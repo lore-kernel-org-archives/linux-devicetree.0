@@ -1,82 +1,31 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v3 03/12] clk: Add a function to retrieve phase
-Date: Wed, 24 Sep 2014 12:42:38 +0200
-Message-ID: <3525720.qAeygkRlEr@phil>
-References: <1410466706-27386-1-git-send-email-maxime.ripard@free-electrons.com> <1410466706-27386-4-git-send-email-maxime.ripard@free-electrons.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] watchdog: qcom: document device tree bindings
+Date: Wed, 24 Sep 2014 12:44:44 +0200
+Message-ID: <2941802.u7NP2737aD@wuerfel>
+References: <cover.1411513109.git.joshc@codeaurora.org> <337231c0fc8b16b4f37e1e3b85cb0246f357a64d.1411513109.git.joshc@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1410466706-27386-4-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, david.lanzendoerfer@o2s.ch, ulf.hansson@linaro.org, devicetree@vger.kernel.org, wens@csie.org, linux-mmc@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <337231c0fc8b16b4f37e1e3b85cb0246f357a64d.1411513109.git.joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 11. September 2014, 22:18:17 schrieb Maxime Ripard:
-> The current phase API doesn't look into the actual hardware to get the phase
-> value, but will rather get it from a variable only set by the set_phase
-> function.
-> 
-> This will cause issue when the client driver will never call the set_phase
-> function, where we can end up having a reported phase that will not match
-> what the hardware has been programmed to by the bootloader or what phase is
-> programmed out of reset.
-> 
-> Add a new get_phase function for the drivers to implement so that we can get
-> this value.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+On Tuesday 23 September 2014 18:04:37 Josh Cartwright wrote:
+> +- clocks : shall contain the input clock phandle
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Just nitpicking, but this is not just a phandle, it's a clock
+descriptor, which is a phandle followed by a set of arguments,
+which may be empty, depending the on the clock controller
+implementation.
 
-> ---
->  drivers/clk/clk.c            | 10 ++++++++++
->  include/linux/clk-provider.h |  5 +++++
->  2 files changed, 15 insertions(+)
-> 
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index d87661af0c72..113d75db371d 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -1934,6 +1934,16 @@ int __clk_init(struct device *dev, struct clk *clk)
->  		clk->accuracy = 0;
-> 
->  	/*
-> +	 * Set clk's phase.
-> +	 * Since a phase is by definition relative to its parent, just
-> +	 * query the current clock phase, or just assume it's in phase.
-> +	 */
-> +	if (clk->ops->get_phase)
-> +		clk->phase = clk->ops->get_phase(clk->hw);
-> +	else
-> +		clk->phase = 0;
-> +
-> +	/*
->  	 * Set clk's rate.  The preferred method is to use .recalc_rate.  For
->  	 * simple clocks and lazy developers the default fallback is to use the
->  	 * parent's rate.  If a clock doesn't have a parent (or is orphaned)
-> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-> index 69b20d4c1e1a..abec961092a7 100644
-> --- a/include/linux/clk-provider.h
-> +++ b/include/linux/clk-provider.h
-> @@ -130,6 +130,10 @@ struct dentry;
->   *		set then clock accuracy will be initialized to parent accuracy
->   *		or 0 (perfect clock) if clock has no parent.
->   *
-> + * @get_phase:	Queries the hardware to get the current phase of a clock.
-> + *		Returned values are 0-359 degrees on success, negative
-> + *		error codes on failure.
-> + *
->   * @set_phase:	Shift the phase this clock signal in degrees specified
->   *		by the second argument. Valid values for degrees are
->   *		0-359. Return 0 on success, otherwise -EERROR.
-> @@ -182,6 +186,7 @@ struct clk_ops {
->  				    unsigned long parent_rate, u8 index);
->  	unsigned long	(*recalc_accuracy)(struct clk_hw *hw,
->  					   unsigned long parent_accuracy);
-> +	int		(*get_phase)(struct clk_hw *hw);
->  	int		(*set_phase)(struct clk_hw *hw, int degrees);
->  	void		(*init)(struct clk_hw *hw);
->  	int		(*debug_init)(struct clk_hw *hw, struct dentry *dentry);
+I would just call it 'the input clock', rather than 'input clock
+phandle'.
 
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
