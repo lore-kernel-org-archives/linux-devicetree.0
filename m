@@ -1,109 +1,60 @@
-From: Johannes Pointner <johannes.pointner@gmail.com>
-Subject: Re: [PATCH] mfd: tps65217: add compatible string for subdevices
-Date: Wed, 24 Sep 2014 13:49:18 +0200
-Message-ID: <CAJKbBDDpAULVFjr058qRz7rV3y5DEnnxeA9n5xtGW1Fu6YLr=A@mail.gmail.com>
-References: <5439652.jHp5aCCfrZ@lenovobook>
-	<20140924110602.GI19999@lee--X1>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH 3/6] ARM: dts: sunxi: Add Allwinner A80 dtsi
+Date: Wed, 24 Sep 2014 19:53:33 +0800
+Message-ID: <CAGb2v64yGmdLeWmA=+nxD85DbQf_xxUNx3n3oedFZi51uc50+w@mail.gmail.com>
+References: <1411311493-24344-1-git-send-email-wens@csie.org>
+ <1411311493-24344-4-git-send-email-wens@csie.org> <20140924063738.GQ15315@lukather>
+ <CAGb2v64voZpK_82wtkErRowR0vjEUALNUwvCx_sd8Q5wb4Hq-g@mail.gmail.com> <54227038.2020805@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140924110602.GI19999@lee--X1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, AnilKumar Ch <anilkumar@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBUXBRKQQKGQE3ACDS4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <54227038.2020805-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Meng Zhang <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, yhf <yhf-HcjymKqD97rQT0dZR+AlfA@public.gmane.org>, ctl <ctl-HcjymKqD97rQT0dZR+AlfA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-09-24 13:06 GMT+02:00 Lee Jones <lee.jones@linaro.org>:
-> On Mon, 22 Sep 2014, Johannes Pointner wrote:
+On Wed, Sep 24, 2014 at 3:18 PM, Gregory CLEMENT
+<gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi Chen-Yu,
 >
->> The TPS65217 is missing of_compatible string in the mfd_cell for its
->> subdevices. This compatible string is necessary to use functions lik=
-e
->> of_find_backlight_by_node in backlight.c.
+>
+>>>> +
+>>>> +     memory {
+>>>> +             reg = <0x20000000 0x40000000>;
+>>>
+>>> Usually, what we put there was the maximum amount of RAM that can be
+>>> handled by the SoC. I think that it can go above 1GB
 >>
->> Signed-off-by: Johannes Pointner <johannes.pointner@br-automation.co=
-m>
->> ---
->>  Documentation/devicetree/bindings/regulator/tps65217.txt           =
- | 5 ++++-
->>  .../devicetree/bindings/video/backlight/tps65217-backlight.txt     =
- | 6 +++---
->>  drivers/mfd/tps65217.c                                             =
- | 2 ++
->>  3 files changed, 9 insertions(+), 4 deletions(-)
+>> With LPAE, it can handle 8GB. But the DT won't take 64bit values.
+>> I'm not sure how to get it in. I'll look around for examples.
 >
-> [...]
+> You can have a look on what we did for Armada XP:
 >
->> diff --git a/Documentation/devicetree/bindings/video/backlight/tps65=
-217-backlight.txt b/Documentation/devicetree/bindings/video/backlight/t=
-ps65217-backlight.txt
->> index 5fb9279..c3fb649 100644
->> --- a/Documentation/devicetree/bindings/video/backlight/tps65217-bac=
-klight.txt
->> +++ b/Documentation/devicetree/bindings/video/backlight/tps65217-bac=
-klight.txt
->> @@ -7,18 +7,18 @@ Required properties:
->>  - compatible: "ti,tps65217"
->>  - reg: I2C slave address
->>  - backlight: node for specifying WLED1 and WLED2 lines in TPS65217
->> +- compatible: "ti,tps65217-bl"
+> arch/arm/boot/dts/armada-370-xp.dtsi
+> arch/arm/boot/dts/armada-xp.dtsi
+> arch/arm/boot/dts/armada-xp-gp.dts
 >
-> This is now confusing.  Please make it clear that this part of the
-> documentation is now referencing the sub-node.
+> I created a skeleton64.dtsi for this case
 
-I will add a Subnode properties label, to make it clearer.
+Thanks for the tip. Before I send v2, I do have a question. I'm using
 
->
->>  - isel: selection bit, valid values: 1 for ISEL1 (low-level) and 2 =
-for ISEL2 (high-level)
->>  - fdim: PWM dimming frequency, valid values: 100, 200, 500, 1000
->>  - default-brightness: valid values: 0-100
->>
->> -Each regulator is defined using the standard binding for regulators=
-=2E
->> -
->>  Example:
->>
->>       tps: tps@24 {
->>               reg =3D <0x24>;
->>               compatible =3D "ti,tps65217";
->> -             backlight {
->> +             tps_bl: backlight {
->> +                     compatible =3D "ti,tps65217-bl";
->>                       isel =3D <1>;  /* 1 - ISET1, 2 ISET2 */
->>                       fdim =3D <100>; /* TPS65217_BL_FDIM_100HZ */
->>                       default-brightness =3D <50>;
->> diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
->
-> This shouldn't be in this patch.
->
-> Please adhere to: Documentation/devicetree/bindings/submitting-patche=
-s.txt
+    ranges = <0 0 0 0x20000000>;
 
-I will split the patch.
->
->> index 3cc4c70..77708f9 100644
->> --- a/drivers/mfd/tps65217.c
->> +++ b/drivers/mfd/tps65217.c
->> @@ -33,9 +33,11 @@
->>  static const struct mfd_cell tps65217s[] =3D {
->>       {
->>               .name =3D "tps65217-pmic",
->> +             .of_compatible =3D "ti,tps65217-pmic",
->>       },
->>       {
->>               .name =3D "tps65217-bl",
->> +             .of_compatible =3D "ti,tps65217-bl",
->>       },
->>  };
->>
->
-> --
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+in the clocks and soc node to avoid having to use 64bit values for all
+addresses and sizes. Would this be undesirable, even bad practice maybe?
 
-Thank you for your feedback. I'll resend the patches with the modificat=
-ions.
+http://linux-sunxi.org/A80/Memory_map is a document I pieced together
+from Allwinner's SDK header files. AFAIK only the memory goes above
+the 4GB limit. All peripherals are under 512 MB, 256MB even.
+
+
+Thanks
+ChenYu
