@@ -1,77 +1,49 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v4 3/4] pinctrl: Qualcomm SPMI PMIC GPIO pin controller
- driver
-Date: Wed, 24 Sep 2014 16:09:32 +0300
-Message-ID: <1411564172.18580.69.camel@iivanov-dev>
-References: <1410792254-24126-1-git-send-email-iivanov@mm-sol.com>
-	 <1410792254-24126-4-git-send-email-iivanov@mm-sol.com>
-	 <20140924041852.GO10179@sonymobile.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v1 4/5] drivers: net: xgene: Add 10GbE support
+Date: Wed, 24 Sep 2014 15:10:07 +0200
+Message-ID: <7752137.3u6F6qDtIo@wuerfel>
+References: <1411530688-2939-1-git-send-email-isubramanian@apm.com> <1411530688-2939-5-git-send-email-isubramanian@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140924041852.GO10179@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, David Collins <collinsd@codeaurora.org>, Wu Fenglin <fenglinw@qti.qualcomm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1411530688-2939-5-git-send-email-isubramanian@apm.com>
+Sender: netdev-owner@vger.kernel.org
+To: Iyappan Subramanian <isubramanian@apm.com>
+Cc: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org, kchudgar@apm.com, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-09-23 at 21:18 -0700, Bjorn Andersson wrote:
-> On Mon 15 Sep 07:44 PDT 2014, Ivan T. Ivanov wrote:
+On Tuesday 23 September 2014 20:51:27 Iyappan Subramanian wrote:
+> -static void xgene_enet_wr_mcx_mac(struct xgene_enet_pdata *pdata,
+> -                                 u32 wr_addr, u32 wr_data)
+> +void xgene_enet_wr_mac(struct xgene_enet_pdata *pdata, u32 wr_addr, u32 wr_data)
+>  {
+>         void __iomem *addr, *wr, *cmd, *cmd_done;
+>  
+> -       addr = pdata->mcx_mac_addr + MAC_ADDR_REG_OFFSET;
+> -       wr = pdata->mcx_mac_addr + MAC_WRITE_REG_OFFSET;
+> -       cmd = pdata->mcx_mac_addr + MAC_COMMAND_REG_OFFSET;
+> -       cmd_done = pdata->mcx_mac_addr + MAC_COMMAND_DONE_REG_OFFSET;
+> +       addr = pdata->mac_addr + MAC_ADDR_REG_OFFSET;
+> +       wr = pdata->mac_addr + MAC_WRITE_REG_OFFSET;
+> +       cmd = pdata->mac_addr + MAC_COMMAND_REG_OFFSET;
+> +       cmd_done = pdata->mac_addr + MAC_COMMAND_DONE_REG_OFFSET;
+>  
+>         if (!xgene_enet_wr_indirect(addr, wr, cmd, cmd_done, wr_addr, wr_data))
+>                 netdev_err(pdata->ndev, "MCX mac write failed, addr: %04x\n",
+>                            wr_addr);
+>  }
+>  
+> -static void xgene_enet_rd_csr(struct xgene_enet_pdata *pdata,
+> -                             u32 offset, u32 *val)
+> +void xgene_enet_rd_csr(struct xgene_enet_pdata *pdata, u32 offset, u32 *val)
+>  {
+>         void __iomem *addr = pdata->eth_csr_addr + offset;
+>  
 > 
 
-<snip>
+A lot of the changes in this patch seem to just rename existing interfaces.
+Please split those out into a preparatory patch, to make it easier to
+review the actual functional changes.
 
-> > +static int pmic_gpio_of_xlate(struct gpio_chip *chip,
-> > +                             const struct of_phandle_args *gpio_desc,
-> > +                             u32 *flags)
-> > +{
-> > +       if (chip->of_gpio_n_cells < 2)
-> > +               return -EINVAL;
-> > +
-> > +       if (flags)
-> > +               *flags = gpio_desc->args[1];
-> > +
-> > +       return gpio_desc->args[0] - PMIC_GPIO_PHYSICAL_OFFSET;
-> > +}
-> 
-> If you change:
->  gpiochip_add_pin_range(&state->chip, dev_name(dev), 0, 0, npins);
-> to:
->  gpiochip_add_pin_range(&state->chip, dev_name(dev), 1, 0, npins);
-> 
-> And you treat the gpio functions as taking the gpio number instead of pinctrl
-> number (i.e. subtract 1 in those), then gpiolib will provide this function for
-> you.
-> 
-
-I am unable to make this work. of_gpio_simple_xlate() didn't know that
-GPIO range is offset with 1. Requesting last GPIO return error. And
-debug output looks weird, for example:
-
-# cat /sys/kernel/debug/gpio
-...
-GPIOs 220-255, platform/0.c000.gpios, 0.c000.gpios:
-...
-
-# cat /sys/kernel/debug/pinctrl/0.c000.gpios/gpio-ranges 
-GPIO ranges handled:
-1: 0.c000.gpios GPIOS [221 - 256] PINS [0 - 35]
-
-Advice, please.
-
-> [..]
-> > +
-> > +static const struct of_device_id pmic_gpio_of_match[] = {
-> > +       { .compatible = "qcom,spmi-pmic-gpio" },
-> 
-> I think this should be more specific, because hopefully the spmi specification
-> will outlive the current pmic gpio block.
-> 
-> So I think you need to list the pmic blocks here (e.g. "qcom,pm8941-gpio").
-
-I can rename this to lovely "qcom,qpnp-gpio" :-), in this way driver
-can outlive bus on which device is connected this time.
-
-Regards,
-Ivan
+	Arnd
