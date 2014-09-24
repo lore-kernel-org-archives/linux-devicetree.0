@@ -1,42 +1,52 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 00/10] rtc: at91sam9: add DT support
-Date: Wed, 24 Sep 2014 13:03:15 +0100
-Message-ID: <20140924120315.GC32069@lee--X1>
-References: <1411483725-31532-1-git-send-email-boris.brezillon@free-electrons.com>
- <20140924084911.GI17801@lee--X1>
- <20140924111757.00c303d2@bbrezillon>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Wed, 24 Sep 2014 14:23:38 +0200
+Message-ID: <2786668.t3YLqX5enD@wuerfel>
+References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com> <2923729.dtX0WmHSV0@wuerfel> <20140924112902.GA23331@peterchendt>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140924111757.00c303d2@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140924112902.GA23331@peterchendt>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Chen <peter.chen@freescale.com>
+Cc: balbi@ti.com, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com, p.zabel@pengutronix.de, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 Sep 2014, Boris BREZILLON wrote:
-> And I'll take care to wait between each version next time (that's oft=
-en
-> what I'm doing BTW).
+On Wednesday 24 September 2014 19:29:05 Peter Chen wrote:
+> 
+> So, it is IP CORE LIB (you suggest) vs IP CORE Platform Driver
+> (dwc3, musb, chipidea) you are talking about, right? Except for
+> creating another platform driver as well as related DT node (optional),
+> are there any advantages compared to current IP core driver structure?
 
-I know you usually do.
+Having a library module usually requires less code, and is more consistent
+with other drivers, which helps new developers understand what the
+driver is doing.
 
-> > If I have to deal with another 55 repeat emails again, you'll find
-> > yourself as an entry in my spam filter.
->=20
-> This won't happen again.
+The most important aspect though is the DT binding: once the structure
+with separate kernel drivers leaks out into the DT format, you can't
+easily change the driver any more, e.g. to make a property that was
+introduced for one glue driver more general so it can get handled by
+the common part. Having a single node lets us convert to the library
+model later, so that would be a strong reason to keep the DT binding
+simple, without child nodes.
 
-Thank you.
+Following that logic, it turns into another reason for using the library
+model to start with, because otherwise the child device does not have
+any DT properties itself and has to rely on the parent device properties,
+which somewhat complicates the driver structure.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> In this thread, we are talking about creating common platform driver for glue
+> layer, its design purpose (adapt it for as many as platforms) should be the
+> same, no matter the IP core part is a LIB or platform driver, am I missing
+> something?
+
+No, you are absolutely right with that, introducing the generic glue
+driver is orthogonal to the structure of the core driver in principle.
+
+I mainly brought it up because I noticed how this patch could be done
+in a simpler way by combining the new generic glue with the move to
+a library driver model.
+
+	Arnd
