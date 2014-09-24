@@ -1,100 +1,66 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 1/2] clk: rockchip: add some needed clock binding id for rk3288
-Date: Wed, 24 Sep 2014 16:06:07 +0200
-Message-ID: <22772850.SzfCHKUkJc@phil>
-References: <1411565795-26966-1-git-send-email-kever.yang@rock-chips.com> <1411565795-26966-2-git-send-email-kever.yang@rock-chips.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v12 00/12] Support for creating generic PCI host bridges
+ from DT
+Date: Wed, 24 Sep 2014 15:23:18 +0100
+Message-ID: <20140924142317.GC1994@e106497-lin.cambridge.arm.com>
+References: <1411498874-9864-1-git-send-email-Liviu.Dudau@arm.com>
+ <20140923215435.GD27117@google.com>
+ <20140923224810.GA32643@bart.dudau.co.uk>
+ <CAErSpo5PBXSUeU_LP2m=9jxibmqxreL4tEeHBsc5To7D=_bAJA@mail.gmail.com>
+ <CAL_Jsq+U=1JT0qqZgb=aR66Q4NYDyzOogspOmmpsp61pE+aCUg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411565795-26966-2-git-send-email-kever.yang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kever Yang <kever.yang@rock-chips.com>
-Cc: Mike Turquette <mturquette@linaro.org>, dianders@chromium.org, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+U=1JT0qqZgb=aR66Q4NYDyzOogspOmmpsp61pE+aCUg@mail.gmail.com>
+Content-Disposition: inline
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Liviu Dudau <liviu@dudau.co.uk>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 24. September 2014, 21:36:34 schrieb Kever Yang:
-> This patch add some clock binding id for different modules
-> that under development and going to send upstream.
-> 
-> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+On Wed, Sep 24, 2014 at 02:30:37PM +0100, Rob Herring wrote:
+> On Tue, Sep 23, 2014 at 6:00 PM, Bjorn Helgaas <bhelgaas@google.com> =
+wrote:
+> > On Tue, Sep 23, 2014 at 4:48 PM, Liviu Dudau <liviu@dudau.co.uk> wr=
+ote:
+> >> ...
+> >> While the next immediate target is converting pci-host-generic.c, =
+pci-imx6.c
+> >> and probably pcie-designware.c to my series, I would like to ask y=
+ou what
+> >> is your longer term plan. Now that I have got my head full of PCI =
+code,
+> >> I have some ideas but feel that meeting with you and all those inv=
+olved
+> >> in core PCI support would be a better venue than sending emails ba=
+ck and
+> >> forth. When is your next plan to attend a Linux conference?
+> >
+> > That would be nice.  Unfortunately, I don't know what the next
+> > conference will be yet.
+>=20
+> Perhaps an irc meeting or Google hangout. These have been happening o=
+n
+> several areas like DT and ARM KVM.
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+I'm open to the idea. I don't know if there is a recurring one already =
+for
+PCI or how Bjorn has been handling future planning previously.
 
-> ---
-> 
->  include/dt-bindings/clock/rk3288-cru.h | 38
-> +++++++++++++++++++++++++++++++++- 1 file changed, 37 insertions(+), 1
-> deletion(-)
-> 
-> diff --git a/include/dt-bindings/clock/rk3288-cru.h
-> b/include/dt-bindings/clock/rk3288-cru.h index ebcb460..ee579ff 100644
-> --- a/include/dt-bindings/clock/rk3288-cru.h
-> +++ b/include/dt-bindings/clock/rk3288-cru.h
-> @@ -61,6 +61,15 @@
->  #define SCLK_LCDC_PWM1		101
->  #define SCLK_MAC_RX		102
->  #define SCLK_MAC_TX		103
-> +#define SCLK_EDP_24M		104
-> +#define SCLK_EDP		105
-> +#define SCLK_RGA		106
-> +#define SCLK_ISP		107
-> +#define SCLK_ISP_JPE		108
-> +#define SCLK_HDMI_HDCP		109
-> +#define SCLK_HDMI_CEC		110
-> +#define SCLK_HEVC_CABAC		111
-> +#define SCLK_HEVC_CORE		112
-> 
->  #define DCLK_VOP0		190
->  #define DCLK_VOP1		191
-> @@ -75,6 +84,16 @@
->  #define ACLK_VOP1		198
->  #define ACLK_CRYPTO		199
->  #define ACLK_RGA		200
-> +#define ACLK_RGA_NIU		201
-> +#define ACLK_IEP		202
-> +#define ACLK_VIO0_NIU		203
-> +#define ACLK_VIP		204
-> +#define ACLK_ISP		205
-> +#define ACLK_VIO1_NIU		206
-> +#define ACLK_HEVC		207
-> +#define ACLK_VCODEC		208
-> +#define ACLK_CPU		209
-> +#define ACLK_PERI		210
-> 
->  /* pclk gates */
->  #define PCLK_GPIO0		320
-> @@ -112,6 +131,15 @@
->  #define PCLK_PS2C		352
->  #define PCLK_TIMER		353
->  #define PCLK_TZPC		354
-> +#define PCLK_EDP_CTRL		355
-> +#define PCLK_MIPI_DSI0		356
-> +#define PCLK_MIPI_DSI1		357
-> +#define PCLK_MIPI_CSI		358
-> +#define PCLK_LVDS_PHY		359
-> +#define PCLK_HDMI_CTRL		360
-> +#define PCLK_VIO2_H2P		361
-> +#define PCLK_CPU		362
-> +#define PCLK_PERI		363
-> 
->  /* hclk gates */
->  #define HCLK_GPS		448
-> @@ -137,8 +165,16 @@
->  #define HCLK_IEP		468
->  #define HCLK_ISP		469
->  #define HCLK_RGA		470
-> +#define HCLK_VIO_AHB_ARBI	471
-> +#define HCLK_VIO_NIU		472
-> +#define HCLK_VIP		473
-> +#define HCLK_VIO2_H2P		474
-> +#define HCLK_HEVC		475
-> +#define HCLK_VCODEC		476
-> +#define HCLK_CPU		477
-> +#define HCLK_PERI		478
-> 
-> -#define CLK_NR_CLKS		(HCLK_RGA + 1)
-> +#define CLK_NR_CLKS		(HCLK_PERI + 1)
-> 
->  /* soft-reset indices */
->  #define SRST_CORE0		0
+Best regards,
+Liviu
+
+>=20
+> Rob
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
