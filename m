@@ -1,63 +1,45 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v2 4/4] ARM: dts: mt8135: Add pinctrl node for mt8135.
-Date: Wed, 24 Sep 2014 14:40:44 +0200
-Message-ID: <20140924124044.GC4992@pengutronix.de>
-References: <1411443545-24951-1-git-send-email-srv_hongzhou.yang@mediatek.com>
- <1411443545-24951-5-git-send-email-srv_hongzhou.yang@mediatek.com>
- <CACRpkda-K7w-bY0uSdnZvzEKEeQg38oExoHPSW61kEv9Wv20mA@mail.gmail.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v5 00/11] PM / Domains: Generic OF-based support
+Date: Wed, 24 Sep 2014 15:44:07 +0300
+Message-ID: <5422BC97.6080608@ti.com>
+References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org> <20140919184849.GA14832@core.coreip.homeip.net> <2161168.GXttgFlE1X@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkda-K7w-bY0uSdnZvzEKEeQg38oExoHPSW61kEv9Wv20mA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "Hongzhou.Yang" <srv_hongzhou.yang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>Hongzhou Yang <hongzhou.yang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dandan.he@mediatek.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <2161168.GXttgFlE1X@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Philipp Zabel <philipp.zabel@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, linux-acpi@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, Len Brown <len.brown@intel.com>, Kevin Hilman <khilman@linaro.org>, linux-pm@vger.kernel.org, Chris Ball <chris@printf.net>, Simon Horman <horms@verge.net.au>, Ben Dooks <ben-linux@fluff.org>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Hi Rafael,
 
-On Wed, Sep 24, 2014 at 01:23:09PM +0200, Linus Walleij wrote:
-> On Tue, Sep 23, 2014 at 5:39 AM, Hongzhou.Yang
-> <srv_hongzhou.yang@mediatek.com> wrote:
+On 09/22/2014 05:19 PM, Rafael J. Wysocki wrote:
+> On Friday, September 19, 2014 11:48:49 AM Dmitry Torokhov wrote:
+>> Hi Ulf,
+>>
+>> On Fri, Sep 19, 2014 at 08:27:33PM +0200, Ulf Hansson wrote:
+>>> Changes in v5:
+>>> 	- Converted dev_pm_domain_detach() to a void function
+>>> 	- Added a ->detach() callback to the PM domain struct, invoked from the
+>>> 	  dev_pm_domain_detach().
+>>> 	- Make ACPI and genpd both assign the ->detach() callback at successfull
+>>> 	  attachment.
+>>> 	- The above changes made it possible to make acpi_pm_domain_detach() to
+>>> 	  be static, added a separate patch for that.
+>>
+>> Thank you for making these changes. For the series:
+>>
+>> Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 > 
-> > From: Hongzhou Yang <hongzhou.yang@mediatek.com>
-> >
-> > Add pinctrl node to mt8135.dtsi.
-> >
-> > Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
-> (...)
-> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_GPIO0 (MT_PIN_NO(0) | 0)
-> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_MSDC0_DAT7 (MT_PIN_NO(0) | 1)
-> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_EINT49 (MT_PIN_NO(0) | 2)
-> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_I2SOUT_DAT (MT_PIN_NO(0) | 3)
+> I've queued up this patchset for 3.18 (I fixed up the two minor issues pointed
+> to by Geert in the process).
 > 
-> I haven't got to reviewing the driver, but this looks just wrong.
-> 
-> Have the magic numbers in the driver.
-> 
-> Use strings to describe functions, not integers.
 
-Interrupts, clocks, gpios, dma channels, nearly everything in the device tree is
-arbitrarily numbered. Instead of "irq-i2c0" we have <0 36 IRQ_TYPE_LEVEL_HIGH>
-in the device tree. These numbers can be resolved efficiently in the
-driver by shifting them to get a bitmask or by adding them as offset to
-a register base.
-Why do you want to make pinctrl different? Thanks to the recently
-introduced defines in the device trees these numbers are not magic at
-all anymore.
+Could you point me on branch where I can find these patches?
+Also, are there any chances to have these patches  in next/linux-next.git,
+so they will become available for testing and re-using?
 
-> 
-> We need to move toward standardized device tree bindings
-> for this stuff, and that means using strings, not magic
-> numbers.
-
-Agreed for standardized device tree bindings, but not for using strings.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best regards,
+-grygorii
