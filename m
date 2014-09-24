@@ -1,93 +1,69 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 0/3] new Atmel DMA controller
-Date: Wed, 24 Sep 2014 09:46:48 +0200
-Message-ID: <20140924074648.GE586@ldesroches-Latitude-E6320>
-References: <1411392138-5014-1-git-send-email-ludovic.desroches@atmel.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device properties interface
+Date: Wed, 24 Sep 2014 09:55:12 +0200
+Message-ID: <4515093.TGIQh7cBOD@wuerfel>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <2809308.3y5s7TV5Ip@wuerfel> <1579761.oeYleOAY1N@vostro.rjw.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1411392138-5014-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1579761.oeYleOAY1N-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Darren Hart <dvhart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 22, 2014 at 03:22:15PM +0200, Ludovic Desroches wrote:
-> Hi,
+On Tuesday 23 September 2014 22:47:36 Rafael J. Wysocki wrote:
+> Quite frankly, I'm not sure what you're asking for.
 > 
-> This set of patches introduces support for the new Atmel DMA controller know as
-> XDMAC and available on SAMA5D4.
-> 
-> Driver updated according to Arnd and Nicolas comments.
-> 
-> Changes from:
-> - v4
->   - compile the driver if COMPILE_TEST is selected
+> It seems to mean "I kind of don't like the current implementation", but
+> then the last part is quite unclear to me.  Are you suggesting to add more
+> "if (IS_ENABLED(CONFIG_OF) && pdev->dev.of_node) etc" type of checks to
+> device drivers?  That I'd like to avoid to be honest.
 
-Maxime told me that I can't use _relaxed accessors if I depends on
-COMPILE_TEST since they are not generic.
+No, that is not what I want. Device drivers should ideally call interfaces
+that just take a 'struct device' or 'struct platform_device' pointer,
+and those should be implemented in an appropriate way.
 
-So which one I have to keep? To be honest, I have no idea about
-performance gain using _relaxed. Due to the use of descriptors, I feel
-like saying using _relaxed or not should not change performances.
+> Instead of the current proposal we can introduce something like
+> 
+> int device_get_child_property(struct device *dev, void *child_node,
+>                               const char *propname, void **valptr);
+> 
+> (and analogously for device_read_property*) and use that in the drivers that
+> need to iterate over child nodes of a device.  Quite along the lines of what
+> Dmitry is suggesting.
+> 
+> Then, fn() in acpi_for_each_child_node() (and the of_ counterpart of it)
+> would become
+> 
+> int (*fn)(struct device *dev, void *child_node, void *data)
+> 
+> and so on.
+> 
+> Would you prefer that?
 
+I must still be missing part of what you are trying to achieve above.
+We definitely need an interface to get properties from the device itself,
+like
 
->   - merge header file into at_xdmac.c
->   - use write memory barriers before starting the channel
->   - init active_xfer to false when taking a descriptor from the free
->   descriptors list
->   - remove dma capabilities mask
->   - use CONFIG_PM instead of CONFIG_PM_SLEEP for prepare function
->   - style fixes
->   - update documentation to add the <chip> compatible description
->   - add maintener entry
-> - v3
->   - use dma_get_any_slave_channel instead of dma_request_channel
->   - fix tx_status behavior for non active transfers
->   - rename at_xdmac_terminate_xfer
->   - replace suspend/resume no irq variants by late/early variants
->   - no more use dev res to request the irq, use the legacy way
->   - add slave capabilities
-> - v2
->   - documentation updated
->   - fix locking issues
-> - v1
->   - add power management stuff
->   - check maxburst value
->   - revert subsys_initcall remove, EPROBE_DEFER not yet available on the kernel
->   version I use to do the tests, moreover other devices are not ready to use it
-> - RFC:
->   - DMA_SUCCESS replaced by DMA_COMPLETE
->   - fix memcpy issue caused by a mistake in interfaces used
->   - add filter function
->   - remove some parameters from device tree since we can get them through the
->   dma slave configuration
->   - use readl/writel relaxed
->   - remove subsys_initcall
->   - synchronize irq before killing tasklets
->   - use BIT macro
->   - misc cleanup
-> 
-> 
-> Ludovic Desroches (3):
->   dma: at_xdmac: creation of the atmel eXtended DMA Controller driver
->   ARM: dts: at_xdmac: add bindings documentation
->   MAINTAINERS: add entry for Atmel XDMA driver
-> 
->  .../devicetree/bindings/dma/atmel-xdma.txt         |   50 +
->  MAINTAINERS                                        |    7 +
->  drivers/dma/Kconfig                                |    7 +
->  drivers/dma/Makefile                               |    1 +
->  drivers/dma/at_xdmac.c                             | 1491 ++++++++++++++++++++
->  include/dt-bindings/dma/at91.h                     |   25 +
->  6 files changed, 1581 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/atmel-xdma.txt
->  create mode 100644 drivers/dma/at_xdmac.c
-> 
-> -- 
-> 2.0.3
-> 
+int device_get_property(struct device *dev, const char *propname, void **valptr);
+
+(whatever valptr ends up being, that would be a separate discussion).
+
+As soon as it comes to devices that have child nodes, I don't see a
+necessity to have a generic abstraction for them, as this is typically
+only done for some of the more obscure bindings, or for child nodes that
+are defined in a subsystem-wide binding rather than a device private
+binding.
+
+For the former case, I think they are indeed better left in drivers that
+actively know the difference between DT and ACPI, and that don't necessarily
+use the same binding for both. In the latter case, I'd leave the
+implementation up to subsystem code, which again would know what
+interface it is using.
+
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
