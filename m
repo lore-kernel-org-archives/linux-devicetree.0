@@ -1,66 +1,93 @@
-From: Frans Klaver <fransklaver@gmail.com>
-Subject: Re: [RFC PATCH 1/2] sbs-battery: add forced instantiation from
- device tree
-Date: Wed, 24 Sep 2014 20:59:34 +0200
-Message-ID: <20140924185933.GA2221@gmail.com>
-References: <1411564278-17207-1-git-send-email-frans.klaver@xsens.com>
- <1411564278-17207-2-git-send-email-frans.klaver@xsens.com>
- <20140924131655.GG5729@leverpostej>
- <20140924142222.GC22872@ci00147.xsens-tech.local>
- <20140924143848.GH5729@leverpostej>
- <20140924151448.GD22872@ci00147.xsens-tech.local>
- <20140924153431.GJ5729@leverpostej>
+From: Sunil Kovvuri <sunil.kovvuri@gmail.com>
+Subject: Re: [PATCH 3/6] pci, thunder: Add PCIe host controller devicetree bindings
+Date: Thu, 25 Sep 2014 00:37:00 +0530
+Message-ID: <CA+sq2CcXCVrk=fxH79n88ZJj5fBQmbyhnzj08qHNO8EmpZT1Yg@mail.gmail.com>
+References: <1411573068-12952-1-git-send-email-rric@kernel.org>
+	<3082935.e3X4GsVUDn@wuerfel>
+	<CA+sq2Ce8sb=YGma05qEk_992Mc9M92TxCk+RWsyi6tY-FVOCXw@mail.gmail.com>
+	<3414852.SWQ9rRcUDx@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140924153431.GJ5729@leverpostej>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: olof@lixom.net, anton.vorontsov@linaro.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3414852.SWQ9rRcUDx@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: LAKML <linux-arm-kernel@lists.infradead.org>, Robert Richter <rric@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <liviu.dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Sunil Goutham <sgoutham@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 24, 2014 at 04:34:32PM +0100, Mark Rutland wrote:
-> On Wed, Sep 24, 2014 at 04:14:48PM +0100, Frans Klaver wrote:
-> > On Wed, Sep 24, 2014 at 03:38:49PM +0100, Mark Rutland wrote:
-> > > On Wed, Sep 24, 2014 at 03:22:22PM +0100, Frans Klaver wrote:
-> > > You mention that there's a GPIO that can be used to detect the battery
-> > > presence. Why can't the driver always probe and then on check for the
-> > > presence of the battery dynamically using that GPIO? That should cover
-> > > both cases.
-> > 
-> > I would say that this was the case before [1] was done. The GPIO is
-> > optional and if not configured, the presence or absence of the battery
-> > is detected by checking a status register much like probe() currently
-> > does. It seems all cases were covered before that patch. If you worry
-> > about speed, you should use the GPIO. I wonder if we might be able to
-> > revert [1] without doing much harm.
-> 
-> But reverting that would re-introduce the lag on some systems, no? Given
-> the wording of the original commit I would guess that the GPIO wasn't
-> available. Perhaps Olof or Anton can enlighten us?
+On Thu, Sep 25, 2014 at 12:04 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wednesday 24 September 2014 23:34:04 Sunil Kovvuri wrote:
+>> On Wed, Sep 24, 2014 at 9:36 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> > On Wednesday 24 September 2014 17:37:45 Robert Richter wrote:
+>> >> +               compatible = "cavium,thunder-pcie";
+>> >> +               device_type = "pci";
+>> >> +               msi-parent = <&its>;
+>> >> +               bus-range = <0 255>;
+>> >> +               #size-cells = <2>;
+>> >> +               #address-cells = <3>;
+>> >> +               reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
+>> >> +               ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>, /* mem ranges */
+>> >> +                       <0x03000000 0x8300 0x00000000 0x8300 0x00000000 0x80 0x00000000>,
+>> >> +                       <0x03000000 0x87e0 0x00000000 0x87e0 0x00000000 0x01 0x00000000>;
+>> >> +        };
+>> >
+>> > If you claim the entire 0-255 bus range, I think you should also
+>> > specify a domain, otherwise it's not predictable which domain you
+>> > get.
+>> >
+>> > The interrupt-map and interrupt-map-mask properties are required for PCI,
+>> > otherwise you can't do LSI interrupts.
+>>
+>> This PCI controller supports only MSIx interrupts which are edge triggered.
+>
+> Interesting, so it's not PCI compliant then? I assume this will be fixed
+> in the production version of the silicon, right?
+>
+> Having no support for interrupts mean that the majority of PCI device drivers
+> will fail.
 
-It probably would yes. The battery_detect gpio was last touched in 2011, the
-probe check was added somewhere in 2012.
+This controller is for on-board PCI devices and all of them do support
+MSIx interrupts.
 
-We could keep it as a compile option.
+>
+>> > If your hardware can support it, you should also list I/O space and prefetchable
+>> > memory spaces. Can you explain why you have multiple non-prefetchable ranges?
+>>
+>> Our hardware is an ECAM based host controller and doesn't support I/O
+>> and prefetchable memory spaces.
+>> All on-board PCI devices connected to this PCI controller have fixed resources
+>> and doesn't have to be allocated/reassigned. Some of these devices are
+>> SRIOV based.
+>
+> I think you need to mark the ones that are nonrelocatable with flag
+> 0x80000000, otherwise the PCI core might decide to reassign them.
 
-> In the cases where a GPIO is available, I think we should be able to be
-> less pessimistic. Is a GPIO available in your case?
+Is this flag part of DT pci node properties ?
+I am using IORESOURCE_PCI_FIXED flag. Its there in other patches of
+the same series.
 
-We don't have the battery_detect pin available. Incidentally, a bit of
-lag reading out the battery is not a problem for us.
+>
+>> Kernel's SRIOV (pci/iov.c) is expecting 'resource->parent' hierarchy
+>> to be set, otherwise doesn't
+>> enable SRIOV device. So, here multiple non-prefetchable ranges of root bus
+>> aid in resource claiming and setting res->parent hierarchy.
+>
+> I don't understand. Isn't that just a bug in the code that you are working
+> around with the DT. Have you tried fixing the code instead?
 
-> Mark.
-> 
-> > 
-> > Thanks,
-> > Frans
-> > 
-> > [1] a22b41a31e53 "sbs-battery: Probe should try talking to the device"
-> > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+I tried but wasn't sure if its going to impact existing SRIOV devices.
+Will have a deeper look again .
+
+>
+>> We do call "pci_claim_resource" in controller driver code.
+>> "[PATCH 1/6] pci, thunder: Add support for Thunder PCIe host controller."
+>
+> My guess is that you are using the wrong interface here. Isn't the normal
+> request_resource() in the host driver enough?
+
+Isn't that host driver calls "request_resource" only for resources of root port.
+i.e requesting from iomem_resource/ioport_resource. Here i am referring
+to SRIOV devices enumerated upon scan of root port.
+
+>
+>         Arnd
