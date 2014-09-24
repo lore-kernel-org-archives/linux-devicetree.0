@@ -1,92 +1,121 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] bcma: register bcma as device tree driver
-Date: Wed, 24 Sep 2014 23:19:12 +0200
-Message-ID: <54233550.60600@hauke-m.de>
-References: <1411339108-22307-1-git-send-email-hauke@hauke-m.de> <4345256.UGZH9SeRYG@wuerfel> <5421EE62.2080701@hauke-m.de> <3856565.LYF1mvpGOq@wuerfel>
+From: "Bird, Tim" <Tim.Bird@sonymobile.com>
+Subject: RE: [PATCH v2] ARM: dts: Add initial DTS file for Sony Xperia Z1
+Date: Wed, 24 Sep 2014 23:38:22 +0200
+Message-ID: <F5184659D418E34EA12B1903EE5EF5FD0170C7C7B85C@seldmbx02.corpusers.net>
+References: <5422DF46.90306@sonymobile.com>,<B9941F2B-B82A-475B-A482-9C774E3C11FA@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3856565.LYF1mvpGOq@wuerfel>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=Windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <B9941F2B-B82A-475B-A482-9C774E3C11FA@codeaurora.org>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, =?Windows-1252?Q?=22Andersson=2C_Bj=F6rn=22?= <Bjorn.Andersson@sonymobile.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "arnd.bergmann@linaro.org" <arnd.bergmann@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/24/2014 11:48 AM, Arnd Bergmann wrote:
-> On Wednesday 24 September 2014 00:04:18 Hauke Mehrtens wrote:
->> I assume this should then look somehow like this:
->>
->> axi@18000000 {
->>         compatible = "brcm,bus-axi";
->>         reg = <0x18000000 0x1000>;
->>         ranges = <0x00000000 0x18000000 0x00100000>;
->>         #address-cells = <1>;
->>         #size-cells = <1>;
->>
->>         #interrupt-cells = <1>;
->>         interrupt-map = <
->>                 /* ChipCommon */
->>                 0x00000000 0 &gic  GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH
->>
->>                 /* PCIe Controller 0 */
->>                 0x00012000 0 &gic GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH
->>                 0x00012000 1 &gic GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH
->>                 0x00012000 2 &gic GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH
->>                 0x00012000 3 &gic GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH
->>                 0x00012000 4 &gic GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH
->>                 0x00012000 5 &gic GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH
->>
->>                 /* USB 2.0 Controller */
->>                 0x00021000 0 &gic GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH
->>                 >;
->>         };
-> 
-> Right, although I would add a few more '<', '>' and ',' for readability,
-> separating each line with a comma.
-> 
-> You are also missing an 'interrupt-map-mask' property that lists which
-> bits of the address are significant.
-> 
-> Are the interrupt numbers you have in the example (0, 0, 1, 2, ... 5, 0)
-> the actual numbers that are present in the hw registers?
+On Wednesday, September 24, 2014 11:21 AM, Kumar Gala [galak@codeaurora=
+=2Eorg] wrote:
+>
+> On Sep 24, 2014, at 10:12 AM, Tim Bird <tim.bird@sonymobile.com> wrot=
+e:
+>
+> > This DTS has support for the Sony Xperia Z1 phone (codenamed Honami=
+).
+> > This first version of the DTS supports just a serial console.
+> >
+> > changes from v1
+> > - removed qcom,msm-id attribute
+> > - removed mis-capitalized Qualcomm word
+> > - changed dts file name
+> > - added board-specific compatible-string
+> >
+> > Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
+> > =97
+>
+> Does this actually boot?  I=92d be surprised since =93qcom,msm8974=94=
+ isn=92t in the match table (just sent a patch for that).
 
-Some cores do have more than one IRQ. The NAND core uses 8 IRQs and the
-PCIe controller uses 5 (the vendor code just uses the last one which
-gets triggered always). How can I handle this cases where one device has
-more than one IRQ? There is no hardware register these IRQ get mapped
-to. As far as I know the driver just knows that this device needs more
-IRQs. Should I just add a special device node entry for such devices?
+Yeah.  It booted just fine.  Apparently with CONFIG_ARCH_MULTIPLATFORM =
+the
+match table entry is not needed.
 
->> How does the mapping of these interrupts to the devices work?
-> 
-> The same way that of_irq_parse_and_map_pci() works (the second half of it).
-> It's a very similar situation: you have a discoverable bus on which the
-> interrupts are listed in a different domain from which they are supposed to
-> be on the parent. The trick is to make up your own address property
-> and of_phandle_args on the stack and fill that with the data from
-> the hw bus scan, so you can get into the middle of the normal DT
-> irq code that gets them from device nodes.
+Do you want me to re-spin with an addition for "sony,xperia-honami" in =
+the match table?
 
-Thanks for the description, that worked for me.
+ -- Tim
 
->> Do I have to add a device tree entry for every device after all?
-> 
-> No, unless you want to add other properties in the node, such as
-> a MAC address, but then you still only need some of the devices.
-> 
->> Do you have some example code where this is handled in code, I could not
->> find the code doing this for PCI.
-> 
-> drivers/of/of_pci_irq.c, though the hard part is done in drivers/of/irq.c,
-> which parses the interrupt-map and interrupt-map-mask properties.
-
-
-I will split this patch into two patches, one just adding the bcma
-registration and an additional RFC patch adding the IRQ stuff.
-
-Hauke
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > Documentation/devicetree/bindings/vendor-prefixes.txt |  1 +
+> > arch/arm/boot/dts/Makefile                            |  3 ++-
+> > arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts | 17 ++++++++=
++++++++++
+> > 3 files changed, 20 insertions(+), 1 deletion(-)
+> > create mode 100644 arch/arm/boot/dts/qcom-msm8974-sony-xperia-honam=
+i.dts
+> >
+> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt =
+b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > index ac7269f..d3a4579 100644
+> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > @@ -128,6 +128,7 @@ sirf      SiRF Technology, Inc.
+> > smsc  Standard Microsystems Corporation
+> > snps  Synopsys, Inc.
+> > solidrun      SolidRun
+> > +sony Sony Corporation
+> > spansion      Spansion Inc.
+> > st    STMicroelectronics
+> > ste   ST-Ericsson
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefil=
+e
+> > index b8c5cd3..0c2702e 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -343,7 +343,8 @@ dtb-$(CONFIG_ARCH_QCOM) +=3D \
+> >       qcom-apq8074-dragonboard.dtb \
+> >       qcom-apq8084-mtp.dtb \
+> >       qcom-msm8660-surf.dtb \
+> > -     qcom-msm8960-cdp.dtb
+> > +     qcom-msm8960-cdp.dtb \
+> > +     qcom-msm8974-sony-honami-xperia.dtb
+> > dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D \
+> >       rk3066a-bqcurie2.dtb \
+> >       rk3188-radxarock.dtb \
+> > diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts =
+b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+> > new file mode 100644
+> > index 0000000..cccc21b
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+> > @@ -0,0 +1,17 @@
+> > +#include "qcom-msm8974.dtsi"
+> > +
+> > +/ {
+> > +     model =3D "Sony Xperia Z1";
+> > +     compatible =3D "sony,xperia-honami", "qcom,msm8974";
+> > +
+> > +     memory@0 {
+> > +             reg =3D <0 0x40000000>, <0x40000000 0x40000000>;
+> > +             device_type =3D "memory";
+> > +     };
+> > +};
+> > +
+> > +&soc {
+> > +     serial@f991e000 {
+> > +             status =3D "ok";
+> > +     };
+> > +};
+> > --
+> > 1.8.2.2
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-arm=
+-msm" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> --
+> Employee of Qualcomm Innovation Center, Inc.
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, ho=
+sted by The Linux Foundation
+>
