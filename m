@@ -1,51 +1,81 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 2/3] mfd: qcom-rpm: Driver for the Qualcomm RPM
-Date: Wed, 24 Sep 2014 09:23:26 +0100
-Message-ID: <20140924082326.GG17801@lee--X1>
-References: <1411428329-23172-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1411428329-23172-3-git-send-email-bjorn.andersson@sonymobile.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: regulator node names and unit-addresses? (Re: [PATCH v2 1/5]
+ ARM: shmobile: kzm9d: Remove spurious regulator base addresses)
+Date: Wed, 24 Sep 2014 09:27:26 +0100
+Message-ID: <20140924082726.GX4015@sirena.org.uk>
+References: <CAMuHMdVC2h4_Q+4BpV5iLbhfviimzrnfZ3+c6dqnegTAxBHw_g@mail.gmail.com>
+ <20140924081455.GU4015@sirena.org.uk>
+ <CAMuHMdWQfSLwqMMigLOZuGFJqQO03Qyw+ZHE1YAgd6mNDGmrEg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1411428329-23172-3-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============6790311168108756246=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAMuHMdWQfSLwqMMigLOZuGFJqQO03Qyw+ZHE1YAgd6mNDGmrEg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Olof Johansson <olof@lixom.net>, Simon Horman <horms@verge.net.au>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 22 Sep 2014, Bjorn Andersson wrote:
 
-> Driver for the Resource Power Manager (RPM) found in Qualcomm 8660, 8=
-960
-> and 8064 based devices. The driver exposes resources that child drive=
-rs
-> can operate on; to implementing regulator, clock and bus frequency
-> drivers.
->=20
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->=20
-> No functional changes since v6.
+--===============6790311168108756246==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qRqofxetdBO9L27H"
+Content-Disposition: inline
 
-Then you should have applied my:
 
-  Acked-by: Lee Jones <lee.jones@linaro.org>
+--qRqofxetdBO9L27H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->  drivers/mfd/Kconfig          |   14 +
->  drivers/mfd/Makefile         |    1 +
->  drivers/mfd/qcom_rpm.c       |  580 ++++++++++++++++++++++++++++++++=
-++++++++++
->  include/linux/mfd/qcom_rpm.h |   10 +
->  4 files changed, 605 insertions(+)
->  create mode 100644 drivers/mfd/qcom_rpm.c
->  create mode 100644 include/linux/mfd/qcom_rpm.h
+On Wed, Sep 24, 2014 at 10:21:12AM +0200, Geert Uytterhoeven wrote:
+> On Wed, Sep 24, 2014 at 10:14 AM, Mark Brown <broonie@kernel.org> wrote:
 
-[...]
+> > As far as the regulator API is concerned the node name is completly
+> > immaterial and all this stuff is just verbiage we're forced to include.
+> > As far as I can tell the requirement that node names be in the form
+> > "regulator" or whatever is just another thing that wasn't terribly well
+> > thought through in ePAPR, they were trying to do classes I think.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> So perhaps we should just keep "regulator@0" and "regulator@1"?
+
+I don't care what they're called so long as things work; the DT people
+are the ones to ask though.
+
+--qRqofxetdBO9L27H
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUIoBtAAoJECTWi3JdVIfQcBwH/RPaghAYlu5qUpsvSrTkSIu9
+ksbjo3QtgXhNyX2yLpwXla4v6zJSLcSQ8jlHBxvUeHWcGsS9LJyyi26TPuFvAA0J
+zMZSNqSchAaIfpnseR0m+hTSxegOevDdaMmAEz+HdkQIFD20aBc6kpZtk85ebRZX
+FYu/B5DcQIvUVssMqzW/VFwMd48IemU5KqzG8+r6rVp1Wta8EbZQdasfoRGAPji+
+k8wlhyRwekQmPDyg1a2nKEga9qPCd0d146nEPDe0I8UXRdRIGD4VON7Df7tAGxr+
+LvsAkYl5pCzKxMNPH7exwLASxk1i0zOx4JF/zGARqpIG6YJ5FgGXPjrjCy70jRM=
+=nju0
+-----END PGP SIGNATURE-----
+
+--qRqofxetdBO9L27H--
+
+
+--===============6790311168108756246==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6790311168108756246==--
