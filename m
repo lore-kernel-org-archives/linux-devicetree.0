@@ -1,127 +1,29 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v2 4/7] ARM: dts: sun9i: Add A80 Optimus Board support
-Date: Wed, 24 Sep 2014 22:48:58 +0800
-Message-ID: <1411570141-29960-5-git-send-email-wens@csie.org>
-References: <1411570141-29960-1-git-send-email-wens@csie.org>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH RESEND] thermal: Add QPNP PMIC temperature alarm driver
+Date: Wed, 24 Sep 2014 17:56:10 +0300
+Message-ID: <1411570570.18580.72.camel@iivanov-dev>
+References: <1410793383-30097-1-git-send-email-iivanov@mm-sol.com>
+	 <20140915153052.GB27076@developer>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1411570141-29960-1-git-send-email-wens@csie.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, ctl@merrii.com, Shuge <shuge@allwinnertech.com>, Meng Zhang <kevin@allwinnertech.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140915153052.GB27076@developer>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, David Collins <collinsd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The A80 Optimus Board is was launched with the Allwinner A80 SoC.
-It was jointly developed by Allwinner and Merrii.
+On Mon, 2014-09-15 at 11:30 -0400, Eduardo Valentin wrote:
+> Hey Ivan,
+> 
+> Please give us at least a two weeks time frame before resending your
+> patches.
 
-This board has a UART port, a JTAG connector, USB host ports, a USB
-3.0 OTG connector, an HDMI output, a micro SD slot, 8G NAND flash,
-4G DRAM, a camera sensor interface, a WiFi/BT combo chip, a headphone
-jack, IR receiver, and additional GPIO headers.
+Hi Eduardo, 
 
-This patch adds only basic support.
+Should I wait for more comments or I can post updated
+version of this patch?
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- arch/arm/boot/dts/Makefile              |  2 +
- arch/arm/boot/dts/sun9i-a80-optimus.dts | 66 +++++++++++++++++++++++++++++++++
- 2 files changed, 68 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun9i-a80-optimus.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 2f42b18..098f319 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -424,6 +424,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-pcduino3.dtb
- dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-a23-ippo-q8h-v5.dtb
-+dtb-$(CONFIG_MACH_SUN9I) += \
-+	sun9i-a80-optimus.dtb
- dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb \
- 	tegra20-iris-512.dtb \
- 	tegra20-medcom-wide.dtb \
-diff --git a/arch/arm/boot/dts/sun9i-a80-optimus.dts b/arch/arm/boot/dts/sun9i-a80-optimus.dts
-new file mode 100644
-index 0000000..f83abab
---- /dev/null
-+++ b/arch/arm/boot/dts/sun9i-a80-optimus.dts
-@@ -0,0 +1,66 @@
-+/*
-+ * Copyright 2014 Chen-Yu Tsai
-+ *
-+ * Chen-Yu Tsai <wens@csie.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this library; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+/include/ "sun9i-a80.dtsi"
-+
-+/ {
-+	model = "Merrii A80 Optimus Board";
-+	compatible = "merrii,a80-optimus", "allwinner,sun9i-a80";
-+
-+	chosen {
-+		bootargs = "earlyprintk console=ttyS0,115200";
-+	};
-+
-+	soc {
-+		uart0: serial@07000000 {
-+			status = "okay";
-+		};
-+	};
-+};
--- 
-2.1.0
+Regards,
+Ivan
