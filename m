@@ -1,98 +1,85 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] mfd: tps65217: add compatible string for subdevices
-Date: Wed, 24 Sep 2014 12:06:02 +0100
-Message-ID: <20140924110602.GI19999@lee--X1>
-References: <5439652.jHp5aCCfrZ@lenovobook>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v4 1/5] drm/rockchip: Add basic drm driver
+Date: Wed, 24 Sep 2014 13:20:47 +0200
+Message-ID: <CAKMK7uHiQFDH-qyPBsyVa953F5SY2UgSv7Nbsu73AKvjqUm1jw@mail.gmail.com>
+References: <1411382820-1615-1-git-send-email-mark.yao@rock-chips.com>
+	<1411382934-1763-1-git-send-email-mark.yao@rock-chips.com>
+	<20140924082037.GJ15734@phenom.ffwll.local>
+	<54228F7B.2050608@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5439652.jHp5aCCfrZ@lenovobook>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johannes Pointner <johannes.pointner@gmail.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, AnilKumar Ch <anilkumar@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <54228F7B.2050608@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark yao <mark.yao@rock-chips.com>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Boris BREZILLON <boris.brezillon@free-electrons.com>, David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, linux-doc@vger.kernel.org, Kever Yang <kever.yang@rock-chips.com>, dri-devel <dri-devel@lists.freedesktop.org>, Douglas Anderson <dianders@chromium.org>, Jianqun Xu <xjq@rock-chips.com>, Chris Zhong <zyw@rock-chips.com>, jeff chen <cym@rock-chips.com>, linux-rockchip@lists.infradead.org, kfx@rock-chips.com, =?UTF-8?B
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 22 Sep 2014, Johannes Pointner wrote:
+On Wed, Sep 24, 2014 at 11:31 AM, Mark yao <mark.yao@rock-chips.com> wr=
+ote:
+> On 2014=E5=B9=B409=E6=9C=8824=E6=97=A5 16:20, Daniel Vetter wrote:
+>>
+>> On Mon, Sep 22, 2014 at 06:48:54PM +0800, Mark yao wrote:
+>>>
+>>> This patch adds the basic structure of a DRM Driver for Rockchip So=
+cs.
+>>>
+>>> Signed-off-by: Mark yao <mark.yao@rock-chips.com>
+>>> ---
+>>> Changes in v2:
+>>> - use the component framework to defer main drm driver probe
+>>>    until all VOP devices have been probed.
+>>> - use dma-mapping API with ARM_DMA_USE_IOMMU, create dma mapping by
+>>>    master device and each vop device can shared the drm dma mapping=
+=2E
+>>> - use drm_crtc_init_with_planes and drm_universal_plane_init.
+>>> - remove unnecessary middle layers.
+>>> - add cursor set, move funcs to rockchip drm crtc.
+>>> - use vop reset at first init
+>>> - reference framebuffer when used and unreference when swap out vop
+>>>
+>>> Changes in v3:
+>>> - change "crtc->fb" to "crtc->primary-fb"
+>>> Adviced by Daniel Vetter
+>>> - init cursor plane with universal api, remove unnecessary cursor
+>>> set,move
+>>>
+>>> Changes in v4:
+>>> Adviced by David Herrmann
+>>> - remove drm_platform_*() usage, use register drm device directly.
+>>> Adviced by Rob Clark
+>>> - remove special mmap ioctl, do userspace mmap with normal mmap() o=
+r mmap
+>>> offset
+>>>
+>>>   drivers/gpu/drm/Kconfig                       |    2 +
+>>>   drivers/gpu/drm/Makefile                      |    1 +
+>>>   drivers/gpu/drm/rockchip/Kconfig              |   19 +
+>>>   drivers/gpu/drm/rockchip/Makefile             |   10 +
+>>>   drivers/gpu/drm/rockchip/rockchip_drm_drv.c   |  524 ++++++++++
+>>>   drivers/gpu/drm/rockchip/rockchip_drm_drv.h   |  120 +++
+>>>   drivers/gpu/drm/rockchip/rockchip_drm_fb.c    |  201 ++++
+>>>   drivers/gpu/drm/rockchip/rockchip_drm_fb.h    |   28 +
+>>>   drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c |  231 +++++
+>>>   drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h |   20 +
+>>>   drivers/gpu/drm/rockchip/rockchip_drm_gem.c   |  404 ++++++++
+>>>   drivers/gpu/drm/rockchip/rockchip_drm_gem.h   |   72 ++
+>>>   drivers/gpu/drm/rockchip/rockchip_drm_vop.c   | 1372
+>>> +++++++++++++++++++++++++
+>>>   drivers/gpu/drm/rockchip/rockchip_drm_vop.h   |  187 ++++
+>>>   include/uapi/drm/rockchip_drm.h               |   75 ++
+>>
+>> uapi is still here ... Was this an oversight?
+>> -Daniel
+>>
+> Hi, Daniel
+> this version is old, newest is v5. and I remove uapi at v5.
+> you can see v5 patch at:
+> https://lkml.org/lkml/2014/9/23/1061
+> thanks
 
-> The TPS65217 is missing of_compatible string in the mfd_cell for its
-> subdevices. This compatible string is necessary to use functions like
-> of_find_backlight_by_node in backlight.c.
->=20
-> Signed-off-by: Johannes Pointner <johannes.pointner@br-automation.com=
->
-> ---
->  Documentation/devicetree/bindings/regulator/tps65217.txt            =
-| 5 ++++-
->  .../devicetree/bindings/video/backlight/tps65217-backlight.txt      =
-| 6 +++---
->  drivers/mfd/tps65217.c                                              =
-| 2 ++
->  3 files changed, 9 insertions(+), 4 deletions(-)
+This version doesn't seem to be cc'ed to dri-devel, at least it didn't
+yet show up. Can you please double-check?
 
-[...]
-
-> diff --git a/Documentation/devicetree/bindings/video/backlight/tps652=
-17-backlight.txt b/Documentation/devicetree/bindings/video/backlight/tp=
-s65217-backlight.txt
-> index 5fb9279..c3fb649 100644
-> --- a/Documentation/devicetree/bindings/video/backlight/tps65217-back=
-light.txt
-> +++ b/Documentation/devicetree/bindings/video/backlight/tps65217-back=
-light.txt
-> @@ -7,18 +7,18 @@ Required properties:
->  - compatible: "ti,tps65217"
->  - reg: I2C slave address
->  - backlight: node for specifying WLED1 and WLED2 lines in TPS65217
-> +- compatible: "ti,tps65217-bl"
-
-This is now confusing.  Please make it clear that this part of the
-documentation is now referencing the sub-node.
-
->  - isel: selection bit, valid values: 1 for ISEL1 (low-level) and 2 f=
-or ISEL2 (high-level)
->  - fdim: PWM dimming frequency, valid values: 100, 200, 500, 1000
->  - default-brightness: valid values: 0-100
-> =20
-> -Each regulator is defined using the standard binding for regulators.
-> -
->  Example:
-> =20
->  	tps: tps@24 {
->  		reg =3D <0x24>;
->  		compatible =3D "ti,tps65217";
-> -		backlight {
-> +		tps_bl: backlight {
-> +			compatible =3D "ti,tps65217-bl";
->  			isel =3D <1>;  /* 1 - ISET1, 2 ISET2 */
->  			fdim =3D <100>; /* TPS65217_BL_FDIM_100HZ */
->  			default-brightness =3D <50>;
-> diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
-
-This shouldn't be in this patch.
-
-Please adhere to: Documentation/devicetree/bindings/submitting-patches.=
-txt
-
-> index 3cc4c70..77708f9 100644
-> --- a/drivers/mfd/tps65217.c
-> +++ b/drivers/mfd/tps65217.c
-> @@ -33,9 +33,11 @@
->  static const struct mfd_cell tps65217s[] =3D {
->  	{
->  		.name =3D "tps65217-pmic",
-> +		.of_compatible =3D "ti,tps65217-pmic",
->  	},
->  	{
->  		.name =3D "tps65217-bl",
-> +		.of_compatible =3D "ti,tps65217-bl",
->  	},
->  };
-> =20
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Thanks, Daniel
