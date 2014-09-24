@@ -1,84 +1,37 @@
 From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] dmaengine: Add QCOM ADM DMA driver
-Date: Wed, 24 Sep 2014 10:07:55 +0530
-Message-ID: <20140924043755.GQ24663@intel.com>
-References: <1410401933-20621-1-git-send-email-agross@codeaurora.org>
- <1410401933-20621-2-git-send-email-agross@codeaurora.org>
- <20140923102850.GI24663@intel.com>
- <20140923221002.GC5975@qualcomm.com>
+Subject: Re: [PATCH 7/7] dmaengine: sun6i: Remove obsolete clk
+ muxing code
+Date: Wed, 24 Sep 2014 10:40:28 +0530
+Message-ID: <20140924051028.GS24663@intel.com>
+References: <1410000448-9999-1-git-send-email-wens@csie.org>
+ <1410000448-9999-8-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDLNNTP63EBBBUFRRGQQKGQEDVAUKIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1410000448-9999-8-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
 Content-Disposition: inline
-In-Reply-To: <20140923221002.GC5975-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 23, 2014 at 05:10:02PM -0500, Andy Gross wrote:
-> <snip>
+On Sat, Sep 06, 2014 at 06:47:28PM +0800, Chen-Yu Tsai wrote:
+> The sun6i DMA controller requires the AHB1 bus clock to be
+> clocked from PLL6. This was originally done by the dmaengine
+> driver during probe time. The AHB1 clock driver has since been
+> unified, so the original code does not work.
 > 
-> > > +			break;
-> > > +		default:
-> > > +			achan->slave.src_maxburst = 0;
-> > > +			achan->slave.dst_maxburst = 0;
-> > Why clear these for error cases
-> 
-> With the return I shouldn't need to.  I'll fix this.
-> 
-> > > +			ret = -EINVAL;
-> > > +			break;
-> > > +		}
-> > > +
-> > > +		if (!ret)
-> > > +			writel(achan->blk_size,
-> > > +				adev->regs + HI_CRCI_CTL(achan->id, adev->ee));
-> > and why do we write to HW on this. Shouldn't this be done when you program
-> > the descriptor?
-> 
-> It could be deferred to later.  The main point is that I don't see the
-> slave_config happening every transaction.  I was only modifying it now instead
-> of making a register write for every transaction.
-Well wouldn't it cause a problem if you write to hardware and a transaction
-is already in progress.
-So it makese sense to write every time at transaction start with latest
-value programmed.
+> Remove the clk muxing code, and replace it with DT clk default
+> properties.
 
-> > 
-> > > +static enum dma_status adm_tx_status(struct dma_chan *chan, dma_cookie_t cookie,
-> > > +	struct dma_tx_state *txstate)
-> > > +{
-> > > +	struct adm_chan *achan = to_adm_chan(chan);
-> > > +	struct virt_dma_desc *vd;
-> > > +	enum dma_status ret;
-> > > +	unsigned long flags;
-> > > +	size_t residue = 0;
-> > > +
-> > > +	ret = dma_cookie_status(chan, cookie, txstate);
-> > > +
-> > Last arg can be null to this, so before you do residue calcluation and block
-> > interrupts would make sense to return from here if arg is NULL
-> 
-> Good catch.  Will fix.
-> 
-> > 
-> > > +	spin_lock_irqsave(&achan->vc.lock, flags);
-> > > +
-> > > +	vd = vchan_find_desc(&achan->vc, cookie);
-> > > +	if (vd)
-> > > +		residue = container_of(vd, struct adm_async_desc, vd)->length;
-> > > +	else if (achan->curr_txd && achan->curr_txd->vd.tx.cookie == cookie)
-> > > +		residue = achan->curr_txd->length;
-> > so this is current cookie, so you need to read from HW on current position
-> 
-> There is no way to get current position unfortunately without relying on
-> unreliable debug registers.
-In that case would it make sense to return complete txn length?
+Applied, thanks
 
 -- 
 ~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
