@@ -1,17 +1,16 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/6] ARM: sunxi: Add debug uart used by
- sun9i (Allwinner A80)
-Date: Wed, 24 Sep 2014 08:39:02 +0200
-Message-ID: <20140924063902.GR15315@lukather>
+Subject: Re: [PATCH 0/6] ARM: sunxi: Add basic support for
+ Allwinner A80 SoC
+Date: Wed, 24 Sep 2014 08:41:24 +0200
+Message-ID: <20140924064124.GS15315@lukather>
 References: <1411311493-24344-1-git-send-email-wens@csie.org>
- <1411311493-24344-3-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5xr6Gr0irOxp3+3c"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBROORGQQKGQEOLPNGBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="Bk6L21jbBNK7V1Rv"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB36QRGQQKGQE23WEXSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1411311493-24344-3-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <1411311493-24344-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -24,59 +23,62 @@ Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <p
 List-Id: devicetree@vger.kernel.org
 
 
---5xr6Gr0irOxp3+3c
+--Bk6L21jbBNK7V1Rv
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Sep 21, 2014 at 10:58:09PM +0800, Chen-Yu Tsai wrote:
-> The uarts on sun9i are still compatible with the dw_8250, but are
-> located at different addresses.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  arch/arm/Kconfig.debug | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->=20
-> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-> index b11ad54..58b5218 100644
-> --- a/arch/arm/Kconfig.debug
-> +++ b/arch/arm/Kconfig.debug
-> @@ -707,6 +707,14 @@ choice
->  		  Say Y here if you want kernel low-level debugging support
->  		  on SOCFPGA based platforms.
-> =20
-> +	config DEBUG_SUN9I_UART0
-> +		bool "Kernel low-level debugging messages via sun9i UART0"
-> +		depends on ARCH_SUNXI && MACH_SUN9I
+Hi Chen-Yu,
 
-Depending on MACH_SUN9I should be enough. It already depends on ARCH_SUNXI.
+On Sun, Sep 21, 2014 at 10:58:07PM +0800, Chen-Yu Tsai wrote:
+> Hi everyone,
+>=20
+> This patch series adds very basic support for Allwinner's A80 SoC,
+> a big.LITTLE architecture with 4 Cortex-A7s and 4 Cortex-A15s.
+>=20
+> Development is done on the A80 Optimus Board, the defacto development
+> board for the A80, with the accompanying SDK as a reference.=20
+>=20
+> So far I've been unable to get the board to boot from MMC, or
+> using Android fastboot. I'm using Allwinner's FEL mode to load
+> the bootloader and kernel+dtb image over USB. Notes on my attempts
+> can be found here: http://linux-sunxi.org/User:Wens#A80_Optimus
+
+It looks very nice, thanks a lot. You'll find a minor comments inline.
+
+One thing I forgot to ask you about when doing the A23, and that would
+nice to do is to update the documentation we have in
+Documentation/arm/sunxi/README with the A23 and A80 infos you've been
+able to gather.
+
+Thanks!
+Maxime
 
 --=20
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---5xr6Gr0irOxp3+3c
+--Bk6L21jbBNK7V1Rv
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJUImcGAAoJEBx+YmzsjxAgEhgQAIO5JOvsoXe3SSMItj+Bu54F
-G7MDrSG2DaNgDt/kbPU08MWoMWosEs1zq1oovURd0A+50ecaX8Zr7LO7ZkI7quOm
-rX5u4Pu20mpxjhimCwuuAw99X/yj6oR85plf0XHH7Miovt4yIEMgkyOaXu1fh3Qs
-jE6j2oq5ddZ0Zkf+L3wG7A0/FAsTStYlWOQCEUMP21orLSd5vdnnq4fjSulhqbCe
-64b+SGR21DJ6iNF2iQalpT9Hb3333K7DYTKQyHXet7CvRmONFYd4yoUwtiGWj84G
-iUgJq0xEXNE9LxfXWpg+GfRskwiYqy+gnpfbydLyfzVyIwo1ZO/q2HJuK3Zv0kox
-yhRc+out9bVVNINhbMhUHxIK2Hu3MoTXYu5UUXZ2bciQCZ3Mf7hwK5C2r9Gjd5Sk
-2RRbdGkdYpbkb6q9DxbDXN09b2rk9oyXOfO96NltOMYA7ns0bdTMjs8++gaOYyrO
-O8qRvt0clWjFEj6xWgy/t78SnoB7/AAhih0fkiMkGGZdEDgjfQlYEUPLsZ/CZ7NK
-rqteBfEZ87YRZecXbpV+GIu1CxOC9JIIi1GK8vwmEMk69lYV0EaBdExa+iyjJca2
-HzZ9d3nZXjHeSxci0wVGEfpM2OpYWpvpKofV2/IeznGjYFBQwTrcw1ncCyiXcnwe
-Wx6GCcJ/Ngnbbh28+uH7
-=8UQ/
+iQIcBAEBAgAGBQJUImeUAAoJEBx+YmzsjxAgC00QAKjq+vKkxpcYoWTWVdMu4nLb
+uGQCqPTrBDrW+CtewlO8fXiRw53Dzrbtxrjc59WoAQ2iviG1uiBQIhLOfxyoKmg1
+zs8h3E3dNvPdtvKmIXOj3jiq15hEqiTJXJqmWYy56TFsNTHPs0BHB/Bbecu5iILy
+Oj9nKNh2f9nGrksaimKDidMRp63dldmo/McGPoRTPP/qijqtNClczfzSecxBX7Rb
+xcVNSFaXfelySVeeVhceIGLiFtlV7mtn2sgqoZU9PHXOly4GNDqkDWC1+48OmTQL
+Sb/K5yY0JWW/Pci5bukNrekwkqfTUOAAeLl8hlncRC1ISi/Joh+eNmmz3yvO+jC5
+fYL3h4cJ8ayBUgAaU/SmG7Ikwa0PfnKRp7ndO7I3TwexJUDmYFxPXWnPIZ7GdRry
+e7E+bCqvSYhGXFM+OkceieAUgCoz5Jky6rGoBrlCyRr1MsM9RezHr39nhh06UBoP
+03e7D75BFBUPGWTsTvtmYv0Ulo3fIq9KASzOHKOYjJOY/tdDjJfD3PWX2N2P39uj
+oSEIUV2iRbwLCBegxvT0KyaC+van+43+ZInMhXL46XXvOtBFlFTC5f/U25maDDs5
+nNMo8trPK2Bh7sxX9bVeRrkWByaNhB0ORL8EPLylZ8QnPFDq8rkfnlbvQ9MYQWCZ
+5guf86B8YKH116J31Oji
+=0CLX
 -----END PGP SIGNATURE-----
 
---5xr6Gr0irOxp3+3c--
+--Bk6L21jbBNK7V1Rv--
