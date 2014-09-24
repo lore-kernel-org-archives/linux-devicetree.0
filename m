@@ -1,41 +1,62 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 4/4] ARM: dts: mt8135: Add pinctrl node for mt8135.
-Date: Wed, 24 Sep 2014 13:23:09 +0200
-Message-ID: <CACRpkda-K7w-bY0uSdnZvzEKEeQg38oExoHPSW61kEv9Wv20mA@mail.gmail.com>
-References: <1411443545-24951-1-git-send-email-srv_hongzhou.yang@mediatek.com>
-	<1411443545-24951-5-git-send-email-srv_hongzhou.yang@mediatek.com>
+Subject: Re: [PATCH 2/2] GPIO: 74xx-mmio: Add DT bindings documentation
+Date: Wed, 24 Sep 2014 13:26:26 +0200
+Message-ID: <CACRpkdYhebMPV0HNHkLK1dOO7WCXs=mUo=zsp_8WGarbD4r-_g@mail.gmail.com>
+References: <1411112404-16040-1-git-send-email-shc_work@mail.ru>
+	<1411112404-16040-3-git-send-email-shc_work@mail.ru>
+	<CAMuHMdV2gkx+tVoYL_zcYg0ZtYkkascQiTOaTfDUuRVMxFkdTw@mail.gmail.com>
+	<1411491087.608315333@f51.i.mail.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411443545-24951-5-git-send-email-srv_hongzhou.yang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Hongzhou.Yang" <srv_hongzhou.yang@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dandan.he@mediatek.com
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1411491087.608315333@f51.i.mail.ru>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 23, 2014 at 5:39 AM, Hongzhou.Yang
-<srv_hongzhou.yang@mediatek.com> wrote:
-
-> From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+On Tue, Sep 23, 2014 at 6:51 PM, Alexander Shiyan <shc_work@mail.ru> wr=
+ote:
+> Mon, 22 Sep 2014 13:39:26 +0200 =D0=BE=D1=82 Geert Uytterhoeven <geer=
+t@linux-m68k.org>:
+>> On Fri, Sep 19, 2014 at 9:40 AM, Alexander Shiyan <shc_work@mail.ru>=
+ wrote:
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/gpio/gpio-74xx-mmio.txt
+>> > @@ -0,0 +1,30 @@
+>> > +* 74XX MMIO GPIO driver
+>> > +
+>> > +Required properties:
+>> > +- compatible: Should contain one of the following:
+>> > +   "ti,74ahc1g125": for 74AHC1G125 (1-bit Input),
+>> > +   "ti,74auc1g174": for 74AUC1G74 (1-bit Output),
+>> > +   "ti,74lvc2g125": for 74LVC2G125 (2-bit Input),
+>> > +   "ti,74hc74":     for 74HC74 (2-bit Output),
+>> > +   "ti,74hc125":    for 74HC125 (4-bit Input),
+>> > +   "ti,74hc175":    for 74HC175 (4-bit Output),
+>> > +   "ti,74hc365":    for 74HC365 (6-bit Input),
+>> > +   "ti,74hc174":    for 74HC174 (6-bit Output),
+>> > +   "ti,74hc244":    for 74HC244 (8-bit Input),
+>> > +   "ti,74hc273":    for 74HC273 (8-bit Output),
+>> > +   "ti,74ac1624":   for 74AC1624 (16-bit Input),
+>> > +   "ti,74ac16374":  for 74AC16374 (16-bit Output).
+>>
+>> As the actual implementation technology doesn't matter, I think you
+>> should use the base name where appropriate.
+>> E.g. "ti,7474" instead of "ti,74hc74".
 >
-> Add pinctrl node to mt8135.dtsi.
+> Make sense.
 >
-> Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
-(...)
-> +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_GPIO0 (MT_PIN_NO(0) | 0)
-> +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_MSDC0_DAT7 (MT_PIN_NO(0) | 1)
-> +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_EINT49 (MT_PIN_NO(0) | 2)
-> +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_I2SOUT_DAT (MT_PIN_NO(0) | 3)
+> Linus, what you think overall about this driver?
 
-I haven't got to reviewing the driver, but this looks just wrong.
-
-Have the magic numbers in the driver.
-
-Use strings to describe functions, not integers.
-
-We need to move toward standardized device tree bindings
-for this stuff, and that means using strings, not magic
-numbers.
+That's a question about patch 1/2, and I haven't gotten to it
+yet. High incoming patch rate.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
