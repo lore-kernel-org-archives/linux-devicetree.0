@@ -1,78 +1,46 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v2 0/7] ARM: sunxi: Add basic support for Allwinner A80 SoC
-Date: Wed, 24 Sep 2014 22:48:54 +0800
-Message-ID: <1411570141-29960-1-git-send-email-wens@csie.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v2 5/7] devicetree: bindings: Add vendor prefix for Merrii
+ Technology Co., Ltd.
+Date: Wed, 24 Sep 2014 22:48:59 +0800
+Message-ID: <1411570141-29960-6-git-send-email-wens@csie.org>
+References: <1411570141-29960-1-git-send-email-wens@csie.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1411570141-29960-1-git-send-email-wens@csie.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shuge <shuge@allwinnertech.com>, Meng Zhang <kevin@allwinnertech.com>, ctl@merrii.com, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, ctl@merrii.com, Shuge <shuge@allwinnertech.com>, Meng Zhang <kevin@allwinnertech.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+Merrii Technology Co., Ltd. is a Chinese ARM integration developer that
+specializes in Allwinner SoC based designs.
 
-This is v2 of the initial Allwinner A80 support series.
-This patch series adds very basic support for Allwinner's A80 SoC,
-a big.LITTLE architecture with 4 Cortex-A7s and 4 Cortex-A15s.
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Development is done on the A80 Optimus Board, the defacto development
-board for the A80, with the accompanying SDK as a reference. 
-
-So far I've been unable to get the board to boot from MMC, or
-using Android fastboot. I'm using Allwinner's FEL mode to load
-the bootloader and kernel+dtb image over USB. Notes on my attempts
-can be found here: http://linux-sunxi.org/User:Wens#A80_Optimus
-
-
-Patch 1 introduces the compatible string for the A80.
-
-Patch 2 adds options to use UART0 on the A80 as the debug port for
-earlyprintk.
-
-Patch 3 adds a barebone dtsi with just the cpu, memory and uart nodes.
-
-Patch 4 adds a barebone dts for the A80 Optimus Board.
-
-Patch 5 documents the vendor prefix for Merrii Technology Co., Ltd,
-the designer and vendor of the A80 Optimus Board.
-
-Patch 6 documents all the Allwinner SoCs we currently support.
-
-Patch 7 updates the sunxi README with a link to the A80's datasheet.
-
-
-Changes since v1:
-
-  - Use skeleton64.dtsi as basis to support maximum of 8GB DRAM
-  - Dropped dependency on ARCH_SUNXI for DEBUG_SUN9I_UART0
-  - Added empty lines separating cores in the DT cpu-map node
-  - Added patch 7 to update sunxi README
-
-Cheers
-ChenYu
-
-Chen-Yu Tsai (7):
-  ARM: sunxi: Introduce Allwinner A80 support
-  ARM: sunxi: Add debug uart used by sun9i (Allwinner A80)
-  ARM: dts: sunxi: Add Allwinner A80 dtsi
-  ARM: dts: sun9i: Add A80 Optimus Board support
-  devicetree: bindings: Add vendor prefix for Merrii Technology Co.,
-    Ltd.
-  devicetree: bindings: Document supported Allwinner sunxi SoCs
-  Documentation: sunxi: Add A80 datasheet link
-
- Documentation/arm/sunxi/README                     |   3 +-
- Documentation/devicetree/bindings/arm/sunxi.txt    |  12 +
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- arch/arm/Kconfig.debug                             |  10 +
- arch/arm/boot/dts/Makefile                         |   2 +
- arch/arm/boot/dts/sun9i-a80-optimus.dts            |  66 +++++
- arch/arm/boot/dts/sun9i-a80.dtsi                   | 287 +++++++++++++++++++++
- arch/arm/mach-sunxi/Kconfig                        |   5 +
- arch/arm/mach-sunxi/sunxi.c                        |   9 +
- 9 files changed, 394 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/arm/sunxi.txt
- create mode 100644 arch/arm/boot/dts/sun9i-a80-optimus.dts
- create mode 100644 arch/arm/boot/dts/sun9i-a80.dtsi
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index ac7269f..d3a96ac 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -81,6 +81,7 @@ lltc	Linear Technology Corporation
+ marvell	Marvell Technology Group Ltd.
+ maxim	Maxim Integrated Products
+ mediatek	MediaTek Inc.
++merrii	Merrii Technology Co., Ltd.
+ micrel	Micrel Inc.
+ microchip	Microchip Technology Inc.
+ mosaixtech	Mosaix Technologies, Inc.
 -- 
 2.1.0
