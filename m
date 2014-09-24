@@ -1,67 +1,67 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: Re: [PATCH v6 1/2] regulator: st-pwm: get voltage and duty table
- from dts
-Date: Wed, 24 Sep 2014 10:51:53 +0800
-Message-ID: <542231C9.1060903@rock-chips.com>
-References: <1411487622-10881-1-git-send-email-zyw@rock-chips.com>	<1411487622-10881-2-git-send-email-zyw@rock-chips.com>	<CAD=FV=Vhejf4JoEPUGwmBJdO+zfHgE5hgoT6V1DGtva7r_1Etg@mail.gmail.com>	<542222BC.4060203@rock-chips.com> <CAD=FV=Umjmrp5grqvYnMe0=EjpH8++i4JL-5fOquyU+SGt95Fw@mail.gmail.com>
+From: Matt Ranostay <mranostay@gmail.com>
+Subject: Re: [PATCH v2 1/2] cap1106: Add support for various cap11xx devices
+Date: Tue, 23 Sep 2014 20:28:53 -0700
+Message-ID: <CAKzfze_EiS1XAmDsA9cFMuxKhOx-Lea7ruxLeQiJdbtfVaphmA@mail.gmail.com>
+References: <1411445057-30048-1-git-send-email-mranostay@gmail.com>
+	<1411445057-30048-2-git-send-email-mranostay@gmail.com>
+	<5421174A.7060101@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=Umjmrp5grqvYnMe0=EjpH8++i4JL-5fOquyU+SGt95Fw@mail.gmail.com>
+In-Reply-To: <5421174A.7060101@zonque.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Daniel Mack <daniel@zonque.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Daniel Mack <zonque@gmail.com>, linux-input@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Sep 22, 2014 at 11:46 PM, Daniel Mack <daniel@zonque.org> wrote:
+> On 09/23/2014 06:04 AM, Matt Ranostay wrote:
+>> diff --git a/drivers/input/keyboard/cap1106.c b/drivers/input/keyboard/cap1106.c
+>> index d70b65a..07f9e88 100644
+>> --- a/drivers/input/keyboard/cap1106.c
+>> +++ b/drivers/input/keyboard/cap1106.c
+>> @@ -55,8 +55,6 @@
+>>  #define CAP1106_REG_MANUFACTURER_ID  0xfe
+>>  #define CAP1106_REG_REVISION         0xff
+>>
+>> -#define CAP1106_NUM_CHN 6
+>> -#define CAP1106_PRODUCT_ID   0x55
+>>  #define CAP1106_MANUFACTURER_ID      0x5d
+>>
+>>  struct cap1106_priv {
+>> @@ -64,7 +62,25 @@ struct cap1106_priv {
+>>       struct input_dev *idev;
+>>
+>>       /* config */
+>> -     unsigned short keycodes[CAP1106_NUM_CHN];
+>> +     u32 *keycodes;
+>> +     unsigned int num_channels;
+>> +};
+>> +
+>> +struct cap11xx_hw_model {
+>> +     uint8_t product_id;
+>> +     unsigned int num_channels;
+>> +};
+>> +
+>> +enum {
+>> +     CAP1106,
+>> +     CAP1126,
+>> +     CAP1188,
+>> +};
+>> +
+>> +struct cap11xx_hw_model cap11xx_devices[] = {
+>
+> This can be static const.
+>
+D'oh how did I miss that?
 
-On 09/24/2014 10:13 AM, Doug Anderson wrote:
-> Chris,
+> And, as I said, there should be a 3rd patch that renames the file and
+> its functions, structs, defines etc to the more generic "11xx" variants.
 >
-> On Tue, Sep 23, 2014 at 6:47 PM, Chris Zhong <zyw@rock-chips.com> wrote:
->> On 09/24/2014 07:43 AM, Doug Anderson wrote:
->>> Chris,
->>>
->>> On Tue, Sep 23, 2014 at 8:53 AM, Chris Zhong <zyw@rock-chips.com> wrote:
->>>> Get voltage & duty table from device tree might be better, other
->>>> platforms can also use this
->>>> driver without any modify.
->>>>
->>>> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
->>>> Reviewed-by: Doug Anderson <dianders@chromium.org>
->>> I finally managed to get everything setup and I've now tested this
->>> myself on an rk3288-based board.
->>>
->>> Tested-by: Doug Anderson <dianders@chromium.org>
->>>
->>> I'd imagine the next step is for Lee to comment on the patch and when
->>> he's happy with it Mark Brown will land it?
->>>
->>>
->>> One thing that's still a bit odd (though no different than the
->>> behavior of the driver from before you touched it, so it shouldn't
->>> block landing IMHO) is that at boot time this regulator will report
->>> that it's at the highest voltage but the voltage won't actually change
->>> until the first client sets the voltage.
->> Yes, I knew this problem, since the default of duty cycle is 0, not a true
->> value.
->> If we can get duty from pwm, this regulator will report a correct voltage.
-> I don't think it's possible in all cases to figure out what the
-> voltage was before this regulator was probed.
+
+Ok will do and resubmit.
+
 >
-> * pin might have been input w/ pullup, pulldown, or no pull
-> * pin might have been driven high or driven low
+> Thanks,
+> Daniel
 >
-> In that case trying to read the duty from the pwm wouldn't make sense.
-> ...but I guess you could add a property to the PWM driver to say that
-> it stays enabled at boot if the FW left it enabled (and keep the same
-> duty cycle / clocks?).  That would at least solve the problem where
-> the firmware configured the PWM and left it in a specific state even
-> if it doesn't solve the above problem...
->
->
-> -Doug
->
-If we want pwm stay enabled at boot(FW left it), needn't to modify 
-anything, only need to init pwm duty in FW.
-And now reading the duty from pwm would make sense.
