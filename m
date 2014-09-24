@@ -1,36 +1,48 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device
- properties interface
-Date: Wed, 24 Sep 2014 12:38:23 +0300
-Message-ID: <20140924093823.GW1786@lahna.fi.intel.com>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
- <2809308.3y5s7TV5Ip@wuerfel>
- <D04730D8.A9DB0%dvhart@linux.intel.com>
- <6744174.JquHLt80n3@wuerfel>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: zynq: DT: Remove 222 MHz OPP
+Date: Wed, 24 Sep 2014 11:39:46 +0200
+Message-ID: <b5cd2f8d-f37d-4e19-a891-bd234849096d@BL2FFO11FD054.protection.gbl>
+References: <1411498520-8117-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6744174.JquHLt80n3@wuerfel>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Darren Hart <dvhart@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, David Woodhouse <david.woodhouse@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Aaron Lu <aaron.lu@intel.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411498520-8117-1-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 24, 2014 at 11:12:36AM +0200, Arnd Bergmann wrote:
-> As a start, we could probably take the proposed device_for_each_child_node
-> and move that into the leds-core, changing the fw_dev_node argument
-> for an led_classdev with the addition of the of_node and acpi_object
-> members. It would still leave it up to the gpio-leds driver to do
+On 09/23/2014 08:55 PM, Soren Brinkmann wrote:
+> Due to dependencies between timer and CPU frequency, only changes by
+> powers of two are allowed. The clocksource driver prevents other
+> changes, but with cpufreq and its governors it can result in being
+> spammed with error messages constantly. Hence, remove the 222 MHz OPP.
 > 
-> 	if (led_cdev->of_node)
-> 		gpiod = devm_of_get_gpiod(led_cdev->of_node, ...);
-> 	else
-> 		gpiod = devm_acpi_get_gpiod(led_cdev->acpi_object, ...);
+> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/zynq-7000.dtsi | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> but there seems little benefit in abstracting this because there is
-> only one driver that needs it.
+> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+> index 6cc83d4c6c76..a0ed01d68328 100644
+> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> @@ -30,7 +30,6 @@
+>  				/* kHz    uV */
+>  				666667  1000000
+>  				333334  1000000
+> -				222223  1000000
+>  			>;
+>  		};
+>  
+> 
 
-The same interface is used also in gpio_keys_polled.c driver so if we
-want to avoid duplicating code this needs to be abstracted away from the
-drivers.
+Applied.
+
+Thanks,
+Michal
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
