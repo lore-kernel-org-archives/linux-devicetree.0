@@ -1,112 +1,45 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v9 00/10] rtc: at91sam9: add DT support
-Date: Wed, 24 Sep 2014 09:49:11 +0100
-Message-ID: <20140924084911.GI17801@lee--X1>
-References: <1411483725-31532-1-git-send-email-boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH] DT: mfd: pm8xxx: Add new compatible string
+Date: Wed, 24 Sep 2014 09:56:21 +0100
+Message-ID: <20140924085621.GJ17801@lee--X1>
+References: <1411480360-18091-1-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1411483725-31532-1-git-send-email-boris.brezillon@free-electrons.com>
+In-Reply-To: <1411480360-18091-1-git-send-email-svarbanov@mm-sol.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Johan Hovold <jhovold@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "Acked-by: Arnd Bergmann" <arnd@arndb.de>
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-This is not acceptable.  You have sent a 10 patch patch-set 5 times in
-24hrs.  To make matters worse, the only patch that has any affiliation
-to me has already been accepted.
+On Tue, 23 Sep 2014, Stanimir Varbanov wrote:
 
-Send a patch-set to the list and don't do anything until the patch has
-either been accepted or the reviews to stop coming in.  Then re-send
-(only the patches that have not yet been accepted) in a week or so, if
-required.
+> The rtc driver now supports PM8941 PMIC device, reflect this
+> in the binding document.
+>=20
+> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> ---
+>  .../devicetree/bindings/mfd/qcom,pm8xxx.txt        |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
 
-If I have to deal with another 55 repeat emails again, you'll find
-yourself as an entry in my spam filter.
+Applied, thanks.
 
-> This patch series adds DT support to the atmel at91sam9 RTC driver.
->=20
-> It also removes any machine specific inclusions to prepare the migrat=
-ion
-> to multi platform kernel support, and retain the slow clock to preven=
-t
-> the CCF from disabling it at the end of boot.
->  =20
-> Best Regards,
->=20
-> Boris
->=20
-> Changes since v8:
->  - fix DT documentation
->  - add missing '\n' in dev_err messages
->=20
-> Changes since v7:
->  - fix typo
->  - fix sclk_rate test
->  - state that RTC_DRV_AT91SAM9_RTT and RTC_DRV_AT91SAM9_GPBR are no l=
-onger
->    used when booting a DT board
->=20
-> Changes since v6:
->  - fix typos
->  - add missing commit messages
->  - rework the Kconfig description
->=20
-> Changes since v5:
->  - replace 'rtc' by 'rtt' where appropriate
->  - fix commit messages
->=20
-> Changes since v4:
->  - add a TODO comment to remember removing non DT board support code
->=20
-> Changes since v3:
->  - add GPBR DT bindings doc
->  - fix a coding style issues
->  - add Alexandre's Acked-by
->  - change RTT DT bindings
->=20
-> Changes since v2:
->  - make use of syscon/regmap to avoid directly requesting/mapping a G=
-PBR
->    memory region in the RTT driver
->=20
-> Changes since v1:
->  - remove non CCF specific case by adding the appropriate clk_lookup
->    entries in arch/arm/mach-at91/<soc-name>.c files
->=20
-> Boris BREZILLON (10):
->   rtc: at91sam9: remove references to mach specific headers
->   rtc: at91sam9: use standard readl/writel functions instead of raw
->     versions
->   rtc: at91sam9: replace devm_ioremap by devm_ioremap_resource
->   rtc: at91sam9: add DT support
->   rtc: at91sam9: make use of syscon/regmap to access GPBR registers
->   rtc: at91sam9: rework the Kconfig description
->   ARM: at91: add clk_lookup entry for RTT devices
->   rtc: at91sam9: use clk API instead of relying on AT91_SLOW_CLOCK
->   rtc: at91sam9: add DT bindings documentation
->   mfd: syscon: add Atmel GPBR DT bindings documention
->=20
->  .../devicetree/bindings/mfd/atmel,gpbr.txt         |  15 +++
->  .../devicetree/bindings/rtc/atmel,at91sam9-rtc.txt |  23 ++++
->  arch/arm/mach-at91/at91sam9260.c                   |   2 +
->  arch/arm/mach-at91/at91sam9261.c                   |   2 +
->  arch/arm/mach-at91/at91sam9263.c                   |   4 +
->  arch/arm/mach-at91/at91sam9g45.c                   |   2 +
->  arch/arm/mach-at91/at91sam9rl.c                    |   2 +
->  arch/arm/mach-at91/clock.c                         |   2 +-
->  arch/arm/mach-at91/clock.h                         |   1 +
->  drivers/rtc/Kconfig                                |  24 ++--
->  drivers/rtc/rtc-at91sam9.c                         | 138 +++++++++++=
-+++++-----
->  11 files changed, 177 insertions(+), 38 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/atmel,gpbr.=
-txt
->  create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91s=
-am9-rtc.txt
->=20
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt b/=
+Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
+> index 03518dc..f24f334 100644
+> --- a/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
+> +++ b/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
+> @@ -61,6 +61,7 @@ The below bindings specify the set of valid subnode=
+s.
+>  	Definition: must be one of:
+>  		    "qcom,pm8058-rtc"
+>  		    "qcom,pm8921-rtc"
+> +		    "qcom,pm8941-rtc"
+> =20
+>  - reg:
+>  	Usage: required
 
 --=20
 Lee Jones
