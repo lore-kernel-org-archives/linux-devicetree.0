@@ -1,33 +1,51 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v12 00/12] Support for creating generic PCI host bridges
- from DT
-Date: Wed, 24 Sep 2014 08:30:37 -0500
-Message-ID: <CAL_Jsq+U=1JT0qqZgb=aR66Q4NYDyzOogspOmmpsp61pE+aCUg@mail.gmail.com>
-References: <1411498874-9864-1-git-send-email-Liviu.Dudau@arm.com>
- <20140923215435.GD27117@google.com> <20140923224810.GA32643@bart.dudau.co.uk> <CAErSpo5PBXSUeU_LP2m=9jxibmqxreL4tEeHBsc5To7D=_bAJA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v5 00/11] PM / Domains: Generic OF-based support
+Date: Wed, 24 Sep 2014 15:51:18 +0200
+Message-ID: <1724421.fbdO6SWIjA@vostro.rjw.lan>
+References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org> <2161168.GXttgFlE1X@vostro.rjw.lan> <5422BC97.6080608@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAErSpo5PBXSUeU_LP2m=9jxibmqxreL4tEeHBsc5To7D=_bAJA@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Liviu Dudau <liviu@dudau.co.uk>, Liviu Dudau <Liviu.Dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <5422BC97.6080608@ti.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Pavel Machek <pavel@ucw.cz>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Philipp Zabel <philipp.zabel@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, linux-acpi@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, Len Brown <len.brown@intel.com>, Kevin Hilman <khilman@linaro.org>, linux-pm@vger.kernel.org, Chris Ball <chris@printf.net>, Simon Horman <horms@verge.net.au>, Ben Dooks <ben-linux@fluff.org>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 23, 2014 at 6:00 PM, Bjorn Helgaas <bhelgaas@google.com> wrote:
-> On Tue, Sep 23, 2014 at 4:48 PM, Liviu Dudau <liviu@dudau.co.uk> wrote:
->> ...
->> While the next immediate target is converting pci-host-generic.c, pci-imx6.c
->> and probably pcie-designware.c to my series, I would like to ask you what
->> is your longer term plan. Now that I have got my head full of PCI code,
->> I have some ideas but feel that meeting with you and all those involved
->> in core PCI support would be a better venue than sending emails back and
->> forth. When is your next plan to attend a Linux conference?
->
-> That would be nice.  Unfortunately, I don't know what the next
-> conference will be yet.
+On Wednesday, September 24, 2014 03:44:07 PM Grygorii Strashko wrote:
+> Hi Rafael,
+> 
+> On 09/22/2014 05:19 PM, Rafael J. Wysocki wrote:
+> > On Friday, September 19, 2014 11:48:49 AM Dmitry Torokhov wrote:
+> >> Hi Ulf,
+> >>
+> >> On Fri, Sep 19, 2014 at 08:27:33PM +0200, Ulf Hansson wrote:
+> >>> Changes in v5:
+> >>> 	- Converted dev_pm_domain_detach() to a void function
+> >>> 	- Added a ->detach() callback to the PM domain struct, invoked from the
+> >>> 	  dev_pm_domain_detach().
+> >>> 	- Make ACPI and genpd both assign the ->detach() callback at successfull
+> >>> 	  attachment.
+> >>> 	- The above changes made it possible to make acpi_pm_domain_detach() to
+> >>> 	  be static, added a separate patch for that.
+> >>
+> >> Thank you for making these changes. For the series:
+> >>
+> >> Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > 
+> > I've queued up this patchset for 3.18 (I fixed up the two minor issues pointed
+> > to by Geert in the process).
+> > 
+> 
+> Could you point me on branch where I can find these patches?
+> Also, are there any chances to have these patches  in next/linux-next.git,
+> so they will become available for testing and re-using?
 
-Perhaps an irc meeting or Google hangout. These have been happening on
-several areas like DT and ARM KVM.
+It is in the bleeding-edge branch of the linux-pm.git tree at the moment,
+which is rebased quite often, but you can use it for testing.
 
-Rob
+It should appear in linux-next tomorrow.
+
+Rafael
+
