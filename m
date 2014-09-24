@@ -1,59 +1,156 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv4 3/6] ARM: dts: Add initial LS1021A TWR board dts support
-Date: Wed, 24 Sep 2014 11:00:34 +0000
-Message-ID: <bb122a232a1c40559e84a058f3d003b4@BL2PR03MB467.namprd03.prod.outlook.com>
-References: <1411371952-5618-1-git-send-email-jingchang.lu@freescale.com>
- <3321146.kBfn28qbNM@wuerfel>
- <a83d5601a26b4e45be5e5016de287287@BL2PR03MB467.namprd03.prod.outlook.com>
- <4264466.HtkUxyxBW8@wuerfel>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 1/3] mfd/axp20x: extend axp20x to support axp288 pmic
+Date: Wed, 24 Sep 2014 12:02:12 +0100
+Message-ID: <20140924110212.GH19999@lee--X1>
+References: <1410912715-25903-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1410912715-25903-2-git-send-email-jacob.jun.pan@linux.intel.com>
+ <20140918053926.GC8740@lee--X1>
+ <20140918053252.34829684@ultegra>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4264466.HtkUxyxBW8@wuerfel>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Shengchao Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "B46807-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B46807-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140918053252.34829684@ultegra>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: IIO <linux-iio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DEVICE TREE <devicetree@vger.kernel.org>, Carlo Caione <carlo@caione.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Alan Cox <alan@linux.intel.com>, Jean Delvare <khali@linux-fr.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Fugang Duan <B38611@freescale.com>, Arnd Bergmann <arnd@arndb.de>, Zubair Lutfullah <zubair.lutfullah@gmail.com>, Sebastian Reichel <sre@debian.org>, Johannes Thumshirn <johannes.thumshirn@men.de>, Philippe Reynes <tremyfr@yahoo.fr>, Angelo Compagnucci <angelo.compagnu>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEFybmQgQmVyZ21hbm4gW21h
-aWx0bzphcm5kQGFybmRiLmRlXQ0KPlNlbnQ6IFdlZG5lc2RheSwgU2VwdGVtYmVyIDI0LCAyMDE0
-IDU6MzYgUE0NCj5UbzogTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPkNjOiBHdW8gU2hhd24tUjY1MDcz
-OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLQ0KPmtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTHUgQ2hlbi1CNDY4MDc7IEZ1DQo+
-Q2hhby1CNDQ1NDgNCj5TdWJqZWN0OiBSZTogW1BBVENIdjQgMy82XSBBUk06IGR0czogQWRkIGlu
-aXRpYWwgTFMxMDIxQSBUV1IgYm9hcmQgZHRzDQo+c3VwcG9ydA0KPg0KPk9uIFdlZG5lc2RheSAy
-NCBTZXB0ZW1iZXIgMjAxNCAwNTo0Nzo1MyBKaW5nY2hhbmcgTHUgd3JvdGU6DQo+Pg0KPj4gVGhl
-IGV0aGVybmV0IGRldmljZSBub2RlcyBhbHJlYWR5IGhhdmUgdGhlIHBoeS1oYW5kbGUgcHJvcGVy
-dGllcyB0bw0KPnRoZWlyIG1kaW8gbm9kZXMuDQo+Pg0KPj4gVGhlIGFsaWFzIGZvciBQSFkgbm9k
-ZXMgaGVyZSBpczoNCj4+ICAgVGhlIGV0aGVybmV0IGhhcyB0d28ga2luZCBvZiBQSFkgaW50ZXJm
-YWNlLCBvbmUgaXMgU0dNSUksIGFuZCB0aGUNCj4+IG90aGVyIGlzIFJHTUlJLCBUaGUgc2VsZWN0
-aW9uIGlzIGRvbmUgYnkgdGhlIHJlc2V0IGNvbmZpZ3VyYXRpb24NCj4+IHdvcmQoUkNXKSwgc28g
-UGh5LWhhbmRsZSBwcm9wZXJ0aWVzIHNob3VsZCBiZSBjaGFuZ2UgcHJvcGVybHkgdG8NCj4+IHJl
-ZmxlY3RpbmcgdGhlIFBIWSBpbnRlcmZhY2Ugc2VsZWN0aW9uLiBUaGlzIGlzIGRvbmUgYnkgZml4
-aW5nIHVwIGR0Yg0KPj4gaW4gdS1ib290IGJlZm9yZSBib290aW5nIHRoZSBrZXJuZWwuIFRodXMg
-dGhlIGFsaWFzIGZvciBQSFkgbm9kZXMgaXMNCj5hZGRlZCBoZXJlIGZvciBmZHQgZmluZGluZyB0
-aGUgUEhZIG5vZGVzIGVhc2lseS4NCj4NCj5PaywgSSBzZWUuIEkgdGhvdWdodCB0aGF0IHRoaXMg
-d2FzIHdoYXQgdGhlIGxhYmVscyBpbiB0aGUgZHRiIHdlcmUNCj5zdXBwb3NlZCB0byBiZSB1c2Vk
-IGZvci4gQ2FuJ3QgeW91IGRvIHRoZSBzYW1lIHRoaW5nIGluIHUtYm9vdCBieSB1c2luZyBhDQo+
-bGFiZWwgYXMgb3Bwb3NlZCB0byB0aGUgYWxpYXM/DQo+DQo+SUlSQyB5b3Ugc2hvdWxkIGJlIGFi
-bGUgdG8gYWRkIGFuIGFkZGl0aW9uYWwgbGFiZWwgbGlrZQ0KPg0KPismbWRpbzAgew0KPisgICAg
-ICAgZW5ldDFfc2dtaWlfcGh5OiBzZ21paV9waHkwOiBldGhlcm5ldC1waHlAMCB7DQo+KyAgICAg
-ICAgICAgICAgIHJlZyA9IDwweDA+Ow0KPisgICAgICAgfTsNCj4NCj5hbmQgdGhlbiB1c2UgbGli
-ZmR0IHRvIGZpbmQgdGhlIG5vZGUgdGhyb3VnaCB0aGF0LCByYXRoZXIgdGhhbiB0aHJvdWdoIHRo
-ZQ0KPmFsaWFzLiBJIGRvbid0IGtub3cgaG93IHRoaW5ncyBhcmUgaGFuZGxlZCBvbiBvdGhlciBw
-bGF0Zm9ybXMsIGJ1dCBJIHRoaW5rDQo+dGhhdCB3YXMgaG93IGl0IHdhcyBpbml0aWFsbHkgdGhv
-dWdodCB1cCB3aGVuIHdlIGludHJvZHVjZWQgdGhlIGZkdCBmb3JtYXQNCj5vbiBQb3dlclBDLg0K
-Pg0KPglBcm5kDQoNCldlIGFsc28gZG8gdGhlIHBoeS1oYW5kbGUgZml4dXAgb24gb3VyIFBvd2Vy
-UEMgcGxhdGZvcm0gYmFzZWQgb24gdGhlIGFsaWFzZXMsDQphbmQgc28gSSBhZG9wdCB0aGUgc2Ft
-ZSB3YXkgdG8gbWFrZSB0aGVzZSBmaXh1cCBjb25zaXN0ZW50IGJldHdlZW4gU29Dcy4NCkFuZCB0
-aGUgdS1ib290IGZkdCBmaXh1cCBjb2RlIGJhc2Ugb24gdGhlIGFsaWFzZXMgaGFzIGJlZW4gdXBz
-dHJlYW1lZCwgc28gbWF5DQp3ZSBrZWVwIHRoaXMgYWxpYXNlcyB1bmNoYW5nZWQ/DQoNCkJUVywg
-ZmluZCBhIG5vZGUgYnkgYWxpYXMgaXMgZWFzaWx5LCBjb3VsZCB5b3UgZ2l2ZSBtZSBzb21lIGNs
-dWUgb24gZmluZGluZyBhIG5vZGUNCmJ5IGEgbGFiZWwgZGlyZWN0bHksIFRoYW5rcy4NCg0KDQpC
-ZXN0IFJlZ2FyZHMsDQpKaW5nY2hhbmcNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, 18 Sep 2014, Jacob Pan wrote:
+> Lee Jones <lee.jones@linaro.org> wrote:
+> > On Tue, 16 Sep 2014, Jacob Pan wrote:
+> >=20
+> > > X-Powers AXP288 is a customized PMIC for Intel Baytrail-CR
+> > > platforms. Similar to AXP202/209, AXP288 comes with USB charger,
+> > > more LDO and BUCK channels, and AD converters. It also provides
+> > > extended status and interrupt reporting capabilities than the
+> > > devices currently supported in axp20x.c.
+> > >=20
+> > > In addition to feature extension, this patch also adds ACPI bindi=
+ng
+> > > for enumeration.
+> > >=20
+> > > This consolidated driver should support more X-Powers' PMICs in
+> > > both device tree and ACPI enumerated platforms.
+> > >=20
+> > > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > ---
+> > >  drivers/mfd/Kconfig        |   3 +-
+> > >  drivers/mfd/axp20x.c       | 353
+> > > +++++++++++++++++++++++++++++++++++++--------
+> > > include/linux/mfd/axp20x.h |  58 ++++++++ 3 files changed, 354
+> > > insertions(+), 60 deletions(-)
+
+[...]
+
+> > > -static const struct regmap_irq_chip axp20x_regmap_irq_chip =3D {
+> > > +static struct acpi_device_id axp20x_acpi_match[] =3D {
+> > > +	{
+> > > +		.id =3D "INT33F4",
+> > > +		.driver_data =3D (kernel_ulong_t)AXP288_ID,
+> >=20
+> > Why do you need to cast this?
+> >=20
+> to make sure match driver_data which is different in acpi_device_id t=
+han
+> of_device_id.
+
+You don't need the cast.
+
+[...]
+
+> > > +static int axp20x_match_device(struct axp20x_dev *axp20x, struct
+> > > device *dev) +{
+> > > +	const struct acpi_device_id *acpi_id;
+> > > +	const struct of_device_id *of_id;
+> > > +
+> > > +	of_id =3D of_match_device(axp20x_of_match, dev);
+> > > +	if (of_id)
+> > > +		axp20x->variant =3D (long) of_id->data;
+> > > +	else {
+> > > +		acpi_id =3D
+> > > acpi_match_device(dev->driver->acpi_match_table, dev);
+> > > +		if (!acpi_id || !acpi_id->driver_data) {
+> > > +			dev_err(dev, "Unable to determine ID\n");
+> > > +			return -ENODEV;
+> > > +		}
+> > > +		axp20x->variant =3D (long) acpi_id->driver_data;
+> > > +	}
+> >=20
+> > We can do better error handling here and give the user a better sen=
+se
+> > of what happened if anything were to go wrong.  Do:
+> >=20
+> > if (dev->of_node)
+> >   of_id =3D of_match_device()
+> >   if (!of_id)
+> >     error()
+> this will give false error on ACPI based platforms, right? in reality
+
+Why would it?  dev->of_node should be NULL if running ACPI?
+
+[...]
+
+> > > +	switch (axp20x->variant) {
+> > > +	case AXP202_ID:
+> > > +	case AXP209_ID:
+> > > +		axp20x->nr_cells =3D ARRAY_SIZE(axp20x_cells);
+> > > +		axp20x->cells =3D axp20x_cells;
+> > > +		axp20x->regmap_cfg =3D &axp20x_regmap_config;
+> > > +		axp20x_regmap_irq_chip.num_regs	=3D 5;
+> > > +		axp20x_regmap_irq_chip.irqs =3D axp20x_regmap_irqs;
+> > > +		axp20x_regmap_irq_chip.num_irqs	=3D
+> > > +			ARRAY_SIZE(axp20x_regmap_irqs);
+> > > +		break;
+> > > +	case AXP288_ID:
+> > > +		axp20x->cells =3D axp288_cells;
+> > > +		axp20x->nr_cells =3D ARRAY_SIZE(axp288_cells);
+> > > +		axp20x->regmap_cfg =3D &axp288_regmap_config;
+> > > +		axp20x_regmap_irq_chip.irqs =3D axp288_regmap_irqs;
+> > > +		axp20x_regmap_irq_chip.num_irqs	=3D
+> > > +			ARRAY_SIZE(axp288_regmap_irqs);
+> > > +		axp20x_regmap_irq_chip.num_regs	=3D 6;
+> > > +		break;
+> > > +	default:
+> > > +		dev_err(dev, "unsupported AXP20X ID %lu\n",
+> > > axp20x->variant);
+> > > +		return -ENODEV;
+> >=20
+> > -EINVAL might be better here.
+> I was considering the return value gets propagated to probe function
+> which is used to query the existence of a device per driver model. Bu=
+t
+> I have no strong preference.
+
+I think -EINVAL would be better as the argument passed in
+axp20x->variant is invalid.
+
+define EINVAL          22      /* Invalid argument */
+
+> > > +	}
+> > > +	dev_info(dev, "AXP20x variant %s found\n",
+> > > +		axp20x_model_names[axp20x->variant]);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  static int axp20x_i2c_probe(struct i2c_client *i2c,
+> > > -			 const struct i2c_device_id *id)
+> > > +			const struct i2c_device_id *id)
+> >=20
+> > Sneaky. ;)
+> I should not fix the extra white spaces here, unrelated to this patch=
+=2E
+> will remove.
+
+It's okay.  I don't mind little things like this occasionally.  I find
+them more amusing than harmful.
+
+[...]
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
