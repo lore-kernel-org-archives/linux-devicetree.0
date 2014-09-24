@@ -1,53 +1,38 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v9 00/10] rtc: at91sam9: add DT support
-Date: Wed, 24 Sep 2014 11:17:57 +0200
-Message-ID: <20140924111757.00c303d2@bbrezillon>
-References: <1411483725-31532-1-git-send-email-boris.brezillon@free-electrons.com>
-	<20140924084911.GI17801@lee--X1>
+From: Robert Richter <rric@kernel.org>
+Subject: Re: [PATCH v12 05/12] PCI: OF: Fix the conversion of IO ranges into
+ IO resources.
+Date: Wed, 24 Sep 2014 11:20:36 +0200
+Message-ID: <20140924092036.GC20256@rric.localhost>
+References: <1411498874-9864-1-git-send-email-Liviu.Dudau@arm.com>
+ <1411498874-9864-6-git-send-email-Liviu.Dudau@arm.com>
+ <20140924002253.GB27357@google.com>
+ <20140924011249.GC32643@bart.dudau.co.uk>
+ <CAErSpo5GiycLfcx68tocfrGFt67+OPKLVZB1zdsZFU2M6gC_ag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140924084911.GI17801@lee--X1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Johan Hovold <jhovold@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arch-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAErSpo5GiycLfcx68tocfrGFt67+OPKLVZB1zdsZFU2M6gC_ag@mail.gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Liviu Dudau <liviu@dudau.co.uk>, Liviu Dudau <Liviu.Dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Lee,
-
-On Wed, 24 Sep 2014 09:49:11 +0100
-Lee Jones <lee.jones@linaro.org> wrote:
-
-> This is not acceptable.  You have sent a 10 patch patch-set 5 times in
-> 24hrs.  To make matters worse, the only patch that has any affiliation
-> to me has already been accepted.
-
-Sorry for that, I oversight your email saying that you were going to
-apply it.
-
+On 23.09.14 19:16:19, Bjorn Helgaas wrote:
+> You probably saw the subsequent [pci:pci/host-generic 10/13]
+> drivers/of/of_pci.c:202:3: error: implicit declaration of function
+> 'of_pci_range_to_resource' error.
 > 
-> Send a patch-set to the list and don't do anything until the patch has
-> either been accepted or the reviews to stop coming in.  Then re-send
-> (only the patches that have not yet been accepted) in a week or so, if
-> required.
+> I looked at that a bit, but gave up.  Apparently drivers/of/of_pci.c
+> can be compiled with CONFIG_PCI=y but CONFIG_OF_ADDRESS not set..
 
-Yes, as I said I didn't notice you had taken patch 9 in your tree,
-otherwise I would have removed it from the series.
+This is due to the !SPARC dependency in drivers/of/Kconfig:
 
-And I'll take care to wait between each version next time (that's often
-what I'm doing BTW).
+config OF_ADDRESS
+        def_bool y
+        depends on !SPARC
+        select OF_ADDRESS_PCI if PCI
 
-> 
-> If I have to deal with another 55 repeat emails again, you'll find
-> yourself as an entry in my spam filter.
+Error above occurs with ARCH=sparc.
 
-This won't happen again.
-
-Best Regards,
-
-Boris
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+-Robert
