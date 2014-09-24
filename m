@@ -1,37 +1,94 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH 0/3] Introduce of_match_machine() helper
-Date: Wed, 24 Sep 2014 10:44:39 +0300
-Message-ID: <20140924074439.GA25537@tbergstrom-lnx.Nvidia.com>
-References: <1407452515-2390-1-git-send-email-ttynkkynen@nvidia.com>
- <53FB7642.1000808@wwwdotorg.org>
- <20140919131245.GQ26779@tbergstrom-lnx.Nvidia.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 0/3] new Atmel DMA controller
+Date: Wed, 24 Sep 2014 09:46:48 +0200
+Message-ID: <20140924074648.GE586@ldesroches-Latitude-E6320>
+References: <1411392138-5014-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140919131245.GQ26779@tbergstrom-lnx.Nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Tuomas Tynkkynen <ttynkkynen@nvidia.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+In-Reply-To: <1411392138-5014-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 19, 2014 at 04:12:45PM +0300, Peter De Schrijver wrote:
-> On Mon, Aug 25, 2014 at 07:45:38PM +0200, Stephen Warren wrote:
-> > On 08/07/2014 05:01 PM, Tuomas Tynkkynen wrote:
-> > > Some mach-specific drivers that don't require their own node in the device tree
-> > > (for example drivers/soc/*, cpufreq, cpuidle etc.) want to match on the device
-> > > tree root compatible property instead. Instead of open-coding (and forgetting
-> > > to call of_node_put on the root node) everywhere, add a helper to the OF core.
-> > 
-> > Tuomas, I assume there will be a new version of this series to address 
-> > the review comments? For now, I'm not intending on applying this.
+On Mon, Sep 22, 2014 at 03:22:15PM +0200, Ludovic Desroches wrote:
+> Hi,
 > 
-> Given that Tuomas's internship ended, I'm willing to push this patch set
-> forward, if there is interest. So are people still interested in this idea
-> or should we drop it?
+> This set of patches introduces support for the new Atmel DMA controller know as
+> XDMAC and available on SAMA5D4.
+> 
+> Driver updated according to Arnd and Nicolas comments.
+> 
+> Changes from:
+> - v4
+>   - compile the driver if COMPILE_TEST is selected
 
-Seems there's no interest. I won't bother with this then.
+Maxime told me that I can't use _relaxed accessors if I depends on
+COMPILE_TEST since they are not generic.
 
-Cheers,
+So which one I have to keep? To be honest, I have no idea about
+performance gain using _relaxed. Due to the use of descriptors, I feel
+like saying using _relaxed or not should not change performances.
 
-Peter.
+
+>   - merge header file into at_xdmac.c
+>   - use write memory barriers before starting the channel
+>   - init active_xfer to false when taking a descriptor from the free
+>   descriptors list
+>   - remove dma capabilities mask
+>   - use CONFIG_PM instead of CONFIG_PM_SLEEP for prepare function
+>   - style fixes
+>   - update documentation to add the <chip> compatible description
+>   - add maintener entry
+> - v3
+>   - use dma_get_any_slave_channel instead of dma_request_channel
+>   - fix tx_status behavior for non active transfers
+>   - rename at_xdmac_terminate_xfer
+>   - replace suspend/resume no irq variants by late/early variants
+>   - no more use dev res to request the irq, use the legacy way
+>   - add slave capabilities
+> - v2
+>   - documentation updated
+>   - fix locking issues
+> - v1
+>   - add power management stuff
+>   - check maxburst value
+>   - revert subsys_initcall remove, EPROBE_DEFER not yet available on the kernel
+>   version I use to do the tests, moreover other devices are not ready to use it
+> - RFC:
+>   - DMA_SUCCESS replaced by DMA_COMPLETE
+>   - fix memcpy issue caused by a mistake in interfaces used
+>   - add filter function
+>   - remove some parameters from device tree since we can get them through the
+>   dma slave configuration
+>   - use readl/writel relaxed
+>   - remove subsys_initcall
+>   - synchronize irq before killing tasklets
+>   - use BIT macro
+>   - misc cleanup
+> 
+> 
+> Ludovic Desroches (3):
+>   dma: at_xdmac: creation of the atmel eXtended DMA Controller driver
+>   ARM: dts: at_xdmac: add bindings documentation
+>   MAINTAINERS: add entry for Atmel XDMA driver
+> 
+>  .../devicetree/bindings/dma/atmel-xdma.txt         |   50 +
+>  MAINTAINERS                                        |    7 +
+>  drivers/dma/Kconfig                                |    7 +
+>  drivers/dma/Makefile                               |    1 +
+>  drivers/dma/at_xdmac.c                             | 1491 ++++++++++++++++++++
+>  include/dt-bindings/dma/at91.h                     |   25 +
+>  6 files changed, 1581 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/atmel-xdma.txt
+>  create mode 100644 drivers/dma/at_xdmac.c
+> 
+> -- 
+> 2.0.3
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
