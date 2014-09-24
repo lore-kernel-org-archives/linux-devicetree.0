@@ -1,45 +1,36 @@
-From: Frans Klaver <frans.klaver-MHHw4NDrbWwAvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH 0/2] explicitly instantiate battery from device tree
-Date: Wed, 24 Sep 2014 15:11:16 +0200
-Message-ID: <1411564278-17207-1-git-send-email-frans.klaver@xsens.com>
+From: Frans Klaver <frans.klaver@xsens.com>
+Subject: [PATCH 2/2] sbs-battery: dts: document always-present property
+Date: Wed, 24 Sep 2014 15:11:18 +0200
+Message-ID: <1411564278-17207-3-git-send-email-frans.klaver@xsens.com>
+References: <1411564278-17207-1-git-send-email-frans.klaver@xsens.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Frans Klaver <frans.klaver-MHHw4NDrbWwAvxtiuMwx3w@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1411564278-17207-1-git-send-email-frans.klaver@xsens.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Frans Klaver <frans.klaver@xsens.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi there,
+Document the sbs,always-present property of sbs batteries.
 
-Here's some patches that make it possible to instantiate an sbs battery without
-it being present yet.
+Signed-off-by: Frans Klaver <frans.klaver@xsens.com>
+---
+ Documentation/devicetree/bindings/power_supply/sbs_sbs-battery.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-i2c devices are more or less presumed to be persistent. This is a fair
-assumption, except for the case of batteries. It is perfectly sensible for a
-device to boot up using wall power, but no battery attached. While later
-attaching a battery and dropping the wall power. Detecting the device from
-userspace is tedious requires you to scan for device presence yourself, or you
-can ask the kernel to probe again, cluttering your logs with failed probes.
-
-I'd like to hear what you think about this.
-
-Thanks,
-Frans
-
-Frans Klaver (2):
-  sbs-battery: add forced instantiation from device tree
-  sbs-battery: dts: document always-present property
-
- .../devicetree/bindings/power_supply/sbs_sbs-battery.txt      |  2 ++
- drivers/power/sbs-battery.c                                   | 11 +++++++++--
- include/linux/power/sbs-battery.h                             |  3 +++
- 4 files changed, 15 insertions(+), 2 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/power_supply/sbs_sbs-battery.txt b/Documentation/devicetree/bindings/power_supply/sbs_sbs-battery.txt
+index c40e892..05bf09c 100644
+--- a/Documentation/devicetree/bindings/power_supply/sbs_sbs-battery.txt
++++ b/Documentation/devicetree/bindings/power_supply/sbs_sbs-battery.txt
+@@ -11,6 +11,8 @@ Optional properties :
+    after an external change notification.
+  - sbs,battery-detect-gpios : The gpio which signals battery detection and
+    a flag specifying its polarity.
++ - sbs,always-present : If set, the battery is always registered even if
++   status cannot be read during probe
+ 
+ Example:
+ 
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
