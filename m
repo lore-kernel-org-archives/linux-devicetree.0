@@ -1,48 +1,88 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] DT: mfd: pm8xxx: Add new compatible string
-Date: Wed, 24 Sep 2014 09:56:21 +0100
-Message-ID: <20140924085621.GJ17801@lee--X1>
-References: <1411480360-18091-1-git-send-email-svarbanov@mm-sol.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
+ ps8622 DT properties
+Date: Wed, 24 Sep 2014 12:08:37 +0300
+Message-ID: <54228A15.4090901@ti.com>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com> <5419760A.7020908@ti.com> <20140922075424.GB1470@ulmo> <54202C86.3040808@ti.com> <20140923062111.GE30514@ulmo> <54213DAC.5010806@ti.com> <20140923095314.GS30514@ulmo> <542160DF.2040008@ti.com> <20140923145833.GI5982@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1411480360-18091-1-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="NbGcMAWJWkihmncc2QFXaKmI1wS2lSDIi"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140923145833.GI5982@ulmo>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, inki.dae@samsung.com, robdclark@gmail.com, daniel.vetter@ffwll.ch, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 Sep 2014, Stanimir Varbanov wrote:
+--NbGcMAWJWkihmncc2QFXaKmI1wS2lSDIi
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-> The rtc driver now supports PM8941 PMIC device, reflect this
-> in the binding document.
+On 23/09/14 17:58, Thierry Reding wrote:
+
+>> But if a panel driver controls its video source, it makes sense for th=
+e
+>> panel driver to get its video source in its probe, and that happens
+>> easiest if the panel has a link to the video source.
 >=20
-> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> ---
->  .../devicetree/bindings/mfd/qcom,pm8xxx.txt        |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
+> That's an orthogonal problem. You speak about the link in software here=
+,
+> whereas the phandles only represent the link in the description of
+> hardware. Now DT describes hardware from the perspective of the CPU, so=
 
-Applied, thanks.
+> it's sort of like a cave that you're trying to explore. You start at th=
+e
+> top with the address bus, from where a couple of tunnels lead to the
+> various peripherals on the address bus. A display controller might have=
 
-> diff --git a/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt b/=
-Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
-> index 03518dc..f24f334 100644
-> --- a/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
-> +++ b/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
-> @@ -61,6 +61,7 @@ The below bindings specify the set of valid subnode=
-s.
->  	Definition: must be one of:
->  		    "qcom,pm8058-rtc"
->  		    "qcom,pm8921-rtc"
-> +		    "qcom,pm8941-rtc"
-> =20
->  - reg:
->  	Usage: required
+> another tunnel to a panel, etc.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+We don't do that for GPIOs, regulators, etc. either. And for video data
+there are no address buses. Yes, for DSI and similar we have a control
+bus, but that is modeled differently than the video data path.
+
+Now, I'm fine with starting from the CPU, going outwards. I agree that
+it's probably better to model it in the direction of the data stream,
+even if that would make the SW a bit more complex.
+
+However, I do think it's not as clear as you make it sound, especially
+if we take cameras/sensors into account as Laurent explained elsewhere
+in this thread.
+
+> If you go the other way around, how do you detect how things connect?
+> Where do you get the information about the panel so you can trace back
+> to the origin?
+
+When the panel driver probes, it registers itself as a panel and gets
+its video source. Similarly a bridge in between gets its video source,
+which often would be the SoC, i.e. the origin.
+
+ Tomi
+
+
+
+--NbGcMAWJWkihmncc2QFXaKmI1wS2lSDIi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUIooVAAoJEPo9qoy8lh71Zl0P/2siTDSQiaqPObwTDpVR2bn+
++wvaFqk/LtFJxeDxptVvGBJLI7KPlMhe/XqH7mpJr4oBGML16o750m7SJPsh+d6V
+5uvdxCS5fEA+JgZQwAfuz1PI1tOsLEgGnWtVZeup8K45Sis8JP7ioXOGnR2hobV9
+jbyl9GYWS7DwnvFPEHwsGnuayDXgKHIQHkBbGSMvxOGjxpq9ZbKUBKbqyow/epi7
+46C8vOHqnjm7QiijMHtDXYsC1EoW4zekm63ljVRJxp4wn4PXuOKOrGFHe6zaDICs
+4eFiwr5Q6KuZa9FdHWwjnwHHVSiJShyzAkb6Z9hysJDeVAxp4UOMreg2NZbW9YFc
+skDzvN0eQLPHkzyX+dcxqtntbExYY2JG7sot/6wGxCSS7wlJ2X0PnoO0OeVGeafT
+BD01plzEDasQQeTYATWQXd2tGHHdemaXnhrBoPhAJY4a59lKER62zyJkYN4s7oe7
+Dpa8g9LzEyt3PDBAZFLhJNlcCIUupGhrsHeYSwsD3mpHQ/Gu+Kqz16g/hPGVfxvL
+v593x9TS/9XrGNAvKirX/cVoNwrbP0rySjmoqSrbGlGMtWn060AHSrv71u/pMpDC
+z28rO2PyJUFD05LCbyJzgWgARXEao0wH5F30ejFtae6Ue7ZgiuaVKgBhcKh/vpn/
+g/Br1ifyBLswH5n1dNQr
+=EUl1
+-----END PGP SIGNATURE-----
+
+--NbGcMAWJWkihmncc2QFXaKmI1wS2lSDIi--
