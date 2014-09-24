@@ -1,14 +1,16 @@
 From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 1/2] ARM: zynq: DT: Add missing reference for ADC
-Date: Wed, 24 Sep 2014 09:18:14 -0700
-Message-ID: <68d34c42-b0e0-4e8f-8b92-0bc8fd233d52@BN1AFFO11FD056.protection.gbl>
+Subject: Re: [PATCH 2/2] ARM: zynq: DT: Add missing reference for
+ memory-controller
+Date: Wed, 24 Sep 2014 09:19:57 -0700
+Message-ID: <a8d11082-8806-4a24-b904-0718ff0b0896@BN1BFFO11FD020.protection.gbl>
 References: <fced9e56dc4ef8df9ead34f6444c010cc31c7a61.1411567289.git.michal.simek@xilinx.com>
+ <ca95da888c9cd61e5b5e437b0e1b5cea893455ae.1411567289.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <fced9e56dc4ef8df9ead34f6444c010cc31c7a61.1411567289.git.michal.simek@xilinx.com>
+In-Reply-To: <ca95da888c9cd61e5b5e437b0e1b5cea893455ae.1411567289.git.michal.simek@xilinx.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,17 +25,19 @@ Cc: Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com
 List-Id: devicetree@vger.kernel.org
 
 T24gV2VkLCAyMDE0LTA5LTI0IGF0IDA0OjAxUE0gKzAyMDAsIE1pY2hhbCBTaW1layB3cm90ZToK
-PiBBZGQgbWlzc2luZyByZWZlcmVuY2UgZm9yIEFEQyBub2RlLgo+IAo+IFNpZ25lZC1vZmYtYnk6
-IE1pY2hhbCBTaW1layA8bWljaGFsLnNpbWVrQHhpbGlueC5jb20+Cj4gLS0tCj4gCj4gIGFyY2gv
-YXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpIHwgMiArLQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBp
-bnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
-dC9kdHMvenlucS03MDAwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaQo+
-IGluZGV4IDc3MjM4MWZlMDdiYi4uZmM5MGY0N2Y5YzAzIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvenlucS03
-MDAwLmR0c2kKPiBAQCAtNjQsNyArNjQsNyBAQAo+ICAJCWludGVycnVwdC1wYXJlbnQgPSA8Jmlu
-dGM+Owo+ICAJCXJhbmdlczsKPiAKPiAtCQlhZGNAZjgwMDcxMDAgewo+ICsJCWFkYzogYWRjQGY4
-MDA3MTAwIHsKSSB0aGluayB3ZSBlbnVtZXJhdGVkIGFsbCBsYWJlbHMuIEkuZS4gJ2FkYzAnIGlz
-IHByb2JhYmx5IGJldHRlci4KCglTw7ZyZW4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+PiBBZGQgbWlzc2luZyByZWZlcmVuY2UgZm9yIG1lbW9yeS1jb250cm9sbGVyLgo+IAo+IFNpZ25l
+ZC1vZmYtYnk6IE1pY2hhbCBTaW1layA8bWljaGFsLnNpbWVrQHhpbGlueC5jb20+Cj4gLS0tCj4g
+Cj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpIHwgMiArLQo+ICAxIGZpbGUgY2hh
+bmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPiAKPiBkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy96eW5xLTcw
+MDAuZHRzaQo+IGluZGV4IGZjOTBmNDdmOWMwMy4uMjY5MGU2ZDAxZjcxIDEwMDY0NAo+IC0tLSBh
+L2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvenlucS03MDAwLmR0c2kKPiBAQCAtMTQ1LDcgKzE0NSw3IEBACj4gIAkJCWNhY2hlLWxldmVs
+ID0gPDI+Owo+ICAJCX07Cj4gCj4gLQkJbWVtb3J5LWNvbnRyb2xsZXJAZjgwMDYwMDAgewo+ICsJ
+CW1jOiBtZW1vcnktY29udHJvbGxlckBmODAwNjAwMCB7CnNhbWUgaGVyZS4gJ21jMCcsIHRoZXJl
+IGFyZSBkZWZpbml0ZWx5IG9wdGlvbnMgdG8gYWRkIG1vcmUgbWVtb3J5CmNvbnRyb2xsZXJzIHRv
+IFp5bnEgaW4gdGhlIFBMLiBBbHNvLCBJJ2Qgc3BlbGwgaXQgb3V0IGluc3RlYWQgb2YKYWJicmV2
+aWF0aW5nIHRoZSBuYW1lLgoKCVPDtnJlbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
