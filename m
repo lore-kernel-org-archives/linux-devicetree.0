@@ -1,97 +1,102 @@
-From: Kever Yang <kever.yang@rock-chips.com>
-Subject: [PATCH v2 1/3] clk: rockchip: add some needed clock binding id for rk3288
-Date: Wed, 24 Sep 2014 23:33:20 +0800
-Message-ID: <1411572802-22042-2-git-send-email-kever.yang@rock-chips.com>
-References: <1411572802-22042-1-git-send-email-kever.yang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411572802-22042-1-git-send-email-kever.yang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, Mike Turquette <mturquette@linaro.org>
-Cc: dianders@chromium.org, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, linux-rockchip@lists.infradead.org, Kever Yang <kever.yang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC PATCH 1/2] sbs-battery: add forced instantiation from
+ device tree
+Date: Wed, 24 Sep 2014 16:34:32 +0100
+Message-ID: <20140924153431.GJ5729@leverpostej>
+References: <1411564278-17207-1-git-send-email-frans.klaver@xsens.com>
+ <1411564278-17207-2-git-send-email-frans.klaver@xsens.com>
+ <20140924131655.GG5729@leverpostej>
+ <20140924142222.GC22872@ci00147.xsens-tech.local>
+ <20140924143848.GH5729@leverpostej>
+ <20140924151448.GD22872@ci00147.xsens-tech.local>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140924151448.GD22872@ci00147.xsens-tech.local>
+Sender: linux-doc-owner@vger.kernel.org
+To: Frans Klaver <frans.klaver@xsens.com>, olof@lixom.net, anton.vorontsov@linaro.org
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add some clock binding id for different modules
-that under development and going to send upstream.
+On Wed, Sep 24, 2014 at 04:14:48PM +0100, Frans Klaver wrote:
+> On Wed, Sep 24, 2014 at 03:38:49PM +0100, Mark Rutland wrote:
+> > On Wed, Sep 24, 2014 at 03:22:22PM +0100, Frans Klaver wrote:
+> > > On Wed, Sep 24, 2014 at 02:16:55PM +0100, Mark Rutland wrote:
+> > > > On Wed, Sep 24, 2014 at 02:11:17PM +0100, Frans Klaver wrote:
+> > > > > In some cases you want to instantiate a battery even before it is
+> > > > > attached; it is perfectly reasonable for a device to start up on
+> > > > > wall-power and be connected to a battery later. The current advice is to
+> > > > > instantiate a device explicitly in the kernel, or probe for the device
+> > > > > from userspace. The downside of these approaches is that the user needs
+> > > > > to keep the information related to the i2c battery in different places,
+> > > > > which is inconvenient.
+> > > > 
+> > > > This really sounds like a Linux policy issue rather than something that
+> > > > should be described in dt.
+> > > > 
+> > > > Presumably there's a reason we sanity cehck this in the first place.
+> > > > What happens while the battery isn't plugged in? What can fail, and how?
+> > > 
+> > > It was introduced in a22b41a31e53 "sbs-battery: Probe should try talking
+> > > to the device", saying:
+> > > 
+> > >   "this driver doesn't actually try talking to the device at probe time,
+> > >   so if it's incorrectly configured in the device tree or platform data
+> > >   (or if the battery has been removed from the system), then probe will
+> > >   succeed and every access will sit there and time out. The end result
+> > >   is a possibly laggy system that thinks it has a battery but can never
+> > >   read status, which isn't very useful."
+> > > 
+> > > That's a reasonable thing to do, but it breaks just the feature I need.
+> > > Besides that, the driver provides us with a gpio that indicates battery
+> > > presence, which will also be useless if the device isn't present at
+> > > probe time. That commit also doesn't take into account the fact that a
+> > > battery could be removed after probing without any problems, leaving the
+> > > system in the same state as before the probe change.
+> > > 
+> > > Now if the battery isn't plugged in, it is never detected after it has
+> > > been attached, unless you take action from userspace. Basically you
+> > > don't know your battery level until it has been explicitly probed.
+> > > 
+> > > We might also reduce the severity of the sanity check failure to produce
+> > > a warning instead of an error. This would achieve that a developer might
+> > > be warned that the battery isn't present, but also allow my use case
+> > > where the battery may not be present at boot time. Was that what you
+> > > meant with policy by the way?
+> > 
+> > In general, properties in general shouldn't tell the kernel what to do.
+> > They should tell the kernel details of the hardware that it can then use
+> > to make informed decisions. In this case, the suggested property is
+> > purely a software detail, as the hardware isn't any different in
+> > situations you would or would not want the property.
+> 
+> Ok, that makes sense.
+> 
+> > You mention that there's a GPIO that can be used to detect the battery
+> > presence. Why can't the driver always probe and then on check for the
+> > presence of the battery dynamically using that GPIO? That should cover
+> > both cases.
+> 
+> I would say that this was the case before [1] was done. The GPIO is
+> optional and if not configured, the presence or absence of the battery
+> is detected by checking a status register much like probe() currently
+> does. It seems all cases were covered before that patch. If you worry
+> about speed, you should use the GPIO. I wonder if we might be able to
+> revert [1] without doing much harm.
 
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
----
+But reverting that would re-introduce the lag on some systems, no? Given
+the wording of the original commit I would guess that the GPIO wasn't
+available. Perhaps Olof or Anton can enlighten us?
 
-Changes in v2: None
+In the cases where a GPIO is available, I think we should be able to be
+less pessimistic. Is a GPIO available in your case?
 
- include/dt-bindings/clock/rk3288-cru.h | 38 +++++++++++++++++++++++++++++++++-
- 1 file changed, 37 insertions(+), 1 deletion(-)
+Mark.
 
-diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
-index ebcb460..ee579ff 100644
---- a/include/dt-bindings/clock/rk3288-cru.h
-+++ b/include/dt-bindings/clock/rk3288-cru.h
-@@ -61,6 +61,15 @@
- #define SCLK_LCDC_PWM1		101
- #define SCLK_MAC_RX		102
- #define SCLK_MAC_TX		103
-+#define SCLK_EDP_24M		104
-+#define SCLK_EDP		105
-+#define SCLK_RGA		106
-+#define SCLK_ISP		107
-+#define SCLK_ISP_JPE		108
-+#define SCLK_HDMI_HDCP		109
-+#define SCLK_HDMI_CEC		110
-+#define SCLK_HEVC_CABAC		111
-+#define SCLK_HEVC_CORE		112
- 
- #define DCLK_VOP0		190
- #define DCLK_VOP1		191
-@@ -75,6 +84,16 @@
- #define ACLK_VOP1		198
- #define ACLK_CRYPTO		199
- #define ACLK_RGA		200
-+#define ACLK_RGA_NIU		201
-+#define ACLK_IEP		202
-+#define ACLK_VIO0_NIU		203
-+#define ACLK_VIP		204
-+#define ACLK_ISP		205
-+#define ACLK_VIO1_NIU		206
-+#define ACLK_HEVC		207
-+#define ACLK_VCODEC		208
-+#define ACLK_CPU		209
-+#define ACLK_PERI		210
- 
- /* pclk gates */
- #define PCLK_GPIO0		320
-@@ -112,6 +131,15 @@
- #define PCLK_PS2C		352
- #define PCLK_TIMER		353
- #define PCLK_TZPC		354
-+#define PCLK_EDP_CTRL		355
-+#define PCLK_MIPI_DSI0		356
-+#define PCLK_MIPI_DSI1		357
-+#define PCLK_MIPI_CSI		358
-+#define PCLK_LVDS_PHY		359
-+#define PCLK_HDMI_CTRL		360
-+#define PCLK_VIO2_H2P		361
-+#define PCLK_CPU		362
-+#define PCLK_PERI		363
- 
- /* hclk gates */
- #define HCLK_GPS		448
-@@ -137,8 +165,16 @@
- #define HCLK_IEP		468
- #define HCLK_ISP		469
- #define HCLK_RGA		470
-+#define HCLK_VIO_AHB_ARBI	471
-+#define HCLK_VIO_NIU		472
-+#define HCLK_VIP		473
-+#define HCLK_VIO2_H2P		474
-+#define HCLK_HEVC		475
-+#define HCLK_VCODEC		476
-+#define HCLK_CPU		477
-+#define HCLK_PERI		478
- 
--#define CLK_NR_CLKS		(HCLK_RGA + 1)
-+#define CLK_NR_CLKS		(HCLK_PERI + 1)
- 
- /* soft-reset indices */
- #define SRST_CORE0		0
--- 
-1.9.1
+> 
+> Thanks,
+> Frans
+> 
+> [1] a22b41a31e53 "sbs-battery: Probe should try talking to the device"
+> 
