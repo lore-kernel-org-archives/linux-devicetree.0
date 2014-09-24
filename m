@@ -1,83 +1,64 @@
 From: Robert Richter <rric@kernel.org>
-Subject: [PATCH 3/6] pci, thunder: Add PCIe host controller devicetree bindings
-Date: Wed, 24 Sep 2014 17:37:45 +0200
-Message-ID: <1411573068-12952-4-git-send-email-rric@kernel.org>
+Subject: [PATCH 4/6] pci, thunder: Document PCIe host controller devicetree bindings
+Date: Wed, 24 Sep 2014 17:37:46 +0200
+Message-ID: <1411573068-12952-5-git-send-email-rric@kernel.org>
 References: <1411573068-12952-1-git-send-email-rric@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1411573068-12952-1-git-send-email-rric@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Liviu Dudau <liviu.dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>, Sunil Goutham <sgoutham@cavium.com>, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Robert Richter <rrichter@cavium.com>, devicetree@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Liviu Dudau <liviu.dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>, Sunil Goutham <sgoutham@cavium.com>, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Robert Richter <rrichter@cavium.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Sunil Goutham <sgoutham@cavium.com>
 
-This patch adds the PCIe host controller entry for Cavium Thunder SoCs
-to the devicetree. There are 4 internal PCI controllers available.
+This patch adds documentation for the devicetree bindings used by the
+Thunder PCI host controller.
 
 Signed-off-by: Sunil Goutham <sgoutham@cavium.com>
 Signed-off-by: Robert Richter <rrichter@cavium.com>
 ---
- arch/arm64/boot/dts/thunder-88xx.dtsi | 49 +++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ .../devicetree/bindings/pci/cavium,thunder-pci.txt | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/cavium,thunder-pci.txt
 
-diff --git a/arch/arm64/boot/dts/thunder-88xx.dtsi b/arch/arm64/boot/dts/thunder-88xx.dtsi
-index 9cb7cf94284a..0b433b0e7af4 100644
---- a/arch/arm64/boot/dts/thunder-88xx.dtsi
-+++ b/arch/arm64/boot/dts/thunder-88xx.dtsi
-@@ -407,4 +407,53 @@
- 			clock-names = "apb_pclk";
- 		};
- 	};
+diff --git a/Documentation/devicetree/bindings/pci/cavium,thunder-pci.txt b/Documentation/devicetree/bindings/pci/cavium,thunder-pci.txt
+new file mode 100644
+index 000000000000..c8ff3d2e8630
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/cavium,thunder-pci.txt
+@@ -0,0 +1,32 @@
++* Cavium Thunder PCIe interface
 +
-+	pcie0@0x8480,00000000 {
-+	        compatible = "cavium,thunder-pcie";
++Required properties:
++- compatible: should contain "cavium,thunder-pcie" to identify the core.
++- device_type: set to "pci"
++- #address-cells: set to <3>
++- #size-cells: set to <2>
++- #stream-id-cells: set to <1>
++- bus-range: PCI bus numbers covered
++- reg: base address and length of the pcie configuration space.
++- ranges: ranges for the PCI memory regions.
++- msi-parent: Link to the hardware entity that serves as the Message
++  Signaled Interrupt controller for this PCI controller.
++
++Example:
++
++SoC specific DT Entry:
++
++	pcie0: pcie0@0x848000000000 {
++		compatible = "cavium,thunder-pcie";
 +		device_type = "pci";
 +		msi-parent = <&its>;
 +		bus-range = <0 255>;
 +		#size-cells = <2>;
 +		#address-cells = <3>;
++		#stream-id-cells = <1>;
 +		reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
-+		ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>, /* mem ranges */
++		ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>, /* mem */
 +			<0x03000000 0x8300 0x00000000 0x8300 0x00000000 0x80 0x00000000>,
 +			<0x03000000 0x87e0 0x00000000 0x87e0 0x00000000 0x01 0x00000000>;
-+        };
++	};
 +
-+	pcie1@0x8490,00000000 {
-+	        compatible = "cavium,thunder-pcie";
-+		device_type = "pci";
-+		msi-parent = <&its>;
-+		bus-range = <0 255>;
-+		#size-cells = <2>;
-+		#address-cells = <3>;
-+		reg = <0x8490 0x00000000 0 0x10000000>;  /* Configuration space */
-+		ranges = <0x03000000 0x8310 0x00000000 0x8310 0x00000000 0x00 0x10000000>, /* mem ranges */
-+			<0x03000000 0x8100 0x00000000 0x8100 0x00000000 0x80 0x00000000>;
-+        };
-+
-+	pcie2@0x84a0,00000000 {
-+	        compatible = "cavium,thunder-pcie";
-+		device_type = "pci";
-+		msi-parent = <&its>;
-+		bus-range = <0 255>;
-+		#size-cells = <2>;
-+		#address-cells = <3>;
-+		reg = <0x84a0 0x00000000 0 0x10000000>;  /* Configuration space */
-+		ranges = <0x03000000 0x8320 0x00000000 0x8320 0x00000000 0x00 0x10000000>, /* mem ranges */
-+			<0x03000000 0x8430 0x00000000 0x8430 0x00000000 0x01 0x00000000>;
-+        };
-+
-+	pcie3@0x84b0,00000000 {
-+	        compatible = "cavium,thunder-pcie";
-+		device_type = "pci";
-+		msi-parent = <&its>;
-+		bus-range = <0 255>;
-+		#size-cells = <2>;
-+		#address-cells = <3>;
-+		reg = <0x84b0 0x00000000 0 0x10000000>;  /* Configuration space */
-+		ranges = <0x03000000 0x8330 0x00000000 0x8330 0x00000000 0x00 0x10000000>, /* mem ranges */
-+			<0x03000000 0x8180 0x00000000 0x8180 0x00000000 0x80 0x00000000>;
-+        };
- };
 -- 
 2.1.0
