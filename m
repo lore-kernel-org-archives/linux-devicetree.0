@@ -1,68 +1,89 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 0/8] charger/mfd: max14577: Add support for MAX77836
-Date: Wed, 24 Sep 2014 11:03:25 +0100
-Message-ID: <20140924100325.GB19999@lee--X1>
-References: <1411472603-11821-1-git-send-email-k.kozlowski@samsung.com>
+From: Andrew Murray <amurray@embedded-bits.co.uk>
+Subject: Re: [PATCH v12 05/12] PCI: OF: Fix the conversion of IO ranges into
+ IO resources.
+Date: Wed, 24 Sep 2014 11:14:32 +0100
+Message-ID: <CAPcvp5GeZCkxC-_9e3VQQ=VwiAwFn-kJL_yCr9V3H-Go5eJvyw@mail.gmail.com>
+References: <1411498874-9864-1-git-send-email-Liviu.Dudau@arm.com>
+	<1411498874-9864-6-git-send-email-Liviu.Dudau@arm.com>
+	<20140924002253.GB27357@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1411472603-11821-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140924002253.GB27357@google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>, Thierry Reding <thierry.reding@>
 List-Id: devicetree@vger.kernel.org
 
-Mark, Sebastian,
+On 24 September 2014 01:22, Bjorn Helgaas <bhelgaas@google.com> wrote:
+> [+cc Andrew]
+>
+> On Tue, Sep 23, 2014 at 08:01:07PM +0100, Liviu Dudau wrote:
+>> The ranges property for a host bridge controller in DT describes
+>> the mapping between the PCI bus address and the CPU physical address.
+>> The resources framework however expects that the IO resources start
+>> at a pseudo "port" address 0 (zero) and have a maximum size of IO_SPACE_LIMIT.
+>> The conversion from pci ranges to resources failed to take that into account,
+>> returning a CPU physical address instead of a port number.
+>>
+>> Also fix all the drivers that depend on the old behaviour by fetching
+>> the CPU physical address based on the port number where it is being needed.
+>>
+>> Cc: Grant Likely <grant.likely@linaro.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>> Cc: Thierry Reding <thierry.reding@gmail.com>
+>> Cc: Simon Horman <horms@verge.net.au>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+>> ---
+>>  arch/arm/mach-integrator/pci_v3.c | 23 ++++++++++----------
+>>  drivers/of/address.c              | 44 +++++++++++++++++++++++++++++++++++----
+>>  drivers/pci/host/pci-tegra.c      | 10 ++++++---
+>>  drivers/pci/host/pcie-rcar.c      | 21 +++++++++++++------
+>>  include/linux/of_address.h        | 15 ++++++-------
+>>  5 files changed, 82 insertions(+), 31 deletions(-)
+>> ...
+>
+> The of_pci_range_to_resource() implementation in drivers/of/address.c is
+> always compiled when CONFIG_OF_ADDRESS=y, but when CONFIG_OF_ADDRESS=y and
+> CONFIG_PCI is not set, we get the static inline version from
+> include/linux/of_address.h as well, causing a redefinition error.
+>
+>> diff --git a/drivers/of/address.c b/drivers/of/address.c
+>> @@ -957,12 +957,48 @@ bool of_dma_is_coherent(struct device_node *np)
+>> ...
+>> +int of_pci_range_to_resource(struct of_pci_range *range,
+>> +     struct device_node *np, struct resource *res)
+>
+>> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+>> ...
+>>  #else /* CONFIG_OF_ADDRESS && CONFIG_PCI */
+>>  static inline int of_pci_address_to_resource(struct device_node *dev, int bar,
+>>                                            struct resource *r)
+>> @@ -144,6 +139,12 @@ static inline int of_pci_address_to_resource(struct device_node *dev, int bar,
+>>       return -ENOSYS;
+>>  }
+>>
+>> +static inline int of_pci_range_to_resource(struct of_pci_range *range,
+>> +             struct device_node *np, struct resource *res)
+>> +{
+>> +     return -ENOSYS;
+>> +}
+>
+> My proposal to fix it is the following three patches.  The first moves the
+> inline version of of_pci_range_to_resource() into the existing "#if
+> defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)" block.
+>
+> Andrew added it (and some other PCI-related things) with 29b635c00f3e
+> ("of/pci: Provide support for parsing PCI DT ranges property") to
+> of_address.h outside of any ifdefs, so it's always available.  Maybe
+> there's a reason that's needed in the non-CONFIG_PCI case, but I didn't see
+> it with a quick look.
+>
 
-The following changes since commit a497c3ba1d97fc69c1e78e7b96435ba8c2cb=
-42ee:
+There was no reason - it probably should have been inside a #ifdef
+like the others.
 
-  Linux 3.16-rc2 (2014-06-21 19:02:54 -1000)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-re=
-gulator-power-v3.17
-
-for you to fetch changes up to f453d80f908254293bf453a2d7e68974e2abc2af=
-:
-
-  Documentation: charger: max14577: Document exported sysfs entry (2014=
--09-24 10:58:07 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD, Regulator and Power due for v3.17
-
-----------------------------------------------------------------
-Krzysztof Kozlowski (8):
-      mfd: max14577: Add defines for MAX77836 charger
-      mfd: max14577: Map charger device to its own of_node
-      charger: max14577: Add support for MAX77836 charger
-      regulator/mfd: max14577: Export symbols for calculating charger c=
-urrent
-      charger: max14577: Configure battery-dependent settings from DTS =
-and sysfs
-      power: max17040: Add ID for MAX77836 Fuel Gauge block
-      devicetree: mfd: max14577: Add device tree bindings document
-      Documentation: charger: max14577: Document exported sysfs entry
-
- Documentation/ABI/testing/sysfs-class-power        |  14 +
- Documentation/devicetree/bindings/mfd/max14577.txt | 146 ++++++++
- drivers/mfd/max14577.c                             | 100 +++++-
- drivers/power/Kconfig                              |   5 +-
- drivers/power/max14577_charger.c                   | 370 +++++++++++++=
-++++++--
- drivers/power/max17040_battery.c                   |   3 +-
- drivers/regulator/max14577.c                       |  80 +----
- include/linux/mfd/max14577-private.h               |  95 ++++--
- include/linux/mfd/max14577.h                       |  30 ++
- 9 files changed, 704 insertions(+), 139 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Andrew Murray
