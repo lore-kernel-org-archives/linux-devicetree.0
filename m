@@ -1,43 +1,61 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 2/2] ARM: zynq: DT: Add missing reference for
- memory-controller
-Date: Wed, 24 Sep 2014 09:19:57 -0700
-Message-ID: <a8d11082-8806-4a24-b904-0718ff0b0896@BN1BFFO11FD020.protection.gbl>
-References: <fced9e56dc4ef8df9ead34f6444c010cc31c7a61.1411567289.git.michal.simek@xilinx.com>
- <ca95da888c9cd61e5b5e437b0e1b5cea893455ae.1411567289.git.michal.simek@xilinx.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 1/3] mfd: devicetree: bindings: Add Qualcomm RPM DT
+ binding
+Date: Wed, 24 Sep 2014 17:21:12 +0100
+Message-ID: <20140924162112.GB7113@lee--X1>
+References: <1411428329-23172-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1411428329-23172-2-git-send-email-bjorn.andersson@sonymobile.com>
+ <20140924082228.GF17801@lee--X1>
+ <20140924155319.GA28481@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <ca95da888c9cd61e5b5e437b0e1b5cea893455ae.1411567289.git.michal.simek@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, monstr@monstr.eu, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20140924155319.GA28481@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE0LTA5LTI0IGF0IDA0OjAxUE0gKzAyMDAsIE1pY2hhbCBTaW1layB3cm90ZToK
-PiBBZGQgbWlzc2luZyByZWZlcmVuY2UgZm9yIG1lbW9yeS1jb250cm9sbGVyLgo+IAo+IFNpZ25l
-ZC1vZmYtYnk6IE1pY2hhbCBTaW1layA8bWljaGFsLnNpbWVrQHhpbGlueC5jb20+Cj4gLS0tCj4g
-Cj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpIHwgMiArLQo+ICAxIGZpbGUgY2hh
-bmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPiAKPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy96eW5xLTcw
-MDAuZHRzaQo+IGluZGV4IGZjOTBmNDdmOWMwMy4uMjY5MGU2ZDAxZjcxIDEwMDY0NAo+IC0tLSBh
-L2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvenlucS03MDAwLmR0c2kKPiBAQCAtMTQ1LDcgKzE0NSw3IEBACj4gIAkJCWNhY2hlLWxldmVs
-ID0gPDI+Owo+ICAJCX07Cj4gCj4gLQkJbWVtb3J5LWNvbnRyb2xsZXJAZjgwMDYwMDAgewo+ICsJ
-CW1jOiBtZW1vcnktY29udHJvbGxlckBmODAwNjAwMCB7CnNhbWUgaGVyZS4gJ21jMCcsIHRoZXJl
-IGFyZSBkZWZpbml0ZWx5IG9wdGlvbnMgdG8gYWRkIG1vcmUgbWVtb3J5CmNvbnRyb2xsZXJzIHRv
-IFp5bnEgaW4gdGhlIFBMLiBBbHNvLCBJJ2Qgc3BlbGwgaXQgb3V0IGluc3RlYWQgb2YKYWJicmV2
-aWF0aW5nIHRoZSBuYW1lLgoKCVPDtnJlbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Wed, 24 Sep 2014, Bjorn Andersson wrote:
+
+> On Wed 24 Sep 01:22 PDT 2014, Lee Jones wrote:
+>=20
+> > On Mon, 22 Sep 2014, Bjorn Andersson wrote:
+> >=20
+> > > Add binding for the Qualcomm Resource Power Manager (RPM) found i=
+n 8660,
+> > > 8960 and 8064 based devices. The binding currently describes the =
+rpm
+> > > itself and the regulator subnodes.
+> > >=20
+> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/mfd/qcom-rpm.txt |  246 ++++++=
+++++++++++++++
+> >=20
+> > Please adhere to: Documentation/devicetree/bindings/submitting-patc=
+hes.txt
+> >=20
+>=20
+> I assume you mean this part:
+>=20
+>   1) The Documentation/ portion of the patch should be a separate pat=
+ch.
+>=20
+> But I doubt this document was written with include/dt-bindings in min=
+d, because
+> in my eyes they are part of "device tree bindings".
+
+Actually, this is an oversight on my part.  If I would have seen that
+this patch only touched the bindings and include/dt-bindings I
+probably wouldn't have said anything.
+
+This patch still needs a DT Ack though.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
