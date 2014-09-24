@@ -1,139 +1,66 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH v2 1/3] watchdog: qcom: add support for KPSS WDT
-Date: Wed, 24 Sep 2014 13:30:50 -0500
-Message-ID: <20140924183050.GI868@joshc.qualcomm.com>
-References: <cover.1411513109.git.joshc@codeaurora.org>
- <8f4be0230a7fea8c299a0e878d0eb826eaba6099.1411513109.git.joshc@codeaurora.org>
- <20140924155854.GA12620@roeck-us.net>
+From: Frans Klaver <fransklaver@gmail.com>
+Subject: Re: [RFC PATCH 1/2] sbs-battery: add forced instantiation from
+ device tree
+Date: Wed, 24 Sep 2014 20:59:34 +0200
+Message-ID: <20140924185933.GA2221@gmail.com>
+References: <1411564278-17207-1-git-send-email-frans.klaver@xsens.com>
+ <1411564278-17207-2-git-send-email-frans.klaver@xsens.com>
+ <20140924131655.GG5729@leverpostej>
+ <20140924142222.GC22872@ci00147.xsens-tech.local>
+ <20140924143848.GH5729@leverpostej>
+ <20140924151448.GD22872@ci00147.xsens-tech.local>
+ <20140924153431.GJ5729@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140924155854.GA12620@roeck-us.net>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20140924153431.GJ5729@leverpostej>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: olof@lixom.net, anton.vorontsov@linaro.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 24, 2014 at 08:58:54AM -0700, Guenter Roeck wrote:
-> On Tue, Sep 23, 2014 at 06:04:36PM -0500, Josh Cartwright wrote:
-> > Add a driver for the watchdog timer block found in the Krait Processor
-> > Subsystem (KPSS) on the MSM8960, APQ8064, and IPQ8064.
+On Wed, Sep 24, 2014 at 04:34:32PM +0100, Mark Rutland wrote:
+> On Wed, Sep 24, 2014 at 04:14:48PM +0100, Frans Klaver wrote:
+> > On Wed, Sep 24, 2014 at 03:38:49PM +0100, Mark Rutland wrote:
+> > > On Wed, Sep 24, 2014 at 03:22:22PM +0100, Frans Klaver wrote:
+> > > You mention that there's a GPIO that can be used to detect the battery
+> > > presence. Why can't the driver always probe and then on check for the
+> > > presence of the battery dynamically using that GPIO? That should cover
+> > > both cases.
 > > 
-> > Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+> > I would say that this was the case before [1] was done. The GPIO is
+> > optional and if not configured, the presence or absence of the battery
+> > is detected by checking a status register much like probe() currently
+> > does. It seems all cases were covered before that patch. If you worry
+> > about speed, you should use the GPIO. I wonder if we might be able to
+> > revert [1] without doing much harm.
 > 
-> Hi Josh,
+> But reverting that would re-introduce the lag on some systems, no? Given
+> the wording of the original commit I would guess that the GPIO wasn't
+> available. Perhaps Olof or Anton can enlighten us?
+
+It probably would yes. The battery_detect gpio was last touched in 2011, the
+probe check was added somewhere in 2012.
+
+We could keep it as a compile option.
+
+> In the cases where a GPIO is available, I think we should be able to be
+> less pessimistic. Is a GPIO available in your case?
+
+We don't have the battery_detect pin available. Incidentally, a bit of
+lag reading out the battery is not a problem for us.
+
+> Mark.
 > 
-> looks much better. Couple of comments inline.
-
-Thanks for another review!
-
-[..]
-> > +++ b/drivers/watchdog/Kconfig
-> > @@ -443,6 +443,19 @@ config TEGRA_WATCHDOG
-> >  	  To compile this driver as a module, choose M here: the
-> >  	  module will be called tegra_wdt.
-> >  
-> > +config QCOM_WDT
-> > +	tristate "QCOM watchdog"
-> > +	depends on HAS_IOMEM
-> > +	depends on ARCH_QCOM
-> > +	select WATCHDOG_CORE
-> > +	help
-> > +	  Say Y here to include Watchdog timer support for the watchdog found
-> > +	  on QCOM chipsets.  Currently supported targets are the MSM8960,
-> > +	  APQ8064, and IPQ8064.
-> > +
-> > +	  To compile this driver as a module, choose M here: the
-> > +	  module will be called qcom_wdt.
-> > +
-> >  # AVR32 Architecture
-[..]
-> > +static int qcom_wdt_probe(struct platform_device *pdev)
-> > +{
-> > +	struct qcom_wdt *wdt;
-> > +	struct resource *res;
-> > +	unsigned long freq;
-> > +	int ret;
-> > +
-> > +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-> > +	if (!wdt)
-> > +		return -ENOMEM;
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	wdt->base = devm_ioremap_resource(&pdev->dev, res);
-> > +	if (IS_ERR(wdt->base))
-> > +		return PTR_ERR(wdt->base);
-> > +
-> > +	wdt->clk = devm_clk_get(&pdev->dev, NULL);
-> > +	if (IS_ERR(wdt->clk))
-> > +		return PTR_ERR(wdt->clk);
-> > +
-> > +	ret = clk_prepare_enable(wdt->clk);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "failed to setup clock\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	/*
-> > +	 * We use the clock rate to calculate the max timeout, so ensure it's
-> > +	 * not zero to avoid a divide-by-zero exception.
-> > +	 */
-> > +	freq = clk_get_rate(wdt->clk);
-> > +	if (freq == 0) {
-> > +		dev_err(&pdev->dev, "invalid clock rate\n");
-> > +		return -EINVAL;
-> > +	}
-> 
-> This will need clk_disable_unprepare().
-
-Yep.  Nice catch.  Will fix.
-
-> Since you are reading the frequency here, it might make sense to store it
-> in struct qcom_wdt so you don't have to call clk_get_rate() again in the
-> start function.
-
-Yeah, it doesn't save much, but I'll go ahead and add it.
-
-> > +	wdt->wdd.dev = &pdev->dev;
-> > +	wdt->wdd.info = &qcom_wdt_info;
-> > +	wdt->wdd.ops = &qcom_wdt_ops;
-> > +	wdt->wdd.min_timeout = 1;
-> > +	wdt->wdd.max_timeout = 0x10000000U / freq;
->
-> What if the frequency turns out to be larger than 8947848 Hz ?
-> Then your maximum timeout is below the default timeout.
-> And if the frequency is larger than 268435456 Hz, the maximum
-> timeout would be 0.
-
-Yes, I should be doing more sanity checking.  I'll do so.
-
-> > +	/*
-> > +	 * If 'timeout-sec' unspecified in devicetree, assume a 30 second
-> > +	 * default.
-> > +	 */
-> > +	if (watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev))
-> > +		wdt->wdd.timeout = 30;
-> 
-> You can just initialize timeout above with 30 seconds. Saves you the if
-> statement here.
-
-Great.  Thanks.
-
-> > +	ret = watchdog_register_device(&wdt->wdd);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "failed to register watchdog\n");
->
-> This will need a clk_disable_unprepare().
->
-> Given that this is needed twice, you might want to consider using
-> error exit code below, as suggested in CodingStyle.
-
-Indeed.  Will do.
-
-Thanks again,
-  Josh
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+> > 
+> > Thanks,
+> > Frans
+> > 
+> > [1] a22b41a31e53 "sbs-battery: Probe should try talking to the device"
+> > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
