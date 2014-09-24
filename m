@@ -1,138 +1,46 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RFC PATCH v2 00/16] Add ACPI _DSD and unified device properties
- support
-Date: Wed, 24 Sep 2014 09:34:18 +0100
-Message-ID: <20140924083418.GH17801@lee--X1>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
- <1582936.0FiE8Cvqie@vostro.rjw.lan>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v7 3/3] regulator: qcom-rpm: Regulator driver for the
+ Qualcomm RPM
+Date: Wed, 24 Sep 2014 09:35:18 +0100
+Message-ID: <20140924083518.GB4015@sirena.org.uk>
+References: <1411428329-23172-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1411428329-23172-4-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jn9UjnPB79FDtyKu"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1582936.0FiE8Cvqie@vostro.rjw.lan>
+In-Reply-To: <1411428329-23172-4-git-send-email-bjorn.andersson@sonymobile.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 21 Sep 2014, Rafael J. Wysocki wrote:
 
-> On Tuesday, September 16, 2014 02:52:31 PM Mika Westerberg wrote:
-> > This is a second revision of the patches first submitted here [1].
-> >=20
-> > The recent publication of the ACPI 5.1 specification [2] adds a res=
-erved name
-> > for Device Specific Data (_DSD, Section 6.2.5). This mechanism allo=
-ws for
-> > passing arbitrary hardware description data to the OS. The exact fo=
-rmat of the
-> > _DSD data is specific to the UUID paired with it [3].  =20
-> >=20
-> > An ACPI Device Properties UUID has been defined [4] to provide a fo=
-rmat
-> > compatible with existing device tree schemas. The purpose for this =
-was to
-> > allow for the reuse of the existing schemas and encourage the devel=
-opment
-> > of firmware agnostic device drivers.
-> >=20
-> > This series accomplishes the following (as well as some other depen=
-dencies):
-> >=20
-> >  * Add _DSD support to the ACPI core
-> >    This simply reads the UUID and the accompanying Package
-> >=20
-> >  * Add ACPI Device Properties _DSD format support
-> >    This understands the hierarchical key:value pair structure
-> >    defined by the Device Properties UUID
-> >=20
-> >  * Add a unified device properties API with ACPI and OF backends
-> >    This provides for the firmware agnostic device properties
-> >    Interface to be used by drivers
-> >=20
-> >  * Provides 3 example drivers that were previously Device Tree awar=
-e that
-> >    can now be used with either Device Tree or ACPI Device Propertie=
-s. The
-> >    drivers use "PRP0001" as their _HID which means that the match s=
-hould be
-> >    done using driver's .of_match_table instead.
-> >=20
-> > The patch series has been tested on Minnoboard and Minnowboard MAX =
-and the
-> > relevant part of DSDTs are at the end of this cover letter.
-> >=20
-> > This series does not provide for a means to append to a system DSDT=
-=2E That
-> > will ultimately be required to make the most effective use of the _=
-DSD
-> > mechanism. Work is underway on that as a separate effort.
-> >=20
-> > Most important changes to the previous RFC version:
-> >=20
-> >   * Added wrapper functions for most used property types
-> >   * Return -EOVERFLOW in case integer would not fit to a type
-> >   * Dropped dev_prop_ops
-> >   * We now have dev_node_xxx() functions to access firmware node
-> >     properties without dev pointer
-> >   * The accessor function names try to be close to their correspond=
-ing of_*
-> >     counterpart
-> >   * Tried to have a bit better examples in the documentation patch
-> >   * gpiolib got support for _DSD and also it now understand firmwar=
-e node
-> >     properties with dev_node_get_named_gpiod() that requests the GP=
-IO
-> >     properly.
-> >   * Support for "PRP0001" _HID/_CID. This means that the match shou=
-ld be
-> >     done using driver .of_match_table instead.
-> >   * Add unified property support for at25 SPI eeprom driver as well=
-=2E
-> >=20
-> > [1] https://lkml.org/lkml/2014/8/17/10
-> > [2] http://www.uefi.org/sites/default/files/resources/ACPI_5_1relea=
-se.pdf
-> > [3] http://www.uefi.org/sites/default/files/resources/_DSD-implemen=
-tation-guide-toplevel.htm
-> > [4] http://www.uefi.org/sites/default/files/resources/_DSD-device-p=
-roperties-UUID.pdf
-> >=20
-> > Aaron Lu (2):
-> >   input: gpio_keys_polled - Add support for GPIO descriptors
-> >   input: gpio_keys_polled - Make use of device property API
-> >=20
-> > Max Eliaser (2):
-> >   leds: leds-gpio: Make use of device property API
-> >   leds: leds-gpio: Add ACPI probing support
-> >=20
-> > Mika Westerberg (11):
-> >   ACPI: Add support for device specific properties
-> >   ACPI: Allow drivers to match using Device Tree compatible propert=
-y
-> >   ACPI: Document ACPI device specific properties
-> >   mfd: Add ACPI support
-> >   gpio / ACPI: Add support for _DSD device properties
-> >   gpio: Add support for unified device properties interface
-> >   gpio: sch: Consolidate core and resume banks
-> >   leds: leds-gpio: Add support for GPIO descriptors
-> >   input: gpio_keys_polled - Add ACPI probing support
-> >   misc: at25: Make use of device property API
-> >   misc: at25: Add ACPI probing support
->=20
-> Given the ACKs that we've got already (the Greg's one in particular) =
-and
-> the apparent lack of objections (or indeed any comments at all), I'm =
-about
-> to queue this up for 3.18 next week.
+--jn9UjnPB79FDtyKu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'd prefer to take the MFD patch through the MFD tree if that's
-possible.  Are there any technical reasons why this would prove
-difficult?
+On Mon, Sep 22, 2014 at 04:25:29PM -0700, Bjorn Andersson wrote:
+> Driver for regulators exposed by the Resource Power Manager (RPM) found
+> in Qualcomm 8660, 8960 and 8064 based devices.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Applied, thanks.
+
+--jn9UjnPB79FDtyKu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUIoJFAAoJECTWi3JdVIfQhDAH/jXShZUDhiLUAcKYd0rNeozS
+7ZMmtMESndvdDiIUMwP3InunByEW9YHQXG0e2Sh/ZEd9chs1ImLIkz8jAwc5IITn
+phga8e9Zw5v8UtBaurGcyxZt/Y9IEZqopHJBAYyumDLmkVG49+qTEilburonvSH6
+ym4rb9VrWVEXtEG/oQjW0TLdVizUz3+8IHMWPW0hZQDdiEWMX0pq2EKy3nmMeS+5
+SJ8PWFnRS59KWF6LKfVoJmkw2c31B6ev6yVUM4Nn1YEafwG5s5Cn2Fhi+2llbiGn
+1CVNnabmib2l24U5THEEet79lrIlcgHV/v64+EmWZud+Lz/lejGfOs5rSLb8Sl8=
+=LFw3
+-----END PGP SIGNATURE-----
+
+--jn9UjnPB79FDtyKu--
