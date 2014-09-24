@@ -1,60 +1,109 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Wed, 24 Sep 2014 19:29:05 +0800
-Message-ID: <20140924112902.GA23331@peterchendt>
-References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
- <20140924022736.GA5307@peterchendt> <2990737.4KzKXPZhaB@wuerfel>
- <2923729.dtX0WmHSV0@wuerfel>
+From: Johannes Pointner <johannes.pointner@gmail.com>
+Subject: Re: [PATCH] mfd: tps65217: add compatible string for subdevices
+Date: Wed, 24 Sep 2014 13:49:18 +0200
+Message-ID: <CAJKbBDDpAULVFjr058qRz7rV3y5DEnnxeA9n5xtGW1Fu6YLr=A@mail.gmail.com>
+References: <5439652.jHp5aCCfrZ@lenovobook>
+	<20140924110602.GI19999@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2923729.dtX0WmHSV0@wuerfel>
+In-Reply-To: <20140924110602.GI19999@lee--X1>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: balbi@ti.com, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com, p.zabel@pengutronix.de, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, AnilKumar Ch <anilkumar@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 24, 2014 at 10:30:41AM +0200, Arnd Bergmann wrote:
-> On Wednesday 24 September 2014 09:44:19 Arnd Bergmann wrote:
-> > 
-> > We can also gradually move in some of the other glue drivers into
-> > the main driver if the differences are small enough.
-> > 
-> 
-> FWIW, I've just looked at the other glue drivers that already
-> exist:
-> 
-> - zevio can just get merged into the common driver, all that seems
->   to be needed for that is the additional compatible string, and
->   keying off the ci_default_zevio_platdata on the .data field of
->   the of_device_id table.
-> 
-> - msm has a custom notifier, which justifies leaving it in a separate
->   driver, but it's also small enough that it wouldn't hurt to have
->   that merged into the main driver too.
-> 
-> - imx requires a lot of other things, in particular the dependency
->   on the usbmisc driver means we don't want to have that in the
->   core anyway, so we can't really merge that in.
-> 
-> - the proposed ar933x driver again looks almost trivial, so no reason
->   for a separate glue driver for that.
-> 
-> 	Arnd
+2014-09-24 13:06 GMT+02:00 Lee Jones <lee.jones@linaro.org>:
+> On Mon, 22 Sep 2014, Johannes Pointner wrote:
+>
+>> The TPS65217 is missing of_compatible string in the mfd_cell for its
+>> subdevices. This compatible string is necessary to use functions lik=
+e
+>> of_find_backlight_by_node in backlight.c.
+>>
+>> Signed-off-by: Johannes Pointner <johannes.pointner@br-automation.co=
+m>
+>> ---
+>>  Documentation/devicetree/bindings/regulator/tps65217.txt           =
+ | 5 ++++-
+>>  .../devicetree/bindings/video/backlight/tps65217-backlight.txt     =
+ | 6 +++---
+>>  drivers/mfd/tps65217.c                                             =
+ | 2 ++
+>>  3 files changed, 9 insertions(+), 4 deletions(-)
+>
+> [...]
+>
+>> diff --git a/Documentation/devicetree/bindings/video/backlight/tps65=
+217-backlight.txt b/Documentation/devicetree/bindings/video/backlight/t=
+ps65217-backlight.txt
+>> index 5fb9279..c3fb649 100644
+>> --- a/Documentation/devicetree/bindings/video/backlight/tps65217-bac=
+klight.txt
+>> +++ b/Documentation/devicetree/bindings/video/backlight/tps65217-bac=
+klight.txt
+>> @@ -7,18 +7,18 @@ Required properties:
+>>  - compatible: "ti,tps65217"
+>>  - reg: I2C slave address
+>>  - backlight: node for specifying WLED1 and WLED2 lines in TPS65217
+>> +- compatible: "ti,tps65217-bl"
+>
+> This is now confusing.  Please make it clear that this part of the
+> documentation is now referencing the sub-node.
 
-Thanks, Arnd.
+I will add a Subnode properties label, to make it clearer.
 
-So, it is IP CORE LIB (you suggest) vs IP CORE Platform Driver
-(dwc3, musb, chipidea) you are talking about, right? Except for
-creating another platform driver as well as related DT node (optional),
-are there any advantages compared to current IP core driver structure?
+>
+>>  - isel: selection bit, valid values: 1 for ISEL1 (low-level) and 2 =
+for ISEL2 (high-level)
+>>  - fdim: PWM dimming frequency, valid values: 100, 200, 500, 1000
+>>  - default-brightness: valid values: 0-100
+>>
+>> -Each regulator is defined using the standard binding for regulators=
+=2E
+>> -
+>>  Example:
+>>
+>>       tps: tps@24 {
+>>               reg =3D <0x24>;
+>>               compatible =3D "ti,tps65217";
+>> -             backlight {
+>> +             tps_bl: backlight {
+>> +                     compatible =3D "ti,tps65217-bl";
+>>                       isel =3D <1>;  /* 1 - ISET1, 2 ISET2 */
+>>                       fdim =3D <100>; /* TPS65217_BL_FDIM_100HZ */
+>>                       default-brightness =3D <50>;
+>> diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
+>
+> This shouldn't be in this patch.
+>
+> Please adhere to: Documentation/devicetree/bindings/submitting-patche=
+s.txt
 
-In this thread, we are talking about creating common platform driver for glue
-layer, its design purpose (adapt it for as many as platforms) should be the
-same, no matter the IP core part is a LIB or platform driver, am I missing
-something?
+I will split the patch.
+>
+>> index 3cc4c70..77708f9 100644
+>> --- a/drivers/mfd/tps65217.c
+>> +++ b/drivers/mfd/tps65217.c
+>> @@ -33,9 +33,11 @@
+>>  static const struct mfd_cell tps65217s[] =3D {
+>>       {
+>>               .name =3D "tps65217-pmic",
+>> +             .of_compatible =3D "ti,tps65217-pmic",
+>>       },
+>>       {
+>>               .name =3D "tps65217-bl",
+>> +             .of_compatible =3D "ti,tps65217-bl",
+>>       },
+>>  };
+>>
+>
+> --
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
 
--- 
-Best Regards,
-Peter Chen
+Thank you for your feedback. I'll resend the patches with the modificat=
+ions.
