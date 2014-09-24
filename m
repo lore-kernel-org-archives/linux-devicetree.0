@@ -1,47 +1,64 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] iio: iadc: Qualcomm SPMI PMIC current ADC driver
-Date: Wed, 24 Sep 2014 18:10:46 +0100
-Message-ID: <20140924171046.GM5729@leverpostej>
-References: <1411567103-2380-1-git-send-email-iivanov@mm-sol.com>
- <20140924145527.GI5729@leverpostej>
- <1411574442.18580.95.camel@iivanov-dev>
- <20140924170522.GL5729@leverpostej>
+From: Iyappan Subramanian <isubramanian@apm.com>
+Subject: Re: [PATCH v1 4/5] drivers: net: xgene: Add 10GbE support
+Date: Wed, 24 Sep 2014 10:24:52 -0700
+Message-ID: <CAKh23F=8Y4vGw1LkXbYD_1138nYZ0sCCPRjf0YS5JqjS10JnPQ@mail.gmail.com>
+References: <1411530688-2939-1-git-send-email-isubramanian@apm.com>
+	<1411530688-2939-5-git-send-email-isubramanian@apm.com>
+	<7752137.3u6F6qDtIo@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140924170522.GL5729@leverpostej>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <7752137.3u6F6qDtIo@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: David Miller <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Keyur Chudgar <kchudgar@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-> > > > +
-> > > > +- qcom,rsense:
-> > > > +    Usage: optional
-> > > > +    Value type: <u32>
-> > > > +    Definition: External sense register value in Ohm. Defining this
-> > > > +            propery will instruct ADC to use external ADC sense channel.
-> > > > +            If property is not defined ADC will use internal sense channel.
-> > > 
-> > > The latter two sentences sound like a driver description.
-> > > 
-> > > What exactly is the difference between the internal and external
-> > > channels, and what exactly is the value in the sense register used for?
-> > 
-> > Internal - when using chip build-in resistor
-> > External - when using off-chip resistor
-> 
-> Would it be possible to use the internal channel when you have an
-> external resistor?
-> 
-> If so, does the device have a channel per resistor, or can either
-> resistor be selected and applied to the single channel the device has?
-> 
-> This might be better worded as "external-registor-ohms".
+Hi Arnd,
 
-I meant to say "external-resistor-ohms".
+On Wed, Sep 24, 2014 at 6:10 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday 23 September 2014 20:51:27 Iyappan Subramanian wrote:
+>> -static void xgene_enet_wr_mcx_mac(struct xgene_enet_pdata *pdata,
+>> -                                 u32 wr_addr, u32 wr_data)
+>> +void xgene_enet_wr_mac(struct xgene_enet_pdata *pdata, u32 wr_addr, u32 wr_data)
+>>  {
+>>         void __iomem *addr, *wr, *cmd, *cmd_done;
+>>
+>> -       addr = pdata->mcx_mac_addr + MAC_ADDR_REG_OFFSET;
+>> -       wr = pdata->mcx_mac_addr + MAC_WRITE_REG_OFFSET;
+>> -       cmd = pdata->mcx_mac_addr + MAC_COMMAND_REG_OFFSET;
+>> -       cmd_done = pdata->mcx_mac_addr + MAC_COMMAND_DONE_REG_OFFSET;
+>> +       addr = pdata->mac_addr + MAC_ADDR_REG_OFFSET;
+>> +       wr = pdata->mac_addr + MAC_WRITE_REG_OFFSET;
+>> +       cmd = pdata->mac_addr + MAC_COMMAND_REG_OFFSET;
+>> +       cmd_done = pdata->mac_addr + MAC_COMMAND_DONE_REG_OFFSET;
+>>
+>>         if (!xgene_enet_wr_indirect(addr, wr, cmd, cmd_done, wr_addr, wr_data))
+>>                 netdev_err(pdata->ndev, "MCX mac write failed, addr: %04x\n",
+>>                            wr_addr);
+>>  }
+>>
+>> -static void xgene_enet_rd_csr(struct xgene_enet_pdata *pdata,
+>> -                             u32 offset, u32 *val)
+>> +void xgene_enet_rd_csr(struct xgene_enet_pdata *pdata, u32 offset, u32 *val)
+>>  {
+>>         void __iomem *addr = pdata->eth_csr_addr + offset;
+>>
+>>
+>
+> A lot of the changes in this patch seem to just rename existing interfaces.
+> Please split those out into a preparatory patch, to make it easier to
+> review the actual functional changes.
 
-Muscle memory and lack of coffee got the better of me.
+Sure.  I will do as you suggest.  Thanks for the review.
 
-Mark.
+>
+>         Arnd
+> CONFIDENTIALITY NOTICE: This e-mail message, including any attachments,
+> is for the sole use of the intended recipient(s) and contains information
+> that is confidential and proprietary to Applied Micro Circuits Corporation or its subsidiaries.
+> It is to be used solely for the purpose of furthering the parties' business relationship.
+> All unauthorized review, use, disclosure or distribution is prohibited.
+> If you are not the intended recipient, please contact the sender by reply e-mail
+> and destroy all copies of the original message.
+>
