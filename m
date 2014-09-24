@@ -1,90 +1,31 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device properties interface
-Date: Wed, 24 Sep 2014 16:08:15 +0200
-Message-ID: <3464697.XblUcyRfDp@vostro.rjw.lan>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <1579761.oeYleOAY1N@vostro.rjw.lan> <4515093.TGIQh7cBOD@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <4515093.TGIQh7cBOD@wuerfel>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Aaron Lu <aaron.lu@intel.com>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v7 3/3] regulator: qcom-rpm: Regulator driver for the Qualcomm RPM
+Date: Wed, 24 Sep 2014 08:50:38 -0500
+Message-ID: <4437DA50-D8BC-4E78-821C-41440A08B9A9@codeaurora.org>
+References: <1411428329-23172-1-git-send-email-bjorn.andersson@sonymobile.com> <1411428329-23172-4-git-send-email-bjorn.andersson@sonymobile.com> <20140924083518.GB4015@sirena.org.uk>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140924083518.GB4015@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, September 24, 2014 09:55:12 AM Arnd Bergmann wrote:
-> On Tuesday 23 September 2014 22:47:36 Rafael J. Wysocki wrote:
-> > Quite frankly, I'm not sure what you're asking for.
-> > 
-> > It seems to mean "I kind of don't like the current implementation", but
-> > then the last part is quite unclear to me.  Are you suggesting to add more
-> > "if (IS_ENABLED(CONFIG_OF) && pdev->dev.of_node) etc" type of checks to
-> > device drivers?  That I'd like to avoid to be honest.
+
+On Sep 24, 2014, at 3:35 AM, Mark Brown <broonie@kernel.org> wrote:
+
+> On Mon, Sep 22, 2014 at 04:25:29PM -0700, Bjorn Andersson wrote:
+>> Driver for regulators exposed by the Resource Power Manager (RPM) found
+>> in Qualcomm 8660, 8960 and 8064 based devices.
 > 
-> No, that is not what I want. Device drivers should ideally call interfaces
-> that just take a 'struct device' or 'struct platform_device' pointer,
-> and those should be implemented in an appropriate way.
+> Applied, thanks.
 
-But then you have drivers that access properties of their child nodes which
-have no corresponding struct device(s).
+Mark, can you drop this until we see at least an RFC patch for the RPM support for b-family SoCs (8074, 8084, etc) chips.  The regulator could should either be the same or highly similar for b-family, but until we see the core RPM driver on the b-family SoCs we will not know that.
 
-> > Instead of the current proposal we can introduce something like
-> > 
-> > int device_get_child_property(struct device *dev, void *child_node,
-> >                               const char *propname, void **valptr);
-> > 
-> > (and analogously for device_read_property*) and use that in the drivers that
-> > need to iterate over child nodes of a device.  Quite along the lines of what
-> > Dmitry is suggesting.
-> > 
-> > Then, fn() in acpi_for_each_child_node() (and the of_ counterpart of it)
-> > would become
-> > 
-> > int (*fn)(struct device *dev, void *child_node, void *data)
-> > 
-> > and so on.
-> > 
-> > Would you prefer that?
-> 
-> I must still be missing part of what you are trying to achieve above.
-> We definitely need an interface to get properties from the device itself,
-> like
-> 
-> int device_get_property(struct device *dev, const char *propname, void **valptr);
-> 
-> (whatever valptr ends up being, that would be a separate discussion).
-> 
-> As soon as it comes to devices that have child nodes, I don't see a
-> necessity to have a generic abstraction for them, as this is typically
-> only done for some of the more obscure bindings, or for child nodes that
-> are defined in a subsystem-wide binding rather than a device private
-> binding.
-
-Well, I don't really agree here.
-
-We can demonstrably reduce code duplication (and therefore complexity too) in
-at least two drivers by doing that at a reasonably low cost, which is
-simply exposing the API for child nodes and adding helpers for iterating
-over them.
-
-We don't have to use struct fw_dev_node (or similar) for that if that's what
-bothers you, but in my opinion something like "get me a property of this thing
-which may be either a device tree node or an ACPI object" (ie. what the current
-dev_node_get_property() does) is more straightforwad than "get me a property
-of that child of this device which may be either a device tree node or an ACPI
-object" (ie. what device_get_child_property() as described above would do).
-
-> For the former case, I think they are indeed better left in drivers that
-> actively know the difference between DT and ACPI, and that don't necessarily
-> use the same binding for both. In the latter case, I'd leave the
-> implementation up to subsystem code, which again would know what
-> interface it is using.
-
-The case in question is drivers that need not know the difference between DT and
-ACPI and do use the same binding for both.  It seems quite clear what needs to
-be done in the other cases.
+- k
 
 -- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
