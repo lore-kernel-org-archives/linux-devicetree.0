@@ -1,37 +1,58 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 7/7] dmaengine: sun6i: Remove obsolete clk
- muxing code
-Date: Wed, 24 Sep 2014 10:40:28 +0530
-Message-ID: <20140924051028.GS24663@intel.com>
-References: <1410000448-9999-1-git-send-email-wens@csie.org>
- <1410000448-9999-8-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv4 3/6] ARM: dts: Add initial LS1021A TWR board dts support
+Date: Wed, 24 Sep 2014 05:47:53 +0000
+Message-ID: <a83d5601a26b4e45be5e5016de287287@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1411371952-5618-1-git-send-email-jingchang.lu@freescale.com>
+ <1411371952-5618-4-git-send-email-jingchang.lu@freescale.com>
+ <3321146.kBfn28qbNM@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDLNNTP63EBBBUFRRGQQKGQEDVAUKIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1410000448-9999-8-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-Content-Disposition: inline
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3321146.kBfn28qbNM@wuerfel>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Shengchao Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "B46807-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B46807-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 06, 2014 at 06:47:28PM +0800, Chen-Yu Tsai wrote:
-> The sun6i DMA controller requires the AHB1 bus clock to be
-> clocked from PLL6. This was originally done by the dmaengine
-> driver during probe time. The AHB1 clock driver has since been
-> unified, so the original code does not work.
-> 
-> Remove the clk muxing code, and replace it with DT clk default
-> properties.
-
-Applied, thanks
-
--- 
-~Vinod
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQXJuZCBCZXJnbWFubiBbbWFpbHRv
+OmFybmRAYXJuZGIuZGVdDQo+U2VudDogVHVlc2RheSwgU2VwdGVtYmVyIDIzLCAyMDE0IDEwOjU0
+IFBNDQo+VG86IEx1IEppbmdjaGFuZy1CMzUwODMNCj5DYzogR3VvIFNoYXduLVI2NTA3MzsgbWFy
+ay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWFybS0NCj5rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IEx1IENoZW4tQjQ2ODA3OyBGdQ0KPkNoYW8t
+QjQ0NTQ4DQo+U3ViamVjdDogUmU6IFtQQVRDSHY0IDMvNl0gQVJNOiBkdHM6IEFkZCBpbml0aWFs
+IExTMTAyMUEgVFdSIGJvYXJkIGR0cw0KPnN1cHBvcnQNCj4NCj5PbiBNb25kYXkgMjIgU2VwdGVt
+YmVyIDIwMTQgMTU6NDU6NDkgSmluZ2NoYW5nIEx1IHdyb3RlOg0KPj4gQEAgLTAsMCArMSwxMTcg
+QEANCj4+ICsvKg0KPj4gKyAqIENvcHlyaWdodCAyMDEzLTIwMTQgRnJlZXNjYWxlIFNlbWljb25k
+dWN0b3IsIEluYy4NCj4+ICsgKg0KPj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJl
+OyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3INCj4+ICttb2RpZnkNCj4+ICsgKiBpdCB1
+bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFzIHB1Ymxp
+c2hlZA0KPj4gK2J5DQo+PiArICogdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbjsgZWl0aGVy
+IHZlcnNpb24gMiBvZiB0aGUgTGljZW5zZSwgb3INCj4+ICsgKiAoYXQgeW91ciBvcHRpb24pIGFu
+eSBsYXRlciB2ZXJzaW9uLg0KPj4gKyAqLw0KPg0KPkNhbiB5b3UgY2hhbmdlIHRoZSBsaWNlbnNl
+IHNvIHRoaXMgZmlsZSBpcyBhdmFpbGFibGUgdW5kZXIgYm90aCBHUEwgYW5kDQo+QlNEIG9yIFgx
+MSBsaWNlbnNlPw0KPg0KSSdkIGxpa2UgdG8gYWRkIHRoaXMuIElzIHRoZXJlIGFueSB0ZW1wbGF0
+ZSBmb3IgbXkgcmVmZXJlbmNlPyBUaGFua3MuDQoNCj4+ICsvZHRzLXYxLzsNCj4+ICsjaW5jbHVk
+ZSAibHMxMDIxYS5kdHNpIg0KPj4gKw0KPj4gKy8gew0KPj4gKyAgICAgICBtb2RlbCA9ICJMUzEw
+MjFBIFRXUiBCb2FyZCI7DQo+PiArDQo+PiArICAgICAgIGFsaWFzZXMgew0KPj4gKyAgICAgICAg
+ICAgICAgIGVuZXQyX3JnbWlpX3BoeSA9ICZyZ21paV9waHkxOw0KPj4gKyAgICAgICAgICAgICAg
+IGVuZXQwX3NnbWlpX3BoeSA9ICZzZ21paV9waHkyOw0KPj4gKyAgICAgICAgICAgICAgIGVuZXQx
+X3NnbWlpX3BoeSA9ICZzZ21paV9waHkwOw0KPj4gKyAgICAgICB9Ow0KPj4gK307DQo+Pg0KPg0K
+PkkndmUgbmV2ZXIgc2VlbiBhbGlhcyBub2RlcyBmb3IgbWRpbyBkZXZpY2VzLiBXaGF0IGFyZSB0
+aGVzZSB1c2VkIGZvcj8NCj5TaG91bGRuJ3QgeW91IHVzZSAncGh5LWhhbmRsZScgcHJvcGVydGll
+cyBpbiB0aGUgZXRoZXJuZXQgbm9kZXMgaW5zdGVhZD8NCj4NCj4JQXJuZA0KDQpUaGUgZXRoZXJu
+ZXQgZGV2aWNlIG5vZGVzIGFscmVhZHkgaGF2ZSB0aGUgcGh5LWhhbmRsZSBwcm9wZXJ0aWVzIHRv
+IHRoZWlyIG1kaW8gbm9kZXMuDQoNClRoZSBhbGlhcyBmb3IgUEhZIG5vZGVzIGhlcmUgaXM6DQog
+IFRoZSBldGhlcm5ldCBoYXMgdHdvIGtpbmQgb2YgUEhZIGludGVyZmFjZSwgb25lIGlzIFNHTUlJ
+LCBhbmQgdGhlIG90aGVyIGlzIFJHTUlJLA0KVGhlIHNlbGVjdGlvbiBpcyBkb25lIGJ5IHRoZSBy
+ZXNldCBjb25maWd1cmF0aW9uIHdvcmQoUkNXKSwgc28gUGh5LWhhbmRsZSBwcm9wZXJ0aWVzDQpz
+aG91bGQgYmUgY2hhbmdlIHByb3Blcmx5IHRvIHJlZmxlY3RpbmcgdGhlIFBIWSBpbnRlcmZhY2Ug
+c2VsZWN0aW9uLiBUaGlzIGlzIGRvbmUNCmJ5IGZpeGluZyB1cCBkdGIgaW4gdS1ib290IGJlZm9y
+ZSBib290aW5nIHRoZSBrZXJuZWwuIFRodXMgdGhlIGFsaWFzIGZvciBQSFkgbm9kZXMNCmlzIGFk
+ZGVkIGhlcmUgZm9yIGZkdCBmaW5kaW5nIHRoZSBQSFkgbm9kZXMgZWFzaWx5Lg0KDQpCZXN0IFJl
+Z2FyZHMsDQpKaW5nY2hhbmcNCg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
