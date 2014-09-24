@@ -1,49 +1,45 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v1 4/5] drivers: net: xgene: Add 10GbE support
-Date: Wed, 24 Sep 2014 15:10:07 +0200
-Message-ID: <7752137.3u6F6qDtIo@wuerfel>
-References: <1411530688-2939-1-git-send-email-isubramanian@apm.com> <1411530688-2939-5-git-send-email-isubramanian@apm.com>
+From: Frans Klaver <frans.klaver-MHHw4NDrbWwAvxtiuMwx3w@public.gmane.org>
+Subject: [RFC PATCH 0/2] explicitly instantiate battery from device tree
+Date: Wed, 24 Sep 2014 15:11:16 +0200
+Message-ID: <1411564278-17207-1-git-send-email-frans.klaver@xsens.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1411530688-2939-5-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: Iyappan Subramanian <isubramanian@apm.com>
-Cc: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org, kchudgar@apm.com, patches@apm.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Frans Klaver <frans.klaver-MHHw4NDrbWwAvxtiuMwx3w@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 23 September 2014 20:51:27 Iyappan Subramanian wrote:
-> -static void xgene_enet_wr_mcx_mac(struct xgene_enet_pdata *pdata,
-> -                                 u32 wr_addr, u32 wr_data)
-> +void xgene_enet_wr_mac(struct xgene_enet_pdata *pdata, u32 wr_addr, u32 wr_data)
->  {
->         void __iomem *addr, *wr, *cmd, *cmd_done;
->  
-> -       addr = pdata->mcx_mac_addr + MAC_ADDR_REG_OFFSET;
-> -       wr = pdata->mcx_mac_addr + MAC_WRITE_REG_OFFSET;
-> -       cmd = pdata->mcx_mac_addr + MAC_COMMAND_REG_OFFSET;
-> -       cmd_done = pdata->mcx_mac_addr + MAC_COMMAND_DONE_REG_OFFSET;
-> +       addr = pdata->mac_addr + MAC_ADDR_REG_OFFSET;
-> +       wr = pdata->mac_addr + MAC_WRITE_REG_OFFSET;
-> +       cmd = pdata->mac_addr + MAC_COMMAND_REG_OFFSET;
-> +       cmd_done = pdata->mac_addr + MAC_COMMAND_DONE_REG_OFFSET;
->  
->         if (!xgene_enet_wr_indirect(addr, wr, cmd, cmd_done, wr_addr, wr_data))
->                 netdev_err(pdata->ndev, "MCX mac write failed, addr: %04x\n",
->                            wr_addr);
->  }
->  
-> -static void xgene_enet_rd_csr(struct xgene_enet_pdata *pdata,
-> -                             u32 offset, u32 *val)
-> +void xgene_enet_rd_csr(struct xgene_enet_pdata *pdata, u32 offset, u32 *val)
->  {
->         void __iomem *addr = pdata->eth_csr_addr + offset;
->  
-> 
+Hi there,
 
-A lot of the changes in this patch seem to just rename existing interfaces.
-Please split those out into a preparatory patch, to make it easier to
-review the actual functional changes.
+Here's some patches that make it possible to instantiate an sbs battery without
+it being present yet.
 
-	Arnd
+i2c devices are more or less presumed to be persistent. This is a fair
+assumption, except for the case of batteries. It is perfectly sensible for a
+device to boot up using wall power, but no battery attached. While later
+attaching a battery and dropping the wall power. Detecting the device from
+userspace is tedious requires you to scan for device presence yourself, or you
+can ask the kernel to probe again, cluttering your logs with failed probes.
+
+I'd like to hear what you think about this.
+
+Thanks,
+Frans
+
+Frans Klaver (2):
+  sbs-battery: add forced instantiation from device tree
+  sbs-battery: dts: document always-present property
+
+ .../devicetree/bindings/power_supply/sbs_sbs-battery.txt      |  2 ++
+ drivers/power/sbs-battery.c                                   | 11 +++++++++--
+ include/linux/power/sbs-battery.h                             |  3 +++
+ 4 files changed, 15 insertions(+), 2 deletions(-)
+
+-- 
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
