@@ -1,44 +1,59 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 2/3] watchdog: qcom: document device tree bindings
-Date: Wed, 24 Sep 2014 11:56:00 +0100
-Message-ID: <20140924105600.GD5729@leverpostej>
-References: <cover.1411513109.git.joshc@codeaurora.org>
- <337231c0fc8b16b4f37e1e3b85cb0246f357a64d.1411513109.git.joshc@codeaurora.org>
- <2941802.u7NP2737aD@wuerfel>
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv4 3/6] ARM: dts: Add initial LS1021A TWR board dts support
+Date: Wed, 24 Sep 2014 11:00:34 +0000
+Message-ID: <bb122a232a1c40559e84a058f3d003b4@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1411371952-5618-1-git-send-email-jingchang.lu@freescale.com>
+ <3321146.kBfn28qbNM@wuerfel>
+ <a83d5601a26b4e45be5e5016de287287@BL2PR03MB467.namprd03.prod.outlook.com>
+ <4264466.HtkUxyxBW8@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2941802.u7NP2737aD@wuerfel>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Josh Cartwright <joshc@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4264466.HtkUxyxBW8@wuerfel>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Shengchao Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "B46807-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B46807-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 24, 2014 at 11:44:44AM +0100, Arnd Bergmann wrote:
-> On Tuesday 23 September 2014 18:04:37 Josh Cartwright wrote:
-> > +- clocks : shall contain the input clock phandle
-> 
-> Just nitpicking, but this is not just a phandle, it's a clock
-> descriptor, which is a phandle followed by a set of arguments,
-> which may be empty, depending the on the clock controller
-> implementation.
-
-We're _extremely_ inconsistent with terminology, so it's not confusing
-people don't know what to put here.
-
-Elsewhere people say "phandle + clock specifier" (which is correct),
-"clock reference" (which is ok, but sounds like a phandle), etc. From
-what I recall some documentation says some *-specifier properties
-include the phandle too.
-
-It would be really nice if we had one consistent way of refering to
-phandle+args style properties.
-
-> 
-> I would just call it 'the input clock', rather than 'input clock
-> phandle'.
-
-That's fine by me, given clocks is a well-understood standard property.
-
-Mark.
+DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEFybmQgQmVyZ21hbm4gW21h
+aWx0bzphcm5kQGFybmRiLmRlXQ0KPlNlbnQ6IFdlZG5lc2RheSwgU2VwdGVtYmVyIDI0LCAyMDE0
+IDU6MzYgUE0NCj5UbzogTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPkNjOiBHdW8gU2hhd24tUjY1MDcz
+OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLQ0KPmtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTHUgQ2hlbi1CNDY4MDc7IEZ1DQo+
+Q2hhby1CNDQ1NDgNCj5TdWJqZWN0OiBSZTogW1BBVENIdjQgMy82XSBBUk06IGR0czogQWRkIGlu
+aXRpYWwgTFMxMDIxQSBUV1IgYm9hcmQgZHRzDQo+c3VwcG9ydA0KPg0KPk9uIFdlZG5lc2RheSAy
+NCBTZXB0ZW1iZXIgMjAxNCAwNTo0Nzo1MyBKaW5nY2hhbmcgTHUgd3JvdGU6DQo+Pg0KPj4gVGhl
+IGV0aGVybmV0IGRldmljZSBub2RlcyBhbHJlYWR5IGhhdmUgdGhlIHBoeS1oYW5kbGUgcHJvcGVy
+dGllcyB0bw0KPnRoZWlyIG1kaW8gbm9kZXMuDQo+Pg0KPj4gVGhlIGFsaWFzIGZvciBQSFkgbm9k
+ZXMgaGVyZSBpczoNCj4+ICAgVGhlIGV0aGVybmV0IGhhcyB0d28ga2luZCBvZiBQSFkgaW50ZXJm
+YWNlLCBvbmUgaXMgU0dNSUksIGFuZCB0aGUNCj4+IG90aGVyIGlzIFJHTUlJLCBUaGUgc2VsZWN0
+aW9uIGlzIGRvbmUgYnkgdGhlIHJlc2V0IGNvbmZpZ3VyYXRpb24NCj4+IHdvcmQoUkNXKSwgc28g
+UGh5LWhhbmRsZSBwcm9wZXJ0aWVzIHNob3VsZCBiZSBjaGFuZ2UgcHJvcGVybHkgdG8NCj4+IHJl
+ZmxlY3RpbmcgdGhlIFBIWSBpbnRlcmZhY2Ugc2VsZWN0aW9uLiBUaGlzIGlzIGRvbmUgYnkgZml4
+aW5nIHVwIGR0Yg0KPj4gaW4gdS1ib290IGJlZm9yZSBib290aW5nIHRoZSBrZXJuZWwuIFRodXMg
+dGhlIGFsaWFzIGZvciBQSFkgbm9kZXMgaXMNCj5hZGRlZCBoZXJlIGZvciBmZHQgZmluZGluZyB0
+aGUgUEhZIG5vZGVzIGVhc2lseS4NCj4NCj5PaywgSSBzZWUuIEkgdGhvdWdodCB0aGF0IHRoaXMg
+d2FzIHdoYXQgdGhlIGxhYmVscyBpbiB0aGUgZHRiIHdlcmUNCj5zdXBwb3NlZCB0byBiZSB1c2Vk
+IGZvci4gQ2FuJ3QgeW91IGRvIHRoZSBzYW1lIHRoaW5nIGluIHUtYm9vdCBieSB1c2luZyBhDQo+
+bGFiZWwgYXMgb3Bwb3NlZCB0byB0aGUgYWxpYXM/DQo+DQo+SUlSQyB5b3Ugc2hvdWxkIGJlIGFi
+bGUgdG8gYWRkIGFuIGFkZGl0aW9uYWwgbGFiZWwgbGlrZQ0KPg0KPismbWRpbzAgew0KPisgICAg
+ICAgZW5ldDFfc2dtaWlfcGh5OiBzZ21paV9waHkwOiBldGhlcm5ldC1waHlAMCB7DQo+KyAgICAg
+ICAgICAgICAgIHJlZyA9IDwweDA+Ow0KPisgICAgICAgfTsNCj4NCj5hbmQgdGhlbiB1c2UgbGli
+ZmR0IHRvIGZpbmQgdGhlIG5vZGUgdGhyb3VnaCB0aGF0LCByYXRoZXIgdGhhbiB0aHJvdWdoIHRo
+ZQ0KPmFsaWFzLiBJIGRvbid0IGtub3cgaG93IHRoaW5ncyBhcmUgaGFuZGxlZCBvbiBvdGhlciBw
+bGF0Zm9ybXMsIGJ1dCBJIHRoaW5rDQo+dGhhdCB3YXMgaG93IGl0IHdhcyBpbml0aWFsbHkgdGhv
+dWdodCB1cCB3aGVuIHdlIGludHJvZHVjZWQgdGhlIGZkdCBmb3JtYXQNCj5vbiBQb3dlclBDLg0K
+Pg0KPglBcm5kDQoNCldlIGFsc28gZG8gdGhlIHBoeS1oYW5kbGUgZml4dXAgb24gb3VyIFBvd2Vy
+UEMgcGxhdGZvcm0gYmFzZWQgb24gdGhlIGFsaWFzZXMsDQphbmQgc28gSSBhZG9wdCB0aGUgc2Ft
+ZSB3YXkgdG8gbWFrZSB0aGVzZSBmaXh1cCBjb25zaXN0ZW50IGJldHdlZW4gU29Dcy4NCkFuZCB0
+aGUgdS1ib290IGZkdCBmaXh1cCBjb2RlIGJhc2Ugb24gdGhlIGFsaWFzZXMgaGFzIGJlZW4gdXBz
+dHJlYW1lZCwgc28gbWF5DQp3ZSBrZWVwIHRoaXMgYWxpYXNlcyB1bmNoYW5nZWQ/DQoNCkJUVywg
+ZmluZCBhIG5vZGUgYnkgYWxpYXMgaXMgZWFzaWx5LCBjb3VsZCB5b3UgZ2l2ZSBtZSBzb21lIGNs
+dWUgb24gZmluZGluZyBhIG5vZGUNCmJ5IGEgbGFiZWwgZGlyZWN0bHksIFRoYW5rcy4NCg0KDQpC
+ZXN0IFJlZ2FyZHMsDQpKaW5nY2hhbmcNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
