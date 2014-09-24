@@ -1,60 +1,55 @@
-From: Robert Richter <rric@kernel.org>
-Subject: [PATCH 2/6] GICv3: Add ITS entry to THUNDER dts
-Date: Wed, 24 Sep 2014 17:37:44 +0200
-Message-ID: <1411573068-12952-3-git-send-email-rric@kernel.org>
-References: <1411573068-12952-1-git-send-email-rric@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v7 3/3] regulator: qcom-rpm: Regulator driver for the
+ Qualcomm RPM
+Date: Wed, 24 Sep 2014 16:45:07 +0100
+Message-ID: <20140924154507.GJ16977@sirena.org.uk>
+References: <1411428329-23172-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1411428329-23172-4-git-send-email-bjorn.andersson@sonymobile.com>
+ <20140924083518.GB4015@sirena.org.uk>
+ <4437DA50-D8BC-4E78-821C-41440A08B9A9@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1411573068-12952-1-git-send-email-rric@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>, linux-kernel@vger.kernel.org, Robert Richter <rrichter@cavium.com>, Tirumalesh Chalamarla <tchalamarla@cavium.com>, Sunil Goutham <sgoutham@cavium.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Xssso5lpTBgMxDfe"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4437DA50-D8BC-4E78-821C-41440A08B9A9@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tirumalesh Chalamarla <tchalamarla@cavium.com>
 
-The PCIe host controller uses MSIs provided by GICv3 ITS. Enable it on
-Thunder SoCs by adding an entry to DT.
+--Xssso5lpTBgMxDfe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Tirumalesh Chalamarla <tchalamarla@cavium.com>
-Signed-off-by: Robert Richter <rrichter@cavium.com>
----
- arch/arm64/boot/dts/thunder-88xx.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On Wed, Sep 24, 2014 at 08:50:38AM -0500, Kumar Gala wrote:
 
-diff --git a/arch/arm64/boot/dts/thunder-88xx.dtsi b/arch/arm64/boot/dts/thunder-88xx.dtsi
-index d8c0bdc51882..9cb7cf94284a 100644
---- a/arch/arm64/boot/dts/thunder-88xx.dtsi
-+++ b/arch/arm64/boot/dts/thunder-88xx.dtsi
-@@ -376,10 +376,19 @@
- 		gic0: interrupt-controller@8010,00000000 {
- 			compatible = "arm,gic-v3";
- 			#interrupt-cells = <3>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
- 			interrupt-controller;
- 			reg = <0x8010 0x00000000 0x0 0x010000>, /* GICD */
- 			      <0x8010 0x80000000 0x0 0x600000>; /* GICR */
- 			interrupts = <1 9 0xf04>;
-+
-+			its: gic-its@8010,00020000 {
-+				compatible = "arm,gic-v3-its";
-+				msi-controller;
-+				reg = <0x8010 0x20000 0x0 0x200000>;
-+			};
- 		};
- 
- 		uaa0: serial@87e0,24000000 {
--- 
-2.1.0
+Fix your mailer to word wrap within paragraphs please.
+
+> Mark, can you drop this until we see at least an RFC patch for the RPM
+> support for b-family SoCs (8074, 8084, etc) chips.  The regulator
+> could should either be the same or highly similar for b-family, but
+> until we see the core RPM driver on the b-family SoCs we will not know
+> that.
+
+No, send incremental patches.  This is the *seventh* resend of this
+code, I really don't want to have to reread it again.
+
+--Xssso5lpTBgMxDfe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUIucCAAoJECTWi3JdVIfQ3r0H/1baQ7Em5fhCzTe+DMU3be5R
+w8a/f5W5BOA9UAzQMNo7P0EiTG/m9O/LZIdL9uJyo+eR48tf+xendmtYLhXLMqH7
+ESHkldfOPLVyDcuChKwfqAfMCxZ+sKHPN4ohuLGNNJID4uLPKsiXqrWihrG3jHBY
+83BQmf/P4Casg5hAkbNBYmVpqfjrivcFQ74K+tWyqnJXJbTNI3aX9J+nrRpTccu3
+5HOabre0RJh5NoPWDALvjppTLHCoff0TWMyr9p0LTv/AYPrv0BOX4s4pCTDE4Ghj
+AJiOMus1cBU1X5mP0HtJYxX/GvFrcBKs2BtLSkfgpxZblzOJvngl6dSFk10FsIs=
+=EEp/
+-----END PGP SIGNATURE-----
+
+--Xssso5lpTBgMxDfe--
