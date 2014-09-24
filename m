@@ -1,102 +1,113 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC PATCH 1/2] sbs-battery: add forced instantiation from
- device tree
-Date: Wed, 24 Sep 2014 16:34:32 +0100
-Message-ID: <20140924153431.GJ5729@leverpostej>
-References: <1411564278-17207-1-git-send-email-frans.klaver@xsens.com>
- <1411564278-17207-2-git-send-email-frans.klaver@xsens.com>
- <20140924131655.GG5729@leverpostej>
- <20140924142222.GC22872@ci00147.xsens-tech.local>
- <20140924143848.GH5729@leverpostej>
- <20140924151448.GD22872@ci00147.xsens-tech.local>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 1/7] clk: sunxi: Add post clk divider for
+ factor clocks
+Date: Wed, 24 Sep 2014 23:35:58 +0800
+Message-ID: <CAGb2v64o-7La6Sd_WVDrPQC0DUTqXZPZoG7u=OpXb+xRB1tcog@mail.gmail.com>
+References: <1410000448-9999-1-git-send-email-wens@csie.org>
+ <1410000448-9999-2-git-send-email-wens@csie.org> <54145822.4020607@elopez.com.ar>
+ <20140916155711.GF2166@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140924151448.GD22872@ci00147.xsens-tech.local>
-Sender: linux-doc-owner@vger.kernel.org
-To: Frans Klaver <frans.klaver@xsens.com>, olof@lixom.net, anton.vorontsov@linaro.org
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB46JROQQKGQEF5JFRYY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20140916155711.GF2166@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 24, 2014 at 04:14:48PM +0100, Frans Klaver wrote:
-> On Wed, Sep 24, 2014 at 03:38:49PM +0100, Mark Rutland wrote:
-> > On Wed, Sep 24, 2014 at 03:22:22PM +0100, Frans Klaver wrote:
-> > > On Wed, Sep 24, 2014 at 02:16:55PM +0100, Mark Rutland wrote:
-> > > > On Wed, Sep 24, 2014 at 02:11:17PM +0100, Frans Klaver wrote:
-> > > > > In some cases you want to instantiate a battery even before it is
-> > > > > attached; it is perfectly reasonable for a device to start up on
-> > > > > wall-power and be connected to a battery later. The current advice is to
-> > > > > instantiate a device explicitly in the kernel, or probe for the device
-> > > > > from userspace. The downside of these approaches is that the user needs
-> > > > > to keep the information related to the i2c battery in different places,
-> > > > > which is inconvenient.
-> > > > 
-> > > > This really sounds like a Linux policy issue rather than something that
-> > > > should be described in dt.
-> > > > 
-> > > > Presumably there's a reason we sanity cehck this in the first place.
-> > > > What happens while the battery isn't plugged in? What can fail, and how?
-> > > 
-> > > It was introduced in a22b41a31e53 "sbs-battery: Probe should try talking
-> > > to the device", saying:
-> > > 
-> > >   "this driver doesn't actually try talking to the device at probe time,
-> > >   so if it's incorrectly configured in the device tree or platform data
-> > >   (or if the battery has been removed from the system), then probe will
-> > >   succeed and every access will sit there and time out. The end result
-> > >   is a possibly laggy system that thinks it has a battery but can never
-> > >   read status, which isn't very useful."
-> > > 
-> > > That's a reasonable thing to do, but it breaks just the feature I need.
-> > > Besides that, the driver provides us with a gpio that indicates battery
-> > > presence, which will also be useless if the device isn't present at
-> > > probe time. That commit also doesn't take into account the fact that a
-> > > battery could be removed after probing without any problems, leaving the
-> > > system in the same state as before the probe change.
-> > > 
-> > > Now if the battery isn't plugged in, it is never detected after it has
-> > > been attached, unless you take action from userspace. Basically you
-> > > don't know your battery level until it has been explicitly probed.
-> > > 
-> > > We might also reduce the severity of the sanity check failure to produce
-> > > a warning instead of an error. This would achieve that a developer might
-> > > be warned that the battery isn't present, but also allow my use case
-> > > where the battery may not be present at boot time. Was that what you
-> > > meant with policy by the way?
-> > 
-> > In general, properties in general shouldn't tell the kernel what to do.
-> > They should tell the kernel details of the hardware that it can then use
-> > to make informed decisions. In this case, the suggested property is
-> > purely a software detail, as the hardware isn't any different in
-> > situations you would or would not want the property.
-> 
-> Ok, that makes sense.
-> 
-> > You mention that there's a GPIO that can be used to detect the battery
-> > presence. Why can't the driver always probe and then on check for the
-> > presence of the battery dynamically using that GPIO? That should cover
-> > both cases.
-> 
-> I would say that this was the case before [1] was done. The GPIO is
-> optional and if not configured, the presence or absence of the battery
-> is detected by checking a status register much like probe() currently
-> does. It seems all cases were covered before that patch. If you worry
-> about speed, you should use the GPIO. I wonder if we might be able to
-> revert [1] without doing much harm.
+Hi Maxime, Emilio,
 
-But reverting that would re-introduce the lag on some systems, no? Given
-the wording of the original commit I would guess that the GPIO wasn't
-available. Perhaps Olof or Anton can enlighten us?
+On Tue, Sep 16, 2014 at 11:57 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi Emilio,
+>
+> On Sat, Sep 13, 2014 at 11:43:46AM -0300, Emilio L=C3=B3pez wrote:
+>> Hi,
+>>
+>> El 06/09/14 a las 07:47, Chen-Yu Tsai escibi=C3=B3:
+>> >Some factor clocks, mostly PLLs, have an extra fixed divider just befor=
+e
+>> >the clock output. Add an option to the factor clk driver config data to
+>> >specify this divider.
+>> >
+>> >Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> >---
+>> >  drivers/clk/sunxi/clk-factors.c | 3 +++
+>> >  drivers/clk/sunxi/clk-factors.h | 1 +
+>> >  2 files changed, 4 insertions(+)
+>> >
+>> >diff --git a/drivers/clk/sunxi/clk-factors.c b/drivers/clk/sunxi/clk-fa=
+ctors.c
+>> >index 2057c8a..435111d 100644
+>> >--- a/drivers/clk/sunxi/clk-factors.c
+>> >+++ b/drivers/clk/sunxi/clk-factors.c
+>> >@@ -64,6 +64,9 @@ static unsigned long clk_factors_recalc_rate(struct c=
+lk_hw *hw,
+>> >     /* Calculate the rate */
+>> >     rate =3D (parent_rate * (n + config->n_start) * (k + 1) >> p) / (m=
+ + 1);
+>> >
+>> >+    if (config->post_div)
+>> >+            rate /=3D config->post_div;
+>> >+
+>> >     return rate;
+>> >  }
+>> >
+>> >diff --git a/drivers/clk/sunxi/clk-factors.h b/drivers/clk/sunxi/clk-fa=
+ctors.h
+>> >index d2d0efa..ce70c65 100644
+>> >--- a/drivers/clk/sunxi/clk-factors.h
+>> >+++ b/drivers/clk/sunxi/clk-factors.h
+>> >@@ -16,6 +16,7 @@ struct clk_factors_config {
+>> >     u8 pshift;
+>> >     u8 pwidth;
+>> >     u8 n_start;
+>> >+    u8 post_div;
+>> >  };
+>> >
+>> >  struct clk_factors {
+>> >
+>>
+>> For the record, I liked your solution on[1] more, as it's in line
+>> with what we're doing on the other sunxi platforms, instead of
+>> adding features in factors to cover for some cases. But it's your
+>> and Maxime's call, as I haven't written any of the sun6i code so
+>> far.
+>
+> No, you still wrote most of the clock support, so your opinion is
+> always valuable (and valued).
+>
+> Thing is, unlike what was done in the sun4i driver where there was a
+> "real" technical issue that was preventing us from using only
+> fixed-factor, we're not in such a case in sun6i (and later,
+> apparently).
+>
+> PLL6 has only one output, which is then directly multiplied by
+> fixed-factors, without any (pre|post)-dividers for any of them.
+>
+> That means that following what you did for the sun4i would just
+> register 3 "dumbs" fixed-factors, that we couldn't reference from DT,
+> or through a cryptic index (which is not even documented in our
+> bindings).
+>
+> I'd be fine either way, I just prefer the solution that has less code
+> and is more explicit.
 
-In the cases where a GPIO is available, I think we should be able to be
-less pessimistic. Is a GPIO available in your case?
+What's the verdict on this series?
 
-Mark.
+ChenYu
 
-> 
-> Thanks,
-> Frans
-> 
-> [1] a22b41a31e53 "sbs-battery: Probe should try talking to the device"
-> 
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
