@@ -1,96 +1,213 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
- ps8622 DT properties
-Date: Wed, 24 Sep 2014 09:11:17 +0200
-Message-ID: <54226E95.9000706@samsung.com>
-References: <CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com>
- <5419B52D.4060107@ti.com> <20140922080629.GC1470@ulmo>
- <542030DD.3060906@ti.com> <20140923060452.GD30514@ulmo>
- <5421201C.6000509@samsung.com> <20140923083514.GM30514@ulmo>
- <542140D3.8080806@samsung.com> <20140923101032.GU30514@ulmo>
- <54214CCE.7050102@samsung.com> <20140923144127.GE5982@ulmo>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH 3/6] ARM: dts: sunxi: Add Allwinner A80 dtsi
+Date: Wed, 24 Sep 2014 15:14:47 +0800
+Message-ID: <CAGb2v64voZpK_82wtkErRowR0vjEUALNUwvCx_sd8Q5wb4Hq-g@mail.gmail.com>
+References: <1411311493-24344-1-git-send-email-wens@csie.org>
+ <1411311493-24344-4-git-send-email-wens@csie.org> <20140924063738.GQ15315@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20140923144127.GE5982@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay kumar <ajaynumb@gmail.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB7G6RGQQKGQESCGXQZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20140924063738.GQ15315@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Meng Zhang <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, yhf-HcjymKqD97rQT0dZR+AlfA@public.gmane.org, ctl-HcjymKqD97rQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/23/2014 04:41 PM, Thierry Reding wrote:
-> On Tue, Sep 23, 2014 at 12:34:54PM +0200, Andrzej Hajda wrote:
->> On 09/23/2014 12:10 PM, Thierry Reding wrote:
->>> On Tue, Sep 23, 2014 at 11:43:47AM +0200, Andrzej Hajda wrote:
->>>> On 09/23/2014 10:35 AM, Thierry Reding wrote:
->>> [...]
->>>>> But I agree that it would be nice to unify bridges and encoders more. It
->>>>> should be possible to make encoder always a bridge (or perhaps even
->>>>> replace encoders with bridges altogether). Then once you're out of the
->>>>> DRM device everything would be a bridge until you get to a panel.
->>>> I agree that some sort of unification of bridges, (slave) encoders is a good
->>>> thing, this way we stay only with bridges and panels as receivers.
->>>> But we will still have to deal with the code like:
->>>>     if (on the other end of the link is panel)
->>>>         do panel framework specific things
->>>>     else
->>>>         do bridge framework specific things
->>>>
->>>> The code in both branches usually does similar things but due to framework
->>>> differences it is difficult to merge.
->>> That's because they are inherently different entities. You can perform
->>> operations on a panel that don't make sense for a bridge and vice-versa.
->>>
->>>> Ideally it would be best to get rid of such constructs. For example by
->>>> trying to
->>>> make frameworks per interface type exposed by device (eg. video_sink) and
->>>> not by device type (drm_bridge, drm_panel).
->>> But then you loose all information about the real type of device.
->> Driver knows type of its device anyway. Why should it know device
->> type of devices it is connected to? It is enough it knows how to talk to
->> other device.
->> Like in real world, why desktop PC should know it is connected to DVI
->> monitor or to
->> DVI/HDMI converter which is connected to TV?
-> TVs are much more standardized. There are things like DDC/CI which can
-> be used to control the device. Or there's additional circuitry or
-> control paths to change things like brightness. The same isn't true of
-> panels.
-But it is also true on HW level in case of display subsystem components -
-If some device have output format X it means it can be connected to any
-device
-having input format X, whatever it is: panel, bridge, image enhancer...
-
+On Wed, Sep 24, 2014 at 2:37 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi,
 >
->>>  Or you
->>> have to create a common base class. And then you're still back to
->>> dealing with the two specific cases in many places, so the gain seems
->>> rather minimal.
->> For example RGB panel and RGB/??? bridge have the same hardware input
->> interface.
->> Why shall they have different representation in kernel?
-> Because panels have different requirements than bridges. Panels for
-> example require the backlight to be adjustable, bridges don't.
-
-But I have asked about their input interface, RGB panel and RGB/???
-bridge have the
-same input interface.
-In other words if instead of creating frameworks for each device type we
-try to create framework
-for functions/interfaces these device provides we should end up with
-fewer frameworks and more clean code.
-
-Regards
-Andrzej
-
+> Thanks, a lot for your patches :)
 >
-> Thierry
+> On Sun, Sep 21, 2014 at 10:58:10PM +0800, Chen-Yu Tsai wrote:
+>> The Allwinner A80 is a new multi-purpose SoC with 4 Cortex-A7 and
+>> 4 Cortex-A15 cores in a big.LITTLE architecture, and a 64-core
+>> PowerVR G6230 GPU.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/sun9i-a80.dtsi | 280 +++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 280 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/sun9i-a80.dtsi
+>>
+>> diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
+>> new file mode 100644
+>> index 0000000..f23ea59
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun9i-a80.dtsi
+>> @@ -0,0 +1,280 @@
+>> +/*
+>> + * Copyright 2014 Chen-Yu Tsai
+>> + *
+>> + * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This library is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This library is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + *     You should have received a copy of the GNU General Public
+>> + *     License along with this library; if not, write to the Free
+>> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+>> + *     MA 02110-1301 USA
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +/include/ "skeleton.dtsi"
+>> +
+>> +/ {
+>> +     interrupt-parent = <&gic>;
+>> +
+>> +     aliases {
+>> +             serial0 = &uart0;
+>> +             serial1 = &uart1;
+>> +             serial2 = &uart2;
+>> +             serial3 = &uart3;
+>> +             serial4 = &uart4;
+>> +             serial5 = &uart5;
+>> +             serial6 = &r_uart;
+>> +     };
+>> +
+>> +     cpu-map {
+>> +             cluster0 {
+>> +                     core0 {
+>> +                             cpu = <&cpu0>;
+>> +                     };
+>> +                     core1 {
+>> +                             cpu = <&cpu1>;
+>> +                     };
+>> +                     core2 {
+>> +                             cpu = <&cpu2>;
+>> +                     };
+>> +                     core3 {
+>> +                             cpu = <&cpu3>;
+>> +                     };
+>
+> Having separation lines between the cores here would be nice.
+
+OK.
+
+>> +             };
+>> +
+>> +             cluster1 {
+>> +                     core0 {
+>> +                             cpu = <&cpu4>;
+>> +                     };
+>> +                     core1 {
+>> +                             cpu = <&cpu5>;
+>> +                     };
+>> +                     core2 {
+>> +                             cpu = <&cpu6>;
+>> +                     };
+>> +                     core3 {
+>> +                             cpu = <&cpu7>;
+>> +                     };
+>> +             };
+>> +     };
+>> +
+>> +     cpus {
+>> +             #address-cells = <1>;
+>> +             #size-cells = <0>;
+>> +
+>> +             cpu0: cpu@0 {
+>> +                     compatible = "arm,cortex-a7";
+>> +                     device_type = "cpu";
+>> +                     reg = <0x0>;
+>> +             };
+>> +
+>> +             cpu1: cpu@1 {
+>> +                     compatible = "arm,cortex-a7";
+>> +                     device_type = "cpu";
+>> +                     reg = <0x1>;
+>> +             };
+>> +
+>> +             cpu2: cpu@2 {
+>> +                     compatible = "arm,cortex-a7";
+>> +                     device_type = "cpu";
+>> +                     reg = <0x2>;
+>> +             };
+>> +
+>> +             cpu3: cpu@3 {
+>> +                     compatible = "arm,cortex-a7";
+>> +                     device_type = "cpu";
+>> +                     reg = <0x3>;
+>> +             };
+>> +
+>> +             cpu4: cpu@100 {
+>> +                     compatible = "arm,cortex-a15";
+>> +                     device_type = "cpu";
+>> +                     reg = <0x100>;
+>> +             };
+>> +
+>> +             cpu5: cpu@101 {
+>> +                     compatible = "arm,cortex-a15";
+>> +                     device_type = "cpu";
+>> +                     reg = <0x101>;
+>> +             };
+>> +
+>> +             cpu6: cpu@102 {
+>> +                     compatible = "arm,cortex-a15";
+>> +                     device_type = "cpu";
+>> +                     reg = <0x102>;
+>> +             };
+>> +
+>> +             cpu7: cpu@103 {
+>> +                     compatible = "arm,cortex-a15";
+>> +                     device_type = "cpu";
+>> +                     reg = <0x103>;
+>> +             };
+>> +     };
+>> +
+>> +     memory {
+>> +             reg = <0x20000000 0x40000000>;
+>
+> Usually, what we put there was the maximum amount of RAM that can be
+> handled by the SoC. I think that it can go above 1GB
+
+With LPAE, it can handle 8GB. But the DT won't take 64bit values.
+I'm not sure how to get it in. I'll look around for examples.
+
+> It looks fine otherwise, thanks!
+
+Thanks!
+
+ChenYu
