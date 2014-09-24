@@ -1,42 +1,76 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH RESEND] thermal: Add QPNP PMIC temperature alarm driver
-Date: Wed, 24 Sep 2014 14:24:12 -0400
-Message-ID: <20140924182410.GD27076@developer>
-References: <1410793383-30097-1-git-send-email-iivanov@mm-sol.com>
- <20140915153052.GB27076@developer>
- <1411570570.18580.72.camel@iivanov-dev>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 3/6] pci, thunder: Add PCIe host controller devicetree bindings
+Date: Wed, 24 Sep 2014 20:34:14 +0200
+Message-ID: <3414852.SWQ9rRcUDx@wuerfel>
+References: <1411573068-12952-1-git-send-email-rric@kernel.org> <3082935.e3X4GsVUDn@wuerfel> <CA+sq2Ce8sb=YGma05qEk_992Mc9M92TxCk+RWsyi6tY-FVOCXw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1411570570.18580.72.camel@iivanov-dev>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, David Collins <collinsd@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+sq2Ce8sb=YGma05qEk_992Mc9M92TxCk+RWsyi6tY-FVOCXw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sunil Kovvuri <sunil.kovvuri-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Sunil Goutham <sgoutham-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Ivan,
-
-On Wed, Sep 24, 2014 at 05:56:10PM +0300, Ivan T. Ivanov wrote:
-> On Mon, 2014-09-15 at 11:30 -0400, Eduardo Valentin wrote:
-> > Hey Ivan,
-> > 
-> > Please give us at least a two weeks time frame before resending your
-> > patches.
+On Wednesday 24 September 2014 23:34:04 Sunil Kovvuri wrote:
+> On Wed, Sep 24, 2014 at 9:36 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Wednesday 24 September 2014 17:37:45 Robert Richter wrote:
+> >> +               compatible = "cavium,thunder-pcie";
+> >> +               device_type = "pci";
+> >> +               msi-parent = <&its>;
+> >> +               bus-range = <0 255>;
+> >> +               #size-cells = <2>;
+> >> +               #address-cells = <3>;
+> >> +               reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
+> >> +               ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>, /* mem ranges */
+> >> +                       <0x03000000 0x8300 0x00000000 0x8300 0x00000000 0x80 0x00000000>,
+> >> +                       <0x03000000 0x87e0 0x00000000 0x87e0 0x00000000 0x01 0x00000000>;
+> >> +        };
+> >
+> > If you claim the entire 0-255 bus range, I think you should also
+> > specify a domain, otherwise it's not predictable which domain you
+> > get.
+> >
+> > The interrupt-map and interrupt-map-mask properties are required for PCI,
+> > otherwise you can't do LSI interrupts.
 > 
-> Hi Eduardo, 
+> This PCI controller supports only MSIx interrupts which are edge triggered.
+
+Interesting, so it's not PCI compliant then? I assume this will be fixed
+in the production version of the silicon, right?
+
+Having no support for interrupts mean that the majority of PCI device drivers
+will fail.
+
+> > If your hardware can support it, you should also list I/O space and prefetchable
+> > memory spaces. Can you explain why you have multiple non-prefetchable ranges?
 > 
-> Should I wait for more comments or I can post updated
-> version of this patch?
-> 
+> Our hardware is an ECAM based host controller and doesn't support I/O
+> and prefetchable memory spaces.
+> All on-board PCI devices connected to this PCI controller have fixed resources
+> and doesn't have to be allocated/reassigned. Some of these devices are
+> SRIOV based.
 
-Please, if you have a new version, I would prefer you send it as V2. I
-am specially interested about the cooling parts of it, and the DT usage.
+I think you need to mark the ones that are nonrelocatable with flag
+0x80000000, otherwise the PCI core might decide to reassign them.
 
-> Regards,
-> Ivan
-> 
+> Kernel's SRIOV (pci/iov.c) is expecting 'resource->parent' hierarchy
+> to be set, otherwise doesn't
+> enable SRIOV device. So, here multiple non-prefetchable ranges of root bus
+> aid in resource claiming and setting res->parent hierarchy.
 
-Thanks for sharing your driver.
+I don't understand. Isn't that just a bug in the code that you are working
+around with the DT. Have you tried fixing the code instead?
 
-Eduardo
+> We do call "pci_claim_resource" in controller driver code.
+> "[PATCH 1/6] pci, thunder: Add support for Thunder PCIe host controller."
+
+My guess is that you are using the wrong interface here. Isn't the normal
+request_resource() in the host driver enough?
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
