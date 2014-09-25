@@ -1,267 +1,75 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: [PATCH v4 1/3] watchdog: qcom: add support for KPSS WDT
-Date: Thu, 25 Sep 2014 17:51:02 -0500
-Message-ID: <f294b9c41eb418fa5842f549bf557fce96bb5b7c.1411684967.git.joshc@codeaurora.org>
-References: <cover.1411684967.git.joshc@codeaurora.org>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/7] clk: sunxi: unify sun6i AHB1 clock with
+ proper PLL6 pre-divider
+Date: Thu, 25 Sep 2014 16:03:40 -0700
+Message-ID: <20140925230340.19023.22674@quantum>
+References: <1410000448-9999-1-git-send-email-wens@csie.org>
+ <1410000448-9999-4-git-send-email-wens@csie.org>
+ <20140911210211.GM31276@lukather>
+ <CAGb2v66L36nsoucSgLY8pV8f=wjKTvtjJby43Z=Ct+NiRonptQ@mail.gmail.com>
+ <20140913102603.GZ31276@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1411684967.git.joshc@codeaurora.org>
-In-Reply-To: <cover.1411684967.git.joshc@codeaurora.org>
-References: <cover.1411684967.git.joshc@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDO333VC4INBBY56SKQQKGQE5H7JAQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140913102603.GZ31276@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a driver for the watchdog timer block found in the Krait Processor
-Subsystem (KPSS) on the MSM8960, APQ8064, and IPQ8064.
+Quoting Maxime Ripard (2014-09-13 03:26:03)
+> On Fri, Sep 12, 2014 at 11:16:26AM +0800, Chen-Yu Tsai wrote:
+> > Hi,
+> > 
+> > On Fri, Sep 12, 2014 at 5:02 AM, Maxime Ripard
+> > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > > Hi,
+> > >
+> > > On Sat, Sep 06, 2014 at 06:47:24PM +0800, Chen-Yu Tsai wrote:
+> > >> This patch unifies the sun6i AHB1 clock, originally supported
+> > >> with separate mux and divider clks. It also adds support for
+> > >> the pre-divider on the PLL6 input, thus allowing the clock to
+> > >> be muxed to PLL6 with proper clock rate calculation.
+> > >>
+> > >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> > >
+> > > It looks fine, but I'd rather see this in a separate file, especially
+> > > since we don't seem to have any order dependency.
+> > 
+> > Sorry, just to be clear, separate file under clk/sunxi?
+> 
+> Yes
+> 
+> > This cannot be in a separate file, as it shares a spinlock with apb1
+> > divider. They share the same register.
+> > 
+> > We could move apb1 out though. But i would prefer to do that when
+> > we split out all the clocks into individual OF_CLK_DECLAREs.
+> 
+> Ah right, my bad :)
+> 
+> My plan on the long term is to kill clk-sunxi as a place where all the
+> clocks are defined, and only leave the "policy" there, for example the
+> clock protection code (even if that should probably be removed too,
+> together with clkdev), the various rates / parenting enforcements,
+> etc.
 
-Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
----
- drivers/watchdog/Kconfig    |  13 ++++
- drivers/watchdog/Makefile   |   1 +
- drivers/watchdog/qcom-wdt.c | 186 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 200 insertions(+)
- create mode 100644 drivers/watchdog/qcom-wdt.c
+Interesting! Where are you planning to store the clock data?
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 1d1330a..0479e3f 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -443,6 +443,19 @@ config TEGRA_WATCHDOG
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called tegra_wdt.
- 
-+config QCOM_WDT
-+	tristate "QCOM watchdog"
-+	depends on HAS_IOMEM
-+	depends on ARCH_QCOM
-+	select WATCHDOG_CORE
-+	help
-+	  Say Y here to include Watchdog timer support for the watchdog found
-+	  on QCOM chipsets.  Currently supported targets are the MSM8960,
-+	  APQ8064, and IPQ8064.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called qcom_wdt.
-+
- # AVR32 Architecture
- 
- config AT32AP700X_WDT
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 468c320..d645448 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -57,6 +57,7 @@ obj-$(CONFIG_RETU_WATCHDOG) += retu_wdt.o
- obj-$(CONFIG_BCM2835_WDT) += bcm2835_wdt.o
- obj-$(CONFIG_MOXART_WDT) += moxart_wdt.o
- obj-$(CONFIG_SIRFSOC_WATCHDOG) += sirfsoc_wdt.o
-+obj-$(CONFIG_QCOM_WDT) += qcom-wdt.o
- obj-$(CONFIG_BCM_KONA_WDT) += bcm_kona_wdt.o
- obj-$(CONFIG_TEGRA_WATCHDOG) += tegra_wdt.o
- 
-diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-new file mode 100644
-index 0000000..68db322
---- /dev/null
-+++ b/drivers/watchdog/qcom-wdt.c
-@@ -0,0 +1,186 @@
-+/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/watchdog.h>
-+
-+#define WDT_RST		0x0
-+#define WDT_EN		0x8
-+#define WDT_BITE_TIME	0x24
-+
-+struct qcom_wdt {
-+	struct watchdog_device	wdd;
-+	struct clk		*clk;
-+	unsigned long		rate;
-+	void __iomem		*base;
-+};
-+
-+static inline
-+struct qcom_wdt *to_qcom_wdt(struct watchdog_device *wdd)
-+{
-+	return container_of(wdd, struct qcom_wdt, wdd);
-+}
-+
-+static int qcom_wdt_start(struct watchdog_device *wdd)
-+{
-+	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
-+
-+	writel(0, wdt->base + WDT_EN);
-+	writel(1, wdt->base + WDT_RST);
-+	writel(wdd->timeout * wdt->rate, wdt->base + WDT_BITE_TIME);
-+	writel(1, wdt->base + WDT_EN);
-+	return 0;
-+}
-+
-+static int qcom_wdt_stop(struct watchdog_device *wdd)
-+{
-+	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
-+
-+	writel(0, wdt->base + WDT_EN);
-+	return 0;
-+}
-+
-+static int qcom_wdt_ping(struct watchdog_device *wdd)
-+{
-+	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
-+
-+	writel(1, wdt->base + WDT_RST);
-+	return 0;
-+}
-+
-+static int qcom_wdt_set_timeout(struct watchdog_device *wdd,
-+				unsigned int timeout)
-+{
-+	wdd->timeout = timeout;
-+	return qcom_wdt_start(wdd);
-+}
-+
-+static const struct watchdog_ops qcom_wdt_ops = {
-+	.start		= qcom_wdt_start,
-+	.stop		= qcom_wdt_stop,
-+	.ping		= qcom_wdt_ping,
-+	.set_timeout	= qcom_wdt_set_timeout,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct watchdog_info qcom_wdt_info = {
-+	.options	= WDIOF_KEEPALIVEPING
-+			| WDIOF_MAGICCLOSE
-+			| WDIOF_SETTIMEOUT,
-+	.identity	= KBUILD_MODNAME,
-+};
-+
-+static int qcom_wdt_probe(struct platform_device *pdev)
-+{
-+	struct qcom_wdt *wdt;
-+	struct resource *res;
-+	int ret;
-+
-+	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-+	if (!wdt)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	wdt->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(wdt->base))
-+		return PTR_ERR(wdt->base);
-+
-+	wdt->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(wdt->clk)) {
-+		dev_err(&pdev->dev, "failed to get input clock\n");
-+		return PTR_ERR(wdt->clk);
-+	}
-+
-+	ret = clk_prepare_enable(wdt->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to setup clock\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * We use the clock rate to calculate the max timeout, so ensure it's
-+	 * not zero to avoid a divide-by-zero exception.
-+	 *
-+	 * WATCHDOG_CORE assumes units of seconds, if the WDT is clocked such
-+	 * that it would bite before a second elapses it's usefulness is
-+	 * limited.  Bail if this is the case.
-+	 */
-+	wdt->rate = clk_get_rate(wdt->clk);
-+	if (wdt->rate == 0 ||
-+	    wdt->rate > 0x10000000U) {
-+		dev_err(&pdev->dev, "invalid clock rate\n");
-+		ret = -EINVAL;
-+		goto err_clk_unprepare;
-+	}
-+
-+	wdt->wdd.dev = &pdev->dev;
-+	wdt->wdd.info = &qcom_wdt_info;
-+	wdt->wdd.ops = &qcom_wdt_ops;
-+	wdt->wdd.min_timeout = 1;
-+	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
-+
-+	/*
-+	 * If 'timeout-sec' unspecified in devicetree, assume a 30 second
-+	 * default, unless the max timeout is less than 30 seconds, then use
-+	 * the max instead.
-+	 */
-+	wdt->wdd.timeout = min(wdt->wdd.max_timeout, 30U);
-+	watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev);
-+
-+	ret = watchdog_register_device(&wdt->wdd);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register watchdog\n");
-+		goto err_clk_unprepare;
-+	}
-+
-+	platform_set_drvdata(pdev, wdt);
-+	return 0;
-+
-+err_clk_unprepare:
-+	clk_disable_unprepare(wdt->clk);
-+	return ret;
-+}
-+
-+static int qcom_wdt_remove(struct platform_device *pdev)
-+{
-+	struct qcom_wdt *wdt = platform_get_drvdata(pdev);
-+
-+	watchdog_unregister_device(&wdt->wdd);
-+	clk_disable_unprepare(wdt->clk);
-+	return 0;
-+}
-+
-+static const struct of_device_id qcom_wdt_of_table[] = {
-+	{ .compatible = "qcom,kpss-wdt-msm8960", },
-+	{ .compatible = "qcom,kpss-wdt-apq8064", },
-+	{ .compatible = "qcom,kpss-wdt-ipq8064", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, qcom_wdt_of_table);
-+
-+static struct platform_driver qcom_watchdog_driver = {
-+	.probe	= qcom_wdt_probe,
-+	.remove	= qcom_wdt_remove,
-+	.driver	= {
-+		.name		= KBUILD_MODNAME,
-+		.of_match_table	= qcom_wdt_of_table,
-+	},
-+};
-+module_platform_driver(qcom_watchdog_driver);
-+
-+MODULE_DESCRIPTION("QCOM KPSS Watchdog Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Regards,
+Mike
+
+> 
+> Maxime
+> 
+> -- 
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
