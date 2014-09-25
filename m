@@ -1,99 +1,53 @@
-From: Kever Yang <kever.yang@rock-chips.com>
-Subject: [PATCH v3 1/3] clk: rockchip: add some needed clock binding id for rk3288
-Date: Thu, 25 Sep 2014 15:48:45 +0800
-Message-ID: <1411631328-14973-2-git-send-email-kever.yang@rock-chips.com>
-References: <1411631328-14973-1-git-send-email-kever.yang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411631328-14973-1-git-send-email-kever.yang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, Mike Turquette <mturquette@linaro.org>
-Cc: dianders@chromium.org, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, linux-rockchip@lists.infradead.org, Kever Yang <kever.yang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv4 3/6] ARM: dts: Add initial LS1021A TWR board dts support
+Date: Thu, 25 Sep 2014 08:06:27 +0000
+Message-ID: <1b72af7d8c90492ba91115ef958bbda7@BLUPR03MB472.namprd03.prod.outlook.com>
+References: <1411371952-5618-1-git-send-email-jingchang.lu@freescale.com>
+ <4264466.HtkUxyxBW8@wuerfel>
+ <bb122a232a1c40559e84a058f3d003b4@BL2PR03MB467.namprd03.prod.outlook.com>
+ <3598074.CpE7Waa9La@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3598074.CpE7Waa9La@wuerfel>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Shengchao Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "B46807-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B46807-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add some clock binding id for different modules
-that under development and going to send upstream.
-
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-Reviewed-by: Doug Anderson <dianders@chromium.org>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
----
-
-Changes in v3: None
-Changes in v2: None
-
- include/dt-bindings/clock/rk3288-cru.h | 38 +++++++++++++++++++++++++++++++++-
- 1 file changed, 37 insertions(+), 1 deletion(-)
-
-diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
-index ebcb460..ee579ff 100644
---- a/include/dt-bindings/clock/rk3288-cru.h
-+++ b/include/dt-bindings/clock/rk3288-cru.h
-@@ -61,6 +61,15 @@
- #define SCLK_LCDC_PWM1		101
- #define SCLK_MAC_RX		102
- #define SCLK_MAC_TX		103
-+#define SCLK_EDP_24M		104
-+#define SCLK_EDP		105
-+#define SCLK_RGA		106
-+#define SCLK_ISP		107
-+#define SCLK_ISP_JPE		108
-+#define SCLK_HDMI_HDCP		109
-+#define SCLK_HDMI_CEC		110
-+#define SCLK_HEVC_CABAC		111
-+#define SCLK_HEVC_CORE		112
- 
- #define DCLK_VOP0		190
- #define DCLK_VOP1		191
-@@ -75,6 +84,16 @@
- #define ACLK_VOP1		198
- #define ACLK_CRYPTO		199
- #define ACLK_RGA		200
-+#define ACLK_RGA_NIU		201
-+#define ACLK_IEP		202
-+#define ACLK_VIO0_NIU		203
-+#define ACLK_VIP		204
-+#define ACLK_ISP		205
-+#define ACLK_VIO1_NIU		206
-+#define ACLK_HEVC		207
-+#define ACLK_VCODEC		208
-+#define ACLK_CPU		209
-+#define ACLK_PERI		210
- 
- /* pclk gates */
- #define PCLK_GPIO0		320
-@@ -112,6 +131,15 @@
- #define PCLK_PS2C		352
- #define PCLK_TIMER		353
- #define PCLK_TZPC		354
-+#define PCLK_EDP_CTRL		355
-+#define PCLK_MIPI_DSI0		356
-+#define PCLK_MIPI_DSI1		357
-+#define PCLK_MIPI_CSI		358
-+#define PCLK_LVDS_PHY		359
-+#define PCLK_HDMI_CTRL		360
-+#define PCLK_VIO2_H2P		361
-+#define PCLK_CPU		362
-+#define PCLK_PERI		363
- 
- /* hclk gates */
- #define HCLK_GPS		448
-@@ -137,8 +165,16 @@
- #define HCLK_IEP		468
- #define HCLK_ISP		469
- #define HCLK_RGA		470
-+#define HCLK_VIO_AHB_ARBI	471
-+#define HCLK_VIO_NIU		472
-+#define HCLK_VIP		473
-+#define HCLK_VIO2_H2P		474
-+#define HCLK_HEVC		475
-+#define HCLK_VCODEC		476
-+#define HCLK_CPU		477
-+#define HCLK_PERI		478
- 
--#define CLK_NR_CLKS		(HCLK_RGA + 1)
-+#define CLK_NR_CLKS		(HCLK_PERI + 1)
- 
- /* soft-reset indices */
- #define SRST_CORE0		0
--- 
-1.9.1
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQXJuZCBCZXJnbWFubiBbbWFpbHRv
+OmFybmRAYXJuZGIuZGVdDQo+U2VudDogV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMjQsIDIwMTQgMTE6
+NTUgUE0NCj5UbzogTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPkNjOiBHdW8gU2hhd24tUjY1MDczOyBt
+YXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLQ0KPmtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTHUgQ2hlbi1CNDY4MDc7IEZ1DQo+Q2hh
+by1CNDQ1NDgNCj5TdWJqZWN0OiBSZTogW1BBVENIdjQgMy82XSBBUk06IGR0czogQWRkIGluaXRp
+YWwgTFMxMDIxQSBUV1IgYm9hcmQgZHRzDQo+c3VwcG9ydA0KPg0KPk9uIFdlZG5lc2RheSAyNCBT
+ZXB0ZW1iZXIgMjAxNCAxMTowMDozNCBKaW5nY2hhbmcgTHUgd3JvdGU6DQo+Pg0KPj4gV2UgYWxz
+byBkbyB0aGUgcGh5LWhhbmRsZSBmaXh1cCBvbiBvdXIgUG93ZXJQQyBwbGF0Zm9ybSBiYXNlZCBv
+biB0aGUNCj4+IGFsaWFzZXMsIGFuZCBzbyBJIGFkb3B0IHRoZSBzYW1lIHdheSB0byBtYWtlIHRo
+ZXNlIGZpeHVwIGNvbnNpc3RlbnQNCj5iZXR3ZWVuIFNvQ3MuDQo+PiBBbmQgdGhlIHUtYm9vdCBm
+ZHQgZml4dXAgY29kZSBiYXNlIG9uIHRoZSBhbGlhc2VzIGhhcyBiZWVuIHVwc3RyZWFtZWQsDQo+
+PiBzbyBtYXkgd2Uga2VlcCB0aGlzIGFsaWFzZXMgdW5jaGFuZ2VkPw0KPg0KPkkgZG9uJ3Qgc2Vl
+IGEgc3Ryb25nIHJlYXNvbiB0byBjaGFuZ2UgaXQsIGl0IGp1c3Qgc2VlbWVkIHN0cmFuZ2UgdG8g
+bWUuDQo+DQo+PiBCVFcsIGZpbmQgYSBub2RlIGJ5IGFsaWFzIGlzIGVhc2lseSwgY291bGQgeW91
+IGdpdmUgbWUgc29tZSBjbHVlIG9uDQo+PiBmaW5kaW5nIGEgbm9kZSBieSBhIGxhYmVsIGRpcmVj
+dGx5LCBUaGFua3MuDQo+DQo+SSBoYXZlbid0IHVzZWQgbGliZmR0IGluIHRoaXMgd2F5IG15c2Vs
+Ziwgc28gSSBkb24ndCBrbm93IGhvdyBpdCB3b3VsZCBiZQ0KPmRvbmUuIEhvd2V2ZXIsIHRoZSBp
+ZGVhIGlzIHRoYXQgdGhlIGxhYmVscyBpbiBkdHMgZmlsZXMgZW5kIHVwIGFzIEVMRg0KPnN5bWJv
+bHMgaW4gdGhlIGR0Yiwgc28geW91IGNhbiBsb29rIHRoZW0gdXAgYnkgZm9sbG93aW5nIHRoZSBF
+TEYgaGVhZGVycy4NCj4NCj4JQXJuZA0KDQpMaWJmZHQgZG9lc24ndCBwcm92aWRlIHdheSB0byBm
+aW5kIGEgbm9kZSBieSBsYWJlbC4gTGFiZWwgaXMganVzdCBhIHNob3J0Y3V0IHRvDQphIGZ1bGwg
+YWJzb2x1dGUgcGF0aCwgaXQncyB1c2VmdWwgaW4gZGV2aWNlIHRyZWUgc291cmNlIHJlZmVyZW5j
+ZSwgYnV0IGlzIGhhcmQNCnRvIGZpbmQgYSBsYWJlbCBhZnRlciBidWlsZCB0byBkdGIuIEFsaWFz
+ZXMganVzdCBwcm92aWRlIHRoZSB3YXkgdG8gc2F2ZSBhDQpmdWxsIGFic29sdXRlIHBhdGggaW4g
+cHJvcGVydGllcyBsaWtlIGxhYmVsLCBidXQgdGhleSBjYW4gYmUgZmluZCBpbiBkdGIgYWZ0ZXIN
+CmJ1aWxkIHNvIHRoYXQgZml4dXAgb24gZHRiIGNhbiBmaW5kIGEgbm9kZSBlZmZpY2llbnRseS4g
+U28gSSB0aGluayB0aGUgYWxpYXNlcw0KZm9yIHRoZSBwaHkgbm9kZXMgaXMgYWxzbyByZWFzb25h
+YmxlLiBNYW55IG90aGVycyBib2FyZHMgYWxzbyB1c2UgbGFiZWxzIGZvcg0KdmFyaW91cyBkdHMg
+bm9kZXMuDQpUaGFua3MuDQoNCkJlc3QgUmVnYXJkcywNCkppbmdjaGFuZw0KIA0KDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
