@@ -1,114 +1,67 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] bcma: get IRQ numbers from dt
-Date: Thu, 25 Sep 2014 13:34:04 +0200
-Message-ID: <2791240.uYg7Zkz6J1@wuerfel>
-References: <1411597048-25470-1-git-send-email-hauke@hauke-m.de> <1411597048-25470-2-git-send-email-hauke@hauke-m.de>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Thu, 25 Sep 2014 15:47:05 +0300
+Message-ID: <1411649225.18580.134.camel@iivanov-dev>
+References: <1411563415-11933-1-git-send-email-svarbanov@mm-sol.com>
+	 <1411563415-11933-2-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411597048-25470-2-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411563415-11933-2-git-send-email-svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd@codeauro>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 25 September 2014 00:17:28 Hauke Mehrtens wrote:
-> It is not possible to auto detect the irq numbers used by the cores on
-> an arm SoC. If bcma was registered with device tree it will search for
-> some device tree nodes with the irq number and add it to the core
-> configuration.
+
+Hi Stan, few comment bellow.
+
+On Wed, 2014-09-24 at 15:56 +0300, Stanimir Varbanov wrote:
+> The voltage ADC is peripheral of Qualcomm SPMI PMIC chips. It has
+> 15bits resolution and register space inside PMIC accessible across
+> SPMI bus.
 > 
-> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-
-Some more explanation for how this can be improved according to my earlier
-reply:
-
+> The vadc driver registers itself through IIO interface.
+> 
+> Signed-off-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/iio/adc/Kconfig                       |   10 +
+>  drivers/iio/adc/Makefile                      |    1 +
+>  drivers/iio/adc/qcom-spmi-vadc.c              | 1029 +++++++++++++++++++++++++
+>  include/dt-bindings/iio/qcom,spmi-pmic-vadc.h |  119 +++
+>  4 files changed, 1159 insertions(+), 0 deletions(-)
+>  create mode 100644 drivers/iio/adc/qcom-spmi-vadc.c
+>  create mode 100644 include/dt-bindings/iio/qcom,spmi-pmic-vadc.h
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 11b048a..ec48360 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -206,6 +206,16 @@ config NAU7802
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called nau7802.
 >  
-> @@ -17,4 +21,24 @@ Example:
->  		ranges = <0x00000000 0x18000000 0x00100000>;
->  		#address-cells = <1>;
->  		#size-cells = <1>;
+> +config QCOM_SPMI_VADC
+> +	tristate "Qualcomm SPMI PMIC voltage ADC"
+> +	depends on SPMI
+
++ select REGMAP_SPMI
+
+<snip>
+
 > +
-> +		#interrupt-cells = <0>;
-
-	<1>
-
-> +		interrupt-map-mask = <0x000fffff>;
-> +		interrupt-map =
-> +			/* Ethernet Controller 0 */
-> +			<0x00024000 &gic GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-> +
-> +			/* Ethernet Controller 1 */
-> +			<0x00025000 &gic GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-
-Add 0 here after the address for the first interrupt of a device,
-or a consecutive number for additional interrupts.
-
-But check first if the register that is used on MIPS to access the
-interrupts has any function. If it does, put the bit position in here
-instead.
-
-> +		pcie@12000 {
-> +			interrupt-parent = <&gic>;
-> +			reg = <0x00012000 0x1000>;
-> +			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-
-so this can go away.
-
-> +static int bcma_of_irq_parse(struct platform_device *parent,
-> +			     struct bcma_device *core,
-> +			     struct of_phandle_args *out_irq)
+> +static int vadc_read(struct vadc_priv *vadc, u16 offset, u8 *data)
 > +{
-> +	__be32 laddr[1];
-> +	int rc;
-> +
-> +	if (core->dev.of_node) {
-> +		rc = of_irq_parse_one(core->dev.of_node, 0, out_irq);
-> +		if (!rc)
-> +			return rc;
-> +	}
-> +
-> +	out_irq->np = parent->dev.of_node;
-> +	out_irq->args_count = 0;
-> +
-> +	laddr[0] = cpu_to_be32(core->addr);
-> +	return of_irq_parse_raw(laddr, out_irq);
+> +	return regmap_bulk_read(vadc->regmap, vadc->base + offset, data, 1);
+
+just regmap_read() ?
+
 > +}
-
-You probably don't need a separate function here, just move the code into
-bcma_of_get_irq.
-
-> +static int bcma_of_get_irq(struct platform_device *parent,
-> +			   struct bcma_device *core)
-
-Make this function take the interrupt number as an argument
-
 > +
->  static void bcma_of_fill_device(struct platform_device *parent,
->  				struct bcma_device *core)
->  {
-> @@ -161,6 +201,8 @@ static void bcma_of_fill_device(struct platform_device *parent,
->  	node = bcma_of_find_child_device(parent, core);
->  	if (node)
->  		core->dev.of_node = node;
-> +
-> +	core->irq = bcma_of_get_irq(parent, core);
->  }
 
-It's probably a good idea to still put the first interrupt number in here,
-but drivers should not rely on the interrupt numbers being consecutive.
-If a driver needs more than one irq, it should call bcma_of_get_irq() or
-another API function that calls it internally and that also works on MIPS.
+General comment, most of the dev_dbg looks like legitimate dev_err's to me.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Ivan 
