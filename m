@@ -1,132 +1,70 @@
-From: Yinghai Lu <yinghai@kernel.org>
-Subject: Re: [PATCH v12 06/12] PCI: Create pci_host_bridge before its
- associated bus in pci_create_root_bus.
-Date: Thu, 25 Sep 2014 11:15:01 -0700
-Message-ID: <CAE9FiQXuJZnj74dwTbKJCQNJ+OdEbjSB0fpwqh92+WZ_XGnrxQ@mail.gmail.com>
-References: <1411498874-9864-1-git-send-email-Liviu.Dudau@arm.com>
-	<1411498874-9864-7-git-send-email-Liviu.Dudau@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1411498874-9864-7-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH v6 0/2] Initial support for XPowers AXP288 PMIC
+Date: Thu, 25 Sep 2014 04:15:39 -0700
+Message-ID: <1411643739-21205-1-git-send-email-jacob.jun.pan@linux.intel.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: IIO <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICE TREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Zubair Lutfullah <zubair.lutfullah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>Pete
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 23, 2014 at 12:01 PM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> Before commit 7b5436635800 the pci_host_bridge was created before the root bus.
-> As that commit has added a needless dependency on the bus for pci_alloc_host_bridge()
-> the creation order has been changed for no good reason. Revert the order of
-> creation as we are going to depend on the pci_host_bridge structure to retrieve the
-> domain number of the root bus.
->
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> Acked-by: Grant Likely <grant.likely@linaro.org>
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> Tested-by: Tanmay Inamdar <tinamdar@apm.com>
-> ---
->  drivers/pci/probe.c | 32 +++++++++++++++++---------------
->  1 file changed, 17 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index e3cf8a2..5ff72ec 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -515,7 +515,7 @@ static void pci_release_host_bridge_dev(struct device *dev)
->         kfree(bridge);
->  }
->
-> -static struct pci_host_bridge *pci_alloc_host_bridge(struct pci_bus *b)
-> +static struct pci_host_bridge *pci_alloc_host_bridge(void)
->  {
->         struct pci_host_bridge *bridge;
->
-> @@ -524,7 +524,8 @@ static struct pci_host_bridge *pci_alloc_host_bridge(struct pci_bus *b)
->                 return NULL;
->
->         INIT_LIST_HEAD(&bridge->windows);
-> -       bridge->bus = b;
-> +       bridge->dev.release = pci_release_host_bridge_dev;
-> +
->         return bridge;
->  }
->
-> @@ -1761,9 +1762,15 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
->         char bus_addr[64];
->         char *fmt;
->
-> +       bridge = pci_alloc_host_bridge();
-> +       if (!bridge)
-> +               return NULL;
-> +
-> +       bridge->dev.parent = parent;
-> +
->         b = pci_alloc_bus();
->         if (!b)
-> -               return NULL;
-> +               goto err_out;
->
->         b->sysdata = sysdata;
->         b->ops = ops;
-> @@ -1772,26 +1779,19 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
->         if (b2) {
->                 /* If we already got to this bus through a different bridge, ignore it */
->                 dev_dbg(&b2->dev, "bus already known\n");
-> -               goto err_out;
-> +               goto err_bus_out;
->         }
->
-> -       bridge = pci_alloc_host_bridge(b);
-> -       if (!bridge)
-> -               goto err_out;
-> -
-> -       bridge->dev.parent = parent;
-> -       bridge->dev.release = pci_release_host_bridge_dev;
-> +       bridge->bus = b;
->         dev_set_name(&bridge->dev, "pci%04x:%02x", pci_domain_nr(b), bus);
->         error = pcibios_root_bridge_prepare(bridge);
-> -       if (error) {
-> -               kfree(bridge);
-> +       if (error)
->                 goto err_out;
-> -       }
->
->         error = device_register(&bridge->dev);
->         if (error) {
->                 put_device(&bridge->dev);
-> -               goto err_out;
-> +               goto err_bus_out;
->         }
->         b->bridge = get_device(&bridge->dev);
->         device_enable_async_suspend(b->bridge);
-> @@ -1848,8 +1848,10 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
->  class_dev_reg_err:
->         put_device(&bridge->dev);
->         device_unregister(&bridge->dev);
-> -err_out:
-> +err_bus_out:
->         kfree(b);
-> +err_out:
-> +       kfree(bridge);
->         return NULL;
->  }
+X-Powers AXP288 is a customized PMIC found on some Intel Baytrail-CR platforms.
+It comes with sub-functions such as USB charging, fuel gauge, ADC, and many LDO
+and BUCK channels.
 
-Hi Bjorn,
+By extending the existing AXP20x driver, this patchset adds basic support
+for AXP288 PMIC with ADC as one MFD cell device driver.
 
-Noticed that you put this one into pci/next.
+Currently, the PMIC driver in this patchset does not support platform data
+enumeration. But when ACPI _DSD and unified device properties become available,
+cell devices with platform data will be added.
 
-This patch has problem for the class_dev_reg_err path.
-as device_unregister(&bridge->dev) will trigger pci_release_host_bridge_dev.
-So will have double free for bridge or else.
+This patch does not use intel_soc_pmic core for i2c and regmap handling in that
+axp288 shares similar programming interface with other X-Power PMICs supported in
+axp20x.c. Therefore, extending axp20x.c to include axp288 makes more sense.
 
-Please drop this patch from pci/next.
+Changes
+ v6:	- change axp20x_match_device() flow to give more specific error
+ 	  messages.
+	- remove unnecessary cast
 
-Also looks strange that the patch have long CC list, but just omit me
-and Jiang Liu that
-touched those code before.
+ v5:	- excluded iio documentation patch, already applied to iio.git
+ 	- restructured axp288_adc read_raw code to make it more readable
+	- renamed adc_enable to adc_set_state and add comment about why adc
+	  has to be always on and there is no disable function.
+	- axp20x use const as needed for regmap structures
 
-Thanks
+ v4:	- removed rename patch, use Kconfig description to list supported devices
+ 	- misc clean up in ADC code, use regmap_bulk_read and improve error
+	  handling, etc.
+	- remove IIO ADC scale, treat raw data as processed since the unit is
+	  already in IIO expected milliamps.
 
-Yinghai
+ v3:	- put all file rename changes in 1/5
+ 	- add iio documentation for in_current_raw/scale
+	- removed global variables in axp2xx
+	- removed pm callbacks from GPADC
+	- removed ACPI opregion cell device
+	- added scales to ADC current and voltage
+	- removed ADC thermal sensor from sysfs, kernel internal use only
+
+ v2:
+	- use format -M for 1/4
+	- minor tweak based on Maxime's review
+
+
+Jacob Pan (2):
+  mfd/axp20x: extend axp20x to support axp288 pmic
+  iio/adc: add support for axp288 adc
+
+ drivers/iio/adc/Kconfig      |   8 +
+ drivers/iio/adc/Makefile     |   1 +
+ drivers/iio/adc/axp288_adc.c | 253 ++++++++++++++++++++++++++++++
+ drivers/mfd/Kconfig          |   3 +-
+ drivers/mfd/axp20x.c         | 361 ++++++++++++++++++++++++++++++++++++-------
+ include/linux/mfd/axp20x.h   |  59 +++++++
+ 6 files changed, 629 insertions(+), 56 deletions(-)
+ create mode 100644 drivers/iio/adc/axp288_adc.c
+
+-- 
+1.9.1
