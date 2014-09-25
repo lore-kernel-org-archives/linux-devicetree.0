@@ -1,45 +1,45 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 05/13] ARM: shmobile: ape6evm-reference dts: Add chosen/stdout-path
-Date: Thu, 25 Sep 2014 18:13:21 +0200
-Message-ID: <1411661609-4280-6-git-send-email-geert+renesas@glider.be>
-References: <1411661609-4280-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411661609-4280-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 3/6] pci, thunder: Add PCIe host controller devicetree bindings
+Date: Thu, 25 Sep 2014 10:16:36 -0600
+Message-ID: <CAErSpo4oFLKbtddzVoXBN-1dXZn5C4pmzY_QiFMwV+RWtmtjiQ@mail.gmail.com>
+References: <1411573068-12952-1-git-send-email-rric@kernel.org>
+ <3414852.SWQ9rRcUDx@wuerfel> <CA+sq2CcXCVrk=fxH79n88ZJj5fBQmbyhnzj08qHNO8EmpZT1Yg@mail.gmail.com>
+ <8057985.kyfsioKAVy@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8057985.kyfsioKAVy@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Sunil Kovvuri <sunil.kovvuri@gmail.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Robert Richter <rric@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <liviu.dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Sunil Goutham <sgoutham@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a stdout-path property so that automatic console selection works
-in the absence of a "console=" parameter on the kernel command line.
-In addition, this will allow the PM domain code to find the PM domain
-for the console device.
+On Thu, Sep 25, 2014 at 1:31 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thursday 25 September 2014 00:37:00 Sunil Kovvuri wrote:
+>> On Thu, Sep 25, 2014 at 12:04 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> > On Wednesday 24 September 2014 23:34:04 Sunil Kovvuri wrote:
 
-Remove the now-superfluous "console=" parameter from chosen/bootargs.
+>> >> All on-board PCI devices connected to this PCI controller have fixed resources
+>> >> and doesn't have to be allocated/reassigned. Some of these devices are
+>> >> SRIOV based.
+>> >
+>> > I think you need to mark the ones that are nonrelocatable with flag
+>> > 0x80000000, otherwise the PCI core might decide to reassign them.
+>>
+>> Is this flag part of DT pci node properties ?
+>> I am using IORESOURCE_PCI_FIXED flag. Its there in other patches of
+>> the same series.
+>
+> Ah, right. I checked the source code again and it seems that we don't handle
+> this right at the moment. I think a range that has the nonrelocatable
+> flag set should be used for IORESOURCE_PCI_FIXED mappings without any
+> host specific code, but that needs to be implemented in common code.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+What connection do you envision between nonrelocatable ranges and
+IORESOURCE_PCI_FIXED?  I don't know what a nonrelocatable range is,
+but for IORESOURCE_PCI_FIXED, all I intend is that the PCI core should
+not try to assign a different address, e.g., because the BAR is
+read-only or because it's a legacy IDE/VGA/etc. range for which there
+is no BAR at all.
 
-diff --git a/arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts b/arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts
-index a860f32bca27fd8d..2bcf69124a6ab3ec 100644
---- a/arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts
-+++ b/arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts
-@@ -21,7 +21,8 @@
- 	};
- 
- 	chosen {
--		bootargs = "console=ttySC0,115200 ignore_loglevel rw";
-+		bootargs = "ignore_loglevel rw";
-+		stdout-path = &scifa0;
- 	};
- 
- 	memory@40000000 {
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bjorn
