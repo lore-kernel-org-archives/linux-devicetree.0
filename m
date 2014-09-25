@@ -1,91 +1,87 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 3/6] pci, thunder: Add PCIe host controller devicetree bindings
-Date: Thu, 25 Sep 2014 14:49:29 -0600
-Message-ID: <CAErSpo6yXoETkXkimW2Lv724D4gn8ENi0U3wM=dFhQVkZJKXKg@mail.gmail.com>
-References: <1411573068-12952-1-git-send-email-rric@kernel.org>
- <201409252126.38945.arnd@arndb.de> <CAErSpo5rhL7pLha-yWt7sZUBmAnwA6FkacL+sWXBKkSzsuC7Sg@mail.gmail.com>
- <201409252222.23825.arnd@arndb.de>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 0/6] Add initial support for Broadcom Cygnus SoC
+Date: Thu, 25 Sep 2014 14:04:04 -0700
+Message-ID: <54248344.5030308@broadcom.com>
+References: <Jonathan Richardson <jonathar@broadcom.com> <1411507057-14771-1-git-send-email-jonathar@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <201409252222.23825.arnd@arndb.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sunil Kovvuri <sunil.kovvuri@gmail.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Robert Richter <rric@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <liviu.dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Sunil Goutham <sgoutham@cavium.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411507057-14771-1-git-send-email-jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 25, 2014 at 2:22 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thursday 25 September 2014, Bjorn Helgaas wrote:
->> OK.  You said "a range that has the nonrelocatable flag set should be
->> used for IORESOURCE_PCI_FIXED mappings."  I thought you meant that the
->> range was a bridge window, and somehow PCI_FIXED BARs should be put in
->> that window.
->>
->> But maybe you meant that nonrelocatable ranges should have the
->> IORESOURCE_PCI_FIXED bit set in their struct resources.  That would
->> mean we couldn't move the window, but we could put relocatable BARs
->> inside the window.
->>
->> What needs to be implemented?  Just the code that would set
->> IORESOURCE_PCI_FIXED for nonrelocatable ranges?
+Hi Matt/Christian (and others),
+
+We would like to move forward in getting our base Cygnus support into 
+the mainline kernel.  From there we will be able to contribute 
+additional drivers.
+
+Is somebody willing to accept this pull request to get this patchset 
+accepted by the open source community?
+
+Regards,
+  Scott
+
+
+On 14-09-23 02:17 PM, Jonathan Richardson wrote:
+> Hi,
 >
-> It might be more complex than I thought. Let's see what the original
-> hack does:
+> This patchset contains initial support for Broadcom's Cygnus SoC based on our
+> iProc architecture. Initial support is minimal and includes just the mach
+> platform code, clock driver, and a basic device tree configuration. Peripheral
+> drivers will be submitted soon, as will device tree configurations for other
+> Cygnus board variants.
 >
-> +/*
-> + * All PCIe devices in Thunder have fixed resources, shouldn't be reassigned.
-> + * Also claim the device's valid resources to set 'res->parent' hierarchy.
-> + */
-> +static void pci_dev_resource_fixup(struct pci_dev *dev)
-> +{
-> +       struct resource *res;
-> +       int resno;
-> +
-> +       for (resno = 0; resno < PCI_NUM_RESOURCES; resno++)
-> +               dev->resource[resno].flags |= IORESOURCE_PCI_FIXED;
-> +
-> +       for (resno = 0; resno < PCI_BRIDGE_RESOURCES; resno++) {
-> +               res = &dev->resource[resno];
-> +               if (res->parent || !(res->flags & IORESOURCE_MEM))
-> +                       continue;
-> +               pci_claim_resource(dev, resno);
-> +       }
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CAVIUM, PCI_ANY_ID,
-> +                       pci_dev_resource_fixup);
+> Changes from v1:
+>   - Address code review comments as per previous responses.
+>   - Copyright headers updated to remove Broadcom URL.
+>   - mach platform code still contains hard coded adresses. These address are
+>     the same for all Cygnus variants. Could you please provide guidance on where
+>     they should go if you would still like them changed.
 >
-> This actually looks harmful, because it means that any kernel that contains
-> the thunder host controller driver will do the above for any device made
-> by Cavium, whether it's connected to this bridge or not.
+> Thanks,
+> Jon
+>
+> Jonathan Richardson (6):
+>    ARM: cygnus: Initial support for Broadcom Cygnus SoC
+>    clk: Clock driver support for Broadcom Cygnus SoC
+>    dt-bindings: Document Broadcom Cygnus SoC and clock driver
+>    ARM: dts: Enable Broadcom Cygnus SoC
+>    ARM: cygnus defconfig : Initial defconfig for Broadcom Cygnus SoC
+>    MAINTAINERS: Entry for Cygnus/iproc arm architecture and clock
+>      drivers
+>
+>   Documentation/devicetree/bindings/arm/cygnus.txt   |   12 +
+>   .../devicetree/bindings/clock/clk-cygnus.txt       |  121 ++
+>   .../devicetree/bindings/clock/clk-iproc.txt        |   48 +
+>   MAINTAINERS                                        |   21 +
+>   arch/arm/boot/dts/Makefile                         |    1 +
+>   arch/arm/boot/dts/bcm-cygnus.dtsi                  |  349 ++++++
+>   arch/arm/boot/dts/bcm911360_entphn.dts             |   22 +
+>   arch/arm/configs/bcm_cygnus_defconfig              |  223 ++++
+>   arch/arm/mach-bcm/Kconfig                          |   31 +
+>   arch/arm/mach-bcm/Makefile                         |    3 +
+>   arch/arm/mach-bcm/bcm_cygnus.c                     |  166 +++
+>   drivers/clk/Makefile                               |    1 +
+>   drivers/clk/bcm/Makefile                           |    2 +
+>   drivers/clk/bcm/clk-cygnus.c                       | 1186 ++++++++++++++++++++
+>   drivers/clk/bcm/clk-iproc.c                        |  451 ++++++++
+>   15 files changed, 2637 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/arm/cygnus.txt
+>   create mode 100644 Documentation/devicetree/bindings/clock/clk-cygnus.txt
+>   create mode 100644 Documentation/devicetree/bindings/clock/clk-iproc.txt
+>   create mode 100644 arch/arm/boot/dts/bcm-cygnus.dtsi
+>   create mode 100644 arch/arm/boot/dts/bcm911360_entphn.dts
+>   create mode 100644 arch/arm/configs/bcm_cygnus_defconfig
+>   create mode 100644 arch/arm/mach-bcm/bcm_cygnus.c
+>   create mode 100644 drivers/clk/bcm/clk-cygnus.c
+>   create mode 100644 drivers/clk/bcm/clk-iproc.c
+>
 
-I agree, that looks broken.
-
-> What I think we want instead is to mark any resource whose parent
-> resource is IORESOURCE_PCI_FIXED to have the same flag, and mark
-> the PCI host controller resources IORESOURCE_PCI_FIXED when the
-> nonrelocatable flag is set, and that should all be done in core
-> code, not in a driver fixup.
-
-The PCI host controller resources are host bridge windows, right?  I
-don't think it matters whether they have IORESOURCE_PCI_FIXED set,
-because the bridge is not itself a PCI device, and PCI resource
-assignment treats the host bridge windows as fixed.
-
-That doesn't imply that the PCI device resources *inside* the windows
-need to be fixed, though.  Regular BARs can be moved around inside the
-window.
-
-Sunil said "All on-board PCI devices connected to this PCI controller
-have fixed resources..."  That sounds like these on-board PCI devices
-are non-compliant because their BARs don't work per spec.  But that
-doesn't sound right, because we wouldn't be able to size them.
-
-> The part that still looks weird is the pci_claim_resource() that
-> Sunil mentioned. This is currently done for resources that do not
-> have a parent, but AFAICT all PCI device resources should have a
-> parent that connects it to the upstream bridge.
-
-Ideally the pci_claim_resource() would be in the core, not in arch
-code, but it's a bit of a hodge-podge right now.
-
-Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
