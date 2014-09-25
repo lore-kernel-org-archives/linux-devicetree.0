@@ -1,56 +1,57 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v5 00/11] PM / Domains: Generic OF-based support
-Date: Thu, 25 Sep 2014 15:45:11 -0700
-Message-ID: <7hppej8glk.fsf@deeprootsystems.com>
-References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
-	<20140925112122.GA22753@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140925112122.GA22753@ulmo> (Thierry Reding's message of "Thu,
-	25 Sep 2014 13:21:24 +0200")
-Sender: linux-pm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: [PATCH v4 2/3] watchdog: qcom: document device tree bindings
+Date: Thu, 25 Sep 2014 17:51:03 -0500
+Message-ID: <84605584a0634ad35a7829daf5a148107aaabc72.1411684967.git.joshc@codeaurora.org>
+References: <cover.1411684967.git.joshc@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1411684967.git.joshc@codeaurora.org>
+In-Reply-To: <cover.1411684967.git.joshc@codeaurora.org>
+References: <cover.1411684967.git.joshc@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thierry Reding <thierry.reding@gmail.com> writes:
+The Qualcomm Krait Processor Sub-system (KPSS) contains one or more
+instances of the WDT.  Provide documentation on how to describe these in
+the device tree.
 
-> I just noticed these patches because they conflicted with some of the
-> local patches I had to add a very similar framework. One of the reasons
-> why I hadn't posted these publicly yet is because the platform where I
-> want to use this (Tegra) is somewhat quirky when it comes to power
-> domains.
->
-> On Tegra these domains are called power gates and they currently have
-> their own API. We've been looking at migrating things over to some
-> generic framework for some time and PM domains do seem like a good fit.
-> However one of the quirks regarding these domains on Tegra is that a
-> fixed sequence exists that needs to be respected when enabling or
-> disabling a power partition. The exact sequence can be found in the
-> drivers/soc/tegra/pmc.c driver's tegra_powergate_sequence_power_up()
-> function. Essentially we need to call into the clock and reset drivers
-> at very specific moments during the operations that the PMC does.
->
-> One solution to this would be to make the needed clocks and resets
-> available to the power domain driver via DT, but then we have the
-> problem that two drivers would be controlling the same resources. For
-> example drivers could still want to disable the clock for more fine-
-> grained power management. 
+Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+---
+ .../devicetree/bindings/watchdog/qcom-wdt.txt      | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
 
-I think you're on the right path here.  You can get rid of this conflict
-by removing the direct/manual clock management from the drivers, and
-using runtime PM instead: s/clk_enable/pm_runtime_get_sync/,
-s/clk_disable/pm_runtime_put_sync/.  When using runtime PM, those calls
-trickle down through the power domain driver, which can manage the
-device clocks, as well as any additional clocks and resets needed for
-power gating.
-
-> Furthermore for some devices it may turn out that turning the domain
-> off and on introduces too much latency to be useful.
-
-In these cases, you should use the per-device PM QoS framework to set
-per-device latencies.  Then your power-domain can look up these
-latencies and decide whether or not to actually power gate or not.
-
-Kevin
+diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+new file mode 100644
+index 0000000..4726924
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+@@ -0,0 +1,24 @@
++Qualcomm Krait Processor Sub-system (KPSS) Watchdog
++---------------------------------------------------
++
++Required properties :
++- compatible : shall contain only one of the following:
++
++			"qcom,kpss-wdt-msm8960"
++			"qcom,kpss-wdt-apq8064"
++			"qcom,kpss-wdt-ipq8064"
++
++- reg : shall contain base register location and length
++- clocks : shall contain the input clock
++
++Optional properties :
++- timeout-sec : shall contain the default watchdog timeout in seconds,
++                if unset, the default timeout is 30 seconds
++
++Example:
++	watchdog@208a038 {
++		compatible = "qcom,kpss-wdt-ipq8064";
++		reg = <0x0208a038 0x40>;
++		clocks = <&sleep_clk>;
++		timeout-sec = <10>;
++	};
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
