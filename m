@@ -1,64 +1,56 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] of: amba: use of_dma_configure for AMBA devices
-Date: Fri, 26 Sep 2014 00:36:51 +0200
-Message-ID: <201409260036.51545.arnd@arndb.de>
-References: <90bd1ff3c93b827c12e1b3dc9ad3f227632d0f6e.1410954967.git.robin.murphy@arm.com> <20140918125535.GB17701@e104818-lin.cambridge.arm.com> <20140922105515.GI30085@e104818-lin.cambridge.arm.com>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v5 00/11] PM / Domains: Generic OF-based support
+Date: Thu, 25 Sep 2014 15:45:11 -0700
+Message-ID: <7hppej8glk.fsf@deeprootsystems.com>
+References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
+	<20140925112122.GA22753@ulmo>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140922105515.GI30085-M2fw3Uu6cmfZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140925112122.GA22753@ulmo> (Thierry Reding's message of "Thu,
+	25 Sep 2014 13:21:24 +0200")
+Sender: linux-pm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 22 September 2014, Catalin Marinas wrote:
-> On Thu, Sep 18, 2014 at 01:55:36PM +0100, Catalin Marinas wrote:
-> > On Thu, Sep 18, 2014 at 12:35:32PM +0100, Robin Murphy wrote:
-> > > On 17/09/14 19:05, Will Deacon wrote:
-> > > > On Wed, Sep 17, 2014 at 06:47:19PM +0100, Rob Herring wrote:
-> > > >> On Wed, Sep 17, 2014 at 12:03 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> > > >>> On Wed, Sep 17, 2014 at 12:56:07PM +0100, Robin Murphy wrote:
-> > > >>>> Commit 591c1e ("of: configure the platform device dma parameters)
-> > > >>>> introduced a common mechanism to configure DMA from DT properties.
-> > > >>>> AMBA devices created from DT can take advantage of this, too.
-> > > >>>>
-> > > >>>> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> > > >>>
-> > > >>>    Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> > > >>>
-> > > >>> It would be great if the arm-soc guys can pick this up.
-> > > >>
-> > > >> Is this a dependency for something else? If so,
-> > > >>
-> > > >> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > > >
-> > > > Yeah, it's going to be needed by my IOMMU init rework so that AMBA devices
-> > > > get registered with their IOMMUs.
-> > > 
-> > > Noob question: Does that mean I should resend (with ACKs) to 
-> > > arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org? (I wasn't entirely sure where this should go, hence just 
-> > > throwing at the list with CCs)
-> > 
-> > If it is not part of a larger series you want to merge, Rob could pick
-> > it up (he could add the acks as well).
-> > 
-> > Alternatively, I can get it via the arm64 tree together with an
-> > additional patch removing the bus hooks in dma-mapping.c (maybe that's a
-> > better option if no-one objects).
-> 
-> So I plan to take this patch via the arm64 tree together with the patch
-> below (after some more testing):
+Thierry Reding <thierry.reding@gmail.com> writes:
 
-Sounds good to me. If you haven't already done so, please add
+> I just noticed these patches because they conflicted with some of the
+> local patches I had to add a very similar framework. One of the reasons
+> why I hadn't posted these publicly yet is because the platform where I
+> want to use this (Tegra) is somewhat quirky when it comes to power
+> domains.
+>
+> On Tegra these domains are called power gates and they currently have
+> their own API. We've been looking at migrating things over to some
+> generic framework for some time and PM domains do seem like a good fit.
+> However one of the quirks regarding these domains on Tegra is that a
+> fixed sequence exists that needs to be respected when enabling or
+> disabling a power partition. The exact sequence can be found in the
+> drivers/soc/tegra/pmc.c driver's tegra_powergate_sequence_power_up()
+> function. Essentially we need to call into the clock and reset drivers
+> at very specific moments during the operations that the PMC does.
+>
+> One solution to this would be to make the needed clocks and resets
+> available to the power domain driver via DT, but then we have the
+> problem that two drivers would be controlling the same resources. For
+> example drivers could still want to disable the clock for more fine-
+> grained power management. 
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+I think you're on the right path here.  You can get rid of this conflict
+by removing the direct/manual clock management from the drivers, and
+using runtime PM instead: s/clk_enable/pm_runtime_get_sync/,
+s/clk_disable/pm_runtime_put_sync/.  When using runtime PM, those calls
+trickle down through the power domain driver, which can manage the
+device clocks, as well as any additional clocks and resets needed for
+power gating.
 
+> Furthermore for some devices it may turn out that turning the domain
+> off and on introduces too much latency to be useful.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In these cases, you should use the per-device PM QoS framework to set
+per-device latencies.  Then your power-domain can look up these
+latencies and decide whether or not to actually power gate or not.
+
+Kevin
