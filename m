@@ -1,174 +1,91 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: [PATCH v3] powerpc/iommu/ddw: Fix endianness
-Date: Thu, 25 Sep 2014 16:39:18 +1000
-Message-ID: <1411627167-22927-1-git-send-email-aik@ozlabs.ru>
-Return-path: <stable-owner@vger.kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, anton@samba.org, stable@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: Device tree vs hardware configurations
+Date: Thu, 25 Sep 2014 08:42:42 +0200
+Message-ID: <20140925064242.GJ4992@pengutronix.de>
+References: <5421B4B0.1020306@dev.rtsoft.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5421B4B0.1020306-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nikita Yushchenko <nyushchenko-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gennady Kuznetsov <kuznetsovg-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>, Aleksey Makarov <amakarov-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-rtas_call() accepts and returns values in CPU endianness.
-The ddw_query_response and ddw_create_response structs members are
-defined and treated as BE but as they are passed to rtas_call() as
-(u32 *) and they get byteswapped automatically, the data is CPU-endian.
-This fixes ddw_query_response and ddw_create_response definitions and use.
+Hi Nikita,
 
-of_read_number() is designed to work with device tree cells - it assumes
-the input is big-endian and returns data in CPU-endian. However due
-to the ddw_create_response struct fix, create.addr_hi/lo are already
-CPU-endian so do not byteswap them.
+On Tue, Sep 23, 2014 at 09:58:08PM +0400, Nikita Yushchenko wrote:
+> Hi
+> 
+> I'm currently forward-porting a BSP for imx6-based custom board from
+> pre-devicetree kernel to modern kernel.
+> 
+> In old BSP there was a board setup file, that registered all board's
+> devices. For new BSP, I need to replace that with device tree based
+> solution.
+> 
+> However, old BSP used conditional code to register devices
+> differently based on GPIO inputs and on kernel command line. This
+> approach was used to
+> 
+> - handle board's jumper that switches SPI CS lines: current jumper
+> setting is available over gpio, depending on that old BSP registered
+> chips differently,
+> 
+> - handle different i2c connections on different board revisions:
+> board has 5 i2c busses with quite a few devices connected, these
+> busses are routed to different hardware busses on different board
+> revisions, board revision could be read over gpios.
+> 
+> - handle different possible display connections (lvds vs lcd, 6bit
+> vs 8bit hw interface) based on kernel command line options
+> 
+> - handle different possible camera connections by registered camera
+> differently based on kernel command line option
+> 
+> ... and more,
+> 
+> 
+> Device tree describes hardware unconditionally. I already have to
+> provide 2 dts files for imx6q and imx6dl based setups (both just
+> include a common dtsi) ...  But providing separate dts file for
+> every possible hardware configuration will result into 2^n device
+> trees, which is inconvenient visible regression against old BSP that
+> "just worked" on all hardware configurations.
+> 
+> 
+> Is there a sane way to handle hardware configurations like above in
+> device tree based kernel?
 
-ddw_avail is a pointer to the "ibm,ddw-applicable" property which contains
-3 cells which are big-endian as it is a device tree. rtas_call() accepts
-a RTAS token in CPU-endian. This makes use of of_property_read_u32_array
-to byte swap and avoid the need for a number of be32_to_cpu calls.
+This depends on your definition of sane, but here the options I know of:
 
-Cc: stable@vger.kernel.org # v3.13
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Reviewed-by: Anton Blanchard <anton@samba.org>
-[aik: folded Anton's patch with of_property_read_u32_array]
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
----
-Changes:
-v3:
-* of_property_read_u32_array() is used for ddw_avail[]
+- Let the bootloader modify the device tree based on the GPIOs. This
+  seems doable in new projects, but not when you want to keep the old
+  bootloader.
 
-v2:
-* updated commit log
-* fixed definition of ddw_query_response and ddw_create_response
----
- arch/powerpc/platforms/pseries/iommu.c | 51 +++++++++++++++++++---------------
- 1 file changed, 28 insertions(+), 23 deletions(-)
+- Use device tree overlays in the Kernel which is something Pantelis
+  Antoniou works on. I think the intention here is more to plug a
+  daughter board to a CPU board. I don't know how good this works when
+  you have to manipulate many different places in the device tree.
 
-diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-index 4642d6a..de1ec54 100644
---- a/arch/powerpc/platforms/pseries/iommu.c
-+++ b/arch/powerpc/platforms/pseries/iommu.c
-@@ -329,16 +329,16 @@ struct direct_window {
- 
- /* Dynamic DMA Window support */
- struct ddw_query_response {
--	__be32 windows_available;
--	__be32 largest_available_block;
--	__be32 page_size;
--	__be32 migration_capable;
-+	u32 windows_available;
-+	u32 largest_available_block;
-+	u32 page_size;
-+	u32 migration_capable;
- };
- 
- struct ddw_create_response {
--	__be32 liobn;
--	__be32 addr_hi;
--	__be32 addr_lo;
-+	u32 liobn;
-+	u32 addr_hi;
-+	u32 addr_lo;
- };
- 
- static LIST_HEAD(direct_window_list);
-@@ -725,16 +725,18 @@ static void remove_ddw(struct device_node *np, bool remove_prop)
- {
- 	struct dynamic_dma_window_prop *dwp;
- 	struct property *win64;
--	const u32 *ddw_avail;
-+	u32 ddw_avail[3];
- 	u64 liobn;
--	int len, ret = 0;
-+	int ret = 0;
-+
-+	ret = of_property_read_u32_array(np, "ibm,ddw-applicable",
-+					 &ddw_avail[0], 3);
- 
--	ddw_avail = of_get_property(np, "ibm,ddw-applicable", &len);
- 	win64 = of_find_property(np, DIRECT64_PROPNAME, NULL);
- 	if (!win64)
- 		return;
- 
--	if (!ddw_avail || len < 3 * sizeof(u32) || win64->length < sizeof(*dwp))
-+	if (ret || win64->length < sizeof(*dwp))
- 		goto delprop;
- 
- 	dwp = win64->value;
-@@ -872,8 +874,9 @@ static int create_ddw(struct pci_dev *dev, const u32 *ddw_avail,
- 
- 	do {
- 		/* extra outputs are LIOBN and dma-addr (hi, lo) */
--		ret = rtas_call(ddw_avail[1], 5, 4, (u32 *)create, cfg_addr,
--				BUID_HI(buid), BUID_LO(buid), page_shift, window_shift);
-+		ret = rtas_call(ddw_avail[1], 5, 4, (u32 *)create,
-+				cfg_addr, BUID_HI(buid), BUID_LO(buid),
-+				page_shift, window_shift);
- 	} while (rtas_busy_delay(ret));
- 	dev_info(&dev->dev,
- 		"ibm,create-pe-dma-window(%x) %x %x %x %x %x returned %d "
-@@ -910,7 +913,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 	int page_shift;
- 	u64 dma_addr, max_addr;
- 	struct device_node *dn;
--	const u32 *uninitialized_var(ddw_avail);
-+	u32 ddw_avail[3];
- 	struct direct_window *window;
- 	struct property *win64;
- 	struct dynamic_dma_window_prop *ddwprop;
-@@ -942,8 +945,9 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 	 * for the given node in that order.
- 	 * the property is actually in the parent, not the PE
- 	 */
--	ddw_avail = of_get_property(pdn, "ibm,ddw-applicable", &len);
--	if (!ddw_avail || len < 3 * sizeof(u32))
-+	ret = of_property_read_u32_array(pdn, "ibm,ddw-applicable",
-+					 &ddw_avail[0], 3);
-+	if (ret)
- 		goto out_failed;
- 
-        /*
-@@ -966,11 +970,11 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 		dev_dbg(&dev->dev, "no free dynamic windows");
- 		goto out_failed;
- 	}
--	if (be32_to_cpu(query.page_size) & 4) {
-+	if (query.page_size & 4) {
- 		page_shift = 24; /* 16MB */
--	} else if (be32_to_cpu(query.page_size) & 2) {
-+	} else if (query.page_size & 2) {
- 		page_shift = 16; /* 64kB */
--	} else if (be32_to_cpu(query.page_size) & 1) {
-+	} else if (query.page_size & 1) {
- 		page_shift = 12; /* 4kB */
- 	} else {
- 		dev_dbg(&dev->dev, "no supported direct page size in mask %x",
-@@ -980,7 +984,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 	/* verify the window * number of ptes will map the partition */
- 	/* check largest block * page size > max memory hotplug addr */
- 	max_addr = memory_hotplug_max();
--	if (be32_to_cpu(query.largest_available_block) < (max_addr >> page_shift)) {
-+	if (query.largest_available_block < (max_addr >> page_shift)) {
- 		dev_dbg(&dev->dev, "can't map partiton max 0x%llx with %u "
- 			  "%llu-sized pages\n", max_addr,  query.largest_available_block,
- 			  1ULL << page_shift);
-@@ -1006,8 +1010,9 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 	if (ret != 0)
- 		goto out_free_prop;
- 
--	ddwprop->liobn = create.liobn;
--	ddwprop->dma_base = cpu_to_be64(of_read_number(&create.addr_hi, 2));
-+	ddwprop->liobn = cpu_to_be32(create.liobn);
-+	ddwprop->dma_base = cpu_to_be64(((u64)create.addr_hi << 32) |
-+			create.addr_lo);
- 	ddwprop->tce_shift = cpu_to_be32(page_shift);
- 	ddwprop->window_shift = cpu_to_be32(len);
- 
-@@ -1039,7 +1044,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 	list_add(&window->list, &direct_window_list);
- 	spin_unlock(&direct_window_list_lock);
- 
--	dma_addr = of_read_number(&create.addr_hi, 2);
-+	dma_addr = be64_to_cpu(ddwprop->dma_base);
- 	goto out_unlock;
- 
- out_free_window:
+- I heard people working on a shim to place between bootloader and
+  kernel. The shim translates the bootloader information into the
+  device tree. I can't remember who it was though. For going this way
+  I wouldn't rewrite the shim but use barebox instead of course ;)
+
+BTW where do the command line options in your setup come from? Are
+they autogenerated from other informations in the bootloader or are
+they entered there by a user?
+
+Sascha
+
 -- 
-2.0.0
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
