@@ -1,72 +1,52 @@
-From: Frans Klaver <fransklaver@gmail.com>
-Subject: Re: [RFC PATCH 1/2] sbs-battery: add forced instantiation from device tree
-Date: Thu, 25 Sep 2014 11:32:44 +0200
-Message-ID: <CAH6sp9O=Hb3uGk3=5Gc+bb+AAZVZu=xHqNnUBHPG8BJUn==ZzQ@mail.gmail.com>
-References: <1411564278-17207-1-git-send-email-frans.klaver@xsens.com>
-	<1411564278-17207-2-git-send-email-frans.klaver@xsens.com>
-	<20140924131655.GG5729@leverpostej>
-	<20140924142222.GC22872@ci00147.xsens-tech.local>
-	<20140924143848.GH5729@leverpostej>
-	<20140924151448.GD22872@ci00147.xsens-tech.local>
-	<20140924153431.GJ5729@leverpostej>
-	<20140924185933.GA2221@gmail.com>
-	<20140925092715.GA3524@leverpostej>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH v2 0/4] rtc: omap: Add support for regulator supply
+Date: Thu, 25 Sep 2014 15:02:05 +0530
+Message-ID: <1411637529-18289-1-git-send-email-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140925092715.GA3524@leverpostej>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "olof@lixom.net" <olof@lixom.net>, "anton.vorontsov@linaro.org" <anton.vorontsov@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: rtc-linux@googlegroups.com, a.zummo@towertech.it
+Cc: devicetree@vger.kernel.org, tony@atomide.com, j-keerthy@ti.com, nsekhar@ti.com, balbi@ti.com, t-kristo@ti.com, lokeshvutla@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 25, 2014 at 11:27 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Wed, Sep 24, 2014 at 07:59:34PM +0100, Frans Klaver wrote:
->> On Wed, Sep 24, 2014 at 04:34:32PM +0100, Mark Rutland wrote:
->> > On Wed, Sep 24, 2014 at 04:14:48PM +0100, Frans Klaver wrote:
->> > > On Wed, Sep 24, 2014 at 03:38:49PM +0100, Mark Rutland wrote:
->> > > > On Wed, Sep 24, 2014 at 03:22:22PM +0100, Frans Klaver wrote:
->> > > > You mention that there's a GPIO that can be used to detect the battery
->> > > > presence. Why can't the driver always probe and then on check for the
->> > > > presence of the battery dynamically using that GPIO? That should cover
->> > > > both cases.
->> > >
->> > > I would say that this was the case before [1] was done. The GPIO is
->> > > optional and if not configured, the presence or absence of the battery
->> > > is detected by checking a status register much like probe() currently
->> > > does. It seems all cases were covered before that patch. If you worry
->> > > about speed, you should use the GPIO. I wonder if we might be able to
->> > > revert [1] without doing much harm.
->> >
->> > But reverting that would re-introduce the lag on some systems, no? Given
->> > the wording of the original commit I would guess that the GPIO wasn't
->> > available. Perhaps Olof or Anton can enlighten us?
->>
->> It probably would yes. The battery_detect gpio was last touched in 2011, the
->> probe check was added somewhere in 2012.
->
-> We can't revert it unless we know doing so won't reintroduce the
-> problem. From the above it sounds like we can't revert it.
->
->> We could keep it as a compile option.
->
-> Perhaps.
->
->> > In the cases where a GPIO is available, I think we should be able to be
->> > less pessimistic. Is a GPIO available in your case?
->>
->> We don't have the battery_detect pin available. Incidentally, a bit of
->> lag reading out the battery is not a problem for us.
->
-> So now we're back at sqaure one. The hardware is likely identical in the
-> your case and the care-about-lag case. Whether or not you care about lag
-> is a property of the user rather than the HW, so I don't think that
-> belongs in the dt.
->
-> It would be interesting to know what the lag was adversely affecting.
-> Perhaps there's another way around this.
+This series cleans up the OMAP RTC driver to use per device data structure.
+And adds support for regulator supply.
 
-Exactly. I can imagine this really being a problem if the i2c bus
-already has a lot of priority traffic.
+Testing:
+RTC functionality test on:
+DRA742-evm: http://hastebin.com/avowiyegut.xml
+DRA722-evm: http://hastebin.com/hujuyuyato.xml
+Beagle Bone Black: http://hastebin.com/fawahapuyi.rb
+AM4372-GP-evm: http://hastebin.com/iyitiqeyev.rb (Used an out of tree patch for enabling rtc)
 
-Frans
+Tested rtc wake using an internal tree with these patches applied:
+DRA742-evm: http://hastebin.com/banejadaci.coffee
+DRA722-evm: http://hastebin.com/adifefetax.vhdl
+Beagle Bone Black: http://hastebin.com/uxezamokiy.coffee
+AM4372-GP-evm: http://hastebin.com/ruvetigico.coffee
+
+Lokesh Vutla (3):
+  rtc: omap: Introduce rtc_omap_dev structure to include per device data
+  rtc: omap: Adopt driver to support probe deferral
+  rtc: omap: Support regulator supply for RTC
+
+Tero Kristo (1):
+  rtc: omap: Update Kconfig for OMAP RTC
+
+ Documentation/devicetree/bindings/rtc/rtc-omap.txt |   3 +
+ drivers/rtc/Kconfig                                |   6 +-
+ drivers/rtc/rtc-omap.c                             | 290 +++++++++++++--------
+ 3 files changed, 182 insertions(+), 117 deletions(-)
+
+-- 
+1.9.1
