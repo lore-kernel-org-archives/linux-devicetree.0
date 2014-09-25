@@ -1,49 +1,65 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] spi/rockchip: fix bug that cause the failture to read
- data in DMA mode
-Date: Thu, 25 Sep 2014 14:08:47 +0100
-Message-ID: <20140925130847.GQ27755@sirena.org.uk>
-References: <1411628381-4029-1-git-send-email-addy.ke@rock-chips.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [GIT PULL] Devicetree bug fixes and documentation for v3.17
+Date: Thu, 25 Sep 2014 14:18:12 +0100
+Message-ID: <CACxGe6vFYRO_s9Wd2dMdWd2zwCxZRXATTVQiYvBRFdSkWfOsqw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rKoHqF+aPLVth8b2"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1411628381-4029-1-git-send-email-addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wei.luo-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Linus,
 
---rKoHqF+aPLVth8b2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Please pull the following bugfix branch. Description below...
 
-On Thu, Sep 25, 2014 at 02:59:41PM +0800, Addy Ke wrote:
-> In my test on RK3288-pinky board, if spi is enabled, it will begin to
-> read data from slave regardless of whether the DMA is ready. So we
-> need prepare DMA before spi is enable.
+Thanks,
+g.
 
-Applied, thanks.
+The following changes since commit 2ce7598c9a453e0acd0e07be7be3f5eb39608ebd:
 
---rKoHqF+aPLVth8b2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+  Linux 3.17-rc4 (2014-09-07 16:09:43 -0700)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+are available in the git repository at:
 
-iQEcBAEBAgAGBQJUJBPfAAoJECTWi3JdVIfQUpcH/jwD1U4mFyYRJ0NxDY7xL/6c
-TVWcpXm9CuQPWc8T4Wy/DP6C7z3NRp536fWn2wgIfV5X87aGlRtdqqZ21aI4tnw5
-NmkRDu1isk1FplzR9eitLArFZFsUaeMFwHS88H2r+3FbvBfOSo1g80p701ebtVUb
-Sso5wMEpuc3pUFIvbVQDmqoOIOS+bJgkYFmqZVPYNHyT7gctj+alznM0PvR28uzp
-h42VF71K/1Kw4BQuMER4inc0z06rchMHmkfQJq4l19mfUDsdmyW7KizQM7eKNSc3
-npDuiSgT3Whonl+NvDoNsSmZLt5GYSNRsZUWbl3RhHHMJRl2tZASLADVj4yoFxQ=
-=x3pf
------END PGP SIGNATURE-----
+  git://git.secretlab.ca/git/linux tags/devicetree-for-linus
 
---rKoHqF+aPLVth8b2--
+for you to fetch changes up to 9aacd602f0246f1b1f3c4684b2ab13d0772976f7:
+
+  of/fdt: fix memory range check (2014-09-25 11:55:50 +0100)
+
+----------------------------------------------------------------
+Devicetree bug fixes and documentation for v3.17
+
+Several bug fix commits for issues found in the v3.17 rc series. Most of
+these are minor in that they aren't actively dangerous, but they have
+been seen in the wild. The one important fix is 7dbe5849fb, "of: make
+sure of_alias is initialized before accessing it", without which some
+powerpc platforms will fail to find stdout for the console.
+
+----------------------------------------------------------------
+Brian Norris (1):
+      of: correct of_console_check()'s return value
+
+Gaurav Minocha (2):
+      of: Disabling OF functions that use sysfs if CONFIG_SYSFS disabled
+      of: Documentation regarding attaching OF Selftest testdata
+
+Geert Uytterhoeven (1):
+      of: Fix memory block alignment in early_init_dt_add_memory_arch()
+
+Laurentiu Tudor (1):
+      of: make sure of_alias is initialized before accessing it
+
+Srinivas Kandagatla (1):
+      of/fdt: fix memory range check
+
+ Documentation/devicetree/of_selftest.txt | 211 +++++++++++++++++++++++++++++++
+ drivers/of/base.c                        |  16 ++-
+ drivers/of/dynamic.c                     |   3 +
+ drivers/of/fdt.c                         |  14 +-
+ 4 files changed, 237 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/of_selftest.txt
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
