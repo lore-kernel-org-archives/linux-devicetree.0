@@ -1,74 +1,82 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v5 00/11] PM / Domains: Generic OF-based support
-Date: Thu, 25 Sep 2014 17:29:10 +0200
-Message-ID: <CAPDyKFp8oK6KAujU44NEwT2vL2_BBPSMuGPkyppHdonPfOmUrQ@mail.gmail.com>
-References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
-	<20140925112122.GA22753@ulmo>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH v3 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Thu, 25 Sep 2014 18:30:59 +0300
+Message-ID: <54243533.7080809@mm-sol.com>
+References: <1411563415-11933-1-git-send-email-svarbanov@mm-sol.com>  <1411563415-11933-2-git-send-email-svarbanov@mm-sol.com> <1411649225.18580.134.camel@iivanov-dev>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140925112122.GA22753@ulmo>
-Sender: linux-pm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>Mark Brown <br>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1411649225.18580.134.camel@iivanov-dev>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeauro>
 List-Id: devicetree@vger.kernel.org
 
-On 25 September 2014 13:21, Thierry Reding <thierry.reding@gmail.com> wrote:
-> I just noticed these patches because they conflicted with some of the
-> local patches I had to add a very similar framework. One of the reasons
-> why I hadn't posted these publicly yet is because the platform where I
-> want to use this (Tegra) is somewhat quirky when it comes to power
-> domains.
+Hi Ivan,
 
-It's great that more things goes on in this area. :-)
+On 09/25/2014 03:47 PM, Ivan T. Ivanov wrote:
+> 
+> Hi Stan, few comment bellow.
+> 
+> On Wed, 2014-09-24 at 15:56 +0300, Stanimir Varbanov wrote:
+>> The voltage ADC is peripheral of Qualcomm SPMI PMIC chips. It has
+>> 15bits resolution and register space inside PMIC accessible across
+>> SPMI bus.
+>>
+>> The vadc driver registers itself through IIO interface.
+>>
+>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+>> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+>> ---
+>>  drivers/iio/adc/Kconfig                       |   10 +
+>>  drivers/iio/adc/Makefile                      |    1 +
+>>  drivers/iio/adc/qcom-spmi-vadc.c              | 1029 +++++++++++++++++++++++++
+>>  include/dt-bindings/iio/qcom,spmi-pmic-vadc.h |  119 +++
+>>  4 files changed, 1159 insertions(+), 0 deletions(-)
+>>  create mode 100644 drivers/iio/adc/qcom-spmi-vadc.c
+>>  create mode 100644 include/dt-bindings/iio/qcom,spmi-pmic-vadc.h
+>>
+>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+>> index 11b048a..ec48360 100644
+>> --- a/drivers/iio/adc/Kconfig
+>> +++ b/drivers/iio/adc/Kconfig
+>> @@ -206,6 +206,16 @@ config NAU7802
+>>  	  To compile this driver as a module, choose M here: the
+>>  	  module will be called nau7802.
+>>  
+>> +config QCOM_SPMI_VADC
+>> +	tristate "Qualcomm SPMI PMIC voltage ADC"
+>> +	depends on SPMI
+> 
+> + select REGMAP_SPMI
 
->
-> On Tegra these domains are called power gates and they currently have
-> their own API. We've been looking at migrating things over to some
-> generic framework for some time and PM domains do seem like a good fit.
-> However one of the quirks regarding these domains on Tegra is that a
-> fixed sequence exists that needs to be respected when enabling or
-> disabling a power partition. The exact sequence can be found in the
-> drivers/soc/tegra/pmc.c driver's tegra_powergate_sequence_power_up()
-> function. Essentially we need to call into the clock and reset drivers
-> at very specific moments during the operations that the PMC does.
+I'd suggest MFD_SPMI_PMIC symbol of the parent driver instead? The
+parent MFD PMIC driver already selects REGMAP_SPMI and depends on SPMI.
 
-I am not sure I fully understand how the power gating actually
-happens. How is it triggered?
+> 
+> <snip>
+> 
+>> +
+>> +static int vadc_read(struct vadc_priv *vadc, u16 offset, u8 *data)
+>> +{
+>> +	return regmap_bulk_read(vadc->regmap, vadc->base + offset, data, 1);
+> 
+> just regmap_read() ?
 
->
-> One solution to this would be to make the needed clocks and resets
-> available to the power domain driver via DT, but then we have the
-> problem that two drivers would be controlling the same resources. For
-> example drivers could still want to disable the clock for more fine-
-> grained power management.
+No, regmap_read() expects unsigned int *val as an argument hence I will
+need temporary variable. I had a comment to rework this on the first
+version of the patchset.
 
-Sorry, but I think I need a better understanding to be able to comment.
+> 
+>> +}
+>> +
+> 
+> General comment, most of the dev_dbg looks like legitimate dev_err's to me.
 
-But maybe, drivers could implement runtime PM support and define
-runtime PM callbacks. From the callbacks those will handle clocks and
-resets, is not that enough? What more is needed from a PM domain point
-of view?
+I've decided to not flood console with messages. If someone wants to
+debug why the driver doesn't probed he can define DEBUG.
 
-> Furthermore for some devices it may turn out
-> that turning the domain off and on introduces too much latency to be
-> useful.
-
-This should be handled by the generic PM domain governor. Through the
-per device QOS, you are able to set latencies constraints which could
-prevent a PM domain from being gated.
-
->
-> Does anyone have any better ideas on how to make that work with this
-> generic PM domain framework? Or is Tegra just too special to be a good
-> fit?
-
-I certainly think it's worth a try, I would be surprised if we
-shouldn't be able to address requirements from Tegra.
-
-As you might have figured out, I am dedicated to improve the generic
-power domain such it could fit more SOCs than today, thus I am also
-hoping for more SOC to start to convert to it.
-
-Kind regards
-Uffe
+-- 
+regards,
+Stan
