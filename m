@@ -1,93 +1,288 @@
-From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v6 0/2] Initial support for XPowers AXP288 PMIC
-Date: Thu, 25 Sep 2014 11:30:04 -0700
-Message-ID: <20140925113004.582367d1@jacob-VirtualBox>
-References: <1411643739-21205-1-git-send-email-jacob.jun.pan@linux.intel.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 1/3] watchdog: qcom: add support for KPSS WDT
+Date: Thu, 25 Sep 2014 11:38:57 -0700
+Message-ID: <20140925183857.GA12340@roeck-us.net>
+References: <cover.1411667144.git.joshc@codeaurora.org>
+ <ae171484ae036b331f06814251872c7602a54996.1411667144.git.joshc@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411643739-21205-1-git-send-email-jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: IIO <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICE TREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Zubair Lutfullah <zubair.lutfullah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <ae171484ae036b331f06814251872c7602a54996.1411667144.git.joshc@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee/Jonathan,
+On Thu, Sep 25, 2014 at 12:48:51PM -0500, Josh Cartwright wrote:
+> Add a driver for the watchdog timer block found in the Krait Processor
+> Subsystem (KPSS) on the MSM8960, APQ8064, and IPQ8064.
+> 
+> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
 
-Can you consider taking this for 3.18 if there are no other issues?
+Hi Josh,
+
+just a couple of minor comments this time (yes, I know,
+I am being difficult ;-).
 
 Thanks,
+Guenter
 
-Jacob
+> ---
+>  drivers/watchdog/Kconfig    |  13 +++
+>  drivers/watchdog/Makefile   |   1 +
+>  drivers/watchdog/qcom-wdt.c | 189 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 203 insertions(+)
+>  create mode 100644 drivers/watchdog/qcom-wdt.c
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 79d2589..c389ed7 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -421,6 +421,19 @@ config SIRFSOC_WATCHDOG
+>  	  Support for CSR SiRFprimaII and SiRFatlasVI watchdog. When
+>  	  the watchdog triggers the system will be reset.
+>  
+> +config QCOM_WDT
+> +	tristate "QCOM watchdog"
+> +	depends on HAS_IOMEM
+> +	depends on ARCH_QCOM
+> +	select WATCHDOG_CORE
+> +	help
+> +	  Say Y here to include Watchdog timer support for the watchdog found
+> +	  on QCOM chipsets.  Currently supported targets are the MSM8960,
+> +	  APQ8064, and IPQ8064.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called qcom_wdt.
+> +
+>  # AVR32 Architecture
+>  
+>  config AT32AP700X_WDT
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 985a66c..cede21e 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -57,6 +57,7 @@ obj-$(CONFIG_RETU_WATCHDOG) += retu_wdt.o
+>  obj-$(CONFIG_BCM2835_WDT) += bcm2835_wdt.o
+>  obj-$(CONFIG_MOXART_WDT) += moxart_wdt.o
+>  obj-$(CONFIG_SIRFSOC_WATCHDOG) += sirfsoc_wdt.o
+> +obj-$(CONFIG_QCOM_WDT) += qcom-wdt.o
+>  obj-$(CONFIG_BCM_KONA_WDT) += bcm_kona_wdt.o
+>  
+>  # AVR32 Architecture
+> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+> new file mode 100644
+> index 0000000..0f56ca3
+> --- /dev/null
+> +++ b/drivers/watchdog/qcom-wdt.c
+> @@ -0,0 +1,189 @@
+> +/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/watchdog.h>
+> +
+> +#define WDT_RST		0x0
+> +#define WDT_EN		0x8
+> +#define WDT_BITE_TIME	0x24
+> +
+> +struct qcom_wdt {
+> +	struct watchdog_device	wdd;
+> +	struct clk		*clk;
+> +	unsigned long		rate;
+> +	void __iomem		*base;
+> +};
+> +
+> +static inline
+> +struct qcom_wdt *to_qcom_wdt(struct watchdog_device *wdd)
+> +{
+> +	return container_of(wdd, struct qcom_wdt, wdd);
+> +}
+> +
+> +static int qcom_wdt_start(struct watchdog_device *wdd)
+> +{
+> +	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
+> +
+> +	writel(0, wdt->base + WDT_EN);
+> +	writel(1, wdt->base + WDT_RST);
+> +	writel(wdd->timeout * wdt->rate, wdt->base + WDT_BITE_TIME);
+> +	writel(1, wdt->base + WDT_EN);
+> +	return 0;
+> +}
+> +
+> +static int qcom_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
+> +
+> +	writel(0, wdt->base + WDT_EN);
+> +	return 0;
+> +}
+> +
+> +static int qcom_wdt_ping(struct watchdog_device *wdd)
+> +{
+> +	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
+> +
+> +	writel(1, wdt->base + WDT_RST);
+> +	return 0;
+> +}
+> +
+> +static int qcom_wdt_set_timeout(struct watchdog_device *wdd,
+> +				unsigned int timeout)
+> +{
+> +	wdd->timeout = timeout;
+> +	return qcom_wdt_start(wdd);
+> +}
+> +
+> +static const struct watchdog_ops qcom_wdt_ops = {
+> +	.start		= qcom_wdt_start,
+> +	.stop		= qcom_wdt_stop,
+> +	.ping		= qcom_wdt_ping,
+> +	.set_timeout	= qcom_wdt_set_timeout,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static const struct watchdog_info qcom_wdt_info = {
+> +	.options	= WDIOF_KEEPALIVEPING
+> +			| WDIOF_MAGICCLOSE
+> +			| WDIOF_SETTIMEOUT,
+> +	.identity	= KBUILD_MODNAME,
+> +};
+> +
+> +static int qcom_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct qcom_wdt *wdt;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+> +	if (!wdt)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	wdt->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(wdt->base)) {
+> +		ret = PTR_ERR(wdt->base);
+> +		goto err_out;
 
+This is really unnecessary. Just return PTR_ERR((wdt->base) as you did before.
+No need to make the code more complicated than necessary.
 
-On Thu, 25 Sep 2014 04:15:39 -0700
-Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+Basic rule is: If you can return immediately, do it. Otherwise use goto
+and have a single error handler.
 
-> X-Powers AXP288 is a customized PMIC found on some Intel Baytrail-CR
-> platforms. It comes with sub-functions such as USB charging, fuel
-> gauge, ADC, and many LDO and BUCK channels.
-> 
-> By extending the existing AXP20x driver, this patchset adds basic
-> support for AXP288 PMIC with ADC as one MFD cell device driver.
-> 
-> Currently, the PMIC driver in this patchset does not support platform
-> data enumeration. But when ACPI _DSD and unified device properties
-> become available, cell devices with platform data will be added.
-> 
-> This patch does not use intel_soc_pmic core for i2c and regmap
-> handling in that axp288 shares similar programming interface with
-> other X-Power PMICs supported in axp20x.c. Therefore, extending
-> axp20x.c to include axp288 makes more sense.
-> 
-> Changes
->  v6:	- change axp20x_match_device() flow to give more specific
-> error messages.
-> 	- remove unnecessary cast
-> 
->  v5:	- excluded iio documentation patch, already applied to
-> iio.git
->  	- restructured axp288_adc read_raw code to make it more
-> readable
-> 	- renamed adc_enable to adc_set_state and add comment about
-> why adc has to be always on and there is no disable function.
-> 	- axp20x use const as needed for regmap structures
-> 
->  v4:	- removed rename patch, use Kconfig description to list
-> supported devices
->  	- misc clean up in ADC code, use regmap_bulk_read and
-> improve error handling, etc.
-> 	- remove IIO ADC scale, treat raw data as processed since the
-> unit is already in IIO expected milliamps.
-> 
->  v3:	- put all file rename changes in 1/5
->  	- add iio documentation for in_current_raw/scale
-> 	- removed global variables in axp2xx
-> 	- removed pm callbacks from GPADC
-> 	- removed ACPI opregion cell device
-> 	- added scales to ADC current and voltage
-> 	- removed ADC thermal sensor from sysfs, kernel internal use
-> only
-> 
->  v2:
-> 	- use format -M for 1/4
-> 	- minor tweak based on Maxime's review
-> 
-> 
-> Jacob Pan (2):
->   mfd/axp20x: extend axp20x to support axp288 pmic
->   iio/adc: add support for axp288 adc
-> 
->  drivers/iio/adc/Kconfig      |   8 +
->  drivers/iio/adc/Makefile     |   1 +
->  drivers/iio/adc/axp288_adc.c | 253 ++++++++++++++++++++++++++++++
->  drivers/mfd/Kconfig          |   3 +-
->  drivers/mfd/axp20x.c         | 361
-> ++++++++++++++++++++++++++++++++++++-------
-> include/linux/mfd/axp20x.h   |  59 +++++++ 6 files changed, 629
-> insertions(+), 56 deletions(-) create mode 100644
-> drivers/iio/adc/axp288_adc.c
-> 
+> +	}
+> +
+> +	wdt->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(wdt->clk)) {
+> +		ret = PTR_ERR(wdt->clk);
+> +		goto err_out;
 
-[Jacob Pan]
+Same here.
+
+> +	}
+> +
+> +	ret = clk_prepare_enable(wdt->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to setup clock\n");
+> +		goto err_out;
+
+and here.
+
+> +	}
+> +
+> +	/*
+> +	 * We use the clock rate to calculate the max timeout, so ensure it's
+> +	 * not zero to avoid a divide-by-zero exception.
+> +	 *
+> +	 * WATCHDOG_CORE assumes units of seconds, if the WDT is clocked such
+> +	 * that it would bite before a second elapses it's usefulness is
+> +	 * limited.  Bail if this is the case.
+> +	 */
+> +	wdt->rate = clk_get_rate(wdt->clk);
+> +	if (wdt->rate == 0 ||
+> +	    wdt->rate > 0x10000000U) {
+> +		dev_err(&pdev->dev, "invalid clock rate\n");
+> +		ret = -EINVAL;
+> +		goto err_clk_unprepare;
+> +	}
+> +
+> +	wdt->wdd.dev = &pdev->dev;
+> +	wdt->wdd.info = &qcom_wdt_info;
+> +	wdt->wdd.ops = &qcom_wdt_ops;
+> +	wdt->wdd.min_timeout = 1;
+> +	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
+> +
+> +	/*
+> +	 * If 'timeout-sec' unspecified in devicetree, assume a 30 second
+> +	 * default, unless the max timeout is less than 30 seconds, then use
+> +	 * the max instead.
+> +	 */
+> +	wdt->wdd.timeout = min(wdt->wdd.max_timeout, 30U);
+
+Good idea.
+
+> +	watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev);
+> +
+> +	ret = watchdog_register_device(&wdt->wdd);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to register watchdog\n");
+> +		goto err_clk_unprepare;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, wdt);
+> +	return 0;
+> +
+> +err_clk_unprepare:
+> +	clk_disable_unprepare(wdt->clk);
+> +err_out:
+> +	return ret;
+> +}
+> +
+> +static int qcom_wdt_remove(struct platform_device *pdev)
+> +{
+> +	struct qcom_wdt *wdt = platform_get_drvdata(pdev);
+> +
+> +	watchdog_unregister_device(&wdt->wdd);
+> +	clk_disable_unprepare(wdt->clk);
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id qcom_wdt_of_table[] = {
+> +	{ .compatible = "qcom,kpss-wdt-msm8960", },
+> +	{ .compatible = "qcom,kpss-wdt-apq8064", },
+> +	{ .compatible = "qcom,kpss-wdt-ipq8064", },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, qcom_wdt_of_table);
+> +
+> +static struct platform_driver qcom_watchdog_driver = {
+> +	.probe	= qcom_wdt_probe,
+> +	.remove	= qcom_wdt_remove,
+> +	.driver	= {
+> +		.name		= KBUILD_MODNAME,
+> +		.of_match_table	= qcom_wdt_of_table,
+> +	},
+> +};
+> +module_platform_driver(qcom_watchdog_driver);
+> +
+> +MODULE_DESCRIPTION("QCOM KPSS Watchdog Driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> hosted by The Linux Foundation
+> 
