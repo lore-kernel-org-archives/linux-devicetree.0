@@ -1,108 +1,82 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 3/4] rtc: omap: Update Kconfig for OMAP RTC
-Date: Thu, 25 Sep 2014 10:11:18 -0500
-Message-ID: <20140925151117.GL28045@saruman>
-References: <1411637529-18289-1-git-send-email-lokeshvutla@ti.com>
- <1411637529-18289-4-git-send-email-lokeshvutla@ti.com>
-Reply-To: balbi@ti.com
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] clk: rockchip: rk3288: add reset indices for SOFTRST9-11
+Date: Thu, 25 Sep 2014 08:27:57 -0700
+Message-ID: <CAD=FV=UOHc2xLmSJdJbZTgcvJ7xZXPeGZkGGfCRySeKh6q+nJQ@mail.gmail.com>
+References: <1410522327-23175-1-git-send-email-mark.yao@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7416677211900859528=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1411637529-18289-4-git-send-email-lokeshvutla@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: a.zummo@towertech.it, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, tony@atomide.com, j-keerthy@ti.com, nsekhar@ti.com, balbi@ti.com, t-kristo@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1410522327-23175-1-git-send-email-mark.yao@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark yao <mark.yao@rock-chips.com>
+Cc: Mike Turquette <mturquette@linaro.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, =?UTF-8?B?5oi05YWL6ZyWIChKYWNrKQ==?= <dkl@rock-chips.com>, Eddie Cai <eddie.cai@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, =?UTF-8?B?5p+v6aOe6ZuE?= <kfx@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Chris <zyw@rock-chips.com>, =?UTF-8?B?6Zer5a2d5Yab?= <yxj@rock-chips.com>, jeff chen <cym@rock-chips.com>, Shunqian Zheng <zhengsq@rock-chips.com>, =?UTF-8?B?5pmT6IW+546L?= <caesar.wang@rock-chips.com>, Kever Yang <kever.yang@ro>
 List-Id: devicetree@vger.kernel.org
 
---===============7416677211900859528==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eMP3JyRexyk9c0Bv"
-Content-Disposition: inline
+Mark,
 
---eMP3JyRexyk9c0Bv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Sep 25, 2014 at 03:02:08PM +0530, Lokesh Vutla wrote:
-> From: Tero Kristo <t-kristo@ti.com>
->=20
-> RTC is present in AM43xx and DRA7xx also. Updating the
-> same in Kconfig.
->=20
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+On Fri, Sep 12, 2014 at 4:45 AM, Mark yao <mark.yao@rock-chips.com> wrote:
+> The patch add the rest of the indices of the additional reset
+> registers from the updated TRM.
+>
+> Signed-off-by: Mark yao <mark.yao@rock-chips.com>
 > ---
-> Changes since v1:
-> 	- New patch
->  drivers/rtc/Kconfig    | 6 +++---
->  drivers/rtc/rtc-omap.c | 4 ++--
->  2 files changed, 5 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index a168e96..b092e2f 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -971,11 +971,11 @@ config RTC_DRV_IMXDI
->  	   will be called "rtc-imxdi".
-> =20
->  config RTC_DRV_OMAP
-> -	tristate "TI OMAP1"
-> -	depends on ARCH_OMAP15XX || ARCH_OMAP16XX || ARCH_OMAP730 || ARCH_DAVIN=
-CI_DA8XX || SOC_AM33XX
-> +	tristate "TI OMAP Real Time Clock"
-> +	depends on ARCH_OMAP15XX || ARCH_OMAP16XX || ARCH_OMAP730 || ARCH_DAVIN=
-CI_DA8XX || SOC_AM33XX || SOC_DRA7XX || SOC_AM43XX
+>  include/dt-bindings/clock/rk3288-cru.h | 43 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>
+> diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
+> index ebcb460..e65d522 100644
+> --- a/include/dt-bindings/clock/rk3288-cru.h
+> +++ b/include/dt-bindings/clock/rk3288-cru.h
+> @@ -276,3 +276,46 @@
+>  #define SRST_USBHOST1_CON      140
+>  #define SRST_USB_ADP           141
+>  #define SRST_ACC_EFUSE         142
+> +
+> +#define SRST_CORESIGHT         144
+> +#define SRST_PD_CORE_AHB_NOC   145
+> +#define SRST_PD_CORE_APB_NOC   146
+> +#define SRST_PD_CORE_MP_AXI    147
+> +#define SRST_GIC               148
+> +#define SRST_LCDC_PWM0         149
+> +#define SRST_LCDC_PWM1         150
+> +#define SRST_VIO0_H2P_BRG      151
+> +#define SRST_VIO1_H2P_BRG      152
+> +#define SRST_RGA_H2P_BRG       153
+> +#define SRST_HEVC              154
+> +#define SRST_TSADC             159
+> +
+> +#define SRST_DDRPHY0           160
+> +#define SRST_DDRPHY0_APB       161
+> +#define SRST_DDRCTRL0          162
+> +#define SRST_DDRCTRL0_APB      163
+> +#define SRST_DDRPHY0_CTRL      164
+> +#define SRST_DDRPHY1           165
+> +#define SRST_DDRPHY1_APB       166
+> +#define SRST_DDRCTRL1          167
+> +#define SRST_DDRCTRL1_APB      168
+> +#define SRST_DDRPHY1_CTRL      169
+> +#define SRST_DDRMSCH0          170
+> +#define SRST_DDRMSCH1          171
 
-do you mind if we just make this "depends on ARCH_OMAP || ARCH_DAVINCI" ? P=
-retty much
-every incarnation has this anyway.
+Interestingly 170 and 171 show as Reserved in my TRM...  ...but if
+that's what the reserved bits map to then I have no objection.
 
---=20
-balbi
+> +#define SRST_CRYPTO            174
+> +#define SRST_C2C_HOST          175
+> +
+> +#define SRST_LCDC1_AXI         176
+> +#define SRST_LCDC1_AHB         177
+> +#define SRST_LCDC1_DCLK                178
+> +#define SRST_UART0             179
+> +#define SRST_UART1             180
+> +#define SRST_UART2             181
+> +#define SRST_UART3             182
+> +#define SRST_UART4             183
+> +#define SRST_SIMC              186
+> +#define SRST_PS2C              187
+> +#define SRST_TSP               188
+> +#define SRST_TSP_CLKIN0                189
+> +#define SRST_TSP_CLKIN1                190
+> +#define SRST_TSP_27M           191
 
---eMP3JyRexyk9c0Bv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUJDCVAAoJEIaOsuA1yqRExl0QAKQ61n+fkOnUUBnVYgJR465z
-+/2lPE3hgjxGyxvVi7i08oSroIfQjKtS+6QCCxf0haKF/uXurWG+bniloSvQX82K
-C9LnZwClwqqr4PwlCq8pXSJESfEappufgYusfDUs6e3nl8/KCI1gjA/ZrVLZhur6
-r9L3HZNXFyz0b3yWeOAoPG+gaVpUILm4YpJ3OFH8DgP/6bHst4GIJtuFJk14PFKK
-iN7+f7LLmfOma0wZlE8zuKn7YdKi+2EqJ4rYe2VBmN9saw0XPCEPrWNNgfGCDUwq
-1fQkWx//ZUN4GIhzlL5uaHfeaZhycBAsOUWs+H+zhVotViNpCaRAnzus80U+BlsB
-2/2w5ANuwswOFkMH9Vc17uWjq8foOIFpOhAIQa3k2slTvCW1546ednnMhLHwe0rv
-/IMaCVhPYp6b7XEKvMmZcVnMtxoLrhOPvb+sVdLDngDjvLvN6WBZb5NjQU0gHPOh
-JHQlg6NQV0mpTGkY6iKihit95rPY/sdV3ZBo8BhgGP7jzLHL34exmg+RMEf5xnjb
-JP+Njkk3GQkiQJgTWVcWXkGpLKqnVzeALVpEMPR8FiIRyfrFkeWxQO/YDdZ7Banc
-tWHJCLaDwe8t6+m+AUlDWkJNr5f5AouWgZj5skDwyev9W/HEvrWvn4h0H6OKGsAW
-ni2+PYEav/1yAnTEkajk
-=VQ/o
------END PGP SIGNATURE-----
-
---eMP3JyRexyk9c0Bv--
-
-
---===============7416677211900859528==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7416677211900859528==--
+Reviewed-by: Doug Anderson <dianders@chromium.org>
