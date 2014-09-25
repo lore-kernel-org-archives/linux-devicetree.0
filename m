@@ -1,270 +1,132 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: [PATCH v3 1/3] watchdog: qcom: add support for KPSS WDT
-Date: Thu, 25 Sep 2014 12:48:51 -0500
-Message-ID: <ae171484ae036b331f06814251872c7602a54996.1411667144.git.joshc@codeaurora.org>
-References: <cover.1411667144.git.joshc@codeaurora.org>
+From: Yinghai Lu <yinghai@kernel.org>
+Subject: Re: [PATCH v12 06/12] PCI: Create pci_host_bridge before its
+ associated bus in pci_create_root_bus.
+Date: Thu, 25 Sep 2014 11:15:01 -0700
+Message-ID: <CAE9FiQXuJZnj74dwTbKJCQNJ+OdEbjSB0fpwqh92+WZ_XGnrxQ@mail.gmail.com>
+References: <1411498874-9864-1-git-send-email-Liviu.Dudau@arm.com>
+	<1411498874-9864-7-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1411667144.git.joshc@codeaurora.org>
-In-Reply-To: <cover.1411667144.git.joshc@codeaurora.org>
-References: <cover.1411667144.git.joshc@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1411498874-9864-7-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a driver for the watchdog timer block found in the Krait Processor
-Subsystem (KPSS) on the MSM8960, APQ8064, and IPQ8064.
+On Tue, Sep 23, 2014 at 12:01 PM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> Before commit 7b5436635800 the pci_host_bridge was created before the root bus.
+> As that commit has added a needless dependency on the bus for pci_alloc_host_bridge()
+> the creation order has been changed for no good reason. Revert the order of
+> creation as we are going to depend on the pci_host_bridge structure to retrieve the
+> domain number of the root bus.
+>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> Acked-by: Grant Likely <grant.likely@linaro.org>
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> Tested-by: Tanmay Inamdar <tinamdar@apm.com>
+> ---
+>  drivers/pci/probe.c | 32 +++++++++++++++++---------------
+>  1 file changed, 17 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index e3cf8a2..5ff72ec 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -515,7 +515,7 @@ static void pci_release_host_bridge_dev(struct device *dev)
+>         kfree(bridge);
+>  }
+>
+> -static struct pci_host_bridge *pci_alloc_host_bridge(struct pci_bus *b)
+> +static struct pci_host_bridge *pci_alloc_host_bridge(void)
+>  {
+>         struct pci_host_bridge *bridge;
+>
+> @@ -524,7 +524,8 @@ static struct pci_host_bridge *pci_alloc_host_bridge(struct pci_bus *b)
+>                 return NULL;
+>
+>         INIT_LIST_HEAD(&bridge->windows);
+> -       bridge->bus = b;
+> +       bridge->dev.release = pci_release_host_bridge_dev;
+> +
+>         return bridge;
+>  }
+>
+> @@ -1761,9 +1762,15 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+>         char bus_addr[64];
+>         char *fmt;
+>
+> +       bridge = pci_alloc_host_bridge();
+> +       if (!bridge)
+> +               return NULL;
+> +
+> +       bridge->dev.parent = parent;
+> +
+>         b = pci_alloc_bus();
+>         if (!b)
+> -               return NULL;
+> +               goto err_out;
+>
+>         b->sysdata = sysdata;
+>         b->ops = ops;
+> @@ -1772,26 +1779,19 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+>         if (b2) {
+>                 /* If we already got to this bus through a different bridge, ignore it */
+>                 dev_dbg(&b2->dev, "bus already known\n");
+> -               goto err_out;
+> +               goto err_bus_out;
+>         }
+>
+> -       bridge = pci_alloc_host_bridge(b);
+> -       if (!bridge)
+> -               goto err_out;
+> -
+> -       bridge->dev.parent = parent;
+> -       bridge->dev.release = pci_release_host_bridge_dev;
+> +       bridge->bus = b;
+>         dev_set_name(&bridge->dev, "pci%04x:%02x", pci_domain_nr(b), bus);
+>         error = pcibios_root_bridge_prepare(bridge);
+> -       if (error) {
+> -               kfree(bridge);
+> +       if (error)
+>                 goto err_out;
+> -       }
+>
+>         error = device_register(&bridge->dev);
+>         if (error) {
+>                 put_device(&bridge->dev);
+> -               goto err_out;
+> +               goto err_bus_out;
+>         }
+>         b->bridge = get_device(&bridge->dev);
+>         device_enable_async_suspend(b->bridge);
+> @@ -1848,8 +1848,10 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+>  class_dev_reg_err:
+>         put_device(&bridge->dev);
+>         device_unregister(&bridge->dev);
+> -err_out:
+> +err_bus_out:
+>         kfree(b);
+> +err_out:
+> +       kfree(bridge);
+>         return NULL;
+>  }
 
-Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
----
- drivers/watchdog/Kconfig    |  13 +++
- drivers/watchdog/Makefile   |   1 +
- drivers/watchdog/qcom-wdt.c | 189 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 203 insertions(+)
- create mode 100644 drivers/watchdog/qcom-wdt.c
+Hi Bjorn,
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 79d2589..c389ed7 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -421,6 +421,19 @@ config SIRFSOC_WATCHDOG
- 	  Support for CSR SiRFprimaII and SiRFatlasVI watchdog. When
- 	  the watchdog triggers the system will be reset.
- 
-+config QCOM_WDT
-+	tristate "QCOM watchdog"
-+	depends on HAS_IOMEM
-+	depends on ARCH_QCOM
-+	select WATCHDOG_CORE
-+	help
-+	  Say Y here to include Watchdog timer support for the watchdog found
-+	  on QCOM chipsets.  Currently supported targets are the MSM8960,
-+	  APQ8064, and IPQ8064.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called qcom_wdt.
-+
- # AVR32 Architecture
- 
- config AT32AP700X_WDT
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 985a66c..cede21e 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -57,6 +57,7 @@ obj-$(CONFIG_RETU_WATCHDOG) += retu_wdt.o
- obj-$(CONFIG_BCM2835_WDT) += bcm2835_wdt.o
- obj-$(CONFIG_MOXART_WDT) += moxart_wdt.o
- obj-$(CONFIG_SIRFSOC_WATCHDOG) += sirfsoc_wdt.o
-+obj-$(CONFIG_QCOM_WDT) += qcom-wdt.o
- obj-$(CONFIG_BCM_KONA_WDT) += bcm_kona_wdt.o
- 
- # AVR32 Architecture
-diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-new file mode 100644
-index 0000000..0f56ca3
---- /dev/null
-+++ b/drivers/watchdog/qcom-wdt.c
-@@ -0,0 +1,189 @@
-+/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/watchdog.h>
-+
-+#define WDT_RST		0x0
-+#define WDT_EN		0x8
-+#define WDT_BITE_TIME	0x24
-+
-+struct qcom_wdt {
-+	struct watchdog_device	wdd;
-+	struct clk		*clk;
-+	unsigned long		rate;
-+	void __iomem		*base;
-+};
-+
-+static inline
-+struct qcom_wdt *to_qcom_wdt(struct watchdog_device *wdd)
-+{
-+	return container_of(wdd, struct qcom_wdt, wdd);
-+}
-+
-+static int qcom_wdt_start(struct watchdog_device *wdd)
-+{
-+	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
-+
-+	writel(0, wdt->base + WDT_EN);
-+	writel(1, wdt->base + WDT_RST);
-+	writel(wdd->timeout * wdt->rate, wdt->base + WDT_BITE_TIME);
-+	writel(1, wdt->base + WDT_EN);
-+	return 0;
-+}
-+
-+static int qcom_wdt_stop(struct watchdog_device *wdd)
-+{
-+	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
-+
-+	writel(0, wdt->base + WDT_EN);
-+	return 0;
-+}
-+
-+static int qcom_wdt_ping(struct watchdog_device *wdd)
-+{
-+	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
-+
-+	writel(1, wdt->base + WDT_RST);
-+	return 0;
-+}
-+
-+static int qcom_wdt_set_timeout(struct watchdog_device *wdd,
-+				unsigned int timeout)
-+{
-+	wdd->timeout = timeout;
-+	return qcom_wdt_start(wdd);
-+}
-+
-+static const struct watchdog_ops qcom_wdt_ops = {
-+	.start		= qcom_wdt_start,
-+	.stop		= qcom_wdt_stop,
-+	.ping		= qcom_wdt_ping,
-+	.set_timeout	= qcom_wdt_set_timeout,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct watchdog_info qcom_wdt_info = {
-+	.options	= WDIOF_KEEPALIVEPING
-+			| WDIOF_MAGICCLOSE
-+			| WDIOF_SETTIMEOUT,
-+	.identity	= KBUILD_MODNAME,
-+};
-+
-+static int qcom_wdt_probe(struct platform_device *pdev)
-+{
-+	struct qcom_wdt *wdt;
-+	struct resource *res;
-+	int ret;
-+
-+	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-+	if (!wdt)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	wdt->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(wdt->base)) {
-+		ret = PTR_ERR(wdt->base);
-+		goto err_out;
-+	}
-+
-+	wdt->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(wdt->clk)) {
-+		ret = PTR_ERR(wdt->clk);
-+		goto err_out;
-+	}
-+
-+	ret = clk_prepare_enable(wdt->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to setup clock\n");
-+		goto err_out;
-+	}
-+
-+	/*
-+	 * We use the clock rate to calculate the max timeout, so ensure it's
-+	 * not zero to avoid a divide-by-zero exception.
-+	 *
-+	 * WATCHDOG_CORE assumes units of seconds, if the WDT is clocked such
-+	 * that it would bite before a second elapses it's usefulness is
-+	 * limited.  Bail if this is the case.
-+	 */
-+	wdt->rate = clk_get_rate(wdt->clk);
-+	if (wdt->rate == 0 ||
-+	    wdt->rate > 0x10000000U) {
-+		dev_err(&pdev->dev, "invalid clock rate\n");
-+		ret = -EINVAL;
-+		goto err_clk_unprepare;
-+	}
-+
-+	wdt->wdd.dev = &pdev->dev;
-+	wdt->wdd.info = &qcom_wdt_info;
-+	wdt->wdd.ops = &qcom_wdt_ops;
-+	wdt->wdd.min_timeout = 1;
-+	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
-+
-+	/*
-+	 * If 'timeout-sec' unspecified in devicetree, assume a 30 second
-+	 * default, unless the max timeout is less than 30 seconds, then use
-+	 * the max instead.
-+	 */
-+	wdt->wdd.timeout = min(wdt->wdd.max_timeout, 30U);
-+	watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev);
-+
-+	ret = watchdog_register_device(&wdt->wdd);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register watchdog\n");
-+		goto err_clk_unprepare;
-+	}
-+
-+	platform_set_drvdata(pdev, wdt);
-+	return 0;
-+
-+err_clk_unprepare:
-+	clk_disable_unprepare(wdt->clk);
-+err_out:
-+	return ret;
-+}
-+
-+static int qcom_wdt_remove(struct platform_device *pdev)
-+{
-+	struct qcom_wdt *wdt = platform_get_drvdata(pdev);
-+
-+	watchdog_unregister_device(&wdt->wdd);
-+	clk_disable_unprepare(wdt->clk);
-+	return 0;
-+}
-+
-+static const struct of_device_id qcom_wdt_of_table[] = {
-+	{ .compatible = "qcom,kpss-wdt-msm8960", },
-+	{ .compatible = "qcom,kpss-wdt-apq8064", },
-+	{ .compatible = "qcom,kpss-wdt-ipq8064", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, qcom_wdt_of_table);
-+
-+static struct platform_driver qcom_watchdog_driver = {
-+	.probe	= qcom_wdt_probe,
-+	.remove	= qcom_wdt_remove,
-+	.driver	= {
-+		.name		= KBUILD_MODNAME,
-+		.of_match_table	= qcom_wdt_of_table,
-+	},
-+};
-+module_platform_driver(qcom_watchdog_driver);
-+
-+MODULE_DESCRIPTION("QCOM KPSS Watchdog Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Noticed that you put this one into pci/next.
+
+This patch has problem for the class_dev_reg_err path.
+as device_unregister(&bridge->dev) will trigger pci_release_host_bridge_dev.
+So will have double free for bridge or else.
+
+Please drop this patch from pci/next.
+
+Also looks strange that the patch have long CC list, but just omit me
+and Jiang Liu that
+touched those code before.
+
+Thanks
+
+Yinghai
