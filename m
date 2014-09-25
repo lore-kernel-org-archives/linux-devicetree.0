@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 11/13] ARM: shmobile: koelsch dts: Add chosen/stdout-path
-Date: Thu, 25 Sep 2014 18:13:27 +0200
-Message-ID: <1411661609-4280-12-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 04/13] ARM: shmobile: genmai dts: Add chosen/stdout-path
+Date: Thu, 25 Sep 2014 18:13:20 +0200
+Message-ID: <1411661609-4280-5-git-send-email-geert+renesas@glider.be>
 References: <1411661609-4280-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1411661609-4280-1-git-send-email-geert+renesas@glider.be>
@@ -17,23 +17,23 @@ Remove the now-superfluous "console=" parameter from chosen/bootargs.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7791-koelsch.dts | 3 ++-
+ arch/arm/boot/dts/r7s72100-genmai.dts | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
-index 51807a3795d9b5b8..a33e8eaa7008da51 100644
---- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-+++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-@@ -25,7 +25,8 @@
+diff --git a/arch/arm/boot/dts/r7s72100-genmai.dts b/arch/arm/boot/dts/r7s72100-genmai.dts
+index a3ed23c0a8f58abd..1518c5bcca33d8d1 100644
+--- a/arch/arm/boot/dts/r7s72100-genmai.dts
++++ b/arch/arm/boot/dts/r7s72100-genmai.dts
+@@ -21,7 +21,8 @@
  	};
  
  	chosen {
--		bootargs = "console=ttySC6,115200 ignore_loglevel rw root=/dev/nfs ip=dhcp";
+-		bootargs = "console=ttySC2,115200 ignore_loglevel rw root=/dev/nfs ip=dhcp";
 +		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
-+		stdout-path = &scif0;
++		stdout-path = &scif2;
  	};
  
- 	memory@40000000 {
+ 	memory {
 -- 
 1.9.1
 
