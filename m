@@ -1,7 +1,7 @@
 From: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: [RFC PATCH 1/4] arm64: defconfig: increase NR_CPUS range to 2-128
-Date: Thu, 25 Sep 2014 14:33:56 +0530
-Message-ID: <1411635840-24038-2-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+Subject: [RFC PATCH 3/4] arm64:thunder: Add initial dts for Cavium Thunder SoC in 2 Node topology.
+Date: Thu, 25 Sep 2014 14:33:58 +0530
+Message-ID: <1411635840-24038-4-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
 References: <1411635840-24038-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,29 +12,1095 @@ To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Raising the maximum limit to 128. This is needed for Cavium's
-Thunder systems that will have 96 cores on Multi-node system.
+adding devicetree definition for thunder's 2 node topology.
+Defined cpu-map for all 96 cores of 2 node system.
 
 Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm64/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/thunder-88xx-2n.dts  |  76 +++
+ arch/arm64/boot/dts/thunder-88xx-2n.dtsi | 990 +++++++++++++++++++++++++++++++
+ 2 files changed, 1066 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/thunder-88xx-2n.dts
+ create mode 100644 arch/arm64/boot/dts/thunder-88xx-2n.dtsi
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 4d42453..a409105 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -296,8 +296,8 @@ config SCHED_SMT
- 	  places. If unsure say N here.
- 
- config NR_CPUS
--	int "Maximum number of CPUs (2-64)"
--	range 2 64
-+	int "Maximum number of CPUs (2-128)"
-+	range 2 128
- 	depends on SMP
- 	# These have to remain sorted largest to smallest
- 	default "64"
+diff --git a/arch/arm64/boot/dts/thunder-88xx-2n.dts b/arch/arm64/boot/dts/thunder-88xx-2n.dts
+new file mode 100644
+index 0000000..b2e70e1
+--- /dev/null
++++ b/arch/arm64/boot/dts/thunder-88xx-2n.dts
+@@ -0,0 +1,76 @@
++/*
++ * Cavium Thunder DTS file - Thunder board description
++ *
++ * Copyright (C) 2014, Cavium Inc.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this library; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++/include/ "thunder-88xx-2n.dtsi"
++
++/ {
++	model = "Cavium ThunderX CN88XX board";
++	compatible = "cavium,thunder-88xx";
++
++	aliases {
++		serial0 = &uaa0;
++		serial1 = &uaa1;
++	};
++
++	memory@00000000 {
++		device_type = "memory";
++		reg = <0x0 0x00000000 0x0 0x80000000>,
++		      <0x1 0x00000000 0x0 0x80000000>;
++		nid = <0x0>;
++	};
++
++	memory@10000000000 {
++		device_type = "memory";
++		reg = <0x100 0x00000000 0x0 0x80000000>;
++		nid = <0x1>;
++	};
++
++};
+diff --git a/arch/arm64/boot/dts/thunder-88xx-2n.dtsi b/arch/arm64/boot/dts/thunder-88xx-2n.dtsi
+new file mode 100644
+index 0000000..511c932
+--- /dev/null
++++ b/arch/arm64/boot/dts/thunder-88xx-2n.dtsi
+@@ -0,0 +1,990 @@
++/*
++ * Cavium Thunder DTS file - Thunder SoC description
++ *
++ * Copyright (C) 2014, Cavium Inc.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this library; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/ {
++	compatible = "cavium,thunder-88xx";
++	interrupt-parent = <&gic0>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		cpu-map {
++			cluster0 {
++				core0 {
++					cpu = <&CPU0>;
++				};
++				core1 {
++					cpu = <&CPU1>;
++				};
++				core2 {
++					cpu = <&CPU2>;
++				};
++				core3 {
++					cpu = <&CPU3>;
++				};
++				core4 {
++					cpu = <&CPU4>;
++				};
++				core5 {
++					cpu = <&CPU5>;
++				};
++				core6 {
++					cpu = <&CPU6>;
++				};
++				core7 {
++					cpu = <&CPU7>;
++				};
++				core8 {
++					cpu = <&CPU8>;
++				};
++				core9 {
++					cpu = <&CPU9>;
++				};
++				core10 {
++					cpu = <&CPU10>;
++				};
++				core11 {
++					cpu = <&CPU11>;
++				};
++				core12 {
++					cpu = <&CPU12>;
++				};
++				core13 {
++					cpu = <&CPU13>;
++				};
++				core14 {
++					cpu = <&CPU14>;
++				};
++				core15 {
++					cpu = <&CPU15>;
++				};
++				core16 {
++					cpu = <&CPU16>;
++				};
++				core17 {
++					cpu = <&CPU17>;
++				};
++				core18 {
++					cpu = <&CPU18>;
++				};
++				core19 {
++					cpu = <&CPU19>;
++				};
++				core20 {
++					cpu = <&CPU20>;
++				};
++				core21 {
++					cpu = <&CPU21>;
++				};
++				core22 {
++					cpu = <&CPU22>;
++				};
++				core23 {
++					cpu = <&CPU23>;
++				};
++				core24 {
++					cpu = <&CPU24>;
++				};
++				core25 {
++					cpu = <&CPU25>;
++				};
++				core26 {
++					cpu = <&CPU26>;
++				};
++				core27 {
++					cpu = <&CPU27>;
++				};
++				core28 {
++					cpu = <&CPU28>;
++				};
++				core29 {
++					cpu = <&CPU29>;
++				};
++				core30 {
++					cpu = <&CPU30>;
++				};
++				core31 {
++					cpu = <&CPU31>;
++				};
++				core32 {
++					cpu = <&CPU32>;
++				};
++				core33 {
++					cpu = <&CPU33>;
++				};
++				core34 {
++					cpu = <&CPU34>;
++				};
++				core35 {
++					cpu = <&CPU35>;
++				};
++				core36 {
++					cpu = <&CPU36>;
++				};
++				core37 {
++					cpu = <&CPU37>;
++				};
++				core38 {
++					cpu = <&CPU38>;
++				};
++				core39 {
++					cpu = <&CPU39>;
++				};
++				core40 {
++					cpu = <&CPU40>;
++				};
++				core41 {
++					cpu = <&CPU41>;
++				};
++				core42 {
++					cpu = <&CPU42>;
++				};
++				core43 {
++					cpu = <&CPU43>;
++				};
++				core44 {
++					cpu = <&CPU44>;
++				};
++				core45 {
++					cpu = <&CPU45>;
++				};
++				core46 {
++					cpu = <&CPU46>;
++				};
++				core47 {
++					cpu = <&CPU47>;
++				};
++			};
++
++			cluster1 {
++				core0 {
++					cpu = <&CPU48>;
++				};
++				core1 {
++					cpu = <&CPU49>;
++				};
++				core2 {
++					cpu = <&CPU50>;
++				};
++				core3 {
++					cpu = <&CPU51>;
++				};
++				core4 {
++					cpu = <&CPU52>;
++				};
++				core5 {
++					cpu = <&CPU53>;
++				};
++				core6 {
++					cpu = <&CPU54>;
++				};
++				core7 {
++					cpu = <&CPU55>;
++				};
++				core8 {
++					cpu = <&CPU56>;
++				};
++				core9 {
++					cpu = <&CPU57>;
++				};
++				core10 {
++					cpu = <&CPU58>;
++				};
++				core11 {
++					cpu = <&CPU59>;
++				};
++				core12 {
++					cpu = <&CPU60>;
++				};
++				core13 {
++					cpu = <&CPU61>;
++				};
++				core14 {
++					cpu = <&CPU62>;
++				};
++				core15 {
++					cpu = <&CPU63>;
++				};
++				core16 {
++					cpu = <&CPU64>;
++				};
++				core17 {
++					cpu = <&CPU65>;
++				};
++				core18 {
++					cpu = <&CPU66>;
++				};
++				core19 {
++					cpu = <&CPU67>;
++				};
++				core20 {
++					cpu = <&CPU68>;
++				};
++				core21 {
++					cpu = <&CPU69>;
++				};
++				core22 {
++					cpu = <&CPU70>;
++				};
++				core23 {
++					cpu = <&CPU71>;
++				};
++				core24 {
++					cpu = <&CPU72>;
++				};
++				core25 {
++					cpu = <&CPU73>;
++				};
++				core26 {
++					cpu = <&CPU74>;
++				};
++				core27 {
++					cpu = <&CPU75>;
++				};
++				core28 {
++					cpu = <&CPU76>;
++				};
++				core29 {
++					cpu = <&CPU77>;
++				};
++				core30 {
++					cpu = <&CPU78>;
++				};
++				core31 {
++					cpu = <&CPU79>;
++				};
++				core32 {
++					cpu = <&CPU80>;
++				};
++				core33 {
++					cpu = <&CPU81>;
++				};
++				core34 {
++					cpu = <&CPU82>;
++				};
++				core35 {
++					cpu = <&CPU83>;
++				};
++				core36 {
++					cpu = <&CPU84>;
++				};
++				core37 {
++					cpu = <&CPU85>;
++				};
++				core38 {
++					cpu = <&CPU86>;
++				};
++				core39 {
++					cpu = <&CPU87>;
++				};
++				core40 {
++					cpu = <&CPU88>;
++				};
++				core41 {
++					cpu = <&CPU89>;
++				};
++				core42 {
++					cpu = <&CPU90>;
++				};
++				core43 {
++					cpu = <&CPU91>;
++				};
++				core44 {
++					cpu = <&CPU92>;
++				};
++				core45 {
++					cpu = <&CPU93>;
++				};
++				core46 {
++					cpu = <&CPU94>;
++				};
++				core47 {
++					cpu = <&CPU95>;
++				};
++			};
++		};
++
++		CPU0: cpu@000 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x000>;
++			enable-method = "psci";
++		};
++		CPU1: cpu@001 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x001>;
++			enable-method = "psci";
++		};
++		CPU2: cpu@002 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x002>;
++			enable-method = "psci";
++		};
++		CPU3: cpu@003 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x003>;
++			enable-method = "psci";
++		};
++		CPU4: cpu@004 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x004>;
++			enable-method = "psci";
++		};
++		CPU5: cpu@005 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x005>;
++			enable-method = "psci";
++		};
++		CPU6: cpu@006 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x006>;
++			enable-method = "psci";
++		};
++		CPU7: cpu@007 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x007>;
++			enable-method = "psci";
++		};
++		CPU8: cpu@008 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x008>;
++			enable-method = "psci";
++		};
++		CPU9: cpu@009 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x009>;
++			enable-method = "psci";
++		};
++		CPU10: cpu@00a {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x00a>;
++			enable-method = "psci";
++		};
++		CPU11: cpu@00b {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x00b>;
++			enable-method = "psci";
++		};
++		CPU12: cpu@00c {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x00c>;
++			enable-method = "psci";
++		};
++		CPU13: cpu@00d {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x00d>;
++			enable-method = "psci";
++		};
++		CPU14: cpu@00e {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x00e>;
++			enable-method = "psci";
++		};
++		CPU15: cpu@00f {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x00f>;
++			enable-method = "psci";
++		};
++		CPU16: cpu@100 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x100>;
++			enable-method = "psci";
++		};
++		CPU17: cpu@101 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x101>;
++			enable-method = "psci";
++		};
++		CPU18: cpu@102 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x102>;
++			enable-method = "psci";
++		};
++		CPU19: cpu@103 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x103>;
++			enable-method = "psci";
++		};
++		CPU20: cpu@104 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x104>;
++			enable-method = "psci";
++		};
++		CPU21: cpu@105 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x105>;
++			enable-method = "psci";
++		};
++		CPU22: cpu@106 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x106>;
++			enable-method = "psci";
++		};
++		CPU23: cpu@107 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x107>;
++			enable-method = "psci";
++		};
++		CPU24: cpu@108 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x108>;
++			enable-method = "psci";
++		};
++		CPU25: cpu@109 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x109>;
++			enable-method = "psci";
++		};
++		CPU26: cpu@10a {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10a>;
++			enable-method = "psci";
++		};
++		CPU27: cpu@10b {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10b>;
++			enable-method = "psci";
++		};
++		CPU28: cpu@10c {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10c>;
++			enable-method = "psci";
++		};
++		CPU29: cpu@10d {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10d>;
++			enable-method = "psci";
++		};
++		CPU30: cpu@10e {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10e>;
++			enable-method = "psci";
++		};
++		CPU31: cpu@10f {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10f>;
++			enable-method = "psci";
++		};
++		CPU32: cpu@200 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x200>;
++			enable-method = "psci";
++		};
++		CPU33: cpu@201 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x201>;
++			enable-method = "psci";
++		};
++		CPU34: cpu@202 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x202>;
++			enable-method = "psci";
++		};
++		CPU35: cpu@203 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x203>;
++			enable-method = "psci";
++		};
++		CPU36: cpu@204 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x204>;
++			enable-method = "psci";
++		};
++		CPU37: cpu@205 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x205>;
++			enable-method = "psci";
++		};
++		CPU38: cpu@206 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x206>;
++			enable-method = "psci";
++		};
++		CPU39: cpu@207 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x207>;
++			enable-method = "psci";
++		};
++		CPU40: cpu@208 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x208>;
++			enable-method = "psci";
++		};
++		CPU41: cpu@209 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x209>;
++			enable-method = "psci";
++		};
++		CPU42: cpu@20a {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x20a>;
++			enable-method = "psci";
++		};
++		CPU43: cpu@20b {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x20b>;
++			enable-method = "psci";
++		};
++		CPU44: cpu@20c {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x20c>;
++			enable-method = "psci";
++		};
++		CPU45: cpu@20d {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x20d>;
++			enable-method = "psci";
++		};
++		CPU46: cpu@20e {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x20e>;
++			enable-method = "psci";
++		};
++		CPU47: cpu@20f {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x20f>;
++			enable-method = "psci";
++		};
++		CPU48: cpu@10000 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10000>;
++			enable-method = "psci";
++		};
++		CPU49: cpu@10001 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10001>;
++			enable-method = "psci";
++		};
++		CPU50: cpu@10002 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10002>;
++			enable-method = "psci";
++		};
++		CPU51: cpu@10003 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10003>;
++			enable-method = "psci";
++		};
++		CPU52: cpu@10004 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10004>;
++			enable-method = "psci";
++		};
++		CPU53: cpu@10005 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10005>;
++			enable-method = "psci";
++		};
++		CPU54: cpu@10006 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10006>;
++			enable-method = "psci";
++		};
++		CPU55: cpu@10007 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10007>;
++			enable-method = "psci";
++		};
++		CPU56: cpu@10008 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10008>;
++			enable-method = "psci";
++		};
++		CPU57: cpu@10009 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10009>;
++			enable-method = "psci";
++		};
++		CPU58: cpu@1000a {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1000a>;
++			enable-method = "psci";
++		};
++		CPU59: cpu@1000b {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1000b>;
++			enable-method = "psci";
++		};
++		CPU60: cpu@1000c {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1000c>;
++			enable-method = "psci";
++		};
++		CPU61: cpu@1000d {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1000d>;
++			enable-method = "psci";
++		};
++		CPU62: cpu@1000e {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1000e>;
++			enable-method = "psci";
++		};
++		CPU63: cpu@1000f {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1000f>;
++			enable-method = "psci";
++		};
++		CPU64: cpu@10100 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10100>;
++			enable-method = "psci";
++		};
++		CPU65: cpu@10101 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10101>;
++			enable-method = "psci";
++		};
++		CPU66: cpu@10102 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10102>;
++			enable-method = "psci";
++		};
++		CPU67: cpu@10103 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10103>;
++			enable-method = "psci";
++		};
++		CPU68: cpu@10104 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10104>;
++			enable-method = "psci";
++		};
++		CPU69: cpu@10105 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10105>;
++			enable-method = "psci";
++		};
++		CPU70: cpu@10106 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10106>;
++			enable-method = "psci";
++		};
++		CPU71: cpu@10107 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10107>;
++			enable-method = "psci";
++		};
++		CPU72: cpu@10108 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10108>;
++			enable-method = "psci";
++		};
++		CPU73: cpu@10109 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10109>;
++			enable-method = "psci";
++		};
++		CPU74: cpu@1010a {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1010a>;
++			enable-method = "psci";
++		};
++		CPU75: cpu@1010b {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1010b>;
++			enable-method = "psci";
++		};
++		CPU76: cpu@1010c {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1010c>;
++			enable-method = "psci";
++		};
++		CPU77: cpu@1010d {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1010d>;
++			enable-method = "psci";
++		};
++		CPU78: cpu@1010e {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1010e>;
++			enable-method = "psci";
++		};
++		CPU79: cpu@1010f {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1010f>;
++			enable-method = "psci";
++		};
++		CPU80: cpu@10200 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10200>;
++			enable-method = "psci";
++		};
++		CPU81: cpu@10201 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10201>;
++			enable-method = "psci";
++		};
++		CPU82: cpu@10202 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10202>;
++			enable-method = "psci";
++		};
++		CPU83: cpu@10203 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10203>;
++			enable-method = "psci";
++		};
++		CPU84: cpu@10204 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10204>;
++			enable-method = "psci";
++		};
++		CPU85: cpu@10205 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10205>;
++			enable-method = "psci";
++		};
++		CPU86: cpu@10206 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10206>;
++			enable-method = "psci";
++		};
++		CPU87: cpu@10207 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10207>;
++			enable-method = "psci";
++		};
++		CPU88: cpu@10208 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10208>;
++			enable-method = "psci";
++		};
++		CPU89: cpu@10209 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10209>;
++			enable-method = "psci";
++		};
++		CPU90: cpu@1020a {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1020a>;
++			enable-method = "psci";
++		};
++		CPU91: cpu@1020b {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1020b>;
++			enable-method = "psci";
++		};
++		CPU92: cpu@1020c {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1020c>;
++			enable-method = "psci";
++		};
++		CPU93: cpu@1020d {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1020d>;
++			enable-method = "psci";
++		};
++		CPU94: cpu@1020e {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1020e>;
++			enable-method = "psci";
++		};
++		CPU95: cpu@1020f {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x1020f>;
++			enable-method = "psci";
++		};
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <1 13 0xff01>,
++		             <1 14 0xff01>,
++		             <1 11 0xff01>,
++		             <1 10 0xff01>;
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		refclk50mhz: refclk50mhz {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <50000000>;
++			clock-output-names = "refclk50mhz";
++		};
++
++		gic0: interrupt-controller@8010,00000000 {
++			compatible = "arm,gic-v3";
++			#interrupt-cells = <3>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			#redistributor-regions = <2>;
++			ranges;
++			interrupt-controller;
++			reg = <0x8010 0x00000000 0x0 0x010000>, /* GICD */
++			      <0x8010 0x80000000 0x0 0x600000>, /* GICR Node 0 */
++			      <0x9010 0x80000000 0x0 0x600000>; /* GICR Node 1 */
++			interrupts = <1 9 0xf04>;
++		};
++
++		uaa0: serial@87e0,24000000 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0x87e0 0x24000000 0x0 0x1000>;
++			interrupts = <1 21 4>;
++			clocks = <&refclk50mhz>;
++			clock-names = "apb_pclk";
++		};
++
++		uaa1: serial@87e0,25000000 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0x87e0 0x25000000 0x0 0x1000>;
++			interrupts = <1 22 4>;
++			clocks = <&refclk50mhz>;
++			clock-names = "apb_pclk";
++		};
++	};
++};
 -- 
 1.8.1.4
 
