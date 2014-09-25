@@ -1,70 +1,62 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH v2] ARM: ls1021a: add gating clocks to IP blocks.
-Date: Thu, 25 Sep 2014 16:29:41 +0800
-Message-ID: <20140925082940.GF6405@dragon>
-References: <1411366160-42685-1-git-send-email-Li.Xiubo@freescale.com>
- <20140922070037.GR3755@pengutronix.de>
- <e7a0fe3cbe4c4ed0bcc489853a392f35@BY2PR0301MB0613.namprd03.prod.outlook.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH 0/3 v4] Fix Exynos USB on kernels with USB Gadget support
+Date: Thu, 25 Sep 2014 17:34:18 +0900
+Message-ID: <5423D38A.5080609@samsung.com>
+References: <542199F4.3090601@samsung.com> <1411545465-12930-1-git-send-email-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e7a0fe3cbe4c4ed0bcc489853a392f35@BY2PR0301MB0613.namprd03.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Xiubo Li-B47053 <Li.Xiubo@freescale.com>
-Cc: Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1411545465-12930-1-git-send-email-sjoerd.simons@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 22, 2014 at 03:55:14PM +0800, Xiubo Li-B47053 wrote:
-> > > +static void __init ls1021a_clocks_init(struct device_node *np)
-> > > +{
-> > > +	void __iomem *dcfg_base;
-> > > +
-> > > +#define DCFG_CCSR_DEVDISR1	(dcfg_base + 0x70)
-> > > +#define DCFG_CCSR_DEVDISR2	(dcfg_base + 0x74)
-> > > +#define DCFG_CCSR_DEVDISR3	(dcfg_base + 0x78)
-> > > +#define DCFG_CCSR_DEVDISR4	(dcfg_base + 0x7c)
-> > > +#define DCFG_CCSR_DEVDISR5	(dcfg_base + 0x80)
-> > > +
-> > > +	dcfg_base = of_iomap(np, 0);
-> > > +
-> > > +	BUG_ON(!dcfg_base);
-> > Is this worth a BUG? 
-> Yes, I do think so.
-> 
-> There is one story about my platform:
-> We are using the imx2_wdt watchdog device, which cannot stop or suspend
-> once it has started.
-> And our platform will also support the Power Management, if the gating
-> Clock initialized failed, so when the system enters sleep mode, we cannot
-> Stop the imx2_wdt IP block, so it will reset the board after 180 seconds at
-> most.
-> 
-> So using this gating clock, the watchdog IP block's clock could be disabled
-> When the system enter sleep mode.
-> 
-> So I think BUG_ON here is make sense.
->  
-> Doesn't it ?
-> 
-> > Or is it enough to do
-> > 	if (!dcfg_base) {
-> > 		pr_warn("failed to map fsl,ls1021a-gate device\n");
-> > 		return
-> > 	}
-> > 
-> > > +
-> > > +	clk[LS1021A_CLK_PBL_EN] = ls1021a_clk_gate("pbl_en", "dummy",
-> > > +						DCFG_CCSR_DEVDISR1, 0, true);
-> > If the machine's device tree contains two (or more) nodes that are
-> > compatible to "fsl,ls1021a-gate", you overwrite your static clk array. Is
-> > it worth to add another check here?:
-> > 
-> On LS1021A SoC, I can make sure that there will only be one gate node. But for
-> More compatibly using one dynamic clk array will be better.
+On 09/24/14 16:57, Sjoerd Simons wrote:
+> Same patches as v3 but rebased on
+> https://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/=
+log/?h=3Dfor-next
+>
+Thanks, applied.
 
-I do not think it's really necessary to use dynamic allocation.  Making
-dcfg_base a static variable and check if it's null at the beginning of
-the function is probably enough.
+- Kukjin
 
-Shawn
+> When building a kernel with support for both USB host and USB Gadget =
+support on
+> the dwc3 controller on the Exynos5 soc will go into USB OTG mode unle=
+ss
+> otherwise specified in the dtb, which is unhelpful for boards hooked =
+up to run
+> as USB host.
+>
+> First patch in this set explicitely set the dual-role mode for the dw=
+c3
+> controller on Peach pi and Peach pit boards to host mode. Second patc=
+h adds
+> similar updates for Arndale Octa as reported by Andreas F=C3=A4rber. =
+Last patch
+> enables gadget mode in the default exynos config to more easily catch=
+/trigger
+> issues like these.
+>
+> I suspect the Samsung SMDK5420 DTS might need similar changes, so it =
+would be
+> great if users of those board could verify this.
+>
+> Changes in v2: alphabetically sort the dts entries
+> Changes in v3: Add DTS updates for arndale octa
+> Changes in v4: Rebased on todays linux-samsungs for-next branch
+>
+> Sjoerd Simons (3):
+>    ARM: dts: exynos: Explicitly set dr_mode on peach-pit and peach-pi
+>    ARM: dts: exynos: Explicitly set dr_mode on arndale-octa
+>    ARM: exynos_defconfig: enable USB gadget support
+>
+>   arch/arm/boot/dts/exynos5420-arndale-octa.dts | 4 ++++
+>   arch/arm/boot/dts/exynos5420-peach-pit.dts    | 8 ++++++++
+>   arch/arm/boot/dts/exynos5420.dtsi             | 4 ++--
+>   arch/arm/boot/dts/exynos5800-peach-pi.dts     | 8 ++++++++
+>   arch/arm/configs/exynos_defconfig             | 1 +
+>   5 files changed, 23 insertions(+), 2 deletions(-)
