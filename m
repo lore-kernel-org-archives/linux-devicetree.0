@@ -1,116 +1,71 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Thu, 25 Sep 2014 09:15:53 -0500
-Message-ID: <20140925141553.GC28045@saruman>
-References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
- <2923729.dtX0WmHSV0@wuerfel>
- <20140924112902.GA23331@peterchendt>
- <2786668.t3YLqX5enD@wuerfel>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH] [RFC] Using hierarchy irqdomian to implement MTK
+ intpol.
+Date: Thu, 25 Sep 2014 16:27:27 +0200 (CEST)
+Message-ID: <alpine.DEB.2.10.1409251609500.4604@nanos>
+References: <1411574696-1881-1-git-send-email-srv_yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JWEK1jqKZ6MHAcjA"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2786668.t3YLqX5enD@wuerfel>
+In-Reply-To: <1411574696-1881-1-git-send-email-srv_yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+To: "Joe.C" <srv_yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---JWEK1jqKZ6MHAcjA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, 25 Sep 2014, Joe.C wrote:
+> From: "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> Here's the first draft of using hierarchy irqdomain to implement MTK intpol
+> support. I have tested it and intpol works fine. Before continue, I'd like
+> to get your comments. This is based on Jiang's hierarchy irqdomian [1] and
+> my mediatek SoC basic support [2].
+> 
+> Simplified block diagram for interrupt:
+> 
+>     ---------      ---------
+>  ---| CIRQ  |------|ARM GIC|
+>  ---|       |------|       |
+>  ---|       |------|       |
+>  ---|       |------|       |
+>  ---|       |------|       |
+>     ---------      ---------
+>  
+> In device tree, interrupt-parent for other devices is cirq, child of gic.
+> This describe HW better and allow device to specify polarity as it is sent
+> by the device. I'm using interrupt-parent to specify irq domain parent in
+> cirq now. Maybe adding another name like 'interrupt-domain-parent' will be
+> better.
 
-On Wed, Sep 24, 2014 at 02:23:38PM +0200, Arnd Bergmann wrote:
-> On Wednesday 24 September 2014 19:29:05 Peter Chen wrote:
-> >=20
-> > So, it is IP CORE LIB (you suggest) vs IP CORE Platform Driver
-> > (dwc3, musb, chipidea) you are talking about, right? Except for
-> > creating another platform driver as well as related DT node (optional),
-> > are there any advantages compared to current IP core driver structure?
->=20
-> Having a library module usually requires less code, and is more
-> consistent with other drivers, which helps new developers understand
-> what the driver is doing.
+I leave that to the DT folks.
+ 
+> Currently only set_type is implement in CIRQ, but I think this could extended
+> to cover all function gic_arch_extn provided.
 
-I beg to differ. You end-up having to pass function pointers through
-platform_data to handle differences which could be handled by the core
-IP.
+Right. Marc, can you have a look at this whether you can see how that
+might replace the rest of the arch_extn hackery?
 
-> The most important aspect though is the DT binding: once the structure
-> with separate kernel drivers leaks out into the DT format, you can't
-> easily change the driver any more, e.g. to make a property that was
-> introduced for one glue driver more general so it can get handled by
-> the common part. Having a single node lets us convert to the library
-> model later, so that would be a strong reason to keep the DT binding
-> simple, without child nodes.
->=20
-> Following that logic, it turns into another reason for using the library
-> model to start with, because otherwise the child device does not have
-> any DT properties itself and has to rely on the parent device properties,
-> which somewhat complicates the driver structure.
+At least the avoidance of the set_type mess looks pretty reasonable.
+ 
+> In order to use hierarchy irq domain, gic can't use legacy irq domain anymore.
+> If arm,hierarchy-irq-domain property is specified, GIC will work in hierarchy
+> way and all interrupt must be set by device tree.
+> 
+> One thing worth mention is arg in irq_domain_alloc_irqs. On x86, msi is using
+> struct irq_alloc_info, to pass data between irq domain. In irq_create_of_mapping(),
+> of_phandle_args is used. All allocs in irq_domain chain will need to use same
+> interrupt-cells formats.
 
-this is bullcrap. Take a look at
-Documentation/devicetree/bindings/usb/dwc3.txt:
+Right, but we leave that to the architecture implementation. It needs
+to be consistent within an architecture, so we should change the "void
+*arg" to a well defined type. For OF architectures this would be
+of_phandle_args, other architectures can define their own struct type
+which allows to transport data between the domains. That ensures
+compile time type checking.
 
-synopsys DWC3 CORE
+Thanks,
 
-DWC3- USB3 CONTROLLER
-
-Required properties:
- - compatible: must be "snps,dwc3"
- - reg : Address and length of the register set for the device
- - interrupts: Interrupts used by the dwc3 controller.
-
-Optional properties:
- - usb-phy : array of phandle for the PHY device.  The first element
-   in the array is expected to be a handle to the USB2/HS PHY and
-   the second element is expected to be a handle to the USB3/SS PHY
- - phys: from the *Generic PHY* bindings
- - phy-names: from the *Generic PHY* bindings
- - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
-
-This is usually a subnode to DWC3 glue to which it is connected.
-
-dwc3@4a030000 {
-	compatible =3D "snps,dwc3";
-	reg =3D <0x4a030000 0xcfff>;
-	interrupts =3D <0 92 4>
-	usb-phy =3D <&usb2_phy>, <&usb3,phy>;
-	tx-fifo-resize;
-};
-
-This contains all the attributes it needs to work. In fact, this could
-be used without any glue.
-
---=20
-balbi
-
---JWEK1jqKZ6MHAcjA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUJCOZAAoJEIaOsuA1yqREqZAP/A3p0DDhoM/aMv7+JY7L508C
-UVS8LhzA5f60fSR9QxVMrrI5TsmGKCXpGrprQPZeZZgks8YwC6BJjW9EN0p7ykuM
-GyA4MKNCBl7q99tVIgC8EZ59FU4vQcoLxC/U+dIePCyvn9JyarM9tQ5zleiXvGt9
-F88N091tsS+905xQo13Ef1sw5EgFXrFxt4eVeFiEy8jh+Ll/hs2UoYi72CzA+N1h
-CRSPlPhubFz3gzDkyz/9Uv9IXWYd80WUIVzkdOAN9MGiM5x/GSXsFe25DASel9sg
-g1Ayyid2VffUKscGxUVfPRHmm0zxiti2Cj7PAPP9XWS4ZRHvElpO6PAJcKb5Is2B
-5wNY+2qI6UNqyb7ydJOwKUga/XDC2/Ra6LfOTU4xiPIoGgY0LShCw9qAfwDyQ5xB
-gZBir+QGb0MvmPWG07/ckM6oq3adhhLcnQ2bu+/0wR2S/Fk6pbk9RbOYQzj2OuOi
-PwGjwz01z4HlMD+D9y2JReTLYDyMHvjcigmI/yxs8yvlJBIzFgQZDN4RTM9Yv477
-Bl2+wfs/HWGO3jgjcLE7x8AunRNLBup+wCGfV//wHMMKKGesDP2Trfg2ydWnV/VX
-GfQtQgq3MgcXIkEz2bPXJ2Hk0L49xWzINVVl0ULCu+BscxndPTnko5a4Oklgydym
-kZpjHkNs/bSw8ft/nlnw
-=FfiF
------END PGP SIGNATURE-----
-
---JWEK1jqKZ6MHAcjA--
+	tglx
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
