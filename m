@@ -1,90 +1,71 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: Device tree vs hardware configurations
-Date: Thu, 25 Sep 2014 08:42:42 +0200
-Message-ID: <20140925064242.GJ4992@pengutronix.de>
-References: <5421B4B0.1020306@dev.rtsoft.ru>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH] spi/rockchip: fix bug that cause the failture to read data in DMA mode
+Date: Thu, 25 Sep 2014 14:59:41 +0800
+Message-ID: <1411628381-4029-1-git-send-email-addy.ke@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5421B4B0.1020306-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nikita Yushchenko <nyushchenko-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gennady Kuznetsov <kuznetsovg-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>, Aleksey Makarov <amakarov-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wei.luo-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Nikita,
+In my test on RK3288-pinky board, if spi is enabled, it will begin to
+read data from slave regardless of whether the DMA is ready. So we
+need prepare DMA before spi is enable.
 
-On Tue, Sep 23, 2014 at 09:58:08PM +0400, Nikita Yushchenko wrote:
-> Hi
-> 
-> I'm currently forward-porting a BSP for imx6-based custom board from
-> pre-devicetree kernel to modern kernel.
-> 
-> In old BSP there was a board setup file, that registered all board's
-> devices. For new BSP, I need to replace that with device tree based
-> solution.
-> 
-> However, old BSP used conditional code to register devices
-> differently based on GPIO inputs and on kernel command line. This
-> approach was used to
-> 
-> - handle board's jumper that switches SPI CS lines: current jumper
-> setting is available over gpio, depending on that old BSP registered
-> chips differently,
-> 
-> - handle different i2c connections on different board revisions:
-> board has 5 i2c busses with quite a few devices connected, these
-> busses are routed to different hardware busses on different board
-> revisions, board revision could be read over gpios.
-> 
-> - handle different possible display connections (lvds vs lcd, 6bit
-> vs 8bit hw interface) based on kernel command line options
-> 
-> - handle different possible camera connections by registered camera
-> differently based on kernel command line option
-> 
-> ... and more,
-> 
-> 
-> Device tree describes hardware unconditionally. I already have to
-> provide 2 dts files for imx6q and imx6dl based setups (both just
-> include a common dtsi) ...  But providing separate dts file for
-> every possible hardware configuration will result into 2^n device
-> trees, which is inconvenient visible regression against old BSP that
-> "just worked" on all hardware configurations.
-> 
-> 
-> Is there a sane way to handle hardware configurations like above in
-> device tree based kernel?
+Signed-off-by: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+ drivers/spi/spi-rockchip.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-This depends on your definition of sane, but here the options I know of:
-
-- Let the bootloader modify the device tree based on the GPIOs. This
-  seems doable in new projects, but not when you want to keep the old
-  bootloader.
-
-- Use device tree overlays in the Kernel which is something Pantelis
-  Antoniou works on. I think the intention here is more to plug a
-  daughter board to a CPU board. I don't know how good this works when
-  you have to manipulate many different places in the device tree.
-
-- I heard people working on a shim to place between bootloader and
-  kernel. The shim translates the bootloader information into the
-  device tree. I can't remember who it was though. For going this way
-  I wouldn't rewrite the shim but use barebox instead of course ;)
-
-BTW where do the command line options in your setup come from? Are
-they autogenerated from other informations in the bootloader or are
-they entered there by a user?
-
-Sascha
-
+diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+index 3afc266..f96ea8a 100644
+--- a/drivers/spi/spi-rockchip.c
++++ b/drivers/spi/spi-rockchip.c
+@@ -415,7 +415,7 @@ static void rockchip_spi_dma_txcb(void *data)
+ 	spin_unlock_irqrestore(&rs->lock, flags);
+ }
+ 
+-static int rockchip_spi_dma_transfer(struct rockchip_spi *rs)
++static void rockchip_spi_prepare_dma(struct rockchip_spi *rs)
+ {
+ 	unsigned long flags;
+ 	struct dma_slave_config rxconf, txconf;
+@@ -474,8 +474,6 @@ static int rockchip_spi_dma_transfer(struct rockchip_spi *rs)
+ 		dmaengine_submit(txdesc);
+ 		dma_async_issue_pending(rs->dma_tx.ch);
+ 	}
+-
+-	return 1;
+ }
+ 
+ static void rockchip_spi_config(struct rockchip_spi *rs)
+@@ -557,16 +555,17 @@ static int rockchip_spi_transfer_one(
+ 	else if (rs->rx)
+ 		rs->tmode = CR0_XFM_RO;
+ 
+-	if (master->can_dma && master->can_dma(master, spi, xfer))
++	/* we need prepare dma before spi was enabled */
++	if (master->can_dma && master->can_dma(master, spi, xfer)) {
+ 		rs->use_dma = 1;
+-	else
++		rockchip_spi_prepare_dma(rs);
++	} else {
+ 		rs->use_dma = 0;
++	}
+ 
+ 	rockchip_spi_config(rs);
+ 
+-	if (rs->use_dma)
+-		ret = rockchip_spi_dma_transfer(rs);
+-	else
++	if (!rs->use_dma)
+ 		ret = rockchip_spi_pio_transfer(rs);
+ 
+ 	return ret;
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.8.3.2
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
