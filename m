@@ -1,62 +1,46 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH 0/3 v4] Fix Exynos USB on kernels with USB Gadget support
-Date: Thu, 25 Sep 2014 17:34:18 +0900
-Message-ID: <5423D38A.5080609@samsung.com>
-References: <542199F4.3090601@samsung.com> <1411545465-12930-1-git-send-email-sjoerd.simons@collabora.co.uk>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] usb: gadget: pxa27x_udc: add devicetree support
+Date: Thu, 25 Sep 2014 10:45:35 +0200
+Message-ID: <CACRpkdaEQpMvtFhoazwKWt_yJoddW0OKm+2VvtwZ0Zwv6LgBGw@mail.gmail.com>
+References: <1411587673-31156-1-git-send-email-robert.jarzmik@free.fr>
+	<1411587673-31156-3-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1411545465-12930-1-git-send-email-sjoerd.simons@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411587673-31156-3-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/24/14 16:57, Sjoerd Simons wrote:
-> Same patches as v3 but rebased on
-> https://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/=
-log/?h=3Dfor-next
->
-Thanks, applied.
+On Wed, Sep 24, 2014 at 9:41 PM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
 
-- Kukjin
+> Add support for device-tree device discovery. If devicetree is not
+> provided, fallback to legacy platform data "discovery".
+>
+> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+(...)
+> @@ -2417,6 +2425,8 @@ static int pxa_udc_probe(struct platform_device *pdev)
+>         if (mach) {
+>                 udc->gpiod = gpio_to_desc(mach->gpio_pullup);
+>                 udc->udc_command = mach->udc_command;
+> +       } else {
+> +               udc->gpiod = devm_gpiod_get(&pdev->dev, NULL);
+>         }
 
-> When building a kernel with support for both USB host and USB Gadget =
-support on
-> the dwc3 controller on the Exynos5 soc will go into USB OTG mode unle=
-ss
-> otherwise specified in the dtb, which is unhelpful for boards hooked =
-up to run
-> as USB host.
->
-> First patch in this set explicitely set the dual-role mode for the dw=
-c3
-> controller on Peach pi and Peach pit boards to host mode. Second patc=
-h adds
-> similar updates for Arndale Octa as reported by Andreas F=C3=A4rber. =
-Last patch
-> enables gadget mode in the default exynos config to more easily catch=
-/trigger
-> issues like these.
->
-> I suspect the Samsung SMDK5420 DTS might need similar changes, so it =
-would be
-> great if users of those board could verify this.
->
-> Changes in v2: alphabetically sort the dts entries
-> Changes in v3: Add DTS updates for arndale octa
-> Changes in v4: Rebased on todays linux-samsungs for-next branch
->
-> Sjoerd Simons (3):
->    ARM: dts: exynos: Explicitly set dr_mode on peach-pit and peach-pi
->    ARM: dts: exynos: Explicitly set dr_mode on arndale-octa
->    ARM: exynos_defconfig: enable USB gadget support
->
->   arch/arm/boot/dts/exynos5420-arndale-octa.dts | 4 ++++
->   arch/arm/boot/dts/exynos5420-peach-pit.dts    | 8 ++++++++
->   arch/arm/boot/dts/exynos5420.dtsi             | 4 ++--
->   arch/arm/boot/dts/exynos5800-peach-pi.dts     | 8 ++++++++
->   arch/arm/configs/exynos_defconfig             | 1 +
->   5 files changed, 23 insertions(+), 2 deletions(-)
+Aha OK there it is.
+
+devm_gpiod_get() actually uses three arguments now, you're using
+a deprecated version of the interface:
+
+struct gpio_desc *__must_check devm_gpiod_get(struct device *dev,
+                                              const char *con_id,
+                                              enum gpiod_flags flags);
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
