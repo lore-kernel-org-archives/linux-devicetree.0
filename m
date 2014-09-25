@@ -1,73 +1,114 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v5 00/11] PM / Domains: Generic OF-based support
-Date: Thu, 25 Sep 2014 13:21:24 +0200
-Message-ID: <20140925112122.GA22753@ulmo>
-References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] bcma: get IRQ numbers from dt
+Date: Thu, 25 Sep 2014 13:34:04 +0200
+Message-ID: <2791240.uYg7Zkz6J1@wuerfel>
+References: <1411597048-25470-1-git-send-email-hauke@hauke-m.de> <1411597048-25470-2-git-send-email-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>, Dm
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411597048-25470-2-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thursday 25 September 2014 00:17:28 Hauke Mehrtens wrote:
+> It is not possible to auto detect the irq numbers used by the cores on
+> an arm SoC. If bcma was registered with device tree it will search for
+> some device tree nodes with the irq number and add it to the core
+> configuration.
+> 
+> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 
---DocE+STaALJfprDB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Some more explanation for how this can be improved according to my earlier
+reply:
 
-I just noticed these patches because they conflicted with some of the
-local patches I had to add a very similar framework. One of the reasons
-why I hadn't posted these publicly yet is because the platform where I
-want to use this (Tegra) is somewhat quirky when it comes to power
-domains.
+>  
+> @@ -17,4 +21,24 @@ Example:
+>  		ranges = <0x00000000 0x18000000 0x00100000>;
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> +
+> +		#interrupt-cells = <0>;
 
-On Tegra these domains are called power gates and they currently have
-their own API. We've been looking at migrating things over to some
-generic framework for some time and PM domains do seem like a good fit.
-However one of the quirks regarding these domains on Tegra is that a
-fixed sequence exists that needs to be respected when enabling or
-disabling a power partition. The exact sequence can be found in the
-drivers/soc/tegra/pmc.c driver's tegra_powergate_sequence_power_up()
-function. Essentially we need to call into the clock and reset drivers
-at very specific moments during the operations that the PMC does.
+	<1>
 
-One solution to this would be to make the needed clocks and resets
-available to the power domain driver via DT, but then we have the
-problem that two drivers would be controlling the same resources. For
-example drivers could still want to disable the clock for more fine-
-grained power management. Furthermore for some devices it may turn out
-that turning the domain off and on introduces too much latency to be
-useful.
+> +		interrupt-map-mask = <0x000fffff>;
+> +		interrupt-map =
+> +			/* Ethernet Controller 0 */
+> +			<0x00024000 &gic GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
+> +
+> +			/* Ethernet Controller 1 */
+> +			<0x00025000 &gic GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
 
-Does anyone have any better ideas on how to make that work with this
-generic PM domain framework? Or is Tegra just too special to be a good
-fit?
+Add 0 here after the address for the first interrupt of a device,
+or a consecutive number for additional interrupts.
 
-Thierry
+But check first if the register that is used on MIPS to access the
+interrupts has any function. If it does, put the bit position in here
+instead.
 
---DocE+STaALJfprDB
-Content-Type: application/pgp-signature
+> +		pcie@12000 {
+> +			interrupt-parent = <&gic>;
+> +			reg = <0x00012000 0x1000>;
+> +			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+so this can go away.
 
-iQIcBAEBAgAGBQJUI/qyAAoJEN0jrNd/PrOhhQYQAKj4ChY1io8nNFaZnX51r2fl
-qsRhAHbpjBN57qi+hDlrZ63/hyIr1OENDurHSNh2RF7pT8y50w9ldP6YEkcntzbH
-ufi8IGf/NMaz7tz64TGGO7GRavXdMpq9ki523glCMBCISBdGltTpHtUFatpKBqSY
-znhzXUN52RHG4FW3CCaFVhW6PDgkuuNdtFPLUHPU02+7B9nE3MSYI1xqNtxw4zJu
-UV9nnnql88FZ4TRUbtEEy39D1HXNUbGKEnzC3p7y5H4jfwSNNcwKVoTt7p69o46j
-9FKacQWG0MRiy8Hfgf6/8/TXdFbsCm0Grj2I6N10YHAFzWqoHWSAe1wrUKb/Y0iN
-/NxCBzqnsju2uCzE6RinrAyc1zZcpiTl39DGR++IjejD2L5jGGE3DX5vK3XGJCk3
-63PXCaYi+9ZFBKkchhglw1m9pl6OKZDkFJXtnCIpZuPMl+Cte4pD2xM7f3m+c+Za
-IJHsgtnIZpY1kbxYMgXM7tq4g1l1UX+suMxfZAzHxeVGH/7/73lfqQ7hA3UtzxM/
-3iV+cYD3gHBxBKAFfnm968y0uCFakrK3C+4sePGMfKOva5quKkkp/d+vOSBc2zdd
-hXdGYJ4gxEJPQK0ifbUNu/NMRgTuaFgqADJyIvs5TsKueZqz6WICmOQjgt+KKQJB
-LOFMT3PsJ2VDcQ9ijtaE
-=IKvD
------END PGP SIGNATURE-----
+> +static int bcma_of_irq_parse(struct platform_device *parent,
+> +			     struct bcma_device *core,
+> +			     struct of_phandle_args *out_irq)
+> +{
+> +	__be32 laddr[1];
+> +	int rc;
+> +
+> +	if (core->dev.of_node) {
+> +		rc = of_irq_parse_one(core->dev.of_node, 0, out_irq);
+> +		if (!rc)
+> +			return rc;
+> +	}
+> +
+> +	out_irq->np = parent->dev.of_node;
+> +	out_irq->args_count = 0;
+> +
+> +	laddr[0] = cpu_to_be32(core->addr);
+> +	return of_irq_parse_raw(laddr, out_irq);
+> +}
 
---DocE+STaALJfprDB--
+You probably don't need a separate function here, just move the code into
+bcma_of_get_irq.
+
+> +static int bcma_of_get_irq(struct platform_device *parent,
+> +			   struct bcma_device *core)
+
+Make this function take the interrupt number as an argument
+
+> +
+>  static void bcma_of_fill_device(struct platform_device *parent,
+>  				struct bcma_device *core)
+>  {
+> @@ -161,6 +201,8 @@ static void bcma_of_fill_device(struct platform_device *parent,
+>  	node = bcma_of_find_child_device(parent, core);
+>  	if (node)
+>  		core->dev.of_node = node;
+> +
+> +	core->irq = bcma_of_get_irq(parent, core);
+>  }
+
+It's probably a good idea to still put the first interrupt number in here,
+but drivers should not rely on the interrupt numbers being consecutive.
+If a driver needs more than one irq, it should call bcma_of_get_irq() or
+another API function that calls it internally and that also works on MIPS.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
