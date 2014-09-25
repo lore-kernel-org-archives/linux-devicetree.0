@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 07/13] ARM: shmobile: bockw-reference dts: Add chosen/stdout-path
-Date: Thu, 25 Sep 2014 18:13:23 +0200
-Message-ID: <1411661609-4280-8-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 09/13] ARM: shmobile: lager dts: Add chosen/stdout-path
+Date: Thu, 25 Sep 2014 18:13:25 +0200
+Message-ID: <1411661609-4280-10-git-send-email-geert+renesas@glider.be>
 References: <1411661609-4280-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1411661609-4280-1-git-send-email-geert+renesas@glider.be>
@@ -17,23 +17,23 @@ Remove the now-superfluous "console=" parameter from chosen/bootargs.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7778-bockw-reference.dts | 3 ++-
+ arch/arm/boot/dts/r8a7790-lager.dts | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7778-bockw-reference.dts b/arch/arm/boot/dts/r8a7778-bockw-reference.dts
-index 3342c74c5de890b1..fba294905ff42690 100644
---- a/arch/arm/boot/dts/r8a7778-bockw-reference.dts
-+++ b/arch/arm/boot/dts/r8a7778-bockw-reference.dts
-@@ -28,7 +28,8 @@
+diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+index 84dcafa7179bf04d..cba084b0a8806151 100644
+--- a/arch/arm/boot/dts/r8a7790-lager.dts
++++ b/arch/arm/boot/dts/r8a7790-lager.dts
+@@ -24,7 +24,8 @@
  	};
  
  	chosen {
--		bootargs = "console=ttySC0,115200 ignore_loglevel root=/dev/nfs ip=dhcp rw";
-+		bootargs = "ignore_loglevel root=/dev/nfs ip=dhcp rw";
+-		bootargs = "console=ttySC6,115200 ignore_loglevel rw root=/dev/nfs ip=dhcp";
++		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
 +		stdout-path = &scif0;
  	};
  
- 	memory {
+ 	memory@40000000 {
 -- 
 1.9.1
 
