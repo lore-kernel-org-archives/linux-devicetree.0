@@ -1,38 +1,56 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Wed, 24 Sep 2014 16:58:14 -0700
-Message-ID: <1a0ed130-a53d-42df-9f6a-994c5b68755c@BN1BFFO11FD031.protection.gbl>
-References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
- <1411468088-5702-8-git-send-email-antoine.tenart@free-electrons.com>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: Add initial DTS file for Sony Xperia Z1
+Date: Wed, 24 Sep 2014 17:10:05 -0700
+Message-ID: <7h61gck1b6.fsf@deeprootsystems.com>
+References: <5422DF46.90306@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1411468088-5702-8-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <5422DF46.90306@sonymobile.com> (Tim Bird's message of "Wed, 24
+	Sep 2014 08:12:06 -0700")
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Tim Bird <tim.bird@sonymobile.com>
+Cc: Kumar Gala <galak@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "arnd.bergmann@linaro.org" <arnd.bergmann@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-09-23 at 12:28PM +0200, Antoine Tenart wrote:
-> Add a USB2 ChipIdea driver for ci13xxx, with optional PHY, clock
-> and DMA mask, to support USB2 ChipIdea controllers that don't need
-> specific functions.
->=20
-> Tested on the Marvell Berlin SoCs USB controllers.
->=20
-> Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Hi Tim,
 
-This driver also works for Zynq. I didn't do extensive testing, but I
-could access a flash drive successfully.
+Tim Bird <tim.bird@sonymobile.com> writes:
 
-Tested-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> This DTS has support for the Sony Xperia Z1 phone (codenamed Honami).
+> This first version of the DTS supports just a serial console.
+>
+> changes from v1
+>  - removed qcom,msm-id attribute
+>  - removed mis-capitalized Qualcomm word
+>  - changed dts file name
+>  - added board-specific compatible-string
+>
+> Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
 
-	Thanks,
-	S=C3=B6ren
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
+
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index b8c5cd3..0c2702e 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -343,7 +343,8 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+>  	qcom-apq8074-dragonboard.dtb \
+>  	qcom-apq8084-mtp.dtb \
+>  	qcom-msm8660-surf.dtb \
+> -	qcom-msm8960-cdp.dtb
+> +	qcom-msm8960-cdp.dtb \
+> +	qcom-msm8974-sony-honami-xperia.dtb
+
+This doesn't compile becase the filename added is xperia-honami (not
+honami-xperia)
+
+After fixing that up, I was able to test it on my Z1 (Thanks Tim/Bjorn!)
+but found I needed to add in the qcom,msm-id stuff first.  I guess that
+will be remedied with the updated mkbootimg tool, correct?
+
+Anyways, after fixing the filename, feel free to add:
+
+Tested-by: Kevin Hilman <khilman@linaro.org>
+
+Kevin
