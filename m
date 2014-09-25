@@ -1,52 +1,93 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/6] pci, thunder: Add PCIe host controller devicetree bindings
-Date: Thu, 25 Sep 2014 21:26:38 +0200
-Message-ID: <201409252126.38945.arnd@arndb.de>
-References: <1411573068-12952-1-git-send-email-rric@kernel.org> <8057985.kyfsioKAVy@wuerfel> <CAErSpo4oFLKbtddzVoXBN-1dXZn5C4pmzY_QiFMwV+RWtmtjiQ@mail.gmail.com>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Thu, 25 Sep 2014 22:27:57 +0300
+Message-ID: <1411673277.28648.5.camel@mm-sol.com>
+References: <1411563415-11933-1-git-send-email-svarbanov@mm-sol.com>
+	  <1411563415-11933-2-git-send-email-svarbanov@mm-sol.com>
+	 <1411649225.18580.134.camel@iivanov-dev> <54243533.7080809@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAErSpo4oFLKbtddzVoXBN-1dXZn5C4pmzY_QiFMwV+RWtmtjiQ@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Sunil Kovvuri <sunil.kovvuri@gmail.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Robert Richter <rric@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <liviu.dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Sunil Goutham <sgoutham@cavium.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54243533.7080809-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd@codeauro>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 25 September 2014, Bjorn Helgaas wrote:
-> On Thu, Sep 25, 2014 at 1:31 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Thursday 25 September 2014 00:37:00 Sunil Kovvuri wrote:
-> >> On Thu, Sep 25, 2014 at 12:04 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> > On Wednesday 24 September 2014 23:34:04 Sunil Kovvuri wrote:
+On Thu, 2014-09-25 at 18:30 +0300, Stanimir Varbanov wrote:
+> Hi Ivan,
 > 
-> >> >> All on-board PCI devices connected to this PCI controller have fixed resources
-> >> >> and doesn't have to be allocated/reassigned. Some of these devices are
-> >> >> SRIOV based.
-> >> >
-> >> > I think you need to mark the ones that are nonrelocatable with flag
-> >> > 0x80000000, otherwise the PCI core might decide to reassign them.
+> On 09/25/2014 03:47 PM, Ivan T. Ivanov wrote:
+> > 
+> > Hi Stan, few comment bellow.
+> > 
+> > On Wed, 2014-09-24 at 15:56 +0300, Stanimir Varbanov wrote:
+> >> The voltage ADC is peripheral of Qualcomm SPMI PMIC chips. It has
+> >> 15bits resolution and register space inside PMIC accessible across
+> >> SPMI bus.
 > >>
-> >> Is this flag part of DT pci node properties ?
-> >> I am using IORESOURCE_PCI_FIXED flag. Its there in other patches of
-> >> the same series.
-> >
-> > Ah, right. I checked the source code again and it seems that we don't handle
-> > this right at the moment. I think a range that has the nonrelocatable
-> > flag set should be used for IORESOURCE_PCI_FIXED mappings without any
-> > host specific code, but that needs to be implemented in common code.
+> >> The vadc driver registers itself through IIO interface.
+> >>
+> >> Signed-off-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> >> Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> >> ---
+> >>  drivers/iio/adc/Kconfig                       |   10 +
+> >>  drivers/iio/adc/Makefile                      |    1 +
+> >>  drivers/iio/adc/qcom-spmi-vadc.c              | 1029 +++++++++++++++++++++++++
+> >>  include/dt-bindings/iio/qcom,spmi-pmic-vadc.h |  119 +++
+> >>  4 files changed, 1159 insertions(+), 0 deletions(-)
+> >>  create mode 100644 drivers/iio/adc/qcom-spmi-vadc.c
+> >>  create mode 100644 include/dt-bindings/iio/qcom,spmi-pmic-vadc.h
+> >>
+> >> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> >> index 11b048a..ec48360 100644
+> >> --- a/drivers/iio/adc/Kconfig
+> >> +++ b/drivers/iio/adc/Kconfig
+> >> @@ -206,6 +206,16 @@ config NAU7802
+> >>  	  To compile this driver as a module, choose M here: the
+> >>  	  module will be called nau7802.
+> >>  
+> >> +config QCOM_SPMI_VADC
+> >> +	tristate "Qualcomm SPMI PMIC voltage ADC"
+> >> +	depends on SPMI
+> > 
+> > + select REGMAP_SPMI
 > 
-> What connection do you envision between nonrelocatable ranges and
-> IORESOURCE_PCI_FIXED?  I don't know what a nonrelocatable range is,
-> but for IORESOURCE_PCI_FIXED, all I intend is that the PCI core should
-> not try to assign a different address, e.g., because the BAR is
-> read-only or because it's a legacy IDE/VGA/etc. range for which there
-> is no BAR at all.
+> I'd suggest MFD_SPMI_PMIC symbol of the parent driver instead? The
+> parent MFD PMIC driver already selects REGMAP_SPMI and depends on SPMI.
 
-I think that is exactly the definition of the nonrelocatable flag
-in http://www.openfirmware.org/1275/bindings/pci/pci2_1.pdf
 
-The example given in section 11.1.2 is for a VGA device that has some
-relocatable BARs and some nonrelocatable BARs.
++1 for depends on MFD_SPMI_PMIC.
 
-	Arnd
+> 
+> > 
+> > <snip>
+> > 
+> >> +
+> >> +static int vadc_read(struct vadc_priv *vadc, u16 offset, u8 *data)
+> >> +{
+> >> +	return regmap_bulk_read(vadc->regmap, vadc->base + offset, data, 1);
+> > 
+> > just regmap_read() ?
+> 
+> No, regmap_read() expects unsigned int *val as an argument hence I will
+> need temporary variable. I had a comment to rework this on the first
+> version of the patchset.
+
+Oops, So I should expect the same comment on my IADC driver :-)
+
+> 
+> > 
+> >> +}
+> >> +
+> > 
+> > General comment, most of the dev_dbg looks like legitimate dev_err's to me.
+> 
+> I've decided to not flood console with messages. If someone wants to
+> debug why the driver doesn't probed he can define DEBUG.
+
+Ok, is up to you.
+
+Regards,
+Ivan
