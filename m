@@ -1,148 +1,108 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] net: Add Keystone NetCP ethernet driver
-Date: Thu, 25 Sep 2014 07:29:23 -0700
-Message-ID: <1411655363.4026.13.camel@joe-AO725>
-References: <1411653805-29257-1-git-send-email-santosh.shilimkar@ti.com>
-	 <1411653805-29257-3-git-send-email-santosh.shilimkar@ti.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2 3/4] rtc: omap: Update Kconfig for OMAP RTC
+Date: Thu, 25 Sep 2014 10:11:18 -0500
+Message-ID: <20140925151117.GL28045@saruman>
+References: <1411637529-18289-1-git-send-email-lokeshvutla@ti.com>
+ <1411637529-18289-4-git-send-email-lokeshvutla@ti.com>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411653805-29257-3-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sandeep_n-l0cyMroinI0@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============7416677211900859528=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1411637529-18289-4-git-send-email-lokeshvutla@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: a.zummo@towertech.it, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, tony@atomide.com, j-keerthy@ti.com, nsekhar@ti.com, balbi@ti.com, t-kristo@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-09-25 at 10:03 -0400, Santosh Shilimkar wrote:
-> From: Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>
-> 
-> The network coprocessor (NetCP) is a hardware accelerator that processes
-> Ethernet packets. NetCP has a gigabit Ethernet (GbE) subsystem with a ethernet
-> switch sub-module to send and receive packets. NetCP also includes a packet
-> accelerator (PA) module to perform packet classification operations such as
-> header matching, and packet modification operations such as checksum
-> generation. NetCP can also optionally include a Security Accelerator(SA)
-> capable of performing IPSec operations on ingress/egress packets.
+--===============7416677211900859528==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="eMP3JyRexyk9c0Bv"
+Content-Disposition: inline
 
-Some checkpatch trivia you might consider:
----
- drivers/net/ethernet/ti/netcp_ethss.c | 29 ++++++++++++-----------------
- 1 file changed, 12 insertions(+), 17 deletions(-)
+--eMP3JyRexyk9c0Bv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-index 4b273a2..8443bf3 100644
---- a/drivers/net/ethernet/ti/netcp_ethss.c
-+++ b/drivers/net/ethernet/ti/netcp_ethss.c
-@@ -253,6 +253,7 @@ struct xgbe_hw_stats {
- 	u32	rx_mof_overruns;
- 	u32	rx_dma_overruns;
- };
-+
- #define XGBE10_NUM_STAT_ENTRIES (sizeof(struct xgbe_hw_stats)/sizeof(u32))
- 
- struct gbe_ss_regs {
-@@ -264,12 +265,12 @@ struct gbe_ss_regs {
- 	u32	rx_en;
- 	u32	tx_en;
- 	u32	misc_en;
--	u32	mem_allign1[8];
-+	u32	mem_align1[8];
- 	u32	rx_thresh_stat;
- 	u32	rx_stat;
- 	u32	tx_stat;
- 	u32	misc_stat;
--	u32	mem_allign2[8];
-+	u32	mem_align2[8];
- 	u32	rx_imax;
- 	u32	tx_imax;
- };
-@@ -398,6 +399,7 @@ struct gbe_hw_stats {
- 	u32	rx_mof_overruns;
- 	u32	rx_dma_overruns;
- };
-+
- #define GBE13_NUM_HW_STAT_ENTRIES (sizeof(struct gbe_hw_stats)/sizeof(u32))
- #define GBE13_NUM_HW_STATS_MOD			2
- #define XGBE10_NUM_HW_STATS_MOD			3
-@@ -1188,7 +1190,6 @@ static void gbe_slave_stop(struct gbe_intf *intf)
- 	cpsw_ale_del_mcast(gbe_dev->ale, intf->ndev->broadcast,
- 			   1 << slave->port_num, 0, 0);
- 
--
- 	if (!slave->phy)
- 		return;
- 
-@@ -1253,12 +1254,11 @@ static int gbe_slave_open(struct gbe_intf *gbe_intf)
- 			dev_err(priv->dev, "phy not found on slave %d\n",
- 				slave->slave_num);
- 			return -ENODEV;
--		} else {
--			dev_dbg(priv->dev, "phy found: id is: 0x%s\n",
--				dev_name(&slave->phy->dev));
--			phy_start(slave->phy);
--			phy_read_status(slave->phy);
- 		}
-+		dev_dbg(priv->dev, "phy found: id is: 0x%s\n",
-+			dev_name(&slave->phy->dev));
-+		phy_start(slave->phy);
-+		phy_read_status(slave->phy);
- 	}
- 	return 0;
- }
-@@ -1501,7 +1501,6 @@ static int gbe_open(void *intf_priv, struct net_device *ndev)
- 	else
- 		gbe_intf->tx_pipe.dma_psflags = port_num;
- 
--
- 	dev_dbg(gbe_dev->dev, "opened TX channel %s: %p with psflags %d\n",
- 		gbe_intf->tx_pipe.dma_chan_name,
- 		gbe_intf->tx_pipe.dma_channel,
-@@ -1557,7 +1556,7 @@ static int init_slave(struct gbe_priv *gbe_dev, struct gbe_slave *slave,
- 	u32 port_reg_ofs, emac_reg_ofs;
- 
- 	if (of_property_read_u32(node, "slave-port", &slave->slave_num)) {
--		dev_err(gbe_dev->dev, "missing slave-port paramater\n");
-+		dev_err(gbe_dev->dev, "missing slave-port parameter\n");
- 		return -EINVAL;
- 	}
- 
-@@ -1906,10 +1905,8 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
- 	}
- 
- 	gbe_dev = devm_kzalloc(dev, sizeof(struct gbe_priv), GFP_KERNEL);
--	if (!gbe_dev) {
--		dev_err(dev, "gbe_dev memory allocation failed\n");
-+	if (!gbe_dev)
- 		return -ENOMEM;
--	}
- 
- 	gbe_dev->dev = dev;
- 	gbe_dev->netcp_device = netcp_device;
-@@ -2053,10 +2050,9 @@ static int gbe_attach(void *inst_priv, struct net_device *ndev,
- 	}
- 
- 	gbe_intf = devm_kzalloc(gbe_dev->dev, sizeof(*gbe_intf), GFP_KERNEL);
--	if (!gbe_intf) {
--		dev_err(gbe_dev->dev, "gbe interface memory allocation failed\n");
-+	if (!gbe_intf)
- 		return -ENOMEM;
--	}
-+
- 	gbe_intf->ndev = ndev;
- 	gbe_intf->dev = gbe_dev->dev;
- 	gbe_intf->gbe_dev = gbe_dev;
-@@ -2065,7 +2061,6 @@ static int gbe_attach(void *inst_priv, struct net_device *ndev,
- 					sizeof(*gbe_intf->slave),
- 					GFP_KERNEL);
- 	if (!gbe_intf->slave) {
--		dev_err(gbe_dev->dev, "gbe interface slave memory allocation failed\n");
- 		ret = -ENOMEM;
- 		goto fail;
- 	}
+On Thu, Sep 25, 2014 at 03:02:08PM +0530, Lokesh Vutla wrote:
+> From: Tero Kristo <t-kristo@ti.com>
+>=20
+> RTC is present in AM43xx and DRA7xx also. Updating the
+> same in Kconfig.
+>=20
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+> Changes since v1:
+> 	- New patch
+>  drivers/rtc/Kconfig    | 6 +++---
+>  drivers/rtc/rtc-omap.c | 4 ++--
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index a168e96..b092e2f 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -971,11 +971,11 @@ config RTC_DRV_IMXDI
+>  	   will be called "rtc-imxdi".
+> =20
+>  config RTC_DRV_OMAP
+> -	tristate "TI OMAP1"
+> -	depends on ARCH_OMAP15XX || ARCH_OMAP16XX || ARCH_OMAP730 || ARCH_DAVIN=
+CI_DA8XX || SOC_AM33XX
+> +	tristate "TI OMAP Real Time Clock"
+> +	depends on ARCH_OMAP15XX || ARCH_OMAP16XX || ARCH_OMAP730 || ARCH_DAVIN=
+CI_DA8XX || SOC_AM33XX || SOC_DRA7XX || SOC_AM43XX
+
+do you mind if we just make this "depends on ARCH_OMAP || ARCH_DAVINCI" ? P=
+retty much
+every incarnation has this anyway.
+
+--=20
+balbi
+
+--eMP3JyRexyk9c0Bv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUJDCVAAoJEIaOsuA1yqRExl0QAKQ61n+fkOnUUBnVYgJR465z
++/2lPE3hgjxGyxvVi7i08oSroIfQjKtS+6QCCxf0haKF/uXurWG+bniloSvQX82K
+C9LnZwClwqqr4PwlCq8pXSJESfEappufgYusfDUs6e3nl8/KCI1gjA/ZrVLZhur6
+r9L3HZNXFyz0b3yWeOAoPG+gaVpUILm4YpJ3OFH8DgP/6bHst4GIJtuFJk14PFKK
+iN7+f7LLmfOma0wZlE8zuKn7YdKi+2EqJ4rYe2VBmN9saw0XPCEPrWNNgfGCDUwq
+1fQkWx//ZUN4GIhzlL5uaHfeaZhycBAsOUWs+H+zhVotViNpCaRAnzus80U+BlsB
+2/2w5ANuwswOFkMH9Vc17uWjq8foOIFpOhAIQa3k2slTvCW1546ednnMhLHwe0rv
+/IMaCVhPYp6b7XEKvMmZcVnMtxoLrhOPvb+sVdLDngDjvLvN6WBZb5NjQU0gHPOh
+JHQlg6NQV0mpTGkY6iKihit95rPY/sdV3ZBo8BhgGP7jzLHL34exmg+RMEf5xnjb
+JP+Njkk3GQkiQJgTWVcWXkGpLKqnVzeALVpEMPR8FiIRyfrFkeWxQO/YDdZ7Banc
+tWHJCLaDwe8t6+m+AUlDWkJNr5f5AouWgZj5skDwyev9W/HEvrWvn4h0H6OKGsAW
+ni2+PYEav/1yAnTEkajk
+=VQ/o
+-----END PGP SIGNATURE-----
+
+--eMP3JyRexyk9c0Bv--
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--===============7416677211900859528==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============7416677211900859528==--
