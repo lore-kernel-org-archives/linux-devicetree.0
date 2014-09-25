@@ -1,46 +1,92 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] usb: gadget: pxa27x_udc: add devicetree support
-Date: Thu, 25 Sep 2014 10:45:35 +0200
-Message-ID: <CACRpkdaEQpMvtFhoazwKWt_yJoddW0OKm+2VvtwZ0Zwv6LgBGw@mail.gmail.com>
-References: <1411587673-31156-1-git-send-email-robert.jarzmik@free.fr>
-	<1411587673-31156-3-git-send-email-robert.jarzmik@free.fr>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v12 09/12] OF: PCI: Add support for parsing PCI host
+ bridge resources from DT
+Date: Thu, 25 Sep 2014 09:54:32 +0100
+Message-ID: <20140925085432.GL1994@e106497-lin.cambridge.arm.com>
+References: <1411498874-9864-1-git-send-email-Liviu.Dudau@arm.com>
+ <1411498874-9864-10-git-send-email-Liviu.Dudau@arm.com>
+ <20140924164304.GF1994@e106497-lin.cambridge.arm.com>
+ <20140924173109.GA20416@google.com>
+ <20140924175330.GI1994@e106497-lin.cambridge.arm.com>
+ <20140924180119.GN16244@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411587673-31156-3-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140924180119.GN16244@arm.com>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Robert Richter <rrichter@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 24, 2014 at 9:41 PM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
+On Wed, Sep 24, 2014 at 07:01:19PM +0100, Will Deacon wrote:
+> On Wed, Sep 24, 2014 at 06:53:31PM +0100, Liviu Dudau wrote:
+> > On Wed, Sep 24, 2014 at 06:31:09PM +0100, Bjorn Helgaas wrote:
+> > > On Wed, Sep 24, 2014 at 05:43:04PM +0100, Liviu Dudau wrote:
+> > > > Provide a function to parse the PCI DT ranges that can be used =
+to
+> > > > create a pci_host_bridge structure together with its associated
+> > > > bus.
+> > > >=20
+> > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > Cc: Arnd Bergmann <arnd@arndb.de>
+> > > > Cc: Grant Likely <grant.likely@linaro.org>
+> > > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > > > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> > > > [make io_base parameter optional]
+> > > > Signed-off-by: Robert Richter <rrichter@cavium.com>
+> > > > ---
+> > > > Hi Bjorn,
+> > > >=20
+> > > > I have fixed the compilation error that this patch was triggeri=
+ng. I
+> > > > have validated that the patch applies to your pci/host-generic =
+branch
+> > > > as well as to my series.
+> > >=20
+> > > I applied this to pci/host-generic along with the following patch=
+es and
+> > > pushed the branch, thanks!
+> >=20
+> > Thanks again and sorry for lack of thorough testing. I still haven'=
+t managed
+> > to get a cross compiler for sparc and as I don't run Ubuntu or debi=
+an the
+> > make.cross script doesn't work for me.
+>=20
+>   https://www.kernel.org/pub/tools/crosstool/
+>=20
+> No libc, but good enough for building the kernel. I've asked for an a=
+arch64
+> compiler there for a while, but it didn't materialise for some reason=
+=2E
 
-> Add support for device-tree device discovery. If devicetree is not
-> provided, fallback to legacy platform data "discovery".
->
-> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-(...)
-> @@ -2417,6 +2425,8 @@ static int pxa_udc_probe(struct platform_device *pdev)
->         if (mach) {
->                 udc->gpiod = gpio_to_desc(mach->gpio_pullup);
->                 udc->udc_command = mach->udc_command;
-> +       } else {
-> +               udc->gpiod = devm_gpiod_get(&pdev->dev, NULL);
->         }
+I'm familiar with crosstool and busybox uses a variant of crosstool-ng,=
+ but
+it currently fails with "configure: error: cannot compute suffix of obj=
+ect files: cannot compile"
+on the stage2 of the compilation.
 
-Aha OK there it is.
+Best regards,
+Liviu
 
-devm_gpiod_get() actually uses three arguments now, you're using
-a deprecated version of the interface:
+>=20
+> Will
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
+in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
 
-struct gpio_desc *__must_check devm_gpiod_get(struct device *dev,
-                                              const char *con_id,
-                                              enum gpiod_flags flags);
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
