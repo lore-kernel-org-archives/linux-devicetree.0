@@ -1,49 +1,47 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 10/12] video: Add ADV751[13] DT bindings documentation
-Date: Thu, 25 Sep 2014 09:06:46 +0200
-Message-ID: <CAMuHMdVT8AC+HeYJBSUn149D-CgcVHEiUsWYx_e--kbK06awkw@mail.gmail.com>
-References: <1411589072-28609-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1411589072-28609-11-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Thu, 25 Sep 2014 09:11:35 +0200
+Message-ID: <3696520.MDUrkdjfGZ@wuerfel>
+References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com> <1411468088-5702-8-git-send-email-antoine.tenart@free-electrons.com> <20140925011647.GB3716@peterchendt>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1411589072-28609-11-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140925011647.GB3716@peterchendt>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+On Thursday 25 September 2014 09:16:48 Peter Chen wrote:
+> > +     }
+> > +
+> > +     if (dev->of_node) {
+> > +             ret = ci_hdrc_usb2_dt_probe(dev, ci_pdata);
+> > +             if (ret)
+> > +                     goto clk_err;
+> > +     } else {
+> > +             ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+> > +             if (ret)
+> > +                     goto clk_err;
+> > +     }
+> 
+> Hi Antoine, the above code may not be needed, since get phy and set dma
+> mask are common operation, we can do it at core code, the only thing you
+> need to do is something like: dev->dma_mask = DMA_BIT_MASK(32).
+> 
 
-On Wed, Sep 24, 2014 at 10:04 PM, Laurent Pinchart
-<laurent.pinchart+renesas@ideasonboard.com> wrote:
-> +- adi,input-style: The input components arrangement variant (1, 2 or 3).
+Certainly not, doing that would be broken for a number of reasons:
 
-What's the meaning of the numerical values 1, 2, and 3?
+- dev->dma_mask is a pointer, a driver should not reassign that
+- the device may have been set up for a bus that requires a smaller mask
+  that is already set, changing the mask would cause data corruption
+- setting just the dma mask but not coherent mask is wrong
+- setting the dma mask can fail, e.g. if the mask is smaller than the
+  smallest memory zone, so you have to check the return value.
 
-I found this code in "[PATCH 11/12] drm: Add adv7511 encoder driver":
-
-+       input_style = config->input_style == 1 ? 2
-+                   : (config->input_style == 2 ? 1 : 3);
-
-which didn't really help much ;-)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+	Arnd
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
