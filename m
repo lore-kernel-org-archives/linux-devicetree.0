@@ -1,44 +1,52 @@
 From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v1 2/2] mtd: docg3: add device-tree documentation
-Date: Fri, 26 Sep 2014 00:33:16 +0200
-Message-ID: <1411684396-12094-2-git-send-email-robert.jarzmik@free.fr>
-References: <1411684396-12094-1-git-send-email-robert.jarzmik@free.fr>
+Subject: [PATCH v1 1/2] mtd: docg3: add device-tree support
+Date: Fri, 26 Sep 2014 00:33:15 +0200
+Message-ID: <1411684396-12094-1-git-send-email-robert.jarzmik@free.fr>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411684396-12094-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the sandisk docg3 chip.
+Add device-tree support. This is straightforward as docg3 only uses the
+standard IOMEM resources.
 
 Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- Documentation/devicetree/bindings/mtd/docg3.txt | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/docg3.txt
+ drivers/mtd/devices/docg3.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mtd/docg3.txt b/Documentation/devicetree/bindings/mtd/docg3.txt
-new file mode 100644
-index 0000000..3fcc163
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/docg3.txt
-@@ -0,0 +1,14 @@
-+Sandisk docg3 device
-+====================
+diff --git a/drivers/mtd/devices/docg3.c b/drivers/mtd/devices/docg3.c
+index 91a169c..fc05f81 100644
+--- a/drivers/mtd/devices/docg3.c
++++ b/drivers/mtd/devices/docg3.c
+@@ -22,6 +22,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/errno.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/string.h>
+ #include <linux/slab.h>
+@@ -2126,10 +2127,17 @@ static int __exit docg3_release(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static struct of_device_id docg3_dt_ids[] = {
++	{ .compatible = "sandisk,docg3" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, docg3_dt_ids);
 +
-+The Sandisk (former MSystems) docg3 is a nand device of 64M to 256MB.
-+
-+Required properties:
-+ - compatible: Should be "sandisk,docg3"
-+ - reg: register base and size
-+
-+Example:
-+	docg3 {
-+		compatible = "sandisk,docg3";
-+		reg = <0x0 0x2000>;
-+	};
+ static struct platform_driver g3_driver = {
+ 	.driver		= {
+ 		.name	= "docg3",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(docg3_dt_ids),
+ 	},
+ 	.suspend	= docg3_suspend,
+ 	.resume		= docg3_resume,
 -- 
 2.0.0.rc2
 
