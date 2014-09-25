@@ -1,76 +1,239 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv10 2/4] mailbox: Introduce framework for mailbox
-Date: Thu, 25 Sep 2014 17:57:46 -0700
-Message-ID: <CAJe_ZhdxZwrBsvRt7X0KN2+vnQVRDAJdUGOyNgq2rynwmsur9A@mail.gmail.com>
-References: <1406896194-4667-1-git-send-email-jaswinder.singh@linaro.org>
-	<1406896296-4863-1-git-send-email-jaswinder.singh@linaro.org>
-	<CAJ5Y-eZ5gNMQ2YRN4iS5QTU7qUrgxGdTHXhQZ_2ut4iBsEZHGg@mail.gmail.com>
-	<5420675C.6040805@arm.com>
-	<54206B7C.60501@arm.com>
-	<CAJ5Y-ea7e1LCym49jGen-eXuw6tWOzTi3Rrd_K-4ZcZUwkv_jg@mail.gmail.com>
+From: Mark yao <mark.yao@rock-chips.com>
+Subject: Re: [PATCH v5 1/3] drm/rockchip: Add basic drm driver
+Date: Thu, 25 Sep 2014 20:11:39 +0800
+Message-ID: <5424067B.7090908@rock-chips.com>
+References: <1411524672-14524-1-git-send-email-mark.yao@rock-chips.com>
+ <1411524746-14635-1-git-send-email-mark.yao@rock-chips.com>
+ <CAGS+omBKKktuqOfiek0VN5Nk6KGC64Yc7i_HbM=Wf3gyJZC8bw@mail.gmail.com>
+ <5423D951.4030703@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJ5Y-ea7e1LCym49jGen-eXuw6tWOzTi3Rrd_K-4ZcZUwkv_jg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, "broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones@linaro>
+Content-Type: multipart/mixed; boundary="===============1630992258=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <5423D951.4030703@rock-chips.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Kurtz <djkurtz@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, linux-doc@vger.kernel.org, kever.yang@rock-chips.com, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, xjq@rock-chips.com, zyw@rock-chips.com, linux-api@vger.kernel.org, jeff chen <cym@rock-chips.com>, linux-rockchip@lists.infradead.org, kfx@rock-chips.com, Grant Likely <grant.likely@linaro.org>, wxt@rock-chips.com, huangtao@rock-chips.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, yxj@rock-chips.com, Eddie Cai <cf@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?B?U3TDqXBoYW5lIE1hcmNoZXNpbg==?= <marcheu@chromium.org>, simon xue <xxm@rock-chips.com>, xw@rock-chips.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.or>
 List-Id: devicetree@vger.kernel.org
 
-On 24 September 2014 09:14, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 22 September 2014 14:33, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+This is a multi-part message in MIME format.
+--===============1630992258==
+Content-Type: multipart/alternative;
+ boundary="------------020802010800050801080108"
 
->>>>> +static void poll_txdone(unsigned long data)
->>>>> +{
->>>>> +       struct mbox_controller *mbox = (struct mbox_controller *)data;
->>>>> +       bool txdone, resched = false;
->>>>> +       int i;
->>>>> +
->>>>> +       for (i = 0; i < mbox->num_chans; i++) {
->>>>> +               struct mbox_chan *chan = &mbox->chans[i];
->>>>> +
->>>>> +               if (chan->active_req && chan->cl) {
->>>>> +                       resched = true;
->>>>> +                       txdone = chan->mbox->ops->last_tx_done(chan);
->>>>> +                       if (txdone)
->>>>> +                               tx_tick(chan, 0);
->>>>> +               }
->>>>> +       }
->>>>> +
->>>>> +       if (resched)
->>>>> +               mod_timer(&mbox->poll, jiffies +
->>>>> +                               msecs_to_jiffies(mbox->period));
->>>>
->>>>
->>>> While preparing a different patch which uses the Mbox framework, I
->>>> noticed that mbox->period might not be initialized anywhere. Also, how
->>>> is mbox->txpoll_period to be used? It appears from the description of
->>>> txpoll_period in mbox_controller.h that you'd want to use that value
->>>> in the mod_timer above, or equate the two somewhere in the controller
->>>> registration or eliminate one of the two. FWIW I also looked at your
->>>> code in [1].
->>>>
->>>
->>> IIUC the controller needs to set the txpoll_period if it sets
->>> txdone_poll, may be a sanity check for !0 would be good.
->>>
+This is a multi-part message in MIME format.
+--------------020802010800050801080108
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+
+On 2014=E5=B9=B409=E6=9C=8825=E6=97=A5 16:58, Mark yao wrote:
+> On 2014=E5=B9=B409=E6=9C=8825=E6=97=A5 00:20, Daniel Kurtz wrote:
+>> Hi Mark,
 >>
->> Ah, sorry I confused mbox->period to txpoll_period.
->> You are right mbox->period is not set, the header claims it to be
->> private, and hence I assume it needs to be handled only in core mailbox
->> library. Not sure if we need both mbox->period and txpoll_period though.
+>> Please review comments inline...
+>>
+>> On Wed, Sep 24, 2014 at 10:12 AM, Mark yao<mark.yao@rock-chips.com>  w=
+rote:
+>> To match the enum name, use ROCKCHIP_OUTPUT_TYPE_*.
+>> Also, no need to explicitly set the first one to 0.
+>> However, see below.  I don't think we to modify the drm_display_mode
+>> to include an output type.
+> but vop devices need know the connector type, connector enable=20
+> register is in vop.
+> can I do that like under to  get connector type for crtc?
 >
-> Right. I dont see the need for having both either. Unless the Mailbox
-> maintainer wants to fix this in some other way, I can send a patch for
-> replacing mbox->period with mbox->txpoll_period along with my PCC
-> work.
+>     static int rockchip_get_connector_type(struct drm_crtc *crtc)
+>     {
+>           struct drm_device *dev =3D crtc->dev;
+>           struct drm_connector * connector;
 >
-Yeah, probably we should just get rid of mbox_controller.period  I
-have updated the same in for-next.
+>           list_for_each_entry(connector,=20
+> &dev->mode_config.connector_list, head) {
+>           if (!connector->encoder)
+>                   continue;
+>           /*
+>            * one crtc only has one connector in my case, so just find=20
+> the first connector at list.
+>            */
+>           if (connector->encoder->crtc =3D=3D crtc)
+>                   break;
+>     }
+>
+>     if (!connector)
+>             return -EINVAL;
+>
+>     return connector->connector_type;
+> }=20
+Oh, sorry, forgot to drop this comment,
+for connector type problem, I try to new a help function for encoder to=20
+call as Daniel advices.
+>>>
+>>> +#define to_rockchip_plane(x) container_of(x, struct rockchip_plane, =
+base)
+>>> +
+>>> +struct rockchip_plane {
+>>> +       int id;
+>>> +       struct drm_plane base;
+>>> +       const struct vop_win *win;
+>>> +       struct vop_context *ctx;
+>> Isn't ctx just: to_vop_ctx(base->crtc)
+>>
+> OK. we can use to_vop_ctx(base->crtc) to get ctx.=20
+I have do a test to use "to_vop_ctx(base->crtc)", but found that=20
+"base->crtc" maybe not init.
+for cursor plane, base->crtc always is NULL. and disable_plane will fail.
+maybe we can add "base->crtc =3D crtc" at update_plane, but it seems not =
+good.
+so I think still use "rockchip_plane->ctx" would be better.
 
-Thanks
-Jassi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Mark
+
+--------------020802010800050801080108
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+  <head>
+    <meta content=3D"text/html; charset=3DUTF-8" http-equiv=3D"Content-Ty=
+pe">
+  </head>
+  <body text=3D"#000000" bgcolor=3D"#FFFFFF">
+    <div class=3D"moz-cite-prefix">On 2014=E5=B9=B409=E6=9C=8825=E6=97=A5=
+ 16:58, Mark yao wrote:<br>
+    </div>
+    <blockquote cite=3D"mid:5423D951.4030703@rock-chips.com" type=3D"cite=
+">
+      <meta content=3D"text/html; charset=3DUTF-8" http-equiv=3D"Content-=
+Type">
+      <div class=3D"moz-cite-prefix">On 2014=E5=B9=B409=E6=9C=8825=E6=97=A5=
+ 00:20, Daniel Kurtz
+        wrote:<br>
+      </div>
+      <blockquote
+cite=3D"mid:CAGS+omBKKktuqOfiek0VN5Nk6KGC64Yc7i_HbM=3DWf3gyJZC8bw@mail.gm=
+ail.com"
+        type=3D"cite">
+        <pre wrap=3D"">Hi Mark,
+
+Please review comments inline...
+
+On Wed, Sep 24, 2014 at 10:12 AM, Mark yao <a moz-do-not-send=3D"true" cl=
+ass=3D"moz-txt-link-rfc2396E" href=3D"mailto:mark.yao@rock-chips.com">&lt=
+;mark.yao@rock-chips.com&gt;</a> wrote:
+</pre>
+      </blockquote>
+      <blockquote
+cite=3D"mid:CAGS+omBKKktuqOfiek0VN5Nk6KGC64Yc7i_HbM=3DWf3gyJZC8bw@mail.gm=
+ail.com"
+        type=3D"cite">
+        <blockquote type=3D"cite"> </blockquote>
+        <pre wrap=3D"">To match the enum name, use ROCKCHIP_OUTPUT_TYPE_*=
+.
+Also, no need to explicitly set the first one to 0.
+However, see below.  I don't think we to modify the drm_display_mode
+to include an output type.
+</pre>
+      </blockquote>
+      but vop devices need know the connector type, connector enable
+      register is in vop.<br>
+      can I do that like under to=C2=A0 get connector type for crtc?<br>
+      <br>
+      =C2=A0=C2=A0=C2=A0 static int rockchip_get_connector_type(struct dr=
+m_crtc *crtc)<br>
+      =C2=A0=C2=A0=C2=A0 {<br>
+      =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct drm_d=
+evice *dev =3D crtc-&gt;dev;<br>
+      =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct drm_c=
+onnector * connector;<br>
+      <br>
+      =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 list_for_eac=
+h_entry(connector,
+      &amp;dev-&gt;mode_config.connector_list, head) {<br>
+      =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!connector-&g=
+t;encoder)<br>
+      =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 continue;<br>
+      =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*<br>
+      =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * one =
+crtc only has one connector in my case, so just
+      find the first connector at list.<br>
+      =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */<br>
+      =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (connector-&gt=
+;encoder-&gt;crtc =3D=3D crtc)<br>
+      =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 break;<br>
+      =C2=A0=C2=A0=C2=A0 }<br>
+      <br>
+      =C2=A0=C2=A0=C2=A0 if (!connector)<br>
+      =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retur=
+n -EINVAL;<br>
+      <br>
+      =C2=A0=C2=A0=C2=A0 return connector-&gt;connector_type;<br>
+      } </blockquote>
+    Oh, sorry, forgot to drop this comment, <br>
+    for connector type problem, I try to new a help function for encoder
+    to call as Daniel advices.<br>
+    <blockquote cite=3D"mid:5423D951.4030703@rock-chips.com" type=3D"cite=
+">
+      <blockquote
+cite=3D"mid:CAGS+omBKKktuqOfiek0VN5Nk6KGC64Yc7i_HbM=3DWf3gyJZC8bw@mail.gm=
+ail.com"
+        type=3D"cite">
+        <blockquote type=3D"cite">
+          <pre wrap=3D"">
+
++#define to_rockchip_plane(x) container_of(x, struct rockchip_plane, base=
+)
++
++struct rockchip_plane {
++       int id;
++       struct drm_plane base;
++       const struct vop_win *win;
++       struct vop_context *ctx;
+</pre>
+        </blockquote>
+      </blockquote>
+      <blockquote
+cite=3D"mid:CAGS+omBKKktuqOfiek0VN5Nk6KGC64Yc7i_HbM=3DWf3gyJZC8bw@mail.gm=
+ail.com"
+        type=3D"cite">
+        <blockquote type=3D"cite"> </blockquote>
+        <pre wrap=3D"">Isn't ctx just: to_vop_ctx(base-&gt;crtc)
+
+</pre>
+      </blockquote>
+      OK. we can use to_vop_ctx(base-&gt;crtc) to get ctx. </blockquote>
+    I have do a test to use "to_vop_ctx(base-&gt;crtc)", but found that
+    "base-&gt;crtc" maybe not init.<br>
+    for cursor plane, base-&gt;crtc always is NULL. and disable_plane
+    will fail.<br>
+    maybe we can add "base-&gt;crtc =3D crtc" at update_plane, but it
+    seems not good.<br>
+    so I think still use "rockchip_plane-&gt;ctx" would be better.<br>
+    <br>
+    -Mark<br>
+  </body>
+</html>
+
+--------------020802010800050801080108--
+
+
+--===============1630992258==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============1630992258==--
