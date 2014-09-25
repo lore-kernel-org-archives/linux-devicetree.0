@@ -1,53 +1,70 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv4 3/6] ARM: dts: Add initial LS1021A TWR board dts support
-Date: Thu, 25 Sep 2014 08:06:27 +0000
-Message-ID: <1b72af7d8c90492ba91115ef958bbda7@BLUPR03MB472.namprd03.prod.outlook.com>
-References: <1411371952-5618-1-git-send-email-jingchang.lu@freescale.com>
- <4264466.HtkUxyxBW8@wuerfel>
- <bb122a232a1c40559e84a058f3d003b4@BL2PR03MB467.namprd03.prod.outlook.com>
- <3598074.CpE7Waa9La@wuerfel>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH v2] ARM: ls1021a: add gating clocks to IP blocks.
+Date: Thu, 25 Sep 2014 16:29:41 +0800
+Message-ID: <20140925082940.GF6405@dragon>
+References: <1411366160-42685-1-git-send-email-Li.Xiubo@freescale.com>
+ <20140922070037.GR3755@pengutronix.de>
+ <e7a0fe3cbe4c4ed0bcc489853a392f35@BY2PR0301MB0613.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3598074.CpE7Waa9La@wuerfel>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Shengchao Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "B46807-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B46807-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e7a0fe3cbe4c4ed0bcc489853a392f35@BY2PR0301MB0613.namprd03.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Xiubo Li-B47053 <Li.Xiubo@freescale.com>
+Cc: Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQXJuZCBCZXJnbWFubiBbbWFpbHRv
-OmFybmRAYXJuZGIuZGVdDQo+U2VudDogV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMjQsIDIwMTQgMTE6
-NTUgUE0NCj5UbzogTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPkNjOiBHdW8gU2hhd24tUjY1MDczOyBt
-YXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLQ0KPmtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTHUgQ2hlbi1CNDY4MDc7IEZ1DQo+Q2hh
-by1CNDQ1NDgNCj5TdWJqZWN0OiBSZTogW1BBVENIdjQgMy82XSBBUk06IGR0czogQWRkIGluaXRp
-YWwgTFMxMDIxQSBUV1IgYm9hcmQgZHRzDQo+c3VwcG9ydA0KPg0KPk9uIFdlZG5lc2RheSAyNCBT
-ZXB0ZW1iZXIgMjAxNCAxMTowMDozNCBKaW5nY2hhbmcgTHUgd3JvdGU6DQo+Pg0KPj4gV2UgYWxz
-byBkbyB0aGUgcGh5LWhhbmRsZSBmaXh1cCBvbiBvdXIgUG93ZXJQQyBwbGF0Zm9ybSBiYXNlZCBv
-biB0aGUNCj4+IGFsaWFzZXMsIGFuZCBzbyBJIGFkb3B0IHRoZSBzYW1lIHdheSB0byBtYWtlIHRo
-ZXNlIGZpeHVwIGNvbnNpc3RlbnQNCj5iZXR3ZWVuIFNvQ3MuDQo+PiBBbmQgdGhlIHUtYm9vdCBm
-ZHQgZml4dXAgY29kZSBiYXNlIG9uIHRoZSBhbGlhc2VzIGhhcyBiZWVuIHVwc3RyZWFtZWQsDQo+
-PiBzbyBtYXkgd2Uga2VlcCB0aGlzIGFsaWFzZXMgdW5jaGFuZ2VkPw0KPg0KPkkgZG9uJ3Qgc2Vl
-IGEgc3Ryb25nIHJlYXNvbiB0byBjaGFuZ2UgaXQsIGl0IGp1c3Qgc2VlbWVkIHN0cmFuZ2UgdG8g
-bWUuDQo+DQo+PiBCVFcsIGZpbmQgYSBub2RlIGJ5IGFsaWFzIGlzIGVhc2lseSwgY291bGQgeW91
-IGdpdmUgbWUgc29tZSBjbHVlIG9uDQo+PiBmaW5kaW5nIGEgbm9kZSBieSBhIGxhYmVsIGRpcmVj
-dGx5LCBUaGFua3MuDQo+DQo+SSBoYXZlbid0IHVzZWQgbGliZmR0IGluIHRoaXMgd2F5IG15c2Vs
-Ziwgc28gSSBkb24ndCBrbm93IGhvdyBpdCB3b3VsZCBiZQ0KPmRvbmUuIEhvd2V2ZXIsIHRoZSBp
-ZGVhIGlzIHRoYXQgdGhlIGxhYmVscyBpbiBkdHMgZmlsZXMgZW5kIHVwIGFzIEVMRg0KPnN5bWJv
-bHMgaW4gdGhlIGR0Yiwgc28geW91IGNhbiBsb29rIHRoZW0gdXAgYnkgZm9sbG93aW5nIHRoZSBF
-TEYgaGVhZGVycy4NCj4NCj4JQXJuZA0KDQpMaWJmZHQgZG9lc24ndCBwcm92aWRlIHdheSB0byBm
-aW5kIGEgbm9kZSBieSBsYWJlbC4gTGFiZWwgaXMganVzdCBhIHNob3J0Y3V0IHRvDQphIGZ1bGwg
-YWJzb2x1dGUgcGF0aCwgaXQncyB1c2VmdWwgaW4gZGV2aWNlIHRyZWUgc291cmNlIHJlZmVyZW5j
-ZSwgYnV0IGlzIGhhcmQNCnRvIGZpbmQgYSBsYWJlbCBhZnRlciBidWlsZCB0byBkdGIuIEFsaWFz
-ZXMganVzdCBwcm92aWRlIHRoZSB3YXkgdG8gc2F2ZSBhDQpmdWxsIGFic29sdXRlIHBhdGggaW4g
-cHJvcGVydGllcyBsaWtlIGxhYmVsLCBidXQgdGhleSBjYW4gYmUgZmluZCBpbiBkdGIgYWZ0ZXIN
-CmJ1aWxkIHNvIHRoYXQgZml4dXAgb24gZHRiIGNhbiBmaW5kIGEgbm9kZSBlZmZpY2llbnRseS4g
-U28gSSB0aGluayB0aGUgYWxpYXNlcw0KZm9yIHRoZSBwaHkgbm9kZXMgaXMgYWxzbyByZWFzb25h
-YmxlLiBNYW55IG90aGVycyBib2FyZHMgYWxzbyB1c2UgbGFiZWxzIGZvcg0KdmFyaW91cyBkdHMg
-bm9kZXMuDQpUaGFua3MuDQoNCkJlc3QgUmVnYXJkcywNCkppbmdjaGFuZw0KIA0KDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Sep 22, 2014 at 03:55:14PM +0800, Xiubo Li-B47053 wrote:
+> > > +static void __init ls1021a_clocks_init(struct device_node *np)
+> > > +{
+> > > +	void __iomem *dcfg_base;
+> > > +
+> > > +#define DCFG_CCSR_DEVDISR1	(dcfg_base + 0x70)
+> > > +#define DCFG_CCSR_DEVDISR2	(dcfg_base + 0x74)
+> > > +#define DCFG_CCSR_DEVDISR3	(dcfg_base + 0x78)
+> > > +#define DCFG_CCSR_DEVDISR4	(dcfg_base + 0x7c)
+> > > +#define DCFG_CCSR_DEVDISR5	(dcfg_base + 0x80)
+> > > +
+> > > +	dcfg_base = of_iomap(np, 0);
+> > > +
+> > > +	BUG_ON(!dcfg_base);
+> > Is this worth a BUG? 
+> Yes, I do think so.
+> 
+> There is one story about my platform:
+> We are using the imx2_wdt watchdog device, which cannot stop or suspend
+> once it has started.
+> And our platform will also support the Power Management, if the gating
+> Clock initialized failed, so when the system enters sleep mode, we cannot
+> Stop the imx2_wdt IP block, so it will reset the board after 180 seconds at
+> most.
+> 
+> So using this gating clock, the watchdog IP block's clock could be disabled
+> When the system enter sleep mode.
+> 
+> So I think BUG_ON here is make sense.
+>  
+> Doesn't it ?
+> 
+> > Or is it enough to do
+> > 	if (!dcfg_base) {
+> > 		pr_warn("failed to map fsl,ls1021a-gate device\n");
+> > 		return
+> > 	}
+> > 
+> > > +
+> > > +	clk[LS1021A_CLK_PBL_EN] = ls1021a_clk_gate("pbl_en", "dummy",
+> > > +						DCFG_CCSR_DEVDISR1, 0, true);
+> > If the machine's device tree contains two (or more) nodes that are
+> > compatible to "fsl,ls1021a-gate", you overwrite your static clk array. Is
+> > it worth to add another check here?:
+> > 
+> On LS1021A SoC, I can make sure that there will only be one gate node. But for
+> More compatibly using one dynamic clk array will be better.
+
+I do not think it's really necessary to use dynamic allocation.  Making
+dcfg_base a static variable and check if it's null at the beginning of
+the function is probably enough.
+
+Shawn
