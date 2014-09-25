@@ -1,45 +1,68 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 3/6] pci, thunder: Add PCIe host controller devicetree bindings
-Date: Thu, 25 Sep 2014 10:16:36 -0600
-Message-ID: <CAErSpo4oFLKbtddzVoXBN-1dXZn5C4pmzY_QiFMwV+RWtmtjiQ@mail.gmail.com>
-References: <1411573068-12952-1-git-send-email-rric@kernel.org>
- <3414852.SWQ9rRcUDx@wuerfel> <CA+sq2CcXCVrk=fxH79n88ZJj5fBQmbyhnzj08qHNO8EmpZT1Yg@mail.gmail.com>
- <8057985.kyfsioKAVy@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v3 07/13] ARM: shmobile: R-Mobile: Use generic_pm_domain.attach_dev() for pm_clk setup
+Date: Thu, 25 Sep 2014 18:28:34 +0200
+Message-ID: <1411662520-22795-8-git-send-email-geert+renesas@glider.be>
+References: <1411662520-22795-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8057985.kyfsioKAVy@wuerfel>
+In-Reply-To: <1411662520-22795-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sunil Kovvuri <sunil.kovvuri@gmail.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Robert Richter <rric@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <liviu.dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Sunil Goutham <sgoutham@cavium.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Philipp Zabel <philipp.zabel@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Kevin Hilman <khilman@linaro.org>, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 25, 2014 at 1:31 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thursday 25 September 2014 00:37:00 Sunil Kovvuri wrote:
->> On Thu, Sep 25, 2014 at 12:04 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->> > On Wednesday 24 September 2014 23:34:04 Sunil Kovvuri wrote:
+Use the just introduced genpd attach/detach callbacks to register the
+devices' module clocks, instead of doing it directly, to make it
+DT-proof.
 
->> >> All on-board PCI devices connected to this PCI controller have fixed resources
->> >> and doesn't have to be allocated/reassigned. Some of these devices are
->> >> SRIOV based.
->> >
->> > I think you need to mark the ones that are nonrelocatable with flag
->> > 0x80000000, otherwise the PCI core might decide to reassign them.
->>
->> Is this flag part of DT pci node properties ?
->> I am using IORESOURCE_PCI_FIXED flag. Its there in other patches of
->> the same series.
->
-> Ah, right. I checked the source code again and it seems that we don't handle
-> this right at the moment. I think a range that has the nonrelocatable
-> flag set should be used for IORESOURCE_PCI_FIXED mappings without any
-> host specific code, but that needs to be implemented in common code.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v3:
+  - Update for callback signature changes,
+v2:
+  - New
 
-What connection do you envision between nonrelocatable ranges and
-IORESOURCE_PCI_FIXED?  I don't know what a nonrelocatable range is,
-but for IORESOURCE_PCI_FIXED, all I intend is that the PCI core should
-not try to assign a different address, e.g., because the BAR is
-read-only or because it's a legacy IDE/VGA/etc. range for which there
-is no BAR at all.
+ arch/arm/mach-shmobile/pm-rmobile.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-Bjorn
+diff --git a/arch/arm/mach-shmobile/pm-rmobile.c b/arch/arm/mach-shmobile/pm-rmobile.c
+index 717e6413d29cb998..ae846dfcd69293f7 100644
+--- a/arch/arm/mach-shmobile/pm-rmobile.c
++++ b/arch/arm/mach-shmobile/pm-rmobile.c
+@@ -101,6 +101,17 @@ static bool rmobile_pd_active_wakeup(struct device *dev)
+ 	return true;
+ }
+ 
++static void rmobile_pd_attach_dev(struct device *dev)
++{
++	if (pm_clk_no_clocks(dev))
++		pm_clk_add(dev, NULL);
++}
++
++static void rmobile_pd_detach_dev(struct device *dev)
++{
++	pm_clk_remove(dev, NULL);
++}
++
+ static void rmobile_init_pm_domain(struct rmobile_pm_domain *rmobile_pd)
+ {
+ 	struct generic_pm_domain *genpd = &rmobile_pd->genpd;
+@@ -112,6 +123,8 @@ static void rmobile_init_pm_domain(struct rmobile_pm_domain *rmobile_pd)
+ 	genpd->dev_ops.active_wakeup	= rmobile_pd_active_wakeup;
+ 	genpd->power_off		= rmobile_pd_power_down;
+ 	genpd->power_on			= rmobile_pd_power_up;
++	genpd->attach_dev		= rmobile_pd_attach_dev;
++	genpd->detach_dev		= rmobile_pd_detach_dev;
+ 	__rmobile_pd_power_up(rmobile_pd, false);
+ }
+ 
+@@ -130,8 +143,6 @@ void rmobile_add_device_to_domain_td(const char *domain_name,
+ 	struct device *dev = &pdev->dev;
+ 
+ 	__pm_genpd_name_add_device(domain_name, dev, td);
+-	if (pm_clk_no_clocks(dev))
+-		pm_clk_add(dev, NULL);
+ }
+ 
+ void rmobile_add_devices_to_domains(struct pm_domain_device data[],
+-- 
+1.9.1
