@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 13/13] ARM: shmobile: kzm9g-reference dts: Add chosen/stdout-path
-Date: Thu, 25 Sep 2014 18:13:29 +0200
-Message-ID: <1411661609-4280-14-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 06/13] ARM: shmobile: armadillo800eva dts: Add chosen/stdout-path
+Date: Thu, 25 Sep 2014 18:13:22 +0200
+Message-ID: <1411661609-4280-7-git-send-email-geert+renesas@glider.be>
 References: <1411661609-4280-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1411661609-4280-1-git-send-email-geert+renesas@glider.be>
@@ -15,23 +15,27 @@ in the absence of a "console=" parameter on the kernel command line.
 In addition, this will allow the PM domain code to find the PM domain
 for the console device.
 
-Note that we have to keep the "console=ttySC4" parameter in
+Note that we have to keep the "console=ttySC1" parameter in
 chosen/bootargs, else we only get console messages on tty0.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/sh73a0-kzm9g-reference.dts | 1 +
+This is a prerequisite for working "no_console_suspend" support in
+"[PATCH v3 09/13] ARM: shmobile: R-Mobile: Add DT support for PM
+domains".
+---
+ arch/arm/boot/dts/r8a7740-armadillo800eva.dts | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-index 30ef97e99dc53ea7..0dac0e66ccad8f74 100644
---- a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-+++ b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-@@ -40,6 +40,7 @@
+diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
+index effb7b46f13172d5..2703428557fce9fa 100644
+--- a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
++++ b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
+@@ -25,6 +25,7 @@
  
  	chosen {
- 		bootargs = "console=tty0 console=ttySC4,115200 root=/dev/nfs ip=dhcp ignore_loglevel rw";
-+		stdout-path = &scifa4;
+ 		bootargs = "console=tty0 console=ttySC1,115200 earlyprintk=sh-sci.1,115200 ignore_loglevel root=/dev/nfs ip=dhcp rw";
++		stdout-path = &scifa1;
  	};
  
  	memory {
