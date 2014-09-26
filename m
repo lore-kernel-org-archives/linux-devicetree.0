@@ -1,112 +1,83 @@
-From: Robin Gong <b38343@freescale.com>
-Subject: Re: [PATCH v1] rtc: snvs: add poweroff function
-Date: Fri, 26 Sep 2014 10:21:12 +0800
-Message-ID: <20140926022110.GA21831@Robin-OptiPlex-780>
-References: <1411611233-29919-1-git-send-email-b38343@freescale.com>
- <20140926012410.GD21077@dragon>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] ARM: sun8i: Add DMA controller support
+Date: Fri, 26 Sep 2014 11:06:01 +0800
+Message-ID: <CAGb2v65ZkBvqSjwR0bVUu0-=5-pOmydp51K6GeMnxOa4vOtCRQ@mail.gmail.com>
+References: <1411010680-4481-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140926012410.GD21077@dragon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, a.zummo@towertech.it, grant.likely@linaro.org, kernel@pengutronix.de, LW@KARO-electronics.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBL5QSOQQKGQE2IYOGBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1411010680-4481-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 26, 2014 at 09:24:11AM +0800, Shawn Guo wrote:
-> On Thu, Sep 25, 2014 at 10:13:53AM +0800, Robin Gong wrote:
-> > On i.mx6 chips, PMIC_ON_REQ can be pulled by snvs LPCR. That can be
-> > used poweroff system if PMIC_ON_REQ connected with external PMIC or
-> > power control circuit.Power up again if PMIC_ON_REQ pulled high.
-> > 
-> > Signed-off-by: Robin Gong <b38343@freescale.com>
-> 
-> I'm not sure it's a good idea to plug poweroff support into RTC driver.
-> If RTC driver is built out, poweroff function is gone too.
-> 
-> Shawn
+On Thu, Sep 18, 2014 at 11:24 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> Hi everyone,
 >
-Yes, that's true since there is no real SNVS driver, only snvs-rtc and
-snvs-caam driver. I'll pick up the patch about the driver which located
-in drivers/power/reset.
-> > ---
-> >  Documentation/devicetree/bindings/crypto/fsl-sec4.txt |  4 ++++
-> >  drivers/rtc/rtc-snvs.c                                | 18 ++++++++++++++++++
-> >  2 files changed, 22 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> > index e402277..00d67f2 100644
-> > --- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> > +++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> > @@ -363,11 +363,15 @@ Secure Non-Volatile Storage (SNVS) Low Power (LP) RTC Node
-> >        Value type: <prop-encoded-array>
-> >        Definition: A standard property.  Specifies the physical
-> >            address and length of the SNVS LP configuration registers.
-> > +  - fsl,poweroff
-> > +      Usage: opertional, recommend if PMIC_ON_REQ connected with external
-> > +	PMIC or power control circuit.
-> >  
-> >  EXAMPLE
-> >  	sec_mon_rtc_lp@314000 {
-> >  		compatible = "fsl,sec-v4.0-mon-rtc-lp";
-> >  		reg = <0x34 0x58>;
-> > +		fsl,poweroff;
-> >  	};
-> >  
-> >  =====================================================================
-> > diff --git a/drivers/rtc/rtc-snvs.c b/drivers/rtc/rtc-snvs.c
-> > index fa384fe..ef32541 100644
-> > --- a/drivers/rtc/rtc-snvs.c
-> > +++ b/drivers/rtc/rtc-snvs.c
-> > @@ -29,6 +29,8 @@
-> >  #define SNVS_LPCR_SRTC_ENV	(1 << 0)
-> >  #define SNVS_LPCR_LPTA_EN	(1 << 1)
-> >  #define SNVS_LPCR_LPWUI_EN	(1 << 3)
-> > +#define SNVS_LPCR_DP		(1 << 5)
-> > +#define SNVS_LPCR_TOP		(1 << 6)
-> >  #define SNVS_LPSR_LPTA		(1 << 0)
-> >  
-> >  #define SNVS_LPPGDR_INIT	0x41736166
-> > @@ -41,6 +43,8 @@ struct snvs_rtc_data {
-> >  	spinlock_t lock;
-> >  };
-> >  
-> > +static void __iomem *snvs_base;
-> > +
-> >  static u32 rtc_read_lp_counter(void __iomem *ioaddr)
-> >  {
-> >  	u64 read1, read2;
-> > @@ -241,8 +245,17 @@ static irqreturn_t snvs_rtc_irq_handler(int irq, void *dev_id)
-> >  	return events ? IRQ_HANDLED : IRQ_NONE;
-> >  }
-> >  
-> > +static void snvs_poweroff(void)
-> > +{
-> > +	u32 value;
-> > +
-> > +	value = readl(snvs_base + SNVS_LPCR);
-> > +	writel(value | SNVS_LPCR_DP | SNVS_LPCR_TOP, snvs_base + SNVS_LPCR);
-> > +}
-> > +
-> >  static int snvs_rtc_probe(struct platform_device *pdev)
-> >  {
-> > +	struct device_node *np = pdev->dev.of_node;
-> >  	struct snvs_rtc_data *data;
-> >  	struct resource *res;
-> >  	int ret;
-> > @@ -260,6 +273,11 @@ static int snvs_rtc_probe(struct platform_device *pdev)
-> >  	if (data->irq < 0)
-> >  		return data->irq;
-> >  
-> > +	if (np && of_get_property(np, "fsl,poweroff", NULL)) {
-> > +		snvs_base = data->ioaddr;
-> > +		pm_power_off = snvs_poweroff;
-> > +	}
-> > +
-> >  	platform_set_drvdata(pdev, data);
-> >  
-> >  	spin_lock_init(&data->lock);
-> > -- 
-> > 1.9.1
-> > 
+> This is v2 of my sun8i DMA controller support series. This series
+> adds support for the DMA controller found in the Allwinner A23 SoC.
+> It is the same hardware as found in the A31 (sun6i) SoC. In addition
+> to reduced physical channels and endpoints, the controller in the A23
+> requires an undocumented register to be toggled. That seems to allow
+> memory bus access.
+>
+> This series is based on my earlier "clk: sun6i: Unify AHB1 clock and
+> fix rate calculation" series, which removes the clock muxing calls from
+> the sun6i-dma driver. The default PLL6 pre-divider for AHB1 on the A23
+> results in an exceedingly high clock rate for AHB1, and the system hangs.
+> Also, on the A23, the dma controller happily works even when AHB1 is
+> clocked from AXI.
+>
+>
+> Patch 1 changes the channel count macros into runtime data binded to
+> the DT compatible strings. It also gets rid of some hardcoded values
+> in the interrupt handler.
+>
+> Patch 2 adds the channel number data for the A23 (sun8i), as well as
+> the undocumented register quirk.
+
+Hi, Vinod,
+
+Any chance we can get patches 1 & 2 merged? You've already merged the
+prerequisite patch "dmaengine: sun6i: Remove obsolete clk muxing code"
+a few days ago, and patch 3 is already in arm-soc.
+
+Thanks!
+ChenYu
+
+> Patch 3 adds the dma controller node, and related dma resources, to the
+> DT.
+>
+> Changes since v1:
+>
+>   - Added Maxime's Acked-by for patch 1
+>   - Added macros for sun8i specific dma gating registers, and updated
+>     comment to reflect its usage.
+>
+>
+> Cheers
+> ChenYu
+>
+>
+> Chen-Yu Tsai (3):
+>   dmaengine: sun6i: support parameterized compatible strings
+>   dmaengine: sun6i: Add support for Allwinner A23 (sun8i) variant
+>   ARM: dts: sun8i: Add DMA controller node
+>
+>  .../devicetree/bindings/dma/sun6i-dma.txt          |   2 +-
+>  arch/arm/boot/dts/sun8i-a23.dtsi                   |  19 ++++
+>  drivers/dma/Kconfig                                |   4 +-
+>  drivers/dma/sun6i-dma.c                            | 123 +++++++++++++++------
+>  4 files changed, 110 insertions(+), 38 deletions(-)
+>
+> --
+> 2.1.0
+>
