@@ -1,47 +1,58 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 00/12] Renesas R-Car DU HDMI support
-Date: Fri, 26 Sep 2014 14:35:53 +0300
-Message-ID: <47059749.yRmN0BhnM7@avalon>
-References: <1411589072-28609-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1411650553.5671.5.camel@pengutronix.de>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Adding selftest testdata dynamically into live tree
+Date: Fri, 26 Sep 2014 13:09:17 +0100
+Message-ID: <20140926120917.B60B4C40FEB@trevor.secretlab.ca>
+References: <542064F1.4000601@elproma.com.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1411650553.5671.5.camel@pengutronix.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <542064F1.4000601-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Janusz =?iso-8859-2?q?U=BFycki?= <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+On Mon, 22 Sep 2014 20:05:37 +0200, Janusz U=C5=BCycki <j.uzycki@elprom=
+a.com.pl> wrote:
+> Hi.
+>=20
+> On 3.17.0-rc6-next-20140922+ with CONFIG_OF_SELFTEST enabled
+> zImage is recreated every time I call "make" despite I've not done
+> any change in source files and zImage was the same.
+> This is caused by the rm line:
+>    CALL    scripts/checksyscalls.sh
+>    CHK     include/generated/compile.h
+>    DTC     drivers/of/testcase-data/testcases.dtb
+>    DTB     drivers/of/testcase-data/testcases.dtb.S
+>    AS      drivers/of/testcase-data/testcases.dtb.o
+>    LD      drivers/of/of_selftest.o
+>    LD      drivers/of/built-in.o
+> rm drivers/of/testcase-data/testcases.dtb.S=20
+> drivers/of/testcase-data/testcases.dtb
+>    LD      drivers/built-in.o
+>    LINK    vmlinux
+>    LD      vmlinux.o
 
-On Thursday 25 September 2014 15:09:13 Philipp Zabel wrote:
-> Am Mittwoch, den 24.09.2014, 23:04 +0300 schrieb Laurent Pinchart:
-> > Hello,
-> > 
-> > This patch set adds support for the HDMI output port present on the
-> > Renesas Koelsch board. Doing so requires two components, a driver for the
-> > external ADV7511W HDMI encoder, and support for HDMI encoders in the DU
-> > driver.
-> > 
-> > The HDMI encoder drivers uses the DRM slave encoder framework and the
-> > component framework to communicate with the DU driver. The DT bindings are
-> > based on the OF graph bindings to link the display controller and encoder.
-> > 
-> > The first two patches have been taken from Philipp Zabel's "[PATCH v3 0/8]
-> > Add of-graph helpers to loop over endpoints and find ports by id" series.
-> > Philipp, I don't see that series in linux-next, what's the merge status ?
-> 
-> There is a remaining comment by Guennadi on the soc_camera patch.
+Try this change:
 
-I've seen that, it shouldn't be too hard to sort out.
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 260bf8acfce9..4555e2e1b4ed 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -269,7 +269,7 @@ cmd_dtc =3D $(CPP) $(dtc_cpp_flags) -x assembler-wi=
+th-cpp -o $(dtc-tmp) $< ; \
+ 		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
+ 	cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
+=20
+-$(obj)/%.dtb: $(src)/%.dts FORCE
++$(obj)/%.dtb: $(src)/%.dts
+ 	$(call if_changed_dep,dtc)
+=20
+ dtc-tmp =3D $(subst $(comma),_,$(dot-target).dts.tmp)
 
-I'll probably drop the dependency for now and implement a manual loop in the 
-rcar-du-drm driver for now, and switch to your helpers when this series hit 
-mainling. Which tree do you plan to send it through ?
-
--- 
-Regards,
-
-Laurent Pinchart
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
