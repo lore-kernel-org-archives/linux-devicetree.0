@@ -1,44 +1,44 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v3 01/13] PM / Domains: Add genpd attach/detach callbacks
-Date: Fri, 26 Sep 2014 08:47:34 -0700
-Message-ID: <7heguy4c4p.fsf@deeprootsystems.com>
-References: <1411662520-22795-1-git-send-email-geert+renesas@glider.be>
-	<1411662520-22795-2-git-send-email-geert+renesas@glider.be>
+From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCH] arm: dts: socfpga: Add OCRAM node
+Date: Fri, 26 Sep 2014 11:06:50 -0500
+Message-ID: <1411747610-27722-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1411662520-22795-2-git-send-email-geert+renesas@glider.be>
-	(Geert Uytterhoeven's message of "Thu, 25 Sep 2014 18:28:28 +0200")
-Sender: linux-pm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Philipp Zabel <philipp.zabel@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Geert Uytterhoeven <geert+renesas@glider.be> writes:
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-> While a PM domain can enable PM runtime management of its devices' module
-> clocks by setting
->
-> 	genpd->dev_ops.stop = pm_clk_suspend;
-> 	genpd->dev_ops.start = pm_clk_resume;
->
-> this also requires registering the clocks with the pm_clk subsystem.
-> In the legacy case, this is handled by the platform code, after
-> attaching the device to its PM domain.
->
-> When the devices are instantiated from DT, devices are attached to their
-> PM domains by generic code, leaving no method for the platform-specific
-> PM domain code to register their clocks.
->
-> Add two callbacks, allowing a PM domain to perform platform-specific
-> tasks when a device is attached to or detached from a PM domain.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+At a 64KB ocram node for SOCFPGA.
 
-I replied to the previous RFC, but just to be thorough (and because I
-like this approach):
+Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+---
+ arch/arm/boot/dts/socfpga.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Reviewed-by: Kevin Hilman <khilman@linaro.org>
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 45fce2c..6af96ed 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -639,6 +639,11 @@
+ 			clock-names = "biu", "ciu";
+ 		};
+ 
++		ocram: sram@ffff0000 {
++			compatible = "mmio-sram";
++			reg = <0xffff0000 0x10000>;
++		};
++
+ 		/* Local timer */
+ 		timer@fffec600 {
+ 			compatible = "arm,cortex-a9-twd-timer";
+-- 
+2.0.3
 
-Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
