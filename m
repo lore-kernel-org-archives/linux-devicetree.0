@@ -1,68 +1,92 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device properties interface
-Date: Fri, 26 Sep 2014 10:36:06 +0200
-Message-ID: <1957255.2hxfTldm4Q@wuerfel>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <6744174.JquHLt80n3@wuerfel> <20140926032131.GC40523@vmdeb7>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 05/13] PM / Domains: Add helper variable np = dev->of_node
+Date: Fri, 26 Sep 2014 10:43:22 +0200
+Message-ID: <CAPDyKFpiTBKEJHTF9cK20GTqEgx=4UNt52sKi0dQ7NsZNhfFOA@mail.gmail.com>
+References: <1411662520-22795-1-git-send-email-geert+renesas@glider.be>
+	<1411662520-22795-6-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140926032131.GC40523@vmdeb7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, David Woodhouse <david.woodhouse@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Aaron Lu <aaron.lu@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1411662520-22795-6-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, Philipp Zabel <philipp.zabel@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Kevin Hilman <khilman@linaro.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 25 September 2014 20:21:32 Darren Hart wrote:
-> On Wed, Sep 24, 2014 at 11:12:36AM +0200, Arnd Bergmann wrote:
-> > How would you feel about a more general way of probing LED, using
-> > a new helper in the leds-core that iterates over the child nodes
-> > and parses the standard properties but calls into a driver specific
-> > callback to parse the specific properties?
-> > It's probably much more work than your current approach, but it seems
-> > to me that there is more to gain by solving the problem for LED
-> > drivers in particular to cut down the per-driver duplication
-> > at the same time as the per-firmware-interface duplication.
-> > 
-> > As a start, we could probably take the proposed device_for_each_child_node
-> > and move that into the leds-core, changing the fw_dev_node argument
-> > for an led_classdev with the addition of the of_node and acpi_object
-> > members. It would still leave it up to the gpio-leds driver to do
-> > 
-> > 	if (led_cdev->of_node)
-> > 		gpiod = devm_of_get_gpiod(led_cdev->of_node, ...);
-> > 	else
-> > 		gpiod = devm_acpi_get_gpiod(led_cdev->acpi_object, ...);
-> 
-> So as Mika has pointed out, LEDs aren't the only ones affected. Several drivers
-> will need to walk through non-device child nodes, and it seems to me that having
-> a firmware-independent mechanism to do so benefits the drivers by both making
-> them smaller and by increasing the reusability of new drivers and drivers
-> updated to use the new API across platforms.
-> 
-> I fear we might be entering bike shed territory as we seem to be repeating
-> points now. Can you restate your concern with the interface and why this level
-> of abstraction is worse for the kernel? I'm not seeing this point, so I'm not
-> sure what to address in my response.
+On 25 September 2014 18:28, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
 
-I think we should have abstractions for all common interfaces but make
-them as simple as possible. In the discussions at the kernel summit,
-everyone agreed that we should have common accessors for simple properties
-(bool, int, string, ...) based on device pointers, as well as subsystem
-specific accessors to handle the high-level abstractions (registers,
-interrupts, gpio, regulator, pinctrl, dma, reset, pwm, ...).
+Why?
 
-Having generalized accessors for the same properties in child nodes of
-the device goes beyond that, and I think this is the wrong trade-off
-between interface simplicity and generality since only few drivers will
-be able to use those. I think we will always have to live with a leaky
-abstraction because some drivers need to do things beyond what we can
-do with a common API.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> Grant, Linus W? Thoughts?
+Normally I think this kind of cleanup patches is a bit unnecessary,
+but I don't have strong opinions.
 
-I definitely want to hear other voices on this too. This is really not
-a fundamental debate I think, but more a question of how far the abstraction
-should go.
+Kind regards
+Uffe
 
-	Arnd
+> ---
+> v3:
+>   - No changes
+> v2:
+>   - New
+>
+>  drivers/base/power/domain.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index 6e36bb09e7d9c144..0ebc6bb31c9c227f 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -2171,17 +2171,18 @@ static void genpd_dev_pm_detach(struct device *dev, bool power_off)
+>   */
+>  int genpd_dev_pm_attach(struct device *dev)
+>  {
+> +       struct device_node *np = dev->of_node;
+>         struct of_phandle_args pd_args;
+>         struct generic_pm_domain *pd;
+>         int ret;
+>
+> -       if (!dev->of_node)
+> +       if (!np)
+>                 return -ENODEV;
+>
+>         if (dev->pm_domain)
+>                 return -EEXIST;
+>
+> -       ret = of_parse_phandle_with_args(dev->of_node, "power-domains",
+> +       ret = of_parse_phandle_with_args(np, "power-domains",
+>                                         "#power-domain-cells", 0, &pd_args);
+>         if (ret < 0) {
+>                 if (ret != -ENOENT)
+> @@ -2192,8 +2193,7 @@ int genpd_dev_pm_attach(struct device *dev)
+>                  * (for backwards compatibility of DT ABI)
+>                  */
+>                 pd_args.args_count = 0;
+> -               pd_args.np = of_parse_phandle(dev->of_node,
+> -                                               "samsung,power-domain", 0);
+> +               pd_args.np = of_parse_phandle(np, "samsung,power-domain", 0);
+>                 if (!pd_args.np)
+>                         return -ENOENT;
+>         }
+> @@ -2202,7 +2202,7 @@ int genpd_dev_pm_attach(struct device *dev)
+>         if (IS_ERR(pd)) {
+>                 dev_dbg(dev, "%s() failed to find PM domain: %ld\n",
+>                         __func__, PTR_ERR(pd));
+> -               of_node_put(dev->of_node);
+> +               of_node_put(np);
+>                 return PTR_ERR(pd);
+>         }
+>
+> @@ -2218,7 +2218,7 @@ int genpd_dev_pm_attach(struct device *dev)
+>         if (ret < 0) {
+>                 dev_err(dev, "failed to add to PM domain %s: %d",
+>                         pd->name, ret);
+> -               of_node_put(dev->of_node);
+> +               of_node_put(np);
+>                 return ret;
+>         }
+>
+> --
+> 1.9.1
+>
