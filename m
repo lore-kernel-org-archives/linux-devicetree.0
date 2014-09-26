@@ -1,76 +1,54 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v3 6/8] phy: miphy28lp: Add SSC support for PCIE
-Date: Fri, 26 Sep 2014 10:54:15 +0200
-Message-ID: <1411721657-9924-7-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH v3 2/8] phy: miphy28lp: Add MiPHY28lp header file for DT x
+ Driver defines
+Date: Fri, 26 Sep 2014 10:54:11 +0200
+Message-ID: <1411721657-9924-3-git-send-email-gabriel.fernandez@linaro.org>
 References: <1411721657-9924-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1411721657-9924-1-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Harsh Gupta <harsh.gupta@st.com>
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, alexandre torgue <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-SSC is the technique of modulating the operating frequency of a signal
-slightly to spread its radiated emissions over a range of frequencies.
-This reduction in the maximum emission for a given frequency helps meet
-radiated emission requirements.
-These settings are applicable for PCIE with Internal clock.
+This provides the shared header file which will be reference from both
+the MiPHY28lp driver and its associated Device Tree node(s).
 
-Signed-off-by: Harsh Gupta <harsh.gupta@st.com>
+Signed-off-by: alexandre torgue <alexandre.torgue@st.com>
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 ---
- drivers/phy/phy-miphy28lp.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ include/dt-bindings/phy/phy-miphy.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 include/dt-bindings/phy/phy-miphy.h
 
-diff --git a/drivers/phy/phy-miphy28lp.c b/drivers/phy/phy-miphy28lp.c
-index 7285543..b6574e8 100644
---- a/drivers/phy/phy-miphy28lp.c
-+++ b/drivers/phy/phy-miphy28lp.c
-@@ -579,6 +579,35 @@ static void miphy_sata_tune_ssc(struct miphy28lp_phy *miphy_phy)
- 	}
- }
- 
-+static void miphy_pcie_tune_ssc(struct miphy28lp_phy *miphy_phy)
-+{
-+	u8 val;
+diff --git a/include/dt-bindings/phy/phy-miphy.h b/include/dt-bindings/phy/phy-miphy.h
+new file mode 100644
+index 0000000..9bc49b9
+--- /dev/null
++++ b/include/dt-bindings/phy/phy-miphy.h
+@@ -0,0 +1,12 @@
++/*
++ * This header provides constants for the phy framework
++ * based on the STMicroelectronics miphxxxx.
++ */
++#ifndef _DT_BINDINGS_PHY_MIPHY
++#define _DT_BINDINGS_PHY_MIPHY
 +
-+	/* Compensate Tx impedance to avoid out of range values */
-+	/*
-+	 * Enable the SSC on PLL for all banks
-+	 * SSC Modulation @ 31 KHz and 4000 ppm modulation amp
-+	 */
-+	val = readb_relaxed(miphy_phy->base + MIPHY_BOUNDARY_2);
-+	val |= SSC_EN_SW;
-+	writeb_relaxed(val, miphy_phy->base + MIPHY_BOUNDARY_2);
++#define MIPHY_TYPE_SATA		1
++#define MIPHY_TYPE_PCIE		2
++#define MIPHY_TYPE_USB		3
 +
-+	val = readb_relaxed(miphy_phy->base + MIPHY_BOUNDARY_SEL);
-+	val |= SSC_SEL;
-+	writeb_relaxed(val, miphy_phy->base + MIPHY_BOUNDARY_SEL);
-+
-+	for (val = 0; val < 2; val++) {
-+		writeb_relaxed(val, miphy_phy->base + MIPHY_CONF);
-+		writeb_relaxed(0x69, miphy_phy->base + MIPHY_PLL_SBR_3);
-+		writeb_relaxed(0x21, miphy_phy->base + MIPHY_PLL_SBR_4);
-+		writeb_relaxed(0x3c, miphy_phy->base + MIPHY_PLL_SBR_2);
-+		writeb_relaxed(0x21, miphy_phy->base + MIPHY_PLL_SBR_4);
-+		writeb_relaxed(0x00, miphy_phy->base + MIPHY_PLL_SBR_1);
-+		writeb_relaxed(0x02, miphy_phy->base + MIPHY_PLL_SBR_1);
-+		writeb_relaxed(0x00, miphy_phy->base + MIPHY_PLL_SBR_1);
-+	}
-+}
-+
- static inline int miphy28lp_configure_sata(struct miphy28lp_phy *miphy_phy)
- {
- 	void __iomem *base = miphy_phy->base;
-@@ -647,6 +676,9 @@ static inline int miphy28lp_configure_pcie(struct miphy28lp_phy *miphy_phy)
- 	if (err)
- 		return err;
- 
-+	if (miphy_phy->ssc)
-+		miphy_pcie_tune_ssc(miphy_phy);
-+
- 	return 0;
- }
- 
++#endif /* _DT_BINDINGS_PHY_MIPHY */
 -- 
 1.9.1
