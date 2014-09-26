@@ -1,166 +1,68 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3 04/13] PM / Domains: Add DT bindings for the R-Mobile
- System Controller
-Date: Fri, 26 Sep 2014 10:32:43 +0200
-Message-ID: <CAPDyKFo7QruMXivxXoxkZD8DkFdcZCacH=g0rxH=TEH_nJtJpw@mail.gmail.com>
-References: <1411662520-22795-1-git-send-email-geert+renesas@glider.be>
-	<1411662520-22795-5-git-send-email-geert+renesas@glider.be>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device properties interface
+Date: Fri, 26 Sep 2014 10:36:06 +0200
+Message-ID: <1957255.2hxfTldm4Q@wuerfel>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <6744174.JquHLt80n3@wuerfel> <20140926032131.GC40523@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1411662520-22795-5-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, Philipp Zabel <philipp.zabel@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Kevin Hilman <khilman@linaro.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140926032131.GC40523@vmdeb7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, David Woodhouse <david.woodhouse@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Aaron Lu <aaron.lu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 25 September 2014 18:28, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
-> The Renesas R-Mobile System Controller provides a.o. power management
-> support, following the generic PM domain bindings in
-> Documentation/devicetree/bindings/power/power_domain.txt.
->
-> For now this supports the R-Mobile A1 (r8a7740) only, but it should be
-> sufficiently generic to handle other members of the SH-Mobile/R-Mobile
-> family in the future.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v3:
->   - Reword,
-> v2:
->   - Fix copy-and-paste s/#address-cells/#size-cells/,
->   - Add optional PM QoS device latencies.
->
->  .../bindings/power/renesas,sysc-rmobile.txt        | 111 +++++++++++++++++++++
->  1 file changed, 111 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
->
-> diff --git a/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt b/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
-> new file mode 100644
-> index 0000000000000000..0b1e56d6ed1ab9a2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
-> @@ -0,0 +1,111 @@
-> +DT bindings for the Renesas R-Mobile System Controller
-> +
-> +== System Controller Node ==
-> +
-> +The R-Mobile System Controller provides the following functions:
-> +  - Boot mode management,
-> +  - Reset generation,
-> +  - Power management.
-> +
-> +Required properties:
-> +- compatible: Should be "renesas,sysc-<soctype>", "renesas,sysc-rmobile" as
-> +             fallback.
-> +             Examples with soctypes are:
-> +               - "renesas,sysc-r8a7740" (R-Mobile A1)
-> +- reg: Two address start and address range blocks for the device:
-> +         - The first block refers to the normally accessible registers,
-> +         - the second block refers to the registers protected by the HPB
-> +          semaphore.
-> +
-> +Optional nodes:
-> +- pm-domains: This node contains a hierarchy of PM domain nodes, which should
-> +  match the Power Area Hierarchy in the Power Domain Specifications section of
-> +  the device's datasheet.
-> +
-> +
-> +== PM Domain Nodes ==
-> +
-> +Each of the PM domain nodes represents a PM domain, as documented by the
-> +generic PM domain bindings in
-> +Documentation/devicetree/bindings/power/power_domain.txt.
-> +
-> +The nodes should be named by the real power area names, and thus their names
-> +should be unique.
-> +
-> +Required properties:
-> +  - #power-domain-cells: Must be 0.
-> +
-> +Optional properties:
-> +- reg: If the PM domain is not always-on, this property must contain the bit
-> +       index number for the corresponding power area in the various Power
-> +       Control and Status Registers. The parent's node must contain the
-> +       following two properties:
-> +        - #address-cells: Must be 1,
-> +        - #size-cells: Must be 0.
-> +       If the PM domain is always-on, this property must be omitted.
-> +- power-on-latency: Power-on latency of the PM domain, in ns,
-> +- power-off-latency: Power-off latency of the PM domain, in ns.
-> +
-> +
-> +Example:
-> +
-> +This shows a subset of the r8a7740 PM domain hierarchy, containing the
-> +C5 "always-on" domain, 2 of its subdomains (A4S and A4SU), and the A3SP domain,
-> +which is a subdomain of A4S.
-> +
-> +       sysc: system-controller@e6180000 {
-> +               compatible = "renesas,sysc-r8a7740", "renesas,sysc-rmobile";
-> +               reg = <0xe6180000 8000>, <0xe6188000 8000>;
-> +
-> +               pm-domains {
-> +                       pd_c5: c5 {
-> +                               #address-cells = <1>;
-> +                               #size-cells = <0>;
-> +                               #power-domain-cells = <0>;
-> +
-> +                               pd_a4s: a4s@10 {
-> +                                       reg = <10>;
-> +                                       #address-cells = <1>;
-> +                                       #size-cells = <0>;
-> +                                       #power-domain-cells = <0>;
-> +                                       power-on-latency = <250000>;
-> +                                       power-off-latency = <250000>;
-> +
-> +                                       pd_a3sp: a3sp@11 {
-> +                                               reg = <11>;
-> +                                               #power-domain-cells = <0>;
-> +                                               power-on-latency = <250000>;
-> +                                               power-off-latency = <250000>;
-> +                                       };
-> +                               };
-> +
-> +                               pd_a4su: a4su@20 {
-> +                                       reg = <20>;
-> +                                       #power-domain-cells = <0>;
-> +                                       power-on-latency = <250000>;
-> +                                       power-off-latency = <250000>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
-> +
-> +== PM Domain Consumers ==
-> +
-> +Hardware blocks belonging to a PM domain should contain a "power-domains"
-> +property that is a phandle pointing to the corresponding PM domain node,
-> +and optional PM QoS device latencies:
-> +
-> +Example:
-> +
-> +       tpu: pwm@e6600000 {
-> +               compatible = "renesas,tpu-r8a7740", "renesas,tpu";
-> +               reg = <0xe6600000 0x100>;
-> +               clocks = <&mstp3_clks R8A7740_CLK_TPU0>;
-> +               power-domains = <&pd_a3sp>;
-> +               stop-latency = <250000>;
-> +               start-latency = <250000>;
-> +               save-state-latency = <250000>;
-> +               restore-state-latency = <250000>;
+On Thursday 25 September 2014 20:21:32 Darren Hart wrote:
+> On Wed, Sep 24, 2014 at 11:12:36AM +0200, Arnd Bergmann wrote:
+> > How would you feel about a more general way of probing LED, using
+> > a new helper in the leds-core that iterates over the child nodes
+> > and parses the standard properties but calls into a driver specific
+> > callback to parse the specific properties?
+> > It's probably much more work than your current approach, but it seems
+> > to me that there is more to gain by solving the problem for LED
+> > drivers in particular to cut down the per-driver duplication
+> > at the same time as the per-firmware-interface duplication.
+> > 
+> > As a start, we could probably take the proposed device_for_each_child_node
+> > and move that into the leds-core, changing the fw_dev_node argument
+> > for an led_classdev with the addition of the of_node and acpi_object
+> > members. It would still leave it up to the gpio-leds driver to do
+> > 
+> > 	if (led_cdev->of_node)
+> > 		gpiod = devm_of_get_gpiod(led_cdev->of_node, ...);
+> > 	else
+> > 		gpiod = devm_acpi_get_gpiod(led_cdev->acpi_object, ...);
+> 
+> So as Mika has pointed out, LEDs aren't the only ones affected. Several drivers
+> will need to walk through non-device child nodes, and it seems to me that having
+> a firmware-independent mechanism to do so benefits the drivers by both making
+> them smaller and by increasing the reusability of new drivers and drivers
+> updated to use the new API across platforms.
+> 
+> I fear we might be entering bike shed territory as we seem to be repeating
+> points now. Can you restate your concern with the interface and why this level
+> of abstraction is worse for the kernel? I'm not seeing this point, so I'm not
+> sure what to address in my response.
 
-As per comment for the previous patch, I think you should remove these
-latencies.
+I think we should have abstractions for all common interfaces but make
+them as simple as possible. In the discussions at the kernel summit,
+everyone agreed that we should have common accessors for simple properties
+(bool, int, string, ...) based on device pointers, as well as subsystem
+specific accessors to handle the high-level abstractions (registers,
+interrupts, gpio, regulator, pinctrl, dma, reset, pwm, ...).
 
-> +               #pwm-cells = <3>;
-> +       };
-> --
-> 1.9.1
->
+Having generalized accessors for the same properties in child nodes of
+the device goes beyond that, and I think this is the wrong trade-off
+between interface simplicity and generality since only few drivers will
+be able to use those. I think we will always have to live with a leaky
+abstraction because some drivers need to do things beyond what we can
+do with a common API.
 
-When you fixed the above you may add my reviewed by tag for this patch.
+> Grant, Linus W? Thoughts?
 
-Kind regards
-Uffe
+I definitely want to hear other voices on this too. This is really not
+a fundamental debate I think, but more a question of how far the abstraction
+should go.
+
+	Arnd
