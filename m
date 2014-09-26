@@ -1,57 +1,596 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: Add vendor prefix for Energy Micro
-Date: Fri, 26 Sep 2014 11:34:26 -0500
-Message-ID: <CAL_JsqJ0hbvK2FD9LaOucKP0Q0tMtfREk_aKXKPDRGmC0ZQj6w@mail.gmail.com>
-References: <1395756677-6166-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <1406146969-26279-1-git-send-email-u.kleine-koenig@pengutronix.de> <20140724103801.GD4079@leverpostej>
+From: Bob Cochran <ppc@mindchasers.com>
+Subject: Re: [PATCH][V2] Freescale Frame Manager Device Tree binding document
+Date: Fri, 26 Sep 2014 12:37:03 -0400
+Message-ID: <5425962F.7090602@mindchasers.com>
+References: <1410952110-32733-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140724103801.GD4079@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1410952110-32733-1-git-send-email-igal.liberman@freescale.com>
+Sender: netdev-owner@vger.kernel.org
+To: "Igal.Liberman" <igal.liberman@freescale.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org
+Cc: scottwood@freescale.com, Emilian.Medve@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 24, 2014 at 5:38 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wr=
-ote:
-> On Wed, Jul 23, 2014 at 09:22:49PM +0100, Uwe Kleine-K=C3=B6nig wrote=
-:
->> The kernel supports devices with the following compatible strings
->> already:
->>
->>       energymicro,efm32-i2c
->>       energymicro,efm32-uart
->>       energymicro,efm32-spi
->>       energymicro,efm32-timer
->>
->> So add "energymicro" to the list of vendors.
->>
->> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org=
+On 09/17/2014 07:08 AM, Igal.Liberman wrote:
+> From: Igal Liberman <Igal.Liberman@freescale.com>
 >
->> ---
->> Hello,
->>
->> An earlier version (with a different changelog) was sent with
->> Message-Id: 1395756677-6166-1-git-send-email-u.kleine-koenig@pengutr=
-onix.de
->> in March and got an Ack by Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> and
->> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>.
->> I adapted the change log because the drivers are in mainline in the =
-meantime.
+> The Frame Manager (FMan) combines the Ethernet network interfaces with packet
+> distribution logic to provide intelligent distribution and queuing decisions
+> for incoming traffic at line rate.
 >
-> As with last time, this looks sensible to me:
+> This binding document describes Freescale's Frame Manager hardware attributes
+> that are used by the Frame Manager driver for its basic initialization and
+> configuration.
 >
-> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Difference between [V1] and [V2]:
+> Addressed all comments recieved from Scott in [V1]
 >
-> Rob, do you want to pick this up?
+> Signed-off-by: Igal Liberman <Igal.Liberman@freescale.com>
 
-Applied. Sorry for the delay.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Is there a reference (FMAN) dts file I can compare this against?  I was 
+reviewing this against my (combined) dts file for my t1040rdb built with 
+either FSL's SDK1.6 or Yocto Project meta-fsl-ppc master branch, and I'm 
+not finding a good match between the nodes / properties in my dts file 
+and what you have here.
+
+For example, I don't find the required "clocks" or 
+"fsl,qman-channel-range" properties under my <fman0: fman@400000 ...> 
+node.
+	
+I'm wondering if this document is trailing or leading the source in the 
+latest published FSL SDK (1.6).
+
+And a minor nit pick: twice you write "bellow" where you should have "below"
+
+
+Thanks
+
+Bob
+
+
+
+
+> ---
+>   .../devicetree/bindings/powerpc/fsl/fman.txt       |  529 ++++++++++++++++++++
+>   1 file changed, 529 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+>
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> new file mode 100644
+> index 0000000..da8e5f2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> @@ -0,0 +1,529 @@
+> +=============================================================================
+> +Freescale Frame Manager Device Bindings
+> +
+> +CONTENTS
+> +  - FMan Node
+> +  - FMan Port Node
+> +  - FMan MURAM Node
+> +  - FMan dTSEC/XGEC/mEMAC Node
+> +  - FMan IEEE 1588 Node
+> +  - Example
+> +
+> +=============================================================================
+> +FMan Node
+> +
+> +DESCRIPTION
+> +
+> +Due to the fact that the FMan is an aggregation of sub-engines (ports, MACs,
+> +etc.) the FMan node will have child nodes for each of them.
+> +
+> +PROPERTIES
+> +
+> +- compatible
+> +		Usage: required
+> +		Value type: <stringlist>
+> +		Definition: Must include "fsl,fman"
+> +		FMan version can be determined via FM_IP_REV_1 register in the
+> +		FMan block. The offset is 0xc4 from the beginning of the
+> +		Frame Processing Manager memory map (0xc3000 from the
+> +		beginning of the FMan node).
+> +
+> +- cell-index
+> +		Usage: required
+> +		Value type: <u32>
+> +		Definition: Specifies the index of the FMan unit.
+> +
+> +		The cell-index value may be used by the SoC, to identify the
+> +		FMan unit in the SoC memory map. In the table bellow,
+> +		there's a description of the cell-index use in each SoC:
+> +
+> +		- P1023:
+> +		register[bit]			FMan unit	cell-index
+> +		============================================================
+> +		DEVDISR[1]			1		0
+> +
+> +		- P2041, P3041, P4080 P5020, P5040:
+> +		register[bit]			FMan unit	cell-index
+> +		============================================================
+> +		DCFG_DEVDISR2[6]		1		0
+> +		DCFG_DEVDISR2[14]		2		1
+> +			(Second FM available only in P4080 and P5040)
+> +
+> +		- B4860, T1040, T2080, T4240:
+> +		register[bit]			FMan unit	cell-index
+> +		============================================================
+> +		DCFG_CCSR_DEVDISR2[24]		1		0
+> +		DCFG_CCSR_DEVDISR2[25]		2		1
+> +			(Second FM available only in T4240)
+> +
+> +		DEVDISR, DCFG_DEVDISR2 and DCFG_CCSR_DEVDISR2 are located in
+> +		the specific SoC "Device Configuration/Pin Control" Memory
+> +		Map.
+> +
+> +- reg
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: A standard property. Specifies the offset of the
+> +		following configuration registers:
+> +		- BMI configuration registers.
+> +		- QMI configuration registers.
+> +		- DMA configuration registers.
+> +		- FPM configuration registers.
+> +		- FMan controller configuration registers.
+> +
+> +- ranges
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: A standard property.
+> +
+> +- clocks
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: phandle for fman clock.
+> +
+> +- clock-names
+> +		usage: optional
+> +		Value type: <stringlist>
+> +		Definition: A standard property
+> +
+> +- interrupts
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: A pair of IRQs are specified in this property.
+> +		The first element is associated with the event interrupts and
+> +		the second element is associated with the error interrupts.
+> +
+> +- fsl,qman-channel-range
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: Specifies the range of the available dedicated
+> +		channels in the FMan. The first cell specifies the beginning
+> +		of the range and the second cell specifies the number of
+> +		channels.
+> +		Further information available at:
+> +		"Work Queue (WQ) Channel Assignments in the QMan" section
+> +		in DPAA Reference Manual.
+> +
+> +=============================================================================
+> +FMan MURAM Node
+> +
+> +DESCRIPTION
+> +
+> +FMan Internal memory - shared between all the FMan modules.
+> +It contains data structures that are common and written to or read by
+> +the modules.
+> +FMan internal memory is split into the following parts:
+> +	Packet buffering (Tx/Rx FIFOs)
+> +	Frames internal context
+> +
+> +PROPERTIES
+> +
+> +- compatible
+> +		Usage: required
+> +		Value type: <stringlist>
+> +		Definition: Must include "fsl,fman-muram"
+> +
+> +- ranges
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: A standard property.
+> +		Specifies the multi-user memory offset and the size within
+> +		the FMan.
+> +
+> +EXAMPLE
+> +
+> +muram@0 {
+> +	compatible = "fsl,fman-muram";
+> +	ranges = <0 0x000000 0x28000>;
+> +};
+> +
+> +=============================================================================
+> +FMan Port Node
+> +
+> +DESCRIPTION
+> +
+> +The Frame Manager (FMan) supports several types of hardware ports:
+> +	Ethernet receiver (RX)
+> +	Ethernet transmitter (TX)
+> +	Offline/Host command (O/H)
+> +
+> +PROPERTIES
+> +
+> +- compatible
+> +		Usage: required
+> +		Value type: <stringlist>
+> +		Definition: A standard property.
+> +		Must include one of the following:
+> +			- "fsl,fman-v2-port-oh" for FManV2 OH ports
+> +			- "fsl,fman-v2-port-rx" for FManV2 RX ports
+> +			- "fsl,fman-v2-port-tx" for FManV2 TX ports
+> +			- "fsl,fman-v3-port-oh" for FManV3 OH ports
+> +			- "fsl,fman-v3-port-rx" for FManV3 RX ports
+> +			- "fsl,fman-v3-port-tx" for FManV3 TX ports
+> +
+> +- cell-index
+> +		Usage: required
+> +		Value type: <u32>
+> +		Definition: Specifies the hardware port id.
+> +		Each hardware port on the FMan has its own hardware PortID.
+> +		Super set of all hardware Port IDs available at FMan Reference
+> +		Manual under "FMan Hardware Ports in Freescale Devices" table.
+> +
+> +		Each hardware port is assigned a 4KB, port-specific page in
+> +		the FMan hardware port memory region (which is part of the
+> +		FMan memory map). The first 4 KB in the FMan hardware ports
+> +		memory region is used for what are called common registers.
+> +		The subsequent 63 4KB pages are allocated to the hardware
+> +		ports.
+> +		The page of a specific port is determined by the cell-index.
+> +
+> +- reg
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: There is one reg region describing the port
+> +		configuration registers.
+> +
+> +EXAMPLE
+> +
+> +port@a8000 {
+> +	cell-index = <0x28>;
+> +	compatible = "fsl,fman-v2-port-tx";
+> +	reg = <0xa8000 0x1000>;
+> +};
+> +
+> +port@88000 {
+> +	cell-index = <0x8>;
+> +	compatible = "fsl,fman-v2-port-rx";
+> +	reg = <0x88000 0x1000>;
+> +};
+> +
+> +port@81000 {
+> +	cell-index = <0x1>;
+> +	compatible = "fsl,fman-v2-port-oh";
+> +	reg = <0x81000 0x1000>;
+> +};
+> +
+> +=============================================================================
+> +FMan dTSEC/XGEC/mEMAC Node
+> +
+> +DESCRIPTION
+> +
+> +mEMAC/dTSEC/XGEC are the Ethernet network interfaces
+> +
+> +PROPERTIES
+> +
+> +- compatible
+> +		Usage: required
+> +		Value type: <stringlist>
+> +		Definition: A standard property.
+> +		Must include one of the following:
+> +		- "fsl,fman-dtsec" for dTSEC MAC
+> +		- "fsl,fman-xgec" for XGEC MAC
+> +		- "fsl,fman-memac for mEMAC MAC
+> +
+> +- cell-index
+> +		Usage: required
+> +		Value type: <u32>
+> +		Definition: Specifies the MAC id.
+> +
+> +		The cell-index value may be used by the FMan or the SoC, to
+> +		identify the MAC unit in the FMan (or SoC) memory map.
+> +		In the tables bellow there's a description of the cell-index
+> +		use, there are two tables, one describes the use of cell-index
+> +		by the FMan, the second describes the use by the SoC:
+> +
+> +		1. FMan Registers
+> +
+> +		FManV2:
+> +		register[bit]		MAC		cell-index
+> +		============================================================
+> +		FM_EPI[16]		XGEC		8
+> +		FM_EPI[16+n]		dTSECn		n-1
+> +		FM_NPI[11+n]		dTSECn		n-1
+> +			n = 1,..,5
+> +
+> +		FManV3:
+> +		register[bit]		MAC		cell-index
+> +		============================================================
+> +		FM_EPI[16+n]		mEMACn		n-1
+> +		FM_EPI[25]		mEMAC10		9
+> +
+> +		FM_NPI[11+n]		mEMACn		n-1
+> +		FM_NPI[10]		mEMAC10		9
+> +		FM_NPI[11]		mEMAC9		8
+> +			n = 1,..8
+> +
+> +		FM_EPI and FM_NPI are located in the FMan memory map.
+> +
+> +		2. SoC registers:
+> +
+> +		- P2041, P3041, P4080 P5020, P5040:
+> +		register[bit]		FMan		MAC		cell
+> +					Unit				index
+> +		============================================================
+> +		DCFG_DEVDISR2[7]	1		XGEC		8
+> +		DCFG_DEVDISR2[7+n]	1		dTSECn		n-1
+> +		DCFG_DEVDISR2[15]	2		XGEC		8
+> +		DCFG_DEVDISR2[15+n]	2		dTSECn		n-1
+> +			n = 1,..5
+> +
+> +		- T1040, T2080, T4240, B4860:
+> +		register[bit]			FMan	MAC		cell
+> +						Unit			index
+> +		============================================================
+> +		DCFG_CCSR_DEVDISR2[n-1]		1	mEMACn		n-1
+> +		DCFG_CCSR_DEVDISR2[11+n]	2	mEMACn		n-1
+> +			n = 1,..6,9,10
+> +
+> +		EVDISR, DCFG_DEVDISR2 and DCFG_CCSR_DEVDISR2 are located in
+> +		the specific SoC "Device Configuration/Pin Control" Memory
+> +		Map.
+> +
+> +- reg
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: A standard property.
+> +
+> +- fsl,fman-ports
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: An array of two phandles - the first references is
+> +		the FMan RX port and the second is the TX port used by this
+> +		MAC.
+> +
+> +- ptp-timer
+> +		Usage required
+> +		Value type: <phandle>
+> +		Definition: A phandle for 1EEE1588 timer.
+> +
+> +EXAMPLE
+> +
+> +fman1_tx28: port@a8000 {
+> +	cell-index = <0x28>;
+> +	compatible = "fsl,fman-v2-port-tx";
+> +	reg = <0xa8000 0x1000>;
+> +};
+> +
+> +fman1_rx8: port@88000 {
+> +	cell-index = <0x8>;
+> +	compatible = "fsl,fman-v2-port-rx";
+> +	reg = <0x88000 0x1000>;
+> +};
+> +
+> +ptp-timer: ptp_timer@fe000 {
+> +	compatible = "fsl,fman-ptp-timer";
+> +	reg = <0xfe000 0x1000>;
+> +};
+> +
+> +ethernet@e0000 {
+> +	compatible = "fsl,fman-dtsec";
+> +	cell-index = <0>;
+> +	reg = <0xe0000 0x1000>;
+> +	fsl,fman-ports = <&fman1_rx8 &fman1_tx28>;
+> +	ptp-timer = <&ptp-timer>;
+> +};
+> +
+> +============================================================================
+> +FMan IEEE 1588 Node
+> +
+> +DESCRIPTION
+> +
+> +The FMan interface to support IEEE 1588
+> +
+> +
+> +PROPERTIES
+> +
+> +- compatible
+> +		Usage: required
+> +		Value type: <stringlist>
+> +		Definition: A standard property.
+> +		Must include "fsl,fman-ptp-timer".
+> +
+> +- reg
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: A standard property.
+> +
+> +EXAMPLE
+> +
+> +ptp-timer@fe000 {
+> +	compatible = "fsl,fman-ptp-timer";
+> +	reg = <0xfe000 0x1000>;
+> +};
+> +
+> +=============================================================================
+> +Example
+> +
+> +fman@400000 {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	cell-index = <1>;
+> +	compatible = "fsl,fman"
+> +	ranges = <0 0x400000 0x100000>;
+> +	reg = <0x400000 0x100000>;
+> +	clocks = <&fman_clk>;
+> +	clock-names = "fmanclk";
+> +	interrupts = <
+> +		96 2 0 0
+> +		16 2 1 1>;
+> +	fsl,qman-channel-range = <0x40 0xc>;
+> +
+> +	muram@0 {
+> +		compatible = "fsl,fman-muram";
+> +		reg = <0x0 0x28000>;
+> +	};
+> +
+> +	port@81000 {
+> +		cell-index = <1>;
+> +		compatible = "fsl,fman-v2-port-oh";
+> +		reg = <0x81000 0x1000>;
+> +	};
+> +
+> +	port@82000 {
+> +		cell-index = <2>;
+> +		compatible = "fsl,fman-v2-port-oh";
+> +		reg = <0x82000 0x1000>;
+> +	};
+> +
+> +	port@83000 {
+> +		cell-index = <3>;
+> +		compatible = "fsl,fman-v2-port-oh";
+> +		reg = <0x83000 0x1000>;
+> +	};
+> +
+> +	port@84000 {
+> +		cell-index = <4>;
+> +		compatible = "fsl,fman-v2-port-oh";
+> +		reg = <0x84000 0x1000>;
+> +	};
+> +
+> +	port@85000 {
+> +		cell-index = <5>;
+> +		compatible = "fsl,fman-v2-port-oh";
+> +		reg = <0x85000 0x1000>;
+> +	};
+> +
+> +	port@86000 {
+> +		cell-index = <6>;
+> +		compatible = "fsl,fman-v2-port-oh";
+> +		reg = <0x86000 0x1000>;
+> +	};
+> +
+> +	fman1_rx_0x8: port@88000 {
+> +		cell-index = <0x8>;
+> +		compatible = "fsl,fman-v2-port-rx";
+> +		reg = <0x88000 0x1000>;
+> +	};
+> +
+> +	fman1_rx_0x9: port@89000 {
+> +		cell-index = <0x9>;
+> +		compatible = "fsl,fman-v2-port-rx";
+> +		reg = <0x89000 0x1000>;
+> +	};
+> +
+> +	fman1_rx_0xa: port@8a000 {
+> +		cell-index = <0xa>;
+> +		compatible = "fsl,fman-v2-port-rx";
+> +		reg = <0x8a000 0x1000>;
+> +	};
+> +
+> +	fman1_rx_0xb: port@8b000 {
+> +		cell-index = <0xb>;
+> +		compatible = "fsl,fman-v2-port-rx";
+> +		reg = <0x8b000 0x1000>;
+> +	};
+> +
+> +	fman1_rx_0xc: port@8c000 {
+> +		cell-index = <0xc>;
+> +		compatible = "fsl,fman-v2-port-rx";
+> +		reg = <0x8c000 0x1000>;
+> +	};
+> +
+> +	fman1_rx_0x10: port@90000 {
+> +		cell-index = <0x10>;
+> +		compatible = "fsl,fman-v2-port-rx";
+> +		reg = <0x90000 0x1000>;
+> +	};
+> +
+> +	fman1_tx_0x28: port@a8000 {
+> +		cell-index = <0x28>;
+> +		compatible = "fsl,fman-v2-port-tx";
+> +		reg = <0xa8000 0x1000>;
+> +	};
+> +
+> +	fman1_tx_0x29: port@a9000 {
+> +		cell-index = <0x29>;
+> +		compatible = "fsl,fman-v2-port-tx";
+> +		reg = <0xa9000 0x1000>;
+> +	};
+> +
+> +	fman1_tx_0x2a: port@aa000 {
+> +		cell-index = <0x2a>;
+> +		compatible = "fsl,fman-v2-port-tx";
+> +		reg = <0xaa000 0x1000>;
+> +	};
+> +
+> +	fman1_tx_0x2b: port@ab000 {
+> +		cell-index = <0x2b>;
+> +		compatible = "fsl,fman-v2-port-tx";
+> +		reg = <0xab000 0x1000>;
+> +	};
+> +
+> +	fman1_tx_0x2c: port@ac0000 {
+> +		cell-index = <0x2c>;
+> +		compatible = "fsl,fman-v2-port-tx";
+> +		reg = <0xac000 0x1000>;
+> +	};
+> +
+> +	fman1_tx_0x30: port@b0000 {
+> +		cell-index = <0x30>;
+> +		compatible = "fsl,fman-v2-port-tx";
+> +		reg = <0xb0000 0x1000>;
+> +	};
+> +
+> +	ethernet@e0000 {
+> +		compatible = "fsl,fman-dtsec";
+> +		cell-index = <0>;
+> +		reg = <0xe0000 0x1000>;
+> +		fsl,fman-ports = <&fman1_rx_0x8 &fman1_tx_0x28>;
+> +	};
+> +
+> +	ethernet@e2000 {
+> +		compatible = "fsl,fman-dtsec";
+> +		cell-index = <1>;
+> +		reg = <0xe2000 0x1000>;
+> +		fsl,fman-ports = <&fman1_rx_0x9 &fman1_tx_0x29>;
+> +	};
+> +
+> +	ethernet@e4000 {
+> +		compatible = "fsl,fman-dtsec";
+> +		cell-index = <2>;
+> +		reg = <0xe4000 0x1000>;
+> +		fsl,fman-ports = <&fman1_rx_0xa &fman1_tx_0x2a>;
+> +	};
+> +
+> +	ethernet@e6000 {
+> +		compatible = "fsl,fman-dtsec";
+> +		cell-index = <3>;
+> +		reg = <0xe6000 0x1000>;
+> +		fsl,fman-ports = <&fman1_rx_0xb &fman1_tx_0x2b>;
+> +	};
+> +
+> +	ethernet@e8000 {
+> +		compatible = "fsl,fman-dtsec";
+> +		cell-index = <4>;
+> +		reg = <0xf0000 0x1000>;
+> +		fsl,fman-ports = <&fman1_rx_0xc &fman1_tx_0x2c>;
+> +
+> +	ethernet@f0000 {
+> +		cell-index = <8>;
+> +		compatible = "fsl,fman-xgec";
+> +		reg = <0xf0000 0x1000>;
+> +		fsl,fman-ports = <&fman1_rx_0x10 &fman1_tx_0x30>;
+> +	};
+> +
+> +	ptp-timer@fe000 {
+> +		compatible = "fsl,fman-ptp-timer";
+> +		reg = <0xfe000 0x1000>;
+> +	};
+> +};
+>
