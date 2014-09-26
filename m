@@ -1,58 +1,44 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Adding selftest testdata dynamically into live tree
-Date: Fri, 26 Sep 2014 13:09:17 +0100
-Message-ID: <20140926120917.B60B4C40FEB@trevor.secretlab.ca>
-References: <542064F1.4000601@elproma.com.pl>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/4] Correct vendor-prefix and document device isl29028
+Date: Fri, 26 Sep 2014 17:54:48 +0530
+Message-ID: <1411734292-10910-1-git-send-email-darshanapadmadas@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <542064F1.4000601-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Janusz =?iso-8859-2?q?U=BFycki?= <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: opw-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 22 Sep 2014 20:05:37 +0200, Janusz U=C5=BCycki <j.uzycki@elprom=
-a.com.pl> wrote:
-> Hi.
->=20
-> On 3.17.0-rc6-next-20140922+ with CONFIG_OF_SELFTEST enabled
-> zImage is recreated every time I call "make" despite I've not done
-> any change in source files and zImage was the same.
-> This is caused by the rm line:
->    CALL    scripts/checksyscalls.sh
->    CHK     include/generated/compile.h
->    DTC     drivers/of/testcase-data/testcases.dtb
->    DTB     drivers/of/testcase-data/testcases.dtb.S
->    AS      drivers/of/testcase-data/testcases.dtb.o
->    LD      drivers/of/of_selftest.o
->    LD      drivers/of/built-in.o
-> rm drivers/of/testcase-data/testcases.dtb.S=20
-> drivers/of/testcase-data/testcases.dtb
->    LD      drivers/built-in.o
->    LINK    vmlinux
->    LD      vmlinux.o
+Patchset documents correct and the deprecated vendor-prefix found by checkpatch 
+warning and also documents information of device isl29028 for compatibility. 
+Patchset also includes corrected vendor-prefix and device name in compatible 
+property for files with checkpatch warning of undocumented string "isil,isl29028".
 
-Try this change:
+Darshana Padmadas (4):
+  Documentation: devicetree: bindings: Document correct and deprecated
+    vendor-prefix of device
+  Documentation: devicetree: bindings: Document deprecated vendor-prefix
+    found by checkpatch.pl
+  Staging: iio: light: Added correct vendor-prefix with device name in
+    compatible property
+  arch: arm: boot: dts: Added correct vendor-prefix with device name to
+    compatible property
 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 260bf8acfce9..4555e2e1b4ed 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -269,7 +269,7 @@ cmd_dtc =3D $(CPP) $(dtc_cpp_flags) -x assembler-wi=
-th-cpp -o $(dtc-tmp) $< ; \
- 		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
- 	cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
-=20
--$(obj)/%.dtb: $(src)/%.dts FORCE
-+$(obj)/%.dtb: $(src)/%.dts
- 	$(call if_changed_dep,dtc)
-=20
- dtc-tmp =3D $(subst $(comma),_,$(dot-target).dts.tmp)
+Changes in v2:
+    - Made the commit message more clear.
+    - Made cover letter more clear.
+
+ Documentation/devicetree/bindings/i2c/trivial-devices.txt | 2 ++
+ Documentation/devicetree/bindings/vendor-prefixes.txt     | 1 +
+ arch/arm/boot/dts/tegra30-cardhu.dtsi                     | 2 +-
+ drivers/staging/iio/light/isl29028.c                      | 3 ++-
+ 4 files changed, 6 insertions(+), 2 deletions(-)
+
+-- 
+1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
