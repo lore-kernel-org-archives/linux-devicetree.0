@@ -1,84 +1,51 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCHv4 4/6] dt-bindings: arm: add Freescale LS1021A SoC device
- tree binding
-Date: Fri, 26 Sep 2014 14:18:52 +0800
-Message-ID: <20140926061851.GE31948@dragon>
-References: <1411371952-5618-1-git-send-email-jingchang.lu@freescale.com>
- <1411371952-5618-5-git-send-email-jingchang.lu@freescale.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC v2 02/12] PM / Domains: Add DT bindings for PM QoS
+ device latencies
+Date: Fri, 26 Sep 2014 08:25:26 +0200
+Message-ID: <CAMuHMdVp6MiPb8Dhph=eyTgsnBbQSzEHbA9TOjCDi=7BM8GgTg@mail.gmail.com>
+References: <1410893339-6361-1-git-send-email-geert+renesas@glider.be>
+	<1410893339-6361-3-git-send-email-geert+renesas@glider.be>
+	<7heguzbd4z.fsf@deeprootsystems.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1411371952-5618-5-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <7heguzbd4z.fsf@deeprootsystems.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Philipp Zabel <philipp.zabel@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 22, 2014 at 03:45:50PM +0800, Jingchang Lu wrote:
-> Signed-off-by: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.txt | 38 +++++++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-> index e935d7d..2e0ba09 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.txt
-> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
-> @@ -74,3 +74,41 @@ Required root node properties:
->  i.MX6q generic board
->  Required root node properties:
->      - compatible = "fsl,imx6q";
-> +
-> +
-> +Freescale LS1021A Platform Device Tree Bindings
-> +------------------------------------------------
-> +
-> +Required root node compatible properties:
-> +  - compatible = "fsl,ls1021a";
-> +
-> +Freescale LS1021A SoC-specific Device Tree Bindings
-> +-------------------------------------------
-> +
-> +Freescale SCFG
-> +  scfg is the supplemental configuration unit, that provides SoC specific
+Hi Kevin,
 
-s/scfg/SCFG
+On Thu, Sep 25, 2014 at 11:31 PM, Kevin Hilman <khilman@kernel.org> wrote:
+> Geert Uytterhoeven <geert+renesas@glider.be> writes:
+>> PM QoS device start/stop and save/restore state latencies are more or
+>> less properties of the hardware.
+>> In legacy code, they're specified from platform code.
+>> On DT platforms, their values should come from DT.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> ---
+>> Should these properties be called "linux,*-latency"?
+>
+> Hmm, the start/stop latencies are clearly properties of the hardware,
+> but the save/restore latencies seem to be a function of the driver.
+> e.g., some drivers may keep a shadow copy of their registers in memory
+> so the save time is minimized.
+>
+> I don't have too strong of an opinion on this, but probably the drivers
+> should just add their own values to the start/stop latencies to add the
+> linux specific overhead.
 
-> +configuration and status registers for the chip. Such as getting PEX port
-> +status.
-> +  Required properties:
-> +  - compatible: should be "fsl,ls1021a-scfg"
-> +  - reg: should contain base address and length of SCFG memory-mapped registers
-> +
-> +Example:
-> +	scfg: scfg@1570000 {
-> +		compatible = "fsl,ls1021a-scfg";
-> +		reg = <0x0 0x1570000 0x0 0x10000>;
-> +	};
-> +
-> +Freescale DCFG
-> +  dcfg is the device configuration unit, that provides general purpose
+Thanks. I agree with you on this, so I'll remove the save/restore latencies.
 
-s/dcfg/DCFG
+Gr{oetje,eeting}s,
 
-Shawn
+                        Geert
 
-> +configuration and status for the device. Such as setting the secondary
-> +core start address and release the secondary core from holdoff and startup.
-> +  Required properties:
-> +  - compatible: should be "fsl,ls1021a-dcfg"
-> +  - reg : should contain base address and length of DCFG memory-mapped registers
-> +
-> +Example:
-> +	dcfg: dcfg@1ee0000 {
-> +		compatible = "fsl,ls1021a-dcfg";
-> +		reg = <0x0 0x1ee0000 0x0 0x10000>;
-> +	};
-> -- 
-> 1.8.0
-> 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
