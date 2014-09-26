@@ -1,191 +1,125 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH v5 00/11] drm: add support for Atmel HLCDC Display
- Controller
-Date: Thu, 25 Sep 2014 20:02:06 -0400
-Message-ID: <CAF6AEGsBp84LRLHUY=6_AFs5d4pyfNnjfRGMy+8g_QAfxVqT+A@mail.gmail.com>
-References: <1410165822-16868-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/6] Add initial support for Broadcom Cygnus SoC
+Date: Thu, 25 Sep 2014 17:14:10 -0700
+Message-ID: <5424AFD2.2070406@gmail.com>
+References: <Jonathan Richardson <jonathar@broadcom.com> <1411507057-14771-1-git-send-email-jonathar@broadcom.com> <54248344.5030308@broadcom.com> <54248791.9060805@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1410165822-16868-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Andrew Victor <linux@maxim.org.za>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54248791.9060805-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 8, 2014 at 4:43 AM, Boris BREZILLON
-<boris.brezillon@free-electrons.com> wrote:
-> Hello,
->
-> This patch series adds support for Atmel HLCDC (HLCD Controller) available
-> on some Atmel SoCs (i.e. the sama5d3 family).
->
-> The HLCDC actually provides a Display Controller and a PWM device, hence I
-> decided to declare an MFD device exposing 2 subdevices: a display
-> controller and a PWM chip.
-> This also solves a circular dependency issue preventing HLCDC driver from
-> unloading.
-> The HLCDC request a drm_panel device, which request a backlight device
-> (a PWM backlight), which depends on a PWM which is provided by the HLCDC
-> driver (hlcdc -> panel -> backlight -> hlcdc (pwm part)).
->
-> The current implementation only supports sama5d3 SoCs but other SoCs should
-> be easily ported by defining new compatible strings and adding HLCDC
-> description structures for these SoCs (Ludovic tested this driver on an
-> at91sam9x5 board).
->
-> The drivers supports basic CRTC functionalities, several overlays and an
-> hardware cursor.
->
-> At the moment, it only supports connection to LCD panels through an RGB
-> connector (defined as an LVDS connector in my implementation), though
-> connection to other kind of devices (like DRM bridges) could be added later.
->
-> It also supports several RGB formats on all planes and some YUV formats on
-> the HEO overlay plane.
->
-> This series depends those series: [1] and [2].
->
-> I know you're all quite busy, but I was expecting to get support for
-> atmel's HLCDC block in 3.18, and given the lack of review I got on the
-> DRM and PWM parts I doubt it can happen :-(.
->
-> Moreover, the dependencies ([1] and [2]) are stuck too.
-> The first one has been reviewed by Rob, but didn't get any feedback after
-> that. David, Rob, is there anything blocking this series ?
-> The second patch series contains some rework I've done to describe the
-> transfer format used on a connector bus. Laurent, Thierry, you're the one
-> who suggested this rework. Could you give your opinion on my
-> implementation ?
+Scott, Jonathan,
 
+On 09/25/2014 02:22 PM, Florian Fainelli wrote:
+> Hi Scott,
+> 
+> On 09/25/2014 02:04 PM, Scott Branden wrote:
+>> Hi Matt/Christian (and others),
+>>
+>> We would like to move forward in getting our base Cygnus support into
+>> the mainline kernel.  From there we will be able to contribute
+>> additional drivers.
+>>
+>> Is somebody willing to accept this pull request to get this patchset
+>> accepted by the open source community?
+> 
+> I am fine with taking the ARM patches and putting them at
+> http://github/brcm/linux.git, with C code in cygnus/board and the Device
+> Tree files in cygnus/dt for instance?
+> 
+> The clock driver patch will have to go through Mike Turquette's tree
+> unless he wants to delegate that one.
 
-hmm, looks like I still owe you a review after conversion to flip-work
-helpers..  Sorry, I thought I'd already reviewed one of the later
-versions.  It is on my list for tomorrow.
+Could you resend patch 3 without the clock binding, patch 4 without the
+clocks node, and patch 6 without the drivers/clk changes? Once you do
+that, I can assemble these patches quickly and send a pull request which
+does only contain ARM SoC and DTS changes, and you can get the clock
+driver to be reviewed separately by its maintainer?
 
-Definitely we should get the flip-work helper patches landed, that
-part already has my r-b
+Thanks!
 
-BR,
--R
+> 
+>>
+>> Regards,
+>>  Scott
+>>
+>>
+>> On 14-09-23 02:17 PM, Jonathan Richardson wrote:
+>>> Hi,
+>>>
+>>> This patchset contains initial support for Broadcom's Cygnus SoC based
+>>> on our
+>>> iProc architecture. Initial support is minimal and includes just the mach
+>>> platform code, clock driver, and a basic device tree configuration.
+>>> Peripheral
+>>> drivers will be submitted soon, as will device tree configurations for
+>>> other
+>>> Cygnus board variants.
+>>>
+>>> Changes from v1:
+>>>   - Address code review comments as per previous responses.
+>>>   - Copyright headers updated to remove Broadcom URL.
+>>>   - mach platform code still contains hard coded adresses. These
+>>> address are
+>>>     the same for all Cygnus variants. Could you please provide
+>>> guidance on where
+>>>     they should go if you would still like them changed.
+>>>
+>>> Thanks,
+>>> Jon
+>>>
+>>> Jonathan Richardson (6):
+>>>    ARM: cygnus: Initial support for Broadcom Cygnus SoC
+>>>    clk: Clock driver support for Broadcom Cygnus SoC
+>>>    dt-bindings: Document Broadcom Cygnus SoC and clock driver
+>>>    ARM: dts: Enable Broadcom Cygnus SoC
+>>>    ARM: cygnus defconfig : Initial defconfig for Broadcom Cygnus SoC
+>>>    MAINTAINERS: Entry for Cygnus/iproc arm architecture and clock
+>>>      drivers
+>>>
+>>>   Documentation/devicetree/bindings/arm/cygnus.txt   |   12 +
+>>>   .../devicetree/bindings/clock/clk-cygnus.txt       |  121 ++
+>>>   .../devicetree/bindings/clock/clk-iproc.txt        |   48 +
+>>>   MAINTAINERS                                        |   21 +
+>>>   arch/arm/boot/dts/Makefile                         |    1 +
+>>>   arch/arm/boot/dts/bcm-cygnus.dtsi                  |  349 ++++++
+>>>   arch/arm/boot/dts/bcm911360_entphn.dts             |   22 +
+>>>   arch/arm/configs/bcm_cygnus_defconfig              |  223 ++++
+>>>   arch/arm/mach-bcm/Kconfig                          |   31 +
+>>>   arch/arm/mach-bcm/Makefile                         |    3 +
+>>>   arch/arm/mach-bcm/bcm_cygnus.c                     |  166 +++
+>>>   drivers/clk/Makefile                               |    1 +
+>>>   drivers/clk/bcm/Makefile                           |    2 +
+>>>   drivers/clk/bcm/clk-cygnus.c                       | 1186
+>>> ++++++++++++++++++++
+>>>   drivers/clk/bcm/clk-iproc.c                        |  451 ++++++++
+>>>   15 files changed, 2637 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/arm/cygnus.txt
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/clock/clk-cygnus.txt
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/clock/clk-iproc.txt
+>>>   create mode 100644 arch/arm/boot/dts/bcm-cygnus.dtsi
+>>>   create mode 100644 arch/arm/boot/dts/bcm911360_entphn.dts
+>>>   create mode 100644 arch/arm/configs/bcm_cygnus_defconfig
+>>>   create mode 100644 arch/arm/mach-bcm/bcm_cygnus.c
+>>>   create mode 100644 drivers/clk/bcm/clk-cygnus.c
+>>>   create mode 100644 drivers/clk/bcm/clk-iproc.c
+>>>
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-> Best Regards,
->
-> Boris
->
-> [1]http://lkml.iu.edu/hypermail/linux/kernel/1407.1/04171.html
-> [2]http://www.spinics.net/lists/kernel/msg1791681.html
->
-> Changes since v4:
-> - fix a few more bugs in rotation handling (rotation was buggy on some
->   formats)
-> - return connector_status_unknown until a panel is exposed by the
->   drm_panel infrastructure (prevent fbdev creation until everyting is
->   in place)
-> - rework Kconfig MFD_ATMEL_HLCDC selection to simplify the configuration
->   (automatically select this option when selecting the HLCDC PMW or DRM
->   driver, instead of depending on this option)
->
-> Changes since v3:
-> - rework the layer code to simplify several parts (locking and layer
->   disabling)
-> - make use of the drm_flip_work infrastructure
-> - rely on default HW cursor implementation using on the cursor plane
-> - rework the display controller DT bindings (based on OF graph
->   representation)
-> - add rotation support
-> - retrive RGB bus format from drm_display_info
-> - drop the dynamic pinctrl state selection
-> - rework HLCDC output handling (previously specialized to interface
->   with LCD panels)
-> - drop ".module = THIS_MODULE" lines
-> - change display controller compatible string
->
-> Changes since v2:
-> - fix coding style issues (macro indentation)
-> - make use of GENMASK in several places
-> - declare regmap config as a static structure
-> - rework hlcdc plane update API
-> - rework cursor handling to make use of the new plane update API
-> - fix backporch config
-> - do not use devm_regmap_init_mmio_clk to avoid extra clk_enable
->   clk disable calls when accessing registers
-> - explicitely include regmap and clk headers instead of relying on
->   atmel-hlcdc.h inclusions
-> - make the atmel-hlcdc driver depends on CONFIG_OF
-> - separate DT bindings documentation from driver implementation
-> - support several pin muxing for HLCDC pins on sama5d3 SoCs
->
-> Changes since v1:
-> - replace the backlight driver by a PWM driver
-> - make use of drm_panel infrastructure
-> - split driver code in several subsystem: MFD, PWM and DRM
-> - add support for overlays
-> - add support for hardware cursor
->
-> Boris BREZILLON (11):
->   mfd: add atmel-hlcdc driver
->   mfd: add documentation for atmel-hlcdc DT bindings
->   pwm: add support for atmel-hlcdc-pwm device
->   pwm: add DT bindings documentation for atmel-hlcdc-pwm driver
->   drm: add Atmel HLCDC Display Controller support
->   drm: add DT bindings documentation for atmel-hlcdc-dc driver
->   ARM: AT91/dt: split sama5d3 lcd pin definitions to match RGB mode
->     configs
->   ARM: AT91/dt: add alternative pin muxing for sama5d3 lcd pins
->   ARM: at91/dt: define the HLCDC node available on sama5d3 SoCs
->   ARM: at91/dt: add LCD panel description to sama5d3xdm.dtsi
->   ARM: at91/dt: enable the LCD panel on sama5d3xek boards
->
->  .../devicetree/bindings/drm/atmel-hlcdc-dc.txt     |  54 ++
->  .../devicetree/bindings/mfd/atmel-hlcdc.txt        |  50 ++
->  .../devicetree/bindings/pwm/atmel-hlcdc-pwm.txt    |  55 ++
->  arch/arm/boot/dts/sama5d31ek.dts                   |  20 +
->  arch/arm/boot/dts/sama5d33ek.dts                   |  20 +
->  arch/arm/boot/dts/sama5d34ek.dts                   |  20 +
->  arch/arm/boot/dts/sama5d36ek.dts                   |  20 +
->  arch/arm/boot/dts/sama5d3_lcd.dtsi                 | 205 ++++-
->  arch/arm/boot/dts/sama5d3xdm.dtsi                  |  58 ++
->  drivers/gpu/drm/Kconfig                            |   2 +
->  drivers/gpu/drm/Makefile                           |   1 +
->  drivers/gpu/drm/atmel-hlcdc/Kconfig                |  13 +
->  drivers/gpu/drm/atmel-hlcdc/Makefile               |   7 +
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c     | 286 +++++++
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c       | 488 ++++++++++++
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h       | 224 ++++++
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c    | 656 ++++++++++++++++
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h    | 403 ++++++++++
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c   | 476 ++++++++++++
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c    | 836 +++++++++++++++++++++
->  drivers/mfd/Kconfig                                |   6 +
->  drivers/mfd/Makefile                               |   1 +
->  drivers/mfd/atmel-hlcdc.c                          | 118 +++
->  drivers/pwm/Kconfig                                |  10 +
->  drivers/pwm/Makefile                               |   1 +
->  drivers/pwm/pwm-atmel-hlcdc.c                      | 229 ++++++
->  include/linux/mfd/atmel-hlcdc.h                    |  78 ++
->  27 files changed, 4306 insertions(+), 31 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
->  create mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Kconfig
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Makefile
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
->  create mode 100644 drivers/mfd/atmel-hlcdc.c
->  create mode 100644 drivers/pwm/pwm-atmel-hlcdc.c
->  create mode 100644 include/linux/mfd/atmel-hlcdc.h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
