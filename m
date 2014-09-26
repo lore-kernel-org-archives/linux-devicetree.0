@@ -1,139 +1,58 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v12 08/12] PCI: OF: Introduce helper function for
- retrieving PCI domain numbers
-Date: Fri, 26 Sep 2014 23:47:52 +0100
-Message-ID: <20140926224752.GB22030@e106497-lin.cambridge.arm.com>
-References: <1411498874-9864-1-git-send-email-Liviu.Dudau@arm.com>
- <1411498874-9864-9-git-send-email-Liviu.Dudau@arm.com>
- <CAL_Jsq+j40Xf208wCf4as3H=cDU=htJ-JWinB0DjpcORjatNXQ@mail.gmail.com>
- <20140926212052.GA6030@borg.dudau.co.uk>
- <CAL_JsqKJ6bfPuOofo4grVm3qW_WOpUzcS1juZvHxZdFyyF_19A@mail.gmail.com>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 0/4] clk: hix5hd2: clocks update
+Date: Fri, 26 Sep 2014 16:32:10 -0700
+Message-ID: <20140926233210.19023.98858@quantum>
+References: <1411356016-20553-1-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKJ6bfPuOofo4grVm3qW_WOpUzcS1juZvHxZdFyyF_19A@mail.gmail.com>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411356016-20553-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 26, 2014 at 10:53:26PM +0100, Rob Herring wrote:
-> On Fri, Sep 26, 2014 at 4:20 PM,  <liviu@dudau.co.uk> wrote:
-> > On Fri, Sep 26, 2014 at 01:20:39PM -0500, Rob Herring wrote:
-> >> On Tue, Sep 23, 2014 at 2:01 PM, Liviu Dudau <Liviu.Dudau@arm.com>=
- wrote:
-> >> > Add pci_get_new_domain_nr() to allocate a new domain number
-> >> > and of_get_pci_domain_nr() to retrieve the PCI domain number
-> >> > of a given device from DT. Host bridge drivers or architecture
-> >> > specific code can choose to implement their PCI domain number
-> >> > policy using these two functions.
-> >> >
-> >> > Using of_get_pci_domain_nr() guarantees a stable PCI domain
-> >> > number on every boot provided that all host bridge controllers
-> >> > are assigned a number in the device tree using "linux,pci-domain=
-"
-> >> > property. Mix use of pci_get_new_domain_nr() and of_get_pci_doma=
-in_nr()
-> >> > is not recommended as it can lead to potentially conflicting
-> >> > domain numbers being assigned to root busses behind different
-> >> > host bridges.
-> >> >
-> >> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> >> > Cc: Arnd Bergmann <arnd@arndb.de>
-> >> > Cc: Grant Likely <grant.likely@linaro.org>
-> >> > Cc: Rob Herring <robh+dt@kernel.org>
-> >> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> >> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> >>
-> >> Looks pretty good, but a couple of comments that can be addressed =
-as
-> >> follow-up patches.
-> >>
-> >> > ---
-> >> >  drivers/of/of_pci.c    | 25 +++++++++++++++++++++++++
-> >> >  drivers/pci/pci.c      |  9 +++++++++
-> >> >  include/linux/of_pci.h |  7 +++++++
-> >> >  include/linux/pci.h    |  3 +++
-> >> >  4 files changed, 44 insertions(+)
-> >> >
-> >> > diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> >> > index 8481996..82d172f 100644
-> >> > --- a/drivers/of/of_pci.c
-> >> > +++ b/drivers/of/of_pci.c
-> >> > @@ -89,6 +89,31 @@ int of_pci_parse_bus_range(struct device_node=
- *node, struct resource *res)
-> >> >  }
-> >> >  EXPORT_SYMBOL_GPL(of_pci_parse_bus_range);
-> >> >
-> >> > +/**
-> >> > + * This function will try to obtain the host bridge domain numb=
-er by
-> >> > + * finding a property called "linux,pci-domain" of the given de=
-vice node.
-> >> > + *
-> >> > + * @node: device tree node with the domain information
-> >> > + *
-> >> > + * Returns the associated domain number from DT in the range [0=
--0xffff], or
-> >> > + * a negative value if the required property is not found.
-> >> > + */
-> >> > +int of_get_pci_domain_nr(struct device_node *node)
-> >> > +{
-> >> > +       const __be32 *value;
-> >> > +       int len;
-> >> > +       u16 domain;
-> >> > +
-> >> > +       value =3D of_get_property(node, "linux,pci-domain", &len=
-);
-> >>
-> >> This needs to be documented.
-> >
-> > I would say needs agreed on *and* documented.
->=20
-> I thought Bjorn already applied the series. Who's agreement are you
-> waiting for specifically.
+Quoting Zhangfei Gao (2014-09-21 20:20:12)
+> v5:
+> 0001:
+> Suggested by Mike, change to clk_ether_prepare since delay required inside
+> 
+> v4:
+> Drop ir clock, whose register is not in the same region
+> 
+> v3: 
+> Add patches 3, 4, 5 for clocks of watchdog, ir, and i2c
+> Patches 1, 2 are same as v2
 
-Looks like he only applied about 60% of the series.
+Patches look OK to me. Will you or Wei be sending me a pull request?
 
-I'm not waiting on anyones specifig agreement, just general agreement.
-Jason Gunthrope have initially suggested using pci-domain alias which
-you don't like, now I'm using "linux,pci-domain" property which you've
-ACKed, I wonder if I need to give people more time to catch up to the
-fact?
+Also in the future please try to have more info in your change logs.
 
->=20
-> >>
-> >> > +       if (!value || len < sizeof(*value))
-> >> > +               return -EINVAL;
-> >> > +
-> >> > +       domain =3D (u16)be32_to_cpup(value);
-> >>
-> >> of_property_read_u32 would not work here?
-> >
-> > It should, I guess, but I want to limit the domain number range to =
-16 bits.
->=20
-> Okay, but it would still be fewer lines to use of_property_read_u32
-> and then cast it. You could use the u16 variant and make the property
-> be defined to be 16-bit in the documentation.
+Regards,
+Mike
 
-True. Will do.
-
-Best regards,
-Liviu
-
->=20
-> Rob
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+> 
+> Guoxiong Yan (1):
+>   clk: hix5hd2: add watchdog0 clocks
+> 
+> Jiancheng Xue (1):
+>   clk: hix5hd2: add sd clk
+> 
+> Wei Yan (1):
+>   clk: hix5hd2: add I2C clocks
+> 
+> Zhangfei Gao (1):
+>   clk: hix5hd2: add complex clk
+> 
+>  drivers/clk/hisilicon/clk-hix5hd2.c       |  236 ++++++++++++++++++++++++++++-
+>  include/dt-bindings/clock/hix5hd2-clock.h |   27 ++++
+>  2 files changed, 257 insertions(+), 6 deletions(-)
+> 
+> -- 
+> 1.7.9.5
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
