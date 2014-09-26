@@ -1,42 +1,87 @@
-From: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 4/4] arch: arm: boot: dts: Added correct vendor-prefix with device name to compatible property
-Date: Fri, 26 Sep 2014 17:54:52 +0530
-Message-ID: <1411734292-10910-5-git-send-email-darshanapadmadas@gmail.com>
-References: <1411734292-10910-1-git-send-email-darshanapadmadas@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411734292-10910-1-git-send-email-darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: opw-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 10/12] video: Add ADV751[13] DT bindings documentation
+Date: Fri, 26 Sep 2014 15:30:56 +0300
+Message-ID: <1464975.QfMrH1tcTG@avalon>
+References: <1411589072-28609-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <7167797.cQ2LzKYS7F@avalon>
+ <CAMuHMdXmaxmb0GgidM9LL7DhqHQXO3YfOdfpWv=zwHBN6T_UXA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAMuHMdXmaxmb0GgidM9LL7DhqHQXO3YfOdfpWv=zwHBN6T_UXA@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the correct vendor-prefix listed in Documentation/devicetree/bindings/vendor-prefixes.txt
-with the device name to compatible property.
+Hi Geert,
 
-Signed-off-by: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/tegra30-cardhu.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thursday 25 September 2014 12:10:59 Geert Uytterhoeven wrote:
+> On Thu, Sep 25, 2014 at 11:57 AM, Laurent Pinchart wrote:
+> > On Thursday 25 September 2014 09:06:46 Geert Uytterhoeven wrote:
+> >> On Wed, Sep 24, 2014 at 10:04 PM, Laurent Pinchart
+> >> 
+> >> <laurent.pinchart+renesas@ideasonboard.com> wrote:
+> >> > +- adi,input-style: The input components arrangement variant (1, 2 or
+> >> > 3).
+> >> 
+> >> What's the meaning of the numerical values 1, 2, and 3?
+> >> 
+> >> I found this code in "[PATCH 11/12] drm: Add adv7511 encoder driver":
+> >> 
+> >> +       input_style = config->input_style == 1 ? 2
+> >> +                   : (config->input_style == 2 ? 1 : 3);
+> >> 
+> >> which didn't really help much ;-)
+> >> 
+> > :-)
+> > 
+> > The ADV751[13]W? datasheets document all the supported input formats.
+> > They're split in categories, each of them having multiple variants called
+> > styles. The styles are just numbered 1, 2 and 3 in the tables that
+> > describe the formats, and there's a register field used to select a
+> > style. For some reason style 1 maps to register value 2, style 2 to
+> > register value 1, and style 3 to register value 3. Go figure...
+> 
+> Thanks, that explains it.
+> 
+> Then I suggest to reflect this in the binding:
+> 
+>     - adi,input-style: The input components arrangement variant (1, 2 or 3),
+> as listed in the datasheet.
+> 
+> and in the code, e.g. by translating the values using a mapping array?
 
-diff --git a/arch/arm/boot/dts/tegra30-cardhu.dtsi b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-index 2063795..491fed6 100644
---- a/arch/arm/boot/dts/tegra30-cardhu.dtsi
-+++ b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-@@ -187,7 +187,7 @@
- 
- 		/* ALS and Proximity sensor */
- 		isl29028@44 {
--			compatible = "isil,isl29028";
-+			compatible = "isl,isl29028", "isil,isl29028";
- 			reg = <0x44>;
- 			interrupt-parent = <&gpio>;
- 			interrupts = <TEGRA_GPIO(L, 0) IRQ_TYPE_LEVEL_HIGH>;
+I'll document the property as
+
+- adi,input-style: The input components arrangement variant (1, 2 or 3), as
+  listed in the input format tables in the datasheet.
+
+and modify the code to use an array as in
+
+    /*
+     * The input style values documented in the datasheet don't match the
+     * hardware register field values :-(
+     */
+    static const unsigned int input_styles[4] = { 0, 2, 1, 3 };
+
+    ...
+    regmap_update_bits(adv7511->regmap, ADV7511_REG_VIDEO_INPUT_CFG1, 0x7e,
+                       (color_depth << 4) |
+                       (input_styles[config->input_style] << 2));
+
+(config->input_style is validated when parsing DT).
+
 -- 
-1.9.1
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
