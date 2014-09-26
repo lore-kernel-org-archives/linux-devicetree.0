@@ -1,106 +1,103 @@
-From: Mark yao <mark.yao@rock-chips.com>
-Subject: [PATCH v7 3/3] dt-bindings: video: Add documentation for rockchip vop
-Date: Fri, 26 Sep 2014 15:58:38 +0800
-Message-ID: <1411718318-15218-1-git-send-email-mark.yao@rock-chips.com>
-References: <1411718091-15056-1-git-send-email-mark.yao@rock-chips.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1411718091-15056-1-git-send-email-mark.yao@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: heiko@sntech.de, Boris BREZILLON <boris.brezillon@free-electrons.com>, David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-api@vger.kernel.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, marcheu@chromium.org, dbehr@chromium.org, olof@lixom.net, djkurtz@chromium.org, xjq@rock-chips.com, kfx@rock-chips.com, cym@rock-chips.com, cf@rock-chips.com, zyw@rock-chips.com, xxm@rock-chips.com, huangtao@rock-chips.com, kever.yang@rock-chips.com, yxj@rock-chips.com, wxt@rock-chips.com, xw@rock-chips.com, Mark yao <mark.yao@rock-chips.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v5 00/11] PM / Domains: Generic OF-based support
+Date: Fri, 26 Sep 2014 10:06:24 +0200
+Message-ID: <CAMuHMdWq9ZySdt8sQpBFq=X7LR5a=vZkowNZoB8NHztTisG+NQ@mail.gmail.com>
+References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
+	<20140925112122.GA22753@ulmo>
+	<7hppej8glk.fsf@deeprootsystems.com>
+	<20140926073125.GB31106@ulmo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20140926073125.GB31106@ulmo>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@g>
 List-Id: devicetree@vger.kernel.org
 
-This adds binding documentation for Rockchip SoC VOP driver.
+Hi Thierry,
 
-Signed-off-by: Mark Yao <mark.yao@rock-chips.com>
-Acked-by: Daniel Vetter <daniel@ffwll.ch>
-Reviewed-by: Rob Clark <robdclark@gmail.com>
----
-Changes in v2:
-- rename "lcdc" to "vop"
-- add vop reset
-- add iommu node
-- add port for display-subsystem
+On Fri, Sep 26, 2014 at 9:31 AM, Thierry Reding
+<thierry.reding@gmail.com> wrote:
+> On Thu, Sep 25, 2014 at 03:45:11PM -0700, Kevin Hilman wrote:
+>> Thierry Reding <thierry.reding@gmail.com> writes:
+>> > I just noticed these patches because they conflicted with some of the
+>> > local patches I had to add a very similar framework. One of the reasons
+>> > why I hadn't posted these publicly yet is because the platform where I
+>> > want to use this (Tegra) is somewhat quirky when it comes to power
+>> > domains.
+>> >
+>> > On Tegra these domains are called power gates and they currently have
+>> > their own API. We've been looking at migrating things over to some
+>> > generic framework for some time and PM domains do seem like a good fit.
+>> > However one of the quirks regarding these domains on Tegra is that a
+>> > fixed sequence exists that needs to be respected when enabling or
+>> > disabling a power partition. The exact sequence can be found in the
+>> > drivers/soc/tegra/pmc.c driver's tegra_powergate_sequence_power_up()
+>> > function. Essentially we need to call into the clock and reset drivers
+>> > at very specific moments during the operations that the PMC does.
+>> >
+>> > One solution to this would be to make the needed clocks and resets
+>> > available to the power domain driver via DT, but then we have the
+>> > problem that two drivers would be controlling the same resources. For
+>> > example drivers could still want to disable the clock for more fine-
+>> > grained power management.
+>>
+>> I think you're on the right path here.  You can get rid of this conflict
+>> by removing the direct/manual clock management from the drivers, and
+>> using runtime PM instead: s/clk_enable/pm_runtime_get_sync/,
+>> s/clk_disable/pm_runtime_put_sync/.  When using runtime PM, those calls
+>> trickle down through the power domain driver, which can manage the
+>> device clocks, as well as any additional clocks and resets needed for
+>> power gating.
+>
+> Okay. The DT part of it is going to be pretty nasty (as usual) because
+> we currently have the clocks and resets within the device's device tree
+> node (which I think is where they really belong).
+>
+> So one possibility would be to move the clocks and resets to the power
+> domain controller's node, like so:
+>
+>         pmc@... {
+>                 power-domains {
+>                         ...
+>
+>                         sata@... {
+>                                 clocks = <&tegra_car 124>;
+>                                 resets = <&tegra_car 124>;
+>                         };
+>                 };
+>         };
+>
+> An alternative would be to make the power-domain controller look up the
+> clock within the user's device tree node. That could be problematic,
+> because while the module clock is always the first clock in current
+> device trees, there aren't ordering guarantees, so we'd have to rely on
+> the clock name.
 
-Changes in v3: None
+Or on some other way.
+Do you have a separate hardware block that controls all (and only) the
+module clocks?
 
-Changes in v4: None
+On shmobile SoCs, all module clocks are controlled using the MSTP
+(Module SToP) clocks.
 
-Changes in v5: None
+In my old RFC series "[PATCH/RFC 0/4] of: Register clocks for Runtime PM
+with PM core" (https://lkml.org/lkml/2014/4/24/1118) the MSTP clock driver
+advertised using a new CLK_RUNTIME_PM flag that its clocks are module
+clocks and thus suitable for runtime PM.
 
-Changes in v6: None
+There were some issues with that series, but the general idea of letting a
+clock driver advertise that all its clocks are module clocks could still be
+useful. Then the power domain driver knows which clocks to manage.
 
-Changes in v7: None
+Gr{oetje,eeting}s,
 
- .../devicetree/bindings/video/rockchip-vop.txt     |   58 ++++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/rockchip-vop.txt
+                        Geert
 
-diff --git a/Documentation/devicetree/bindings/video/rockchip-vop.txt b/Documentation/devicetree/bindings/video/rockchip-vop.txt
-new file mode 100644
-index 0000000..d15351f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/rockchip-vop.txt
-@@ -0,0 +1,58 @@
-+device-tree bindings for rockchip soc display controller (vop)
-+
-+VOP (Visual Output Processor) is the Display Controller for the Rockchip
-+series of SoCs which transfers the image data from a video memory
-+buffer to an external LCD interface.
-+
-+Required properties:
-+- compatible: value should be one of the following
-+		"rockchip,rk3288-vop";
-+
-+- interrupts: should contain a list of all VOP IP block interrupts in the
-+		 order: VSYNC, LCD_SYSTEM. The interrupt specifier
-+		 format depends on the interrupt controller used.
-+
-+- clocks: must include clock specifiers corresponding to entries in the
-+		clock-names property.
-+
-+- clock-names: Must contain
-+		aclk_vop: for ddr buffer transfer.
-+		hclk_vop: for ahb bus to R/W the phy regs.
-+		dclk_vop: pixel clock.
-+
-+- resets: Must contain an entry for each entry in reset-names.
-+  See ../reset/reset.txt for details.
-+- reset-names: Must include the following entries:
-+  - axi
-+  - ahb
-+  - dclk
-+
-+- iommus: required a iommu node
-+
-+- port: A port node with endpoint definitions as defined in
-+  Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+SoC specific DT entry:
-+	vopb: vopb@ff930000 {
-+		compatible = "rockchip,rk3288-vop";
-+		reg = <0xff930000 0x19c>;
-+		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
-+		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-+		resets = <&cru SRST_LCDC1_AXI>, <&cru SRST_LCDC1_AHB>, <&cru SRST_LCDC1_DCLK>;
-+		reset-names = "axi", "ahb", "dclk";
-+		iommus = <&vopb_mmu>;
-+		vopb_out: port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			vopb_out_edp: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint=<&edp_in_vopb>;
-+			};
-+			vopb_out_hdmi: endpoint@1 {
-+				reg = <1>;
-+				remote-endpoint=<&hdmi_in_vopb>;
-+			};
-+		};
-+	};
--- 
-1.7.9.5
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
