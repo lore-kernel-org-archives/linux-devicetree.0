@@ -1,55 +1,59 @@
-From: David =?ISO-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer@o2s.ch>
-Subject: Re: [PATCH v3 11/12] mmc: sunxi: Convert MMC driver to the standard clock phase API
-Date: Fri, 26 Sep 2014 16:27:10 +0200
-Message-ID: <3992138.y6J8TjIuMq@pagira.o2s.ch>
-References: <1410466706-27386-1-git-send-email-maxime.ripard@free-electrons.com> <1410466706-27386-12-git-send-email-maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart64174242.DlQWOzDDiA"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1410466706-27386-12-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mike Turquette <mturquette@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, wens@csie.org
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: [PATCH v6 00/10] ARM: Berlin: Ethernet support
+Date: Fri, 26 Sep 2014 16:33:46 +0200
+Message-ID: <1411742036-23520-1-git-send-email-antoine.tenart@free-electrons.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com
+Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
 
---nextPart64174242.DlQWOzDDiA
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+This series introduce support for the Ethernet controller on Berlin SoCs,
+using the existing pxa168 Ethernet driver. In order to do this, DT
+support is added to the driver alongside some other modifications and
+fixes.
 
-Hello
-> Now that we have proper support to use the generic phase API in our c=
-lock
-> driver, switch the MMC driver to use it.
-> [...]
->  =09/* determine delays */
->  =09if (rate <=3D 400000) {
-> -=09=09oclk_dly =3D 0;
-> -=09=09sclk_dly =3D 7;
-> +=09=09oclk_dly =3D 180;
-> +=09=09sclk_dly =3D 42;
-> [...]
-How did you calculate the actual phase values from the original paramet=
-ers?
+This has been tested on a Berlin BG2Q DMP board.
 
-greatings
-=2D-=20
-David Lanzend=F6rfer
-OpenSourceSupport GmbH
-System engineer and supporter
-http://www.o2s.ch/
---nextPart64174242.DlQWOzDDiA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+Changes since v4:
+	- removed the phy-addr property and added a phy subnode
+	- added COMPILE_TEST for the pxa168_eth driver
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Changes since v3:
+        - moved the addition of pxa168_eth_get_mac_address() to the patch
+          using it first
 
-iEYEABECAAYFAlQld8QACgkQAeZw77btGjoJ2ACdHJ7p45e0wf1ZPmsy+7FpVfs+
-SFcAoKWruth0hUhjwzAUF4UPdmtdurRS
-=jltd
------END PGP SIGNATURE-----
+Changes since v2:
+        - reworked how the MAC address is configured
+        - made the clock anonymous
 
---nextPart64174242.DlQWOzDDiA--
+Changes since v1:
+        - removed custom Berlin Ethernet driver
+        - used the pxa168 Ethernet driver instead
+        - made modifications to the pxa168 driver (DT support, fixes)
 
+Antoine Tenart (10):
+  net: pxa168_eth: clean up
+  net: pxa168_eth: add device tree support
+  Documentation: bindings: net: add the Marvell PXA168 Ethernet
+    controller
+  net: pxa168_eth: fix Ethernet flow control status
+  net: pxa168_eth: set the mac address on the Ethernet controller
+  net: pxa168_eth: rework the MAC address setup
+  net: pxa168_eth: allow Berlin SoCs to use the pxa168_eth driver
+  net: pxa168_eth: allow to compile the pxa168_eth driver for tests
+  ARM: dts: berlin: add the Ethernet node
+  ARM: dts: berlin: enable the Ethernet port on the BG2Q DMP
+
+ .../devicetree/bindings/net/marvell-pxa168.txt     |  36 ++++
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts         |   4 +
+ arch/arm/boot/dts/berlin2q.dtsi                    |  17 ++
+ drivers/net/ethernet/marvell/Kconfig               |   2 +-
+ drivers/net/ethernet/marvell/pxa168_eth.c          | 219 +++++++++++++--------
+ 5 files changed, 199 insertions(+), 79 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/marvell-pxa168.txt
+
+-- 
+1.9.1
