@@ -1,86 +1,191 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] drm/rockchip: Add basic drm driver
-Date: Thu, 25 Sep 2014 19:56:34 -0400
-Message-ID: <CAF6AEGu+EBtYyfpthk8NaPuh6cAQXDc+=hnNORRZqb4t=yO00g@mail.gmail.com>
-References: <1411524672-14524-1-git-send-email-mark.yao@rock-chips.com>
-	<1411524746-14635-1-git-send-email-mark.yao@rock-chips.com>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH v5 00/11] drm: add support for Atmel HLCDC Display
+ Controller
+Date: Thu, 25 Sep 2014 20:02:06 -0400
+Message-ID: <CAF6AEGsBp84LRLHUY=6_AFs5d4pyfNnjfRGMy+8g_QAfxVqT+A@mail.gmail.com>
+References: <1410165822-16868-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411524746-14635-1-git-send-email-mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1410165822-16868-1-git-send-email-boris.brezillon@free-electrons.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Andrew Victor <linux@maxim.org.za>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 23, 2014 at 10:12 PM, Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> This patch adds the basic structure of a DRM Driver for Rockchip Socs.
+On Mon, Sep 8, 2014 at 4:43 AM, Boris BREZILLON
+<boris.brezillon@free-electrons.com> wrote:
+> Hello,
 >
-> Signed-off-by: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> This patch series adds support for Atmel HLCDC (HLCD Controller) available
+> on some Atmel SoCs (i.e. the sama5d3 family).
+>
+> The HLCDC actually provides a Display Controller and a PWM device, hence I
+> decided to declare an MFD device exposing 2 subdevices: a display
+> controller and a PWM chip.
+> This also solves a circular dependency issue preventing HLCDC driver from
+> unloading.
+> The HLCDC request a drm_panel device, which request a backlight device
+> (a PWM backlight), which depends on a PWM which is provided by the HLCDC
+> driver (hlcdc -> panel -> backlight -> hlcdc (pwm part)).
+>
+> The current implementation only supports sama5d3 SoCs but other SoCs should
+> be easily ported by defining new compatible strings and adding HLCDC
+> description structures for these SoCs (Ludovic tested this driver on an
+> at91sam9x5 board).
+>
+> The drivers supports basic CRTC functionalities, several overlays and an
+> hardware cursor.
+>
+> At the moment, it only supports connection to LCD panels through an RGB
+> connector (defined as an LVDS connector in my implementation), though
+> connection to other kind of devices (like DRM bridges) could be added later.
+>
+> It also supports several RGB formats on all planes and some YUV formats on
+> the HEO overlay plane.
+>
+> This series depends those series: [1] and [2].
+>
+> I know you're all quite busy, but I was expecting to get support for
+> atmel's HLCDC block in 3.18, and given the lack of review I got on the
+> DRM and PWM parts I doubt it can happen :-(.
+>
+> Moreover, the dependencies ([1] and [2]) are stuck too.
+> The first one has been reviewed by Rob, but didn't get any feedback after
+> that. David, Rob, is there anything blocking this series ?
+> The second patch series contains some rework I've done to describe the
+> transfer format used on a connector bus. Laurent, Thierry, you're the one
+> who suggested this rework. Could you give your opinion on my
+> implementation ?
 
-Looks like my comments are addressed, so:
 
-Reviewed-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+hmm, looks like I still owe you a review after conversion to flip-work
+helpers..  Sorry, I thought I'd already reviewed one of the later
+versions.  It is on my list for tomorrow.
 
-> ---
-> Changes in v2:
-> - use the component framework to defer main drm driver probe
->   until all VOP devices have been probed.
-> - use dma-mapping API with ARM_DMA_USE_IOMMU, create dma mapping by
->   master device and each vop device can shared the drm dma mapping.
-> - use drm_crtc_init_with_planes and drm_universal_plane_init.
-> - remove unnecessary middle layers.
-> - add cursor set, move funcs to rockchip drm crtc.
-> - use vop reset at first init
-> - reference framebuffer when used and unreference when swap out vop
+Definitely we should get the flip-work helper patches landed, that
+part already has my r-b
+
+BR,
+-R
+
+> Best Regards,
 >
-> Changes in v3:
-> - change "crtc->fb" to "crtc->primary-fb"
-> Adviced by Daniel Vetter
-> - init cursor plane with universal api, remove unnecessary cursor set,move
+> Boris
 >
-> Changes in v4:
-> Adviced by David Herrmann
-> - remove drm_platform_*() usage, use register drm device directly.
-> Adviced by Rob Clark
-> - remove special mmap ioctl, do userspace mmap with normal mmap() or mmap offset
+> [1]http://lkml.iu.edu/hypermail/linux/kernel/1407.1/04171.html
+> [2]http://www.spinics.net/lists/kernel/msg1791681.html
 >
-> Changes in v5:
-> Adviced by Arnd Bergmann
-> - doing DMA start with a 32-bit masks with dma_mask and dma_coherent_mark
-> - fix some incorrect dependencies.
-> Adviced by Boris BREZILLON
-> - fix some mistake and bugs.
-> Adviced by Daniel Vetter
-> - drop all special ioctl and use generic kms ioctl instead.
-> Adviced by Rob Clark
-> - use unlocked api for drm_fb_helper_restore_fbdev_mode.
-> - remove unused rockchip_gem_prime_import_sg_table.
+> Changes since v4:
+> - fix a few more bugs in rotation handling (rotation was buggy on some
+>   formats)
+> - return connector_status_unknown until a panel is exposed by the
+>   drm_panel infrastructure (prevent fbdev creation until everyting is
+>   in place)
+> - rework Kconfig MFD_ATMEL_HLCDC selection to simplify the configuration
+>   (automatically select this option when selecting the HLCDC PMW or DRM
+>   driver, instead of depending on this option)
 >
->  drivers/gpu/drm/Kconfig                       |    2 +
->  drivers/gpu/drm/Makefile                      |    1 +
->  drivers/gpu/drm/rockchip/Kconfig              |   17 +
->  drivers/gpu/drm/rockchip/Makefile             |    8 +
->  drivers/gpu/drm/rockchip/rockchip_drm_drv.c   |  509 +++++++++
->  drivers/gpu/drm/rockchip/rockchip_drm_drv.h   |  120 +++
->  drivers/gpu/drm/rockchip/rockchip_drm_fb.c    |  201 ++++
->  drivers/gpu/drm/rockchip/rockchip_drm_fb.h    |   28 +
->  drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c |  230 +++++
->  drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h |   20 +
->  drivers/gpu/drm/rockchip/rockchip_drm_gem.c   |  341 ++++++
->  drivers/gpu/drm/rockchip/rockchip_drm_gem.h   |   55 +
->  drivers/gpu/drm/rockchip/rockchip_drm_vop.c   | 1373 +++++++++++++++++++++++++
->  drivers/gpu/drm/rockchip/rockchip_drm_vop.h   |  187 ++++
->  14 files changed, 3092 insertions(+)
->  create mode 100644 drivers/gpu/drm/rockchip/Kconfig
->  create mode 100644 drivers/gpu/drm/rockchip/Makefile
->  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_drv.c
->  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_drv.h
->  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fb.c
->  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fb.h
->  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c
->  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h
->  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_gem.c
->  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_gem.h
->  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_vop.c
->  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+> Changes since v3:
+> - rework the layer code to simplify several parts (locking and layer
+>   disabling)
+> - make use of the drm_flip_work infrastructure
+> - rely on default HW cursor implementation using on the cursor plane
+> - rework the display controller DT bindings (based on OF graph
+>   representation)
+> - add rotation support
+> - retrive RGB bus format from drm_display_info
+> - drop the dynamic pinctrl state selection
+> - rework HLCDC output handling (previously specialized to interface
+>   with LCD panels)
+> - drop ".module = THIS_MODULE" lines
+> - change display controller compatible string
+>
+> Changes since v2:
+> - fix coding style issues (macro indentation)
+> - make use of GENMASK in several places
+> - declare regmap config as a static structure
+> - rework hlcdc plane update API
+> - rework cursor handling to make use of the new plane update API
+> - fix backporch config
+> - do not use devm_regmap_init_mmio_clk to avoid extra clk_enable
+>   clk disable calls when accessing registers
+> - explicitely include regmap and clk headers instead of relying on
+>   atmel-hlcdc.h inclusions
+> - make the atmel-hlcdc driver depends on CONFIG_OF
+> - separate DT bindings documentation from driver implementation
+> - support several pin muxing for HLCDC pins on sama5d3 SoCs
+>
+> Changes since v1:
+> - replace the backlight driver by a PWM driver
+> - make use of drm_panel infrastructure
+> - split driver code in several subsystem: MFD, PWM and DRM
+> - add support for overlays
+> - add support for hardware cursor
+>
+> Boris BREZILLON (11):
+>   mfd: add atmel-hlcdc driver
+>   mfd: add documentation for atmel-hlcdc DT bindings
+>   pwm: add support for atmel-hlcdc-pwm device
+>   pwm: add DT bindings documentation for atmel-hlcdc-pwm driver
+>   drm: add Atmel HLCDC Display Controller support
+>   drm: add DT bindings documentation for atmel-hlcdc-dc driver
+>   ARM: AT91/dt: split sama5d3 lcd pin definitions to match RGB mode
+>     configs
+>   ARM: AT91/dt: add alternative pin muxing for sama5d3 lcd pins
+>   ARM: at91/dt: define the HLCDC node available on sama5d3 SoCs
+>   ARM: at91/dt: add LCD panel description to sama5d3xdm.dtsi
+>   ARM: at91/dt: enable the LCD panel on sama5d3xek boards
+>
+>  .../devicetree/bindings/drm/atmel-hlcdc-dc.txt     |  54 ++
+>  .../devicetree/bindings/mfd/atmel-hlcdc.txt        |  50 ++
+>  .../devicetree/bindings/pwm/atmel-hlcdc-pwm.txt    |  55 ++
+>  arch/arm/boot/dts/sama5d31ek.dts                   |  20 +
+>  arch/arm/boot/dts/sama5d33ek.dts                   |  20 +
+>  arch/arm/boot/dts/sama5d34ek.dts                   |  20 +
+>  arch/arm/boot/dts/sama5d36ek.dts                   |  20 +
+>  arch/arm/boot/dts/sama5d3_lcd.dtsi                 | 205 ++++-
+>  arch/arm/boot/dts/sama5d3xdm.dtsi                  |  58 ++
+>  drivers/gpu/drm/Kconfig                            |   2 +
+>  drivers/gpu/drm/Makefile                           |   1 +
+>  drivers/gpu/drm/atmel-hlcdc/Kconfig                |  13 +
+>  drivers/gpu/drm/atmel-hlcdc/Makefile               |   7 +
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c     | 286 +++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c       | 488 ++++++++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h       | 224 ++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c    | 656 ++++++++++++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h    | 403 ++++++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c   | 476 ++++++++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c    | 836 +++++++++++++++++++++
+>  drivers/mfd/Kconfig                                |   6 +
+>  drivers/mfd/Makefile                               |   1 +
+>  drivers/mfd/atmel-hlcdc.c                          | 118 +++
+>  drivers/pwm/Kconfig                                |  10 +
+>  drivers/pwm/Makefile                               |   1 +
+>  drivers/pwm/pwm-atmel-hlcdc.c                      | 229 ++++++
+>  include/linux/mfd/atmel-hlcdc.h                    |  78 ++
+>  27 files changed, 4306 insertions(+), 31 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Kconfig
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Makefile
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
+>  create mode 100644 drivers/mfd/atmel-hlcdc.c
+>  create mode 100644 drivers/pwm/pwm-atmel-hlcdc.c
+>  create mode 100644 include/linux/mfd/atmel-hlcdc.h
