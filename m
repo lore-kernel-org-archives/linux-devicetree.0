@@ -1,79 +1,82 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device properties interface
-Date: Fri, 26 Sep 2014 16:42:28 +0200
-Message-ID: <4111948.OqsXPJi3b5@vostro.rjw.lan>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <20140926032131.GC40523@vmdeb7> <1957255.2hxfTldm4Q@wuerfel>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] bcma: use device from DT (brcm,bus-gpio) for SoC GPIO chip
+Date: Fri, 26 Sep 2014 16:28:53 +0200
+Message-ID: <1411741733-13888-1-git-send-email-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1957255.2hxfTldm4Q@wuerfel>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Darren Hart <dvhart@infradead.org>, David Woodhouse <david.woodhouse@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Aaron Lu <aaron.lu@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, September 26, 2014 10:36:06 AM Arnd Bergmann wrote:
-> On Thursday 25 September 2014 20:21:32 Darren Hart wrote:
-> > On Wed, Sep 24, 2014 at 11:12:36AM +0200, Arnd Bergmann wrote:
-> > > How would you feel about a more general way of probing LED, using
-> > > a new helper in the leds-core that iterates over the child nodes
-> > > and parses the standard properties but calls into a driver specific
-> > > callback to parse the specific properties?
-> > > It's probably much more work than your current approach, but it seems
-> > > to me that there is more to gain by solving the problem for LED
-> > > drivers in particular to cut down the per-driver duplication
-> > > at the same time as the per-firmware-interface duplication.
-> > > 
-> > > As a start, we could probably take the proposed device_for_each_child_node
-> > > and move that into the leds-core, changing the fw_dev_node argument
-> > > for an led_classdev with the addition of the of_node and acpi_object
-> > > members. It would still leave it up to the gpio-leds driver to do
-> > > 
-> > > 	if (led_cdev->of_node)
-> > > 		gpiod = devm_of_get_gpiod(led_cdev->of_node, ...);
-> > > 	else
-> > > 		gpiod = devm_acpi_get_gpiod(led_cdev->acpi_object, ...);
-> > 
-> > So as Mika has pointed out, LEDs aren't the only ones affected. Several drivers
-> > will need to walk through non-device child nodes, and it seems to me that having
-> > a firmware-independent mechanism to do so benefits the drivers by both making
-> > them smaller and by increasing the reusability of new drivers and drivers
-> > updated to use the new API across platforms.
-> > 
-> > I fear we might be entering bike shed territory as we seem to be repeating
-> > points now. Can you restate your concern with the interface and why this level
-> > of abstraction is worse for the kernel? I'm not seeing this point, so I'm not
-> > sure what to address in my response.
-> 
-> I think we should have abstractions for all common interfaces but make
-> them as simple as possible. In the discussions at the kernel summit,
-> everyone agreed that we should have common accessors for simple properties
-> (bool, int, string, ...) based on device pointers, as well as subsystem
-> specific accessors to handle the high-level abstractions (registers,
-> interrupts, gpio, regulator, pinctrl, dma, reset, pwm, ...).
-> 
-> Having generalized accessors for the same properties in child nodes of
-> the device goes beyond that, and I think this is the wrong trade-off
-> between interface simplicity and generality since only few drivers will
-> be able to use those. I think we will always have to live with a leaky
-> abstraction because some drivers need to do things beyond what we can
-> do with a common API.
+This will allow us to define GPIO-attached devices (LEDs, buttons) in
+the the device tree.
 
-Some drivers do, but then we can avoid adding DT/ACPI knowledge to some
-drivers by adding general accessors for properties in child nodes.  In my
-opinion, drivers should not do things specific to DT/ACPI unless that is
-unavoidable.
+Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+This is based on top of
+[PATCH v6] bcma: register bcma as device tree driver
+that I hope will reach wireless-next git tree.
+---
+ Documentation/devicetree/bindings/bus/bcma.txt | 15 +++++++++++++++
+ drivers/bcma/driver_gpio.c                     |  5 +++++
+ 2 files changed, 20 insertions(+)
 
-> 
-> > Grant, Linus W? Thoughts?
-> 
-> I definitely want to hear other voices on this too. This is really not
-> a fundamental debate I think, but more a question of how far the abstraction
-> should go.
+diff --git a/Documentation/devicetree/bindings/bus/bcma.txt b/Documenta=
+tion/devicetree/bindings/bus/bcma.txt
+index e9070c1..f1b381e 100644
+--- a/Documentation/devicetree/bindings/bus/bcma.txt
++++ b/Documentation/devicetree/bindings/bus/bcma.txt
+@@ -6,6 +6,15 @@ Required properties:
+=20
+ - reg : iomem address range of chipcommon core
+=20
++The top-level axi bus may contain following children:
++
++- gpio: GPIO chip on the SoC
++
++  Required properties:
++  - compatible: "brcm,bus-gpio"
++  - gpio-controller : makes the node a GPIO controller
++  - #gpio-cells : size of the GPIO specifier, must be 2
++
+ The cores on the AXI bus are automatically detected by bcma with the
+ memory ranges they are using and they get registered afterwards.
+=20
+@@ -17,4 +26,10 @@ Example:
+ 		ranges =3D <0x00000000 0x18000000 0x00100000>;
+ 		#address-cells =3D <1>;
+ 		#size-cells =3D <1>;
++
++		gpio@0 {
++			compatible =3D "brcm,bus-gpio";
++			gpio-controller;
++			#gpio-cells =3D <2>;
++		};
+ 	};
+diff --git a/drivers/bcma/driver_gpio.c b/drivers/bcma/driver_gpio.c
+index 8ea497c..7ae39a8 100644
+--- a/drivers/bcma/driver_gpio.c
++++ b/drivers/bcma/driver_gpio.c
+@@ -218,6 +218,11 @@ int bcma_gpio_init(struct bcma_drv_cc *cc)
+ #if IS_BUILTIN(CONFIG_BCM47XX)
+ 	chip->to_irq		=3D bcma_gpio_to_irq;
+ #endif
++#if IS_BUILTIN(CONFIG_OF)
++	if (cc->core->bus->hosttype =3D=3D BCMA_HOSTTYPE_SOC)
++		chip->of_node	=3D of_find_compatible_node(NULL, NULL,
++							  "brcm,bus-gpio");
++#endif
+ 	switch (cc->core->bus->chipinfo.id) {
+ 	case BCMA_CHIP_ID_BCM5357:
+ 	case BCMA_CHIP_ID_BCM53572:
+--=20
+1.8.4.5
 
-Right.
-
--- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireles=
+s" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
