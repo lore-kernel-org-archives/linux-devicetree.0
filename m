@@ -1,114 +1,166 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/7] clk: sunxi: unify sun6i AHB1 clock with
- proper PLL6 pre-divider
-Date: Fri, 26 Sep 2014 10:28:14 +0200
-Message-ID: <20140926082814.GP15315@lukather>
-References: <1410000448-9999-1-git-send-email-wens@csie.org>
- <1410000448-9999-4-git-send-email-wens@csie.org>
- <20140911210211.GM31276@lukather>
- <CAGb2v66L36nsoucSgLY8pV8f=wjKTvtjJby43Z=Ct+NiRonptQ@mail.gmail.com>
- <20140913102603.GZ31276@lukather>
- <20140925230340.19023.22674@quantum>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 04/13] PM / Domains: Add DT bindings for the R-Mobile
+ System Controller
+Date: Fri, 26 Sep 2014 10:32:43 +0200
+Message-ID: <CAPDyKFo7QruMXivxXoxkZD8DkFdcZCacH=g0rxH=TEH_nJtJpw@mail.gmail.com>
+References: <1411662520-22795-1-git-send-email-geert+renesas@glider.be>
+	<1411662520-22795-5-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yFtM4vvgVM46ytb2"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBC6ISSQQKGQERPMQ7ZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140925230340.19023.22674@quantum>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1411662520-22795-5-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, Philipp Zabel <philipp.zabel@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Kevin Hilman <khilman@linaro.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 25 September 2014 18:28, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+> The Renesas R-Mobile System Controller provides a.o. power management
+> support, following the generic PM domain bindings in
+> Documentation/devicetree/bindings/power/power_domain.txt.
+>
+> For now this supports the R-Mobile A1 (r8a7740) only, but it should be
+> sufficiently generic to handle other members of the SH-Mobile/R-Mobile
+> family in the future.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v3:
+>   - Reword,
+> v2:
+>   - Fix copy-and-paste s/#address-cells/#size-cells/,
+>   - Add optional PM QoS device latencies.
+>
+>  .../bindings/power/renesas,sysc-rmobile.txt        | 111 +++++++++++++++++++++
+>  1 file changed, 111 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
+>
+> diff --git a/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt b/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
+> new file mode 100644
+> index 0000000000000000..0b1e56d6ed1ab9a2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
+> @@ -0,0 +1,111 @@
+> +DT bindings for the Renesas R-Mobile System Controller
+> +
+> +== System Controller Node ==
+> +
+> +The R-Mobile System Controller provides the following functions:
+> +  - Boot mode management,
+> +  - Reset generation,
+> +  - Power management.
+> +
+> +Required properties:
+> +- compatible: Should be "renesas,sysc-<soctype>", "renesas,sysc-rmobile" as
+> +             fallback.
+> +             Examples with soctypes are:
+> +               - "renesas,sysc-r8a7740" (R-Mobile A1)
+> +- reg: Two address start and address range blocks for the device:
+> +         - The first block refers to the normally accessible registers,
+> +         - the second block refers to the registers protected by the HPB
+> +          semaphore.
+> +
+> +Optional nodes:
+> +- pm-domains: This node contains a hierarchy of PM domain nodes, which should
+> +  match the Power Area Hierarchy in the Power Domain Specifications section of
+> +  the device's datasheet.
+> +
+> +
+> +== PM Domain Nodes ==
+> +
+> +Each of the PM domain nodes represents a PM domain, as documented by the
+> +generic PM domain bindings in
+> +Documentation/devicetree/bindings/power/power_domain.txt.
+> +
+> +The nodes should be named by the real power area names, and thus their names
+> +should be unique.
+> +
+> +Required properties:
+> +  - #power-domain-cells: Must be 0.
+> +
+> +Optional properties:
+> +- reg: If the PM domain is not always-on, this property must contain the bit
+> +       index number for the corresponding power area in the various Power
+> +       Control and Status Registers. The parent's node must contain the
+> +       following two properties:
+> +        - #address-cells: Must be 1,
+> +        - #size-cells: Must be 0.
+> +       If the PM domain is always-on, this property must be omitted.
+> +- power-on-latency: Power-on latency of the PM domain, in ns,
+> +- power-off-latency: Power-off latency of the PM domain, in ns.
+> +
+> +
+> +Example:
+> +
+> +This shows a subset of the r8a7740 PM domain hierarchy, containing the
+> +C5 "always-on" domain, 2 of its subdomains (A4S and A4SU), and the A3SP domain,
+> +which is a subdomain of A4S.
+> +
+> +       sysc: system-controller@e6180000 {
+> +               compatible = "renesas,sysc-r8a7740", "renesas,sysc-rmobile";
+> +               reg = <0xe6180000 8000>, <0xe6188000 8000>;
+> +
+> +               pm-domains {
+> +                       pd_c5: c5 {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +                               #power-domain-cells = <0>;
+> +
+> +                               pd_a4s: a4s@10 {
+> +                                       reg = <10>;
+> +                                       #address-cells = <1>;
+> +                                       #size-cells = <0>;
+> +                                       #power-domain-cells = <0>;
+> +                                       power-on-latency = <250000>;
+> +                                       power-off-latency = <250000>;
+> +
+> +                                       pd_a3sp: a3sp@11 {
+> +                                               reg = <11>;
+> +                                               #power-domain-cells = <0>;
+> +                                               power-on-latency = <250000>;
+> +                                               power-off-latency = <250000>;
+> +                                       };
+> +                               };
+> +
+> +                               pd_a4su: a4su@20 {
+> +                                       reg = <20>;
+> +                                       #power-domain-cells = <0>;
+> +                                       power-on-latency = <250000>;
+> +                                       power-off-latency = <250000>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+> +
+> +== PM Domain Consumers ==
+> +
+> +Hardware blocks belonging to a PM domain should contain a "power-domains"
+> +property that is a phandle pointing to the corresponding PM domain node,
+> +and optional PM QoS device latencies:
+> +
+> +Example:
+> +
+> +       tpu: pwm@e6600000 {
+> +               compatible = "renesas,tpu-r8a7740", "renesas,tpu";
+> +               reg = <0xe6600000 0x100>;
+> +               clocks = <&mstp3_clks R8A7740_CLK_TPU0>;
+> +               power-domains = <&pd_a3sp>;
+> +               stop-latency = <250000>;
+> +               start-latency = <250000>;
+> +               save-state-latency = <250000>;
+> +               restore-state-latency = <250000>;
 
---yFtM4vvgVM46ytb2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+As per comment for the previous patch, I think you should remove these
+latencies.
 
-On Thu, Sep 25, 2014 at 04:03:40PM -0700, Mike Turquette wrote:
-> Quoting Maxime Ripard (2014-09-13 03:26:03)
-> > On Fri, Sep 12, 2014 at 11:16:26AM +0800, Chen-Yu Tsai wrote:
-> > > Hi,
-> > >=20
-> > > On Fri, Sep 12, 2014 at 5:02 AM, Maxime Ripard
-> > > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > > > Hi,
-> > > >
-> > > > On Sat, Sep 06, 2014 at 06:47:24PM +0800, Chen-Yu Tsai wrote:
-> > > >> This patch unifies the sun6i AHB1 clock, originally supported
-> > > >> with separate mux and divider clks. It also adds support for
-> > > >> the pre-divider on the PLL6 input, thus allowing the clock to
-> > > >> be muxed to PLL6 with proper clock rate calculation.
-> > > >>
-> > > >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> > > >
-> > > > It looks fine, but I'd rather see this in a separate file, especial=
-ly
-> > > > since we don't seem to have any order dependency.
-> > >=20
-> > > Sorry, just to be clear, separate file under clk/sunxi?
-> >=20
-> > Yes
-> >=20
-> > > This cannot be in a separate file, as it shares a spinlock with apb1
-> > > divider. They share the same register.
-> > >=20
-> > > We could move apb1 out though. But i would prefer to do that when
-> > > we split out all the clocks into individual OF_CLK_DECLAREs.
-> >=20
-> > Ah right, my bad :)
-> >=20
-> > My plan on the long term is to kill clk-sunxi as a place where all the
-> > clocks are defined, and only leave the "policy" there, for example the
-> > clock protection code (even if that should probably be removed too,
-> > together with clkdev), the various rates / parenting enforcements,
-> > etc.
->=20
-> Interesting! Where are you planning to store the clock data?
+> +               #pwm-cells = <3>;
+> +       };
+> --
+> 1.9.1
+>
 
-Which data?=20
+When you fixed the above you may add my reviewed by tag for this patch.
 
-I guess, for the rate boundaries, the DT would be the right place,
-wether a clock should be protected can be derived from its
-compatible. And for the rate to enforce, maybe a clock-frequency
-property in the DT too, or directly in the driver, I haven't really
-thought about that part at the moment to be honest :)
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---yFtM4vvgVM46ytb2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUJSOeAAoJEBx+YmzsjxAgYpEQAKmXeZA80Fb9x+aZiwZBN9TD
-1fSH7KtuOr9HKLanUNSdRdbUde6+9LRKBVsHAidP0cbeLiEXTzjkxfCf2hHCCqaG
-nyTfubemooU9VM5ot3YWejGyerL3gxwHUz+61LPaVqUO6yp9sDkL5nNvYCm8h0E8
-4gEAyjkQ1dkWOc/zd0WFsOQUg2Kq36etwFaCSgQzvLYHDvz5vne19zIBuw0wsbKn
-NR9qoE6azaM/YCpmBGZKkDhqVp3/hpoHIApNoEjKplPMRoa3S3rAayzZ3PKoI8m4
-AMOu+8APzgYvQpdynRqA9YnoNZk7AXsAynugdYWTLlaxj4pMMhOKUNJ6ZqNhj1rb
-rQqoft6munFBMF1Lli05Mcl6BrTVx5ZowrQypVZGeIAGG9c9AxYVmJ+S62tI9NHZ
-Vpx1UhoywrHLvfsFDh8pi4vXOvQ1yzQ+jp1J2gIR3a0ZRbupYpUD8thpQI/xAaKn
-xuzLqRPnH9EDIf1ar5C2njoj24dvOinQdo0qg1j8OgrTzSr3Zc7AwGoJbLGbR2lQ
-TxY3WxATzObQfbSD5F1V3+4YLQnA7g+jrq6PYll0v8dGtMA81BQqv1MgL6tSqqSX
-3MXYwdeSGGw7ftqyXfUnGizwIuJ6hq/SoMperwr5mou+9HxKhJk3TFpIXRZ7R70N
-tqgVtHW0VNbTlY2MMw/e
-=/ol0
------END PGP SIGNATURE-----
-
---yFtM4vvgVM46ytb2--
+Kind regards
+Uffe
