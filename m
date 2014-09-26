@@ -1,79 +1,49 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v5 00/11] PM / Domains: Generic OF-based support
-Date: Thu, 25 Sep 2014 22:08:03 -0700
-Message-ID: <7hvbob6kb0.fsf@deeprootsystems.com>
-References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
-	<20140925112122.GA22753@ulmo>
-	<CAPDyKFp8oK6KAujU44NEwT2vL2_BBPSMuGPkyppHdonPfOmUrQ@mail.gmail.com>
-	<20140925165625.GC30382@ulmo> <20140926002757.GJ10233@codeaurora.org>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] ARM: dts: mt8135: Add pinctrl node for mt8135.
+Date: Fri, 26 Sep 2014 07:32:55 +0200
+Message-ID: <20140926053255.GL4992@pengutronix.de>
+References: <1411443545-24951-1-git-send-email-srv_hongzhou.yang@mediatek.com>
+ <1411443545-24951-5-git-send-email-srv_hongzhou.yang@mediatek.com>
+ <CACRpkda-K7w-bY0uSdnZvzEKEeQg38oExoHPSW61kEv9Wv20mA@mail.gmail.com>
+ <20140924124044.GC4992@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20140926002757.GJ10233@codeaurora.org> (Stephen Boyd's message
-	of "Thu, 25 Sep 2014 17:27:57 -0700")
-Sender: linux-acpi-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Philipp Zabel <philipp.zabel@gmail.com>Ma
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140924124044.GC4992-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "Hongzhou.Yang" <srv_hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dandan.he-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Stephen Boyd <sboyd@codeaurora.org> writes:
+Linus,
 
-> On 09/25, Thierry Reding wrote:
+On Wed, Sep 24, 2014 at 02:40:44PM +0200, Sascha Hauer wrote:
+> > I haven't got to reviewing the driver, but this looks just wrong.
+> > 
+> > Have the magic numbers in the driver.
+> > 
+> > Use strings to describe functions, not integers.
+> 
+> Interrupts, clocks, gpios, dma channels, nearly everything in the device tree is
+> arbitrarily numbered. Instead of "irq-i2c0" we have <0 36 IRQ_TYPE_LEVEL_HIGH>
+> in the device tree. These numbers can be resolved efficiently in the
+> driver by shifting them to get a bitmask or by adding them as offset to
+> a register base.
+> Why do you want to make pinctrl different? Thanks to the recently
+> introduced defines in the device trees these numbers are not magic at
+> all anymore.
 
-[...]
+Any opinions on this?
 
->> The critical part is that we need to enable the clock after the
->> partition has been powered, but before the clamps are removed.
->> Implementing this with runtime PM support in drivers won't work
->> because the power domain driver has to do both the powering up
->> and removing the clamps, so there's no place to inject the call
->> to enable the clock.
->
-> FWIW, Qualcomm platforms have pretty much the same design. Our
-> power domain controls live in the same register space as the
-> clocks and resets. Is Tegra the same way? To power on/off a
-> domain we need to go and forcefully turn a clock on and assert a
-> reset or perhaps we need the clock to be off and assert a reset.
-> It depends on the domain.
->
+Sascha
 
-> Historically we've supported this by requiring all drivers to
-> disable their clocks and deassert any resets before calling into
-> this code (we put this behind the regulator API). Then we're free
-> to do whatever is necessary to power on/off, eventally leaving
-> the clocks off if they were forced on and finally giving control
-> to the drivers so they can manage their own clocks and resets. It
-> would be better for us to take ownership of the clocks and resets
-> in the domain so we don't have this prerequisite of clocks being
-> off before calling into the domain code. I plan to do pretty much
-> Kevin outlined and use runtime PM, power domains, and per-device
-> pm QoS to figure out if we should gate clocks (clk_disable), or
-> if we go to a lower power mode where we unprepare clocks
-> (clk_unprepare), or if we go to the lowest power mode where we
-> apply clamps, etc. (called power collapse for us). Then the
-> drivers just interact with runtime PM and QoS and they aren't
-> aware of all this SoC glue.
-
-Excellent!  I'm glad you're heading in that direction.  One other
-important point here is that keeping drivers "simple" like this makes it
-much easier for them to stay portable across SoCs.
-
-Also, neither tegra or qcom are unique here.
-
-FWIW, OMAP has similar ordering requirements, and quite a bit of "stuff"
-to properly get a device and powerdomain to actually power down (and
-power up) properly.  The OMAP implementation pre-dates runtime PM, power
-domains etc. so we hid all of this behind the omap_hwmod abstraction and
-the omap_device API where all clocks, resets, and various other magic is
-handled, and so that device drivers didn't have to care about the details.
-
-These days, those APIs are now used by the OMAP pm_domain implementation
-(which pre-dates genpd), so drivers (still) don't have to care about the
-details only have to care about runtime PM and QoS.  After genpd came
-along, the goal was to convert OMAP to it, but well, other circumstances
-have changed things such that those working in that area are, um...,
-somewhat less focused on OMAP. ;)
-
-Kevin
-
-
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
