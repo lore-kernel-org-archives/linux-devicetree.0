@@ -1,111 +1,94 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v5 00/11] PM / Domains: Generic OF-based support
-Date: Fri, 26 Sep 2014 12:04:46 +0200
-Message-ID: <20140926100445.GL31106@ulmo>
-References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
- <20140925112122.GA22753@ulmo>
- <7hppej8glk.fsf@deeprootsystems.com>
- <20140926073125.GB31106@ulmo>
- <CAMuHMdWq9ZySdt8sQpBFq=X7LR5a=vZkowNZoB8NHztTisG+NQ@mail.gmail.com>
- <20140926095647.GI31106@ulmo>
- <CAMuHMdUqHZWrQGx=y8_yEJ7G9H5C=Y14-qPCMVJC6mxS5Sdb6A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="L/bWm/e7/ricERqM"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUqHZWrQGx=y8_yEJ7G9H5C=Y14-qPCMVJC6mxS5Sdb6A@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@g>
+From: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [RESENT PATCH v7 0/3] Add drm driver for Rockchip Socs
+Date: Fri, 26 Sep 2014 18:53:20 +0800
+Message-ID: <1411728800-25112-1-git-send-email-mark.yao@rock-chips.com>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dbehr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This a series of patches is a DRM Driver for Rockchip Socs, add support
+for vop devices. Future patches will add additional encoders/connectors,
+such as eDP, HDMI.
 
---L/bWm/e7/ricERqM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The basic "crtc" for rockchip is a "VOP" - Video Output Processor.
+the vop devices found on Rockchip rk3288 Soc, rk3288 soc have two similar
+Vop devices. Vop devices support iommu mapping, we use dma-mapping API with
+ARM_DMA_USE_IOMMU.
 
-On Fri, Sep 26, 2014 at 12:01:13PM +0200, Geert Uytterhoeven wrote:
-> Hi Thierry,
->=20
-> On Fri, Sep 26, 2014 at 11:56 AM, Thierry Reding
-> <thierry.reding@gmail.com> wrote:
-> >> > An alternative would be to make the power-domain controller look up =
-the
-> >> > clock within the user's device tree node. That could be problematic,
-> >> > because while the module clock is always the first clock in current
-> >> > device trees, there aren't ordering guarantees, so we'd have to rely=
- on
-> >> > the clock name.
-> >>
-> >> Or on some other way.
-> >> Do you have a separate hardware block that controls all (and only) the
-> >> module clocks?
-> >
-> > No, the "clock and reset controller" controls all clocks (and resets) on
-> > the SoC.
->=20
-> Sorry, with "only the module clocks" I meant "not clocks that are not mod=
-ule
-> clocks". Having a reset controller function in there is fine.
->=20
-> So it seems you do have a clock provider that provides module clocks,
-> and can mark them CLK_RUNTIME_PM.
->=20
-> >> On shmobile SoCs, all module clocks are controlled using the MSTP
-> >> (Module SToP) clocks.
-> >>
-> >> In my old RFC series "[PATCH/RFC 0/4] of: Register clocks for Runtime =
-PM
-> >> with PM core" (https://lkml.org/lkml/2014/4/24/1118) the MSTP clock dr=
-iver
-> >> advertised using a new CLK_RUNTIME_PM flag that its clocks are module
-> >> clocks and thus suitable for runtime PM.
-> >>
-> >> There were some issues with that series, but the general idea of letti=
-ng a
-> >> clock driver advertise that all its clocks are module clocks could sti=
-ll be
-> >> useful. Then the power domain driver knows which clocks to manage.
-> >
-> > That sounds interesting. Although it would still mean that we need a way
-> > to associate a clock with the correct power domain. I guess the driver
-> > could do that by iterating over all available clocks in the device's
-> > clocks property and grab only those that are marked CLK_RUNTIME_PM.
->=20
-> Yes, that's the idea.
+Resent v7 email to fix mail style.
 
-It sounds like this could work. Reading up on the thread you linked to
-there's some resistance to merging what you propose, though. Given that
-we may want to control the clocks and resets in the controller as well,
-maybe duplicating the clock references would actually be the proper way
-to do it.
+Changes in v2:
+- add DRM master device node to list all display nodes that comprise
+  the graphics subsystem.
+- use the component framework to defer main drm driver probe
+  until all VOP devices have been probed.
+- use dma-mapping API with ARM_DMA_USE_IOMMU, create dma mapping by
+  master device and each vop device can shared the drm dma mapping.
+- use drm_crtc_init_with_planes and drm_universal_plane_init.
+- remove unnecessary middle layers.
+- add cursor set, move funcs to rockchip drm crtc.
+- add vop reset.
 
-I'll have to think a little bit more about it, or implement it to see
-how it all fits. Thanks for the pointers.
+Changes in v3:
+- change "crtc->fb" to "crtc->primary-fb"
+Adviced by Daniel Vetter
+- init cursor plane with universal api, remove unnecessary cursor set,move 
 
-Thierry
+Changes in v4:
+Adviced by David Herrmann
+- remove drm_platform_*() usage, use register drm device directly.
+Adviced by Rob Clark
+- remove special mmap ioctl, do userspace mmap with normal mmap() or mmap offset
 
---L/bWm/e7/ricERqM
-Content-Type: application/pgp-signature
+Changes in v5:
+Adviced by Arnd Bergmann
+- doing DMA start with a 32-bit masks with dma_mask and dma_coherent_mark
+- fix some incorrect dependencies.
+Adviced by Boris BREZILLON
+- fix some mistake and bugs. 
+Adviced by Daniel Vetter
+- drop all special ioctl and use generic kms ioctl instead.
+Adviced by Rob Clark
+- use unlocked api for drm_fb_helper_restore_fbdev_mode.
+- remove unused rockchip_gem_prime_import_sg_table.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Changes in v6:
+- set gem buffer pitch 64 bytes align, needed by mali gpu.
+Adviced by Daniel Kurtz
+- fix some mistake, bugs, remove unused define, more better code style etc. 
+- use clk_prepare()/unprepare() at probe()/remove() and clk_enable()/disable()
+  at runtime instead of clk_prepare_enable().
+- provide a help function from vop for encoder to do mode config, instead of
+  using drm_diaplay_mode private method.
+- change vop mode_set timing to make it more safely. 
 
-iQIcBAEBAgAGBQJUJTo9AAoJEN0jrNd/PrOh9U4QAIL6kXN9hQhYgsWO8opoBwXx
-gupdu012EbD0rKPG9PQcZpLLOhIjfSWjug8TlgRvd1WBrNi4rJaca2DCf46tRfth
-ih3EmKKHyldtyz3u6OkpSwcwRrnYoWSsyyf0zc6baG9p3FWi6F0M99C/80SwKIiY
-78/KDTbLaHzFcX5UfAUJkZ5HhKT2fkftGXwcpB++Zvutl+TJG6pQ5Au/fOk2Ojsh
-XMgT0ceRUC8StGO9xcdpC9Xf3icuW4Na2A9jy0jrHXOOum1VaWtN+baQBhORGO+3
-f8brXTezMgtnvFlKh9euOXVW/Y2DbPlZFYv/vM+lGCl85yIsTlLvw6kvhM71DtMP
-U/VyJvyVzNJtfzbnuFfM9r5qKNp8VkjRGSTiWVsTyBvP4HsMY9YAyGxhd/1eWlav
-rvogJO8Q/bwi9bji6uxPfbIp4mj5bpc1vCWHodz+6jhX0dve5mjdCSfNSQC3yjn5
-qPOc1W66KRaREKJzL6MgTFuFq8YDHrSkgnpOF0ZNOMNNhaGWavYN9uI6uKNudpOr
-BujqxBkWUgZqJlWGu8ti1nUo/1lY4jw7OgtyloJKqMeeqFd3ZSFCe6PLvR6wFERd
-ZgOLB5/7D0WwROKji0Vu0vcGjMDMkBVB6FyzjeVGW0dCwb9woIObDP9v0N3ExfV/
-61UYgWe/e/ABarKSpHbT
-=6YGG
------END PGP SIGNATURE-----
+Changes in v7:
+- fix memory leakage problem.
 
---L/bWm/e7/ricERqM--
+Mark yao (3):
+  drm: rockchip: Add basic drm driver
+  dt-bindings: video: Add for rockchip display subsytem
+  dt-bindings: video: Add documentation for rockchip vop
+
+ .../devicetree/bindings/video/rockchip-drm.txt     |   19 +
+ .../devicetree/bindings/video/rockchip-vop.txt     |   58 +
+ drivers/gpu/drm/Kconfig                            |    2 +
+ drivers/gpu/drm/Makefile                           |    1 +
+ drivers/gpu/drm/rockchip/Kconfig                   |   17 +
+ drivers/gpu/drm/rockchip/Makefile                  |    8 +
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |  516 +++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   61 +
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.c         |  201 +++
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.h         |   28 +
+ drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c      |  230 ++++
+ drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h      |   20 +
+ drivers/gpu/drm/rockchip/rockchip_drm_gem.c        |  345 +++++
+ drivers/gpu/drm/rockchip/rockchip_drm_gem.h        |   55 +
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c        | 1422 ++++++++++++++++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |  196 +++
+ 16 files changed, 3179 insertions(+)
+
+-- 
+1.7.9.5
