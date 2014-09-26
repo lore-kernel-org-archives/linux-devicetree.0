@@ -1,57 +1,89 @@
-From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: [PATCH v5 04/10] net: pxa168_eth: fix Ethernet flow control status
-Date: Fri, 26 Sep 2014 16:33:50 +0200
-Message-ID: <1411742036-23520-5-git-send-email-antoine.tenart@free-electrons.com>
-References: <1411742036-23520-1-git-send-email-antoine.tenart@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1411742036-23520-1-git-send-email-antoine.tenart@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sebastian.hesselbarth@gmail.com
-Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
+From: Caesar Wang <caesar.wang@rock-chips.com>
+Subject: [PATCH v6 3/3] ARM: dts: add main Thermal info to rk3288
+Date: Fri, 26 Sep 2014 22:33:12 +0800
+Message-ID: <1411741992-18890-4-git-send-email-caesar.wang@rock-chips.com>
+References: <1411741992-18890-1-git-send-email-caesar.wang@rock-chips.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1411741992-18890-1-git-send-email-caesar.wang@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com
+Cc: dmitry.torokhov@gmail.com, arnd@arndb.de, zyf@rock-chips.com, dianders@chromium.org, cjf@rock-chips.com, zhengsq@rock-chips.com, linux-rockchip@list.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dbasehore@chromium.org, Caesar Wang <caesar.wang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-IEEE 802.3x Ethernet flow control is disabled when bit (1 << 2) is set
-in the port status register. Fix the flow control detection in the link
-event handling function which was relying on the opposite assumption.
-
-Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
 ---
- drivers/net/ethernet/marvell/pxa168_eth.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/rk3288.dtsi | 44 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/drivers/net/ethernet/marvell/pxa168_eth.c b/drivers/net/ethernet/marvell/pxa168_eth.c
-index 978f26198dd6..b9073e2f3623 100644
---- a/drivers/net/ethernet/marvell/pxa168_eth.c
-+++ b/drivers/net/ethernet/marvell/pxa168_eth.c
-@@ -163,7 +163,7 @@
- /* Bit definitions for Port status */
- #define PORT_SPEED_100		(1 << 0)
- #define FULL_DUPLEX		(1 << 1)
--#define FLOW_CONTROL_ENABLED	(1 << 2)
-+#define FLOW_CONTROL_DISABLED	(1 << 2)
- #define LINK_UP			(1 << 3)
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 36be7bb..6092d34 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -15,6 +15,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
+ #include <dt-bindings/clock/rk3288-cru.h>
++#include <dt-bindings/thermal/thermal.h>
+ #include "skeleton.dtsi"
  
- /* Bit definitions for work to be done */
-@@ -885,7 +885,7 @@ static void handle_link_event(struct pxa168_eth_private *pep)
- 		speed = 10;
+ / {
+@@ -215,6 +216,43 @@
+ 		status = "disabled";
+ 	};
  
- 	duplex = (port_status & FULL_DUPLEX) ? 1 : 0;
--	fc = (port_status & FLOW_CONTROL_ENABLED) ? 1 : 0;
-+	fc = (port_status & FLOW_CONTROL_DISABLED) ? 0 : 1;
- 	netdev_info(dev, "link up, %d Mb/s, %s duplex, flow control %sabled\n",
- 		    speed, duplex ? "full" : "half", fc ? "en" : "dis");
- 	if (!netif_carrier_ok(dev))
++        thermal-zones {
++                cpu {
++                        polling-delay-passive = <2000>;
++                        polling-delay = <1000>;
++
++                        thermal-sensors =
++                                <&tsadc 0>;
++
++                        trips {
++                                cpu_alert0: cpu_alert {
++                                        temperature = <80000>; /* millicelsius */
++                                        hysteresis = <2000>; /* millicelsius */
++                                        type = "passive";
++                                };
++                                cpu_crit: cpu_crit {
++                                        temperature = <120000>; /* millicelsius */
++                                        hysteresis = <2000>; /* millicelsius */
++                                        type = "critical";
++                                };
++                        };
++                };
++        };
++
++        tsadc: tsadc@ff280000 {
++                compatible = "rockchip,rk3288-tsadc";
++                reg = <0xff280000 0x100>;
++                interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
++                clocks = <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
++                clock-names = "tsadc", "apb_pclk";
++                pinctrl-names = "tsadc_int";
++                pinctrl-0 = <&otp_out>;
++                reset-gpios = <&gpio0 10 GPIO_ACTIVE_HIGH>;
++
++                #thermal-sensor-cells = <1>;
++                hw-shut-temp = <115000>;
++        };
++
+ 	usb_host0_ehci: usb@ff500000 {
+ 		compatible = "generic-ehci";
+ 		reg = <0xff500000 0x100>;
+@@ -611,5 +649,11 @@
+ 				rockchip,pins = <5 15 3 &pcfg_pull_none>;
+ 			};
+ 		};
++
++                tsadc {
++                        otp_out: otp-out {
++                                rockchip,pins = <0 10 RK_FUNC_1 &pcfg_pull_none>;
++                    };
++                };
+ 	};
+ };
 -- 
 1.9.1
+
+
