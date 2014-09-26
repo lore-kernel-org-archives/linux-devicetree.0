@@ -1,220 +1,131 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: [PATCH v10 2/4] arm64: dts: APM X-Gene PCIe device tree nodes
-Date: Fri, 26 Sep 2014 14:08:25 -0700
-Message-ID: <1411765707-28822-3-git-send-email-tinamdar@apm.com>
-References: <1411765707-28822-1-git-send-email-tinamdar@apm.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1411765707-28822-1-git-send-email-tinamdar@apm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@apm.com, jcm@redhat.com, Tanmay Inamdar <tinamdar@apm.com>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH v5 05/11] drm: add Atmel HLCDC Display Controller support
+Date: Fri, 26 Sep 2014 17:10:49 -0400
+Message-ID: <CAF6AEGup9qvivbcovHBrf6me-sStrK_jaBTd5ofohCS9DfRV4g@mail.gmail.com>
+References: <1410165822-16868-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1410165822-16868-6-git-send-email-boris.brezillon@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1410165822-16868-6-git-send-email-boris.brezillon@free-electrons.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Andrew Victor <linux@maxim.org.za>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree nodes for APM X-Gene PCIe host controller and
-PCIe clock interface. Since X-Gene SOC supports maximum 5 ports, 5 dts
-nodes are added.
+On Mon, Sep 8, 2014 at 4:43 AM, Boris BREZILLON
+<boris.brezillon@free-electrons.com> wrote:
+> The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoCs (i.e.
+> at91sam9n12, at91sam9x5 family or sama5d3 family) provides a display
+> controller device.
+>
+> This display controller supports at least one primary plane and might
+> provide several overlays and an hardware cursor depending on the IP
+> version.
+>
+> At the moment, this driver only implements an RGB connector to interface
+> with LCD panels, but support for other kind of external devices might be
+> added later.
+>
+> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> Tested-by: Ludovic Desroches <ludovic.desroches@atmel.com>
 
-Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
----
- arch/arm64/boot/dts/apm-mustang.dts |   8 ++
- arch/arm64/boot/dts/apm-storm.dtsi  | 165 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 173 insertions(+)
+A few small comments below, but with those addressed it has my
 
-diff --git a/arch/arm64/boot/dts/apm-mustang.dts b/arch/arm64/boot/dts/apm-mustang.dts
-index b2f5622..f649000 100644
---- a/arch/arm64/boot/dts/apm-mustang.dts
-+++ b/arch/arm64/boot/dts/apm-mustang.dts
-@@ -25,6 +25,14 @@
- 	};
- };
- 
-+&pcie0clk {
-+	status = "ok";
-+};
-+
-+&pcie0 {
-+	status = "ok";
-+};
-+
- &serial0 {
- 	status = "ok";
- };
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index c0aceef..403197a 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -269,6 +269,171 @@
- 				enable-mask = <0x2>;
- 				clock-output-names = "rtcclk";
- 			};
-+
-+			pcie0clk: pcie0clk@1f2bc000 {
-+				status = "disabled";
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f2bc000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "pcie0clk";
-+			};
-+
-+			pcie1clk: pcie1clk@1f2cc000 {
-+				status = "disabled";
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f2cc000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "pcie1clk";
-+			};
-+
-+			pcie2clk: pcie2clk@1f2dc000 {
-+				status = "disabled";
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f2dc000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "pcie2clk";
-+			};
-+
-+			pcie3clk: pcie3clk@1f50c000 {
-+				status = "disabled";
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f50c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "pcie3clk";
-+			};
-+
-+			pcie4clk: pcie4clk@1f51c000 {
-+				status = "disabled";
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f51c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "pcie4clk";
-+			};
-+		};
-+
-+		pcie0: pcie@1f2b0000 {
-+			status = "disabled";
-+			device_type = "pci";
-+			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-+			#interrupt-cells = <1>;
-+			#size-cells = <2>;
-+			#address-cells = <3>;
-+			reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
-+				0xe0 0xd0000000 0x0 0x00040000>; /* PCI config space */
-+			reg-names = "csr", "cfg";
-+			ranges = <0x01000000 0x00 0x00000000 0xe0 0x10000000 0x00 0x00010000   /* io */
-+				  0x02000000 0x00 0x80000000 0xe1 0x80000000 0x00 0x80000000>; /* mem */
-+			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
-+				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1
-+					 0x0 0x0 0x0 0x2 &gic 0x0 0xc3 0x1
-+					 0x0 0x0 0x0 0x3 &gic 0x0 0xc4 0x1
-+					 0x0 0x0 0x0 0x4 &gic 0x0 0xc5 0x1>;
-+			dma-coherent;
-+			clocks = <&pcie0clk 0>;
-+		};
-+
-+		pcie1: pcie@1f2c0000 {
-+			status = "disabled";
-+			device_type = "pci";
-+			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-+			#interrupt-cells = <1>;
-+			#size-cells = <2>;
-+			#address-cells = <3>;
-+			reg = < 0x00 0x1f2c0000 0x0 0x00010000   /* Controller registers */
-+				0xd0 0xd0000000 0x0 0x00040000>; /* PCI config space */
-+			reg-names = "csr", "cfg";
-+			ranges = <0x01000000 0x0 0x00000000 0xd0 0x10000000 0x00 0x00010000   /* io  */
-+				  0x02000000 0x0 0x80000000 0xd1 0x80000000 0x00 0x80000000>; /* mem */
-+			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
-+				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc8 0x1
-+					 0x0 0x0 0x0 0x2 &gic 0x0 0xc9 0x1
-+					 0x0 0x0 0x0 0x3 &gic 0x0 0xca 0x1
-+					 0x0 0x0 0x0 0x4 &gic 0x0 0xcb 0x1>;
-+			dma-coherent;
-+			clocks = <&pcie1clk 0>;
-+		};
-+
-+		pcie2: pcie@1f2d0000 {
-+			status = "disabled";
-+			device_type = "pci";
-+			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-+			#interrupt-cells = <1>;
-+			#size-cells = <2>;
-+			#address-cells = <3>;
-+			reg =  < 0x00 0x1f2d0000 0x0 0x00010000   /* Controller registers */
-+				 0x90 0xd0000000 0x0 0x00040000>; /* PCI config space */
-+			reg-names = "csr", "cfg";
-+			ranges = <0x01000000 0x0 0x00000000 0x90 0x10000000 0x0 0x00010000   /* io  */
-+				  0x02000000 0x0 0x80000000 0x91 0x80000000 0x0 0x80000000>; /* mem */
-+			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
-+				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xce 0x1
-+					 0x0 0x0 0x0 0x2 &gic 0x0 0xcf 0x1
-+					 0x0 0x0 0x0 0x3 &gic 0x0 0xd0 0x1
-+					 0x0 0x0 0x0 0x4 &gic 0x0 0xd1 0x1>;
-+			dma-coherent;
-+			clocks = <&pcie2clk 0>;
-+		};
-+
-+		pcie3: pcie@1f500000 {
-+			status = "disabled";
-+			device_type = "pci";
-+			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-+			#interrupt-cells = <1>;
-+			#size-cells = <2>;
-+			#address-cells = <3>;
-+			reg = < 0x00 0x1f500000 0x0 0x00010000   /* Controller registers */
-+				0xa0 0xd0000000 0x0 0x00040000>; /* PCI config space */
-+			reg-names = "csr", "cfg";
-+			ranges = <0x01000000 0x0 0x00000000 0xa0 0x10000000 0x0 0x00010000   /* io   */
-+				  0x02000000 0x0 0x80000000 0xa1 0x80000000 0x0 0x80000000>; /* mem  */
-+			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
-+				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xd4 0x1
-+					 0x0 0x0 0x0 0x2 &gic 0x0 0xd5 0x1
-+					 0x0 0x0 0x0 0x3 &gic 0x0 0xd6 0x1
-+					 0x0 0x0 0x0 0x4 &gic 0x0 0xd7 0x1>;
-+			dma-coherent;
-+			clocks = <&pcie3clk 0>;
-+		};
-+
-+		pcie4: pcie@1f510000 {
-+			status = "disabled";
-+			device_type = "pci";
-+			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-+			#interrupt-cells = <1>;
-+			#size-cells = <2>;
-+			#address-cells = <3>;
-+			reg = < 0x00 0x1f510000 0x0 0x00010000   /* Controller registers */
-+				0xc0 0xd0000000 0x0 0x00200000>; /* PCI config space */
-+			reg-names = "csr", "cfg";
-+			ranges = <0x01000000 0x0 0x00000000 0xc0 0x10000000 0x0 0x00010000   /* io  */
-+				  0x02000000 0x0 0x80000000 0xc1 0x80000000 0x0 0x80000000>; /* mem */
-+			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
-+				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xda 0x1
-+					 0x0 0x0 0x0 0x2 &gic 0x0 0xdb 0x1
-+					 0x0 0x0 0x0 0x3 &gic 0x0 0xdc 0x1
-+					 0x0 0x0 0x0 0x4 &gic 0x0 0xdd 0x1>;
-+			dma-coherent;
-+			clocks = <&pcie4clk 0>;
- 		};
- 
- 		serial0: serial@1c020000 {
--- 
-1.9.1
+Reviewed-by: Rob Clark <robdclark@gmail.com>
 
+
+> ---
+>  drivers/gpu/drm/Kconfig                          |   2 +
+>  drivers/gpu/drm/Makefile                         |   1 +
+>  drivers/gpu/drm/atmel-hlcdc/Kconfig              |  13 +
+>  drivers/gpu/drm/atmel-hlcdc/Makefile             |   7 +
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c   | 286 ++++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c     | 488 +++++++++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h     | 224 ++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c  | 656 ++++++++++++++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h  | 403 +++++++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c | 476 +++++++++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c  | 836 +++++++++++++++++++++++
+>  11 files changed, 3392 insertions(+)
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Kconfig
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Makefile
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
+>
+
+[snip]
+
+> +
+> +/**
+> + * Atmel HLCDC plane rotation enum
+> + *
+> + * TODO: export DRM_ROTATE_XX macros defined by omap driver and use them
+> + * instead of defining this enum.
+> + */
+> +enum atmel_hlcdc_plane_rotation {
+> +       ATMEL_HLCDC_PLANE_NO_ROTATION,
+> +       ATMEL_HLCDC_PLANE_90DEG_ROTATION,
+> +       ATMEL_HLCDC_PLANE_180DEG_ROTATION,
+> +       ATMEL_HLCDC_PLANE_270DEG_ROTATION,
+> +};
+
+DRM_ROTATE_* are already in drm_crtc.h
+
+[snip]
+
+> +static int atmel_hlcdc_rgb_mode_valid(struct drm_connector *connector,
+> +                                     struct drm_display_mode *mode)
+> +{
+> +       return MODE_OK;
+> +}
+
+your _mode_valid() should perhaps somehow check the constraints in
+atmel_hlcdc_crtc_mode_set()?  This way invalid modes get filtered out
+earlier..
+
+[snip]
+
+> +static struct atmel_hlcdc_plane_properties *
+> +atmel_hlcdc_plane_create_properties(struct drm_device *dev)
+> +{
+> +       struct atmel_hlcdc_plane_properties *props;
+> +       const struct drm_prop_enum_list rotations[] = {
+> +               { ATMEL_HLCDC_PLANE_NO_ROTATION,   "rotate-0" },
+> +               { ATMEL_HLCDC_PLANE_90DEG_ROTATION,  "rotate-90" },
+> +               { ATMEL_HLCDC_PLANE_180DEG_ROTATION, "rotate-180" },
+> +               { ATMEL_HLCDC_PLANE_270DEG_ROTATION, "rotate-270" },
+> +       };
+> +
+
+you could just use drm_mode_create_rotation_property() now
+
+
+> +       props = devm_kzalloc(dev->dev, sizeof(*props), GFP_KERNEL);
+> +       if (!props)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       props->alpha = drm_property_create_range(dev, 0, "alpha", 0, 255);
+> +       if (!props->alpha)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       props->rotation = drm_property_create_enum(dev, 0, "rotation",
+> +                                               rotations,
+> +                                               ARRAY_SIZE(rotations));
+> +       return props;
+> +}
+> +
