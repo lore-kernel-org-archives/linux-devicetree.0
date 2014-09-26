@@ -1,104 +1,47 @@
-From: Kiran Padwal <kiran.padwal@smartplayin.com>
-Subject: Re: [PATCH v2] thermal: Add QPNP PMIC temperature alarm driver
-Date: Fri, 26 Sep 2014 16:51:50 +0530
-Message-ID: <54254C4E.3070807@smartplayin.com>
-References: <1411651825-14240-1-git-send-email-iivanov@mm-sol.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 00/12] Renesas R-Car DU HDMI support
+Date: Fri, 26 Sep 2014 14:35:53 +0300
+Message-ID: <47059749.yRmN0BhnM7@avalon>
+References: <1411589072-28609-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1411650553.5671.5.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1411651825-14240-1-git-send-email-iivanov@mm-sol.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, David Collins <collinsd@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1411650553.5671.5.camel@pengutronix.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 25 September 2014 07:00 PM, Ivan T. Ivanov wrote:
-> Add support for the temperature alarm peripheral found inside
-> Qualcomm plug-and-play (QPNP) PMIC chips.  The temperature alarm
-> peripheral outputs a pulse on an interrupt line whenever the
-> thermal over temperature stage value changes.  Implement an ISR
-> to manage this interrupt.
->=20
+Hi Philipp,
 
-<snip>
+On Thursday 25 September 2014 15:09:13 Philipp Zabel wrote:
+> Am Mittwoch, den 24.09.2014, 23:04 +0300 schrieb Laurent Pinchart:
+> > Hello,
+> > 
+> > This patch set adds support for the HDMI output port present on the
+> > Renesas Koelsch board. Doing so requires two components, a driver for the
+> > external ADV7511W HDMI encoder, and support for HDMI encoders in the DU
+> > driver.
+> > 
+> > The HDMI encoder drivers uses the DRM slave encoder framework and the
+> > component framework to communicate with the DU driver. The DT bindings are
+> > based on the OF graph bindings to link the display controller and encoder.
+> > 
+> > The first two patches have been taken from Philipp Zabel's "[PATCH v3 0/8]
+> > Add of-graph helpers to loop over endpoints and find ports by id" series.
+> > Philipp, I don't see that series in linux-next, what's the merge status ?
+> 
+> There is a remaining comment by Guennadi on the soc_camera patch.
 
-> + * This function updates the internal temp value based on the
-> + * current thermal stage and threshold as well as the previous stage
-> + */
-> +static int qpnp_tm_update_temp_no_adc(struct qpnp_tm_chip *chip)
-> +{
-> +	unsigned int stage;
-> +	int rc;
-> +	u8 reg;
-> +
-> +	rc =3D qpnp_tm_read(chip, QPNP_TM_REG_STATUS, &reg);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	stage =3D reg & STATUS_STAGE_MASK;
+I've seen that, it shouldn't be too hard to sort out.
 
-During compilation, getting a waring as below,
+I'll probably drop the dependency for now and implement a manual loop in the 
+rcar-du-drm driver for now, and switch to your helpers when this series hit 
+mainling. Which tree do you plan to send it through ?
 
-drivers/thermal/qpnp-temp-alarm.c: In function =91qpnp_tm_update_temp_n=
-o_adc=92:
-drivers/thermal/qpnp-temp-alarm.c:135:8: warning: =91reg=92 may be used=
- uninitialized in this function [-Wmaybe-uninitialized]
-  stage =3D reg & STATUS_STAGE_MASK;
+-- 
+Regards,
 
-> +
-> +	if (stage > chip->stage) {
-> +		/* increasing stage, use lower bound */
-> +		chip->temp =3D (stage - 1) * TEMP_STAGE_STEP +
-> +			     chip->thresh * TEMP_THRESH_STEP +
-> +			     TEMP_STAGE_HYSTERESIS + TEMP_THRESH_MIN;
-> +	} else if (stage < chip->stage) {
-> +		/* decreasing stage, use upper bound */
-> +		chip->temp =3D stage * TEMP_STAGE_STEP +
-> +			     chip->thresh * TEMP_THRESH_STEP -
-> +			     TEMP_STAGE_HYSTERESIS + TEMP_THRESH_MIN;
-> +	}
-> +
-> +	chip->stage =3D stage;
-> +
-> +	return 0;
-> +}
-> +
-
-<snip>
-
-> +
-> +#define QPNP_TM_PM_OPS	(&qpnp_tm_pm_ops)
-> +#else
-> +#define QPNP_TM_PM_OPS	NULL
-> +#endif
-> +
-> +static struct of_device_id qpnp_tm_match_table[] =3D {
-
-It must be static const struct of_device_id, because all OF functions h=
-andle it as const.
-
-Thanks,
---Kiran
-
-> +	{ .compatible =3D "qcom,spmi-temp-alarm" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, qpnp_tm_match_table);
-> +
-> +static struct platform_driver qpnp_tm_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "spmi-temp-alarm",
-> +		.of_match_table =3D qpnp_tm_match_table,
-> +		.pm =3D QPNP_TM_PM_OPS,
-> +	},
-> +	.probe  =3D qpnp_tm_probe,
-> +	.remove =3D qpnp_tm_remove,
-> +};
-> +module_platform_driver(qpnp_tm_driver);
-> +
-> +MODULE_ALIAS("platform:spmi-temp-alarm");
-> +MODULE_DESCRIPTION("QPNP PMIC Temperature Alarm driver");
-> +MODULE_LICENSE("GPL v2");
->=20
+Laurent Pinchart
 
