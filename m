@@ -1,65 +1,120 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] watchdog: qcom: document device tree bindings
-Date: Thu, 25 Sep 2014 20:19:15 -0700
-Message-ID: <5424DB33.1060700@roeck-us.net>
-References: <cover.1411684967.git.joshc@codeaurora.org> <84605584a0634ad35a7829daf5a148107aaabc72.1411684967.git.joshc@codeaurora.org>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device
+ properties interface
+Date: Thu, 25 Sep 2014 20:21:32 -0700
+Message-ID: <20140926032131.GC40523@vmdeb7>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
+ <2809308.3y5s7TV5Ip@wuerfel>
+ <D04730D8.A9DB0%dvhart@linux.intel.com>
+ <6744174.JquHLt80n3@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <84605584a0634ad35a7829daf5a148107aaabc72.1411684967.git.joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6744174.JquHLt80n3@wuerfel>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, David Woodhouse <david.woodhouse@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Aaron Lu <aaron.lu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/25/2014 03:51 PM, Josh Cartwright wrote:
-> The Qualcomm Krait Processor Sub-system (KPSS) contains one or more
-> instances of the WDT.  Provide documentation on how to describe these in
-> the device tree.
->
-> Signed-off-by: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+On Wed, Sep 24, 2014 at 11:12:36AM +0200, Arnd Bergmann wrote:
+> On Tuesday 23 September 2014 14:15:47 Darren Hart wrote:
+> > Arnd, I think you meant:
+> > 
+> >         Return gpio_leds_create_acpi(pdev) ?
+> 
+> Yes, sorry for the confusion on my part.
 
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Hi Arnd,
 
-> ---
->   .../devicetree/bindings/watchdog/qcom-wdt.txt      | 24 ++++++++++++++++++++++
->   1 file changed, 24 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
->
-> diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
-> new file mode 100644
-> index 0000000..4726924
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
-> @@ -0,0 +1,24 @@
-> +Qualcomm Krait Processor Sub-system (KPSS) Watchdog
-> +---------------------------------------------------
-> +
-> +Required properties :
-> +- compatible : shall contain only one of the following:
-> +
-> +			"qcom,kpss-wdt-msm8960"
-> +			"qcom,kpss-wdt-apq8064"
-> +			"qcom,kpss-wdt-ipq8064"
-> +
-> +- reg : shall contain base register location and length
-> +- clocks : shall contain the input clock
-> +
-> +Optional properties :
-> +- timeout-sec : shall contain the default watchdog timeout in seconds,
-> +                if unset, the default timeout is 30 seconds
-> +
-> +Example:
-> +	watchdog@208a038 {
-> +		compatible = "qcom,kpss-wdt-ipq8064";
-> +		reg = <0x0208a038 0x40>;
-> +		clocks = <&sleep_clk>;
-> +		timeout-sec = <10>;
-> +	};
->
+No problem, just wanted to make sure I knew what you meant.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> > This is what we did early on to prototype this concept, but the problem
+> > with this approach we duplicate all of the creation code, which leads to
+> > maintenance errors, and is inconsistent with the goals of the _DSD which
+> > is to reuse the same schemas for ACPI and FDT. If we have separate pdata
+> > creation functions anyway, we are leaving much of the advantage of the
+> > common schema on the table. Namely the ability to reuse drivers relatively
+> > easily across firmware implementations. We don't want driver authors to
+> > have to care if it's ACPI or FDT.
+> 
+> I think we are absolutely in agreement about the basic principle here,
+> but disagree on how far we'd want to take the abstraction.
+> 
+> I got a little confused by the leds-gpio example, as I initially saw
+> that as generic infrastructure rather than a specific driver. As I just
+> wrote in my reply to Rafael, I generally believe we should strive to
+> have generic driver-side interfaces so drivers don't have to care,
+> but keep the differences in subsystem specific code.
+> 
+> > We would have preferred to have deprecated the of property interface in
+> > favor of the new generic device_property interface, but Grant specifically
+> > requested that we update drivers individually rather than all at once,
+> > which means we can't just kill the OF interface.
+> 
+> I don't actually have a strong opinion on that matter, having only the
+> device property interface does have some advantages as well, but I also
+> agree that we are somewhat better off not having to change all the drivers.
+> 
+> > We agreed to that, somewhat reluctantly as it adds more work in updating
+> > the drivers over time which will slow adoption, but I understand the
+> > desire not to make large sweeping changes due to the risk of breaking
+> > things inadvertently as we cannot expect to be able to test all of them.
+> > That said, I don't want to forget that the goal is to use the common
+> > interface over time as we convert individual drivers, and using the common
+> > interface means we need a common iterator function and that we not have fw
+> > implementation specific pdata create functions.
+> 
+> I've looked a bit closer at how the LED subsystem handles sub-nodes
+> in DT at the moment. It seems that there is some duplication between
+> the drivers already, as they all implement a variation of the sub-node
+> parsing code.
+> 
+> There are other non-LED drivers with similar loops, but they seem to be
+> either very specialized, or explicitly for DT abstractions, so I'm still
+> not convinced we need a generic loop-through-child-nodes-and-parse-properties
+> interface.
+> 
+> How would you feel about a more general way of probing LED, using
+> a new helper in the leds-core that iterates over the child nodes
+> and parses the standard properties but calls into a driver specific
+> callback to parse the specific properties?
+> It's probably much more work than your current approach, but it seems
+> to me that there is more to gain by solving the problem for LED
+> drivers in particular to cut down the per-driver duplication
+> at the same time as the per-firmware-interface duplication.
+> 
+> As a start, we could probably take the proposed device_for_each_child_node
+> and move that into the leds-core, changing the fw_dev_node argument
+> for an led_classdev with the addition of the of_node and acpi_object
+> members. It would still leave it up to the gpio-leds driver to do
+> 
+> 	if (led_cdev->of_node)
+> 		gpiod = devm_of_get_gpiod(led_cdev->of_node, ...);
+> 	else
+> 		gpiod = devm_acpi_get_gpiod(led_cdev->acpi_object, ...);
+
+So as Mika has pointed out, LEDs aren't the only ones affected. Several drivers
+will need to walk through non-device child nodes, and it seems to me that having
+a firmware-independent mechanism to do so benefits the drivers by both making
+them smaller and by increasing the reusability of new drivers and drivers
+updated to use the new API across platforms.
+
+I fear we might be entering bike shed territory as we seem to be repeating
+points now. Can you restate your concern with the interface and why this level
+of abstraction is worse for the kernel? I'm not seeing this point, so I'm not
+sure what to address in my response.
+
+Grant, Linus W? Thoughts?
+
+> 
+> but there seems little benefit in abstracting this because there is
+> only one driver that needs it.
+> 
+> 	Arnd
+> 
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
