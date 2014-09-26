@@ -1,58 +1,54 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] arm: pxa: add non device-tree timer link to clocksource
-Date: Fri, 26 Sep 2014 19:08:45 +0200
-Message-ID: <87lhp6paw2.fsf@free.fr>
-References: <1405356724-32207-1-git-send-email-robert.jarzmik@free.fr>
-	<1405356724-32207-4-git-send-email-robert.jarzmik@free.fr>
-	<53CD25A4.7030606@linaro.org> <87oawivarv.fsf@free.fr>
-	<54251B27.909@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] of: of_reserved_mem: Provide return values
+Date: Fri, 26 Sep 2014 14:08:46 -0300
+Message-ID: <1411751326-30933-1-git-send-email-festevam@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54251B27.909-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> (Daniel Lezcano's message of "Fri, 26
-	Sep 2014 09:52:07 +0200")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+To: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
+Cc: m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-> On 07/21/2014 08:15 PM, Robert Jarzmik wrote:
->> Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
->>
->>> On 07/14/2014 06:52 PM, Robert Jarzmik wrote:
->>>> As clocksource pxa_timer was moved to clocksource framework, the
->>>> pxa_timer initialization needs to be a bit amended, to pass the
->>>> necessary informations to clocksource, ie :
->>>>    - the timer interrupt (mach specific)
->>>>    - the timer registers base (ditto)
->>>>    - the timer clockrate
->>>>
->>>> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
->>>>
->>>> ---
->>>> Since V2: Arnd's comment : moved extern declaration into .h file
->>>> ---
->>>
+Commit 1a29544cc8c9 ("drivers: of: add return value to 
+of_reserved_mem_device_init") missed to update the return values in the error
+cases, causing the following build warnings:
 
-> Hi,
->
-> May be I missed it but I don't see the Haojian's ack.
->
-> Thanks
->   -- Daniel
+drivers/of/of_reserved_mem.c: In function 'of_reserved_mem_device_init':
+drivers/of/of_reserved_mem.c:253:3: warning: 'return' with no value, in function returning non-void [-Wreturn-type]
+drivers/of/of_reserved_mem.c:259:3: warning: 'return' with no value, in function returning non-void [-Wreturn-type]
 
-You're right, I scanned through my mail and didn't find the ack.
-Haojian, would you review this one please ?
+Provide proper return values. 
 
-It's here :
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/272311.html
+Reported-by: Stephen Rothwel <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ drivers/of/of_reserved_mem.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Cheers.
-
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 7e7de03..01ef0a3 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -250,13 +250,13 @@ int of_reserved_mem_device_init(struct device *dev)
+ 
+ 	np = of_parse_phandle(dev->of_node, "memory-region", 0);
+ 	if (!np)
+-		return;
++		return -ENODEV;
+ 
+ 	rmem = __find_rmem(np);
+ 	of_node_put(np);
+ 
+ 	if (!rmem || !rmem->ops || !rmem->ops->device_init)
+-		return;
++		return -ENOMEM;
+ 
+ 	rmem->ops->device_init(rmem, dev);
+ 	dev_info(dev, "assigned reserved memory node %s\n", rmem->name);
 -- 
-Robert
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
