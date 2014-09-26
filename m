@@ -1,103 +1,41 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v3 5/8] phy: miphy28lp: Add SSC support for SATA
-Date: Fri, 26 Sep 2014 10:54:14 +0200
-Message-ID: <1411721657-9924-6-git-send-email-gabriel.fernandez@linaro.org>
-References: <1411721657-9924-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411721657-9924-1-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Giuseppe Condorelli <giuseppe.condorelli@st.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 00/13] ARM: shmobile: R-Mobile: DT PM domain support
+Date: Fri, 26 Sep 2014 11:27:26 +0200
+Message-ID: <CAMuHMdXJPQjRQip+YY0jysR5pzU3hEz-QQ6C-GZQmDKqU1TreA@mail.gmail.com>
+References: <1411662520-22795-1-git-send-email-geert+renesas@glider.be>
+	<3136347.ncZoJtR6MK@vostro.rjw.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3136347.ncZoJtR6MK-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch to tune on/off the ssc on miphy sata setup.
-User can now enable ssc via dt blob, it is useful to reduce
-effects of EMI.
+Hi Rafael,
 
-Signed-off-by: Giuseppe Condorelli <giuseppe.condorelli@st.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
----
- .../devicetree/bindings/phy/phy-miphy28lp.txt      |  1 +
- drivers/phy/phy-miphy28lp.c                        | 34 ++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
+On Thu, Sep 25, 2014 at 10:19 PM, Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> wrote:
+>> Rafael: If you accept "PM / Domains: Add genpd attach/detach callbacks", it
+>> would be good to get this patch in v3.18-rc1, as it's the only hard dependency
+>> on linux-pm.git for the rest of this series. The other parts have relaxed
+>> ordering constraints due to the separation of code and DTS.
+>
+> OK, this one looks good to me, so I can push it for 3.18.
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt b/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
-index 1ad4433..daa8310 100644
---- a/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
-+++ b/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
-@@ -39,6 +39,7 @@ Optional properties (port (child) node):
- 			  register.
- - st,px_rx_pol_inv	: to invert polarity of RXn/RXp (respectively negative line and positive
- 			  line).
-+- st,scc-on		: enable ssc to reduce effects of EMI (only for sata or PCIe).
- 
- example:
- 
-diff --git a/drivers/phy/phy-miphy28lp.c b/drivers/phy/phy-miphy28lp.c
-index 1a468d1..7285543 100644
---- a/drivers/phy/phy-miphy28lp.c
-+++ b/drivers/phy/phy-miphy28lp.c
-@@ -200,6 +200,7 @@ struct miphy28lp_phy {
- 	bool osc_force_ext;
- 	bool osc_rdy;
- 	bool px_rx_pol_inv;
-+	bool ssc;
- 
- 	struct reset_control *miphy_rst;
- 
-@@ -550,6 +551,34 @@ static inline void miphy28_usb3_miphy_reset(struct miphy28lp_phy *miphy_phy)
- 	writeb_relaxed(0x00, base + MIPHY_CONF);
- }
- 
-+static void miphy_sata_tune_ssc(struct miphy28lp_phy *miphy_phy)
-+{
-+	u8 val;
-+
-+	/* Compensate Tx impedance to avoid out of range values */
-+	/*
-+	 * Enable the SSC on PLL for all banks
-+	 * SSC Modulation @ 31 KHz and 4000 ppm modulation amp
-+	 */
-+	val = readb_relaxed(miphy_phy->base + MIPHY_BOUNDARY_2);
-+	val |= SSC_EN_SW;
-+	writeb_relaxed(val, miphy_phy->base + MIPHY_BOUNDARY_2);
-+
-+	val = readb_relaxed(miphy_phy->base + MIPHY_BOUNDARY_SEL);
-+	val |= SSC_SEL;
-+	writeb_relaxed(val, miphy_phy->base + MIPHY_BOUNDARY_SEL);
-+
-+	for (val = 0; val < 3; val++) {
-+		writeb_relaxed(val, miphy_phy->base + MIPHY_CONF);
-+		writeb_relaxed(0x3c, miphy_phy->base + MIPHY_PLL_SBR_2);
-+		writeb_relaxed(0x6c, miphy_phy->base + MIPHY_PLL_SBR_3);
-+		writeb_relaxed(0x81, miphy_phy->base + MIPHY_PLL_SBR_4);
-+		writeb_relaxed(0x00, miphy_phy->base + MIPHY_PLL_SBR_1);
-+		writeb_relaxed(0x02, miphy_phy->base + MIPHY_PLL_SBR_1);
-+		writeb_relaxed(0x00, miphy_phy->base + MIPHY_PLL_SBR_1);
-+	}
-+}
-+
- static inline int miphy28lp_configure_sata(struct miphy28lp_phy *miphy_phy)
- {
- 	void __iomem *base = miphy_phy->base;
-@@ -585,6 +614,9 @@ static inline int miphy28lp_configure_sata(struct miphy28lp_phy *miphy_phy)
- 		writeb_relaxed(val, miphy_phy->base + MIPHY_CONTROL);
- 	}
- 
-+	if (miphy_phy->ssc)
-+		miphy_sata_tune_ssc(miphy_phy);
-+
- 	return 0;
- }
- 
-@@ -1051,6 +1083,8 @@ static int miphy28lp_of_probe(struct device_node *np,
- 	miphy_phy->px_rx_pol_inv =
- 		of_property_read_bool(np, "st,px_rx_pol_inv");
- 
-+	miphy_phy->ssc = of_property_read_bool(np, "st,ssc-on");
-+
- 	of_property_read_u32(np, "st,sata-gen", &miphy_phy->sata_gen);
- 	if (!miphy_phy->sata_gen)
- 		miphy_phy->sata_gen = SATA_GEN1;
--- 
-1.9.1
+Thank you very much!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
