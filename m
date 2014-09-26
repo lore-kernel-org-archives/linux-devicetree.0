@@ -1,46 +1,29 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] of: add vendor prefix for Chipidea
-Date: Fri, 26 Sep 2014 11:32:49 -0500
-Message-ID: <CAL_JsqLVUrxEZKQiHa=-+krnoog0rybEgp8O7pZxbR5TyQx5kA@mail.gmail.com>
-References: <1410827745-4101-1-git-send-email-peter.chen@freescale.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2] of: Add vendor prefix for Sitronix
+Date: Fri, 26 Sep 2014 11:33:25 -0500
+Message-ID: <CAL_JsqJPcx4Kis=0Bcd=Vupz527THnCVKS0Gec9mAm4oNsupFg@mail.gmail.com>
+References: <1409212074-2966-1-git-send-email-geert+renesas@glider.be> <CAMuHMdXWpRyj7ke-RV0t0G4CzS1_5bCOpCYuOA1TiLZxTPYNUA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410827745-4101-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXWpRyj7ke-RV0t0G4CzS1_5bCOpCYuOA1TiLZxTPYNUA@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 15, 2014 at 7:35 PM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> Adds chipidea to the list of DT vendor prefixes.
+On Tue, Sep 16, 2014 at 3:34 AM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> ping?
 >
-> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> On Thu, Aug 28, 2014 at 9:47 AM, Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+>> The stock ticker for Sitronix is just a number.
+>> "sitronix,st1232" is already in use for the Sitronix st1232 touchscreen
+>> controller on Atmark Techno Armadillo 800 EVA.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Applied.
+Applied. Sorry for the delay.
 
 Rob
-
-> ---
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index ac7269f..28c574f 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -29,6 +29,7 @@ calxeda       Calxeda
->  capella        Capella Microsystems, Inc
->  cavium Cavium, Inc.
->  cdns   Cadence Design Systems Inc.
-> +chipidea       Chipidea, Inc
->  chrp   Common Hardware Reference Platform
->  chunghwa       Chunghwa Picture Tubes Ltd.
->  cirrus Cirrus Logic, Inc.
-> --
-> 1.7.9.5
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
