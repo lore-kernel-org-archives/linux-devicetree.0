@@ -1,85 +1,104 @@
-From: Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv10 2/4] mailbox: Introduce framework for mailbox
-Date: Fri, 26 Sep 2014 11:43:26 -0400
-Message-ID: <CAJ5Y-eZDHuHJpbZ8owYosR3gmqfEtTJeeMB_B_z6dxda+QyNnw@mail.gmail.com>
-References: <1406896194-4667-1-git-send-email-jaswinder.singh@linaro.org>
-	<1406896296-4863-1-git-send-email-jaswinder.singh@linaro.org>
-	<CAJ5Y-eZ5gNMQ2YRN4iS5QTU7qUrgxGdTHXhQZ_2ut4iBsEZHGg@mail.gmail.com>
-	<5420675C.6040805@arm.com>
-	<54206B7C.60501@arm.com>
-	<CAJ5Y-ea7e1LCym49jGen-eXuw6tWOzTi3Rrd_K-4ZcZUwkv_jg@mail.gmail.com>
-	<CAJe_ZhdxZwrBsvRt7X0KN2+vnQVRDAJdUGOyNgq2rynwmsur9A@mail.gmail.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Fri, 26 Sep 2014 10:43:06 -0500
+Message-ID: <20140926154306.GE26227@saruman>
+References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
+ <20140926003750.GA12770@saruman>
+ <20140926003934.GD12770@saruman>
+ <3346642.tZaefcZubX@wuerfel>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="AsxXAMtlQ5JHofzM"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJe_ZhdxZwrBsvRt7X0KN2+vnQVRDAJdUGOyNgq2rynwmsur9A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <3346642.tZaefcZubX@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, "broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones@linaro>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 25 September 2014 20:57, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 24 September 2014 09:14, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On 22 September 2014 14:33, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->
->>>>>> +static void poll_txdone(unsigned long data)
->>>>>> +{
->>>>>> +       struct mbox_controller *mbox = (struct mbox_controller *)data;
->>>>>> +       bool txdone, resched = false;
->>>>>> +       int i;
->>>>>> +
->>>>>> +       for (i = 0; i < mbox->num_chans; i++) {
->>>>>> +               struct mbox_chan *chan = &mbox->chans[i];
->>>>>> +
->>>>>> +               if (chan->active_req && chan->cl) {
->>>>>> +                       resched = true;
->>>>>> +                       txdone = chan->mbox->ops->last_tx_done(chan);
->>>>>> +                       if (txdone)
->>>>>> +                               tx_tick(chan, 0);
->>>>>> +               }
->>>>>> +       }
->>>>>> +
->>>>>> +       if (resched)
->>>>>> +               mod_timer(&mbox->poll, jiffies +
->>>>>> +                               msecs_to_jiffies(mbox->period));
->>>>>
->>>>>
->>>>> While preparing a different patch which uses the Mbox framework, I
->>>>> noticed that mbox->period might not be initialized anywhere. Also, how
->>>>> is mbox->txpoll_period to be used? It appears from the description of
->>>>> txpoll_period in mbox_controller.h that you'd want to use that value
->>>>> in the mod_timer above, or equate the two somewhere in the controller
->>>>> registration or eliminate one of the two. FWIW I also looked at your
->>>>> code in [1].
->>>>>
->>>>
->>>> IIUC the controller needs to set the txpoll_period if it sets
->>>> txdone_poll, may be a sanity check for !0 would be good.
->>>>
->>>
->>> Ah, sorry I confused mbox->period to txpoll_period.
->>> You are right mbox->period is not set, the header claims it to be
->>> private, and hence I assume it needs to be handled only in core mailbox
->>> library. Not sure if we need both mbox->period and txpoll_period though.
->>
->> Right. I dont see the need for having both either. Unless the Mailbox
->> maintainer wants to fix this in some other way, I can send a patch for
->> replacing mbox->period with mbox->txpoll_period along with my PCC
->> work.
->>
-> Yeah, probably we should just get rid of mbox_controller.period  I
-> have updated the same in for-next.
+--AsxXAMtlQ5JHofzM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Looks like linux-next already has the older version[1]. Your for-next
-branch seems to have the fix squashed into the previous commit.
-Wouldnt you need to send this as a separate patch? Or ask for the
-patch to be reverted in linux-next and then pull again from your
-branch.
+Hi,
 
-Thanks,
-Ashwin
+On Fri, Sep 26, 2014 at 09:20:54AM +0200, Arnd Bergmann wrote:
+> On Thursday 25 September 2014 19:39:34 Felipe Balbi wrote:
+> > >=20
+> > > why would a glue layer need to access registers from the core ? That
+> > > sounds very odd. I haven't seen that and will, definitely, NACK such a
+> > > patch=20
+> > >=20
+> > > can you further describe why you think a glue layer might need to acc=
+ess
+> > > core IP's registers ?
+> >=20
+> > I just realised we're talking about chipidea here... in any case, it's
+> > still valid to ask why would glue need to fiddle with core IP's
+> > registers.
+>=20
+> Generally, the glue driver wouldn't access the registers, but I don't
+> think it's important to prevent it from doing that. In some cases,=20
 
-[1] - http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/drivers/mailbox/mailbox.c
+sure it is. Have already gone through debugging sessions just because
+someone fiddled with registers they shouldn't. Also RMK's L2 rework
+patchset is another example of why it's important to prevent other
+layers from messing with registers they don't really own.
+
+> a glue driver needs to override a function of the core driver, e.g.
+> to work around an errata. We have a lot of those quirks in ATA drivers,
+
+pass a quirk flag and let core driver handle it.
+
+> one example from ahci_mvebu.c is
+>=20
+> static void ahci_mvebu_regret_option(struct ahci_host_priv *hpriv)
+> {
+>         /*
+>          * Enable the regret bit to allow the SATA unit to regret a
+>          * request that didn't receive an acknowlegde and avoid a
+>          * deadlock
+>          */
+>         writel(0x4, hpriv->mmio + AHCI_VENDOR_SPECIFIC_0_ADDR);
+>         writel(0x80, hpriv->mmio + AHCI_VENDOR_SPECIFIC_0_DATA);
+
+I would rather see:
+
+	if (this_is_one_of_the_broken_mvebu_versions(hpriv))
+		quirks |=3D AHCI_NEEDS_REGRET_BIT;
+
+then let core handle the rest. If other glue has the same bug and needs
+the workaround, we don't duplicate code.
+
+--=20
+balbi
+
+--AsxXAMtlQ5JHofzM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUJYmKAAoJEIaOsuA1yqREd+QP+gMT9mRfPY+Tc7gb/L9ltPvu
+IfVPneXdEdoSDYnMmPYiiIGyn3ilqzcNnrgREdsO27CNqS3nmfnMu3HJXUVralLI
+ztR0LzSaqG2bwdAj4PqCv3P6NPMyAvWnFCwrGAcWDdysaQJuT2UQxxJ4yHZFcK88
+JT7wghPSTAbHJrwN5BaW5jzhrVnapOGGaaxBDTBC55gFmferWbwiY4QZJjniWi62
+apMQo77ZfZad8V47dmYQxp6Qv02YXHgGoKD9GYfbDsvGzMX0EWrYVg7IklmZStNG
+II+MiuhmVdDtXwHbQIW28iYd2M+d0b9a6LnvlghLdwAN3ZZqClwIhd9KENs6IoZK
+60p58kUBez+NUZrEx7aag/ikFqVUsrVtaj7SaHJrKFJHxu9Aoyu4PaNom/cZFG/X
+7IPoJ3gzDonsNkPU4WR1Xk/QXsSVDi1ObgKUug0j+EZYPPRY296kSwpAdJlrsUwu
+K0pM3rwMFoEWJBJxXh6uSJ78xGC0oTqKEPRGS1BOMnLUOaisRQZWw4AGRMzmSKmh
+ZySjVPStjwzPrhwhEerUus+6KigibQyzJREOyepOJTEXRvZCfr6yKA/1oEwCaHx4
+ccV0r6yxTtShdly5o5V/sE15VnKW59rMjxzMEx/vx6wYLCo89oeR1VPpJ4ae8zcu
+AM+janwF4xSj3+OWX9lk
+=1Ma1
+-----END PGP SIGNATURE-----
+
+--AsxXAMtlQ5JHofzM--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
