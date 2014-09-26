@@ -1,82 +1,55 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] bcma: use device from DT (brcm,bus-gpio) for SoC GPIO chip
-Date: Fri, 26 Sep 2014 16:28:53 +0200
-Message-ID: <1411741733-13888-1-git-send-email-zajec5@gmail.com>
+From: David =?ISO-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer@o2s.ch>
+Subject: Re: [PATCH v3 11/12] mmc: sunxi: Convert MMC driver to the standard clock phase API
+Date: Fri, 26 Sep 2014 16:27:10 +0200
+Message-ID: <3992138.y6J8TjIuMq@pagira.o2s.ch>
+References: <1410466706-27386-1-git-send-email-maxime.ripard@free-electrons.com> <1410466706-27386-12-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; boundary="nextPart64174242.DlQWOzDDiA"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1410466706-27386-12-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mike Turquette <mturquette@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, wens@csie.org
 List-Id: devicetree@vger.kernel.org
 
-This will allow us to define GPIO-attached devices (LEDs, buttons) in
-the the device tree.
 
-Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-This is based on top of
-[PATCH v6] bcma: register bcma as device tree driver
-that I hope will reach wireless-next git tree.
----
- Documentation/devicetree/bindings/bus/bcma.txt | 15 +++++++++++++++
- drivers/bcma/driver_gpio.c                     |  5 +++++
- 2 files changed, 20 insertions(+)
+--nextPart64174242.DlQWOzDDiA
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-diff --git a/Documentation/devicetree/bindings/bus/bcma.txt b/Documenta=
-tion/devicetree/bindings/bus/bcma.txt
-index e9070c1..f1b381e 100644
---- a/Documentation/devicetree/bindings/bus/bcma.txt
-+++ b/Documentation/devicetree/bindings/bus/bcma.txt
-@@ -6,6 +6,15 @@ Required properties:
-=20
- - reg : iomem address range of chipcommon core
-=20
-+The top-level axi bus may contain following children:
-+
-+- gpio: GPIO chip on the SoC
-+
-+  Required properties:
-+  - compatible: "brcm,bus-gpio"
-+  - gpio-controller : makes the node a GPIO controller
-+  - #gpio-cells : size of the GPIO specifier, must be 2
-+
- The cores on the AXI bus are automatically detected by bcma with the
- memory ranges they are using and they get registered afterwards.
-=20
-@@ -17,4 +26,10 @@ Example:
- 		ranges =3D <0x00000000 0x18000000 0x00100000>;
- 		#address-cells =3D <1>;
- 		#size-cells =3D <1>;
-+
-+		gpio@0 {
-+			compatible =3D "brcm,bus-gpio";
-+			gpio-controller;
-+			#gpio-cells =3D <2>;
-+		};
- 	};
-diff --git a/drivers/bcma/driver_gpio.c b/drivers/bcma/driver_gpio.c
-index 8ea497c..7ae39a8 100644
---- a/drivers/bcma/driver_gpio.c
-+++ b/drivers/bcma/driver_gpio.c
-@@ -218,6 +218,11 @@ int bcma_gpio_init(struct bcma_drv_cc *cc)
- #if IS_BUILTIN(CONFIG_BCM47XX)
- 	chip->to_irq		=3D bcma_gpio_to_irq;
- #endif
-+#if IS_BUILTIN(CONFIG_OF)
-+	if (cc->core->bus->hosttype =3D=3D BCMA_HOSTTYPE_SOC)
-+		chip->of_node	=3D of_find_compatible_node(NULL, NULL,
-+							  "brcm,bus-gpio");
-+#endif
- 	switch (cc->core->bus->chipinfo.id) {
- 	case BCMA_CHIP_ID_BCM5357:
- 	case BCMA_CHIP_ID_BCM53572:
---=20
-1.8.4.5
+Hello
+> Now that we have proper support to use the generic phase API in our c=
+lock
+> driver, switch the MMC driver to use it.
+> [...]
+>  =09/* determine delays */
+>  =09if (rate <=3D 400000) {
+> -=09=09oclk_dly =3D 0;
+> -=09=09sclk_dly =3D 7;
+> +=09=09oclk_dly =3D 180;
+> +=09=09sclk_dly =3D 42;
+> [...]
+How did you calculate the actual phase values from the original paramet=
+ers?
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireles=
-s" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+greatings
+=2D-=20
+David Lanzend=F6rfer
+OpenSourceSupport GmbH
+System engineer and supporter
+http://www.o2s.ch/
+--nextPart64174242.DlQWOzDDiA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iEYEABECAAYFAlQld8QACgkQAeZw77btGjoJ2ACdHJ7p45e0wf1ZPmsy+7FpVfs+
+SFcAoKWruth0hUhjwzAUF4UPdmtdurRS
+=jltd
+-----END PGP SIGNATURE-----
+
+--nextPart64174242.DlQWOzDDiA--
+
