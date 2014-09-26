@@ -1,78 +1,79 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [git pull] Devicetree changes for v3.15
-Date: Fri, 26 Sep 2014 10:19:43 -0400
-Message-ID: <20140926141943.GC23926@titan.lakedaemon.net>
-References: <CACxGe6vCrkHPL6UNy1p8AO4+z5VFRY6w4_2grQEZQwp_3jJ7Yw@mail.gmail.com>
- <CACRpkdZoo=P7uTO1rNDD_HUPjfAk26C0=mNYPoZmTV0wcO3V-w@mail.gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device properties interface
+Date: Fri, 26 Sep 2014 16:42:28 +0200
+Message-ID: <4111948.OqsXPJi3b5@vostro.rjw.lan>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <20140926032131.GC40523@vmdeb7> <1957255.2hxfTldm4Q@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZoo=P7uTO1rNDD_HUPjfAk26C0=mNYPoZmTV0wcO3V-w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1957255.2hxfTldm4Q@wuerfel>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Darren Hart <dvhart@infradead.org>, David Woodhouse <david.woodhouse@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Aaron Lu <aaron.lu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Linus,
-
-On Fri, Sep 26, 2014 at 02:30:53PM +0200, Linus Walleij wrote:
-> On Tue, Apr 1, 2014 at 12:15 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+On Friday, September 26, 2014 10:36:06 AM Arnd Bergmann wrote:
+> On Thursday 25 September 2014 20:21:32 Darren Hart wrote:
+> > On Wed, Sep 24, 2014 at 11:12:36AM +0200, Arnd Bergmann wrote:
+> > > How would you feel about a more general way of probing LED, using
+> > > a new helper in the leds-core that iterates over the child nodes
+> > > and parses the standard properties but calls into a driver specific
+> > > callback to parse the specific properties?
+> > > It's probably much more work than your current approach, but it seems
+> > > to me that there is more to gain by solving the problem for LED
+> > > drivers in particular to cut down the per-driver duplication
+> > > at the same time as the per-firmware-interface duplication.
+> > > 
+> > > As a start, we could probably take the proposed device_for_each_child_node
+> > > and move that into the leds-core, changing the fw_dev_node argument
+> > > for an led_classdev with the addition of the of_node and acpi_object
+> > > members. It would still leave it up to the gpio-leds driver to do
+> > > 
+> > > 	if (led_cdev->of_node)
+> > > 		gpiod = devm_of_get_gpiod(led_cdev->of_node, ...);
+> > > 	else
+> > > 		gpiod = devm_acpi_get_gpiod(led_cdev->acpi_object, ...);
+> > 
+> > So as Mika has pointed out, LEDs aren't the only ones affected. Several drivers
+> > will need to walk through non-device child nodes, and it seems to me that having
+> > a firmware-independent mechanism to do so benefits the drivers by both making
+> > them smaller and by increasing the reusability of new drivers and drivers
+> > updated to use the new API across platforms.
+> > 
+> > I fear we might be entering bike shed territory as we seem to be repeating
+> > points now. Can you restate your concern with the interface and why this level
+> > of abstraction is worse for the kernel? I'm not seeing this point, so I'm not
+> > sure what to address in my response.
 > 
-> > Here are the dt changes I've got queued up for v3.15. The full
-> > description is below in the tag. Please pull.
-> (...)
-> > Jason Cooper (1):
-> >       kbuild: dtbs_install: new make target
-
-Exact patch is:
-
-  f4d4ffc03efc kbuild: dtbs_install: new make target
-
-> After this patch a while back I have observed the following behaviour
-> of the kernel build:
+> I think we should have abstractions for all common interfaces but make
+> them as simple as possible. In the discussions at the kernel summit,
+> everyone agreed that we should have common accessors for simple properties
+> (bool, int, string, ...) based on device pointers, as well as subsystem
+> specific accessors to handle the high-level abstractions (registers,
+> interrupts, gpio, regulator, pinctrl, dma, reset, pwm, ...).
 > 
-> make zImage
-> make zImage
-> -> incremental build, just relink
-> 
-> make zImage
-> make dtbs
-> make zImage
-> -> The whole kernel gets rebuilt
-> 
-> So now if I happen to recompile my device trees, I suddenly want
-> the entire zImage to be rebuilt to? It's by definition not changes that
-> affect the kernel build :-(
-> 
-> I noticed this because my build scripts calls make dtbs && make zImage,
-> and started to rebuild absolutely everything all the time.
-> 
-> Do you think this can be fixed? It's quite simple to reproduce...
+> Having generalized accessors for the same properties in child nodes of
+> the device goes beyond that, and I think this is the wrong trade-off
+> between interface simplicity and generality since only few drivers will
+> be able to use those. I think we will always have to live with a leaky
+> abstraction because some drivers need to do things beyond what we can
+> do with a common API.
 
-Does the attached fix your problem?
+Some drivers do, but then we can avoid adding DT/ACPI knowledge to some
+drivers by adding general accessors for properties in child nodes.  In my
+opinion, drivers should not do things specific to DT/ACPI unless that is
+unavoidable.
 
-thx,
+> 
+> > Grant, Linus W? Thoughts?
+> 
+> I definitely want to hear other voices on this too. This is really not
+> a fundamental debate I think, but more a question of how far the abstraction
+> should go.
 
-Jason.
+Right.
 
------------>8------------------------------------------
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index 0ce9d0f71f2a..a88b13af58d2 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -313,7 +313,9 @@ $(INSTALL_TARGETS):
- 	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $(boot)/dts/$@
- 
- PHONY += dtbs dtbs_install
--dtbs dtbs_install: prepare scripts
-+dtbs: scripts
-+	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $@
-+dtbs_install: prepare scripts
- 	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $@
- 
- # We use MRPROPER_FILES and CLEAN_FILES now
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
