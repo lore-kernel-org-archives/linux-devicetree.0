@@ -1,36 +1,100 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Fri, 26 Sep 2014 09:01:49 +0200
-Message-ID: <202048167.dt5r3yRThs@wuerfel>
-References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com> <3696520.MDUrkdjfGZ@wuerfel> <20140926002339.GB3026@peterchendt>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v6 0/2] Initial support for XPowers AXP288 PMIC
+Date: Fri, 26 Sep 2014 08:17:38 +0100
+Message-ID: <20140926071738.GD31272@lee--X1>
+References: <1411643739-21205-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <20140925113004.582367d1@jacob-VirtualBox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140926002339.GB3026@peterchendt>
+Content-Disposition: inline
+In-Reply-To: <20140925113004.582367d1@jacob-VirtualBox>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@free-electrons.com>, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, alexandre.belloni@free-electrons.com, p.zabel@pengutronix.de, jszhang@marvell.com, sebastian.hesselbarth@gmail.com
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: IIO <linux-iio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DEVICE TREE <devicetree@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Carlo Caione <carlo@caione.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Alan Cox <alan@linux.intel.com>, Jean Delvare <khali@linux-fr.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Fugang Duan <B38611@freescale.com>, Arnd Bergmann <arnd@arndb.de>, Zubair Lutfullah <zubair.lutfullah@gmail.com>, Sebastian Reichel <sre@debian.org>, Johannes Thumshirn <johannes.thumshirn@men.de>, Philippe Reynes <tremyfr@yahoo.fr>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 26 September 2014 08:23:40 Peter Chen wrote:
-> In current chipidea structure, the parent (glue layer) driver will not be
-> used for dma, udc/host driver uses dma mask from child (core layer), at core
-> layer we will do:
-> 
-> 
->         pdev->dev.dma_mask = dev->dma_mask; /* this device is parent */
->         dma_set_coherent_mask(&pdev->dev, dev->coherent_dma_mask);
-> 
-> Would you suggestion us a suitable way? Or it is ok we use just Antoine's way that
-> call dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32)) at parent
-> driver no matter dt or non-dt? Thanks.
+> Can you consider taking this for 3.18 if there are no other issues?
 
-dma_coerce_mask_and_coherent is not ok, it will force a dma mask that is
-unrelated to the actual requirements of the hardware.
+I'm afraid not.  Linus is opening the v3.18 merge-window early this
+cycle, so I have stopped applying patches.  This will be re-considered
+for v3.19.
 
-I think the best way would be to never use the child device pointer for
-DMA operations, just use a pointer to the parent device and make the
-child dev->dma_mask pointer NULL to ensure all DMA operations fail.
+> On Thu, 25 Sep 2014 04:15:39 -0700
+> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+>=20
+> > X-Powers AXP288 is a customized PMIC found on some Intel Baytrail-C=
+R
+> > platforms. It comes with sub-functions such as USB charging, fuel
+> > gauge, ADC, and many LDO and BUCK channels.
+> >=20
+> > By extending the existing AXP20x driver, this patchset adds basic
+> > support for AXP288 PMIC with ADC as one MFD cell device driver.
+> >=20
+> > Currently, the PMIC driver in this patchset does not support platfo=
+rm
+> > data enumeration. But when ACPI _DSD and unified device properties
+> > become available, cell devices with platform data will be added.
+> >=20
+> > This patch does not use intel_soc_pmic core for i2c and regmap
+> > handling in that axp288 shares similar programming interface with
+> > other X-Power PMICs supported in axp20x.c. Therefore, extending
+> > axp20x.c to include axp288 makes more sense.
+> >=20
+> > Changes
+> >  v6:	- change axp20x_match_device() flow to give more specific
+> > error messages.
+> > 	- remove unnecessary cast
+> >=20
+> >  v5:	- excluded iio documentation patch, already applied to
+> > iio.git
+> >  	- restructured axp288_adc read_raw code to make it more
+> > readable
+> > 	- renamed adc_enable to adc_set_state and add comment about
+> > why adc has to be always on and there is no disable function.
+> > 	- axp20x use const as needed for regmap structures
+> >=20
+> >  v4:	- removed rename patch, use Kconfig description to list
+> > supported devices
+> >  	- misc clean up in ADC code, use regmap_bulk_read and
+> > improve error handling, etc.
+> > 	- remove IIO ADC scale, treat raw data as processed since the
+> > unit is already in IIO expected milliamps.
+> >=20
+> >  v3:	- put all file rename changes in 1/5
+> >  	- add iio documentation for in_current_raw/scale
+> > 	- removed global variables in axp2xx
+> > 	- removed pm callbacks from GPADC
+> > 	- removed ACPI opregion cell device
+> > 	- added scales to ADC current and voltage
+> > 	- removed ADC thermal sensor from sysfs, kernel internal use
+> > only
+> >=20
+> >  v2:
+> > 	- use format -M for 1/4
+> > 	- minor tweak based on Maxime's review
+> >=20
+> >=20
+> > Jacob Pan (2):
+> >   mfd/axp20x: extend axp20x to support axp288 pmic
+> >   iio/adc: add support for axp288 adc
+> >=20
+> >  drivers/iio/adc/Kconfig      |   8 +
+> >  drivers/iio/adc/Makefile     |   1 +
+> >  drivers/iio/adc/axp288_adc.c | 253 ++++++++++++++++++++++++++++++
+> >  drivers/mfd/Kconfig          |   3 +-
+> >  drivers/mfd/axp20x.c         | 361
+> > ++++++++++++++++++++++++++++++++++++-------
+> > include/linux/mfd/axp20x.h   |  59 +++++++ 6 files changed, 629
+> > insertions(+), 56 deletions(-) create mode 100644
+> > drivers/iio/adc/axp288_adc.c
+> >=20
+>=20
+> [Jacob Pan]
 
-	Arnd
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
