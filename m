@@ -1,73 +1,131 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/7] clk: sun6i: Unify AHB1 clock and fix
- rate calculation
-Date: Thu, 25 Sep 2014 17:25:44 -0700
-Message-ID: <20140926002544.19023.39287@quantum>
-References: <1410000448-9999-1-git-send-email-wens@csie.org>
- <20140911203623.GJ31276@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v5 00/11] PM / Domains: Generic OF-based support
+Date: Thu, 25 Sep 2014 17:27:57 -0700
+Message-ID: <20140926002757.GJ10233@codeaurora.org>
+References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
+ <20140925112122.GA22753@ulmo>
+ <CAPDyKFp8oK6KAujU44NEwT2vL2_BBPSMuGPkyppHdonPfOmUrQ@mail.gmail.com>
+ <20140925165625.GC30382@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDO333VC4INBBIHFSKQQKGQERSCTFQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140911203623.GJ31276@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140925165625.GC30382@ulmo>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Philipp Zabel <philipp.zabel@gmail.com>Mark Brown <b>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Maxime Ripard (2014-09-11 13:36:23)
-> Hi Chen-Yu,
+On 09/25, Thierry Reding wrote:
+> On Thu, Sep 25, 2014 at 05:29:10PM +0200, Ulf Hansson wrote:
+> > On 25 September 2014 13:21, Thierry Reding <thierry.reding@gmail.com> wrote:
+> > > I just noticed these patches because they conflicted with some of the
+> > > local patches I had to add a very similar framework. One of the reasons
+> > > why I hadn't posted these publicly yet is because the platform where I
+> > > want to use this (Tegra) is somewhat quirky when it comes to power
+> > > domains.
+> > 
+> > It's great that more things goes on in this area. :-)
+> > 
+> > >
+> > > On Tegra these domains are called power gates and they currently have
+> > > their own API. We've been looking at migrating things over to some
+> > > generic framework for some time and PM domains do seem like a good fit.
+> > > However one of the quirks regarding these domains on Tegra is that a
+> > > fixed sequence exists that needs to be respected when enabling or
+> > > disabling a power partition. The exact sequence can be found in the
+> > > drivers/soc/tegra/pmc.c driver's tegra_powergate_sequence_power_up()
+> > > function. Essentially we need to call into the clock and reset drivers
+> > > at very specific moments during the operations that the PMC does.
+> > 
+> > I am not sure I fully understand how the power gating actually
+> > happens. How is it triggered?
 > 
-> On Sat, Sep 06, 2014 at 06:47:21PM +0800, Chen-Yu Tsai wrote:
-> > Hi everyone,
-> > 
-> > This series unifies the mux and divider parts of the AHB1 clock found
-> > on sun6i and sun8i, while also adding support for the pre-divider on
-> > the PLL6 input.
-> > 
-> > The rate calculation logic must factor in which parent it is using to
-> > calculate the rate, to decide whether to use the pre-divider or not.
-> > This is beyond the original factors clk design in sunxi. To avoid
-> > feature bloat, this is implemented as a seperate composite clk.
-> > 
-> > The new clock driver is registered with a separate OF_CLK_DECLARE.
-> > This is done so that assigned-clocks* properties on the clk provider
-> > node can actually work. The clock framework arranges the clock setup
-> > order by checking whether all clock parents are available, by checking
-> > the node matching OF_CLK_DECLARE.
-> > 
-> > However, the sunxi clk driver is based on the root node compatible,
-> > has no defined dependencies (parents), and is setup before the fixed-rate
-> > clocks. Thus when the ahb1 clock is added, all parents have rate = 0.
-> > There is no way to calculate the required clock factors to set a default
-> > clock rate under these circumstances. This happens when we set the
-> > defaults in the clock node (provider), rather than a clock consumer.
-> >
-> > I can think of 2 ways to solve the dependency issue, but neither is
-> > pretty. One would be to move the root fixed-rate clocks into the sunxi
-> > clk driver. The other would be separating all the clocks into individual
-> > OF_CLK_DECLARE statements, which adds a lot of boilerplate code.
+> Drivers explicitly call the custom API. So all drivers that need to turn
+> on power partitions have a call to tegra_powergate_sequence_power_up()
+> in .probe() and tegra_powergate_power_off() in .remove().
 > 
-> I don't know what Mike thinks of this, but I'd prefer the second.
+> > > One solution to this would be to make the needed clocks and resets
+> > > available to the power domain driver via DT, but then we have the
+> > > problem that two drivers would be controlling the same resources. For
+> > > example drivers could still want to disable the clock for more fine-
+> > > grained power management.
+> > 
+> > Sorry, but I think I need a better understanding to be able to comment.
+> > 
+> > But maybe, drivers could implement runtime PM support and define
+> > runtime PM callbacks. From the callbacks those will handle clocks and
+> > resets, is not that enough? What more is needed from a PM domain point
+> > of view?
+> 
+> Let me quote the actual power up sequence code:
+> 
+> 	int tegra_powergate_sequence_power_up(int id, struct clk *clk,
+> 					      struct reset_control *rst)
+> 	{
+> 		int ret;
+> 
+> 		reset_control_assert(rst);
+> 
+> 		ret = tegra_powergate_power_on(id);
+> 		if (ret)
+> 			goto err_power;
+> 
+> 		ret = clk_prepare_enable(clk);
+> 		if (ret)
+> 			goto err_clk;
+> 
+> 		usleep_range(10, 20);
+> 
+> 		ret = tegra_powergate_remove_clamping(id);
+> 		if (ret)
+> 			goto err_clamp;
+> 
+> 		usleep_range(10, 20);
+> 		reset_control_deassert(rst);
+> 
+> 		return 0;
+> 
+> 	err_clamp:
+> 		clk_disable_unprepare(clk);
+> 	err_clk:
+> 		tegra_powergate_power_off(id);
+> 	err_power:
+> 		return ret;
+> 	}
+> 	EXPORT_SYMBOL(tegra_powergate_sequence_power_up);
+> 
+> The critical part is that we need to enable the clock after the
+> partition has been powered, but before the clamps are removed.
+> Implementing this with runtime PM support in drivers won't work
+> because the power domain driver has to do both the powering up
+> and removing the clamps, so there's no place to inject the call
+> to enable the clock.
 
-I do not fully understand the problem. Ideally the clock driver should
-have some way to fail with EPROBE_DEFER until the fixed-rate clocks are
-registered. Those fixed-rate parents are enumerated in your dts, right?
-Why isn't this enough?
+FWIW, Qualcomm platforms have pretty much the same design. Our
+power domain controls live in the same register space as the
+clocks and resets. Is Tegra the same way? To power on/off a
+domain we need to go and forcefully turn a clock on and assert a
+reset or perhaps we need the clock to be off and assert a reset.
+It depends on the domain.
 
-Thanks,
-Mike
+Historically we've supported this by requiring all drivers to
+disable their clocks and deassert any resets before calling into
+this code (we put this behind the regulator API). Then we're free
+to do whatever is necessary to power on/off, eventally leaving
+the clocks off if they were forced on and finally giving control
+to the drivers so they can manage their own clocks and resets. It
+would be better for us to take ownership of the clocks and resets
+in the domain so we don't have this prerequisite of clocks being
+off before calling into the domain code. I plan to do pretty much
+Kevin outlined and use runtime PM, power domains, and per-device
+pm QoS to figure out if we should gate clocks (clk_disable), or
+if we go to a lower power mode where we unprepare clocks
+(clk_unprepare), or if we go to the lowest power mode where we
+apply clamps, etc. (called power collapse for us). Then the
+drivers just interact with runtime PM and QoS and they aren't
+aware of all this SoC glue.
 
-> 
-> Maxime
-> 
-> -- 
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
