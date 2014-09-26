@@ -1,7 +1,7 @@
 From: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 3/4] Staging: iio: light: Added correct vendor-prefix with device name in compatible property
-Date: Fri, 26 Sep 2014 17:54:51 +0530
-Message-ID: <1411734292-10910-4-git-send-email-darshanapadmadas@gmail.com>
+Subject: [PATCH v2 4/4] arch: arm: boot: dts: Added correct vendor-prefix with device name to compatible property
+Date: Fri, 26 Sep 2014 17:54:52 +0530
+Message-ID: <1411734292-10910-5-git-send-email-darshanapadmadas@gmail.com>
 References: <1411734292-10910-1-git-send-email-darshanapadmadas@gmail.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -12,29 +12,27 @@ To: opw-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the correct vendor-prefix for the device isl29028 to fix
-following checkpatch warning:
-WARNING: DT compatible string "isil,isl29028" appears un-documented -- check ./Documentation/devicetree/bindings/
+This patch adds the correct vendor-prefix listed in Documentation/devicetree/bindings/vendor-prefixes.txt
+with the device name to compatible property.
 
 Signed-off-by: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/staging/iio/light/isl29028.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/tegra30-cardhu.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/iio/light/isl29028.c b/drivers/staging/iio/light/isl29028.c
-index 6014625..7090708 100644
---- a/drivers/staging/iio/light/isl29028.c
-+++ b/drivers/staging/iio/light/isl29028.c
-@@ -537,7 +537,8 @@ static const struct i2c_device_id isl29028_id[] = {
- MODULE_DEVICE_TABLE(i2c, isl29028_id);
+diff --git a/arch/arm/boot/dts/tegra30-cardhu.dtsi b/arch/arm/boot/dts/tegra30-cardhu.dtsi
+index 2063795..491fed6 100644
+--- a/arch/arm/boot/dts/tegra30-cardhu.dtsi
++++ b/arch/arm/boot/dts/tegra30-cardhu.dtsi
+@@ -187,7 +187,7 @@
  
- static const struct of_device_id isl29028_of_match[] = {
--	{ .compatible = "isil,isl29028", },
-+	{ .compatible = "isl,isl29028", },
-+	{ .compatible = "isil,isl29028", }, /* Deprecated, don't use */
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, isl29028_of_match);
+ 		/* ALS and Proximity sensor */
+ 		isl29028@44 {
+-			compatible = "isil,isl29028";
++			compatible = "isl,isl29028", "isil,isl29028";
+ 			reg = <0x44>;
+ 			interrupt-parent = <&gpio>;
+ 			interrupts = <TEGRA_GPIO(L, 0) IRQ_TYPE_LEVEL_HIGH>;
 -- 
 1.9.1
 
