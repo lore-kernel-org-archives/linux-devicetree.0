@@ -1,61 +1,94 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v3 4/4] arm: pxa: add non device-tree timer link to clocksource
-Date: Fri, 26 Sep 2014 09:52:07 +0200
-Message-ID: <54251B27.909@linaro.org>
-References: <1405356724-32207-1-git-send-email-robert.jarzmik@free.fr>	<1405356724-32207-4-git-send-email-robert.jarzmik@free.fr>	<53CD25A4.7030606@linaro.org> <87oawivarv.fsf@free.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87oawivarv.fsf@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>, Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+From: Mark yao <mark.yao@rock-chips.com>
+Subject: [PATCH v7 0/3] Add drm driver for Rockchip Socs
+Date: Fri, 26 Sep 2014 15:54:51 +0800
+Message-ID: <1411718091-15056-1-git-send-email-mark.yao@rock-chips.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: heiko@sntech.de, Boris BREZILLON <boris.brezillon@free-electrons.com>, David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-api@vger.kernel.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, marcheu@chromium.org, dbehr@chromium.org, olof@lixom.net, djkurtz@chromium.org, xjq@rock-chips.com, kfx@rock-chips.com, cym@rock-chips.com, cf@rock-chips.com, zyw@rock-chips.com, xxm@rock-chips.com, huangtao@rock-chips.com, kever.yang@rock-chips.com, yxj@rock-chips.com, wxt@rock-chips.com, xw@rock-chips.com, Mark yao <mark.yao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/21/2014 08:15 PM, Robert Jarzmik wrote:
-> Daniel Lezcano <daniel.lezcano@linaro.org> writes:
->
->> On 07/14/2014 06:52 PM, Robert Jarzmik wrote:
->>> As clocksource pxa_timer was moved to clocksource framework, the
->>> pxa_timer initialization needs to be a bit amended, to pass the
->>> necessary informations to clocksource, ie :
->>>    - the timer interrupt (mach specific)
->>>    - the timer registers base (ditto)
->>>    - the timer clockrate
->>>
->>> Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
->>>
->>> ---
->>> Since V2: Arnd's comment : moved extern declaration into .h file
->>> ---
->>
->> Shall I take the patches 4-5 also ?
-> Mmm you mean patch 4 I think.
-> Then I'd like you too, because it's linked in the serie, and without =
-it the
-> former non-DT platforms break, hence I'd like all the serie to go thr=
-ough 1
-> tree.
->
-> Yet we'd need Haojian's ack here. Haojian, would you give your blessi=
-ng on the
-> serie and agree that Daniel carries all the patches including patch 4=
-/4 ?
+This a series of patches is a DRM Driver for Rockchip Socs, add support
+for vop devices. Future patches will add additional encoders/connectors,
+such as eDP, HDMI.
 
-Hi,
+The basic "crtc" for rockchip is a "VOP" - Video Output Processor.
+the vop devices found on Rockchip rk3288 Soc, rk3288 soc have two similar
+Vop devices. Vop devices support iommu mapping, we use dma-mapping API with
+ARM_DMA_USE_IOMMU.
 
-May be I missed it but I don't see the Haojian's ack.
+Changes in v2:
+- add DRM master device node to list all display nodes that comprise
+  the graphics subsystem.
+- use the component framework to defer main drm driver probe
+  until all VOP devices have been probed.
+- use dma-mapping API with ARM_DMA_USE_IOMMU, create dma mapping by
+  master device and each vop device can shared the drm dma mapping.
+- use drm_crtc_init_with_planes and drm_universal_plane_init.
+- remove unnecessary middle layers.
+- add cursor set, move funcs to rockchip drm crtc.
+- add vop reset.
 
-Thanks
-   -- Daniel
+Changes in v3:
+- change "crtc->fb" to "crtc->primary-fb"
+Adviced by Daniel Vetter
+- init cursor plane with universal api, remove unnecessary cursor set,move 
+
+Changes in v4:
+Adviced by David Herrmann
+- remove drm_platform_*() usage, use register drm device directly.
+Adviced by Rob Clark
+- remove special mmap ioctl, do userspace mmap with normal mmap() or mmap offset
+
+Changes in v5:
+Adviced by Arnd Bergmann
+- doing DMA start with a 32-bit masks with dma_mask and dma_coherent_mark
+- fix some incorrect dependencies.
+Adviced by Boris BREZILLON
+- fix some mistake and bugs. 
+Adviced by Daniel Vetter
+- drop all special ioctl and use generic kms ioctl instead.
+Adviced by Rob Clark
+- use unlocked api for drm_fb_helper_restore_fbdev_mode.
+- remove unused rockchip_gem_prime_import_sg_table.
+
+Changes in v6:
+- set gem buffer pitch 64 bytes align, needed by mali gpu.
+Adviced by Daniel Kurtz
+- fix some mistake, bugs, remove unused define, more better code style etc. 
+- use clk_prepare()/unprepare() at probe()/remove() and clk_enable()/disable()
+  at runtime instead of clk_prepare_enable().
+- provide a help function from vop for encoder to do mode config, instead of
+  using drm_diaplay_mode private method.
+- change vop mode_set timing to make it more safely. 
+
+Changes in v7:
+- fix memory leakage problem.
+
+Mark yao (3):
+  drm/rockchip: Add basic drm driver
+  dt-bindings: video: Add for rockchip display subsytem
+  dt-bindings: video: Add documentation for rockchip vop
+
+ .../devicetree/bindings/video/rockchip-drm.txt     |   19 +
+ .../devicetree/bindings/video/rockchip-vop.txt     |   58 +
+ drivers/gpu/drm/Kconfig                            |    2 +
+ drivers/gpu/drm/Makefile                           |    1 +
+ drivers/gpu/drm/rockchip/Kconfig                   |   17 +
+ drivers/gpu/drm/rockchip/Makefile                  |    8 +
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |  516 +++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   61 +
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.c         |  201 +++
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.h         |   28 +
+ drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c      |  230 ++++
+ drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h      |   20 +
+ drivers/gpu/drm/rockchip/rockchip_drm_gem.c        |  345 +++++
+ drivers/gpu/drm/rockchip/rockchip_drm_gem.h        |   55 +
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c        | 1422 ++++++++++++++++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |  196 +++
+ 16 files changed, 3179 insertions(+)
+
+-- 
+1.7.9.5
 
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
