@@ -1,120 +1,232 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device
- properties interface
-Date: Thu, 25 Sep 2014 20:21:32 -0700
-Message-ID: <20140926032131.GC40523@vmdeb7>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
- <2809308.3y5s7TV5Ip@wuerfel>
- <D04730D8.A9DB0%dvhart@linux.intel.com>
- <6744174.JquHLt80n3@wuerfel>
+From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH resend 2/2] i2c: hix5hd2: add i2c controller driver
+Date: Fri, 26 Sep 2014 11:30:29 +0800
+Message-ID: <5424DDD5.1020706@linaro.org>
+References: <1409030722-30709-1-git-send-email-zhangfei.gao@linaro.org> <1409030722-30709-3-git-send-email-zhangfei.gao@linaro.org> <20140919171829.GB2874@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6744174.JquHLt80n3@wuerfel>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, David Woodhouse <david.woodhouse@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Aaron Lu <aaron.lu@intel.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140919171829.GB2874@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 24, 2014 at 11:12:36AM +0200, Arnd Bergmann wrote:
-> On Tuesday 23 September 2014 14:15:47 Darren Hart wrote:
-> > Arnd, I think you meant:
-> > 
-> >         Return gpio_leds_create_acpi(pdev) ?
-> 
-> Yes, sorry for the confusion on my part.
 
-Hi Arnd,
+Thanks Wolfram for the careful review
 
-No problem, just wanted to make sure I knew what you meant.
+On 09/20/2014 01:18 AM, Wolfram Sang wrote:
+> Hi,
+>
+> thanks for the submission.
+>
+>> --- /dev/null
+>> +++ b/drivers/i2c/busses/i2c-hix5hd2.c
+>> @@ -0,0 +1,573 @@
+>> +/*
+>> + * Copyright (c) 2014 Linaro Ltd.
+>> + * Copyright (c) 2014 Hisilicon Limited.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * publishhed by the Free Software Foundation.
+>
+> "publishhed"
+OK.
+>
+>> + *
+>> + * Now only support 7 bit address.
+>> + */
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/io.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pm_runtime.h>
+>
+> I think there should be at least of.h, too.
+The of.h is already in i2c.h
+include/linux/i2c.h:33:#include <linux/of.h>
+>
+>> +struct hix5hd2_i2c {
+>> +	struct i2c_adapter adap;
+>> +	struct i2c_msg	*msg;
+>> +	unsigned int msg_ptr;	/* msg index */
+>
+> Comment seems wrong. It looks to me as the msg buffer index. If so, the
+> variable name is also confusing.
+Change to msg_idx & msg_len.
+>
+>> +	unsigned int len;	/* msg length */
+>> +	int stop;
+>> +	struct completion msg_complete;
+>> +
+>> +	unsigned int irq;
+>
+> That can be a local variable.
+Yes
+>
+>> +	void __iomem *regs;
+>> +	struct clk *clk;
+>> +	struct device *dev;
+>> +	spinlock_t lock;	/* IRQ synchronization */
+>> +
+>> +	int err;
+>> +	enum hix5hd2_i2c_state state;
+>> +	enum hix5hd2_i2c_speed speed_mode;
+>
+> Where is this needed?
+will remove
+>
+>> +
+>> +	/* Controller frequency */
+>> +	unsigned int s_clock;
+>> +};
+>> +
+>> +static void hix5hd2_i2c_drv_setrate(struct hix5hd2_i2c *i2c)
+>> +{
+>> +	u32 rate, val;
+>> +	u32 sclh, scll, sysclock;
+>> +
+>> +	/* close all i2c interrupt */
+>> +	val = readl_relaxed(i2c->regs + HIX5I2C_CTRL);
+>> +	writel_relaxed(val & (~I2C_UNMASK_TOTAL), i2c->regs + HIX5I2C_CTRL);
+>> +
+>> +	rate = i2c->s_clock;
+>> +	sysclock = clk_get_rate(i2c->clk);
+>> +	sclh = (sysclock / (rate * 2)) / 2 - 1;
+>> +	writel_relaxed(sclh, i2c->regs + HIX5I2C_SCL_H);
+>> +	scll = (sysclock / (rate * 2)) / 2 - 1;
+>
+> scll and sclh use the same formula? Have you measured the setup
+> frequency with a scope?
+Yes, it is confusing, will use the same vector scl instead.
+The value is same means sclk high voltage and low voltage keep same time.
+>
+>> +	writel_relaxed(scll, i2c->regs + HIX5I2C_SCL_L);
+>> +
+>> +	/* restore original interrupt*/
+>> +	writel_relaxed(val, i2c->regs + HIX5I2C_CTRL);
+>> +
+>> +	dev_dbg(i2c->dev, "%s: sysclock=%d, rate=%d, sclh=%d, scll=%d\n",
+>> +		__func__, sysclock, rate, sclh, scll);
+>> +}
+>> +
+>> +static void hix5hd2_rw_over(struct hix5hd2_i2c *i2c)
+>> +{
+>> +	if (HIX5I2C_STAT_SND_STOP == i2c->state)
+>
+> To be honest, I don't like having the constant on the left side. It
+> is far easier to read if they are on the right side. Plus, we have gcc
+> warnings to prevent the "=" and "==" mistake. Please switch them around
+> in this driver.
+Got it.
+>
+>> +		dev_dbg(i2c->dev, "%s: rw and send stop over\n", __func__);
+>> +	else
+>> +		dev_dbg(i2c->dev, "%s: have not data to send\n", __func__);
+>> +
+>> +	i2c->state = HIX5I2C_STAT_RW_SUCCESS;
+>> +	i2c->err = 0;
+>> +}
+>> +
+>
+> ...
+>
+>> +	/* handle error */
+>> +	if (int_status & I2C_ARBITRATE_INTR) {
+>> +		/*Bus error */
+>
+> Space missing in front of "Bus". If this is an arbitration lost error,
+> then please use -EAGAIN. Check Documentation/i2c/fault-codes for the
+> convention.
+OK.
+>
+>> +		dev_dbg(i2c->dev, "ARB bus loss\n");
+>> +		i2c->err = -ENXIO;
+>> +		i2c->state = HIX5I2C_STAT_RW_ERR;
+>> +		goto stop;
+>> +	} else if (int_status & I2C_ACK_INTR) {
+>> +		/* ack error */
+>> +		dev_dbg(i2c->dev, "No ACK from device\n");
+>> +		i2c->err = -ENXIO;
+>> +		i2c->state = HIX5I2C_STAT_RW_ERR;
+>> +		goto stop;
+>> +	}
+>> +
+>> +static void hix5hd2_i2c_message_start(struct hix5hd2_i2c *i2c, int stop)
+>> +{
+>> +	unsigned long flags;
+>> +
+>> +	spin_lock_irqsave(&i2c->lock, flags);
+>> +	hix5hd2_i2c_clr_all_irq(i2c);
+>> +	hix5hd2_i2c_enable_irq(i2c);
+>> +
+>> +	if (i2c->msg->flags & I2C_M_RD)
+>> +		writel_relaxed(i2c->msg->addr | HIX5I2C_READ_OPERATION,
+>> +			       i2c->regs + HIX5I2C_TXR);
+>> +	else
+>> +		writel_relaxed(i2c->msg->addr & HIX5I2C_WRITE_OPERATION,
+>> +			       i2c->regs + HIX5I2C_TXR);
+>
+> ??? Does this really work? i2c->msg->addr should be left shifted by 1?
 
-> 
-> > This is what we did early on to prototype this concept, but the problem
-> > with this approach we duplicate all of the creation code, which leads to
-> > maintenance errors, and is inconsistent with the goals of the _DSD which
-> > is to reuse the same schemas for ACPI and FDT. If we have separate pdata
-> > creation functions anyway, we are leaving much of the advantage of the
-> > common schema on the table. Namely the ability to reuse drivers relatively
-> > easily across firmware implementations. We don't want driver authors to
-> > have to care if it's ACPI or FDT.
-> 
-> I think we are absolutely in agreement about the basic principle here,
-> but disagree on how far we'd want to take the abstraction.
-> 
-> I got a little confused by the leds-gpio example, as I initially saw
-> that as generic infrastructure rather than a specific driver. As I just
-> wrote in my reply to Rafael, I generally believe we should strive to
-> have generic driver-side interfaces so drivers don't have to care,
-> but keep the differences in subsystem specific code.
-> 
-> > We would have preferred to have deprecated the of property interface in
-> > favor of the new generic device_property interface, but Grant specifically
-> > requested that we update drivers individually rather than all at once,
-> > which means we can't just kill the OF interface.
-> 
-> I don't actually have a strong opinion on that matter, having only the
-> device property interface does have some advantages as well, but I also
-> agree that we are somewhat better off not having to change all the drivers.
-> 
-> > We agreed to that, somewhat reluctantly as it adds more work in updating
-> > the drivers over time which will slow adoption, but I understand the
-> > desire not to make large sweeping changes due to the risk of breaking
-> > things inadvertently as we cannot expect to be able to test all of them.
-> > That said, I don't want to forget that the goal is to use the common
-> > interface over time as we convert individual drivers, and using the common
-> > interface means we need a common iterator function and that we not have fw
-> > implementation specific pdata create functions.
-> 
-> I've looked a bit closer at how the LED subsystem handles sub-nodes
-> in DT at the moment. It seems that there is some duplication between
-> the drivers already, as they all implement a variation of the sub-node
-> parsing code.
-> 
-> There are other non-LED drivers with similar loops, but they seem to be
-> either very specialized, or explicitly for DT abstractions, so I'm still
-> not convinced we need a generic loop-through-child-nodes-and-parse-properties
-> interface.
-> 
-> How would you feel about a more general way of probing LED, using
-> a new helper in the leds-core that iterates over the child nodes
-> and parses the standard properties but calls into a driver specific
-> callback to parse the specific properties?
-> It's probably much more work than your current approach, but it seems
-> to me that there is more to gain by solving the problem for LED
-> drivers in particular to cut down the per-driver duplication
-> at the same time as the per-firmware-interface duplication.
-> 
-> As a start, we could probably take the proposed device_for_each_child_node
-> and move that into the leds-core, changing the fw_dev_node argument
-> for an led_classdev with the addition of the of_node and acpi_object
-> members. It would still leave it up to the gpio-leds driver to do
-> 
-> 	if (led_cdev->of_node)
-> 		gpiod = devm_of_get_gpiod(led_cdev->of_node, ...);
-> 	else
-> 		gpiod = devm_acpi_get_gpiod(led_cdev->acpi_object, ...);
+Double checked, it is because the test applictaion do the left shift.
+Yes, will do the left shift by 1.
+>
+>> +
+>> +	writel_relaxed(I2C_WRITE | I2C_START, i2c->regs + HIX5I2C_COM);
+>> +	spin_unlock_irqrestore(&i2c->lock, flags);
+>> +}
+>> +
+>> +static int hix5hd2_i2c_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device_node *np = pdev->dev.of_node;
+>> +	struct hix5hd2_i2c *i2c;
+>> +	struct resource *mem;
+>> +	unsigned int op_clock;
+>> +	int ret;
+>> +
+>> +	i2c = devm_kzalloc(&pdev->dev, sizeof(struct hix5hd2_i2c), GFP_KERNEL);
+>> +	if (!i2c)
+>> +		return -ENOMEM;
+>> +
+>> +	if (of_property_read_u32(np, "clock-frequency", &op_clock)) {
+>> +		/* use default value */
+>> +		i2c->speed_mode = HIX5I2C_HIG_SPD;
+>> +		i2c->s_clock = HIX5I2C_HS_TX_CLOCK;
+>
+> Please use 100kHz as the default. This is the speed devices should
+> support. 400kHz is optional. And I think 100000 is easier to read than a
+> define.
+OK.
+>
+>> +	} else {
+>> +		if (op_clock >= HIX5I2C_HS_TX_CLOCK) {
+>> +			i2c->speed_mode = HIX5I2C_HIG_SPD;
+>> +			i2c->s_clock = HIX5I2C_HS_TX_CLOCK;
+>
+> So, if the speed is bigger than 400kHz, it will be capped down to
+> 400kHz? Is that true? Then, the user should be informed about that.
+Will add dev_warn to notify.
+>
+>> +		} else {
+>> +			i2c->speed_mode = HIX5I2C_NORMAL_SPD;
+>> +			i2c->s_clock = op_clock;
+>> +		}
+>> +	}
+>> +
+>
+> ...
+>
+>> +	i2c->adap.owner   = THIS_MODULE;
+>> +	i2c->adap.algo	  = &hix5hd2_i2c_algorithm;
+>
+> Single space as indentation.
+Got it.
 
-So as Mika has pointed out, LEDs aren't the only ones affected. Several drivers
-will need to walk through non-device child nodes, and it seems to me that having
-a firmware-independent mechanism to do so benefits the drivers by both making
-them smaller and by increasing the reusability of new drivers and drivers
-updated to use the new API across platforms.
-
-I fear we might be entering bike shed territory as we seem to be repeating
-points now. Can you restate your concern with the interface and why this level
-of abstraction is worse for the kernel? I'm not seeing this point, so I'm not
-sure what to address in my response.
-
-Grant, Linus W? Thoughts?
-
-> 
-> but there seems little benefit in abstracting this because there is
-> only one driver that needs it.
-> 
-> 	Arnd
-> 
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+Thanks
