@@ -1,83 +1,264 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] ARM: sun8i: Add DMA controller support
-Date: Fri, 26 Sep 2014 11:06:01 +0800
-Message-ID: <CAGb2v65ZkBvqSjwR0bVUu0-=5-pOmydp51K6GeMnxOa4vOtCRQ@mail.gmail.com>
-References: <1411010680-4481-1-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] watchdog: qcom: add support for KPSS WDT
+Date: Thu, 25 Sep 2014 20:18:45 -0700
+Message-ID: <5424DB15.2010300@roeck-us.net>
+References: <cover.1411684967.git.joshc@codeaurora.org> <f294b9c41eb418fa5842f549bf557fce96bb5b7c.1411684967.git.joshc@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBL5QSOQQKGQE2IYOGBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1411010680-4481-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f294b9c41eb418fa5842f549bf557fce96bb5b7c.1411684967.git.joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 18, 2014 at 11:24 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> Hi everyone,
+On 09/25/2014 03:51 PM, Josh Cartwright wrote:
+> Add a driver for the watchdog timer block found in the Krait Processor
+> Subsystem (KPSS) on the MSM8960, APQ8064, and IPQ8064.
 >
-> This is v2 of my sun8i DMA controller support series. This series
-> adds support for the DMA controller found in the Allwinner A23 SoC.
-> It is the same hardware as found in the A31 (sun6i) SoC. In addition
-> to reduced physical channels and endpoints, the controller in the A23
-> requires an undocumented register to be toggled. That seems to allow
-> memory bus access.
->
-> This series is based on my earlier "clk: sun6i: Unify AHB1 clock and
-> fix rate calculation" series, which removes the clock muxing calls from
-> the sun6i-dma driver. The default PLL6 pre-divider for AHB1 on the A23
-> results in an exceedingly high clock rate for AHB1, and the system hangs.
-> Also, on the A23, the dma controller happily works even when AHB1 is
-> clocked from AXI.
->
->
-> Patch 1 changes the channel count macros into runtime data binded to
-> the DT compatible strings. It also gets rid of some hardcoded values
-> in the interrupt handler.
->
-> Patch 2 adds the channel number data for the A23 (sun8i), as well as
-> the undocumented register quirk.
+> Signed-off-by: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-Hi, Vinod,
+Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 
-Any chance we can get patches 1 & 2 merged? You've already merged the
-prerequisite patch "dmaengine: sun6i: Remove obsolete clk muxing code"
-a few days ago, and patch 3 is already in arm-soc.
+> ---
+>   drivers/watchdog/Kconfig    |  13 ++++
+>   drivers/watchdog/Makefile   |   1 +
+>   drivers/watchdog/qcom-wdt.c | 186 ++++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 200 insertions(+)
+>   create mode 100644 drivers/watchdog/qcom-wdt.c
+>
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 1d1330a..0479e3f 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -443,6 +443,19 @@ config TEGRA_WATCHDOG
+>   	  To compile this driver as a module, choose M here: the
+>   	  module will be called tegra_wdt.
+>
+> +config QCOM_WDT
+> +	tristate "QCOM watchdog"
+> +	depends on HAS_IOMEM
+> +	depends on ARCH_QCOM
+> +	select WATCHDOG_CORE
+> +	help
+> +	  Say Y here to include Watchdog timer support for the watchdog found
+> +	  on QCOM chipsets.  Currently supported targets are the MSM8960,
+> +	  APQ8064, and IPQ8064.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called qcom_wdt.
+> +
+>   # AVR32 Architecture
+>
+>   config AT32AP700X_WDT
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 468c320..d645448 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -57,6 +57,7 @@ obj-$(CONFIG_RETU_WATCHDOG) += retu_wdt.o
+>   obj-$(CONFIG_BCM2835_WDT) += bcm2835_wdt.o
+>   obj-$(CONFIG_MOXART_WDT) += moxart_wdt.o
+>   obj-$(CONFIG_SIRFSOC_WATCHDOG) += sirfsoc_wdt.o
+> +obj-$(CONFIG_QCOM_WDT) += qcom-wdt.o
+>   obj-$(CONFIG_BCM_KONA_WDT) += bcm_kona_wdt.o
+>   obj-$(CONFIG_TEGRA_WATCHDOG) += tegra_wdt.o
+>
+> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+> new file mode 100644
+> index 0000000..68db322
+> --- /dev/null
+> +++ b/drivers/watchdog/qcom-wdt.c
+> @@ -0,0 +1,186 @@
+> +/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/watchdog.h>
+> +
+> +#define WDT_RST		0x0
+> +#define WDT_EN		0x8
+> +#define WDT_BITE_TIME	0x24
+> +
+> +struct qcom_wdt {
+> +	struct watchdog_device	wdd;
+> +	struct clk		*clk;
+> +	unsigned long		rate;
+> +	void __iomem		*base;
+> +};
+> +
+> +static inline
+> +struct qcom_wdt *to_qcom_wdt(struct watchdog_device *wdd)
+> +{
+> +	return container_of(wdd, struct qcom_wdt, wdd);
+> +}
+> +
+> +static int qcom_wdt_start(struct watchdog_device *wdd)
+> +{
+> +	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
+> +
+> +	writel(0, wdt->base + WDT_EN);
+> +	writel(1, wdt->base + WDT_RST);
+> +	writel(wdd->timeout * wdt->rate, wdt->base + WDT_BITE_TIME);
+> +	writel(1, wdt->base + WDT_EN);
+> +	return 0;
+> +}
+> +
+> +static int qcom_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
+> +
+> +	writel(0, wdt->base + WDT_EN);
+> +	return 0;
+> +}
+> +
+> +static int qcom_wdt_ping(struct watchdog_device *wdd)
+> +{
+> +	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
+> +
+> +	writel(1, wdt->base + WDT_RST);
+> +	return 0;
+> +}
+> +
+> +static int qcom_wdt_set_timeout(struct watchdog_device *wdd,
+> +				unsigned int timeout)
+> +{
+> +	wdd->timeout = timeout;
+> +	return qcom_wdt_start(wdd);
+> +}
+> +
+> +static const struct watchdog_ops qcom_wdt_ops = {
+> +	.start		= qcom_wdt_start,
+> +	.stop		= qcom_wdt_stop,
+> +	.ping		= qcom_wdt_ping,
+> +	.set_timeout	= qcom_wdt_set_timeout,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static const struct watchdog_info qcom_wdt_info = {
+> +	.options	= WDIOF_KEEPALIVEPING
+> +			| WDIOF_MAGICCLOSE
+> +			| WDIOF_SETTIMEOUT,
+> +	.identity	= KBUILD_MODNAME,
+> +};
+> +
+> +static int qcom_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct qcom_wdt *wdt;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+> +	if (!wdt)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	wdt->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(wdt->base))
+> +		return PTR_ERR(wdt->base);
+> +
+> +	wdt->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(wdt->clk)) {
+> +		dev_err(&pdev->dev, "failed to get input clock\n");
+> +		return PTR_ERR(wdt->clk);
+> +	}
+> +
+> +	ret = clk_prepare_enable(wdt->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to setup clock\n");
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * We use the clock rate to calculate the max timeout, so ensure it's
+> +	 * not zero to avoid a divide-by-zero exception.
+> +	 *
+> +	 * WATCHDOG_CORE assumes units of seconds, if the WDT is clocked such
+> +	 * that it would bite before a second elapses it's usefulness is
+> +	 * limited.  Bail if this is the case.
+> +	 */
+> +	wdt->rate = clk_get_rate(wdt->clk);
+> +	if (wdt->rate == 0 ||
+> +	    wdt->rate > 0x10000000U) {
+> +		dev_err(&pdev->dev, "invalid clock rate\n");
+> +		ret = -EINVAL;
+> +		goto err_clk_unprepare;
+> +	}
+> +
+> +	wdt->wdd.dev = &pdev->dev;
+> +	wdt->wdd.info = &qcom_wdt_info;
+> +	wdt->wdd.ops = &qcom_wdt_ops;
+> +	wdt->wdd.min_timeout = 1;
+> +	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
+> +
+> +	/*
+> +	 * If 'timeout-sec' unspecified in devicetree, assume a 30 second
+> +	 * default, unless the max timeout is less than 30 seconds, then use
+> +	 * the max instead.
+> +	 */
+> +	wdt->wdd.timeout = min(wdt->wdd.max_timeout, 30U);
+> +	watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev);
+> +
+> +	ret = watchdog_register_device(&wdt->wdd);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to register watchdog\n");
+> +		goto err_clk_unprepare;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, wdt);
+> +	return 0;
+> +
+> +err_clk_unprepare:
+> +	clk_disable_unprepare(wdt->clk);
+> +	return ret;
+> +}
+> +
+> +static int qcom_wdt_remove(struct platform_device *pdev)
+> +{
+> +	struct qcom_wdt *wdt = platform_get_drvdata(pdev);
+> +
+> +	watchdog_unregister_device(&wdt->wdd);
+> +	clk_disable_unprepare(wdt->clk);
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id qcom_wdt_of_table[] = {
+> +	{ .compatible = "qcom,kpss-wdt-msm8960", },
+> +	{ .compatible = "qcom,kpss-wdt-apq8064", },
+> +	{ .compatible = "qcom,kpss-wdt-ipq8064", },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, qcom_wdt_of_table);
+> +
+> +static struct platform_driver qcom_watchdog_driver = {
+> +	.probe	= qcom_wdt_probe,
+> +	.remove	= qcom_wdt_remove,
+> +	.driver	= {
+> +		.name		= KBUILD_MODNAME,
+> +		.of_match_table	= qcom_wdt_of_table,
+> +	},
+> +};
+> +module_platform_driver(qcom_watchdog_driver);
+> +
+> +MODULE_DESCRIPTION("QCOM KPSS Watchdog Driver");
+> +MODULE_LICENSE("GPL v2");
+>
 
-Thanks!
-ChenYu
-
-> Patch 3 adds the dma controller node, and related dma resources, to the
-> DT.
->
-> Changes since v1:
->
->   - Added Maxime's Acked-by for patch 1
->   - Added macros for sun8i specific dma gating registers, and updated
->     comment to reflect its usage.
->
->
-> Cheers
-> ChenYu
->
->
-> Chen-Yu Tsai (3):
->   dmaengine: sun6i: support parameterized compatible strings
->   dmaengine: sun6i: Add support for Allwinner A23 (sun8i) variant
->   ARM: dts: sun8i: Add DMA controller node
->
->  .../devicetree/bindings/dma/sun6i-dma.txt          |   2 +-
->  arch/arm/boot/dts/sun8i-a23.dtsi                   |  19 ++++
->  drivers/dma/Kconfig                                |   4 +-
->  drivers/dma/sun6i-dma.c                            | 123 +++++++++++++++------
->  4 files changed, 110 insertions(+), 38 deletions(-)
->
-> --
-> 2.1.0
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
