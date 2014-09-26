@@ -1,80 +1,26 @@
-From: David =?ISO-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer@o2s.ch>
-Subject: Re: [PATCH v3 11/12] mmc: sunxi: Convert MMC driver to the standard clock phase API
-Date: Fri, 26 Sep 2014 22:47:40 +0200
-Message-ID: <16423025.s6ZiXuohCJ@dizzy-6.o2s.ch>
-References: <1410466706-27386-1-git-send-email-maxime.ripard@free-electrons.com> <3992138.y6J8TjIuMq@pagira.o2s.ch> <20140926150204.GT15315@lukather>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v4 0/2] Add USB PHY device tree support for R8A7790/Lager board
+Date: Fri, 26 Sep 2014 13:58:01 -0700 (PDT)
+Message-ID: <4420279.PiYV5HPFxp@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart7437499.kAG72mjR6x"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140926150204.GT15315@lukather>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mike Turquette <mturquette@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, wens@csie.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
---nextPart7437499.kAG72mjR6x
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+   Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+'renesas-devel-20140924-v3.17-rc6' tag. Here we add the USB PHY device tree
+support on the R8A7790/Lager reference board. The patchset requires the USB PHY
+driver already merged by Kishon and Greg in order to work, so can be applied at
+last...
 
-Hi
-Great! Since I didn't see any mistakes from my side it shouldn't be a p=
-roblem.
-Because someone has borrowed my UART2USB(FT232)-cable I unfortunately c=
-an't
-test the code for now.
-If you can verfiy that all the adaptions are working properly on A10/A2=
-0 and
-all the others you my assume my:
-=09Acked-by: David Lanzend=F6rfer <david.lanzendoerfer@o2s.ch>
+[1/2] ARM: shmobile: r8a7790: add USB PHY DT support
+[2/2] ARM: shmobile: lager: enable USB PHY
 
-chears and all the best
-david
-
-> > > [...]
-> > How did you calculate the actual phase values from the original
-> > parameters?
->
-> Like shown in the clock driver. 0 is always a 180 deg phase shift, an=
-d
-> any other value is the number of the parent clock cycle to outphase
-> the clock of.
->=20
-> the clock out phase is calculating using:
->=20
-> phase =3D 360 * interval / period.
->=20
-> with period =3D 1 / (parent_freq / divider)
-> and interval =3D reg / parent_freq
->=20
-> which makes
->=20
-> phase =3D 360 * (reg / parent_freq) * (parent_freq / divider)
->=20
-> If we simplify by removing the parent_freq, we end up with
->=20
-> phase =3D 360 * reg / divider, which makes it rather trivial to
-> calculate.
->=20
-> Maxime
-
-=2D-=20
-David Lanzend=F6rfer
-OpenSourceSupport GmbH
-System engineer and supporter
-http://www.o2s.ch/
---nextPart7437499.kAG72mjR6x
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iEYEABECAAYFAlQl0OwACgkQAeZw77btGjoO0gCeNCNBoamkTSH/41FIDXDH34dN
-ysAAnR6JmNgXGWWfl6ql4PFEaEw8w9k0
-=T99B
------END PGP SIGNATURE-----
-
---nextPart7437499.kAG72mjR6x--
+WBR, Sergei
 
