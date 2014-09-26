@@ -1,112 +1,162 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v1 2/2] mtd: docg3: add device-tree documentation
-Date: Fri, 26 Sep 2014 20:12:03 +0200
-Message-ID: <87d2aip7yk.fsf@free.fr>
-References: <1411684396-12094-1-git-send-email-robert.jarzmik@free.fr>
-	<1411684396-12094-2-git-send-email-robert.jarzmik@free.fr>
-	<20140926110546.GA7422@leverpostej> <87h9zupadm.fsf@free.fr>
-	<20140926175013.GL7422@leverpostej>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v12 08/12] PCI: OF: Introduce helper function for
+ retrieving PCI domain numbers
+Date: Fri, 26 Sep 2014 13:20:39 -0500
+Message-ID: <CAL_Jsq+j40Xf208wCf4as3H=cDU=htJ-JWinB0DjpcORjatNXQ@mail.gmail.com>
+References: <1411498874-9864-1-git-send-email-Liviu.Dudau@arm.com> <1411498874-9864-9-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140926175013.GL7422@leverpostej> (Mark Rutland's message of
-	"Fri, 26 Sep 2014 18:50:13 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-mtd@lists.infradead.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1411498874-9864-9-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
+On Tue, Sep 23, 2014 at 2:01 PM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> Add pci_get_new_domain_nr() to allocate a new domain number
+> and of_get_pci_domain_nr() to retrieve the PCI domain number
+> of a given device from DT. Host bridge drivers or architecture
+> specific code can choose to implement their PCI domain number
+> policy using these two functions.
+>
+> Using of_get_pci_domain_nr() guarantees a stable PCI domain
+> number on every boot provided that all host bridge controllers
+> are assigned a number in the device tree using "linux,pci-domain"
+> property. Mix use of pci_get_new_domain_nr() and of_get_pci_domain_nr()
+> is not recommended as it can lead to potentially conflicting
+> domain numbers being assigned to root busses behind different
+> host bridges.
+>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
 
-> Ok, so I'd label those devices with an M-Systems vendor prefix
-> ("m-systems", I guess, if we don't already have one).
-OK. We don't have it, so I'll add that patch for review too (I have submitted
-one for sandisk, should have been m-systems ...)
->
->>  - M-Systems is bought and absorbed by Sandisk
->
-> For the devices sold during this time where nothing has changed other
-> than the label, I'd keep the M-Systems vendor.
-OK.
->
->>  - Sandisk creates and ships other diskonchip, under sandisk brand
->
-> These new devices I would label with a sandisk vendor-prefix.
-OK.
->
->> Now I'll put in the compat whatever you advice for, I have no opinion on
->> that. I'm telling you this because I have another patch to submit for a camera
->> sensor made by Aptina. Aptina was absorbed by Micron, and the sensor was
->> released under Aptina/Micron brand (ie. Aptina team in Micron corp. if I
->> understood correctly).
->> 
->> Therefore, I'll take your advice for both sandisk/msystems and aptina/micron :)
->
-> I'd label something as the original brand it shipped under, unless
-> there's a compelling reason not to. We can add notes in the binding
-> documentation to make the bindings easier to find where a device has
-> been labelled by different manufacturers.
-OK.
->
->> > Are we able to detect the particular variant by reading registers on the
->> > device? Are there any differences that we can probe dynamically (even if
->> > we don't care about those at the moment)?
->> 
->> Yes, what defines a docg3 is :
->>  - a device mapped at address 0
->>  - a read of the chip id gives DOC_CHIPID_G3
->> 
->> But there is a catch : the read is not a simple memory read, it's a write to a
->> register to set the "register to read", then a read in the iospace. Doing this
->> implies you know you are in the iospace of a docg3 ...
->
-> I was more concerned with the identifying information that we can
-> acquire from the device than the precise sequence of steps that have to
-> be performed to extract that information.
->
-> You mention that the size of the flash is variable (it could be 64MB,
-> 256MB, etc), but this isn't described in the binding. Therefore I assume
-> there is some mechanism by which I can query this from the device?
-Ah you know what, you made me understand something in here.
-As there is no spec of this device, I had created the driver by observing its
-behaviour under another OS on a single chip, a 512 Mbits (ie. 64MBi) one.
+Looks pretty good, but a couple of comments that can be addressed as
+follow-up patches.
 
-I had assumed that the identification string, "0x200" (ie. DOC_CHIPID_G3) was
-the identifier of a G3 chip. But you opened my eyes in here : it's the size of
-the docg3 !
-
-So your answer is :
- - a docg3 cannot be identified (from another diskonchip)
- - the variant of the docg3, ie. its size, can be identified (even if that
- doesn't change anything from a device-tree perspective). It's just something
- the driver should take into account.
- - I'm not aware of any other kind of variations nor any way to query them
-
-> Are there other parameters that vary across instances? Even those for
-> which we currently don't care? If so, can these be queried from the
-> device?
-Ah, no spec, no answer I'm afraid.
-There might be variations in the ECC algorith, block size, etc ... but still no
-spec.
-
-I'm pretty sure the device has an interrupt line, and a requestor line for a DMA
-most probably. No clue but heavy presomptions.
-
-> No, the unit-address is the bit after the '@' on the node name. I'm
-> asking for:
+> ---
+>  drivers/of/of_pci.c    | 25 +++++++++++++++++++++++++
+>  drivers/pci/pci.c      |  9 +++++++++
+>  include/linux/of_pci.h |  7 +++++++
+>  include/linux/pci.h    |  3 +++
+>  4 files changed, 44 insertions(+)
 >
-> docg3: flash@0 {
-> 	...
-> 	reg = <0x0 0x2000>;
-> 	...
-> };
-Ah ok, I'll put that in v2.
+> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> index 8481996..82d172f 100644
+> --- a/drivers/of/of_pci.c
+> +++ b/drivers/of/of_pci.c
+> @@ -89,6 +89,31 @@ int of_pci_parse_bus_range(struct device_node *node, struct resource *res)
+>  }
+>  EXPORT_SYMBOL_GPL(of_pci_parse_bus_range);
+>
+> +/**
+> + * This function will try to obtain the host bridge domain number by
+> + * finding a property called "linux,pci-domain" of the given device node.
+> + *
+> + * @node: device tree node with the domain information
+> + *
+> + * Returns the associated domain number from DT in the range [0-0xffff], or
+> + * a negative value if the required property is not found.
+> + */
+> +int of_get_pci_domain_nr(struct device_node *node)
+> +{
+> +       const __be32 *value;
+> +       int len;
+> +       u16 domain;
+> +
+> +       value = of_get_property(node, "linux,pci-domain", &len);
 
-Cheers.
+This needs to be documented.
 
--- 
-Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +       if (!value || len < sizeof(*value))
+> +               return -EINVAL;
+> +
+> +       domain = (u16)be32_to_cpup(value);
+
+of_property_read_u32 would not work here?
+
+> +
+> +       return domain;
+> +}
+> +EXPORT_SYMBOL_GPL(of_get_pci_domain_nr);
+> +
+>  #ifdef CONFIG_PCI_MSI
+>
+>  static LIST_HEAD(of_pci_msi_chip_list);
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 2c9ac70..d36f35f 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4406,6 +4406,15 @@ static void pci_no_domains(void)
+>  #endif
+>  }
+>
+> +#ifdef CONFIG_PCI_DOMAINS
+> +static atomic_t __domain_nr = ATOMIC_INIT(-1);
+> +
+> +int pci_get_new_domain_nr(void)
+> +{
+> +       return atomic_inc_return(&__domain_nr);
+> +}
+> +#endif
+> +
+>  /**
+>   * pci_ext_cfg_avail - can we access extended PCI config space?
+>   *
+> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+> index dde3a4a..71062e9 100644
+> --- a/include/linux/of_pci.h
+> +++ b/include/linux/of_pci.h
+> @@ -15,6 +15,7 @@ struct device_node *of_pci_find_child_device(struct device_node *parent,
+>  int of_pci_get_devfn(struct device_node *np);
+>  int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
+>  int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
+> +int of_get_pci_domain_nr(struct device_node *node);
+>  #else
+>  static inline int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq)
+>  {
+> @@ -43,6 +44,12 @@ of_pci_parse_bus_range(struct device_node *node, struct resource *res)
+>  {
+>         return -EINVAL;
+>  }
+> +
+> +static inline int
+> +of_get_pci_domain_nr(struct device_node *node)
+> +{
+> +       return -1;
+> +}
+>  #endif
+>
+>  #if defined(CONFIG_OF) && defined(CONFIG_PCI_MSI)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index a494e5d..150da2d 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1285,10 +1285,12 @@ void pci_cfg_access_unlock(struct pci_dev *dev);
+>   */
+>  #ifdef CONFIG_PCI_DOMAINS
+>  extern int pci_domains_supported;
+> +int pci_get_new_domain_nr(void);
+>  #else
+>  enum { pci_domains_supported = 0 };
+>  static inline int pci_domain_nr(struct pci_bus *bus) { return 0; }
+>  static inline int pci_proc_domain(struct pci_bus *bus) { return 0; }
+> +static inline int pci_get_new_domain_nr(void) { return -ENOSYS; }
+>  #endif /* CONFIG_PCI_DOMAINS */
+>
+>  /*
+> @@ -1417,6 +1419,7 @@ static inline struct pci_dev *pci_get_bus_and_slot(unsigned int bus,
+>
+>  static inline int pci_domain_nr(struct pci_bus *bus) { return 0; }
+>  static inline struct pci_dev *pci_dev_get(struct pci_dev *dev) { return NULL; }
+> +static inline int pci_get_new_domain_nr(void) { return -ENOSYS; }
+>
+>  #define dev_is_pci(d) (false)
+>  #define dev_is_pf(d) (false)
+> --
+> 2.1.0
+>
