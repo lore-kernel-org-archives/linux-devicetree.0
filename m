@@ -1,78 +1,90 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH resend 2/2] i2c: hix5hd2: add i2c controller driver
-Date: Fri, 26 Sep 2014 08:55:44 +0200
-Message-ID: <20140926065544.GA1284@katana>
-References: <1409030722-30709-1-git-send-email-zhangfei.gao@linaro.org>
- <1409030722-30709-3-git-send-email-zhangfei.gao@linaro.org>
- <20140919171829.GB2874@katana>
- <5424DDD5.1020706@linaro.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v3 00/12] clk: sunxi: Improve MMC clocks support
+Date: Fri, 26 Sep 2014 08:55:07 +0200
+Message-ID: <20140926065507.GO15315@lukather>
+References: <1410466706-27386-1-git-send-email-maxime.ripard@free-electrons.com>
+ <20140922113133.GF15315@lukather>
+ <20140926004218.19023.88602@quantum>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="G23JYFG0d77Z6i/3"
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5424DDD5.1020706-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20140926004218.19023.88602@quantum>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, david.lanzendoerfer@o2s.ch, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, wens@csie.org
 List-Id: devicetree@vger.kernel.org
 
 
---ReaqsoxgOBHFXBhH
+--G23JYFG0d77Z6i/3
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi Mike,
 
-> >>+#include <linux/clk.h>
-> >>+#include <linux/delay.h>
-> >>+#include <linux/i2c.h>
-> >>+#include <linux/io.h>
-> >>+#include <linux/interrupt.h>
-> >>+#include <linux/module.h>
-> >>+#include <linux/platform_device.h>
-> >>+#include <linux/pm_runtime.h>
-> >
-> >I think there should be at least of.h, too.
-> The of.h is already in i2c.h
-> include/linux/i2c.h:33:#include <linux/of.h>
+On Thu, Sep 25, 2014 at 05:42:18PM -0700, Mike Turquette wrote:
+> Quoting Maxime Ripard (2014-09-22 04:31:33)
+> > Mike,
+> >=20
+> > On Thu, Sep 11, 2014 at 10:18:14PM +0200, Maxime Ripard wrote:
+> > > Hi everyone,
+> > >=20
+> > > Here is an attempt at improving the MMC clock support in the Allwinner
+> > > SoCs.
+> > >=20
+> > > Until now, the MMC clocks were having a custom phase function that was
+> > > directly setting an obscure value in the right register, because we
+> > > were not really having any idea of what these values were.
+> > >=20
+> > > Now that we have more informations, we can introduce a common function
+> > > call to get and set the phase of a particular clock, and use this in
+> > > both our provider and our client.
+> >=20
+> > It would be great that we have that custom phase API out of the kernel
+> > for 3.18, and you were one of the greatest supporters to that idea,
+> > could we please have your view on this?
+>=20
+> Patches all look good to me. Did you want the whole series to go through
+> the clk tree?
 
-Please add it nonetheless, because you use e.g. of_property_read_u32()
-directly. That makes you independet of changes to i2c.h.
+I guess it would be where it most make sense yes.
 
-> >>+	rate = i2c->s_clock;
-> >>+	sysclock = clk_get_rate(i2c->clk);
-> >>+	sclh = (sysclock / (rate * 2)) / 2 - 1;
-> >>+	writel_relaxed(sclh, i2c->regs + HIX5I2C_SCL_H);
-> >>+	scll = (sysclock / (rate * 2)) / 2 - 1;
-> >
-> >scll and sclh use the same formula? Have you measured the setup
-> >frequency with a scope?
-> Yes, it is confusing, will use the same vector scl instead.
-> The value is same means sclk high voltage and low voltage keep same time.
+> If so we'll need an Ack for the MMC patch and for the ARM DTS
+> patches as well.
 
-OK.
+We already have an Ack from Ulf on the MMC patch, and I'm the
+maintainer of the DTS involved, so we should be ok :)
 
+Thanks!
+Maxime
 
---ReaqsoxgOBHFXBhH
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--G23JYFG0d77Z6i/3
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJUJQ3wAAoJEBQN5MwUoCm2YNwQAIinkNKuFDpxWw8k3s1yBHs0
-PcaS8RpHRmtzuYr90lU0KXIwLsMzjmwH46uzwB3mgB+iI5BXqqrQfSw4H046m1dz
-biIph7JK/aCkttarBj+GGTepfjKWchwxburAFbzWq+RAW6zxPx/feOxeC5UCc4Ns
-mbGE59npZzvgWD+ijb0//mg9lwfhMW1/QdRtN85/K9TBrOfEyCnW1mO9ZH4a/nht
-X1cltEailZrGc5M328KkZijNsTYB7Yw7mcB08GTOmdcK/VNnSnSfHxa3fJKoJ7xq
-7DYxBCa0NV1r3brGt5kHLGTLohib6m6KFdJUKBUBbyIxEKNJVyGFSCHRDUKegROs
-NVV4r18DeBzXvKmrqBsZQQjv+4d6Of+KhruOO2pWhpS/IYvHM/8BapKaXvLa/Swf
-OfhhbIJIaQ6x2AWWWWLZjIhYIUL6iI228xD4FOVoHaKCfIm+8Ahntqblzr7SKBQk
-IFugRFV7XBFA8+NsVwGs89QRJJT6YUwjuYLALIL8fIjsGUyBSb/2AwnPf0cJP6Au
-X2U+Y4kJ8/7kDbWh7PJa1D8MhPkI8jfhW7g7oSQUKrXmYIY+4r2QBWt5mG/XC8jt
-IUFqKde+o2uefg19ypB8d4QwUQC49aXqRgs2eZOjujmwpSByTEgDOGAGHAMi42+y
-cG/7pZMWVgAe60bVaWP9
-=SRH1
+iQIcBAEBAgAGBQJUJQ3LAAoJEBx+YmzsjxAgmwEP/RaTxW7Bk80ewS8n+5x1iY5Z
+ZoU9KSH19up57Bi2YdjqOQAPYkiORR3P6ndaaWj5ggFNFdKVyZN6NaP3FsLq8iOo
+Alfwl4cY/KH5KiqJ+VFq7mziQMU+TcRmjGEE8dnhS+K6YrNsPe8azUyDLTr/V24r
+J3oIAZ73qKiu2D7sTCJuhgBcptj7usOYWybKlgzCkmIhgJgcJDVKwrm2l2POgqVt
+HmxED/6oCvZxlrrKoCzLchkMBozDvGwXf4c700VTpmunQwB0B1nv/b1Nk008p7Lj
+NiTOYb6VQstkrOgCLCohqvtAoLwydhRT0a9ouxAHUPzPTCSiTl/KaeRz8UFVuCp/
+s3trQm6PJiQjhnEVt9b2NEbuAXaMarIZOhveLg7raF6npnB9w1TAc+zhthD/ax93
+lI0Z00nj34HuzTA0L75ITCayQDidXpg3JsjopBFkeoU+FkVI7YjZMsT2LlV58DwI
+Bia0vE8+t/Zl4ZlGAcm1j9aiSd8PNiWNnKWY7h/rvx+sOmtVPEypB6aFPKBjh7NF
+bx7ydv9cg39HFSdNH+8lKQ2I+/GGJEVNe2kxWl0fiKgsUnjj6FFh1OFbR8Eb0wBh
+yQ1C28aloEugSOOQN1XsnjsdZLtQHRR7PI1bYU4K2JQzCUKAOAC4aJkKRoamDg9v
+xzH+nlY4tIA1r1gFwhcf
+=7oy/
 -----END PGP SIGNATURE-----
 
---ReaqsoxgOBHFXBhH--
+--G23JYFG0d77Z6i/3--
