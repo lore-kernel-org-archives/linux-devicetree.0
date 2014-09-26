@@ -1,39 +1,77 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] bcma: use device from DT (brcm,bus-gpio) for SoC GPIO chip
-Date: Sat, 27 Sep 2014 00:03:18 +0200
-Message-ID: <2539898.4te2VKk57a@wuerfel>
-References: <1411741733-13888-1-git-send-email-zajec5@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411741733-13888-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH V3 1/2] Documentation: add Device tree bindings for QCA7000
+Date: Fri, 26 Sep 2014 22:21:20 +0000
+Message-ID: <1411770081-20995-2-git-send-email-stefan.wahren@i2se.com>
+References: <1411770081-20995-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1411770081-20995-1-git-send-email-stefan.wahren@i2se.com>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 26 September 2014 16:28:53 Rafa=C5=82 Mi=C5=82ecki wrote:
-> +The top-level axi bus may contain following children:
-> +
-> +- gpio: GPIO chip on the SoC
-> +
-> +  Required properties:
-> +  - compatible: "brcm,bus-gpio"
-> +  - gpio-controller : makes the node a GPIO controller
-> +  - #gpio-cells : size of the GPIO specifier, must be 2
-> +
->=20
+This patch adds the Device tree bindings for the
+Ethernet over SPI protocol driver of the Qualcomm
+QCA7000 HomePlug GreenPHY.
 
-I wonder if it would be better to avoid the subnode here and just
-make the parent itself the gpio controller.
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ .../devicetree/bindings/net/qca-qca7000-spi.txt    |   47 ++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
 
-Is the gpio controller part of the bus itself in reality, or is it
-a device that gets probed on the bus?
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireles=
-s" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt b/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
+new file mode 100644
+index 0000000..c74989c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
+@@ -0,0 +1,47 @@
++* Qualcomm QCA7000 (Ethernet over SPI protocol)
++
++Note: The QCA7000 is useable as a SPI device. In this case it must be defined
++as a child of a SPI master in the device tree.
++
++Required properties:
++- compatible : Should be "qca,qca7000"
++- reg : Should specify the SPI chip select
++- interrupts : The first cell should specify the index of the source interrupt
++  and the second cell should specify the trigger type as rising edge
++- spi-cpha : Must be set
++- spi-cpol: Must be set
++
++Optional properties:
++- interrupt-parent : Specify the pHandle of the source interrupt
++- spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at.
++  Numbers smaller than 1000000 or greater than 16000000 are invalid. Missing
++  the property will set the SPI frequency to 8000000 Hertz.
++- local-mac-address: 6 bytes, MAC address
++- qca,legacy-mode : Set the SPI data transfer of the QCA7000 to legacy mode.
++  In this mode the SPI master must toggle the chip select between each data
++  word. In burst mode these gaps aren't necessary, which is faster.
++  This setting depends on how the QCA7000 is setup via GPIO pin strapping.
++  If the property is missing the driver defaults to burst mode.
++
++Example:
++
++/* Freescale i.MX28 SPI master*/
++ssp2: spi@80014000 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "fsl,imx28-spi";
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi2_pins_a>;
++	status = "okay";
++
++	qca7000: ethernet@0 {
++		compatible = "qca,qca7000";
++		reg = <0x0>;
++		interrupt-parent = <&gpio3>;      /* GPIO Bank 3 */
++		interrupts = <25 0x1>;            /* Index: 25, rising edge */
++		spi-cpha;                         /* SPI mode: CPHA=1 */
++		spi-cpol;                         /* SPI mode: CPOL=1 */
++		spi-max-frequency = <8000000>;    /* freq: 8 MHz */
++		local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
++	};
++};
+-- 
+1.7.9.5
