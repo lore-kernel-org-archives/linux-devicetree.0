@@ -1,60 +1,59 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v2 1/2] mtd: docg3: add device-tree support
-Date: Sat, 27 Sep 2014 21:34:29 +0200
-Message-ID: <1411846470-30041-1-git-send-email-robert.jarzmik@free.fr>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH] clk: Add PWM clock driver
+Date: Sat, 27 Sep 2014 13:01:22 -0700
+Message-ID: <20140927200122.19023.40310@quantum>
+References: <5410AEFD.5030302@elproma.com.pl> <20140923085130.GO30514@ulmo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140923085130.GO30514@ulmo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, =?utf-8?q?Janusz_U=C5=BCycki?= <j.uzycki@elproma.com.pl>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add device-tree support. This is straightforward as docg3 only uses the
-standard IOMEM resources.
+Quoting Thierry Reding (2014-09-23 01:51:31)
+> On Wed, Sep 10, 2014 at 10:05:17PM +0200, Janusz U=C5=BCycki wrote:
+> > Hi,
+> >=20
+> > http://patchwork.ozlabs.org/patch/359069/
+> > https://lkml.org/lkml/2014/6/12/186
+> >=20
+> > Will the patch ever included to linux-next?
+>=20
+> I've never seen this patch before. From a quick look it doesn't seem
+> like it would work as is, but the idea is certainly interesting. If
+> somebody decides to continue work on it, please Cc me and the linux-p=
+wm
+> mailing list.
 
-Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+I just merged a gpio-controlled clock gate and I'm fine with a PWM cloc=
+k
+output.
 
----
-Since v1: Mark's review: changed compatible string
----
- drivers/mtd/devices/docg3.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Janusz, how are you testing the clock driver?
 
-diff --git a/drivers/mtd/devices/docg3.c b/drivers/mtd/devices/docg3.c
-index 91a169c..e2e0713 100644
---- a/drivers/mtd/devices/docg3.c
-+++ b/drivers/mtd/devices/docg3.c
-@@ -22,6 +22,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/errno.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/string.h>
- #include <linux/slab.h>
-@@ -2126,10 +2127,17 @@ static int __exit docg3_release(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static struct of_device_id docg3_dt_ids[] = {
-+	{ .compatible = "m-systems,diskonchip-g3" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, docg3_dt_ids);
-+
- static struct platform_driver g3_driver = {
- 	.driver		= {
- 		.name	= "docg3",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(docg3_dt_ids),
- 	},
- 	.suspend	= docg3_suspend,
- 	.resume		= docg3_resume,
--- 
-2.1.0
+Regards,
+Mike
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+> > pwm_config()  API could be extended to support
+> > not only period [ns] and duty [ns] time
+> > but also frequency [Hz] and duty cycle fraction [1/1000?]
+> > (instead of time in ns) as parameters.
+> > Then  ns (rounded by pwm) to freq. conversion problem
+> > inclk_pwm_recalc_rate() usingpwm_get_period()
+> > could be avoided.
+> > To extend the API pwm_config() can support
+> > new flags forduty_ns and period_ns,
+> > eg. PWM_DUTY_PERCENT and PWM_PERIOD_HZ.
+>=20
+> Is that rounding really a problem? Also the PWM chips will most likel=
+y
+> use the concept of period and duty-cycle internally anyway, so it wil=
+l
+> convert back from Hz/percentage to nanoseconds and fall victim to
+> similar rounding effects.
+>=20
+> Thierry
