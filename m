@@ -1,461 +1,149 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 2/2] regulator: add mxs regulator driver
-Date: Sat, 27 Sep 2014 00:59:48 +0000
-Message-ID: <1411779588-22031-3-git-send-email-stefan.wahren@i2se.com>
-References: <1411779588-22031-1-git-send-email-stefan.wahren@i2se.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411779588-22031-1-git-send-email-stefan.wahren@i2se.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, shawn.guo@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: festevam@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Stefan Wahren <stefan.wahren@i2se.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/7] clk: sunxi: Add post clk divider for
+ factor clocks
+Date: Sat, 27 Sep 2014 09:07:08 +0200
+Message-ID: <20140927070708.GY15315@lukather>
+References: <1410000448-9999-1-git-send-email-wens@csie.org>
+ <1410000448-9999-2-git-send-email-wens@csie.org>
+ <54145822.4020607@elopez.com.ar>
+ <20140916155711.GF2166@lukather>
+ <CAGb2v64o-7La6Sd_WVDrPQC0DUTqXZPZoG7u=OpXb+xRB1tcog@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="o+N5O4bNGxsQWEyZ"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBGWGTGQQKGQEJ4HVVJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64o-7La6Sd_WVDrPQC0DUTqXZPZoG7u=OpXb+xRB1tcog-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds driver support for Freescale i.MX23, i.MX28
-on-chip regulators. The driver supports the following regulators:
-vddd, vdda and vddio.
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- drivers/regulator/Kconfig         |   11 ++
- drivers/regulator/Makefile        |    1 +
- drivers/regulator/mxs-regulator.c |  395 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 407 insertions(+)
- create mode 100644 drivers/regulator/mxs-regulator.c
+--o+N5O4bNGxsQWEyZ
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index a353011..f353a2b 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -433,6 +433,17 @@ config REGULATOR_MC13892
- 	  Say y here to support the regulators found on the Freescale MC13892
- 	  PMIC.
- 
-+config REGULATOR_MXS
-+	tristate "Freescale MXS on-chip regulators"
-+	depends on ARCH_MXS
-+	default y if ARCH_MXS
-+	help
-+	  Say y here to support Freescale MXS on-chip regulators.
-+
-+	  The driver currently support the following voltage regulators:
-+          vddd, vdda and vddio. It is recommended that this option be
-+	  enabled on i.MX23, i.MX28 platform.
-+
- config REGULATOR_PALMAS
- 	tristate "TI Palmas PMIC Regulators"
- 	depends on MFD_PALMAS
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 25271f8..0f5b66c 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -58,6 +58,7 @@ obj-$(CONFIG_REGULATOR_MAX77802) += max77802.o
- obj-$(CONFIG_REGULATOR_MC13783) += mc13783-regulator.o
- obj-$(CONFIG_REGULATOR_MC13892) += mc13892-regulator.o
- obj-$(CONFIG_REGULATOR_MC13XXX_CORE) +=  mc13xxx-regulator-core.o
-+obj-$(CONFIG_REGULATOR_MXS) += mxs-regulator.o
- obj-$(CONFIG_REGULATOR_PALMAS) += palmas-regulator.o
- obj-$(CONFIG_REGULATOR_PFUZE100) += pfuze100-regulator.o
- obj-$(CONFIG_REGULATOR_TPS51632) += tps51632-regulator.o
-diff --git a/drivers/regulator/mxs-regulator.c b/drivers/regulator/mxs-regulator.c
-new file mode 100644
-index 0000000..63c09cc
---- /dev/null
-+++ b/drivers/regulator/mxs-regulator.c
-@@ -0,0 +1,395 @@
-+/*
-+ * Freescale STMP378X voltage regulators
-+ *
-+ * Embedded Alley Solutions, Inc <source@embeddedalley.com>
-+ *
-+ * Copyright (C) 2014 Stefan Wahren
-+ * Copyright (C) 2010 Freescale Semiconductor, Inc.
-+ * Copyright 2008 Embedded Alley Solutions, Inc All Rights Reserved.
-+ */
-+
-+/*
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+#include <linux/regulator/of_regulator.h>
-+#include <linux/slab.h>
-+
-+#define HW_POWER_STS			(0x000000c0)
-+
-+#define BM_POWER_STS_DC_OK		BIT(9)
-+
-+#define MXS_VDDIO	1
-+#define MXS_VDDA	2
-+#define MXS_VDDD	3
-+
-+struct mxs_regulator {
-+	struct regulator_desc rdesc;
-+	struct regulator_init_data *initdata;
-+
-+	const char *name;
-+	void __iomem *base_addr;
-+	void __iomem *power_addr;
-+	unsigned int mode_mask;
-+};
-+
-+static int mxs_set_voltage(struct regulator_dev *reg, int min_uV, int max_uV,
-+			   unsigned *selector)
-+{
-+	struct mxs_regulator *sreg = rdev_get_drvdata(reg);
-+	struct regulation_constraints *con = &sreg->initdata->constraints;
-+	void __iomem *power_sts = sreg->power_addr + HW_POWER_STS;
-+	unsigned long start;
-+	u32 val, regs, i;
-+
-+	pr_debug("%s: min_uV %d, max_uV %d, min %d, max %d\n", __func__,
-+		 min_uV, max_uV, con->min_uV, con->max_uV);
-+
-+	if (max_uV < con->min_uV || max_uV > con->max_uV)
-+		return -EINVAL;
-+
-+	val = (max_uV - con->min_uV) * sreg->rdesc.n_voltages /
-+			(con->max_uV - con->min_uV);
-+
-+	regs = (readl(sreg->base_addr) & ~sreg->rdesc.vsel_mask);
-+
-+	pr_debug("%s: %s calculated val %d\n", __func__, sreg->name, val);
-+
-+	writel(val | regs, sreg->base_addr);
-+	for (i = 20; i; i--) {
-+		/* delay for fast mode */
-+		if (readl(power_sts) & BM_POWER_STS_DC_OK)
-+			return 0;
-+
-+		udelay(1);
-+	}
-+
-+	writel(val | regs, sreg->base_addr);
-+	start = jiffies;
-+	while (1) {
-+		/* delay for normal mode */
-+		if (readl(power_sts) & BM_POWER_STS_DC_OK)
-+			return 0;
-+
-+		if (time_after(jiffies, start +	msecs_to_jiffies(80)))
-+			break;
-+
-+		schedule();
-+	}
-+
-+	return -ETIMEDOUT;
-+}
-+
-+
-+static int mxs_get_voltage(struct regulator_dev *reg)
-+{
-+	struct mxs_regulator *sreg = rdev_get_drvdata(reg);
-+	struct regulation_constraints *con = &sreg->initdata->constraints;
-+	int uV;
-+	u32 val = readl(sreg->base_addr) & sreg->rdesc.vsel_mask;
-+
-+	pr_debug("%s: %s register val %d\n", __func__, sreg->name, val);
-+
-+	if (val > sreg->rdesc.n_voltages)
-+		val = sreg->rdesc.n_voltages;
-+
-+	uV = con->min_uV + val *
-+		(con->max_uV - con->min_uV) / sreg->rdesc.n_voltages;
-+
-+	return uV;
-+}
-+
-+static int mxs_is_enabled(struct regulator_dev *reg)
-+{
-+	struct mxs_regulator *sreg = rdev_get_drvdata(reg);
-+	u32 val;
-+
-+	if (sreg->rdesc.id == MXS_VDDIO)
-+		return 1;
-+
-+	val = readl(sreg->base_addr) & sreg->rdesc.enable_mask;
-+
-+	pr_debug("%s: %s register val %d\n", __func__, sreg->name, val);
-+
-+	switch (sreg->rdesc.id) {
-+	case MXS_VDDA:
-+		val >>= 16;
-+		break;
-+	case MXS_VDDD:
-+		val >>= 20;
-+		break;
-+	}
-+
-+	return val ? 1 : 0;
-+}
-+
-+static int mxs_set_mode(struct regulator_dev *reg, unsigned int mode)
-+{
-+	struct mxs_regulator *sreg = rdev_get_drvdata(reg);
-+	int ret = 0;
-+	u32 val;
-+
-+	switch (mode) {
-+	case REGULATOR_MODE_FAST:
-+		val = readl(sreg->base_addr);
-+		/* Disable stepping */
-+		writel(val | sreg->mode_mask, sreg->base_addr);
-+		break;
-+
-+	case REGULATOR_MODE_NORMAL:
-+		val = readl(sreg->base_addr);
-+		/* Enable stepping */
-+		writel(val & ~sreg->mode_mask, sreg->base_addr);
-+		break;
-+
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static unsigned int mxs_get_mode(struct regulator_dev *reg)
-+{
-+	struct mxs_regulator *sreg = rdev_get_drvdata(reg);
-+	u32 val = readl(sreg->base_addr) & sreg->mode_mask;
-+
-+	return val ? REGULATOR_MODE_FAST : REGULATOR_MODE_NORMAL;
-+}
-+
-+static struct regulator_ops mxs_rops = {
-+	.set_voltage	= mxs_set_voltage,
-+	.get_voltage	= mxs_get_voltage,
-+	.set_mode	= mxs_set_mode,
-+	.get_mode	= mxs_get_mode,
-+};
-+
-+static struct regulator_desc mxs_reg_desc[] = {
-+	{
-+		.name = "vddio",
-+		.id = MXS_VDDIO,
-+		.type = REGULATOR_VOLTAGE,
-+		.n_voltages = 0x10,
-+		.uV_step = 50000,
-+		.linear_min_sel = 0,
-+		.vsel_mask = 0x1f,
-+		.enable_mask = 0,
-+	},
-+	{
-+		.name = "vdda",
-+		.id = MXS_VDDA,
-+		.type = REGULATOR_VOLTAGE,
-+		.n_voltages = 0x1f,
-+		.uV_step = 25000,
-+		.linear_min_sel = 0,
-+		.vsel_mask = 0x1f,
-+		.enable_mask = (3 << 16),
-+	},
-+	{
-+		.name = "vddd",
-+		.id = MXS_VDDD,
-+		.type = REGULATOR_VOLTAGE,
-+		.n_voltages = 0x1f,
-+		.uV_step = 25000,
-+		.linear_min_sel = 0,
-+		.vsel_mask = 0x1f,
-+		.enable_mask = (3 << 20),
-+	},
-+};
-+
-+static int mxs_regulator_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct device_node *parent;
-+	struct regulator_desc *rdesc;
-+	struct regulator_dev *rdev = NULL;
-+	struct mxs_regulator *sreg;
-+	struct regulator_init_data *initdata = NULL;
-+	struct regulation_constraints *con;
-+	struct regulator_config config = { };
-+	void __iomem *base_addr = NULL;
-+	void __iomem *power_addr = NULL;
-+	int ret = 0;
-+	const char *name;
-+	unsigned int i;
-+
-+	if (!np) {
-+		dev_err(dev, "missing device tree\n");
-+		return -EINVAL;
-+	}
-+
-+	initdata = of_get_regulator_init_data(dev, np);
-+	if (!initdata) {
-+		dev_err(dev, "missing regulator init data\n");
-+		return -EINVAL;
-+	}
-+
-+	if (of_property_read_string(np, "regulator-name", &name)) {
-+		dev_err(dev, "missing property regulator-name\n");
-+		return -EINVAL;
-+	}
-+
-+	sreg = devm_kzalloc(dev, sizeof(*sreg), GFP_KERNEL);
-+	if (!sreg)
-+		return -EINVAL;
-+
-+	sreg->initdata = initdata;
-+	rdesc = &sreg->rdesc;
-+	memset(rdesc, 0, sizeof(*rdesc));
-+
-+	for (i = 0; i < ARRAY_SIZE(mxs_reg_desc); i++) {
-+		if (!strcmp(mxs_reg_desc[i].name, name))
-+			break;
-+	}
-+
-+	if (i >= ARRAY_SIZE(mxs_reg_desc)) {
-+		dev_err(dev, "unknown regulator %s\n", name);
-+		return -EINVAL;
-+	}
-+
-+	sreg->name = name;
-+	rdesc->name = sreg->name;
-+	rdesc->owner = THIS_MODULE;
-+	rdesc->id = mxs_reg_desc[i].id;
-+	rdesc->type = REGULATOR_VOLTAGE;
-+	rdesc->linear_min_sel = mxs_reg_desc[i].linear_min_sel;
-+	rdesc->n_voltages = mxs_reg_desc[i].n_voltages;
-+	rdesc->uV_step = mxs_reg_desc[i].uV_step;
-+	rdesc->vsel_mask = mxs_reg_desc[i].vsel_mask;
-+	rdesc->enable_mask = mxs_reg_desc[i].enable_mask;
-+	rdesc->enable_is_inverted = mxs_reg_desc[i].enable_is_inverted;
-+	rdesc->ops = &mxs_rops;
-+
-+	switch (sreg->rdesc.id) {
-+	case MXS_VDDIO:
-+		sreg->mode_mask = BIT(17);
-+		break;
-+	case MXS_VDDA:
-+		sreg->mode_mask = BIT(18);
-+		break;
-+	case MXS_VDDD:
-+		sreg->mode_mask = BIT(22);
-+		break;
-+	}
-+
-+	/* get device base address */
-+	base_addr = of_iomap(np, 0);
-+	if (!base_addr) {
-+		dev_err(dev, "unable to map base addr\n");
-+		return -ENXIO;
-+	}
-+
-+	parent = of_get_parent(np);
-+	if (!parent) {
-+		dev_err(dev, "unable to get power controller node\n");
-+		ret = -ENXIO;
-+		goto fail1;
-+	}
-+
-+	/* get base address of power controller */
-+	power_addr = of_iomap(parent, 0);
-+	of_node_put(parent);
-+	if (!power_addr) {
-+		dev_err(dev, "unable to map power controller addr\n");
-+		ret = -ENXIO;
-+		goto fail1;
-+	}
-+
-+	dev_info(dev, "%s found\n", name);
-+
-+	sreg->base_addr = base_addr;
-+	sreg->power_addr = power_addr;
-+
-+	con = &initdata->constraints;
-+
-+	config.dev = &pdev->dev;
-+	config.init_data = initdata;
-+	config.driver_data = sreg;
-+	config.of_node = np;
-+
-+	pr_debug("probing regulator %s\n", name);
-+
-+	rdev = devm_regulator_register(dev, rdesc, &config);
-+
-+	if (IS_ERR(rdev)) {
-+		dev_err(dev, "failed to register %s\n", name);
-+		ret = PTR_ERR(rdev);
-+		goto fail2;
-+	}
-+
-+	platform_set_drvdata(pdev, rdev);
-+
-+	return 0;
-+fail2:
-+	iounmap(power_addr);
-+fail1:
-+	iounmap(base_addr);
-+
-+	return ret;
-+}
-+
-+static int mxs_regulator_remove(struct platform_device *pdev)
-+{
-+	struct regulator_dev *rdev = platform_get_drvdata(pdev);
-+	struct mxs_regulator *sreg = rdev_get_drvdata(rdev);
-+	void __iomem *base_addr = sreg->base_addr;
-+	void __iomem *power_addr = sreg->power_addr;
-+
-+	regulator_unregister(rdev);
-+	iounmap(power_addr);
-+	iounmap(base_addr);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id of_mxs_regulator_match[] = {
-+	{ .compatible = "fsl,mxs-regulator" },
-+	{ /* end */ }
-+};
-+MODULE_DEVICE_TABLE(of, of_mxs_regulator_match);
-+
-+static struct platform_driver mxs_regulator_driver = {
-+	.driver = {
-+		.name	= "mxs_regulator",
-+		.owner  = THIS_MODULE,
-+		.of_match_table = of_mxs_regulator_match,
-+	},
-+	.probe	= mxs_regulator_probe,
-+	.remove = mxs_regulator_remove,
-+};
-+
-+static int __init mxs_regulator_init(void)
-+{
-+	return platform_driver_register(&mxs_regulator_driver);
-+}
-+postcore_initcall(mxs_regulator_init);
-+
-+static void __exit mxs_regulator_exit(void)
-+{
-+	platform_driver_unregister(&mxs_regulator_driver);
-+}
-+module_exit(mxs_regulator_exit);
-+
-+MODULE_AUTHOR("Embedded Alley Solutions <source@embeddedalley.com>");
-+MODULE_AUTHOR("Stefan Wahren <stefan.wahren@i2se.com>");
-+MODULE_DESCRIPTION("Freescale STMP378X voltage regulators");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:mxs_regulator");
--- 
-1.7.9.5
+On Wed, Sep 24, 2014 at 11:35:58PM +0800, Chen-Yu Tsai wrote:
+> Hi Maxime, Emilio,
+>=20
+> On Tue, Sep 16, 2014 at 11:57 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Hi Emilio,
+> >
+> > On Sat, Sep 13, 2014 at 11:43:46AM -0300, Emilio L=F3pez wrote:
+> >> Hi,
+> >>
+> >> El 06/09/14 a las 07:47, Chen-Yu Tsai escibi=F3:
+> >> >Some factor clocks, mostly PLLs, have an extra fixed divider just bef=
+ore
+> >> >the clock output. Add an option to the factor clk driver config data =
+to
+> >> >specify this divider.
+> >> >
+> >> >Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >> >---
+> >> >  drivers/clk/sunxi/clk-factors.c | 3 +++
+> >> >  drivers/clk/sunxi/clk-factors.h | 1 +
+> >> >  2 files changed, 4 insertions(+)
+> >> >
+> >> >diff --git a/drivers/clk/sunxi/clk-factors.c b/drivers/clk/sunxi/clk-=
+factors.c
+> >> >index 2057c8a..435111d 100644
+> >> >--- a/drivers/clk/sunxi/clk-factors.c
+> >> >+++ b/drivers/clk/sunxi/clk-factors.c
+> >> >@@ -64,6 +64,9 @@ static unsigned long clk_factors_recalc_rate(struct=
+ clk_hw *hw,
+> >> >     /* Calculate the rate */
+> >> >     rate =3D (parent_rate * (n + config->n_start) * (k + 1) >> p) / =
+(m + 1);
+> >> >
+> >> >+    if (config->post_div)
+> >> >+            rate /=3D config->post_div;
+> >> >+
+> >> >     return rate;
+> >> >  }
+> >> >
+> >> >diff --git a/drivers/clk/sunxi/clk-factors.h b/drivers/clk/sunxi/clk-=
+factors.h
+> >> >index d2d0efa..ce70c65 100644
+> >> >--- a/drivers/clk/sunxi/clk-factors.h
+> >> >+++ b/drivers/clk/sunxi/clk-factors.h
+> >> >@@ -16,6 +16,7 @@ struct clk_factors_config {
+> >> >     u8 pshift;
+> >> >     u8 pwidth;
+> >> >     u8 n_start;
+> >> >+    u8 post_div;
+> >> >  };
+> >> >
+> >> >  struct clk_factors {
+> >> >
+> >>
+> >> For the record, I liked your solution on[1] more, as it's in line
+> >> with what we're doing on the other sunxi platforms, instead of
+> >> adding features in factors to cover for some cases. But it's your
+> >> and Maxime's call, as I haven't written any of the sun6i code so
+> >> far.
+> >
+> > No, you still wrote most of the clock support, so your opinion is
+> > always valuable (and valued).
+> >
+> > Thing is, unlike what was done in the sun4i driver where there was a
+> > "real" technical issue that was preventing us from using only
+> > fixed-factor, we're not in such a case in sun6i (and later,
+> > apparently).
+> >
+> > PLL6 has only one output, which is then directly multiplied by
+> > fixed-factors, without any (pre|post)-dividers for any of them.
+> >
+> > That means that following what you did for the sun4i would just
+> > register 3 "dumbs" fixed-factors, that we couldn't reference from DT,
+> > or through a cryptic index (which is not even documented in our
+> > bindings).
+> >
+> > I'd be fine either way, I just prefer the solution that has less code
+> > and is more explicit.
+>=20
+> What's the verdict on this series?
+
+If Emilio prefers to have a single clock node, fine. But please update
+the DT bindings documentation.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--o+N5O4bNGxsQWEyZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUJmIcAAoJEBx+YmzsjxAgDjkP/AmH1TWbHbHV4MUF0QNAhNk6
+vxAxizt5C0OYeZk/ZO+bLCBXgVfG+t9cx+Mj2wyscvhezKYB8KAD3O6cYC1YY8ZY
+BxOMwCSqIiRoXPd14DE9df0pQZxR73e51s9/3ew83rQ8Gv5Knb+iDKszb9E3ES/S
+2Kfz+4ncEKpmmi38sAEmDiarDb0fENs82nswqccxWGLF84VionqNUTxw4wLe0BwM
+gJwp7MqaC8tHAy/+yMLFxisZK/JhgOmBlSEm0SZIFOeZIMtIq5WSnA5cvv5GWx2C
+ptBAYLoJKb4EbV5FBFZNNNj3lI06BqMQVlOzUD8lZTiY1gfgIOVESC2oi2MX5GDT
+Hz5vdNP51Hv+eCFrK0dBZE1ObBqsvTGH5wr34qg/UPY4WGyfxyAHAVwvuwOtPmOK
+1w8sEu+T58vjhZJBTbGNDSfxeazmu47Piz9+Zzq5vBecf4p4re6MiN67t3J7Px3n
+B3ZGiFrao4LE2b5Ob6vqKMEGiW7ZYSawgsT24VEJ9UE9+5pMGs8gh47kaGLP7td8
+KOTHbc9dI3SsoTCsqE4h0Mc834vhrrIYglewKXDQN4Qkd9g5geJyfMSrYfM5lYyF
+mvwYBNjh1lGVBqcyKofqnDKHAPU2Qglehh1Sw1tcfqZcaS9KeHh+b7mxl5FwEQNW
+KgbNy2cRSyBRyv4vls75
+=dnRg
+-----END PGP SIGNATURE-----
+
+--o+N5O4bNGxsQWEyZ--
