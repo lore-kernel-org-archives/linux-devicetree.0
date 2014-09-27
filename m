@@ -1,58 +1,108 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2] of: of_reserved_mem: Provide return values
-Date: Sat, 27 Sep 2014 11:02:21 -0300
-Message-ID: <1411826541-5408-1-git-send-email-festevam@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
-Cc: m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Romain Perier <romain.perier@gmail.com>
+Subject: [PATCH v1 1/3] regulator: act8865: Add support to turn off all outputs
+Date: Sat, 27 Sep 2014 16:21:44 +0000
+Message-ID: <1411834906-9533-1-git-send-email-romain.perier@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+When the property "active-semi,system-power-controller" is found in the
+devicetree, the function pm_power_off is defined. This function sends the
+rights bit fields to the global off control register. shutdown/poweroff
+commands are now supported for hardware components which use these PMU.
 
-Commit 1a29544cc8c9 ("drivers: of: add return value to 
-of_reserved_mem_device_init") missed to update the return values in the error
-cases, causing the following build warnings:
-
-drivers/of/of_reserved_mem.c: In function 'of_reserved_mem_device_init':
-drivers/of/of_reserved_mem.c:253:3: warning: 'return' with no value, in function returning non-void [-Wreturn-type]
-drivers/of/of_reserved_mem.c:259:3: warning: 'return' with no value, in function returning non-void [-Wreturn-type]
-
-Provide proper return values. 
-
-Reported-by: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Romain Perier <romain.perier@gmail.com>
 ---
-Changes since v1:
-- Fix typo in the Reported-by tag
+ drivers/regulator/act8865-regulator.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
- drivers/of/of_reserved_mem.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 7e7de03..01ef0a3 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -250,13 +250,13 @@ int of_reserved_mem_device_init(struct device *dev)
+diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
+index afd06f9..6cf202d 100644
+--- a/drivers/regulator/act8865-regulator.c
++++ b/drivers/regulator/act8865-regulator.c
+@@ -61,6 +61,8 @@
+ #define	ACT8846_REG12_VSET	0xa0
+ #define	ACT8846_REG12_CTRL	0xa1
+ #define	ACT8846_REG13_CTRL	0xb1
++#define	ACT8846_GLB_OFF_CTRL	0xc3
++#define	ACT8846_OFF_SYSMASK	0x18
  
- 	np = of_parse_phandle(dev->of_node, "memory-region", 0);
- 	if (!np)
--		return;
-+		return -ENODEV;
+ /*
+  * ACT8865 Global Register Map.
+@@ -84,6 +86,7 @@
+ #define	ACT8865_LDO3_CTRL	0x61
+ #define	ACT8865_LDO4_VSET	0x64
+ #define	ACT8865_LDO4_CTRL	0x65
++#define	ACT8865_MSTROFF		0x20
  
- 	rmem = __find_rmem(np);
- 	of_node_put(np);
+ /*
+  * Field Definitions.
+@@ -98,6 +101,8 @@
  
- 	if (!rmem || !rmem->ops || !rmem->ops->device_init)
--		return;
-+		return -ENOMEM;
+ struct act8865 {
+ 	struct regmap *regmap;
++	int off_reg;
++	int off_mask;
+ };
  
- 	rmem->ops->device_init(rmem, dev);
- 	dev_info(dev, "assigned reserved memory node %s\n", rmem->name);
+ static const struct regmap_config act8865_regmap_config = {
+@@ -275,6 +280,16 @@ static struct regulator_init_data
+ 	return NULL;
+ }
+ 
++static struct i2c_client *act8865_i2c_client;
++static void act8865_power_off(void)
++{
++	struct act8865 *act8865;
++
++	act8865 = i2c_get_clientdata(act8865_i2c_client);
++	regmap_write(act8865->regmap, act8865->off_reg, act8865->off_mask);
++	while (1);
++}
++
+ static int act8865_pmic_probe(struct i2c_client *client,
+ 			      const struct i2c_device_id *i2c_id)
+ {
+@@ -285,6 +300,7 @@ static int act8865_pmic_probe(struct i2c_client *client,
+ 	int i, ret, num_regulators;
+ 	struct act8865 *act8865;
+ 	unsigned long type;
++	int off_reg, off_mask;
+ 
+ 	pdata = dev_get_platdata(dev);
+ 
+@@ -304,10 +320,14 @@ static int act8865_pmic_probe(struct i2c_client *client,
+ 	case ACT8846:
+ 		regulators = act8846_regulators;
+ 		num_regulators = ARRAY_SIZE(act8846_regulators);
++		off_reg = ACT8846_GLB_OFF_CTRL;
++		off_mask = ACT8846_OFF_SYSMASK;
+ 		break;
+ 	case ACT8865:
+ 		regulators = act8865_regulators;
+ 		num_regulators = ARRAY_SIZE(act8865_regulators);
++		off_reg = ACT8865_SYS_CTRL;
++		off_mask = ACT8865_MSTROFF;
+ 		break;
+ 	default:
+ 		dev_err(dev, "invalid device id %lu\n", type);
+@@ -345,6 +365,15 @@ static int act8865_pmic_probe(struct i2c_client *client,
+ 		return ret;
+ 	}
+ 
++	if (dev->of_node &&
++	    of_property_read_bool(dev->of_node,
++				  "active-semi,system-power-controller")) {
++		act8865_i2c_client = client;
++		act8865->off_reg = off_reg;
++		act8865->off_mask = off_mask;
++		pm_power_off = act8865_power_off;
++	}
++
+ 	/* Finally register devices */
+ 	for (i = 0; i < num_regulators; i++) {
+ 		const struct regulator_desc *desc = &regulators[i];
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
