@@ -1,59 +1,98 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH] clk: Add PWM clock driver
-Date: Sat, 27 Sep 2014 13:01:22 -0700
-Message-ID: <20140927200122.19023.40310@quantum>
-References: <5410AEFD.5030302@elproma.com.pl> <20140923085130.GO30514@ulmo>
+From: Mike Turquette <mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] drm/tegra: Set the dsi lp clk parent and rate
+Date: Sat, 27 Sep 2014 13:05:32 -0700
+Message-ID: <20140927200532.19023.95967@quantum>
+References: <1411156429-19797-1-git-send-email-seanpaul@chromium.org>
+ <20140922174652.GP3290@leverpostej> <20140923072204.GJ30514@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140923085130.GO30514@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, =?utf-8?q?Janusz_U=C5=BCycki?= <j.uzycki@elproma.com.pl>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140923072204.GJ30514@ulmo>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Thierry Reding (2014-09-23 01:51:31)
-> On Wed, Sep 10, 2014 at 10:05:17PM +0200, Janusz U=C5=BCycki wrote:
-> > Hi,
-> >=20
-> > http://patchwork.ozlabs.org/patch/359069/
-> > https://lkml.org/lkml/2014/6/12/186
-> >=20
-> > Will the patch ever included to linux-next?
->=20
-> I've never seen this patch before. From a quick look it doesn't seem
-> like it would work as is, but the idea is certainly interesting. If
-> somebody decides to continue work on it, please Cc me and the linux-p=
-wm
-> mailing list.
+Quoting Thierry Reding (2014-09-23 00:22:05)
+> On Mon, Sep 22, 2014 at 06:46:52PM +0100, Mark Rutland wrote:
+> > On Fri, Sep 19, 2014 at 08:53:48PM +0100, Sean Paul wrote:
+> > > Per NVidia, this clock rate should be around 70MHz in
+> > > order to properly sample reads on data lane 0. In order
+> > > to achieve this rate, we need to reparent the clock from
+> > > clk_m which can only achieve 12MHz. Add parent_lp to the
+> > > dts bindings and set the parent & rate on init.
+> > > 
+> > > Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > > ---
+> > >  .../devicetree/bindings/gpu/nvidia,tegra20-host1x.txt  | 10 ++++++++--
+> > >  drivers/gpu/drm/tegra/dsi.c                            | 18 ++++++++++++++++++
+> > >  drivers/gpu/drm/tegra/dsi.h                            |  3 +++
+> > >  3 files changed, 29 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
+> > > index b48f4ef..fef2918 100644
+> > > --- a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
+> > > +++ b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
+> > > @@ -191,6 +191,10 @@ of the following host1x client modules:
+> > >    - nvidia,hpd-gpio: specifies a GPIO used for hotplug detection
+> > >    - nvidia,edid: supplies a binary EDID blob
+> > >    - nvidia,panel: phandle of a display panel
+> > > +  - clock-names: Can include the following entries:
+> > > +    - lp_parent: The parent clock for lp
+> > > +  - clocks: Must contain an entry for each optional entry in clock-names.
+> > > +    See ../clocks/clock-bindings.txt for details.
+> > 
+> > Did this driver previously acquire clocks?
+> > 
+> > What order or names did it expect if so?
+> 
+> This is badly placed. There are clocks and clock-names properties in a
+> "Required properties" section above this hunk which lists all the clocks
+> that this module uses. Presumably this was added to the optional section
+> because it isn't always needed.
+> 
+> > >  - sor: serial output resource
+> > >  
+> > > @@ -360,8 +364,10 @@ Example:
+> > >                     compatible = "nvidia,tegra20-dsi";
+> > >                     reg = <0x54300000 0x00040000>;
+> > >                     clocks = <&tegra_car TEGRA20_CLK_DSI>,
+> > > -                            <&tegra_car TEGRA20_CLK_PLL_D_OUT0>;
+> > > -                   clock-names = "dsi", "parent";
+> > > +                            <&tegra_car TEGRA124_CLK_DSIALP>,
+> > > +                            <&tegra_car TEGRA20_CLK_PLL_D_OUT0>,
+> > > +                            <&tegra_car TEGRA124_CLK_PLL_P>;
+> > > +                   clock-names = "dsi", "lp", "parent", "lp_parent";
+> > 
+> > Please document _all_ the names you expect.
+> > 
+> > What exactly are these two new clocks?
+> 
+> "lp" isn't actually new, it's just missing from the example.
+> 
+> > Is this all the clocks that feed into the DSI block? Are any of these
+> > not directly wired to the DSI block?
+> > 
+> > Why exactly do you need to reparent it to this particular clock, and why
+> > do you need a reference here in order to do so, given it presumably
+> > doesn't feed directly into the DSI block?
+> 
+> It seems like the hardware default is to use a parent clock unsuitable
+> for the DSI low-power mode, but as discussed elsewhere this should be
+> fixed in the clock driver where we already have a way to statically set
+> the parent clock at boot time.
 
-I just merged a gpio-controlled clock gate and I'm fine with a PWM cloc=
-k
-output.
+The driver fix is perfectly fine, but we also have the
+assigned-clock-parent stuff now if you prefer to manage it from DT.
 
-Janusz, how are you testing the clock driver?
+See,
+
+Documentation/devicetree/bindings/clock/clock-bindings.txt
+drivers/clk/clk-conf.c
 
 Regards,
 Mike
 
->=20
-> > pwm_config()  API could be extended to support
-> > not only period [ns] and duty [ns] time
-> > but also frequency [Hz] and duty cycle fraction [1/1000?]
-> > (instead of time in ns) as parameters.
-> > Then  ns (rounded by pwm) to freq. conversion problem
-> > inclk_pwm_recalc_rate() usingpwm_get_period()
-> > could be avoided.
-> > To extend the API pwm_config() can support
-> > new flags forduty_ns and period_ns,
-> > eg. PWM_DUTY_PERCENT and PWM_PERIOD_HZ.
->=20
-> Is that rounding really a problem? Also the PWM chips will most likel=
-y
-> use the concept of period and duty-cycle internally anyway, so it wil=
-l
-> convert back from Hz/percentage to nanoseconds and fall victim to
-> similar rounding effects.
->=20
+> 
 > Thierry
