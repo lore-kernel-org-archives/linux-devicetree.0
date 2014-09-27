@@ -1,51 +1,58 @@
-From: Janusz Uzycki <j.uzycki@elproma.com.pl>
-Subject: [PATCH] serial: mxs-auart: enable PPS support
-Date: Sat, 27 Sep 2014 15:36:38 +0200
-Message-ID: <1411824998-24050-1-git-send-email-j.uzycki@elproma.com.pl>
-References: <5426B1F0.9050006@cogentembedded.com>
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <5426B1F0.9050006@cogentembedded.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Jiri Slaby <jslaby@suse.cz>, Richard Genoud <richard.genoud@gmail.com>, Fabio Estevam <festevam@gmail.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Janusz Uzycki <j.uzycki@elproma.com.pl>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] of: of_reserved_mem: Provide return values
+Date: Sat, 27 Sep 2014 11:02:21 -0300
+Message-ID: <1411826541-5408-1-git-send-email-festevam@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
+Cc: m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enables PPS support in mxs-auart serial driver to make PPS API working.
+From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Signed-off-by: Janusz Uzycki <j.uzycki@elproma.com.pl>
+Commit 1a29544cc8c9 ("drivers: of: add return value to 
+of_reserved_mem_device_init") missed to update the return values in the error
+cases, causing the following build warnings:
+
+drivers/of/of_reserved_mem.c: In function 'of_reserved_mem_device_init':
+drivers/of/of_reserved_mem.c:253:3: warning: 'return' with no value, in function returning non-void [-Wreturn-type]
+drivers/of/of_reserved_mem.c:259:3: warning: 'return' with no value, in function returning non-void [-Wreturn-type]
+
+Provide proper return values. 
+
+Reported-by: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/tty/serial/mxs-auart.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Changes since v1:
+- Fix typo in the Reported-by tag
 
-diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
-index 4c238bf..fc262ba 100644
---- a/drivers/tty/serial/mxs-auart.c
-+++ b/drivers/tty/serial/mxs-auart.c
-@@ -782,6 +782,16 @@ static void mxs_auart_settermios(struct uart_port *u,
- 		mxs_auart_disable_ms(u);
- }
+ drivers/of/of_reserved_mem.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 7e7de03..01ef0a3 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -250,13 +250,13 @@ int of_reserved_mem_device_init(struct device *dev)
  
-+static void mxs_auart_set_ldisc(struct uart_port *port, int new)
-+{
-+	if (new == N_PPS) {
-+		port->flags |= UPF_HARDPPS_CD;
-+		mxs_auart_enable_ms(port);
-+	} else {
-+		port->flags &= ~UPF_HARDPPS_CD;
-+	}
-+}
-+
- static irqreturn_t mxs_auart_irq_handle(int irq, void *context)
- {
- 	u32 istat;
-@@ -949,6 +959,7 @@ static struct uart_ops mxs_auart_ops = {
- 	.startup	= mxs_auart_startup,
- 	.shutdown       = mxs_auart_shutdown,
- 	.set_termios    = mxs_auart_settermios,
-+	.set_ldisc      = mxs_auart_set_ldisc,
- 	.type	   	= mxs_auart_type,
- 	.release_port   = mxs_auart_release_port,
- 	.request_port   = mxs_auart_request_port,
+ 	np = of_parse_phandle(dev->of_node, "memory-region", 0);
+ 	if (!np)
+-		return;
++		return -ENODEV;
+ 
+ 	rmem = __find_rmem(np);
+ 	of_node_put(np);
+ 
+ 	if (!rmem || !rmem->ops || !rmem->ops->device_init)
+-		return;
++		return -ENOMEM;
+ 
+ 	rmem->ops->device_init(rmem, dev);
+ 	dev_info(dev, "assigned reserved memory node %s\n", rmem->name);
 -- 
-1.7.11.3
+1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
