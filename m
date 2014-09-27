@@ -1,34 +1,38 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v12 08/12] PCI: OF: Introduce helper function for
- retrieving PCI domain numbers
-Date: Sat, 27 Sep 2014 14:18:55 -0600
-Message-ID: <CAErSpo5Q-gZaeV91+UeMjmnUt7jqGndDY6zfZqsDWJUNh+Gm6A@mail.gmail.com>
-References: <1411498874-9864-1-git-send-email-Liviu.Dudau@arm.com>
- <1411498874-9864-9-git-send-email-Liviu.Dudau@arm.com> <CAL_Jsq+j40Xf208wCf4as3H=cDU=htJ-JWinB0DjpcORjatNXQ@mail.gmail.com>
- <20140926212052.GA6030@borg.dudau.co.uk> <CAL_JsqKJ6bfPuOofo4grVm3qW_WOpUzcS1juZvHxZdFyyF_19A@mail.gmail.com>
- <20140926224752.GB22030@e106497-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140926224752.GB22030@e106497-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Rob Herring <robherring2@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Yinghai Lu <ying>
+From: Janusz Uzycki <j.uzycki@elproma.com.pl>
+Subject: Re: serial: mxs-auart: gpios as modem signals (dirty)
+Date: Sat, 27 Sep 2014 22:32:47 +0200
+Message-ID: <1411849969-12543-1-git-send-email-j.uzycki@elproma.com.pl>
+References: <20140927100737.GC5182@n2100.arm.linux.org.uk>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20140927100737.GC5182@n2100.arm.linux.org.uk>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Jiri Slaby <jslaby@suse.cz>, Richard Genoud <richard.genoud@gmail.com>, Fabio Estevam <festevam@gmail.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-[+cc Yinghai]
+Is it better in mxs_auart_init_gpios():
+a) to block DMA by disabling MXS_AUART_RTSCTS (misleading name problem)
+b) or just warn (depends on DT) if MXS_AUART_RTSCTS is set and CTS or RTS
+   is defined as GPIO line? Then MXS_AUART_RTSCTS could be used
+   instead of CTS_AT_AUART() in the interrupt and mxs_auart_settermios().
 
-On Fri, Sep 26, 2014 at 4:47 PM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> On Fri, Sep 26, 2014 at 10:53:26PM +0100, Rob Herring wrote:
+What do you think about RTSEN? It is set in mxs_auart_settermios()
+and mxs_auart_set_mctrl().
 
->> I thought Bjorn already applied the series. Who's agreement are you
->> waiting for specifically.
->
-> Looks like he only applied about 60% of the series.
+[PATCH 1/2] serial: mxs-auart: use mctrl_gpio helpers for handling
+* RTS_AT_AUART() and CTS_AT_AUART() macro defined
+* DMA engine disabled if RTS or CTS is GPIO line
+* CTSEN can't be enabled for hardware flow control block
+  if CTS is defined as GPIO line
+* RTSEN can be enabled for hardware flow control block
+  even if RTS is defined as GPIO line.
+  RTS pin depends on pinctrl configuration which
+  selects RTS output from hardware flow control block or GPIO line.
+* mxs_auart_settermios(): RTS_AT_AUART() and CTS_AT_AUART() used
+* mxs_auart_irq_handle(): CTS_AT_AUART() used
+* mxs_auart_init_gpios() returns true(success)/false(failure)
+* dev_err() message fixed in mxs_auart_probe()
 
-I applied it all but Yinghai pointed out a problem with a patch in the
-middle, so I dropped that patch and everything after it because I didn't
-have time to work out whether the later patches depended on anything
-in the one I dropped.
+[PATCH 2/2] serial: mxs-auart: add interrupts for modem control
+* rebased
 
-Bjorn
