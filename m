@@ -1,53 +1,168 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 5/7] ARM: dts: sun6i: Unify ahb1 clock nodes
-Date: Sat, 27 Sep 2014 16:49:53 +0800
-Message-ID: <1411807795-6575-6-git-send-email-wens@csie.org>
-References: <1411807795-6575-1-git-send-email-wens@csie.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411807795-6575-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 2/2] DT: iio: vadc: document dt binding
+Date: Sat, 27 Sep 2014 10:43:46 +0100
+Message-ID: <542686D2.2000206@kernel.org>
+References: <1411563415-11933-1-git-send-email-svarbanov@mm-sol.com> <1411563415-11933-3-git-send-email-svarbanov@mm-sol.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1411563415-11933-3-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collinsd@codeaurora.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Mark Rutland <Mark.Rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The clock driver has unified support for the ahb1 clock.
-Unify the clock nodes so it works.
+On 24/09/14 13:56, Stanimir Varbanov wrote:
+> Document DT binding for Qualcomm SPMI PMIC voltage ADC
+> driver.
+> 
+> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+Ideally I'd like a device tree maintainer to take a look at this
+as it's non trivial.  Right now we have just missed this cycle anyway so there
+is now plenty of time.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun6i-a31.dtsi | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 9ac1dd3..caf879d 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -162,19 +162,11 @@
- 			clock-output-names = "axi";
- 		};
- 
--		ahb1_mux: ahb1_mux@01c20054 {
--			#clock-cells = <0>;
--			compatible = "allwinner,sun6i-a31-ahb1-mux-clk";
--			reg = <0x01c20054 0x4>;
--			clocks = <&osc32k>, <&osc24M>, <&axi>, <&pll6 0>;
--			clock-output-names = "ahb1_mux";
--		};
--
- 		ahb1: ahb1@01c20054 {
- 			#clock-cells = <0>;
--			compatible = "allwinner,sun4i-a10-ahb-clk";
-+			compatible = "allwinner,sun6i-a31-ahb1-clk";
- 			reg = <0x01c20054 0x4>;
--			clocks = <&ahb1_mux>;
-+			clocks = <&osc32k>, <&osc24M>, <&axi>, <&pll6 0>;
- 			clock-output-names = "ahb1";
- 		};
- 
--- 
-2.1.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jonathan
+> ---
+>  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  130 ++++++++++++++++++++
+>  1 files changed, 130 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+> new file mode 100644
+> index 0000000..fa30300
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+> @@ -0,0 +1,130 @@
+> +Qualcomm's SPMI PMIC voltage ADC
+> +
+> +SPMI PMIC voltage ADC (VADC) provides interface to clients to read
+> +voltage. A 15 bit ADC is used for voltage measurements. There are multiple
+> +peripherals to the VADC and the scope of the driver is to provide interface
+> +for the USR peripheral of the VADC.
+> +
+> +VADC node:
+> +
+> +- compatible:
+> +    Usage: required
+> +    Value type: <string>
+> +    Definition: Should contain "qcom,spmi-vadc".
+> +
+> +- reg:
+> +    Usage: required
+> +    Value type: <u32>
+> +    Definition: Base address in the SPMI PMIC register map.
+> +
+> +- address-cells:
+> +    Usage: required
+> +    Value type: <u32>
+> +    Definition: Must be one.
+> +
+> +- size-cells:
+> +    Usage: required
+> +    Value type: <u32>
+> +    Definition: Must be zero.
+> +
+> +- interrupts:
+> +    Usage: optional
+> +    Value type: <prop-encoded-array>
+> +    Definition: End of conversion interrupt number. If this property does
+> +            not exist polling will be used instead.
+> +
+> +- interrupt-names:
+> +    Usage: optional
+> +    Value type: <string>
+> +    Definition: Should contain the interrupt name "eoc" (end of conversion).
+> +
+> +Channel node properties:
+> +
+> +- reg:
+> +    Usage: required
+> +    Value type: <u32>
+> +    Definition: AMUX channel number.
+> +            See include/dt-bindings/iio/qcom,spmi-pmic-vadc.h
+> +
+> +- qcom,decimation:
+> +    Usage: optional
+> +    Value type: <u32>
+> +    Definition: Sampling rate to use for the individual channel measurement.
+> +            Quicker measurements can be made by reducing decimation ratio.
+> +            Valid values are 512, 1024, 2048, 4096.
+> +            If property is not found, default value of 512 will be used.
+> +
+> +- qcom,pre-scaling:
+> +    Usage: optional
+> +    Value type: <u32 array>
+> +    Definition: Used for scaling the channel input signal before the signal is
+> +            fed to VADC. The configuration for this node is to know the
+> +            pre-determined ratio and use it for post scaling. Select one from
+> +            the following options.
+> +            <1 1>, <1 3>, <1 4>, <1 6>, <1 20>, <1 8>, <10 81>, <1 10>
+> +            If property is not found default value depending of chip will be used.
+> +
+> +- qcom,ratiometric:
+> +    Usage: optional
+> +    Value type: <empty>
+> +    Definition: Channel calibration type. If this property is specified
+> +            VADC will use the VDD reference(1.8V) and GND for channel
+> +            calibration. If property is not found, channel will be
+> +            calibrated with 625mV and 1.25V reference channels.
+> +            Otherwise the absolute calibration will be used.
+> +
+> +- qcom,hw-settle-time:
+> +    Usage: optional
+> +    Value type: <u32>
+> +    Definition: Time between AMUX getting configured and the ADC starting
+> +            conversion. Delay = 100us * (value) for value < 11, and
+> +            2ms * (value - 10) otherwise.
+> +            Valid values are: 0, 100, 200, 300, 400, 500, 600, 700, 800,
+> +            900 us and 1, 2, 4, 6, 8, 10 ms
+> +            If property is not found, channel will use 0us.
+> +
+> +- qcom,avg-samples:
+> +    Usage: optional
+> +    Value type: <u32>
+> +    Definition: Number of samples to be used for measurement.
+> +            Fast averaging provides the option to obtain a single measurement
+> +            from the ADC that is an average of multiple samples. The value
+> +            selected is 2^(value).
+> +            Valid values are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
+> +            If property is not found, 1 sample will be used.
+> +
+> +NOTE: At least reference channel nodes are required. The reference channels
+> +      might be different depending on PMIC version.
+> +      Reference channels per type of calibration are:
+> +       - absolute
+> +         (VADC_REF_625MV or VADC_SPARE1) and VADC_REF_1250MV
+> +       - ratiomatric
+> +         VADC_GND_REF and VADC_VDD_VADC
+> +
+> +Example:
+> +	/* VADC node */
+> +	pmic_vadc: vadc@3100 {
+> +		compatible = "qcom,spmi-vadc";
+> +		reg = <0x3100 0x100>;
+> +		interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		#io-channel-cells = <1>;
+> +		io-channel-ranges;
+> +
+> +		/* Channel node */
+> +		usb_id_nopull {
+> +			reg = <VADC_LR_MUX10_USB_ID>;
+> +			qcom,decimation = <512>;
+> +			qcom,ratiometric;
+> +			qcom,hw-settle-time = <200>;
+> +			qcom,avg-samples = <1>;
+> +			qcom,pre-scaling = <1 3>;
+> +		};
+> +	};
+> +
+> +	/* IIO client node */
+> +	usb {
+> +		io-channels = <&pmic_vadc VADC_LR_MUX10_USB_ID>;
+> +		io-channel-names = "vadc";
+> +	};
+> 
