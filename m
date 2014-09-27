@@ -1,42 +1,54 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH v3 1/3] cap11xx: make driver generic for variant support
-Date: Sat, 27 Sep 2014 20:21:38 +0200
-Message-ID: <54270032.5010204@zonque.org>
-References: <1411622662-16581-1-git-send-email-mranostay@gmail.com> <1411622662-16581-2-git-send-email-mranostay@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1411622662-16581-2-git-send-email-mranostay@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Matt Ranostay <mranostay@gmail.com>, galak@codeaurora.org, dmitry.torokhov@gmail.com, zonque@gmail.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v2 2/2] mtd: docg3: add device-tree documentation
+Date: Sat, 27 Sep 2014 21:34:30 +0200
+Message-ID: <1411846470-30041-2-git-send-email-robert.jarzmik@free.fr>
+References: <1411846470-30041-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411846470-30041-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/25/2014 07:24 AM, Matt Ranostay wrote:
-> cap1106 driver can support much more one device make the driver
-> generic for support of similiar parts.
-> 
-> Signed-off-by: Matt Ranostay <mranostay@gmail.com>
-> ---
->  .../devicetree/bindings/input/cap1106.txt          |  53 ----
->  .../devicetree/bindings/input/cap11xx.txt          |  54 ++++
->  drivers/input/keyboard/Kconfig                     |   8 +-
->  drivers/input/keyboard/Makefile                    |   2 +-
->  drivers/input/keyboard/cap1106.c                   | 341 ---------------------
->  drivers/input/keyboard/cap11xx.c                   | 340 ++++++++++++++++++++
->  6 files changed, 399 insertions(+), 399 deletions(-)
+Add documentation for the sandisk docg3 chip.
 
-As I've said, such a patch is really a whole lot more readable if you
-use the -M switch for git format-patch to detect renames.
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 
-Other than that, the series now looks good to me. I can't test it,
-however, as I don't have access to the hardware anymore.
+---
+Since v1: Mark's review : use m-systems,diskonchip-g3, add flash@0,
+grammar
+---
+ Documentation/devicetree/bindings/mtd/diskonchip.txt | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/diskonchip.txt
 
-  Reviewed-by: Daniel Mack <daniel@zonque.org>
+diff --git a/Documentation/devicetree/bindings/mtd/diskonchip.txt b/Documentation/devicetree/bindings/mtd/diskonchip.txt
+new file mode 100644
+index 0000000..3e13bfd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/diskonchip.txt
+@@ -0,0 +1,15 @@
++M-Systems and Sandisk DiskOnChip devices
++
++M-System DiskOnChip G3
++======================
++The Sandisk (formerly M-Systems) docg3 is a nand device of 64M to 256MB.
++
++Required properties:
++ - compatible: should be "m-systems,diskonchip-g3"
++ - reg: register base and size
++
++Example:
++	docg3: flash@0 {
++		compatible = "m-systems,diskonchip-g3";
++		reg = <0x0 0x2000>;
++	};
+-- 
+2.1.0
 
-
-
-Thanks,
-Daniel
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
