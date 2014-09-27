@@ -1,82 +1,215 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 8/8] iio: Add ABI documentation for input current readings
-Date: Sat, 27 Sep 2014 11:23:03 +0100
-Message-ID: <54269007.9000709@kernel.org>
-References: <cover.1411396718.git.Adam.Thomson.Opensource@diasemi.com> <b578cdd53527bb71c271eefadd1ce1bac175b5a7.1411396719.git.Adam.Thomson.Opensource@diasemi.com>
+From: =?UTF-8?B?SmFudXN6IFXFvHlja2k=?= <j.uzycki@elproma.com.pl>
+Subject: Re: [PATCH 2/4] serial: mxs-auart: use mctrl_gpio helpers for handling
+ modem signals
+Date: Sat, 27 Sep 2014 12:33:16 +0200
+Message-ID: <5426926C.60402@elproma.com.pl>
+References: <1411811197-12638-1-git-send-email-j.uzycki@elproma.com.pl> <1411811197-12638-3-git-send-email-j.uzycki@elproma.com.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b578cdd53527bb71c271eefadd1ce1bac175b5a7.1411396719.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1411811197-12638-3-git-send-email-j.uzycki@elproma.com.pl>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jslaby@suse.cz>, Richard Genoud <richard.genoud@gmail.com>, Fabio Estevam <festevam@gmail.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Marek Vasut <marex@denx.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 23/09/14 11:53, Adam Thomson wrote:
-> Add information on in_current related readings.
-> 
-> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-This crossed with a similar patch also adding some docs for current channels.
-That just missed this cycle anyway so I'll probably just merge this in as
-an extension of that patch when we are happy with the rest of the series.
-That patch covers the raw attribute but doesn't add the other entries..
-(in the togreg branch of iio.git)
+Could somebody comment if DMA could be enabled also
+if CTS/RTS is supported by GPIOs? Is it safe?
+It would allow me to avoid ugly code in mxs_auart_settermios(),
+as commented Russel King.
+Otherwise I have to keep backward compatibility on DMA
+and HW flow control, and fix the ugly code.
 
-Jonathan
+Marek Vasut:
+"Why do you think DMA would do any good on long transfers without 
+flowcontrol."
+
+In past: "serial: mxs: enable the DMA only when the RTS/CTS is valid":
+https://git.kernel.org/cgit/linux/kernel/git/stable/linux-stable.git/commit/drivers/tty/serial/mxs-auart.c?id=8418e67d95235c3449df6f2e5b33863343fa72f9 
+
+"The original DMA support works only when RTS/CTS is enabled.
+(see the "e800163 serial: mxs-auart: add the DMA support for mx28")
+But after several patches, DMA support has lost this limit.
+(see the "bcc20f9 serial: mxs-auart: move to use generic DMA helper")
+
+So an UART without the RTS/CTS lines may also enables the DMA support,
+in which case the UART may gets unpredictable results.
+
+This patch adds an optional property for the UART DT node
+which indicates the UART has RTS and CTS lines, and it also means you
+enable the DMA support for this UART.
+
+This patch also adds a macro MXS_AUART_RTSCTS, and uses it to check
+RTS/CTS before we enable the DMA for the UART. "
+
+best regards
+Janusz
+
+W dniu 2014-09-27 11:46, Janusz Uzycki pisze:
+> Dedicated CTS and RTS pins are unusable together with a lot of other
+> peripherals because they share the same line. Pinctrl is limited.
+>
+> Moreover, the AUART controller doesn't handle DTR/DSR/DCD/RI signals,
+> so we have to control them via GPIO.
+>
+> This patch permits to use GPIOs to control the CTS/RTS/DTR/DSR/DCD/RI
+> signals.
+>
+> Signed-off-by: Janusz Uzycki <j.uzycki@elproma.com.pl>
 > ---
->  Documentation/ABI/testing/sysfs-bus-iio | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> index d760b02..37cd4d4 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> @@ -92,6 +92,18 @@ Description:
->  		is required is a consistent labeling.  Units after application
->  		of scale and offset are millivolts.
-> 
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_raw
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_supply_raw
-> +KernelVersion:	3.17
-> +Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +Description:
-> +		Raw (unscaled no bias removal etc.) current measurement from
-> +		channel Y. In special cases where the channel does not
-> +		correspond to externally available input one of the named
-> +		versions may be used. The number must always be specified and
-> +		unique to allow association with event codes. Units after
-> +		application of scale and offset are milliamps.
+>   .../devicetree/bindings/serial/fsl-mxs-auart.txt   | 10 +++++-
+>   drivers/tty/serial/Kconfig           |  1 +
+>   drivers/tty/serial/mxs-auart.c       | 37 ++++++++++++++++++++--
+>   3 files changed, 44 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt b/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
+> index 59a40f1..7c408c8 100644
+> --- a/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
+> +++ b/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
+> @@ -11,8 +11,13 @@ Required properties:
+>   - dma-names: "rx" for RX channel, "tx" for TX channel.
+>   
+>   Optional properties:
+> -- fsl,uart-has-rtscts : Indicate the UART has RTS and CTS lines,
+> +- fsl,uart-has-rtscts : Indicate the UART has RTS and CTS lines
+> +  for hardware flow control,
+>   	it also means you enable the DMA support for this UART.
+> +- {rts,cts,dtr,dsr,rng,dcd}-gpios: specify a GPIO for RTS/CTS/DTR/DSR/RI/DCD
+> +  line respectively. It will use specified PIO instead of the peripheral
+> +  function pin for the USART feature.
+> +  If unsure, don't specify this property.
+>   
+>   Example:
+>   auart0: serial@8006a000 {
+> @@ -21,6 +26,9 @@ auart0: serial@8006a000 {
+>   	interrupts = <112>;
+>   	dmas = <&dma_apbx 8>, <&dma_apbx 9>;
+>   	dma-names = "rx", "tx";
+> +	cts-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
+> +	dsr-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
+> +	dcd-gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;
+>   };
+>   
+>   Note: Each auart port should have an alias correctly numbered in "aliases"
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 4fe8ca1..90e8516 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -1357,6 +1357,7 @@ config SERIAL_MXS_AUART
+>   	depends on ARCH_MXS
+>   	tristate "MXS AUART support"
+>   	select SERIAL_CORE
+> +	select SERIAL_MCTRL_GPIO if GPIOLIB
+>   	help
+>   	  This driver supports the MXS Application UART (AUART) port.
+>   
+> diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
+> index c712108..fdfa8a9 100644
+> --- a/drivers/tty/serial/mxs-auart.c
+> +++ b/drivers/tty/serial/mxs-auart.c
+> @@ -42,6 +42,9 @@
+>   
+>   #include <asm/cacheflush.h>
+>   
+> +#include <linux/err.h>
+> +#include "serial_mctrl_gpio.h"
 > +
->  What:		/sys/bus/iio/devices/iio:deviceX/in_capacitanceY_raw
->  KernelVersion:	3.2
->  Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> @@ -227,6 +239,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_accel_y_offset
->  What:		/sys/bus/iio/devices/iio:deviceX/in_accel_z_offset
->  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_offset
->  What:		/sys/bus/iio/devices/iio:deviceX/in_voltage_offset
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_offset
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_current_offset
->  What:		/sys/bus/iio/devices/iio:deviceX/in_tempY_offset
->  What:		/sys/bus/iio/devices/iio:deviceX/in_temp_offset
->  What:		/sys/bus/iio/devices/iio:deviceX/in_pressureY_offset
-> @@ -249,8 +263,11 @@ Description:
->  		to the _raw output.
-> 
->  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_scale
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_scale
->  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_supply_scale
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_supply_scale
->  What:		/sys/bus/iio/devices/iio:deviceX/in_voltage_scale
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_current_scale
->  What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_scale
->  What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_scale
->  What:		/sys/bus/iio/devices/iio:deviceX/in_accel_scale
-> --
-> 1.9.3
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+>   #define MXS_AUART_PORTS 5
+>   #define MXS_AUART_FIFO_SIZE		16
+>   
+> @@ -158,6 +161,8 @@ struct mxs_auart_port {
+>   	struct scatterlist rx_sgl;
+>   	struct dma_chan	*rx_dma_chan;
+>   	void *rx_dma_buf;
+> +
+> +	struct mctrl_gpios	*gpios;
+>   };
+>   
+>   static struct platform_device_id mxs_auart_devtype[] = {
+> @@ -405,6 +410,8 @@ static void mxs_auart_release_port(struct uart_port *u)
+>   
+>   static void mxs_auart_set_mctrl(struct uart_port *u, unsigned mctrl)
+>   {
+> +	struct mxs_auart_port *s = to_auart_port(u);
+> +
+>   	u32 ctrl = readl(u->membase + AUART_CTRL2);
+>   
+>   	ctrl &= ~(AUART_CTRL2_RTSEN | AUART_CTRL2_RTS);
+> @@ -416,10 +423,13 @@ static void mxs_auart_set_mctrl(struct uart_port *u, unsigned mctrl)
+>   	}
+>   
+>   	writel(ctrl, u->membase + AUART_CTRL2);
+> +
+> +	mctrl_gpio_set(s->gpios, mctrl);
+>   }
+>   
+>   static u32 mxs_auart_get_mctrl(struct uart_port *u)
+>   {
+> +	struct mxs_auart_port *s = to_auart_port(u);
+>   	u32 stat = readl(u->membase + AUART_STAT);
+>   	int ctrl2 = readl(u->membase + AUART_CTRL2);
+>   	u32 mctrl = 0;
+> @@ -431,7 +441,7 @@ static u32 mxs_auart_get_mctrl(struct uart_port *u)
+>   	if (ctrl2 & AUART_CTRL2_RTS)
+>   		mctrl |= TIOCM_RTS;
+>   
+> -	return mctrl;
+> +	return mctrl_gpio_get(s->gpios, &mctrl);
+>   }
+>   
+>   static int mxs_auart_dma_prep_rx(struct mxs_auart_port *s);
+> @@ -635,7 +645,12 @@ static void mxs_auart_settermios(struct uart_port *u,
+>   		ctrl |= AUART_LINECTRL_STP2;
+>   
+>   	/* figure out the hardware flow control settings */
+> -	if (cflag & CRTSCTS) {
+> +	/* FIXME: Likely DMA could be enabled not only for HW flow control */
+> +	if (cflag & CRTSCTS &&
+> +			(IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(s->gpios,
+> +					 UART_GPIO_RTS)) ||
+> +			 IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(s->gpios,
+> +					 UART_GPIO_CTS)))) {
+>   		/*
+>   		 * The DMA has a bug(see errata:2836) in mx23.
+>   		 * So we can not implement the DMA for auart in mx23,
+> @@ -695,7 +710,10 @@ static irqreturn_t mxs_auart_irq_handle(int irq, void *context)
+>   			s->port.membase + AUART_INTR_CLR);
+>   
+>   	if (istat & AUART_INTR_CTSMIS) {
+> -		uart_handle_cts_change(&s->port, stat & AUART_STAT_CTS);
+> +		if (IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(s->gpios,
+> +						UART_GPIO_CTS)))
+> +			uart_handle_cts_change(&s->port,
+> +					stat & AUART_STAT_CTS);
+>   		writel(AUART_INTR_CTSMIS,
+>   				s->port.membase + AUART_INTR_CLR);
+>   		istat &= ~AUART_INTR_CTSMIS;
+> @@ -1019,6 +1037,14 @@ static int serial_mxs_probe_dt(struct mxs_auart_port *s,
+>   	return 0;
+>   }
+>   
+> +static int mxs_auart_init_gpios(struct mxs_auart_port *s, struct device *dev)
+> +{
+> +	s->gpios = mctrl_gpio_init(dev, 0);
+> +	if (IS_ERR_OR_NULL(s->gpios))
+> +		return -1;
+> +	return 0;
+> +}
+> +
+>   static int mxs_auart_probe(struct platform_device *pdev)
+>   {
+>   	const struct of_device_id *of_id =
+> @@ -1074,6 +1100,11 @@ static int mxs_auart_probe(struct platform_device *pdev)
+>   
+>   	platform_set_drvdata(pdev, s);
+>   
+> +	ret = mxs_auart_init_gpios(s, &pdev->dev);
+> +	if (ret < 0)
+> +		dev_err(&pdev->dev, "%s",
+> +			"Failed to initialize GPIOs. The serial port may not work as expected");
+> +
+>   	auart_port[s->port.line] = s;
+>   
+>   	mxs_auart_reset(&s->port);
+
