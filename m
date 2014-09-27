@@ -1,49 +1,64 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 4/4] serial: mxs-auart: enable PPS support
-Date: Sat, 27 Sep 2014 16:47:44 +0400
-Message-ID: <5426B1F0.9050006@cogentembedded.com>
-References: <1411811197-12638-1-git-send-email-j.uzycki@elproma.com.pl> <1411811197-12638-5-git-send-email-j.uzycki@elproma.com.pl>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 6/7] devicetree: bindings: Document supported Allwinner
+ sunxi SoCs
+Date: Sat, 27 Sep 2014 21:08:46 +0800
+Message-ID: <CAGb2v65pKo=6BC-HaMsEMq-bcQcoHZNc9GiX+kfTBgP1PE5wMg@mail.gmail.com>
+References: <1411570141-29960-1-git-send-email-wens@csie.org>
+ <1411570141-29960-7-git-send-email-wens@csie.org> <20140925133609.GK15315@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1411811197-12638-5-git-send-email-j.uzycki@elproma.com.pl>
-Sender: linux-serial-owner@vger.kernel.org
-To: Janusz Uzycki <j.uzycki@elproma.com.pl>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, Richard Genoud <richard.genoud@gmail.com>, Jiri Slaby <jslaby@suse.cz>, linux-serial@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140925133609.GK15315@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Meng Zhang <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, ctl <ctl-HcjymKqD97rQT0dZR+AlfA@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Thu, Sep 25, 2014 at 9:36 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Wed, Sep 24, 2014 at 10:49:00PM +0800, Chen-Yu Tsai wrote:
+>> This adds a list of supported Allwinner SoC bindings.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/sunxi.txt | 12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/sunxi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
+>> new file mode 100644
+>> index 0000000..d7d1039
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
+>> @@ -0,0 +1,12 @@
+>> +Allwinner sunXi Platforms Device Tree Bindings
+>> +
+>> +Each device tree must specify which Allwinner SoC it uses,
+>> +using one of the following compatible stirngs:
+>                                          ^ strings
 
-On 9/27/2014 1:46 PM, Janusz Uzycki wrote:
+Will fix.
 
-> Enables PPS support in mxs-auart serial driver to make PPS API working.
-
-> Signed-off-by: Janusz Uzycki <j.uzycki@elproma.com.pl>
-> ---
->   drivers/tty/serial/mxs-auart.c | 10 ++++++++++
->   1 file changed, 10 insertions(+)
-
-> diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
-> index ab127a2..4f1ab98 100644
-> --- a/drivers/tty/serial/mxs-auart.c
-> +++ b/drivers/tty/serial/mxs-auart.c
-> @@ -787,6 +787,15 @@ static void mxs_auart_settermios(struct uart_port *u,
->   		mxs_auart_disable_ms(u);
->   }
+>> +
+>> +  allwinner,sun4i-a10
+>> +  allwinner,sun5i-a10s
+>> +  allwinner,sun5i-a13
+>> +  allwinner,sun6i-a31
+>> +  allwinner,sun7i-a20
+>> +  allwinner,sun8i-a23
+>> +  allwinner,sun9i-a80
 >
-> +static void mxs_auart_set_ldisc(struct uart_port *port, int new)
-> +{
-> +	if (new == N_PPS) {
-> +		port->flags |= UPF_HARDPPS_CD;
-> +		mxs_auart_enable_ms(port);
-> +	} else
-> +		port->flags &= ~UPF_HARDPPS_CD;
+> Maybe you can just add this info to the already existing README?
 
-    The kernel coding style dictates that {} should be in both arms of the 
-*if* statement.
+AFAIK the bindings are where they're supposed to be.
 
-[...]
+Putting the bindings outside of devicetree/bindings is unexpected
+and confusing.
 
-WBR, Sergei
 
+Cheers
+ChenYu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
