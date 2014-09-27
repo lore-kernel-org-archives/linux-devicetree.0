@@ -1,60 +1,51 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] ARM: sunxi: Introduce Allwinner A80 support
-Date: Sat, 27 Sep 2014 21:16:02 +0800
-Message-ID: <CAGb2v64LwgEZkiuej2KKi+CUU3OkUZaBKJ3ZZn_Y64tDD+LRwg@mail.gmail.com>
-References: <1411570141-29960-1-git-send-email-wens@csie.org>
- <1411570141-29960-2-git-send-email-wens@csie.org> <20140925132527.GF15315@lukather>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140925132527.GF15315@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Meng Zhang <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, ctl <ctl-HcjymKqD97rQT0dZR+AlfA@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Janusz Uzycki <j.uzycki@elproma.com.pl>
+Subject: [PATCH] serial: mxs-auart: enable PPS support
+Date: Sat, 27 Sep 2014 15:36:38 +0200
+Message-ID: <1411824998-24050-1-git-send-email-j.uzycki@elproma.com.pl>
+References: <5426B1F0.9050006@cogentembedded.com>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <5426B1F0.9050006@cogentembedded.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Jiri Slaby <jslaby@suse.cz>, Richard Genoud <richard.genoud@gmail.com>, Fabio Estevam <festevam@gmail.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Janusz Uzycki <j.uzycki@elproma.com.pl>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 25, 2014 at 9:25 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Wed, Sep 24, 2014 at 10:48:55PM +0800, Chen-Yu Tsai wrote:
->> The Allwinner A80 is a new Cortex octo-core A7/A15 big.LITTLE SoC.
->> While it's processor cores and interconnecting bus are new, it
->> re-uses many peripherals found in earlier Allwinner SoCs.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->>  arch/arm/mach-sunxi/Kconfig | 5 +++++
->>  arch/arm/mach-sunxi/sunxi.c | 9 +++++++++
->>  2 files changed, 14 insertions(+)
->>
->> diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
->> index 1aaa1e1..72f222b 100644
->> --- a/arch/arm/mach-sunxi/Kconfig
->> +++ b/arch/arm/mach-sunxi/Kconfig
->> @@ -42,4 +42,9 @@ config MACH_SUN8I
->>       select MFD_SUN6I_PRCM
->>       select RESET_CONTROLLER
->>
->> +config MACH_SUN9I
->> +     bool "Allwinner A80 (sun9i) SoCs support"
->
-> With the new naming scheme, I wonder wether it makes sense to have the
-> A80 displayed here and in the machine definition.
+Enables PPS support in mxs-auart serial driver to make PPS API working.
 
-I expect anything that falls under sun9i to be compatible, or a trimmed
-down version. But that's just me.
+Signed-off-by: Janusz Uzycki <j.uzycki@elproma.com.pl>
+---
+ drivers/tty/serial/mxs-auart.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-We know that Allwinner has released the A33, which should be compatible
-with the A23, sun8i. And the A83 has been announced, which looks like
-a trimmed down version of the A80. The next SoC should be arm64, and
-would not matter here.
+diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
+index 4c238bf..fc262ba 100644
+--- a/drivers/tty/serial/mxs-auart.c
++++ b/drivers/tty/serial/mxs-auart.c
+@@ -782,6 +782,16 @@ static void mxs_auart_settermios(struct uart_port *u,
+ 		mxs_auart_disable_ms(u);
+ }
+ 
++static void mxs_auart_set_ldisc(struct uart_port *port, int new)
++{
++	if (new == N_PPS) {
++		port->flags |= UPF_HARDPPS_CD;
++		mxs_auart_enable_ms(port);
++	} else {
++		port->flags &= ~UPF_HARDPPS_CD;
++	}
++}
++
+ static irqreturn_t mxs_auart_irq_handle(int irq, void *context)
+ {
+ 	u32 istat;
+@@ -949,6 +959,7 @@ static struct uart_ops mxs_auart_ops = {
+ 	.startup	= mxs_auart_startup,
+ 	.shutdown       = mxs_auart_shutdown,
+ 	.set_termios    = mxs_auart_settermios,
++	.set_ldisc      = mxs_auart_set_ldisc,
+ 	.type	   	= mxs_auart_type,
+ 	.release_port   = mxs_auart_release_port,
+ 	.request_port   = mxs_auart_request_port,
+-- 
+1.7.11.3
 
-Kevin, Shuge, could you provide us with the codenames for the A33 and
-A83, and what earlier SoC they are based on?
-
-
-Thanks
-ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
