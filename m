@@ -1,261 +1,57 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] iio: iadc: Qualcomm SPMI PMIC current ADC driver
-Date: Sat, 27 Sep 2014 11:06:49 +0100
-Message-ID: <54268C39.7030509@kernel.org>
-References: <1411046123-30625-1-git-send-email-iivanov@mm-sol.com>	 <541EDAE5.50307@kernel.org> <1411461092.18580.30.camel@iivanov-dev>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 2/4] serial: mxs-auart: use mctrl_gpio helpers for
+	handling modem signals
+Date: Sat, 27 Sep 2014 11:07:38 +0100
+Message-ID: <20140927100737.GC5182@n2100.arm.linux.org.uk>
+References: <1411811197-12638-1-git-send-email-j.uzycki@elproma.com.pl> <1411811197-12638-3-git-send-email-j.uzycki@elproma.com.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411461092.18580.30.camel@iivanov-dev>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1411811197-12638-3-git-send-email-j.uzycki@elproma.com.pl>
+Sender: linux-serial-owner@vger.kernel.org
+To: Janusz Uzycki <j.uzycki@elproma.com.pl>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Richard Genoud <richard.genoud@gmail.com>, Jiri Slaby <jslaby@suse.cz>, linux-serial@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-<snip>
-> 
->>> +static int iadc_poll_wait_eoc(struct iadc_chip *iadc, int interval_us)
->>> +{
->>> +	int ret, count, retry;
->>> +	u8 sta1;
->>> +
->>> +	retry = interval_us / IADC_CONV_TIME_MIN_US;
->>> +
->>> +	for (count = 0; count < retry; count++) {
->>> +		ret = iadc_read(iadc, IADC_STATUS1, &sta1);
->>> +		if (ret < 0)
->>> +			return ret;
->>> +
->>> +		sta1 &= IADC_STATUS1_REQ_STS_EOC_MASK;
->>> +		if (sta1 == IADC_STATUS1_EOC)
->>> +			return 0;
->>> +
->>> +		usleep_range(IADC_CONV_TIME_MIN_US, IADC_CONV_TIME_MAX_US);
->>> +	}
->>> +
->>> +	iadc_status_show(iadc);
->> What is this for?  Left over from debugging the driver?
-> 
-> This should not generally happen, but will be useful to see what was 
-> ADC configuration and statuses, when conversion time outs.
-Hmm. Fine I guess, just a lot of code for an unexpected condition
-Should probably be as dev_err if it occurs.
-> 
->>> +
->>> +	return -ETIMEDOUT;
->>> +}
->>> +
-> 
-> <snip>
-> 
->>> +static int iadc_read_raw(struct iio_dev *indio_dev,
->>> +			 struct iio_chan_spec const *chan,
->>> +			 int *val, int *val2, long mask)
->>> +{
->>> +	struct iadc_chip *iadc = iio_priv(indio_dev);
->>> +	long rsense_ua, rsense_uv, rsense_raw;
->>> +	int ret = -EINVAL, negative;
->>> +	u16 adc_raw;
->>> +
->>> +	mutex_lock(&iadc->lock);
->>> +
->>> +	switch (mask) {
->>> +	case IIO_CHAN_INFO_PROCESSED:
->>> +		ret = iadc_do_conversion(iadc, chan->channel, &adc_raw);
->>> +		if (ret < 0)
->>> +			goto exit;
->>> +
->>> +		rsense_raw = adc_raw - iadc->offset_raw;
->>> +
->>> +		rsense_uv = (rsense_raw * IADC_REF_GAIN_MICRO_VOLTS);
->>> +		rsense_uv /= iadc->gain_raw - iadc->offset_raw;
->>> +
->>> +		negative = 0;
->>> +		if (rsense_uv < 0) {
->>> +			negative = 1;
->>> +			rsense_uv = -rsense_uv;
->>> +		}
->>> +
->>> +		rsense_ua = rsense_uv;
->>> +
->>> +		do_div(rsense_ua, iadc->rsense);
->>> +
->>> +		if (negative)
->>> +			rsense_ua = -rsense_ua;
->>> +
->>> +		dev_dbg(iadc->dev, "offset %d, gain %d, adc %d, V=%ld,uV, I=%ld,uA\n",
->>> +			iadc->offset_raw, iadc->gain_raw, adc_raw,
->>> +			rsense_uv, rsense_ua);
->>> +
->>> +		*val = rsense_ua;
->> Given the naming this seems unlikely to be in millamps?
-> 
-> Yes, it is micro amps. I was unable to find what should be correct
-> dimension. There is nothing in sysfs-bus-iio or bindings/iio.
-There is now (in the togreg branch of iio.git;)  Wasn't until very recently though.
-Somehow it got lost in the move out of staging...  The scaling comes form hwmon,
-With hindsight we should probably have ditched it in favour of using Volts and Amps
-as our base scaling.  Less confusing, but too late now!
-> 
->>> +		ret = IIO_VAL_INT;
->>> +		break;
->>> +	default:
->>> +		break;
->>> +	}
->>> +
->>> +exit:
->>> +	mutex_unlock(&iadc->lock);
->>> +
->>> +	return ret;
->>> +}
->>> +
-> 
-> <snip>
+On Sat, Sep 27, 2014 at 11:46:35AM +0200, Janusz Uzycki wrote:
+> @@ -635,7 +645,12 @@ static void mxs_auart_settermios(struct uart_port *u,
+>  		ctrl |= AUART_LINECTRL_STP2;
+>  
+>  	/* figure out the hardware flow control settings */
+> -	if (cflag & CRTSCTS) {
+> +	/* FIXME: Likely DMA could be enabled not only for HW flow control */
+> +	if (cflag & CRTSCTS &&
+> +			(IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(s->gpios,
+> +					 UART_GPIO_RTS)) ||
+> +			 IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(s->gpios,
+> +					 UART_GPIO_CTS)))) {
 
->>> +
->>> +static int iadc_rsense_read(struct iadc_chip *iadc, struct device_node *node)
->>> +{
->>> +	unsigned int trim_val;
->>> +	u8  rsense, const_rds;
->>> +	int ret, negative;
->>> +	u32 trim_type;
->>> +
->>> +	ret = of_property_read_u32(node, "qcom,rsense", &iadc->rsense);
->>> +	if (!ret) {
->>> +		iadc->ext_sense = true;
->>> +		return 0;
->>> +	}
-> 
-> User specify external sense resistor value, which means external
-> channel should be used.
-> 
->>> +
->>> +	ret = iadc_read(iadc, IADC_NOMINAL_RSENSE, &rsense);
->>> +	if (ret < 0)
->>> +		return ret;
->>> +
->>> +	negative = 0;
->>> +	if (rsense & IADC_NOMINAL_RSENSE_SIGN_MASK)
->>> +		negative = 1;
->> I'm a little confused.  The docs say that rsense is a resistor value in
->> ohms (u32).  Why does bit 7 allow encode other information?
-> 
-> External sense resistor value not specified, driver will use internal
-> ADC channel and internal sense resistor, so read what was trimmed
-> during manufacturing process. Sense register value is read from
-> register. If bit 7 of value is set value in register is negative.
-> Register itself didn't contain value in ohms, but difference between
-> desired and actual value.
-Ah got it.  Thanks for the explanation.
-Perhaps ensure that iadc->rsense is clearly in ohms wherease this local
-rsense is the register value (rename one of them!)
-> 
->>> +
->>> +	rsense &= ~IADC_NOMINAL_RSENSE_SIGN_MASK;
->>> +
->>> +	iadc->rsense = IADC_INTERNAL_RSENSE_OHMS;
->>> +	if (negative)
->>> +		iadc->rsense -=	rsense * IADC_RSENSE_OHMS_PER_BIT;
->>> +	else
->>> +		iadc->rsense +=	rsense * IADC_RSENSE_OHMS_PER_BIT;
-> 
-> internal rsense = 10000000 + sign * 15625 * value;
-> 
->>> +
->>> +	if (rsense < IADC_TRIM2_FULLSCALE)
->>> +		return 0;
->>> +	/*
->>> +	 * Trim register is "saturated", check for specific trim value
->>> +	 * based on manufacturer and RDS constant
->>> +	 */
->>> +	ret = of_property_read_u32(node, "qcom,rds-trim", &trim_type);
->>> +	if (ret)
->>> +		return 0;
->>> +
->>> +	ret = regmap_read(iadc->regmap, iadc->trim_rds, &trim_val);
->>> +	if (ret < 0)
->>> +		return ret;
->>> +
->>> +	const_rds = trim_val & IADC_TRIM_CNST_RDS_MASK;
->>> +
->>> +	dev_dbg(iadc->dev, "factory %d trim type %d rsense %d const %d\n",
->>> +		iadc->factory, trim_type, rsense, const_rds);
->>> +
->>> +	switch (trim_type) {
->>> +	case 0:
->>> +		if (const_rds == 2)
->>> +			iadc->rsense = IADC_RSENSE_DEFAULT_VALUE;
->> So this is overwriting rsense if properties are obeyed.  Would it not
->> make sense to do this before using the rsense value above (if these
->> constraints are not met?)
-> 
-> We are coming here only if value trimmed into IADC_NOMINAL_RSENSE
-> register is saturated i.e, u8 value is 127, bit 7 is sign bit. Which 
-> means that internal resistor is far from desired value. And this 
-> depends on the factory used for manufacturing the chip. The whole 
-> logic here is simplified version, I believe, on the downstream 
-> implementation, which could be found here[1].
-> 
-> [1] https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/drivers/hwmon/qpnp-adc-current.c?h=msm-3.10
-> 
->>> +		break;
->>> +	case 1:
->>> +		if (const_rds >= 2) {
->>> +			iadc->rsense = IADC_RSENSE_DEFAULT_VALUE;
->>> +		} else if (const_rds < 2) {
->>> +			if (iadc->factory == IADC_FACTORY_GF)
->>> +				iadc->rsense = IADC_RSENSE_DEFAULT_GF;
->>> +			else if (iadc->factory == IADC_FACTORY_SMIC)
->>> +				iadc->rsense = IADC_RSENSE_DEFAULT_SMIC;
->>> +		}
->>> +		break;
->>> +	case 2:
->>> +		if (const_rds > 0 && const_rds <= 2)
->>> +			iadc->rsense = IADC_RSENSE_DEFAULT_VALUE;
->>> +		break;
->>> +	default:
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int iadc_probe(struct platform_device *pdev)
->>> +{
->>> +	struct device_node *node = pdev->dev.of_node;
->>> +	struct device *dev = &pdev->dev;
->>> +	struct iio_chan_spec *iio_chan;
->>> +	struct iio_dev *indio_dev;
->>> +	struct iadc_chip *iadc;
->>> +	struct resource *res;
->>> +	struct regmap *regmap;
->>> +	int ret, irq_eoc;
->>> +
->>> +	regmap = dev_get_regmap(dev->parent, NULL);
->>> +	if (!regmap)
->>> +		return -ENODEV;
->>> +
->>> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*iadc));
->>> +	if (!indio_dev)
->>> +		return -ENOMEM;
->> Spinning the order of the regmap get and iio_device_alloc would perhaps
->> give a cleaner result as you could then fill iadc->regmap directly...
->> (marginal!)
-> 
-> No local variables, right? :-)
-Well only when they actually make the code cleaner!
+There has to be a better way to do this.
 
-> Thank you for review.
-You are welcome
+> +static int mxs_auart_init_gpios(struct mxs_auart_port *s, struct device *dev)
+> +{
+> +	s->gpios = mctrl_gpio_init(dev, 0);
+> +	if (IS_ERR_OR_NULL(s->gpios))
+> +		return -1;
+> +	return 0;
 
-Jonathan
-> 
-> Regards,
-> Ivan
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+I personally hate the practise of returning -1 - it ends up getting returned
+to userspace as an error code, and it means EPERM.  If you want to indicate
+success/failure, use the bool return type, and return true/false.
+
+> @@ -1074,6 +1100,11 @@ static int mxs_auart_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, s);
+>  
+> +	ret = mxs_auart_init_gpios(s, &pdev->dev);
+> +	if (ret < 0)
+> +		dev_err(&pdev->dev, "%s",
+> +			"Failed to initialize GPIOs. The serial port may not work as expected");
+
+Does the "%s" do anything for this message?  More importantly though, it's
+lacking a newline.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
