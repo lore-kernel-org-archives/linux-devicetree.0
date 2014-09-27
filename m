@@ -1,65 +1,92 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 1/2] regulator: st-pwm: get voltage and duty table
- from dts
-Date: Sat, 27 Sep 2014 12:18:36 +0100
-Message-ID: <20140927111836.GI27755@sirena.org.uk>
-References: <1411479779-10229-1-git-send-email-zyw@rock-chips.com>
- <1411479779-10229-2-git-send-email-zyw@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gX7DG0PufVj3JKBt"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1411479779-10229-2-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: dianders@chromium.org, heiko@sntech.de, linux-rockchip@lists.infradead.org, lee.jones@linaro.org, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Janusz Uzycki <j.uzycki@elproma.com.pl>
+Subject: [PATCH] serial: mxs-auart: clean get_mctrl and set_mctrl
+Date: Sat, 27 Sep 2014 13:44:11 +0200
+Message-ID: <1411818251-21884-1-git-send-email-j.uzycki@elproma.com.pl>
+References: <20140927100345.GB5182@n2100.arm.linux.org.uk>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20140927100345.GB5182@n2100.arm.linux.org.uk>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Jiri Slaby <jslaby@suse.cz>, Richard Genoud <richard.genoud@gmail.com>, Fabio Estevam <festevam@gmail.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Janusz Uzycki <j.uzycki@elproma.com.pl>
 List-Id: devicetree@vger.kernel.org
 
+Russell King:
+The only thing which the .get_mctrl method is supposed to do is
+to return the state of the /input/ lines, which are CTS, DCD, DSR, RI.
+The output line state is stored in port->mctrl, and is added to
+the returned value by serial_core when it's required.
+RTS output state should not be returned from the .get_mctrl method.
 
---gX7DG0PufVj3JKBt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This patch removes ctrl variable from mxs_auart_port
+and removes useless reading back RTS line.
 
-On Tue, Sep 23, 2014 at 09:42:58PM +0800, Chris Zhong wrote:
+The ctrl variable in mxs_auart_port duplicated mctrl,
+member of uart_port structure in serial_core.h.
+The removed code from mxs_auart_set_mctrl() and mxs_auart_get_mctrl
+duplicated uart_update_mctrl() and uart_tiocmget()
+in serial_core.c.
 
-> Get voltage & duty table from device tree might be better, other platforms can also use this
-> driver without any modify.
+Signed-off-by: Janusz Uzycki <j.uzycki@elproma.com.pl>
+---
+ drivers/tty/serial/mxs-auart.c | 14 +-------------
+ 1 file changed, 1 insertion(+), 13 deletions(-)
 
-Please wrap your changelogs to less than 80 characters.
+diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
+index e838e84..2d49901 100644
+--- a/drivers/tty/serial/mxs-auart.c
++++ b/drivers/tty/serial/mxs-auart.c
+@@ -143,7 +143,6 @@ struct mxs_auart_port {
+ #define MXS_AUART_DMA_RX_READY	3  /* bit 3 */
+ #define MXS_AUART_RTSCTS	4  /* bit 4 */
+ 	unsigned long flags;
+-	unsigned int ctrl;
+ 	enum mxs_auart_type devtype;
+ 
+ 	unsigned int irq;
+@@ -406,8 +405,6 @@ static void mxs_auart_release_port(struct uart_port *u)
+ 
+ static void mxs_auart_set_mctrl(struct uart_port *u, unsigned mctrl)
+ {
+-	struct mxs_auart_port *s = to_auart_port(u);
+-
+ 	u32 ctrl = readl(u->membase + AUART_CTRL2);
+ 
+ 	ctrl &= ~(AUART_CTRL2_RTSEN | AUART_CTRL2_RTS);
+@@ -418,24 +415,17 @@ static void mxs_auart_set_mctrl(struct uart_port *u, unsigned mctrl)
+ 			ctrl |= AUART_CTRL2_RTS;
+ 	}
+ 
+-	s->ctrl = mctrl;
+ 	writel(ctrl, u->membase + AUART_CTRL2);
+ }
+ 
+ static u32 mxs_auart_get_mctrl(struct uart_port *u)
+ {
+-	struct mxs_auart_port *s = to_auart_port(u);
+ 	u32 stat = readl(u->membase + AUART_STAT);
+-	int ctrl2 = readl(u->membase + AUART_CTRL2);
+-	u32 mctrl = s->ctrl;
++	u32 mctrl = 0;
+ 
+-	mctrl &= ~TIOCM_CTS;
+ 	if (stat & AUART_STAT_CTS)
+ 		mctrl |= TIOCM_CTS;
+ 
+-	if (ctrl2 & AUART_CTRL2_RTS)
+-		mctrl |= TIOCM_RTS;
+-
+ 	return mctrl;
+ }
+ 
+@@ -1071,8 +1061,6 @@ static int mxs_auart_probe(struct platform_device *pdev)
+ 	s->port.type = PORT_IMX;
+ 	s->port.dev = s->dev = &pdev->dev;
+ 
+-	s->ctrl = 0;
+-
+ 	s->irq = platform_get_irq(pdev, 0);
+ 	s->port.irq = s->irq;
+ 	ret = request_irq(s->irq, mxs_auart_irq_handle, 0, dev_name(&pdev->dev), s);
+-- 
+1.7.11.3
 
-> diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
-> new file mode 100644
-> index 0000000..d3f55ea
-> --- /dev/null
-> +++ b/drivers/regulator/pwm-regulator.c
-> @@ -0,0 +1,197 @@
-> +/*
-> + * Regulator driver for PWM Regulators
-> + *
-> + * Copyright (C) 2014 - STMicroelectronics Inc.
-> + *
-> + * Author: Lee Jones <lee.jones@linaro.org>
-> + *
-
-Generate patches renaming files with git format-patch -M - as things
-stand since this deletes and re-adds the code it's very difficult to
-review, it's equivalent to just re-reviewing the driver from scratch.
-
---gX7DG0PufVj3JKBt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUJp0MAAoJECTWi3JdVIfQXaMIAIP5gTvdncj6nr2T14mA4UWx
-3LMI3wvynXbWxE0Cdp0zhsT5yt7G0KmZZAHqRQ5ji0ZP2CMMYbs7aKYxLURkIcSv
-fDGRz2IvRcNcThtdPXbLJSJOYDHAM6I/wxii/Lqhtv5Q6w/9PHXUQS/DV94wWCDV
-/WmETqj2B8Jgb+tdOAtSlhEQ2rQCTu7O8H0r4PsxR9ULLW3n3PH3yF0dQLS6SiJG
-zeVlrFTrff1PzqyXhJIqFA8jEXJ7XO6weOoxZw2zp4O7AxUBMnTMCVGPG4WeSyXU
-4YEwGlAjiXIwv0Mm2coUjIyh5MZUhHkeMixZTtSko/SqiT/WU1xaHKaBF1k7W9A=
-=s2Dq
------END PGP SIGNATURE-----
-
---gX7DG0PufVj3JKBt--
