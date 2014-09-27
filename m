@@ -1,98 +1,146 @@
-From: Mike Turquette <mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] drm/tegra: Set the dsi lp clk parent and rate
-Date: Sat, 27 Sep 2014 13:05:32 -0700
-Message-ID: <20140927200532.19023.95967@quantum>
-References: <1411156429-19797-1-git-send-email-seanpaul@chromium.org>
- <20140922174652.GP3290@leverpostej> <20140923072204.GJ30514@ulmo>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v5 05/11] drm: add Atmel HLCDC Display Controller support
+Date: Sat, 27 Sep 2014 22:12:55 +0200
+Message-ID: <20140927221255.58f4d14d@bbrezillon>
+References: <1410165822-16868-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1410165822-16868-6-git-send-email-boris.brezillon@free-electrons.com>
+ <CAF6AEGup9qvivbcovHBrf6me-sStrK_jaBTd5ofohCS9DfRV4g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140923072204.GJ30514@ulmo>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAF6AEGup9qvivbcovHBrf6me-sStrK_jaBTd5ofohCS9DfRV4g@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Andrew Victor <linux@maxim.org.za>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Thierry Reding (2014-09-23 00:22:05)
-> On Mon, Sep 22, 2014 at 06:46:52PM +0100, Mark Rutland wrote:
-> > On Fri, Sep 19, 2014 at 08:53:48PM +0100, Sean Paul wrote:
-> > > Per NVidia, this clock rate should be around 70MHz in
-> > > order to properly sample reads on data lane 0. In order
-> > > to achieve this rate, we need to reparent the clock from
-> > > clk_m which can only achieve 12MHz. Add parent_lp to the
-> > > dts bindings and set the parent & rate on init.
-> > > 
-> > > Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > > ---
-> > >  .../devicetree/bindings/gpu/nvidia,tegra20-host1x.txt  | 10 ++++++++--
-> > >  drivers/gpu/drm/tegra/dsi.c                            | 18 ++++++++++++++++++
-> > >  drivers/gpu/drm/tegra/dsi.h                            |  3 +++
-> > >  3 files changed, 29 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-> > > index b48f4ef..fef2918 100644
-> > > --- a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-> > > +++ b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-> > > @@ -191,6 +191,10 @@ of the following host1x client modules:
-> > >    - nvidia,hpd-gpio: specifies a GPIO used for hotplug detection
-> > >    - nvidia,edid: supplies a binary EDID blob
-> > >    - nvidia,panel: phandle of a display panel
-> > > +  - clock-names: Can include the following entries:
-> > > +    - lp_parent: The parent clock for lp
-> > > +  - clocks: Must contain an entry for each optional entry in clock-names.
-> > > +    See ../clocks/clock-bindings.txt for details.
-> > 
-> > Did this driver previously acquire clocks?
-> > 
-> > What order or names did it expect if so?
-> 
-> This is badly placed. There are clocks and clock-names properties in a
-> "Required properties" section above this hunk which lists all the clocks
-> that this module uses. Presumably this was added to the optional section
-> because it isn't always needed.
-> 
-> > >  - sor: serial output resource
-> > >  
-> > > @@ -360,8 +364,10 @@ Example:
-> > >                     compatible = "nvidia,tegra20-dsi";
-> > >                     reg = <0x54300000 0x00040000>;
-> > >                     clocks = <&tegra_car TEGRA20_CLK_DSI>,
-> > > -                            <&tegra_car TEGRA20_CLK_PLL_D_OUT0>;
-> > > -                   clock-names = "dsi", "parent";
-> > > +                            <&tegra_car TEGRA124_CLK_DSIALP>,
-> > > +                            <&tegra_car TEGRA20_CLK_PLL_D_OUT0>,
-> > > +                            <&tegra_car TEGRA124_CLK_PLL_P>;
-> > > +                   clock-names = "dsi", "lp", "parent", "lp_parent";
-> > 
-> > Please document _all_ the names you expect.
-> > 
-> > What exactly are these two new clocks?
-> 
-> "lp" isn't actually new, it's just missing from the example.
-> 
-> > Is this all the clocks that feed into the DSI block? Are any of these
-> > not directly wired to the DSI block?
-> > 
-> > Why exactly do you need to reparent it to this particular clock, and why
-> > do you need a reference here in order to do so, given it presumably
-> > doesn't feed directly into the DSI block?
-> 
-> It seems like the hardware default is to use a parent clock unsuitable
-> for the DSI low-power mode, but as discussed elsewhere this should be
-> fixed in the clock driver where we already have a way to statically set
-> the parent clock at boot time.
+Hi Rob,
 
-The driver fix is perfectly fine, but we also have the
-assigned-clock-parent stuff now if you prefer to manage it from DT.
+On Fri, 26 Sep 2014 17:10:49 -0400
+Rob Clark <robdclark@gmail.com> wrote:
 
-See,
+> On Mon, Sep 8, 2014 at 4:43 AM, Boris BREZILLON
+> <boris.brezillon@free-electrons.com> wrote:
+> > The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoCs (i.e.
+> > at91sam9n12, at91sam9x5 family or sama5d3 family) provides a display
+> > controller device.
+> >
+> > This display controller supports at least one primary plane and might
+> > provide several overlays and an hardware cursor depending on the IP
+> > version.
+> >
+> > At the moment, this driver only implements an RGB connector to interface
+> > with LCD panels, but support for other kind of external devices might be
+> > added later.
+> >
+> > Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> > Tested-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+> 
+> A few small comments below, but with those addressed it has my
+> 
+> Reviewed-by: Rob Clark <robdclark@gmail.com>
 
-Documentation/devicetree/bindings/clock/clock-bindings.txt
-drivers/clk/clk-conf.c
-
-Regards,
-Mike
+Thanks for your review.
 
 > 
-> Thierry
+> 
+> > ---
+> >  drivers/gpu/drm/Kconfig                          |   2 +
+> >  drivers/gpu/drm/Makefile                         |   1 +
+> >  drivers/gpu/drm/atmel-hlcdc/Kconfig              |  13 +
+> >  drivers/gpu/drm/atmel-hlcdc/Makefile             |   7 +
+> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c   | 286 ++++++++
+> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c     | 488 +++++++++++++
+> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h     | 224 ++++++
+> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c  | 656 ++++++++++++++++++
+> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h  | 403 +++++++++++
+> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c | 476 +++++++++++++
+> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c  | 836 +++++++++++++++++++++++
+> >  11 files changed, 3392 insertions(+)
+> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Kconfig
+> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Makefile
+> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
+> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
+> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c
+> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h
+> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
+> >  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
+> >
+> 
+> [snip]
+> 
+> > +
+> > +/**
+> > + * Atmel HLCDC plane rotation enum
+> > + *
+> > + * TODO: export DRM_ROTATE_XX macros defined by omap driver and use them
+> > + * instead of defining this enum.
+> > + */
+> > +enum atmel_hlcdc_plane_rotation {
+> > +       ATMEL_HLCDC_PLANE_NO_ROTATION,
+> > +       ATMEL_HLCDC_PLANE_90DEG_ROTATION,
+> > +       ATMEL_HLCDC_PLANE_180DEG_ROTATION,
+> > +       ATMEL_HLCDC_PLANE_270DEG_ROTATION,
+> > +};
+> 
+> DRM_ROTATE_* are already in drm_crtc.h
+> 
+> [snip]
+
+Yep, I changed that, but won't be able to test until next week.
+
+> 
+> > +static int atmel_hlcdc_rgb_mode_valid(struct drm_connector *connector,
+> > +                                     struct drm_display_mode *mode)
+> > +{
+> > +       return MODE_OK;
+> > +}
+> 
+> your _mode_valid() should perhaps somehow check the constraints in
+> atmel_hlcdc_crtc_mode_set()?  This way invalid modes get filtered out
+> earlier..
+
+I'm not sure, the test done in atmel_hlcdc_crtc_mode_set are not
+connector related, but rather imposed by the display controller
+limitations.
+Anyway, let me know if you still think I should move those tests in the
+connector mode_valid implementation.
+
+> 
+> [snip]
+> 
+> > +static struct atmel_hlcdc_plane_properties *
+> > +atmel_hlcdc_plane_create_properties(struct drm_device *dev)
+> > +{
+> > +       struct atmel_hlcdc_plane_properties *props;
+> > +       const struct drm_prop_enum_list rotations[] = {
+> > +               { ATMEL_HLCDC_PLANE_NO_ROTATION,   "rotate-0" },
+> > +               { ATMEL_HLCDC_PLANE_90DEG_ROTATION,  "rotate-90" },
+> > +               { ATMEL_HLCDC_PLANE_180DEG_ROTATION, "rotate-180" },
+> > +               { ATMEL_HLCDC_PLANE_270DEG_ROTATION, "rotate-270" },
+> > +       };
+> > +
+> 
+> you could just use drm_mode_create_rotation_property() now
+> 
+
+Yep, I changed that too. Thanks for the tip.
+
+Best Regards,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
