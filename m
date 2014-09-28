@@ -1,89 +1,123 @@
-From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: hix5hd2: add i2c node
-Date: Sun, 28 Sep 2014 12:22:09 +0800
-Message-ID: <1411878129-19743-4-git-send-email-zhangfei.gao@linaro.org>
-References: <1411878129-19743-1-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411878129-19743-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Subject: [PATCH 1/2] ASoC: ssm2602: add device tree bindings
+Date: Sun, 28 Sep 2014 10:57:52 +0300
+Message-ID: <1411891072-22637-1-git-send-email-stefan.kristiansson@saunalahti.fi>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, lars@metafoo.de, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/hisi-x5hd2.dtsi |   60 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+Allow the ssm2602/ssm2603/ssm2604 codec driver to be
+instantiated from the device tree.
 
-diff --git a/arch/arm/boot/dts/hisi-x5hd2.dtsi b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-index d3d99fb..17d0637 100644
---- a/arch/arm/boot/dts/hisi-x5hd2.dtsi
-+++ b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-@@ -476,5 +476,65 @@
-                         interrupts = <0 70 4>;
-                         clocks = <&clock HIX5HD2_SATA_CLK>;
- 		};
+Also, add Kconfig prompts to allow manual selection of both the
+I2C and SPI configuration versions of the driver.
+
+Signed-off-by: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+---
+ .../devicetree/bindings/sound/adi,ssm2602.txt         | 19 +++++++++++++++++++
+ sound/soc/codecs/Kconfig                              |  8 ++++++--
+ sound/soc/codecs/ssm2602-i2c.c                        |  9 +++++++++
+ sound/soc/codecs/ssm2602-spi.c                        |  9 +++++++++
+ 4 files changed, 43 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/adi,ssm2602.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/adi,ssm2602.txt b/Documentation/devicetree/bindings/sound/adi,ssm2602.txt
+new file mode 100644
+index 0000000..3b3302f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/adi,ssm2602.txt
+@@ -0,0 +1,19 @@
++Analog Devices SSM2602, SSM2603 and SSM2604 I2S audio CODEC devices
 +
-+		i2c0: i2c@b10000 {
-+			compatible = "hisilicon,hix5hd2-i2c";
-+			reg = <0xb10000 0x1000>;
-+			interrupts = <0 38 4>;
-+			clocks = <&clock HIX5HD2_I2C0_RST>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
++SSM2602 support both I2C and SPI as the configuration interface,
++the selection is made by the MODE strap-in pin.
++SSM2603 and SSM2604 only support I2C as the configuration interface.
 +
-+		i2c1: i2c@b11000 {
-+			compatible = "hisilicon,hix5hd2-i2c";
-+			reg = <0xb11000 0x1000>;
-+			interrupts = <0 39 4>;
-+			clocks = <&clock HIX5HD2_I2C1_RST>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
++Required properties:
 +
-+		i2c2: i2c@b12000 {
-+			compatible = "hisilicon,hix5hd2-i2c";
-+			reg = <0xb12000 0x1000>;
-+			interrupts = <0 40 4>;
-+			clocks = <&clock HIX5HD2_I2C2_RST>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
++  - compatible : One of "adi,ssm2602", "adi,ssm2603" or "adi,ssm2604"
 +
-+		i2c3: i2c@b13000 {
-+			compatible = "hisilicon,hix5hd2-i2c";
-+			reg = <0xb13000 0x1000>;
-+			interrupts = <0 41 4>;
-+			clocks = <&clock HIX5HD2_I2C3_RST>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
++  - reg : the I2C address of the device for I2C, the chip select
++          number for SPI.
 +
-+		i2c4: i2c@b16000 {
-+			compatible = "hisilicon,hix5hd2-i2c";
-+			reg = <0xb16000 0x1000>;
-+			interrupts = <0 43 4>;
-+			clocks = <&clock HIX5HD2_I2C4_RST>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
++ Example:
 +
-+		i2c5: i2c@b17000 {
-+			compatible = "hisilicon,hix5hd2-i2c";
-+			reg = <0xb17000 0x1000>;
-+			interrupts = <0 44 4>;
-+			clocks = <&clock HIX5HD2_I2C5_RST>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
- 	};
++	ssm2602: ssm2602@1a {
++		compatible = "adi,ssm2602";
++		reg = <0x1a>;
++	};
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index 8838838e..3649e73 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -520,12 +520,16 @@ config SND_SOC_SSM2602
+ 	tristate
+ 
+ config SND_SOC_SSM2602_SPI
++	tristate "Analog Devices SSM2602 CODEC - SPI"
++	depends on SPI_MASTER
+ 	select SND_SOC_SSM2602
+-	tristate
++	select REGMAP_SPI
+ 
+ config SND_SOC_SSM2602_I2C
++	tristate "Analog Devices SSM2602 CODEC - I2C"
++	depends on I2C
+ 	select SND_SOC_SSM2602
+-	tristate
++	select REGMAP_I2C
+ 
+ config SND_SOC_STA32X
+ 	tristate
+diff --git a/sound/soc/codecs/ssm2602-i2c.c b/sound/soc/codecs/ssm2602-i2c.c
+index abd63d5..0d9779d 100644
+--- a/sound/soc/codecs/ssm2602-i2c.c
++++ b/sound/soc/codecs/ssm2602-i2c.c
+@@ -41,10 +41,19 @@ static const struct i2c_device_id ssm2602_i2c_id[] = {
  };
+ MODULE_DEVICE_TABLE(i2c, ssm2602_i2c_id);
+ 
++static const struct of_device_id ssm2602_of_match[] = {
++	{ .compatible = "adi,ssm2602", },
++	{ .compatible = "adi,ssm2603", },
++	{ .compatible = "adi,ssm2604", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ssm2602_of_match);
++
+ static struct i2c_driver ssm2602_i2c_driver = {
+ 	.driver = {
+ 		.name = "ssm2602",
+ 		.owner = THIS_MODULE,
++		.of_match_table = ssm2602_of_match,
+ 	},
+ 	.probe = ssm2602_i2c_probe,
+ 	.remove = ssm2602_i2c_remove,
+diff --git a/sound/soc/codecs/ssm2602-spi.c b/sound/soc/codecs/ssm2602-spi.c
+index 2bf55e2..fb4cc46 100644
+--- a/sound/soc/codecs/ssm2602-spi.c
++++ b/sound/soc/codecs/ssm2602-spi.c
+@@ -26,10 +26,19 @@ static int ssm2602_spi_remove(struct spi_device *spi)
+ 	return 0;
+ }
+ 
++static const struct of_device_id ssm2602_of_match[] = {
++	{ .compatible = "adi,ssm2602", },
++	{ .compatible = "adi,ssm2603", },
++	{ .compatible = "adi,ssm2604", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ssm2602_of_match);
++
+ static struct spi_driver ssm2602_spi_driver = {
+ 	.driver = {
+ 		.name	= "ssm2602",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = ssm2602_of_match,
+ 	},
+ 	.probe		= ssm2602_spi_probe,
+ 	.remove		= ssm2602_spi_remove,
 -- 
-1.7.9.5
+1.9.1
