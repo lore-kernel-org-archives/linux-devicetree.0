@@ -1,55 +1,60 @@
-From: PERIER Romain <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 1/3] regulator: act8865: Add support to turn off all outputs
-Date: Sun, 28 Sep 2014 14:00:54 +0200
-Message-ID: <CABgxDo+h2AYjAO4darK4+RTXqnhf4OqouGLfF2yuJCpu7r6tLg@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 1/3] regulator: act8865: Add support to turn off all
+ outputs
+Date: Sun, 28 Sep 2014 13:25:43 +0100
+Message-ID: <20140928122543.GA27755@sirena.org.uk>
 References: <1411834906-9533-1-git-send-email-romain.perier@gmail.com>
-	<20140928103301.GN27755@sirena.org.uk>
+ <20140928103301.GN27755@sirena.org.uk>
+ <CABgxDo+h2AYjAO4darK4+RTXqnhf4OqouGLfF2yuJCpu7r6tLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="z0JXx0QNa4/JeB8y"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140928103301.GN27755-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CABgxDo+h2AYjAO4darK4+RTXqnhf4OqouGLfF2yuJCpu7r6tLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: PERIER Romain <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
 
+--z0JXx0QNa4/JeB8y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-2014-09-28 12:33 GMT+02:00 Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> On Sat, Sep 27, 2014 at 04:21:44PM +0000, Romain Perier wrote:
->> When the property "active-semi,system-power-controller" is found in the
->> devicetree, the function pm_power_off is defined. This function sends the
->> rights bit fields to the global off control register. shutdown/poweroff
->> commands are now supported for hardware components which use these PMU.
->
-> We really need to come up with a standard property for this and document
-> it rather than continuing to add individual device specific properties
-> all doing the same thing, and probably also some helper code and/or a
-> standard operation for this - there's a lot of drivers implementing the
-> same pattern here.
+On Sun, Sep 28, 2014 at 02:00:54PM +0200, PERIER Romain wrote:
+> 2014-09-28 12:33 GMT+02:00 Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
 
-I completly agree about adding a unified and generic property for that purpose.
-I already proposed something for that on devicetree ML, see the thread
-"Proposal: generic property for system-power-controller".
-Unfortunately I did not get replies :) .
+> > We really need to come up with a standard property for this and document
+> > it rather than continuing to add individual device specific properties
+> > all doing the same thing, and probably also some helper code and/or a
+> > standard operation for this - there's a lot of drivers implementing the
+> > same pattern here.
 
+> I completly agree about adding a unified and generic property for that purpose.
+> I already proposed something for that on devicetree ML, see the thread
+> "Proposal: generic property for system-power-controller".
+> Unfortunately I did not get replies :) .
 
->
->> +     if (dev->of_node &&
->> +         of_property_read_bool(dev->of_node,
->> +                               "active-semi,system-power-controller")) {
->> +             act8865_i2c_client = client;
->
-> Indentation seems messed up here - tabs vs spaces?
+Did you CC relevant maintainers and send a patch?
 
-Yes, I really don't understand where the problem is. I use good emacs
-settings to be compatible with kernel coding style and git diff does
-not show me indent/spaces problems :/ .
-Sorry because this is a very boring issue when reviewing patches... I
-will investigate ^^
+--z0JXx0QNa4/JeB8y
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Romain
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUJ/5GAAoJECTWi3JdVIfQWqsH/2xGS5zNCoOxQajdk9xsFD1l
+n20Of1CrP5/nv0zcN4NhSAoJvPXFIq1wkGOsj4pfq1/swBLsOtNt38yQ/EVT9nkh
+yNry4WCzF7/V9UaSSFgQ662ISNu49rv7Py7bC9jBhY+beQ16Vrmd44xrgMj1RFgn
+1XW8DQ4U+7rfE77X0R9sOxIjV2o99YvW097h50z3LqsWDUj98whSDUzxaG9MNS6z
+Zk7uCzfTGcN751BFmMV2eUwvhvY3Dhtxi6/wQQ4TaBq6om6G91B/4PAHbo4p8b6O
+ZxATyy6EIRmMvgkewNbst716rT0PApcecfOlUOYvzKkKvKodETaNTEFN7GIApZU=
+=U1Kk
+-----END PGP SIGNATURE-----
+
+--z0JXx0QNa4/JeB8y--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
