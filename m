@@ -1,53 +1,96 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] Removes OF_SELFTEST dependency on OF_DYNAMIC config symbol
-Date: Sat, 27 Sep 2014 23:23:59 +0100
-Message-ID: <CACxGe6t7Krmtm4enS=-7yjWiR6m81Rr1A7RNKnn70bVHoEe2Bw@mail.gmail.com>
-References: <1410611708-9369-1-git-send-email-gaurav.minocha.os@gmail.com> <9D65D8A3-6404-451B-A3F4-E9ED94810B7B@antoniou-consulting.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v3 03/12] clk: Add a function to retrieve phase
+Date: Sat, 27 Sep 2014 17:17:32 -0700
+Message-ID: <20140928001732.19023.2496@quantum>
+References: <1410466706-27386-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1410466706-27386-4-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9D65D8A3-6404-451B-A3F4-E9ED94810B7B-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1410466706-27386-4-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, david.lanzendoerfer@o2s.ch, ulf.hansson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, wens@csie.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 15, 2014 at 10:34 AM, Pantelis Antoniou
-<panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
-> Hi Gaurav,
->
->
-> On Sep 13, 2014, at 3:35 PM, Gaurav Minocha wrote:
->
->> This patch is used to remove the selftests dependency on
->> OF_DYNAMIC config flag. Now, it selectively builds only
->> the functions required by the selftests.
->>
->> Tested with and without OF_DYNAMIC enabled.
->>
->> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->
-> [snip]
->
-> I'm not happy with this patch.
->
-> It duplicates core functionality already present in drivers/of/dynamic.c and those
-> two implementations are for sure going to get out of sync.
->
-> If you require the self-tests to work without OF_DYNAMIC you can do that by including the
-> tests in your dts. If you want to insert them dynamically then use OF_DYNAMIC.
+Quoting Maxime Ripard (2014-09-11 13:18:17)
+> The current phase API doesn't look into the actual hardware to get the phase
+> value, but will rather get it from a variable only set by the set_phase
+> function.
+> 
+> This will cause issue when the client driver will never call the set_phase
+> function, where we can end up having a reported phase that will not match what
+> the hardware has been programmed to by the bootloader or what phase is
+> programmed out of reset.
+> 
+> Add a new get_phase function for the drivers to implement so that we can get
+> this value.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> ---
+>  drivers/clk/clk.c            | 10 ++++++++++
+>  include/linux/clk-provider.h |  5 +++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index d87661af0c72..113d75db371d 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -1934,6 +1934,16 @@ int __clk_init(struct device *dev, struct clk *clk)
+>                 clk->accuracy = 0;
+>  
+>         /*
+> +        * Set clk's phase.
+> +        * Since a phase is by definition relative to its parent, just
+> +        * query the current clock phase, or just assume it's in phase.
+> +        */
+> +       if (clk->ops->get_phase)
+> +               clk->phase = clk->ops->get_phase(clk->hw);
+> +       else
+> +               clk->phase = 0;
 
-I asked Gaurav to make this work. The selftest code should always be
-usable, without requiring the testcase data to be directly included
-into the dtb. It is important to be able to still test the code paths
-on any platform when OF_DYNAMIC is not selected.
+I probably wasn't paying enough attention to this. Based on the
+coverletter I thought that v3 would introduce something like
+CLK_GET_PHASE_NOCACHE and stuff that logic into a __clk_get_phase
+function? Looks like this version of the series doesn't handle phases
+that can be changed by hardware (e.g. coming out of idle).
 
-This patch doesn't do it in a very nice way, agreed, but it is
-important to get working.
+Correct me if I am wrong, but it looks like we retrieve the phase only
+once at init and then never again? The rest of the time we rely on
+clk->phase to always be accurate...
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Mike
+
+> +
+> +       /*
+>          * Set clk's rate.  The preferred method is to use .recalc_rate.  For
+>          * simple clocks and lazy developers the default fallback is to use the
+>          * parent's rate.  If a clock doesn't have a parent (or is orphaned)
+> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+> index 69b20d4c1e1a..abec961092a7 100644
+> --- a/include/linux/clk-provider.h
+> +++ b/include/linux/clk-provider.h
+> @@ -130,6 +130,10 @@ struct dentry;
+>   *             set then clock accuracy will be initialized to parent accuracy
+>   *             or 0 (perfect clock) if clock has no parent.
+>   *
+> + * @get_phase: Queries the hardware to get the current phase of a clock.
+> + *             Returned values are 0-359 degrees on success, negative
+> + *             error codes on failure.
+> + *
+>   * @set_phase: Shift the phase this clock signal in degrees specified
+>   *             by the second argument. Valid values for degrees are
+>   *             0-359. Return 0 on success, otherwise -EERROR.
+> @@ -182,6 +186,7 @@ struct clk_ops {
+>                                     unsigned long parent_rate, u8 index);
+>         unsigned long   (*recalc_accuracy)(struct clk_hw *hw,
+>                                            unsigned long parent_accuracy);
+> +       int             (*get_phase)(struct clk_hw *hw);
+>         int             (*set_phase)(struct clk_hw *hw, int degrees);
+>         void            (*init)(struct clk_hw *hw);
+>         int             (*debug_init)(struct clk_hw *hw, struct dentry *dentry);
+> -- 
+> 2.1.0
+> 
