@@ -1,13 +1,12 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 4/4] simplefb: add clock handling code
-Date: Sun, 28 Sep 2014 14:43:38 +0200
-Message-ID: <1411908218-20947-4-git-send-email-hdegoede@redhat.com>
-References: <1411908218-20947-1-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 1/4] dt-bindings: Add a clocks property to the
+ simple-framebuffer binding
+Date: Sun, 28 Sep 2014 14:43:35 +0200
+Message-ID: <1411908218-20947-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBCUFUCQQKGQEV46D6TY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1411908218-20947-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBA4FUCQQKGQEFSHGCXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -19,168 +18,28 @@ To: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gma
 Cc: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
+A simple-framebuffer node represents a framebuffer setup by the firmware /
+bootloader. Such a framebuffer may have a number of clocks in use, add a
+property to communicate this to the OS.
 
-This claims and enables clocks listed in the simple framebuffer dt node.
-This is needed so that the display engine, in case the required clocks
-are known by the kernel code and are described in the dt, will remain
-properly enabled.
-
-Signed-off-by: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
-[hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: drop dev_err on kzalloc failure]
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/video/fbdev/simplefb.c | 100 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 98 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/video/simple-framebuffer.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
-index b7d5c08..f329cc1 100644
---- a/drivers/video/fbdev/simplefb.c
-+++ b/drivers/video/fbdev/simplefb.c
-@@ -26,6 +26,7 @@
- #include <linux/module.h>
- #include <linux/platform_data/simplefb.h>
- #include <linux/platform_device.h>
-+#include <linux/clk-provider.h>
+diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+index 70c26f3..e75478e 100644
+--- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
++++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+@@ -14,6 +14,9 @@ Required properties:
+   - r5g6b5 (16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b).
+   - a8b8g8r8 (32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r).
  
- static struct fb_fix_screeninfo simplefb_fix = {
- 	.id		= "simple",
-@@ -165,8 +166,98 @@ static int simplefb_parse_pd(struct platform_device *pdev,
- 	return 0;
- }
++Optional properties:
++- clocks : List of clocks used by the framebuffer
++
+ Example:
  
-+/*
-+ * Clock handling code.
-+ *
-+ * Here we handle the clocks property of our "simple-framebuffer" dt node.
-+ * This is necessary so that we can make sure that any clocks needed by
-+ * the display engine that the bootloader set up for us (and for which it
-+ * provided a simplefb dt node), stay up, for the life of the simplefb
-+ * driver.
-+ *
-+ * When the driver unloads, we cleanly disable, and then release the clocks.
-+ */
-+struct simplefb_clock {
-+	struct list_head list;
-+	struct clk *clock;
-+};
-+
-+/*
-+ * We only complain about errors here, no action is taken as the most likely
-+ * error can only happen due to a mismatch between the bootloader which set
-+ * up simplefb, and the clock definitions in the device tree. Chances are
-+ * that there are no adverse effects, and if there are, a clean teardown of
-+ * the fb probe will not help us much either. So just complain and carry on,
-+ * and hope that the user actually gets a working fb at the end of things.
-+ */
-+static void
-+simplefb_clocks_init(struct platform_device *pdev, struct list_head *list)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	int clock_count, i;
-+
-+	INIT_LIST_HEAD(list);
-+
-+	if (dev_get_platdata(&pdev->dev) || !np)
-+		return;
-+
-+	clock_count = of_clk_get_parent_count(np);
-+	for (i = 0; i < clock_count; i++) {
-+		struct simplefb_clock *entry;
-+		struct clk *clock = of_clk_get(np, i);
-+		int ret;
-+
-+		if (IS_ERR(clock)) {
-+			dev_err(&pdev->dev, "%s: clock %d not found: %ld\n",
-+			       __func__, i, PTR_ERR(clock));
-+			continue;
-+		}
-+
-+		ret = clk_prepare_enable(clock);
-+		if (ret) {
-+			dev_err(&pdev->dev,
-+				"%s: failed to enable clock %d: %d\n",
-+			       __func__, i, ret);
-+			clk_put(clock);
-+			continue;
-+		}
-+
-+		entry = kzalloc(sizeof(struct simplefb_clock), GFP_KERNEL);
-+		if (!entry) {
-+			clk_disable_unprepare(clock);
-+			clk_put(clock);
-+			continue;
-+		}
-+
-+		entry->clock = clock;
-+		/*
-+		 * add to the front of the list, so we disable clocks in the
-+		 * correct order.
-+		 */
-+		list_add(&entry->list, list);
-+	}
-+}
-+
-+static void
-+simplefb_clocks_destroy(struct list_head *list)
-+{
-+	struct list_head *pos, *n;
-+
-+	list_for_each_safe(pos, n, list) {
-+		struct simplefb_clock *entry =
-+			container_of(pos, struct simplefb_clock, list);
-+
-+		list_del(&entry->list);
-+
-+		clk_disable_unprepare(entry->clock);
-+		clk_put(entry->clock);
-+		kfree(entry);
-+	}
-+}
-+
- struct simplefb_par {
- 	u32 palette[PSEUDO_PALETTE_SIZE];
-+	struct list_head clock_list[1];
- };
- 
- static int simplefb_probe(struct platform_device *pdev)
-@@ -236,6 +327,8 @@ static int simplefb_probe(struct platform_device *pdev)
- 	}
- 	info->pseudo_palette = par->palette;
- 
-+	simplefb_clocks_init(pdev, par->clock_list);
-+
- 	dev_info(&pdev->dev, "framebuffer at 0x%lx, 0x%x bytes, mapped to 0x%p\n",
- 			     info->fix.smem_start, info->fix.smem_len,
- 			     info->screen_base);
-@@ -247,14 +340,15 @@ static int simplefb_probe(struct platform_device *pdev)
- 	ret = register_framebuffer(info);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Unable to register simplefb: %d\n", ret);
--		goto error_unmap;
-+		goto error_clocks;
- 	}
- 
- 	dev_info(&pdev->dev, "fb%d: simplefb registered!\n", info->node);
- 
- 	return 0;
- 
-- error_unmap:
-+ error_clocks:
-+	simplefb_clocks_destroy(par->clock_list);
- 	iounmap(info->screen_base);
- 
-  error_fb_release:
-@@ -266,8 +360,10 @@ static int simplefb_probe(struct platform_device *pdev)
- static int simplefb_remove(struct platform_device *pdev)
- {
- 	struct fb_info *info = platform_get_drvdata(pdev);
-+	struct simplefb_par *par = info->par;
- 
- 	unregister_framebuffer(info);
-+	simplefb_clocks_destroy(par->clock_list);
- 	framebuffer_release(info);
- 
- 	return 0;
+ 	framebuffer {
 -- 
 2.1.0
