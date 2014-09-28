@@ -1,159 +1,294 @@
-From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] To remove non-ascii characters in of_selftest.txt
-Date: Sun, 28 Sep 2014 12:38:07 -0700
-Message-ID: <1411933087-4272-1-git-send-email-gaurav.minocha.os@gmail.com>
+From: Wim Van Sebroeck <wim@iguana.be>
+Subject: Re: [PATCH 3/4] watchdog: add driver for Ricoh RN5T618 watchdog
+Date: Sun, 28 Sep 2014 22:35:41 +0200
+Message-ID: <20140928203541.GA571@spo001.leaseweb.nl>
+References: <1409091237-16722-1-git-send-email-b.galvani@gmail.com> <1409091237-16722-4-git-send-email-b.galvani@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1409091237-16722-4-git-send-email-b.galvani@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Beniamino Galvani <b.galvani@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Carlo Caione <carlo@caione.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch removes the non-ascii characters in
-Documentation/devicetree/of_selftest.txt
+Hi Beniamino,
 
-Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/of_selftest.txt | 28 ++++++++++++++----------=
-----
- 1 file changed, 14 insertions(+), 14 deletions(-)
+> This adds a driver for the watchdog timer available in Ricoh RN5T618
+> PMIC. The device supports a programmable expiration time of 1, 8, 32
+> or 128 seconds.
+> 
+> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+> ---
+>  drivers/watchdog/Kconfig       |   11 +++
+>  drivers/watchdog/Makefile      |    1 +
+>  drivers/watchdog/rn5t618_wdt.c |  196 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/rn5t618.h    |    4 +
+>  4 files changed, 212 insertions(+)
+>  create mode 100644 drivers/watchdog/rn5t618_wdt.c
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index f57312f..9eba6af 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -309,6 +309,17 @@ config ORION_WATCHDOG
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called orion_wdt.
+>  
+> +config RN5T618_WATCHDOG
+> +	tristate "Ricoh RN5T618 watchdog"
+> +	depends on MFD_RN5T618
+> +	select WATCHDOG_CORE
+> +	help
+> +	  If you say yes here you get support for watchdog on the Ricoh
+> +	  RN5T618 PMIC.
+> +
+> +	  This driver can also be built as a module.  If so, the module
+> +	  will be called rn5t618_wdt.
+> +
+>  config SUNXI_WATCHDOG
+>  	tristate "Allwinner SoCs watchdog support"
+>  	depends on ARCH_SUNXI
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 468c320..0afa343 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -47,6 +47,7 @@ obj-$(CONFIG_IOP_WATCHDOG) += iop_wdt.o
+>  obj-$(CONFIG_DAVINCI_WATCHDOG) += davinci_wdt.o
+>  obj-$(CONFIG_ORION_WATCHDOG) += orion_wdt.o
+>  obj-$(CONFIG_SUNXI_WATCHDOG) += sunxi_wdt.o
+> +obj-$(CONFIG_RN5T618_WATCHDOG) += rn5t618_wdt.o
+>  obj-$(CONFIG_COH901327_WATCHDOG) += coh901327_wdt.o
+>  obj-$(CONFIG_STMP3XXX_RTC_WATCHDOG) += stmp3xxx_rtc_wdt.o
+>  obj-$(CONFIG_NUC900_WATCHDOG) += nuc900_wdt.o
+> diff --git a/drivers/watchdog/rn5t618_wdt.c b/drivers/watchdog/rn5t618_wdt.c
+> new file mode 100644
+> index 0000000..3a76ad7
+> --- /dev/null
+> +++ b/drivers/watchdog/rn5t618_wdt.c
+> @@ -0,0 +1,196 @@
+> +/*
+> + * Watchdog driver for Ricoh RN5T618 PMIC
+> + *
+> + * Copyright (C) 2014 Beniamino Galvani <b.galvani@gmail.com>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * version 2 as published by the Free Software Foundation.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/mfd/rn5t618.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/watchdog.h>
+> +
+> +#define DRIVER_NAME "rn5t618-wdt"
+> +
+> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> +static unsigned int heartbeat = -1;
+> +
+> +module_param(heartbeat, int, 0);
+> +MODULE_PARM_DESC(heartbeat, "Initial watchdog heartbeat in seconds");
 
-diff --git a/Documentation/devicetree/of_selftest.txt b/Documentation/d=
-evicetree/of_selftest.txt
-index 9326bba..99f8d8b 100644
---- a/Documentation/devicetree/of_selftest.txt
-+++ b/Documentation/devicetree/of_selftest.txt
-@@ -67,14 +67,14 @@ struct device_node {
-     ...
-  };
-=20
--Figure 1, describes a generic structure of machine=E2=80=99s un-flatte=
-ned device tree
-+Figure 1, describes a generic structure of machine's un-flattened devi=
-ce tree
- considering only child and sibling pointers. There exists another poin=
-ter,
- *parent, that is used to traverse the tree in the reverse direction. S=
-o, at
- a particular level the child node and all the sibling nodes will have =
-a parent
--pointer pointing to a common node (e.g. child1, sibling2, sibling3, si=
-bling4=E2=80=99s
-+pointer pointing to a common node (e.g. child1, sibling2, sibling3, si=
-bling4's
- parent points to root node)
-=20
--root (=E2=80=98/=E2=80=99)
-+root ('/')
-    |
- child1 -> sibling2 -> sibling3 -> sibling4 -> null
-    |         |           |           |
-@@ -110,7 +110,7 @@ __dtb_testcases_begin - address marking the start o=
-f test data blob
- __dtb_testcases_end   - address marking the end of test data blob
-=20
- Secondly, it calls of_fdt_unflatten_device_tree() to unflatten the fla=
-ttened
--blob. And finally, if the machine=E2=80=99s device tree (i.e live tree=
-) is present,
-+blob. And finally, if the machine's device tree (i.e live tree) is pre=
-sent,
- then it attaches the unflattened test data tree to the live tree, else=
- it
- attaches itself as a live device tree.
-=20
-@@ -118,7 +118,7 @@ attach_node_and_children() uses of_attach_node() to=
- attach the nodes into the
- live tree as explained below. To explain the same, the test data tree =
-described
-  in Figure 2 is attached to the live tree described in Figure 1.
-=20
--root (=E2=80=98/=E2=80=99)
-+root ('/')
-     |
-  testcase-data
-     |
-@@ -134,8 +134,8 @@ root->testcase-data->test-child0->test-child01->tes=
-t-sibling1->test-sibling2
-=20
- Figure 2: Example test data tree to be attached to live tree.
-=20
--According to the scenario above, the live tree is already present so i=
-t isn=E2=80=99t
--required to attach the root(=E2=80=98/=E2=80=99) node. All other nodes=
- are attached by calling
-+According to the scenario above, the live tree is already present so i=
-t isn't
-+required to attach the root('/') node. All other nodes are attached by=
- calling
- of_attach_node() on each node.
-=20
- In the function of_attach_node(), the new node is attached as the chil=
-d of the
-@@ -144,7 +144,7 @@ replaces the current child and turns it into its si=
-bling. So, when the testcase
- data node is attached to the live tree above (Figure 1), the final str=
-ucture is
-  as shown in Figure 3.
-=20
--root (=E2=80=98/=E2=80=99)
-+root ('/')
-    |
- testcase-data -> child1 -> sibling2 -> sibling3 -> sibling4 -> null
-    |               |          |           |           |
-@@ -163,7 +163,7 @@ testcase-data -> child1 -> sibling2 -> sibling3 -> =
-sibling4 -> null
-                                           null
- ----------------------------------------------------------------------=
--
-=20
--root (=E2=80=98/=E2=80=99)
-+root ('/')
-    |
- testcase-data -> child1 -> sibling2 -> sibling3 -> sibling4 -> null
-    |               |          |           |           |
-@@ -184,8 +184,8 @@ test-child0 the test-sibling1 is attached that push=
-es the child node
-  as mentioned above.
-=20
- If a duplicate node is found (i.e. if a node with same full_name prope=
-rty is
--already present in the live tree), then the node isn=E2=80=99t attache=
-d rather its
--properties are updated to the live tree=E2=80=99s node by calling the =
-function
-+already present in the live tree), then the node isn't attached rather=
- its
-+properties are updated to the live tree's node by calling the function
- update_node_properties().
-=20
-=20
-@@ -198,7 +198,7 @@ whole tree). selftest_data_remove() calls detach_no=
-de_and_children() that uses
- of_detach_node() to detach the nodes from the live device tree.
-=20
- To detach a node, of_detach_node() first updates all_next linked list,=
- by
--attaching the previous node=E2=80=99s allnext to current node=E2=80=99=
-s allnext pointer. And
--then, it either updates the child pointer of given node=E2=80=99s pare=
-nt to its
--sibling or attaches the previous sibling to the given node=E2=80=99s s=
-ibling, as
-+attaching the previous node's allnext to current node's allnext pointe=
-r. And
-+then, it either updates the child pointer of given node's parent to it=
-s
-+sibling or attaches the previous sibling to the given node's sibling, =
-as
- appropriate. That is it :)
---=20
-1.9.1
+1) this is actually a timeout value and not the same as the heartbeat of the watchdog device.
+So I prefer this also to be called as timeout and not heartbeat.
+2) this actually is an unsigned int.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+For the rest OK by me.
+
+Kind regards,
+Wim.
+
+> +
+> +module_param(nowayout, bool, 0);
+> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+> +
+> +struct rn5t618_wdt {
+> +	struct watchdog_device wdt_dev;
+> +	struct rn5t618 *rn5t618;
+> +};
+> +
+> +/*
+> + * This array encodes the values of WDOGTIM field for the supported
+> + * watchdog expiration times. If the watchdog is not accessed before
+> + * the timer expiration, the PMU generates an interrupt and if the CPU
+> + * doesn't clear it within one second the system is restarted.
+> + */
+> +static const struct {
+> +	u8 reg_val;
+> +	int time;
+> +} rn5t618_wdt_map[] = {
+> +	{ 0, 1 },
+> +	{ 1, 8 },
+> +	{ 2, 32 },
+> +	{ 3, 128 },
+> +};
+> +
+> +static int rn5t618_wdt_set_timeout(struct watchdog_device *wdt_dev,
+> +				   unsigned int timeout)
+> +{
+> +	struct rn5t618_wdt *wdt = watchdog_get_drvdata(wdt_dev);
+> +	int ret, i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(rn5t618_wdt_map); i++) {
+> +		if (rn5t618_wdt_map[i].time + 1 >= timeout)
+> +			break;
+> +	}
+> +
+> +	if (i == ARRAY_SIZE(rn5t618_wdt_map))
+> +		ret = -EINVAL;
+> +	else
+> +		ret = regmap_update_bits(wdt->rn5t618->regmap, RN5T618_WATCHDOG,
+> +					 RN5T618_WATCHDOG_WDOGTIM_M,
+> +					 rn5t618_wdt_map[i].reg_val);
+> +	if (!ret)
+> +		wdt_dev->timeout = rn5t618_wdt_map[i].time;
+> +
+> +	return ret;
+> +}
+> +
+> +static int rn5t618_wdt_start(struct watchdog_device *wdt_dev)
+> +{
+> +	struct rn5t618_wdt *wdt = watchdog_get_drvdata(wdt_dev);
+> +	int ret;
+> +
+> +	ret = rn5t618_wdt_set_timeout(wdt_dev, wdt_dev->timeout);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* enable repower-on */
+> +	ret = regmap_update_bits(wdt->rn5t618->regmap, RN5T618_REPCNT,
+> +				 RN5T618_REPCNT_REPWRON,
+> +				 RN5T618_REPCNT_REPWRON);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* enable watchdog */
+> +	ret = regmap_update_bits(wdt->rn5t618->regmap, RN5T618_WATCHDOG,
+> +				 RN5T618_WATCHDOG_WDOGEN,
+> +				 RN5T618_WATCHDOG_WDOGEN);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* enable watchdog interrupt */
+> +	return regmap_update_bits(wdt->rn5t618->regmap, RN5T618_PWRIREN,
+> +				  RN5T618_PWRIRQ_IR_WDOG,
+> +				  RN5T618_PWRIRQ_IR_WDOG);
+> +}
+> +
+> +static int rn5t618_wdt_stop(struct watchdog_device *wdt_dev)
+> +{
+> +	struct rn5t618_wdt *wdt = watchdog_get_drvdata(wdt_dev);
+> +
+> +	return regmap_update_bits(wdt->rn5t618->regmap, RN5T618_WATCHDOG,
+> +				  RN5T618_WATCHDOG_WDOGEN, 0);
+> +}
+> +
+> +static int rn5t618_wdt_ping(struct watchdog_device *wdt_dev)
+> +{
+> +	struct rn5t618_wdt *wdt = watchdog_get_drvdata(wdt_dev);
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	/* The counter is restarted after a R/W access to watchdog register */
+> +	ret = regmap_read(wdt->rn5t618->regmap, RN5T618_WATCHDOG, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_write(wdt->rn5t618->regmap, RN5T618_WATCHDOG, val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Clear pending watchdog interrupt */
+> +	return regmap_update_bits(wdt->rn5t618->regmap, RN5T618_PWRIRQ,
+> +				  RN5T618_PWRIRQ_IR_WDOG, 0);
+> +}
+> +
+> +static struct watchdog_info rn5t618_wdt_info = {
+> +	.options	= WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE |
+> +			  WDIOF_KEEPALIVEPING,
+> +	.identity	= DRIVER_NAME,
+> +};
+> +
+> +static struct watchdog_ops rn5t618_wdt_ops = {
+> +	.owner          = THIS_MODULE,
+> +	.start          = rn5t618_wdt_start,
+> +	.stop           = rn5t618_wdt_stop,
+> +	.ping           = rn5t618_wdt_ping,
+> +	.set_timeout    = rn5t618_wdt_set_timeout,
+> +};
+> +
+> +static int rn5t618_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct rn5t618 *rn5t618 = dev_get_drvdata(pdev->dev.parent);
+> +	struct rn5t618_wdt *wdt;
+> +	int min_timeout, max_timeout;
+> +
+> +	wdt = devm_kzalloc(&pdev->dev, sizeof(struct rn5t618_wdt), GFP_KERNEL);
+> +	if (!wdt)
+> +		return -ENOMEM;
+> +
+> +	min_timeout = rn5t618_wdt_map[0].time;
+> +	max_timeout = rn5t618_wdt_map[ARRAY_SIZE(rn5t618_wdt_map) - 1].time;
+> +
+> +	wdt->rn5t618 = rn5t618;
+> +	wdt->wdt_dev.info = &rn5t618_wdt_info;
+> +	wdt->wdt_dev.ops = &rn5t618_wdt_ops;
+> +	wdt->wdt_dev.min_timeout = min_timeout;
+> +	wdt->wdt_dev.max_timeout = max_timeout;
+> +	wdt->wdt_dev.timeout = max_timeout;
+> +	wdt->wdt_dev.parent = &pdev->dev;
+> +
+> +	watchdog_set_drvdata(&wdt->wdt_dev, wdt);
+> +	watchdog_init_timeout(&wdt->wdt_dev, heartbeat, &pdev->dev);
+> +	watchdog_set_nowayout(&wdt->wdt_dev, nowayout);
+> +
+> +	return watchdog_register_device(&wdt->wdt_dev);
+> +}
+> +
+> +static int rn5t618_wdt_remove(struct platform_device *pdev)
+> +{
+> +	struct watchdog_device *wdt_dev = platform_get_drvdata(pdev);
+> +
+> +	watchdog_unregister_device(wdt_dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver rn5t618_wdt_driver = {
+> +	.probe = rn5t618_wdt_probe,
+> +	.remove = rn5t618_wdt_remove,
+> +	.driver = {
+> +		.name	= DRIVER_NAME,
+> +	},
+> +};
+> +
+> +module_platform_driver(rn5t618_wdt_driver);
+> +
+> +MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
+> +MODULE_DESCRIPTION("RN5T618 watchdog driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.h
+> index e3571d1..c72d534 100644
+> --- a/include/linux/mfd/rn5t618.h
+> +++ b/include/linux/mfd/rn5t618.h
+> @@ -202,6 +202,10 @@
+>  
+>  #define RN5T618_REPCNT_REPWRON		BIT(0)
+>  #define RN5T618_SLPCNT_SWPWROFF		BIT(0)
+> +#define RN5T618_WATCHDOG_WDOGEN		BIT(2)
+> +#define RN5T618_WATCHDOG_WDOGTIM_M	(BIT(0) | BIT(1))
+> +#define RN5T618_WATCHDOG_WDOGTIM_S	0
+> +#define RN5T618_PWRIRQ_IR_WDOG		BIT(6)
+>  
+>  enum {
+>  	RN5T618_DCDC1,
+> -- 
+> 1.7.10.4
+> 
