@@ -1,61 +1,186 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 1/3] regulator: act8865: Add support to turn off all
- outputs
-Date: Sun, 28 Sep 2014 13:25:43 +0100
-Message-ID: <20140928122543.GA27755@sirena.org.uk>
-References: <1411834906-9533-1-git-send-email-romain.perier@gmail.com>
- <20140928103301.GN27755@sirena.org.uk>
- <CABgxDo+h2AYjAO4darK4+RTXqnhf4OqouGLfF2yuJCpu7r6tLg@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 4/4] simplefb: add clock handling code
+Date: Sun, 28 Sep 2014 14:43:38 +0200
+Message-ID: <1411908218-20947-4-git-send-email-hdegoede@redhat.com>
+References: <1411908218-20947-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="z0JXx0QNa4/JeB8y"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CABgxDo+h2AYjAO4darK4+RTXqnhf4OqouGLfF2yuJCpu7r6tLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: PERIER Romain <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBCUFUCQQKGQEV46D6TY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1411908218-20947-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
 
---z0JXx0QNa4/JeB8y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This claims and enables clocks listed in the simple framebuffer dt node.
+This is needed so that the display engine, in case the required clocks
+are known by the kernel code and are described in the dt, will remain
+properly enabled.
 
-On Sun, Sep 28, 2014 at 02:00:54PM +0200, PERIER Romain wrote:
-> 2014-09-28 12:33 GMT+02:00 Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+Signed-off-by: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
+[hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: drop dev_err on kzalloc failure]
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/video/fbdev/simplefb.c | 100 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 98 insertions(+), 2 deletions(-)
 
-> > We really need to come up with a standard property for this and document
-> > it rather than continuing to add individual device specific properties
-> > all doing the same thing, and probably also some helper code and/or a
-> > standard operation for this - there's a lot of drivers implementing the
-> > same pattern here.
-
-> I completly agree about adding a unified and generic property for that purpose.
-> I already proposed something for that on devicetree ML, see the thread
-> "Proposal: generic property for system-power-controller".
-> Unfortunately I did not get replies :) .
-
-Did you CC relevant maintainers and send a patch?
-
---z0JXx0QNa4/JeB8y
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUJ/5GAAoJECTWi3JdVIfQWqsH/2xGS5zNCoOxQajdk9xsFD1l
-n20Of1CrP5/nv0zcN4NhSAoJvPXFIq1wkGOsj4pfq1/swBLsOtNt38yQ/EVT9nkh
-yNry4WCzF7/V9UaSSFgQ662ISNu49rv7Py7bC9jBhY+beQ16Vrmd44xrgMj1RFgn
-1XW8DQ4U+7rfE77X0R9sOxIjV2o99YvW097h50z3LqsWDUj98whSDUzxaG9MNS6z
-Zk7uCzfTGcN751BFmMV2eUwvhvY3Dhtxi6/wQQ4TaBq6om6G91B/4PAHbo4p8b6O
-ZxATyy6EIRmMvgkewNbst716rT0PApcecfOlUOYvzKkKvKodETaNTEFN7GIApZU=
-=U1Kk
------END PGP SIGNATURE-----
-
---z0JXx0QNa4/JeB8y--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
+index b7d5c08..f329cc1 100644
+--- a/drivers/video/fbdev/simplefb.c
++++ b/drivers/video/fbdev/simplefb.c
+@@ -26,6 +26,7 @@
+ #include <linux/module.h>
+ #include <linux/platform_data/simplefb.h>
+ #include <linux/platform_device.h>
++#include <linux/clk-provider.h>
+ 
+ static struct fb_fix_screeninfo simplefb_fix = {
+ 	.id		= "simple",
+@@ -165,8 +166,98 @@ static int simplefb_parse_pd(struct platform_device *pdev,
+ 	return 0;
+ }
+ 
++/*
++ * Clock handling code.
++ *
++ * Here we handle the clocks property of our "simple-framebuffer" dt node.
++ * This is necessary so that we can make sure that any clocks needed by
++ * the display engine that the bootloader set up for us (and for which it
++ * provided a simplefb dt node), stay up, for the life of the simplefb
++ * driver.
++ *
++ * When the driver unloads, we cleanly disable, and then release the clocks.
++ */
++struct simplefb_clock {
++	struct list_head list;
++	struct clk *clock;
++};
++
++/*
++ * We only complain about errors here, no action is taken as the most likely
++ * error can only happen due to a mismatch between the bootloader which set
++ * up simplefb, and the clock definitions in the device tree. Chances are
++ * that there are no adverse effects, and if there are, a clean teardown of
++ * the fb probe will not help us much either. So just complain and carry on,
++ * and hope that the user actually gets a working fb at the end of things.
++ */
++static void
++simplefb_clocks_init(struct platform_device *pdev, struct list_head *list)
++{
++	struct device_node *np = pdev->dev.of_node;
++	int clock_count, i;
++
++	INIT_LIST_HEAD(list);
++
++	if (dev_get_platdata(&pdev->dev) || !np)
++		return;
++
++	clock_count = of_clk_get_parent_count(np);
++	for (i = 0; i < clock_count; i++) {
++		struct simplefb_clock *entry;
++		struct clk *clock = of_clk_get(np, i);
++		int ret;
++
++		if (IS_ERR(clock)) {
++			dev_err(&pdev->dev, "%s: clock %d not found: %ld\n",
++			       __func__, i, PTR_ERR(clock));
++			continue;
++		}
++
++		ret = clk_prepare_enable(clock);
++		if (ret) {
++			dev_err(&pdev->dev,
++				"%s: failed to enable clock %d: %d\n",
++			       __func__, i, ret);
++			clk_put(clock);
++			continue;
++		}
++
++		entry = kzalloc(sizeof(struct simplefb_clock), GFP_KERNEL);
++		if (!entry) {
++			clk_disable_unprepare(clock);
++			clk_put(clock);
++			continue;
++		}
++
++		entry->clock = clock;
++		/*
++		 * add to the front of the list, so we disable clocks in the
++		 * correct order.
++		 */
++		list_add(&entry->list, list);
++	}
++}
++
++static void
++simplefb_clocks_destroy(struct list_head *list)
++{
++	struct list_head *pos, *n;
++
++	list_for_each_safe(pos, n, list) {
++		struct simplefb_clock *entry =
++			container_of(pos, struct simplefb_clock, list);
++
++		list_del(&entry->list);
++
++		clk_disable_unprepare(entry->clock);
++		clk_put(entry->clock);
++		kfree(entry);
++	}
++}
++
+ struct simplefb_par {
+ 	u32 palette[PSEUDO_PALETTE_SIZE];
++	struct list_head clock_list[1];
+ };
+ 
+ static int simplefb_probe(struct platform_device *pdev)
+@@ -236,6 +327,8 @@ static int simplefb_probe(struct platform_device *pdev)
+ 	}
+ 	info->pseudo_palette = par->palette;
+ 
++	simplefb_clocks_init(pdev, par->clock_list);
++
+ 	dev_info(&pdev->dev, "framebuffer at 0x%lx, 0x%x bytes, mapped to 0x%p\n",
+ 			     info->fix.smem_start, info->fix.smem_len,
+ 			     info->screen_base);
+@@ -247,14 +340,15 @@ static int simplefb_probe(struct platform_device *pdev)
+ 	ret = register_framebuffer(info);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Unable to register simplefb: %d\n", ret);
+-		goto error_unmap;
++		goto error_clocks;
+ 	}
+ 
+ 	dev_info(&pdev->dev, "fb%d: simplefb registered!\n", info->node);
+ 
+ 	return 0;
+ 
+- error_unmap:
++ error_clocks:
++	simplefb_clocks_destroy(par->clock_list);
+ 	iounmap(info->screen_base);
+ 
+  error_fb_release:
+@@ -266,8 +360,10 @@ static int simplefb_probe(struct platform_device *pdev)
+ static int simplefb_remove(struct platform_device *pdev)
+ {
+ 	struct fb_info *info = platform_get_drvdata(pdev);
++	struct simplefb_par *par = info->par;
+ 
+ 	unregister_framebuffer(info);
++	simplefb_clocks_destroy(par->clock_list);
+ 	framebuffer_release(info);
+ 
+ 	return 0;
+-- 
+2.1.0
