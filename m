@@ -1,123 +1,96 @@
-From: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-Subject: [PATCH 1/2] ASoC: ssm2602: add device tree bindings
-Date: Sun, 28 Sep 2014 10:57:52 +0300
-Message-ID: <1411891072-22637-1-git-send-email-stefan.kristiansson@saunalahti.fi>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, lars@metafoo.de, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V2] bcma: use device from DT (brcm,bus-gpio) for SoC GPIO chip
+Date: Sun, 28 Sep 2014 10:24:01 +0200
+Message-ID: <1411892641-5662-1-git-send-email-zajec5@gmail.com>
+References: <1411741733-13888-1-git-send-email-zajec5@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411741733-13888-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allow the ssm2602/ssm2603/ssm2604 codec driver to be
-instantiated from the device tree.
+This will allow us to define GPIO-attached devices (LEDs, buttons) in
+the the device tree.
 
-Also, add Kconfig prompts to allow manual selection of both the
-I2C and SPI configuration versions of the driver.
-
-Signed-off-by: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/sound/adi,ssm2602.txt         | 19 +++++++++++++++++++
- sound/soc/codecs/Kconfig                              |  8 ++++++--
- sound/soc/codecs/ssm2602-i2c.c                        |  9 +++++++++
- sound/soc/codecs/ssm2602-spi.c                        |  9 +++++++++
- 4 files changed, 43 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/adi,ssm2602.txt
+This is based on top of
+[PATCH v6] bcma: register bcma as device tree driver
+that I hope will reach wireless-next git tree.
 
-diff --git a/Documentation/devicetree/bindings/sound/adi,ssm2602.txt b/Documentation/devicetree/bindings/sound/adi,ssm2602.txt
-new file mode 100644
-index 0000000..3b3302f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/adi,ssm2602.txt
-@@ -0,0 +1,19 @@
-+Analog Devices SSM2602, SSM2603 and SSM2604 I2S audio CODEC devices
+V2: Describe axi chilren and make gpio a child of chipcommon core.
+---
+ Documentation/devicetree/bindings/bus/bcma.txt | 24 ++++++++++++++++++=
+++++++
+ drivers/bcma/driver_gpio.c                     |  5 +++++
+ 2 files changed, 29 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/bus/bcma.txt b/Documenta=
+tion/devicetree/bindings/bus/bcma.txt
+index e9070c1..26ef4b7 100644
+--- a/Documentation/devicetree/bindings/bus/bcma.txt
++++ b/Documentation/devicetree/bindings/bus/bcma.txt
+@@ -9,6 +9,22 @@ Required properties:
+ The cores on the AXI bus are automatically detected by bcma with the
+ memory ranges they are using and they get registered afterwards.
+=20
++The top-level axi bus may contain children representing attached cores
++(devices). This is needed since some hardware details can't be auto
++detected (e.g. IRQ numbers).
 +
-+SSM2602 support both I2C and SPI as the configuration interface,
-+the selection is made by the MODE strap-in pin.
-+SSM2603 and SSM2604 only support I2C as the configuration interface.
++There is also one special core called ChipCommon that may contain some
++extra sub-devices. This is because some devices (e.g. GPIO chip) are
++not standalone cores and can be access using ChipCommon regs only.
++Possible ChipCommon children:
 +
-+Required properties:
++- gpio: GPIO chip on the SoC
 +
-+  - compatible : One of "adi,ssm2602", "adi,ssm2603" or "adi,ssm2604"
++  Required properties:
++  - compatible: "brcm,bus-gpio"
++  - gpio-controller : makes the node a GPIO controller
++  - #gpio-cells : size of the GPIO specifier, must be 2
 +
-+  - reg : the I2C address of the device for I2C, the chip select
-+          number for SPI.
+ Example:
+=20
+ 	axi@18000000 {
+@@ -17,4 +33,12 @@ Example:
+ 		ranges =3D <0x00000000 0x18000000 0x00100000>;
+ 		#address-cells =3D <1>;
+ 		#size-cells =3D <1>;
 +
-+ Example:
-+
-+	ssm2602: ssm2602@1a {
-+		compatible = "adi,ssm2602";
-+		reg = <0x1a>;
-+	};
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 8838838e..3649e73 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -520,12 +520,16 @@ config SND_SOC_SSM2602
- 	tristate
- 
- config SND_SOC_SSM2602_SPI
-+	tristate "Analog Devices SSM2602 CODEC - SPI"
-+	depends on SPI_MASTER
- 	select SND_SOC_SSM2602
--	tristate
-+	select REGMAP_SPI
- 
- config SND_SOC_SSM2602_I2C
-+	tristate "Analog Devices SSM2602 CODEC - I2C"
-+	depends on I2C
- 	select SND_SOC_SSM2602
--	tristate
-+	select REGMAP_I2C
- 
- config SND_SOC_STA32X
- 	tristate
-diff --git a/sound/soc/codecs/ssm2602-i2c.c b/sound/soc/codecs/ssm2602-i2c.c
-index abd63d5..0d9779d 100644
---- a/sound/soc/codecs/ssm2602-i2c.c
-+++ b/sound/soc/codecs/ssm2602-i2c.c
-@@ -41,10 +41,19 @@ static const struct i2c_device_id ssm2602_i2c_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, ssm2602_i2c_id);
- 
-+static const struct of_device_id ssm2602_of_match[] = {
-+	{ .compatible = "adi,ssm2602", },
-+	{ .compatible = "adi,ssm2603", },
-+	{ .compatible = "adi,ssm2604", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ssm2602_of_match);
-+
- static struct i2c_driver ssm2602_i2c_driver = {
- 	.driver = {
- 		.name = "ssm2602",
- 		.owner = THIS_MODULE,
-+		.of_match_table = ssm2602_of_match,
- 	},
- 	.probe = ssm2602_i2c_probe,
- 	.remove = ssm2602_i2c_remove,
-diff --git a/sound/soc/codecs/ssm2602-spi.c b/sound/soc/codecs/ssm2602-spi.c
-index 2bf55e2..fb4cc46 100644
---- a/sound/soc/codecs/ssm2602-spi.c
-+++ b/sound/soc/codecs/ssm2602-spi.c
-@@ -26,10 +26,19 @@ static int ssm2602_spi_remove(struct spi_device *spi)
- 	return 0;
- }
- 
-+static const struct of_device_id ssm2602_of_match[] = {
-+	{ .compatible = "adi,ssm2602", },
-+	{ .compatible = "adi,ssm2603", },
-+	{ .compatible = "adi,ssm2604", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ssm2602_of_match);
-+
- static struct spi_driver ssm2602_spi_driver = {
- 	.driver = {
- 		.name	= "ssm2602",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = ssm2602_of_match,
- 	},
- 	.probe		= ssm2602_spi_probe,
- 	.remove		= ssm2602_spi_remove,
--- 
-1.9.1
++		chipcommon@0 {
++			gpio@0 {
++				compatible =3D "brcm,bus-gpio";
++				gpio-controller;
++				#gpio-cells =3D <2>;
++			};
++		};
+ 	};
+diff --git a/drivers/bcma/driver_gpio.c b/drivers/bcma/driver_gpio.c
+index 8ea497c..7ae39a8 100644
+--- a/drivers/bcma/driver_gpio.c
++++ b/drivers/bcma/driver_gpio.c
+@@ -218,6 +218,11 @@ int bcma_gpio_init(struct bcma_drv_cc *cc)
+ #if IS_BUILTIN(CONFIG_BCM47XX)
+ 	chip->to_irq		=3D bcma_gpio_to_irq;
+ #endif
++#if IS_BUILTIN(CONFIG_OF)
++	if (cc->core->bus->hosttype =3D=3D BCMA_HOSTTYPE_SOC)
++		chip->of_node	=3D of_find_compatible_node(NULL, NULL,
++							  "brcm,bus-gpio");
++#endif
+ 	switch (cc->core->bus->chipinfo.id) {
+ 	case BCMA_CHIP_ID_BCM5357:
+ 	case BCMA_CHIP_ID_BCM53572:
+--=20
+1.8.4.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireles=
+s" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
