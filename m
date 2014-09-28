@@ -1,73 +1,56 @@
-From: Jianqun <xjq@rock-chips.com>
-Subject: Re: [PATCH 1/2] ASoC: rockchip-max98090: add documentation for rockchip-max98090
- driver
-Date: Sun, 28 Sep 2014 19:05:10 +0800
-Message-ID: <5427EB66.5090607@rock-chips.com>
-References: <1410506806-15327-1-git-send-email-jay.xu@rock-chips.com> <1410507036-15442-1-git-send-email-jay.xu@rock-chips.com> <20140912134446.GT7960@sirena.org.uk> <54275C43.8010205@rock-chips.com> <20140928104851.GR27755@sirena.org.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: use improved armada spi device tree
+ compatible name
+Date: Sun, 28 Sep 2014 12:43:53 +0100
+Message-ID: <20140928114353.GY27755@sirena.org.uk>
+References: <1410147029-30067-1-git-send-email-gerg@uclinux.org>
+ <20140909160043.GP30828@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140928104851.GR27755@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Jianqun <jay.xu@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, heiko@sntech.de, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, huangtao@rock-chips.com, cf@rock-chips.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZlyDGGI/Hohreivc"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140909160043.GP30828-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--ZlyDGGI/Hohreivc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-=E5=9C=A8 09/28/2014 06:48 PM, Mark Brown =E5=86=99=E9=81=93:
-> On Sun, Sep 28, 2014 at 08:54:27AM +0800, Jianqun wrote:
->=20
-> Please fix your mailer to word wrap within paragraphs.
->=20
->> =E5=9C=A8 09/12/2014 09:44 PM, Mark Brown =E5=86=99=E9=81=93:
->>> On Fri, Sep 12, 2014 at 03:30:36PM +0800, Jianqun wrote:
->>>> Add documentation for rockchip-max98090 driver, which is need by r=
-ockchip
->>>> board using a max98090.
->=20
->>> Can this use simple-card (perhaps after a bit of extension)?
->> I haven't ever try simple-card, is there any sample usage for me fro=
-m other vendor ?
->=20
-> $ git grep -l simple-audio-card
-> Documentation/devicetree/bindings/sound/simple-card.txt
-> arch/arm/boot/dts/kirkwood-openrd-client.dts
-> arch/arm/boot/dts/kirkwood-t5325.dts
-> arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-> arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-> arch/arm/boot/dts/vf610-twr.dts
-> sound/soc/generic/simple-card.c
->=20
-thanks
->>>> +- rockchip,audio-codec : The phandle of the MAX98090 audio codec.
->=20
->>> Is the driver really specific to this CODEC?
->=20
->> I think yes, we need to add two gpio for mic and hp detect, but simp=
-le-card driver hasn't them
->=20
-> That'd be the "possibly with some extensions" bit then...  if they're
-> just isolated GPIOs there's not really much board specific about havi=
-ng
-> them.
->=20
-I'll try it first, thanks Mark
+On Tue, Sep 09, 2014 at 12:00:43PM -0400, Jason Cooper wrote:
+> On Mon, Sep 08, 2014 at 01:30:29PM +1000, gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org wrote:
 
---=20
-Jianqun Xu
+> > Switch the Armada SoC SPI port device tree binding to use the new improved
+> > armada-370-spi compatible name. This allows for a wider range of baud rates
+> > to be used.
 
-***********************************************************************=
-*****
-*IMPORTANT NOTICE:*This email is from Fuzhou Rockchip Electronics Co.,
-Ltd .The contents of this email and any attachments may contain
-information that is privileged, confidential and/or exempt from
-disclosure under applicable law and relevant NDA. If you are not the
-intended recipient, you are hereby notified that any disclosure,
-copying, distribution, or use of the information is STRICTLY PROHIBITED=
-=2E
-Please immediately contact the sender as soon as possible and destroy
-the material in its entirety in any format. Thank you.
-***********************************************************************=
-*****
+> Applied to mvebu/dt.
+
+Note that the corresponding driver change hasn't been applied (or sent
+to me for review) so this will break users.
+
+--ZlyDGGI/Hohreivc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUJ/R4AAoJECTWi3JdVIfQpIgH/242hhKQZxTsc75aCVo/OSVA
+fZJ4gMShGZESkQMDQz8ZB5gjze6hgGMRGVVieDfb34r0NykmC4mWqqJjc4JNm4eC
+qBJl7+fkwXZUUdoiIgSOeIDs8wRURq/kxKeYSh91JTZydapWIsVeUNCPcPR4qel7
+cvuSwz0PC+M6f2VNXG/ca1k9t0BYnTfDehZ3SlMrhsCcElnd8roKCwlj41QysGdd
+fRPznuNj9e2VPy7+VpSstndSR6CPlSCCmZIo29Uo+6LJt8num+b3zLsrhdokQaq6
+YpeJBWV1ebUGsH07DB/vmsMFJY2lLFP3Nu3a3TrT1p323z0pA9iEruprEXbtl/A=
+=TlnF
+-----END PGP SIGNATURE-----
+
+--ZlyDGGI/Hohreivc--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
