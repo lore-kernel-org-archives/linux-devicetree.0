@@ -1,120 +1,136 @@
-From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: Re: [PATCH 3/4] watchdog: add driver for Ricoh RN5T618 watchdog
-Date: Mon, 29 Sep 2014 00:50:16 +0200
-Message-ID: <20140928225016.GA30777@gmail.com>
-References: <1409091237-16722-1-git-send-email-b.galvani@gmail.com>
- <1409091237-16722-4-git-send-email-b.galvani@gmail.com>
- <20140904091917.GA1397@lee--X1>
- <20140928203646.GB571@spo001.leaseweb.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140928203646.GB571@spo001.leaseweb.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@iguana.be>
-Cc: Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Carlo Caione <carlo@caione.org>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: [PATCH] thermal: fix multiple disbalanced device node counters
+Date: Mon, 29 Sep 2014 02:47:46 +0300
+Message-ID: <1411948066-9118-1-git-send-email-vz@mleia.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 28, 2014 at 10:36:46PM +0200, Wim Van Sebroeck wrote:
-> Hi Lee,
-> 
-> > Still waiting on a Watchdog Ack, so I can take this set in.
-> > 
-> > > This adds a driver for the watchdog timer available in Ricoh RN5T618
-> > > PMIC. The device supports a programmable expiration time of 1, 8, 32
-> > > or 128 seconds.
-> > > 
-> > > Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
-> > > ---
-> > >  drivers/watchdog/Kconfig       |   11 +++
-> > >  drivers/watchdog/Makefile      |    1 +
-> > >  drivers/watchdog/rn5t618_wdt.c |  196 ++++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/mfd/rn5t618.h    |    4 +
-> > >  4 files changed, 212 insertions(+)
-> > >  create mode 100644 drivers/watchdog/rn5t618_wdt.c
-> > > 
-> > > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> > > index f57312f..9eba6af 100644
-> > > --- a/drivers/watchdog/Kconfig
-> > > +++ b/drivers/watchdog/Kconfig
-> > > @@ -309,6 +309,17 @@ config ORION_WATCHDOG
-> > >  	  To compile this driver as a module, choose M here: the
-> > >  	  module will be called orion_wdt.
-> > >  
-> > > +config RN5T618_WATCHDOG
-> > > +	tristate "Ricoh RN5T618 watchdog"
-> > > +	depends on MFD_RN5T618
-> > > +	select WATCHDOG_CORE
-> > > +	help
-> > > +	  If you say yes here you get support for watchdog on the Ricoh
-> > > +	  RN5T618 PMIC.
-> > > +
-> > > +	  This driver can also be built as a module.  If so, the module
-> > > +	  will be called rn5t618_wdt.
-> > > +
-> > >  config SUNXI_WATCHDOG
-> > >  	tristate "Allwinner SoCs watchdog support"
-> > >  	depends on ARCH_SUNXI
-> > > diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> > > index 468c320..0afa343 100644
-> > > --- a/drivers/watchdog/Makefile
-> > > +++ b/drivers/watchdog/Makefile
-> > > @@ -47,6 +47,7 @@ obj-$(CONFIG_IOP_WATCHDOG) += iop_wdt.o
-> > >  obj-$(CONFIG_DAVINCI_WATCHDOG) += davinci_wdt.o
-> > >  obj-$(CONFIG_ORION_WATCHDOG) += orion_wdt.o
-> > >  obj-$(CONFIG_SUNXI_WATCHDOG) += sunxi_wdt.o
-> > > +obj-$(CONFIG_RN5T618_WATCHDOG) += rn5t618_wdt.o
-> > >  obj-$(CONFIG_COH901327_WATCHDOG) += coh901327_wdt.o
-> > >  obj-$(CONFIG_STMP3XXX_RTC_WATCHDOG) += stmp3xxx_rtc_wdt.o
-> > >  obj-$(CONFIG_NUC900_WATCHDOG) += nuc900_wdt.o
-> > > diff --git a/drivers/watchdog/rn5t618_wdt.c b/drivers/watchdog/rn5t618_wdt.c
-> > > new file mode 100644
-> > > index 0000000..3a76ad7
-> > > --- /dev/null
-> > > +++ b/drivers/watchdog/rn5t618_wdt.c
-> > > @@ -0,0 +1,196 @@
-> > > +/*
-> > > + * Watchdog driver for Ricoh RN5T618 PMIC
-> > > + *
-> > > + * Copyright (C) 2014 Beniamino Galvani <b.galvani@gmail.com>
-> > > + *
-> > > + * This program is free software; you can redistribute it and/or
-> > > + * modify it under the terms of the GNU General Public License
-> > > + * version 2 as published by the Free Software Foundation.
-> > > + *
-> > > + * You should have received a copy of the GNU General Public License
-> > > + * along with this program. If not, see <http://www.gnu.org/licenses/>.
-> > > + */
-> > > +
-> > > +#include <linux/device.h>
-> > > +#include <linux/mfd/rn5t618.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/watchdog.h>
-> > > +
-> > > +#define DRIVER_NAME "rn5t618-wdt"
-> > > +
-> > > +static bool nowayout = WATCHDOG_NOWAYOUT;
-> > > +static unsigned int heartbeat = -1;
-> > > +
-> > > +module_param(heartbeat, int, 0);
-> > > +MODULE_PARM_DESC(heartbeat, "Initial watchdog heartbeat in seconds");
-> > > +
-> 
-> These are the comments I just mailed:
-> 1) this is actually a timeout value and not the same as the heartbeat of the watchdog device.
-> So I prefer this also to be called as timeout and not heartbeat.
-> 2) this actually is an unsigned int.
-> 
-> For the rest OK by me.
+Here on function return all temporarily used device nodes shall
+decrement their usage counter. The problems are found with device
+nodes allocated by for_each_child_of_node(), of_parse_phandle()
+and of_find_node_by_name(), fix all problems at once.
 
-Hi Wim,
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Cc: devicetree@vger.kernel.org
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>
+---
+ drivers/thermal/of-thermal.c |   40 ++++++++++++++++++++++++++++++++--------
+ 1 file changed, 32 insertions(+), 8 deletions(-)
 
-there was a more recent version of the patch [1] , but your comments
-were still valid. I addressed your suggestions in v3 of the patch [2].
+diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+index f8eb625..62143ba 100644
+--- a/drivers/thermal/of-thermal.c
++++ b/drivers/thermal/of-thermal.c
+@@ -387,15 +387,18 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id,
+ 				int (*get_trend)(void *, long *))
+ {
+ 	struct device_node *np, *child, *sensor_np;
++	struct thermal_zone_device *tzd = ERR_PTR(-ENODEV);
+ 
+ 	np = of_find_node_by_name(NULL, "thermal-zones");
+ 	if (!np)
+ 		return ERR_PTR(-ENODEV);
+ 
+-	if (!dev || !dev->of_node)
++	if (!dev || !dev->of_node) {
++		of_node_put(np);
+ 		return ERR_PTR(-EINVAL);
++	}
+ 
+-	sensor_np = dev->of_node;
++	sensor_np = of_node_get(dev->of_node);
+ 
+ 	for_each_child_of_node(np, child) {
+ 		struct of_phandle_args sensor_specs;
+@@ -422,16 +425,21 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id,
+ 		}
+ 
+ 		if (sensor_specs.np == sensor_np && id == sensor_id) {
+-			of_node_put(np);
+-			return thermal_zone_of_add_sensor(child, sensor_np,
+-							  data,
+-							  get_temp,
+-							  get_trend);
++			tzd = thermal_zone_of_add_sensor(child, sensor_np,
++							 data,
++							 get_temp,
++							 get_trend);
++			of_node_put(sensor_specs.np);
++			of_node_put(child);
++			goto exit;
+ 		}
++		of_node_put(sensor_specs.np);
+ 	}
++exit:
++	of_node_put(sensor_np);
+ 	of_node_put(np);
+ 
+-	return ERR_PTR(-ENODEV);
++	return tzd;
+ }
+ EXPORT_SYMBOL_GPL(thermal_zone_of_sensor_register);
+ 
+@@ -623,6 +631,7 @@ static int thermal_of_populate_trip(struct device_node *np,
+ 
+ 	/* Required for cooling map matching */
+ 	trip->np = np;
++	of_node_get(np);
+ 
+ 	return 0;
+ }
+@@ -730,9 +739,14 @@ finish:
+ 	return tz;
+ 
+ free_tbps:
++	for (i = 0; i < tz->num_tbps; i++)
++		of_node_put(tz->tbps[i].cooling_device);
+ 	kfree(tz->tbps);
+ free_trips:
++	for (i = 0; i < tz->ntrips; i++)
++		of_node_put(tz->trips[i].np);
+ 	kfree(tz->trips);
++	of_node_put(gchild);
+ free_tz:
+ 	kfree(tz);
+ 	of_node_put(child);
+@@ -742,7 +756,13 @@ free_tz:
+ 
+ static inline void of_thermal_free_zone(struct __thermal_zone *tz)
+ {
++	int i;
++
++	for (i = 0; i < tz->num_tbps; i++)
++		of_node_put(tz->tbps[i].cooling_device);
+ 	kfree(tz->tbps);
++	for (i = 0; i < tz->ntrips; i++)
++		of_node_put(tz->trips[i].np);
+ 	kfree(tz->trips);
+ 	kfree(tz);
+ }
+@@ -814,10 +834,13 @@ int __init of_parse_thermal_zones(void)
+ 			/* attempting to build remaining zones still */
+ 		}
+ 	}
++	of_node_put(np);
+ 
+ 	return 0;
+ 
+ exit_free:
++	of_node_put(child);
++	of_node_put(np);
+ 	of_thermal_free_zone(tz);
+ 
+ 	/* no memory available, so free what we have built */
+@@ -859,4 +882,5 @@ void of_thermal_destroy_zones(void)
+ 		kfree(zone->ops);
+ 		of_thermal_free_zone(zone->devdata);
+ 	}
++	of_node_put(np);
+ }
+-- 
+1.7.10.4
 
-Beniamino
-
-[1] http://lwn.net/Articles/610000/
-[2] https://lkml.org/lkml/2014/9/28/173
