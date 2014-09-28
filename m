@@ -1,12 +1,13 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/4] dt-bindings: Add a clocks property to the
- simple-framebuffer binding
-Date: Sun, 28 Sep 2014 14:43:35 +0200
-Message-ID: <1411908218-20947-1-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 3/4] simplefb: add goto error path to probe
+Date: Sun, 28 Sep 2014 14:43:37 +0200
+Message-ID: <1411908218-20947-3-git-send-email-hdegoede@redhat.com>
+References: <1411908218-20947-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBA4FUCQQKGQEFSHGCXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBCEFUCQQKGQEEGGSF3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1411908218-20947-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -18,28 +19,63 @@ To: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gma
 Cc: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-A simple-framebuffer node represents a framebuffer setup by the firmware /
-bootloader. Such a framebuffer may have a number of clocks in use, add a
-property to communicate this to the OS.
+From: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
 
+Signed-off-by: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- Documentation/devicetree/bindings/video/simple-framebuffer.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/video/fbdev/simplefb.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-index 70c26f3..e75478e 100644
---- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-+++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-@@ -14,6 +14,9 @@ Required properties:
-   - r5g6b5 (16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b).
-   - a8b8g8r8 (32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r).
+diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
+index ec112c1..b7d5c08 100644
+--- a/drivers/video/fbdev/simplefb.c
++++ b/drivers/video/fbdev/simplefb.c
+@@ -220,8 +220,8 @@ static int simplefb_probe(struct platform_device *pdev)
  
-+Optional properties:
-+- clocks : List of clocks used by the framebuffer
+ 	info->apertures = alloc_apertures(1);
+ 	if (!info->apertures) {
+-		framebuffer_release(info);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto error_fb_release;
+ 	}
+ 	info->apertures->ranges[0].base = info->fix.smem_start;
+ 	info->apertures->ranges[0].size = info->fix.smem_len;
+@@ -231,8 +231,8 @@ static int simplefb_probe(struct platform_device *pdev)
+ 	info->screen_base = ioremap_wc(info->fix.smem_start,
+ 				       info->fix.smem_len);
+ 	if (!info->screen_base) {
+-		framebuffer_release(info);
+-		return -ENODEV;
++		ret = -ENODEV;
++		goto error_fb_release;
+ 	}
+ 	info->pseudo_palette = par->palette;
+ 
+@@ -247,14 +247,20 @@ static int simplefb_probe(struct platform_device *pdev)
+ 	ret = register_framebuffer(info);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Unable to register simplefb: %d\n", ret);
+-		iounmap(info->screen_base);
+-		framebuffer_release(info);
+-		return ret;
++		goto error_unmap;
+ 	}
+ 
+ 	dev_info(&pdev->dev, "fb%d: simplefb registered!\n", info->node);
+ 
+ 	return 0;
 +
- Example:
++ error_unmap:
++	iounmap(info->screen_base);
++
++ error_fb_release:
++	framebuffer_release(info);
++
++	return ret;
+ }
  
- 	framebuffer {
+ static int simplefb_remove(struct platform_device *pdev)
 -- 
 2.1.0
