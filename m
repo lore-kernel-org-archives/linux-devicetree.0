@@ -1,49 +1,32 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH v5 05/11] drm: add Atmel HLCDC Display Controller support
-Date: Sat, 27 Sep 2014 23:52:44 -0400
-Message-ID: <CAF6AEGsa37H8B6YpQZ2ZBNhF1kJ-TX=jbcrd1VqXCrX1ZNADFw@mail.gmail.com>
-References: <1410165822-16868-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1410165822-16868-6-git-send-email-boris.brezillon@free-electrons.com>
-	<CAF6AEGup9qvivbcovHBrf6me-sStrK_jaBTd5ofohCS9DfRV4g@mail.gmail.com>
-	<20140927221255.58f4d14d@bbrezillon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20140927221255.58f4d14d@bbrezillon>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: David Airlie <airlied@linux.ie>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>
+From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 0/3] i2c: hix5hd2: add i2c controller driver
+Date: Sun, 28 Sep 2014 12:22:06 +0800
+Message-ID: <1411878129-19743-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 27, 2014 at 4:12 PM, Boris BREZILLON
-<boris.brezillon@free-electrons.com> wrote:
->> > +static int atmel_hlcdc_rgb_mode_valid(struct drm_connector *connector,
->> > +                                     struct drm_display_mode *mode)
->> > +{
->> > +       return MODE_OK;
->> > +}
->>
->> your _mode_valid() should perhaps somehow check the constraints in
->> atmel_hlcdc_crtc_mode_set()?  This way invalid modes get filtered out
->> earlier..
->
-> I'm not sure, the test done in atmel_hlcdc_crtc_mode_set are not
-> connector related, but rather imposed by the display controller
-> limitations.
-> Anyway, let me know if you still think I should move those tests in the
-> connector mode_valid implementation.
+v2: 
+Modify according to Wolfram's comments 
+including change vector name, coding style, return value etc.
 
+Wei Yan (2):
+  i2c: hix5hd2: add devicetree documentation
+  i2c: hix5hd2: add i2c controller driver
 
-it gets a bit tricky if you have multiple crtc with different
-constants which can be hooked to any connector (which I'm not sure if
-that is the case here).. but for sure if you can eliminate modes that
-cannot possibly work regardless of the crtc chosen, that is a good
-thing.
+Zhangfei Gao (1):
+  ARM: dts: hix5hd2: add i2c node
 
-So you may have to preserve the checks in the crtc.. but if you can
-filter anything that is completely impossible in the connector, you
-should.
+ .../devicetree/bindings/i2c/i2c-hix5hd2.txt        |   31 ++
+ arch/arm/boot/dts/hisi-x5hd2.dtsi                  |   60 +++
+ drivers/i2c/busses/Kconfig                         |   10 +
+ drivers/i2c/busses/Makefile                        |    1 +
+ drivers/i2c/busses/i2c-hix5hd2.c                   |  555 ++++++++++++++++++++
+ 5 files changed, 657 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-hix5hd2.txt
+ create mode 100644 drivers/i2c/busses/i2c-hix5hd2.c
 
-
-BR,
--R
+-- 
+1.7.9.5
