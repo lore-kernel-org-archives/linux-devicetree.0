@@ -1,60 +1,42 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] DT: add binding for mxs regulator
-Date: Sun, 28 Sep 2014 11:22:02 +0100
-Message-ID: <20140928102202.GM27755@sirena.org.uk>
-References: <1411779588-22031-1-git-send-email-stefan.wahren@i2se.com>
- <1411779588-22031-2-git-send-email-stefan.wahren@i2se.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YGQsgxOP0v8GKjPA"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1411779588-22031-2-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: "jinkun.hong" <jinkun.hong@rock-chips.com>
+Subject: [PATCH v2 0/3] ARM: rk3288 : Add PM Domain support
+Date: Sun, 28 Sep 2014 03:22:51 -0700
+Message-ID: <1411899774-8484-1-git-send-email-jinkun.hong@rock-chips.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org, "jinkun.hong" <jinkun.hong@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
+From: "jinkun.hong" <jinkun.hong@rock-chips.com>
 
---YGQsgxOP0v8GKjPA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Use PM Domain framework to manage the clock.
 
-On Sat, Sep 27, 2014 at 12:59:47AM +0000, Stefan Wahren wrote:
-> This patch adds the Device tree bindings for the Freescale MXS
-> on-chip regulators.
+Changes in v2:
+- remove the "pd->pd.of_node = np"
+Adviced by Doug
+- move clocks to "optional"
+Adviced by Daniel
+- make pd_vio clocks all one entry per line and alphabetize.
+Adviced by Heiko
+- power: power-controller move back to pinctrl: pinctrl.
 
-Use subject lines matching the style for the subsystem.
+jinkun.hong (3):
+  power-domain: add power domain drivers for Rockchip platform
+  dt-bindings: add document of Rockchip power domain
+  ARM: dts: add rk3288 power-domain node
 
-> +Required regulator properties:
-> +- compatible: Must be "fsl,mxs-regulator"
-> +- reg: Absolute physical address of the register set for the regulator
-> +
-> +Any regulator property defined as part of the core regulator
-> +binding, defined in regulator.txt, can also be used.
+ .../bindings/arm/rockchip/power_domain.txt         |   48 +++
+ arch/arm/boot/dts/rk3288.dtsi                      |   67 ++++
+ arch/arm/mach-rockchip/Kconfig                     |    1 +
+ arch/arm/mach-rockchip/Makefile                    |    1 +
+ arch/arm/mach-rockchip/pm_domains.c                |  371 ++++++++++++++++++++
+ include/dt-bindings/power-domain/rk3288.h          |   11 +
+ 6 files changed, 499 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/rockchip/power_domain.txt
+ create mode 100644 arch/arm/mach-rockchip/pm_domains.c
+ create mode 100644 include/dt-bindings/power-domain/rk3288.h
 
-While this should be using compatibles to identify which regulator is
-being supported note that the binding doesn't document the fact that the
-code makes regulator-name mandatory or what values are required.
+-- 
+1.7.9.5
 
---YGQsgxOP0v8GKjPA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUJ+FJAAoJECTWi3JdVIfQKWkH/07JDU+MbOO0709bg6SPkhl/
-AEOdpHTku5FHYJ7DSRUEmijpqjw+1s4YR2CYs1UmNseHUeFpKtkKrBBtpjrNsFnE
-/ahHfCQPPy4JnLQpwpsD0lTB56bLV0z+NHTLRQPb3cuiBXyZykQTx9tNwcuD0ThH
-WKa6hJm+3aYMtaE78sNPmUcDUjCzNbDHqopGvr1uJeMiuYIJdamHNGZp7fSWF3yR
-7bMHnvoq7qBFcwVBOfI6HjvMfvybzURfan/hWaNTVGhA0FZx0r62Rd+x/2PeI9OF
-UttFSaQerzOhoumc44DOXn62J6e3LZD7A6CNJ56A+wNHw3/Yvf0S63vWrkpFWn4=
-=7ewL
------END PGP SIGNATURE-----
-
---YGQsgxOP0v8GKjPA--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
