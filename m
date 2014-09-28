@@ -1,58 +1,80 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v1 1/3] regulator: act8865: Add support to turn off all
- outputs
-Date: Sun, 28 Sep 2014 11:33:01 +0100
-Message-ID: <20140928103301.GN27755@sirena.org.uk>
-References: <1411834906-9533-1-git-send-email-romain.perier@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rdeY6f/ml8+xnc5C"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1411834906-9533-1-git-send-email-romain.perier@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Romain Perier <romain.perier@gmail.com>
-Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org
+From: Caesar Wang <caesar.wang@rock-chips.com>
+Subject: [PATCH v7 0/5] Rockchip soc thermal driver
+Date: Sun, 28 Sep 2014 18:38:08 +0800
+Message-ID: <1411900693-30484-1-git-send-email-caesar.wang@rock-chips.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com
+Cc: dmitry.torokhov@gmail.com, arnd@arndb.de, zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dbasehore@chromium.org, huangtao@rock-chips.com, Caesar Wang <caesar.wang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
+This series patchs tested on rk3288 SDK board and pinky-v1 board.
+I believe the driver can be used on the rk3288-eve board.
 
---rdeY6f/ml8+xnc5C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Add this driver, The system can reset the entire chip when
+the thermal temperture at 125C, In case of overing 125C
+when tha hardware shorting,The chip will shutdown.
 
-On Sat, Sep 27, 2014 at 04:21:44PM +0000, Romain Perier wrote:
-> When the property "active-semi,system-power-controller" is found in the
-> devicetree, the function pm_power_off is defined. This function sends the
-> rights bit fields to the global off control register. shutdown/poweroff
-> commands are now supported for hardware components which use these PMU.
+Changes in v7:
+        - fix get data->clk=0 when in probe() function.
+	- fix some style code.
+	- modify dts,main add rk3xxx-cpu-thermal.dtsi
 
-We really need to come up with a standard property for this and document
-it rather than continuing to add individual device specific properties
-all doing the same thing, and probably also some helper code and/or a
-standard operation for this - there's a lot of drivers implementing the
-same pattern here.
+Changes in v6:
+        * address comments from Tomeu Vizoso.
+        - use thermal's generic framework.
 
-> +	if (dev->of_node &&
-> +	    of_property_read_bool(dev->of_node,
-> +				  "active-semi,system-power-controller")) {
-> +		act8865_i2c_client = client;
+Changes in v5:
+        * address comments from Eduardo Valentin,rui.zhang and Heiko Stubner:
+        - with BIT() macro
+        - manage clocks in suspend/resume.
+	- license is fixed as GPLv2.
+	- #include "thermal_core.h"->#include <linux/thermal.h>
+	- use the generic trip-points.the hw-shut-temp isn't generic trip-points.
+	- The method of binding and unbinding be fixed.
+	- The pin-name tsadc->otp_out
 
-Indentation seems messed up here - tabs vs spaces?
+Changes in v4:
+        * address comments from Jonathan Cameron,huangtao and zhaoyifeng:
+        - this series thermal driver still be put in driver/thermal/
+        - modify the thermal driver description.
 
---rdeY6f/ml8+xnc5C
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Changes in v3:(add dts configure)
+        * address comments from Dmitry Torokhov and Arnd Bergmann:
+        - fix clock-names in rockchip-thermal.txt
+        - remove rockchip_thermal_control() in rockchip_set_mode()
+        - fix some code style.
+        - add dts configure.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Changes in v2:
+        * address comments from Heiko Stubner:
+        - fix dt-bindings in rockchip-thermal.txt
+        - remove Author mark
+        - rename TSADC_XXX->TSADCV2_XXX,it eill ready to merge compatible other SoCs.
+        - fix a identation
+        - remove clk_set_rate(),it's no necessary.
+        - fix the SIMPLE_DEV_PM_OPS() function  style.
 
-iQEcBAEBAgAGBQJUJ+PcAAoJECTWi3JdVIfQBRsH/jG9HiRNk1r92AiGwMqUGWAq
-DrykyN7xeX0riwKdWWJSfV/2B4a3QMmgkpf3bjQapgEKHH+/RkMBPsFPhygDwn7L
-NNgRrolQ+KV0Q7Z209X4QaGQAgrIM+lCxim9c50DIrkhXqQ5j9SZc6/7LyIUfXXY
-B1s6gHexwZQhX4bEkD8ynMRgk77/vyBTsywbbEOqbBxWsEZt/fp2ZiRKJ0eplv9f
-FaHKBwaUyVyGqrRFPBnqnfO3/ZkCExpQ9mZnKe2ZPMFFPOggx6F1cVCNA0jK9uQz
-bWWnVJLIWg2xRA3TWezrbdUaF8dmZ2zyZDYS7NKUeOJCTF4u0EQ8ATRGax6+SuA=
-=VddQ
------END PGP SIGNATURE-----
+Caesar Wang (5):
+  thermal: rockchip: add driver for thermal
+  dt-bindings: document Rockchip thermal
+  ARM: dts: add RK3xxx CPU Thermal data
+  ARM: dts: add main Thermal info to rk3288
+  ARM: dts: enable Thermal on rk3288-evb board
 
---rdeY6f/ml8+xnc5C--
+ .../bindings/thermal/rockchip-thermal.txt          |  32 ++
+ arch/arm/boot/dts/rk3288-evb.dtsi                  |   5 +
+ arch/arm/boot/dts/rk3288.dtsi                      |  24 +
+ arch/arm/boot/dts/rk3xxx-cpu-thermal.dtsi          |  32 ++
+ drivers/thermal/Kconfig                            |  10 +
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/rockchip_thermal.c                 | 608 +++++++++++++++++++++
+ 7 files changed, 712 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+ create mode 100644 arch/arm/boot/dts/rk3xxx-cpu-thermal.dtsi
+ create mode 100644 drivers/thermal/rockchip_thermal.c
+
+-- 
+1.9.1
+
+
