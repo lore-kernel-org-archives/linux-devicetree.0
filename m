@@ -1,96 +1,168 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2] bcma: use device from DT (brcm,bus-gpio) for SoC GPIO chip
-Date: Sun, 28 Sep 2014 10:24:01 +0200
-Message-ID: <1411892641-5662-1-git-send-email-zajec5@gmail.com>
-References: <1411741733-13888-1-git-send-email-zajec5@gmail.com>
+From: Jingchang Lu <jingchang.lu@freescale.com>
+Subject: RE: [PATCHv4 2/6] ARM: dts: Add initial LS1021A QDS board dts support
+Date: Sun, 28 Sep 2014 08:48:17 +0000
+Message-ID: <7ecfaed8cb1b4c228ee2eb20aab33429@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1411371952-5618-1-git-send-email-jingchang.lu@freescale.com>
+ <1411371952-5618-3-git-send-email-jingchang.lu@freescale.com>
+ <20140926061354.GD31948@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411741733-13888-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140926061354.GD31948@dragon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shengchao Guo <Shawn.Guo@freescale.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, Chao Fu <B44548@freescale.com>, Huan Wang <alison.wang@freescale.com>, "bhupesh.sharma@freescale.com" <bhupesh.sharma@freescale.com>, "jaiprakash.singh@freescale.com" <jaiprakash.singh@freescale.com>, "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>, "Jason.Jin@freescale.com" <Jason.Jin@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This will allow us to define GPIO-attached devices (LEDs, buttons) in
-the the device tree.
+>-----Original Message-----
+>From: Shawn Guo [mailto:shawn.guo@freescale.com]
+>Sent: Friday, September 26, 2014 2:14 PM
+>To: Lu Jingchang-B35083
+>Cc: arnd@arndb.de; mark.rutland@arm.com; linux-arm-
+>kernel@lists.infradead.org; devicetree@vger.kernel.org; Lu Jingchang-
+>B35083; Wang Huan-B18965; Fu Chao-B44548; Jin Zhengxiong-R64188; Xiubo Li-
+>B47053; Sharma Bhupesh-B45370; Singh Jaiprakash-B44839
+>Subject: Re: [PATCHv4 2/6] ARM: dts: Add initial LS1021A QDS board dts
+>support
+>
+>On Mon, Sep 22, 2014 at 03:45:48PM +0800, Jingchang Lu wrote:
+>> From: Jingchang Lu <b35083@freescale.com>
+>>
+>> Signed-off-by: Alison Wang <alison.wang@freescale.com>
+>> Signed-off-by: Chao Fu <B44548@freescale.com>
+>> Signed-off-by: Jason Jin <Jason.Jin@freescale.com>
+>> Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+>> Signed-off-by: Bhupesh Sharma <bhupesh.sharma@freescale.com>
+>> Signed-off-by: Jaiprakash Singh <b44839@freescale.com>
+>> Signed-off-by: Jingchang Lu <jingchang.lu@freescale.com>
+>> ---
+>>  arch/arm/boot/dts/Makefile        |   1 +
+>>  arch/arm/boot/dts/ls1021a-qds.dts | 285
+>> ++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 286 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/ls1021a-qds.dts
+>>
+[ ... ]
+>> +
+>> +&enet0 {
+>> +	tbi-handle = <&tbi0>;
+>
+>I cannot find this property in any binding doc.
+This property has been used on PowerPC platform for a long time, I will investigate its binding. Thanks.
 
-Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-This is based on top of
-[PATCH v6] bcma: register bcma as device tree driver
-that I hope will reach wireless-next git tree.
+>
+>> +	phy-handle = <&sgmii_phy1c>;
+>> +	phy-connection-type = "sgmii";
+>> +	status = "okay";
+>> +};
+>> +
+>> +&enet1 {
+>> +	tbi-handle = <&tbi0>;
+>> +	phy-handle = <&sgmii_phy1d>;
+>> +	phy-connection-type = "sgmii";
+>> +	status = "okay";
+>> +};
+>> +
+>> +&enet2 {
+>> +	phy-handle = <&rgmii_phy3>;
+>> +	phy-connection-type = "rgmii-id";
+>> +	status = "okay";
+>> +};
+>> +
+>> +&i2c0 {
+>> +	status = "okay";
+>
+>Add a new line.
+>
+>> +	pca9547@77 {
+>> +		compatible = "philips,pca9547";
+>
+>Undocumented compatible.
+I will check this, if it is not documented, I will remove this since the i2c attached device doesn't rely on the compatible. Thanks. 
+>
+>> +		reg = <0x77>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		i2c@0 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x0>;
+>> +
+>> +			rtc@68 {
+>> +				compatible = "dallas,ds3232";
+>> +				reg = <0x68>;
+>> +				interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
+>> +			};
+>> +		};
+>> +
+>> +		i2c@2 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x2>;
+>> +
+>> +			ina220@40 {
+>> +				compatible = "ti,ina220";
+>> +				reg = <0x40>;
+>> +				shunt-resistor = <1000>;
+>> +			};
+>> +
+>> +			ina220@41 {
+>> +				compatible = "ti,ina220";
+>> +				reg = <0x41>;
+>> +				shunt-resistor = <1000>;
+>> +			};
+>> +		};
+>> +
+>> +		i2c@3 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x3>;
+>> +
+>> +			eeprom@56 {
+>> +				compatible = "at24,24c512";
+>
+>Undocumented property.
+It documented in Documentation/devicetree/bindings/eeprom.txt as the form of "<manufacturer>,<type>". Thanks.
+>
+>> +				reg = <0x56>;
+>> +			};
+>> +
+>> +			eeprom@57 {
+>> +				compatible = "at24,24c512";
+>> +				reg = <0x57>;
+>> +			};
+>> +
+>> +			adt7461a@4c {
+>> +				compatible = "adt7461a";
+>
+>Shouldn't it be "adi,adt7461a"?  And if that's case, per
+>Documentation/devicetree/bindings/hwmon/lm90.txt, vcc-supply is a required
+>property.
+Yes, I will update this. Thanks.
+>
+>> +				reg = <0x4c>;
+>> +			};
+>> +		};
+>> +
+>> +		i2c@4 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x4>;
+>> +		};
+>
+>What's this device?  Drop it and add it only when you actually need it.
+I will remove this, thanks.
 
-V2: Describe axi chilren and make gpio a child of chipcommon core.
----
- Documentation/devicetree/bindings/bus/bcma.txt | 24 ++++++++++++++++++=
-++++++
- drivers/bcma/driver_gpio.c                     |  5 +++++
- 2 files changed, 29 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/bus/bcma.txt b/Documenta=
-tion/devicetree/bindings/bus/bcma.txt
-index e9070c1..26ef4b7 100644
---- a/Documentation/devicetree/bindings/bus/bcma.txt
-+++ b/Documentation/devicetree/bindings/bus/bcma.txt
-@@ -9,6 +9,22 @@ Required properties:
- The cores on the AXI bus are automatically detected by bcma with the
- memory ranges they are using and they get registered afterwards.
-=20
-+The top-level axi bus may contain children representing attached cores
-+(devices). This is needed since some hardware details can't be auto
-+detected (e.g. IRQ numbers).
-+
-+There is also one special core called ChipCommon that may contain some
-+extra sub-devices. This is because some devices (e.g. GPIO chip) are
-+not standalone cores and can be access using ChipCommon regs only.
-+Possible ChipCommon children:
-+
-+- gpio: GPIO chip on the SoC
-+
-+  Required properties:
-+  - compatible: "brcm,bus-gpio"
-+  - gpio-controller : makes the node a GPIO controller
-+  - #gpio-cells : size of the GPIO specifier, must be 2
-+
- Example:
-=20
- 	axi@18000000 {
-@@ -17,4 +33,12 @@ Example:
- 		ranges =3D <0x00000000 0x18000000 0x00100000>;
- 		#address-cells =3D <1>;
- 		#size-cells =3D <1>;
-+
-+		chipcommon@0 {
-+			gpio@0 {
-+				compatible =3D "brcm,bus-gpio";
-+				gpio-controller;
-+				#gpio-cells =3D <2>;
-+			};
-+		};
- 	};
-diff --git a/drivers/bcma/driver_gpio.c b/drivers/bcma/driver_gpio.c
-index 8ea497c..7ae39a8 100644
---- a/drivers/bcma/driver_gpio.c
-+++ b/drivers/bcma/driver_gpio.c
-@@ -218,6 +218,11 @@ int bcma_gpio_init(struct bcma_drv_cc *cc)
- #if IS_BUILTIN(CONFIG_BCM47XX)
- 	chip->to_irq		=3D bcma_gpio_to_irq;
- #endif
-+#if IS_BUILTIN(CONFIG_OF)
-+	if (cc->core->bus->hosttype =3D=3D BCMA_HOSTTYPE_SOC)
-+		chip->of_node	=3D of_find_compatible_node(NULL, NULL,
-+							  "brcm,bus-gpio");
-+#endif
- 	switch (cc->core->bus->chipinfo.id) {
- 	case BCMA_CHIP_ID_BCM5357:
- 	case BCMA_CHIP_ID_BCM53572:
---=20
-1.8.4.5
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireles=
-s" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Jingchang
