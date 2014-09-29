@@ -1,46 +1,35 @@
-From: zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH 0/6] Add Spreadtrum Shark64 SoC support
-Date: Mon, 29 Sep 2014 19:48:28 +0800
-Message-ID: <1411991314-6636-1-git-send-email-zhang.lyra@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "chunyan.zhang" <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+From: zhang.lyra@gmail.com
+Subject: [PATCH 1/6] Documentation: DT: Add bindings for Spreadtrum serial
+Date: Mon, 29 Sep 2014 19:48:29 +0800
+Message-ID: <1411991314-6636-2-git-send-email-zhang.lyra@gmail.com>
+References: <1411991314-6636-1-git-send-email-zhang.lyra@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1411991314-6636-1-git-send-email-zhang.lyra@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, galak@codeaurora.org, broonie@linaro.org, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, artagnon@gmail.com, rrichter@cavium.com, robh+dt@kernel.org, will.deacon@arm.com, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "chunyan.zhang" <chunyan.zhang@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-From: "chunyan.zhang" <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+From: "chunyan.zhang" <chunyan.zhang@spreadtrum.com>
 
-Spreadtrum is a rapid growing chip vendor providing smart phone total solutions. 
-Shark64 is nominated as a SoC infrastructure that supports 4G/3G/2G standards based on ARMv8 multiple core architecture.
+Adds the device-tree documentation for Spreadtrum's serial.
 
-This patchset adds shark64 supports in arm64 device tree and implements the basic earlycon serial driver.
-
-chunyan.zhang (6):
-  Documentation: DT: Add bindings for Spreadtrum serial
-  arm64: Add DTS support for Spreadtrum's Shark64 SoC
-  arm64: dts/Makefile: Add support for Spreadtrum's Shark64 SoC.
-  arm64: Add support for Spreadtrum's Shark64 SoC in Kconfig and defconfig
-  tty/serial: add Spreadtrum's serial earlycon
-  Documentation: Add entry for Spreadtrum's Shark64 SoC
-
- Documentation/devicetree/bindings/arm/sprd.txt     |    6 ++
+Signed-off-by: chunyan.zhang <chunyan.zhang@spreadtrum.com>
+---
  .../devicetree/bindings/serial/of-serial.txt       |    1 +
- arch/arm64/Kconfig                                 |    5 +
- arch/arm64/boot/dts/Makefile                       |    1 +
- arch/arm64/boot/dts/sprd_shark64.dts               |  110 ++++++++++++++++++++
- arch/arm64/configs/defconfig                       |    1 +
- drivers/tty/serial/Kconfig                         |   12 +++
- drivers/tty/serial/Makefile                        |    1 +
- drivers/tty/serial/serial_sprd_early.c             |   64 ++++++++++++
- 9 files changed, 201 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/sprd.txt
- create mode 100644 arch/arm64/boot/dts/sprd_shark64.dts
- create mode 100644 drivers/tty/serial/serial_sprd_early.c
+ 1 file changed, 1 insertion(+)
 
+diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/of-serial.txt
+index 7705477..a0bb1d1 100644
+--- a/Documentation/devicetree/bindings/serial/of-serial.txt
++++ b/Documentation/devicetree/bindings/serial/of-serial.txt
+@@ -14,6 +14,7 @@ Required properties:
+ 	- "altr,16550-FIFO32"
+ 	- "altr,16550-FIFO64"
+ 	- "altr,16550-FIFO128"
++	- "sprd,serial"
+ 	- "serial" if the port type is unknown.
+ - reg : offset and length of the register set for the device.
+ - interrupts : should contain uart interrupt.
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
