@@ -1,146 +1,710 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 4/7] ARM: dts: sun9i: Add A80 Optimus Board support
-Date: Mon, 29 Sep 2014 18:04:50 +0800
-Message-ID: <CAGb2v64-zshYgcPo-WR0TVebUDY3=LKBA9DfTVDKk2PA6VSiUA@mail.gmail.com>
-References: <1411570141-29960-1-git-send-email-wens@csie.org>
- <1411570141-29960-5-git-send-email-wens@csie.org> <20140925133427.GI15315@lukather>
- <CAGb2v65Yu=3rgQ+G6USJubKOPzcMJ5bqhe7d9wrYjpT9aFaZuw@mail.gmail.com> <20140929095344.GE4388@lukather>
+From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] i2c: axxia: Add I2C driver for AXM55xx
+Date: Mon, 29 Sep 2014 15:37:48 +0530
+Message-ID: <54292F74.2030209@gmail.com>
+References: <1411983159-4692-1-git-send-email-anders.berg@avagotech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140929095344.GE4388@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Meng Zhang <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, ctl <ctl-HcjymKqD97rQT0dZR+AlfA@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411983159-4692-1-git-send-email-anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 29, 2014 at 5:53 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Sat, Sep 27, 2014 at 09:10:48PM +0800, Chen-Yu Tsai wrote:
->> On Thu, Sep 25, 2014 at 9:34 PM, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > On Wed, Sep 24, 2014 at 10:48:58PM +0800, Chen-Yu Tsai wrote:
->> >> The A80 Optimus Board is was launched with the Allwinner A80 SoC.
->> >> It was jointly developed by Allwinner and Merrii.
->> >>
->> >> This board has a UART port, a JTAG connector, USB host ports, a USB
->> >> 3.0 OTG connector, an HDMI output, a micro SD slot, 8G NAND flash,
->> >> 4G DRAM, a camera sensor interface, a WiFi/BT combo chip, a headphone
->> >> jack, IR receiver, and additional GPIO headers.
->> >>
->> >> This patch adds only basic support.
->> >>
->> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> >> ---
->> >>  arch/arm/boot/dts/Makefile              |  2 +
->> >>  arch/arm/boot/dts/sun9i-a80-optimus.dts | 66 +++++++++++++++++++++++++++++++++
->> >>  2 files changed, 68 insertions(+)
->> >>  create mode 100644 arch/arm/boot/dts/sun9i-a80-optimus.dts
->> >>
->> >> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> >> index 2f42b18..098f319 100644
->> >> --- a/arch/arm/boot/dts/Makefile
->> >> +++ b/arch/arm/boot/dts/Makefile
->> >> @@ -424,6 +424,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
->> >>       sun7i-a20-pcduino3.dtb
->> >>  dtb-$(CONFIG_MACH_SUN8I) += \
->> >>       sun8i-a23-ippo-q8h-v5.dtb
->> >> +dtb-$(CONFIG_MACH_SUN9I) += \
->> >> +     sun9i-a80-optimus.dtb
->> >>  dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb \
->> >>       tegra20-iris-512.dtb \
->> >>       tegra20-medcom-wide.dtb \
->> >> diff --git a/arch/arm/boot/dts/sun9i-a80-optimus.dts b/arch/arm/boot/dts/sun9i-a80-optimus.dts
->> >> new file mode 100644
->> >> index 0000000..f83abab
->> >> --- /dev/null
->> >> +++ b/arch/arm/boot/dts/sun9i-a80-optimus.dts
->> >> @@ -0,0 +1,66 @@
->> >> +/*
->> >> + * Copyright 2014 Chen-Yu Tsai
->> >> + *
->> >> + * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> >> + *
->> >> + * This file is dual-licensed: you can use it either under the terms
->> >> + * of the GPL or the X11 license, at your option. Note that this dual
->> >> + * licensing only applies to this file, and not this project as a
->> >> + * whole.
->> >> + *
->> >> + *  a) This library is free software; you can redistribute it and/or
->> >> + *     modify it under the terms of the GNU General Public License as
->> >> + *     published by the Free Software Foundation; either version 2 of the
->> >> + *     License, or (at your option) any later version.
->> >> + *
->> >> + *     This library is distributed in the hope that it will be useful,
->> >> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> >> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> >> + *     GNU General Public License for more details.
->> >> + *
->> >> + *     You should have received a copy of the GNU General Public
->> >> + *     License along with this library; if not, write to the Free
->> >> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
->> >> + *     MA 02110-1301 USA
->> >> + *
->> >> + * Or, alternatively,
->> >> + *
->> >> + *  b) Permission is hereby granted, free of charge, to any person
->> >> + *     obtaining a copy of this software and associated documentation
->> >> + *     files (the "Software"), to deal in the Software without
->> >> + *     restriction, including without limitation the rights to use,
->> >> + *     copy, modify, merge, publish, distribute, sublicense, and/or
->> >> + *     sell copies of the Software, and to permit persons to whom the
->> >> + *     Software is furnished to do so, subject to the following
->> >> + *     conditions:
->> >> + *
->> >> + *     The above copyright notice and this permission notice shall be
->> >> + *     included in all copies or substantial portions of the Software.
->> >> + *
->> >> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
->> >> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
->> >> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->> >> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->> >> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->> >> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->> >> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->> >> + *     OTHER DEALINGS IN THE SOFTWARE.
->> >> + */
->> >> +
->> >> +/dts-v1/;
->> >> +/include/ "sun9i-a80.dtsi"
->> >> +
->> >> +/ {
->> >> +     model = "Merrii A80 Optimus Board";
->> >> +     compatible = "merrii,a80-optimus", "allwinner,sun9i-a80";
->> >> +
->> >> +     chosen {
->> >> +             bootargs = "earlyprintk console=ttyS0,115200";
->> >> +     };
->> >
->> > Since you changed the memory node in the DTSI, you should probably add
->> > one here too, don't you?
->>
->> I thought we left fixing that to the bootloader?
->> I don't see any memory nodes in our other DTS.
+On 09/29/2014 03:02 PM, Anders Berg wrote:
+> Add I2C bus driver for the controller found in the LSI Axxia family SoCs. The
+> driver implements 10-bit addressing and SMBus transfer modes via emulation
+> (including SMBus block data read).
 >
-> Yes, but does the A80 bootloader supports DT and actually fixes it? If
-> not, then you'll still have to have a memory node, just like on the
-> A31 (and presumably on the A23).
+> Signed-off-by: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
+> ---
+>
+> Changelog
+>
+> v2:
+>      - Document the len <= 255 limitation
+>      - return IRQ_HANDLED on unexpected IRQs
+>      - fixed a number of style issues
+>      - handle zero-length messages
+>      - use reinit_completion() where appropriate
+>      - enable for COMPILE_TEST
+>
+>   .../devicetree/bindings/i2c/i2c-axxia.txt          |  30 ++
+>   drivers/i2c/busses/Kconfig                         |  11 +
+>   drivers/i2c/busses/Makefile                        |   1 +
+>   drivers/i2c/busses/i2c-axxia.c                     | 561 +++++++++++++++++++++
+>   4 files changed, 603 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/i2c/i2c-axxia.txt
+>   create mode 100644 drivers/i2c/busses/i2c-axxia.c
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-axxia.txt b/Documentation/devicetree/bindings/i2c/i2c-axxia.txt
+> new file mode 100644
+> index 0000000..2296d78
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-axxia.txt
+> @@ -0,0 +1,30 @@
+> +LSI Axxia I2C
+> +
+> +Required properties :
+> +- compatible : Must be "lsi,api2c"
+> +- reg : Offset and length of the register set for the device
+> +- interrupts : the interrupt specifier
+> +- #address-cells : Must be <1>;
+> +- #size-cells : Must be <0>;
+> +- clock-names : Must contain "i2c".
+> +- clocks: Must contain an entry for each name in clock-names. See the common
+> +  clock bindings.
+> +
+> +Optional properties :
+> +- clock-frequency : Desired I2C bus clock frequency in Hz. If not specified,
+> +  the default 100 kHz frequency will be used. As only Normal and Fast modes
+> +  are supported, possible values are 100000 and 400000.
+> +
+> +Example :
+> +
+> +i2c@02010084000 {
+> +	compatible = "lsi,api2c";
+> +	device_type = "i2c";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	reg = <0x20 0x10084000 0x00 0x1000>;
+> +	interrupts = <0 19 4>;
+> +	clocks = <&clk_per>;
+> +	clock-names = "i2c";
+> +	clock-frequency = <400000>;
+> +};
+> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> index 2ac87fa..8983474 100644
+> --- a/drivers/i2c/busses/Kconfig
+> +++ b/drivers/i2c/busses/Kconfig
+> @@ -77,6 +77,17 @@ config I2C_AMD8111
+>   	  This driver can also be built as a module.  If so, the module
+>   	  will be called i2c-amd8111.
+>   
+> +config I2C_AXXIA
+> +	tristate "Axxia I2C controller"
+> +	depends on ARCH_AXXIA || COMPILE_TEST
+> +	default ARCH_AXXIA
+> +	help
+> +	  Say yes if you want to support the I2C bus on Axxia platforms.
+> +
+> +	  Please note that this controller is limited to transfers of maximum
+> +	  255 bytes in length. Any attempt to to a larger transfer will return
+> +	  an error.
+> +
+>   config I2C_I801
+>   	tristate "Intel 82801 (ICH/PCH)"
+>   	depends on PCI
+> diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
+> index 49bf07e..5899edb 100644
+> --- a/drivers/i2c/busses/Makefile
+> +++ b/drivers/i2c/busses/Makefile
+> @@ -12,6 +12,7 @@ obj-$(CONFIG_I2C_ALI15X3)	+= i2c-ali15x3.o
+>   obj-$(CONFIG_I2C_AMD756)	+= i2c-amd756.o
+>   obj-$(CONFIG_I2C_AMD756_S4882)	+= i2c-amd756-s4882.o
+>   obj-$(CONFIG_I2C_AMD8111)	+= i2c-amd8111.o
+> +obj-$(CONFIG_I2C_AXXIA)		+= i2c-axxia.o
+>   obj-$(CONFIG_I2C_I801)		+= i2c-i801.o
+>   obj-$(CONFIG_I2C_ISCH)		+= i2c-isch.o
+>   obj-$(CONFIG_I2C_ISMT)		+= i2c-ismt.o
+> diff --git a/drivers/i2c/busses/i2c-axxia.c b/drivers/i2c/busses/i2c-axxia.c
+> new file mode 100644
+> index 0000000..c6faca1
+> --- /dev/null
+> +++ b/drivers/i2c/busses/i2c-axxia.c
+> @@ -0,0 +1,561 @@
+> +/*
+> + * This driver implements I2C master functionality using the LSI API2C
+> + * controller.
+> + *
+> + * NOTE: The controller has a limitation in that it can only do transfers of
+> + * maximum 255 bytes at a time. If a larger transfer is attempted, error code
+> + * (-EINVAL) is returned.
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/err.h>
+> +#include <linux/i2c.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define SCL_WAIT_TIMEOUT_NS 25000000
+> +#define I2C_XFER_TIMEOUT    (msecs_to_jiffies(250))
+> +#define I2C_STOP_TIMEOUT    (msecs_to_jiffies(100))
+> +#define FIFO_SIZE           8
+> +
+> +#define GLOBAL_CONTROL		0x00
+> +#define   GLOBAL_MST_EN         BIT(0)
+> +#define   GLOBAL_SLV_EN         BIT(1)
+> +#define   GLOBAL_IBML_EN        BIT(2)
+> +#define INTERRUPT_STATUS	0x04
+> +#define INTERRUPT_ENABLE	0x08
+> +#define   INT_SLV               BIT(1)
+> +#define   INT_MST               BIT(0)
+> +#define WAIT_TIMER_CONTROL	0x0c
+> +#define   WT_EN			BIT(15)
+> +#define   WT_VALUE(_x)		((_x) & 0x7fff)
+> +#define IBML_TIMEOUT		0x10
+> +#define IBML_LOW_MEXT		0x14
+> +#define IBML_LOW_SEXT		0x18
+> +#define TIMER_CLOCK_DIV		0x1c
+> +#define I2C_BUS_MONITOR		0x20
+> +#define SOFT_RESET		0x24
+> +#define MST_COMMAND		0x28
+> +#define   CMD_BUSY		(1<<3)
+> +#define   CMD_MANUAL		(0x00 | CMD_BUSY)
+> +#define   CMD_AUTO		(0x01 | CMD_BUSY)
+> +#define MST_RX_XFER		0x2c
+> +#define MST_TX_XFER		0x30
+> +#define MST_ADDR_1		0x34
+> +#define MST_ADDR_2		0x38
+> +#define MST_DATA		0x3c
+> +#define MST_TX_FIFO		0x40
+> +#define MST_RX_FIFO		0x44
+> +#define MST_INT_ENABLE		0x48
+> +#define MST_INT_STATUS		0x4c
+> +#define   MST_STATUS_RFL	(1 << 13) /* RX FIFO serivce */
+> +#define   MST_STATUS_TFL	(1 << 12) /* TX FIFO service */
+> +#define   MST_STATUS_SNS	(1 << 11) /* Manual mode done */
+> +#define   MST_STATUS_SS		(1 << 10) /* Automatic mode done */
+> +#define   MST_STATUS_SCC	(1 << 9)  /* Stop complete */
+> +#define   MST_STATUS_IP		(1 << 8)  /* Invalid parameter */
+> +#define   MST_STATUS_TSS	(1 << 7)  /* Timeout */
+> +#define   MST_STATUS_AL		(1 << 6)  /* Arbitration lost */
+> +#define   MST_STATUS_ND		(1 << 5)  /* NAK on data phase */
+> +#define   MST_STATUS_NA		(1 << 4)  /* NAK on address phase */
+> +#define   MST_STATUS_NAK	(MST_STATUS_NA | \
+> +				 MST_STATUS_ND)
+> +#define   MST_STATUS_ERR	(MST_STATUS_NAK | \
+> +				 MST_STATUS_AL  | \
+> +				 MST_STATUS_IP  | \
+> +				 MST_STATUS_TSS)
+> +#define MST_TX_BYTES_XFRD	0x50
+> +#define MST_RX_BYTES_XFRD	0x54
+> +#define SCL_HIGH_PERIOD		0x80
+> +#define SCL_LOW_PERIOD		0x84
+> +#define SPIKE_FLTR_LEN		0x88
+> +#define SDA_SETUP_TIME		0x8c
+> +#define SDA_HOLD_TIME		0x90
+> +
+> +/**
+> + * axxia_i2c_dev - I2C device context
+> + * @base: pointer to register struct
+> + * @msg: pointer to current message
+> + * @msg_xfrd: number of bytes transferred in msg
+> + * @msg_err: error code for completed message
+> + * @msg_complete: xfer completion object
+> + * @dev: device reference
+> + * @adapter: core i2c abstraction
+> + * @i2c_clk: clock reference for i2c input clock
+> + * @bus_clk_rate: current i2c bus clock rate
+> + */
+> +struct axxia_i2c_dev {
+> +	void __iomem *base;
+> +	struct i2c_msg *msg;
+> +	size_t msg_xfrd;
+> +	int msg_err;
+> +	struct completion msg_complete;
+> +	struct device *dev;
+> +	struct i2c_adapter adapter;
+> +	struct clk *i2c_clk;
+> +	u32 bus_clk_rate;
+> +};
+> +
+> +static void i2c_int_disable(struct axxia_i2c_dev *idev, u32 mask)
+> +{
+> +	u32 int_en;
+> +
+> +	int_en = readl(idev->base + MST_INT_ENABLE);
+> +	writel(int_en & ~mask, idev->base + MST_INT_ENABLE);
+> +}
+> +
+> +static void i2c_int_enable(struct axxia_i2c_dev *idev, u32 mask)
+> +{
+> +	u32 int_en;
+> +
+> +	int_en = readl(idev->base + MST_INT_ENABLE);
+> +	writel(int_en | mask, idev->base + MST_INT_ENABLE);
+> +}
+> +
+> +/**
+> + * ns_to_clk - Convert time (ns) to clock cycles for the given clock frequency.
+> + */
+> +static u32 ns_to_clk(u64 ns, u32 clk_mhz)
+> +{
+> +	return div_u64(ns * clk_mhz, 1000);
+> +}
+> +
+> +static int axxia_i2c_init(struct axxia_i2c_dev *idev)
+> +{
+> +	u32 divisor = clk_get_rate(idev->i2c_clk) / idev->bus_clk_rate;
+> +	u32 clk_mhz = clk_get_rate(idev->i2c_clk) / 1000000;
+> +	u32 t_setup;
+> +	u32 t_high, t_low;
+> +	u32 tmo_clk;
+> +	u32 prescale;
+> +	unsigned long timeout;
+> +
+> +	dev_dbg(idev->dev, "rate=%uHz per_clk=%uMHz -> ratio=1:%u\n",
+> +		idev->bus_clk_rate, clk_mhz, divisor);
+> +
+> +	/* Reset controller */
+> +	writel(0x01, idev->base + SOFT_RESET);
+> +	timeout = jiffies + msecs_to_jiffies(100);
+> +	while (readl(idev->base + SOFT_RESET) & 1) {
+> +		if (time_after(jiffies, timeout)) {
+> +			dev_warn(idev->dev, "Soft reset failed\n");
+> +			break;
+> +		}
+> +	}
+> +
+> +	/* Enable Master Mode */
+> +	writel(0x1, idev->base + GLOBAL_CONTROL);
+> +
+> +	if (idev->bus_clk_rate <= 100000) {
+> +		/* Standard mode SCL 50/50, tSU:DAT = 250 ns */
+> +		t_high = divisor * 1 / 2;
+> +		t_low = divisor * 1 / 2;
+> +		t_setup = ns_to_clk(250, clk_mhz);
+> +	} else {
+> +		/* Fast mode SCL 33/66, tSU:DAT = 100 ns */
+> +		t_high = divisor * 1 / 3;
+> +		t_low = divisor * 2 / 3;
+> +		t_setup = ns_to_clk(100, clk_mhz);
+> +	}
+> +
+> +	/* SCL High Time */
+> +	writel(t_high, idev->base + SCL_HIGH_PERIOD);
+> +	/* SCL Low Time */
+> +	writel(t_low, idev->base + SCL_LOW_PERIOD);
+> +	/* SDA Setup Time */
+> +	writel(t_setup, idev->base + SDA_SETUP_TIME);
+> +	/* SDA Hold Time, 300ns */
+> +	writel(ns_to_clk(300, clk_mhz), idev->base + SDA_HOLD_TIME);
+> +	/* Filter <50ns spikes */
+> +	writel(ns_to_clk(50, clk_mhz), idev->base + SPIKE_FLTR_LEN);
+> +
+> +	/* Configure Time-Out Registers */
+> +	tmo_clk = ns_to_clk(SCL_WAIT_TIMEOUT_NS, clk_mhz);
+> +
+> +	/* Find prescaler value that makes tmo_clk fit in 15-bits counter. */
+> +	for (prescale = 0; prescale < 15; ++prescale) {
+> +		if (tmo_clk <= 0x7fff)
+> +			break;
+> +		tmo_clk >>= 1;
+> +	}
+> +	if (tmo_clk > 0x7fff)
+> +		tmo_clk = 0x7fff;
+> +
+> +	/* Prescale divider (log2) */
+> +	writel(prescale, idev->base + TIMER_CLOCK_DIV);
+> +	/* Timeout in divided clocks */
+> +	writel(WT_EN | WT_VALUE(tmo_clk), idev->base + WAIT_TIMER_CONTROL);
+> +
+> +	/* Mask all master interrupt bits */
+> +	i2c_int_disable(idev, ~0);
+> +
+> +	/* Interrupt enable */
+> +	writel(0x01, idev->base + INTERRUPT_ENABLE);
+> +
+> +	return 0;
+> +}
+> +
+> +static int i2c_m_rd(const struct i2c_msg *msg)
+> +{
+> +	return (msg->flags & I2C_M_RD) != 0;
+> +}
+> +
+> +static int i2c_m_ten(const struct i2c_msg *msg)
+> +{
+> +	return (msg->flags & I2C_M_TEN) != 0;
+> +}
+> +
+> +static int i2c_m_recv_len(const struct i2c_msg *msg)
+> +{
+> +	return (msg->flags & I2C_M_RECV_LEN) != 0;
+> +}
+> +
+> +/**
+> + * axxia_i2c_empty_rx_fifo - Fetch data from RX FIFO and update SMBus block
+> + * transfer length if this is the first byte of such a transfer.
+> + */
+> +static int axxia_i2c_empty_rx_fifo(struct axxia_i2c_dev *idev)
+> +{
+> +	struct i2c_msg *msg = idev->msg;
+> +	size_t rx_fifo_avail = readl(idev->base + MST_RX_FIFO);
+> +	int bytes_to_transfer = min(rx_fifo_avail, msg->len - idev->msg_xfrd);
+> +
+> +	while (bytes_to_transfer-- > 0) {
+> +		int c = readl(idev->base + MST_DATA);
+> +
+> +		if (idev->msg_xfrd == 0 && i2c_m_recv_len(msg)) {
+> +			/*
+> +			 * Check length byte for SMBus block read
+> +			 */
+> +			if (c <= 0 || c > I2C_SMBUS_BLOCK_MAX) {
+> +				idev->msg_err = -EPROTO;
+> +				i2c_int_disable(idev, ~0);
+> +				complete(&idev->msg_complete);
+> +				break;
+> +			}
+> +			msg->len = 1 + c;
+> +			writel(msg->len, idev->base + MST_RX_XFER);
+> +		}
+> +		msg->buf[idev->msg_xfrd++] = c;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * axxia_i2c_fill_tx_fifo - Fill TX FIFO from current message buffer.
+> + * @return: Number of bytes left to transfer.
+> + */
+> +static int axxia_i2c_fill_tx_fifo(struct axxia_i2c_dev *idev)
+> +{
+> +	struct i2c_msg *msg = idev->msg;
+> +	size_t tx_fifo_avail = FIFO_SIZE - readl(idev->base + MST_TX_FIFO);
+> +	int bytes_to_transfer = min(tx_fifo_avail, msg->len - idev->msg_xfrd);
+> +	int ret = msg->len - idev->msg_xfrd - bytes_to_transfer;
+> +
+> +	while (bytes_to_transfer-- > 0)
+> +		writel(msg->buf[idev->msg_xfrd++], idev->base + MST_DATA);
+> +
+> +	return ret;
+> +}
+> +
+> +static irqreturn_t axxia_i2c_isr(int irq, void *_dev)
+> +{
+> +	struct axxia_i2c_dev *idev = _dev;
+> +	u32 status;
+> +
+> +	if (!(readl(idev->base + INTERRUPT_STATUS) & INT_MST))
+> +		return IRQ_NONE;
+> +
+> +	/* Read interrupt status bits */
+> +	status = readl(idev->base + MST_INT_STATUS);
+> +
+> +	if (!idev->msg) {
+> +		dev_warn(idev->dev, "unexpected interrupt");
 
-Not at the moment no. But last I checked none of our board dts files
-have separate memory nodes. We only have them in the dtsi, with the
-largest supported ram size as its value. Also the bootloader
-(u-boot that is) can pass the memory size via atags I think.
+Missed terminating new line '\n'
 
-At least I'm only getting 512MB RAM on my Optimus, due to u-boot
-incorrectly assuming I only have as much. But that's another problem. :(
+> +		goto out;
+> +	}
+> +
+> +	/* RX FIFO needs service? */
+> +	if (i2c_m_rd(idev->msg) && (status & MST_STATUS_RFL))
+> +		axxia_i2c_empty_rx_fifo(idev);
+> +
+> +	/* TX FIFO needs service? */
+> +	if (!i2c_m_rd(idev->msg) && (status & MST_STATUS_TFL)) {
+> +		if (axxia_i2c_fill_tx_fifo(idev) == 0)
+> +			i2c_int_disable(idev, MST_STATUS_TFL);
+> +	}
+> +
+> +	if (status & MST_STATUS_SCC) {
+> +		/* Stop completed */
+> +		i2c_int_disable(idev, ~0);
+> +		complete(&idev->msg_complete);
+> +	} else if (status & MST_STATUS_SNS) {
+> +		/* Transfer done */
+> +		i2c_int_disable(idev, ~0);
+> +		if (i2c_m_rd(idev->msg) && idev->msg_xfrd < idev->msg->len)
+> +			axxia_i2c_empty_rx_fifo(idev);
+> +		complete(&idev->msg_complete);
+> +	} else if (unlikely(status & MST_STATUS_ERR)) {
+> +		/* Transfer error */
+> +		i2c_int_disable(idev, ~0);
+> +		if (status & MST_STATUS_AL)
+> +			idev->msg_err = -EAGAIN;
+> +		else if (status & MST_STATUS_NAK)
+> +			idev->msg_err = -ENXIO;
+> +		else
+> +			idev->msg_err = -EIO;
+> +		dev_dbg(idev->dev, "error %#x, addr=%#x rx=%u/%u tx=%u/%u\n",
+> +			status,
+> +			idev->msg->addr,
+> +			readl(idev->base + MST_RX_BYTES_XFRD),
+> +			readl(idev->base + MST_RX_XFER),
+> +			readl(idev->base + MST_TX_BYTES_XFRD),
+> +			readl(idev->base + MST_TX_XFER));
+> +		complete(&idev->msg_complete);
+> +	}
+> +
+> +out:
+> +	/* Clear interrupt */
+> +	writel(INT_MST, idev->base + INTERRUPT_STATUS);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
 
-Would this be a problem when using Android fastboot from the stock
-u-boot?
+Its looks good if we move the entire ISR above probe/remove functionalities...
+
+> +static int axxia_i2c_xfer_msg(struct axxia_i2c_dev *idev, struct i2c_msg *msg)
+> +{
+> +	u32 int_mask = MST_STATUS_ERR | MST_STATUS_SNS;
+> +	u32 rx_xfer, tx_xfer;
+> +	u32 addr_1, addr_2;
+> +	int ret;
+> +
+> +	if (msg->len > 255) {
+> +		dev_warn(idev->dev, "unsupported length %u\n", msg->len);
+> +		return -EINVAL;
+> +	}
+> +
+> +	idev->msg = msg;
+> +	idev->msg_xfrd = 0;
+> +	idev->msg_err = 0;
+> +	reinit_completion(&idev->msg_complete);
+> +
+> +	if (i2c_m_ten(msg)) {
+> +		/* 10-bit address
+> +		 *   addr_1: 5'b11110 | addr[9:8] | (R/nW)
+> +		 *   addr_2: addr[7:0]
+> +		 */
+> +		addr_1 = 0xF0 | ((msg->addr >> 7) & 0x06);
+> +		addr_2 = msg->addr & 0xFF;
+> +	} else {
+> +		/* 7-bit address
+> +		 *   addr_1: addr[6:0] | (R/nW)
+> +		 *   addr_2: dont care
+> +		 */
+> +		addr_1 = (msg->addr << 1) & 0xFF;
+> +		addr_2 = 0;
+> +	}
+> +
+> +	if (i2c_m_rd(msg)) {
+> +		/* I2C read transfer */
+> +		rx_xfer = i2c_m_recv_len(msg) ? I2C_SMBUS_BLOCK_MAX : msg->len;
+> +		tx_xfer = 0;
+> +		addr_1 |= 1;	/* Set the R/nW bit of the address */
+> +	} else {
+> +		/* I2C write transfer */
+> +		rx_xfer = 0;
+> +		tx_xfer = msg->len;
+> +	}
+> +
+> +	writel(rx_xfer, idev->base + MST_RX_XFER);
+> +	writel(tx_xfer, idev->base + MST_TX_XFER);
+> +	writel(addr_1, idev->base + MST_ADDR_1);
+> +	writel(addr_2, idev->base + MST_ADDR_2);
+> +
+> +	if (i2c_m_rd(msg))
+> +		int_mask |= MST_STATUS_RFL;
+> +	else if (axxia_i2c_fill_tx_fifo(idev) != 0)
+> +		int_mask |= MST_STATUS_TFL;
+> +
+> +	/* Start manual mode */
+> +	writel(CMD_MANUAL, idev->base + MST_COMMAND);
+> +
+> +	i2c_int_enable(idev, int_mask);
+> +
+> +	ret = wait_for_completion_timeout(&idev->msg_complete,
+> +					  I2C_XFER_TIMEOUT);
+> +
+> +	i2c_int_disable(idev, int_mask);
+> +
+> +	if (readl(idev->base + MST_COMMAND) & CMD_BUSY)
+> +		dev_warn(idev->dev, "busy after xfer");
+
+'\n'
+
+> +
+> +	if (ret == 0)
+> +		idev->msg_err = -ETIMEDOUT;
+> +
+> +	if (unlikely(idev->msg_err) && idev->msg_err != -ENXIO)
+> +		axxia_i2c_init(idev);
+> +
+> +	return idev->msg_err;
+> +}
+> +
+> +static int axxia_i2c_stop(struct axxia_i2c_dev *idev)
+> +{
+> +	u32 int_mask = MST_STATUS_ERR | MST_STATUS_SCC;
+> +	int ret;
+> +
+> +	reinit_completion(&idev->msg_complete);
+> +
+> +	/* Issue stop */
+> +	writel(0xb, idev->base + MST_COMMAND);
+> +	i2c_int_enable(idev, int_mask);
+> +	ret = wait_for_completion_timeout(&idev->msg_complete,
+> +					  I2C_STOP_TIMEOUT);
+> +	i2c_int_disable(idev, int_mask);
+> +	if (ret == 0)
+> +		return -ETIMEDOUT;
+> +
+> +	if (readl(idev->base + MST_COMMAND) & CMD_BUSY)
+> +		dev_warn(idev->dev, "busy after stop");
+
+'\n'
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +axxia_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
+> +{
+> +	struct axxia_i2c_dev *idev = i2c_get_adapdata(adap);
+> +	int i;
+> +	int ret = 0;
+> +
+> +	for (i = 0; ret == 0 && i < num; ++i)
+> +		ret = axxia_i2c_xfer_msg(idev, &msgs[i]);
+> +
+> +	axxia_i2c_stop(idev);
+> +
+> +	return ret ? : i;
+> +}
+> +
+> +static u32 axxia_i2c_func(struct i2c_adapter *adap)
+> +{
+> +	u32 caps = (I2C_FUNC_I2C |
+> +		    I2C_FUNC_10BIT_ADDR |
+> +		    I2C_FUNC_SMBUS_EMUL | I2C_FUNC_SMBUS_BLOCK_DATA);
+> +	return caps;
+
+return (I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR |
+	I2C_FUNC_SMBUS_EMUL | I2C_FUNC_SMBUS_BLOCK_DATA);
+
+> +}
+> +
+> +static const struct i2c_algorithm axxia_i2c_algo = {
+> +	.master_xfer = axxia_i2c_xfer,
+> +	.functionality = axxia_i2c_func,
+> +};
+> +
+> +static int axxia_i2c_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct axxia_i2c_dev *idev = NULL;
+> +	struct resource *res;
+> +	void __iomem *base;
+> +	int irq;
+> +	int ret = 0;
+> +
+> +	idev = devm_kzalloc(&pdev->dev, sizeof(*idev), GFP_KERNEL);
+> +	if (!idev)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+
+Error checking on *res*...?
+
+We should *return* on platform_get_resource() failure..
+
+> +	base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+> +		dev_err(&pdev->dev, "missing interrupt resource\n");
+> +		return irq;
+> +	}
+> +
+> +	idev->i2c_clk = devm_clk_get(&pdev->dev, "i2c");
+> +	if (IS_ERR(idev->i2c_clk)) {
+> +		dev_err(&pdev->dev, "missing clock");
+
+Missed terminating new line '\n'
+
+> +		return PTR_ERR(idev->i2c_clk);
+> +	}
+> +
+> +	idev->base = base;
+> +	idev->dev = &pdev->dev;
+> +	init_completion(&idev->msg_complete);
+> +
+> +	of_property_read_u32(np, "clock-frequency", &idev->bus_clk_rate);
+> +	if (idev->bus_clk_rate == 0)
+> +		idev->bus_clk_rate = 100000;	/* default clock rate */
+> +
+> +	ret = axxia_i2c_init(idev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to initialize");
+
+Missed terminating new line '\n'
+
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_request_irq(&pdev->dev, irq, axxia_i2c_isr, 0,
+> +			       pdev->name, idev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to claim IRQ%d\n", irq);
+> +		return ret;
+> +	}
+> +
+> +	clk_prepare_enable(idev->i2c_clk);
+> +
+> +	i2c_set_adapdata(&idev->adapter, idev);
+> +	strlcpy(idev->adapter.name, pdev->name, sizeof(idev->adapter.name));
+> +	idev->adapter.owner = THIS_MODULE;
+> +	idev->adapter.class = I2C_CLASS_HWMON;
+> +	idev->adapter.algo = &axxia_i2c_algo;
+> +	idev->adapter.dev.parent = &pdev->dev;
+> +	idev->adapter.dev.of_node = pdev->dev.of_node;
+> +
+> +	platform_set_drvdata(pdev, idev);
+> +
+> +	ret = i2c_add_adapter(&idev->adapter);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to add adapter\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int axxia_i2c_remove(struct platform_device *pdev)
+> +{
+> +	struct axxia_i2c_dev *idev = platform_get_drvdata(pdev);
+> +
+> +	clk_disable_unprepare(idev->i2c_clk);
+> +	i2c_del_adapter(&idev->adapter);
+> +
+> +	return 0;
+> +}
+> +
+> +/* Match table for of_platform binding */
+> +static const struct of_device_id axxia_i2c_of_match[] = {
+> +	{ .compatible = "lsi,api2c", },
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, axxia_i2c_of_match);
+> +
+> +static struct platform_driver axxia_i2c_driver = {
+> +	.probe = axxia_i2c_probe,
+> +	.remove = axxia_i2c_remove,
+> +	.driver = {
+> +		.name = "axxia-i2c",
+> +		.of_match_table = axxia_i2c_of_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(axxia_i2c_driver);
+> +
+> +MODULE_DESCRIPTION("Axxia I2C Bus driver");
+> +MODULE_AUTHOR("Anders Berg <anders.berg-M7mHMAq9Yzo@public.gmane.org>");
+> +MODULE_LICENSE("GPL v2");
 
 
-Cheers
-ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Varka Bhadram.
