@@ -1,76 +1,115 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] usb: renesas_usbhs: Add device tree support for
- R-Car H2 and M2
-Date: Mon, 29 Sep 2014 20:35:04 +0400
-Message-ID: <54298A38.5030703@cogentembedded.com>
-References: <5406A664.2050501@renesas.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] regulator: add mxs regulator driver
+Date: Mon, 29 Sep 2014 18:13:14 +0100
+Message-ID: <20140929171314.GW16977@sirena.org.uk>
+References: <1411779588-22031-1-git-send-email-stefan.wahren@i2se.com>
+ <1411779588-22031-3-git-send-email-stefan.wahren@i2se.com>
+ <20140928101650.GL27755@sirena.org.uk>
+ <5428FE7B.8060700@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5406A664.2050501-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Ulrich Hecht <ulrich.hecht-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="nqu5fpgjE+BQlEdo"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5428FE7B.8060700-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
 
-On 09/03/2014 09:25 AM, Yoshihiro Shimoda wrote:
+--nqu5fpgjE+BQlEdo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> This driver supports other SoCs, but they need boards/Soc depend code.
-> So, this patch adds device tree support for R-Car H2 and M2 initially.
+On Mon, Sep 29, 2014 at 08:38:51AM +0200, Stefan Wahren wrote:
 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> ---
->   drivers/usb/renesas_usbhs/common.c |   44 ++++++++++++++++++++++++++++++++++++
->   1 file changed, 44 insertions(+)
+> I'm searching for a good regulator implementation example.
 
-> diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-> index 1b9bf8d..b3b6813 100644
-> --- a/drivers/usb/renesas_usbhs/common.c
-> +++ b/drivers/usb/renesas_usbhs/common.c
-> @@ -18,6 +18,8 @@
->   #include <linux/gpio.h>
->   #include <linux/io.h>
->   #include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_gpio.h>
->   #include <linux/pm_runtime.h>
->   #include <linux/slab.h>
->   #include <linux/sysfs.h>
-> @@ -438,6 +440,43 @@ static int usbhsc_drvcllbck_notify_hotplug(struct platform_device *pdev)
-[...]
-> +static struct renesas_usbhs_platform_info *usbhs_parse_dt(struct device *dev)
-> +{
-> +	struct renesas_usbhs_platform_info *info;
-> +	struct renesas_usbhs_driver_param *dparam;
-> +	const struct of_device_id *of_id = of_match_device(usbhs_of_match, dev);
-> +	u32 tmp;
-> +	int gpio;
-> +
-> +	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-> +	if (!info)
-> +		return NULL;
-> +
-> +	dparam = &info->driver_param;
-> +	dparam->type = of_id ? (u32)of_id->data : 0;
-> +	if (!of_property_read_u32(dev->of_node, "renesas,buswait", &tmp))
-> +		dparam->buswait_bwait = tmp;
-> +	gpio = of_get_named_gpio_flags(dev->of_node, "renesas,enable-gpio", 0,
-> +				       NULL);
-> +	if (gpio > 0)
-> +		dparam->enable_gpio = gpio;
-> +
-> +	return info;
+> Does it apply to ti-abb-regulator.c and twl-regulator.c?
 
-    I don't see where you parse the optional "phy" property. It should exist 
-for the Lager and Koelsch boards you target.
+Possibly.  But bear in mind that it's important to understand the
+hardware you're trying to support.
 
-WBR, Sergei
+> > This really needs a comment to explain what on earth is going on here -
+> > the whole thing with writing the same thing twice with two delays is
+> > more than a little odd.  It looks like the driver is trying to busy wait
+> > in cases where the change happens quickly but the comments about "fast"
+> > and "normal" mode make this unclear.
 
+> The regulator driver polls for the DC_OK bit in the power status register.
+
+> Quote for reference manual (p. 935): "High when switching DC-DC
+> converter control loop has stabilized after a voltage target change."
+
+> The two loops comes from the different regulator modes
+> (REGULATOR_MODE_FAST, REGULATOR_MODE_NORMAL).
+
+> In REGULATOR_MODE_FAST the voltage steping is disabled and changing
+> voltage should be fast. In REGULATOR_MODE_NORMAL voltage steping is
+> enabled and it's take a while for reaching the target voltage.
+
+I don't think you've fully understood what the different modes mean
+here, that's not normally how a buck convertor works.  The different
+modes would typically control the ability of the regulator to respond
+quickly to changes in load without drifting off regulation, fast mode
+makes the regulator less efficient but more responsive to load changes
+(probably marginally with modern regulators).  It should have relatively
+little to do with the ability to ramp the voltage and certainly not on
+the scale there.
+
+> Do you see more a problem with the two different loops or the redundant
+> register write?
+
+Both.  The code right now just looks really obscure.
+
+> if (readl(sreg->base_addr) & sreg->mode_mask)
+>     return REGULATOR_MODE_FAST;
+
+> return REGULATOR_MODE_NORMAL;
+
+> Better?
+
+Yes.
+
+> > Why is this not looked up from the data structure like the rest of the
+> > data?
+
+> I was a little bit confused why there wasn't a mode_mask in the struct
+> regulator_desc. I will do it like the ti-abb-regulator in the matching
+> table.
+
+There's no helpers for setting modes.
+
+> >> +	regulator_unregister(rdev);
+> >> +	iounmap(power_addr);
+> >> +	iounmap(base_addr);
+
+> > Use devm_ versions of functions.
+
+> As a result the remove function for the drivers becomes unnecessary. Am
+> i right?
+
+Yes.
+
+--nqu5fpgjE+BQlEdo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUKZMpAAoJECTWi3JdVIfQ8gYH/1LE4xs4mGetcUR5/f9aJDNp
+ofg2K/fNOyqi5d79gY+l5lM8otlBijWAeNtVrWQs33u+2HqPWpCsxkYnCKsSCqIl
+mLSxC36/WK4jZw2DxOi6U7JAdZIbkib2b/KIXQp9IkbOnhjktuGK14GluFA/j+f4
+SAJ/dbDrjihWD5/XtQ2gFv0czOeEFB2U+jqu0Uk+IrJ2duTp2KPqeJP0DlTGO4sq
+094CQAdjcKliNbFy9fDr5Iq5znvxx3CbPaYSpgUg7MWzvM0gI18WixrMUVVByfum
+oy2cjoMaKeIM3A0StH76a0QFTr73c0C/BAgOwycPgD+9mzEwDyJUmTHnniWdf8w=
+=JYcR
+-----END PGP SIGNATURE-----
+
+--nqu5fpgjE+BQlEdo--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
