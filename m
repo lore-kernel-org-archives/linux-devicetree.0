@@ -1,53 +1,89 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [git pull] Devicetree changes for v3.15
-Date: Mon, 29 Sep 2014 10:52:30 +0200
-Message-ID: <CACRpkdYtiRyJK32M2z5EVxW1wXEfv-YDqJ=JPK3TeThV2=7sHA@mail.gmail.com>
-References: <CACxGe6vCrkHPL6UNy1p8AO4+z5VFRY6w4_2grQEZQwp_3jJ7Yw@mail.gmail.com>
-	<CACRpkdZoo=P7uTO1rNDD_HUPjfAk26C0=mNYPoZmTV0wcO3V-w@mail.gmail.com>
-	<20140926141943.GC23926@titan.lakedaemon.net>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] arch: arm: boot: dts: Added correct vendor-prefix
+ with device name to compatible property
+Date: Mon, 29 Sep 2014 10:02:06 +0100
+Message-ID: <20140929090206.GA1899@leverpostej>
+References: <1411734292-10910-1-git-send-email-darshanapadmadas@gmail.com>
+ <1411734292-10910-5-git-send-email-darshanapadmadas@gmail.com>
+ <20140926135047.GH7422@leverpostej>
+ <b17b5b73-b571-41d9-abed-3626f111eb84@googlegroups.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140926141943.GC23926@titan.lakedaemon.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Linus Torvalds <torvalds@linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <b17b5b73-b571-41d9-abed-3626f111eb84-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "opw-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <opw-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 26, 2014 at 4:19 PM, Jason Cooper <jason@lakedaemon.net> wrote:
-> On Fri, Sep 26, 2014 at 02:30:53PM +0200, Linus Walleij wrote:
+On Sat, Sep 27, 2014 at 05:03:00PM +0100, Darshana Padmadas wrote:
+>    On Friday, September 26, 2014 7:20:50 PM UTC+5:30, Mark Rutland wr=
+ote:
+>=20
+>      Hi,
+>=20
+>      On Fri, Sep 26, 2014 at 01:24:52PM +0100, Darshana Padmadas wrot=
+e:
+>      > This patch adds the correct vendor-prefix listed in
+>      Documentation/devicetree/bindings/vendor-prefixes.txt
+>      > with the device name to compatible property.
+>      >
+>      > Signed-off-by: Darshana Padmadas <[1]darshana...-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>      > ---
+>      > =C2=A0arch/arm/boot/dts/tegra30-cardhu.dtsi | 2 +-
+>      > =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>      >
+>      > diff --git a/arch/arm/boot/dts/tegra30-cardhu.dtsi
+>      b/arch/arm/boot/dts/tegra30-cardhu.dtsi
+>      > index 2063795..491fed6 100644
+>      > --- a/arch/arm/boot/dts/tegra30-cardhu.dtsi
+>      > +++ b/arch/arm/boot/dts/tegra30-cardhu.dtsi
+>      > @@ -187,7 +187,7 @@
+>      > =C2=A0
+>      > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* ALS and Proximity sensor */
+>      > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0isl29028@44 {
+>      > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0compatible =3D "isil,isl29028";
+>      > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0compatible =3D "isl,isl29028", "isil,isl29028";
+>=20
+>      Please either drop the old string, or don't add the new string.
+>=20
+>      For compatibility with old DTBs, the kernel must continue to sup=
+port the
+>      old string. So the old string will alone will work -- it's not n=
+ecessary
+>      to add the new one to DTs just because the kernel now supports i=
+t.
+>=20
+>      However, this DTB need not work with older kernels, so you could=
+ simply
+>      replace the string with the new one if your aim is to remove ins=
+tances
+>      of "isil" to ensure consistency going forwards. If so, please me=
+ntion
+>      that in the commit message.
+>=20
+>    So I simply replace isil with isl for the newer kernels?=C2=A0
 
-> Exact patch is:
->
->   f4d4ffc03efc kbuild: dtbs_install: new make target
->
->> After this patch a while back I have observed the following behaviour
->> of the kernel build:
->>
->> make zImage
->> make zImage
->> -> incremental build, just relink
->>
->> make zImage
->> make dtbs
->> make zImage
->> -> The whole kernel gets rebuilt
->>
->> So now if I happen to recompile my device trees, I suddenly want
->> the entire zImage to be rebuilt to? It's by definition not changes that
->> affect the kernel build :-(
->>
->> I noticed this because my build scripts calls make dtbs && make zImage,
->> and started to rebuild absolutely everything all the time.
->>
->> Do you think this can be fixed? It's quite simple to reproduce...
->
-> Does the attached fix your problem?
+=46or the dts(i) files, that should be fine. You will need to Cc the Te=
+gra
+maintainers to verify if they're ok with that.
 
-Yes!
-Tested-by: Linus Walleij <linus.walleij@linaro.org>
+As an aside, your email came through as HTML, which some lists will
+reject. Please ensure your mail client sends plain text.
 
-Please get this upstream marked for stable.
-
-Yours,
-Linus Walleij
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
