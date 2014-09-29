@@ -1,72 +1,101 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] Removes OF_SELFTEST dependency on OF_DYNAMIC config
- symbol
-Date: Mon, 29 Sep 2014 13:51:26 +0100
-Message-ID: <20140929125126.1D1ACC4150A@trevor.secretlab.ca>
-References: <1410611708-9369-1-git-send-email-gaurav.minocha.os@gmail.com>
-	<9D65D8A3-6404-451B-A3F4-E9ED94810B7B@antoniou-consulting.com>
-	<CACxGe6t7Krmtm4enS=-7yjWiR6m81Rr1A7RNKnn70bVHoEe2Bw@mail.gmail.com>
-	<CBCF02E6-831F-425B-9FE7-CB4EE9A2F19C@antoniou-consulting.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH 1/2] DT: add binding for mxs regulator
+Date: Mon, 29 Sep 2014 15:10:07 +0200
+Message-ID: <54295A2F.3070700@i2se.com>
+References: <1411779588-22031-1-git-send-email-stefan.wahren@i2se.com> <1411779588-22031-2-git-send-email-stefan.wahren@i2se.com> <20140929110919.GB2432@leverpostej> <54294832.8000702@i2se.com> <20140929124137.GD2432@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CBCF02E6-831F-425B-9FE7-CB4EE9A2F19C-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+In-Reply-To: <20140929124137.GD2432@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 29 Sep 2014 10:50:52 +0300
-, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
- wrote:
-> Hi Grant,
-> 
-> On Sep 28, 2014, at 1:23 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> 
-> > On Mon, Sep 15, 2014 at 10:34 AM, Pantelis Antoniou
-> > <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
-> >> Hi Gaurav,
-> >> 
-> >> 
-> >> On Sep 13, 2014, at 3:35 PM, Gaurav Minocha wrote:
-> >> 
-> >>> This patch is used to remove the selftests dependency on
-> >>> OF_DYNAMIC config flag. Now, it selectively builds only
-> >>> the functions required by the selftests.
-> >>> 
-> >>> Tested with and without OF_DYNAMIC enabled.
-> >>> 
-> >>> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>> ---
-> >> 
-> >> [snip]
-> >> 
-> >> I'm not happy with this patch.
-> >> 
-> >> It duplicates core functionality already present in drivers/of/dynamic.c and those
-> >> two implementations are for sure going to get out of sync.
-> >> 
-> >> If you require the self-tests to work without OF_DYNAMIC you can do that by including the
-> >> tests in your dts. If you want to insert them dynamically then use OF_DYNAMIC.
-> > 
-> > I asked Gaurav to make this work. The selftest code should always be
-> > usable, without requiring the testcase data to be directly included
-> > into the dtb. It is important to be able to still test the code paths
-> > on any platform when OF_DYNAMIC is not selected.
-> > 
-> 
-> OK, I can understand that. However the way it goes about it is wrong IMO.
+Hi,
 
-Agreed.
+Am 29.09.2014 um 14:41 schrieb Mark Rutland:
+> Well, the simple-bus will cause the children to be probed. But it looks
+> like you care about properties of the parent. I don't think that
+> simple-bus is appropriate because it's not being handled as a
+> transparent bridge from the PoV of the children.
 
-> If we need the dynamic node attachment/detachment code to work even when
-> OF_DYNAMIC is not enabled, we should keep the same implementation but
-> use a new hidden config option that is CONFIG_OF_DYNAMIC | CONFIG_OF_TESTCASES
-> and put the code there.
+actually i need the address of the power status register. In this
+version i get the base address from the parent node add an offset.
 
-I'm thinking that we just drop node detachment in the selftest code when
-running without CONFIG_OF_DYNAMIC. It doesn't hurt anything to leave the
-data in-tree.
+Do you prefer to define the address of the power status register like a
+second address cell:
 
-g.
+reg_vddd: regulator@80044040 {
+	reg = <0x80044040 0x10
+	       0x800440c0 0x01>;
+        ...
+};
+
+or do i need special properties like this:
+
+reg_vddd: regulator@80044040 {
+	reg = <0x80044040 0x10>;
+	fsl,mxs-status-reg = <0x800440c0>;
+        ...
+};
+
+>> Do we need a extra driver?
+> Perhaps, but it's relatively simple to match on a compatible string and
+> probe children if you just wantto start small for now.
+
+Okay. Would be great if someone has a good example. At first, i thought
+of power/anatop.
+
+>
+>>>> +- #address-cells: Number of cells required to define regulator register,
+>>>> +  must be 1
+>>>> +- #size-cells: Number of cells required to define register size, must be 1
+>>> Why must this be the case, given that the child node expects an absolute
+>>> physical address?
+>> I need a property to define the control register for the regulators
+>> without defining vendor specific properties like "fsl,mxs-control-reg"
+>> or something.
+> You misunderstand me. I was querying the "must be 1" rather than the
+> proeprties themselves.
+>
+>>> What's wrong with #address-cells = <2>, for example?
+>> Nothing
+> Then we shouldn't specify "must be 1", no?
+
+Right, must be at least 1.
+
+>>>> +- reg: Absolute physical address and size of the register set for the device
+>>> Why is this here _and_ in the child node(s)?
+>> The parent of the power node is also a simple bus. I use this to
+>> calculate the power status register per offset.
+>>
+>>> What is the difference between this node and its children?
+>> The parent node represent the power sub system and the regulators are
+>> part of this sub system.
+>>
+>>> Can there be more than one sub-node?
+>> In the i.MX28 are at least 4 voltage regulators, 1 current regulator and
+>> many more. At first, the driver should implement only 3 voltage
+>> regulators (vddd, vdda, vddio).
+> Ok.
+>
+> I think you need a binding for the power subsystem, and a trivial driver
+> that can match on that and probe the child regulators. Are there
+> components other than voltage or current regulators in the sub system?
+
+Yes, according to the reference manual there is a dc-dc converter, a
+battery charger, battery monitor, ...
+
+In short a lot of developing time ;-)
+
+> Mark.
+
+Best regards
+
+Stefan
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
