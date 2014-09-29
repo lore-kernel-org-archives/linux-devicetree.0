@@ -1,81 +1,70 @@
-From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
-Subject: Re: [PATCH v2 2/5] pinctrl: exynos: Add irq_chip instance for Exynos7
- wakeup interrupts
-Date: Mon, 29 Sep 2014 10:50:14 +0530
-Message-ID: <CAM4voakz5JpKV9sK8EHWDmBTFxy8YDCFejGz_VbZ0bamtVmteQ@mail.gmail.com>
-References: <1411460169-30536-1-git-send-email-a.kesavan@samsung.com>
-	<1411460169-30536-3-git-send-email-a.kesavan@samsung.com>
-	<54218882.1050401@gmail.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH v3 3/4] rtc: omap: Update Kconfig for OMAP RTC
+Date: Mon, 29 Sep 2014 10:55:39 +0530
+Message-ID: <1411968339-9933-1-git-send-email-lokeshvutla@ti.com>
+References: <1411637529-18289-4-git-send-email-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <54218882.1050401@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Thomas Abraham <thomas.ab@samsung.com>, Naveen Krishna <naveenkrishna.ch@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1411637529-18289-4-git-send-email-lokeshvutla@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: rtc-linux@googlegroups.com, a.zummo@towertech.it
+Cc: nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, balbi@ti.com, tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, lokeshvutla@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+From: Tero Kristo <t-kristo@ti.com>
 
-On Tue, Sep 23, 2014 at 8:19 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> On 23.09.2014 10:16, Abhilash Kesavan wrote:
-> [snip]
->> @@ -383,9 +377,11 @@ static int exynos_wkup_irq_set_wake(struct irq_data *irqd, unsigned int on)
->>  /*
->>   * irq_chip for wakeup interrupts
->>   */
->> -static struct exynos_irq_chip exynos_wkup_irq_chip = {
->> +static struct exynos_irq_chip *exynos_wkup_irq_chip;
->> +
-> [snip]
->> @@ -459,7 +480,7 @@ static void exynos_irq_demux_eint16_31(unsigned int irq, struct irq_desc *desc)
->>  static int exynos_wkup_irq_map(struct irq_domain *h, unsigned int virq,
->>                                       irq_hw_number_t hw)
->>  {
->> -     irq_set_chip_and_handler(virq, &exynos_wkup_irq_chip.chip,
->> +     irq_set_chip_and_handler(virq, &exynos_wkup_irq_chip->chip,
->>                                       handle_level_irq);
->>       irq_set_chip_data(virq, h->host_data);
->>       set_irq_flags(virq, IRQF_VALID);
->> @@ -491,7 +512,12 @@ static int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
->>       int idx, irq;
->>
->>       for_each_child_of_node(dev->of_node, np) {
->> -             if (of_match_node(exynos_wkup_irq_ids, np)) {
->> +             const struct of_device_id *match;
->> +
->> +             match = of_match_node(exynos_wkup_irq_ids, np);
->> +             if (match) {
->> +                     exynos_wkup_irq_chip = kmemdup(match->data,
->> +                             sizeof(struct exynos_irq_chip), GFP_KERNEL);
->
-> That's not exactly what I had in my mind.
->
-> You just changed the code to write to another global variable. This is
-> not the best practice and might cause hard to track issues in future,
-> when extending the driver.
->
-> From what I can see, the best solution would be to add .irq_chip field
-> to samsung_pin_bank struct. Then exynos_wkup_irq_map() could access it
-> through h->host_data pointer and exynos_irq_demux_eint16_31() could also
-> retrieve the irq chip through bank struct without the need too add chip
-> field to exynos_muxed_weint_data struct.
->
-> As a side effect, it would be possible to consolidate
-> exynos_wkup_irqd_ops with exynos_gpio_irqd_ops, which currently only
-> differ in irq chip passed as argument to irq_set_chip_and_handler() in
-> .map() callback.
+RTC is present in AM43xx and DRA7xx also. Updating the Kconfig
+to depend on ARCH_OMAP or ARCH_DAVINCI
 
-I have posted v3 adding a new irq_chip field to the samsung_pin_bank
-structure as per your suggestion. Please take a look.
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+Changes since v2:
+ 	- Updated depends on in Kconfig.
+ drivers/rtc/Kconfig    | 6 +++---
+ drivers/rtc/rtc-omap.c | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-Regards,
-Abhilash
->
-> Best regards,
-> Tomasz
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index a168e96..f14d200 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -971,11 +971,11 @@ config RTC_DRV_IMXDI
+ 	   will be called "rtc-imxdi".
+ 
+ config RTC_DRV_OMAP
+-	tristate "TI OMAP1"
+-	depends on ARCH_OMAP15XX || ARCH_OMAP16XX || ARCH_OMAP730 || ARCH_DAVINCI_DA8XX || SOC_AM33XX
++	tristate "TI OMAP Real Time Clock"
++	depends on ARCH_OMAP || ARCH_DAVINCI
+ 	help
+ 	  Say "yes" here to support the on chip real time clock
+-	  present on TI OMAP1, AM33xx and DA8xx/OMAP-L13x.
++	  present on TI OMAP1, AM33xx, DA8xx/OMAP-L13x, AM43xx and DRA7xx.
+ 
+ 	  This driver can also be built as a module, if so, module
+ 	  will be called rtc-omap.
+diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
+index 93c5424..f28f1fd 100644
+--- a/drivers/rtc/rtc-omap.c
++++ b/drivers/rtc/rtc-omap.c
+@@ -1,5 +1,5 @@
+ /*
+- * TI OMAP1 Real Time Clock interface for Linux
++ * TI OMAP Real Time Clock interface for Linux
+  *
+  * Copyright (C) 2003 MontaVista Software, Inc.
+  * Author: George G. Davis <gdavis@mvista.com> or <source@mvista.com>
+@@ -25,7 +25,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/io.h>
+ 
+-/* The OMAP1 RTC is a year/month/day/hours/minutes/seconds BCD clock
++/* The OMAP RTC is a year/month/day/hours/minutes/seconds BCD clock
+  * with century-range alarm matching, driven by the 32kHz clock.
+  *
+  * The main user-visible ways it differs from PC RTCs are by omitting
+-- 
+1.9.1
+
