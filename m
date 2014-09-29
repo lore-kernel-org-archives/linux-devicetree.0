@@ -1,68 +1,144 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] DT: add binding for mxs regulator
-Date: Mon, 29 Sep 2014 11:23:52 +0100
-Message-ID: <20140929102352.GO16977@sirena.org.uk>
-References: <1411779588-22031-1-git-send-email-stefan.wahren@i2se.com>
- <1411779588-22031-2-git-send-email-stefan.wahren@i2se.com>
- <20140928102202.GM27755@sirena.org.uk>
- <5428F592.3020809@i2se.com>
+From: Kiran Padwal <kiran.padwal@smartplayin.com>
+Subject: Re: [PATCH 3/4] ARM: DT: apq8064: Add USB OTG support
+Date: Mon, 29 Sep 2014 15:56:41 +0530
+Message-ID: <542933E1.8010809@smartplayin.com>
+References: <1411982044-7873-1-git-send-email-srinivas.kandagatla@linaro.org> <1411982127-8048-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="iEWWOZ/QYGWEaBRW"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5428F592.3020809-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1411982127-8048-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, broonie@kernel.org, lee.jones@linaro.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arm@kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@sonymobile.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Srinivas,
 
---iEWWOZ/QYGWEaBRW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Some review are comments inline.
 
-On Mon, Sep 29, 2014 at 08:00:50AM +0200, Stefan Wahren wrote:
-> Am 28.09.2014 um 12:22 schrieb Mark Brown:
+On Monday 29 September 2014 02:45 PM, Srinivas Kandagatla wrote:
+> This patch adds USB OTG support on USB1 of APQ8064 SOC.
+> Tested on IFC6410 with ethernet gadget.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 14 +++++++++
+>  arch/arm/boot/dts/qcom-apq8064.dtsi        | 46 ++++++++++++++++++++++++++++++
+>  2 files changed, 60 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> index d6036b8..f41fb39 100644
+> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> @@ -40,6 +40,11 @@
+>  			};
+>  		};
+>  
+> +		/* OTG */
+> +		usb1_phy:phy@12500000 {
+> +			status = "ok";
 
-> > Use subject lines matching the style for the subsystem.
+Its canonical value is "okay" (although in practice anything
+other than "disabled" should work).
 
-> sorry i'm not sure what's wrong with the subject lines.
+> +		};
+> +
+>  		usb3_phy:phy@12520000 {
+>  			status = "ok";
+>  		};
+> @@ -48,6 +53,15 @@
+>  			status = "ok";
+>  		};
+>  
+> +		gadget1:gadget@12500000 {
+> +			status = "ok";
+> +		};
+> +
+> +		/* OTG */
+> +		usb1: usb@12500000 {
+> +			status = "ok";
+> +		};
+> +
+>  		usb3: usb@12520000 {
+>  			status = "ok";
+>  		};
+> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> index 491a136..38d3efa 100644
+> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
+> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> @@ -284,6 +284,16 @@
+>  				qcom,boot-load = <50000>;
+>  			};
+>  
+> +			pm8921_l4: pm8921-l4 {
+> +				compatible	= "qcom,rpm-pm8921-pldo";
+> +				reg		= <QCOM_RPM_PM8921_LDO4>;
+> +
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-always-on;
+> +				qcom,boot-load = <50000>;
+> +			};
+> +
+>  			pm8921_l23: pm8921-l23 {
+>  				compatible	= "qcom,rpm-pm8921-pldo";
+>  				reg		= <QCOM_RPM_PM8921_LDO23>;
+> @@ -296,6 +306,25 @@
+>  
+>  		};
+>  
+> +		usb1_phy:phy@12500000 {
+> +			compatible	= "qcom,usb-otg-ci";
+> +			reg		= <0x12500000 0x400>;
+> +			interrupts	= <0 100 0>;
 
-> Did you expect "[PATCH 1/2] regulator: add binding for mxs regulator"?
+The trailing 0 might be IRQ_TYPE_NONE?
 
-Yes.
+> +			status		= "disabled";
 
-> > While this should be using compatibles to identify which regulator is
-> > being supported note that the binding doesn't document the fact that the
-> > code makes regulator-name mandatory or what values are required.
+Usually the status property goes first.
 
-> Is the following better?
 
-> - fsl,mxs-regulator-vddd
-> - fsl,mxs-regulator-vdda
-> - fsl,mxs-regulator-vddio
-
-Yes.
-
---iEWWOZ/QYGWEaBRW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUKTMzAAoJECTWi3JdVIfQfx0H/iylZ4g8pS5Fu8LP8XqMt5sp
-oNPHAui6VdJ/RWUvk0m8NuZSXUV+6g3+HG5Y1MODP+pdhJ7g405N+GlDXxi3SNbP
-kzC2r55fGbqTtduMDZDv2Ffy7op/meJp1urjtLvq2VD/CtXJ0B4hNjotkPhzv+cS
-thrZ6+5EtsiLodfn2/PKfSS9WfsoP46nT7oWHd7L0EYJF6G5M31nL5BkaU5gThwk
-Wd1SLEv8xa0tCQQsuYfwe9tUzscK6cV8QM52pUsaUUaIu8hBXENdsoTpgpfq+Ymx
-okXLdwvBcPsCQMFRbzwpX82M8oHg4ijLuBUF6ACcPBBCUOVnhFIs7EgeVXgwvp0=
-=S+g5
------END PGP SIGNATURE-----
-
---iEWWOZ/QYGWEaBRW--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +			dr_mode		= "host";
+> +
+> +			clocks		= <&gcc USB_HS1_XCVR_CLK>,
+> +					  <&gcc USB_HS1_H_CLK>;
+> +			clock-names	= "core", "iface";
+> +
+> +			vddcx-supply	= <&pm8921_s3>;
+> +			v3p3-supply	= <&pm8921_l3>;
+> +			v1p8-supply	= <&pm8921_l4>;
+> +
+> +			resets		= <&gcc USB_HS1_RESET>;
+> +			reset-names	= "link";
+> +		};
+> +
+>  		usb3_phy:phy@12520000 {
+>  			compatible	= "qcom,usb-otg-ci";
+>  			reg		= <0x12520000 0x400>;
+> @@ -334,6 +363,23 @@
+>  			reset-names	= "link";
+>  		};
+>  
+> +		gadget1:gadget@12500000 {
+> +			compatible	= "qcom,ci-hdrc";
+> +			reg		= <0x12500000 0x400>;
+> +			status		= "disabled";
+> +			dr_mode		= "peripheral";
+> +			interrupts	= <0 100 0>;
+> +			usb-phy		= <&usb1_phy>;
+> +		};
+> +
+> +		usb1: usb@12500000 {
+> +			compatible	= "qcom,ehci-host";
+> +			reg		= <0x12500000 0x400>;
+> +			interrupts	= <0 100 0>;
+> +			status		= "disabled";
+> +			usb-phy		= <&usb1_phy>;
+> +		};
+> +
+>  		usb3: usb@12520000 {
+>  			compatible	= "qcom,ehci-host";
+>  			reg		= <0x12520000 0x400>;
+> 
