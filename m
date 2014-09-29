@@ -1,65 +1,128 @@
-From: Valdis.Kletnieks-PjAqaU27lzQ@public.gmane.org
-Subject: Re: [PATCH v3 6/8] phy: miphy28lp: Add SSC support for PCIE
-Date: Mon, 29 Sep 2014 15:19:28 -0400
-Message-ID: <15685.1412018368@turing-police.cc.vt.edu>
-References: <1411721657-9924-1-git-send-email-gabriel.fernandez@linaro.org>
-            <1411721657-9924-7-git-send-email-gabriel.fernandez@linaro.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1412018368_2318P";
-	 micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
+From: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
+Subject: [PATCH v2 2/3] ASoC: ssm2602: add device tree bindings
+Date: Mon, 29 Sep 2014 22:41:10 +0300
+Message-ID: <1412019670-19429-1-git-send-email-stefan.kristiansson@saunalahti.fi>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: Your message of "Fri, 26 Sep 2014 10:54:15 +0200."
-             <1411721657-9924-7-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Harsh Gupta <harsh.gupta-qxv4g6HH51o@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---==_Exmh_1412018368_2318P
-Content-Type: text/plain; charset=us-ascii
+Allow the ssm2602/ssm2603/ssm2604 codec driver to be
+instantiated from the device tree.
 
-On Fri, 26 Sep 2014 10:54:15 +0200, Gabriel FERNANDEZ said:
-> SSC is the technique of modulating the operating frequency of a signal
-> slightly to spread its radiated emissions over a range of frequencies.
-> This reduction in the maximum emission for a given frequency helps meet
-> radiated emission requirements.
-> These settings are applicable for PCIE with Internal clock.
+Also, add Kconfig prompts to allow manual selection of both the
+I2C and SPI configuration versions of the driver.
 
-> +		writeb_relaxed(0x69, miphy_phy->base + MIPHY_PLL_SBR_3);
-> +		writeb_relaxed(0x21, miphy_phy->base + MIPHY_PLL_SBR_4);
-> +		writeb_relaxed(0x3c, miphy_phy->base + MIPHY_PLL_SBR_2);
-> +		writeb_relaxed(0x21, miphy_phy->base + MIPHY_PLL_SBR_4);
-> +		writeb_relaxed(0x00, miphy_phy->base + MIPHY_PLL_SBR_1);
-> +		writeb_relaxed(0x02, miphy_phy->base + MIPHY_PLL_SBR_1);
-> +		writeb_relaxed(0x00, miphy_phy->base + MIPHY_PLL_SBR_1);
+Signed-off-by: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
+---
+Changes in v2:
+ - Remove "ssm2603" and "ssm2604" from the spi compatible list
+---
+ .../devicetree/bindings/sound/adi,ssm2602.txt         | 19 +++++++++++++++++++
+ sound/soc/codecs/Kconfig                              |  8 ++++++--
+ sound/soc/codecs/ssm2602-i2c.c                        |  9 +++++++++
+ sound/soc/codecs/ssm2602-spi.c                        |  7 +++++++
+ 4 files changed, 41 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/adi,ssm2602.txt
 
-I'd feel a lot better about all these magic numbers (and the triple write
-to SBR_1) if the Changelog or something referenced where they came from....
+diff --git a/Documentation/devicetree/bindings/sound/adi,ssm2602.txt b/Documentation/devicetree/bindings/sound/adi,ssm2602.txt
+new file mode 100644
+index 0000000..3b3302f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/adi,ssm2602.txt
+@@ -0,0 +1,19 @@
++Analog Devices SSM2602, SSM2603 and SSM2604 I2S audio CODEC devices
++
++SSM2602 support both I2C and SPI as the configuration interface,
++the selection is made by the MODE strap-in pin.
++SSM2603 and SSM2604 only support I2C as the configuration interface.
++
++Required properties:
++
++  - compatible : One of "adi,ssm2602", "adi,ssm2603" or "adi,ssm2604"
++
++  - reg : the I2C address of the device for I2C, the chip select
++          number for SPI.
++
++ Example:
++
++	ssm2602: ssm2602@1a {
++		compatible = "adi,ssm2602";
++		reg = <0x1a>;
++	};
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index 8838838e..3649e73 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -520,12 +520,16 @@ config SND_SOC_SSM2602
+ 	tristate
+ 
+ config SND_SOC_SSM2602_SPI
++	tristate "Analog Devices SSM2602 CODEC - SPI"
++	depends on SPI_MASTER
+ 	select SND_SOC_SSM2602
+-	tristate
++	select REGMAP_SPI
+ 
+ config SND_SOC_SSM2602_I2C
++	tristate "Analog Devices SSM2602 CODEC - I2C"
++	depends on I2C
+ 	select SND_SOC_SSM2602
+-	tristate
++	select REGMAP_I2C
+ 
+ config SND_SOC_STA32X
+ 	tristate
+diff --git a/sound/soc/codecs/ssm2602-i2c.c b/sound/soc/codecs/ssm2602-i2c.c
+index abd63d5..0d9779d 100644
+--- a/sound/soc/codecs/ssm2602-i2c.c
++++ b/sound/soc/codecs/ssm2602-i2c.c
+@@ -41,10 +41,19 @@ static const struct i2c_device_id ssm2602_i2c_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, ssm2602_i2c_id);
+ 
++static const struct of_device_id ssm2602_of_match[] = {
++	{ .compatible = "adi,ssm2602", },
++	{ .compatible = "adi,ssm2603", },
++	{ .compatible = "adi,ssm2604", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ssm2602_of_match);
++
+ static struct i2c_driver ssm2602_i2c_driver = {
+ 	.driver = {
+ 		.name = "ssm2602",
+ 		.owner = THIS_MODULE,
++		.of_match_table = ssm2602_of_match,
+ 	},
+ 	.probe = ssm2602_i2c_probe,
+ 	.remove = ssm2602_i2c_remove,
+diff --git a/sound/soc/codecs/ssm2602-spi.c b/sound/soc/codecs/ssm2602-spi.c
+index 2bf55e2..b5df14f 100644
+--- a/sound/soc/codecs/ssm2602-spi.c
++++ b/sound/soc/codecs/ssm2602-spi.c
+@@ -26,10 +26,17 @@ static int ssm2602_spi_remove(struct spi_device *spi)
+ 	return 0;
+ }
+ 
++static const struct of_device_id ssm2602_of_match[] = {
++	{ .compatible = "adi,ssm2602", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ssm2602_of_match);
++
+ static struct spi_driver ssm2602_spi_driver = {
+ 	.driver = {
+ 		.name	= "ssm2602",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = ssm2602_of_match,
+ 	},
+ 	.probe		= ssm2602_spi_probe,
+ 	.remove		= ssm2602_spi_remove,
+-- 
+1.9.1
 
---==_Exmh_1412018368_2318P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Exmh version 2.5 07/13/2001
-
-iQIVAwUBVCmwvwdmEQWDXROgAQLtMg/9H+nmmSKkfoI/tNnOeYX/CReNoesUCvSd
-1z2hck+7206Yq5efMlrUV0SZ051iL+ak0XESDhzHccn1q1pcSQZjmgMEQDCrFbTP
-Dfl7Eb2Wn5aqd8DMyNcBoEzzV51iAJi2rtVGKh6KhT7/A2QdmkFTlmNZrgz12ZuS
-qUfFsRIpGqmHRsu/T73bC2ICdrP/uBlpi93GspYEWo4cyRqOD6gB1EsgldNP0l5J
-5J7aRoKcd2omQckVzkR3lSFzo1vh+imC1cULNT5aAQ0p1xvQgKQP4E+o4qlrOw8j
-mM85s80fw5VaAi4eqURWCyIoo8DVX8NP5qLD/3TgDyBttTCLMFPbAiR9FGjzsjtJ
-k3HB/PZsUiJhO5Fy/2T5k6vwgGSk+qq132rG583gtBU8dHk9hUQULF7WlOGpmPya
-0xX/xr/+bceHefr8sZddUicvtvuCkhvbFZciMm731nwFfQYtSEOlImpEVVtM1FrF
-KQ19Mi952EFxRANDSKHeOGPhQcUv/qKF4fnw5okV/lc52u+6c2a35Kri+sy50Ai7
-iNLRliCvWDIV5L72VdrVAcL0IZOJRwiH+xlTvpg89NygHhfJgTaIWi6E+fEXgvHT
-yA8zEEH9KNEnTTRdxE0GnJzX5MzTjsAJHjdqWzimfYmKli6yH5R/gHkoCWhhXQR6
-AFTrrAya2p8=
-=1oR7
------END PGP SIGNATURE-----
-
---==_Exmh_1412018368_2318P--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
