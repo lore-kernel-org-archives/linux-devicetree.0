@@ -1,50 +1,114 @@
-From: Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3] clocksource: arch_timer: Allow the device tree to
- specify the physical timer
-Date: Mon, 29 Sep 2014 09:12:26 -0400
-Message-ID: <54295ABA.1010806@codeaurora.org>
-References: <1410454801-14231-1-git-send-email-dianders@chromium.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] DT: add binding for mxs regulator
+Date: Mon, 29 Sep 2014 14:23:34 +0100
+Message-ID: <20140929132334.GE2432@leverpostej>
+References: <1411779588-22031-1-git-send-email-stefan.wahren@i2se.com>
+ <1411779588-22031-2-git-send-email-stefan.wahren@i2se.com>
+ <20140929110919.GB2432@leverpostej>
+ <54294832.8000702@i2se.com>
+ <20140929124137.GD2432@leverpostej>
+ <54295A2F.3070700@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410454801-14231-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54295A2F.3070700@i2se.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "festevam@gmail.com" <festevam@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug,
-
-On 09/11/2014 01:00 PM, Doug Anderson wrote:
-> Some 32-bit (ARMv7) systems are architected like this:
+On Mon, Sep 29, 2014 at 02:10:07PM +0100, Stefan Wahren wrote:
+> Hi,
 > 
-> * The firmware doesn't know and doesn't care about hypervisor mode and
->   we don't want to add the complexity of hypervisor there.
+> Am 29.09.2014 um 14:41 schrieb Mark Rutland:
+> > Well, the simple-bus will cause the children to be probed. But it looks
+> > like you care about properties of the parent. I don't think that
+> > simple-bus is appropriate because it's not being handled as a
+> > transparent bridge from the PoV of the children.
 > 
-> * The firmware isn't involved in SMP bringup or resume.
+> actually i need the address of the power status register. In this
+> version i get the base address from the parent node add an offset.
 > 
-> * The ARCH timer come up with an uninitialized offset between the
->   virtual and physical counters.  Each core gets a different random
->   offset.
+> Do you prefer to define the address of the power status register like a
+> second address cell:
 > 
-> * The device boots in "Secure SVC" mode.
+> reg_vddd: regulator@80044040 {
+> 	reg = <0x80044040 0x10
+> 	       0x800440c0 0x01>;
+>         ...
+> };
+> 
+> or do i need special properties like this:
+> 
+> reg_vddd: regulator@80044040 {
+> 	reg = <0x80044040 0x10>;
+> 	fsl,mxs-status-reg = <0x800440c0>;
+>         ...
+> };
 
-I believe this can safely be detected by whether a write to CNTFRQ succeeds
-(handling the UNDEF on failure). I've tested this approach in what I've
-determined to be the 19 valid combinations of the following options.
+I would prefer a top level node for the subsystem that is not a
+simple-bus.
 
-* AArch64 EL3, AArch32 EL3, no EL3
-* AArch64 EL2, AArch32 EL2, no EL2
-* Start in SVC_N, SVC_S, HYP_N, MON_S
+Give it a compatible string and a well-defined set of base properties
+(looks like you just need the reg for now). Match that and probe the
+child nodes as appropriate.
 
-Christopher
+> >> Do we need a extra driver?
+> > Perhaps, but it's relatively simple to match on a compatible string and
+> > probe children if you just wantto start small for now.
+> 
+> Okay. Would be great if someone has a good example. At first, i thought
+> of power/anatop.
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by the Linux Foundation.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+While I believe there are examples in the kernel, I can't think
+immediately of any instances.
+
+> >>>> +- #address-cells: Number of cells required to define regulator register,
+> >>>> +  must be 1
+> >>>> +- #size-cells: Number of cells required to define register size, must be 1
+> >>> Why must this be the case, given that the child node expects an absolute
+> >>> physical address?
+> >> I need a property to define the control register for the regulators
+> >> without defining vendor specific properties like "fsl,mxs-control-reg"
+> >> or something.
+> > You misunderstand me. I was querying the "must be 1" rather than the
+> > proeprties themselves.
+> >
+> >>> What's wrong with #address-cells = <2>, for example?
+> >> Nothing
+> > Then we shouldn't specify "must be 1", no?
+> 
+> Right, must be at least 1.
+
+Why not just say that #address-cells, #size-cells and ranges must be
+present as appropriate to map children?
+
+> 
+> >>>> +- reg: Absolute physical address and size of the register set for the device
+> >>> Why is this here _and_ in the child node(s)?
+> >> The parent of the power node is also a simple bus. I use this to
+> >> calculate the power status register per offset.
+> >>
+> >>> What is the difference between this node and its children?
+> >> The parent node represent the power sub system and the regulators are
+> >> part of this sub system.
+> >>
+> >>> Can there be more than one sub-node?
+> >> In the i.MX28 are at least 4 voltage regulators, 1 current regulator and
+> >> many more. At first, the driver should implement only 3 voltage
+> >> regulators (vddd, vdda, vddio).
+> > Ok.
+> >
+> > I think you need a binding for the power subsystem, and a trivial driver
+> > that can match on that and probe the child regulators. Are there
+> > components other than voltage or current regulators in the sub system?
+> 
+> Yes, according to the reference manual there is a dc-dc converter, a
+> battery charger, battery monitor, ...
+> 
+> In short a lot of developing time ;-)
+
+Sure, but not everything needs to be supported fomr the outset.
+
+Mark.
