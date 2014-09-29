@@ -1,35 +1,87 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCAxLzJdIEdQSU86IEFkZCBkcml2ZXIgZm9yIDc0eHgtSUNz?=
- =?UTF-8?B?IHdpdGggTU1JTyBhY2Nlc3M=?=
-Date: Mon, 29 Sep 2014 16:10:41 +0400
-Message-ID: <1411992641.669702342@f127.i.mail.ru>
-References: <1411112404-16040-1-git-send-email-shc_work@mail.ru>
- <1411112404-16040-2-git-send-email-shc_work@mail.ru>
- <CACRpkdYAohAjHiabQC7zs=CrJzDJh+jFKTYhATFoHdNOH2Ef0A@mail.gmail.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYAohAjHiabQC7zs=CrJzDJh+jFKTYhATFoHdNOH2Ef0A@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: =?UTF-8?B?TGludXMgV2FsbGVpag==?= <linus.walleij@linaro.org>
-Cc: =?UTF-8?B?bGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc=?= <linux-gpio@vger.kernel.org>, =?UTF-8?B?QWxleGFuZHJlIENvdXJib3Q=?= <gnurou@gmail.com>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree@vger.kernel.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [git pull] Devicetree changes for v3.15
+Date: Mon, 29 Sep 2014 13:49:22 +0100
+Message-ID: <20140929124922.CBE9FC4150A@trevor.secretlab.ca>
+References: <CACxGe6vCrkHPL6UNy1p8AO4+z5VFRY6w4_2grQEZQwp_3jJ7Yw@mail.gmail.com>
+	<CACRpkdZoo=P7uTO1rNDD_HUPjfAk26C0=mNYPoZmTV0wcO3V-w@mail.gmail.com>
+	<20140926141943.GC23926@titan.lakedaemon.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140926141943.GC23926-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-TW9uLCAyOSBTZXAgMjAxNCAxNDowNDo0NyArMDIwMCDQvtGCIExpbnVzIFdhbGxlaWogPGxpbnVz
-LndhbGxlaWpAbGluYXJvLm9yZz46Cj4gT24gRnJpLCBTZXAgMTksIDIwMTQgYXQgOTo0MCBBTSwg
-QWxleGFuZGVyIFNoaXlhbiA8c2hjX3dvcmtAbWFpbC5ydT4gd3JvdGU6Cj4gCj4gPiBUaGlzIHBh
-dGNoIGFkZHMgZHJpdmVyIHRvIHN1cHBvcnQgR1BJTyBmdW5jdGlvbmFsaXR5IGZvciA3NHh4LWNv
-bXBhdGlibGUKPiA+IElDcyB3aXRoIE1NSU8gYWNjZXNzLiBDb21wYXRpYmxlIG1vZGVscyBpbmNs
-dWRlOgo+ID4gIDEgYml0OiAgIDc0QUhDMUcxMjUgKElucHV0KSwgNzRBVUMxRzc0IChPdXRwdXQp
-Cj4gPiAgMiBiaXRzOiAgNzRMVkMyRzEyNSAoSW5wdXQpLCA3NEhDNzQgKE91dHB1dCkKPiA+ICA0
-IGJpdHM6ICA3NEhDMTI1IChJbnB1dCksIDc0SEMxNzUgKE91dHB1dCkKPiA+ICA2IGJpdHM6ICA3
-NEhDMzY1IChJbnB1dCksIDc0SEMxNzQgKE91dHB1dCkKPiA+ICA4IGJpdHM6ICA3NEhDMjQ0IChJ
-bnB1dCksIDc0SEMyNzMgKE91dHB1dCkKPiA+ICAxNiBiaXRzOiA3NEFDMTYyNCAoSW5wdXQpLCA3
-NEFDMTYzNzQgKE91dHB1dCkKPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kZXIgU2hpeWFu
-IDxzaGNfd29ya0BtYWlsLnJ1Pgo+IAo+IExvb2tpbmcgZ29vZCwgaWYgeW91IGZpeCB1cCB0aGUg
-RFQgYmluZGluZ3MgdG8gbm90IGluY2x1ZGUKPiB0ZWNobm9sb2d5IGFzIGluZGljYXRlZCBpbiBy
-ZXBseSB0byBwYXRjaCAyLzIgSSdsbCBiZSBoYXBweSB0bwo+IGFwcGx5IHRoaXMgcGF0Y2guCgpI
-ZWxsby4KCkNoYW5nZSBhZmZlY3RzIGJvdGggcGFydHMgb2YgdGhlIHBhdGNoLCBzbyBJIHdpbGwg
-c2VuZCBjb21wbGV0ZSBwYXRjaCBhcyBhIHYyLgoKVGhhbmtzIQotLS0KCg==
+On Fri, 26 Sep 2014 10:19:43 -0400
+, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+ wrote:
+> Linus,
+> 
+> On Fri, Sep 26, 2014 at 02:30:53PM +0200, Linus Walleij wrote:
+> > On Tue, Apr 1, 2014 at 12:15 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> > 
+> > > Here are the dt changes I've got queued up for v3.15. The full
+> > > description is below in the tag. Please pull.
+> > (...)
+> > > Jason Cooper (1):
+> > >       kbuild: dtbs_install: new make target
+> 
+> Exact patch is:
+> 
+>   f4d4ffc03efc kbuild: dtbs_install: new make target
+> 
+> > After this patch a while back I have observed the following behaviour
+> > of the kernel build:
+> > 
+> > make zImage
+> > make zImage
+> > -> incremental build, just relink
+> > 
+> > make zImage
+> > make dtbs
+> > make zImage
+> > -> The whole kernel gets rebuilt
+> > 
+> > So now if I happen to recompile my device trees, I suddenly want
+> > the entire zImage to be rebuilt to? It's by definition not changes that
+> > affect the kernel build :-(
+> > 
+> > I noticed this because my build scripts calls make dtbs && make zImage,
+> > and started to rebuild absolutely everything all the time.
+> > 
+> > Do you think this can be fixed? It's quite simple to reproduce...
+> 
+> Does the attached fix your problem?
+> 
+> thx,
+> 
+> Jason.
+> 
+> ----------->8------------------------------------------
+> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> index 0ce9d0f71f2a..a88b13af58d2 100644
+> --- a/arch/arm/Makefile
+> +++ b/arch/arm/Makefile
+> @@ -313,7 +313,9 @@ $(INSTALL_TARGETS):
+>  	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $(boot)/dts/$@
+>  
+>  PHONY += dtbs dtbs_install
+> -dtbs dtbs_install: prepare scripts
+> +dtbs: scripts
+> +	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $@
+> +dtbs_install: prepare scripts
+>  	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $@
+>  
+>  # We use MRPROPER_FILES and CLEAN_FILES now
+
+Is this the right fix though? It seems that it would fix the problem for
+the dtbs target, but would still cause a kernel rebuild for
+dtbs_install. Why does dtbs_install need to depend on the 'prepare'
+target?
+
+g.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
