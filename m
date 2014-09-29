@@ -1,52 +1,80 @@
-From: Yinghai Lu <yinghai@kernel.org>
-Subject: Re: [PATCH v13 10/12] PCI: Assign unassigned bus resources in pci_scan_root_bus()
-Date: Mon, 29 Sep 2014 11:25:16 -0700
-Message-ID: <CAE9FiQXEUZvkuzwOrK+2zGVj0ywFaQsiWH7SHufZk9BRWnwddQ@mail.gmail.com>
-References: <1412000971-9242-1-git-send-email-Liviu.Dudau@arm.com>
-	<1412000971-9242-11-git-send-email-Liviu.Dudau@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1412000971-9242-11-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Jiang Liu <jiang.liu@linux.intel.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 11/13] arm: dts: dra7: add DMA properties for UART
+Date: Mon, 29 Sep 2014 20:06:47 +0200
+Message-ID: <1412014009-13315-12-git-send-email-bigeasy@linutronix.de>
+References: <1412014009-13315-1-git-send-email-bigeasy@linutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412014009-13315-1-git-send-email-bigeasy@linutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-serial@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, balbi@ti.com, gregkh@linuxfoundation.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 29, 2014 at 7:29 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> If the firmware has not assigned all the bus resources and we are not just
-> probing the PCI buses, it makes sense to assign the unassigned resources
-> in pci_scan_root_bus().
->
-> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> CC: Arnd Bergmann <arnd@arndb.de>
-> CC: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-> CC: Rob Herring <robh+dt@kernel.org>
-> ---
->  drivers/pci/probe.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 636d1c9..d2ebd49 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1951,6 +1951,9 @@ struct pci_bus *pci_scan_root_bus(struct device *parent, int bus,
->         if (!found)
->                 pci_bus_update_busn_res_end(b, max);
->
-> +       if (!pci_has_flag(PCI_PROBE_ONLY))
-> +               pci_assign_unassigned_bus_resources(b);
-> +
->         pci_bus_add_devices(b);
->         return b;
->  }
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Tony Lindgren <tony@atomide.com>
+Tested-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/arm/boot/dts/dra7.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-No, you can not do it that early.
-
-On x86, we need to call
-pcibios_resource_survey_bus at first.
-
-Thanks
-
-Yinghai
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index d678152db4cb..f273e3811f75 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -332,6 +332,8 @@
+ 			ti,hwmods = "uart1";
+ 			clock-frequency = <48000000>;
+ 			status = "disabled";
++			dmas = <&sdma 49>, <&sdma 50>;
++			dma-names = "tx", "rx";
+ 		};
+ 
+ 		uart2: serial@4806c000 {
+@@ -341,6 +343,8 @@
+ 			ti,hwmods = "uart2";
+ 			clock-frequency = <48000000>;
+ 			status = "disabled";
++			dmas = <&sdma 51>, <&sdma 52>;
++			dma-names = "tx", "rx";
+ 		};
+ 
+ 		uart3: serial@48020000 {
+@@ -350,6 +354,8 @@
+ 			ti,hwmods = "uart3";
+ 			clock-frequency = <48000000>;
+ 			status = "disabled";
++			dmas = <&sdma 53>, <&sdma 54>;
++			dma-names = "tx", "rx";
+ 		};
+ 
+ 		uart4: serial@4806e000 {
+@@ -359,6 +365,8 @@
+ 			ti,hwmods = "uart4";
+ 			clock-frequency = <48000000>;
+                         status = "disabled";
++			dmas = <&sdma 55>, <&sdma 56>;
++			dma-names = "tx", "rx";
+ 		};
+ 
+ 		uart5: serial@48066000 {
+@@ -368,6 +376,8 @@
+ 			ti,hwmods = "uart5";
+ 			clock-frequency = <48000000>;
+ 			status = "disabled";
++			dmas = <&sdma 63>, <&sdma 64>;
++			dma-names = "tx", "rx";
+ 		};
+ 
+ 		uart6: serial@48068000 {
+@@ -377,6 +387,8 @@
+ 			ti,hwmods = "uart6";
+ 			clock-frequency = <48000000>;
+ 			status = "disabled";
++			dmas = <&sdma 79>, <&sdma 80>;
++			dma-names = "tx", "rx";
+ 		};
+ 
+ 		uart7: serial@48420000 {
+-- 
+2.1.0
