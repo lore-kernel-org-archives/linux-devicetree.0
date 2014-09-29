@@ -1,51 +1,53 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v13 10/12] PCI: Assign unassigned bus resources in pci_scan_root_bus()
-Date: Mon, 29 Sep 2014 17:08:49 -0600
-Message-ID: <CAErSpo70t9TMdntjBt+GdTw3FVmMquACQePX8=SKkySPuG3F3Q@mail.gmail.com>
-References: <1412000971-9242-1-git-send-email-Liviu.Dudau@arm.com>
- <1412000971-9242-11-git-send-email-Liviu.Dudau@arm.com> <CAE9FiQXEUZvkuzwOrK+2zGVj0ywFaQsiWH7SHufZk9BRWnwddQ@mail.gmail.com>
- <CAE9FiQUkcPRMUEn01VJMyXz8aYvk6C5MBNZi5NCV2m3qkNabeg@mail.gmail.com>
- <1412024521.4285.98.camel@pasglop> <CAErSpo62ap1YkzvuZ6MCpXry9=VpLv+Skzrwr10h=+Lc4VfVgQ@mail.gmail.com>
- <1412029912.4285.110.camel@pasglop>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH][V2] Freescale Frame Manager Device Tree binding document
+Date: Mon, 29 Sep 2014 18:33:00 -0500
+Message-ID: <1412033580.13320.295.camel@snotra.buserror.net>
+References: <1410952110-32733-1-git-send-email-igal.liberman@freescale.com>
+ <5425962F.7090602@mindchasers.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1412029912.4285.110.camel@pasglop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Yinghai Lu <yinghai@kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Jiang Liu <jiang.liu@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <5425962F.7090602@mindchasers.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Bob Cochran <ppc@mindchasers.com>
+Cc: "Igal.Liberman" <igal.liberman@freescale.com>, netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Emilian.Medve@freescale.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 29, 2014 at 4:31 PM, Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
-> On Mon, 2014-09-29 at 15:33 -0600, Bjorn Helgaas wrote:
->> > Right and on powerpc and others as well. We need to survey existing
->> > resources. We also have a number of platform things that might need
->> > to happen before we do the final re-assignment pass.
->>
->> That's true today.  But I don't know whether it *has* to be this way
->> forever.  On x86, pcibios_resource_survey() throws in E820 information
->> (which we know long before we do any PCI enumeration) and some IO-APIC
->> resources (it looks like we also know these before PCI enumeration).
->> Powerpc has pcibios_reserve_legacy_regions(), but that looks like
->> mostly stuff that could be done when we find the host bridge, before
->> we enumerate PCI devices below it.
->
-> Oh we can probably change that but it's going to be much more work than
-> just moving the assignment into pci_scan_root_bus().
-
-Agreed.  It's obvious that we can't apply Liviu's patch as-is.
-
-> There are also a
-> number of subtle and not-so-subtle bits of code that rely on side
-> effects of the current code such as anything that tests for bus->added
-> or dev->added. Again, nothing we can't sort out eventually but the
-> transition might be a bit painful.
->
-> We might need to introduce a new flag for platforms converted to the
-> "new style" generalized resource assignment which we can deprecate once
-> everybody has moved over.
-
-There's definitely a lot of work here if we ever want to make this happen.
-
-Bjorn
+T24gRnJpLCAyMDE0LTA5LTI2IGF0IDEyOjM3IC0wNDAwLCBCb2IgQ29jaHJhbiB3cm90ZToKPiBP
+biAwOS8xNy8yMDE0IDA3OjA4IEFNLCBJZ2FsLkxpYmVybWFuIHdyb3RlOgo+ID4gRnJvbTogSWdh
+bCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgo+ID4KPiA+IFRoZSBGcmFt
+ZSBNYW5hZ2VyIChGTWFuKSBjb21iaW5lcyB0aGUgRXRoZXJuZXQgbmV0d29yayBpbnRlcmZhY2Vz
+IHdpdGggcGFja2V0Cj4gPiBkaXN0cmlidXRpb24gbG9naWMgdG8gcHJvdmlkZSBpbnRlbGxpZ2Vu
+dCBkaXN0cmlidXRpb24gYW5kIHF1ZXVpbmcgZGVjaXNpb25zCj4gPiBmb3IgaW5jb21pbmcgdHJh
+ZmZpYyBhdCBsaW5lIHJhdGUuCj4gPgo+ID4gVGhpcyBiaW5kaW5nIGRvY3VtZW50IGRlc2NyaWJl
+cyBGcmVlc2NhbGUncyBGcmFtZSBNYW5hZ2VyIGhhcmR3YXJlIGF0dHJpYnV0ZXMKPiA+IHRoYXQg
+YXJlIHVzZWQgYnkgdGhlIEZyYW1lIE1hbmFnZXIgZHJpdmVyIGZvciBpdHMgYmFzaWMgaW5pdGlh
+bGl6YXRpb24gYW5kCj4gPiBjb25maWd1cmF0aW9uLgo+ID4KPiA+IERpZmZlcmVuY2UgYmV0d2Vl
+biBbVjFdIGFuZCBbVjJdOgo+ID4gQWRkcmVzc2VkIGFsbCBjb21tZW50cyByZWNpZXZlZCBmcm9t
+IFNjb3R0IGluIFtWMV0KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBJZ2FsIExpYmVybWFuIDxJZ2Fs
+LkxpYmVybWFuQGZyZWVzY2FsZS5jb20+Cj4gCj4gCj4gSXMgdGhlcmUgYSByZWZlcmVuY2UgKEZN
+QU4pIGR0cyBmaWxlIEkgY2FuIGNvbXBhcmUgdGhpcyBhZ2FpbnN0PyAgSSB3YXMgCj4gcmV2aWV3
+aW5nIHRoaXMgYWdhaW5zdCBteSAoY29tYmluZWQpIGR0cyBmaWxlIGZvciBteSB0MTA0MHJkYiBi
+dWlsdCB3aXRoIAo+IGVpdGhlciBGU0wncyBTREsxLjYgb3IgWW9jdG8gUHJvamVjdCBtZXRhLWZz
+bC1wcGMgbWFzdGVyIGJyYW5jaCwgYW5kIEknbSAKPiBub3QgZmluZGluZyBhIGdvb2QgbWF0Y2gg
+YmV0d2VlbiB0aGUgbm9kZXMgLyBwcm9wZXJ0aWVzIGluIG15IGR0cyBmaWxlIAo+IGFuZCB3aGF0
+IHlvdSBoYXZlIGhlcmUuCj4gCj4gRm9yIGV4YW1wbGUsIEkgZG9uJ3QgZmluZCB0aGUgcmVxdWly
+ZWQgImNsb2NrcyIgb3IgCj4gImZzbCxxbWFuLWNoYW5uZWwtcmFuZ2UiIHByb3BlcnRpZXMgdW5k
+ZXIgbXkgPGZtYW4wOiBmbWFuQDQwMDAwMCAuLi4+IAo+IG5vZGUuCj4gCQo+IEknbSB3b25kZXJp
+bmcgaWYgdGhpcyBkb2N1bWVudCBpcyB0cmFpbGluZyBvciBsZWFkaW5nIHRoZSBzb3VyY2UgaW4g
+dGhlIAo+IGxhdGVzdCBwdWJsaXNoZWQgRlNMIFNESyAoMS42KS4KClRoZSBTREsncyBkZXZpY2Ug
+dHJlZSBiaW5kaW5nIHdhcyBub3QgY29uc2lkZXJlZCBzdWl0YWJsZSBhbmQgd2UndmUKc3RhcnRl
+ZCBmcm9tIHNjcmF0Y2ggZm9yIHVwc3RyZWFtLgoKLVNjb3R0CgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApM
+aW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlz
+dGluZm8vbGludXhwcGMtZGV2
