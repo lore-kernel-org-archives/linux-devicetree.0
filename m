@@ -1,37 +1,52 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v5 2/3] net: Add Keystone NetCP ethernet driver
-Date: Mon, 29 Sep 2014 17:47:48 -0400
-Message-ID: <5429D384.1040909@ti.com>
-References: <1411667317-1163-3-git-send-email-santosh.shilimkar@ti.com>	<20140929.155200.2231132602322345812.davem@davemloft.net>	<5429BAD0.1050101@ti.com> <20140929.161253.1302757975839499212.davem@davemloft.net>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH v2 1/3] dmaengine: qcom_bam_dma: Generalize BAM register
+ offset calculations
+Date: Mon, 29 Sep 2014 17:14:06 -0500
+Message-ID: <20140929221406.GE11142@qualcomm.com>
+References: <1411037575-13153-1-git-send-email-architt@codeaurora.org>
+ <1411965189-24499-1-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140929.161253.1302757975839499212.davem@davemloft.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org, devicetree@vger.kernel.org, sandeep_n@ti.com, joe@perches.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1411965189-24499-1-git-send-email-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Archit Taneja <architt@codeaurora.org>
+Cc: vinod.koul@intel.com, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 29 September 2014 04:12 PM, David Miller wrote:
-> From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Date: Mon, 29 Sep 2014 16:02:24 -0400
+On Mon, Sep 29, 2014 at 10:03:07AM +0530, Archit Taneja wrote:
+> The BAM DMA IP comes in different versions. The register offset layout varies
+> among these versions. The layouts depend on which generation/family of SoCs they
+> belong to.
 > 
->> We are badly missing mainline network driver support for the Keystone
->> and hence I request you to help here.
+> The current SoCs(like 8084, 8074) have a layout where the Top level registers
+> come in the beginning of the address range, followed by pipe and event
+> registers. The BAM revision numbers fall above 1.4.0.
 > 
-> It is absolutely not reasonable for you depend specifically upon me
-> for top-level review of a given change, sorry.
+> The older SoCs (like 8064, 8960) have a layout where the pipe registers come
+> first, and the top level come later. These have BAM revision numbers lesser than
+> 1.4.0.
 > 
-Sorry I didn't mean you specifically to review everything. But a guidance
-on how we can move forward. If you can suggest someone, we can try to
-request them to have a look. The design of driver is just now standard
-NIC card. We removed the controversial plug in framework after your
-and Jamal's suggestion. Jamal already commented on the offload design of
-the driver and we addressed them in the last version.
+> It isn't suitable to have macros provide the register offsets with the layouts
+> changed. Future BAM revisions may have different register layouts too. The
+> register addresses are now calculated by referring a table which contains a base
+> offset and multipliers for pipe/evnt/ee registers.
+> 
+> We have a common function bam_addr() which computes addresses for all the
+> registers. When computing address of top level/ee registers, we pass 0 to the
+> pipe argument in addr() since they don't have any multiple instances.
+> 
+> Some of the unused register definitions are removed. We can add new registers as
+> we need them.
 
-We can follow it up on any comments, suggestions quickly so do let us
-know.
+Vinod,
 
-Regards,
-Santosh
+These changes replace the patch set I had that implemented support for the
+v.1.3.0 register set.
+
+
+-- 
+sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
