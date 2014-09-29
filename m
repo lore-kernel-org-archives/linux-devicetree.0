@@ -1,130 +1,68 @@
-From: Sonny Rao <sonnyrao@chromium.org>
-Subject: Re: [PATCH v3] clocksource: arch_timer: Allow the device tree to
- specify the physical timer
-Date: Mon, 29 Sep 2014 10:30:32 -0700
-Message-ID: <CAPz6YkWZWgm--6EJxoV1s3zqTNpAF6+CBOrRc5qxdm5=hFzj1w@mail.gmail.com>
-References: <1410454801-14231-1-git-send-email-dianders@chromium.org> <20140926100025.GC4476@leverpostej>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [RFC 3/4] arm64: Do not call enable PCI resources when specify PCI_PROBE_ONLY
+Date: Mon, 29 Sep 2014 12:17:29 -0600
+Message-ID: <CAErSpo6SngcV6_Ew0DOjW+xTw8y6j3UmwdPw1x-tk_AB=mapaQ@mail.gmail.com>
+References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com> <1411937610-22125-4-git-send-email-suravee.suthikulpanit@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140926100025.GC4476@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Doug Anderson <dianders@chromium.org>, "olof@lixom.net" <olof@lixom.net>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Christopher Covington <cov@codeaurora.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Nathan Lynch <Nathan_Lynch@mentor.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1411937610-22125-4-git-send-email-suravee.suthikulpanit@amd.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Cc: Will Deacon <will.deacon@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 26, 2014 at 3:00 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Thu, Sep 11, 2014 at 06:00:01PM +0100, Doug Anderson wrote:
->> Some 32-bit (ARMv7) systems are architected like this:
->>
->> * The firmware doesn't know and doesn't care about hypervisor mode and
->>   we don't want to add the complexity of hypervisor there.
->>
->> * The firmware isn't involved in SMP bringup or resume.
->>
->> * The ARCH timer come up with an uninitialized offset between the
->>   virtual and physical counters.  Each core gets a different random
->>   offset.
->>
->> * The device boots in "Secure SVC" mode.
->>
->> * Nothing has touched the reset value of CNTHCTL.PL1PCEN or
->>   CNTHCTL.PL1PCTEN (both default to 1 at reset)
->>
->> On systems like the above, it doesn't make sense to use the virtual
->> counter.  There's nobody managing the offset and each time a core goes
->> down and comes back up it will get reinitialized to some other random
->> value.
->>
->> Let's add a property to the device tree to say that we shouldn't use
->> the virtual timer.  Firmware could potentially remove this property
->> before passing the device tree to the kernel if it really wants the
->> kernel to use a virtual timer.
->>
->> Note that it's been said that ARM64 (ARMv8) systems the firmware and
->> kernel really can't be architected as described above.  That means
->> using the physical timer like this really only makes sense for ARMv7
->> systems.
->>
->> In order for this patch to do anything useful, we also need Sonny's
->> patch at <https://patchwork.kernel.org/patch/4790921/>
->>
->> Signed-off-by: Doug Anderson <dianders@chromium.org>
->> Signed-off-by: Sonny Rao <sonnyrao@chromium.org>
->> ---
->> Changes in v3:
->> - Wording changes to bindings and patch desc as per Will Deacon
->>
->> Changes in v2:
->> - Add "#ifdef CONFIG_ARM" as per Will Deacon
->>
->>  Documentation/devicetree/bindings/arm/arch_timer.txt | 6 ++++++
->>  drivers/clocksource/arm_arch_timer.c                 | 5 +++++
->>  2 files changed, 11 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
->> index 37b2caf..e28fced 100644
->> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
->> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
->> @@ -22,6 +22,12 @@ to deliver its interrupts via SPIs.
->>  - always-on : a boolean property. If present, the timer is powered through an
->>    always-on power domain, therefore it never loses context.
->>
->> +** Optional properties:
->> +
->> +- arm,use-physical-timer : Don't ever use the virtual timer, just use the
->> +  physical one.  Only supported for ARM (not ARM64).
+On Sun, Sep 28, 2014 at 2:53 PM,  <suravee.suthikulpanit@amd.com> wrote:
+> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 >
-> I'm still not keen on telling the kernel what to do rather than
-> describing the actual state of affairs and having the kernel decide what
-> to do. Perhaps what we actually need is:
+> When specify PCI_PROBE_ONLY, the resource parent does not get assigned.
+> Therefore, pci_enable_resources() return error saying that
+> "BAR x not claimed".
 >
-> - cntvoff-not-fw-configured: Firmware does not configure CNTVOFF, which
->   may reset to (different) arbitrary values on each CPU.
+> Note: This same logic is also used in the arch/arm/kernel/bios32.c
 >
-> This also doesn't describe that CNTHCTL.PL1PC(T)EN must both be 1. While
-> that is the reset state, it still feels dodbgy to me to rely on that.
+> Cc: Liviu Dudau <Liviu.Dudau@arm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+> ---
+>  arch/arm64/kernel/pci.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 >
-> Mark.
+> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> index ce5836c..7fd4d2b 100644
+> --- a/arch/arm64/kernel/pci.c
+> +++ b/arch/arm64/kernel/pci.c
+> @@ -68,3 +68,11 @@ void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
+>         bus->domain_nr = domain;
+>  }
+>  #endif
+> +
+> +int pcibios_enable_device(struct pci_dev *dev, int mask)
+> +{
+> +       if (pci_has_flag(PCI_PROBE_ONLY))
+> +               return 0;
+> +
+> +       return pci_enable_resources(dev, mask);
 
-Mark, I'm happy to repost it with that name for Doug.
+I had thought of "PCI_PROBE_ONLY" as the "look but don't touch" flag,
+i.e., never change any BAR or bridge window assignments.  But I guess
+the current usage is more general than that: we also use it to
 
-I think it's fair to describe this state in the binding, and if a
-firmware were to put this property into the device-tree for and
-CNTHCTL.PL1P(T)CEN also have configured to 0, then the kernel can
-merely consider that to be a broken usage of this property.   We
-certainly can't protect against all of the possible invalid states
-caused and probably shouldn't try.  If we implement something like
-Christopher's suggestion for transitioning from secure svc to NS hyp
-mode then the kernel can simply ignore this property at that point.
+  - avoid pci_enable_resources(), which only turns on IO/MEM bits in
+the command register
+  - avoid pcie_bus_configure_settings(), which programs MPS and MRRS
+  - avoid pci_read_bridge_bases(), which really just *reads* bridge windows
+  - avoid pcibios_reserve_legacy_regions(), which doesn't touch any
+PCI registers
+  - enables pci_claim_resource()
 
->> +
->> +
->>  Example:
->>
->>       timer {
->> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
->> index 5163ec1..e7aa256 100644
->> --- a/drivers/clocksource/arm_arch_timer.c
->> +++ b/drivers/clocksource/arm_arch_timer.c
->> @@ -649,6 +649,11 @@ static void __init arch_timer_init(struct device_node *np)
->>               arch_timer_ppi[i] = irq_of_parse_and_map(np, i);
->>       arch_timer_detect_rate(NULL, np);
->>
->> +#ifdef CONFIG_ARM
->> +     if (of_property_read_bool(np, "arm,use-physical-timer"))
->> +             arch_timer_use_virtual = false;
->> +#endif
->> +
->>       /*
->>        * If HYP mode is available, we know that the physical timer
->>        * has been configured to be accessible from PL1. Use it, so
->> --
->> 2.1.0.rc2.206.gedb03e5
->>
->>
+This seems like more than necessary, but I don't know all the history.
+In particular, I don't know why PCI_PROBE_ONLY should make a
+difference to things like claiming resources.
+
+> +}
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+> 1.9.3
+>b
