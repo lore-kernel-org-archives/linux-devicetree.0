@@ -1,111 +1,130 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v6 05/11] drm: add Atmel HLCDC Display Controller
- support
-Date: Mon, 29 Sep 2014 19:20:57 +0200
-Message-ID: <20140929192057.1ede0346@bbrezillon>
-References: <1412001864-3251-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1412001864-3251-6-git-send-email-boris.brezillon@free-electrons.com>
+From: Sonny Rao <sonnyrao@chromium.org>
+Subject: Re: [PATCH v3] clocksource: arch_timer: Allow the device tree to
+ specify the physical timer
+Date: Mon, 29 Sep 2014 10:30:32 -0700
+Message-ID: <CAPz6YkWZWgm--6EJxoV1s3zqTNpAF6+CBOrRc5qxdm5=hFzj1w@mail.gmail.com>
+References: <1410454801-14231-1-git-send-email-dianders@chromium.org> <20140926100025.GC4476@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1412001864-3251-6-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Rob Clark <robdclark@gmail.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Yao <mark.yao@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140926100025.GC4476@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Doug Anderson <dianders@chromium.org>, "olof@lixom.net" <olof@lixom.net>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Christopher Covington <cov@codeaurora.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Nathan Lynch <Nathan_Lynch@mentor.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 29 Sep 2014 16:44:18 +0200
-Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
+On Fri, Sep 26, 2014 at 3:00 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Thu, Sep 11, 2014 at 06:00:01PM +0100, Doug Anderson wrote:
+>> Some 32-bit (ARMv7) systems are architected like this:
+>>
+>> * The firmware doesn't know and doesn't care about hypervisor mode and
+>>   we don't want to add the complexity of hypervisor there.
+>>
+>> * The firmware isn't involved in SMP bringup or resume.
+>>
+>> * The ARCH timer come up with an uninitialized offset between the
+>>   virtual and physical counters.  Each core gets a different random
+>>   offset.
+>>
+>> * The device boots in "Secure SVC" mode.
+>>
+>> * Nothing has touched the reset value of CNTHCTL.PL1PCEN or
+>>   CNTHCTL.PL1PCTEN (both default to 1 at reset)
+>>
+>> On systems like the above, it doesn't make sense to use the virtual
+>> counter.  There's nobody managing the offset and each time a core goes
+>> down and comes back up it will get reinitialized to some other random
+>> value.
+>>
+>> Let's add a property to the device tree to say that we shouldn't use
+>> the virtual timer.  Firmware could potentially remove this property
+>> before passing the device tree to the kernel if it really wants the
+>> kernel to use a virtual timer.
+>>
+>> Note that it's been said that ARM64 (ARMv8) systems the firmware and
+>> kernel really can't be architected as described above.  That means
+>> using the physical timer like this really only makes sense for ARMv7
+>> systems.
+>>
+>> In order for this patch to do anything useful, we also need Sonny's
+>> patch at <https://patchwork.kernel.org/patch/4790921/>
+>>
+>> Signed-off-by: Doug Anderson <dianders@chromium.org>
+>> Signed-off-by: Sonny Rao <sonnyrao@chromium.org>
+>> ---
+>> Changes in v3:
+>> - Wording changes to bindings and patch desc as per Will Deacon
+>>
+>> Changes in v2:
+>> - Add "#ifdef CONFIG_ARM" as per Will Deacon
+>>
+>>  Documentation/devicetree/bindings/arm/arch_timer.txt | 6 ++++++
+>>  drivers/clocksource/arm_arch_timer.c                 | 5 +++++
+>>  2 files changed, 11 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
+>> index 37b2caf..e28fced 100644
+>> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
+>> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
+>> @@ -22,6 +22,12 @@ to deliver its interrupts via SPIs.
+>>  - always-on : a boolean property. If present, the timer is powered through an
+>>    always-on power domain, therefore it never loses context.
+>>
+>> +** Optional properties:
+>> +
+>> +- arm,use-physical-timer : Don't ever use the virtual timer, just use the
+>> +  physical one.  Only supported for ARM (not ARM64).
+>
+> I'm still not keen on telling the kernel what to do rather than
+> describing the actual state of affairs and having the kernel decide what
+> to do. Perhaps what we actually need is:
+>
+> - cntvoff-not-fw-configured: Firmware does not configure CNTVOFF, which
+>   may reset to (different) arbitrary values on each CPU.
+>
+> This also doesn't describe that CNTHCTL.PL1PC(T)EN must both be 1. While
+> that is the reset state, it still feels dodbgy to me to rely on that.
+>
+> Mark.
 
-> From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> 
-> The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoCs (i.e.
-> at91sam9n12, at91sam9x5 family or sama5d3 family) provides a display
-> controller device.
-> 
-> This display controller supports at least one primary plane and might
-> provide several overlays and an hardware cursor depending on the IP
-> version.
-> 
-> At the moment, this driver only implements an RGB connector to interface
-> with LCD panels, but support for other kind of external devices might be
-> added later.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> Reviewed-by: Rob Clark <robdclark@gmail.com>
-> Tested-by: Anthony Harivel <anthony.harivel@emtrion.de>
-> Tested-by: Ludovic Desroches <ludovic.desroches@atmel.com>
-> ---
->  drivers/gpu/drm/Kconfig                          |   2 +
->  drivers/gpu/drm/Makefile                         |   1 +
->  drivers/gpu/drm/atmel-hlcdc/Kconfig              |  13 +
->  drivers/gpu/drm/atmel-hlcdc/Makefile             |   7 +
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c   | 392 +++++++++++
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c     | 527 ++++++++++++++
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h     | 216 ++++++
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c  | 659 ++++++++++++++++++
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h  | 403 +++++++++++
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c | 443 ++++++++++++
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c  | 833 +++++++++++++++++++++++
->  11 files changed, 3496 insertions(+)
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Kconfig
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Makefile
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
->  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
-> 
-> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> index b066bb3..2d97f7e 100644
-> --- a/drivers/gpu/drm/Kconfig
-> +++ b/drivers/gpu/drm/Kconfig
-> @@ -185,6 +185,8 @@ source "drivers/gpu/drm/cirrus/Kconfig"
->  
+Mark, I'm happy to repost it with that name for Doug.
 
-[...]
+I think it's fair to describe this state in the binding, and if a
+firmware were to put this property into the device-tree for and
+CNTHCTL.PL1P(T)CEN also have configured to 0, then the kernel can
+merely consider that to be a broken usage of this property.   We
+certainly can't protect against all of the possible invalid states
+caused and probably shouldn't try.  If we implement something like
+Christopher's suggestion for transitioning from secure svc to NS hyp
+mode then the kernel can simply ignore this property at that point.
 
-> +
-> +int atmel_hlcdc_crtc_mode_valid(struct drm_crtc *c,
-> +				struct drm_display_mode *mode)
-> +{
-> +	struct videomode vm;
-> +
-> +	vm.vfront_porch = mode->vsync_start - mode->vdisplay;
-> +	vm.vback_porch = mode->vtotal - mode->vsync_end;
-> +	vm.vsync_len = mode->vsync_end - mode->vsync_start;
-> +	vm.hfront_porch = mode->hsync_start - mode->hdisplay;
-> +	vm.hback_porch = mode->htotal - mode->hsync_end;
-> +	vm.hsync_len = mode->hsync_end - mode->hsync_start;
-> +
-> +	if (vm.hsync_len > 0x40 || vm.hsync_len < 1)
-> +		return MODE_HSYNC;
-> +
-> +	if (vm.vsync_len > 0x40 || vm.vsync_len < 1)
-> +		return MODE_VSYNC;
-> +
-> +	if (vm.vfront_porch > 0x40 || vm.hfront_porch < 1 ||
-> +	    vm.vback_porch > 0x40 || vm.vback_porch < 0 ||
-> +	    mode->hdisplay > 2048 || mode->hdisplay < 1)
-> +		return MODE_H_ILLEGAL;
-> +
-> +	if (vm.hfront_porch > 0x200 || vm.hfront_porch < 1 ||
-> +	    vm.hback_porch > 0x200 || vm.hback_porch < 1 ||
-> +	    mode->hdisplay > 2048 || mode->hdisplay < 1)
-> +		return MODE_V_ILLEGAL;
-> +
-> +	return MODE_OK;
-> +}
-> +
-
-I forgot to squash the commit removing this function which a vestige
-from one of my attempt to provide a common mode_valid function that can
-be called from the connector mode_valid function.
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+>> +
+>> +
+>>  Example:
+>>
+>>       timer {
+>> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+>> index 5163ec1..e7aa256 100644
+>> --- a/drivers/clocksource/arm_arch_timer.c
+>> +++ b/drivers/clocksource/arm_arch_timer.c
+>> @@ -649,6 +649,11 @@ static void __init arch_timer_init(struct device_node *np)
+>>               arch_timer_ppi[i] = irq_of_parse_and_map(np, i);
+>>       arch_timer_detect_rate(NULL, np);
+>>
+>> +#ifdef CONFIG_ARM
+>> +     if (of_property_read_bool(np, "arm,use-physical-timer"))
+>> +             arch_timer_use_virtual = false;
+>> +#endif
+>> +
+>>       /*
+>>        * If HYP mode is available, we know that the physical timer
+>>        * has been configured to be accessible from PL1. Use it, so
+>> --
+>> 2.1.0.rc2.206.gedb03e5
+>>
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
