@@ -1,7 +1,7 @@
 From: zhang.lyra@gmail.com
-Subject: [PATCH 4/6] arm64: Add support for Spreadtrum's Shark64 SoC in Kconfig and defconfig
-Date: Mon, 29 Sep 2014 20:04:51 +0800
-Message-ID: <1411992293-7729-5-git-send-email-zhang.lyra@gmail.com>
+Subject: [PATCH 6/6] Documentation: Add entry for Spreadtrum's Shark64 SoC
+Date: Mon, 29 Sep 2014 20:04:53 +0800
+Message-ID: <1411992293-7729-7-git-send-email-zhang.lyra@gmail.com>
 References: <1411992293-7729-1-git-send-email-zhang.lyra@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1411992293-7729-1-git-send-email-zhang.lyra@gmail.com>
@@ -10,45 +10,27 @@ To: catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "chunyan.zhang" <chunyan.zhang@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-From: "zhizhou.zhang" <zhizhou.zhang@spreadtrum.com>
+From: "chunyan.zhang" <chunyan.zhang@spreadtrum.com>
 
-Adds support for Spreadtrum's Shark64 SoC in the arm64 Kconfig
-and defconfig files.
+Adds a devicetree binding documentation for Spreadtrum's Shark64 SoC.
 
-Signed-off-by: zhizhou.zhang <zhizhou.zhang@spreadtrum.com>
 Signed-off-by: chunyan.zhang <chunyan.zhang@spreadtrum.com>
 ---
- arch/arm64/Kconfig           |    5 +++++
- arch/arm64/configs/defconfig |    1 +
- 2 files changed, 6 insertions(+)
+ Documentation/devicetree/bindings/arm/sprd.txt |    6 ++++++
+ 1 file changed, 6 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/sprd.txt
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index fd4e81a..c8f36ad 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -149,6 +149,11 @@ config ARCH_XGENE
- 	help
- 	  This enables support for AppliedMicro X-Gene SOC Family
- 
-+config ARCH_SHARK64
-+	bool "Spreadtrum 64-bit SOC (ARMv8 platform)"
-+	help
-+	Support for 64 bits Spreadtrum based systems.
+diff --git a/Documentation/devicetree/bindings/arm/sprd.txt b/Documentation/devicetree/bindings/arm/sprd.txt
+new file mode 100644
+index 0000000..b6dc143
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/sprd.txt
+@@ -0,0 +1,6 @@
++Spreadtrum Platforms Device Tree Bindings
++----------------------------------------------------
 +
- endmenu
- 
- menu "Bus support"
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index d92ef3c..86bb5e9 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -34,6 +34,7 @@ CONFIG_MODULE_UNLOAD=y
- # CONFIG_IOSCHED_DEADLINE is not set
- CONFIG_ARCH_VEXPRESS=y
- CONFIG_ARCH_XGENE=y
-+CONFIG_ARCH_SHARK64=y
- CONFIG_SMP=y
- CONFIG_PREEMPT=y
- CONFIG_KSM=y
++Shark64 Board
++Required root node properties:
++        - compatible = "sprd,shark64";
 -- 
 1.7.9.5
