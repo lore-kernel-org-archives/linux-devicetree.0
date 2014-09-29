@@ -1,91 +1,52 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4] ARM: shmobile: r8a7791: link PCI USB devices to USB PHY
-Date: Mon, 29 Sep 2014 22:23:11 +0400
-Message-ID: <5270578.Srkf5AOOOJ@wasted.cogentembedded.com>
+From: Yinghai Lu <yinghai@kernel.org>
+Subject: Re: [PATCH v13 10/12] PCI: Assign unassigned bus resources in pci_scan_root_bus()
+Date: Mon, 29 Sep 2014 11:25:16 -0700
+Message-ID: <CAE9FiQXEUZvkuzwOrK+2zGVj0ywFaQsiWH7SHufZk9BRWnwddQ@mail.gmail.com>
+References: <1412000971-9242-1-git-send-email-Liviu.Dudau@arm.com>
+	<1412000971-9242-11-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1412000971-9242-11-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Jiang Liu <jiang.liu@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Describe the PCI USB devices that are behind the PCI bridges, adding necessary
-links to the USB PHY device.
+On Mon, Sep 29, 2014 at 7:29 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> If the firmware has not assigned all the bus resources and we are not just
+> probing the PCI buses, it makes sense to assign the unassigned resources
+> in pci_scan_root_bus().
+>
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> CC: Arnd Bergmann <arnd@arndb.de>
+> CC: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+> CC: Rob Herring <robh+dt@kernel.org>
+> ---
+>  drivers/pci/probe.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 636d1c9..d2ebd49 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1951,6 +1951,9 @@ struct pci_bus *pci_scan_root_bus(struct device *parent, int bus,
+>         if (!found)
+>                 pci_bus_update_busn_res_end(b, max);
+>
+> +       if (!pci_has_flag(PCI_PROBE_ONLY))
+> +               pci_assign_unassigned_bus_resources(b);
+> +
+>         pci_bus_add_devices(b);
+>         return b;
+>  }
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+No, you can not do it that early.
 
----
-This patch is against 'renesas-devel-20140924-v3.17-rc6' tag of Simon Horman's
-'renesas.git' repo plus R8A7791/Koelsch/Henninger USB PHY support patches posted
-before.  The patch requires the USB PHY driver and USB HCD generic PHY support
-(merged by Kishon and Greg recently) in order to work.
+On x86, we need to call
+pcibios_resource_survey_bus at first.
 
-Changes in version 4:
-- refreshed the patch.
+Thanks
 
-Changes in version 3:
-- adjusted "phys" properties in the PCI OHCI/EHCI device nodes;
-- resolved rejects.
-
-Changes in version 2:
-- renamed the PCI OHCI/EHCI device nodes to comply with the PCI binding;
-- changed the PHY specifier in the PCI#1 node to reflect that channel #1 support
-  was dropped;
-- resolved rejects.
-
- arch/arm/boot/dts/r8a7791.dtsi |   28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7791.dtsi
-@@ -1125,6 +1125,20 @@
- 		interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
- 				 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
- 				 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		usb@0,1 {
-+			reg = <0x800 0 0 0 0>;
-+			device_type = "pci";
-+			phys = <&usb0 0>;
-+			phy-names = "usb";
-+		};
-+
-+		usb@0,2 {
-+			reg = <0x1000 0 0 0 0>;
-+			device_type = "pci";
-+			phys = <&usb0 0>;
-+			phy-names = "usb";
-+		};
- 	};
- 
- 	pci1: pci@ee0d0000 {
-@@ -1145,6 +1159,20 @@
- 		interrupt-map = <0x0000 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
- 				 0x0800 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
- 				 0x1000 0 0 2 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		usb@0,1 {
-+			reg = <0x800 0 0 0 0>;
-+			device_type = "pci";
-+			phys = <&usb2 0>;
-+			phy-names = "usb";
-+		};
-+
-+		usb@0,2 {
-+			reg = <0x1000 0 0 0 0>;
-+			device_type = "pci";
-+			phys = <&usb2 0>;
-+			phy-names = "usb";
-+		};
- 	};
- 
- 	pciec: pcie@fe000000 {
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yinghai
