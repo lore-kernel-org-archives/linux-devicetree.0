@@ -1,154 +1,84 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: [PATCH 09/11] v4l: xilinx: Add Xilinx Video IP core
-Date: Mon, 29 Sep 2014 23:27:55 +0300
-Message-ID: <1412022477-28749-10-git-send-email-laurent.pinchart@ideasonboard.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH 11/11] v4l: xilinx: Add Test Pattern Generator driver
+Date: Mon, 29 Sep 2014 23:27:57 +0300
+Message-ID: <1412022477-28749-12-git-send-email-laurent.pinchart@ideasonboard.com>
 References: <1412022477-28749-1-git-send-email-laurent.pinchart@ideasonboard.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412022477-28749-1-git-send-email-laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Chris Kohn <christian.kohn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Radhey Shyam Pandey <radheys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1412022477-28749-1-git-send-email-laurent.pinchart@ideasonboard.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Michal Simek <michal.simek@xilinx.com>, Chris Kohn <christian.kohn@xilinx.com>, Hyun Kwon <hyun.kwon@xilinx.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Xilinx platforms have no hardwired video capture or video processing
-interface. Users create capture and memory to memory processing
-pipelines in the FPGA fabric to suit their particular needs, by
-instantiating video IP cores from a large library.
+The TPG generates multiple static or dynamic test patterns. The driver
+currently hardcodes the pattern to the moving box pattern.
 
-The Xilinx Video IP core is a framework that models a video pipeline
-described in the device tree and expose the pipeline to userspace
-through the media controller and V4L2 APIs.
-
-Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Signed-off-by: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Radhey Shyam Pandey <radheys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Christian Kohn <christian.kohn@xilinx.com>
+Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
- .../devicetree/bindings/media/xilinx/video.txt     |  52 ++
- .../bindings/media/xilinx/xlnx,video.txt           |  55 ++
- MAINTAINERS                                        |   9 +
- drivers/media/platform/Kconfig                     |   1 +
- drivers/media/platform/Makefile                    |   2 +
- drivers/media/platform/xilinx/Kconfig              |  10 +
- drivers/media/platform/xilinx/Makefile             |   3 +
- drivers/media/platform/xilinx/xilinx-dma.c         | 995 +++++++++++++++++++++
- drivers/media/platform/xilinx/xilinx-dma.h         | 109 +++
- drivers/media/platform/xilinx/xilinx-vip.c         | 269 ++++++
- drivers/media/platform/xilinx/xilinx-vip.h         | 227 +++++
- drivers/media/platform/xilinx/xilinx-vipp.c        | 666 ++++++++++++++
- drivers/media/platform/xilinx/xilinx-vipp.h        |  47 +
- 13 files changed, 2445 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/xilinx/video.txt
- create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt
- create mode 100644 drivers/media/platform/xilinx/Kconfig
- create mode 100644 drivers/media/platform/xilinx/Makefile
- create mode 100644 drivers/media/platform/xilinx/xilinx-dma.c
- create mode 100644 drivers/media/platform/xilinx/xilinx-dma.h
- create mode 100644 drivers/media/platform/xilinx/xilinx-vip.c
- create mode 100644 drivers/media/platform/xilinx/xilinx-vip.h
- create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.c
- create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.h
+ .../bindings/media/xilinx/xlnx,v-tpg.txt           |  68 ++
+ MAINTAINERS                                        |   1 +
+ drivers/media/platform/xilinx/Kconfig              |   7 +
+ drivers/media/platform/xilinx/Makefile             |   1 +
+ drivers/media/platform/xilinx/xilinx-tpg.c         | 921 +++++++++++++++++++++
+ include/uapi/linux/Kbuild                          |   1 +
+ include/uapi/linux/xilinx-v4l2-controls.h          |  73 ++
+ 7 files changed, 1072 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,v-tpg.txt
+ create mode 100644 drivers/media/platform/xilinx/xilinx-tpg.c
+ create mode 100644 include/uapi/linux/xilinx-v4l2-controls.h
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree@vger.kernel.org
 
-diff --git a/Documentation/devicetree/bindings/media/xilinx/video.txt b/Documentation/devicetree/bindings/media/xilinx/video.txt
+diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,v-tpg.txt b/Documentation/devicetree/bindings/media/xilinx/xlnx,v-tpg.txt
 new file mode 100644
-index 0000000..15720e4
+index 0000000..c6de1e3
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/xilinx/video.txt
-@@ -0,0 +1,52 @@
-+DT bindings for Xilinx video IP cores
-+-------------------------------------
-+
-+Xilinx video IP cores process video streams by acting as video sinks and/or
-+sources. They are connected by links through their input and output ports,
-+creating a video pipeline.
-+
-+Each video IP core is represented by an AMBA bus child node in the device
-+tree using bindings documented in this directory. Connections between the IP
-+cores are represented as defined in ../video-interfaces.txt.
-+
-+The whole  pipeline is represented by an AMBA bus child node in the device
-+tree using bindings documented in ./xlnx,video.txt.
-+
-+Common properties
-+-----------------
-+
-+The following properties are common to all Xilinx video IP cores.
-+
-+- xlnx,video-format: This property represents a video format transmitted on an
-+  AXI bus between video IP cores. How the format relates to the IP core is
-+  decribed in the IP core bindings documentation. The following formats are
-+  supported.
-+
-+	rbg
-+	xrgb
-+	yuv422
-+	yuv444
-+	rggb
-+	grbg
-+	gbrg
-+	bggr
-+
-+- xlnx,video-width: This property qualifies the video format with the sample
-+  width expressed as a number of bits per pixel component. All components must
-+  use the same width.
-+
-+The following table lists the supported formats and widths combinations, along
-+with the corresponding media bus pixel code.
-+
-+----------------+-------+-------------------------------------------------------
-+Format		| Width	| Media bus code
-+----------------+-------+-------------------------------------------------------
-+rbg		| 8	| V4L2_MBUS_FMT_RBG888_1X24
-+xrgb		| 8	| V4L2_MBUS_FMT_RGB888_1X32_PADHI
-+yuv422		| 8	| V4L2_MBUS_FMT_UYVY8_1X16
-+yuv444		| 8	| V4L2_MBUS_FMT_VUY888_1X24
-+rggb		| 8	| V4L2_MBUS_FMT_SRGGB8_1X8
-+grbg		| 8	| V4L2_MBUS_FMT_SGRBG8_1X8
-+gbrg		| 8	| V4L2_MBUS_FMT_SGBRG8_1X8
-+bggr		| 8	| V4L2_MBUS_FMT_SBGGR8_1X8
-+----------------+-------+-------------------------------------------------------
-diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt b/Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt
-new file mode 100644
-index 0000000..5a02270
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt
-@@ -0,0 +1,55 @@
-+Xilinx Video IP Pipeline (VIPP)
-+-------------------------------
-+
-+General concept
-+---------------
-+
-+Xilinx video IP pipeline processes video streams through one or more Xilinx
-+video IP cores. Each video IP core is represented as documented in video.txt
-+and IP core specific documentation, xlnx,v-*.txt, in this directory. The DT
-+node of the VIPP represents as a top level node of the pipeline and defines
-+mappings between DMAs and the video IP cores.
++++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,v-tpg.txt
+@@ -0,0 +1,68 @@
++Xilinx Video Test Pattern Generator (TPG)
++-----------------------------------------
 +
 +Required properties:
 +
-+- compatible: Must be "xlnx,video".
++- compatible: Must contain at least one of
 +
-+- dmas, dma-names: List of one DMA specifier and identifier string (as defined
-+  in Documentation/devicetree/bindings/dma/dma.txt) per port. Each port
-+  requires a DMA channel with the identifier string set to "port" followed by
-+  the port index.
++    "xlnx,v-tpg-5.0" (TPG version 5.0)
++    "xlnx,v-tpg-6.0" (TPG version 6.0)
 +
-+- ports: Video port, using the DT bindings defined in ../video-interfaces.txt.
++  TPG versions backward-compatible with previous versions should list all
++  compatible versions in the newer to older order.
 +
-+Required port properties:
++- reg: Physical base address and length of the registers set for the device.
 +
-+- direction: should be either "input" or "output" depending on the direction
-+  of stream.
++- xlnx,video-format, xlnx,video-width: Video format and width, as defined in
++  video.txt.
++
++- port: Video port, using the DT bindings defined in ../video-interfaces.txt.
++  The TPG has a single output port numbered 0.
++
++Optional properties:
++
++- xlnx,vtc: A phandle referencing the Video Timing Controller that generates
++  video timings for the TPG test patterns.
++
++- timing-gpios: Specifier for a GPIO that controls the timing mux at the TPG
++  input. The GPIO active level corresponds to the selection of VTC-generated
++  video timings.
++
++The xlnx,vtc and timing-gpios properties are mandatory when the TPG is
++synthesized with two ports and forbidden when synthesized with one port.
 +
 +Example:
 +
-+	video_cap {
-+		compatible = "xlnx,video";
-+		dmas = <&vdma_1 1>, <&vdma_3 1>;
-+		dma-names = "port0", "port1";
++	tpg_0: tpg@40050000 {
++		compatible = "xlnx,v-tpg-6.0", "xlnx,v-tpg-5.0";
++		reg = <0x40050000 0x10000>;
++
++		xlnx,vtc = <&vtc_3>;
++		timing-gpios = <&ps7_gpio_0 55 GPIO_ACTIVE_LOW>;
 +
 +		ports {
 +			#address-cells = <1>;
@@ -156,1453 +86,396 @@ index 0000000..5a02270
 +
 +			port@0 {
 +				reg = <0>;
-+				direction = "input";
-+				vcap0_in0: endpoint {
-+					remote-endpoint = <&scaler0_out>;
++
++				xlnx,video-format = "yuv422";
++				xlnx,video-width = <8>;
++
++				tpg_in: endpoint {
++					remote-endpoint = <&adv7611_out>;
 +				};
 +			};
 +			port@1 {
 +				reg = <1>;
-+				direction = "input";
-+				vcap0_in1: endpoint {
-+					remote-endpoint = <&switch_out1>;
++
++				xlnx,video-format = "yuv422";
++				xlnx,video-width = <8>;
++
++				tpg1_out: endpoint {
++					remote-endpoint = <&switch_in0>;
 +				};
-+			};
++			}:
 +		};
 +	};
 diff --git a/MAINTAINERS b/MAINTAINERS
-index e80a275..8d09f6e 100644
+index 8d09f6e..384bdd4 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -10216,6 +10216,15 @@ L:	linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
- S:	Maintained
- F:	drivers/tty/serial/uartlite.c
+@@ -10224,6 +10224,7 @@ T:	git git://linuxtv.org/media_tree.git
+ S:	Supported
+ F:	Documentation/devicetree/bindings/media/xilinx/
+ F:	drivers/media/platform/xilinx/
++F:	include/uapi/linux/xilinx-v4l2-controls.h
  
-+XILINX VIDEO IP CORES
-+M:	Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-+M:	Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-+L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Supported
-+F:	Documentation/devicetree/bindings/media/xilinx/
-+F:	drivers/media/platform/xilinx/
-+
  XTENSA XTFPGA PLATFORM SUPPORT
- M:	Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- L:	linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index bee9074..2d1a452 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -126,6 +126,7 @@ config VIDEO_S3C_CAMIF
- source "drivers/media/platform/soc_camera/Kconfig"
- source "drivers/media/platform/exynos4-is/Kconfig"
- source "drivers/media/platform/s5p-tv/Kconfig"
-+source "drivers/media/platform/xilinx/Kconfig"
- 
- endif # V4L_PLATFORM_DRIVERS
- 
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index 579046b..5655315 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -49,4 +49,6 @@ obj-$(CONFIG_VIDEO_RENESAS_VSP1)	+= vsp1/
- 
- obj-y	+= omap/
- 
-+obj-$(CONFIG_VIDEO_XILINX)		+= xilinx/
-+
- ccflags-y += -I$(srctree)/drivers/media/i2c
+ M:	Max Filippov <jcmvbkbc@gmail.com>
 diff --git a/drivers/media/platform/xilinx/Kconfig b/drivers/media/platform/xilinx/Kconfig
-new file mode 100644
-index 0000000..f4347e9
---- /dev/null
+index 19db823..d7324c7 100644
+--- a/drivers/media/platform/xilinx/Kconfig
 +++ b/drivers/media/platform/xilinx/Kconfig
-@@ -0,0 +1,10 @@
-+config VIDEO_XILINX
-+	tristate "Xilinx Video IP (EXPERIMENTAL)"
-+	depends on VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API && OF
-+	select VIDEOBUF2_DMA_CONTIG
+@@ -7,6 +7,13 @@ config VIDEO_XILINX
+ 
+ if VIDEO_XILINX
+ 
++config VIDEO_XILINX_TPG
++	tristate "Xilinx Video Test Pattern Generator"
++	depends on VIDEO_XILINX
++	select VIDEO_XILINX_VTC
 +	---help---
-+	  Driver for Xilinx Video IP Pipelines
++	   Driver for the Xilinx Video Test Pattern Generator
 +
-+if VIDEO_XILINX
-+
-+endif #VIDEO_XILINX
+ config VIDEO_XILINX_VTC
+ 	tristate "Xilinx Video Timing Controller"
+ 	depends on VIDEO_XILINX
 diff --git a/drivers/media/platform/xilinx/Makefile b/drivers/media/platform/xilinx/Makefile
-new file mode 100644
-index 0000000..3ef9c8e
---- /dev/null
+index 6611e32..e8a0f2a 100644
+--- a/drivers/media/platform/xilinx/Makefile
 +++ b/drivers/media/platform/xilinx/Makefile
-@@ -0,0 +1,3 @@
-+xilinx-video-objs += xilinx-dma.o xilinx-vip.o xilinx-vipp.o
-+
-+obj-$(CONFIG_VIDEO_XILINX) += xilinx-video.o
-diff --git a/drivers/media/platform/xilinx/xilinx-dma.c b/drivers/media/platform/xilinx/xilinx-dma.c
+@@ -1,4 +1,5 @@
+ xilinx-video-objs += xilinx-dma.o xilinx-vip.o xilinx-vipp.o
+ 
+ obj-$(CONFIG_VIDEO_XILINX) += xilinx-video.o
++obj-$(CONFIG_VIDEO_XILINX_TPG) += xilinx-tpg.o
+ obj-$(CONFIG_VIDEO_XILINX_VTC) += xilinx-vtc.o
+diff --git a/drivers/media/platform/xilinx/xilinx-tpg.c b/drivers/media/platform/xilinx/xilinx-tpg.c
 new file mode 100644
-index 0000000..e09e8bd
+index 0000000..955197b
 --- /dev/null
-+++ b/drivers/media/platform/xilinx/xilinx-dma.c
-@@ -0,0 +1,995 @@
++++ b/drivers/media/platform/xilinx/xilinx-tpg.c
+@@ -0,0 +1,921 @@
 +/*
-+ * Xilinx Video DMA
++ * Xilinx Test Pattern Generator
 + *
 + * Copyright (C) 2013-2014 Ideas on Board
 + * Copyright (C) 2013-2014 Xilinx, Inc.
 + *
-+ * Contacts: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-+ *           Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
++ * Contacts: Hyun Kwon <hyun.kwon@xilinx.com>
++ *           Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
 + * published by the Free Software Foundation.
 + */
 +
-+#include <linux/amba/xilinx_dma.h>
-+#include <linux/lcm.h>
-+#include <linux/list.h>
++#include <linux/device.h>
++#include <linux/gpio/consumer.h>
 +#include <linux/module.h>
 +#include <linux/of.h>
-+#include <linux/slab.h>
++#include <linux/platform_device.h>
++#include <linux/xilinx-v4l2-controls.h>
 +
-+#include <media/v4l2-dev.h>
-+#include <media/v4l2-fh.h>
-+#include <media/v4l2-ioctl.h>
-+#include <media/videobuf2-core.h>
-+#include <media/videobuf2-dma-contig.h>
++#include <media/v4l2-async.h>
++#include <media/v4l2-ctrls.h>
++#include <media/v4l2-subdev.h>
 +
-+#include "xilinx-dma.h"
 +#include "xilinx-vip.h"
-+#include "xilinx-vipp.h"
++#include "xilinx-vtc.h"
 +
-+#define XVIP_DMA_DEF_FORMAT		V4L2_PIX_FMT_YUYV
-+#define XVIP_DMA_DEF_WIDTH		1920
-+#define XVIP_DMA_DEF_HEIGHT		1080
++#define XTPG_CTRL_STATUS_SLAVE_ERROR		(1 << 16)
++#define XTPG_CTRL_IRQ_SLAVE_ERROR		(1 << 16)
 +
-+/* Minimum and maximum widths are expressed in bytes */
-+#define XVIP_DMA_MIN_WIDTH		1U
-+#define XVIP_DMA_MAX_WIDTH		65535U
-+#define XVIP_DMA_MIN_HEIGHT		1U
-+#define XVIP_DMA_MAX_HEIGHT		8191U
++#define XTPG_PATTERN_CONTROL			0x0100
++#define XTPG_PATTERN_MASK			(0xf << 0)
++#define XTPG_PATTERN_CONTROL_CROSS_HAIRS	(1 << 4)
++#define XTPG_PATTERN_CONTROL_MOVING_BOX		(1 << 5)
++#define XTPG_PATTERN_CONTROL_COLOR_MASK_SHIFT	6
++#define XTPG_PATTERN_CONTROL_COLOR_MASK_MASK	(0xf << 6)
++#define XTPG_PATTERN_CONTROL_STUCK_PIXEL	(1 << 9)
++#define XTPG_PATTERN_CONTROL_NOISE		(1 << 10)
++#define XTPG_PATTERN_CONTROL_MOTION		(1 << 12)
++#define XTPG_MOTION_SPEED			0x0104
++#define XTPG_CROSS_HAIRS			0x0108
++#define XTPG_CROSS_HAIRS_ROW_SHIFT		0
++#define XTPG_CROSS_HAIRS_ROW_MASK		(0xfff << 0)
++#define XTPG_CROSS_HAIRS_COLUMN_SHIFT		16
++#define XTPG_CROSS_HAIRS_COLUMN_MASK		(0xfff << 16)
++#define XTPG_ZPLATE_HOR_CONTROL			0x010c
++#define XTPG_ZPLATE_VER_CONTROL			0x0110
++#define XTPG_ZPLATE_START_SHIFT			0
++#define XTPG_ZPLATE_START_MASK			(0xffff << 0)
++#define XTPG_ZPLATE_SPEED_SHIFT			16
++#define XTPG_ZPLATE_SPEED_MASK			(0xffff << 16)
++#define XTPG_BOX_SIZE				0x0114
++#define XTPG_BOX_COLOR				0x0118
++#define XTPG_STUCK_PIXEL_THRESH			0x011c
++#define XTPG_NOISE_GAIN				0x0120
++#define XTPG_BAYER_PHASE			0x0124
++#define XTPG_BAYER_PHASE_RGGB			0
++#define XTPG_BAYER_PHASE_GRBG			1
++#define XTPG_BAYER_PHASE_GBRG			2
++#define XTPG_BAYER_PHASE_BGGR			3
++#define XTPG_BAYER_PHASE_OFF			4
 +
-+/* -----------------------------------------------------------------------------
-+ * Helper functions
++/*
++ * The minimum blanking value is one clock cycle for the front porch, one clock
++ * cycle for the sync pulse and one clock cycle for the back porch.
 + */
-+
-+static struct v4l2_subdev *
-+xvip_dma_remote_subdev(struct media_pad *local, u32 *pad)
-+{
-+	struct media_pad *remote;
-+
-+	remote = media_entity_remote_pad(local);
-+	if (remote == NULL ||
-+	    media_entity_type(remote->entity) != MEDIA_ENT_T_V4L2_SUBDEV)
-+		return NULL;
-+
-+	if (pad)
-+		*pad = remote->index;
-+
-+	return media_entity_to_v4l2_subdev(remote->entity);
-+}
-+
-+static int xvip_dma_verify_format(struct xvip_dma *dma)
-+{
-+	struct v4l2_subdev_format fmt;
-+	struct v4l2_subdev *subdev;
-+	int ret;
-+
-+	subdev = xvip_dma_remote_subdev(&dma->pad, &fmt.pad);
-+	if (subdev == NULL)
-+		return -EPIPE;
-+
-+	fmt.which = V4L2_SUBDEV_FORMAT_ACTIVE;
-+	ret = v4l2_subdev_call(subdev, pad, get_fmt, NULL, &fmt);
-+	if (ret < 0)
-+		return ret == -ENOIOCTLCMD ? -EINVAL : ret;
-+
-+	if (dma->fmtinfo->code != fmt.format.code ||
-+	    dma->format.height != fmt.format.height ||
-+	    dma->format.width != fmt.format.width)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+/* -----------------------------------------------------------------------------
-+ * Pipeline Stream Management
-+ */
++#define XTPG_MIN_HBLANK			3
++#define XTPG_MAX_HBLANK			(XVTC_MAX_HSIZE - XVIP_MIN_WIDTH)
++#define XTPG_MIN_VBLANK			3
++#define XTPG_MAX_VBLANK			(XVTC_MAX_VSIZE - XVIP_MIN_HEIGHT)
 +
 +/**
-+ * xvip_pipeline_start_stop - Start ot stop streaming on a pipeline
-+ * @pipe: The pipeline
-+ * @start: Start (when true) or stop (when false) the pipeline
-+ *
-+ * Walk the entities chain starting at the pipeline output video node and start
-+ * or stop all of them.
-+ *
-+ * Return: 0 if successful, or the return value of the failed video::s_stream
-+ * operation otherwise.
++ * struct xtpg_device - Xilinx Test Pattern Generator device structure
++ * @xvip: Xilinx Video IP device
++ * @pads: media pads
++ * @npads: number of pads (1 or 2)
++ * @has_input: whether an input is connected to the sink pad
++ * @formats: active V4L2 media bus format for each pad
++ * @default_format: default V4L2 media bus format
++ * @vip_format: format information corresponding to the active format
++ * @bayer: boolean flag if TPG is set to any bayer format
++ * @ctrl_handler: control handler
++ * @hblank: horizontal blanking control
++ * @vblank: vertical blanking control
++ * @pattern: test pattern control
++ * @streaming: is the video stream active
++ * @vtc: video timing controller
++ * @vtmux_gpio: video timing mux GPIO
 + */
-+static int xvip_pipeline_start_stop(struct xvip_pipeline *pipe, bool start)
-+{
-+	struct xvip_dma *dma = pipe->output;
-+	struct media_entity *entity;
-+	struct media_pad *pad;
-+	struct v4l2_subdev *subdev;
-+	int ret;
++struct xtpg_device {
++	struct xvip_device xvip;
 +
-+	entity = &dma->video.entity;
-+	while (1) {
-+		pad = &entity->pads[0];
-+		if (!(pad->flags & MEDIA_PAD_FL_SINK))
-+			break;
++	struct media_pad pads[2];
++	unsigned int npads;
++	bool has_input;
 +
-+		pad = media_entity_remote_pad(pad);
-+		if (pad == NULL ||
-+		    media_entity_type(pad->entity) != MEDIA_ENT_T_V4L2_SUBDEV)
-+			break;
++	struct v4l2_mbus_framefmt formats[2];
++	struct v4l2_mbus_framefmt default_format;
++	const struct xvip_video_format *vip_format;
++	bool bayer;
 +
-+		entity = pad->entity;
-+		subdev = media_entity_to_v4l2_subdev(entity);
++	struct v4l2_ctrl_handler ctrl_handler;
++	struct v4l2_ctrl *hblank;
++	struct v4l2_ctrl *vblank;
++	struct v4l2_ctrl *pattern;
++	bool streaming;
 +
-+		ret = v4l2_subdev_call(subdev, video, s_stream, start);
-+		if (start && ret < 0 && ret != -ENOIOCTLCMD)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * xvip_pipeline_set_stream - Enable/disable streaming on a pipeline
-+ * @pipe: The pipeline
-+ * @on: Turn the stream on when true or off when false
-+ *
-+ * The pipeline is shared between all DMA engines connect at its input and
-+ * output. While the stream state of DMA engines can be controlled
-+ * independently, pipelines have a shared stream state that enable or disable
-+ * all entities in the pipeline. For this reason the pipeline uses a streaming
-+ * counter that tracks the number of DMA engines that have requested the stream
-+ * to be enabled.
-+ *
-+ * When called with the @on argument set to true, this function will increment
-+ * the pipeline streaming count. If the streaming count reaches the number of
-+ * DMA engines in the pipeline it will enable all entities that belong to the
-+ * pipeline.
-+ *
-+ * Similarly, when called with the @on argument set to false, this function will
-+ * decrement the pipeline streaming count and disable all entities in the
-+ * pipeline when the streaming count reaches zero.
-+ *
-+ * Return: 0 if successful, or the return value of the failed video::s_stream
-+ * operation otherwise. Stopping the pipeline never fails. The pipeline state is
-+ * not updated when the operation fails.
-+ */
-+static int xvip_pipeline_set_stream(struct xvip_pipeline *pipe, bool on)
-+{
-+	int ret = 0;
-+
-+	mutex_lock(&pipe->lock);
-+
-+	if (on) {
-+		if (pipe->stream_count == pipe->num_dmas - 1) {
-+			ret = xvip_pipeline_start_stop(pipe, true);
-+			if (ret < 0)
-+				goto done;
-+		}
-+		pipe->stream_count++;
-+	} else {
-+		if (--pipe->stream_count == 0)
-+			xvip_pipeline_start_stop(pipe, false);
-+	}
-+
-+done:
-+	mutex_unlock(&pipe->lock);
-+	return ret;
-+}
-+
-+static int xvip_pipeline_validate(struct xvip_pipeline *pipe,
-+				  struct xvip_dma *start)
-+{
-+	struct media_entity_graph graph;
-+	struct media_entity *entity = &start->video.entity;
-+	struct media_device *mdev = entity->parent;
-+	unsigned int num_inputs = 0;
-+	unsigned int num_outputs = 0;
-+
-+	mutex_lock(&mdev->graph_mutex);
-+
-+	/* Walk the graph to locate the video nodes. */
-+	media_entity_graph_walk_start(&graph, entity);
-+
-+	while ((entity = media_entity_graph_walk_next(&graph))) {
-+		struct xvip_dma *dma;
-+
-+		if (entity->type != MEDIA_ENT_T_DEVNODE_V4L)
-+			continue;
-+
-+		dma = to_xvip_dma(media_entity_to_video_device(entity));
-+
-+		if (dma->pad.flags & MEDIA_PAD_FL_SINK) {
-+			pipe->output = dma;
-+			num_outputs++;
-+		} else {
-+			num_inputs++;
-+		}
-+	}
-+
-+	mutex_unlock(&mdev->graph_mutex);
-+
-+	/* We need exactly one output and zero or one input. */
-+	if (num_outputs != 1 || num_inputs > 1)
-+		return -EPIPE;
-+
-+	pipe->num_dmas = num_inputs + num_outputs;
-+
-+	return 0;
-+}
-+
-+static void __xvip_pipeline_cleanup(struct xvip_pipeline *pipe)
-+{
-+	pipe->num_dmas = 0;
-+	pipe->output = NULL;
-+}
-+
-+/**
-+ * xvip_pipeline_cleanup - Cleanup the pipeline after streaming
-+ * @pipe: the pipeline
-+ *
-+ * Decrease the pipeline use count and clean it up if we were the last user.
-+ */
-+static void xvip_pipeline_cleanup(struct xvip_pipeline *pipe)
-+{
-+	mutex_lock(&pipe->lock);
-+
-+	/* If we're the last user clean up the pipeline. */
-+	if (--pipe->use_count == 0)
-+		__xvip_pipeline_cleanup(pipe);
-+
-+	mutex_unlock(&pipe->lock);
-+}
-+
-+/**
-+ * xvip_pipeline_prepare - Prepare the pipeline for streaming
-+ * @pipe: the pipeline
-+ * @dma: DMA engine at one end of the pipeline
-+ *
-+ * Validate the pipeline if no user exists yet, otherwise just increase the use
-+ * count.
-+ *
-+ * Return: 0 if successful or -EPIPE if the pipeline is not valid.
-+ */
-+static int xvip_pipeline_prepare(struct xvip_pipeline *pipe,
-+				 struct xvip_dma *dma)
-+{
-+	int ret;
-+
-+	mutex_lock(&pipe->lock);
-+
-+	/* If we're the first user validate and initialize the pipeline. */
-+	if (pipe->use_count == 0) {
-+		ret = xvip_pipeline_validate(pipe, dma);
-+		if (ret < 0) {
-+			__xvip_pipeline_cleanup(pipe);
-+			goto done;
-+		}
-+	}
-+
-+	pipe->use_count++;
-+	ret = 0;
-+
-+done:
-+	mutex_unlock(&pipe->lock);
-+	return ret;
-+}
-+
-+/* -----------------------------------------------------------------------------
-+ * videobuf2 queue operations
-+ */
-+
-+/**
-+ * struct xvip_dma_buffer - Video DMA buffer
-+ * @buf: vb2 buffer base object
-+ * @queue: buffer list entry in the DMA engine queued buffers list
-+ * @dma: DMA channel that uses the buffer
-+ * @addr: DMA bus address for the buffer memory
-+ * @length: total length of the buffer in bytes
-+ * @bytesused: number of bytes used in the buffer
-+ */
-+struct xvip_dma_buffer {
-+	struct vb2_buffer buf;
-+	struct list_head queue;
-+
-+	struct xvip_dma *dma;
-+
-+	dma_addr_t addr;
-+	unsigned int length;
-+	unsigned int bytesused;
++	struct xvtc_device *vtc;
++	struct gpio_desc *vtmux_gpio;
 +};
 +
-+#define to_xvip_dma_buffer(vb)	container_of(vb, struct xvip_dma_buffer, buf)
-+
-+static void xvip_dma_complete(void *param)
++static inline struct xtpg_device *to_tpg(struct v4l2_subdev *subdev)
 +{
-+	struct xvip_dma_buffer *buf = param;
-+	struct xvip_dma *dma = buf->dma;
-+
-+	spin_lock(&dma->queued_lock);
-+	list_del(&buf->queue);
-+	spin_unlock(&dma->queued_lock);
-+
-+	buf->buf.v4l2_buf.sequence = dma->sequence++;
-+	v4l2_get_timestamp(&buf->buf.v4l2_buf.timestamp);
-+	vb2_set_plane_payload(&buf->buf, 0, buf->length);
-+	vb2_buffer_done(&buf->buf, VB2_BUF_STATE_DONE);
++	return container_of(subdev, struct xtpg_device, xvip.subdev);
 +}
 +
-+static int
-+xvip_dma_queue_setup(struct vb2_queue *vq, const struct v4l2_format *fmt,
-+		     unsigned int *nbuffers, unsigned int *nplanes,
-+		     unsigned int sizes[], void *alloc_ctxs[])
++static u32 xtpg_get_bayer_phase(unsigned int code)
 +{
-+	struct xvip_dma *dma = vb2_get_drv_priv(vq);
-+
-+	*nplanes = 1;
-+
-+	sizes[0] = dma->format.sizeimage;
-+	alloc_ctxs[0] = dma->alloc_ctx;
-+
-+	return 0;
-+}
-+
-+static int xvip_dma_buffer_prepare(struct vb2_buffer *vb)
-+{
-+	struct xvip_dma *dma = vb2_get_drv_priv(vb->vb2_queue);
-+	struct xvip_dma_buffer *buf = to_xvip_dma_buffer(vb);
-+
-+	buf->dma = dma;
-+	buf->addr = vb2_dma_contig_plane_dma_addr(vb, 0);
-+	buf->length = vb2_plane_size(vb, 0);
-+	buf->bytesused = 0;
-+
-+	return 0;
-+}
-+
-+static void xvip_dma_buffer_queue(struct vb2_buffer *vb)
-+{
-+	struct xvip_dma *dma = vb2_get_drv_priv(vb->vb2_queue);
-+	struct xvip_dma_buffer *buf = to_xvip_dma_buffer(vb);
-+	struct dma_async_tx_descriptor *desc;
-+	u32 flags;
-+
-+	if (dma->queue.type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
-+		flags = DMA_PREP_INTERRUPT | DMA_CTRL_ACK;
-+		dma->xt.dir = DMA_DEV_TO_MEM;
-+		dma->xt.src_sgl = false;
-+		dma->xt.dst_sgl = true;
-+		dma->xt.dst_start = buf->addr;
-+	} else {
-+		flags = DMA_PREP_INTERRUPT | DMA_CTRL_ACK;
-+		dma->xt.dir = DMA_MEM_TO_DEV;
-+		dma->xt.src_sgl = true;
-+		dma->xt.dst_sgl = false;
-+		dma->xt.src_start = buf->addr;
++	switch (code) {
++	case V4L2_MBUS_FMT_SRGGB8_1X8:
++		return XTPG_BAYER_PHASE_RGGB;
++	case V4L2_MBUS_FMT_SGRBG8_1X8:
++		return XTPG_BAYER_PHASE_GRBG;
++	case V4L2_MBUS_FMT_SGBRG8_1X8:
++		return XTPG_BAYER_PHASE_GBRG;
++	case V4L2_MBUS_FMT_SBGGR8_1X8:
++		return XTPG_BAYER_PHASE_BGGR;
++	default:
++		return XTPG_BAYER_PHASE_OFF;
 +	}
-+
-+	dma->xt.frame_size = 1;
-+	dma->sgl[0].size = dma->format.width * dma->fmtinfo->bpp;
-+	dma->sgl[0].icg = dma->format.bytesperline - dma->sgl[0].size;
-+	dma->xt.numf = dma->format.height;
-+
-+	desc = dmaengine_prep_interleaved_dma(dma->dma, &dma->xt, flags);
-+	if (!desc) {
-+		dev_err(dma->xdev->dev, "Failed to prepare DMA transfer\n");
-+		vb2_buffer_done(&buf->buf, VB2_BUF_STATE_ERROR);
-+		return;
-+	}
-+	desc->callback = xvip_dma_complete;
-+	desc->callback_param = buf;
-+
-+	spin_lock_irq(&dma->queued_lock);
-+	list_add_tail(&buf->queue, &dma->queued_bufs);
-+	spin_unlock_irq(&dma->queued_lock);
-+
-+	dmaengine_submit(desc);
-+
-+	if (vb2_is_streaming(&dma->queue))
-+		dma_async_issue_pending(dma->dma);
 +}
 +
-+static void xvip_dma_wait_prepare(struct vb2_queue *vq)
++static void __xtpg_update_pattern_control(struct xtpg_device *xtpg,
++					  bool passthrough, bool pattern)
 +{
-+	struct xvip_dma *dma = vb2_get_drv_priv(vq);
-+
-+	mutex_unlock(&dma->lock);
-+}
-+
-+static void xvip_dma_wait_finish(struct vb2_queue *vq)
-+{
-+	struct xvip_dma *dma = vb2_get_drv_priv(vq);
-+
-+	mutex_lock(&dma->lock);
-+}
-+
-+static int xvip_dma_start_streaming(struct vb2_queue *vq, unsigned int count)
-+{
-+	struct xvip_dma *dma = vb2_get_drv_priv(vq);
-+	struct xvip_pipeline *pipe;
-+	int ret;
-+
-+	dma->sequence = 0;
++	u32 pattern_mask = (1 << (xtpg->pattern->maximum + 1)) - 1;
 +
 +	/*
-+	 * Start streaming on the pipeline. No link touching an entity in the
-+	 * pipeline can be activated or deactivated once streaming is started.
-+	 *
-+	 * Use the pipeline object embedded in the first DMA object that starts
-+	 * streaming.
++	 * If the TPG has no sink pad or no input connected to its sink pad
++	 * passthrough mode can't be enabled.
 +	 */
-+	pipe = dma->video.entity.pipe
-+	     ? to_xvip_pipeline(&dma->video.entity) : &dma->pipe;
++	if (xtpg->npads == 1 || !xtpg->has_input)
++		passthrough = false;
 +
-+	ret = media_entity_pipeline_start(&dma->video.entity, &pipe->pipe);
-+	if (ret < 0)
-+		return ret;
++	/* If passthrough mode is allowed unmask bit 0. */
++	if (passthrough)
++		pattern_mask &= ~1;
 +
-+	/* Verify that the configured format matches the output of the
-+	 * connected subdev.
-+	 */
-+	ret = xvip_dma_verify_format(dma);
-+	if (ret < 0)
-+		goto error;
++	/* If test pattern mode is allowed unmask all other bits. */
++	if (pattern)
++		pattern_mask &= 1;
 +
-+	ret = xvip_pipeline_prepare(pipe, dma);
-+	if (ret < 0)
-+		goto error;
-+
-+	/* Start the DMA engine. This must be done before starting the blocks
-+	 * in the pipeline to avoid DMA synchronization issues.
-+	 */
-+	dma_async_issue_pending(dma->dma);
-+
-+	/* Start the pipeline. */
-+	xvip_pipeline_set_stream(pipe, true);
-+
-+	return 0;
-+
-+error:
-+	media_entity_pipeline_stop(&dma->video.entity);
-+	return ret;
++	__v4l2_ctrl_modify_range(xtpg->pattern, 0, xtpg->pattern->maximum,
++				 pattern_mask, pattern ? 9 : 0);
 +}
 +
-+static void xvip_dma_stop_streaming(struct vb2_queue *vq)
++static void xtpg_update_pattern_control(struct xtpg_device *xtpg,
++					bool passthrough, bool pattern)
 +{
-+	struct xvip_dma *dma = vb2_get_drv_priv(vq);
-+	struct xvip_pipeline *pipe = to_xvip_pipeline(&dma->video.entity);
-+	struct xvip_dma_buffer *buf, *nbuf;
-+	struct xilinx_vdma_config config;
-+
-+	/* Stop the pipeline. */
-+	xvip_pipeline_set_stream(pipe, false);
-+
-+	/* Stop and reset the DMA engine. */
-+	dmaengine_device_control(dma->dma, DMA_TERMINATE_ALL, 0);
-+
-+	config.reset = 1;
-+
-+	dmaengine_device_control(dma->dma, DMA_SLAVE_CONFIG,
-+				 (unsigned long)&config);
-+
-+	/* Cleanup the pipeline and mark it as being stopped. */
-+	xvip_pipeline_cleanup(pipe);
-+	media_entity_pipeline_stop(&dma->video.entity);
-+
-+	/* Give back all queued buffers to videobuf2. */
-+	spin_lock_irq(&dma->queued_lock);
-+	list_for_each_entry_safe(buf, nbuf, &dma->queued_bufs, queue) {
-+		vb2_buffer_done(&buf->buf, VB2_BUF_STATE_ERROR);
-+		list_del(&buf->queue);
-+	}
-+	spin_unlock_irq(&dma->queued_lock);
++	mutex_lock(xtpg->ctrl_handler.lock);
++	__xtpg_update_pattern_control(xtpg, passthrough, pattern);
++	mutex_unlock(xtpg->ctrl_handler.lock);
 +}
-+
-+static struct vb2_ops xvip_dma_queue_qops = {
-+	.queue_setup = xvip_dma_queue_setup,
-+	.buf_prepare = xvip_dma_buffer_prepare,
-+	.buf_queue = xvip_dma_buffer_queue,
-+	.wait_prepare = xvip_dma_wait_prepare,
-+	.wait_finish = xvip_dma_wait_finish,
-+	.start_streaming = xvip_dma_start_streaming,
-+	.stop_streaming = xvip_dma_stop_streaming,
-+};
 +
 +/* -----------------------------------------------------------------------------
-+ * V4L2 ioctls
++ * V4L2 Subdevice Video Operations
 + */
 +
-+static int
-+xvip_dma_querycap(struct file *file, void *fh, struct v4l2_capability *cap)
++static int xtpg_s_stream(struct v4l2_subdev *subdev, int enable)
 +{
-+	struct v4l2_fh *vfh = file->private_data;
-+	struct xvip_dma *dma = to_xvip_dma(vfh->vdev);
++	struct xtpg_device *xtpg = to_tpg(subdev);
++	unsigned int width = xtpg->formats[0].width;
++	unsigned int height = xtpg->formats[0].height;
++	bool passthrough;
++	u32 bayer_phase;
 +
-+	if (dma->queue.type == V4L2_BUF_TYPE_VIDEO_CAPTURE)
-+		cap->capabilities = V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_STREAMING;
-+	else
-+		cap->capabilities = V4L2_CAP_VIDEO_OUTPUT | V4L2_CAP_STREAMING;
++	if (!enable) {
++		xvip_stop(&xtpg->xvip);
++		if (xtpg->vtc)
++			xvtc_generator_stop(xtpg->vtc);
 +
-+	strlcpy(cap->driver, "xilinx-vipp", sizeof(cap->driver));
-+	strlcpy(cap->card, dma->video.name, sizeof(cap->card));
-+	strlcpy(cap->bus_info, "media", sizeof(cap->bus_info));
++		xtpg_update_pattern_control(xtpg, true, true);
++		xtpg->streaming = false;
++		return 0;
++	}
 +
-+	return 0;
-+}
++	xvip_set_frame_size(&xtpg->xvip, &xtpg->formats[0]);
 +
-+/* FIXME: without this callback function, some applications are not configured
-+ * with correct formats, and it results in frames in wrong format. Whether this
-+ * callback needs to be required is not clearly defined, so it should be
-+ * clarified through the mailing list.
-+ */
-+static int
-+xvip_dma_enum_format(struct file *file, void *fh, struct v4l2_fmtdesc *f)
-+{
-+	struct v4l2_fh *vfh = file->private_data;
-+	struct xvip_dma *dma = to_xvip_dma(vfh->vdev);
++	if (xtpg->vtc) {
++		struct xvtc_config config = {
++			.hblank_start = width,
++			.hsync_start = width + 1,
++			.vblank_start = height,
++			.vsync_start = height + 1,
++		};
++		unsigned int htotal;
++		unsigned int vtotal;
 +
-+	if (f->index > 0)
-+		return -EINVAL;
++		htotal = min_t(unsigned int, XVTC_MAX_HSIZE,
++			       v4l2_ctrl_g_ctrl(xtpg->hblank) + width);
++		vtotal = min_t(unsigned int, XVTC_MAX_VSIZE,
++			       v4l2_ctrl_g_ctrl(xtpg->vblank) + height);
 +
-+	mutex_lock(&dma->lock);
-+	f->pixelformat = dma->format.pixelformat;
-+	strlcpy(f->description, dma->fmtinfo->description,
-+		sizeof(f->description));
-+	mutex_unlock(&dma->lock);
++		config.hsync_end = htotal - 1;
++		config.hsize = htotal;
++		config.vsync_end = vtotal - 1;
++		config.vsize = vtotal;
 +
-+	return 0;
-+}
++		xvtc_generator_start(xtpg->vtc, &config);
++	}
 +
-+static int
-+xvip_dma_get_format(struct file *file, void *fh, struct v4l2_format *format)
-+{
-+	struct v4l2_fh *vfh = file->private_data;
-+	struct xvip_dma *dma = to_xvip_dma(vfh->vdev);
-+
-+	mutex_lock(&dma->lock);
-+	format->fmt.pix = dma->format;
-+	mutex_unlock(&dma->lock);
-+
-+	return 0;
-+}
-+
-+static void
-+__xvip_dma_try_format(struct xvip_dma *dma, struct v4l2_pix_format *pix,
-+		      const struct xvip_video_format **fmtinfo)
-+{
-+	const struct xvip_video_format *info;
-+	unsigned int min_width;
-+	unsigned int max_width;
-+	unsigned int min_bpl;
-+	unsigned int max_bpl;
-+	unsigned int width;
-+	unsigned int align;
-+	unsigned int bpl;
-+
-+	/* Retrieve format information and select the default format if the
-+	 * requested format isn't supported.
++	/*
++	 * Configure the bayer phase and video timing mux based on the
++	 * operation mode (passthrough or test pattern generation). The test
++	 * pattern can be modified by the control set handler, we thus need to
++	 * take the control lock here to avoid races.
 +	 */
-+	info = xvip_get_format_by_fourcc(pix->pixelformat);
-+	if (IS_ERR(info))
-+		info = xvip_get_format_by_fourcc(XVIP_DMA_DEF_FORMAT);
++	mutex_lock(xtpg->ctrl_handler.lock);
 +
-+	pix->pixelformat = info->fourcc;
-+	pix->colorspace = V4L2_COLORSPACE_SRGB;
-+	pix->field = V4L2_FIELD_NONE;
++	xvip_clr_and_set(&xtpg->xvip, XTPG_PATTERN_CONTROL,
++			 XTPG_PATTERN_MASK, xtpg->pattern->cur.val);
 +
-+	/* The transfer alignment requirements are expressed in bytes. Compute
-+	 * the minimum and maximum values, clamp the requested width and convert
-+	 * it back to pixels.
++	/*
++	 * Switching between passthrough and test pattern generation modes isn't
++	 * allowed during streaming, update the control range accordingly.
 +	 */
-+	align = lcm(dma->align, info->bpp);
-+	min_width = roundup(XVIP_DMA_MIN_WIDTH, align);
-+	max_width = rounddown(XVIP_DMA_MAX_WIDTH, align);
-+	width = rounddown(pix->width * info->bpp, align);
++	passthrough = xtpg->pattern->cur.val == 0;
++	__xtpg_update_pattern_control(xtpg, passthrough, !passthrough);
 +
-+	pix->width = clamp(width, min_width, max_width) / info->bpp;
-+	pix->height = clamp(pix->height, XVIP_DMA_MIN_HEIGHT,
-+			    XVIP_DMA_MAX_HEIGHT);
++	xtpg->streaming = true;
 +
-+	/* Clamp the requested bytes per line value. If the maximum bytes per
-+	 * line value is zero, the module doesn't support user configurable line
-+	 * sizes. Override the requested value with the minimum in that case.
++	mutex_unlock(xtpg->ctrl_handler.lock);
++
++	/*
++	 * For TPG v5.0, the bayer phase needs to be off for the pass through
++	 * mode, otherwise the external input would be subsampled.
 +	 */
-+	min_bpl = pix->width * info->bpp;
-+	max_bpl = rounddown(XVIP_DMA_MAX_WIDTH, dma->align);
-+	bpl = rounddown(pix->bytesperline, dma->align);
++	bayer_phase = passthrough ? XTPG_BAYER_PHASE_OFF
++		    : xtpg_get_bayer_phase(xtpg->formats[0].code);
++	xvip_write(&xtpg->xvip, XTPG_BAYER_PHASE, bayer_phase);
 +
-+	pix->bytesperline = clamp(bpl, min_bpl, max_bpl);
-+	pix->sizeimage = pix->bytesperline * pix->height;
++	if (xtpg->vtmux_gpio)
++		gpiod_set_value_cansleep(xtpg->vtmux_gpio, !passthrough);
 +
-+	if (fmtinfo)
-+		*fmtinfo = info;
-+}
++	xvip_start(&xtpg->xvip);
 +
-+static int
-+xvip_dma_try_format(struct file *file, void *fh, struct v4l2_format *format)
-+{
-+	struct v4l2_fh *vfh = file->private_data;
-+	struct xvip_dma *dma = to_xvip_dma(vfh->vdev);
-+
-+	__xvip_dma_try_format(dma, &format->fmt.pix, NULL);
 +	return 0;
 +}
-+
-+static int
-+xvip_dma_set_format(struct file *file, void *fh, struct v4l2_format *format)
-+{
-+	struct v4l2_fh *vfh = file->private_data;
-+	struct xvip_dma *dma = to_xvip_dma(vfh->vdev);
-+	const struct xvip_video_format *info;
-+	struct xilinx_vdma_config config;
-+	int ret;
-+
-+	__xvip_dma_try_format(dma, &format->fmt.pix, &info);
-+
-+	mutex_lock(&dma->lock);
-+
-+	if (vb2_is_streaming(&dma->queue)) {
-+		ret = -EBUSY;
-+		goto done;
-+	}
-+
-+	dma->format = format->fmt.pix;
-+	dma->fmtinfo = info;
-+
-+	/* Configure the DMA engine. */
-+	memset(&config, 0, sizeof(config));
-+
-+	config.park = 1;
-+	config.park_frm = 0;
-+	config.ext_fsync = 2;
-+
-+	dmaengine_device_control(dma->dma, DMA_SLAVE_CONFIG,
-+				 (unsigned long)&config);
-+
-+	ret = 0;
-+
-+done:
-+	mutex_unlock(&dma->lock);
-+	return ret;
-+}
-+
-+static int
-+xvip_dma_reqbufs(struct file *file, void *fh, struct v4l2_requestbuffers *rb)
-+{
-+	struct v4l2_fh *vfh = file->private_data;
-+	struct xvip_dma *dma = to_xvip_dma(vfh->vdev);
-+	int ret;
-+
-+	mutex_lock(&dma->lock);
-+
-+	if (dma->queue.owner && dma->queue.owner != vfh) {
-+		ret = -EBUSY;
-+		goto done;
-+	}
-+
-+	ret = vb2_reqbufs(&dma->queue, rb);
-+	if (ret < 0)
-+		goto done;
-+
-+	dma->queue.owner = vfh;
-+
-+done:
-+	mutex_unlock(&dma->lock);
-+	return ret ? ret : rb->count;
-+}
-+
-+static int
-+xvip_dma_querybuf(struct file *file, void *fh, struct v4l2_buffer *buf)
-+{
-+	struct v4l2_fh *vfh = file->private_data;
-+	struct xvip_dma *dma = to_xvip_dma(vfh->vdev);
-+	int ret;
-+
-+	mutex_lock(&dma->lock);
-+	ret = vb2_querybuf(&dma->queue, buf);
-+	mutex_unlock(&dma->lock);
-+
-+	return ret;
-+}
-+
-+static int
-+xvip_dma_qbuf(struct file *file, void *fh, struct v4l2_buffer *buf)
-+{
-+	struct v4l2_fh *vfh = file->private_data;
-+	struct xvip_dma *dma = to_xvip_dma(vfh->vdev);
-+	int ret;
-+
-+	mutex_lock(&dma->lock);
-+
-+	if (dma->queue.owner && dma->queue.owner != vfh) {
-+		ret = -EBUSY;
-+		goto done;
-+	}
-+
-+	ret = vb2_qbuf(&dma->queue, buf);
-+
-+done:
-+	mutex_unlock(&dma->lock);
-+	return ret;
-+}
-+
-+static int
-+xvip_dma_dqbuf(struct file *file, void *fh, struct v4l2_buffer *buf)
-+{
-+	struct v4l2_fh *vfh = file->private_data;
-+	struct xvip_dma *dma = to_xvip_dma(vfh->vdev);
-+	int ret;
-+
-+	mutex_lock(&dma->lock);
-+
-+	if (dma->queue.owner && dma->queue.owner != vfh) {
-+		ret = -EBUSY;
-+		goto done;
-+	}
-+
-+	ret = vb2_dqbuf(&dma->queue, buf, file->f_flags & O_NONBLOCK);
-+
-+done:
-+	mutex_unlock(&dma->lock);
-+	return ret;
-+}
-+
-+static int
-+xvip_dma_expbuf(struct file *file, void *priv, struct v4l2_exportbuffer *eb)
-+{
-+	struct v4l2_fh *vfh = file->private_data;
-+	struct xvip_dma *dma = to_xvip_dma(vfh->vdev);
-+	int ret;
-+
-+	mutex_lock(&dma->lock);
-+
-+	if (dma->queue.owner && dma->queue.owner != vfh) {
-+		ret = -EBUSY;
-+		goto done;
-+	}
-+
-+	ret = vb2_expbuf(&dma->queue, eb);
-+
-+done:
-+	mutex_unlock(&dma->lock);
-+	return ret;
-+}
-+
-+static int
-+xvip_dma_streamon(struct file *file, void *fh, enum v4l2_buf_type type)
-+{
-+	struct v4l2_fh *vfh = file->private_data;
-+	struct xvip_dma *dma = to_xvip_dma(vfh->vdev);
-+	int ret;
-+
-+	mutex_lock(&dma->lock);
-+
-+	if (dma->queue.owner && dma->queue.owner != vfh) {
-+		ret = -EBUSY;
-+		goto done;
-+	}
-+
-+	ret = vb2_streamon(&dma->queue, type);
-+
-+done:
-+	mutex_unlock(&dma->lock);
-+	return ret;
-+}
-+
-+static int
-+xvip_dma_streamoff(struct file *file, void *fh, enum v4l2_buf_type type)
-+{
-+	struct v4l2_fh *vfh = file->private_data;
-+	struct xvip_dma *dma = to_xvip_dma(vfh->vdev);
-+	int ret;
-+
-+	mutex_lock(&dma->lock);
-+
-+	if (dma->queue.owner && dma->queue.owner != vfh) {
-+		ret = -EBUSY;
-+		goto done;
-+	}
-+
-+	ret = vb2_streamoff(&dma->queue, type);
-+
-+done:
-+	mutex_unlock(&dma->lock);
-+	return ret;
-+}
-+
-+static const struct v4l2_ioctl_ops xvip_dma_ioctl_ops = {
-+	.vidioc_querycap		= xvip_dma_querycap,
-+	.vidioc_enum_fmt_vid_cap	= xvip_dma_enum_format,
-+	.vidioc_g_fmt_vid_cap		= xvip_dma_get_format,
-+	.vidioc_g_fmt_vid_out		= xvip_dma_get_format,
-+	.vidioc_s_fmt_vid_cap		= xvip_dma_set_format,
-+	.vidioc_s_fmt_vid_out		= xvip_dma_set_format,
-+	.vidioc_try_fmt_vid_cap		= xvip_dma_try_format,
-+	.vidioc_try_fmt_vid_out		= xvip_dma_try_format,
-+	.vidioc_reqbufs			= xvip_dma_reqbufs,
-+	.vidioc_querybuf		= xvip_dma_querybuf,
-+	.vidioc_qbuf			= xvip_dma_qbuf,
-+	.vidioc_dqbuf			= xvip_dma_dqbuf,
-+	.vidioc_expbuf			= xvip_dma_expbuf,
-+	.vidioc_streamon		= xvip_dma_streamon,
-+	.vidioc_streamoff		= xvip_dma_streamoff,
-+};
 +
 +/* -----------------------------------------------------------------------------
-+ * V4L2 file operations
++ * V4L2 Subdevice Pad Operations
 + */
 +
-+static int xvip_dma_open(struct file *file)
++static struct v4l2_mbus_framefmt *
++__xtpg_get_pad_format(struct xtpg_device *xtpg, struct v4l2_subdev_fh *fh,
++		      unsigned int pad, u32 which)
 +{
-+	struct xvip_dma *dma = video_drvdata(file);
-+	struct v4l2_fh *vfh;
-+
-+	vfh = kzalloc(sizeof(*vfh), GFP_KERNEL);
-+	if (vfh == NULL)
-+		return -ENOMEM;
-+
-+	v4l2_fh_init(vfh, &dma->video);
-+	v4l2_fh_add(vfh);
-+
-+	file->private_data = vfh;
-+
-+	return 0;
-+}
-+
-+static int xvip_dma_release(struct file *file)
-+{
-+	struct xvip_dma *dma = video_drvdata(file);
-+	struct v4l2_fh *vfh = file->private_data;
-+
-+	mutex_lock(&dma->lock);
-+	if (dma->queue.owner == vfh) {
-+		vb2_queue_release(&dma->queue);
-+		dma->queue.owner = NULL;
++	switch (which) {
++	case V4L2_SUBDEV_FORMAT_TRY:
++		return v4l2_subdev_get_try_format(fh, pad);
++	case V4L2_SUBDEV_FORMAT_ACTIVE:
++		return &xtpg->formats[pad];
++	default:
++		return NULL;
 +	}
-+	mutex_unlock(&dma->lock);
++}
 +
-+	v4l2_fh_release(file);
++static int xtpg_get_format(struct v4l2_subdev *subdev,
++			   struct v4l2_subdev_fh *fh,
++			   struct v4l2_subdev_format *fmt)
++{
++	struct xtpg_device *xtpg = to_tpg(subdev);
 +
-+	file->private_data = NULL;
++	fmt->format = *__xtpg_get_pad_format(xtpg, fh, fmt->pad, fmt->which);
 +
 +	return 0;
 +}
 +
-+static unsigned int xvip_dma_poll(struct file *file, poll_table *wait)
++static int xtpg_set_format(struct v4l2_subdev *subdev,
++			   struct v4l2_subdev_fh *fh,
++			   struct v4l2_subdev_format *fmt)
 +{
-+	struct v4l2_fh *vfh = file->private_data;
-+	struct xvip_dma *dma = to_xvip_dma(vfh->vdev);
-+	int ret;
++	struct xtpg_device *xtpg = to_tpg(subdev);
++	struct v4l2_mbus_framefmt *__format;
++	u32 bayer_phase;
 +
-+	mutex_lock(&dma->lock);
-+	ret = vb2_poll(&dma->queue, file, wait);
-+	mutex_unlock(&dma->lock);
++	__format = __xtpg_get_pad_format(xtpg, fh, fmt->pad, fmt->which);
 +
-+	return ret;
++	/* In two pads mode the source pad format is always identical to the
++	 * sink pad format.
++	 */
++	if (xtpg->npads == 2 && fmt->pad == 1) {
++		fmt->format = *__format;
++		return 0;
++	}
++
++	/* Bayer phase is configurable at runtime */
++	if (xtpg->bayer) {
++		bayer_phase = xtpg_get_bayer_phase(fmt->format.code);
++		if (bayer_phase != XTPG_BAYER_PHASE_OFF)
++			__format->code = fmt->format.code;
++	}
++
++	xvip_set_format_size(__format, fmt);
++
++	fmt->format = *__format;
++
++	/* Propagate the format to the source pad. */
++	if (xtpg->npads == 2) {
++		__format = __xtpg_get_pad_format(xtpg, fh, 1, fmt->which);
++		*__format = fmt->format;
++	}
++
++	return 0;
 +}
-+
-+static int xvip_dma_mmap(struct file *file, struct vm_area_struct *vma)
-+{
-+	struct v4l2_fh *vfh = file->private_data;
-+	struct xvip_dma *dma = to_xvip_dma(vfh->vdev);
-+	int ret;
-+
-+	mutex_lock(&dma->lock);
-+	ret = vb2_mmap(&dma->queue, vma);
-+	mutex_unlock(&dma->lock);
-+
-+	return ret;
-+}
-+
-+static struct v4l2_file_operations xvip_dma_fops = {
-+	.owner		= THIS_MODULE,
-+	.unlocked_ioctl	= video_ioctl2,
-+	.open		= xvip_dma_open,
-+	.release	= xvip_dma_release,
-+	.poll		= xvip_dma_poll,
-+	.mmap		= xvip_dma_mmap,
-+};
 +
 +/* -----------------------------------------------------------------------------
-+ * Xilinx Video DMA Core
++ * V4L2 Subdevice Operations
 + */
 +
-+int xvip_dma_init(struct xvip_composite_device *xdev, struct xvip_dma *dma,
-+		  enum v4l2_buf_type type, unsigned int port)
-+{
-+	char name[14];
-+	int ret;
-+
-+	dma->xdev = xdev;
-+	dma->port = port;
-+	mutex_init(&dma->lock);
-+	mutex_init(&dma->pipe.lock);
-+	INIT_LIST_HEAD(&dma->queued_bufs);
-+	spin_lock_init(&dma->queued_lock);
-+
-+	dma->fmtinfo = xvip_get_format_by_fourcc(XVIP_DMA_DEF_FORMAT);
-+	dma->format.pixelformat = dma->fmtinfo->fourcc;
-+	dma->format.colorspace = V4L2_COLORSPACE_SRGB;
-+	dma->format.field = V4L2_FIELD_NONE;
-+	dma->format.width = XVIP_DMA_DEF_WIDTH;
-+	dma->format.height = XVIP_DMA_DEF_HEIGHT;
-+	dma->format.bytesperline = dma->format.width * dma->fmtinfo->bpp;
-+	dma->format.sizeimage = dma->format.bytesperline * dma->format.height;
-+
-+	/* Initialize the media entity... */
-+	dma->pad.flags = type == V4L2_BUF_TYPE_VIDEO_CAPTURE
-+		       ? MEDIA_PAD_FL_SINK : MEDIA_PAD_FL_SOURCE;
-+
-+	ret = media_entity_init(&dma->video.entity, 1, &dma->pad, 0);
-+	if (ret < 0)
-+		goto error;
-+
-+	/* ... and the video node... */
-+	dma->video.v4l2_dev = &xdev->v4l2_dev;
-+	dma->video.fops = &xvip_dma_fops;
-+	snprintf(dma->video.name, sizeof(dma->video.name), "%s %s %u",
-+		 xdev->dev->of_node->name,
-+		 type == V4L2_BUF_TYPE_VIDEO_CAPTURE ? "output" : "input",
-+		 port);
-+	dma->video.vfl_type = VFL_TYPE_GRABBER;
-+	dma->video.vfl_dir = type == V4L2_BUF_TYPE_VIDEO_CAPTURE
-+			   ? VFL_DIR_RX : VFL_DIR_TX;
-+	dma->video.release = video_device_release_empty;
-+	dma->video.ioctl_ops = &xvip_dma_ioctl_ops;
-+
-+	video_set_drvdata(&dma->video, dma);
-+
-+	/* ... and the buffers queue... */
-+	dma->alloc_ctx = vb2_dma_contig_init_ctx(dma->xdev->dev);
-+	if (IS_ERR(dma->alloc_ctx))
-+		goto error;
-+
-+	dma->queue.type = type;
-+	dma->queue.io_modes = VB2_MMAP | VB2_USERPTR | VB2_DMABUF;
-+	dma->queue.drv_priv = dma;
-+	dma->queue.buf_struct_size = sizeof(struct xvip_dma_buffer);
-+	dma->queue.ops = &xvip_dma_queue_qops;
-+	dma->queue.mem_ops = &vb2_dma_contig_memops;
-+	dma->queue.timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC
-+				   | V4L2_BUF_FLAG_TSTAMP_SRC_EOF;
-+	ret = vb2_queue_init(&dma->queue);
-+	if (ret < 0) {
-+		dev_err(dma->xdev->dev, "failed to initialize VB2 queue\n");
-+		goto error;
-+	}
-+
-+	/* ... and the DMA channel. */
-+	sprintf(name, "port%u", port);
-+	dma->dma = dma_request_slave_channel(dma->xdev->dev, name);
-+	if (dma->dma == NULL) {
-+		dev_err(dma->xdev->dev, "no VDMA channel found\n");
-+		ret = -ENODEV;
-+		goto error;
-+	}
-+
-+	dma->align = 1 << dma->dma->device->copy_align;
-+
-+	ret = video_register_device(&dma->video, VFL_TYPE_GRABBER, -1);
-+	if (ret < 0) {
-+		dev_err(dma->xdev->dev, "failed to register video device\n");
-+		goto error;
-+	}
-+
-+	return 0;
-+
-+error:
-+	xvip_dma_cleanup(dma);
-+	return ret;
-+}
-+
-+void xvip_dma_cleanup(struct xvip_dma *dma)
-+{
-+	if (video_is_registered(&dma->video))
-+		video_unregister_device(&dma->video);
-+
-+	if (dma->dma)
-+		dma_release_channel(dma->dma);
-+
-+	if (!IS_ERR_OR_NULL(dma->alloc_ctx))
-+		vb2_dma_contig_cleanup_ctx(dma->alloc_ctx);
-+
-+	media_entity_cleanup(&dma->video.entity);
-+
-+	mutex_destroy(&dma->lock);
-+	mutex_destroy(&dma->pipe.lock);
-+}
-diff --git a/drivers/media/platform/xilinx/xilinx-dma.h b/drivers/media/platform/xilinx/xilinx-dma.h
-new file mode 100644
-index 0000000..95bf6b2
---- /dev/null
-+++ b/drivers/media/platform/xilinx/xilinx-dma.h
-@@ -0,0 +1,109 @@
-+/*
-+ * Xilinx Video DMA
-+ *
-+ * Copyright (C) 2013-2014 Ideas on Board
-+ * Copyright (C) 2013-2014 Xilinx, Inc.
-+ *
-+ * Contacts: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-+ *           Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef __XILINX_VIP_DMA_H__
-+#define __XILINX_VIP_DMA_H__
-+
-+#include <linux/dmaengine.h>
-+#include <linux/mutex.h>
-+#include <linux/spinlock.h>
-+#include <linux/videodev2.h>
-+
-+#include <media/media-entity.h>
-+#include <media/v4l2-dev.h>
-+#include <media/videobuf2-core.h>
-+
-+struct dma_chan;
-+struct xvip_composite_device;
-+struct xvip_video_format;
-+
-+/**
-+ * struct xvip_pipeline - Xilinx Video IP pipeline structure
-+ * @pipe: media pipeline
-+ * @lock: protects the pipeline @stream_count
-+ * @use_count: number of DMA engines using the pipeline
-+ * @stream_count: number of DMA engines currently streaming
-+ * @num_dmas: number of DMA engines in the pipeline
-+ * @output: DMA engine at the output of the pipeline
-+ */
-+struct xvip_pipeline {
-+	struct media_pipeline pipe;
-+
-+	struct mutex lock;
-+	unsigned int use_count;
-+	unsigned int stream_count;
-+
-+	unsigned int num_dmas;
-+	struct xvip_dma *output;
-+};
-+
-+static inline struct xvip_pipeline *to_xvip_pipeline(struct media_entity *e)
-+{
-+	return container_of(e->pipe, struct xvip_pipeline, pipe);
-+}
-+
-+/**
-+ * struct xvip_dma - Video DMA channel
-+ * @list: list entry in a composite device dmas list
-+ * @video: V4L2 video device associated with the DMA channel
-+ * @pad: media pad for the video device entity
-+ * @xdev: composite device the DMA channel belongs to
-+ * @pipe: pipeline belonging to the DMA channel
-+ * @port: composite device DT node port number for the DMA channel
-+ * @lock: protects the @format, @fmtinfo and @queue fields
-+ * @format: active V4L2 pixel format
-+ * @fmtinfo: format information corresponding to the active @format
-+ * @queue: vb2 buffers queue
-+ * @alloc_ctx: allocation context for the vb2 @queue
-+ * @sequence: V4L2 buffers sequence number
-+ * @queued_bufs: list of queued buffers
-+ * @queued_lock: protects the buf_queued list
-+ * @dma: DMA engine channel
-+ * @align: transfer alignment required by the DMA channel (in bytes)
-+ * @xt: dma interleaved template for dma configuration
-+ * @sgl: data chunk structure for dma_interleaved_template
-+ */
-+struct xvip_dma {
-+	struct list_head list;
-+	struct video_device video;
-+	struct media_pad pad;
-+
-+	struct xvip_composite_device *xdev;
-+	struct xvip_pipeline pipe;
-+	unsigned int port;
-+
-+	struct mutex lock;
-+	struct v4l2_pix_format format;
-+	const struct xvip_video_format *fmtinfo;
-+
-+	struct vb2_queue queue;
-+	void *alloc_ctx;
-+	unsigned int sequence;
-+
-+	struct list_head queued_bufs;
-+	spinlock_t queued_lock;
-+
-+	struct dma_chan *dma;
-+	unsigned int align;
-+	struct dma_interleaved_template xt;
-+	struct data_chunk sgl[1];
-+};
-+
-+#define to_xvip_dma(vdev)	container_of(vdev, struct xvip_dma, video)
-+
-+int xvip_dma_init(struct xvip_composite_device *xdev, struct xvip_dma *dma,
-+		  enum v4l2_buf_type type, unsigned int port);
-+void xvip_dma_cleanup(struct xvip_dma *dma);
-+
-+#endif /* __XILINX_VIP_DMA_H__ */
-diff --git a/drivers/media/platform/xilinx/xilinx-vip.c b/drivers/media/platform/xilinx/xilinx-vip.c
-new file mode 100644
-index 0000000..32b6095
---- /dev/null
-+++ b/drivers/media/platform/xilinx/xilinx-vip.c
-@@ -0,0 +1,269 @@
-+/*
-+ * Xilinx Video IP Core
-+ *
-+ * Copyright (C) 2013-2014 Ideas on Board
-+ * Copyright (C) 2013-2014 Xilinx, Inc.
-+ *
-+ * Contacts: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-+ *           Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/export.h>
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+
-+#include "xilinx-vip.h"
-+
-+/* -----------------------------------------------------------------------------
-+ * Helper functions
-+ */
-+
-+static const struct xvip_video_format xvip_video_formats[] = {
-+	{ "rbg", 8, 3, V4L2_MBUS_FMT_RBG888_1X24, 0, NULL },
-+	{ "xrgb", 8, 4, V4L2_MBUS_FMT_RGB888_1X32_PADHI, V4L2_PIX_FMT_BGR32,
-+	  "RGB32 (BE)" },
-+	{ "yuv422", 8, 2, V4L2_MBUS_FMT_UYVY8_1X16, V4L2_PIX_FMT_YUYV,
-+	  "4:2:2, packed, YUYV" },
-+	{ "yuv444", 8, 3, V4L2_MBUS_FMT_VUY8_1X24, V4L2_PIX_FMT_YUV444,
-+	  "4:4:4, packed, YUYV" },
-+	{ "rggb", 8, 1, V4L2_MBUS_FMT_SRGGB8_1X8, V4L2_PIX_FMT_SGRBG8,
-+	  "Bayer 8-bit RGGB" },
-+	{ "grbg", 8, 1, V4L2_MBUS_FMT_SGRBG8_1X8, V4L2_PIX_FMT_SGRBG8,
-+	  "Bayer 8-bit GRBG" },
-+	{ "gbrg", 8, 1, V4L2_MBUS_FMT_SGBRG8_1X8, V4L2_PIX_FMT_SGBRG8,
-+	  "Bayer 8-bit GBRG" },
-+	{ "bggr", 8, 1, V4L2_MBUS_FMT_SBGGR8_1X8, V4L2_PIX_FMT_SBGGR8,
-+	  "Bayer 8-bit BGGR" },
-+};
-+
-+/**
-+ * xvip_get_format_by_code - Retrieve format information for a media bus code
-+ * @code: the format media bus code
-+ *
-+ * Return: a pointer to the format information structure corresponding to the
-+ * given V4L2 media bus format @code, or ERR_PTR if no corresponding format can
-+ * be found.
-+ */
-+const struct xvip_video_format *xvip_get_format_by_code(unsigned int code)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(xvip_video_formats); ++i) {
-+		const struct xvip_video_format *format = &xvip_video_formats[i];
-+
-+		if (format->code == code)
-+			return format;
-+	}
-+
-+	return ERR_PTR(-EINVAL);
-+}
-+EXPORT_SYMBOL_GPL(xvip_get_format_by_code);
-+
-+/**
-+ * xvip_get_format_by_fourcc - Retrieve format information for a 4CC
-+ * @fourcc: the format 4CC
-+ *
-+ * Return: a pointer to the format information structure corresponding to the
-+ * given V4L2 format @fourcc, or ERR_PTR if no corresponding format can be
-+ * found.
-+ */
-+const struct xvip_video_format *xvip_get_format_by_fourcc(u32 fourcc)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(xvip_video_formats); ++i) {
-+		const struct xvip_video_format *format = &xvip_video_formats[i];
-+
-+		if (format->fourcc == fourcc)
-+			return format;
-+	}
-+
-+	return ERR_PTR(-EINVAL);
-+}
-+EXPORT_SYMBOL_GPL(xvip_get_format_by_fourcc);
-+
-+/**
-+ * xvip_of_get_format - Parse a device tree node and return format information
-+ * @node: the device tree node
-+ *
-+ * Read the xlnx,video-format and xlnx,video-width properties from the device
-+ * tree @node passed as an argument and return the corresponding format
-+ * information.
-+ *
-+ * Return: a pointer to the format information structure corresponding to the
-+ * format name and width, or ERR_PTR if no corresponding format can be found.
-+ */
-+const struct xvip_video_format *xvip_of_get_format(struct device_node *node)
-+{
-+	const char *name;
-+	unsigned int i;
-+	u32 width;
-+	int ret;
-+
-+	ret = of_property_read_string(node, "xlnx,video-format", &name);
-+	if (ret < 0)
-+		return ERR_PTR(ret);
-+
-+	ret = of_property_read_u32(node, "xlnx,video-width", &width);
-+	if (ret < 0)
-+		return ERR_PTR(ret);
-+
-+	for (i = 0; i < ARRAY_SIZE(xvip_video_formats); ++i) {
-+		const struct xvip_video_format *format = &xvip_video_formats[i];
-+
-+		if (strcmp(format->name, name) == 0 && format->width == width)
-+			return format;
-+	}
-+
-+	return ERR_PTR(-EINVAL);
-+}
-+EXPORT_SYMBOL_GPL(xvip_of_get_format);
-+
-+/**
-+ * xvip_set_format_size - Set the media bus frame format size
-+ * @format: V4L2 frame format on media bus
-+ * @fmt: media bus format
-+ *
-+ * Set the media bus frame format size. The width / height from the subdevice
-+ * format are set to the given media bus format. The new format size is stored
-+ * in @format. The width and height are clamped using default min / max values.
-+ */
-+void xvip_set_format_size(struct v4l2_mbus_framefmt *format,
-+			  const struct v4l2_subdev_format *fmt)
-+{
-+	format->width = clamp_t(unsigned int, fmt->format.width,
-+				XVIP_MIN_WIDTH, XVIP_MAX_WIDTH);
-+	format->height = clamp_t(unsigned int, fmt->format.height,
-+			 XVIP_MIN_HEIGHT, XVIP_MAX_HEIGHT);
-+}
-+EXPORT_SYMBOL_GPL(xvip_set_format_size);
-+
-+/**
-+ * xvip_clr_or_set - Clear or set the register with a bitmask
-+ * @xvip: Xilinx Video IP device
-+ * @addr: address of register
-+ * @mask: bitmask to be set or cleared
-+ * @set: boolean flag indicating whether to set or clear
-+ *
-+ * Clear or set the register at address @addr with a bitmask @mask depending on
-+ * the boolean flag @set. When the flag @set is true, the bitmask is set in
-+ * the register, otherwise the bitmask is cleared from the register
-+ * when the flag @set is false.
-+ *
-+ * Fox eample, this function can be used to set a control with a boolean value
-+ * requested by users. If the caller knows whether to set or clear in the first
-+ * place, the caller should call xvip_clr() or xvip_set() directly instead of
-+ * using this function.
-+ */
-+void xvip_clr_or_set(struct xvip_device *xvip, u32 addr, u32 mask, bool set)
-+{
-+	u32 reg;
-+
-+	reg = xvip_read(xvip, addr);
-+	reg = set ? reg | mask : reg & ~mask;
-+	xvip_write(xvip, addr, reg);
-+}
-+EXPORT_SYMBOL_GPL(xvip_clr_or_set);
-+
-+/**
-+ * xvip_clr_and_set - Clear and set the register with a bitmask
-+ * @xvip: Xilinx Video IP device
-+ * @addr: address of register
-+ * @clr: bitmask to be cleared
-+ * @set: bitmask to be set
-+ *
-+ * Clear a bit(s) of mask @clr in the register at address @addr, then set
-+ * a bit(s) of mask @set in the register after.
-+ */
-+void xvip_clr_and_set(struct xvip_device *xvip, u32 addr, u32 clr, u32 set)
-+{
-+	u32 reg;
-+
-+	reg = xvip_read(xvip, addr);
-+	reg &= ~clr;
-+	reg |= set;
-+	xvip_write(xvip, addr, reg);
-+}
-+EXPORT_SYMBOL_GPL(xvip_clr_and_set);
-+
-+/* -----------------------------------------------------------------------------
-+ * Subdev operation helpers
-+ */
-+
-+/**
-+ * xvip_enum_mbus_code - Enumerate the media format code
-+ * @subdev: V4L2 subdevice
-+ * @fh: V4L2 subdevice file handle
-+ * @code: returning media bus code
-+ *
-+ * Enumerate the media bus code of the subdevice. Return the corresponding
-+ * pad format code. This function only works for subdevices with fixed format
-+ * on all pads. Subdevices with multiple format should have their own
-+ * function to enumerate mbus codes.
-+ *
-+ * Return: 0 if the media bus code is found, or -EINVAL if the format index
-+ * is not valid.
-+ */
-+int xvip_enum_mbus_code(struct v4l2_subdev *subdev, struct v4l2_subdev_fh *fh,
-+			struct v4l2_subdev_mbus_code_enum *code)
-+{
-+	struct v4l2_mbus_framefmt *format;
-+
-+	if (code->index)
-+		return -EINVAL;
-+
-+	format = v4l2_subdev_get_try_format(fh, code->pad);
-+
-+	code->code = format->code;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(xvip_enum_mbus_code);
-+
-+/**
-+ * xvip_enum_frame_size - Enumerate the media bus frame size
-+ * @subdev: V4L2 subdevice
-+ * @fh: V4L2 subdevice file handle
-+ * @fse: returning media bus frame size
-+ *
-+ * This function is a drop-in implementation of the subdev enum_frame_size pad
-+ * operation. It assumes that the subdevice has one sink pad and one source
-+ * pad, and that the format on the source pad is always identical to the
-+ * format on the sink pad. Entities with different requirements need to
-+ * implement their own enum_frame_size handlers.
-+ *
-+ * Return: 0 if the media bus frame size is found, or -EINVAL
-+ * if the index or the code is not valid.
-+ */
-+int xvip_enum_frame_size(struct v4l2_subdev *subdev, struct v4l2_subdev_fh *fh,
-+			 struct v4l2_subdev_frame_size_enum *fse)
++static int xtpg_enum_frame_size(struct v4l2_subdev *subdev,
++				struct v4l2_subdev_fh *fh,
++				struct v4l2_subdev_frame_size_enum *fse)
 +{
 +	struct v4l2_mbus_framefmt *format;
 +
@@ -1611,15 +484,15 @@ index 0000000..32b6095
 +	if (fse->index || fse->code != format->code)
 +		return -EINVAL;
 +
-+	if (fse->pad == XVIP_PAD_SINK) {
++	/* Min / max values for pad 0 is always fixed in both one and two pads
++	 * modes. In two pads mode, the source pad(= 1) size is identical to
++	 * the sink pad size */
++	if (fse->pad == 0) {
 +		fse->min_width = XVIP_MIN_WIDTH;
 +		fse->max_width = XVIP_MAX_WIDTH;
 +		fse->min_height = XVIP_MIN_HEIGHT;
 +		fse->max_height = XVIP_MAX_HEIGHT;
 +	} else {
-+		/* The size on the source pad is fixed and always identical to
-+		 * the size on the sink pad.
-+		 */
 +		fse->min_width = format->width;
 +		fse->max_width = format->width;
 +		fse->min_height = format->height;
@@ -1628,842 +501,354 @@ index 0000000..32b6095
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(xvip_enum_frame_size);
-diff --git a/drivers/media/platform/xilinx/xilinx-vip.h b/drivers/media/platform/xilinx/xilinx-vip.h
-new file mode 100644
-index 0000000..2e2b0dc
---- /dev/null
-+++ b/drivers/media/platform/xilinx/xilinx-vip.h
-@@ -0,0 +1,227 @@
-+/*
-+ * Xilinx Video IP Core
-+ *
-+ * Copyright (C) 2013-2014 Ideas on Board
-+ * Copyright (C) 2013-2014 Xilinx, Inc.
-+ *
-+ * Contacts: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-+ *           Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
 +
-+#ifndef __XILINX_VIP_H__
-+#define __XILINX_VIP_H__
-+
-+#include <linux/io.h>
-+#include <media/v4l2-subdev.h>
-+
-+/*
-+ * Minimum and maximum width and height common to most video IP cores. IP
-+ * cores with different requirements must define their own values.
-+ */
-+#define XVIP_MIN_WIDTH			32
-+#define XVIP_MAX_WIDTH			7680
-+#define XVIP_MIN_HEIGHT			32
-+#define XVIP_MAX_HEIGHT			7680
-+
-+/*
-+ * Pad IDs. IP cores with with multiple inputs or outputs should define
-+ * their own values.
-+ */
-+#define XVIP_PAD_SINK			0
-+#define XVIP_PAD_SOURCE			1
-+
-+/* Xilinx Video IP Control Registers */
-+#define XVIP_CTRL_CONTROL			0x0000
-+#define XVIP_CTRL_CONTROL_SW_ENABLE		(1 << 0)
-+#define XVIP_CTRL_CONTROL_REG_UPDATE		(1 << 1)
-+#define XVIP_CTRL_CONTROL_BYPASS		(1 << 4)
-+#define XVIP_CTRL_CONTROL_TEST_PATTERN		(1 << 5)
-+#define XVIP_CTRL_CONTROL_FRAME_SYNC_RESET	(1 << 30)
-+#define XVIP_CTRL_CONTROL_SW_RESET		(1 << 31)
-+#define XVIP_CTRL_STATUS			0x0004
-+#define XVIP_CTRL_STATUS_PROC_STARTED		(1 << 0)
-+#define XVIP_CTRL_STATUS_EOF			(1 << 1)
-+#define XVIP_CTRL_ERROR				0x0008
-+#define XVIP_CTRL_ERROR_SLAVE_EOL_EARLY		(1 << 0)
-+#define XVIP_CTRL_ERROR_SLAVE_EOL_LATE		(1 << 1)
-+#define XVIP_CTRL_ERROR_SLAVE_SOF_EARLY		(1 << 2)
-+#define XVIP_CTRL_ERROR_SLAVE_SOF_LATE		(1 << 3)
-+#define XVIP_CTRL_IRQ_ENABLE			0x000c
-+#define XVIP_CTRL_IRQ_ENABLE_PROC_STARTED	(1 << 0)
-+#define XVIP_CTRL_IRQ_EOF			(1 << 1)
-+#define XVIP_CTRL_VERSION			0x0010
-+#define XVIP_CTRL_VERSION_MAJOR_MASK		(0xff << 24)
-+#define XVIP_CTRL_VERSION_MAJOR_SHIFT		24
-+#define XVIP_CTRL_VERSION_MINOR_MASK		(0xff << 16)
-+#define XVIP_CTRL_VERSION_MINOR_SHIFT		16
-+#define XVIP_CTRL_VERSION_REVISION_MASK		(0xf << 12)
-+#define XVIP_CTRL_VERSION_REVISION_SHIFT	12
-+#define XVIP_CTRL_VERSION_PATCH_MASK		(0xf << 8)
-+#define XVIP_CTRL_VERSION_PATCH_SHIFT		8
-+#define XVIP_CTRL_VERSION_INTERNAL_MASK		(0xff << 0)
-+#define XVIP_CTRL_VERSION_INTERNAL_SHIFT	0
-+
-+/* Xilinx Video IP Timing Registers */
-+#define XVIP_ACTIVE_SIZE			0x0020
-+#define XVIP_ACTIVE_VSIZE_MASK			(0x7ff << 16)
-+#define XVIP_ACTIVE_VSIZE_SHIFT			16
-+#define XVIP_ACTIVE_HSIZE_MASK			(0x7ff << 0)
-+#define XVIP_ACTIVE_HSIZE_SHIFT			0
-+#define XVIP_ENCODING				0x0028
-+#define XVIP_ENCODING_NBITS_8			(0 << 4)
-+#define XVIP_ENCODING_NBITS_10			(1 << 4)
-+#define XVIP_ENCODING_NBITS_12			(2 << 4)
-+#define XVIP_ENCODING_NBITS_16			(3 << 4)
-+#define XVIP_ENCODING_NBITS_MASK		(3 << 4)
-+#define XVIP_ENCODING_NBITS_SHIFT		4
-+#define XVIP_ENCODING_VIDEO_FORMAT_YUV422	(0 << 0)
-+#define XVIP_ENCODING_VIDEO_FORMAT_YUV444	(1 << 0)
-+#define XVIP_ENCODING_VIDEO_FORMAT_RGB		(2 << 0)
-+#define XVIP_ENCODING_VIDEO_FORMAT_YUV420	(3 << 0)
-+#define XVIP_ENCODING_VIDEO_FORMAT_MASK		(3 << 0)
-+#define XVIP_ENCODING_VIDEO_FORMAT_SHIFT	0
-+
-+/**
-+ * struct xvip_device - Xilinx Video IP device structure
-+ * @subdev: V4L2 subdevice
-+ * @dev: (OF) device
-+ * @iomem: device I/O register space remapped to kernel virtual memory
-+ * @saved_ctrl: saved control register for resume / suspend
-+ */
-+struct xvip_device {
-+	struct v4l2_subdev subdev;
-+	struct device *dev;
-+	void __iomem *iomem;
-+	u32 saved_ctrl;
-+};
-+
-+/**
-+ * struct xvip_video_format - Xilinx Video IP video format description
-+ * @name: AXI4 format name
-+ * @width: AXI4 format width in bits per component
-+ * @bpp: bytes per pixel (when stored in memory)
-+ * @code: media bus format code
-+ * @fourcc: V4L2 pixel format FCC identifier
-+ * @description: format description, suitable for userspace
-+ */
-+struct xvip_video_format {
-+	const char *name;
-+	unsigned int width;
-+	unsigned int bpp;
-+	unsigned int code;
-+	u32 fourcc;
-+	const char *description;
-+};
-+
-+const struct xvip_video_format *xvip_get_format_by_code(unsigned int code);
-+const struct xvip_video_format *xvip_get_format_by_fourcc(u32 fourcc);
-+const struct xvip_video_format *xvip_of_get_format(struct device_node *node);
-+void xvip_set_format_size(struct v4l2_mbus_framefmt *format,
-+			  const struct v4l2_subdev_format *fmt);
-+int xvip_enum_mbus_code(struct v4l2_subdev *subdev, struct v4l2_subdev_fh *fh,
-+			struct v4l2_subdev_mbus_code_enum *code);
-+int xvip_enum_frame_size(struct v4l2_subdev *subdev, struct v4l2_subdev_fh *fh,
-+			 struct v4l2_subdev_frame_size_enum *fse);
-+
-+static inline u32 xvip_read(struct xvip_device *xvip, u32 addr)
++static int xtpg_open(struct v4l2_subdev *subdev, struct v4l2_subdev_fh *fh)
 +{
-+	return ioread32(xvip->iomem + addr);
-+}
++	struct xtpg_device *xtpg = to_tpg(subdev);
 +
-+static inline void xvip_write(struct xvip_device *xvip, u32 addr, u32 value)
-+{
-+	iowrite32(value, xvip->iomem + addr);
-+}
++	*v4l2_subdev_get_try_format(fh, 0) = xtpg->default_format;
 +
-+static inline void xvip_clr(struct xvip_device *xvip, u32 addr, u32 clr)
-+{
-+	xvip_write(xvip, addr, xvip_read(xvip, addr) & ~clr);
-+}
-+
-+static inline void xvip_set(struct xvip_device *xvip, u32 addr, u32 set)
-+{
-+	xvip_write(xvip, addr, xvip_read(xvip, addr) | set);
-+}
-+
-+void xvip_clr_or_set(struct xvip_device *xvip, u32 addr, u32 mask, bool set);
-+void xvip_clr_and_set(struct xvip_device *xvip, u32 addr, u32 clr, u32 set);
-+
-+static inline void xvip_reset(struct xvip_device *xvip)
-+{
-+	xvip_write(xvip, XVIP_CTRL_CONTROL, XVIP_CTRL_CONTROL_SW_RESET);
-+}
-+
-+static inline void xvip_start(struct xvip_device *xvip)
-+{
-+	xvip_set(xvip, XVIP_CTRL_CONTROL,
-+		 XVIP_CTRL_CONTROL_SW_ENABLE | XVIP_CTRL_CONTROL_REG_UPDATE);
-+}
-+
-+static inline void xvip_stop(struct xvip_device *xvip)
-+{
-+	xvip_clr(xvip, XVIP_CTRL_CONTROL, XVIP_CTRL_CONTROL_SW_ENABLE);
-+}
-+
-+static inline void xvip_resume(struct xvip_device *xvip)
-+{
-+	xvip_write(xvip, XVIP_CTRL_CONTROL,
-+		   xvip->saved_ctrl | XVIP_CTRL_CONTROL_SW_ENABLE);
-+}
-+
-+static inline void xvip_suspend(struct xvip_device *xvip)
-+{
-+	xvip->saved_ctrl = xvip_read(xvip, XVIP_CTRL_CONTROL);
-+	xvip_write(xvip, XVIP_CTRL_CONTROL,
-+		   xvip->saved_ctrl & ~XVIP_CTRL_CONTROL_SW_ENABLE);
-+}
-+
-+static inline void xvip_set_frame_size(struct xvip_device *xvip,
-+				       const struct v4l2_mbus_framefmt *format)
-+{
-+	xvip_write(xvip, XVIP_ACTIVE_SIZE,
-+		   (format->height << XVIP_ACTIVE_VSIZE_SHIFT) |
-+		   (format->width << XVIP_ACTIVE_HSIZE_SHIFT));
-+}
-+
-+static inline void xvip_get_frame_size(struct xvip_device *xvip,
-+				       struct v4l2_mbus_framefmt *format)
-+{
-+	u32 reg;
-+
-+	reg = xvip_read(xvip, XVIP_ACTIVE_SIZE);
-+	format->width = (reg & XVIP_ACTIVE_HSIZE_MASK) >>
-+			XVIP_ACTIVE_HSIZE_SHIFT;
-+	format->height = (reg & XVIP_ACTIVE_VSIZE_MASK) >>
-+			 XVIP_ACTIVE_VSIZE_SHIFT;
-+}
-+
-+static inline void xvip_enable_reg_update(struct xvip_device *xvip)
-+{
-+	xvip_set(xvip, XVIP_CTRL_CONTROL, XVIP_CTRL_CONTROL_REG_UPDATE);
-+}
-+
-+static inline void xvip_disable_reg_update(struct xvip_device *xvip)
-+{
-+	xvip_clr(xvip, XVIP_CTRL_CONTROL, XVIP_CTRL_CONTROL_REG_UPDATE);
-+}
-+
-+static inline void xvip_print_version(struct xvip_device *xvip)
-+{
-+	u32 version;
-+
-+	version = xvip_read(xvip, XVIP_CTRL_VERSION);
-+
-+	dev_info(xvip->dev, "device found, version %u.%02x%x\n",
-+		 ((version & XVIP_CTRL_VERSION_MAJOR_MASK) >>
-+		  XVIP_CTRL_VERSION_MAJOR_SHIFT),
-+		 ((version & XVIP_CTRL_VERSION_MINOR_MASK) >>
-+		  XVIP_CTRL_VERSION_MINOR_SHIFT),
-+		 ((version & XVIP_CTRL_VERSION_REVISION_MASK) >>
-+		  XVIP_CTRL_VERSION_REVISION_SHIFT));
-+}
-+
-+#endif /* __XILINX_VIP_H__ */
-diff --git a/drivers/media/platform/xilinx/xilinx-vipp.c b/drivers/media/platform/xilinx/xilinx-vipp.c
-new file mode 100644
-index 0000000..7fbecad
---- /dev/null
-+++ b/drivers/media/platform/xilinx/xilinx-vipp.c
-@@ -0,0 +1,666 @@
-+/*
-+ * Xilinx Video IP Composite Device
-+ *
-+ * Copyright (C) 2013-2014 Ideas on Board
-+ * Copyright (C) 2013-2014 Xilinx, Inc.
-+ *
-+ * Contacts: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-+ *           Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/list.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_graph.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#include <media/v4l2-async.h>
-+#include <media/v4l2-common.h>
-+#include <media/v4l2-device.h>
-+#include <media/v4l2-of.h>
-+
-+#include "xilinx-dma.h"
-+#include "xilinx-vipp.h"
-+
-+#define XVIPP_DMA_S2MM				0
-+#define XVIPP_DMA_MM2S				1
-+
-+/**
-+ * struct xvip_graph_entity - Entity in the video graph
-+ * @list: list entry in a graph entities list
-+ * @node: the entity's DT node
-+ * @entity: media entity, from the corresponding V4L2 subdev
-+ * @asd: subdev asynchronous registration information
-+ * @subdev: V4L2 subdev
-+ */
-+struct xvip_graph_entity {
-+	struct list_head list;
-+	struct device_node *node;
-+	struct media_entity *entity;
-+
-+	struct v4l2_async_subdev asd;
-+	struct v4l2_subdev *subdev;
-+};
-+
-+/* -----------------------------------------------------------------------------
-+ * Graph Management
-+ */
-+
-+static struct xvip_graph_entity *
-+xvip_graph_find_entity(struct xvip_composite_device *xdev,
-+		       const struct device_node *node)
-+{
-+	struct xvip_graph_entity *entity;
-+
-+	list_for_each_entry(entity, &xdev->entities, list) {
-+		if (entity->node == node)
-+			return entity;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int xvip_graph_build_one(struct xvip_composite_device *xdev,
-+				struct xvip_graph_entity *entity)
-+{
-+	u32 link_flags = MEDIA_LNK_FL_ENABLED;
-+	struct media_entity *local = entity->entity;
-+	struct media_entity *remote;
-+	struct media_pad *local_pad;
-+	struct media_pad *remote_pad;
-+	struct xvip_graph_entity *ent;
-+	struct v4l2_of_link link;
-+	struct device_node *ep = NULL;
-+	struct device_node *next;
-+	int ret = 0;
-+
-+	dev_dbg(xdev->dev, "creating links for entity %s\n", local->name);
-+
-+	while (1) {
-+		/* Get the next endpoint and parse its link. */
-+		next = of_graph_get_next_endpoint(entity->node, ep);
-+		if (next == NULL)
-+			break;
-+
-+		of_node_put(ep);
-+		ep = next;
-+
-+		dev_dbg(xdev->dev, "processing endpoint %s\n", ep->full_name);
-+
-+		ret = v4l2_of_parse_link(ep, &link);
-+		if (ret < 0) {
-+			dev_err(xdev->dev, "failed to parse link for %s\n",
-+				ep->full_name);
-+			continue;
-+		}
-+
-+		/* Skip sink ports, they will be processed from the other end of
-+		 * the link.
-+		 */
-+		if (link.local_port >= local->num_pads) {
-+			dev_err(xdev->dev, "invalid port number %u on %s\n",
-+				link.local_port, link.local_node->full_name);
-+			v4l2_of_put_link(&link);
-+			ret = -EINVAL;
-+			break;
-+		}
-+
-+		local_pad = &local->pads[link.local_port];
-+
-+		if (local_pad->flags & MEDIA_PAD_FL_SINK) {
-+			dev_dbg(xdev->dev, "skipping sink port %s:%u\n",
-+				link.local_node->full_name, link.local_port);
-+			v4l2_of_put_link(&link);
-+			continue;
-+		}
-+
-+		/* Skip DMA engines, they will be processed separately. */
-+		if (link.remote_node == xdev->dev->of_node) {
-+			dev_dbg(xdev->dev, "skipping DMA port %s:%u\n",
-+				link.local_node->full_name, link.local_port);
-+			v4l2_of_put_link(&link);
-+			continue;
-+		}
-+
-+		/* Find the remote entity. */
-+		ent = xvip_graph_find_entity(xdev, link.remote_node);
-+		if (ent == NULL) {
-+			dev_err(xdev->dev, "no entity found for %s\n",
-+				link.remote_node->full_name);
-+			v4l2_of_put_link(&link);
-+			ret = -ENODEV;
-+			break;
-+		}
-+
-+		remote = ent->entity;
-+
-+		if (link.remote_port >= remote->num_pads) {
-+			dev_err(xdev->dev, "invalid port number %u on %s\n",
-+				link.remote_port, link.remote_node->full_name);
-+			v4l2_of_put_link(&link);
-+			ret = -EINVAL;
-+			break;
-+		}
-+
-+		remote_pad = &remote->pads[link.remote_port];
-+
-+		v4l2_of_put_link(&link);
-+
-+		/* Create the media link. */
-+		dev_dbg(xdev->dev, "creating %s:%u -> %s:%u link\n",
-+			local->name, local_pad->index,
-+			remote->name, remote_pad->index);
-+
-+		ret = media_entity_create_link(local, local_pad->index,
-+					       remote, remote_pad->index,
-+					       link_flags);
-+		if (ret < 0) {
-+			dev_err(xdev->dev,
-+				"failed to create %s:%u -> %s:%u link\n",
-+				local->name, local_pad->index,
-+				remote->name, remote_pad->index);
-+			break;
-+		}
-+	}
-+
-+	of_node_put(ep);
-+	return ret;
-+}
-+
-+static struct xvip_dma *
-+xvip_graph_find_dma(struct xvip_composite_device *xdev, unsigned int port)
-+{
-+	struct xvip_dma *dma;
-+
-+	list_for_each_entry(dma, &xdev->dmas, list) {
-+		if (dma->port == port)
-+			return dma;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int xvip_graph_build_dma(struct xvip_composite_device *xdev)
-+{
-+	u32 link_flags = MEDIA_LNK_FL_ENABLED;
-+	struct device_node *node = xdev->dev->of_node;
-+	struct media_entity *source;
-+	struct media_entity *sink;
-+	struct media_pad *source_pad;
-+	struct media_pad *sink_pad;
-+	struct xvip_graph_entity *ent;
-+	struct v4l2_of_link link;
-+	struct device_node *ep = NULL;
-+	struct device_node *next;
-+	struct xvip_dma *dma;
-+	int ret = 0;
-+
-+	dev_dbg(xdev->dev, "creating links for DMA engines\n");
-+
-+	while (1) {
-+		/* Get the next endpoint and parse its link. */
-+		next = of_graph_get_next_endpoint(node, ep);
-+		if (next == NULL)
-+			break;
-+
-+		of_node_put(ep);
-+		ep = next;
-+
-+		dev_dbg(xdev->dev, "processing endpoint %s\n", ep->full_name);
-+
-+		ret = v4l2_of_parse_link(ep, &link);
-+		if (ret < 0) {
-+			dev_err(xdev->dev, "failed to parse link for %s\n",
-+				ep->full_name);
-+			continue;
-+		}
-+
-+		/* Find the DMA engine. */
-+		dma = xvip_graph_find_dma(xdev, link.local_port);
-+		if (dma == NULL) {
-+			dev_err(xdev->dev, "no DMA engine found for port %u\n",
-+				link.local_port);
-+			v4l2_of_put_link(&link);
-+			ret = -EINVAL;
-+			break;
-+		}
-+
-+		dev_dbg(xdev->dev, "creating link for DMA engine %s\n",
-+			dma->video.name);
-+
-+		/* Find the remote entity. */
-+		ent = xvip_graph_find_entity(xdev, link.remote_node);
-+		if (ent == NULL) {
-+			dev_err(xdev->dev, "no entity found for %s\n",
-+				link.remote_node->full_name);
-+			v4l2_of_put_link(&link);
-+			ret = -ENODEV;
-+			break;
-+		}
-+
-+		if (link.remote_port >= ent->entity->num_pads) {
-+			dev_err(xdev->dev, "invalid port number %u on %s\n",
-+				link.remote_port, link.remote_node->full_name);
-+			v4l2_of_put_link(&link);
-+			ret = -EINVAL;
-+			break;
-+		}
-+
-+		if (dma->pad.flags & MEDIA_PAD_FL_SOURCE) {
-+			source = &dma->video.entity;
-+			source_pad = &dma->pad;
-+			sink = ent->entity;
-+			sink_pad = &sink->pads[link.remote_port];
-+		} else {
-+			source = ent->entity;
-+			source_pad = &source->pads[link.remote_port];
-+			sink = &dma->video.entity;
-+			sink_pad = &dma->pad;
-+		}
-+
-+		v4l2_of_put_link(&link);
-+
-+		/* Create the media link. */
-+		dev_dbg(xdev->dev, "creating %s:%u -> %s:%u link\n",
-+			source->name, source_pad->index,
-+			sink->name, sink_pad->index);
-+
-+		ret = media_entity_create_link(source, source_pad->index,
-+					       sink, sink_pad->index,
-+					       link_flags);
-+		if (ret < 0) {
-+			dev_err(xdev->dev,
-+				"failed to create %s:%u -> %s:%u link\n",
-+				source->name, source_pad->index,
-+				sink->name, sink_pad->index);
-+			break;
-+		}
-+	}
-+
-+	of_node_put(ep);
-+	return ret;
-+}
-+
-+static int xvip_graph_notify_complete(struct v4l2_async_notifier *notifier)
-+{
-+	struct xvip_composite_device *xdev =
-+		container_of(notifier, struct xvip_composite_device, notifier);
-+	struct xvip_graph_entity *entity;
-+	int ret;
-+
-+	dev_dbg(xdev->dev, "notify complete, all subdevs registered\n");
-+
-+	/* Create links for every entity. */
-+	list_for_each_entry(entity, &xdev->entities, list) {
-+		ret = xvip_graph_build_one(xdev, entity);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	/* Create links for DMA channels. */
-+	ret = xvip_graph_build_dma(xdev);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = v4l2_device_register_subdev_nodes(&xdev->v4l2_dev);
-+	if (ret < 0)
-+		dev_err(xdev->dev, "failed to register subdev nodes\n");
-+
-+	return ret;
-+}
-+
-+static int xvip_graph_notify_bound(struct v4l2_async_notifier *notifier,
-+				   struct v4l2_subdev *subdev,
-+				   struct v4l2_async_subdev *asd)
-+{
-+	struct xvip_composite_device *xdev =
-+		container_of(notifier, struct xvip_composite_device, notifier);
-+	struct xvip_graph_entity *entity;
-+
-+	/* Locate the entity corresponding to the bound subdev and store the
-+	 * subdev pointer.
-+	 */
-+	list_for_each_entry(entity, &xdev->entities, list) {
-+		if (entity->node != subdev->dev->of_node)
-+			continue;
-+
-+		if (entity->subdev) {
-+			dev_err(xdev->dev, "duplicate subdev for node %s\n",
-+				entity->node->full_name);
-+			return -EINVAL;
-+		}
-+
-+		dev_dbg(xdev->dev, "subdev %s bound\n", subdev->name);
-+		entity->entity = &subdev->entity;
-+		entity->subdev = subdev;
-+		return 0;
-+	}
-+
-+	dev_err(xdev->dev, "no entity for subdev %s\n", subdev->name);
-+	return -EINVAL;
-+}
-+
-+static int xvip_graph_parse_one(struct xvip_composite_device *xdev,
-+				struct device_node *node)
-+{
-+	struct xvip_graph_entity *entity;
-+	struct device_node *remote;
-+	struct device_node *ep = NULL;
-+	struct device_node *next;
-+	int ret = 0;
-+
-+	dev_dbg(xdev->dev, "parsing node %s\n", node->full_name);
-+
-+	while (1) {
-+		next = of_graph_get_next_endpoint(node, ep);
-+		if (next == NULL)
-+			break;
-+
-+		of_node_put(ep);
-+		ep = next;
-+
-+		dev_dbg(xdev->dev, "handling endpoint %s\n", ep->full_name);
-+
-+		remote = of_graph_get_remote_port_parent(ep);
-+		if (remote == NULL) {
-+			ret = -EINVAL;
-+			break;
-+		}
-+
-+		/* Skip entities that we have already processed. */
-+		if (remote == xdev->dev->of_node ||
-+		    xvip_graph_find_entity(xdev, remote)) {
-+			of_node_put(remote);
-+			continue;
-+		}
-+
-+		entity = devm_kzalloc(xdev->dev, sizeof(*entity), GFP_KERNEL);
-+		if (entity == NULL) {
-+			of_node_put(remote);
-+			ret = -ENOMEM;
-+			break;
-+		}
-+
-+		entity->node = remote;
-+		entity->asd.match_type = V4L2_ASYNC_MATCH_OF;
-+		entity->asd.match.of.node = remote;
-+		list_add_tail(&entity->list, &xdev->entities);
-+		xdev->num_subdevs++;
-+	}
-+
-+	of_node_put(ep);
-+	return ret;
-+}
-+
-+static int xvip_graph_parse(struct xvip_composite_device *xdev)
-+{
-+	struct xvip_graph_entity *entity;
-+	int ret;
-+
-+	/*
-+	 * Walk the links to parse the full graph. Start by parsing the
-+	 * composite node and then parse entities in turn. The list_for_each
-+	 * loop will handle entities added at the end of the list while walking
-+	 * the links.
-+	 */
-+	ret = xvip_graph_parse_one(xdev, xdev->dev->of_node);
-+	if (ret < 0)
-+		return 0;
-+
-+	list_for_each_entry(entity, &xdev->entities, list) {
-+		ret = xvip_graph_parse_one(xdev, entity->node);
-+		if (ret < 0)
-+			break;
-+	}
-+
-+	return ret;
-+}
-+
-+static int xvip_graph_dma_init_one(struct xvip_composite_device *xdev,
-+				   struct device_node *node)
-+{
-+	struct xvip_dma *dma;
-+	enum v4l2_buf_type type;
-+	const char *direction;
-+	unsigned int index;
-+	int ret;
-+
-+	ret = of_property_read_string(node, "direction", &direction);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (strcmp(direction, "input") == 0)
-+		type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-+	else if (strcmp(direction, "output") == 0)
-+		type = V4L2_BUF_TYPE_VIDEO_OUTPUT;
-+	else
-+		return -EINVAL;
-+
-+	of_property_read_u32(node, "reg", &index);
-+
-+	dma = devm_kzalloc(xdev->dev, sizeof(*dma), GFP_KERNEL);
-+	if (dma == NULL)
-+		return -ENOMEM;
-+
-+	ret = xvip_dma_init(xdev, dma, type, index);
-+	if (ret < 0) {
-+		dev_err(xdev->dev, "%s initialization failed\n",
-+			node->full_name);
-+		return ret;
-+	}
-+
-+	list_add_tail(&dma->list, &xdev->dmas);
++	if (xtpg->npads == 2)
++		*v4l2_subdev_get_try_format(fh, 1) = xtpg->default_format;
 +
 +	return 0;
 +}
 +
-+static int xvip_graph_dma_init(struct xvip_composite_device *xdev)
++static int xtpg_close(struct v4l2_subdev *subdev, struct v4l2_subdev_fh *fh)
 +{
-+	struct device_node *ports;
-+	struct device_node *port;
-+	int ret;
++	return 0;
++}
 +
-+	ports = of_get_child_by_name(xdev->dev->of_node, "ports");
-+	if (ports == NULL) {
-+		dev_err(xdev->dev, "ports node not present\n");
-+		return -EINVAL;
-+	}
-+
-+	for_each_child_of_node(ports, port) {
-+		ret = xvip_graph_dma_init_one(xdev, port);
-+		if (ret < 0)
-+			return ret;
++static int xtpg_s_ctrl(struct v4l2_ctrl *ctrl)
++{
++	struct xtpg_device *xtpg = container_of(ctrl->handler,
++						struct xtpg_device,
++						ctrl_handler);
++	switch (ctrl->id) {
++	case V4L2_CID_TEST_PATTERN:
++		xvip_clr_and_set(&xtpg->xvip, XTPG_PATTERN_CONTROL,
++				 XTPG_PATTERN_MASK, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_CROSS_HAIRS:
++		xvip_clr_or_set(&xtpg->xvip, XTPG_PATTERN_CONTROL,
++				XTPG_PATTERN_CONTROL_CROSS_HAIRS, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_MOVING_BOX:
++		xvip_clr_or_set(&xtpg->xvip, XTPG_PATTERN_CONTROL,
++				XTPG_PATTERN_CONTROL_MOVING_BOX, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_COLOR_MASK:
++		xvip_clr_and_set(&xtpg->xvip, XTPG_PATTERN_CONTROL,
++				 XTPG_PATTERN_CONTROL_COLOR_MASK_MASK,
++				 ctrl->val <<
++				 XTPG_PATTERN_CONTROL_COLOR_MASK_SHIFT);
++		return 0;
++	case V4L2_CID_XILINX_TPG_STUCK_PIXEL:
++		xvip_clr_or_set(&xtpg->xvip, XTPG_PATTERN_CONTROL,
++				XTPG_PATTERN_CONTROL_STUCK_PIXEL, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_NOISE:
++		xvip_clr_or_set(&xtpg->xvip, XTPG_PATTERN_CONTROL,
++				XTPG_PATTERN_CONTROL_NOISE, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_MOTION:
++		xvip_clr_or_set(&xtpg->xvip, XTPG_PATTERN_CONTROL,
++				XTPG_PATTERN_CONTROL_MOTION, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_MOTION_SPEED:
++		xvip_write(&xtpg->xvip, XTPG_MOTION_SPEED, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_CROSS_HAIR_ROW:
++		xvip_clr_and_set(&xtpg->xvip, XTPG_CROSS_HAIRS,
++				 XTPG_CROSS_HAIRS_ROW_MASK,
++				 ctrl->val << XTPG_CROSS_HAIRS_ROW_SHIFT);
++		return 0;
++	case V4L2_CID_XILINX_TPG_CROSS_HAIR_COLUMN:
++		xvip_clr_and_set(&xtpg->xvip, XTPG_CROSS_HAIRS,
++				 XTPG_CROSS_HAIRS_COLUMN_MASK,
++				 ctrl->val << XTPG_CROSS_HAIRS_COLUMN_SHIFT);
++		return 0;
++	case V4L2_CID_XILINX_TPG_ZPLATE_HOR_START:
++		xvip_clr_and_set(&xtpg->xvip, XTPG_ZPLATE_HOR_CONTROL,
++				 XTPG_ZPLATE_START_MASK,
++				 ctrl->val << XTPG_ZPLATE_START_SHIFT);
++		return 0;
++	case V4L2_CID_XILINX_TPG_ZPLATE_HOR_SPEED:
++		xvip_clr_and_set(&xtpg->xvip, XTPG_ZPLATE_HOR_CONTROL,
++				 XTPG_ZPLATE_SPEED_MASK,
++				 ctrl->val << XTPG_ZPLATE_SPEED_SHIFT);
++		return 0;
++	case V4L2_CID_XILINX_TPG_ZPLATE_VER_START:
++		xvip_clr_and_set(&xtpg->xvip, XTPG_ZPLATE_VER_CONTROL,
++				 XTPG_ZPLATE_START_MASK,
++				 ctrl->val << XTPG_ZPLATE_START_SHIFT);
++		return 0;
++	case V4L2_CID_XILINX_TPG_ZPLATE_VER_SPEED:
++		xvip_clr_and_set(&xtpg->xvip, XTPG_ZPLATE_VER_CONTROL,
++				 XTPG_ZPLATE_SPEED_MASK,
++				 ctrl->val << XTPG_ZPLATE_SPEED_SHIFT);
++		return 0;
++	case V4L2_CID_XILINX_TPG_BOX_SIZE:
++		xvip_write(&xtpg->xvip, XTPG_BOX_SIZE, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_BOX_COLOR:
++		xvip_write(&xtpg->xvip, XTPG_BOX_COLOR, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_STUCK_PIXEL_THRESH:
++		xvip_write(&xtpg->xvip, XTPG_STUCK_PIXEL_THRESH, ctrl->val);
++		return 0;
++	case V4L2_CID_XILINX_TPG_NOISE_GAIN:
++		xvip_write(&xtpg->xvip, XTPG_NOISE_GAIN, ctrl->val);
++		return 0;
 +	}
 +
 +	return 0;
 +}
 +
-+static void xvip_graph_cleanup(struct xvip_composite_device *xdev)
-+{
-+	struct xvip_graph_entity *entityp;
-+	struct xvip_graph_entity *entity;
-+	struct xvip_dma *dmap;
-+	struct xvip_dma *dma;
++static const struct v4l2_ctrl_ops xtpg_ctrl_ops = {
++	.s_ctrl	= xtpg_s_ctrl,
++};
 +
-+	v4l2_async_notifier_unregister(&xdev->notifier);
++static struct v4l2_subdev_core_ops xtpg_core_ops = {
++};
 +
-+	list_for_each_entry_safe(entity, entityp, &xdev->entities, list) {
-+		of_node_put(entity->node);
-+		list_del(&entity->list);
-+	}
++static struct v4l2_subdev_video_ops xtpg_video_ops = {
++	.s_stream = xtpg_s_stream,
++};
 +
-+	list_for_each_entry_safe(dma, dmap, &xdev->dmas, list) {
-+		xvip_dma_cleanup(dma);
-+		list_del(&dma->list);
-+	}
-+}
++static struct v4l2_subdev_pad_ops xtpg_pad_ops = {
++	.enum_mbus_code		= xvip_enum_mbus_code,
++	.enum_frame_size	= xtpg_enum_frame_size,
++	.get_fmt		= xtpg_get_format,
++	.set_fmt		= xtpg_set_format,
++};
 +
-+static int xvip_graph_init(struct xvip_composite_device *xdev)
-+{
-+	struct xvip_graph_entity *entity;
-+	struct v4l2_async_subdev **subdevs = NULL;
-+	unsigned int num_subdevs;
-+	unsigned int i;
-+	int ret;
++static struct v4l2_subdev_ops xtpg_ops = {
++	.core   = &xtpg_core_ops,
++	.video  = &xtpg_video_ops,
++	.pad    = &xtpg_pad_ops,
++};
 +
-+	/* Init the DMA channels. */
-+	ret = xvip_graph_dma_init(xdev);
-+	if (ret < 0) {
-+		dev_err(xdev->dev, "DMA initialization failed\n");
-+		goto done;
-+	}
++static const struct v4l2_subdev_internal_ops xtpg_internal_ops = {
++	.open	= xtpg_open,
++	.close	= xtpg_close,
++};
 +
-+	/* Parse the graph to extract a list of subdevice DT nodes. */
-+	ret = xvip_graph_parse(xdev);
-+	if (ret < 0) {
-+		dev_err(xdev->dev, "graph parsing failed\n");
-+		goto done;
-+	}
-+
-+	if (!xdev->num_subdevs) {
-+		dev_err(xdev->dev, "no subdev found in graph\n");
-+		goto done;
-+	}
-+
-+	/* Register the subdevices notifier. */
-+	num_subdevs = xdev->num_subdevs;
-+	subdevs = devm_kzalloc(xdev->dev, sizeof(*subdevs) * num_subdevs,
-+			       GFP_KERNEL);
-+	if (subdevs == NULL) {
-+		ret = -ENOMEM;
-+		goto done;
-+	}
-+
-+	i = 0;
-+	list_for_each_entry(entity, &xdev->entities, list)
-+		subdevs[i++] = &entity->asd;
-+
-+	xdev->notifier.subdevs = subdevs;
-+	xdev->notifier.num_subdevs = num_subdevs;
-+	xdev->notifier.bound = xvip_graph_notify_bound;
-+	xdev->notifier.complete = xvip_graph_notify_complete;
-+
-+	ret = v4l2_async_notifier_register(&xdev->v4l2_dev, &xdev->notifier);
-+	if (ret < 0) {
-+		dev_err(xdev->dev, "notifier registration failed\n");
-+		goto done;
-+	}
-+
-+	ret = 0;
-+
-+done:
-+	if (ret < 0)
-+		xvip_graph_cleanup(xdev);
-+
-+	return ret;
-+}
-+
-+/* -----------------------------------------------------------------------------
-+ * Media Controller and V4L2
++/*
++ * Control Config
 + */
 +
-+static void xvip_composite_v4l2_cleanup(struct xvip_composite_device *xdev)
++static const char *const xtpg_pattern_strings[] = {
++	"Passthrough",
++	"Horizontal Ramp",
++	"Vertical Ramp",
++	"Temporal Ramp",
++	"Solid Red",
++	"Solid Green",
++	"Solid Blue",
++	"Solid Black",
++	"Solid White",
++	"Color Bars",
++	"Zone Plate",
++	"Tartan Color Bars",
++	"Cross Hatch",
++	"None",
++	"Vertical/Horizontal Ramps",
++	"Black/White Checker Board",
++};
++
++static struct v4l2_ctrl_config xtpg_ctrls[] = {
++	{
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_CROSS_HAIRS,
++		.name	= "Test Pattern: Cross Hairs",
++		.type	= V4L2_CTRL_TYPE_BOOLEAN,
++		.min	= false,
++		.max	= true,
++		.step	= 1,
++		.def	= 0,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_MOVING_BOX,
++		.name	= "Test Pattern: Moving Box",
++		.type	= V4L2_CTRL_TYPE_BOOLEAN,
++		.min	= false,
++		.max	= true,
++		.step	= 1,
++		.def	= 0,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_COLOR_MASK,
++		.name	= "Test Pattern: Color Mask",
++		.type	= V4L2_CTRL_TYPE_BITMASK,
++		.min	= 0,
++		.max	= 0xf,
++		.def	= 0,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_STUCK_PIXEL,
++		.name	= "Test Pattern: Stuck Pixel",
++		.type	= V4L2_CTRL_TYPE_BOOLEAN,
++		.min	= false,
++		.max	= true,
++		.step	= 1,
++		.def	= 0,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_NOISE,
++		.name	= "Test Pattern: Noise",
++		.type	= V4L2_CTRL_TYPE_BOOLEAN,
++		.min	= false,
++		.max	= true,
++		.step	= 1,
++		.def	= 0,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_MOTION,
++		.name	= "Test Pattern: Motion",
++		.type	= V4L2_CTRL_TYPE_BOOLEAN,
++		.min	= false,
++		.max	= true,
++		.step	= 1,
++		.def	= 0,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_MOTION_SPEED,
++		.name	= "Test Pattern: Motion Speed",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 8) - 1,
++		.step	= 1,
++		.def	= 4,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_CROSS_HAIR_ROW,
++		.name	= "Test Pattern: Cross Hairs Row",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 12) - 1,
++		.step	= 1,
++		.def	= 0x64,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_CROSS_HAIR_COLUMN,
++		.name	= "Test Pattern: Cross Hairs Column",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 12) - 1,
++		.step	= 1,
++		.def	= 0x64,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_ZPLATE_HOR_START,
++		.name	= "Test Pattern: Zplate Horizontal Start Pos",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 16) - 1,
++		.step	= 1,
++		.def	= 0x1e,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_ZPLATE_HOR_SPEED,
++		.name	= "Test Pattern: Zplate Horizontal Speed",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 16) - 1,
++		.step	= 1,
++		.def	= 0,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_ZPLATE_VER_START,
++		.name	= "Test Pattern: Zplate Vertical Start Pos",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 16) - 1,
++		.step	= 1,
++		.def	= 1,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_ZPLATE_VER_SPEED,
++		.name	= "Test Pattern: Zplate Vertical Speed",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 16) - 1,
++		.step	= 1,
++		.def	= 0,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_BOX_SIZE,
++		.name	= "Test Pattern: Box Size",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 12) - 1,
++		.step	= 1,
++		.def	= 0x32,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_BOX_COLOR,
++		.name	= "Test Pattern: Box Color(RGB)",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 24) - 1,
++		.step	= 1,
++		.def	= 0,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_STUCK_PIXEL_THRESH,
++		.name	= "Test Pattern: Stuck Pixel threshhold",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 16) - 1,
++		.step	= 1,
++		.def	= 0,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	}, {
++		.ops	= &xtpg_ctrl_ops,
++		.id	= V4L2_CID_XILINX_TPG_NOISE_GAIN,
++		.name	= "Test Pattern: Noise Gain",
++		.type	= V4L2_CTRL_TYPE_INTEGER,
++		.min	= 0,
++		.max	= (1 << 8) - 1,
++		.step	= 1,
++		.def	= 0,
++		.flags	= V4L2_CTRL_FLAG_SLIDER,
++	},
++};
++
++/* -----------------------------------------------------------------------------
++ * Media Operations
++ */
++
++static const struct media_entity_operations xtpg_media_ops = {
++	.link_validate = v4l2_subdev_link_validate,
++};
++
++/* -----------------------------------------------------------------------------
++ * Power Management
++ */
++
++static int __maybe_unused xtpg_pm_suspend(struct device *dev)
 +{
-+	v4l2_device_unregister(&xdev->v4l2_dev);
-+	media_device_unregister(&xdev->media_dev);
++	struct xtpg_device *xtpg = dev_get_drvdata(dev);
++
++	xvip_suspend(&xtpg->xvip);
++
++	return 0;
 +}
 +
-+static int xvip_composite_v4l2_init(struct xvip_composite_device *xdev)
++static int __maybe_unused xtpg_pm_resume(struct device *dev)
 +{
-+	int ret;
++	struct xtpg_device *xtpg = dev_get_drvdata(dev);
 +
-+	xdev->media_dev.dev = xdev->dev;
-+	strlcpy(xdev->media_dev.model, "Xilinx Video Composite Device",
-+		sizeof(xdev->media_dev.model));
-+	xdev->media_dev.hw_revision = 0;
-+
-+	ret = media_device_register(&xdev->media_dev);
-+	if (ret < 0) {
-+		dev_err(xdev->dev, "media device registration failed (%d)\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	xdev->v4l2_dev.mdev = &xdev->media_dev;
-+	ret = v4l2_device_register(xdev->dev, &xdev->v4l2_dev);
-+	if (ret < 0) {
-+		dev_err(xdev->dev, "V4L2 device registration failed (%d)\n",
-+			ret);
-+		media_device_unregister(&xdev->media_dev);
-+		return ret;
-+	}
++	xvip_resume(&xtpg->xvip);
 +
 +	return 0;
 +}
@@ -2472,125 +857,312 @@ index 0000000..7fbecad
 + * Platform Device Driver
 + */
 +
-+static int xvip_composite_probe(struct platform_device *pdev)
++static int xtpg_parse_of(struct xtpg_device *xtpg)
 +{
-+	struct xvip_composite_device *xdev;
++	struct device *dev = xtpg->xvip.dev;
++	struct device_node *node = xtpg->xvip.dev->of_node;
++	struct device_node *ports;
++	struct device_node *port;
++	unsigned int nports = 0;
++	bool has_endpoint = false;
++
++	ports = of_get_child_by_name(node, "ports");
++	if (ports == NULL)
++		ports = node;
++
++	for_each_child_of_node(ports, port) {
++		const struct xvip_video_format *format;
++		struct device_node *endpoint;
++
++		if (!port->name || of_node_cmp(port->name, "port"))
++			continue;
++
++		format = xvip_of_get_format(port);
++		if (IS_ERR(format)) {
++			dev_err(dev, "invalid format in DT");
++			return PTR_ERR(format);
++		}
++
++		/* Get and check the format description */
++		if (!xtpg->vip_format) {
++			xtpg->vip_format = format;
++		} else if (xtpg->vip_format != format) {
++			dev_err(dev, "in/out format mismatch in DT");
++			return -EINVAL;
++		}
++
++		if (nports == 0) {
++			endpoint = of_get_next_child(port, NULL);
++			if (endpoint)
++				has_endpoint = true;
++			of_node_put(endpoint);
++		}
++
++		/* Count the number of ports. */
++		nports++;
++	}
++
++	if (nports != 1 && nports != 2) {
++		dev_err(dev, "invalid number of ports %u\n", nports);
++		return -EINVAL;
++	}
++
++	xtpg->npads = nports;
++	if (nports == 2 && has_endpoint)
++		xtpg->has_input = true;
++
++	return 0;
++}
++
++static int xtpg_probe(struct platform_device *pdev)
++{
++	struct v4l2_subdev *subdev;
++	struct xtpg_device *xtpg;
++	struct resource *res;
++	u32 i, bayer_phase;
 +	int ret;
 +
-+	xdev = devm_kzalloc(&pdev->dev, sizeof(*xdev), GFP_KERNEL);
-+	if (!xdev)
++	xtpg = devm_kzalloc(&pdev->dev, sizeof(*xtpg), GFP_KERNEL);
++	if (!xtpg)
 +		return -ENOMEM;
 +
-+	xdev->dev = &pdev->dev;
-+	INIT_LIST_HEAD(&xdev->entities);
-+	INIT_LIST_HEAD(&xdev->dmas);
++	xtpg->xvip.dev = &pdev->dev;
 +
-+	ret = xvip_composite_v4l2_init(xdev);
++	ret = xtpg_parse_of(xtpg);
 +	if (ret < 0)
 +		return ret;
 +
-+	ret = xvip_graph_init(xdev);
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	xtpg->xvip.iomem = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(xtpg->xvip.iomem))
++		return PTR_ERR(xtpg->xvip.iomem);
++
++	xtpg->vtmux_gpio = devm_gpiod_get_optional(&pdev->dev, "timing",
++						   GPIOD_OUT_HIGH);
++	if (IS_ERR(xtpg->vtmux_gpio))
++		return PTR_ERR(xtpg->vtmux_gpio);
++
++	xtpg->vtc = xvtc_of_get(pdev->dev.of_node);
++	if (IS_ERR(xtpg->vtc))
++		return PTR_ERR(xtpg->vtc);
++
++	/* Reset and initialize the core */
++	xvip_reset(&xtpg->xvip);
++
++	/* Initialize V4L2 subdevice and media entity. Pad numbers depend on the
++	 * number of pads.
++	 */
++	if (xtpg->npads == 2) {
++		xtpg->pads[0].flags = MEDIA_PAD_FL_SINK;
++		xtpg->pads[1].flags = MEDIA_PAD_FL_SOURCE;
++	} else {
++		xtpg->pads[0].flags = MEDIA_PAD_FL_SOURCE;
++	}
++
++	/* Initialize the default format */
++	xtpg->default_format.code = xtpg->vip_format->code;
++	xtpg->default_format.field = V4L2_FIELD_NONE;
++	xtpg->default_format.colorspace = V4L2_COLORSPACE_SRGB;
++	xvip_get_frame_size(&xtpg->xvip, &xtpg->default_format);
++
++	bayer_phase = xtpg_get_bayer_phase(xtpg->vip_format->code);
++	if (bayer_phase != XTPG_BAYER_PHASE_OFF)
++		xtpg->bayer = true;
++
++	xtpg->formats[0] = xtpg->default_format;
++	if (xtpg->npads == 2)
++		xtpg->formats[1] = xtpg->default_format;
++
++	/* Initialize V4L2 subdevice and media entity */
++	subdev = &xtpg->xvip.subdev;
++	v4l2_subdev_init(subdev, &xtpg_ops);
++	subdev->dev = &pdev->dev;
++	subdev->internal_ops = &xtpg_internal_ops;
++	strlcpy(subdev->name, dev_name(&pdev->dev), sizeof(subdev->name));
++	v4l2_set_subdevdata(subdev, xtpg);
++	subdev->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
++	subdev->entity.ops = &xtpg_media_ops;
++
++	ret = media_entity_init(&subdev->entity, xtpg->npads, xtpg->pads, 0);
 +	if (ret < 0)
++		goto error_media_init;
++
++	v4l2_ctrl_handler_init(&xtpg->ctrl_handler, 3 + ARRAY_SIZE(xtpg_ctrls));
++
++	xtpg->vblank = v4l2_ctrl_new_std(&xtpg->ctrl_handler, &xtpg_ctrl_ops,
++					 V4L2_CID_VBLANK, XTPG_MIN_VBLANK,
++					 XTPG_MAX_VBLANK, 1, 100);
++	xtpg->hblank = v4l2_ctrl_new_std(&xtpg->ctrl_handler, &xtpg_ctrl_ops,
++					 V4L2_CID_HBLANK, XTPG_MIN_HBLANK,
++					 XTPG_MAX_HBLANK, 1, 100);
++	xtpg->pattern = v4l2_ctrl_new_std_menu_items(&xtpg->ctrl_handler,
++					&xtpg_ctrl_ops, V4L2_CID_TEST_PATTERN,
++					ARRAY_SIZE(xtpg_pattern_strings) - 1,
++					1, 9, xtpg_pattern_strings);
++
++	for (i = 0; i < ARRAY_SIZE(xtpg_ctrls); i++)
++		v4l2_ctrl_new_custom(&xtpg->ctrl_handler, &xtpg_ctrls[i], NULL);
++
++	if (xtpg->ctrl_handler.error) {
++		dev_err(&pdev->dev, "failed to add controls\n");
++		ret = xtpg->ctrl_handler.error;
 +		goto error;
++	}
++	subdev->ctrl_handler = &xtpg->ctrl_handler;
 +
-+	platform_set_drvdata(pdev, xdev);
++	xtpg_update_pattern_control(xtpg, true, true);
 +
-+	dev_info(xdev->dev, "device registered\n");
++	ret = v4l2_ctrl_handler_setup(&xtpg->ctrl_handler);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to set controls\n");
++		goto error;
++	}
++
++	platform_set_drvdata(pdev, xtpg);
++
++	xvip_print_version(&xtpg->xvip);
++
++	ret = v4l2_async_register_subdev(subdev);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to register subdev\n");
++		goto error;
++	}
 +
 +	return 0;
 +
 +error:
-+	xvip_composite_v4l2_cleanup(xdev);
++	v4l2_ctrl_handler_free(&xtpg->ctrl_handler);
++	media_entity_cleanup(&subdev->entity);
++error_media_init:
++	xvtc_put(xtpg->vtc);
 +	return ret;
 +}
 +
-+static int xvip_composite_remove(struct platform_device *pdev)
++static int xtpg_remove(struct platform_device *pdev)
 +{
-+	struct xvip_composite_device *xdev = platform_get_drvdata(pdev);
++	struct xtpg_device *xtpg = platform_get_drvdata(pdev);
++	struct v4l2_subdev *subdev = &xtpg->xvip.subdev;
 +
-+	xvip_graph_cleanup(xdev);
-+	xvip_composite_v4l2_cleanup(xdev);
++	v4l2_async_unregister_subdev(subdev);
++	v4l2_ctrl_handler_free(&xtpg->ctrl_handler);
++	media_entity_cleanup(&subdev->entity);
 +
 +	return 0;
 +}
 +
-+static const struct of_device_id xvip_composite_of_id_table[] = {
-+	{ .compatible = "xlnx,video" },
++static SIMPLE_DEV_PM_OPS(xtpg_pm_ops, xtpg_pm_suspend, xtpg_pm_resume);
++
++static const struct of_device_id xtpg_of_id_table[] = {
++	{ .compatible = "xlnx,v-tpg-5.0" },
 +	{ }
 +};
-+MODULE_DEVICE_TABLE(of, xvip_composite_of_id_table);
++MODULE_DEVICE_TABLE(of, xtpg_of_id_table);
 +
-+static struct platform_driver xvip_composite_driver = {
++static struct platform_driver xtpg_driver = {
 +	.driver = {
-+		.name = "xilinx-video",
-+		.of_match_table = xvip_composite_of_id_table,
++		.name		= "xilinx-tpg",
++		.pm		= &xtpg_pm_ops,
++		.of_match_table	= xtpg_of_id_table,
 +	},
-+	.probe = xvip_composite_probe,
-+	.remove = xvip_composite_remove,
++	.probe			= xtpg_probe,
++	.remove			= xtpg_remove,
 +};
 +
-+module_platform_driver(xvip_composite_driver);
++module_platform_driver(xtpg_driver);
 +
-+MODULE_AUTHOR("Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>");
-+MODULE_DESCRIPTION("Xilinx Video IP Composite Driver");
++MODULE_AUTHOR("Laurent Pinchart <laurent.pinchart@ideasonboard.com>");
++MODULE_DESCRIPTION("Xilinx Test Pattern Generator Driver");
 +MODULE_LICENSE("GPL v2");
-diff --git a/drivers/media/platform/xilinx/xilinx-vipp.h b/drivers/media/platform/xilinx/xilinx-vipp.h
+diff --git a/include/uapi/linux/Kbuild b/include/uapi/linux/Kbuild
+index 0234cdf..4beff0b 100644
+--- a/include/uapi/linux/Kbuild
++++ b/include/uapi/linux/Kbuild
+@@ -430,6 +430,7 @@ header-y += wireless.h
+ header-y += x25.h
+ header-y += xattr.h
+ header-y += xfrm.h
++header-y += xilinx-v4l2-controls.h
+ header-y += hw_breakpoint.h
+ header-y += zorro.h
+ header-y += zorro_ids.h
+diff --git a/include/uapi/linux/xilinx-v4l2-controls.h b/include/uapi/linux/xilinx-v4l2-controls.h
 new file mode 100644
-index 0000000..7b26ad5
+index 0000000..59e38db
 --- /dev/null
-+++ b/drivers/media/platform/xilinx/xilinx-vipp.h
-@@ -0,0 +1,47 @@
++++ b/include/uapi/linux/xilinx-v4l2-controls.h
+@@ -0,0 +1,73 @@
 +/*
-+ * Xilinx Video IP Composite Device
++ * Xilinx Controls Header
 + *
 + * Copyright (C) 2013-2014 Ideas on Board
 + * Copyright (C) 2013-2014 Xilinx, Inc.
 + *
-+ * Contacts: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-+ *           Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
++ * Contacts: Hyun Kwon <hyun.kwon@xilinx.com>
++ *           Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 + *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + */
 +
-+#ifndef __XILINX_VIPP_H__
-+#define __XILINX_VIPP_H__
++#ifndef __UAPI_XILINX_V4L2_CONTROLS_H__
++#define __UAPI_XILINX_V4L2_CONTROLS_H__
 +
-+#include <linux/list.h>
-+#include <linux/mutex.h>
-+#include <media/media-device.h>
-+#include <media/v4l2-async.h>
-+#include <media/v4l2-ctrls.h>
-+#include <media/v4l2-device.h>
++#include <linux/v4l2-controls.h>
 +
-+/**
-+ * struct xvip_composite_device - Xilinx Video IP device structure
-+ * @v4l2_dev: V4L2 device
-+ * @media_dev: media device
-+ * @dev: (OF) device
-+ * @notifier: V4L2 asynchronous subdevs notifier
-+ * @entities: entities in the graph as a list of xvip_graph_entity
-+ * @num_subdevs: number of subdevs in the pipeline
-+ * @dmas: list of DMA channels at the pipeline output and input
++#define V4L2_CID_XILINX_OFFSET	0xc000
++#define V4L2_CID_XILINX_BASE	(V4L2_CID_USER_BASE + V4L2_CID_XILINX_OFFSET)
++
++/*
++ * Private Controls for Xilinx Video IPs
 + */
-+struct xvip_composite_device {
-+	struct v4l2_device v4l2_dev;
-+	struct media_device media_dev;
-+	struct device *dev;
 +
-+	struct v4l2_async_notifier notifier;
-+	struct list_head entities;
-+	unsigned int num_subdevs;
++/*
++ * Xilinx TPG Video IP
++ */
 +
-+	struct list_head dmas;
-+};
++#define V4L2_CID_XILINX_TPG			(V4L2_CID_USER_BASE + 0xc000)
 +
-+#endif /* __XILINX_VIPP_H__ */
++/* Draw cross hairs */
++#define V4L2_CID_XILINX_TPG_CROSS_HAIRS		(V4L2_CID_XILINX_TPG + 1)
++/* Enable a moving box */
++#define V4L2_CID_XILINX_TPG_MOVING_BOX		(V4L2_CID_XILINX_TPG + 2)
++/* Mask out a color component */
++#define V4L2_CID_XILINX_TPG_COLOR_MASK		(V4L2_CID_XILINX_TPG + 3)
++/* Enable a stuck pixel feature */
++#define V4L2_CID_XILINX_TPG_STUCK_PIXEL		(V4L2_CID_XILINX_TPG + 4)
++/* Enable a noisy output */
++#define V4L2_CID_XILINX_TPG_NOISE		(V4L2_CID_XILINX_TPG + 5)
++/* Enable the motion feature */
++#define V4L2_CID_XILINX_TPG_MOTION		(V4L2_CID_XILINX_TPG + 6)
++/* Configure the motion speed of moving patterns */
++#define V4L2_CID_XILINX_TPG_MOTION_SPEED	(V4L2_CID_XILINX_TPG + 7)
++/* The row of horizontal cross hair location */
++#define V4L2_CID_XILINX_TPG_CROSS_HAIR_ROW	(V4L2_CID_XILINX_TPG + 8)
++/* The colum of vertical cross hair location */
++#define V4L2_CID_XILINX_TPG_CROSS_HAIR_COLUMN	(V4L2_CID_XILINX_TPG + 9)
++/* Set starting point of sine wave for horizontal component */
++#define V4L2_CID_XILINX_TPG_ZPLATE_HOR_START	(V4L2_CID_XILINX_TPG + 10)
++/* Set speed of the horizontal component */
++#define V4L2_CID_XILINX_TPG_ZPLATE_HOR_SPEED	(V4L2_CID_XILINX_TPG + 11)
++/* Set starting point of sine wave for vertical component */
++#define V4L2_CID_XILINX_TPG_ZPLATE_VER_START	(V4L2_CID_XILINX_TPG + 12)
++/* Set speed of the vertical component */
++#define V4L2_CID_XILINX_TPG_ZPLATE_VER_SPEED	(V4L2_CID_XILINX_TPG + 13)
++/* Moving box size */
++#define V4L2_CID_XILINX_TPG_BOX_SIZE		(V4L2_CID_XILINX_TPG + 14)
++/* Moving box color */
++#define V4L2_CID_XILINX_TPG_BOX_COLOR		(V4L2_CID_XILINX_TPG + 15)
++/* Upper limit count of generated stuck pixels */
++#define V4L2_CID_XILINX_TPG_STUCK_PIXEL_THRESH	(V4L2_CID_XILINX_TPG + 16)
++/* Noise level */
++#define V4L2_CID_XILINX_TPG_NOISE_GAIN		(V4L2_CID_XILINX_TPG + 17)
++
++#endif /* __UAPI_XILINX_V4L2_CONTROLS_H__ */
 -- 
 1.8.5.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
