@@ -1,166 +1,114 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/2] drm/tegra: Set the dsi lp clk parent and rate
-Date: Mon, 29 Sep 2014 10:17:25 +0200
-Message-ID: <20140929081724.GD12506@ulmo>
-References: <1411156429-19797-1-git-send-email-seanpaul@chromium.org>
- <20140922174652.GP3290@leverpostej> <20140923072204.GJ30514@ulmo>
- <20140927200532.19023.95967@quantum>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v3 03/12] clk: Add a function to retrieve phase
+Date: Mon, 29 Sep 2014 10:24:21 +0200
+Message-ID: <20140929082421.GA4388@lukather>
+References: <1410466706-27386-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1410466706-27386-4-git-send-email-maxime.ripard@free-electrons.com>
+ <20140928001732.19023.2496@quantum>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1848626136=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140927200532.19023.95967@quantum>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mike Turquette <mike.turquette@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140928001732.19023.2496@quantum>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, david.lanzendoerfer@o2s.ch, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, wens@csie.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============1848626136==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ZRyEpB+iJ+qUx0kp"
-Content-Disposition: inline
-
-
---ZRyEpB+iJ+qUx0kp
+--3V7upXqbjpZ4EhLz
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Sep 27, 2014 at 01:05:32PM -0700, Mike Turquette wrote:
-> Quoting Thierry Reding (2014-09-23 00:22:05)
-> > On Mon, Sep 22, 2014 at 06:46:52PM +0100, Mark Rutland wrote:
-> > > On Fri, Sep 19, 2014 at 08:53:48PM +0100, Sean Paul wrote:
-> > > > Per NVidia, this clock rate should be around 70MHz in
-> > > > order to properly sample reads on data lane 0. In order
-> > > > to achieve this rate, we need to reparent the clock from
-> > > > clk_m which can only achieve 12MHz. Add parent_lp to the
-> > > > dts bindings and set the parent & rate on init.
-> > > >=20
-> > > > Signed-off-by: Sean Paul <seanpaul@chromium.org>
-> > > > ---
-> > > >  .../devicetree/bindings/gpu/nvidia,tegra20-host1x.txt  | 10 ++++++=
-++--
-> > > >  drivers/gpu/drm/tegra/dsi.c                            | 18 ++++++=
-++++++++++++
-> > > >  drivers/gpu/drm/tegra/dsi.h                            |  3 +++
-> > > >  3 files changed, 29 insertions(+), 2 deletions(-)
-> > > >=20
-> > > > diff --git a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-h=
-ost1x.txt b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-> > > > index b48f4ef..fef2918 100644
-> > > > --- a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.t=
-xt
-> > > > +++ b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.t=
-xt
-> > > > @@ -191,6 +191,10 @@ of the following host1x client modules:
-> > > >    - nvidia,hpd-gpio: specifies a GPIO used for hotplug detection
-> > > >    - nvidia,edid: supplies a binary EDID blob
-> > > >    - nvidia,panel: phandle of a display panel
-> > > > +  - clock-names: Can include the following entries:
-> > > > +    - lp_parent: The parent clock for lp
-> > > > +  - clocks: Must contain an entry for each optional entry in clock=
--names.
-> > > > +    See ../clocks/clock-bindings.txt for details.
-> > >=20
-> > > Did this driver previously acquire clocks?
-> > >=20
-> > > What order or names did it expect if so?
+Hi Mike,
+
+On Sat, Sep 27, 2014 at 05:17:32PM -0700, Mike Turquette wrote:
+> Quoting Maxime Ripard (2014-09-11 13:18:17)
+> > The current phase API doesn't look into the actual hardware to get the =
+phase
+> > value, but will rather get it from a variable only set by the set_phase
+> > function.
 > >=20
-> > This is badly placed. There are clocks and clock-names properties in a
-> > "Required properties" section above this hunk which lists all the clocks
-> > that this module uses. Presumably this was added to the optional section
-> > because it isn't always needed.
+> > This will cause issue when the client driver will never call the set_ph=
+ase
+> > function, where we can end up having a reported phase that will not mat=
+ch what
+> > the hardware has been programmed to by the bootloader or what phase is
+> > programmed out of reset.
 > >=20
-> > > >  - sor: serial output resource
-> > > > =20
-> > > > @@ -360,8 +364,10 @@ Example:
-> > > >                     compatible =3D "nvidia,tegra20-dsi";
-> > > >                     reg =3D <0x54300000 0x00040000>;
-> > > >                     clocks =3D <&tegra_car TEGRA20_CLK_DSI>,
-> > > > -                            <&tegra_car TEGRA20_CLK_PLL_D_OUT0>;
-> > > > -                   clock-names =3D "dsi", "parent";
-> > > > +                            <&tegra_car TEGRA124_CLK_DSIALP>,
-> > > > +                            <&tegra_car TEGRA20_CLK_PLL_D_OUT0>,
-> > > > +                            <&tegra_car TEGRA124_CLK_PLL_P>;
-> > > > +                   clock-names =3D "dsi", "lp", "parent", "lp_pare=
-nt";
-> > >=20
-> > > Please document _all_ the names you expect.
-> > >=20
-> > > What exactly are these two new clocks?
+> > Add a new get_phase function for the drivers to implement so that we ca=
+n get
+> > this value.
 > >=20
-> > "lp" isn't actually new, it's just missing from the example.
+> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> > ---
+> >  drivers/clk/clk.c            | 10 ++++++++++
+> >  include/linux/clk-provider.h |  5 +++++
+> >  2 files changed, 15 insertions(+)
 > >=20
-> > > Is this all the clocks that feed into the DSI block? Are any of these
-> > > not directly wired to the DSI block?
-> > >=20
-> > > Why exactly do you need to reparent it to this particular clock, and =
-why
-> > > do you need a reference here in order to do so, given it presumably
-> > > doesn't feed directly into the DSI block?
-> >=20
-> > It seems like the hardware default is to use a parent clock unsuitable
-> > for the DSI low-power mode, but as discussed elsewhere this should be
-> > fixed in the clock driver where we already have a way to statically set
-> > the parent clock at boot time.
+> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > index d87661af0c72..113d75db371d 100644
+> > --- a/drivers/clk/clk.c
+> > +++ b/drivers/clk/clk.c
+> > @@ -1934,6 +1934,16 @@ int __clk_init(struct device *dev, struct clk *c=
+lk)
+> >                 clk->accuracy =3D 0;
+> > =20
+> >         /*
+> > +        * Set clk's phase.
+> > +        * Since a phase is by definition relative to its parent, just
+> > +        * query the current clock phase, or just assume it's in phase.
+> > +        */
+> > +       if (clk->ops->get_phase)
+> > +               clk->phase =3D clk->ops->get_phase(clk->hw);
+> > +       else
+> > +               clk->phase =3D 0;
 >=20
-> The driver fix is perfectly fine, but we also have the
-> assigned-clock-parent stuff now if you prefer to manage it from DT.
+> I probably wasn't paying enough attention to this. Based on the
+> coverletter I thought that v3 would introduce something like
+> CLK_GET_PHASE_NOCACHE and stuff that logic into a __clk_get_phase
+> function? Looks like this version of the series doesn't handle phases
+> that can be changed by hardware (e.g. coming out of idle).
+>=20
+> Correct me if I am wrong, but it looks like we retrieve the phase only
+> once at init and then never again? The rest of the time we rely on
+> clk->phase to always be accurate...
 
-I don't think this should be done in the driver. It should never have to
-bother with what the parent of the LP clock is. The only reason why this
-is necessary is because the hardware default isn't appropriate. For the
-same reason I don't think it should be encoded in DT. It's an SoC-level
-detail and likely will never need to change per board, so it'll just be
-redundant information in DT.
+Yeah, I didn't have any use for it at the moment, and thought that if
+someone ever needed it, it would be trivial to add, so I left it out.
 
-We already have code in the Tegra clock driver to set up this parent and
-rate properly, so I'm not even sure why this patch is necessary or where
-the disconnect comes from. Perhaps this wasn't tested against the
-upstream kernel?
+If you want me to still do it, I can send an additional patch.
 
-Thierry
+Thanks!
+Maxime
 
---ZRyEpB+iJ+qUx0kp
-Content-Type: application/pgp-signature
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Version: GnuPG v1
 
-iQIcBAEBAgAGBQJUKRWUAAoJEN0jrNd/PrOhfD0P/Av4dH/QhJwY/p0SAJZgkIEf
-J5qBJi3tRbvs9sj6dv2e3suU9yYkrr0Nmud2pLTSU4+gQLw/N3BaGQVUTIwGOSQM
-mJSVs+qu8AYtERHhkBCT69nOzkaKigdIFBaJC9H2HPCc9TqFmDDLD2PqWtBiNznI
-YPsfc12CynNx5Xs0cRiMRIfr6ppQZUxzmHYC+mtpdtrY3L4kuzKfMgxI77xgMHYd
-oSJ7/41Ozhz11FaMqh1kr2JHAWg4M0vDBP0JKKPkbXSoRIyhWsF9Nnryb4NMMcW1
-iTvs6JQ+zOi0FV30nVGUuI0HG/Wxnay1aVHI6G2c6oRKTbQidysL3Ra8iKNym4hB
-AUFK28aAc3yCgbI2J16eQ7DjRddftNqFGJgKbxO4VuFtjhbjl8w1Na1sTW4AmxzD
-wo+vClDEn9Xg4tLC1QElEGhJZMkpccIFjmtzmcyGKsXRIHQnWkRMXPIL5kVkBru7
-eNrhbYpJX6F0ZVBPXBitf90gIvbR5/IG/gTgGwqb08IM4BtYCd+Ls3bT86cJhmDG
-e1Mjn4QLAYxTUKYo+ChhG/6nXdDAi/rlHQVR6RHCY23svv81A/V8zTb9f07pAUTb
-djineihHRvKf1Cr+2SANCHe1fLuOpkLxON4SNKO3IbUv4yI7L4ADNSLUNYX0E0Sz
-osCY9pXvmyU6OL6Zt5CG
-=3Xsg
+iQIcBAEBAgAGBQJUKRc0AAoJEBx+YmzsjxAgFjMP/3W5ySXsZdvc15BwNwW4RnBL
+ZjEkQnwT3LckyxBDv/p1D5Yy4c9bp7mhhPecX7UzUbfDSS9UEEGctX8G/VBaJpBX
+vtTKDAb/bxt5TYcCR1hCs39kHUCfATWs9bM3fMrQWCxvlZRmR/ybNLGgHe3GNNWo
+LIZNzEwpi6ILafMlxmnzrFviTEO32jSTBec3agIBFTip2y7AeLgELQbbFxYNm+oi
+cCvt8hTDhLr6uPVm7S4zN+4wFxNSQnNNayk1UQBtP8J1WjeKLkSNWWcKSKOQaCjk
+taUfM0sp+OQdaGxhA+4VrXOXIgGvELEj1nDi0IZUuh7JDw05nzLfCMzohkgKe81u
+JWTNJI/+I6ccvcvXmICjDSmhNFDJDiIXTAekLMsMljpUm9BJS97RVpYYPOGmq3DJ
+E7xQnIpRBw7HD77GUqOQoprbeid4q7Sk6WMkxt1C49pmWoS8IUhXDDOd5T/tuemk
+9B8GA7/DB3A1njizphherUd/IjUaZcj26qDQD1h6zO8M97cbED2a6LnglaU3UAvO
+jGnwKEeycqU3KFJVZN1CyEZOs8yO61qvMKRbwDyx7gpJ0kL2N3/NVleIVoKBcqeO
+0FYTrKYMCSAiIZDIW2AhHFobAW9Fp3V0a9ysuWweSrqBBQ1pE0trtH0Qc1VGo2Rc
+dQThU2sL8e2tFa6uIhYh
+=iMF7
 -----END PGP SIGNATURE-----
 
---ZRyEpB+iJ+qUx0kp--
-
---===============1848626136==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============1848626136==--
+--3V7upXqbjpZ4EhLz--
