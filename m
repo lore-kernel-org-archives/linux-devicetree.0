@@ -1,75 +1,50 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 1/2] ASoC: ssm2602: add device tree bindings
-Date: Mon, 29 Sep 2014 10:50:24 +0200
-Message-ID: <54291D50.30002@metafoo.de>
-References: <1411891072-22637-1-git-send-email-stefan.kristiansson@saunalahti.fi>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: Re: [PATCH RESEND v6 0/7] net: cpsw: Support for am335x chip MACIDs
+Date: Mon, 29 Sep 2014 14:21:28 +0530
+Message-ID: <54291D90.4010806@ti.com>
+References: <1411973599-18908-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411891072-22637-1-git-send-email-stefan.kristiansson@saunalahti.fi>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, linux-kernel@vger.kernel.org
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1411973599-18908-1-git-send-email-mpa@pengutronix.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Markus Pargmann <mpa@pengutronix.de>, "David S. Miller" <davem@davemloft.net>
+Cc: =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Wolfram Sang <wsa@the-dreams.de>, Steven Rostedt <rostedt@goodmis.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 09/28/2014 09:57 AM, Stefan Kristiansson wrote:
-> Allow the ssm2602/ssm2603/ssm2604 codec driver to be
-> instantiated from the device tree.
->
-> Also, add Kconfig prompts to allow manual selection of both the
-> I2C and SPI configuration versions of the driver.
->
-> Signed-off-by: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+On Monday 29 September 2014 12:23 PM, Markus Pargmann wrote:
+> Hi,
+> 
+> Another resend of this series to add the netdev list.
+> 
+> This series adds support to the cpsw driver to read the MACIDs of the am335x
+> chip and use them as fallback. These addresses are only used if there are no
+> mac addresses in the devicetree, for example set by a bootloader.
+> 
+> Best regards,
+> 
+> Markus
+> 
+> 
+> Markus Pargmann (7):
+>   DT doc: net: cpsw mac-address is optional
+>   net: cpsw: Add missing return value
+>   net: cpsw: header, Add missing include
+>   net: cpsw: Replace pr_err by dev_err
+>   net: cpsw: Add am33xx MACID readout
+>   am33xx: define syscon control module device node
+>   arm: dts: am33xx, Add syscon phandle to cpsw node
+> 
+>  Documentation/devicetree/bindings/net/cpsw.txt |  6 +++-
+>  arch/arm/boot/dts/am33xx.dtsi                  |  6 ++++
+>  drivers/net/ethernet/ti/Kconfig                |  2 ++
+>  drivers/net/ethernet/ti/cpsw.c                 | 45 ++++++++++++++++++++++++--
+>  drivers/net/ethernet/ti/cpsw.h                 |  1 +
+>  5 files changed, 57 insertions(+), 3 deletions(-)
+> 
 
-Looks mostly good, but you should Cc both the devicetree and the ASoC 
-maintainers.
+Acked-by: Mugunthan V N <mugunthanvnm@gmail.com>
 
-[...]
-> diff --git a/sound/soc/codecs/ssm2602-i2c.c b/sound/soc/codecs/ssm2602-i2c.c
-> index abd63d5..0d9779d 100644
-> --- a/sound/soc/codecs/ssm2602-i2c.c
-> +++ b/sound/soc/codecs/ssm2602-i2c.c
-> @@ -41,10 +41,19 @@ static const struct i2c_device_id ssm2602_i2c_id[] = {
->   };
->   MODULE_DEVICE_TABLE(i2c, ssm2602_i2c_id);
->
-> +static const struct of_device_id ssm2602_of_match[] = {
-> +	{ .compatible = "adi,ssm2602", },
-> +	{ .compatible = "adi,ssm2603", },
-> +	{ .compatible = "adi,ssm2604", },
-
-Since the driver is supposed to behave different depending on the device you 
-should set the driver data similar to like it is done in the ssm2602_i2c_id 
-table and add code in the probe function to extract the driver data.
-
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, ssm2602_of_match);
-> +
->   static struct i2c_driver ssm2602_i2c_driver = {
->   	.driver = {
->   		.name = "ssm2602",
->   		.owner = THIS_MODULE,
-> +		.of_match_table = ssm2602_of_match,
->   	},
->   	.probe = ssm2602_i2c_probe,
->   	.remove = ssm2602_i2c_remove,
-> diff --git a/sound/soc/codecs/ssm2602-spi.c b/sound/soc/codecs/ssm2602-spi.c
-> index 2bf55e2..fb4cc46 100644
-> --- a/sound/soc/codecs/ssm2602-spi.c
-> +++ b/sound/soc/codecs/ssm2602-spi.c
-> @@ -26,10 +26,19 @@ static int ssm2602_spi_remove(struct spi_device *spi)
->   	return 0;
->   }
->
-> +static const struct of_device_id ssm2602_of_match[] = {
-> +	{ .compatible = "adi,ssm2602", },
-> +	{ .compatible = "adi,ssm2603", },
-> +	{ .compatible = "adi,ssm2604", },
-
-The ssm2603 and ssm2604 do not have a SPI interface.
-
-> +	{ }
-> +};
-[...]
+Regards
+Mugunthan V N
