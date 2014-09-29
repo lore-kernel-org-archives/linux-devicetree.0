@@ -1,103 +1,104 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/6] arm64: Add DTS support for Spreadtrum's Shark64 SoC
-Date: Mon, 29 Sep 2014 15:47:47 +0200
-Message-ID: <4004425.NZAxCnE0qr@wuerfel>
-References: <1411992293-7729-1-git-send-email-zhang.lyra@gmail.com> <1411992293-7729-3-git-send-email-zhang.lyra@gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [git pull] Devicetree changes for v3.15
+Date: Mon, 29 Sep 2014 09:52:03 -0400
+Message-ID: <20140929135203.GH23926@titan.lakedaemon.net>
+References: <CACxGe6vCrkHPL6UNy1p8AO4+z5VFRY6w4_2grQEZQwp_3jJ7Yw@mail.gmail.com>
+ <CACRpkdZoo=P7uTO1rNDD_HUPjfAk26C0=mNYPoZmTV0wcO3V-w@mail.gmail.com>
+ <20140926141943.GC23926@titan.lakedaemon.net>
+ <20140929124922.CBE9FC4150A@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411992293-7729-3-git-send-email-zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140929124922.CBE9FC4150A-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "chunyan.zhang" <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 29 September 2014 20:04:49 zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> +
-> +/memreserve/ 0x80000000 0x00010000;
+On Mon, Sep 29, 2014 at 01:49:22PM +0100, Grant Likely wrote:
+> On Fri, 26 Sep 2014 10:19:43 -0400
+> , Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+>  wrote:
+> > Linus,
+> > 
+> > On Fri, Sep 26, 2014 at 02:30:53PM +0200, Linus Walleij wrote:
+> > > On Tue, Apr 1, 2014 at 12:15 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> > > 
+> > > > Here are the dt changes I've got queued up for v3.15. The full
+> > > > description is below in the tag. Please pull.
+> > > (...)
+> > > > Jason Cooper (1):
+> > > >       kbuild: dtbs_install: new make target
+> > 
+> > Exact patch is:
+> > 
+> >   f4d4ffc03efc kbuild: dtbs_install: new make target
+> > 
+> > > After this patch a while back I have observed the following behaviour
+> > > of the kernel build:
+> > > 
+> > > make zImage
+> > > make zImage
+> > > -> incremental build, just relink
+> > > 
+> > > make zImage
+> > > make dtbs
+> > > make zImage
+> > > -> The whole kernel gets rebuilt
+> > > 
+> > > So now if I happen to recompile my device trees, I suddenly want
+> > > the entire zImage to be rebuilt to? It's by definition not changes that
+> > > affect the kernel build :-(
+> > > 
+> > > I noticed this because my build scripts calls make dtbs && make zImage,
+> > > and started to rebuild absolutely everything all the time.
+> > > 
+> > > Do you think this can be fixed? It's quite simple to reproduce...
+> > 
+> > Does the attached fix your problem?
+> > 
+> > thx,
+> > 
+> > Jason.
+> > 
+> > ----------->8------------------------------------------
+> > diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> > index 0ce9d0f71f2a..a88b13af58d2 100644
+> > --- a/arch/arm/Makefile
+> > +++ b/arch/arm/Makefile
+> > @@ -313,7 +313,9 @@ $(INSTALL_TARGETS):
+> >  	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $(boot)/dts/$@
+> >  
+> >  PHONY += dtbs dtbs_install
+> > -dtbs dtbs_install: prepare scripts
+> > +dtbs: scripts
+> > +	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $@
+> > +dtbs_install: prepare scripts
+> >  	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $@
+> >  
+> >  # We use MRPROPER_FILES and CLEAN_FILES now
+> 
+> Is this the right fix though? It seems that it would fix the problem for
+> the dtbs target, but would still cause a kernel rebuild for
+> dtbs_install. Why does dtbs_install need to depend on the 'prepare'
+> target?
 
-Maybe add a comment explaining why it is reserved?
+iirc, it was added as a dependency to ensure $KERNELVERSION was set
+before attempting to install into /path/to/$KERNELVERSION/dtbs.
 
-> +	chosen {
-> +		bootargs = "earlycon=serial_sprd,0x70000000";
-> +      };
+This patch was just a confirmation that the 'prepare' target was the
+source of the problem for Linus.  Now that we know that, we need to dig
+and find a proper fix for setting $KERNELVERSION for dtbs_install.
 
-Just remove this for now, the command line should really be set by the
-boot loader, not hardcoded in the dts file.
+I dug into the prepare* menagerie a bit preparing this test patch, and
+it seems that any existing target which would get us $KERNELVERSION also
+depends on FORCE.  I haven't had time to dig into it more... Perhaps one
+of the kbuild maintainers would have some insight?
 
-IIRC, the earlycon=... syntax is not recommended on DT based systems,
-better use the "stdout-path" syntax instead.
+thx,
 
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,armv8";
-> +			reg = <0x0 0x0>;
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x8000fff8>;
-> +		};
-
-New platforms should avoid using "spin-table" method. Please
-change the boot loader to implement PSCI if you can.
-
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		reg = <0 0x80000000 0 0x20000000>;
-> +	};
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +		serial1 = &uart1;
-> +	};
-
-These two belong into a board-specific file. I'd suggest renaming this
-file to sprd_shark64.dtsi (or whatever the SoC is called) and adding a
-.dts file that includes this and sets the aliases and memory node
-according to what the particular board has.
-
-> +	intc:interrupt-controller@71400000 {
-> +		compatible = "sprd,intc";
-> +		#interrupt-cells = <0>;
-> +		interrupt-controller;
-> +		reg =	<0 0x71400000 0 0x1000>,
-> +			<0 0x71500000 0 0x1000>,
-> +			<0 0x71600000 0 0x1000>,
-> +			<0 0x71700000 0 0x1000>;
-> +	};
-
-This interrupt controller does not have a binding, so please add at least
-a documentation for the binding as well. The name should probably be more
-specific that this. Also, explain why you have an interrupt controller
-that has four memory regions but only one interrupt sink but no interrupt
-source.
-
-I assume this is a nested interrupt controller to which some internal
-peripherals are connected?
-
-> +	uart0: uart@70000000 {
-> +		compatible = "sprd,serial";
-> +		reg = <0 0x70000000 0 0x100>;
-> +		interrupts = <0 2 0xf04>;
-> +	};
-> +
-> +	uart1: uart@70100000 {
-> +		compatible = "sprd,serial";
-> +		reg = <0 0x70100000 0 0x100>;
-> +		interrupts = <0 3 0xf04>;
-> +	};
-
-Please rename these to serial@70000000. Like the interrupt controller,
-it would be good to have a more specific compatible string.
-You may want to add a status="disabled" property in both these
-nodes, and override them from the board.dts file for the ports that
-are actually available.
-
-	Arnd
-
+Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
