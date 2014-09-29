@@ -1,60 +1,58 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v3 3/4] rtc: omap: Update Kconfig for OMAP RTC
-Date: Mon, 29 Sep 2014 09:44:20 -0500
-Message-ID: <20140929144420.GJ32403@saruman>
-References: <1411637529-18289-4-git-send-email-lokeshvutla@ti.com>
- <1411968339-9933-1-git-send-email-lokeshvutla@ti.com>
-Reply-To: <balbi@ti.com>
+From: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 3/6] arm64: dts/Makefile: Add support for Spreadtrum's
+ Shark64 SoC.
+Date: Mon, 29 Sep 2014 16:46:45 +0200
+Message-ID: <542970D5.7010507@suse.de>
+References: <1411991314-6636-1-git-send-email-zhang.lyra@gmail.com> <1411991314-6636-4-git-send-email-zhang.lyra@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DesjdUuHQDwS2t4N"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1411968339-9933-1-git-send-email-lokeshvutla@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: rtc-linux@googlegroups.com, a.zummo@towertech.it, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, balbi@ti.com, tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1411991314-6636-4-git-send-email-zhang.lyra@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: zhang.lyra@gmail.com
+Cc: catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, galak@codeaurora.org, broonie@linaro.org, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, artagnon@gmail.com, rrichter@cavium.com, robh+dt@kernel.org, will.deacon@arm.com, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---DesjdUuHQDwS2t4N
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Mon, Sep 29, 2014 at 10:55:39AM +0530, Lokesh Vutla wrote:
-> From: Tero Kristo <t-kristo@ti.com>
+Am 29.09.2014 um 13:48 schrieb zhang.lyra@gmail.com:
+> From: "zhizhou.zhang" <zhizhou.zhang@spreadtrum.com>
 >=20
-> RTC is present in AM43xx and DRA7xx also. Updating the Kconfig
-> to depend on ARCH_OMAP or ARCH_DAVINCI
+> Adds build support for Spreadtrum's Shark64 SoC in arm64 dts Makefile=
+=2E
 >=20
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> Signed-off-by: zhizhou.zhang <zhizhou.zhang@spreadtrum.com>
+> Signed-off-by: chunyan.zhang <chunyan.zhang@spreadtrum.com>
+> ---
+>  arch/arm64/boot/dts/Makefile |    1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makef=
+ile
+> index c52bdb0..7fdb9df 100644
+> --- a/arch/arm64/boot/dts/Makefile
+> +++ b/arch/arm64/boot/dts/Makefile
+> @@ -1,5 +1,6 @@
+>  dtb-$(CONFIG_ARCH_VEXPRESS) +=3D rtsm_ve-aemv8a.dtb foundation-v8.dt=
+b
+>  dtb-$(CONFIG_ARCH_XGENE) +=3D apm-mustang.dtb
+> +dtb-$(CONFIG_ARCH_SHARK64) +=3D sprd_shark64.dtb
+> =20
+>  targets +=3D dtbs
+>  targets +=3D $(dtb-y)
 
-Reviewed-by: Felipe Balbi <balbi@ti.com>
+This patch seems so trivial that you could just squash it into 2/6
+(adding the .dts file).
+
+Also, it looks to me as if the ordering is alphabetical, so SHARK shoul=
+d
+probably go somewhere before VEXPRESS, not after XGENE.
+
+Regards,
+Andreas
 
 --=20
-balbi
-
---DesjdUuHQDwS2t4N
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUKXBDAAoJEIaOsuA1yqRE7O4QAIB8I7ykKNn6uWKcOGiS3wpY
-znL97NJ6kC/SZpPB5g5UFx6k5gOsCG78niMuqh0uWar2ExyuUZMTAe3e9PYN4Bis
-eFAy5Cxgg5CEl7P9KxFNbIWVXwteYHEXVVx92KVbxDLCoNvIwIMi7j11fsp6l7pM
-1WYyRslaQUWyQZK5/v97uLZMgIYkcRDnSPNWmCVFCHD93uhJV/8ELTMGyCQqeOkG
-oDFnQ5d76PDyon2Qi848jg6JruYu9Y/ACEcuYpOkdyQecL1Ky8v+JappF+RnGNeO
-4QMZTTMI5sNDWhzoLxVNUJO9T8DuSPhqVPvpSTvNXMKEiv/F0FvP0irSIJJqFIri
-x+UPj92wCuXtsnDCEpZ86v3aYK+PG0KhDtkzg0aG8dde9RM0mkb9A0Q5NCoQdf3o
-tjD+BhxvFnYAE3cNGunfASIpOq+AVmQYfGQetw9Xkshwr+6e2JSBwQ6diPL7EvB5
-RzHvIfHtaA/+2A5BS0+1xU1fEXffSYD73AW9EKD0/r0s49NHi++UjzHeTkf2VLZu
-5CBvm6rLV5CNitfHyx5yqh0cvDBtbrv5rCwQoaK5dJmNd/knsRUeQxaCtUIpbd8Y
-pv8e3dO+M+uoqSpFJ+WsbJFm8Bx4RJp/Vh4LETMeimZm6pDDd3tYAyW91AIwJWRD
-wBIQY+qrRIgSUIAdwFxs
-=tZ6c
------END PGP SIGNATURE-----
-
---DesjdUuHQDwS2t4N--
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
+berg
