@@ -1,68 +1,34 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [RFC 3/4] arm64: Do not call enable PCI resources when specify PCI_PROBE_ONLY
-Date: Mon, 29 Sep 2014 12:17:29 -0600
-Message-ID: <CAErSpo6SngcV6_Ew0DOjW+xTw8y6j3UmwdPw1x-tk_AB=mapaQ@mail.gmail.com>
-References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com> <1411937610-22125-4-git-send-email-suravee.suthikulpanit@amd.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v12 10/12] PCI: Assign unassigned bus resources in pci_scan_root_bus()
+Date: Mon, 29 Sep 2014 20:18:02 +0200
+Message-ID: <6332476.od04BfvKGr@wuerfel>
+References: <1411498874-9864-1-git-send-email-Liviu.Dudau@arm.com> <CAErSpo5DR+TPYXBWGKRj9SRPjsbJ6kjZmAH1AXT12txEjGdZGQ@mail.gmail.com> <54287AA5.3060408@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1411937610-22125-4-git-send-email-suravee.suthikulpanit@amd.com>
+In-Reply-To: <54287AA5.3060408@amd.com>
 Sender: linux-pci-owner@vger.kernel.org
-To: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Cc: Will Deacon <will.deacon@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Bjorn Helgaas <bhelgaas@google.com>, Liviu Dudau <liviu@dudau.co.uk>, linux-arch <linux-arch@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Device Tree ML <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>, Tanmay Inamdar <tinamdar@apm.com>, Catalin Marinas <catalin.marinas@arm.com>, Sinan Kaya <okaya@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 28, 2014 at 2:53 PM,  <suravee.suthikulpanit@amd.com> wrote:
-> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
->
-> When specify PCI_PROBE_ONLY, the resource parent does not get assigned.
-> Therefore, pci_enable_resources() return error saying that
-> "BAR x not claimed".
->
-> Note: This same logic is also used in the arch/arm/kernel/bios32.c
->
-> Cc: Liviu Dudau <Liviu.Dudau@arm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> ---
->  arch/arm64/kernel/pci.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> index ce5836c..7fd4d2b 100644
-> --- a/arch/arm64/kernel/pci.c
-> +++ b/arch/arm64/kernel/pci.c
-> @@ -68,3 +68,11 @@ void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
->         bus->domain_nr = domain;
->  }
->  #endif
-> +
-> +int pcibios_enable_device(struct pci_dev *dev, int mask)
-> +{
-> +       if (pci_has_flag(PCI_PROBE_ONLY))
-> +               return 0;
-> +
-> +       return pci_enable_resources(dev, mask);
+On Sunday 28 September 2014 16:16:21 Suravee Suthikulpanit wrote:
+> >
+> > I'm not opposed to it, but I have the same question as for setting up
+> > the domain: how does pci_scan_root_bus() learn what to assign to
+> > bus->msi?  It currently only gets a "void *sysdata" so there's no
+> > obvious place to put it there.  You could add a pcibios interface to
+> > retrieve it, I suppose, but I'm starting to get uncomfortable with
+> > adding more of those because we have such a mess of them already.
+> >
+> 
+> [Suravee] Liviu and I had a talk during Linaro Connect, and we came up
+> with a new binding for the pcie controller called "msi-parent" which is
+> supposed to contain phandle to the corresponded msi-controller.
 
-I had thought of "PCI_PROBE_ONLY" as the "look but don't touch" flag,
-i.e., never change any BAR or bridge window assignments.  But I guess
-the current usage is more general than that: we also use it to
+Is this based on the property that we have in the pci-mvebu driver?
 
-  - avoid pci_enable_resources(), which only turns on IO/MEM bits in
-the command register
-  - avoid pcie_bus_configure_settings(), which programs MPS and MRRS
-  - avoid pci_read_bridge_bases(), which really just *reads* bridge windows
-  - avoid pcibios_reserve_legacy_regions(), which doesn't touch any
-PCI registers
-  - enables pci_claim_resource()
+I hope this is meant to be compatible so we can share the implementation.
 
-This seems like more than necessary, but I don't know all the history.
-In particular, I don't know why PCI_PROBE_ONLY should make a
-difference to things like claiming resources.
-
-> +}
-> --
-> 1.9.3
->b
+	Arnd
