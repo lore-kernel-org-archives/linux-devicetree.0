@@ -1,52 +1,55 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH v2 1/3] dmaengine: qcom_bam_dma: Generalize BAM register
- offset calculations
-Date: Mon, 29 Sep 2014 17:14:06 -0500
-Message-ID: <20140929221406.GE11142@qualcomm.com>
-References: <1411037575-13153-1-git-send-email-architt@codeaurora.org>
- <1411965189-24499-1-git-send-email-architt@codeaurora.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 1/4] ARM: DT: apq8064: add rpm support
+Date: Mon, 29 Sep 2014 15:17:57 -0700
+Message-ID: <5429DA95.80505@codeaurora.org>
+References: <1411982044-7873-1-git-send-email-srinivas.kandagatla@linaro.org> <1411982092-7922-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1411965189-24499-1-git-send-email-architt@codeaurora.org>
+In-Reply-To: <1411982092-7922-1-git-send-email-srinivas.kandagatla@linaro.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: vinod.koul@intel.com, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Cc: broonie@kernel.org, lee.jones@linaro.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arm@kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@sonymobile.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 29, 2014 at 10:03:07AM +0530, Archit Taneja wrote:
-> The BAM DMA IP comes in different versions. The register offset layout varies
-> among these versions. The layouts depend on which generation/family of SoCs they
-> belong to.
-> 
-> The current SoCs(like 8084, 8074) have a layout where the Top level registers
-> come in the beginning of the address range, followed by pipe and event
-> registers. The BAM revision numbers fall above 1.4.0.
-> 
-> The older SoCs (like 8064, 8960) have a layout where the pipe registers come
-> first, and the top level come later. These have BAM revision numbers lesser than
-> 1.4.0.
-> 
-> It isn't suitable to have macros provide the register offsets with the layouts
-> changed. Future BAM revisions may have different register layouts too. The
-> register addresses are now calculated by referring a table which contains a base
-> offset and multipliers for pipe/evnt/ee registers.
-> 
-> We have a common function bam_addr() which computes addresses for all the
-> registers. When computing address of top level/ee registers, we pass 0 to the
-> pipe argument in addr() since they don't have any multiple instances.
-> 
-> Some of the unused register definitions are removed. We can add new registers as
-> we need them.
+On 09/29/14 02:14, Srinivas Kandagatla wrote:
+> @@ -246,6 +247,24 @@
+>  			#reset-cells = <1>;
+>  		};
+>  
+> +		apcs: syscon@2011000 {
+> +			compatible = "syscon";
+> +			reg = <0x2011000 0x1000>;
+> +		};
 
-Vinod,
+This is actually a clock controller block that hw designers decided was
+good place to shove the ipc bits (because there's room!). Can we call it
 
-These changes replace the patch set I had that implemented support for the
-v.1.3.0 register set.
+                l2cc: clock-controller@2011000 {
+                        compatible = "syscon";
+                        reg = <0x2011000 0x1000>;
+                };
 
+Eventually I'll add the specific krait compatible when we merge krait
+clock support:
+
+                l2cc: clock-controller@2011000 {
+                        compatible = "qcom,kpss-gcc", "syscon";
+                        reg = <0x2011000 0x1000>;
+                        clock-output-names = "acpu_l2_aux";
+                };
+
+> +
+> +		rpm@108000 {
+> +			compatible	= "qcom,rpm-apq8064";
+> +			reg		= <0x108000 0x1000>;
+> +			qcom,ipc = <&apcs 0x8 2>;
+
+There are actually 3 ipc bits. I guess if we ever have to use the other
+two we'll extend this binding to have the other bits specified some
+other way?
 
 -- 
-sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 hosted by The Linux Foundation
