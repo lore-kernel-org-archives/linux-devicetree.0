@@ -1,53 +1,97 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v8 6/8] drivers: cpuidle: CPU idle ARM64 driver
-Date: Mon, 29 Sep 2014 12:08:04 +0100
-Message-ID: <20140929110804.GC2165@e102568-lin.cambridge.arm.com>
-References: <1409585324-3678-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1409585324-3678-7-git-send-email-lorenzo.pieralisi@arm.com>
- <20140903173740.GJ1824@e102568-lin.cambridge.arm.com>
- <20140904160320.GB22354@arm.com>
- <20140904172909.GA14822@e102568-lin.cambridge.arm.com>
- <20140905092120.GG13515@arm.com>
- <20140905153457.GA26306@e102568-lin.cambridge.arm.com>
- <54115D16.30206@linaro.org>
- <20140911085727.GA25773@e102568-lin.cambridge.arm.com>
- <5415C968.90303@gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/2] DT: add binding for mxs regulator
+Date: Mon, 29 Sep 2014 12:09:19 +0100
+Message-ID: <20140929110919.GB2432@leverpostej>
+References: <1411779588-22031-1-git-send-email-stefan.wahren@i2se.com>
+ <1411779588-22031-2-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <5415C968.90303@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Lina Iyer <lina.iyer@linaro.org>, Chander Kashyap <k.chander@samsung.com>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Geoff Levand <geoff@infradead.org>, Peter
+In-Reply-To: <1411779588-22031-2-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 14, 2014 at 05:59:20PM +0100, Tomasz Figa wrote:
+On Sat, Sep 27, 2014 at 01:59:47AM +0100, Stefan Wahren wrote:
+> This patch adds the Device tree bindings for the Freescale MXS
+> on-chip regulators.
+> 
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> ---
+>  .../bindings/regulator/mxs-regulator.txt           |   36 ++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/mxs-regulator.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/mxs-regulator.txt b/Documentation/devicetree/bindings/regulator/mxs-regulator.txt
+> new file mode 100644
+> index 0000000..e3133a4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/mxs-regulator.txt
+> @@ -0,0 +1,36 @@
+> +MXS regulators
+> +
+> +Required node properties:
+> +- compatible: Should be "simple-bus"
 
-[...]
+This does not look like an appropriate use of simple-bus.
 
-> About the patch 8 alone, somebody would have to test it. Maybe Bart or
-> Krzysztof could find some time to look at this? Other than that, I'm not
-> quite sure about entry latency you specified. It would look like
-> entering the state takes longer time than leaving, which I believe is
-> not the case. However I can't find any place in the code which would use
-> entry latency, so it might not be that important for now.
+Why do you want the parent node to be a simple-bus?
 
-I added that entry latency value because I thought that when entering that
-idle state the CPU had to flush the outercache, which I do not think that's
-what's really happening on Exynos.
+> +- #address-cells: Number of cells required to define regulator register,
+> +  must be 1
+> +- #size-cells: Number of cells required to define register size, must be 1
 
-Since Bart's patch to define cpu nodes in DT is making it to the
-mainline, this leaves us time to find out what that entry-latency-us value
-should be and patch the dts accordingly (Exynos CPUidle DT changes are
-not making it for this cycle, so we have time to update the patch
-accordingly).
+Why must this be the case, given that the child node expects an absolute
+physical address?
 
-entry-latency-us is used to compute CPUidle exit_latency so it has to be
-correct, and I rely on Samsung guys to provide me with that value, or
-I will ask them to set it properly for me.
+What's wrong with #address-cells = <2>, for example?
 
-Thanks,
-Lorenzo
+> +- reg: Absolute physical address and size of the register set for the device
 
+Why is this here _and_ in the child node(s)?
+
+What is the difference between this node and its children?
+
+Can there be more than one sub-node?
+
+Mark.
+
+> +
+> +Required regulator properties:
+> +- compatible: Must be "fsl,mxs-regulator"
+> +- reg: Absolute physical address of the register set for the regulator
+> +
+> +Any regulator property defined as part of the core regulator
+> +binding, defined in regulator.txt, can also be used.
+> +
+> +Example:
+> +
+> +	power: power@80044000 {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		reg = <0x80044000 0x2000>;
+> +		ranges;
+> +
+> +		reg_vddd: regulator@80044040 {
+> +			reg = <0x80044040 0x10>;
+> +			compatible = "fsl,mxs-regulator";
+> +			regulator-name = "vddd";
+> +			regulator-min-microvolt = <800000>;
+> +			regulator-max-microvolt = <1575000>;
+> +			regulator-boot-on;
+> +			vddd-supply = <&reg_vdda>;
+> +		};
+> +	};
+> +
+> -- 
+> 1.7.9.5
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
