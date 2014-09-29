@@ -1,115 +1,111 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] regulator: add mxs regulator driver
-Date: Mon, 29 Sep 2014 18:13:14 +0100
-Message-ID: <20140929171314.GW16977@sirena.org.uk>
-References: <1411779588-22031-1-git-send-email-stefan.wahren@i2se.com>
- <1411779588-22031-3-git-send-email-stefan.wahren@i2se.com>
- <20140928101650.GL27755@sirena.org.uk>
- <5428FE7B.8060700@i2se.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v6 05/11] drm: add Atmel HLCDC Display Controller
+ support
+Date: Mon, 29 Sep 2014 19:20:57 +0200
+Message-ID: <20140929192057.1ede0346@bbrezillon>
+References: <1412001864-3251-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1412001864-3251-6-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nqu5fpgjE+BQlEdo"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5428FE7B.8060700-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1412001864-3251-6-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Rob Clark <robdclark@gmail.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Yao <mark.yao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 29 Sep 2014 16:44:18 +0200
+Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
 
---nqu5fpgjE+BQlEdo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> 
+> The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoCs (i.e.
+> at91sam9n12, at91sam9x5 family or sama5d3 family) provides a display
+> controller device.
+> 
+> This display controller supports at least one primary plane and might
+> provide several overlays and an hardware cursor depending on the IP
+> version.
+> 
+> At the moment, this driver only implements an RGB connector to interface
+> with LCD panels, but support for other kind of external devices might be
+> added later.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> Reviewed-by: Rob Clark <robdclark@gmail.com>
+> Tested-by: Anthony Harivel <anthony.harivel@emtrion.de>
+> Tested-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+> ---
+>  drivers/gpu/drm/Kconfig                          |   2 +
+>  drivers/gpu/drm/Makefile                         |   1 +
+>  drivers/gpu/drm/atmel-hlcdc/Kconfig              |  13 +
+>  drivers/gpu/drm/atmel-hlcdc/Makefile             |   7 +
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c   | 392 +++++++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c     | 527 ++++++++++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h     | 216 ++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c  | 659 ++++++++++++++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h  | 403 +++++++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c | 443 ++++++++++++
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c  | 833 +++++++++++++++++++++++
+>  11 files changed, 3496 insertions(+)
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Kconfig
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/Makefile
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
+>  create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
+> 
+> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+> index b066bb3..2d97f7e 100644
+> --- a/drivers/gpu/drm/Kconfig
+> +++ b/drivers/gpu/drm/Kconfig
+> @@ -185,6 +185,8 @@ source "drivers/gpu/drm/cirrus/Kconfig"
+>  
 
-On Mon, Sep 29, 2014 at 08:38:51AM +0200, Stefan Wahren wrote:
+[...]
 
-> I'm searching for a good regulator implementation example.
+> +
+> +int atmel_hlcdc_crtc_mode_valid(struct drm_crtc *c,
+> +				struct drm_display_mode *mode)
+> +{
+> +	struct videomode vm;
+> +
+> +	vm.vfront_porch = mode->vsync_start - mode->vdisplay;
+> +	vm.vback_porch = mode->vtotal - mode->vsync_end;
+> +	vm.vsync_len = mode->vsync_end - mode->vsync_start;
+> +	vm.hfront_porch = mode->hsync_start - mode->hdisplay;
+> +	vm.hback_porch = mode->htotal - mode->hsync_end;
+> +	vm.hsync_len = mode->hsync_end - mode->hsync_start;
+> +
+> +	if (vm.hsync_len > 0x40 || vm.hsync_len < 1)
+> +		return MODE_HSYNC;
+> +
+> +	if (vm.vsync_len > 0x40 || vm.vsync_len < 1)
+> +		return MODE_VSYNC;
+> +
+> +	if (vm.vfront_porch > 0x40 || vm.hfront_porch < 1 ||
+> +	    vm.vback_porch > 0x40 || vm.vback_porch < 0 ||
+> +	    mode->hdisplay > 2048 || mode->hdisplay < 1)
+> +		return MODE_H_ILLEGAL;
+> +
+> +	if (vm.hfront_porch > 0x200 || vm.hfront_porch < 1 ||
+> +	    vm.hback_porch > 0x200 || vm.hback_porch < 1 ||
+> +	    mode->hdisplay > 2048 || mode->hdisplay < 1)
+> +		return MODE_V_ILLEGAL;
+> +
+> +	return MODE_OK;
+> +}
+> +
 
-> Does it apply to ti-abb-regulator.c and twl-regulator.c?
+I forgot to squash the commit removing this function which a vestige
+from one of my attempt to provide a common mode_valid function that can
+be called from the connector mode_valid function.
 
-Possibly.  But bear in mind that it's important to understand the
-hardware you're trying to support.
-
-> > This really needs a comment to explain what on earth is going on here -
-> > the whole thing with writing the same thing twice with two delays is
-> > more than a little odd.  It looks like the driver is trying to busy wait
-> > in cases where the change happens quickly but the comments about "fast"
-> > and "normal" mode make this unclear.
-
-> The regulator driver polls for the DC_OK bit in the power status register.
-
-> Quote for reference manual (p. 935): "High when switching DC-DC
-> converter control loop has stabilized after a voltage target change."
-
-> The two loops comes from the different regulator modes
-> (REGULATOR_MODE_FAST, REGULATOR_MODE_NORMAL).
-
-> In REGULATOR_MODE_FAST the voltage steping is disabled and changing
-> voltage should be fast. In REGULATOR_MODE_NORMAL voltage steping is
-> enabled and it's take a while for reaching the target voltage.
-
-I don't think you've fully understood what the different modes mean
-here, that's not normally how a buck convertor works.  The different
-modes would typically control the ability of the regulator to respond
-quickly to changes in load without drifting off regulation, fast mode
-makes the regulator less efficient but more responsive to load changes
-(probably marginally with modern regulators).  It should have relatively
-little to do with the ability to ramp the voltage and certainly not on
-the scale there.
-
-> Do you see more a problem with the two different loops or the redundant
-> register write?
-
-Both.  The code right now just looks really obscure.
-
-> if (readl(sreg->base_addr) & sreg->mode_mask)
->     return REGULATOR_MODE_FAST;
-
-> return REGULATOR_MODE_NORMAL;
-
-> Better?
-
-Yes.
-
-> > Why is this not looked up from the data structure like the rest of the
-> > data?
-
-> I was a little bit confused why there wasn't a mode_mask in the struct
-> regulator_desc. I will do it like the ti-abb-regulator in the matching
-> table.
-
-There's no helpers for setting modes.
-
-> >> +	regulator_unregister(rdev);
-> >> +	iounmap(power_addr);
-> >> +	iounmap(base_addr);
-
-> > Use devm_ versions of functions.
-
-> As a result the remove function for the drivers becomes unnecessary. Am
-> i right?
-
-Yes.
-
---nqu5fpgjE+BQlEdo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUKZMpAAoJECTWi3JdVIfQ8gYH/1LE4xs4mGetcUR5/f9aJDNp
-ofg2K/fNOyqi5d79gY+l5lM8otlBijWAeNtVrWQs33u+2HqPWpCsxkYnCKsSCqIl
-mLSxC36/WK4jZw2DxOi6U7JAdZIbkib2b/KIXQp9IkbOnhjktuGK14GluFA/j+f4
-SAJ/dbDrjihWD5/XtQ2gFv0czOeEFB2U+jqu0Uk+IrJ2duTp2KPqeJP0DlTGO4sq
-094CQAdjcKliNbFy9fDr5Iq5znvxx3CbPaYSpgUg7MWzvM0gI18WixrMUVVByfum
-oy2cjoMaKeIM3A0StH76a0QFTr73c0C/BAgOwycPgD+9mzEwDyJUmTHnniWdf8w=
-=JYcR
------END PGP SIGNATURE-----
-
---nqu5fpgjE+BQlEdo--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
