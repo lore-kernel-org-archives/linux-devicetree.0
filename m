@@ -1,87 +1,50 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [git pull] Devicetree changes for v3.15
-Date: Mon, 29 Sep 2014 13:49:22 +0100
-Message-ID: <20140929124922.CBE9FC4150A@trevor.secretlab.ca>
-References: <CACxGe6vCrkHPL6UNy1p8AO4+z5VFRY6w4_2grQEZQwp_3jJ7Yw@mail.gmail.com>
-	<CACRpkdZoo=P7uTO1rNDD_HUPjfAk26C0=mNYPoZmTV0wcO3V-w@mail.gmail.com>
-	<20140926141943.GC23926@titan.lakedaemon.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140926141943.GC23926-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] i2c: hix5hd2: add i2c controller driver
+Date: Mon, 29 Sep 2014 20:49:22 +0800
+Message-ID: <54295552.2020501@linaro.org>
+References: <1411878129-19743-1-git-send-email-zhangfei.gao@linaro.org> <1411878129-19743-3-git-send-email-zhangfei.gao@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411878129-19743-3-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Sep 2014 10:19:43 -0400
-, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
- wrote:
-> Linus,
-> 
-> On Fri, Sep 26, 2014 at 02:30:53PM +0200, Linus Walleij wrote:
-> > On Tue, Apr 1, 2014 at 12:15 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> > 
-> > > Here are the dt changes I've got queued up for v3.15. The full
-> > > description is below in the tag. Please pull.
-> > (...)
-> > > Jason Cooper (1):
-> > >       kbuild: dtbs_install: new make target
-> 
-> Exact patch is:
-> 
->   f4d4ffc03efc kbuild: dtbs_install: new make target
-> 
-> > After this patch a while back I have observed the following behaviour
-> > of the kernel build:
-> > 
-> > make zImage
-> > make zImage
-> > -> incremental build, just relink
-> > 
-> > make zImage
-> > make dtbs
-> > make zImage
-> > -> The whole kernel gets rebuilt
-> > 
-> > So now if I happen to recompile my device trees, I suddenly want
-> > the entire zImage to be rebuilt to? It's by definition not changes that
-> > affect the kernel build :-(
-> > 
-> > I noticed this because my build scripts calls make dtbs && make zImage,
-> > and started to rebuild absolutely everything all the time.
-> > 
-> > Do you think this can be fixed? It's quite simple to reproduce...
-> 
-> Does the attached fix your problem?
-> 
-> thx,
-> 
-> Jason.
-> 
-> ----------->8------------------------------------------
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index 0ce9d0f71f2a..a88b13af58d2 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -313,7 +313,9 @@ $(INSTALL_TARGETS):
->  	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $(boot)/dts/$@
->  
->  PHONY += dtbs dtbs_install
-> -dtbs dtbs_install: prepare scripts
-> +dtbs: scripts
-> +	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $@
-> +dtbs_install: prepare scripts
->  	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $@
->  
->  # We use MRPROPER_FILES and CLEAN_FILES now
 
-Is this the right fix though? It seems that it would fix the problem for
-the dtbs target, but would still cause a kernel rebuild for
-dtbs_install. Why does dtbs_install need to depend on the 'prepare'
-target?
 
-g.
+On 09/28/2014 12:22 PM, Zhangfei Gao wrote:
+> From: Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>
+> I2C drivers for hix5hd2 soc series, including following chipset
+> Hi3716CV200, Hi3719CV100, Hi3718CV100, Hi3719MV100, Hi3718MV100.
+>
+> Signed-off-by: Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>   drivers/i2c/busses/Kconfig       |   10 +
+>   drivers/i2c/busses/Makefile      |    1 +
+>   drivers/i2c/busses/i2c-hix5hd2.c |  554 ++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 565 insertions(+)
+>   create mode 100644 drivers/i2c/busses/i2c-hix5hd2.c
+>
+> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> index 2ac87fa..ba0f43c 100644
+> --- a/drivers/i2c/busses/Kconfig
+> +++ b/drivers/i2c/busses/Kconfig
+> @@ -77,6 +77,16 @@ config I2C_AMD8111
+>   	  This driver can also be built as a module.  If so, the module
+>   	  will be called i2c-amd8111.
+>
+> +config I2C_HIX5HD2
+> +	tristate "Hix5hd2 high-speed I2C driver"
+> +	depends on ARCH_HIX5HD2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Would like to remove the dependence in next version to enable compile-test.
+The commit 4c255791ffd6410f ("asm-generic: io: implement relaxed 
+accessor macros as conditional wrappers") adds wrappers to asm-generic 
+of {read,write}{b,w,l,q}_relaxed.
+
+Thanks
