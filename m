@@ -1,97 +1,98 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] DT: add binding for mxs regulator
-Date: Mon, 29 Sep 2014 12:09:19 +0100
-Message-ID: <20140929110919.GB2432@leverpostej>
-References: <1411779588-22031-1-git-send-email-stefan.wahren@i2se.com>
- <1411779588-22031-2-git-send-email-stefan.wahren@i2se.com>
+From: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
+Subject: Re: [PATCH v2] i2c: axxia: Add I2C driver for AXM55xx
+Date: Mon, 29 Sep 2014 13:13:00 +0200
+Message-ID: <CAE0=X_0guSvMqZxHvdS39Zxx4G7qVvnddv96t72rp4FwpJLgfA@mail.gmail.com>
+References: <1411983159-4692-1-git-send-email-anders.berg@avagotech.com>
+	<54292F74.2030209@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1411779588-22031-2-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54292F74.2030209-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 27, 2014 at 01:59:47AM +0100, Stefan Wahren wrote:
-> This patch adds the Device tree bindings for the Freescale MXS
-> on-chip regulators.
-> 
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> ---
->  .../bindings/regulator/mxs-regulator.txt           |   36 ++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/mxs-regulator.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/mxs-regulator.txt b/Documentation/devicetree/bindings/regulator/mxs-regulator.txt
-> new file mode 100644
-> index 0000000..e3133a4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/mxs-regulator.txt
-> @@ -0,0 +1,36 @@
-> +MXS regulators
-> +
-> +Required node properties:
-> +- compatible: Should be "simple-bus"
+On Mon, Sep 29, 2014 at 12:07 PM, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 09/29/2014 03:02 PM, Anders Berg wrote:
+>>
+>> Add I2C bus driver for the controller found in the LSI Axxia family SoCs.
+>> The
+>> driver implements 10-bit addressing and SMBus transfer modes via emulation
+>> (including SMBus block data read).
+>>
+>> Signed-off-by: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
+>> ---
+>>
+(...)
+>> +
+>> +       if (!idev->msg) {
+>> +               dev_warn(idev->dev, "unexpected interrupt");
+>
+>
+> Missed terminating new line '\n'
+>
 
-This does not look like an appropriate use of simple-bus.
+Right, I'll fix that (all occurrences)
 
-Why do you want the parent node to be a simple-bus?
+>
+>> +               goto out;
+>> +       }
+>> +
+>> +       /* RX FIFO needs service? */
+>> +       if (i2c_m_rd(idev->msg) && (status & MST_STATUS_RFL))
+>> +               axxia_i2c_empty_rx_fifo(idev);
+>> +
+>> +       /* TX FIFO needs service? */
+>> +       if (!i2c_m_rd(idev->msg) && (status & MST_STATUS_TFL)) {
+>> +               if (axxia_i2c_fill_tx_fifo(idev) == 0)
+>> +                       i2c_int_disable(idev, MST_STATUS_TFL);
+>> +       }
+>> +
+>> +       if (status & MST_STATUS_SCC) {
+>> +               /* Stop completed */
+>> +               i2c_int_disable(idev, ~0);
+>> +               complete(&idev->msg_complete);
+>> +       } else if (status & MST_STATUS_SNS) {
+>> +               /* Transfer done */
+>> +               i2c_int_disable(idev, ~0);
+>> +               if (i2c_m_rd(idev->msg) && idev->msg_xfrd <
+>> idev->msg->len)
+>> +                       axxia_i2c_empty_rx_fifo(idev);
+>> +               complete(&idev->msg_complete);
+>> +       } else if (unlikely(status & MST_STATUS_ERR)) {
+>> +               /* Transfer error */
+>> +               i2c_int_disable(idev, ~0);
+>> +               if (status & MST_STATUS_AL)
+>> +                       idev->msg_err = -EAGAIN;
+>> +               else if (status & MST_STATUS_NAK)
+>> +                       idev->msg_err = -ENXIO;
+>> +               else
+>> +                       idev->msg_err = -EIO;
+>> +               dev_dbg(idev->dev, "error %#x, addr=%#x rx=%u/%u
+>> tx=%u/%u\n",
+>> +                       status,
+>> +                       idev->msg->addr,
+>> +                       readl(idev->base + MST_RX_BYTES_XFRD),
+>> +                       readl(idev->base + MST_RX_XFER),
+>> +                       readl(idev->base + MST_TX_BYTES_XFRD),
+>> +                       readl(idev->base + MST_TX_XFER));
+>> +               complete(&idev->msg_complete);
+>> +       }
+>> +
+>> +out:
+>> +       /* Clear interrupt */
+>> +       writel(INT_MST, idev->base + INTERRUPT_STATUS);
+>> +
+>> +       return IRQ_HANDLED;
+>> +}
+>> +
+>
+>
+> Its looks good if we move the entire ISR above probe/remove
+> functionalities...
+>
 
-> +- #address-cells: Number of cells required to define regulator register,
-> +  must be 1
-> +- #size-cells: Number of cells required to define register size, must be 1
+Not sure what you mean here... The ISR _is_ above probe/remove.
 
-Why must this be the case, given that the child node expects an absolute
-physical address?
-
-What's wrong with #address-cells = <2>, for example?
-
-> +- reg: Absolute physical address and size of the register set for the device
-
-Why is this here _and_ in the child node(s)?
-
-What is the difference between this node and its children?
-
-Can there be more than one sub-node?
-
-Mark.
-
-> +
-> +Required regulator properties:
-> +- compatible: Must be "fsl,mxs-regulator"
-> +- reg: Absolute physical address of the register set for the regulator
-> +
-> +Any regulator property defined as part of the core regulator
-> +binding, defined in regulator.txt, can also be used.
-> +
-> +Example:
-> +
-> +	power: power@80044000 {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		reg = <0x80044000 0x2000>;
-> +		ranges;
-> +
-> +		reg_vddd: regulator@80044040 {
-> +			reg = <0x80044040 0x10>;
-> +			compatible = "fsl,mxs-regulator";
-> +			regulator-name = "vddd";
-> +			regulator-min-microvolt = <800000>;
-> +			regulator-max-microvolt = <1575000>;
-> +			regulator-boot-on;
-> +			vddd-supply = <&reg_vdda>;
-> +		};
-> +	};
-> +
-> -- 
-> 1.7.9.5
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+/Anders
