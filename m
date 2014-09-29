@@ -1,36 +1,46 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] GPIO: Add driver for 74xx-ICs with MMIO access
-Date: Mon, 29 Sep 2014 14:04:47 +0200
-Message-ID: <CACRpkdYAohAjHiabQC7zs=CrJzDJh+jFKTYhATFoHdNOH2Ef0A@mail.gmail.com>
-References: <1411112404-16040-1-git-send-email-shc_work@mail.ru>
-	<1411112404-16040-2-git-send-email-shc_work@mail.ru>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1411112404-16040-2-git-send-email-shc_work@mail.ru>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH 0/6] Add Spreadtrum Shark64 SoC support
+Date: Mon, 29 Sep 2014 20:04:47 +0800
+Message-ID: <1411992293-7729-1-git-send-email-zhang.lyra@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "chunyan.zhang" <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 19, 2014 at 9:40 AM, Alexander Shiyan <shc_work@mail.ru> wrote:
+From: "chunyan.zhang" <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 
-> This patch adds driver to support GPIO functionality for 74xx-compatible
-> ICs with MMIO access. Compatible models include:
->  1 bit:   74AHC1G125 (Input), 74AUC1G74 (Output)
->  2 bits:  74LVC2G125 (Input), 74HC74 (Output)
->  4 bits:  74HC125 (Input), 74HC175 (Output)
->  6 bits:  74HC365 (Input), 74HC174 (Output)
->  8 bits:  74HC244 (Input), 74HC273 (Output)
->  16 bits: 74AC1624 (Input), 74AC16374 (Output)
->
-> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+Spreadtrum is a rapid growing chip vendor providing smart phone total solutions. 
+Shark64 is nominated as a SoC infrastructure that supports 4G/3G/2G standards based on ARMv8 multiple core architecture.
 
-Looking good, if you fix up the DT bindings to not include
-technology as indicated in reply to patch 2/2 I'll be happy to
-apply this patch.
+This patchset adds shark64 supports in arm64 device tree and implements the basic earlycon serial driver.
 
-Sorry for the delay.
+chunyan.zhang (6):
+  Documentation: DT: Add bindings for Spreadtrum serial
+  arm64: Add DTS support for Spreadtrum's Shark64 SoC
+  arm64: dts/Makefile: Add support for Spreadtrum's Shark64 SoC.
+  arm64: Add support for Spreadtrum's Shark64 SoC in Kconfig and defconfig
+  tty/serial: add Spreadtrum's serial earlycon
+  Documentation: Add entry for Spreadtrum's Shark64 SoC
 
-Yours,
-Linus Walleij
+ Documentation/devicetree/bindings/arm/sprd.txt     |    6 ++
+ .../devicetree/bindings/serial/of-serial.txt       |    1 +
+ arch/arm64/Kconfig                                 |    5 +
+ arch/arm64/boot/dts/Makefile                       |    1 +
+ arch/arm64/boot/dts/sprd_shark64.dts               |  110 ++++++++++++++++++++
+ arch/arm64/configs/defconfig                       |    1 +
+ drivers/tty/serial/Kconfig                         |   12 +++
+ drivers/tty/serial/Makefile                        |    1 +
+ drivers/tty/serial/serial_sprd_early.c             |   64 ++++++++++++
+ 9 files changed, 201 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/sprd.txt
+ create mode 100644 arch/arm64/boot/dts/sprd_shark64.dts
+ create mode 100644 drivers/tty/serial/serial_sprd_early.c
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
