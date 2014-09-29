@@ -1,175 +1,108 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 2/2] regulator: add mxs regulator driver
-Date: Mon, 29 Sep 2014 08:38:51 +0200
-Message-ID: <5428FE7B.8060700@i2se.com>
-References: <1411779588-22031-1-git-send-email-stefan.wahren@i2se.com> <1411779588-22031-3-git-send-email-stefan.wahren@i2se.com> <20140928101650.GL27755@sirena.org.uk>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v3 5/5] ARM: dts: am335x-boneblack: Add HDMI audio support
+Date: Mon, 29 Sep 2014 09:41:59 +0300
+Message-ID: <5428FF37.1020104@ti.com>
+References: <cover.1410898073.git.jsarha@ti.com> <1af922a485e8084aff33eaeafa30d4698d1cc886.1410898073.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140928101650.GL27755@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: lgirdwood@gmail.com, shawn.guo@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, festevam@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1af922a485e8084aff33eaeafa30d4698d1cc886.1410898073.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, alsa-devel@alsa-project.org
+Cc: tony@atomide.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, peter.ujfalusi@ti.com, detheridge@ti.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+This patch is invalid now that Mike Turquette took the generic 
+clk-gpio-gate in. The other patches in the series are still Ok.
 
-thanks for your comments. Now it looks to me, that i try to reinvent the
-wheel.
+I'll mail a new dts patch shortly.
 
-I'm searching for a good regulator implementation example.
+Best regards,
+Jyri
 
-Does it apply to ti-abb-regulator.c and twl-regulator.c?
-
-Am 28.09.2014 um 12:16 schrieb Mark Brown:
-> On Sat, Sep 27, 2014 at 12:59:48AM +0000, Stefan Wahren wrote:
+On 09/16/2014 11:40 PM, Jyri Sarha wrote:
+> Adds mcasp0_pins, clk_mcasp0_fixed, clk_mcasp0, mcasp0, hdmi_audio,
+> and sound nodes.
 >
->> +	pr_debug("%s: min_uV %d, max_uV %d, min %d, max %d\n", __func__,
->> +		 min_uV, max_uV, con->min_uV, con->max_uV);
->> +
->> +	if (max_uV < con->min_uV || max_uV > con->max_uV)
->> +		return -EINVAL;
-> This is replicating checks done by the core.
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>   arch/arm/boot/dts/am335x-boneblack.dts |   52 ++++++++++++++++++++++++++++++++
+>   1 file changed, 52 insertions(+)
 >
->> +	val = (max_uV - con->min_uV) * sreg->rdesc.n_voltages /
->> +			(con->max_uV - con->min_uV);
-> Drivers should never look at their constraints, they should let the core
-> do that and just do what they're asked.  In this case it is probably
-> best to implement a get_voltage_sel() operation and have the conversion
-> to voltage done by regulator_map_voltage_linear(), this will both make
-> the code look better and mean the driver gets the benefit of all the
-> error checking done by the core.
-
-Okay, i will do that. For the list_voltage operation
-regulator_list_voltage_linear()
-should be the perfect candidate.
-
->> +	writel(val | regs, sreg->base_addr);
->> +	for (i = 20; i; i--) {
->> +		/* delay for fast mode */
->> +		if (readl(power_sts) & BM_POWER_STS_DC_OK)
->> +			return 0;
->> +
->> +		udelay(1);
->> +	}
->> +
->> +	writel(val | regs, sreg->base_addr);
->> +	start = jiffies;
->> +	while (1) {
->> +		/* delay for normal mode */
->> +		if (readl(power_sts) & BM_POWER_STS_DC_OK)
->> +			return 0;
-> This really needs a comment to explain what on earth is going on here -
-> the whole thing with writing the same thing twice with two delays is
-> more than a little odd.  It looks like the driver is trying to busy wait
-> in cases where the change happens quickly but the comments about "fast"
-> and "normal" mode make this unclear.
-
-The regulator driver polls for the DC_OK bit in the power status register.
-
-Quote for reference manual (p. 935): "High when switching DC-DC
-converter control loop has stabilized after a voltage target change."
-
-The two loops comes from the different regulator modes
-(REGULATOR_MODE_FAST, REGULATOR_MODE_NORMAL).
-
-In REGULATOR_MODE_FAST the voltage steping is disabled and changing
-voltage should be fast. In REGULATOR_MODE_NORMAL voltage steping is
-enabled and it's take a while for reaching the target voltage.
-
-Do you see more a problem with the two different loops or the redundant
-register write?
-
-Is it acceptable that the function blocks here?
-
->> +	pr_debug("%s: %s register val %d\n", __func__, sreg->name, val);
->> +
->> +	switch (sreg->rdesc.id) {
->> +	case MXS_VDDA:
->> +		val >>= 16;
->> +		break;
->> +	case MXS_VDDD:
->> +		val >>= 20;
->> +		break;
->> +	}
->> +
->> +	return val ? 1 : 0;
->> +}
-> This seems buggy - it'll always return true for MXS_VDDD if MXS_VDDA
-> enabled won't it?
-
-Shame on me, i forgot to remove this function. mxs_is_enabled is never used.
-
->> +static unsigned int mxs_get_mode(struct regulator_dev *reg)
->> +{
->> +	struct mxs_regulator *sreg = rdev_get_drvdata(reg);
->> +	u32 val = readl(sreg->base_addr) & sreg->mode_mask;
->> +
->> +	return val ? REGULATOR_MODE_FAST : REGULATOR_MODE_NORMAL;
->> +}
-> Please try to avoid the ternery operator, it does nothing for
-> legibility.
-
-if (readl(sreg->base_addr) & sreg->mode_mask)
-    return REGULATOR_MODE_FAST;
-
-return REGULATOR_MODE_NORMAL;
-
-Better?
-
->> +	if (of_property_read_string(np, "regulator-name", &name)) {
->> +		dev_err(dev, "missing property regulator-name\n");
->> +		return -EINVAL;
->> +	}
-> Use different compatibles to identify the regulators, regulator-name
-> should never be mandatory.
-
-I will remove this and use the compatibles.
-
->> +	switch (sreg->rdesc.id) {
->> +	case MXS_VDDIO:
->> +		sreg->mode_mask = BIT(17);
->> +		break;
->> +	case MXS_VDDA:
->> +		sreg->mode_mask = BIT(18);
->> +		break;
->> +	case MXS_VDDD:
->> +		sreg->mode_mask = BIT(22);
->> +		break;
->> +	}
-> Why is this not looked up from the data structure like the rest of the
-> data?
-
-I was a little bit confused why there wasn't a mode_mask in the struct
-regulator_desc. I will do it like the ti-abb-regulator in the matching
-table.
-
+> diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
+> index 305975d..1487f7c 100644
+> --- a/arch/arm/boot/dts/am335x-boneblack.dts
+> +++ b/arch/arm/boot/dts/am335x-boneblack.dts
+> @@ -59,12 +59,35 @@
+>   			0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
+>   		>;
+>   	};
+> +
+> +	mcasp0_pins: mcasp0_pins {
+> +		pinctrl-single,pins = <
+> +			0x1ac (PIN_INPUT_PULLUP | MUX_MODE0)	/* mcasp0_ahclkx.mcasp0_ahclkx */
+> +			0x19c (PIN_OUTPUT_PULLDOWN | MUX_MODE2) /* mcasp0_ahclkr.mcasp0_axr2 */
+> +			0x194 (PIN_OUTPUT_PULLUP | MUX_MODE0)	/* mcasp0_fsx.mcasp0_fsx */
+> +			0x190 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mcasp0_aclkx.mcasp0_aclkx */
+> +			0x06c (PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a11.GPIO1_27 */
+> +		>;
+> +	};
+>   };
 >
->> +	dev_info(dev, "%s found\n", name);
-> Don't add noise like this to the boot log, it provides no useful
-> information.
-
-Okay, i will remove this.
-
->> +	regulator_unregister(rdev);
->> +	iounmap(power_addr);
->> +	iounmap(base_addr);
-> Use devm_ versions of functions.
-
-As a result the remove function for the drivers becomes unnecessary. Am
-i right?
-
+>   &lcdc {
+>   	status = "okay";
+>   };
 >
->> +static int __init mxs_regulator_init(void)
->> +{
->> +	return platform_driver_register(&mxs_regulator_driver);
->> +}
->> +postcore_initcall(mxs_regulator_init);
-> module_platform_driver().
+> +&mcasp0	{
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mcasp0_pins>;
+> +	status = "okay";
+> +	op-mode = <0>;	/* MCASP_IIS_MODE */
+> +	tdm-slots = <2>;
+> +	serial-dir = <	/* 0: INACTIVE, 1: TX, 2: RX */
+> +			0 0 1 0
+> +		>;
+> +	tx-num-evt = <1>;
+> +	rx-num-evt = <1>;
+> +};
+> +
+>   / {
+>   	hdmi {
+>   		compatible = "ti,tilcdc,slave";
+> @@ -74,4 +97,33 @@
+>   		pinctrl-1 = <&nxp_hdmi_bonelt_off_pins>;
+>   		status = "okay";
+>   	};
+> +
+> +	clk_mcasp0_fixed: clk_mcasp0_fixed {
+> +	      #clock-cells = <0>;
+> +	      compatible = "fixed-clock";
+> +	      clock-frequency = <24576000>;
+> +	};
+> +
+> +	clk_mcasp0: clk_mcasp0 {
+> +	      #clock-cells = <0>;
+> +	      compatible = "ti,gpio-gate-clock";
+> +	      clocks = <&clk_mcasp0_fixed>;
+> +	      enable-gpios = <&gpio1 27 0>; /* BeagleBone Black Clk enable on GPIO1_27 */
+> +	};
+> +
+> +	hdmi_audio: hdmi_audio@0 {
+> +	       compatible = "linux,hdmi-audio";
+> +	       status = "okay";
+> +	};
+> +
+> +	sound {
+> +		compatible = "ti,beaglebone-black-audio";
+> +		ti,model = "TI BeagleBone Black";
+> +		ti,audio-codec = <&hdmi_audio>;
+> +		ti,mcasp-controller = <&mcasp0>;
+> +		ti,audio-routing =
+> +			"HDMI Out",	"TX";
+> +		clocks = <&clk_mcasp0>;
+> +		clock-names = "mclk";
+> +	};
+>   };
+>
 
-I wasn't sure because of the postcore stuff. I will fix it.
-
-Best regards
-
-Stefan
