@@ -1,104 +1,60 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [PATCH v6 08/11] ARM: AT91/dt: add alternative pin muxing for sama5d3
- lcd pins
-Date: Mon, 29 Sep 2014 16:44:21 +0200
-Message-ID: <1412001864-3251-9-git-send-email-boris.brezillon@free-electrons.com>
-References: <1412001864-3251-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v3 3/4] rtc: omap: Update Kconfig for OMAP RTC
+Date: Mon, 29 Sep 2014 09:44:20 -0500
+Message-ID: <20140929144420.GJ32403@saruman>
+References: <1411637529-18289-4-git-send-email-lokeshvutla@ti.com>
+ <1411968339-9933-1-git-send-email-lokeshvutla@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1412001864-3251-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Rob Clark <robdclark@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Mark Yao <mark.yao@rock-chips.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="DesjdUuHQDwS2t4N"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1411968339-9933-1-git-send-email-lokeshvutla@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: rtc-linux@googlegroups.com, a.zummo@towertech.it, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, balbi@ti.com, tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+--DesjdUuHQDwS2t4N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Define alternative pin muxing for the LCDC pins.
+On Mon, Sep 29, 2014 at 10:55:39AM +0530, Lokesh Vutla wrote:
+> From: Tero Kristo <t-kristo@ti.com>
+>=20
+> RTC is present in AM43xx and DRA7xx also. Updating the Kconfig
+> to depend on ARCH_OMAP or ARCH_DAVINCI
+>=20
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
 
-Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-Tested-by: Anthony Harivel <anthony.harivel@emtrion.de>
----
- arch/arm/boot/dts/sama5d3_lcd.dtsi | 50 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+Reviewed-by: Felipe Balbi <balbi@ti.com>
 
-diff --git a/arch/arm/boot/dts/sama5d3_lcd.dtsi b/arch/arm/boot/dts/sama5d3_lcd.dtsi
-index 2186b89..e7581f6 100644
---- a/arch/arm/boot/dts/sama5d3_lcd.dtsi
-+++ b/arch/arm/boot/dts/sama5d3_lcd.dtsi
-@@ -82,6 +82,28 @@
- 							 AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD13 pin */
- 							 AT91_PIOA 14 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD14 pin */
- 							 AT91_PIOA 15 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD15 pin */
-+							 AT91_PIOA 16 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD16 pin */
-+							 AT91_PIOA 17 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* LCDD17 pin */
-+					};
-+
-+					pinctrl_lcd_rgb666_alt: lcd-rgb-2-alt {
-+						atmel,pins =
-+							<AT91_PIOA 0 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD0 pin */
-+							 AT91_PIOA 1 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD1 pin */
-+							 AT91_PIOA 2 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD2 pin */
-+							 AT91_PIOA 3 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD3 pin */
-+							 AT91_PIOA 4 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD4 pin */
-+							 AT91_PIOA 5 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD5 pin */
-+							 AT91_PIOA 6 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD6 pin */
-+							 AT91_PIOA 7 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD7 pin */
-+							 AT91_PIOA 8 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD8 pin */
-+							 AT91_PIOA 9 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD9 pin */
-+							 AT91_PIOA 10 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD10 pin */
-+							 AT91_PIOA 11 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD11 pin */
-+							 AT91_PIOA 12 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD12 pin */
-+							 AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD13 pin */
-+							 AT91_PIOA 14 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD14 pin */
-+							 AT91_PIOA 15 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD15 pin */
- 							 AT91_PIOC 14 AT91_PERIPH_C AT91_PINCTRL_NONE	/* LCDD16 pin */
- 							 AT91_PIOC 13 AT91_PERIPH_C AT91_PINCTRL_NONE>;	/* LCDD17 pin */
- 					};
-@@ -104,6 +126,34 @@
- 							 AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD13 pin */
- 							 AT91_PIOA 14 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD14 pin */
- 							 AT91_PIOA 15 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD15 pin */
-+							 AT91_PIOA 16 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD16 pin */
-+							 AT91_PIOA 17 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD17 pin */
-+							 AT91_PIOA 18 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD18 pin */
-+							 AT91_PIOA 19 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD19 pin */
-+							 AT91_PIOA 20 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD20 pin */
-+							 AT91_PIOA 21 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD21 pin */
-+							 AT91_PIOA 22 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD22 pin */
-+							 AT91_PIOA 23 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* LCDD23 pin */
-+					};
-+
-+					pinctrl_lcd_rgb888_alt: lcd-rgb-3-alt {
-+						atmel,pins =
-+							<AT91_PIOA 0 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD0 pin */
-+							 AT91_PIOA 1 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD1 pin */
-+							 AT91_PIOA 2 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD2 pin */
-+							 AT91_PIOA 3 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD3 pin */
-+							 AT91_PIOA 4 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD4 pin */
-+							 AT91_PIOA 5 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD5 pin */
-+							 AT91_PIOA 6 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD6 pin */
-+							 AT91_PIOA 7 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD7 pin */
-+							 AT91_PIOA 8 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD8 pin */
-+							 AT91_PIOA 9 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD9 pin */
-+							 AT91_PIOA 10 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD10 pin */
-+							 AT91_PIOA 11 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD11 pin */
-+							 AT91_PIOA 12 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD12 pin */
-+							 AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD13 pin */
-+							 AT91_PIOA 14 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD14 pin */
-+							 AT91_PIOA 15 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD15 pin */
- 							 AT91_PIOC 14 AT91_PERIPH_C AT91_PINCTRL_NONE	/* LCDD16 pin */
- 							 AT91_PIOC 13 AT91_PERIPH_C AT91_PINCTRL_NONE	/* LCDD17 pin */
- 							 AT91_PIOC 12 AT91_PERIPH_C AT91_PINCTRL_NONE	/* LCDD18 pin */
--- 
-1.9.1
+--=20
+balbi
+
+--DesjdUuHQDwS2t4N
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUKXBDAAoJEIaOsuA1yqRE7O4QAIB8I7ykKNn6uWKcOGiS3wpY
+znL97NJ6kC/SZpPB5g5UFx6k5gOsCG78niMuqh0uWar2ExyuUZMTAe3e9PYN4Bis
+eFAy5Cxgg5CEl7P9KxFNbIWVXwteYHEXVVx92KVbxDLCoNvIwIMi7j11fsp6l7pM
+1WYyRslaQUWyQZK5/v97uLZMgIYkcRDnSPNWmCVFCHD93uhJV/8ELTMGyCQqeOkG
+oDFnQ5d76PDyon2Qi848jg6JruYu9Y/ACEcuYpOkdyQecL1Ky8v+JappF+RnGNeO
+4QMZTTMI5sNDWhzoLxVNUJO9T8DuSPhqVPvpSTvNXMKEiv/F0FvP0irSIJJqFIri
+x+UPj92wCuXtsnDCEpZ86v3aYK+PG0KhDtkzg0aG8dde9RM0mkb9A0Q5NCoQdf3o
+tjD+BhxvFnYAE3cNGunfASIpOq+AVmQYfGQetw9Xkshwr+6e2JSBwQ6diPL7EvB5
+RzHvIfHtaA/+2A5BS0+1xU1fEXffSYD73AW9EKD0/r0s49NHi++UjzHeTkf2VLZu
+5CBvm6rLV5CNitfHyx5yqh0cvDBtbrv5rCwQoaK5dJmNd/knsRUeQxaCtUIpbd8Y
+pv8e3dO+M+uoqSpFJ+WsbJFm8Bx4RJp/Vh4LETMeimZm6pDDd3tYAyW91AIwJWRD
+wBIQY+qrRIgSUIAdwFxs
+=tZ6c
+-----END PGP SIGNATURE-----
+
+--DesjdUuHQDwS2t4N--
