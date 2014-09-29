@@ -1,36 +1,66 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 0/6] Add Spreadtrum Shark64 SoC support
-Date: Mon, 29 Sep 2014 16:08:03 +0200
-Message-ID: <4929446.AOyTEh2uOW@wuerfel>
-References: <1411992293-7729-1-git-send-email-zhang.lyra@gmail.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC 4/4] irqchip: gicv2m: Add supports for ARM GICv2m MSI(-X)
+Date: Mon, 29 Sep 2014 16:23:08 +0200 (CEST)
+Message-ID: <alpine.DEB.2.02.1409291611030.22082@ionos.tec.linutronix.de>
+References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com> <1411937610-22125-5-git-send-email-suravee.suthikulpanit@amd.com> <54287F17.8000503@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411992293-7729-1-git-send-email-zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <54287F17.8000503@amd.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net, will.deacon@arm.com, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 29 September 2014 20:04:47 zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: "chunyan.zhang" <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+On Sun, 28 Sep 2014, Suravee Suthikulpanit wrote:
+
+> Jason/Thomas,
 > 
-> Spreadtrum is a rapid growing chip vendor providing smart phone total solutions. 
-> Shark64 is nominated as a SoC infrastructure that supports 4G/3G/2G standards based on ARMv8 multiple core architecture.
+> This patch comes from:
+>     [V8 2/2] irqchip: gicv2m: Add supports for ARM GICv2m MSI(-X)
+>     (https://lkml.org/lkml/2014/9/20/113)
 > 
-> This patchset adds shark64 supports in arm64 device tree and implements the basic earlycon serial driver.
+> It has been slightly modified to remove the multi-MSI supports for now
+> (I am waiting to discuss with Marc after he returned from vacation.), and will
+> be submitted separately.
+> 
+> Since this patch is independent from the multi-MSI stuff.  Please let me know
+> if you would consider taking this separately.
 
-Hi Lyra and/or Chunyan,
+Not without an explicit reviewed/acked from Marc for the GIC part and
+a reviewed/acked from the DT folks.
 
-Thanks for your submission, it's great to see another company join the
-upstream submission process.
+Aside of that the conditional madness is just horrible:
+ 
+> > +static inline
+> > +struct gic_chip_data *irq_data_get_gic_chip_data(struct irq_data *d)
+> > +{
+> > +	struct gic_chip_data *gic_data;
+> > +	struct msi_chip *mchip;
+> > +	struct v2m_data *v2mdat;
+> > +
+> > +	/*
+> > +	 * For MSI, irq_data.chip_data points to struct msi_chip.
+> > +	 * For non-MSI, irq_data.chip_data points to struct gic_chip_data.
+> > +	 */
+> > +	if (d->msi_desc) {
+> > +		mchip = irq_data_get_irq_chip_data(d);
+> > +		v2mdat = container_of(mchip, struct v2m_data, msi_chip);
+> > +		gic_data = v2mdat->gic;
+> > +	} else {
+> > +		gic_data = irq_data_get_irq_chip_data(d);
+> > +	}
+> > +	return gic_data;
+> > +}
 
-Your patches look good overall, but I have replied with a few comments
-on the details that need to be worked out.
+For heavens sake, why are you insisting on duct-taping that into the
+GIC proper instead of coming up with a proper layering?
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    https://lkml.org/lkml/2014/8/27/228
+    https://lkml.org/lkml/2014/8/26/707
+
+Thanks,
+
+	tglx
+    
+
