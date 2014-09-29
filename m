@@ -1,39 +1,104 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/6] Documentation: DT: Add bindings for Spreadtrum serial
-Date: Mon, 29 Sep 2014 15:39:23 +0200
-Message-ID: <5399512.qxHSYW7FgQ@wuerfel>
-References: <1411992293-7729-1-git-send-email-zhang.lyra@gmail.com> <1411992293-7729-2-git-send-email-zhang.lyra@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/6] arm64: Add DTS support for Spreadtrum's Shark64 SoC
+Date: Mon, 29 Sep 2014 15:47:47 +0200
+Message-ID: <4004425.NZAxCnE0qr@wuerfel>
+References: <1411992293-7729-1-git-send-email-zhang.lyra@gmail.com> <1411992293-7729-3-git-send-email-zhang.lyra@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411992293-7729-2-git-send-email-zhang.lyra@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: zhang.lyra@gmail.com
-Cc: catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, galak@codeaurora.org, broonie@linaro.org, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, artagnon@gmail.com, rrichter@cavium.com, robh+dt@kernel.org, will.deacon@arm.com, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "chunyan.zhang" <chunyan.zhang@spreadtrum.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411992293-7729-3-git-send-email-zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "chunyan.zhang" <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 29 September 2014 20:04:48 zhang.lyra@gmail.com wrote:
-> diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/of-serial.txt
-> index 7705477..a0bb1d1 100644
-> --- a/Documentation/devicetree/bindings/serial/of-serial.txt
-> +++ b/Documentation/devicetree/bindings/serial/of-serial.txt
-> @@ -14,6 +14,7 @@ Required properties:
->         - "altr,16550-FIFO32"
->         - "altr,16550-FIFO64"
->         - "altr,16550-FIFO128"
-> +       - "sprd,serial"
->         - "serial" if the port type is unknown.
->  - reg : offset and length of the register set for the device.
->  - interrupts : should contain uart interrupt.
-> 
+On Monday 29 September 2014 20:04:49 zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> +
+> +/memreserve/ 0x80000000 0x00010000;
 
-This file is really only for 8250 compatible UART implementations, please
-add a new file with a proper binding for your serial port. It would be
-nice if you could rename this file to 8250.txt to avoid confusing the
-next person.
+Maybe add a comment explaining why it is reserved?
 
-Please also add the "sprd" prefix to
-Documentation/devicetree/bindings/vendor-prefixes.txt
+> +	chosen {
+> +		bootargs = "earlycon=serial_sprd,0x70000000";
+> +      };
+
+Just remove this for now, the command line should really be set by the
+boot loader, not hardcoded in the dts file.
+
+IIRC, the earlycon=... syntax is not recommended on DT based systems,
+better use the "stdout-path" syntax instead.
+
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,armv8";
+> +			reg = <0x0 0x0>;
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0x0 0x8000fff8>;
+> +		};
+
+New platforms should avoid using "spin-table" method. Please
+change the boot loader to implement PSCI if you can.
+
+> +	memory@80000000 {
+> +		device_type = "memory";
+> +		reg = <0 0x80000000 0 0x20000000>;
+> +	};
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +		serial1 = &uart1;
+> +	};
+
+These two belong into a board-specific file. I'd suggest renaming this
+file to sprd_shark64.dtsi (or whatever the SoC is called) and adding a
+.dts file that includes this and sets the aliases and memory node
+according to what the particular board has.
+
+> +	intc:interrupt-controller@71400000 {
+> +		compatible = "sprd,intc";
+> +		#interrupt-cells = <0>;
+> +		interrupt-controller;
+> +		reg =	<0 0x71400000 0 0x1000>,
+> +			<0 0x71500000 0 0x1000>,
+> +			<0 0x71600000 0 0x1000>,
+> +			<0 0x71700000 0 0x1000>;
+> +	};
+
+This interrupt controller does not have a binding, so please add at least
+a documentation for the binding as well. The name should probably be more
+specific that this. Also, explain why you have an interrupt controller
+that has four memory regions but only one interrupt sink but no interrupt
+source.
+
+I assume this is a nested interrupt controller to which some internal
+peripherals are connected?
+
+> +	uart0: uart@70000000 {
+> +		compatible = "sprd,serial";
+> +		reg = <0 0x70000000 0 0x100>;
+> +		interrupts = <0 2 0xf04>;
+> +	};
+> +
+> +	uart1: uart@70100000 {
+> +		compatible = "sprd,serial";
+> +		reg = <0 0x70100000 0 0x100>;
+> +		interrupts = <0 3 0xf04>;
+> +	};
+
+Please rename these to serial@70000000. Like the interrupt controller,
+it would be good to have a more specific compatible string.
+You may want to add a status="disabled" property in both these
+nodes, and override them from the board.dts file for the ports that
+are actually available.
 
 	Arnd
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
