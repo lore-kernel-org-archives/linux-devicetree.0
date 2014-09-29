@@ -1,108 +1,68 @@
-From: Shreyas B Prabhu <shreyas@linux.vnet.ibm.com>
-Subject: Re: [PATCH 0/9] powerpc/powernv: Support for fastsleep and winkle
-Date: Mon, 29 Sep 2014 15:53:06 +0530
-Message-ID: <5429330A.7000103@linux.vnet.ibm.com>
-References: <1408989673-14137-1-git-send-email-shreyas@linux.vnet.ibm.com> <541A4D4F.1090307@linux.vnet.ibm.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] DT: add binding for mxs regulator
+Date: Mon, 29 Sep 2014 11:23:52 +0100
+Message-ID: <20140929102352.GO16977@sirena.org.uk>
+References: <1411779588-22031-1-git-send-email-stefan.wahren@i2se.com>
+ <1411779588-22031-2-git-send-email-stefan.wahren@i2se.com>
+ <20140928102202.GM27755@sirena.org.uk>
+ <5428F592.3020809@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <541A4D4F.1090307@linux.vnet.ibm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "Srivatsa S. Bhat" <srivatsa@MIT.EDU>, "Preeti U. Murthy" <preeti@linux.vnet.ibm.com>, Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="iEWWOZ/QYGWEaBRW"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5428F592.3020809-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-Any updates on this patch series?
 
-On Thursday 18 September 2014 08:41 AM, Shreyas B Prabhu wrote:
-> Hi,
-> 
-> In this patch series we use winkle for offlined cores. I successfully
-> tested the working of this with subcore functionality.
-> 
-> Test scenario was as follows:
-> 1. Set SMT mode to 1, Set subores-per-core to 1
-> 2. Offline a core, in this case cpu 32 (sending it to winkle)
-> 3. Set subcores-per-core to 4
-> 4. Online the core
-> 5. Start a guest (Topology 1 core 2 threads) on a subcore, in this case
-> on cpu 36
-> 
-> This works without any glitch.
-> 
-> Thanks,
-> Shreyas
-> 
-> On Monday 25 August 2014 11:31 PM, Shreyas B. Prabhu wrote:
->> Fast sleep is an idle state, where the core and the L1 and L2
->> caches are brought down to a threshold voltage. This also means that
->> the communication between L2 and L3 caches have to be fenced. However
->> the current P8 chips have a bug wherein this fencing between L2 and
->> L3 caches get delayed by a cpu cycle. This can delay L3 response to
->> the other cpus if they request for data during this time. Thus they
->> would fetch the same data from the memory which could lead to data
->> corruption if L3 cache is not flushed.
->> Patch 4 adds support to work around this.
->>
->> 'Deep Winkle' is a deeper idle state where core and private L2 are powered
->> off. While it offers higher power savings, it is at the cost of losing
->> hypervisor register state and higher latency.
->> Patch 5-9 adds support for winkle and uses it for offline cpus.
->>
->> Patch 1 - Moves parameters required discover idle states to a location 
->> common to both cpuidle driver and powernv core code
->> Patch 2 - Populates idle state details from device tree
->> Patch 3 - Enables cpus to run guest after waking up from fastsleep/winkle
->>
->>
->> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> Cc: Paul Mackerras <paulus@samba.org>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
->> Cc: Srivatsa S. Bhat <srivatsa@MIT.EDU>
->> Cc: Preeti U. Murthy <preeti@linux.vnet.ibm.com>
->> Cc: Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Grant Likely <grant.likely@linaro.org>
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-pm@vger.kernel.org
->> Cc: linuxppc-dev@lists.ozlabs.org
->>
->> Preeti U Murthy (2):
->>   cpuidle/powernv: Populate cpuidle state details by querying the
->>     device-tree
->>   powerpc/powernv/cpuidle: Add workaround to enable fastsleep
->>
->> Shreyas B. Prabhu (6):
->>   powerpc/kvm/book3s_hv: Enable CPUs to run guest after waking up from
->>     fast-sleep
->>   powerpc/powernv: Add OPAL call to save and restore
->>   powerpc: Adding macro for accessing Thread Switch Control Register
->>   powerpc/powernv: Add winkle infrastructure
->>   powerpc/powernv: Discover and enable winkle
->>   powerpc/powernv: Enter deepest supported idle state in offline
->>
->> Srivatsa S. Bhat (1):
->>   powerpc/powernv: Enable Offline CPUs to enter deep idle states
->>
->>  arch/powerpc/include/asm/machdep.h             |   4 +
->>  arch/powerpc/include/asm/opal.h                |  10 ++
->>  arch/powerpc/include/asm/paca.h                |   3 +
->>  arch/powerpc/include/asm/ppc-opcode.h          |   2 +
->>  arch/powerpc/include/asm/processor.h           |   6 +-
->>  arch/powerpc/include/asm/reg.h                 |   1 +
->>  arch/powerpc/kernel/asm-offsets.c              |   1 +
->>  arch/powerpc/kernel/exceptions-64s.S           |  37 ++---
->>  arch/powerpc/kernel/idle.c                     |  30 ++++
->>  arch/powerpc/kernel/idle_power7.S              |  83 +++++++++-
->>  arch/powerpc/platforms/powernv/opal-wrappers.S |   2 +
->>  arch/powerpc/platforms/powernv/powernv.h       |   8 +
->>  arch/powerpc/platforms/powernv/setup.c         | 217 +++++++++++++++++++++++++
->>  arch/powerpc/platforms/powernv/smp.c           |  13 +-
->>  arch/powerpc/platforms/powernv/subcore.c       |  15 ++
->>  drivers/cpuidle/cpuidle-powernv.c              |  40 ++++-
->>  16 files changed, 439 insertions(+), 33 deletions(-)
->>
+--iEWWOZ/QYGWEaBRW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Mon, Sep 29, 2014 at 08:00:50AM +0200, Stefan Wahren wrote:
+> Am 28.09.2014 um 12:22 schrieb Mark Brown:
+
+> > Use subject lines matching the style for the subsystem.
+
+> sorry i'm not sure what's wrong with the subject lines.
+
+> Did you expect "[PATCH 1/2] regulator: add binding for mxs regulator"?
+
+Yes.
+
+> > While this should be using compatibles to identify which regulator is
+> > being supported note that the binding doesn't document the fact that the
+> > code makes regulator-name mandatory or what values are required.
+
+> Is the following better?
+
+> - fsl,mxs-regulator-vddd
+> - fsl,mxs-regulator-vdda
+> - fsl,mxs-regulator-vddio
+
+Yes.
+
+--iEWWOZ/QYGWEaBRW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUKTMzAAoJECTWi3JdVIfQfx0H/iylZ4g8pS5Fu8LP8XqMt5sp
+oNPHAui6VdJ/RWUvk0m8NuZSXUV+6g3+HG5Y1MODP+pdhJ7g405N+GlDXxi3SNbP
+kzC2r55fGbqTtduMDZDv2Ffy7op/meJp1urjtLvq2VD/CtXJ0B4hNjotkPhzv+cS
+thrZ6+5EtsiLodfn2/PKfSS9WfsoP46nT7oWHd7L0EYJF6G5M31nL5BkaU5gThwk
+Wd1SLEv8xa0tCQQsuYfwe9tUzscK6cV8QM52pUsaUUaIu8hBXENdsoTpgpfq+Ymx
+okXLdwvBcPsCQMFRbzwpX82M8oHg4ijLuBUF6ACcPBBCUOVnhFIs7EgeVXgwvp0=
+=S+g5
+-----END PGP SIGNATURE-----
+
+--iEWWOZ/QYGWEaBRW--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
