@@ -1,54 +1,72 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/6] arm64: dts/Makefile: Add support for Spreadtrum's
- Shark64 SoC.
-Date: Mon, 29 Sep 2014 15:47:52 +0100
-Message-ID: <20140929144752.GP16977@sirena.org.uk>
-References: <1411992293-7729-1-git-send-email-zhang.lyra@gmail.com>
- <1411992293-7729-4-git-send-email-zhang.lyra@gmail.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH 1/2] ASoC: ssm2602: add device tree bindings
+Date: Mon, 29 Sep 2014 16:49:42 +0200
+Message-ID: <54297186.1070801@metafoo.de>
+References: <1411891072-22637-1-git-send-email-stefan.kristiansson@saunalahti.fi> <54291D50.30002@metafoo.de> <20140929143452.GA11763@chokladfabriken.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="AwNVUpjOmSj7UnwZ"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1411992293-7729-4-git-send-email-zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140929143452.GA11763@chokladfabriken.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Cc: linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 09/29/2014 04:34 PM, Stefan Kristiansson wrote:
+> On Mon, Sep 29, 2014 at 10:50:24AM +0200, Lars-Peter Clausen wrote:
+>> On 09/28/2014 09:57 AM, Stefan Kristiansson wrote:
+>>> Allow the ssm2602/ssm2603/ssm2604 codec driver to be
+>>> instantiated from the device tree.
+>>>
+>>> Also, add Kconfig prompts to allow manual selection of both the
+>>> I2C and SPI configuration versions of the driver.
+>>>
+>>> Signed-off-by: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+>>
+>> Looks mostly good, but you should Cc both the devicetree and the
+>> ASoC maintainers.
+>>
+>
+> Ok, I'll make sure to do that in v2.
+>
+>> [...]
+>>> diff --git a/sound/soc/codecs/ssm2602-i2c.c b/sound/soc/codecs/ssm2602-i2c.c
+>>> index abd63d5..0d9779d 100644
+>>> --- a/sound/soc/codecs/ssm2602-i2c.c
+>>> +++ b/sound/soc/codecs/ssm2602-i2c.c
+>>> @@ -41,10 +41,19 @@ static const struct i2c_device_id ssm2602_i2c_id[] = {
+>>>   };
+>>>   MODULE_DEVICE_TABLE(i2c, ssm2602_i2c_id);
+>>>
+>>> +static const struct of_device_id ssm2602_of_match[] = {
+>>> +	{ .compatible = "adi,ssm2602", },
+>>> +	{ .compatible = "adi,ssm2603", },
+>>> +	{ .compatible = "adi,ssm2604", },
+>>
+>> Since the driver is supposed to behave different depending on the
+>> device you should set the driver data similar to like it is done in
+>> the ssm2602_i2c_id table and add code in the probe function to
+>> extract the driver data.
+>>
+>
+> As far as I understand, that is already covered for, ssm2602_i2c_probe() get
+> called with the i2c_device_id struct set according to the compatible string.
+> I.e. if I set it to "adi,ssm2603" in the .dts, ssm2602_i2c_probe() is called
+> with id->name = "ssm2603" and id->driver_data = 0 and if I set it to
+> "adi,ssm2604" I get id->name = "ssm2603" and id->driver_data = 1.
 
---AwNVUpjOmSj7UnwZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ok, looks like the I2C core extracts the string after the "," and than 
+matches the I2C device id table against it.
 
-On Mon, Sep 29, 2014 at 08:04:50PM +0800, zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>
+> However, when looking into that, I noticed this in ssm2602_probe()
+>
+> 	 ssm2602->type = SSM2602;
+>
+> so the value from id->driver_data is never used.
+> (it should be ssm2602->type = type;)
 
->  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
->  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
-> +dtb-$(CONFIG_ARCH_SHARK64) += sprd_shark64.dtb
+Yes, that's clearly a bug.
 
-It's better to keep lists in Makefiles and Kconfig sorted
-alphanumerically, that way there's less chance of conflicts when
-applying patches or merging different branches.
-
---AwNVUpjOmSj7UnwZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUKXEYAAoJECTWi3JdVIfQz24H/3JHUNCIIe+oQu0RDtsRRR5M
-A3XR98tDOuUnFaLSiLRPfMuVwgUS1sXOBzPCwqawPqbS0vV3vs4RAXx7g68T4rLM
-mWr/RMAm3Jw2Al8uRJNKYUMEZ0vjj+/0sBD7ISVoTOeod2l7qgRZucMkZN9buIcN
-c166c8u5sXorr84Uljvdr9LSP4YRbaLY/KGhvg8xRJuj1aKkzbIGcmiKuuLyy8Pp
-E458PH85D7Q+ph3hGn1jP9bKkpLk0mx2szb7BE2NTL8DFajblEMBE4m68Vrw6Fee
-74CW+GqNpc2AzCo1WW5auwzmiuSYEXxHlV45DgDymsz/riTlJpqnPWvw+l5ekkE=
-=aJWg
------END PGP SIGNATURE-----
-
---AwNVUpjOmSj7UnwZ--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
