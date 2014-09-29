@@ -1,43 +1,51 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH v2 3/3] dt/bindings: dmaengine: qcom_bam_dma: Add compatible string for BAM v1.3.0
-Date: Mon, 29 Sep 2014 10:03:09 +0530
-Message-ID: <1411965189-24499-3-git-send-email-architt@codeaurora.org>
-References: <1411037575-13153-1-git-send-email-architt@codeaurora.org>
- <1411965189-24499-1-git-send-email-architt@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411965189-24499-1-git-send-email-architt@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, agross@codeaurora.org
-Cc: galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <architt@codeaurora.org>
+From: Abhilash Kesavan <a.kesavan@samsung.com>
+Subject: [PATCH v3 0/6] Add initial support for pinctrl on Exynos7
+Date: Mon, 29 Sep 2014 10:45:06 +0530
+Message-ID: <1411967712-8321-1-git-send-email-a.kesavan@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, robh@kernel.org, devicetree@vger.kernel.org, tomasz.figa@gmail.com, linus.walleij@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add compatible string for BAM v1.3.0 in the DT bindings documentation. Mentioned
-a few more SoCs which have BAM v1.4.0 in them.
+Changes since v1:
+	- Marked the newly created irq_chip instances as __initdata
+	- Used kmemdup to keep a copy of the irq_chip
+	- Change the pinctrl name from sd0_rdqs to sd0_ds as per UM
+	- Moved the pinctrl enablement for exynos7 into a separate patch
+	- Added tested-by and reviewed-by tags from Thomas Abraham
 
-Reviewed-by: Kumar Gala <galak@codeaurora.org>
-Reviewed-by: Andy Gross <agross@codeaurora.org>
-Signed-off-by: Archit Taneja <architt@codeaurora.org>
----
-Update in v2: Added IPQ8064 to the v1.3.0 list
-
- Documentation/devicetree/bindings/dma/qcom_bam_dma.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-index d75a9d7..f8c3311 100644
---- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-+++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-@@ -1,7 +1,9 @@
- QCOM BAM DMA controller
+Following patches have been tested on linux-next (20140926).
+https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/
  
- Required properties:
--- compatible: must contain "qcom,bam-v1.4.0" for MSM8974
-+- compatible: must be one of the following:
-+ * "qcom,bam-v1.4.0" for MSM8974, APQ8074 and APQ8084
-+ * "qcom,bam-v1.3.0" for APQ8064, IPQ8064 and MSM8960
- - reg: Address range for DMA registers
- - interrupts: Should contain the one interrupt shared by all channels
- - #dma-cells: must be <1>, the cell in the dmas property of the client device
+Following patches are required for this series:
+1) "tty/serial: fix config dependencies for samsung serial"
+   https://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg36208.html
+2) "dts, kbuild: Implement support for dtb vendor subdirs" patchset 
+   http://comments.gmane.org/gmane.linux.kbuild.devel/12131
+3) "arch: arm64: enable support for Samsung Exynos7 SoC" patchset (v5)
+   http://www.spinics.net/lists/arm-kernel/msg364014.html
+
+Abhilash Kesavan (3):
+  pinctrl: exynos: Generalize the eint16_31 demux code
+  pinctrl: exynos: Consolidate irq domain callbacks
+  pinctrl: exynos: Add irq_chip instance for Exynos7 wakeup interrupts
+
+Naveen Krishna Ch (3):
+  pinctrl: exynos: Add initial driver data for Exynos7
+  arm64: dts: Add initial pinctrl support to EXYNOS7
+  arm64: exynos: Enable pinctrl support for Exynos7
+
+ .../bindings/pinctrl/samsung-pinctrl.txt           |    3 +
+ arch/arm64/Kconfig                                 |    2 +
+ arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi    |  560 ++++++++++++++++++++
+ arch/arm64/boot/dts/exynos/exynos7.dtsi            |   66 +++
+ drivers/pinctrl/samsung/pinctrl-exynos.c           |  196 +++++--
+ drivers/pinctrl/samsung/pinctrl-exynos.h           |    3 +
+ drivers/pinctrl/samsung/pinctrl-samsung.c          |    2 +
+ drivers/pinctrl/samsung/pinctrl-samsung.h          |    3 +
+ 8 files changed, 799 insertions(+), 36 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+1.7.9.5
