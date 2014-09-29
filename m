@@ -1,53 +1,170 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC 4/4] irqchip: gicv2m: Add supports for ARM GICv2m MSI(-X)
-Date: Mon, 29 Sep 2014 16:42:18 +0200
-Message-ID: <2648363.DSa0NxqRJL@wuerfel>
-References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com> <1411937610-22125-5-git-send-email-suravee.suthikulpanit@amd.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1411937610-22125-5-git-send-email-suravee.suthikulpanit@amd.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: suravee.suthikulpanit@amd.com, will.deacon@arm.com, liviu.dudau@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, catalin.marinas@arm.com, jason@lakedaemon.net, tglx@linutronix.de, robh+dt@kernel.org, bhelgaas@google.com, Mark Rutland <Mark.Rutland@arm.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Marc Zyngier <Marc.Zyngier@arm.com>, linux-pci@vger.kernel.org, Will Deacon <Will.Deacon@arm.com>, linux-kernel@vger.kernel.org, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Catalin Marinas <Catalin.Marinas@arm.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: [PATCH v6 00/11] drm: add support for Atmel HLCDC Display Controller
+Date: Mon, 29 Sep 2014 16:44:13 +0200
+Message-ID: <1412001864-3251-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Rob Clark <robdclark@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Yao <mark.yao@rock-chips.com>, Boris Brezillon <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 28 September 2014 15:53:30 suravee.suthikulpanit@amd.com wrote:
-> +       interrupt-controller@e1101000 {
-> +               compatible = "arm,gic-400";
-> +               #interrupt-cells = >;
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               interrupt-controller;
-> +               interrupts = <1 8 0xf04>;
-> +               ranges = <0 0 0 0xe1100000 0 0x100000>;
-> +               reg = <0x0 0xe1110000 0 0x01000>,
-> +                     <0x0 0xe112f000 0 0x02000>,
-> +                     <0x0 0xe1140000 0 0x10000>,
-> +                     <0x0 0xe1160000 0 0x10000>;
-> +               v2m0: v2m@0x8000 {
-> +                       compatible = "arm,gic-v2m-frame";
-> +                       msi-controller;
-> +                       reg = <0x0 0x80000 0 0x1000>;
-> +               };
-> +
-> +               ....
-> +
-> +               v2mN: v2m@0x9000 {
-> +                       compatible = "arm,gic-v2m-frame";
-> +                       msi-controller;
-> +                       reg = <0x0 0x90000 0 0x1000>;
-> +               };
-> +       };
-> 
+Hello,
 
-Could this just be modeled as a separate msi-controller node
-outside of the GIC?
+This patch series adds support for the Atmel HLCDC block (HLCD Controller)
+available on some Atmel SoCs (i.e. the sama5d3 family).
 
-Instead of the arm,msi-base-spi/arm,msi-num-spis properties, how
-about using regular "interrupts"/"interrupt-parent" properties listing
-the exact interrupts? That would also make it more flexible in
-case the same layout is used with a parent other than the GIC.
+The HLCDC actually provides a Display Controller and a PWM device, hence I
+decided to declare an MFD device exposing 2 subdevices: a display
+controller and a PWM chip.
+This also solves a circular dependency issue preventing HLCDC driver from
+unloading.
+The HLCDC request a drm_panel device, which request a backlight device
+(a PWM backlight), which depends on a PWM which is provided by the HLCDC
+driver (hlcdc -> panel -> backlight -> hlcdc (pwm part)).
 
-	ARnd
+The current implementation only supports sama5d3 SoCs but other SoCs should
+be easily ported by defining new compatible strings and adding HLCDC
+description structures for these SoCs (Ludovic tested this driver on an
+at91sam9x5 board).
+
+The drivers supports basic CRTC functionalities, several overlays and an
+hardware cursor.
+
+At the moment, it only supports connection to LCD panels through an RGB
+connector (defined as an LVDS connector in my implementation), though
+connection to other kind of devices (like DRM bridges) could be added later.
+
+It also supports several RGB formats on all planes and some YUV formats on
+the HEO overlay plane.
+
+This series depends those ones: [1], [2] and [3].
+
+Best Regards,
+
+Boris
+
+[1]http://lkml.iu.edu/hypermail/linux/kernel/1407.1/04171.html
+[2]https://lkml.org/lkml/2014/9/29/330
+[3]https://lkml.org/lkml/2014/9/22/575
+
+Changes since v5:
+- fix Kconfig dependency bug
+- use adjusted mode in crtc config
+- move signal config (clk, hsync, vsync) from connector to crtc mode_set
+  function
+- use standard rotation property
+- check display_mode validity in connecto mode_valid function
+- remove dma_set_coherent mask call (now done in MFD core)
+- do not use drm_platform_init
+
+Changes since v4:
+- fix a few more bugs in rotation handling (rotation was buggy on some
+  formats)
+- return connector_status_unknown until a panel is exposed by the
+  drm_panel infrastructure (prevent fbdev creation until everyting is
+  in place)
+- rework Kconfig MFD_ATMEL_HLCDC selection to simplify the configuration
+  (automatically select this option when selecting the HLCDC PMW or DRM
+  driver, instead of depending on this option)
+
+Changes since v3:
+- rework the layer code to simplify several parts (locking and layer
+  disabling)
+- make use of the drm_flip_work infrastructure
+- rely on default HW cursor implementation using on the cursor plane
+- rework the display controller DT bindings (based on OF graph
+  representation)
+- add rotation support
+- retrive RGB bus format from drm_display_info
+- drop the dynamic pinctrl state selection
+- rework HLCDC output handling (previously specialized to interface
+  with LCD panels)
+- drop ".module = THIS_MODULE" lines
+- change display controller compatible string
+
+Changes since v2:
+- fix coding style issues (macro indentation)
+- make use of GENMASK in several places
+- declare regmap config as a static structure
+- rework hlcdc plane update API
+- rework cursor handling to make use of the new plane update API
+- fix backporch config
+- do not use devm_regmap_init_mmio_clk to avoid extra clk_enable
+  clk disable calls when accessing registers
+- explicitely include regmap and clk headers instead of relying on
+  atmel-hlcdc.h inclusions
+- make the atmel-hlcdc driver depends on CONFIG_OF
+- separate DT bindings documentation from driver implementation
+- support several pin muxing for HLCDC pins on sama5d3 SoCs
+
+Changes since v1:
+- replace the backlight driver by a PWM driver
+- make use of drm_panel infrastructure
+- split driver code in several subsystem: MFD, PWM and DRM
+- add support for overlays
+- add support for hardware cursor
+
+
+Boris BREZILLON (10):
+  mfd: add documentation for atmel-hlcdc DT bindings
+  pwm: add support for atmel-hlcdc-pwm device
+  pwm: add DT bindings documentation for atmel-hlcdc-pwm driver
+  drm: add Atmel HLCDC Display Controller support
+  drm: add DT bindings documentation for atmel-hlcdc-dc driver
+  ARM: AT91/dt: split sama5d3 lcd pin definitions to match RGB mode
+    configs
+  ARM: AT91/dt: add alternative pin muxing for sama5d3 lcd pins
+  ARM: at91/dt: define the HLCDC node available on sama5d3 SoCs
+  ARM: at91/dt: add LCD panel description to sama5d3xdm.dtsi
+  ARM: at91/dt: enable the LCD panel on sama5d3xek boards
+
+Boris Brezillon (1):
+  mfd: add atmel-hlcdc driver
+
+ .../devicetree/bindings/drm/atmel-hlcdc-dc.txt     |  54 ++
+ .../devicetree/bindings/mfd/atmel-hlcdc.txt        |  50 ++
+ .../devicetree/bindings/pwm/atmel-hlcdc-pwm.txt    |  55 ++
+ arch/arm/boot/dts/sama5d31ek.dts                   |  20 +
+ arch/arm/boot/dts/sama5d33ek.dts                   |  20 +
+ arch/arm/boot/dts/sama5d34ek.dts                   |  20 +
+ arch/arm/boot/dts/sama5d36ek.dts                   |  20 +
+ arch/arm/boot/dts/sama5d3_lcd.dtsi                 | 205 ++++-
+ arch/arm/boot/dts/sama5d3xdm.dtsi                  |  58 ++
+ drivers/gpu/drm/Kconfig                            |   2 +
+ drivers/gpu/drm/Makefile                           |   1 +
+ drivers/gpu/drm/atmel-hlcdc/Kconfig                |  13 +
+ drivers/gpu/drm/atmel-hlcdc/Makefile               |   7 +
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c     | 392 ++++++++++
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c       | 527 +++++++++++++
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h       | 216 ++++++
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c    | 659 ++++++++++++++++
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h    | 403 ++++++++++
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c   | 443 +++++++++++
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c    | 833 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |   6 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/atmel-hlcdc.c                          | 118 +++
+ drivers/pwm/Kconfig                                |  10 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-atmel-hlcdc.c                      | 229 ++++++
+ include/linux/mfd/atmel-hlcdc.h                    |  78 ++
+ 27 files changed, 4410 insertions(+), 31 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+ create mode 100644 drivers/gpu/drm/atmel-hlcdc/Kconfig
+ create mode 100644 drivers/gpu/drm/atmel-hlcdc/Makefile
+ create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+ create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
+ create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
+ create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.c
+ create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_layer.h
+ create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
+ create mode 100644 drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
+ create mode 100644 drivers/mfd/atmel-hlcdc.c
+ create mode 100644 drivers/pwm/pwm-atmel-hlcdc.c
+ create mode 100644 include/linux/mfd/atmel-hlcdc.h
+
+-- 
+1.9.1
+
