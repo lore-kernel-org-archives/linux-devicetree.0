@@ -1,41 +1,55 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC 3/4] arm64: Do not call enable PCI resources when specify PCI_PROBE_ONLY
-Date: Mon, 29 Sep 2014 16:38:09 +0200
-Message-ID: <4139946.HEULtVYyUh@wuerfel>
-References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com> <1411937610-22125-4-git-send-email-suravee.suthikulpanit@amd.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v1 0/4] ARM: keystone: pm: switch to use generic pm domains
+Date: Mon, 29 Sep 2014 17:38:15 +0300
+Message-ID: <1412001499-19369-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1411937610-22125-4-git-send-email-suravee.suthikulpanit@amd.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: suravee.suthikulpanit@amd.com
-Cc: will.deacon@arm.com, liviu.dudau@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, catalin.marinas@arm.com, jason@lakedaemon.net, tglx@linutronix.de, robh+dt@kernel.org, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Liviu Dudau <Liviu.Dudau@arm.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: santosh.shilimkar-l0cyMroinI0@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 28 September 2014 15:53:29 suravee.suthikulpanit@amd.com wrote:
-> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> index ce5836c..7fd4d2b 100644
-> --- a/arch/arm64/kernel/pci.c
-> +++ b/arch/arm64/kernel/pci.c
-> @@ -68,3 +68,11 @@ void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
->         bus->domain_nr = domain;
->  }
->  #endif
-> +
-> +int pcibios_enable_device(struct pci_dev *dev, int mask)
-> +{
-> +       if (pci_has_flag(PCI_PROBE_ONLY))
-> +               return 0;
-> +
-> +       return pci_enable_resources(dev, mask);
-> +}
+Hi Santosh, Kevin,
 
-This doesn't look arm64 specific to me, and there is already a generic
-pcibios_enable_device() function in drivers/pci/pci.c. Would it
-be possible to move the check for PCI_PROBE_ONLY there without breaking
-other architectures?
+This series switches Keystone 2 PM code to use Generic PM domains
+instead of PM clock domains because of the lack of DT support
+for the last.
+It will finally allow to enable Runtime PM for Keystone 2.
 
-If that works, please do so.
+Patch 1 was reused from [1].
+Patch 4 is added to illustrate Keystone 2 PM domains configuration in DT.
 
-	Arnd
+RFC version of patches can be found at [2].
+
+[1] "[PATCH/RFC 0/4] of: Register clocks for Runtime PM with PM core"
+  https://lkml.org/lkml/2014/4/24/1118
+
+[2] "[RFC PATCH 0/4] ARM: keystone: pm: switch to use generic pm domains"
+  https://lkml.org/lkml/2014/9/25/364
+
+Geert Uytterhoeven (1):
+  PM / clock_ops: Add pm_clk_add_clk()
+
+Grygorii Strashko (3):
+  ARM: keystone: pm: switch to use generic pm domains
+  ARM: dts: keystone: add generic pm controller node
+  ARM: dts: k2hk-evm: attach net, qmss and knav_dmas to keystone-gpc
+
+ .../devicetree/bindings/power/ti,keystone-gpc.txt  |  31 ++++++
+ arch/arm/boot/dts/k2hk-evm.dts                     |   7 ++
+ arch/arm/boot/dts/keystone.dtsi                    |   6 ++
+ arch/arm/mach-keystone/Kconfig                     |   1 +
+ arch/arm/mach-keystone/pm_domain.c                 | 115 ++++++++++++++-------
+ drivers/base/power/clock_ops.c                     |  41 ++++++--
+ include/linux/pm_clock.h                           |   8 ++
+ 7 files changed, 162 insertions(+), 47 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/ti,keystone-gpc.txt
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
