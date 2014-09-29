@@ -1,62 +1,37 @@
-From: Daniel Drake <drake@endlessm.com>
-Subject: [PATCH] ARM: dts: Enable temperature sensor on exynos4412 & ODROID
-Date: Mon, 29 Sep 2014 15:42:14 -0600
-Message-ID: <1412026934-25947-1-git-send-email-drake@endlessm.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: ben-linux@fluff.org, kgene.kim@samsung.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v5 2/3] net: Add Keystone NetCP ethernet driver
+Date: Mon, 29 Sep 2014 17:47:48 -0400
+Message-ID: <5429D384.1040909@ti.com>
+References: <1411667317-1163-3-git-send-email-santosh.shilimkar@ti.com>	<20140929.155200.2231132602322345812.davem@davemloft.net>	<5429BAD0.1050101@ti.com> <20140929.161253.1302757975839499212.davem@davemloft.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140929.161253.1302757975839499212.davem@davemloft.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org, devicetree@vger.kernel.org, sandeep_n@ti.com, joe@perches.com
 List-Id: devicetree@vger.kernel.org
 
-The Exynos4412 has a Thermal Management Unit (TMU) which provides
-a temperature sensor and related functionality.
+On Monday 29 September 2014 04:12 PM, David Miller wrote:
+> From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> Date: Mon, 29 Sep 2014 16:02:24 -0400
+> 
+>> We are badly missing mainline network driver support for the Keystone
+>> and hence I request you to help here.
+> 
+> It is absolutely not reasonable for you depend specifically upon me
+> for top-level review of a given change, sorry.
+> 
+Sorry I didn't mean you specifically to review everything. But a guidance
+on how we can move forward. If you can suggest someone, we can try to
+request them to have a look. The design of driver is just now standard
+NIC card. We removed the controversial plug in framework after your
+and Jamal's suggestion. Jamal already commented on the offload design of
+the driver and we addressed them in the last version.
 
-This must be enabled on a per-board basis, as it requires a 100k
-resistance to ground on the XtsRES_EXT pin, as well as a 1.8V input on
-VDD18_TS pin. If that voltage is not supplied, the machine immediately
-reports a maximum temperature of 255C and triggers the thermal subsystem
-to shut down the system.
+We can follow it up on any comments, suggestions quickly so do let us
+know.
 
-This patch also enables the TMU on the ODROID boards via the appropriate
-power supply.
-
-Signed-off-by: Daniel Drake <drake@endlessm.com>
----
- arch/arm/boot/dts/exynos4412-odroid-common.dtsi |  5 +++++
- arch/arm/boot/dts/exynos4412.dtsi               | 10 ++++++++++
- 2 files changed, 15 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-index 3d8c623..9994a44 100644
---- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-@@ -400,3 +400,8 @@
- 		samsung,pin-drv = <0>;
- 	};
- };
-+
-+&tmu {
-+	status = "okay";
-+	vtmu-supply = <&ldo10_reg>;
-+};
-diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-index 0f6ec93..ee58e7f 100644
---- a/arch/arm/boot/dts/exynos4412.dtsi
-+++ b/arch/arm/boot/dts/exynos4412.dtsi
-@@ -66,4 +66,14 @@
- 	pmu_system_controller: system-controller@10020000 {
- 		compatible = "samsung,exynos4412-pmu", "syscon";
- 	};
-+
-+	tmu: tmu@100C0000 {
-+		compatible = "samsung,exynos4412-tmu";
-+		interrupt-parent = <&combiner>;
-+		reg = <0x100C0000 0x100>;
-+		interrupts = <2 4>;
-+		clocks = <&clock CLK_TMU_APBIF>;
-+		clock-names = "tmu_apbif";
-+		status = "disabled";
-+	};
- };
--- 
-1.9.1
+Regards,
+Santosh
