@@ -1,63 +1,24 @@
-From: Feng Kan <fkan@apm.com>
-Subject: [PATCH RESEND V9 2/6] Documentation: power: reset: Add documentation
- for generic SYSCON reboot driver
-Date: Tue, 30 Sep 2014 16:25:04 -0700
-Message-ID: <1412119508-22864-3-git-send-email-fkan@apm.com>
-References: <1412119508-22864-1-git-send-email-fkan@apm.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v6 00/10] ARM: Berlin: Ethernet support
+Date: Tue, 30 Sep 2014 19:59:53 -0400 (EDT)
+Message-ID: <20140930.195953.531268069301912273.davem@davemloft.net>
+References: <1412087296-18475-1-git-send-email-antoine.tenart@free-electrons.com>
+	<20140930.163735.2099691931550261883.davem@davemloft.net>
+	<542B2851.2050705@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1412119508-22864-1-git-send-email-fkan@apm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux@roeck-us.net, dbaryshkov@gmail.com, catalin.marinas@arm.com, dwmw2@infradead.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patches@apm.com, linux-pm@vger.kernel.org, will.deacon@arm.com
-Cc: Feng Kan <fkan@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <542B2851.2050705@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com
+Cc: antoine.tenart@free-electrons.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for generic SYSCON reboot driver.
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Date: Wed, 01 Oct 2014 00:01:53 +0200
 
-Signed-off-by: Feng Kan <fkan@apm.com>
----
- .../bindings/power/reset/syscon-reboot.txt         | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> Just to make sure how long I have to take care of potential merge
+> issues, is your current net-next meant for v3.18 or v3.19?
 
-diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
-new file mode 100644
-index 0000000..1190631
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
-@@ -0,0 +1,23 @@
-+Generic SYSCON mapped register reset driver
-+
-+This is a generic reset driver using syscon to map the reset register.
-+The reset is generally performed with a write to the reset register
-+defined by the register map pointed by syscon reference plus the offset
-+with the mask defined in the reboot node.
-+
-+Required properties:
-+- compatible: should contain "syscon-reboot"
-+- regmap: this is phandle to the register map node
-+- offset: offset in the register map for the reboot register (in bytes)
-+- mask: the reset value written to the reboot register (32 bit access)
-+
-+Default will be little endian mode, 32 bit access only.
-+
-+Examples:
-+
-+	reboot {
-+	   compatible = "syscon-reboot";
-+	   regmap = <&regmapnode>;
-+	   offset = <0x0>;
-+	   mask = <0x1>;
-+	};
--- 
-1.9.1
+3.18
