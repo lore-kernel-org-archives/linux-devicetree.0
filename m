@@ -1,106 +1,40 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH 1/4] ARM: DT: apq8064: add rpm support
-Date: Tue, 30 Sep 2014 12:00:24 -0700
-Message-ID: <20140930190023.GS28481@sonymobile.com>
-References: <1411982044-7873-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1411982092-7922-1-git-send-email-srinivas.kandagatla@linaro.org>
- <5429DA95.80505@codeaurora.org>
- <20140930050203.GG28481@sonymobile.com>
- <542AF5FE.1000006@codeaurora.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [RFC 1/7] soc: qcom: Add device tree binding for SMEM
+Date: Tue, 30 Sep 2014 12:03:21 -0700
+Message-ID: <542AFE79.6030304@codeaurora.org>
+References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com> <1412037291-16880-2-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <542AF5FE.1000006@codeaurora.org>
+In-Reply-To: <1412037291-16880-2-git-send-email-bjorn.andersson@sonymobile.com>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 30 Sep 11:27 PDT 2014, Stephen Boyd wrote:
+On 09/29/14 17:34, Bjorn Andersson wrote:
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: base address and size pair for each area representing the
+> +		    shared memory. The first pair will must represent the "main"
+> +		    area, where the shared memory header and table-of-content
+> +		    can be found.
+>
+> +
+> += EXAMPLE
+> +
+> +        smem: smem@fa00000 {
+> +                compatible = "qcom,smem";
+> +                reg = <0x0fa00000 0x200000>,
+> +                      <0xfc428000 0x4000>;
 
-> On 09/29/14 22:02, Bjorn Andersson wrote:
-> > On Mon 29 Sep 15:17 PDT 2014, Stephen Boyd wrote:
-> >
-> >> On 09/29/14 02:14, Srinivas Kandagatla wrote:
-> >>> @@ -246,6 +247,24 @@
-> >>>  			#reset-cells = <1>;
-> >>>  		};
-> >>>  
-> >>> +		apcs: syscon@2011000 {
-> >>> +			compatible = "syscon";
-> >>> +			reg = <0x2011000 0x1000>;
-> >>> +		};
-> >> This is actually a clock controller block that hw designers decided was
-> >> good place to shove the ipc bits (because there's room!). Can we call it
-> >>
-> >>                 l2cc: clock-controller@2011000 {
-> >>                         compatible = "syscon";
-> >>                         reg = <0x2011000 0x1000>;
-> >>                 };
-> >>
-> >> Eventually I'll add the specific krait compatible when we merge krait
-> >> clock support:
-> >>
-> >>                 l2cc: clock-controller@2011000 {
-> >>                         compatible = "qcom,kpss-gcc", "syscon";
-> >>                         reg = <0x2011000 0x1000>;
-> >>                         clock-output-names = "acpu_l2_aux";
-> >>                 };
-> >>
-> > As long as we can get hold of the regmap that would be fine. I pressume the
-> > idea is to have the kpss-gcc using syscon, just like the rpm. But hopefully the
-> > syscon patches that are floating around (merged?) will allow any driver to
-> > expose a "syscon regmap".
-> 
-> Agreed. I'm not sure if kpss-gcc will use syscon. With the floating
-> patches I don't see a reason why we need to use it.
-> 
+Isn't this second entry rpm message ram? That isn't the same as smem.
+Plus smem is part of ram (and rpm message ram is not) so we need to do
+memory reservations or something.
 
-
-All we need is a regmap for the kpss-gcc, but the restriction that it has to be 
-a syscon is more of a implementation detail. But you probably don't want to 
-implement the phandle->regmap lookup code in kpss-gcc (and all the other
-places) and if I understand the syscon improvements being suggested they are
-supposed to help with exactly that (help any device expose regmaps).
-
-Need to look into that again though.
-
-> >
-> >>> +
-> >>> +		rpm@108000 {
-> >>> +			compatible	= "qcom,rpm-apq8064";
-> >>> +			reg		= <0x108000 0x1000>;
-> >>> +			qcom,ipc = <&apcs 0x8 2>;
-> >> There are actually 3 ipc bits. I guess if we ever have to use the other
-> >> two we'll extend this binding to have the other bits specified some
-> >> other way?
-> > I haven't seen any indications of us using more than this bit. If we want to do
-> > that, we could simply make it <&apcs 8 2 &apcs 8 3 &apcs 8 4> (or whatever
-> > those indices are). That way this should be easy it keep compatible.
-> >
-> 
-> Good to hear we're not forced to use a new property. The indices have
-> always been 2, 1, and 0 as far as I know.
-> 
-> We use bit 1 to ack the RPM if it ever crashes. We know that it crashes
-> because we receive the error interrupt. Instead of calling panic like we
-> do downstream we can gracefully fail any new rpm requests. There really
-> isn't any way to recover from this scenario though besides rebooting.
-> Looking at the code I see this is all wrong and we use bit 2 to ack the
-> error.
-> 
-
-Hmm, seems I got that wrong, sorry about that.
-
-But do you mean "all wrong" as in that I use the wrong bit or to some greater
-extent? Currently all following requests should timeout, but maybe we should
-have a faster fail-path when we've hit this point?
-
-
->From a practical pov I guess that once the rpm starts returning errors on
-updates to regulators, root clocks and bus scaling then most of the system is
-becoming useless.
-
-Regards,
-Bjorn
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
