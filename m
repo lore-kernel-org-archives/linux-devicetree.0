@@ -1,141 +1,178 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCHv6 0/5] hwspinlock core/omap dt support
-Date: Tue, 30 Sep 2014 11:25:29 -0500
-Message-ID: <542AD979.9000901@ti.com>
-References: <1410553499-55951-1-git-send-email-s-anna@ti.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
+Date: Tue, 30 Sep 2014 17:42:56 +0100
+Message-ID: <20140930164256.GS841@e106497-lin.cambridge.arm.com>
+References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <8631927.qWHZsjCs8e@wuerfel>
+ <20140930120344.GA14215@e102568-lin.cambridge.arm.com>
+ <3090148.OUdB0fsdsR@wuerfel>
+ <20140930161241.GA16583@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410553499-55951-1-git-send-email-s-anna@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
-Cc: Tony Lindgren <tony@atomide.com>, Josh Cartwright <joshc@codeaurora.org>, Bjorn Andersson <bjorn@kryo.se>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140930161241.GA16583@e102568-lin.cambridge.arm.com>
+Content-Disposition: inline
+Sender: linux-doc-owner@vger.kernel.org
+To: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ohad,
+On Tue, Sep 30, 2014 at 05:12:41PM +0100, Lorenzo Pieralisi wrote:
+> On Tue, Sep 30, 2014 at 01:31:44PM +0100, Arnd Bergmann wrote:
+> > On Tuesday 30 September 2014 13:03:44 Lorenzo Pieralisi wrote:
+> > > > >  static int gen_pci_probe(struct platform_device *pdev)
+> > > > >  {
+> > > > > @@ -326,6 +385,7 @@ static int gen_pci_probe(struct platform_=
+device *pdev)
+> > > > >         struct device *dev =3D &pdev->dev;
+> > > > >         struct device_node *np =3D dev->of_node;
+> > > > >         struct gen_pci *pci =3D devm_kzalloc(dev, sizeof(*pci=
+), GFP_KERNEL);
+> > > > > +#ifndef CONFIG_ARM64
+> > > > >         struct hw_pci hw =3D {
+> > > > >                 .nr_controllers =3D 1,
+> > > > >                 .private_data   =3D (void **)&pci,
+> > > > > @@ -333,6 +393,7 @@ static int gen_pci_probe(struct platform_=
+device *pdev)
+> > > > >                 .map_irq        =3D of_irq_parse_and_map_pci,
+> > > > >                 .ops            =3D &gen_pci_ops,
+> > > > >         };
+> > > > > +#endif
+> > > > > =20
+> > > >=20
+> > > > Same here, I'd suggest marking this "#ifdef CONFIG_ARM" instead=
+, as hw_pci
+> > > > is an arm32 specific data structure.
+> > >=20
+> > > I do not think we need hw struct at all, see below, we can write =
+code so
+> > > that we do not rely on ARM32 PCI bios, I will have a stab at that=
+ and
+> > > post the resulting code.
+> >=20
+> > That would of course be best. I think it needs some rework of the
+> > arm32 PCI code though, or you'd still have to create pci_sys_data
+> > manually, and that is currently allocated by pcibios_init_hw.
 
->
-> This is an update to the hwspinlock dt support series. The series
-> is rebased onto v3.17-rc3, and addresses the review comments on the
-> previous v5 series. I have also split and left out the RFC patches
-> about the support for reserved locks (will post these as a separate
-> series) and return code convention changes in the hwspinlock core
-> (will not be needed anymore). The support for deferred probing of
-> clients is supported in the new of_hwspin_lock_get_id() function
-> itself.
-> 
-> Following are the main changes in v6 w.r.t v5:
-> - [Patch 1] Updated generic hwspinlock bindings after folding back
->   the hwlock-base-id property from v5 Patch 8 [1]. [Patch 1]
-> - [Patch 4] Updated the common OF helpers patch based on review
->   comments on v5. of_hwspin_lock_request_specific() is replaced
->   with of_hwspin_lock_get_id(). of_hwspin_lock_simple_xlate() is
->   made internal, and of_hwspin_lock_get_base_id() is added.
-> - [Patch 5] Updated the OMAP hwspinlock DT support patch to address
->   review comments about hard-coded base-id, it is parsed from DT
->   if present.
-> - Patches 2 and 3 are unchanged from previous version.
-> - Support patches for AM335x and AM437x SoCs (v5 patches 6 and 7)
->   have been dropped as they are merged in separately for 3.17
-> - RFC patches (v5 patches 9 through 15) adding the concept of
->   reserved locks and return code change convention dropped.
-> 
-> I had looked into dropping the patch to maintain the list of registered
-> spinlocks, but had to retain the patch as it was needed to perform the
-> validity of the args-specifier value in of_hwspin_lock_get_id().
+I don't see why we need to involve the arm32 code here at all. A host b=
+ridge can
+be fully functional with the generic code without having to use any of =
+the
+arm32 code (unless I'm missing something here).
 
-Ping, do you have any comments on this revised series? If not, can we
-queue this for 3.18?
+>=20
+> Right, as far as I can see, creating a pci_sys_data struct
+> that's all we would need. "Problem" is that it does not exist on ARM6=
+4
+> so to avoid ifdeffery we have to declare a struct with the same
+> fields (ie only pci_sys_data.private_data is used by this driver -
+> apart from arm32 specific functions usage) that is passed to the PCI =
+layer
+> and stored in the bus.sysdata, but that's extremely ugly (and we won'=
+t
+> need this when the arm32 conversion is completed).
+>=20
+> > > > > +       if (!gen_scan_root_bus(&pdev->dev, pci->cfg.bus_range=
+=2Estart,
+> > > > > +                              &gen_pci_ops, pci, &pci->resou=
+rces)) {
+> > > > > +               dev_err(&pdev->dev, "failed to enable PCIe po=
+rts\n");
+> > > > > +               return -ENODEV;
+> > > > > +       }
+> > > > > +#else
+> > > > >         pci_common_init_dev(dev, &hw);
+> > > > > +#endif /* CONFIG_ARM64 */
+> > > > >=20
+> > > >=20
+> > > > Again, just make the pci_common_init_dev() call #ifdef CONFIG_A=
+RM, and move
+> > > > the generic case after it, outside of the #ifdef.
+> > >=20
+> > > I went through the code quickly but I think we can (and should) r=
+emove
+> > > this quite ugly ifdeffery altogether. Most of the functionality i=
+n
+> > > pci_common_init_dev() can be implemented through the common PCI A=
+PI (and this
+> > > would make this driver arch agnostic as it should be), I will go =
+through ARM32
+> > > PCI bios code to check what is executed in detail in pci_common_i=
+nit_dev() and
+> > > make sure that we follow those initialization steps in the result=
+ing probe code
+> > > for this PCI generic host controller driver.
+> >=20
+> > These are the functions I found that refer to pci_sys_data on arm32=
+:
+> >=20
+> > pcibios_add_bus
+> > pcibios_remove_bus
+> > pcibios_align_resource
+> > pci_mmap_page_range
+> > pci_domain_nr
+> > pci_proc_domain
+> >=20
+> > This is not as bad as I had feared, but we still have to ensure tha=
+t
+> > any caller of these functions will work with both the generic PCI s=
+upport
+> > and the arm32 specific drivers that today use hw_pci.
+> >=20
+> > My idea for dealing with this was to convert all host drivers in
+> > drivers/pci/host to the generic PCI code and never build the arm32
+> > bios32 code when CONFIG_ARCH_MULTIPLATFORM is set. Unfortunately th=
+at
+> > requires either doing them all at once or coming up with a migratio=
+n
+> > strategy so we don't break things in the process.
+>=20
+> That makes sense. Related to the migration strategy, thoughts
+> appreciated. Declaring a static pci_sys_data (with some ifdef around =
+it)
+> seems a horrible hack to me. Calling pci_common_init() only if CONFIG=
+_ARM
+> is rather horrible too, but we can probably live with that.
+>=20
+> I do not see anything else as possible solution at the moment unless
+> we go the whole nine yards and do what you suggest above, might take =
+a
+> little while though.
+>=20
+> Probably leaving pci_common_init() call (and related hw_pci struct, a=
+nd
+> related ifdeffery to differentiate between different sysdata layouts =
+for ARM
+> and ARM64) is the fastest path but I still think it is not nice at al=
+l.
 
-regards
-Suman
+Rob Herring found the conversion of mach-integrator/pci_v3.c to the gen=
+eric
+framework quite painless. We might have to go through a lot of testing,=
+ but I don't
+see the process to be too horrendous.
 
-> 
-> The validation logs on all the applicable OMAP SoCs are at:
->   OMAP4  - http://pastebin.ubuntu.com/8329228
->   OMAP5  - http://pastebin.ubuntu.com/8329301
->   DRA74x - http://pastebin.ubuntu.com/8329261
->   AM33xx - http://pastebin.ubuntu.com/8329199
->   AM43xx - http://pastebin.ubuntu.com/8329273
-> 
-> The above logs are generated with some additional test patches staged
-> here for reference:
-> https://github.com/sumananna/omap-kernel/commits/hwspinlock/test/3.17-rc3-dt-v6
-> https://github.com/sumananna/omap-kernel/commits/hwspinlock/submit/3.17-rc3-dt-v6
-> 
-> regards
-> Suman
-> 
-> [1] https://patchwork.kernel.org/patch/4096741/
-> 
-> ---
-> v5:
-> http://marc.info/?l=linux-omap&m=139890478402807&w=2
-> - Rebased v4 patches plus additional RFC patches.
-> - Added back the patch to support DT-based hwlock-base-id property,
->   for registration purposes.
-> - RFC patches introducing the concept of reserved locks.
-> - Staged patches for converting return convention to better support
->   deferred probing of client drivers.
-> 
-> v4:
-> - The DT bindings are split into separate patches, and updated to
->   add comments about #hwlock-cells
-> - Fixed a registration issue with repeated module installation and
->   removal.
-> - Added a new OF helper to support #hwlock-cells in addition to the
->   previous OF functions. The OMAP adaptation patch is updated to use
->   the default translate function
-> - Updated hwspinlock documentation to adjust for the structure
->   changes and the new api additions.
-> - Added build support for AM335x, AM43xx and DRA7xx
-> http://marc.info/?l=linux-omap&m=138965904015225&w=2
-> 
-> v3:
-> - Removed the DT property hwlock-base-id and associated OF helper
-> - Added changes in core to support requesting a specific hwlock using
->   phandle + args approach
-> - Revised both the common and OMAP DT bindings document
-> http://marc.info/?l=linux-omap&m=138143992932197&w=2
-> 
-> v2:
-> - Added a new common DT binding documentation and OF helpers.
-> - Revised OMAP DT parse support to use the new OF helper (Patch2)
-> - OMAP5 hwspinlock support including the hwmod entry and DT node
-> - Add AM335x support to OMAP hwspinlock driver, including a fix
->   needed in driver given that AM335 spinlock module requires s/w wakeup
-> - AM335 DT node for spinlock, and a hwmod change to enable smart-idle
->   for AM335.
-> - OMAP4 DT node patch is unchanged
-> http://marc.info/?l=linux-omap&m=137944644112727&w=2
-> 
-> v1:
-> - Add DT parse support to OMAP hwspinlock driver
-> - Add OMAP4 DT node and bindings information
-> http://marc.info/?l=linux-omap&m=137823082308009&w=2
-> 
-> ---
-> 
-> Suman Anna (5):
->   Documentation: dt: add common bindings for hwspinlock
->   Documentation: dt: add the omap hwspinlock bindings document
->   hwspinlock/core: maintain a list of registered hwspinlock banks
->   hwspinlock/core: add common OF helpers
->   hwspinlock/omap: add support for dt nodes
-> 
->  .../devicetree/bindings/hwlock/hwlock.txt          |  55 +++++++
->  .../devicetree/bindings/hwlock/omap-hwspinlock.txt |  24 +++
->  Documentation/hwspinlock.txt                       |  28 ++++
->  MAINTAINERS                                        |   1 -
->  arch/arm/mach-omap2/Makefile                       |   3 -
->  arch/arm/mach-omap2/hwspinlock.c                   |  60 -------
->  drivers/hwspinlock/hwspinlock_core.c               | 173 +++++++++++++++++++++
->  drivers/hwspinlock/hwspinlock_internal.h           |   2 +
->  drivers/hwspinlock/omap_hwspinlock.c               |  23 ++-
->  include/linux/hwspinlock.h                         |  15 +-
->  10 files changed, 312 insertions(+), 72 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hwlock/hwlock.txt
->  create mode 100644 Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
->  delete mode 100644 arch/arm/mach-omap2/hwspinlock.c
-> 
+That being said, I think we first need to make sure we have all the fea=
+tures
+needed by the host bridge drivers in place before we start the conversi=
+on. MSI
+support is amongst them.
+
+Best regards,
+Liviu
+
+>=20
+> Thanks,
+> Lorenzo
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
+
