@@ -1,36 +1,60 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4] ARM: shmobile: r8a7790: link PCI USB devices to USB PHY
-Date: Tue, 30 Sep 2014 12:08:29 +0200
-Message-ID: <2349534.Ie3QeIWjJF@wuerfel>
-References: <6141061.UF13qqqgfz@wasted.cogentembedded.com>
+From: Lyra Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH 6/6] Documentation: Add entry for Spreadtrum's Shark64 SoC
+Date: Tue, 30 Sep 2014 18:08:44 +0800
+Message-ID: <CAAfSe-sU0w6XTQ1yJd6v0q1eT5H3wvJXJYVBE8dv--QyZ3wHxw@mail.gmail.com>
+References: <1411992293-7729-1-git-send-email-zhang.lyra@gmail.com>
+	<1411992293-7729-7-git-send-email-zhang.lyra@gmail.com>
+	<3268049.TolhrmBCZA@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <6141061.UF13qqqgfz@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-usb@vger.kernel.org, magnus.damm@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3268049.TolhrmBCZA@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@linaro.org>, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, Ramkumar Ramachandra <artagnon@gmail.com>, rrichter@cavium.com, robh+dt@kernel.org, will.deacon@arm.com, Orson Zhai <orsonzhai@gmail.com>, geng.ren@spreadtrum.com, "zhizhou.zhang" <zhizhou.zhang@spreadtrum.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "chunyan.zhang" <chunyan.zhang@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 29 September 2014 22:21:59 Sergei Shtylyov wrote:
-> +
-> +               usb@0,1 {
-> +                       reg = <0x800 0 0 0 0>;
-> +                       device_type = "pci";
-> +                       phys = <&usb0 0>;
-> +                       phy-names = "usb";
-> +               };
-> +
-> +               usb@0,2 {
+Hi, Arnd
 
-Nice to see this actually works!
+[use plain text pattern to send again]
 
-The patch looks good to me, but I wasn't sure if the ARM PCI code handled
-of_nodes correctly.
+Thank you very much for your review in detail so carefully. I'll
+address these changes which you mentioned in this patch set in V2, but
+the days from tomorrow to 10.7 are Chinese holidays, I'm going to send
+PATCHv2 a few days later.
 
-We frequently get people asking for the same functionality on USB device,
-which should really work the same way, so I guess I can point them at
-this now.
+I'm also sorry that make you confused about my name, I'll solve this
+problem in the next submit.
 
-	Arnd
+Thanks,
+Chunyan
+
+2014-09-29 21:59 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+> On Monday 29 September 2014 20:04:53 zhang.lyra@gmail.com wrote:
+>> From: "chunyan.zhang" <chunyan.zhang@spreadtrum.com>
+>>
+>> Adds a devicetree binding documentation for Spreadtrum's Shark64 SoC.
+>>
+>> Signed-off-by: chunyan.zhang <chunyan.zhang@spreadtrum.com>
+>
+> One more thing: The email addresses look wrong, please use the form in
+> which you normally write the names, such as
+>
+> Signed-off-by: Zhang Chunyan <chunyan.zhang@spreadtrum.com>
+>
+> You can set the user name that git will add using the
+> 'git config --global user.name ...'.
+>
+> Also, I notice that the email from which the patch is sent does not
+> match the last 'Signed-off-by' line. If Chunyan and Lyra are both
+> your names, better pick one that you use for both the email and the
+> signoff. If you are Lyra and are posting a patch from Chunyan, please
+> add your own line below hers, like
+>
+> Signed-off-by: Zhang Chunyan <chunyan.zhang@spreadtrum.com>
+> Signed-off-by: Zhang Lyra <zhang.lyra@gmail.com>
+>
+> so that you include everybody who was involved in sending the
+> patch, but have your own list last.
+>
+>         Arnd
