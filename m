@@ -1,81 +1,78 @@
 From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [RFC 4/7] soc: qcom: Add Shared Memory Manager driver
-Date: Mon, 29 Sep 2014 17:34:48 -0700
-Message-ID: <1412037291-16880-5-git-send-email-bjorn.andersson@sonymobile.com>
+Subject: [RFC 7/7] regulator: qcom-smd-rpm: Regulator driver for the Qualcomm RPM
+Date: Mon, 29 Sep 2014 17:34:51 -0700
+Message-ID: <1412037291-16880-8-git-send-email-bjorn.andersson@sonymobile.com>
 References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Suman Anna <s-anna@ti.com>
+To: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-The Shared Memory Manager driver implements an interface for allocating
-and accessing items in the memory area shared among all of the
-processors in a Qualcomm platform.
+Driver for regulators exposed by the Resource Power Manager (RPM) found
+in Qualcomm 8974 based devices.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 ---
 
-In later platforms this is extended to support "secure smem", I do
-unfortunately not have any devices that I could test this with so I have only
-implemented the "insecure" version for now.
+According to the datasheet for the PMIC the regulators are indeed programmed in
+steps, but the steps seems to vary between different regulators and the details
+are hidden by the RPM that exposes contiguous voltage ranges.
 
-I was thinking about implementing an of_xlate as this would make sense for many
-things. It is however not feasible for SMD, that would require us to list 257
-items.
+Either we run with this, add a few more compatibles to encode the steps or have
+the step coming from devicetree. I prefer the current implementation as that is
+the cleanest of these.
 
-It would make sense to enhance this with a method of keeping track of currently
-consumed items, both to take care of "mutual exclusion" between consumers as
-well as knowing when it's safe to remove the device and/or unload the driver.
+ drivers/regulator/Kconfig              |   12 ++
+ drivers/regulator/Makefile             |    1 +
+ drivers/regulator/qcom_smd-regulator.c |  229 ++++++++++++++++++++++++++++++++
+ 3 files changed, 242 insertions(+)
+ create mode 100644 drivers/regulator/qcom_smd-regulator.c
 
-I did consider exposing the items as regmaps, but for many of the items the
-regmap context is consuming far more space then the actual data. And we would
-end up creating 3-400 regmap contexts in a normal system.
-
-
-Also note that the hwspinlock framework does not yet support devicetree based
-retrieval of spinlock handles, so that part needs to be changed.
-
- drivers/soc/qcom/Kconfig           |    8 +
- drivers/soc/qcom/Makefile          |    1 +
- drivers/soc/qcom/qcom_smem.c       |  328 ++++++++++++++++++++++++++++++++++++
- include/linux/soc/qcom/qcom_smem.h |   14 ++
- 4 files changed, 351 insertions(+)
- create mode 100644 drivers/soc/qcom/qcom_smem.c
- create mode 100644 include/linux/soc/qcom/qcom_smem.h
-
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 7bd2c94..9e6bc56 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -9,3 +9,11 @@ config QCOM_GSBI
-           functions for connecting the underlying serial UART, SPI, and I2C
-           devices to the output pins.
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 0e59754..ad01acf 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -461,6 +461,18 @@ config REGULATOR_QCOM_RPM
+ 	  Qualcomm RPM as a module. The module will be named
+ 	  "qcom_rpm-regulator".
  
-+config QCOM_SMEM
-+	tristate "Qualcomm Shared Memory Interface"
-+	depends on ARCH_QCOM
++config REGULATOR_QCOM_SMD_RPM
++	tristate "Qualcomm SMD based RPM regulator driver"
++	depends on MFD_QCOM_SMD_RPM
 +	help
-+	  Say y here to enable support for the Qualcomm Shared Memory Manager.
-+	  The driver provides an interface to items in a heap shared among all
-+	  processors in a Qualcomm platform and is used for exchanging
-+	  information as well as a fifo based communication mechanism (SMD).
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index 4389012..b1f7b18 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_QCOM_GSBI)	+=	qcom_gsbi.o
-+obj-$(CONFIG_QCOM_SMEM) +=	qcom_smem.o
-diff --git a/drivers/soc/qcom/qcom_smem.c b/drivers/soc/qcom/qcom_smem.c
++	  If you say yes to this option, support will be included for the
++	  regulators exposed by the Resource Power Manager found in Qualcomm
++	  8974 based devices.
++
++	  Say M here if you want to include support for the regulators on the
++	  Qualcomm RPM as a module. The module will be named
++	  "qcom_smd-regulator".
++
+ config REGULATOR_RC5T583
+ 	tristate "RICOH RC5T583 Power regulators"
+ 	depends on MFD_RC5T583
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 9c50dc6..b022270 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -56,6 +56,7 @@ obj-$(CONFIG_REGULATOR_MC13783) += mc13783-regulator.o
+ obj-$(CONFIG_REGULATOR_MC13892) += mc13892-regulator.o
+ obj-$(CONFIG_REGULATOR_MC13XXX_CORE) +=  mc13xxx-regulator-core.o
+ obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
++obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
+ obj-$(CONFIG_REGULATOR_PALMAS) += palmas-regulator.o
+ obj-$(CONFIG_REGULATOR_PFUZE100) += pfuze100-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS51632) += tps51632-regulator.o
+diff --git a/drivers/regulator/qcom_smd-regulator.c b/drivers/regulator/qcom_smd-regulator.c
 new file mode 100644
-index 0000000..9766c86
+index 0000000..510cb44
 --- /dev/null
-+++ b/drivers/soc/qcom/qcom_smem.c
-@@ -0,0 +1,328 @@
++++ b/drivers/regulator/qcom_smd-regulator.c
+@@ -0,0 +1,229 @@
 +/*
 + * Copyright (c) 2014, Sony Mobile Communications AB.
 + * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
@@ -91,338 +88,219 @@ index 0000000..9766c86
 + */
 +
 +#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/io.h>
-+#include <linux/slab.h>
 +#include <linux/of.h>
-+#include <linux/hwspinlock.h>
-+#include <linux/soc/qcom/qcom_smem.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
++#include <linux/mfd/qcom-smd-rpm.h>
++#include <dt-bindings/mfd/qcom-rpm.h>
 +
-+#define AUX_BASE_MASK		0xfffffffc
-+#define HWSPINLOCK_TIMEOUT	1000
-+#define SMEM_MAX_ITEMS		512
++struct qcom_rpm_reg {
++	struct qcom_smd_rpm *rpm;
++	unsigned resource;
 +
-+/**
-+  * struct smem_proc_comm - proc_comm communication struct (legacy)
-+  * @command:	current command to be executed
-+  * @status:	status of the currently requested command
-+  * @params:	parameters to the command
-+  */
-+struct smem_proc_comm {
-+	u32 command;
-+	u32 status;
-+	u32 params[2];
++	struct regulator_desc desc;
++
++	int is_enabled;
++	int uV;
 +};
 +
-+/**
-+ * struct smem_entry - entry to reference smem items on the heap
-+ * @allocated:	boolean to indicate if this entry is used
-+ * @offset:	offset to the allocated space
-+ * @size:	size of the allocated space, 8 byte aligned
-+ * @aux_base:	base address for the memory region used by this unit, or 0 for
-+ *		the default region. bits 0,1 are reserved
-+ */
-+struct smem_entry {
-+	u32 allocated;
-+	u32 offset;
-+	u32 size;
-+	u32 aux_base; /* bits 1:0 reserved */
++struct rpm_regulator_req {
++	u32 key;
++	u32 nbytes;
++	u32 value;
 +};
 +
-+/**
-+ * struct smem_header - header found in beginning of primary smem region
-+ * @proc_comm:		proc_comm communication interface (legacy)
-+ * @version:		array of versions for the various subsystems
-+ * @smem_initialized:	boolean to indicate that smem is initialized
-+ * @free_offset:	index of the first unallocated byte in smem
-+ * @available:		number of bytes available for allocation
-+ * @unused:		reserved field
-+ * toc:			array of references to smem entries
-+ */
-+struct smem_header {
-+	struct smem_proc_comm proc_comm[4];
-+	u32 version[32];
-+	u32 smem_initialized;
-+	u32 free_offset;
-+	u32 available;
-+	u32 unused;
-+	struct smem_entry toc[SMEM_MAX_ITEMS];
-+};
++#define RPM_KEY_SWEN	0x6e657773 /* "swen" */
++#define RPM_KEY_UV	0x00007675 /* "uv" */
++#define RPM_KEY_MV	0x0000616d /* "ma" */
 +
-+/**
-+  * struct smem_area - memory region used for smem heap
-+  * @aux_base:	physical base address of the region, used for entry lookup
-+  * @virt_base:	virtual address of the mapping
-+  */
-+struct smem_region {
-+	u32 aux_base;
-+	void __iomem *virt_base;
-+};
-+
-+/**
-+  * struct qcom_smem - control struct for the smem driver
-+  * @dev:		device pointer
-+  * @hwlock:		hwspinlock to be held during heap operations
-+  * @num_regions:	number of entires in the regions array
-+  * @regions:		array of memory regions, region 0 contains smem_header
-+  */
-+struct qcom_smem {
-+	struct device *dev;
-+
-+	struct hwspinlock *hwlock;
-+
-+	unsigned num_regions;
-+	struct smem_region regions[0];
-+};
-+
-+/* Pointer to the one and only smem handle */
-+static struct qcom_smem *smem_handle;
-+
-+/**
-+ * of_get_qcom_smem - retrieve a smem handle from a phandle
-+ * @client_node: of_node of the client
-+ *
-+ * Resolve the phandle in the property "qcom,smem" of @client_node and use this
-+ * to retrieve an smem handle.
-+ */
-+struct qcom_smem *of_get_qcom_smem(struct device_node *client_node)
++static int rpm_reg_enable(struct regulator_dev *rdev)
 +{
-+	struct device_node *node;
-+
-+	node = of_parse_phandle(client_node, "qcom,smem", 0);
-+	if (!node)
-+		return ERR_PTR(-EINVAL);
-+
-+	of_node_put(node);
-+
-+	if (!smem_handle)
-+		return ERR_PTR(-EPROBE_DEFER);
-+	else if (smem_handle->dev->of_node != node)
-+		return ERR_PTR(-EINVAL);
-+
-+	return smem_handle;
-+}
-+EXPORT_SYMBOL(of_get_qcom_smem);
-+
-+/**
-+ * qcom_smem_alloc - allocate space for a smem item
-+ * @smem:	smem handle
-+ * @smem_id:	item to be allocated
-+ * @size:	number of bytes to be allocated
-+ *
-+ * Allocate space for a given smem item of size @size, given that the item is
-+ * not yet allocated.
-+ */
-+int qcom_smem_alloc(struct qcom_smem *smem, unsigned smem_id, size_t size)
-+{
-+	struct smem_header *header = smem->regions[0].virt_base;
-+	struct smem_entry *entry;
-+	unsigned long flags;
++	struct qcom_rpm_reg *vreg = rdev_get_drvdata(rdev);
++	struct rpm_regulator_req req;
 +	int ret;
 +
-+	size = ALIGN(size, 8);
++	req.key = RPM_KEY_SWEN;
++	req.nbytes = sizeof(u32);
++	req.value = 1;
 +
-+	if (WARN_ON(smem_id >= SMEM_MAX_ITEMS))
-+		return -EINVAL;
++	ret = qcom_rpm_smd_write(vreg->rpm, vreg->resource, &req, sizeof(req));
++	if (!ret)
++		vreg->is_enabled = 1;
 +
-+	ret = hwspin_lock_timeout_irqsave(smem->hwlock,
-+					  HWSPINLOCK_TIMEOUT,
-+					  &flags);
-+	if (ret)
-+		return ret;
-+
-+	entry = &header->toc[smem_id];
-+	if (entry->allocated) {
-+		ret = -EEXIST;
-+		goto out;
-+	}
-+
-+	if (WARN_ON(size > header->available)) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	entry->offset = header->free_offset;
-+	entry->size = size;
-+	entry->allocated = 1;
-+
-+	header->free_offset += size;
-+	header->available -= size;
-+
-+	/* Commit the changes before we release the spin lock */
-+	wmb();
-+out:
-+	hwspin_unlock_irqrestore(smem->hwlock, &flags);
 +	return ret;
 +}
-+EXPORT_SYMBOL(qcom_smem_alloc);
 +
-+unsigned qcom_smem_get_free_space(struct qcom_smem *smem)
++static int rpm_reg_is_enabled(struct regulator_dev *rdev)
 +{
-+	struct smem_header *header = smem->regions[0].virt_base;
++	struct qcom_rpm_reg *vreg = rdev_get_drvdata(rdev);
 +
-+	return header->available;
++	return vreg->is_enabled;
 +}
-+EXPORT_SYMBOL(qcom_smem_get_free_space);
 +
-+/**
-+ * qcom_smem_get - resolve ptr of size of a smem item
-+ * @smem:	smem handle
-+ * @smem_id:	item id to be resolved
-+ * @ptr:	pointer to be filled out with address of the item
-+ * @size:	pointer to be filled out with size of the item
-+ *
-+ * Looks up pointer and size of a smem item.
-+ */
-+int qcom_smem_get(struct qcom_smem *smem,
-+		  unsigned smem_id,
-+		  void **ptr,
-+		  size_t *size)
++static int rpm_reg_disable(struct regulator_dev *rdev)
 +{
-+	struct smem_header *header = smem->regions[0].virt_base;
-+	struct smem_region *area;
-+	struct smem_entry *entry;
-+	unsigned long flags;
-+	u32 aux_base;
-+	unsigned i;
++	struct qcom_rpm_reg *vreg = rdev_get_drvdata(rdev);
++	struct rpm_regulator_req req;
 +	int ret;
 +
-+	if (WARN_ON(smem_id >= SMEM_MAX_ITEMS))
-+		return -EINVAL;
++	req.key = RPM_KEY_SWEN;
++	req.nbytes = sizeof(u32);
++	req.value = 0;
 +
-+	ret = hwspin_lock_timeout_irqsave(smem->hwlock,
-+					  HWSPINLOCK_TIMEOUT,
-+					  &flags);
-+	if (ret)
-+		return ret;
++	ret = qcom_rpm_smd_write(vreg->rpm, vreg->resource, &req, sizeof(req));
++	if (!ret)
++		vreg->is_enabled = 0;
 +
-+	entry = &header->toc[smem_id];
-+	if (!entry->allocated) {
-+		ret = -ENXIO;
-+		goto out;
-+	}
-+
-+	if (ptr != NULL) {
-+		aux_base = entry->aux_base & AUX_BASE_MASK;
-+
-+		for (i = 0; i < smem->num_regions; i++) {
-+			area = &smem->regions[i];
-+
-+			if (area->aux_base == aux_base || !aux_base) {
-+				*ptr = area->virt_base + entry->offset;
-+				break;
-+			}
-+		}
-+	}
-+	if (size != NULL)
-+		*size = entry->size;
-+
-+out:
-+	hwspin_unlock_irqrestore(smem->hwlock, &flags);
 +	return ret;
 +}
-+EXPORT_SYMBOL(qcom_smem_get);
 +
-+static int qcom_smem_probe(struct platform_device *pdev)
++static int rpm_reg_get_voltage(struct regulator_dev *rdev)
 +{
-+	struct qcom_smem *smem;
-+	struct resource *res;
-+	size_t array_size;
-+	int num_regions = 0;
-+	int i;
++	struct qcom_rpm_reg *vreg = rdev_get_drvdata(rdev);
 +
-+	for (i = 0; i < pdev->num_resources; i++) {
-+		res = &pdev->resource[i];
++	return vreg->uV;
++}
 +
-+		if (resource_type(res) == IORESOURCE_MEM)
-+			num_regions++;
-+	}
++static int rpm_reg_set_voltage(struct regulator_dev *rdev,
++			       int min_uV,
++			       int max_uV,
++			       unsigned *selector)
++{
++	struct qcom_rpm_reg *vreg = rdev_get_drvdata(rdev);
++	struct rpm_regulator_req req;
++	int ret = 0;
 +
-+	if (num_regions == 0) {
-+		dev_err(&pdev->dev, "no smem regions specified\n");
++	req.key = RPM_KEY_UV;
++	req.nbytes = sizeof(u32);
++	req.value = min_uV;
++
++	ret = qcom_rpm_smd_write(vreg->rpm, vreg->resource, &req, sizeof(req));
++	if (!ret)
++		vreg->uV = min_uV;
++
++	return ret;
++}
++
++static struct regulator_ops rpm_smps_ops = {
++	.enable = rpm_reg_enable,
++	.disable = rpm_reg_disable,
++	.is_enabled = rpm_reg_is_enabled,
++
++	.get_voltage = rpm_reg_get_voltage,
++	.set_voltage = rpm_reg_set_voltage,
++};
++
++static struct regulator_ops rpm_ldo_ops = {
++	.enable = rpm_reg_enable,
++	.disable = rpm_reg_disable,
++	.is_enabled = rpm_reg_is_enabled,
++
++	.get_voltage = rpm_reg_get_voltage,
++	.set_voltage = rpm_reg_set_voltage,
++};
++
++static struct regulator_ops rpm_switch_ops = {
++	.enable = rpm_reg_enable,
++	.disable = rpm_reg_disable,
++	.is_enabled = rpm_reg_is_enabled,
++};
++
++static const struct of_device_id rpm_of_match[] = {
++	{ .compatible = "qcom,rpm-pm8841-smps", .data = &rpm_smps_ops },
++	{ .compatible = "qcom,rpm-pm8941-smps", .data = &rpm_smps_ops },
++	{ .compatible = "qcom,rpm-pm8941-ldo", .data = &rpm_ldo_ops},
++	{ .compatible = "qcom,rpm-pm8941-switch", .data = &rpm_switch_ops },
++	{}
++};
++MODULE_DEVICE_TABLE(of, rpm_of_match);
++
++static int rpm_reg_probe(struct platform_device *pdev)
++{
++	struct regulator_init_data *initdata;
++	const struct of_device_id *match;
++	struct regulator_config config = { };
++	struct regulator_dev *rdev;
++	struct qcom_rpm_reg *vreg;
++	const char *key;
++	u32 val;
++	int ret;
++
++	match = of_match_device(rpm_of_match, &pdev->dev);
++
++	initdata = of_get_regulator_init_data(&pdev->dev, pdev->dev.of_node);
++	if (!initdata)
 +		return -EINVAL;
-+	}
 +
-+	array_size = num_regions * sizeof(struct smem_region);
-+	smem = devm_kzalloc(&pdev->dev, sizeof(*smem) + array_size, GFP_KERNEL);
-+	if (!smem)
++	vreg = devm_kzalloc(&pdev->dev, sizeof(*vreg), GFP_KERNEL);
++	if (!vreg)
 +		return -ENOMEM;
 +
-+	smem->dev = &pdev->dev;
-+	smem->hwlock = of_hwspin_lock_request(pdev->dev.of_node, NULL);
-+	if (IS_ERR(smem->hwlock))
-+		return PTR_ERR(smem->hwlock);
++	vreg->desc.continuous_voltage_range = true;
++	vreg->desc.id = -1;
++	vreg->desc.name = pdev->dev.of_node->name;
++	vreg->desc.ops = (struct regulator_ops *)match->data;
++	vreg->desc.owner = THIS_MODULE;
++	vreg->desc.type = REGULATOR_VOLTAGE;
 +
-+	smem->num_regions = num_regions;
-+
-+	for (i = 0; i < num_regions; i++) {
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
-+
-+		smem->regions[i].aux_base = (u32)res->start;
-+		smem->regions[i].virt_base = devm_ioremap(&pdev->dev,
-+							  res->start,
-+							  resource_size(res));
-+		if (!smem->regions[i].virt_base)
-+			return -ENOMEM;
++	vreg->rpm = dev_get_drvdata(pdev->dev.parent);
++	if (!vreg->rpm) {
++		dev_err(&pdev->dev, "unable to get rpm handle\n");
++		return -ENXIO;
 +	}
 +
-+	dev_set_drvdata(&pdev->dev, smem);
-+	smem_handle = smem;
++	key = "reg";
++	ret = of_property_read_u32(pdev->dev.of_node, key, &val);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to read %s\n", key);
++		return ret;
++	}
++	vreg->resource = val;
 +
-+	dev_info(&pdev->dev, "Qualcomm Shared Memory Interface probed\n");
++	if (vreg->desc.ops->set_voltage &&
++	    (!initdata->constraints.min_uV || !initdata->constraints.max_uV)) {
++		dev_err(&pdev->dev, "no voltage specified for regulator\n");
++		return -EINVAL;
++	}
++
++	config.dev = &pdev->dev;
++	config.init_data = initdata;
++	config.driver_data = vreg;
++	config.of_node = pdev->dev.of_node;
++	rdev = devm_regulator_register(&pdev->dev, &vreg->desc, &config);
++	if (IS_ERR(rdev)) {
++		dev_err(&pdev->dev, "can't register regulator\n");
++		return PTR_ERR(rdev);
++	}
 +
 +	return 0;
 +}
 +
-+static const struct of_device_id qcom_smem_of_match[] = {
-+	{ .compatible = "qcom,smem" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, qcom_smem_of_match);
-+
-+static struct platform_driver qcom_smem_driver = {
-+	.probe          = qcom_smem_probe,
-+	.driver  = {
-+		.name  = "qcom_smem",
++static struct platform_driver rpm_reg_driver = {
++	.probe = rpm_reg_probe,
++	.driver = {
++		.name  = "qcom_rpm_smd_regulator",
 +		.owner = THIS_MODULE,
-+		.of_match_table = qcom_smem_of_match,
++		.of_match_table = rpm_of_match,
 +	},
 +};
 +
-+static int __init qcom_smem_init(void)
++static int __init rpm_reg_init(void)
 +{
-+	return platform_driver_register(&qcom_smem_driver);
++	return platform_driver_register(&rpm_reg_driver);
 +}
-+arch_initcall(qcom_smem_init);
++subsys_initcall(rpm_reg_init);
 +
-+static void __exit qcom_smem_exit(void)
++static void __exit rpm_reg_exit(void)
 +{
-+	platform_driver_unregister(&qcom_smem_driver);
++	platform_driver_unregister(&rpm_reg_driver);
 +}
-+module_exit(qcom_smem_exit)
++module_exit(rpm_reg_exit)
 +
-+MODULE_AUTHOR("Bjorn Andersson <bjorn.andersson@sonymobile.com>");
-+MODULE_DESCRIPTION("Qualcomm Shared Memory Interface");
++MODULE_DESCRIPTION("Qualcomm RPM regulator driver");
 +MODULE_LICENSE("GPLv2");
-diff --git a/include/linux/soc/qcom/qcom_smem.h b/include/linux/soc/qcom/qcom_smem.h
-new file mode 100644
-index 0000000..7c0d3fd
---- /dev/null
-+++ b/include/linux/soc/qcom/qcom_smem.h
-@@ -0,0 +1,14 @@
-+#ifndef __QCOM_SMEM_H__
-+#define __QCOM_SMEM_H__
-+
-+struct device_node;
-+struct qcom_smem;
-+
-+struct qcom_smem *of_get_qcom_smem(struct device_node *node);
-+
-+int qcom_smem_alloc(struct qcom_smem *smem, unsigned smem_id, size_t size);
-+int qcom_smem_get(struct qcom_smem *smem, unsigned item, void **ptr, size_t *size);
-+
-+unsigned qcom_smem_get_free_space(struct qcom_smem *smem);
-+
-+#endif
 -- 
 1.7.9.5
