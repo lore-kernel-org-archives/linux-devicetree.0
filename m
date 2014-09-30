@@ -1,91 +1,74 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V2] bcma: use device from DT (brcm, bus-gpio) for SoC GPIO chip
-Date: Tue, 30 Sep 2014 12:28:21 +0200
-Message-ID: <9255570.ha3Ad1aI6v@wuerfel>
-References: <1411741733-13888-1-git-send-email-zajec5@gmail.com> <7035315.8m6ICWZ25d@wuerfel> <CACna6ry-mmc8QD-bYUNGLfTh07TcUepjZdPYqKyxLc3HbMPung@mail.gmail.com>
+Subject: Re: [PATCH V3] bcma: use device from DT (brcm, bus-chipcommon) for SoC GPIO chip
+Date: Tue, 30 Sep 2014 12:36:28 +0200
+Message-ID: <3484902.1UVy7lmJAD@wuerfel>
+References: <1411892641-5662-1-git-send-email-zajec5@gmail.com> <1412072546-3529-1-git-send-email-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACna6ry-mmc8QD-bYUNGLfTh07TcUepjZdPYqKyxLc3HbMPung-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1412072546-3529-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 30 September 2014 11:56:20 Rafa=C5=82 Mi=C5=82ecki wrote:
-> On 30 September 2014 11:37, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Sunday 28 September 2014 10:24:01 Rafa=C5=82 Mi=C5=82ecki wrote:
-> >> @@ -17,4 +33,12 @@ Example:
-> >>               ranges =3D <0x00000000 0x18000000 0x00100000>;
-> >>               #address-cells =3D <1>;
-> >>               #size-cells =3D <1>;
-> >> +
-> >> +             chipcommon@0 {
-> >> +                     gpio@0 {
-> >> +                             compatible =3D "brcm,bus-gpio";
-> >> +                             gpio-controller;
-> >> +                             #gpio-cells =3D <2>;
-> >> +                     };
-> >> +             };
-> >
-> > I think you should list the 'reg' property of the chipcommon area
-> > and make that match the unit address, rather than using '0', mostly
-> > for consistency.
+On Tuesday 30 September 2014 12:22:26 Rafa=C5=82 Mi=C5=82ecki wrote:
 >=20
-> Do you mean this chipcommon@0? We propose this foo@offset syntax sinc=
-e
-> V1 which was posted 1,5 month ago, it's nothing new.
+> +The top-level axi bus may contain children representing attached cor=
+es
+> +(devices). This is needed since some hardware details can't be auto
+> +detected (e.g. IRQ numbers). Also some of the cores may be responsib=
+le
+> +for extra things, e.g. ChipCommon providing access to the GPIO chip.
+> +
+>  Example:
+> =20
+>         axi@18000000 {
+> @@ -17,4 +22,12 @@ Example:
+>                 ranges =3D <0x00000000 0x18000000 0x00100000>;
+>                 #address-cells =3D <1>;
+>                 #size-cells =3D <1>;
+> +
+> +               chipcommon {
+> +                       compatible =3D "brcm,bus-chipcommon";
+> +                       reg =3D <0x00000000 0x1000>;
+> +
+> +                       gpio-controller;
+> +                       #gpio-cells =3D <2>;
+> +               };
+>         };
 
-Is 'chipcommon' at the start of the 0x18000000 range? If so, that's
-great, but it would still be good to have the 'reg' property in there
-explicitly.
+Looks good.
 
-> >> @@ -218,6 +218,11 @@ int bcma_gpio_init(struct bcma_drv_cc *cc)
-> >>  #if IS_BUILTIN(CONFIG_BCM47XX)
-> >>       chip->to_irq            =3D bcma_gpio_to_irq;
-> >>  #endif
-> >> +#if IS_BUILTIN(CONFIG_OF)
-> >> +     if (cc->core->bus->hosttype =3D=3D BCMA_HOSTTYPE_SOC)
-> >> +             chip->of_node   =3D of_find_compatible_node(NULL, NU=
-LL,
-> >> +                                                       "brcm,bus-=
-gpio");
-> >> +#endif
-> >
-> > Just commenting on the general style here, I think you can skip thi=
-s
-> > step entirely, as mentioned above.
-> >
-> > You should use C syntax here:
-> >
-> >         if (IS_BUILTIN(CONFIG_OF) && cc->core->bus->hosttype =3D=3D=
- BCMA_HOSTTYPE_SOC))
-> >                 chip->of_node =3D of_find_compatible_node(NULL, NUL=
-L, "brcm,bus-gpio");
->=20
-> OK
->=20
->=20
-> > If CONFIG_OF is not set, of_find_compatible_node() is turned into a=
-n inline
-> > function that returns NULL, so you probably don't even need that.
->=20
-> But I need to have of_node defined. Please check out "struct gpio_chi=
-p".
 
-I see. This is something we might want to change, but you don't need to
-bother with it now, so just leave this part as it is.
+> diff --git a/drivers/bcma/driver_gpio.c b/drivers/bcma/driver_gpio.c
+> index 8ea497c..28bdbe5 100644
+> --- a/drivers/bcma/driver_gpio.c
+> +++ b/drivers/bcma/driver_gpio.c
+> @@ -218,6 +218,12 @@ int bcma_gpio_init(struct bcma_drv_cc *cc)
+>  #if IS_BUILTIN(CONFIG_BCM47XX)
+>         chip->to_irq            =3D bcma_gpio_to_irq;
+>  #endif
+> +#if IS_BUILTIN(CONFIG_OF)
+> +       if (cc->core->bus->hosttype =3D=3D BCMA_HOSTTYPE_SOC)
+> +               chip->of_node   =3D of_find_compatible_node(
+> +                                       bus->host_pdev->dev.of_node, =
+NULL,
+> +                                       "brcm,bus-chipcommon");
+> +#endif
+>         switch (cc->core->bus->chipinfo.id) {
 
-> > Finally, of_find_compatible_node() is a really slow operation, and =
-"brcm,bus-gpio"
-> > is a much too generic name. If you need to look for something that =
-is a child
-> > node, use something based on for_each_available_child_of_node().
->=20
-> Will see what I can do.
+This doesn't: you are now searching through all nodes starting at the
+axi node rather than searching just through the children.
 
-ok, thanks.
+I think it would be better with the first change in place to set
+chip->of_node to cc->core->dev.of_node, and set that pointer in
+bcma_bus_scan by matching the 'reg' number. I think that is what
+an earlier version of the bcma DT support did in order to find the
+IRQs. We no longer need it for that purpose, but it seems like a
+good idea anyway, as I expect other bcma_devices to have similar
+requirements to add additional properties.
 
 	Arnd
 --
