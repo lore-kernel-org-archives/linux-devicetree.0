@@ -1,306 +1,127 @@
 From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [RFC 7/7] regulator: qcom-smd-rpm: Regulator driver for the Qualcomm RPM
-Date: Mon, 29 Sep 2014 17:34:51 -0700
-Message-ID: <1412037291-16880-8-git-send-email-bjorn.andersson@sonymobile.com>
+Subject: [RFC 2/7] soc: qcom: Add device tree binding for SMD
+Date: Mon, 29 Sep 2014 17:34:46 -0700
+Message-ID: <1412037291-16880-3-git-send-email-bjorn.andersson@sonymobile.com>
 References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, linux-arm-msm@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Driver for regulators exposed by the Resource Power Manager (RPM) found
-in Qualcomm 8974 based devices.
+Add device tree binding documentation for the Qualcomm Shared Memory
+Device.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 ---
 
-According to the datasheet for the PMIC the regulators are indeed programmed in
-steps, but the steps seems to vary between different regulators and the details
-are hidden by the RPM that exposes contiguous voltage ranges.
+I was looking at having one smd node per remote processor - e.g flatten the
+first and second level. As all the channels, for all the remote processors are
+allocated from the same pool this does however not feel very natural.
 
-Either we run with this, add a few more compatibles to encode the steps or have
-the step coming from devicetree. I prefer the current implementation as that is
-the cleanest of these.
+ .../devicetree/bindings/soc/qcom/qcom,smd.txt      |   82 ++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
 
- drivers/regulator/Kconfig              |   12 ++
- drivers/regulator/Makefile             |    1 +
- drivers/regulator/qcom_smd-regulator.c |  229 ++++++++++++++++++++++++++++++++
- 3 files changed, 242 insertions(+)
- create mode 100644 drivers/regulator/qcom_smd-regulator.c
-
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 0e59754..ad01acf 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -461,6 +461,18 @@ config REGULATOR_QCOM_RPM
- 	  Qualcomm RPM as a module. The module will be named
- 	  "qcom_rpm-regulator".
- 
-+config REGULATOR_QCOM_SMD_RPM
-+	tristate "Qualcomm SMD based RPM regulator driver"
-+	depends on MFD_QCOM_SMD_RPM
-+	help
-+	  If you say yes to this option, support will be included for the
-+	  regulators exposed by the Resource Power Manager found in Qualcomm
-+	  8974 based devices.
-+
-+	  Say M here if you want to include support for the regulators on the
-+	  Qualcomm RPM as a module. The module will be named
-+	  "qcom_smd-regulator".
-+
- config REGULATOR_RC5T583
- 	tristate "RICOH RC5T583 Power regulators"
- 	depends on MFD_RC5T583
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 9c50dc6..b022270 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -56,6 +56,7 @@ obj-$(CONFIG_REGULATOR_MC13783) += mc13783-regulator.o
- obj-$(CONFIG_REGULATOR_MC13892) += mc13892-regulator.o
- obj-$(CONFIG_REGULATOR_MC13XXX_CORE) +=  mc13xxx-regulator-core.o
- obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
-+obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
- obj-$(CONFIG_REGULATOR_PALMAS) += palmas-regulator.o
- obj-$(CONFIG_REGULATOR_PFUZE100) += pfuze100-regulator.o
- obj-$(CONFIG_REGULATOR_TPS51632) += tps51632-regulator.o
-diff --git a/drivers/regulator/qcom_smd-regulator.c b/drivers/regulator/qcom_smd-regulator.c
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
 new file mode 100644
-index 0000000..510cb44
+index 0000000..c56e4fc
 --- /dev/null
-+++ b/drivers/regulator/qcom_smd-regulator.c
-@@ -0,0 +1,229 @@
-+/*
-+ * Copyright (c) 2014, Sony Mobile Communications AB.
-+ * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
+@@ -0,0 +1,82 @@
++Qualcomm Shared Memory Driver (SMD) binding
 +
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+#include <linux/regulator/of_regulator.h>
-+#include <linux/mfd/qcom-smd-rpm.h>
-+#include <dt-bindings/mfd/qcom-rpm.h>
++This binding describes the Qualcomm Shared Memory Driver, a fifo based
++communication channel for sending data between the various subsystems in
++Qualcomm platforms.
 +
-+struct qcom_rpm_reg {
-+	struct qcom_smd_rpm *rpm;
-+	unsigned resource;
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "qcom,smd"
 +
-+	struct regulator_desc desc;
++- qcom,smem:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: reference to a smem node managing the shared memory items
++		    used for smd
 +
-+	int is_enabled;
-+	int uV;
-+};
++= EDGES
 +
-+struct rpm_regulator_req {
-+	u32 key;
-+	u32 nbytes;
-+	u32 value;
-+};
++Each subnode of the SMD node represents a remote subsystem, i.e. a remote
++processor of some sort - in SMD language called an "edge". The name of the
++edges are not important.
 +
-+#define RPM_KEY_SWEN	0x6e657773 /* "swen" */
-+#define RPM_KEY_UV	0x00007675 /* "uv" */
-+#define RPM_KEY_MV	0x0000616d /* "ma" */
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the IRQ used by the remote processor to
++		    signal this processor about communication related updates
 +
-+static int rpm_reg_enable(struct regulator_dev *rdev)
-+{
-+	struct qcom_rpm_reg *vreg = rdev_get_drvdata(rdev);
-+	struct rpm_regulator_req req;
-+	int ret;
++- qcom,ipc:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: three entries specifying the outgoing ipc bit used for
++		    signaling the remote processor:
++		    - phandle to a syscon node representing the apcs registers
++		    - u32 representing offset to the register within the syscon
++		    - u32 representing the ipc bit within the register
 +
-+	req.key = RPM_KEY_SWEN;
-+	req.nbytes = sizeof(u32);
-+	req.value = 1;
++- qcom,smd-edge:
++	Usage: required
++	Value type: <u32>
++	Definition: an identifier representing the remote processor
 +
-+	ret = qcom_rpm_smd_write(vreg->rpm, vreg->resource, &req, sizeof(req));
-+	if (!ret)
-+		vreg->is_enabled = 1;
++= SMD DEVICES
 +
-+	return ret;
-+}
++In turn, subnodes of the "edges" represent devices tied to SMD channels on that
++"edge". The names of the devices are not important. The properties of these
++nodes are defined by the individual bindings for the SMD devices - but must
++contain the following property:
 +
-+static int rpm_reg_is_enabled(struct regulator_dev *rdev)
-+{
-+	struct qcom_rpm_reg *vreg = rdev_get_drvdata(rdev);
++- qcom,smd-channels:
++	Usage: required
++	Value type: <stringlist>
++	Definition: a list of channels tied to this device, used for matching
++		    the device to channels
 +
-+	return vreg->is_enabled;
-+}
++= EXAMPLE
 +
-+static int rpm_reg_disable(struct regulator_dev *rdev)
-+{
-+	struct qcom_rpm_reg *vreg = rdev_get_drvdata(rdev);
-+	struct rpm_regulator_req req;
-+	int ret;
++The following example represents a smd node, with one edge representing the
++"rpm" subsystem. For the "rpm" subsystem we have a device tied to the
++"rpm_request" channel.
 +
-+	req.key = RPM_KEY_SWEN;
-+	req.nbytes = sizeof(u32);
-+	req.value = 0;
++        smd {
++                compatible = "qcom,smd";
++                qcom,smem = <&smem>;
 +
-+	ret = qcom_rpm_smd_write(vreg->rpm, vreg->resource, &req, sizeof(req));
-+	if (!ret)
-+		vreg->is_enabled = 0;
++                rpm {
++                        interrupts = <0 168 1>;
++                        qcom,ipc = <&apcs 8 0>;
++                        qcom,smd-edge = <15>;
 +
-+	return ret;
-+}
++                        rpm_requests {
++                                compatible = "qcom,rpm-msm8974";
++                                qcom,smd-channels = "rpm_requests";
 +
-+static int rpm_reg_get_voltage(struct regulator_dev *rdev)
-+{
-+	struct qcom_rpm_reg *vreg = rdev_get_drvdata(rdev);
++                                #address-cells = <1>;
++                                #size-cells = <0>;
 +
-+	return vreg->uV;
-+}
-+
-+static int rpm_reg_set_voltage(struct regulator_dev *rdev,
-+			       int min_uV,
-+			       int max_uV,
-+			       unsigned *selector)
-+{
-+	struct qcom_rpm_reg *vreg = rdev_get_drvdata(rdev);
-+	struct rpm_regulator_req req;
-+	int ret = 0;
-+
-+	req.key = RPM_KEY_UV;
-+	req.nbytes = sizeof(u32);
-+	req.value = min_uV;
-+
-+	ret = qcom_rpm_smd_write(vreg->rpm, vreg->resource, &req, sizeof(req));
-+	if (!ret)
-+		vreg->uV = min_uV;
-+
-+	return ret;
-+}
-+
-+static struct regulator_ops rpm_smps_ops = {
-+	.enable = rpm_reg_enable,
-+	.disable = rpm_reg_disable,
-+	.is_enabled = rpm_reg_is_enabled,
-+
-+	.get_voltage = rpm_reg_get_voltage,
-+	.set_voltage = rpm_reg_set_voltage,
-+};
-+
-+static struct regulator_ops rpm_ldo_ops = {
-+	.enable = rpm_reg_enable,
-+	.disable = rpm_reg_disable,
-+	.is_enabled = rpm_reg_is_enabled,
-+
-+	.get_voltage = rpm_reg_get_voltage,
-+	.set_voltage = rpm_reg_set_voltage,
-+};
-+
-+static struct regulator_ops rpm_switch_ops = {
-+	.enable = rpm_reg_enable,
-+	.disable = rpm_reg_disable,
-+	.is_enabled = rpm_reg_is_enabled,
-+};
-+
-+static const struct of_device_id rpm_of_match[] = {
-+	{ .compatible = "qcom,rpm-pm8841-smps", .data = &rpm_smps_ops },
-+	{ .compatible = "qcom,rpm-pm8941-smps", .data = &rpm_smps_ops },
-+	{ .compatible = "qcom,rpm-pm8941-ldo", .data = &rpm_ldo_ops},
-+	{ .compatible = "qcom,rpm-pm8941-switch", .data = &rpm_switch_ops },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, rpm_of_match);
-+
-+static int rpm_reg_probe(struct platform_device *pdev)
-+{
-+	struct regulator_init_data *initdata;
-+	const struct of_device_id *match;
-+	struct regulator_config config = { };
-+	struct regulator_dev *rdev;
-+	struct qcom_rpm_reg *vreg;
-+	const char *key;
-+	u32 val;
-+	int ret;
-+
-+	match = of_match_device(rpm_of_match, &pdev->dev);
-+
-+	initdata = of_get_regulator_init_data(&pdev->dev, pdev->dev.of_node);
-+	if (!initdata)
-+		return -EINVAL;
-+
-+	vreg = devm_kzalloc(&pdev->dev, sizeof(*vreg), GFP_KERNEL);
-+	if (!vreg)
-+		return -ENOMEM;
-+
-+	vreg->desc.continuous_voltage_range = true;
-+	vreg->desc.id = -1;
-+	vreg->desc.name = pdev->dev.of_node->name;
-+	vreg->desc.ops = (struct regulator_ops *)match->data;
-+	vreg->desc.owner = THIS_MODULE;
-+	vreg->desc.type = REGULATOR_VOLTAGE;
-+
-+	vreg->rpm = dev_get_drvdata(pdev->dev.parent);
-+	if (!vreg->rpm) {
-+		dev_err(&pdev->dev, "unable to get rpm handle\n");
-+		return -ENXIO;
-+	}
-+
-+	key = "reg";
-+	ret = of_property_read_u32(pdev->dev.of_node, key, &val);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to read %s\n", key);
-+		return ret;
-+	}
-+	vreg->resource = val;
-+
-+	if (vreg->desc.ops->set_voltage &&
-+	    (!initdata->constraints.min_uV || !initdata->constraints.max_uV)) {
-+		dev_err(&pdev->dev, "no voltage specified for regulator\n");
-+		return -EINVAL;
-+	}
-+
-+	config.dev = &pdev->dev;
-+	config.init_data = initdata;
-+	config.driver_data = vreg;
-+	config.of_node = pdev->dev.of_node;
-+	rdev = devm_regulator_register(&pdev->dev, &vreg->desc, &config);
-+	if (IS_ERR(rdev)) {
-+		dev_err(&pdev->dev, "can't register regulator\n");
-+		return PTR_ERR(rdev);
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver rpm_reg_driver = {
-+	.probe = rpm_reg_probe,
-+	.driver = {
-+		.name  = "qcom_rpm_smd_regulator",
-+		.owner = THIS_MODULE,
-+		.of_match_table = rpm_of_match,
-+	},
-+};
-+
-+static int __init rpm_reg_init(void)
-+{
-+	return platform_driver_register(&rpm_reg_driver);
-+}
-+subsys_initcall(rpm_reg_init);
-+
-+static void __exit rpm_reg_exit(void)
-+{
-+	platform_driver_unregister(&rpm_reg_driver);
-+}
-+module_exit(rpm_reg_exit)
-+
-+MODULE_DESCRIPTION("Qualcomm RPM regulator driver");
-+MODULE_LICENSE("GPLv2");
++				...
++			};
++		};
++	};
 -- 
 1.7.9.5
