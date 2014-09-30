@@ -1,105 +1,121 @@
-From: Abhilash Kesavan <a.kesavan@samsung.com>
-Subject: [PATCH v4 1/6] pinctrl: exynos: Generalize the eint16_31 demux code
-Date: Tue, 30 Sep 2014 20:00:45 +0530
-Message-ID: <1412087450-10495-2-git-send-email-a.kesavan@samsung.com>
-References: <1412087450-10495-1-git-send-email-a.kesavan@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1412087450-10495-1-git-send-email-a.kesavan@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: naveenkrishna.ch@gmail.com, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, robh@kernel.org, devicetree@vger.kernel.org, tomasz.figa@gmail.com, linus.walleij@linaro.org
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [RFC 3/7] mfd: devicetree: bindings: Add Qualcomm SMD based RPM
+ DT binding
+Date: Tue, 30 Sep 2014 07:37:41 -0700
+Message-ID: <20140930143740.GK28481@sonymobile.com>
+References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1412037291-16880-4-git-send-email-bjorn.andersson@sonymobile.com>
+ <85C5C172-D309-41B4-B511-7820BAFDA017@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <85C5C172-D309-41B4-B511-7820BAFDA017@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The function exynos_irq_demux_eint16_31 uses pre-defined offsets for external
-interrupt pending status and mask registers. So this function is not extensible
-for Exynos7 SoC which has these registers at different offsets. Generalize
-the exynos_irq_demux_eint16_31 function by using the pending/mask register
-offset values from the exynos_irq_chip structure. This is done by adding a
-irq_chip field to the samsung_pin_bank struct.
+On Tue 30 Sep 06:46 PDT 2014, Kumar Gala wrote:
 
-Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
-Reviewed-by: Thomas Abraham <thomas.ab@samsung.com>
-Tested-by: Thomas Abraham <thomas.ab@samsung.com>
-Acked-by: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/samsung/pinctrl-exynos.c  |   14 ++++++++++----
- drivers/pinctrl/samsung/pinctrl-samsung.h |    2 ++
- 2 files changed, 12 insertions(+), 4 deletions(-)
+>=20
+> On Sep 29, 2014, at 7:34 PM, Bjorn Andersson <Bjorn.Andersson@sonymob=
+ile.com> wrote:
+>=20
+> > diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt=
+ b/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
+> > new file mode 100644
+> > index 0000000..a846101
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
+> > @@ -0,0 +1,122 @@
+> > +Qualcomm Resource Power Manager (RPM) over SMD
+> > +
+> > +This driver is used to interface with the Resource Power Manager (=
+RPM) found in
+> > +various Qualcomm platforms. The RPM allows each component in the s=
+ystem to vote
+> > +for state of the system resources, such as clocks, regulators and =
+bus
+> > +frequencies.
+> > +
+> > +- compatible:
+> > +	Usage: required
+> > +	Value type: <string>
+> > +	Definition: must be one of:
+> > +		    "qcom,rpm-msm8974=94
+>=20
+> Why not =93qcom,rpm-smd=94.  I=92d like to get Jeff H=92s input on ho=
+w
+> what we do here for compat and distinguish the A-family RPM support v=
+s
+> B-family/RPM-SMD support.
+>=20
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
-index d7154ed..14b9b44 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -260,7 +260,7 @@ static int exynos_gpio_irq_map(struct irq_domain *h, unsigned int virq,
- 	struct samsung_pin_bank *b = h->host_data;
- 
- 	irq_set_chip_data(virq, b);
--	irq_set_chip_and_handler(virq, &exynos_gpio_irq_chip.chip,
-+	irq_set_chip_and_handler(virq, &b->irq_chip->chip,
- 					handle_level_irq);
- 	set_irq_flags(virq, IRQF_VALID);
- 	return 0;
-@@ -344,6 +344,8 @@ static int exynos_eint_gpio_init(struct samsung_pinctrl_drv_data *d)
- 			ret = -ENOMEM;
- 			goto err_domains;
- 		}
-+
-+		bank->irq_chip = &exynos_gpio_irq_chip;
- 	}
- 
- 	return 0;
-@@ -445,9 +447,9 @@ static void exynos_irq_demux_eint16_31(unsigned int irq, struct irq_desc *desc)
- 
- 	for (i = 0; i < eintd->nr_banks; ++i) {
- 		struct samsung_pin_bank *b = eintd->banks[i];
--		pend = readl(d->virt_base + EXYNOS_WKUP_EPEND_OFFSET
-+		pend = readl(d->virt_base + b->irq_chip->eint_pend
- 				+ b->eint_offset);
--		mask = readl(d->virt_base + EXYNOS_WKUP_EMASK_OFFSET
-+		mask = readl(d->virt_base + b->irq_chip->eint_mask
- 				+ b->eint_offset);
- 		exynos_irq_demux_eint(pend & ~mask, b->irq_domain);
- 	}
-@@ -458,7 +460,9 @@ static void exynos_irq_demux_eint16_31(unsigned int irq, struct irq_desc *desc)
- static int exynos_wkup_irq_map(struct irq_domain *h, unsigned int virq,
- 					irq_hw_number_t hw)
- {
--	irq_set_chip_and_handler(virq, &exynos_wkup_irq_chip.chip,
-+	struct samsung_pin_bank *b = h->host_data;
-+
-+	irq_set_chip_and_handler(virq, &b->irq_chip->chip,
- 					handle_level_irq);
- 	irq_set_chip_data(virq, h->host_data);
- 	set_irq_flags(virq, IRQF_VALID);
-@@ -510,6 +514,8 @@ static int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
- 			return -ENXIO;
- 		}
- 
-+		bank->irq_chip = &exynos_wkup_irq_chip;
-+
- 		if (!of_find_property(bank->of_node, "interrupts", NULL)) {
- 			bank->eint_type = EINT_TYPE_WKUP_MUX;
- 			++muxed_banks;
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/samsung/pinctrl-samsung.h
-index 5cedc9d..d2c38c8 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.h
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
-@@ -127,6 +127,7 @@ struct samsung_pin_bank_type {
-  * @irq_domain: IRQ domain of the bank.
-  * @gpio_chip: GPIO chip of the bank.
-  * @grange: linux gpio pin range supported by this bank.
-+ * @irq_chip: link to irq chip for external gpio and wakeup interrupts.
-  * @slock: spinlock protecting bank registers
-  * @pm_save: saved register values during suspend
-  */
-@@ -146,6 +147,7 @@ struct samsung_pin_bank {
- 	struct irq_domain *irq_domain;
- 	struct gpio_chip gpio_chip;
- 	struct pinctrl_gpio_range grange;
-+	struct exynos_irq_chip *irq_chip;
- 	spinlock_t slock;
- 
- 	u32 pm_save[PINCFG_TYPE_NUM + 1]; /* +1 to handle double CON registers*/
--- 
-1.7.9.5
+I don't see anything indicating changes in the actual communication, bu=
+t as
+this also encodes what resources are exposed we have to keep this speci=
+fic.
+
+I'm not sure what you mean with distinguish the A and B family, they ar=
+e
+completely different and there are no overlap in compatibles or impleme=
+ntation.
+
+The overlap is in how children are communicating with the rpm, but this=
+ is an
+implementation detail - and noted in that patch as a future improvement=
+=2E
+
+
+I forgot to add Jeff, but did send him a separate email asking for his =
+input on
+all this.
+
+> > +
+> > +- qcom,smd-channels:
+> > +	Usage: required
+> > +	Value type: <stringlist>
+> > +	Definition: Shared Memory Channel used for communication with the=
+ RPM
+> > +
+>=20
+> This needs more details.
+>=20
+
+Not sure what more to add here. It should contain the name of the chann=
+el used
+for communication with the rpm. For all current platforms this would be
+"rpm_requests".
+
+> > +- #address-cells:
+> > +	Usage: required
+> > +	Value type: <u32>
+> > +	Definition: must be 1
+> > +
+> > +- #size-cells:
+> > +	Usage: required
+> > +	Value type: <u32>
+> > +	Definition: must be 0
+> > +
+> > +=3D SUBDEVICES
+>=20
+> As I mentioned for the the RPM binding on a-family, we should split o=
+ut the
+> devices into their own binding specs.
+>=20
+
+Please actually read https://lkml.org/lkml/2014/3/10/567, it's now the =
+third
+time I send you that link. If you don't like it then ask Rob to revise =
+his
+statement.
+
+=46or me it makes sense to consolidate the RPM binding in one document =
+rather
+than spreading it out in 10 different documents with some implicit
+dependencies.
+
+Regards,
+Bjorn
