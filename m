@@ -1,67 +1,59 @@
-From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v6 05/10] net: pxa168_eth: set the mac address on the Ethernet controller
-Date: Tue, 30 Sep 2014 16:28:11 +0200
-Message-ID: <1412087296-18475-6-git-send-email-antoine.tenart@free-electrons.com>
-References: <1412087296-18475-1-git-send-email-antoine.tenart@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412087296-18475-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Abhilash Kesavan <a.kesavan@samsung.com>
+Subject: [PATCH v4 0/6] Add initial support for pinctrl on Exynos7
+Date: Tue, 30 Sep 2014 20:00:44 +0530
+Message-ID: <1412087450-10495-1-git-send-email-a.kesavan@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: naveenkrishna.ch@gmail.com, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, robh@kernel.org, devicetree@vger.kernel.org, tomasz.figa@gmail.com, linus.walleij@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-When changing the MAC address, in addition to updating the dev_addr in
-the net_device structure, this patch also update the MAC address
-registers (high and low) of the Ethernet controller with the new MAC.
-The address stored in these registers is used for IEEE 802.3x Ethernet
-flow control, which is already enabled.
+Changes since v3:
+	- Changed variable name from exynos_wkup_irq_chip to irq_chip
+	- Added acked-by tag from Tomasz Figa
 
-Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
- drivers/net/ethernet/marvell/pxa168_eth.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Changes since v2:
+	- Added a .irq_chip field to the samsung_pin_bank struct
+	- Consolidated the wakeup and gpio irqd_ops
 
-diff --git a/drivers/net/ethernet/marvell/pxa168_eth.c b/drivers/net/ethernet/marvell/pxa168_eth.c
-index 46b86714e9d7..6917904409b8 100644
---- a/drivers/net/ethernet/marvell/pxa168_eth.c
-+++ b/drivers/net/ethernet/marvell/pxa168_eth.c
-@@ -60,6 +60,8 @@
- #define PORT_COMMAND		0x0410
- #define PORT_STATUS		0x0418
- #define HTPR			0x0428
-+#define MAC_ADDR_LOW		0x0430
-+#define MAC_ADDR_HIGH		0x0438
- #define SDMA_CONFIG		0x0440
- #define SDMA_CMD		0x0448
- #define INT_CAUSE		0x0450
-@@ -609,11 +611,22 @@ static int pxa168_eth_set_mac_address(struct net_device *dev, void *addr)
- 	struct sockaddr *sa = addr;
- 	struct pxa168_eth_private *pep = netdev_priv(dev);
- 	unsigned char oldMac[ETH_ALEN];
-+	u32 mac_h, mac_l;
+Changes since v1:
+	- Marked the newly created irq_chip instances as __initdata
+	- Used kmemdup to keep a copy of the irq_chip
+	- Change the pinctrl name from sd0_rdqs to sd0_ds as per UM
+	- Moved the pinctrl enablement for exynos7 into a separate patch
+	- Added tested-by and reviewed-by tags from Thomas Abraham
+
+Following patches have been tested on linux-next (20140926).
+https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/
  
- 	if (!is_valid_ether_addr(sa->sa_data))
- 		return -EADDRNOTAVAIL;
- 	memcpy(oldMac, dev->dev_addr, ETH_ALEN);
- 	memcpy(dev->dev_addr, sa->sa_data, ETH_ALEN);
-+
-+	mac_h = sa->sa_data[0] << 24;
-+	mac_h |= sa->sa_data[1] << 16;
-+	mac_h |= sa->sa_data[2] << 8;
-+	mac_h |= sa->sa_data[3];
-+	mac_l = sa->sa_data[4] << 8;
-+	mac_l |= sa->sa_data[5];
-+	wrl(pep, MAC_ADDR_HIGH, mac_h);
-+	wrl(pep, MAC_ADDR_LOW, mac_l);
-+
- 	netif_addr_lock_bh(dev);
- 	update_hash_table_mac_address(pep, oldMac, dev->dev_addr);
- 	netif_addr_unlock_bh(dev);
--- 
-1.9.1
+Following patches are required for this series:
+1) "tty/serial: fix config dependencies for samsung serial"
+   https://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg36208.html
+2) "dts, kbuild: Implement support for dtb vendor subdirs" patchset 
+   http://comments.gmane.org/gmane.linux.kbuild.devel/12131
+3) "arch: arm64: enable support for Samsung Exynos7 SoC" patchset (v5)
+   http://www.spinics.net/lists/arm-kernel/msg364014.html
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Abhilash Kesavan (3):
+  pinctrl: exynos: Generalize the eint16_31 demux code
+  pinctrl: exynos: Consolidate irq domain callbacks
+  pinctrl: exynos: Add irq_chip instance for Exynos7 wakeup interrupts
+
+Naveen Krishna Ch (3):
+  pinctrl: exynos: Add initial driver data for Exynos7
+  arm64: dts: Add initial pinctrl support to EXYNOS7
+  arm64: exynos: Enable pinctrl support for Exynos7
+
+ .../bindings/pinctrl/samsung-pinctrl.txt           |    3 +
+ arch/arm64/Kconfig                                 |    2 +
+ arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi    |  560 ++++++++++++++++++++
+ arch/arm64/boot/dts/exynos/exynos7.dtsi            |   66 +++
+ drivers/pinctrl/samsung/pinctrl-exynos.c           |  196 +++++--
+ drivers/pinctrl/samsung/pinctrl-exynos.h           |    3 +
+ drivers/pinctrl/samsung/pinctrl-samsung.c          |    2 +
+ drivers/pinctrl/samsung/pinctrl-samsung.h          |    3 +
+ 8 files changed, 799 insertions(+), 36 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
+
+-- 
+1.7.9.5
