@@ -1,49 +1,95 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] i2c: hix5hd2: add devicetree documentation
-Date: Tue, 30 Sep 2014 12:24:59 +0200
-Message-ID: <3181910.E4XHspguRh@wuerfel>
-References: <1411878129-19743-1-git-send-email-zhangfei.gao@linaro.org> <2135291.ciFUCkAm4U@wuerfel> <542A7705.2030404@linaro.org>
+Subject: Re: [PATCH V2] bcma: use device from DT (brcm, bus-gpio) for SoC GPIO chip
+Date: Tue, 30 Sep 2014 12:28:21 +0200
+Message-ID: <9255570.ha3Ad1aI6v@wuerfel>
+References: <1411741733-13888-1-git-send-email-zajec5@gmail.com> <7035315.8m6ICWZ25d@wuerfel> <CACna6ry-mmc8QD-bYUNGLfTh07TcUepjZdPYqKyxLc3HbMPung@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <542A7705.2030404-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACna6ry-mmc8QD-bYUNGLfTh07TcUepjZdPYqKyxLc3HbMPung-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 30 September 2014 17:25:25 zhangfei wrote:
-> On 09/30/2014 05:01 PM, Arnd Bergmann wrote:
-> > On Sunday 28 September 2014 12:22:07 Zhangfei Gao wrote:
+On Tuesday 30 September 2014 11:56:20 Rafa=C5=82 Mi=C5=82ecki wrote:
+> On 30 September 2014 11:37, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Sunday 28 September 2014 10:24:01 Rafa=C5=82 Mi=C5=82ecki wrote:
+> >> @@ -17,4 +33,12 @@ Example:
+> >>               ranges =3D <0x00000000 0x18000000 0x00100000>;
+> >>               #address-cells =3D <1>;
+> >>               #size-cells =3D <1>;
 > >> +
-> >> +Required properties:
-> >> +- compatible: Must be "hisilicon,hix5hd2-i2c"
-> >> +  Specifically, the following versions of the chipset are supported:
-> >> +         Hi3716CV200 (support six I2C module)
-> >> +         Hi3719CV100 (support six I2C module)
-> >> +         Hi3718CV100 (support six I2C module)
-> >> +         Hi3719MV100 (support two I2C module)
-> >> +         Hi3718MV100 (support two I2C module)
-> >>
+> >> +             chipcommon@0 {
+> >> +                     gpio@0 {
+> >> +                             compatible =3D "brcm,bus-gpio";
+> >> +                             gpio-controller;
+> >> +                             #gpio-cells =3D <2>;
+> >> +                     };
+> >> +             };
 > >
-> > How do you detect the specific model? Is there a hardware register that
-> > lets you know the type?
-> > If you have a device specific "compatible" string, you should list all
-> > the known strings.
+> > I think you should list the 'reg' property of the chipcommon area
+> > and make that match the unit address, rather than using '0', mostly
+> > for consistency.
+>=20
+> Do you mean this chipcommon@0? We propose this foo@offset syntax sinc=
+e
+> V1 which was posted 1,5 month ago, it's nothing new.
+
+Is 'chipcommon' at the start of the 0x18000000 range? If so, that's
+great, but it would still be good to have the 'reg' property in there
+explicitly.
+
+> >> @@ -218,6 +218,11 @@ int bcma_gpio_init(struct bcma_drv_cc *cc)
+> >>  #if IS_BUILTIN(CONFIG_BCM47XX)
+> >>       chip->to_irq            =3D bcma_gpio_to_irq;
+> >>  #endif
+> >> +#if IS_BUILTIN(CONFIG_OF)
+> >> +     if (cc->core->bus->hosttype =3D=3D BCMA_HOSTTYPE_SOC)
+> >> +             chip->of_node   =3D of_find_compatible_node(NULL, NU=
+LL,
+> >> +                                                       "brcm,bus-=
+gpio");
+> >> +#endif
 > >
-> In fact, no need to distinguish these hardware, the only difference is 
-> i2c module number.
-> The same compatible is used.
+> > Just commenting on the general style here, I think you can skip thi=
+s
+> > step entirely, as mentioned above.
+> >
+> > You should use C syntax here:
+> >
+> >         if (IS_BUILTIN(CONFIG_OF) && cc->core->bus->hosttype =3D=3D=
+ BCMA_HOSTTYPE_SOC))
+> >                 chip->of_node =3D of_find_compatible_node(NULL, NUL=
+L, "brcm,bus-gpio");
+>=20
+> OK
+>=20
+>=20
+> > If CONFIG_OF is not set, of_find_compatible_node() is turned into a=
+n inline
+> > function that returns NULL, so you probably don't even need that.
+>=20
+> But I need to have of_node defined. Please check out "struct gpio_chi=
+p".
 
-Ah, so you have multiple nodes in those cases, not just one node with
-a variable number of I2C hosts. I was a bit confused by the
-description
+I see. This is something we might want to change, but you don't need to
+bother with it now, so just leave this part as it is.
 
-> These info can be removed to remove the confusion.
+> > Finally, of_find_compatible_node() is a really slow operation, and =
+"brcm,bus-gpio"
+> > is a much too generic name. If you need to look for something that =
+is a child
+> > node, use something based on for_each_available_child_of_node().
+>=20
+> Will see what I can do.
 
-Yes, I think that would be better, both because it avoids the confusion,
-and because it means you can use the driver for future machines without
-having to update the binding each time.
+ok, thanks.
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireles=
+s" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
