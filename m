@@ -1,121 +1,102 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [RFC 3/7] mfd: devicetree: bindings: Add Qualcomm SMD based RPM
- DT binding
-Date: Tue, 30 Sep 2014 07:37:41 -0700
-Message-ID: <20140930143740.GK28481@sonymobile.com>
-References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1412037291-16880-4-git-send-email-bjorn.andersson@sonymobile.com>
- <85C5C172-D309-41B4-B511-7820BAFDA017@codeaurora.org>
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] of/pci: add pci_pio_to_address dummy for !CONFIG_OF
+Date: Tue, 30 Sep 2014 15:45:06 +0100
+Message-ID: <20140930144506.GQ841@e106497-lin.cambridge.arm.com>
+References: <706416181.hbVGLDA3o6@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <706416181.hbVGLDA3o6@wuerfel>
 Content-Disposition: inline
-In-Reply-To: <85C5C172-D309-41B4-B511-7820BAFDA017@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 30 Sep 06:46 PDT 2014, Kumar Gala wrote:
+On Tue, Sep 30, 2014 at 02:19:05PM +0100, Arnd Bergmann wrote:
+> The pci_register_io_range() and pci_pio_to_address() were recently
+> introduced to generalize the handling of memory mapped PCI I/O space,
+> but they are only valid when CONFIG_OF is set, leading to a possible
+> build error:
+>=20
+> drivers/pci/host/pcie-rcar.c: In function 'rcar_pcie_setup_window':
+> drivers/pci/host/pcie-rcar.c:340:3: error: implicit declaration of fu=
+nction 'pci_pio_to_address' [-Werror=3Dimplicit-function-declaration]
+>    res_start =3D pci_pio_to_address(res->start);
+>    ^
+> drivers/pci/host/pcie-rcar.c: In function 'rcar_pcie_probe':
+> drivers/pci/host/pcie-rcar.c:945:3: error: implicit declaration of fu=
+nction 'of_pci_range_to_resource' [-Werror=3Dimplicit-function-declarat=
+ion]
+>    err =3D of_pci_range_to_resource(&range, pdev->dev.of_node,
+>    ^
+> cc1: some warnings being treated as errors
+>=20
+> This provides inline dummy implementations for the case that
+> CONFIG_OF is disabled, to allow better build testing.
+>=20
+> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Fixes: 279c5dd046 ("of/pci: Add pci_register_io_range() and pci_pio_t=
+o_address()")
+
+Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+
+Is that triggered by shmobile_defconfig?
+
+Best regards,
+Liviu
 
 >=20
-> On Sep 29, 2014, at 7:34 PM, Bjorn Andersson <Bjorn.Andersson@sonymob=
-ile.com> wrote:
+> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+> index 7ebb877b07c2..851097aab115 100644
+> --- a/include/linux/of_address.h
+> +++ b/include/linux/of_address.h
+> @@ -71,6 +71,11 @@ static inline const __be32 *of_get_address(struct =
+device_node *dev, int index,
+>  	return NULL;
+>  }
+> =20
+> +static inline phys_addr_t pci_pio_to_address(unsigned long pio)
+> +{
+> +	return 0;
+> +}
+> +
+>  static inline int of_pci_range_parser_init(struct of_pci_range_parse=
+r *parser,
+>  			struct device_node *node)
+>  {
+> @@ -144,6 +149,12 @@ static inline const __be32 *of_get_pci_address(s=
+truct device_node *dev,
+>  {
+>  	return NULL;
+>  }
+> +static inline int of_pci_range_to_resource(struct of_pci_range *rang=
+e,
+> +					   struct device_node *np,
+> +					   struct resource *res)
+> +{
+> +	return -ENOSYS;
+> +}
+>  #endif /* CONFIG_OF_ADDRESS && CONFIG_PCI */
+> =20
+>  #endif /* __OF_ADDRESS_H */
 >=20
-> > diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt=
- b/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
-> > new file mode 100644
-> > index 0000000..a846101
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
-> > @@ -0,0 +1,122 @@
-> > +Qualcomm Resource Power Manager (RPM) over SMD
-> > +
-> > +This driver is used to interface with the Resource Power Manager (=
-RPM) found in
-> > +various Qualcomm platforms. The RPM allows each component in the s=
-ystem to vote
-> > +for state of the system resources, such as clocks, regulators and =
-bus
-> > +frequencies.
-> > +
-> > +- compatible:
-> > +	Usage: required
-> > +	Value type: <string>
-> > +	Definition: must be one of:
-> > +		    "qcom,rpm-msm8974=94
 >=20
-> Why not =93qcom,rpm-smd=94.  I=92d like to get Jeff H=92s input on ho=
-w
-> what we do here for compat and distinguish the A-family RPM support v=
-s
-> B-family/RPM-SMD support.
->=20
-
-I don't see anything indicating changes in the actual communication, bu=
-t as
-this also encodes what resources are exposed we have to keep this speci=
-fic.
-
-I'm not sure what you mean with distinguish the A and B family, they ar=
-e
-completely different and there are no overlap in compatibles or impleme=
-ntation.
-
-The overlap is in how children are communicating with the rpm, but this=
- is an
-implementation detail - and noted in that patch as a future improvement=
-=2E
-
-
-I forgot to add Jeff, but did send him a separate email asking for his =
-input on
-all this.
-
-> > +
-> > +- qcom,smd-channels:
-> > +	Usage: required
-> > +	Value type: <stringlist>
-> > +	Definition: Shared Memory Channel used for communication with the=
- RPM
-> > +
->=20
-> This needs more details.
 >=20
 
-Not sure what more to add here. It should contain the name of the chann=
-el used
-for communication with the rpm. For all current platforms this would be
-"rpm_requests".
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
 
-> > +- #address-cells:
-> > +	Usage: required
-> > +	Value type: <u32>
-> > +	Definition: must be 1
-> > +
-> > +- #size-cells:
-> > +	Usage: required
-> > +	Value type: <u32>
-> > +	Definition: must be 0
-> > +
-> > +=3D SUBDEVICES
->=20
-> As I mentioned for the the RPM binding on a-family, we should split o=
-ut the
-> devices into their own binding specs.
->=20
-
-Please actually read https://lkml.org/lkml/2014/3/10/567, it's now the =
-third
-time I send you that link. If you don't like it then ask Rob to revise =
-his
-statement.
-
-=46or me it makes sense to consolidate the RPM binding in one document =
-rather
-than spreading it out in 10 different documents with some implicit
-dependencies.
-
-Regards,
-Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
