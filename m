@@ -1,75 +1,44 @@
-From: Sunil Kovvuri <sunil.kovvuri@gmail.com>
-Subject: Re: [PATCH 1/6] pci, thunder: Add support for Thunder PCIe host controller
-Date: Tue, 30 Sep 2014 14:44:04 +0530
-Message-ID: <CA+sq2CdUW2qr1wD2aF4QU+R0-V_A5+aMHPT+Opo0hA4D5a_QtA@mail.gmail.com>
-References: <1411573068-12952-1-git-send-email-rric@kernel.org>
-	<1411573068-12952-2-git-send-email-rric@kernel.org>
-	<27476217.5ToIFGoMDz@wuerfel>
-	<20140924164946.GI16244@arm.com>
+From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] ARM: dts: hix5hd2: add i2c node
+Date: Tue, 30 Sep 2014 17:21:55 +0800
+Message-ID: <542A7633.4060507@linaro.org>
+References: <1411878129-19743-1-git-send-email-zhangfei.gao@linaro.org> <1411878129-19743-4-git-send-email-zhangfei.gao@linaro.org> <2637538.ufF2KQPbi9@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140924164946.GI16244@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Robert Richter <rric@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Sunil Goutham <sgoutham@cavium.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2637538.ufF2KQPbi9@wuerfel>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Will/Arnd
 
-Thanks for the comments.
-There is another patch submitted for adding MSI controller to Generic driver.
-https://lkml.org/lkml/2014/9/28/150
 
-Will go through these and comeback.
-
-On Wed, Sep 24, 2014 at 10:19 PM, Will Deacon <will.deacon@arm.com> wrote:
-> On Wed, Sep 24, 2014 at 05:12:26PM +0100, Arnd Bergmann wrote:
->> On Wednesday 24 September 2014 17:37:43 Robert Richter wrote:
->> > From: Sunil Goutham <sgoutham@cavium.com>
->> >
->> > This patch adds support for PCI host controller of Cavium Thunder
->> > SoCs.
+On 09/30/2014 05:02 PM, Arnd Bergmann wrote:
+> On Sunday 28 September 2014 12:22:09 Zhangfei Gao wrote:
+>> +
+>> +               i2c0: i2c@b10000 {
+>> +                       compatible = "hisilicon,hix5hd2-i2c";
+>> +                       reg = <0xb10000 0x1000>;
+>> +                       interrupts = <0 38 4>;
+>> +                       clocks = <&clock HIX5HD2_I2C0_RST>;
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +                       status = "disabled";
+>> +               };
 >>
->> I had expected this hardware to be SBSA compliant. Why do you need
->> a hardware specific driver, is this a workaround for buggy hardware
->> or just noncompliant?
 >
-> Patches welcome to pci-host-generic.c :) Lorenzo already has code to port
-> it to Liviu's new API, so do shout if it's not suitable for your needs.
+> HIX5HD2_I2C0_RST is not defined anywhere, so this will result in the
+> same build error that has required reverting a lot of patches for the
+> 3.18 merge window.
 >
->> > +static int thunder_pcie_msi_enable(struct thunder_pcie *pcie,
->> > +                                   struct pci_bus *bus)
->> > +{
->> > +   struct device_node *msi_node;
->> > +
->> > +   msi_node = of_parse_phandle(pcie->node, "msi-parent", 0);
->> > +   if (!msi_node)
->> > +           return -ENODEV;
->> > +
->> > +   pcie->msi = of_pci_find_msi_chip_by_node(msi_node);
->> > +   if (!pcie->msi)
->> > +           return -ENODEV;
->> > +
->> > +   pcie->msi->dev = pcie->dev;
->> > +   bus->msi = pcie->msi;
->> > +
->> > +   return 0;
->> > +}
->>
->> This is probably something we should add to the generic host driver as well,
->> so it can work with SBSA compliant implementations that come with an MSI
->> controller. Maybe move it into common code so it can be shared with that
->> driver.
+> How do you plan to deal with the dependency in the future?
 >
-> Agreed. I've been carrying something similar [1] (based on a hacked-up version
-> of bios32, so not bothered to post it) whilst I've been waiting for the
-> arm64 core PCI code to get merged.
->
-> Will
->
-> [1] https://git.kernel.org/cgit/linux/kernel/git/will/linux.git/commit/drivers/pci/host/pci-host-generic.c?h=iommu/pci&id=b719acf062ceccfbd79ee7b1ae0b7904ea4da27e
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+HIX5HD2_I2C0_RST in clock patch and already been merged through clock 
+tree in 09/29, should be in 3.18-rc1 (not sure).
+When clock patch are combined in the same rc, will send the dts patch.
+Sorry for the build issue.
+
+Thanks
