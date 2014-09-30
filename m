@@ -1,88 +1,98 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH v3 2/2] usb: renesas_usbhs: Add device tree support for
- R-Car H2 and M2
-Date: Tue, 30 Sep 2014 18:51:37 +0900
-Message-ID: <542A7D29.3010805@renesas.com>
-References: <5406A664.2050501@renesas.com> <54298A38.5030703@cogentembedded.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2] bcma: use device from DT (brcm, bus-gpio) for SoC GPIO chip
+Date: Tue, 30 Sep 2014 11:56:20 +0200
+Message-ID: <CACna6ry-mmc8QD-bYUNGLfTh07TcUepjZdPYqKyxLc3HbMPung@mail.gmail.com>
+References: <1411741733-13888-1-git-send-email-zajec5@gmail.com>
+	<1411892641-5662-1-git-send-email-zajec5@gmail.com>
+	<7035315.8m6ICWZ25d@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <54298A38.5030703@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, kuninori morimoto <kuninori.morimoto.gx@renesas.com>, Ulrich Hecht <ulrich.hecht@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7035315.8m6ICWZ25d@wuerfel>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-(2014/09/30 1:35), Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 09/03/2014 09:25 AM, Yoshihiro Shimoda wrote:
-> 
->> This driver supports other SoCs, but they need boards/Soc depend code.
->> So, this patch adds device tree support for R-Car H2 and M2 initially.
-> 
->> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
->> ---
->>   drivers/usb/renesas_usbhs/common.c |   44 ++++++++++++++++++++++++++++++++++++
->>   1 file changed, 44 insertions(+)
-> 
->> diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
->> index 1b9bf8d..b3b6813 100644
->> --- a/drivers/usb/renesas_usbhs/common.c
->> +++ b/drivers/usb/renesas_usbhs/common.c
->> @@ -18,6 +18,8 @@
->>   #include <linux/gpio.h>
->>   #include <linux/io.h>
->>   #include <linux/module.h>
->> +#include <linux/of_device.h>
->> +#include <linux/of_gpio.h>
->>   #include <linux/pm_runtime.h>
->>   #include <linux/slab.h>
->>   #include <linux/sysfs.h>
->> @@ -438,6 +440,43 @@ static int usbhsc_drvcllbck_notify_hotplug(struct platform_device *pdev)
-> [...]
->> +static struct renesas_usbhs_platform_info *usbhs_parse_dt(struct device *dev)
->> +{
->> +	struct renesas_usbhs_platform_info *info;
->> +	struct renesas_usbhs_driver_param *dparam;
->> +	const struct of_device_id *of_id = of_match_device(usbhs_of_match, dev);
->> +	u32 tmp;
->> +	int gpio;
+On 30 September 2014 11:37, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Sunday 28 September 2014 10:24:01 Rafa=C5=82 Mi=C5=82ecki wrote:
+>> @@ -17,4 +33,12 @@ Example:
+>>               ranges =3D <0x00000000 0x18000000 0x00100000>;
+>>               #address-cells =3D <1>;
+>>               #size-cells =3D <1>;
 >> +
->> +	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
->> +	if (!info)
->> +		return NULL;
->> +
->> +	dparam = &info->driver_param;
->> +	dparam->type = of_id ? (u32)of_id->data : 0;
->> +	if (!of_property_read_u32(dev->of_node, "renesas,buswait", &tmp))
->> +		dparam->buswait_bwait = tmp;
->> +	gpio = of_get_named_gpio_flags(dev->of_node, "renesas,enable-gpio", 0,
->> +				       NULL);
->> +	if (gpio > 0)
->> +		dparam->enable_gpio = gpio;
->> +
->> +	return info;
-> 
->     I don't see where you parse the optional "phy" property. It should exist 
-> for the Lager and Koelsch boards you target.
+>> +             chipcommon@0 {
+>> +                     gpio@0 {
+>> +                             compatible =3D "brcm,bus-gpio";
+>> +                             gpio-controller;
+>> +                             #gpio-cells =3D <2>;
+>> +                     };
+>> +             };
+>
+> I think you should list the 'reg' property of the chipcommon area
+> and make that match the unit address, rather than using '0', mostly
+> for consistency.
 
-Since I wrote 'phy-names: must be "usb"' in the document,
-I intend to use a fixed property for "phy" driver like the following:
+Do you mean this chipcommon@0? We propose this foo@offset syntax since
+V1 which was posted 1,5 month ago, it's nothing new.
 
-	phy = phy_get(&pdev->dev, "usb");
 
-Is this a bad code?
+> Can you have multiple gpio areas in chipcommon? If not, I'd probably
+> leave out the extra node and mark the chipcommon device itself as
+> a 'gpio-controller'. It can also be other things at the same time,
+> e.g. 'interrupt-controller' or provide things like pwms or pinctrl
+> if that's what the hardware does. No need to have separate nodes
+> for those if it's all the same register set.
 
-About using the phy driver in renesas_usbhs driver, I intend to modify
-the drivers/usb/renesas_usbhs/rcar.c.
+OK
 
-Best regards,
-Yoshihiro Shimoda
 
-> WBR, Sergei
-> 
+>> @@ -218,6 +218,11 @@ int bcma_gpio_init(struct bcma_drv_cc *cc)
+>>  #if IS_BUILTIN(CONFIG_BCM47XX)
+>>       chip->to_irq            =3D bcma_gpio_to_irq;
+>>  #endif
+>> +#if IS_BUILTIN(CONFIG_OF)
+>> +     if (cc->core->bus->hosttype =3D=3D BCMA_HOSTTYPE_SOC)
+>> +             chip->of_node   =3D of_find_compatible_node(NULL, NULL=
+,
+>> +                                                       "brcm,bus-gp=
+io");
+>> +#endif
+>
+> Just commenting on the general style here, I think you can skip this
+> step entirely, as mentioned above.
+>
+> You should use C syntax here:
+>
+>         if (IS_BUILTIN(CONFIG_OF) && cc->core->bus->hosttype =3D=3D B=
+CMA_HOSTTYPE_SOC))
+>                 chip->of_node =3D of_find_compatible_node(NULL, NULL,=
+ "brcm,bus-gpio");
+
+OK
+
+
+> If CONFIG_OF is not set, of_find_compatible_node() is turned into an =
+inline
+> function that returns NULL, so you probably don't even need that.
+
+But I need to have of_node defined. Please check out "struct gpio_chip"=
+=2E
+
+
+> Finally, of_find_compatible_node() is a really slow operation, and "b=
+rcm,bus-gpio"
+> is a much too generic name. If you need to look for something that is=
+ a child
+> node, use something based on for_each_available_child_of_node().
+
+Will see what I can do.
+
+--=20
+Rafa=C5=82
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireles=
+s" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
