@@ -1,200 +1,94 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v9 0/4] APM X-Gene PCIe host controller
-Date: Tue, 30 Sep 2014 18:01:01 +0100
-Message-ID: <20140930170101.GW841@e106497-lin.cambridge.arm.com>
-References: <1410906824-9321-1-git-send-email-tinamdar@apm.com>
- <CACVXFVNEFSMjA=h_pyNF1AyYX4C336iM9nkYY=ocGQxjGpDCJA@mail.gmail.com>
- <CACoXjc=eA0nnK2_dRxktFeSKsfV6fQr=mDfN09sbe34H4GADrA@mail.gmail.com>
- <CACVXFVMWTeOnVMp2SCzjhPEc1M=zTLg4O8yFhv_jDPYn_6DfeQ@mail.gmail.com>
- <20140930165353.GC5625@google.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH v4 3/4] pinctrl: Qualcomm SPMI PMIC GPIO pin controller
+ driver
+Date: Tue, 30 Sep 2014 10:02:04 -0700
+Message-ID: <20140930170203.GR28481@sonymobile.com>
+References: <1410792254-24126-1-git-send-email-iivanov@mm-sol.com>
+ <1410792254-24126-4-git-send-email-iivanov@mm-sol.com>
+ <20140924041852.GO10179@sonymobile.com>
+ <1411564172.18580.69.camel@iivanov-dev>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140930165353.GC5625@google.com>
 Content-Disposition: inline
+In-Reply-To: <1411564172.18580.69.camel@iivanov-dev>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Ming Lei <tom.leiming@gmail.com>, Tanmay Inamdar <tinamdar@apm.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Rob Landley <rob@landley.net>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, "jcm@redhat.com" <jcm@redhat.com>
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, David Collins <collinsd@codeaurora.org>, Wu Fenglin <fenglinw@qti.qualcomm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 30, 2014 at 05:53:53PM +0100, Bjorn Helgaas wrote:
-> On Mon, Sep 22, 2014 at 09:23:51AM +0800, Ming Lei wrote:
-> > Hi Tanmay,
-> >=20
-> > On Sat, Sep 20, 2014 at 1:15 AM, Tanmay Inamdar <tinamdar@apm.com> =
-wrote:
-> > > Hi Ming Lei,
-> > >
-> > > On Thu, Sep 18, 2014 at 8:08 PM, Ming Lei <tom.leiming@gmail.com>=
- wrote:
-> > >> Hi Tanmay,
-> > >>
-> > >> On Wed, Sep 17, 2014 at 6:33 AM, Tanmay Inamdar <tinamdar@apm.co=
-m> wrote:
-> > >>> This patch adds support for AppliedMicro X-Gene PCIe host contr=
-oller. The
-> > >>> driver is tested on X-Gene platform with different gen1/2/3 PCI=
-e endpoint
-> > >>> cards.
-> > >>>
-> > >>> X-Gene PCIe controller driver has depedency on the pcie arm64 a=
-rch support.
-> > >>> Liviu Dudau from ARM has sent a patch set for pcie arm64 arch s=
-upport and
-> > >>> support for creating generic pcie bridge from device tree. Livi=
-u's patches
-> > >>> are available here
-> > >>> https://lkml.org/lkml/2014/9/8/333
-> > >>>
-> > >>> If someone wishes to test PCIe on X-Gene with this patch set, a=
-bove mentioned
-> > >>> patches from Liviu must be applied before the patches in this p=
-atch set. Also
-> > >>> please use latest xgene u-boot firmware.
-> > >>>
-> > >>> changes since V8:
-> > >>> 1. Add 'dma-coherent' attribute in device node.
-> > >>
-> > >>
-> > >> I just tested your V9 patches plus Liviu's V10 PCI/ARM64 patches
-> > >> against 3.17-rc5 on Mustang, and the following failure is trigge=
-red:
-> > >>
-> > >> [    1.190131] bnx2x: Broadcom NetXtreme II 5771x/578xx 10/20-Gi=
-gabit
-> > >> Ethernet Driver bnx2x 1.78.19-0 (2014/02/10)
-> > >> [    1.200249] tg3.c:v3.137 (May 11, 2014)
-> > >> [    1.204087] ------------[ cut here ]------------
-> > >> [    1.208682] WARNING: CPU: 1 PID: 1 at drivers/pci/pci.c:131
-> > >> pci_ioremap_bar+0x70/0x78()
-> > >> [    1.216646] Modules linked in:
-> > >> [    1.219696] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 3.17.0-=
-rc5+ #1
-> > >> [    1.226018] Call trace:
-> > >> [    1.228453] [<ffffffc0000884f0>] dump_backtrace+0x0/0x16c
-> > >> [    1.233826] [<ffffffc00008866c>] show_stack+0x10/0x1c
-> > >> [    1.238851] [<ffffffc0006e3210>] dump_stack+0x74/0x94
-> > >> [    1.243878] [<ffffffc0000a934c>] warn_slowpath_common+0x88/0x=
-b0
-> > >> [    1.249767] [<ffffffc0000a9438>] warn_slowpath_null+0x14/0x20
-> > >> [    1.255485] [<ffffffc0003994c4>] pci_ioremap_bar+0x6c/0x78
-> > >> [    1.260942] [<ffffffc0005598cc>] tg3_init_one+0x148/0x16f4
-> > >> [    1.266401] [<ffffffc00039ccf0>] pci_device_probe+0x78/0xd4
-> > >> [    1.271946] [<ffffffc00042785c>] driver_probe_device+0x94/0x3=
-90
-> > >> [    1.277834] [<ffffffc000427c44>] __driver_attach+0x98/0xa0
-> > >> [    1.283293] [<ffffffc000425a54>] bus_for_each_dev+0x54/0x98
-> > >> [    1.288835] [<ffffffc00042730c>] driver_attach+0x1c/0x28
-> > >> [    1.294121] [<ffffffc000426f04>] bus_add_driver+0x164/0x240
-> > >> [    1.299663] [<ffffffc000428430>] driver_register+0x64/0x130
-> > >> [    1.305207] [<ffffffc00039c97c>] __pci_register_driver+0x3c/0=
-x48
-> > >> [    1.311181] [<ffffffc000aa8a5c>] tg3_driver_init+0x1c/0x28
-> > >> [    1.316640] [<ffffffc0000814e0>] do_one_initcall+0xc4/0x1b4
-> > >> [    1.322186] [<ffffffc000a74b64>] kernel_init_freeable+0x1b8/0=
-x25c
-> > >> [    1.328246] [<ffffffc0006de318>] kernel_init+0xc/0xd4
-> > >> [    1.333278] ---[ end trace f4dca5ab5b436080 ]---
-> > >> [    1.337871] tg3 0000:01:00.0: Cannot map device registers, ab=
-orting
-> > >> [    1.344122] tg3: probe of 0000:01:00.0 failed with error -12
-> > >>
-> > >>
-> > >
-> > > Thanks for trying out the patches. Which firmware version are you
-> > > using? We may have release new firmware version for PCI to work i=
-f not
-> > > released yet.
-> >=20
-> > U-Boot 2013.04-mustang_sw_1.13.28-beta (Aug 25 2014 - 14:16:10)
-> >=20
-> > I will check if there is newer fw available.
-> >=20
-> > > Also can you please send out the entire boot log?
-> >=20
-> > Please see below link:
-> >=20
-> >       http://pastebin.com/fLqaDn6t
->=20
-> From Ming's log, using the v9 patches:
->=20
->   PCI host bridge /soc/pcie@1f2b0000 ranges:
->     No bus range found for /soc/pcie@1f2b0000, using [??? 0xffffffc3e=
-b4292c0-0xffffffc0005e3b8c flags 0x40]
->=20
-> What's going on here?  It looks like it's from
-> of_pci_get_host_bridge_resources(), but I don't see how this output c=
-ould
-> happen.
+On Wed 24 Sep 06:09 PDT 2014, Ivan T. Ivanov wrote:
 
-Sorry, v9 to v11 had a bug in the print message where the range was pas=
-sed as a reference. I have since
-fixed it in v12. I've noticed this log when preparing for v12 but someh=
-ow missed it in the change log?
+> On Tue, 2014-09-23 at 21:18 -0700, Bjorn Andersson wrote:
+> > On Mon 15 Sep 07:44 PDT 2014, Ivan T. Ivanov wrote:
+> > 
+> 
+> <snip>
+> 
+> > > +static int pmic_gpio_of_xlate(struct gpio_chip *chip,
+> > > +                             const struct of_phandle_args *gpio_desc,
+> > > +                             u32 *flags)
+> > > +{
+> > > +       if (chip->of_gpio_n_cells < 2)
+> > > +               return -EINVAL;
+> > > +
+> > > +       if (flags)
+> > > +               *flags = gpio_desc->args[1];
+> > > +
+> > > +       return gpio_desc->args[0] - PMIC_GPIO_PHYSICAL_OFFSET;
+> > > +}
+> > 
+> > If you change:
+> >  gpiochip_add_pin_range(&state->chip, dev_name(dev), 0, 0, npins);
+> > to:
+> >  gpiochip_add_pin_range(&state->chip, dev_name(dev), 1, 0, npins);
+> > 
+> > And you treat the gpio functions as taking the gpio number instead of pinctrl
+> > number (i.e. subtract 1 in those), then gpiolib will provide this function for
+> > you.
+> > 
+> 
+> I am unable to make this work. of_gpio_simple_xlate() didn't know that
+> GPIO range is offset with 1. Requesting last GPIO return error. And
+> debug output looks weird, for example:
+> 
+> # cat /sys/kernel/debug/gpio
+> ...
+> GPIOs 220-255, platform/0.c000.gpios, 0.c000.gpios:
+> ...
+> 
+> # cat /sys/kernel/debug/pinctrl/0.c000.gpios/gpio-ranges 
+> GPIO ranges handled:
+> 1: 0.c000.gpios GPIOS [221 - 256] PINS [0 - 35]
+> 
+> Advice, please.
+> 
 
-Best regards,
-Liviu
+Looking at of_gpio_simple_xlate() shows that you're right. It doesn't seem to
+be possible to have a gpiochip that is not 0-based. Then I guess you have to
+have your own "off-by-one-xlate".
 
->=20
->      IO 0xe010000000..0xe01000ffff -> 0x00000000
->     MEM 0xe180000000..0xe1ffffffff -> 0x80000000
->   xgene-pcie 1f2b0000.pcie: (rc) x1 gen-1 link up
->   xgene-pcie 1f2b0000.pcie: PCI host bridge to bus 0000:00
->   pci_bus 0000:00: root bus resource [bus 00-ff]
->   pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
->   pci_bus 0000:00: root bus resource [mem 0xe180000000-0xe1ffffffff] =
-(bus address [0x80000000-0xffffffff])
->   pci_bus 0000:00: scanning bus
->   pci 0000:00:00.0: [19aa:e008] type 01 class 0x060400
->   pci 0000:00:00.0: reg 0x10: [mem 0x8000000000-0x807fffffff 64bit pr=
-ef]
->=20
-> I guess this is the "inbound BAR" that you hid in the v10 patches.  H=
-iding
-> it will prevent some of BAR assignment problems below.  This is proba=
-bly
-> what caused the tg3 mapping problem Ming initially reported above.  W=
-e
-> tried to reassign the inbound BAR, and it took up the entire space th=
-at we
-> thought was available for CPU accesses to the PCI bus, leaving none f=
-or the
-> tg3 device.
->=20
-> Was Ming just unlucky by having an unusual configuration, e.g., with =
-a lot
-> of memory or something?  He certainly doesn't have a complicated PCIe
-> hierarchy.  I assume you've tested this and had it work *somewhere*.
->=20
->   pci 0000:00:00.0: supports D1 D2
->   pci_bus 0000:00: fixups for bus
->   pci 0000:00:00.0: scanning [bus 01-01] behind bridge, pass 0
->   pci_bus 0000:01: scanning bus
->   pci 0000:01:00.0: [14e4:165a] type 00 class 0x020000
->   pci 0000:01:00.0: reg 0x10: [mem 0x00100000-0x0010ffff 64bit]
->   pci 0000:01:00.0: PME# supported from D3hot
->   pci 0000:01:00.0: PME# disabled
->   pci_bus 0000:01: fixups for bus
->   pci_bus 0000:01: bus scan returning with max=3D01
->   pci 0000:00:00.0: scanning [bus 01-01] behind bridge, pass 1
->   pci_bus 0000:00: bus scan returning with max=3D01
->   pci 0000:00:00.0: BAR 0: assigned [mem 0xe180000000-0xe1ffffffff 64=
-bit pref]
->   pci 0000:00:00.0: BAR 8: no space for [mem size 0x00100000]
->   pci 0000:00:00.0: BAR 8: failed to assign [mem size 0x00100000]
->   pci 0000:01:00.0: BAR 0: no space for [mem size 0x00010000 64bit]
->   pci 0000:01:00.0: BAR 0: failed to assign [mem size 0x00010000 64bi=
-t]
->   pci 0000:00:00.0: PCI bridge to [bus 01]
->=20
+@Linus, any comments on this? All documentation states that we have
+gpio1-gpioXX in these chips, so we have to expose it as such or things will be
+messy.
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+> > [..]
+> > > +
+> > > +static const struct of_device_id pmic_gpio_of_match[] = {
+> > > +       { .compatible = "qcom,spmi-pmic-gpio" },
+> > 
+> > I think this should be more specific, because hopefully the spmi specification
+> > will outlive the current pmic gpio block.
+> > 
+> > So I think you need to list the pmic blocks here (e.g. "qcom,pm8941-gpio").
+> 
+> I can rename this to lovely "qcom,qpnp-gpio" :-), in this way driver
+> can outlive bus on which device is connected this time.
+> 
+
+If the mythical qpnp spec actually include a specification for how a gpio block
+looks like then sure. Otherwise you would have to list all the pmics that
+contain this block.
+
+Regards,
+Bjorn
