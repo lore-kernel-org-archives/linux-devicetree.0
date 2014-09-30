@@ -1,316 +1,92 @@
 From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4] hwspinlock: qcom: Add support for Qualcomm HW Mutex
- block
-Date: Tue, 30 Sep 2014 16:48:19 -0500
-Message-ID: <542B2523.7050001@ti.com>
-References: <1412051728-3289-1-git-send-email-bjorn.andersson@sonymobile.com>
+Subject: Re: [RFC 1/7] soc: qcom: Add device tree binding for SMEM
+Date: Tue, 30 Sep 2014 16:55:48 -0500
+Message-ID: <542B26E4.2000708@ti.com>
+References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com> <1412037291-16880-2-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412051728-3289-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+In-Reply-To: <1412037291-16880-2-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Eric Holmberg <eholmber-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Bjorn,
 
-On 09/29/2014 11:35 PM, Bjorn Andersson wrote:
-> From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+On 09/29/2014 07:34 PM, Bjorn Andersson wrote:
+> Add device tree binding documentation for the Qualcom Shared Memory
+> manager.
 > 
-> Add driver for Qualcomm Hardware Mutex block that exists on newer
-> Qualcomm SoCs.
-> 
-> Cc: Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Eric Holmberg <eholmber-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> Signed-off-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> [bjorn: added pm_runtime calls, from Courtney,
-> 	added sfpb-mutex compatible,
-> 	updated DT binding documentation formatting,
-> 	replaced msm prefix with qcom,
-> 	cleaned up includes]
 > Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 > ---
 > 
-> We need this driver to add support for the shared memory manager, so I'm
-> reviving Kumars patch from a year ago, with some additional sprinkles on top.
+> Exposed by this node is a set of items of different sizes. For many things a
+> standard of_xlate method of referencing the individual nodes would be
+> preferable, so a #something-cells would make sense. We do however also needs
+> access to these items without explicitly stating the references in devicetree
+> (e.g. SMD references 257 of these). I haven't found any good example of how to
+> implement this, so suggestions are welcome.
 > 
-> Changes since v3:
->  - Reverted back to getting stride from of_match, per Kumars request
+> Note that the hwspinlock reference is not yet supported in the mainline, but
+> this will likely need a few iterations so I wanted to get this out.
 > 
-> Changes since v2:
->  - MODULE_DEVICE_TABLE
->  - Changed prefix to qcom
->  - Cleaned up includes
->  - Rely on reg and num-locks to figure out stride, instead of of_match data
+>  .../devicetree/bindings/soc/qcom/qcom,smem.txt     |   34 ++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smem.txt
 > 
-> Changes since v1:
->  - Added the pm_runtime calls needed to be able to boot a kernel with
->    pm_runtime and this driver, patch from Courtney.
->  - Added sfpb-mutex compatible, for re-use of the driver in family A platforms.
->  - Updated formatting of DT binding documentation, while adding the extra
->    compatible.
->  - Dropped Stephen Boyds Reviewed-by due to these changes.
->  .../devicetree/bindings/hwlock/qcom-hwspinlock.txt |   35 +++++
->  drivers/hwspinlock/Kconfig                         |   11 ++
->  drivers/hwspinlock/Makefile                        |    1 +
->  drivers/hwspinlock/qcom_hwspinlock.c               |  151 ++++++++++++++++++++
->  4 files changed, 198 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
->  create mode 100644 drivers/hwspinlock/qcom_hwspinlock.c
-> 
-> diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smem.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smem.txt
 > new file mode 100644
-> index 0000000..27c7c80
+> index 0000000..ddd58c7
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
-> @@ -0,0 +1,35 @@
-> +Qualcomm Hardware Mutex Block:
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smem.txt
+> @@ -0,0 +1,34 @@
+> +Qualcomm Shared Memory binding
 > +
-> +The hardware block provides mutexes utilized between different processors
-> +on the SoC as part of the communication protocol used by these processors.
+> +This binding describes the Qualcomm Shared Memory, used to share data between
+> +various subsystems and OSes in Qualcomm platforms.
 > +
 > +- compatible:
 > +	Usage: required
-> +	Value type: <string>
-> +	Definition: must be one of:
-> +		    "qcom,sfpb-mutex",
-> +		    "qcom,tcsr-mutex"
+> +	Value type: <stringlist>
+> +	Definition: must be:
+> +		    "qcom,smem"
 > +
 > +- reg:
 > +	Usage: required
 > +	Value type: <prop-encoded-array>
-> +	Definition: base address and size of the mutex registers
+> +	Definition: base address and size pair for each area representing the
+> +		    shared memory. The first pair will must represent the "main"
+> +		    area, where the shared memory header and table-of-content
+> +		    can be found.
 > +
-> +- reg-names:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: must be "mutex-base"
-> +
-> +- qcom,num-locks:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: the number of locks/mutex available in this block
+> +- hwspinlocks:
 
-Please use the common hwlock-num-locks property defined in the common
-bindings, instead of a qcom specific property name.
-
-> +
-> +Example:
-> +
-> +	hwlock@fd484000 {
-> +		compatible = "qcom,tcsr-mutex";
-> +		reg = <0xfd484000 0x1000>;
-> +		reg-names = "mutex-base";
-> +		qcom,num-locks = <32>;
-
-You also need to add the #hwlock-cells = <1>, without which you won't be
-able to parse a client user's lock id.
-
-> +	};
-> diff --git a/drivers/hwspinlock/Kconfig b/drivers/hwspinlock/Kconfig
-> index 3612cb5..af4c7e6 100644
-> --- a/drivers/hwspinlock/Kconfig
-> +++ b/drivers/hwspinlock/Kconfig
-> @@ -8,6 +8,17 @@ config HWSPINLOCK
->  
->  menu "Hardware Spinlock drivers"
->  
-> +config HWSPINLOCK_QCOM
-> +	tristate "Qualcomm Hardware Spinlock device"
-> +	depends on ARCH_QCOM
-> +	select HWSPINLOCK
-> +	help
-> +	  Say y here to support the Qualcomm Hardware Mutex functionality, which
-> +	  provides a synchronisation mechanism for the various processors on
-> +	  the SoC.
-> +
-> +	  If unsure, say N.
-> +
->  config HWSPINLOCK_OMAP
->  	tristate "OMAP Hardware Spinlock device"
->  	depends on ARCH_OMAP4 || SOC_OMAP5 || SOC_DRA7XX || SOC_AM33XX || SOC_AM43XX
-> diff --git a/drivers/hwspinlock/Makefile b/drivers/hwspinlock/Makefile
-> index 93eb64b..f3bff48 100644
-> --- a/drivers/hwspinlock/Makefile
-> +++ b/drivers/hwspinlock/Makefile
-> @@ -3,5 +3,6 @@
->  #
->  
->  obj-$(CONFIG_HWSPINLOCK)		+= hwspinlock_core.o
-> +obj-$(CONFIG_HWSPINLOCK_QCOM)		+= qcom_hwspinlock.o
->  obj-$(CONFIG_HWSPINLOCK_OMAP)		+= omap_hwspinlock.o
->  obj-$(CONFIG_HSEM_U8500)		+= u8500_hsem.o
-> diff --git a/drivers/hwspinlock/qcom_hwspinlock.c b/drivers/hwspinlock/qcom_hwspinlock.c
-> new file mode 100644
-> index 0000000..d1b3328
-> --- /dev/null
-> +++ b/drivers/hwspinlock/qcom_hwspinlock.c
-> @@ -0,0 +1,151 @@
-> +/*
-> + * Copyright (c) 2013, The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2014, Sony Mobile Communications AB
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/hwspinlock.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +
-> +#include "hwspinlock_internal.h"
-> +
-> +#define SPINLOCK_ID_APPS_PROC	1
-> +#define BASE_ID			0
-> +
-> +static int qcom_hwspinlock_trylock(struct hwspinlock *lock)
-> +{
-> +	void __iomem *lock_addr = lock->priv;
-> +
-> +	writel_relaxed(SPINLOCK_ID_APPS_PROC, lock_addr);
-> +
-> +	return readl_relaxed(lock_addr) == SPINLOCK_ID_APPS_PROC;
-> +}
-> +
-> +static void qcom_hwspinlock_unlock(struct hwspinlock *lock)
-> +{
-> +	void __iomem *lock_addr = lock->priv;
-> +	u32 lock_owner;
-> +
-> +	lock_owner = readl_relaxed(lock_addr);
-> +	if (lock_owner != SPINLOCK_ID_APPS_PROC) {
-> +		pr_err("%s: spinlock not owned by us (actual owner is %d)\n",
-> +				__func__, lock_owner);
-> +	}
-> +
-> +	writel_relaxed(0, lock_addr);
-> +}
-> +
-> +static const struct hwspinlock_ops qcom_hwspinlock_ops = {
-> +	.trylock	= qcom_hwspinlock_trylock,
-> +	.unlock		= qcom_hwspinlock_unlock,
-> +};
-> +
-> +static const struct of_device_id qcom_hwspinlock_of_match[] = {
-> +	{ .compatible = "qcom,sfpb-mutex", .data = (void *)0x4 },
-> +	{ .compatible = "qcom,tcsr-mutex" , .data = (void *)0x80 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, qcom_hwspinlock_of_match);
-> +
-> +static int qcom_hwspinlock_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *node = pdev->dev.of_node;
-> +	const struct of_device_id *match;
-> +	struct hwspinlock_device *bank;
-> +	struct hwspinlock *hwlock;
-> +	struct resource *res;
-> +	void __iomem *iobase;
-> +	unsigned stride, i;
-> +	size_t array_size;
-> +	u32 num_locks;
-> +	int ret;
-> +
-> +	match = of_match_device(qcom_hwspinlock_of_match, &pdev->dev);
-> +
-> +	ret = of_property_read_u32(node, "qcom,num-locks", &num_locks);
-> +	if (ret || num_locks == 0)
-> +		return -ENODEV;
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mutex-base");
-> +	iobase = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(iobase))
-> +		return PTR_ERR(iobase);
-> +
-> +	array_size = num_locks * sizeof(*hwlock);
-> +	bank = devm_kzalloc(&pdev->dev, sizeof(*bank) + array_size, GFP_KERNEL);
-> +	if (!bank)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, bank);
-> +
-> +	stride = (unsigned)match->data;
-> +	for (i = 0, hwlock = &bank->lock[0]; i < num_locks; i++, hwlock++)
-> +		hwlock->priv = iobase + i * stride;
-> +
-> +	pm_runtime_enable(&pdev->dev);
-> +
-> +	ret = hwspin_lock_register(bank, &pdev->dev, &qcom_hwspinlock_ops,
-> +						BASE_ID, num_locks);
-
-I had also done the registration for OMAP hwspinlock driver using a
-constant id in my v5, but had revised it based on Ohad's review comment,
-so you may have to revise here as well. Please see [1] for details.
-
-> +	if (ret)
-> +		pm_runtime_disable(&pdev->dev);
-> +
-> +	return ret;
-> +}
-> +
-> +static int qcom_hwspinlock_remove(struct platform_device *pdev)
-> +{
-> +	struct hwspinlock_device *bank = platform_get_drvdata(pdev);
-> +	int ret;
-> +
-> +	ret = hwspin_lock_unregister(bank);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "%s failed: %d\n", __func__, ret);
-> +		return ret;
-> +	}
-> +
-> +	pm_runtime_disable(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver qcom_hwspinlock_driver = {
-> +	.probe		= qcom_hwspinlock_probe,
-> +	.remove		= qcom_hwspinlock_remove,
-> +	.driver		= {
-> +		.name	= "qcom_hwspinlock",
-> +		.of_match_table = qcom_hwspinlock_of_match,
-> +	},
-> +};
-> +
-> +static int __init qcom_hwspinlock_init(void)
-> +{
-> +	return platform_driver_register(&qcom_hwspinlock_driver);
-> +}
-> +/* board init code might need to reserve hwspinlocks for predefined purposes */
-> +postcore_initcall(qcom_hwspinlock_init);
-> +
-> +static void __exit qcom_hwspinlock_exit(void)
-> +{
-> +	platform_driver_unregister(&qcom_hwspinlock_driver);
-> +}
-> +module_exit(qcom_hwspinlock_exit);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("Hardware spinlock driver for Qualcomm SoCs");
-> +MODULE_AUTHOR("Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>");
-> +MODULE_AUTHOR("Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>");
-> +MODULE_AUTHOR("Eric Holmberg <eholmber-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>");
-> 
+The property name to use should be "hwlocks" and not "hwspinlocks". This
+is what the hwspinlock driver core expects from client users.
 
 regards
 Suman
 
-[1] https://patchwork.kernel.org/patch/4096881/
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: reference to a hwspinlock used to protect allocations from
+> +		    the shared memory
+> +
+> += EXAMPLE
+> +
+> +        smem: smem@fa00000 {
+> +                compatible = "qcom,smem";
+> +                reg = <0x0fa00000 0x200000>,
+> +                      <0xfc428000 0x4000>;
+> +
+> +                hwspinlocks = <&tcsr_mutex 3>;
+
+
+> +        };
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
