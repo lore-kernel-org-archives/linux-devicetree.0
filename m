@@ -1,41 +1,88 @@
-From: Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/6] arm64: dts/Makefile: Add support for Spreadtrum's
- Shark64 SoC.
-Date: Tue, 30 Sep 2014 17:51:37 +0800
-Message-ID: <CAAfSe-sdz=DkJteLCLwLg_2-KWRY8mp1O+ZZ=j2YJtskXNT6Mw@mail.gmail.com>
-References: <1411992293-7729-1-git-send-email-zhang.lyra@gmail.com>
-	<1411992293-7729-4-git-send-email-zhang.lyra@gmail.com>
-	<20140929144752.GP16977@sirena.org.uk>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH v3 2/2] usb: renesas_usbhs: Add device tree support for
+ R-Car H2 and M2
+Date: Tue, 30 Sep 2014 18:51:37 +0900
+Message-ID: <542A7D29.3010805@renesas.com>
+References: <5406A664.2050501@renesas.com> <54298A38.5030703@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140929144752.GP16977-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Ramkumar Ramachandra <artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Orson Zhai <orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, "zhizhou.zhang" <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <54298A38.5030703@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, kuninori morimoto <kuninori.morimoto.gx@renesas.com>, Ulrich Hecht <ulrich.hecht@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Mark
+Hello.
 
-[use plain text pattern to send again]
+(2014/09/30 1:35), Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 09/03/2014 09:25 AM, Yoshihiro Shimoda wrote:
+> 
+>> This driver supports other SoCs, but they need boards/Soc depend code.
+>> So, this patch adds device tree support for R-Car H2 and M2 initially.
+> 
+>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>> ---
+>>   drivers/usb/renesas_usbhs/common.c |   44 ++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 44 insertions(+)
+> 
+>> diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
+>> index 1b9bf8d..b3b6813 100644
+>> --- a/drivers/usb/renesas_usbhs/common.c
+>> +++ b/drivers/usb/renesas_usbhs/common.c
+>> @@ -18,6 +18,8 @@
+>>   #include <linux/gpio.h>
+>>   #include <linux/io.h>
+>>   #include <linux/module.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/of_gpio.h>
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/slab.h>
+>>   #include <linux/sysfs.h>
+>> @@ -438,6 +440,43 @@ static int usbhsc_drvcllbck_notify_hotplug(struct platform_device *pdev)
+> [...]
+>> +static struct renesas_usbhs_platform_info *usbhs_parse_dt(struct device *dev)
+>> +{
+>> +	struct renesas_usbhs_platform_info *info;
+>> +	struct renesas_usbhs_driver_param *dparam;
+>> +	const struct of_device_id *of_id = of_match_device(usbhs_of_match, dev);
+>> +	u32 tmp;
+>> +	int gpio;
+>> +
+>> +	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
+>> +	if (!info)
+>> +		return NULL;
+>> +
+>> +	dparam = &info->driver_param;
+>> +	dparam->type = of_id ? (u32)of_id->data : 0;
+>> +	if (!of_property_read_u32(dev->of_node, "renesas,buswait", &tmp))
+>> +		dparam->buswait_bwait = tmp;
+>> +	gpio = of_get_named_gpio_flags(dev->of_node, "renesas,enable-gpio", 0,
+>> +				       NULL);
+>> +	if (gpio > 0)
+>> +		dparam->enable_gpio = gpio;
+>> +
+>> +	return info;
+> 
+>     I don't see where you parse the optional "phy" property. It should exist 
+> for the Lager and Koelsch boards you target.
 
-2014-09-29 22:47 GMT+08:00 Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> On Mon, Sep 29, 2014 at 08:04:50PM +0800, zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->
->>  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
->>  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
->> +dtb-$(CONFIG_ARCH_SHARK64) += sprd_shark64.dtb
->
-> It's better to keep lists in Makefiles and Kconfig sorted
-> alphanumerically, that way there's less chance of conflicts when
-> applying patches or merging different branches.
+Since I wrote 'phy-names: must be "usb"' in the document,
+I intend to use a fixed property for "phy" driver like the following:
 
-Thank you very much for your review and explain why this way is
-better. I'll address this change in V2.
+	phy = phy_get(&pdev->dev, "usb");
+
+Is this a bad code?
+
+About using the phy driver in renesas_usbhs driver, I intend to modify
+the drivers/usb/renesas_usbhs/rcar.c.
 
 Best regards,
-Chunyan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yoshihiro Shimoda
+
+> WBR, Sergei
+> 
