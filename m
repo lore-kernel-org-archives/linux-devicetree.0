@@ -1,40 +1,76 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v8 2/3] dt-bindings: video: Add for rockchip display subsytem
-Date: Tue, 30 Sep 2014 10:16:45 +0200
-Message-ID: <2305060.Sjt6sMLV0g@phil>
-References: <1412057386-19375-1-git-send-email-mark.yao@rock-chips.com> <1412057659-19483-1-git-send-email-mark.yao@rock-chips.com> <20140930081020.GE24667@phenom.ffwll.local>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: DT: apq8064: Add SATA controller support.
+Date: Tue, 30 Sep 2014 09:18:22 +0100
+Message-ID: <542A674E.8040901@linaro.org>
+References: <1411982044-7873-1-git-send-email-srinivas.kandagatla@linaro.org> <1411982134-8090-1-git-send-email-srinivas.kandagatla@linaro.org> <5429DB3D.5080701@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140930081020.GE24667@phenom.ffwll.local>
-Sender: linux-doc-owner@vger.kernel.org
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: Mark Yao <mark.yao@rock-chips.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-api@vger.kernel.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, marcheu@chromium.org, dbehr@chromium.org, olof@lixom.net, djkurtz@chromium.org, xjq@rock-chips.com, kfx@rock-chips.com, cym@rock-c
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5429DB3D.5080701-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 30. September 2014, 10:10:20 schrieb Daniel Vetter:
-> On Tue, Sep 30, 2014 at 02:14:19PM +0800, Mark Yao wrote:
-> > From: Mark yao <mark.yao@rock-chips.com>
-> > 
-> > This add a display subsystem comprise the all display interface nodes.
-> > 
-> > Signed-off-by: Mark Yao <mark.yao@rock-chips.com>
-> > Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-> > Acked-by: Daniel Vetter <daniel@ffwll.ch>
-> > Reviewed-by: Rob Clark <robdclark@gmail.com>
-> 
-> Just a quick clarification: My ack was only about the drm driver itself, I
-> try really hard to stay away from DT insanity ;-) So please drop my ack
-> from these two patches.
-> 
-> Aside: DT patches need to go through a special process and you must cc dt
-> maintainers and mailing lists. Your patch seems to lack this, which afaiui
-> is a blocker for merging the driver.
 
-Looking at the recipients I see the dt list (devicetree@vger.kernel.org) as 
-well as the dt maintainers (Rob Herring, Pawel Moll, Mark Rutland, Ian 
-Campbell and Kumar Gala) listed there. So from this side it should be fine
+On 29/09/14 23:20, Stephen Boyd wrote:
+> On 09/29/14 02:15, Srinivas Kandagatla wrote:
+>> @@ -396,6 +407,35 @@
+>>   			usb-phy		= <&usb4_phy>;
+>>   		};
+>>
+>> +		sata_phy0:sata-phy@1b400000{
+>
+> add some spaces here?
+Will fix this in next version.
+>
+>> +			compatible	= "qcom,apq8064-sata-phy";
+>> +			reg		= <0x1b400000 0x200>;
+>> +			reg-names	= "phy_mem";
+>> +			clocks		= <&gcc SATA_PHY_CFG_CLK>;
+>> +			clock-names = "cfg";
+>> +			#phy-cells = <0>;
+>
+> These two lost the pretty tabs.
+>
+Will fix this in next version.
+>> +		};
+>> +
+>> +		sata0: sata@29000000 {
+>> +			compatible	= "generic-ahci";
+>> +			reg		= <0x29000000 0x180>;
+>> +			interrupts	= <0 209 0>;
+>
+> Sorry I'm nitpicking but it annoys me. Either align it all or don't
+> align it.
+I Will fix this in next version.
 
-
-Heiko
+thanks,
+srini
+>
+>> +			clocks = <&gcc SFAB_SATA_S_H_CLK>, <&gcc SATA_H_CLK>,
+>> +				 <&gcc SATA_A_CLK>, <&gcc SATA_RXOOB_CLK>,
+>> +				 <&gcc SATA_PMALIVE_CLK>;
+>> +
+>> +			clock-names = "slave_iface", "iface",
+>> +				      "bus", "rxoob",
+>> +				      "core_pmalive";
+>> +			assigned-clocks = <&gcc SATA_RXOOB_CLK>,
+>> +						<&gcc SATA_PMALIVE_CLK>;
+>> +			assigned-clock-rates = <100000000>, <100000000>;
+>> +
+>> +			phys  = <&sata_phy0>;
+>> +			phy-names = "sata-phy";
+>> +			target-supply = <&pm8921_s4>;
+>> +		};
+>> +
+>>   		/* Temporary fixed regulator */
+>>   		vsdcc_fixed: vsdcc-regulator {
+>>   			compatible = "regulator-fixed";
+>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
