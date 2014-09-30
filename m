@@ -1,82 +1,70 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 00/13] ARM: shmobile: dts: Add chosen/stdout-path
-Date: Tue, 30 Sep 2014 09:04:16 +0200
-Message-ID: <CAMuHMdXdobOLhwNfDaZPPuzQHV+j67__bkLeprLOuEx5jts2XQ@mail.gmail.com>
-References: <1411661609-4280-1-git-send-email-geert+renesas@glider.be>
-	<20140930020755.GC10373@verge.net.au>
-	<20140930063029.GA30269@verge.net.au>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v2] thermal: Add QPNP PMIC temperature alarm driver
+Date: Tue, 30 Sep 2014 10:36:46 +0300
+Message-ID: <1412062606.5395.10.camel@iivanov-dev>
+References: <1411651825-14240-1-git-send-email-iivanov@mm-sol.com>
+	  <54254C4E.3070807@smartplayin.com> <1411998865.5395.5.camel@iivanov-dev>
+	 <542A31DF.7020402@smartplayin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140930063029.GA30269@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <542A31DF.7020402@smartplayin.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kiran Padwal <kiran.padwal@smartplayin.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, David Collins <collinsd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On Tue, 2014-09-30 at 10:00 +0530, Kiran Padwal wrote:
+> On Monday 29 September 2014 07:24 PM, Ivan T. Ivanov wrote:
+> > On Fri, 2014-09-26 at 16:51 +0530, Kiran Padwal wrote:
+> >> On Thursday 25 September 2014 07:00 PM, Ivan T. Ivanov wrote:
+> >>> Add support for the temperature alarm peripheral found inside
+> >>> Qualcomm plug-and-play (QPNP) PMIC chips.  The temperature alarm
+> >>> peripheral outputs a pulse on an interrupt line whenever the
+> >>> thermal over temperature stage value changes.  Implement an ISR
+> >>> to manage this interrupt.
+> >>>
+> >>
+> >> <snip>
+> >>
+> >>> + * This function updates the internal temp value based on the
+> >>> + * current thermal stage and threshold as well as the previous s=
+tage
+> >>> + */
+> >>> +static int qpnp_tm_update_temp_no_adc(struct qpnp_tm_chip *chip)
+> >>> +{
+> >>> +	unsigned int stage;
+> >>> +	int rc;
+> >>> +	u8 reg;
+> >>> +
+> >>> +	rc =3D qpnp_tm_read(chip, QPNP_TM_REG_STATUS, &reg);
+> >>> +	if (rc < 0)
+> >>> +		return rc;
+> >>> +
+> >>> +	stage =3D reg & STATUS_STAGE_MASK;
+> >>
+> >> During compilation, getting a waring as below,
+> >>
+> >> drivers/thermal/qpnp-temp-alarm.c: In function =E2=80=98qpnp_tm_up=
+date_temp_no_adc=E2=80=99:
+> >> drivers/thermal/qpnp-temp-alarm.c:135:8: warning: =E2=80=98reg=E2=80=
+=99 may be used uninitialized in this function [-Wmaybe-uninitialized]
+> >>   stage =3D reg & STATUS_STAGE_MASK;
+> >=20
+> > Could you share compiler version and options which you are using.
+> > I am unable to trigger this warning. Looking code I can not=20
+> > see how this could happen.
+>=20
+> I have Linaro cross tool chain with version-4.8.3 and I am simply doi=
+ng "make zImage" without any option.
 
-On Tue, Sep 30, 2014 at 8:30 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Tue, Sep 30, 2014 at 11:07:56AM +0900, Simon Horman wrote:
->> On Thu, Sep 25, 2014 at 06:13:16PM +0200, Geert Uytterhoeven wrote:
->> > This patch series adds chosen/stdout-path to the various shmobile DTS files
->> > that are used for reference or multi-platform builds.
->> >
->> > This serves two purposes:
->> >   1. It makes automatic console selection work in the absence of a "console="
->> >      parameter on the kernel command line, allowing to remove "console="
->> >      parameters from chosen/bootargs on many platforms.
->> >      Note that these "console=" parameters are still needed in some cases:
->> >        a. If console output is wanted on two consoles devices (graphical and
->> >           serial consoles), like on armadillo and kzm9g,
->> >        b. When using a non-default baud for the serial console, like on
->> >           henninger and alt,
->> >   2. It will allow the PM domain code to find the PM domain for the console
->> >      device, to make "no_console_suspend" work in the DT case.
->> >      For now, this will matter on armadillo.
->> >
->> > The first two patches are small cleanups for emev2 dtsi, on top of which the
->> > change for kzm9d is built.
->>
->> Thanks, I have queued these up for v3.19.
->
-> I spoke a little too soon.
->
-> While testing these patches I noticed that the koelsch patch
-> cases there to be no kernel output to the console (during boot)
-> when booting using legacy C.
->
-> I assume that this is due to removing
-> console=ttySC6,115200 from bootargs.
+Hm, no warnings with arm-unknown-linux-gnueabi-gcc (GCC) 4.6.3 and
+arm-linux-gnueabihf-gcc (crosstool-NG linaro-1.13.1-4.9-2014.09, but
+indeed arm-linux-gnueabihf-gcc (crosstool-NG linaro-1.13.1-4.8-2014.03.
 
-Sorry, in my mind koelsch legacy is already gone ;-)
+I will say that this is false positive :-). Please update your tool-cha=
+in.
 
-> I also assume this affects all boards that can still
-> be booted using legacy C.
-
-Only the ones where the DTS is shared between legacy and
-reference/multi-platform.
-Armadillo is not affected, as the console parameters are kept to have
-output on both graphical and serial console.
-So that leaves us with lager and koelsch only.
-
-> I have dropped this series for now.
-
-Do you want me to resend with the console= parameter kept for koelsch
-and lager?
-Or should we delay this whole series until koelsch and lager legacy
-have been dropped?
-IIUC, this is going to happen soon for koelsch, but not for lager?
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+Ivan
