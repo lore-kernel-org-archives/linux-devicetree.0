@@ -1,210 +1,89 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Tue, 30 Sep 2014 08:12:07 +0800
-Message-ID: <20140930001206.GA11657@peterchendt>
-References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
- <1411468088-5702-8-git-send-email-antoine.tenart@free-electrons.com>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: [RFC 0/7] Qualcomm SMEM, SMD, RPM and regulators
+Date: Mon, 29 Sep 2014 17:34:44 -0700
+Message-ID: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1411468088-5702-8-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 23, 2014 at 12:28:03PM +0200, Antoine Tenart wrote:
-> Add a USB2 ChipIdea driver for ci13xxx, with optional PHY, clock
-> and DMA mask, to support USB2 ChipIdea controllers that don't need
-> specific functions.
-> 
-> Tested on the Marvell Berlin SoCs USB controllers.
-> 
-> Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/usb/chipidea/Makefile       |   1 +
->  drivers/usb/chipidea/ci_hdrc_usb2.c | 138 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 139 insertions(+)
->  create mode 100644 drivers/usb/chipidea/ci_hdrc_usb2.c
-> 
-> diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
-> index 2f099c7df7b5..1fc86a2ca22d 100644
-> --- a/drivers/usb/chipidea/Makefile
-> +++ b/drivers/usb/chipidea/Makefile
-> @@ -10,6 +10,7 @@ ci_hdrc-$(CONFIG_USB_OTG_FSM)		+= otg_fsm.o
->  
->  # Glue/Bridge layers go here
->  
-> +obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_usb2.o
->  obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_msm.o
->  obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_zevio.o
->  
-> diff --git a/drivers/usb/chipidea/ci_hdrc_usb2.c b/drivers/usb/chipidea/ci_hdrc_usb2.c
-> new file mode 100644
-> index 000000000000..6eae1de587f2
-> --- /dev/null
-> +++ b/drivers/usb/chipidea/ci_hdrc_usb2.c
-> @@ -0,0 +1,138 @@
-> +/*
-> + * Copyright (C) 2014 Marvell Technology Group Ltd.
-> + *
-> + * Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2. This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/usb/chipidea.h>
-> +#include <linux/usb/hcd.h>
-> +#include <linux/usb/ulpi.h>
-> +
-> +#include "ci.h"
-> +
-> +struct ci_hdrc_usb2_priv {
-> +	struct platform_device	*ci_pdev;
-> +	struct clk		*clk;
-> +};
-> +
-> +static int ci_hdrc_usb2_dt_probe(struct device *dev,
-> +				 struct ci_hdrc_platform_data *ci_pdata)
-> +{
-> +	ci_pdata->phy = of_phy_get(dev->of_node, 0);
-> +	if (IS_ERR(ci_pdata->phy)) {
-> +		if (PTR_ERR(ci_pdata->phy) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +
-> +		/* PHY is optional */
-> +		ci_pdata->phy = NULL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct ci_hdrc_platform_data ci_default_pdata = {
-> +	.capoffset	= DEF_CAPOFFSET,
-> +	.flags		= CI_HDRC_REQUIRE_TRANSCEIVER |
-> +			  CI_HDRC_DISABLE_STREAMING,
-> +};
-> +
-> +static int ci_hdrc_usb2_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct ci_hdrc_usb2_priv *priv;
-> +	struct ci_hdrc_platform_data *ci_pdata = dev_get_platdata(&pdev->dev);
-> +	int ret;
-> +
-> +	if (!ci_pdata)
-> +		ci_pdata = &ci_default_pdata;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->clk = devm_clk_get(dev, NULL);
-> +	if (!IS_ERR(priv->clk)) {
-> +		ret = clk_prepare_enable(priv->clk);
-> +		if (ret) {
-> +			dev_err(dev, "failed to enable the clock: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (dev->of_node) {
-> +		ret = ci_hdrc_usb2_dt_probe(dev, ci_pdata);
-> +		if (ret)
-> +			goto clk_err;
-> +	} else {
-> +		ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-> +		if (ret)
-> +			goto clk_err;
-> +	}
+All Qualcomm platforms implements a shared heap among the processors in the
+SoC, used for sharing data with other parts of the system.
 
-My suggestion:
+One consumer of items from this heap is the "Shared Memory Driver", a ring
+buffer based point-to-point communication mechanism used to send either stream
+or packet based data to remote processors.
 
-- call dma_coerce_mask_and_coherent(&dev->dev, DMA_BIT_MASK(32)) for both 
-dt and non-dt
-- Do not need function ci_hdrc_usb2_dt_probe, the phy handle should be moved
-to core driver, since your generic phy driver are still not accepted, I
-can't do it by myself. Either you or I can do it after your generic phy support
-series has been accepted.
-- Others are ok.
+Starting with 8x74 this system is used to talk to the Resource Power Manager
+(RPM), a power efficient "coprocessor" with responsibility of aggregate votes
+from the various systems in the SoC related to regulators, clocks and bus
+frequencies.
 
-Peter
+The PMIC regulators and root clocks in these platforms are only accessible via
+the RPM, so to get access to these we need the full chain of smem, smd, rpm and
+a regulator driver implemented. And that is exactly what this series provides.
 
-> +
-> +	ci_pdata->name = dev_name(&pdev->dev);
-> +
-> +	priv->ci_pdev = ci_hdrc_add_device(dev, pdev->resource,
-> +					   pdev->num_resources, ci_pdata);
-> +	if (IS_ERR(priv->ci_pdev)) {
-> +		ret = PTR_ERR(priv->ci_pdev);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev,
-> +				"failed to register ci_hdrc platform device: %d\n",
-> +				ret);
-> +		goto clk_err;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	pm_runtime_no_callbacks(dev);
-> +	pm_runtime_enable(dev);
-> +
-> +	return 0;
-> +
-> +clk_err:
-> +	if (!IS_ERR(priv->clk))
-> +		clk_disable_unprepare(priv->clk);
-> +	return ret;
-> +}
-> +
-> +static int ci_hdrc_usb2_remove(struct platform_device *pdev)
-> +{
-> +	struct ci_hdrc_usb2_priv *priv = platform_get_drvdata(pdev);
-> +
-> +	pm_runtime_disable(&pdev->dev);
-> +	ci_hdrc_remove_device(priv->ci_pdev);
-> +	clk_disable_unprepare(priv->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id ci_hdrc_usb2_of_match[] = {
-> +	{ .compatible = "chipidea,usb2" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, ci_hdrc_usb2_of_match);
-> +
-> +static struct platform_driver ci_hdrc_usb2_driver = {
-> +	.probe	= ci_hdrc_usb2_probe,
-> +	.remove	= ci_hdrc_usb2_remove,
-> +	.driver	= {
-> +		.name		= "chipidea-usb2",
-> +		.owner		= THIS_MODULE,
-> +		.of_match_table	= of_match_ptr(ci_hdrc_usb2_of_match),
-> +	},
-> +};
-> +module_platform_driver(ci_hdrc_usb2_driver);
-> +
-> +MODULE_DESCRIPTION("ChipIdea HDRC USB2 binding for ci13xxx");
-> +MODULE_AUTHOR("Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 1.9.1
-> 
+
+A key outstanding question is where in the tree we should put the
+implementation, for now I dropped them in drivers/soc/qcom but that's only
+because I don't know where to put it otherwise. I have not found any equivalent
+of the SMEM driver, SMD resembles mailbox and rpmsg - but comments in that
+patch on why it's neither.
+
+RPM is a mfd and regulator is a regulator :)
+
+
+Part from the rpm regulators I've tested this by hacking up a firmware loader
+and making some adoptions to the wcn36xx WiFi driver and I can indeed
+communicate with this system as well. Missing for that part is the coupling
+with remoteproc to reset smd channels when a remote system goes down.  But that
+is indeed a separate set of patches.
+
+Bjorn Andersson (7):
+  soc: qcom: Add device tree binding for SMEM
+  soc: qcom: Add device tree binding for SMD
+  mfd: devicetree: bindings: Add Qualcomm SMD based RPM DT binding
+  soc: qcom: Add Shared Memory Manager driver
+  soc: qcom: Add Shared Memory Driver
+  mfd: qcom-smd-rpm: Driver for the Qualcomm RPM over SMD
+  regulator: qcom-smd-rpm: Regulator driver for the Qualcomm RPM
+
+ .../devicetree/bindings/mfd/qcom-rpm-smd.txt       |  122 +++
+ .../devicetree/bindings/soc/qcom/qcom,smd.txt      |   82 ++
+ .../devicetree/bindings/soc/qcom/qcom,smem.txt     |   34 +
+ drivers/mfd/Kconfig                                |   14 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/qcom-smd-rpm.c                         |  299 ++++++
+ drivers/regulator/Kconfig                          |   12 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/qcom_smd-regulator.c             |  229 +++++
+ drivers/soc/qcom/Kconfig                           |   16 +
+ drivers/soc/qcom/Makefile                          |    2 +
+ drivers/soc/qcom/qcom_smd.c                        | 1043 ++++++++++++++++++++
+ drivers/soc/qcom/qcom_smem.c                       |  328 ++++++
+ include/dt-bindings/mfd/qcom-rpm.h                 |   36 +
+ include/linux/mfd/qcom-smd-rpm.h                   |    9 +
+ include/linux/soc/qcom/qcom_smd.h                  |   47 +
+ include/linux/soc/qcom/qcom_smem.h                 |   14 +
+ 17 files changed, 2289 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smem.txt
+ create mode 100644 drivers/mfd/qcom-smd-rpm.c
+ create mode 100644 drivers/regulator/qcom_smd-regulator.c
+ create mode 100644 drivers/soc/qcom/qcom_smd.c
+ create mode 100644 drivers/soc/qcom/qcom_smem.c
+ create mode 100644 include/linux/mfd/qcom-smd-rpm.h
+ create mode 100644 include/linux/soc/qcom/qcom_smd.h
+ create mode 100644 include/linux/soc/qcom/qcom_smem.h
 
 -- 
-Best Regards,
-Peter Chen
+1.7.9.5
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
