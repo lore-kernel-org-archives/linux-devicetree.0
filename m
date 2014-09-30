@@ -1,74 +1,71 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/6] Migrate PXA27x platforms to clock framework
-Date: Tue, 30 Sep 2014 12:52:57 -0700
-Message-ID: <20140930195257.19023.57219@quantum>
-References: <1406753464-15000-1-git-send-email-robert.jarzmik@free.fr>
- <1465795.XsPpj3dZHX@wuerfel> <87d2bq43pc.fsf@free.fr>
- <201408241408.19861.arnd@arndb.de> <20140903184956.11368.47800@quantum>
- <874mw2xoau.fsf@free.fr>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] of/pci: add pci_pio_to_address dummy for !CONFIG_OF
+Date: Tue, 30 Sep 2014 13:53:06 -0600
+Message-ID: <CAErSpo61favodLTSwCYzFZq-sB60+ZH6_WvwSGHgRx6cPKtXpA@mail.gmail.com>
+References: <706416181.hbVGLDA3o6@wuerfel> <20140930160139.GA5625@google.com> <20140930171002.GB15854@bart.dudau.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <874mw2xoau.fsf-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140930171002.GB15854@bart.dudau.co.uk>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <liviu@dudau.co.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <Liviu.Dudau@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Rob Herring <robh@kernel.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Robert Jarzmik (2014-09-20 09:13:45)
-> Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
-> 
-> > Quoting Arnd Bergmann (2014-08-24 05:08:19)
-> >> On Sunday 24 August 2014, Robert Jarzmik wrote:
-> >> > > By default, I'd expect Haojian to pick up the patches and send
-> >> > > us a pull request. He sent an Ack, but also didn't make it clear
-> >> > > that we should pick them up.
-> >> > I was thinking that they would go through the clk maintainers, hence Haojian's
-> >> > ack. If they should go through arm-soc, they would need Mike's ack.
-> >
-> > Robert,
-> >
-> > I'm happy to take the patches but they will need to be rebased onto
-> > clk-next and refactored to take into account Tomeu's api split[0].
-> 
-> Hi Mike,
-> 
-> I have had a look at clk-next and Tomeu's split.
-> My current understanding is that Tomeu's patches don't apply on your clk-next,
-> as I get conflicts.
-> 
-> So either I rebase my patches on top of Tomeu's tree (as this is what will drive
-> most of the rebase work AFAIU), or I wait for Tomeu's tree to be merged into
-> your clk-next. Is there any chance Tomeu's work ends up in your clk-next tree
-> soon ?
+On Tue, Sep 30, 2014 at 11:10 AM, Liviu Dudau <liviu@dudau.co.uk> wrote:
+> On Tue, Sep 30, 2014 at 10:01:39AM -0600, Bjorn Helgaas wrote:
+>> On Tue, Sep 30, 2014 at 03:19:05PM +0200, Arnd Bergmann wrote:
+>> > The pci_register_io_range() and pci_pio_to_address() were recently
+>> > introduced to generalize the handling of memory mapped PCI I/O space,
+>> > but they are only valid when CONFIG_OF is set, leading to a possible
+>> > build error:
+>> >
+>> > drivers/pci/host/pcie-rcar.c: In function 'rcar_pcie_setup_window':
+>> > drivers/pci/host/pcie-rcar.c:340:3: error: implicit declaration of function 'pci_pio_to_address' [-Werror=implicit-function-declaration]
+>> >    res_start = pci_pio_to_address(res->start);
+>> >    ^
+>> > drivers/pci/host/pcie-rcar.c: In function 'rcar_pcie_probe':
+>> > drivers/pci/host/pcie-rcar.c:945:3: error: implicit declaration of function 'of_pci_range_to_resource' [-Werror=implicit-function-declaration]
+>> >    err = of_pci_range_to_resource(&range, pdev->dev.of_node,
+>> >    ^
+>> > cc1: some warnings being treated as errors
+>> >
+>> > This provides inline dummy implementations for the case that
+>> > CONFIG_OF is disabled, to allow better build testing.
+>> >
+>> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> > Fixes: 279c5dd046 ("of/pci: Add pci_register_io_range() and pci_pio_to_address()")
+>>
+>> I'm rebuilding the pci/host-generic branch to pick up the other v13 fixes,
+>> so I folded this fix directly into the "of/pci: Add pci_register_io_range()
+>> and pci_pio_to_address()" patch.  Thanks for finding this; the config
+>> dependencies are a bit of a mess.
+>
+> Bjorn,
+>
+> I suggest splitting this patch into 2 parts, move the one that adds pci_pio_to_address() in patch 2
+> and the other in patch 5.
 
-Hi Robert,
+Yeah, I screwed that up.  I had just applied Arnd's patch completely
+to 279c5dd046, which doesn't quite make sense.
 
-Tomeu's stuff won't go into 3.18. I should have circled back to these
-patches when that become apparent, but it got lost in the paperwork.
+I tried again like this:
 
-I can take these patches without you rebasing onto his work. Since we
-have -rc7 I think there is time and these patches shouldn't wait for
-another merge window. I've applied them to clk-next from a stable branch
-with these six patches based on -rc1.
+  - In "of/pci: Add pci_register_io_range() and pci_pio_to_address()",
+I added the dummy pci_pio_to_address(), so there's an extern and a
+definition in address.c when CONFIG_OF_ADDRESS=y, and an inline dummy
+otherwise.
 
-Hi Arnd,
+  - I dropped "of/pci: Define of_pci_range_to_resource() only when
+CONFIG_PCI=y".
 
-I do not believe you'll need the stable branch (I tested merging it with
-linux-next and there were no issues), but I've put one up anyways:
+  - In "of/pci: Move of_pci_range_to_resource() to of/address.c", I
+added the dummy of_pci_range_to_resource(), so there's an extern an a
+definition in address.c when CONFIG_OF_ADDRESS=y and CONFIG_PCI=y, and
+an inline dummy otherwise.
 
-https://git.linaro.org/people/mike.turquette/linux.git clk-pxa27x
+I'm not really set up to build test this, and my head is swimming a
+bit, so I hope this is it.  I pushed the pci/host-generic branch
+again, so you can look at it yourself.
 
-Regards,
-Mike
-
-> 
-> Cheers.
-> 
-> -- 
-> Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bjorn
