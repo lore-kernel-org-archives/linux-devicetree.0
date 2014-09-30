@@ -1,67 +1,94 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 2/2] regulator: add mxs regulator driver
-Date: Tue, 30 Sep 2014 08:40:26 +0200
-Message-ID: <542A505A.5030109@i2se.com>
-References: <1411779588-22031-1-git-send-email-stefan.wahren@i2se.com> <1411779588-22031-3-git-send-email-stefan.wahren@i2se.com> <20140928101650.GL27755@sirena.org.uk> <5428FE7B.8060700@i2se.com> <20140929171314.GW16977@sirena.org.uk>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v3 03/12] clk: Add a function to retrieve phase
+Date: Tue, 30 Sep 2014 00:01:17 -0700
+Message-ID: <20140930070117.19023.51389@quantum>
+References: <1410466706-27386-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1410466706-27386-4-git-send-email-maxime.ripard@free-electrons.com>
+ <20140928001732.19023.2496@quantum> <20140929082421.GA4388@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140929171314.GW16977-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140929082421.GA4388@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, Emilio Lopez <emilio@elopez.com.ar>, linux-mmc@vger.kernel.org, chris@printf.net, Hans de Goede <hdegoede@redhat.com>, wens@csie.org, david.lanzendoerfer@o2s.ch, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am 29.09.2014 um 19:13 schrieb Mark Brown:
-> On Mon, Sep 29, 2014 at 08:38:51AM +0200, Stefan Wahren wrote:
->
->> I'm searching for a good regulator implementation example.
->> Does it apply to ti-abb-regulator.c and twl-regulator.c?
-> Possibly.  But bear in mind that it's important to understand the
-> hardware you're trying to support.
+Quoting Maxime Ripard (2014-09-29 01:24:21)
+> Hi Mike,
+> 
+> On Sat, Sep 27, 2014 at 05:17:32PM -0700, Mike Turquette wrote:
+> > Quoting Maxime Ripard (2014-09-11 13:18:17)
+> > > The current phase API doesn't look into the actual hardware to get the phase
+> > > value, but will rather get it from a variable only set by the set_phase
+> > > function.
+> > > 
+> > > This will cause issue when the client driver will never call the set_phase
+> > > function, where we can end up having a reported phase that will not match what
+> > > the hardware has been programmed to by the bootloader or what phase is
+> > > programmed out of reset.
+> > > 
+> > > Add a new get_phase function for the drivers to implement so that we can get
+> > > this value.
+> > > 
+> > > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> > > ---
+> > >  drivers/clk/clk.c            | 10 ++++++++++
+> > >  include/linux/clk-provider.h |  5 +++++
+> > >  2 files changed, 15 insertions(+)
+> > > 
+> > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > > index d87661af0c72..113d75db371d 100644
+> > > --- a/drivers/clk/clk.c
+> > > +++ b/drivers/clk/clk.c
+> > > @@ -1934,6 +1934,16 @@ int __clk_init(struct device *dev, struct clk *clk)
+> > >                 clk->accuracy = 0;
+> > >  
+> > >         /*
+> > > +        * Set clk's phase.
+> > > +        * Since a phase is by definition relative to its parent, just
+> > > +        * query the current clock phase, or just assume it's in phase.
+> > > +        */
+> > > +       if (clk->ops->get_phase)
+> > > +               clk->phase = clk->ops->get_phase(clk->hw);
+> > > +       else
+> > > +               clk->phase = 0;
+> > 
+> > I probably wasn't paying enough attention to this. Based on the
+> > coverletter I thought that v3 would introduce something like
+> > CLK_GET_PHASE_NOCACHE and stuff that logic into a __clk_get_phase
+> > function? Looks like this version of the series doesn't handle phases
+> > that can be changed by hardware (e.g. coming out of idle).
+> > 
+> > Correct me if I am wrong, but it looks like we retrieve the phase only
+> > once at init and then never again? The rest of the time we rely on
+> > clk->phase to always be accurate...
+> 
+> Yeah, I didn't have any use for it at the moment, and thought that if
+> someone ever needed it, it would be trivial to add, so I left it out.
+> 
+> If you want me to still do it, I can send an additional patch.
 
-The question refer more to the devicetree binding and it's implementation.
+No it is fine. A bit asymmetrical for my brain but it is dead code if no
+one is using it (yet).
 
->
->>> This really needs a comment to explain what on earth is going on here -
->>> the whole thing with writing the same thing twice with two delays is
->>> more than a little odd.  It looks like the driver is trying to busy wait
->>> in cases where the change happens quickly but the comments about "fast"
->>> and "normal" mode make this unclear.
->> The regulator driver polls for the DC_OK bit in the power status register.
->> Quote for reference manual (p. 935): "High when switching DC-DC
->> converter control loop has stabilized after a voltage target change."
->> The two loops comes from the different regulator modes
->> (REGULATOR_MODE_FAST, REGULATOR_MODE_NORMAL).
->> In REGULATOR_MODE_FAST the voltage steping is disabled and changing
->> voltage should be fast. In REGULATOR_MODE_NORMAL voltage steping is
->> enabled and it's take a while for reaching the target voltage.
-> I don't think you've fully understood what the different modes mean
-> here, that's not normally how a buck convertor works.  The different
-> modes would typically control the ability of the regulator to respond
-> quickly to changes in load without drifting off regulation, fast mode
-> makes the regulator less efficient but more responsive to load changes
-> (probably marginally with modern regulators).  It should have relatively
-> little to do with the ability to ramp the voltage and certainly not on
-> the scale there.
->
->> Do you see more a problem with the two different loops or the redundant
->> register write?
-> Both.  The code right now just looks really obscure.
+Regards,
+Mike
 
-That leads me to the conclusion to drop both mode functions. My
-intention is to get the cpufreq-cpu0 aka cpufreq-dt working on i.MX28,
-not to build up the complete power system.
-
-@Fabio, @Shawn: What is your opinion?
-
-Best regards
-
-Stefan
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Thanks!
+> Maxime
+> 
+> -- 
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
