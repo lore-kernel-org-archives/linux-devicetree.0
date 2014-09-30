@@ -1,65 +1,101 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/1] video/atmel_lcdfb: Introduce regulator support
-Date: Tue, 30 Sep 2014 14:45:11 +0300
-Message-ID: <542A97C7.6010506@ti.com>
-References: <1405427605-5288-1-git-send-email-alexander.stein@systec-electronic.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
+Date: Tue, 30 Sep 2014 13:03:44 +0100
+Message-ID: <20140930120344.GA14215@e102568-lin.cambridge.arm.com>
+References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <1411937610-22125-3-git-send-email-suravee.suthikulpanit@amd.com>
+ <8631927.qWHZsjCs8e@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="9bW0oKS4t3Iw6uP12DBx3Qoglqb5Rkwt2"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405427605-5288-1-git-send-email-alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <8631927.qWHZsjCs8e@wuerfel>
+Content-Disposition: inline
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Will Deacon <Will.Deacon@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---9bW0oKS4t3Iw6uP12DBx3Qoglqb5Rkwt2
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 29, 2014 at 03:36:30PM +0100, Arnd Bergmann wrote:
+> On Sunday 28 September 2014 15:53:28 suravee.suthikulpanit@amd.com wrote:
+> > +
+> > +#ifdef CONFIG_ARM64
+> > +struct pci_bus *gen_scan_root_bus(struct device *parent, int bus,
+> > +                                      struct pci_ops *ops, void *sysdata,
+> > +                                      struct list_head *resources)
+> > +{
+> 
+> I don't see anything ARM64 specific in this, the function only uses
+> the newly added generic helpers.
 
-On 15/07/14 15:33, Alexander Stein wrote:
-> This adds regulator support to enable/disable the LCD voltage, using
-> 'lcd-supply' as regulator name.
->=20
-> Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-> ---
->  .../devicetree/bindings/video/atmel,lcdc.txt         |  3 +++
->  drivers/video/fbdev/atmel_lcdfb.c                    | 20 ++++++++++++=
-++++++++
->  2 files changed, 23 insertions(+)
+I do not see it either, it is just a copy'n'paste of common PCI code,
+plus msi management.
 
-Thanks, queued for 3.18.
+> >  static int gen_pci_probe(struct platform_device *pdev)
+> >  {
+> > @@ -326,6 +385,7 @@ static int gen_pci_probe(struct platform_device *pdev)
+> >         struct device *dev = &pdev->dev;
+> >         struct device_node *np = dev->of_node;
+> >         struct gen_pci *pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+> > +#ifndef CONFIG_ARM64
+> >         struct hw_pci hw = {
+> >                 .nr_controllers = 1,
+> >                 .private_data   = (void **)&pci,
+> > @@ -333,6 +393,7 @@ static int gen_pci_probe(struct platform_device *pdev)
+> >                 .map_irq        = of_irq_parse_and_map_pci,
+> >                 .ops            = &gen_pci_ops,
+> >         };
+> > +#endif
+> >  
+> 
+> Same here, I'd suggest marking this "#ifdef CONFIG_ARM" instead, as hw_pci
+> is an arm32 specific data structure.
 
- Tomi
+I do not think we need hw struct at all, see below, we can write code so
+that we do not rely on ARM32 PCI bios, I will have a stab at that and
+post the resulting code.
 
+> >         if (!pci)
+> >                 return -ENOMEM;
+> > @@ -368,8 +429,24 @@ static int gen_pci_probe(struct platform_device *pdev)
+> >                 gen_pci_release_of_pci_ranges(pci);
+> >                 return err;
+> >         }
+> > +#ifdef CONFIG_ARM64
+> >  
+> > +#ifdef CONFIG_PCI_MSI
+> > +       pci->msi_parent = of_parse_phandle(np, "msi-parent", 0);
+> > +       if (!pci->msi_parent) {
+> > +               dev_err(&pdev->dev, "Failed to allocate msi-parent.\n");
+> > +               return -EINVAL;
+> > +       }
+> > +#endif
+> 
+> We probably want to enable MSI unconditionally on ARM64, so the #ifdef is
+> not necessary here. However, I don't think that a missing msi-parent should
+> be a fatal error here: we can still continue without MSI support if this
+> case.
+> 
+> > +       if (!gen_scan_root_bus(&pdev->dev, pci->cfg.bus_range.start,
+> > +                              &gen_pci_ops, pci, &pci->resources)) {
+> > +               dev_err(&pdev->dev, "failed to enable PCIe ports\n");
+> > +               return -ENODEV;
+> > +       }
+> > +#else
+> >         pci_common_init_dev(dev, &hw);
+> > +#endif /* CONFIG_ARM64 */
+> > 
+> 
+> Again, just make the pci_common_init_dev() call #ifdef CONFIG_ARM, and move
+> the generic case after it, outside of the #ifdef.
 
+I went through the code quickly but I think we can (and should) remove
+this quite ugly ifdeffery altogether. Most of the functionality in
+pci_common_init_dev() can be implemented through the common PCI API (and this
+would make this driver arch agnostic as it should be), I will go through ARM32
+PCI bios code to check what is executed in detail in pci_common_init_dev() and
+make sure that we follow those initialization steps in the resulting probe code
+for this PCI generic host controller driver.
 
---9bW0oKS4t3Iw6uP12DBx3Qoglqb5Rkwt2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Lorenzo
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUKpfHAAoJEPo9qoy8lh71yRAQALImWgfmXyQ1BMCMMLyPf+bk
-vkeozPHNr0Y4gCmp8gXfsTnLIo4Piq7iqHyAvllNREnTlgcGnWQi3ssiX/4Ghz/q
-JtTWELsN/7PrRNPULgGn9Hdk7mdMECpuzv4I4kBD5hEvOWUy7SrlSgEA197emACB
-N9S+Y6DfnVCql2umGOiGFZDvcnvRFHWkNaKOs4c8hLz2M+DaxsF5MMF6d7aw59Ut
-EvhZZ13gKmwZTAtec4KtcYADv0YENyg8bqtBTdiv3Sscq9QVO0Ou4e8cb26AvCvq
-oO+nmYodGtrVb6D/qLYZrzzoQnSyqLZarGnbZTbVjL22g8bEHlXSaqF2+fBNS6sg
-iZDXmtGP/uwsSWy0cNpw4eCeMm5gomE0KVl+ej9p3pdqLZcdYLDpuKXRkAuG/lBr
-dy8envSmPIQj8iU0g2+1S0JtWnKq5FQmrZrxR4gsCb9qpcA6soFtY/L99iUI05ZF
-J1bVJ6/3kVvnlpMYY7Hb6YSV/fsebTqfEZXC9VOdTbv59ARIEbQIeYVFS32liPfj
-KwwQGiNUS05UbkNnfRBdg1kgAMXgbc6nvgZ/SWUnIwqqNV4hh6GZxrXitQsTSWGl
-e41+VYvEIhihaCb1K3eyyKf+5WXaYNSFWB2LSmwGs/1VO9+qnWvA2RrEgzKW/FQb
-2AkxM9FCm432okixQrhx
-=0x08
------END PGP SIGNATURE-----
-
---9bW0oKS4t3Iw6uP12DBx3Qoglqb5Rkwt2--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
