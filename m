@@ -1,48 +1,104 @@
-From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
-Subject: Re: [PATCH 4/6] hwrng: atmel: Add TRNG DT binding doc
-Date: Tue, 30 Sep 2014 19:12:22 +0200
-Message-ID: <87bnpxoww9.fsf@dell.be.48ers.dk>
-References: <1412093987-30241-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1412093987-30241-5-git-send-email-boris.brezillon@free-electrons.com>
+From: Liviu Dudau <liviu-I3yL/QOVVjH10XsdtD+oqA@public.gmane.org>
+Subject: Re: [PATCH] of/pci: add pci_pio_to_address dummy for !CONFIG_OF
+Date: Tue, 30 Sep 2014 18:10:03 +0100
+Message-ID: <20140930171002.GB15854@bart.dudau.co.uk>
+References: <706416181.hbVGLDA3o6@wuerfel>
+ <20140930160139.GA5625@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412093987-30241-5-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-	(Boris Brezillon's message of "Tue, 30 Sep 2014 18:19:45 +0200")
+Content-Disposition: inline
+In-Reply-To: <20140930160139.GA5625-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Boris" == Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
+On Tue, Sep 30, 2014 at 10:01:39AM -0600, Bjorn Helgaas wrote:
+> On Tue, Sep 30, 2014 at 03:19:05PM +0200, Arnd Bergmann wrote:
+> > The pci_register_io_range() and pci_pio_to_address() were recently
+> > introduced to generalize the handling of memory mapped PCI I/O space,
+> > but they are only valid when CONFIG_OF is set, leading to a possible
+> > build error:
+> > 
+> > drivers/pci/host/pcie-rcar.c: In function 'rcar_pcie_setup_window':
+> > drivers/pci/host/pcie-rcar.c:340:3: error: implicit declaration of function 'pci_pio_to_address' [-Werror=implicit-function-declaration]
+> >    res_start = pci_pio_to_address(res->start);
+> >    ^
+> > drivers/pci/host/pcie-rcar.c: In function 'rcar_pcie_probe':
+> > drivers/pci/host/pcie-rcar.c:945:3: error: implicit declaration of function 'of_pci_range_to_resource' [-Werror=implicit-function-declaration]
+> >    err = of_pci_range_to_resource(&range, pdev->dev.of_node,
+> >    ^
+> > cc1: some warnings being treated as errors
+> > 
+> > This provides inline dummy implementations for the case that
+> > CONFIG_OF is disabled, to allow better build testing.
+> > 
+> > Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> > Fixes: 279c5dd046 ("of/pci: Add pci_register_io_range() and pci_pio_to_address()")
+> 
+> I'm rebuilding the pci/host-generic branch to pick up the other v13 fixes,
+> so I folded this fix directly into the "of/pci: Add pci_register_io_range()
+> and pci_pio_to_address()" patch.  Thanks for finding this; the config
+> dependencies are a bit of a mess.
 
- > Document DT bindings of Atmel's TRNG (True Random Number Generator) IP.
- > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
- > ---
- >  Documentation/devicetree/bindings/hwrng/atmel-trng.txt | 16 ++++++++++++++++
- >  1 file changed, 16 insertions(+)
- >  create mode 100644 Documentation/devicetree/bindings/hwrng/atmel-trng.txt
+Bjorn,
 
- > diff --git a/Documentation/devicetree/bindings/hwrng/atmel-trng.txt b/Documentation/devicetree/bindings/hwrng/atmel-trng.txt
- > new file mode 100644
- > index 0000000..4ac5aaa
- > --- /dev/null
- > +++ b/Documentation/devicetree/bindings/hwrng/atmel-trng.txt
- > @@ -0,0 +1,16 @@
- > +Atmel TRNG (True Random Number Generator) block
- > +
- > +Required properties:
- > +- compatible : Should be "atmel,at91sam9g45-trng"
- > +- reg : Offset and length of the register set of this block
- > +- interrupts : the interrupt number for the TRNG block
+I suggest splitting this patch into 2 parts, move the one that adds pci_pio_to_address() in patch 2
+and the other in patch 5.
 
-The interrupt isn't strictly speaking required as it isn't used by the
-driver, but as 9G45 has the signal wired up I guess it makes sense.
+Best regards,
+Liviu
 
-Acked-by: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+> 
+> > diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+> > index 7ebb877b07c2..851097aab115 100644
+> > --- a/include/linux/of_address.h
+> > +++ b/include/linux/of_address.h
+> > @@ -71,6 +71,11 @@ static inline const __be32 *of_get_address(struct device_node *dev, int index,
+> >  	return NULL;
+> >  }
+> >  
+> > +static inline phys_addr_t pci_pio_to_address(unsigned long pio)
+> > +{
+> > +	return 0;
+> > +}
+> > +
+> >  static inline int of_pci_range_parser_init(struct of_pci_range_parser *parser,
+> >  			struct device_node *node)
+> >  {
+> > @@ -144,6 +149,12 @@ static inline const __be32 *of_get_pci_address(struct device_node *dev,
+> >  {
+> >  	return NULL;
+> >  }
+> > +static inline int of_pci_range_to_resource(struct of_pci_range *range,
+> > +					   struct device_node *np,
+> > +					   struct resource *res)
+> > +{
+> > +	return -ENOSYS;
+> > +}
+> >  #endif /* CONFIG_OF_ADDRESS && CONFIG_PCI */
+> >  
+> >  #endif /* __OF_ADDRESS_H */
+> > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
 -- 
-Bye, Peter Korsgaard
+-------------------
+   .oooO
+   (   )
+    \ (  Oooo.
+     \_) (   )
+          ) /
+         (_/
+
+ One small step
+   for me ...
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
