@@ -1,89 +1,210 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: [RFC 0/7] Qualcomm SMEM, SMD, RPM and regulators
-Date: Mon, 29 Sep 2014 17:34:44 -0700
-Message-ID: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [RFC 3/7] mfd: devicetree: bindings: Add Qualcomm SMD based RPM DT binding
+Date: Mon, 29 Sep 2014 17:34:47 -0700
+Message-ID: <1412037291-16880-4-git-send-email-bjorn.andersson@sonymobile.com>
+References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-All Qualcomm platforms implements a shared heap among the processors in the
-SoC, used for sharing data with other parts of the system.
+Add binding documentation for the Qualcomm Resource Power Manager (RPM)
+using shared memory (Qualcomm SMD) as transport mechanism. This is found
+in 8974 and newer based devices.
 
-One consumer of items from this heap is the "Shared Memory Driver", a ring
-buffer based point-to-point communication mechanism used to send either stream
-or packet based data to remote processors.
+The binding currently describes the rpm itself and the regulator
+subnodes.
 
-Starting with 8x74 this system is used to talk to the Resource Power Manager
-(RPM), a power efficient "coprocessor" with responsibility of aggregate votes
-from the various systems in the SoC related to regulators, clocks and bus
-frequencies.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+---
 
-The PMIC regulators and root clocks in these platforms are only accessible via
-the RPM, so to get access to these we need the full chain of smem, smd, rpm and
-a regulator driver implemented. And that is exactly what this series provides.
+Note that this patch extends the rpm dt-bindings header from [1].
 
+[1] https://lkml.org/lkml/2014/9/22/733
 
-A key outstanding question is where in the tree we should put the
-implementation, for now I dropped them in drivers/soc/qcom but that's only
-because I don't know where to put it otherwise. I have not found any equivalent
-of the SMEM driver, SMD resembles mailbox and rpmsg - but comments in that
-patch on why it's neither.
-
-RPM is a mfd and regulator is a regulator :)
-
-
-Part from the rpm regulators I've tested this by hacking up a firmware loader
-and making some adoptions to the wcn36xx WiFi driver and I can indeed
-communicate with this system as well. Missing for that part is the coupling
-with remoteproc to reset smd channels when a remote system goes down.  But that
-is indeed a separate set of patches.
-
-Bjorn Andersson (7):
-  soc: qcom: Add device tree binding for SMEM
-  soc: qcom: Add device tree binding for SMD
-  mfd: devicetree: bindings: Add Qualcomm SMD based RPM DT binding
-  soc: qcom: Add Shared Memory Manager driver
-  soc: qcom: Add Shared Memory Driver
-  mfd: qcom-smd-rpm: Driver for the Qualcomm RPM over SMD
-  regulator: qcom-smd-rpm: Regulator driver for the Qualcomm RPM
-
- .../devicetree/bindings/mfd/qcom-rpm-smd.txt       |  122 +++
- .../devicetree/bindings/soc/qcom/qcom,smd.txt      |   82 ++
- .../devicetree/bindings/soc/qcom/qcom,smem.txt     |   34 +
- drivers/mfd/Kconfig                                |   14 +
- drivers/mfd/Makefile                               |    1 +
- drivers/mfd/qcom-smd-rpm.c                         |  299 ++++++
- drivers/regulator/Kconfig                          |   12 +
- drivers/regulator/Makefile                         |    1 +
- drivers/regulator/qcom_smd-regulator.c             |  229 +++++
- drivers/soc/qcom/Kconfig                           |   16 +
- drivers/soc/qcom/Makefile                          |    2 +
- drivers/soc/qcom/qcom_smd.c                        | 1043 ++++++++++++++++++++
- drivers/soc/qcom/qcom_smem.c                       |  328 ++++++
- include/dt-bindings/mfd/qcom-rpm.h                 |   36 +
- include/linux/mfd/qcom-smd-rpm.h                   |    9 +
- include/linux/soc/qcom/qcom_smd.h                  |   47 +
- include/linux/soc/qcom/qcom_smem.h                 |   14 +
- 17 files changed, 2289 insertions(+)
+ .../devicetree/bindings/mfd/qcom-rpm-smd.txt       |  122 ++++++++++++++++++++
+ include/dt-bindings/mfd/qcom-rpm.h                 |   36 ++++++
+ 2 files changed, 158 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smem.txt
- create mode 100644 drivers/mfd/qcom-smd-rpm.c
- create mode 100644 drivers/regulator/qcom_smd-regulator.c
- create mode 100644 drivers/soc/qcom/qcom_smd.c
- create mode 100644 drivers/soc/qcom/qcom_smem.c
- create mode 100644 include/linux/mfd/qcom-smd-rpm.h
- create mode 100644 include/linux/soc/qcom/qcom_smd.h
- create mode 100644 include/linux/soc/qcom/qcom_smem.h
 
+diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt b/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
+new file mode 100644
+index 0000000..a846101
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
+@@ -0,0 +1,122 @@
++Qualcomm Resource Power Manager (RPM) over SMD
++
++This driver is used to interface with the Resource Power Manager (RPM) found in
++various Qualcomm platforms. The RPM allows each component in the system to vote
++for state of the system resources, such as clocks, regulators and bus
++frequencies.
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,rpm-msm8974"
++
++- qcom,smd-channels:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Shared Memory Channel used for communication with the RPM
++
++- #address-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 1
++
++- #size-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 0
++
++= SUBDEVICES
++
++The RPM exposes resources to its subnodes. The below bindings specify the set
++of valid subnodes that can operate on these resources.
++
++== Switch-mode Power Supply regulator
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,rpm-pm8841-smps"
++		    "qcom,rpm-pm8941-smps"
++
++
++- reg:
++	Usage: required
++	Value type: <u32>
++	Definition: resource as defined in <dt-bindings/mfd/qcom-rpm.h>
++		    must be one of:
++		    QCOM_RPM_PM8841_SMPS1 - QCOM_RPM_PM8841_SMPS4,
++		    QCOM_RPM_PM8941_SMPS1 - QCOM_RPM_PM8941_SMPS3
++
++Standard regulator bindings are used inside switch mode power supply subnodes.
++Check Documentation/devicetree/bindings/regulator/regulator.txt for more
++details.
++
++== Low-dropout regulator
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,rpm-pm8941-ldo"
++
++- reg:
++	Usage: required
++	Value type: <u32>
++	Definition: resource as defined in <dt-bindings/mfd/qcom-rpm.h>
++		    must be one of:
++		    QCOM_RPM_PM8941_LDO1 - QCOM_RPM_PM8941_LDO24
++
++Standard regulator bindings are used inside switch low-dropout regulator
++subnodes.  Check Documentation/devicetree/bindings/regulator/regulator.txt for
++more details.
++
++== Switch
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,rpm-pm8941-switch"
++
++- reg:
++	Usage: required
++	Value type: <u32>
++	Definition: resource as defined in <dt-bindings/mfd/qcom/qcom-rpm.h>
++		    must be one of:
++		    QCOM_RPM_PM8941_LVS1 - QCOM_RPM_PM8941_LVS3,
++		    QCOM_RPM_PM8941_MVS1 - QCOM_RPM_PM8941_MVS2
++
++Standard regulator bindings are used inside switch regulator subnodes.  Check
++Documentation/devicetree/bindings/regulator/regulator.txt for more details.
++
++= EXAMPLE
++
++	#include <dt-bindings/mfd/qcom-rpm.h>
++
++	rpm@108000 {
++		compatible = "qcom,rpm-msm8960";
++		qcom,smd-channels = "rpm_requests";
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		pm8941_s1: regulator-s1 {
++			compatible = "qcom,rpm-pm8941-smps";
++			reg = <QCOM_RPM_PM8941_SMPS1>;
++
++			regulator-min-microvolt = <1300000>;
++			regulator-max-microvolt = <1300000>;
++		};
++
++		pm8941_l3: pm8941-l3 {
++			compatible = "qcom,rpm-pm8941-ldo";
++			reg = <QCOM_RPM_PM8941_LDO3>;
++
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++		};
++
++	};
++
+diff --git a/include/dt-bindings/mfd/qcom-rpm.h b/include/dt-bindings/mfd/qcom-rpm.h
+index 388a6f3..a5c473e 100644
+--- a/include/dt-bindings/mfd/qcom-rpm.h
++++ b/include/dt-bindings/mfd/qcom-rpm.h
+@@ -141,6 +141,42 @@
+ #define QCOM_RPM_SYS_FABRIC_MODE		131
+ #define QCOM_RPM_USB_OTG_SWITCH			132
+ #define QCOM_RPM_VDDMIN_GPIO			133
++#define QCOM_RPM_PM8841_SMPS1			134
++#define QCOM_RPM_PM8841_SMPS2			135
++#define QCOM_RPM_PM8841_SMPS3			136
++#define QCOM_RPM_PM8841_SMPS4			137
++#define QCOM_RPM_PM8941_SMPS1			138
++#define QCOM_RPM_PM8941_SMPS2			139
++#define QCOM_RPM_PM8941_SMPS3			140
++#define QCOM_RPM_PM8941_LDO1			141
++#define QCOM_RPM_PM8941_LDO2			142
++#define QCOM_RPM_PM8941_LDO3			143
++#define QCOM_RPM_PM8941_LDO4			144
++#define QCOM_RPM_PM8941_LDO5			145
++#define QCOM_RPM_PM8941_LDO6			146
++#define QCOM_RPM_PM8941_LDO7			147
++#define QCOM_RPM_PM8941_LDO8			148
++#define QCOM_RPM_PM8941_LDO9			149
++#define QCOM_RPM_PM8941_LDO10			150
++#define QCOM_RPM_PM8941_LDO11			151
++#define QCOM_RPM_PM8941_LDO12			152
++#define QCOM_RPM_PM8941_LDO13			153
++#define QCOM_RPM_PM8941_LDO14			154
++#define QCOM_RPM_PM8941_LDO15			155
++#define QCOM_RPM_PM8941_LDO16			156
++#define QCOM_RPM_PM8941_LDO17			157
++#define QCOM_RPM_PM8941_LDO18			158
++#define QCOM_RPM_PM8941_LDO19			159
++#define QCOM_RPM_PM8941_LDO20			160
++#define QCOM_RPM_PM8941_LDO21			161
++#define QCOM_RPM_PM8941_LDO22			162
++#define QCOM_RPM_PM8941_LDO23			163
++#define QCOM_RPM_PM8941_LDO24			164
++#define QCOM_RPM_PM8941_LVS1			165
++#define QCOM_RPM_PM8941_LVS2			166
++#define QCOM_RPM_PM8941_LVS3			167
++#define QCOM_RPM_PM8941_MVS1			168
++#define QCOM_RPM_PM8941_MVS2			169
+ 
+ /*
+  * Constants used to select force mode for regulators.
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
