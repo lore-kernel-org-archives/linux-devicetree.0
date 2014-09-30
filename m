@@ -1,79 +1,46 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 1/4] ARM: DT: apq8064: add rpm support
-Date: Tue, 30 Sep 2014 11:27:10 -0700
-Message-ID: <542AF5FE.1000006@codeaurora.org>
-References: <1411982044-7873-1-git-send-email-srinivas.kandagatla@linaro.org> <1411982092-7922-1-git-send-email-srinivas.kandagatla@linaro.org> <5429DA95.80505@codeaurora.org> <20140930050203.GG28481@sonymobile.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v7 3/5] ARM: dts: add RK3xxx CPU Thermal data
+Date: Tue, 30 Sep 2014 11:35:53 -0700
+Message-ID: <CAD=FV=Wyv9P9cvTFEfD5_0BzgFNC5nyduT0THKKwERkX4-cY0Q@mail.gmail.com>
+References: <1411900693-30484-1-git-send-email-caesar.wang@rock-chips.com>
+	<1411900693-30484-4-git-send-email-caesar.wang@rock-chips.com>
+	<CAD=FV=WRYeW4giA+yRWmXGxAvdG38GcW-7tA39SZDH1GPamf6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140930050203.GG28481@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=WRYeW4giA+yRWmXGxAvdG38GcW-7tA39SZDH1GPamf6A@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arnd Bergmann <arnd@arndb.de>, zyf <zyf@rock-chips.com>, linux-rockchip@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Eddie Cai <cf@rock-chips.com>, Derek Basehore <dbasehore@chromium.org>, Tao Huang <huangtao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/29/14 22:02, Bjorn Andersson wrote:
-> On Mon 29 Sep 15:17 PDT 2014, Stephen Boyd wrote:
+Hi,
+
+On Tue, Sep 30, 2014 at 11:24 AM, Doug Anderson <dianders@chromium.org> wrote:
+> Caesar,
 >
->> On 09/29/14 02:14, Srinivas Kandagatla wrote:
->>> @@ -246,6 +247,24 @@
->>>  			#reset-cells = <1>;
->>>  		};
->>>  
->>> +		apcs: syscon@2011000 {
->>> +			compatible = "syscon";
->>> +			reg = <0x2011000 0x1000>;
->>> +		};
->> This is actually a clock controller block that hw designers decided was
->> good place to shove the ipc bits (because there's room!). Can we call it
+> On Sun, Sep 28, 2014 at 3:38 AM, Caesar Wang <caesar.wang@rock-chips.com> wrote:
+>> This patch changes a dtsi file to contain the thermal data
+>> on RK3288 and later SoCs. This data will
+>> enable a thermal shutdown over 125C.
 >>
->>                 l2cc: clock-controller@2011000 {
->>                         compatible = "syscon";
->>                         reg = <0x2011000 0x1000>;
->>                 };
->>
->> Eventually I'll add the specific krait compatible when we merge krait
->> clock support:
->>
->>                 l2cc: clock-controller@2011000 {
->>                         compatible = "qcom,kpss-gcc", "syscon";
->>                         reg = <0x2011000 0x1000>;
->>                         clock-output-names = "acpu_l2_aux";
->>                 };
->>
-> As long as we can get hold of the regmap that would be fine. I pressume the
-> idea is to have the kpss-gcc using syscon, just like the rpm. But hopefully the
-> syscon patches that are floating around (merged?) will allow any driver to
-> expose a "syscon regmap".
-
-Agreed. I'm not sure if kpss-gcc will use syscon. With the floating
-patches I don't see a reason why we need to use it.
-
+>> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+>> ---
+>>  arch/arm/boot/dts/rk3xxx-cpu-thermal.dtsi | 32 +++++++++++++++++++++++++++++++
+>>  1 file changed, 32 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/rk3xxx-cpu-thermal.dtsi
 >
->>> +
->>> +		rpm@108000 {
->>> +			compatible	= "qcom,rpm-apq8064";
->>> +			reg		= <0x108000 0x1000>;
->>> +			qcom,ipc = <&apcs 0x8 2>;
->> There are actually 3 ipc bits. I guess if we ever have to use the other
->> two we'll extend this binding to have the other bits specified some
->> other way?
-> I haven't seen any indications of us using more than this bit. If we want to do
-> that, we could simply make it <&apcs 8 2 &apcs 8 3 &apcs 8 4> (or whatever
-> those indices are). That way this should be easy it keep compatible.
+> I haven't done lots of review of this series, but I did notice that
+> this file has bad spacing.  It's fairly obvious in your gerrit patch
+> <https://chromium-review.googlesource.com/#/c/220270/1/arch/arm/boot/dts/rk3xxx-cpu-thermal.dtsi>
+> because gerrit (by default) shows you "tab" characters...
 >
+> In general you should use tab for indentation, not spaces.  You seem
+> to use a mix of the two.
 
-Good to hear we're not forced to use a new property. The indices have
-always been 2, 1, and 0 as far as I know.
+I suppose I should also point out that it's generally not great to
+name things "rk3xxx" since it makes too many predictions about how
+future products will behave.  It's better to name things after the
+first relevant product.  I'd just name this "rk3288-cpu-thermal.dtsi".
 
-We use bit 1 to ack the RPM if it ever crashes. We know that it crashes
-because we receive the error interrupt. Instead of calling panic like we
-do downstream we can gracefully fail any new rpm requests. There really
-isn't any way to recover from this scenario though besides rebooting.
-Looking at the code I see this is all wrong and we use bit 2 to ack the
-error.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+-Doug
