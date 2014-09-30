@@ -1,66 +1,62 @@
-From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
-Subject: Re: [PATCH v3 3/6] pinctrl: exynos: Add irq_chip instance for Exynos7
- wakeup interrupts
-Date: Tue, 30 Sep 2014 19:56:02 +0530
-Message-ID: <CAM4voamO1y4J=_AuEgANt6VyBgwLx9L-u--3SJK7YULCQonoDA@mail.gmail.com>
-References: <1411967712-8321-1-git-send-email-a.kesavan@samsung.com>
-	<1411967712-8321-4-git-send-email-a.kesavan@samsung.com>
-	<5429E12B.5020708@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5429E12B.5020708@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "robh@kernel.org" <robh@kernel.org>
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: [PATCH v6 00/10] ARM: Berlin: Ethernet support
+Date: Tue, 30 Sep 2014 16:28:06 +0200
+Message-ID: <1412087296-18475-1-git-send-email-antoine.tenart@free-electrons.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com
+Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+Hi all,
 
-On Tue, Sep 30, 2014 at 4:16 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hi Abhilash,
->
-> Just two minor issues inline. I leave them up to Linus to decide.
->
-> Linus, if you don't mind them, feel free to apply this patch with my Ack.
->
-> On 29.09.2014 07:15, Abhilash Kesavan wrote:
->> Exynos7 uses different offsets for wakeup interrupt configuration registers.
->> So a new irq_chip instance for Exynos7 wakeup interrupts is added. The irq_chip
->> selection is now based on the wakeup interrupt controller compatible string.
->
-> [snip]
->
->> @@ -469,12 +488,18 @@ static int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
->>       struct samsung_pin_bank *bank;
->>       struct exynos_weint_data *weint_data;
->>       struct exynos_muxed_weint_data *muxed_data;
->> +     struct exynos_irq_chip *exynos_wkup_irq_chip;
->
-> Quite an awful name for a local variable. "irq_chip" alone would be enough.
->
->>       unsigned int muxed_banks = 0;
->>       unsigned int i;
->>       int idx, irq;
->>
->>       for_each_child_of_node(dev->of_node, np) {
->> -             if (of_match_node(exynos_wkup_irq_ids, np)) {
->> +             const struct of_device_id *match;
->> +
->> +             match = of_match_node(exynos_wkup_irq_ids, np);
->> +             if (match) {
->> +                     exynos_wkup_irq_chip = kmemdup(match->data,
->> +                             sizeof(struct exynos_irq_chip), GFP_KERNEL);
->
-> sizeof(*exynos_wkup_irq_chip) (or irq_chip considering my comment above)
-> could be used instead.
+This series introduce support for the Ethernet controller on Berlin SoCs,
+using the existing pxa168 Ethernet driver. In order to do this, DT
+support is added to the driver alongside some other modifications and
+fixes.
 
-Thanks for the acks. Will post a new version with these nits fixed.
->
-> Best regards,
-> Tomasz
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+This has been tested on a Berlin BG2Q DMP board.
+
+Changes since v5:
+	- fixed the build when building the driver as a module
+
+Changes since v4:
+        - removed the phy-addr property and added a phy subnode
+        - added COMPILE_TEST for the pxa168_eth driver
+
+Changes since v3:
+        - moved the addition of pxa168_eth_get_mac_address() to the patch
+          using it first
+
+Changes since v2:
+        - reworked how the MAC address is configured
+        - made the clock anonymous
+
+Changes since v1:
+        - removed custom Berlin Ethernet driver
+        - used the pxa168 Ethernet driver instead
+        - made modifications to the pxa168 driver (DT support, fixes)
+
+Antoine Tenart (10):
+  net: pxa168_eth: clean up
+  net: pxa168_eth: add device tree support
+  Documentation: bindings: net: add the Marvell PXA168 Ethernet
+    controller
+  net: pxa168_eth: fix Ethernet flow control status
+  net: pxa168_eth: set the mac address on the Ethernet controller
+  net: pxa168_eth: rework the MAC address setup
+  net: pxa168_eth: allow Berlin SoCs to use the pxa168_eth driver
+  net: pxa168_eth: allow to compile the pxa168_eth driver for tests
+  ARM: dts: berlin: add the Ethernet node
+  ARM: dts: berlin: enable the Ethernet port on the BG2Q DMP
+
+ .../devicetree/bindings/net/marvell-pxa168.txt     |  36 ++++
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts         |   4 +
+ arch/arm/boot/dts/berlin2q.dtsi                    |  17 ++
+ drivers/net/ethernet/marvell/Kconfig               |   2 +-
+ drivers/net/ethernet/marvell/pxa168_eth.c          | 219 +++++++++++++--------
+ 5 files changed, 199 insertions(+), 79 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/marvell-pxa168.txt
+
+-- 
+1.9.1
