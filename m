@@ -1,93 +1,86 @@
-From: Liviu Dudau <liviu-I3yL/QOVVjH10XsdtD+oqA@public.gmane.org>
-Subject: Re: [PATCH] of/pci: add pci_pio_to_address dummy for !CONFIG_OF
-Date: Tue, 30 Sep 2014 22:28:55 +0100
-Message-ID: <20140930212855.GA15713@borg.dudau.co.uk>
-References: <706416181.hbVGLDA3o6@wuerfel>
- <20140930160139.GA5625@google.com>
- <20140930171002.GB15854@bart.dudau.co.uk>
- <CAErSpo61favodLTSwCYzFZq-sB60+ZH6_WvwSGHgRx6cPKtXpA@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] usb: renesas_usbhs: Add device tree support for
+ R-Car H2 and M2
+Date: Wed, 01 Oct 2014 01:34:22 +0400
+Message-ID: <542B21DE.4010903@cogentembedded.com>
+References: <5406A664.2050501@renesas.com> <54298A38.5030703@cogentembedded.com> <542A7D29.3010805@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAErSpo61favodLTSwCYzFZq-sB60+ZH6_WvwSGHgRx6cPKtXpA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <542A7D29.3010805-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kuninori morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Ulrich Hecht <ulrich.hecht-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 30, 2014 at 01:53:06PM -0600, Bjorn Helgaas wrote:
-> On Tue, Sep 30, 2014 at 11:10 AM, Liviu Dudau <liviu-I3yL/QOVVjH10XsdtD+oqA@public.gmane.org> wrote:
-> > On Tue, Sep 30, 2014 at 10:01:39AM -0600, Bjorn Helgaas wrote:
-> >> On Tue, Sep 30, 2014 at 03:19:05PM +0200, Arnd Bergmann wrote:
-> >> > The pci_register_io_range() and pci_pio_to_address() were recently
-> >> > introduced to generalize the handling of memory mapped PCI I/O space,
-> >> > but they are only valid when CONFIG_OF is set, leading to a possible
-> >> > build error:
-> >> >
-> >> > drivers/pci/host/pcie-rcar.c: In function 'rcar_pcie_setup_window':
-> >> > drivers/pci/host/pcie-rcar.c:340:3: error: implicit declaration of function 'pci_pio_to_address' [-Werror=implicit-function-declaration]
-> >> >    res_start = pci_pio_to_address(res->start);
-> >> >    ^
-> >> > drivers/pci/host/pcie-rcar.c: In function 'rcar_pcie_probe':
-> >> > drivers/pci/host/pcie-rcar.c:945:3: error: implicit declaration of function 'of_pci_range_to_resource' [-Werror=implicit-function-declaration]
-> >> >    err = of_pci_range_to_resource(&range, pdev->dev.of_node,
-> >> >    ^
-> >> > cc1: some warnings being treated as errors
-> >> >
-> >> > This provides inline dummy implementations for the case that
-> >> > CONFIG_OF is disabled, to allow better build testing.
-> >> >
-> >> > Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> >> > Fixes: 279c5dd046 ("of/pci: Add pci_register_io_range() and pci_pio_to_address()")
-> >>
-> >> I'm rebuilding the pci/host-generic branch to pick up the other v13 fixes,
-> >> so I folded this fix directly into the "of/pci: Add pci_register_io_range()
-> >> and pci_pio_to_address()" patch.  Thanks for finding this; the config
-> >> dependencies are a bit of a mess.
-> >
-> > Bjorn,
-> >
-> > I suggest splitting this patch into 2 parts, move the one that adds pci_pio_to_address() in patch 2
-> > and the other in patch 5.
-> 
-> Yeah, I screwed that up.  I had just applied Arnd's patch completely
-> to 279c5dd046, which doesn't quite make sense.
-> 
-> I tried again like this:
-> 
->   - In "of/pci: Add pci_register_io_range() and pci_pio_to_address()",
-> I added the dummy pci_pio_to_address(), so there's an extern and a
-> definition in address.c when CONFIG_OF_ADDRESS=y, and an inline dummy
-> otherwise.
-> 
->   - I dropped "of/pci: Define of_pci_range_to_resource() only when
-> CONFIG_PCI=y".
-> 
->   - In "of/pci: Move of_pci_range_to_resource() to of/address.c", I
-> added the dummy of_pci_range_to_resource(), so there's an extern an a
-> definition in address.c when CONFIG_OF_ADDRESS=y and CONFIG_PCI=y, and
-> an inline dummy otherwise.
-> 
-> I'm not really set up to build test this, and my head is swimming a
-> bit, so I hope this is it.  I pushed the pci/host-generic branch
-> again, so you can look at it yourself.
+Hello.
 
-Hi Bjorn,
+On 09/30/2014 01:51 PM, Yoshihiro Shimoda wrote:
 
-It looks good to me. Functionality-wise I can only test it tomorrow UK time,
-but from the diffs I've done I thinks we're good.
+>>> This driver supports other SoCs, but they need boards/Soc depend code.
+>>> So, this patch adds device tree support for R-Car H2 and M2 initially.
 
-Will wait for more reports from the build bot.
+>>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>>> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>>> ---
+>>>    drivers/usb/renesas_usbhs/common.c |   44 ++++++++++++++++++++++++++++++++++++
+>>>    1 file changed, 44 insertions(+)
 
-Take care,
-Liviu
+>>> diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
+>>> index 1b9bf8d..b3b6813 100644
+>>> --- a/drivers/usb/renesas_usbhs/common.c
+>>> +++ b/drivers/usb/renesas_usbhs/common.c
+[...]
+>>> @@ -438,6 +440,43 @@ static int usbhsc_drvcllbck_notify_hotplug(struct platform_device *pdev)
+>> [...]
+>>> +static struct renesas_usbhs_platform_info *usbhs_parse_dt(struct device *dev)
+>>> +{
+>>> +	struct renesas_usbhs_platform_info *info;
+>>> +	struct renesas_usbhs_driver_param *dparam;
+>>> +	const struct of_device_id *of_id = of_match_device(usbhs_of_match, dev);
+>>> +	u32 tmp;
+>>> +	int gpio;
+>>> +
+>>> +	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
+>>> +	if (!info)
+>>> +		return NULL;
+>>> +
+>>> +	dparam = &info->driver_param;
+>>> +	dparam->type = of_id ? (u32)of_id->data : 0;
+>>> +	if (!of_property_read_u32(dev->of_node, "renesas,buswait", &tmp))
+>>> +		dparam->buswait_bwait = tmp;
+>>> +	gpio = of_get_named_gpio_flags(dev->of_node, "renesas,enable-gpio", 0,
+>>> +				       NULL);
+>>> +	if (gpio > 0)
+>>> +		dparam->enable_gpio = gpio;
+>>> +
+>>> +	return info;
 
-> 
-> Bjorn
-> 
+>>      I don't see where you parse the optional "phy" property. It should exist
+>> for the Lager and Koelsch boards you target.
+
+> Since I wrote 'phy-names: must be "usb"' in the document,
+> I intend to use a fixed property for "phy" driver like the following:
+
+> 	phy = phy_get(&pdev->dev, "usb");
+
+> Is this a bad code?
+
+    Seems OK.
+
+> About using the phy driver in renesas_usbhs driver, I intend to modify
+> the drivers/usb/renesas_usbhs/rcar.c.
+
+    Hm, it slready supports 'struct usb_phy'. Also PHYs are not limited to 
+R-Car Gen2 SoCs...
+
+> Best regards,
+> Yoshihiro Shimoda
+
+WBR, Sergei
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
