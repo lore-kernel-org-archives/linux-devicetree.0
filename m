@@ -1,126 +1,42 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v6] bcma: register bcma as device tree driver
-Date: Tue, 30 Sep 2014 15:40:10 +0200
-Message-ID: <7004113.vCTZUyLSaf@wuerfel>
-References: <1411682959-21557-1-git-send-email-hauke@hauke-m.de>
+Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Tue, 30 Sep 2014 15:43:40 +0200
+Message-ID: <10249326.XCThPmSrfL@wuerfel>
+References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com> <3366285.QN2R3CQNzG@wuerfel> <20140930123933.GA25395@peterchendt>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411682959-21557-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140930123933.GA25395@peterchendt>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 26 September 2014 00:09:19 Hauke Mehrtens wrote:
-> This driver is used by the bcm53xx ARM SoC code. Now it is possible to
-> give the address of the chipcommon core in device tree and bcma will
-> search for all the other cores.
+On Tuesday 30 September 2014 20:39:34 Peter Chen wrote:
+> Thanks, Arnd. I had not thought setting dma mask is so complicated, yes, it
+> should check the return value, two things to confirm:
 > 
-> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+> - dma_coerce_mask_and_coherent or dma_set_mask_and_coherent, the only difference
+> of these two API is the first one do "dev->dma_mask = &dev->coherent_dma_mask;"
+> The reason you suggest choosing dma_set_mask_and_coherent is you do not want
+> assign dev->dma_mask?
 
-I'm basically happy with this patch, so
+No, that is just the current definition on ARM32 with CONFIG_ARCH_MULTIPLATFORM, and
+that is going to change soon to be DT aware.
+dma_set_mask_and_coherent() is supposed to check whether the platform can support
+the respective mask and return an error if it cannot.
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> - The second parameter for dma_set_mask_and_coherent is DMA_BIT_MASK(32), is it
+> ok?
+> 
+> I just a little confused of what's the operation is "hardcoding the dma mask"?
 
-A few details that I think are worth improving:
-
-> diff --git a/Documentation/devicetree/bindings/bus/bcma.txt b/Documentation/devicetree/bindings/bus/bcma.txt
-> new file mode 100644
-> index 0000000..e9070c1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/bcma.txt
-> @@ -0,0 +1,20 @@
-> +Driver for ARM AXI Bus with Broadcom Plugins (bcma)
-> +
-> +Required properties:
-> +
-> +- compatible : brcm,bus-axi
-> +
-> +- reg : iomem address range of chipcommon core
-> +
-> +The cores on the AXI bus are automatically detected by bcma with the
-> +memory ranges they are using and they get registered afterwards.
-> +
-> +Example:
-> +
-> +	axi@18000000 {
-> +		compatible = "brcm,bus-axi";
-> +		reg = <0x18000000 0x1000>;
-> +		ranges = <0x00000000 0x18000000 0x00100000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +	};
-
-I think it would be good to document how you can specify child nodes
-here, and give one node as the example.
-
-> +
-> +#ifdef CONFIG_OF
-> +static int bcma_host_soc_probe(struct platform_device *pdev)
-> +{
-
-We generally try to avoid #ifdef in device drivers, I think it would
-be trivial to avoid this one by moving the contents into a new file.
-
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node;
-> +	struct bcma_bus *bus;
-> +	int err;
-> +
-> +	/* Alloc */
-> +	bus = devm_kzalloc(dev, sizeof(*bus), GFP_KERNEL);
-> +	if (!bus)
-> +		return -ENOMEM;
-> +
-> +	/* Map MMIO */
-> +	bus->mmio = of_iomap(np, 0);
-> +	if (!bus->mmio)
-> +		return -ENOMEM;
-
-this could use devm_ioremap_resource() to avoid the iounmap
-in the failu
-
-> +#ifdef CONFIG_OF
-> +static struct device_node *bcma_of_find_child_device(struct platform_device *parent,
-> +						     struct bcma_device *core)
-> +{
-> +	struct device_node *node;
-> +	u64 size;
-> +	const __be32 *reg;
-> +
-> +	if (!parent || !parent->dev.of_node)
-> +		return NULL;
-> +
-> +	for_each_child_of_node(parent->dev.of_node, node) {
-> +		reg = of_get_address(node, 0, &size, NULL);
-> +		if (!reg)
-> +			continue;
-> +		if (of_translate_address(node, reg) == core->addr)
-> +			return node;
-> +	}
-> +	return NULL;
-> +}
-
-I think this will compile into nothing if CONFIG_OF is disabled, so no
-need for the #ifdef.
-
-> +
-> +static void bcma_of_fill_device(struct platform_device *parent,
-> +				struct bcma_device *core)
-> +{
-> +	struct device_node *node;
-> +
-> +	node = bcma_of_find_child_device(parent, core);
-> +	if (node)
-> +		core->dev.of_node = node;
-> +}
-
-and consequently, this function can be moved into the caller.
+dma_coerce_mask_and_coherent() will hardcode the dma mask and override whatever
+the platform says is necessary.
 
 	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
