@@ -1,42 +1,202 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Tue, 30 Sep 2014 15:43:40 +0200
-Message-ID: <10249326.XCThPmSrfL@wuerfel>
-References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com> <3366285.QN2R3CQNzG@wuerfel> <20140930123933.GA25395@peterchendt>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140930123933.GA25395@peterchendt>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [RFC 3/7] mfd: devicetree: bindings: Add Qualcomm SMD based RPM DT binding
+Date: Tue, 30 Sep 2014 08:46:29 -0500
+Message-ID: <85C5C172-D309-41B4-B511-7820BAFDA017@codeaurora.org>
+References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com> <1412037291-16880-4-git-send-email-bjorn.andersson@sonymobile.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1412037291-16880-4-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <Bjorn.Andersson@sonymobile.com>
+Cc: Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 30 September 2014 20:39:34 Peter Chen wrote:
-> Thanks, Arnd. I had not thought setting dma mask is so complicated, yes, it
-> should check the return value, two things to confirm:
-> 
-> - dma_coerce_mask_and_coherent or dma_set_mask_and_coherent, the only difference
-> of these two API is the first one do "dev->dma_mask = &dev->coherent_dma_mask;"
-> The reason you suggest choosing dma_set_mask_and_coherent is you do not want
-> assign dev->dma_mask?
 
-No, that is just the current definition on ARM32 with CONFIG_ARCH_MULTIPLATFORM, and
-that is going to change soon to be DT aware.
-dma_set_mask_and_coherent() is supposed to check whether the platform can support
-the respective mask and return an error if it cannot.
+On Sep 29, 2014, at 7:34 PM, Bjorn Andersson <Bjorn.Andersson@sonymobil=
+e.com> wrote:
 
-> - The second parameter for dma_set_mask_and_coherent is DMA_BIT_MASK(32), is it
-> ok?
-> 
-> I just a little confused of what's the operation is "hardcoding the dma mask"?
+> Add binding documentation for the Qualcomm Resource Power Manager (RP=
+M)
+> using shared memory (Qualcomm SMD) as transport mechanism. This is fo=
+und
+> in 8974 and newer based devices.
+>=20
+> The binding currently describes the rpm itself and the regulator
+> subnodes.
+>=20
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> ---
+>=20
+> Note that this patch extends the rpm dt-bindings header from [1].
+>=20
+> [1] https://lkml.org/lkml/2014/9/22/733
+>=20
+> .../devicetree/bindings/mfd/qcom-rpm-smd.txt       |  122 +++++++++++=
++++++++++
+> include/dt-bindings/mfd/qcom-rpm.h                 |   36 ++++++
+> 2 files changed, 158 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/mfd/qcom-rpm-smd=
+=2Etxt
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt b=
+/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
+> new file mode 100644
+> index 0000000..a846101
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
+> @@ -0,0 +1,122 @@
+> +Qualcomm Resource Power Manager (RPM) over SMD
+> +
+> +This driver is used to interface with the Resource Power Manager (RP=
+M) found in
+> +various Qualcomm platforms. The RPM allows each component in the sys=
+tem to vote
+> +for state of the system resources, such as clocks, regulators and bu=
+s
+> +frequencies.
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be one of:
+> +		    "qcom,rpm-msm8974=94
 
-dma_coerce_mask_and_coherent() will hardcode the dma mask and override whatever
-the platform says is necessary.
+Why not =93qcom,rpm-smd=94.  I=92d like to get Jeff H=92s input on how =
+what we do here for compat and distinguish the A-family RPM support vs =
+B-family/RPM-SMD support.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +- qcom,smd-channels:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Shared Memory Channel used for communication with the R=
+PM
+> +
+
+This needs more details.
+
+> +- #address-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: must be 1
+> +
+> +- #size-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: must be 0
+> +
+> +=3D SUBDEVICES
+
+As I mentioned for the the RPM binding on a-family, we should split out=
+ the devices into their own binding specs.
+
+> +
+> +The RPM exposes resources to its subnodes. The below bindings specif=
+y the set
+> +of valid subnodes that can operate on these resources.
+> +
+> +=3D=3D Switch-mode Power Supply regulator
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be one of:
+> +		    "qcom,rpm-pm8841-smps"
+> +		    "qcom,rpm-pm8941-smps"
+> +
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: resource as defined in <dt-bindings/mfd/qcom-rpm.h>
+> +		    must be one of:
+> +		    QCOM_RPM_PM8841_SMPS1 - QCOM_RPM_PM8841_SMPS4,
+> +		    QCOM_RPM_PM8941_SMPS1 - QCOM_RPM_PM8941_SMPS3
+> +
+> +Standard regulator bindings are used inside switch mode power supply=
+ subnodes.
+> +Check Documentation/devicetree/bindings/regulator/regulator.txt for =
+more
+> +details.
+> +
+> +=3D=3D Low-dropout regulator
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be one of:
+> +		    "qcom,rpm-pm8941-ldo"
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: resource as defined in <dt-bindings/mfd/qcom-rpm.h>
+> +		    must be one of:
+> +		    QCOM_RPM_PM8941_LDO1 - QCOM_RPM_PM8941_LDO24
+> +
+> +Standard regulator bindings are used inside switch low-dropout regul=
+ator
+> +subnodes.  Check Documentation/devicetree/bindings/regulator/regulat=
+or.txt for
+> +more details.
+> +
+> +=3D=3D Switch
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be one of:
+> +		    "qcom,rpm-pm8941-switch"
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: resource as defined in <dt-bindings/mfd/qcom/qcom-rpm.h=
+>
+> +		    must be one of:
+> +		    QCOM_RPM_PM8941_LVS1 - QCOM_RPM_PM8941_LVS3,
+> +		    QCOM_RPM_PM8941_MVS1 - QCOM_RPM_PM8941_MVS2
+> +
+> +Standard regulator bindings are used inside switch regulator subnode=
+s.  Check
+> +Documentation/devicetree/bindings/regulator/regulator.txt for more d=
+etails.
+> +
+> +=3D EXAMPLE
+> +
+> +	#include <dt-bindings/mfd/qcom-rpm.h>
+> +
+> +	rpm@108000 {
+> +		compatible =3D "qcom,rpm-msm8960";
+> +		qcom,smd-channels =3D "rpm_requests";
+> +
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +
+> +		pm8941_s1: regulator-s1 {
+> +			compatible =3D "qcom,rpm-pm8941-smps";
+> +			reg =3D <QCOM_RPM_PM8941_SMPS1>;
+> +
+> +			regulator-min-microvolt =3D <1300000>;
+> +			regulator-max-microvolt =3D <1300000>;
+> +		};
+> +
+> +		pm8941_l3: pm8941-l3 {
+> +			compatible =3D "qcom,rpm-pm8941-ldo";
+> +			reg =3D <QCOM_RPM_PM8941_LDO3>;
+> +
+> +			regulator-min-microvolt =3D <1200000>;
+> +			regulator-max-microvolt =3D <1200000>;
+> +		};
+> +
+> +	};
+> +
+
+- k
+
+--=20
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
+ed by The Linux Foundation
