@@ -1,38 +1,33 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 00/13] ARM: shmobile: dts: Add chosen/stdout-path
-Date: Tue, 30 Sep 2014 11:07:56 +0900
-Message-ID: <20140930020755.GC10373@verge.net.au>
-References: <1411661609-4280-1-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1411661609-4280-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+From: Matt Ranostay <mranostay@gmail.com>
+Subject: [PATCH v4 0/3] cap1106: add support for cap11xx variants
+Date: Mon, 29 Sep 2014 21:26:26 -0700
+Message-ID: <1412051189-22643-1-git-send-email-mranostay@gmail.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: galak@codeaurora.org, dmitry.torokhov@gmail.com, zonque@gmail.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, Matt Ranostay <mranostay@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 25, 2014 at 06:13:16PM +0200, Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus,
-> 
-> This patch series adds chosen/stdout-path to the various shmobile DTS files
-> that are used for reference or multi-platform builds.
-> 
-> This serves two purposes:
->   1. It makes automatic console selection work in the absence of a "console="
->      parameter on the kernel command line, allowing to remove "console="
->      parameters from chosen/bootargs on many platforms.
->      Note that these "console=" parameters are still needed in some cases:
->        a. If console output is wanted on two consoles devices (graphical and
->           serial consoles), like on armadillo and kzm9g,
->        b. When using a non-default baud for the serial console, like on
->           henninger and alt,
->   2. It will allow the PM domain code to find the PM domain for the console
->      device, to make "no_console_suspend" work in the DT case.
->      For now, this will matter on armadillo.
-> 
-> The first two patches are small cleanups for emev2 dtsi, on top of which the
-> change for kzm9d is built.
+Changes from v3:
 
-Thanks, I have queued these up for v3.19.
+ * Resubmit with "git format-patch -M" to make file rename clear in
+   cover letter
+
+Matt Ranostay (3):
+  cap11xx: make driver generic for variant support
+  cap11xx: Add support for various cap11xx devices
+  cap11xx: support for irq-active-high option
+
+ .../bindings/input/{cap1106.txt => cap11xx.txt}    |  12 +-
+ drivers/input/keyboard/Kconfig                     |   8 +-
+ drivers/input/keyboard/Makefile                    |   2 +-
+ drivers/input/keyboard/cap1106.c                   | 341 -------------------
+ drivers/input/keyboard/cap11xx.c                   | 371 +++++++++++++++++++++
+ 5 files changed, 385 insertions(+), 349 deletions(-)
+ rename Documentation/devicetree/bindings/input/{cap1106.txt => cap11xx.txt} (78%)
+ delete mode 100644 drivers/input/keyboard/cap1106.c
+ create mode 100644 drivers/input/keyboard/cap11xx.c
+
+-- 
+1.9.1
+
