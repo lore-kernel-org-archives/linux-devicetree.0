@@ -1,35 +1,43 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] ARM: dts: hix5hd2: add i2c node
-Date: Tue, 30 Sep 2014 11:02:34 +0200
-Message-ID: <2637538.ufF2KQPbi9@wuerfel>
-References: <1411878129-19743-1-git-send-email-zhangfei.gao@linaro.org> <1411878129-19743-4-git-send-email-zhangfei.gao@linaro.org>
+From: Sunil Kovvuri <sunil.kovvuri@gmail.com>
+Subject: Re: [PATCH 3/6] pci, thunder: Add PCIe host controller devicetree bindings
+Date: Tue, 30 Sep 2014 14:41:35 +0530
+Message-ID: <CA+sq2Cc3isZThykhCU=nzFx0BYFvmv+qCTHTuE48bjN+FdVjfA@mail.gmail.com>
+References: <1411573068-12952-1-git-send-email-rric@kernel.org>
+	<1411573068-12952-4-git-send-email-rric@kernel.org>
+	<3082935.e3X4GsVUDn@wuerfel>
+	<CAL_JsqK2bqsbjEf2OngL2=Xr8t0AUobb_bd43BV4t9iXY-n6KQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411878129-19743-4-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqK2bqsbjEf2OngL2=Xr8t0AUobb_bd43BV4t9iXY-n6KQ@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Robert Richter <rric@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Liviu Dudau <liviu.dudau@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Sunil Goutham <sgoutham@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 28 September 2014 12:22:09 Zhangfei Gao wrote:
-> +
-> +               i2c0: i2c@b10000 {
-> +                       compatible = "hisilicon,hix5hd2-i2c";
-> +                       reg = <0xb10000 0x1000>;
-> +                       interrupts = <0 38 4>;
-> +                       clocks = <&clock HIX5HD2_I2C0_RST>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       status = "disabled";
-> +               };
-> 
+Thanks for pointing correction ROB.
+Will fix it.
 
-HIX5HD2_I2C0_RST is not defined anywhere, so this will result in the
-same build error that has required reverting a lot of patches for the
-3.18 merge window.
-
-How do you plan to deal with the dependency in the future?
-
-	Arnd
+On Fri, Sep 26, 2014 at 11:56 PM, Rob Herring <robherring2@gmail.com> wrote:
+> On Wed, Sep 24, 2014 at 11:06 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Wednesday 24 September 2014 17:37:45 Robert Richter wrote:
+>>>
+>>> +       pcie0@0x8480,00000000 {
+>>
+>> The name should be pci, not pci0.
+>
+> And the address should be "@848000000000". There was some confusion
+> about when the comma should be used and it is only if you have things
+> like PCI bus, device, function for the addressing.
+>
+>
+>>
+>>> +               compatible = "cavium,thunder-pcie";
+>
+> A bit too generic as many of the Cavium bindings have been.
+>
+> Rob
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
