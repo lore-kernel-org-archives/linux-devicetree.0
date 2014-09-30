@@ -1,17 +1,17 @@
 From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: [PATCH v6 08/10] net: pxa168_eth: allow to compile the pxa168_eth driver for tests
-Date: Tue, 30 Sep 2014 16:28:14 +0200
-Message-ID: <1412087296-18475-9-git-send-email-antoine.tenart@free-electrons.com>
+Subject: [PATCH v6 07/10] net: pxa168_eth: allow Berlin SoCs to use the pxa168_eth driver
+Date: Tue, 30 Sep 2014 16:28:13 +0200
+Message-ID: <1412087296-18475-8-git-send-email-antoine.tenart@free-electrons.com>
 References: <1412087296-18475-1-git-send-email-antoine.tenart@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <1412087296-18475-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
 To: sebastian.hesselbarth@gmail.com
 Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a dependency to COMPILE_TEST so that the driver can be compiled for
-test purposes.
+Berlin SoCs have an Ethernet controller compatible with the pxa168.
+Allow these SoCs to use the pxa168_eth driver.
 
 Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
 Acked-by: Arnd Bergmann <arnd@arndb.de>
@@ -20,15 +20,15 @@ Acked-by: Arnd Bergmann <arnd@arndb.de>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/marvell/Kconfig b/drivers/net/ethernet/marvell/Kconfig
-index 48b9466d1781..bed8fbb3edc5 100644
+index 1b4fc7c639e6..48b9466d1781 100644
 --- a/drivers/net/ethernet/marvell/Kconfig
 +++ b/drivers/net/ethernet/marvell/Kconfig
 @@ -64,7 +64,7 @@ config MVPP2
  
  config PXA168_ETH
  	tristate "Marvell pxa168 ethernet support"
--	depends on CPU_PXA168 || ARCH_BERLIN
-+	depends on CPU_PXA168 || ARCH_BERLIN || COMPILE_TEST
+-	depends on CPU_PXA168
++	depends on CPU_PXA168 || ARCH_BERLIN
  	select PHYLIB
  	---help---
  	  This driver supports the pxa168 Ethernet ports.
