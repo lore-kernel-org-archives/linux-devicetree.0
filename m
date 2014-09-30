@@ -1,35 +1,40 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCHv4 2/6] ARM: dts: Add initial LS1021A QDS board dts support
-Date: Tue, 30 Sep 2014 11:39:21 +0200
-Message-ID: <5453997.HOc1sLj4Fj@wuerfel>
-References: <1411371952-5618-1-git-send-email-jingchang.lu@freescale.com> <20140926061354.GD31948@dragon> <7ecfaed8cb1b4c228ee2eb20aab33429@BL2PR03MB467.namprd03.prod.outlook.com>
+From: Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/6] arm64: dts/Makefile: Add support for Spreadtrum's
+ Shark64 SoC.
+Date: Tue, 30 Sep 2014 17:51:37 +0800
+Message-ID: <CAAfSe-sdz=DkJteLCLwLg_2-KWRY8mp1O+ZZ=j2YJtskXNT6Mw@mail.gmail.com>
+References: <1411992293-7729-1-git-send-email-zhang.lyra@gmail.com>
+	<1411992293-7729-4-git-send-email-zhang.lyra@gmail.com>
+	<20140929144752.GP16977@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7ecfaed8cb1b4c228ee2eb20aab33429-AZ66ij2kwab4MB1ZSnT4iOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+In-Reply-To: <20140929144752.GP16977-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Shengchao Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Huan Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "jaiprakash.singh-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <jaiprakash.singh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Ramkumar Ramachandra <artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Orson Zhai <orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, "zhizhou.zhang" <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 28 September 2014 08:48:17 Jingchang Lu wrote:
-> >> +            i2c@3 {
-> >> +                    #address-cells = <1>;
-> >> +                    #size-cells = <0>;
-> >> +                    reg = <0x3>;
-> >> +
-> >> +                    eeprom@56 {
-> >> +                            compatible = "at24,24c512";
-> >
-> >Undocumented property.
-> It documented in Documentation/devicetree/bindings/eeprom.txt as the form of "<manufacturer>,<type>". Thanks.
-> >
-> 
+Hi, Mark
 
-The documented vendor name for Atmel is "atmel", not "at24".
+[use plain text pattern to send again]
 
-	Arnd
+2014-09-29 22:47 GMT+08:00 Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Mon, Sep 29, 2014 at 08:04:50PM +0800, zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>
+>>  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
+>>  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
+>> +dtb-$(CONFIG_ARCH_SHARK64) += sprd_shark64.dtb
+>
+> It's better to keep lists in Makefiles and Kconfig sorted
+> alphanumerically, that way there's less chance of conflicts when
+> applying patches or merging different branches.
+
+Thank you very much for your review and explain why this way is
+better. I'll address this change in V2.
+
+Best regards,
+Chunyan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
