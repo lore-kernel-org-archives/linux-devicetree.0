@@ -1,89 +1,62 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 4/4] ARM: dts: apq8064: Add SATA controller support.
-Date: Tue, 30 Sep 2014 15:10:27 +0100
-Message-ID: <1412086227-21071-1-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1412086159-20894-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1412086159-20894-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
-Cc: broonie@kernel.org, lee.jones@linaro.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arm@kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@sonymobile.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [RFC 4/7] soc: qcom: Add Shared Memory Manager driver
+Date: Tue, 30 Sep 2014 07:15:06 -0700
+Message-ID: <20140930141505.GJ28481@sonymobile.com>
+References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1412037291-16880-5-git-send-email-bjorn.andersson@sonymobile.com>
+ <542A4AEF.2030402@smartplayin.com>
+ <542A4D80.60101@smartplayin.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <542A4D80.60101@smartplayin.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kiran Padwal <kiran.padwal@smartplayin.com>
+Cc: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds AHCI based SATA controller support to APQ8064.
-Tested on IFC6410 board.
+On Mon 29 Sep 23:28 PDT 2014, Kiran Padwal wrote:
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- arch/arm/boot/dts/qcom-apq8064-ifc6410.dts |  8 +++++++
- arch/arm/boot/dts/qcom-apq8064.dtsi        | 36 ++++++++++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
+>=20
+> Hi,
+>=20
+> On Tuesday 30 September 2014 11:47 AM, Kiran Padwal wrote:
+> > Hi Bjorn,
+> >=20
+> > On Tuesday 30 September 2014 06:04 AM, Bjorn Andersson wrote:
+[..]
+> >> +	smem->hwlock =3D of_hwspin_lock_request(pdev->dev.of_node, NULL)=
+;
+> >=20
+> > Compilation breaks while I try to compile with this patch.
+> > Do I missing anything? Below is the error I am getting,
+> >=20
+> > drivers/soc/qcom/qcom_smem.c: In function =91qcom_smem_probe=92:
+> > drivers/soc/qcom/qcom_smem.c:274:2: error: implicit declaration of =
+function =91of_hwspin_lock_request=92 [-Werror=3Dimplicit-function-decl=
+aration]
+> >   smem->hwlock =3D of_hwspin_lock_request(pdev->dev.of_node, NULL)
+>=20
+> I am sorry I missed the note in commit message of this patch. I did l=
+ook for any such note in cover letter=20
+> and also googled around for any change to find this function.
+> Could not find and hence posted comment. Please ignore.
+>=20
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-index f221e9e..446dab9 100644
---- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-@@ -40,6 +40,14 @@
- 			};
- 		};
- 
-+		sata_phy0: sata-phy@1b400000{
-+			status = "okay";
-+		};
-+
-+		sata0: sata@29000000 {
-+			status = "okay";
-+		};
-+
- 		/* OTG */
- 		usb1_phy: phy@12500000 {
- 			status = "okay";
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 28643fb..44b6a0a 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -634,6 +634,42 @@
- 			usb-phy		= <&usb4_phy>;
- 		};
- 
-+		sata_phy0: sata-phy@1b400000{
-+			compatible	= "qcom,apq8064-sata-phy";
-+			status		= "disabled";
-+			reg		= <0x1b400000 0x200>;
-+			reg-names	= "phy_mem";
-+			clocks		= <&gcc SATA_PHY_CFG_CLK>;
-+			clock-names	= "cfg";
-+			#phy-cells	= <0>;
-+		};
-+
-+		sata0: sata@29000000 {
-+			compatible		= "generic-ahci";
-+			status			= "disabled";
-+			reg			= <0x29000000 0x180>;
-+			interrupts		= <0 209 0>;
-+
-+			clocks			= <&gcc SFAB_SATA_S_H_CLK>,
-+						<&gcc SATA_H_CLK>,
-+				 	  	<&gcc SATA_A_CLK>,
-+						<&gcc SATA_RXOOB_CLK>,
-+						<&gcc SATA_PMALIVE_CLK>;
-+			clock-names 		= "slave_iface",
-+						"iface",
-+						"bus",
-+						"rxoob",
-+						"core_pmalive";
-+
-+			assigned-clocks		= <&gcc SATA_RXOOB_CLK>,
-+						<&gcc SATA_PMALIVE_CLK>;
-+			assigned-clock-rates	= <100000000>, <100000000>;
-+
-+			phys			= <&sata_phy0>;
-+			phy-names		= "sata-phy";
-+			target-supply		= <&pm8921_s4>;
-+		};
-+
- 		/* Temporary fixed regulator */
- 		vsdcc_fixed: vsdcc-regulator {
- 			compatible = "regulator-fixed";
--- 
-1.9.1
+I respun this ontop of Suman Anna's latest hwspinlock patches [1] and [=
+2].
+
+The above code should now be:
+
+        hwlock_id =3D of_hwspin_lock_get_id(pdev->dev.of_node, 0);
+	smem->hwlock =3D hwspin_lock_request_specific(hwlock_id);
+
+Will include this in the next spin.
+
+[1] https://patchwork.kernel.org/patch/4898051/
+[2] https://patchwork.kernel.org/patch/4898071/
+
+Regards,
+Bjorn
