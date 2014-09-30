@@ -1,49 +1,95 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: Re: [PATCH v4] hwspinlock: qcom: Add support for Qualcomm HW Mutex
- block
-Date: Tue, 30 Sep 2014 15:27:55 -0700
-Message-ID: <20140930222754.GX28481@sonymobile.com>
-References: <1412051728-3289-1-git-send-email-bjorn.andersson@sonymobile.com>
- <542B2B4A.7060002@codeaurora.org>
+From: Tim Bird <tim.bird@sonymobile.com>
+Subject: [PATCH v3] ARM: dts: Add initial DTS file for Sony Xperia Z1 phone
+Date: Tue, 30 Sep 2014 15:49:49 -0700
+Message-ID: <542B338D.2040909@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <542B2B4A.7060002-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Eric Holmberg <eholmber-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Cavin, Courtney" <Courtney.Cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, Kevin Hilman <khilman@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 30 Sep 15:14 PDT 2014, Jeffrey Hugo wrote:
+This DTS has support for the Sony Xperia Z1 phone (codenamed Honami).
+This first version of the DTS supports just a serial console.
 
-> On 9/29/2014 10:35 PM, Bjorn Andersson wrote:
+changes from V2
+ - fixed dtb name in Makefile
 
-[..]
+changes from v1
+ - removed qcom,msm-id attribute
+ - removed mis-capitalized Qualcomm word
+ - changed dts file name
+ - added board-specific compatible-string
 
-> > +static int qcom_hwspinlock_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device_node *node = pdev->dev.of_node;
-> > +	const struct of_device_id *match;
-> > +	struct hwspinlock_device *bank;
-> > +	struct hwspinlock *hwlock;
-> > +	struct resource *res;
-> > +	void __iomem *iobase;
-> > +	unsigned stride, i;
-> > +	size_t array_size;
-> > +	u32 num_locks;
-> > +	int ret;
-> > +
-> > +	match = of_match_device(qcom_hwspinlock_of_match, &pdev->dev);
-> Didn't this have error handling in v2?
+Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
+Tested-by: Kevin Hilman <khilman@linaro.org>
+---
 
-It did, but as this is a platform_device and we only support DTthere is no way
-match will be NULL if we end up here. So the possible check would be to see
-that data is non-null, but for this driver that wouldn't make sense.
+This version fixes the dtb name.  I asked previously about adding to qcom_dt_match,
+but apparently board compatibles are being removed from that list in
+mach_qcom/board.c
+See https://lkml.org/lkml/2014/9/24/952
 
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kevin tested this (modulu re-adding back the qcom,msm-id).  I have a new
+mkqcdtbootimg which works without requiring the qcom,msm-id attribute,
+that I'll send to Kevin shortly (and publish on github).
+
+ Documentation/devicetree/bindings/vendor-prefixes.txt |  1 +
+ arch/arm/boot/dts/Makefile                            |  3 ++-
+ arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts | 17 +++++++++++++++++
+ 3 files changed, 20 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index ac7269f..d3a4579 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -128,6 +128,7 @@ sirf	SiRF Technology, Inc.
+ smsc	Standard Microsystems Corporation
+ snps 	Synopsys, Inc.
+ solidrun	SolidRun
++sony	Sony Corporation
+ spansion	Spansion Inc.
+ st	STMicroelectronics
+ ste	ST-Ericsson
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b8c5cd3..cf58321 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -343,7 +343,8 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-apq8074-dragonboard.dtb \
+ 	qcom-apq8084-mtp.dtb \
+ 	qcom-msm8660-surf.dtb \
+-	qcom-msm8960-cdp.dtb
++	qcom-msm8960-cdp.dtb \
++	qcom-msm8974-sony-xperia-honami.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+ 	rk3066a-bqcurie2.dtb \
+ 	rk3188-radxarock.dtb \
+diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+new file mode 100644
+index 0000000..cccc21b
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+@@ -0,0 +1,17 @@
++#include "qcom-msm8974.dtsi"
++
++/ {
++	model = "Sony Xperia Z1";
++	compatible = "sony,xperia-honami", "qcom,msm8974";
++
++	memory@0 {
++		reg = <0 0x40000000>, <0x40000000 0x40000000>;
++		device_type = "memory";
++	};
++};
++
++&soc {
++	serial@f991e000 {
++		status = "ok";
++	};
++};
+-- 
+1.8.2.2
