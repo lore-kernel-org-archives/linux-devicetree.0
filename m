@@ -1,78 +1,113 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V3] bcma: use device from DT (brcm, bus-chipcommon) for SoC GPIO chip
-Date: Tue, 30 Sep 2014 12:36:28 +0200
-Message-ID: <3484902.1UVy7lmJAD@wuerfel>
-References: <1411892641-5662-1-git-send-email-zajec5@gmail.com> <1412072546-3529-1-git-send-email-zajec5@gmail.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v13 00/12] Support for creating generic PCI host bridges
+ from DT
+Date: Tue, 30 Sep 2014 11:39:42 +0100
+Message-ID: <20140930103942.GO841@e106497-lin.cambridge.arm.com>
+References: <1412000971-9242-1-git-send-email-Liviu.Dudau@arm.com>
+ <20140929194335.GA13747@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412072546-3529-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140929194335.GA13747@google.com>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Yinghai Lu <yinghai@kernel.org>, Jiang Liu <jiang.liu@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 30 September 2014 12:22:26 Rafa=C5=82 Mi=C5=82ecki wrote:
+On Mon, Sep 29, 2014 at 08:43:35PM +0100, Bjorn Helgaas wrote:
+> On Mon, Sep 29, 2014 at 03:29:19PM +0100, Liviu Dudau wrote:
+> > This is my version 13 of the attempt at adding support for generic =
+PCI host
+> > bridge controllers. It contains only cleanups to make it play nice =
+with the
+> > linux-next tree as of 09/25. If Bjorn deems it safe, now that it lo=
+oks like
+> > asm-generic is going to revert some of its more aggresive patches, =
+he has the
+> > choice of queueing it into linux-next again.
+> > ...
 >=20
-> +The top-level axi bus may contain children representing attached cor=
-es
-> +(devices). This is needed since some hardware details can't be auto
-> +detected (e.g. IRQ numbers). Also some of the cores may be responsib=
-le
-> +for extra things, e.g. ChipCommon providing access to the GPIO chip.
-> +
->  Example:
-> =20
->         axi@18000000 {
-> @@ -17,4 +22,12 @@ Example:
->                 ranges =3D <0x00000000 0x18000000 0x00100000>;
->                 #address-cells =3D <1>;
->                 #size-cells =3D <1>;
-> +
-> +               chipcommon {
-> +                       compatible =3D "brcm,bus-chipcommon";
-> +                       reg =3D <0x00000000 0x1000>;
-> +
-> +                       gpio-controller;
-> +                       #gpio-cells =3D <2>;
-> +               };
->         };
+> These patches above were already on my pci/host-generic branch and in
+> linux-next:
+>=20
+>    asm-generic/io.h: Fix ioport_map() for !CONFIG_GENERIC_IOMAP
+This ^ ...
 
-Looks good.
+>    of/pci: Add pci_register_io_range() and pci_pio_to_address()
+>    ARM: Define PCI_IOBASE as the base of virtual PCI IO space
+
+and this ^ need to be refreshed from my series otherwise we will get co=
+nflicts with
+asm-generic branch (either now or in the future). While the asm-generic=
+/io.h
+cast is arguably superflous, we need to define PCI_IOBASE as a void __i=
+omem* to
+match all other standard declarations of PCI_IOBASE.
+
+>    of/pci: Define of_pci_range_to_resource() only when CONFIG_PCI=3Dy
+>    of/pci: Move of_pci_range_to_resources() to of/address.c
+>    of/pci: Fix the conversion of IO ranges into IO resources
+>=20
+> I added these three patches to my pci/host-generic branch:
+>=20
+>    PCI: Add generic domain handling
+>    of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr()
+>    of/pci: Add support for parsing PCI host bridge resources from DT
+
+I can see these patches added to pci/host-generic but not on pci/next.
+
+>=20
+> Yinghai pointed out a problem with this one, so I omitted it:
+>=20
+>    PCI: Assign unassigned bus resources in pci_scan_root_bus()
+
+Thats fine, host bridge drivers will have to work around pci_scan_root_=
+bus() reduced
+functionality for now.
 
 
-> diff --git a/drivers/bcma/driver_gpio.c b/drivers/bcma/driver_gpio.c
-> index 8ea497c..28bdbe5 100644
-> --- a/drivers/bcma/driver_gpio.c
-> +++ b/drivers/bcma/driver_gpio.c
-> @@ -218,6 +218,12 @@ int bcma_gpio_init(struct bcma_drv_cc *cc)
->  #if IS_BUILTIN(CONFIG_BCM47XX)
->         chip->to_irq            =3D bcma_gpio_to_irq;
->  #endif
-> +#if IS_BUILTIN(CONFIG_OF)
-> +       if (cc->core->bus->hosttype =3D=3D BCMA_HOSTTYPE_SOC)
-> +               chip->of_node   =3D of_find_compatible_node(
-> +                                       bus->host_pdev->dev.of_node, =
-NULL,
-> +                                       "brcm,bus-chipcommon");
-> +#endif
->         switch (cc->core->bus->chipinfo.id) {
+>=20
+> I added this one to my pci/host-generic branch:
+>=20
+>    PCI: Add pci_remap_iospace() to map bus I/O resources
+>=20
+> I assume this depends on the pci_scan_root_bus() change (if not, let =
+me
+> know), so I omitted this one:
+>=20
+>    arm64: Add architectural support for PCI
 
-This doesn't: you are now searching through all nodes starting at the
-axi node rather than searching just through the children.
+No, there is no dependency there on pci_scan_root_bus(), it can go in t=
+he series.
+The only thing that depends on a feature rich pci_scan_root_bus() is th=
+e host
+bridge driver in order to be able to use only one line to process the r=
+oot bus.
 
-I think it would be better with the first change in place to set
-chip->of_node to cc->core->dev.of_node, and set that pointer in
-bcma_bus_scan by matching the 'reg' number. I think that is what
-an earlier version of the bcma DT support did in order to find the
-IRQs. We no longer need it for that purpose, but it seems like a
-good idea anyway, as I expect other bcma_devices to have similar
-requirements to add additional properties.
+Thanks for huge support in getting these patches in and I do hope I'm n=
+ot being
+too much of a burden to you.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireles=
-s" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Liviu
+
+>=20
+> Bjorn
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
+in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
