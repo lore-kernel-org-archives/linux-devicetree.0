@@ -1,52 +1,63 @@
 From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH 1/4] ARM: DT: apq8064: add rpm support
-Date: Tue, 30 Sep 2014 12:56:53 -0700
-Message-ID: <20140930195652.GT28481@sonymobile.com>
-References: <1411982044-7873-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1411982092-7922-1-git-send-email-srinivas.kandagatla@linaro.org>
- <5429DA95.80505@codeaurora.org>
- <20140930050203.GG28481@sonymobile.com>
- <542AF5FE.1000006@codeaurora.org>
- <20140930190023.GS28481@sonymobile.com>
- <542B00C1.3010702@codeaurora.org>
+Subject: Re: [RFC 1/7] soc: qcom: Add device tree binding for SMEM
+Date: Tue, 30 Sep 2014 13:00:53 -0700
+Message-ID: <20140930200052.GU28481@sonymobile.com>
+References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1412037291-16880-2-git-send-email-bjorn.andersson@sonymobile.com>
+ <542AFE79.6030304@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <542B00C1.3010702@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+In-Reply-To: <542AFE79.6030304@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 30 Sep 12:13 PDT 2014, Stephen Boyd wrote:
+On Tue 30 Sep 12:03 PDT 2014, Stephen Boyd wrote:
 
-> On 09/30/14 12:00, Bjorn Andersson wrote:
+> On 09/29/14 17:34, Bjorn Andersson wrote:
+> > +
+> > +- reg:
+> > +	Usage: required
+> > +	Value type: <prop-encoded-array>
+> > +	Definition: base address and size pair for each area representing the
+> > +		    shared memory. The first pair will must represent the "main"
+> > +		    area, where the shared memory header and table-of-content
+> > +		    can be found.
 > >
-> > Hmm, seems I got that wrong, sorry about that.
-> >
-> > But do you mean "all wrong" as in that I use the wrong bit or to some greater
-> > extent? Currently all following requests should timeout, but maybe we should
-> > have a faster fail-path when we've hit this point?
+> > +
+> > += EXAMPLE
+> > +
+> > +        smem: smem@fa00000 {
+> > +                compatible = "qcom,smem";
+> > +                reg = <0x0fa00000 0x200000>,
+> > +                      <0xfc428000 0x4000>;
 > 
-> Yes. We just ack the interrupt and go on happy to keep allowing clients
-> to request things. I'd rather see us blow up or start failing requests,
-> or maybe both.
-> 
-
-Okay, I naively figured that the RPM would be dead after this happened and from
-this point we would start getting timeouts. Let's ack the right bit and fail
-early after the RPM have rejected things.
-
-> >
-> > From a practical pov I guess that once the rpm starts returning errors on
-> > updates to regulators, root clocks and bus scaling then most of the system is
-> > becoming useless.
-> 
-> Right. Rebooting will be required fairly soon.
+> Isn't this second entry rpm message ram? That isn't the same as smem.
+> Plus smem is part of ram (and rpm message ram is not) so we need to do
+> memory reservations or something.
 > 
 
-Yes, but we want something else to trigger that right?
+Correct they are different, but smem covers both of those and allocations are
+only supposed to be done in the first of these.
+
+And I forgot to mention that I have the following in my dt:
+
+/ {
+        reserved-memory {
+                #address-cells = <1>;
+                #size-cells = <1>;
+                ranges;
+
+                smem@fa00000 {
+                        #memory-region-cells = <0>;
+                        reg = <0x0fa00000 0x200000>;
+                        no-map;
+                };
+        };
+};
 
 Regards,
 Bjorn
