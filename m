@@ -1,63 +1,47 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] of/pci: add pci_pio_to_address dummy for !CONFIG_OF
-Date: Tue, 30 Sep 2014 15:19:05 +0200
-Message-ID: <706416181.hbVGLDA3o6@wuerfel>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v5 2/3] net: Add Keystone NetCP ethernet driver
+Date: Tue, 30 Sep 2014 15:28:23 +0200
+Message-ID: <CAMuHMdXe2H4qfX4X4GDzJSgoWzu-BrvRL6KoZagepY1GYEA4Ag@mail.gmail.com>
+References: <1411667317-1163-1-git-send-email-santosh.shilimkar@ti.com>
+	<1411667317-1163-3-git-send-email-santosh.shilimkar@ti.com>
+	<20140929.155200.2231132602322345812.davem@davemloft.net>
+	<063D6719AE5E284EB5DD2968C1650D6D174A1012@AcuExch.aculab.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Rob Herring <robh@kernel.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D174A1012@AcuExch.aculab.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Laight <David.Laight@aculab.com>
+Cc: David Miller <davem@davemloft.net>, "santosh.shilimkar@ti.com" <santosh.shilimkar@ti.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sandeep_n@ti.com" <sandeep_n@ti.com>, "joe@perches.com" <joe@perches.com>
 List-Id: devicetree@vger.kernel.org
 
-The pci_register_io_range() and pci_pio_to_address() were recently
-introduced to generalize the handling of memory mapped PCI I/O space,
-but they are only valid when CONFIG_OF is set, leading to a possible
-build error:
+On Tue, Sep 30, 2014 at 3:09 PM, David Laight <David.Laight@aculab.com> wrote:
+>> > +static inline int gbe_phy_link_status(struct gbe_slave *slave)
+>> > +{
+>> > +   if (!slave->phy)
+>> > +           return 1;
+>> > +
+>> > +   if (slave->phy->link)
+>> > +           return 1;
+>> > +
+>> > +   return 0;
+>> > +}
+>>
+>> Please use 'bool' as the return type and return 'true' or 'false'.
+>
+> That function body could also be just:
+>         return !slave->phy && slave->phy->link;
+> which might be more readable if directly coded.
 
-drivers/pci/host/pcie-rcar.c: In function 'rcar_pcie_setup_window':
-drivers/pci/host/pcie-rcar.c:340:3: error: implicit declaration of function 'pci_pio_to_address' [-Werror=implicit-function-declaration]
-   res_start = pci_pio_to_address(res->start);
-   ^
-drivers/pci/host/pcie-rcar.c: In function 'rcar_pcie_probe':
-drivers/pci/host/pcie-rcar.c:945:3: error: implicit declaration of function 'of_pci_range_to_resource' [-Werror=implicit-function-declaration]
-   err = of_pci_range_to_resource(&range, pdev->dev.of_node,
-   ^
-cc1: some warnings being treated as errors
+return !slave->phy || slave->phy->link;
 
-This provides inline dummy implementations for the case that
-CONFIG_OF is disabled, to allow better build testing.
+Gr{oetje,eeting}s,
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Fixes: 279c5dd046 ("of/pci: Add pci_register_io_range() and pci_pio_to_address()")
+                        Geert
 
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index 7ebb877b07c2..851097aab115 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -71,6 +71,11 @@ static inline const __be32 *of_get_address(struct device_node *dev, int index,
- 	return NULL;
- }
- 
-+static inline phys_addr_t pci_pio_to_address(unsigned long pio)
-+{
-+	return 0;
-+}
-+
- static inline int of_pci_range_parser_init(struct of_pci_range_parser *parser,
- 			struct device_node *node)
- {
-@@ -144,6 +149,12 @@ static inline const __be32 *of_get_pci_address(struct device_node *dev,
- {
- 	return NULL;
- }
-+static inline int of_pci_range_to_resource(struct of_pci_range *range,
-+					   struct device_node *np,
-+					   struct resource *res)
-+{
-+	return -ENOSYS;
-+}
- #endif /* CONFIG_OF_ADDRESS && CONFIG_PCI */
- 
- #endif /* __OF_ADDRESS_H */
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
