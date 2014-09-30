@@ -1,53 +1,210 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH][V2] Freescale Frame Manager Device Tree binding document
-Date: Mon, 29 Sep 2014 18:33:00 -0500
-Message-ID: <1412033580.13320.295.camel@snotra.buserror.net>
-References: <1410952110-32733-1-git-send-email-igal.liberman@freescale.com>
- <5425962F.7090602@mindchasers.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Tue, 30 Sep 2014 08:12:07 +0800
+Message-ID: <20140930001206.GA11657@peterchendt>
+References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1411468088-5702-8-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <5425962F.7090602@mindchasers.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Bob Cochran <ppc@mindchasers.com>
-Cc: "Igal.Liberman" <igal.liberman@freescale.com>, netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Emilian.Medve@freescale.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1411468088-5702-8-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE0LTA5LTI2IGF0IDEyOjM3IC0wNDAwLCBCb2IgQ29jaHJhbiB3cm90ZToKPiBP
-biAwOS8xNy8yMDE0IDA3OjA4IEFNLCBJZ2FsLkxpYmVybWFuIHdyb3RlOgo+ID4gRnJvbTogSWdh
-bCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgo+ID4KPiA+IFRoZSBGcmFt
-ZSBNYW5hZ2VyIChGTWFuKSBjb21iaW5lcyB0aGUgRXRoZXJuZXQgbmV0d29yayBpbnRlcmZhY2Vz
-IHdpdGggcGFja2V0Cj4gPiBkaXN0cmlidXRpb24gbG9naWMgdG8gcHJvdmlkZSBpbnRlbGxpZ2Vu
-dCBkaXN0cmlidXRpb24gYW5kIHF1ZXVpbmcgZGVjaXNpb25zCj4gPiBmb3IgaW5jb21pbmcgdHJh
-ZmZpYyBhdCBsaW5lIHJhdGUuCj4gPgo+ID4gVGhpcyBiaW5kaW5nIGRvY3VtZW50IGRlc2NyaWJl
-cyBGcmVlc2NhbGUncyBGcmFtZSBNYW5hZ2VyIGhhcmR3YXJlIGF0dHJpYnV0ZXMKPiA+IHRoYXQg
-YXJlIHVzZWQgYnkgdGhlIEZyYW1lIE1hbmFnZXIgZHJpdmVyIGZvciBpdHMgYmFzaWMgaW5pdGlh
-bGl6YXRpb24gYW5kCj4gPiBjb25maWd1cmF0aW9uLgo+ID4KPiA+IERpZmZlcmVuY2UgYmV0d2Vl
-biBbVjFdIGFuZCBbVjJdOgo+ID4gQWRkcmVzc2VkIGFsbCBjb21tZW50cyByZWNpZXZlZCBmcm9t
-IFNjb3R0IGluIFtWMV0KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBJZ2FsIExpYmVybWFuIDxJZ2Fs
-LkxpYmVybWFuQGZyZWVzY2FsZS5jb20+Cj4gCj4gCj4gSXMgdGhlcmUgYSByZWZlcmVuY2UgKEZN
-QU4pIGR0cyBmaWxlIEkgY2FuIGNvbXBhcmUgdGhpcyBhZ2FpbnN0PyAgSSB3YXMgCj4gcmV2aWV3
-aW5nIHRoaXMgYWdhaW5zdCBteSAoY29tYmluZWQpIGR0cyBmaWxlIGZvciBteSB0MTA0MHJkYiBi
-dWlsdCB3aXRoIAo+IGVpdGhlciBGU0wncyBTREsxLjYgb3IgWW9jdG8gUHJvamVjdCBtZXRhLWZz
-bC1wcGMgbWFzdGVyIGJyYW5jaCwgYW5kIEknbSAKPiBub3QgZmluZGluZyBhIGdvb2QgbWF0Y2gg
-YmV0d2VlbiB0aGUgbm9kZXMgLyBwcm9wZXJ0aWVzIGluIG15IGR0cyBmaWxlIAo+IGFuZCB3aGF0
-IHlvdSBoYXZlIGhlcmUuCj4gCj4gRm9yIGV4YW1wbGUsIEkgZG9uJ3QgZmluZCB0aGUgcmVxdWly
-ZWQgImNsb2NrcyIgb3IgCj4gImZzbCxxbWFuLWNoYW5uZWwtcmFuZ2UiIHByb3BlcnRpZXMgdW5k
-ZXIgbXkgPGZtYW4wOiBmbWFuQDQwMDAwMCAuLi4+IAo+IG5vZGUuCj4gCQo+IEknbSB3b25kZXJp
-bmcgaWYgdGhpcyBkb2N1bWVudCBpcyB0cmFpbGluZyBvciBsZWFkaW5nIHRoZSBzb3VyY2UgaW4g
-dGhlIAo+IGxhdGVzdCBwdWJsaXNoZWQgRlNMIFNESyAoMS42KS4KClRoZSBTREsncyBkZXZpY2Ug
-dHJlZSBiaW5kaW5nIHdhcyBub3QgY29uc2lkZXJlZCBzdWl0YWJsZSBhbmQgd2UndmUKc3RhcnRl
-ZCBmcm9tIHNjcmF0Y2ggZm9yIHVwc3RyZWFtLgoKLVNjb3R0CgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApM
-aW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlz
-dGluZm8vbGludXhwcGMtZGV2
+On Tue, Sep 23, 2014 at 12:28:03PM +0200, Antoine Tenart wrote:
+> Add a USB2 ChipIdea driver for ci13xxx, with optional PHY, clock
+> and DMA mask, to support USB2 ChipIdea controllers that don't need
+> specific functions.
+> 
+> Tested on the Marvell Berlin SoCs USB controllers.
+> 
+> Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/usb/chipidea/Makefile       |   1 +
+>  drivers/usb/chipidea/ci_hdrc_usb2.c | 138 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 139 insertions(+)
+>  create mode 100644 drivers/usb/chipidea/ci_hdrc_usb2.c
+> 
+> diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
+> index 2f099c7df7b5..1fc86a2ca22d 100644
+> --- a/drivers/usb/chipidea/Makefile
+> +++ b/drivers/usb/chipidea/Makefile
+> @@ -10,6 +10,7 @@ ci_hdrc-$(CONFIG_USB_OTG_FSM)		+= otg_fsm.o
+>  
+>  # Glue/Bridge layers go here
+>  
+> +obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_usb2.o
+>  obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_msm.o
+>  obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_zevio.o
+>  
+> diff --git a/drivers/usb/chipidea/ci_hdrc_usb2.c b/drivers/usb/chipidea/ci_hdrc_usb2.c
+> new file mode 100644
+> index 000000000000..6eae1de587f2
+> --- /dev/null
+> +++ b/drivers/usb/chipidea/ci_hdrc_usb2.c
+> @@ -0,0 +1,138 @@
+> +/*
+> + * Copyright (C) 2014 Marvell Technology Group Ltd.
+> + *
+> + * Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2. This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/usb/chipidea.h>
+> +#include <linux/usb/hcd.h>
+> +#include <linux/usb/ulpi.h>
+> +
+> +#include "ci.h"
+> +
+> +struct ci_hdrc_usb2_priv {
+> +	struct platform_device	*ci_pdev;
+> +	struct clk		*clk;
+> +};
+> +
+> +static int ci_hdrc_usb2_dt_probe(struct device *dev,
+> +				 struct ci_hdrc_platform_data *ci_pdata)
+> +{
+> +	ci_pdata->phy = of_phy_get(dev->of_node, 0);
+> +	if (IS_ERR(ci_pdata->phy)) {
+> +		if (PTR_ERR(ci_pdata->phy) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +
+> +		/* PHY is optional */
+> +		ci_pdata->phy = NULL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct ci_hdrc_platform_data ci_default_pdata = {
+> +	.capoffset	= DEF_CAPOFFSET,
+> +	.flags		= CI_HDRC_REQUIRE_TRANSCEIVER |
+> +			  CI_HDRC_DISABLE_STREAMING,
+> +};
+> +
+> +static int ci_hdrc_usb2_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct ci_hdrc_usb2_priv *priv;
+> +	struct ci_hdrc_platform_data *ci_pdata = dev_get_platdata(&pdev->dev);
+> +	int ret;
+> +
+> +	if (!ci_pdata)
+> +		ci_pdata = &ci_default_pdata;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->clk = devm_clk_get(dev, NULL);
+> +	if (!IS_ERR(priv->clk)) {
+> +		ret = clk_prepare_enable(priv->clk);
+> +		if (ret) {
+> +			dev_err(dev, "failed to enable the clock: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	if (dev->of_node) {
+> +		ret = ci_hdrc_usb2_dt_probe(dev, ci_pdata);
+> +		if (ret)
+> +			goto clk_err;
+> +	} else {
+> +		ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+> +		if (ret)
+> +			goto clk_err;
+> +	}
+
+My suggestion:
+
+- call dma_coerce_mask_and_coherent(&dev->dev, DMA_BIT_MASK(32)) for both 
+dt and non-dt
+- Do not need function ci_hdrc_usb2_dt_probe, the phy handle should be moved
+to core driver, since your generic phy driver are still not accepted, I
+can't do it by myself. Either you or I can do it after your generic phy support
+series has been accepted.
+- Others are ok.
+
+Peter
+
+> +
+> +	ci_pdata->name = dev_name(&pdev->dev);
+> +
+> +	priv->ci_pdev = ci_hdrc_add_device(dev, pdev->resource,
+> +					   pdev->num_resources, ci_pdata);
+> +	if (IS_ERR(priv->ci_pdev)) {
+> +		ret = PTR_ERR(priv->ci_pdev);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev,
+> +				"failed to register ci_hdrc platform device: %d\n",
+> +				ret);
+> +		goto clk_err;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	pm_runtime_no_callbacks(dev);
+> +	pm_runtime_enable(dev);
+> +
+> +	return 0;
+> +
+> +clk_err:
+> +	if (!IS_ERR(priv->clk))
+> +		clk_disable_unprepare(priv->clk);
+> +	return ret;
+> +}
+> +
+> +static int ci_hdrc_usb2_remove(struct platform_device *pdev)
+> +{
+> +	struct ci_hdrc_usb2_priv *priv = platform_get_drvdata(pdev);
+> +
+> +	pm_runtime_disable(&pdev->dev);
+> +	ci_hdrc_remove_device(priv->ci_pdev);
+> +	clk_disable_unprepare(priv->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id ci_hdrc_usb2_of_match[] = {
+> +	{ .compatible = "chipidea,usb2" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ci_hdrc_usb2_of_match);
+> +
+> +static struct platform_driver ci_hdrc_usb2_driver = {
+> +	.probe	= ci_hdrc_usb2_probe,
+> +	.remove	= ci_hdrc_usb2_remove,
+> +	.driver	= {
+> +		.name		= "chipidea-usb2",
+> +		.owner		= THIS_MODULE,
+> +		.of_match_table	= of_match_ptr(ci_hdrc_usb2_of_match),
+> +	},
+> +};
+> +module_platform_driver(ci_hdrc_usb2_driver);
+> +
+> +MODULE_DESCRIPTION("ChipIdea HDRC USB2 binding for ci13xxx");
+> +MODULE_AUTHOR("Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 1.9.1
+> 
+
+-- 
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
