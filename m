@@ -1,101 +1,36 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
-Date: Tue, 30 Sep 2014 13:03:44 +0100
-Message-ID: <20140930120344.GA14215@e102568-lin.cambridge.arm.com>
-References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com>
- <1411937610-22125-3-git-send-email-suravee.suthikulpanit@amd.com>
- <8631927.qWHZsjCs8e@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <8631927.qWHZsjCs8e@wuerfel>
-Content-Disposition: inline
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Will Deacon <Will.Deacon@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 0/3] i2c: hix5hd2: add i2c controller driver
+Date: Tue, 30 Sep 2014 20:20:25 +0800
+Message-ID: <1412079628-6316-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 29, 2014 at 03:36:30PM +0100, Arnd Bergmann wrote:
-> On Sunday 28 September 2014 15:53:28 suravee.suthikulpanit@amd.com wrote:
-> > +
-> > +#ifdef CONFIG_ARM64
-> > +struct pci_bus *gen_scan_root_bus(struct device *parent, int bus,
-> > +                                      struct pci_ops *ops, void *sysdata,
-> > +                                      struct list_head *resources)
-> > +{
-> 
-> I don't see anything ARM64 specific in this, the function only uses
-> the newly added generic helpers.
+v3:
+Add COMPILE_TEST as dependence to enable compile test
+Remove specific mach info in dts binding to solve the confusion.
 
-I do not see it either, it is just a copy'n'paste of common PCI code,
-plus msi management.
+v2: 
+Modify according to Wolfram's comments 
+including change vector name, coding style, return value etc.
 
-> >  static int gen_pci_probe(struct platform_device *pdev)
-> >  {
-> > @@ -326,6 +385,7 @@ static int gen_pci_probe(struct platform_device *pdev)
-> >         struct device *dev = &pdev->dev;
-> >         struct device_node *np = dev->of_node;
-> >         struct gen_pci *pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
-> > +#ifndef CONFIG_ARM64
-> >         struct hw_pci hw = {
-> >                 .nr_controllers = 1,
-> >                 .private_data   = (void **)&pci,
-> > @@ -333,6 +393,7 @@ static int gen_pci_probe(struct platform_device *pdev)
-> >                 .map_irq        = of_irq_parse_and_map_pci,
-> >                 .ops            = &gen_pci_ops,
-> >         };
-> > +#endif
-> >  
-> 
-> Same here, I'd suggest marking this "#ifdef CONFIG_ARM" instead, as hw_pci
-> is an arm32 specific data structure.
+Wei Yan (2):
+  i2c: hix5hd2: add devicetree documentation
+  i2c: hix5hd2: add i2c controller driver
 
-I do not think we need hw struct at all, see below, we can write code so
-that we do not rely on ARM32 PCI bios, I will have a stab at that and
-post the resulting code.
+Zhangfei Gao (1):
+  ARM: dts: hix5hd2: add i2c node
 
-> >         if (!pci)
-> >                 return -ENOMEM;
-> > @@ -368,8 +429,24 @@ static int gen_pci_probe(struct platform_device *pdev)
-> >                 gen_pci_release_of_pci_ranges(pci);
-> >                 return err;
-> >         }
-> > +#ifdef CONFIG_ARM64
-> >  
-> > +#ifdef CONFIG_PCI_MSI
-> > +       pci->msi_parent = of_parse_phandle(np, "msi-parent", 0);
-> > +       if (!pci->msi_parent) {
-> > +               dev_err(&pdev->dev, "Failed to allocate msi-parent.\n");
-> > +               return -EINVAL;
-> > +       }
-> > +#endif
-> 
-> We probably want to enable MSI unconditionally on ARM64, so the #ifdef is
-> not necessary here. However, I don't think that a missing msi-parent should
-> be a fatal error here: we can still continue without MSI support if this
-> case.
-> 
-> > +       if (!gen_scan_root_bus(&pdev->dev, pci->cfg.bus_range.start,
-> > +                              &gen_pci_ops, pci, &pci->resources)) {
-> > +               dev_err(&pdev->dev, "failed to enable PCIe ports\n");
-> > +               return -ENODEV;
-> > +       }
-> > +#else
-> >         pci_common_init_dev(dev, &hw);
-> > +#endif /* CONFIG_ARM64 */
-> > 
-> 
-> Again, just make the pci_common_init_dev() call #ifdef CONFIG_ARM, and move
-> the generic case after it, outside of the #ifdef.
+ .../devicetree/bindings/i2c/i2c-hix5hd2.txt        |   25 +
+ arch/arm/boot/dts/hisi-x5hd2.dtsi                  |   60 +++
+ drivers/i2c/busses/Kconfig                         |   10 +
+ drivers/i2c/busses/Makefile                        |    1 +
+ drivers/i2c/busses/i2c-hix5hd2.c                   |  554 ++++++++++++++++++++
+ 5 files changed, 650 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-hix5hd2.txt
+ create mode 100644 drivers/i2c/busses/i2c-hix5hd2.c
 
-I went through the code quickly but I think we can (and should) remove
-this quite ugly ifdeffery altogether. Most of the functionality in
-pci_common_init_dev() can be implemented through the common PCI API (and this
-would make this driver arch agnostic as it should be), I will go through ARM32
-PCI bios code to check what is executed in detail in pci_common_init_dev() and
-make sure that we follow those initialization steps in the resulting probe code
-for this PCI generic host controller driver.
-
-Lorenzo
-
+-- 
+1.7.9.5
