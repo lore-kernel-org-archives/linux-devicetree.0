@@ -1,7 +1,7 @@
 From: Ankit Jindal <ankit.jindal@linaro.org>
-Subject: [PATCH v2 3/6] Documentation: Update documentation for UIO_MEM_PHYS_CACHE
-Date: Tue, 30 Sep 2014 09:56:06 +0530
-Message-ID: <1412051169-9142-4-git-send-email-ankit.jindal@linaro.org>
+Subject: [PATCH v2 5/6] Documentation: dt-bindings: Add binding info for X-Gene QMTM UIO driver
+Date: Tue, 30 Sep 2014 09:56:08 +0530
+Message-ID: <1412051169-9142-6-git-send-email-ankit.jindal@linaro.org>
 References: <1412051169-9142-1-git-send-email-ankit.jindal@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1412051169-9142-1-git-send-email-ankit.jindal@linaro.org>
@@ -10,30 +10,74 @@ To: linux-kernel@vger.kernel.org
 Cc: "Hans J. Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, patches@apm.com, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Tushar Jagad <tushar.jagad@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Ankit Jindal <ankit.jindal@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch updates UIO documentation for new mem region
-type UIO_MEM_PHYS_CACHE.
+This patch adds device tree binding documentation for
+X-Gene QMTM UIO driver.
 
 Signed-off-by: Ankit Jindal <ankit.jindal@linaro.org>
 Signed-off-by: Tushar Jagad <tushar.jagad@linaro.org>
 ---
- Documentation/DocBook/uio-howto.tmpl |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/uio/uio_xgene_qmtm.txt     |   53 ++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
 
-diff --git a/Documentation/DocBook/uio-howto.tmpl b/Documentation/DocBook/uio-howto.tmpl
-index bbe9c1f..baa9185 100644
---- a/Documentation/DocBook/uio-howto.tmpl
-+++ b/Documentation/DocBook/uio-howto.tmpl
-@@ -529,8 +529,9 @@ the memory region, it will show up in the corresponding sysfs node.
- <varname>int memtype</varname>: Required if the mapping is used. Set this to
- <varname>UIO_MEM_PHYS</varname> if you you have physical memory on your
- card to be mapped. Use <varname>UIO_MEM_LOGICAL</varname> for logical
--memory (e.g. allocated with <function>kmalloc()</function>). There's also
--<varname>UIO_MEM_VIRTUAL</varname> for virtual memory.
-+memory (e.g. allocated with <function>kmalloc()</function>). There are also
-+<varname>UIO_MEM_VIRTUAL</varname> for virtual memory, and
-+<varname>UIO_MEM_PHYS_CACHE</varname> for cacheable access to physical memory.
- </para></listitem>
- 
- <listitem><para>
+diff --git a/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt b/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
+new file mode 100644
+index 0000000..288ed92
+--- /dev/null
++++ b/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
+@@ -0,0 +1,53 @@
++APM X-Gene QMTM UIO nodes
++
++The Applied Micro X-Gene SOC has on-chip QMTM (Queue manager
++and Traffic manager). It is a device for managing hardware queues.
++It also implements QoS among hardware queues hence term "traffic"
++manager is present in its name. QMTM UIO nodes are defined for user
++space access to this device using UIO framework.
++
++Required properties:
++- compatible: Should be "apm,xgene-qmtm"
++- reg: Address and length of the register set for the device. It contains the
++  information of registers in the same order as described by reg-names.
++- reg-names: Should contain the register set names
++  - "csr": QMTM control and status register address space.
++  - "fabric": QMTM memory mapped access to queue states.
++- qpool: Points to the phandle of the node defining memory location for
++	 creating QMTM queues. This could point either to the reserved-memory
++	 node (as-per reserved memory bindings) or to the node of on-chip
++	 SRAM etc. It is expected that size and location of qpool memory will
++	 be configurable via bootloader.
++- clocks: Reference to the clock entry.
++- num-queues: Number of queues under this QMTM device.
++- devid: QMTM identification number for the system having multiple QMTM devices.
++	 This is used to form a unique id (a tuple of queue number and
++	 device id) for the queues belonging to this device.
++
++Example:
++	qmtm1_uio_qpool: qmtm1_uio_qpool {
++		reg = <0x0 0x0 0x0 0x0>
++	};
++
++	qmtm1clk: qmtmclk@1f20c000 {
++		compatible = "apm,xgene-device-clock";
++		clock-output-names = "qmtm1clk";
++		status = "ok";
++	};
++
++	qmtm1_uio: qmtm_uio@1f200000 {
++		compatible = "apm,xgene-qmtm";
++		status = "disabled";
++		reg = <0x0 0x1f200000 0x0 0x10000>,
++		      <0x0 0x1b000000 0x0 0x400000>;
++		reg-names = "csr", "fabric";
++		qpool = <&qmtm1_uio_qpool>;
++		clocks = <&qmtm1clk 0>;
++		num-queues = <0x400>;
++		devid = <1>;
++	};
++
++	/* Board-specific peripheral configurations */
++	&qmtm1_uio {
++		status = "ok";
++	};
 -- 
 1.7.9.5
