@@ -1,59 +1,36 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] drm/i2c:tda998x: Use the HDMI audio CODEC
-Date: Tue, 30 Sep 2014 20:25:40 +0100
-Message-ID: <20140930192540.GL4273@sirena.org.uk>
-References: <cover.1411547014.git.moinejf@free.fr>
- <4b3d35a14461ed164956b7f5aa77b29170bc393d.1411547014.git.moinejf@free.fr>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2] thermal: Add QPNP PMIC temperature alarm driver
+Date: Tue, 30 Sep 2014 12:46:18 -0700
+Message-ID: <542B088A.1050601@codeaurora.org>
+References: <1411651825-14240-1-git-send-email-iivanov@mm-sol.com>	  <54254C4E.3070807@smartplayin.com> <1411998865.5395.5.camel@iivanov-dev>	 <542A31DF.7020402@smartplayin.com> <1412062606.5395.10.camel@iivanov-dev>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gmhhrsDozM2n+uz5"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4b3d35a14461ed164956b7f5aa77b29170bc393d.1411547014.git.moinejf-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1412062606.5395.10.camel@iivanov-dev>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Kiran Padwal <kiran.padwal@smartplayin.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, David Collins <collinsd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+On 09/30/14 00:36, Ivan T. Ivanov wrote:
+> On Tue, 2014-09-30 at 10:00 +0530, Kiran Padwal wrote:
+>>
+>> I have Linaro cross tool chain with version-4.8.3 and I am simply doing "make zImage" without any option.
+> Hm, no warnings with arm-unknown-linux-gnueabi-gcc (GCC) 4.6.3 and
+> arm-linux-gnueabihf-gcc (crosstool-NG linaro-1.13.1-4.9-2014.09, but
+> indeed arm-linux-gnueabihf-gcc (crosstool-NG linaro-1.13.1-4.8-2014.03.
+>
+> I will say that this is false positive :-). Please update your tool-chain.
 
---gmhhrsDozM2n+uz5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hopefully you're joking. Once this merges someone will find the warning
+and complain. Telling them to upgrade their compiler isn't going to work.
 
-On Wed, Sep 24, 2014 at 10:11:21AM +0200, Jean-Francois Moine wrote:
-> This patch interfaces the HDMI transmitter with the audio system.
+I wonder if checking for rc != 0 instead of rc < 0 would silence the
+warning? Or get rid of the entire wrapper function and just use regmap
+functions directly.
 
-Please use subject lines corresponding to the style for the subsystem.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
 
-> +	request_module("snd-soc-hdmi-codec");
-> +	pdev = platform_device_register_resndata(&priv->hdmi->dev,
-> +						 "hdmi-audio-codec",
-> +						  PLATFORM_DEVID_NONE,
-> +						  NULL, 0,
-> +						  &tda998x_hdmi_data,
-> +						  sizeof tda998x_hdmi_data);
-
-Why is this request_module() needed?  If there is a good reason for it
-we should have some documentation.
-
---gmhhrsDozM2n+uz5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUKwO0AAoJECTWi3JdVIfQmr0H/i7ij3vyrmU4dk7pN5qms6Th
-eTxnRhHPcUD5DhZxXD82yXG+iKdWpOEPeC1ndQv5lOwOEMzPB0CVUiJ1WoxmCSez
-1qqvRawae184iIy0U4wzkOax95C5LtjxkHlFuM9xw0dAcLA9g4HZZWqXEPGaCJts
-ivRx8ygkPRNi9rU0EHurYS6GXr/pTU7PCTtDTbtUp8Yd9RHxqE9B0DlKzuHwt4+e
-VTvkcMKRNdUgRCY9h3CxfPSEPR/FO9eeHRsGgaBTkPZMzwKRb8Wjv4Hkt4Xp59u7
-4l2wSXjh4mJrPAj2FQz3svQLE3vII8+Z1JbGySjY75YSje67j2YCCoupe97WQpU=
-=FSmn
------END PGP SIGNATURE-----
-
---gmhhrsDozM2n+uz5--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
