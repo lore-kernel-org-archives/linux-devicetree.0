@@ -1,46 +1,42 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v7 3/5] ARM: dts: add RK3xxx CPU Thermal data
-Date: Tue, 30 Sep 2014 11:35:53 -0700
-Message-ID: <CAD=FV=Wyv9P9cvTFEfD5_0BzgFNC5nyduT0THKKwERkX4-cY0Q@mail.gmail.com>
-References: <1411900693-30484-1-git-send-email-caesar.wang@rock-chips.com>
-	<1411900693-30484-4-git-send-email-caesar.wang@rock-chips.com>
-	<CAD=FV=WRYeW4giA+yRWmXGxAvdG38GcW-7tA39SZDH1GPamf6A@mail.gmail.com>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v2 0/4] ARM: dts: apq8064 DT patches
+Date: Tue, 30 Sep 2014 11:45:52 -0700
+Message-ID: <7hvbo5vten.fsf@deeprootsystems.com>
+References: <1411982044-7873-1-git-send-email-srinivas.kandagatla@linaro.org>
+	<1412086159-20894-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WRYeW4giA+yRWmXGxAvdG38GcW-7tA39SZDH1GPamf6A@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Caesar Wang <caesar.wang@rock-chips.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arnd Bergmann <arnd@arndb.de>, zyf <zyf@rock-chips.com>, linux-rockchip@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Eddie Cai <cf@rock-chips.com>, Derek Basehore <dbasehore@chromium.org>, Tao Huang <huangtao@rock-chips.com>
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1412086159-20894-1-git-send-email-srinivas.kandagatla@linaro.org>
+	(Srinivas Kandagatla's message of "Tue, 30 Sep 2014 15:09:19 +0100")
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, broonie@kernel.org, lee.jones@linaro.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arm@kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@sonymobile.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org> writes:
 
-On Tue, Sep 30, 2014 at 11:24 AM, Doug Anderson <dianders@chromium.org> wrote:
-> Caesar,
+> These patches adds dt nodes for RPM, USB and SATA IPs found in APQ8064.
+> All the driver support for these IPs are already available in v3.17, except
+> the RPM driver which is now accepted by Lee and Mark.
 >
-> On Sun, Sep 28, 2014 at 3:38 AM, Caesar Wang <caesar.wang@rock-chips.com> wrote:
->> This patch changes a dtsi file to contain the thermal data
->> on RK3288 and later SoCs. This data will
->> enable a thermal shutdown over 125C.
->>
->> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
->> ---
->>  arch/arm/boot/dts/rk3xxx-cpu-thermal.dtsi | 32 +++++++++++++++++++++++++++++++
->>  1 file changed, 32 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/rk3xxx-cpu-thermal.dtsi
+> These patches depend on the header file from 
+> http://www.spinics.net/lists/arm-kernel/msg364310.html
+> for regulators.
 >
-> I haven't done lots of review of this series, but I did notice that
-> this file has bad spacing.  It's fairly obvious in your gerrit patch
-> <https://chromium-review.googlesource.com/#/c/220270/1/arch/arm/boot/dts/rk3xxx-cpu-thermal.dtsi>
-> because gerrit (by default) shows you "tab" characters...
+> Now that the RPM patch is accepted, should RPM patch go via arm-soc tree?
+> so that we can get more functionality on IFC6410 board in v3.18 mainline.
 >
-> In general you should use tab for indentation, not spaces.  You seem
-> to use a mix of the two.
+> All these patches are tested on IFC6410 board.
+> Am hoping to get these patches for v3.18, as these patches were sitting in
+> my dev tree since last 3 merge windows.
 
-I suppose I should also point out that it's generally not great to
-name things "rk3xxx" since it makes too many predictions about how
-future products will behave.  It's better to name things after the
-first relevant product.  I'd just name this "rk3288-cpu-thermal.dtsi".
+A nit on process, for future reference:
 
--Doug
+You only need to send to arm@kernel.org if you're expecting the arm-soc
+maintainers to directly apply the patches or pull request.
+
+In this case, it seems like stuff that the qcom maintainers will queue
+up in their DT branch, and then submit to arm-soc maintainers.
+
+Kevin
