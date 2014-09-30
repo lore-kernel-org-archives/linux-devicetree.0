@@ -1,92 +1,123 @@
-From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Subject: Re: [PATCH v8 2/3] dt-bindings: video: Add for rockchip display
- subsytem
-Date: Tue, 30 Sep 2014 10:10:20 +0200
-Message-ID: <20140930081020.GE24667@phenom.ffwll.local>
-References: <1412057386-19375-1-git-send-email-mark.yao@rock-chips.com>
- <1412057659-19483-1-git-send-email-mark.yao@rock-chips.com>
+From: Shreyas B Prabhu <shreyas@linux.vnet.ibm.com>
+Subject: Re: [PATCH 0/9] powerpc/powernv: Support for fastsleep and winkle
+Date: Tue, 30 Sep 2014 13:42:05 +0530
+Message-ID: <542A65D5.4090003@linux.vnet.ibm.com>
+References: <1408989673-14137-1-git-send-email-shreyas@linux.vnet.ibm.com> <541A4D4F.1090307@linux.vnet.ibm.com> <5429330A.7000103@linux.vnet.ibm.com> <128377046.aOTypBOIY8@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1412057659-19483-1-git-send-email-mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dbehr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx@rock-chips.c
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <128377046.aOTypBOIY8@vostro.rjw.lan>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, "Srivatsa S. Bhat" <srivatsa@mit.edu>, "Preeti U. Murthy" <preeti@linux.vnet.ibm.com>, Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 30, 2014 at 02:14:19PM +0800, Mark Yao wrote:
-> From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> This add a display subsystem comprise the all display interface nodes.
-> 
-> Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Acked-by: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-> Reviewed-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi Rafael,
 
-Just a quick clarification: My ack was only about the drm driver itself, I
-try really hard to stay away from DT insanity ;-) So please drop my ack
-from these two patches.
-
-Aside: DT patches need to go through a special process and you must cc dt
-maintainers and mailing lists. Your patch seems to lack this, which afaiui
-is a blocker for merging the driver.
-
-Thanks, Daniel
-
-> ---
-> Changes in v2:
-> - add DRM master device node to list all display nodes that comprise
->   the graphics subsystem.
+On Tuesday 30 September 2014 04:58 AM, Rafael J. Wysocki wrote:
+> On Monday, September 29, 2014 03:53:06 PM Shreyas B Prabhu wrote:
+>> Hi,
+>> Any updates on this patch series?
 > 
-> Changes in v3: None
-> 
-> Changes in v4: None
-> 
-> Changes in v5: None
-> 
-> Changes in v6: None
-> 
-> Changes in v7: None
-> 
-> Changes in v8: None
-> 
->  .../devicetree/bindings/video/rockchip-drm.txt     |   19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/rockchip-drm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/video/rockchip-drm.txt b/Documentation/devicetree/bindings/video/rockchip-drm.txt
-> new file mode 100644
-> index 0000000..7fff582
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/rockchip-drm.txt
-> @@ -0,0 +1,19 @@
-> +Rockchip DRM master device
-> +================================
-> +
-> +The Rockchip DRM master device is a virtual device needed to list all
-> +vop devices or other display interface nodes that comprise the
-> +graphics subsystem.
-> +
-> +Required properties:
-> +- compatible: Should be "rockchip,display-subsystem"
-> +- ports: Should contain a list of phandles pointing to display interface port
-> +  of vop devices. vop definitions as defined in
-> +  Documentation/devicetree/bindings/video/rockchip-vop.txt
-> +
-> +example:
-> +
-> +display-subsystem {
-> +	compatible = "rockchip,display-subsystem";
-> +	ports = <&vopl_out>, <&vopb_out>;
-> +};
-> -- 
-> 1.7.9.5
-> 
+> I have a couple of patches from there in my tree it seems.  Please have a look
+> at linux-pm.git/linux-next and please let me know if that's the case.
 > 
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+I checked linux-pm.git/linux-net (Last commit 067c17382165). None of the patches
+in this series are present in the tree. 
+
+
+> 
+>> On Thursday 18 September 2014 08:41 AM, Shreyas B Prabhu wrote:
+>>> Hi,
+>>>
+>>> In this patch series we use winkle for offlined cores. I successfully
+>>> tested the working of this with subcore functionality.
+>>>
+>>> Test scenario was as follows:
+>>> 1. Set SMT mode to 1, Set subores-per-core to 1
+>>> 2. Offline a core, in this case cpu 32 (sending it to winkle)
+>>> 3. Set subcores-per-core to 4
+>>> 4. Online the core
+>>> 5. Start a guest (Topology 1 core 2 threads) on a subcore, in this case
+>>> on cpu 36
+>>>
+>>> This works without any glitch.
+>>>
+>>> Thanks,
+>>> Shreyas
+>>>
+>>> On Monday 25 August 2014 11:31 PM, Shreyas B. Prabhu wrote:
+>>>> Fast sleep is an idle state, where the core and the L1 and L2
+>>>> caches are brought down to a threshold voltage. This also means that
+>>>> the communication between L2 and L3 caches have to be fenced. However
+>>>> the current P8 chips have a bug wherein this fencing between L2 and
+>>>> L3 caches get delayed by a cpu cycle. This can delay L3 response to
+>>>> the other cpus if they request for data during this time. Thus they
+>>>> would fetch the same data from the memory which could lead to data
+>>>> corruption if L3 cache is not flushed.
+>>>> Patch 4 adds support to work around this.
+>>>>
+>>>> 'Deep Winkle' is a deeper idle state where core and private L2 are powered
+>>>> off. While it offers higher power savings, it is at the cost of losing
+>>>> hypervisor register state and higher latency.
+>>>> Patch 5-9 adds support for winkle and uses it for offline cpus.
+>>>>
+>>>> Patch 1 - Moves parameters required discover idle states to a location 
+>>>> common to both cpuidle driver and powernv core code
+>>>> Patch 2 - Populates idle state details from device tree
+>>>> Patch 3 - Enables cpus to run guest after waking up from fastsleep/winkle
+>>>>
+>>>>
+>>>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>>>> Cc: Paul Mackerras <paulus@samba.org>
+>>>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>>>> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+>>>> Cc: Srivatsa S. Bhat <srivatsa@MIT.EDU>
+>>>> Cc: Preeti U. Murthy <preeti@linux.vnet.ibm.com>
+>>>> Cc: Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>
+>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>> Cc: Grant Likely <grant.likely@linaro.org>
+>>>> Cc: devicetree@vger.kernel.org
+>>>> Cc: linux-pm@vger.kernel.org
+>>>> Cc: linuxppc-dev@lists.ozlabs.org
+>>>>
+>>>> Preeti U Murthy (2):
+>>>>   cpuidle/powernv: Populate cpuidle state details by querying the
+>>>>     device-tree
+>>>>   powerpc/powernv/cpuidle: Add workaround to enable fastsleep
+>>>>
+>>>> Shreyas B. Prabhu (6):
+>>>>   powerpc/kvm/book3s_hv: Enable CPUs to run guest after waking up from
+>>>>     fast-sleep
+>>>>   powerpc/powernv: Add OPAL call to save and restore
+>>>>   powerpc: Adding macro for accessing Thread Switch Control Register
+>>>>   powerpc/powernv: Add winkle infrastructure
+>>>>   powerpc/powernv: Discover and enable winkle
+>>>>   powerpc/powernv: Enter deepest supported idle state in offline
+>>>>
+>>>> Srivatsa S. Bhat (1):
+>>>>   powerpc/powernv: Enable Offline CPUs to enter deep idle states
+>>>>
+>>>>  arch/powerpc/include/asm/machdep.h             |   4 +
+>>>>  arch/powerpc/include/asm/opal.h                |  10 ++
+>>>>  arch/powerpc/include/asm/paca.h                |   3 +
+>>>>  arch/powerpc/include/asm/ppc-opcode.h          |   2 +
+>>>>  arch/powerpc/include/asm/processor.h           |   6 +-
+>>>>  arch/powerpc/include/asm/reg.h                 |   1 +
+>>>>  arch/powerpc/kernel/asm-offsets.c              |   1 +
+>>>>  arch/powerpc/kernel/exceptions-64s.S           |  37 ++---
+>>>>  arch/powerpc/kernel/idle.c                     |  30 ++++
+>>>>  arch/powerpc/kernel/idle_power7.S              |  83 +++++++++-
+>>>>  arch/powerpc/platforms/powernv/opal-wrappers.S |   2 +
+>>>>  arch/powerpc/platforms/powernv/powernv.h       |   8 +
+>>>>  arch/powerpc/platforms/powernv/setup.c         | 217 +++++++++++++++++++++++++
+>>>>  arch/powerpc/platforms/powernv/smp.c           |  13 +-
+>>>>  arch/powerpc/platforms/powernv/subcore.c       |  15 ++
+>>>>  drivers/cpuidle/cpuidle-powernv.c              |  40 ++++-
+>>>>  16 files changed, 439 insertions(+), 33 deletions(-)
+>>>>
+>>
+> 
+
