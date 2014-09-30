@@ -1,55 +1,71 @@
 From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [PATCH 4/6] hwrng: atmel: Add TRNG DT binding doc
-Date: Tue, 30 Sep 2014 18:19:45 +0200
-Message-ID: <1412093987-30241-5-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH 6/6] ARM: at91/dt: add ISI node
+Date: Tue, 30 Sep 2014 18:19:47 +0200
+Message-ID: <1412093987-30241-7-git-send-email-boris.brezillon@free-electrons.com>
 References: <1412093987-30241-1-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1412093987-30241-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Peter Korsgaard <jacmet@sunsite.dk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Document DT bindings of Atmel's TRNG (True Random Number Generator) IP.
+Add ISI (Image Sensor Interface) DT node.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
 ---
- Documentation/devicetree/bindings/hwrng/atmel-trng.txt | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwrng/atmel-trng.txt
+ arch/arm/boot/dts/at91sam9g45.dtsi | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/hwrng/atmel-trng.txt b/Documentation/devicetree/bindings/hwrng/atmel-trng.txt
-new file mode 100644
-index 0000000..4ac5aaa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwrng/atmel-trng.txt
-@@ -0,0 +1,16 @@
-+Atmel TRNG (True Random Number Generator) block
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index 790c890..5d8746a 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -804,6 +804,27 @@
+ 					};
+ 				};
+ 
++				isi {
++					pinctrl_isi: isi-0 {
++						atmel,pins = <AT91_PIOB 8 AT91_PERIPH_B AT91_PINCTRL_NONE /* D8 */
++							      AT91_PIOB 9 AT91_PERIPH_B AT91_PINCTRL_NONE /* D9 */
++							      AT91_PIOB 10 AT91_PERIPH_B AT91_PINCTRL_NONE /* D10 */
++							      AT91_PIOB 11 AT91_PERIPH_B AT91_PINCTRL_NONE /* D11 */
++							      AT91_PIOB 20 AT91_PERIPH_A AT91_PINCTRL_NONE /* D0 */
++							      AT91_PIOB 21 AT91_PERIPH_A AT91_PINCTRL_NONE /* D1 */
++							      AT91_PIOB 22 AT91_PERIPH_A AT91_PINCTRL_NONE /* D2 */
++							      AT91_PIOB 23 AT91_PERIPH_A AT91_PINCTRL_NONE /* D3 */
++							      AT91_PIOB 24 AT91_PERIPH_A AT91_PINCTRL_NONE /* D4 */
++							      AT91_PIOB 25 AT91_PERIPH_A AT91_PINCTRL_NONE /* D5 */
++							      AT91_PIOB 26 AT91_PERIPH_A AT91_PINCTRL_NONE /* D6 */
++							      AT91_PIOB 27 AT91_PERIPH_A AT91_PINCTRL_NONE /* D7 */
++							      AT91_PIOB 28 AT91_PERIPH_A AT91_PINCTRL_NONE /* PCK */
++							      AT91_PIOB 29 AT91_PERIPH_A AT91_PINCTRL_NONE /* VSYNC */
++							      AT91_PIOB 30 AT91_PERIPH_A AT91_PINCTRL_NONE /* HSYNC */
++							      AT91_PIOB 31 AT91_PERIPH_A AT91_PINCTRL_NONE /* MCK */>;
++					};
++				};
 +
-+Required properties:
-+- compatible : Should be "atmel,at91sam9g45-trng"
-+- reg : Offset and length of the register set of this block
-+- interrupts : the interrupt number for the TRNG block
-+- clocks: should contain the TRNG clk source
+ 				pioA: gpio@fffff200 {
+ 					compatible = "atmel,at91rm9200-gpio";
+ 					reg = <0xfffff200 0x200>;
+@@ -1029,6 +1050,17 @@
+ 				};
+ 			};
+ 
++			isi@fffb4000 {
++				compatible = "atmel,at91sam9g45-isi";
++				reg = <0xfffb4000 0x4000>;
++				interrupts = <26 IRQ_TYPE_LEVEL_HIGH 5>;
++				clocks = <&isi_clk>;
++				clock-names = "isi_clk";
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_isi>;
++				status = "disabled";
++			};
 +
-+Example:
-+
-+trng@fffcc000 {
-+	compatible = "atmel,at91sam9g45-trng";
-+	reg = <0xfffcc000 0x4000>;
-+	interrupts = <6 IRQ_TYPE_LEVEL_HIGH 0>;
-+	clocks = <&trng_clk>;
-+};
+ 			pwm0: pwm@fffb8000 {
+ 				compatible = "atmel,at91sam9rl-pwm";
+ 				reg = <0xfffb8000 0x300>;
 -- 
 1.9.1
