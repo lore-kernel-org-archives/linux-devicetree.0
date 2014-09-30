@@ -1,102 +1,63 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] of/pci: add pci_pio_to_address dummy for !CONFIG_OF
-Date: Tue, 30 Sep 2014 15:45:06 +0100
-Message-ID: <20140930144506.GQ841@e106497-lin.cambridge.arm.com>
-References: <706416181.hbVGLDA3o6@wuerfel>
+From: Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [PATCH v5 3/4] edac: Add APM X-Gene SoC EDAC driver
+Date: Tue, 30 Sep 2014 08:45:20 -0600
+Message-ID: <CALdTtntGh6kcz+UxOsUsUO_mNZQAzUsgECvzD7CBeEGMswrPsw@mail.gmail.com>
+References: <1408778588-3215-1-git-send-email-lho@apm.com>
+	<1408778588-3215-2-git-send-email-lho@apm.com>
+	<1408778588-3215-3-git-send-email-lho@apm.com>
+	<1408778588-3215-4-git-send-email-lho@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <706416181.hbVGLDA3o6@wuerfel>
-Content-Disposition: inline
+In-Reply-To: <1408778588-3215-4-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Craig Magina <craig.magina-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 30, 2014 at 02:19:05PM +0100, Arnd Bergmann wrote:
-> The pci_register_io_range() and pci_pio_to_address() were recently
-> introduced to generalize the handling of memory mapped PCI I/O space,
-> but they are only valid when CONFIG_OF is set, leading to a possible
-> build error:
->=20
-> drivers/pci/host/pcie-rcar.c: In function 'rcar_pcie_setup_window':
-> drivers/pci/host/pcie-rcar.c:340:3: error: implicit declaration of fu=
-nction 'pci_pio_to_address' [-Werror=3Dimplicit-function-declaration]
->    res_start =3D pci_pio_to_address(res->start);
->    ^
-> drivers/pci/host/pcie-rcar.c: In function 'rcar_pcie_probe':
-> drivers/pci/host/pcie-rcar.c:945:3: error: implicit declaration of fu=
-nction 'of_pci_range_to_resource' [-Werror=3Dimplicit-function-declarat=
-ion]
->    err =3D of_pci_range_to_resource(&range, pdev->dev.of_node,
->    ^
-> cc1: some warnings being treated as errors
->=20
-> This provides inline dummy implementations for the case that
-> CONFIG_OF is disabled, to allow better build testing.
->=20
-> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Fixes: 279c5dd046 ("of/pci: Add pci_register_io_range() and pci_pio_t=
-o_address()")
+On Sat, Aug 23, 2014 at 1:23 AM, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org> wrote:
+> This patch adds support for the APM X-Gene SoC EDAC driver. It
+> requires ARM64 EDAC support patch [1] to compile due to
+> dependence on MC module which calls an unused software memory
+> scrub function.
+>
+> [1] http://www.spinics.net/lists/arm-kernel/msg324093.html
+>
+> Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+> ---
+>  drivers/edac/Kconfig      |    9 +-
+>  drivers/edac/Makefile     |    3 +
+>  drivers/edac/xgene_edac.c | 2132 +++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 2143 insertions(+), 1 deletions(-)
+>  create mode 100644 drivers/edac/xgene_edac.c
+>
+[...]
+> +#ifdef CONFIG_OF
+> +static struct of_device_id xgene_edac_mc_of_match[] = {
+> +       { .compatible = "apm,xgene-edac-mc" },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, xgene_edac_of_match);
+> +#endif
 
-Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Something I apparently forgot to mention when I tested v3 was that I
+had to manually fix this up to get it to build:
 
-Is that triggered by shmobile_defconfig?
+diff --git a/drivers/edac/xgene_edac.c b/drivers/edac/xgene_edac.c
+index d69c2e5..2f436d45 100644
+--- a/drivers/edac/xgene_edac.c
++++ b/drivers/edac/xgene_edac.c
+@@ -452,7 +452,7 @@ static struct of_device_id xgene_edac_mc_of_match[] = {
+     { .compatible = "apm,xgene-edac-mc" },
+     {},
+ };
+-MODULE_DEVICE_TABLE(of, xgene_edac_of_match);
++MODULE_DEVICE_TABLE(of, xgene_edac_mc_of_match);
+ #endif
 
-Best regards,
-Liviu
-
->=20
-> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-> index 7ebb877b07c2..851097aab115 100644
-> --- a/include/linux/of_address.h
-> +++ b/include/linux/of_address.h
-> @@ -71,6 +71,11 @@ static inline const __be32 *of_get_address(struct =
-device_node *dev, int index,
->  	return NULL;
->  }
-> =20
-> +static inline phys_addr_t pci_pio_to_address(unsigned long pio)
-> +{
-> +	return 0;
-> +}
-> +
->  static inline int of_pci_range_parser_init(struct of_pci_range_parse=
-r *parser,
->  			struct device_node *node)
->  {
-> @@ -144,6 +149,12 @@ static inline const __be32 *of_get_pci_address(s=
-truct device_node *dev,
->  {
->  	return NULL;
->  }
-> +static inline int of_pci_range_to_resource(struct of_pci_range *rang=
-e,
-> +					   struct device_node *np,
-> +					   struct resource *res)
-> +{
-> +	return -ENOSYS;
-> +}
->  #endif /* CONFIG_OF_ADDRESS && CONFIG_PCI */
-> =20
->  #endif /* __OF_ADDRESS_H */
->=20
->=20
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
-
+ static struct platform_driver xgene_edac_mc_driver = {
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
