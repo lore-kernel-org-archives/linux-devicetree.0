@@ -1,150 +1,130 @@
-From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v9 0/4] APM X-Gene PCIe host controller
-Date: Tue, 30 Sep 2014 10:53:53 -0600
-Message-ID: <20140930165353.GC5625@google.com>
-References: <1410906824-9321-1-git-send-email-tinamdar@apm.com>
- <CACVXFVNEFSMjA=h_pyNF1AyYX4C336iM9nkYY=ocGQxjGpDCJA@mail.gmail.com>
- <CACoXjc=eA0nnK2_dRxktFeSKsfV6fQr=mDfN09sbe34H4GADrA@mail.gmail.com>
- <CACVXFVMWTeOnVMp2SCzjhPEc1M=zTLg4O8yFhv_jDPYn_6DfeQ@mail.gmail.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v13 00/12] Support for creating generic PCI host bridges
+ from DT
+Date: Tue, 30 Sep 2014 17:54:31 +0100
+Message-ID: <20140930165431.GV841@e106497-lin.cambridge.arm.com>
+References: <1412000971-9242-1-git-send-email-Liviu.Dudau@arm.com>
+ <20140929194335.GA13747@google.com>
+ <20140930103942.GO841@e106497-lin.cambridge.arm.com>
+ <20140930161805.GB5625@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <20140930161805.GB5625@google.com>
 Content-Disposition: inline
-In-Reply-To: <CACVXFVMWTeOnVMp2SCzjhPEc1M=zTLg4O8yFhv_jDPYn_6DfeQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ming Lei <tom.leiming-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Yinghai Lu <yinghai@kernel.org>, Jiang Liu <jiang.liu@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 22, 2014 at 09:23:51AM +0800, Ming Lei wrote:
-> Hi Tanmay,
-> 
-> On Sat, Sep 20, 2014 at 1:15 AM, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org> wrote:
-> > Hi Ming Lei,
-> >
-> > On Thu, Sep 18, 2014 at 8:08 PM, Ming Lei <tom.leiming-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> Hi Tanmay,
-> >>
-> >> On Wed, Sep 17, 2014 at 6:33 AM, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org> wrote:
-> >>> This patch adds support for AppliedMicro X-Gene PCIe host controller. The
-> >>> driver is tested on X-Gene platform with different gen1/2/3 PCIe endpoint
-> >>> cards.
-> >>>
-> >>> X-Gene PCIe controller driver has depedency on the pcie arm64 arch support.
-> >>> Liviu Dudau from ARM has sent a patch set for pcie arm64 arch support and
-> >>> support for creating generic pcie bridge from device tree. Liviu's patches
-> >>> are available here
-> >>> https://lkml.org/lkml/2014/9/8/333
-> >>>
-> >>> If someone wishes to test PCIe on X-Gene with this patch set, above mentioned
-> >>> patches from Liviu must be applied before the patches in this patch set. Also
-> >>> please use latest xgene u-boot firmware.
-> >>>
-> >>> changes since V8:
-> >>> 1. Add 'dma-coherent' attribute in device node.
-> >>
-> >>
-> >> I just tested your V9 patches plus Liviu's V10 PCI/ARM64 patches
-> >> against 3.17-rc5 on Mustang, and the following failure is triggered:
-> >>
-> >> [    1.190131] bnx2x: Broadcom NetXtreme II 5771x/578xx 10/20-Gigabit
-> >> Ethernet Driver bnx2x 1.78.19-0 (2014/02/10)
-> >> [    1.200249] tg3.c:v3.137 (May 11, 2014)
-> >> [    1.204087] ------------[ cut here ]------------
-> >> [    1.208682] WARNING: CPU: 1 PID: 1 at drivers/pci/pci.c:131
-> >> pci_ioremap_bar+0x70/0x78()
-> >> [    1.216646] Modules linked in:
-> >> [    1.219696] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 3.17.0-rc5+ #1
-> >> [    1.226018] Call trace:
-> >> [    1.228453] [<ffffffc0000884f0>] dump_backtrace+0x0/0x16c
-> >> [    1.233826] [<ffffffc00008866c>] show_stack+0x10/0x1c
-> >> [    1.238851] [<ffffffc0006e3210>] dump_stack+0x74/0x94
-> >> [    1.243878] [<ffffffc0000a934c>] warn_slowpath_common+0x88/0xb0
-> >> [    1.249767] [<ffffffc0000a9438>] warn_slowpath_null+0x14/0x20
-> >> [    1.255485] [<ffffffc0003994c4>] pci_ioremap_bar+0x6c/0x78
-> >> [    1.260942] [<ffffffc0005598cc>] tg3_init_one+0x148/0x16f4
-> >> [    1.266401] [<ffffffc00039ccf0>] pci_device_probe+0x78/0xd4
-> >> [    1.271946] [<ffffffc00042785c>] driver_probe_device+0x94/0x390
-> >> [    1.277834] [<ffffffc000427c44>] __driver_attach+0x98/0xa0
-> >> [    1.283293] [<ffffffc000425a54>] bus_for_each_dev+0x54/0x98
-> >> [    1.288835] [<ffffffc00042730c>] driver_attach+0x1c/0x28
-> >> [    1.294121] [<ffffffc000426f04>] bus_add_driver+0x164/0x240
-> >> [    1.299663] [<ffffffc000428430>] driver_register+0x64/0x130
-> >> [    1.305207] [<ffffffc00039c97c>] __pci_register_driver+0x3c/0x48
-> >> [    1.311181] [<ffffffc000aa8a5c>] tg3_driver_init+0x1c/0x28
-> >> [    1.316640] [<ffffffc0000814e0>] do_one_initcall+0xc4/0x1b4
-> >> [    1.322186] [<ffffffc000a74b64>] kernel_init_freeable+0x1b8/0x25c
-> >> [    1.328246] [<ffffffc0006de318>] kernel_init+0xc/0xd4
-> >> [    1.333278] ---[ end trace f4dca5ab5b436080 ]---
-> >> [    1.337871] tg3 0000:01:00.0: Cannot map device registers, aborting
-> >> [    1.344122] tg3: probe of 0000:01:00.0 failed with error -12
-> >>
-> >>
-> >
-> > Thanks for trying out the patches. Which firmware version are you
-> > using? We may have release new firmware version for PCI to work if not
-> > released yet.
-> 
-> U-Boot 2013.04-mustang_sw_1.13.28-beta (Aug 25 2014 - 14:16:10)
-> 
-> I will check if there is newer fw available.
-> 
-> > Also can you please send out the entire boot log?
-> 
-> Please see below link:
-> 
->       http://pastebin.com/fLqaDn6t
+On Tue, Sep 30, 2014 at 05:18:05PM +0100, Bjorn Helgaas wrote:
+> On Tue, Sep 30, 2014 at 11:39:42AM +0100, Liviu Dudau wrote:
+> > On Mon, Sep 29, 2014 at 08:43:35PM +0100, Bjorn Helgaas wrote:
+> > > On Mon, Sep 29, 2014 at 03:29:19PM +0100, Liviu Dudau wrote:
+> > > > This is my version 13 of the attempt at adding support for gene=
+ric PCI host
+> > > > bridge controllers. It contains only cleanups to make it play n=
+ice with the
+> > > > linux-next tree as of 09/25. If Bjorn deems it safe, now that i=
+t looks like
+> > > > asm-generic is going to revert some of its more aggresive patch=
+es, he has the
+> > > > choice of queueing it into linux-next again.
+> > > > ...
+> > >=20
+> > > These patches above were already on my pci/host-generic branch an=
+d in
+> > > linux-next:
+> > >=20
+> > >    asm-generic/io.h: Fix ioport_map() for !CONFIG_GENERIC_IOMAP
+> > This ^ ...
+> >=20
+> > >    of/pci: Add pci_register_io_range() and pci_pio_to_address()
+> > >    ARM: Define PCI_IOBASE as the base of virtual PCI IO space
+> >=20
+> > and this ^ need to be refreshed from my series otherwise we will ge=
+t conflicts with
+> > asm-generic branch (either now or in the future). While the asm-gen=
+eric/io.h
+> > cast is arguably superflous, we need to define PCI_IOBASE as a void=
+ __iomem* to
+> > match all other standard declarations of PCI_IOBASE.
+> >=20
+> > >    of/pci: Define of_pci_range_to_resource() only when CONFIG_PCI=
+=3Dy
+> > >    of/pci: Move of_pci_range_to_resources() to of/address.c
+> > >    of/pci: Fix the conversion of IO ranges into IO resources
+> > >=20
+> > > I added these three patches to my pci/host-generic branch:
+> > >=20
+> > >    PCI: Add generic domain handling
+> > >    of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr()
+> > >    of/pci: Add support for parsing PCI host bridge resources from=
+ DT
+> >=20
+> > I can see these patches added to pci/host-generic but not on pci/ne=
+xt.
+>=20
+> Right.  I leave things on topic branches for a day or two to give a c=
+hance
+> for Fengguang's auto-builder to find problems before I merge them int=
+o the
+> more public "next" or "for-linus" branches.
+>=20
+> > > Yinghai pointed out a problem with this one, so I omitted it:
+> > >=20
+> > >    PCI: Assign unassigned bus resources in pci_scan_root_bus()
+> >=20
+> > Thats fine, host bridge drivers will have to work around pci_scan_r=
+oot_bus() reduced
+> > functionality for now.
+>=20
+> Well, it's not really "reduced functionality."  It is unchanged by th=
+is
+> series and host bridge drivers can continue using it the same way the=
+y have
+> in the past.  It's just that we'd like to make it smarter someday.
+>=20
+> > > I added this one to my pci/host-generic branch:
+> > >=20
+> > >    PCI: Add pci_remap_iospace() to map bus I/O resources
+> > >=20
+> > > I assume this depends on the pci_scan_root_bus() change (if not, =
+let me
+> > > know), so I omitted this one:
+> > >=20
+> > >    arm64: Add architectural support for PCI
+> >=20
+> > No, there is no dependency there on pci_scan_root_bus(), it can go =
+in the series.
+> > The only thing that depends on a feature rich pci_scan_root_bus() i=
+s the host
+> > bridge driver in order to be able to use only one line to process t=
+he root bus.
+>=20
+> OK, I rebuilt pci/host-generic from scratch.  It consists of your v13
+> patches + Arnd's build fix for pci_pio_to_address() in !CONFIG_OF con=
+figs.
 
->From Ming's log, using the v9 patches:
+Something went wrong with the integration, patch 02 adds another defini=
+tion of=20
+of_pci_range_to_resource() before it is moved out of the header file fo=
+r some reason.
 
-  PCI host bridge /soc/pcie@1f2b0000 ranges:
-    No bus range found for /soc/pcie@1f2b0000, using [??? 0xffffffc3eb4292c0-0xffffffc0005e3b8c flags 0x40]
+Best regards,
+Liviu
 
-What's going on here?  It looks like it's from
-of_pci_get_host_bridge_resources(), but I don't see how this output could
-happen.
+>=20
+> Bjorn
+>=20
 
-     IO 0xe010000000..0xe01000ffff -> 0x00000000
-    MEM 0xe180000000..0xe1ffffffff -> 0x80000000
-  xgene-pcie 1f2b0000.pcie: (rc) x1 gen-1 link up
-  xgene-pcie 1f2b0000.pcie: PCI host bridge to bus 0000:00
-  pci_bus 0000:00: root bus resource [bus 00-ff]
-  pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
-  pci_bus 0000:00: root bus resource [mem 0xe180000000-0xe1ffffffff] (bus address [0x80000000-0xffffffff])
-  pci_bus 0000:00: scanning bus
-  pci 0000:00:00.0: [19aa:e008] type 01 class 0x060400
-  pci 0000:00:00.0: reg 0x10: [mem 0x8000000000-0x807fffffff 64bit pref]
-
-I guess this is the "inbound BAR" that you hid in the v10 patches.  Hiding
-it will prevent some of BAR assignment problems below.  This is probably
-what caused the tg3 mapping problem Ming initially reported above.  We
-tried to reassign the inbound BAR, and it took up the entire space that we
-thought was available for CPU accesses to the PCI bus, leaving none for the
-tg3 device.
-
-Was Ming just unlucky by having an unusual configuration, e.g., with a lot
-of memory or something?  He certainly doesn't have a complicated PCIe
-hierarchy.  I assume you've tested this and had it work *somewhere*.
-
-  pci 0000:00:00.0: supports D1 D2
-  pci_bus 0000:00: fixups for bus
-  pci 0000:00:00.0: scanning [bus 01-01] behind bridge, pass 0
-  pci_bus 0000:01: scanning bus
-  pci 0000:01:00.0: [14e4:165a] type 00 class 0x020000
-  pci 0000:01:00.0: reg 0x10: [mem 0x00100000-0x0010ffff 64bit]
-  pci 0000:01:00.0: PME# supported from D3hot
-  pci 0000:01:00.0: PME# disabled
-  pci_bus 0000:01: fixups for bus
-  pci_bus 0000:01: bus scan returning with max=01
-  pci 0000:00:00.0: scanning [bus 01-01] behind bridge, pass 1
-  pci_bus 0000:00: bus scan returning with max=01
-  pci 0000:00:00.0: BAR 0: assigned [mem 0xe180000000-0xe1ffffffff 64bit pref]
-  pci 0000:00:00.0: BAR 8: no space for [mem size 0x00100000]
-  pci 0000:00:00.0: BAR 8: failed to assign [mem size 0x00100000]
-  pci 0000:01:00.0: BAR 0: no space for [mem size 0x00010000 64bit]
-  pci 0000:01:00.0: BAR 0: failed to assign [mem size 0x00010000 64bit]
-  pci 0000:00:00.0: PCI bridge to [bus 01]
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
