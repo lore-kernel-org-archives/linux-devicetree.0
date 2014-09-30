@@ -1,130 +1,83 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v13 00/12] Support for creating generic PCI host bridges
- from DT
-Date: Tue, 30 Sep 2014 17:54:31 +0100
-Message-ID: <20140930165431.GV841@e106497-lin.cambridge.arm.com>
-References: <1412000971-9242-1-git-send-email-Liviu.Dudau@arm.com>
- <20140929194335.GA13747@google.com>
- <20140930103942.GO841@e106497-lin.cambridge.arm.com>
- <20140930161805.GB5625@google.com>
+From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+Subject: Re: [PATCH 2/6] hwrng: atmel: use clk_prepapre_enable/_disable_unprepare
+Date: Tue, 30 Sep 2014 18:55:05 +0200
+Message-ID: <87k34loxp2.fsf@dell.be.48ers.dk>
+References: <1412093987-30241-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1412093987-30241-3-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20140930161805.GB5625@google.com>
-Content-Disposition: inline
-Sender: linux-arch-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Yinghai Lu <yinghai@kernel.org>, Jiang Liu <jiang.liu@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412093987-30241-3-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+	(Boris Brezillon's message of "Tue, 30 Sep 2014 18:19:43 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 30, 2014 at 05:18:05PM +0100, Bjorn Helgaas wrote:
-> On Tue, Sep 30, 2014 at 11:39:42AM +0100, Liviu Dudau wrote:
-> > On Mon, Sep 29, 2014 at 08:43:35PM +0100, Bjorn Helgaas wrote:
-> > > On Mon, Sep 29, 2014 at 03:29:19PM +0100, Liviu Dudau wrote:
-> > > > This is my version 13 of the attempt at adding support for gene=
-ric PCI host
-> > > > bridge controllers. It contains only cleanups to make it play n=
-ice with the
-> > > > linux-next tree as of 09/25. If Bjorn deems it safe, now that i=
-t looks like
-> > > > asm-generic is going to revert some of its more aggresive patch=
-es, he has the
-> > > > choice of queueing it into linux-next again.
-> > > > ...
-> > >=20
-> > > These patches above were already on my pci/host-generic branch an=
-d in
-> > > linux-next:
-> > >=20
-> > >    asm-generic/io.h: Fix ioport_map() for !CONFIG_GENERIC_IOMAP
-> > This ^ ...
-> >=20
-> > >    of/pci: Add pci_register_io_range() and pci_pio_to_address()
-> > >    ARM: Define PCI_IOBASE as the base of virtual PCI IO space
-> >=20
-> > and this ^ need to be refreshed from my series otherwise we will ge=
-t conflicts with
-> > asm-generic branch (either now or in the future). While the asm-gen=
-eric/io.h
-> > cast is arguably superflous, we need to define PCI_IOBASE as a void=
- __iomem* to
-> > match all other standard declarations of PCI_IOBASE.
-> >=20
-> > >    of/pci: Define of_pci_range_to_resource() only when CONFIG_PCI=
-=3Dy
-> > >    of/pci: Move of_pci_range_to_resources() to of/address.c
-> > >    of/pci: Fix the conversion of IO ranges into IO resources
-> > >=20
-> > > I added these three patches to my pci/host-generic branch:
-> > >=20
-> > >    PCI: Add generic domain handling
-> > >    of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr()
-> > >    of/pci: Add support for parsing PCI host bridge resources from=
- DT
-> >=20
-> > I can see these patches added to pci/host-generic but not on pci/ne=
-xt.
->=20
-> Right.  I leave things on topic branches for a day or two to give a c=
-hance
-> for Fengguang's auto-builder to find problems before I merge them int=
-o the
-> more public "next" or "for-linus" branches.
->=20
-> > > Yinghai pointed out a problem with this one, so I omitted it:
-> > >=20
-> > >    PCI: Assign unassigned bus resources in pci_scan_root_bus()
-> >=20
-> > Thats fine, host bridge drivers will have to work around pci_scan_r=
-oot_bus() reduced
-> > functionality for now.
->=20
-> Well, it's not really "reduced functionality."  It is unchanged by th=
-is
-> series and host bridge drivers can continue using it the same way the=
-y have
-> in the past.  It's just that we'd like to make it smarter someday.
->=20
-> > > I added this one to my pci/host-generic branch:
-> > >=20
-> > >    PCI: Add pci_remap_iospace() to map bus I/O resources
-> > >=20
-> > > I assume this depends on the pci_scan_root_bus() change (if not, =
-let me
-> > > know), so I omitted this one:
-> > >=20
-> > >    arm64: Add architectural support for PCI
-> >=20
-> > No, there is no dependency there on pci_scan_root_bus(), it can go =
-in the series.
-> > The only thing that depends on a feature rich pci_scan_root_bus() i=
-s the host
-> > bridge driver in order to be able to use only one line to process t=
-he root bus.
->=20
-> OK, I rebuilt pci/host-generic from scratch.  It consists of your v13
-> patches + Arnd's build fix for pci_pio_to_address() in !CONFIG_OF con=
-figs.
+>>>>> "Boris" == Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
 
-Something went wrong with the integration, patch 02 adds another defini=
-tion of=20
-of_pci_range_to_resource() before it is moved out of the header file fo=
-r some reason.
+ > Use clk_prepapre_enable/_disable_unprepare instead of clk_enable/disable
+ > to work properly with the CCF.
 
-Best regards,
-Liviu
+s/prepapre/prepare/
 
->=20
-> Bjorn
->=20
+Other than that, looks fine to me.
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Acked-by: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+
+ > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+ > ---
+ >  drivers/char/hw_random/atmel-rng.c | 8 ++++----
+ >  1 file changed, 4 insertions(+), 4 deletions(-)
+
+ > diff --git a/drivers/char/hw_random/atmel-rng.c b/drivers/char/hw_random/atmel-rng.c
+ > index 851bc7e..644ec48 100644
+ > --- a/drivers/char/hw_random/atmel-rng.c
+ > +++ b/drivers/char/hw_random/atmel-rng.c
+ > @@ -67,7 +67,7 @@ static int atmel_trng_probe(struct platform_device *pdev)
+ >  	if (IS_ERR(trng->clk))
+ >  		return PTR_ERR(trng->clk);
+ 
+ > -	ret = clk_enable(trng->clk);
+ > +	ret = clk_prepare_enable(trng->clk);
+ >  	if (ret)
+ >  		return ret;
+ 
+ > @@ -95,7 +95,7 @@ static int atmel_trng_remove(struct platform_device *pdev)
+ >  	hwrng_unregister(&trng->rng);
+ 
+ >  	writel(TRNG_KEY, trng->base + TRNG_CR);
+ > -	clk_disable(trng->clk);
+ > +	clk_disable_unprepare(trng->clk);
+ 
+ >  	return 0;
+ >  }
+ > @@ -105,7 +105,7 @@ static int atmel_trng_suspend(struct device *dev)
+ >  {
+ >  	struct atmel_trng *trng = dev_get_drvdata(dev);
+ 
+ > -	clk_disable(trng->clk);
+ > +	clk_disable_unprepare(trng->clk);
+ 
+ >  	return 0;
+ >  }
+ > @@ -114,7 +114,7 @@ static int atmel_trng_resume(struct device *dev)
+ >  {
+ >  	struct atmel_trng *trng = dev_get_drvdata(dev);
+ 
+ > -	return clk_enable(trng->clk);
+ > +	return clk_prepare_enable(trng->clk);
+ >  }
+ 
+ >  static const struct dev_pm_ops atmel_trng_pm_ops = {
+ > -- 
+ > 1.9.1
+
+
+
+-- 
+Bye, Peter Korsgaard
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
