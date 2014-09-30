@@ -1,54 +1,83 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V3] bcma: use device from DT (brcm, bus-chipcommon) for
- SoC GPIO chip
-Date: Tue, 30 Sep 2014 12:41:53 +0200
-Message-ID: <CACna6rx8vm3cqws7hqH0yGZnJiteVy9hsCgi8hXZD5oFdyp_FQ@mail.gmail.com>
-References: <1411892641-5662-1-git-send-email-zajec5@gmail.com>
-	<1412072546-3529-1-git-send-email-zajec5@gmail.com>
-	<3484902.1UVy7lmJAD@wuerfel>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V4] bcma: use chipcommon node from DT for SoC GPIO chip
+Date: Tue, 30 Sep 2014 12:55:48 +0200
+Message-ID: <1412074548-14614-1-git-send-email-zajec5@gmail.com>
+References: <1412072546-3529-1-git-send-email-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3484902.1UVy7lmJAD@wuerfel>
+In-Reply-To: <1412072546-3529-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 30 September 2014 12:36, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Tuesday 30 September 2014 12:22:26 Rafa=C5=82 Mi=C5=82ecki wrote:
->> @@ -218,6 +218,12 @@ int bcma_gpio_init(struct bcma_drv_cc *cc)
->>  #if IS_BUILTIN(CONFIG_BCM47XX)
->>         chip->to_irq            =3D bcma_gpio_to_irq;
->>  #endif
->> +#if IS_BUILTIN(CONFIG_OF)
->> +       if (cc->core->bus->hosttype =3D=3D BCMA_HOSTTYPE_SOC)
->> +               chip->of_node   =3D of_find_compatible_node(
->> +                                       bus->host_pdev->dev.of_node,=
- NULL,
->> +                                       "brcm,bus-chipcommon");
->> +#endif
->>         switch (cc->core->bus->chipinfo.id) {
->
-> This doesn't: you are now searching through all nodes starting at the
-> axi node rather than searching just through the children.
->
-> I think it would be better with the first change in place to set
-> chip->of_node to cc->core->dev.of_node, and set that pointer in
-> bcma_bus_scan by matching the 'reg' number. I think that is what
-> an earlier version of the bcma DT support did in order to find the
-> IRQs. We no longer need it for that purpose, but it seems like a
-> good idea anyway, as I expect other bcma_devices to have similar
-> requirements to add additional properties.
+This will allow us to define GPIO-attached devices (LEDs, buttons) in
+the the device tree.
 
-Ohh, of course, I didn't notice that
+Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+This is based on top of
 [PATCH v6] bcma: register bcma as device tree driver
-already contains bcma_of_fill_device. This will simplify my search a lo=
-t!
+that I hope will reach wireless-next git tree.
 
+V2: Describe axi chilren and make gpio a child of chipcommon core.
+V3: Make chipcommon a GPIO controller (avoid extra sub-child)
+    Speed up finding OF node in driver_gpio.c
+V4: Simplify setting of_node in driver_gpio.c
+---
+ Documentation/devicetree/bindings/bus/bcma.txt | 12 ++++++++++++
+ drivers/bcma/driver_gpio.c                     |  4 ++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/bus/bcma.txt b/Documenta=
+tion/devicetree/bindings/bus/bcma.txt
+index e9070c1..62a4834 100644
+--- a/Documentation/devicetree/bindings/bus/bcma.txt
++++ b/Documentation/devicetree/bindings/bus/bcma.txt
+@@ -9,6 +9,11 @@ Required properties:
+ The cores on the AXI bus are automatically detected by bcma with the
+ memory ranges they are using and they get registered afterwards.
+=20
++The top-level axi bus may contain children representing attached cores
++(devices). This is needed since some hardware details can't be auto
++detected (e.g. IRQ numbers). Also some of the cores may be responsible
++for extra things, e.g. ChipCommon providing access to the GPIO chip.
++
+ Example:
+=20
+ 	axi@18000000 {
+@@ -17,4 +22,11 @@ Example:
+ 		ranges =3D <0x00000000 0x18000000 0x00100000>;
+ 		#address-cells =3D <1>;
+ 		#size-cells =3D <1>;
++
++		chipcommon {
++			reg =3D <0x00000000 0x1000>;
++
++			gpio-controller;
++			#gpio-cells =3D <2>;
++		};
+ 	};
+diff --git a/drivers/bcma/driver_gpio.c b/drivers/bcma/driver_gpio.c
+index 8ea497c..57ce5fe 100644
+--- a/drivers/bcma/driver_gpio.c
++++ b/drivers/bcma/driver_gpio.c
+@@ -218,6 +218,10 @@ int bcma_gpio_init(struct bcma_drv_cc *cc)
+ #if IS_BUILTIN(CONFIG_BCM47XX)
+ 	chip->to_irq		=3D bcma_gpio_to_irq;
+ #endif
++#if IS_BUILTIN(CONFIG_OF)
++	if (cc->core->bus->hosttype =3D=3D BCMA_HOSTTYPE_SOC)
++		chip->of_node	=3D cc->core->dev.of_node;
++#endif
+ 	switch (cc->core->bus->chipinfo.id) {
+ 	case BCMA_CHIP_ID_BCM5357:
+ 	case BCMA_CHIP_ID_BCM53572:
 --=20
-Rafa=C5=82
+1.8.4.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe linux-wireles=
 s" in
