@@ -1,34 +1,96 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] Add USB PHY device tree support for
- R8A7791/Koelsch/Henninger board
-Date: Tue, 30 Sep 2014 14:24:23 +0900
-Message-ID: <20140930052423.GB24665@verge.net.au>
-References: <3383603.zZsCVpCDbD@wasted.cogentembedded.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4] ARM: shmobile: r8a7790: link PCI USB devices to USB
+ PHY
+Date: Tue, 30 Sep 2014 14:24:43 +0900
+Message-ID: <20140930052443.GC24665@verge.net.au>
+References: <6141061.UF13qqqgfz@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3383603.zZsCVpCDbD-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <6141061.UF13qqqgfz@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 27, 2014 at 01:05:41AM +0400, Sergei Shtylyov wrote:
-> Hello.
+On Mon, Sep 29, 2014 at 10:21:59PM +0400, Sergei Shtylyov wrote:
+> Describe the PCI USB devices that are behind the PCI bridges, adding necessary
+> links to the USB PHY device.
 > 
->    Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
-> 'renesas-devel-20140924-v3.17-rc6' tag. Here we add the USB PHY device tree
-> support on the R8A7791/Koelsch/Henninger boards. The patchset requires the USB
-> PHY driver already merged by Kishon and Greg in order to work, so can be
-> applied at last...
+> Based on the original work by Ben Dooks <ben.dooks@codethink.co.uk>.
 > 
-> [1/3] ARM: shmobile: r8a7791: add USB PHY DT support
-> [2/3] ARM: shmobile: koelsch: enable USB PHY
-> [3/3] ARM: shmobile: henninger: enable USB PHY
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Thanks, I have queued these up.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, I have queued this up.
+
+> 
+> ---
+> This patch is against 'renesas-devel-20140924-v3.17-rc6' tag of Simon Horman's
+> 'renesas.git' repo plus R8A7790/Lager USB PHY support patches posted before.
+> The patch requires the USB PHY driver and USB HCD generic PHY support (merged
+> by Kishon and Greg recently) in order to work.
+> 
+> Changes in version 4:
+> - refreshed the patch.
+> 
+> Changes in version 3:
+> - adjusted "phys" properties in the PCI OHCI/EHCI device nodes;
+> - resolved rejects.
+> 
+> Changes in version 2:
+> - renamed the PCI OHCI/EHCI device nodes to comply with the PCI binding;
+> - changed the PHY specifier in the PCI#2 node to reflect that channel #1 support
+>   was dropped;
+> - resolved rejects, refreshed the patch.
+> 
+>  arch/arm/boot/dts/r8a7790.dtsi |   28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
+> +++ renesas/arch/arm/boot/dts/r8a7790.dtsi
+> @@ -1107,6 +1107,20 @@
+>  		interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+>  				 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+>  				 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +		usb@0,1 {
+> +			reg = <0x800 0 0 0 0>;
+> +			device_type = "pci";
+> +			phys = <&usb0 0>;
+> +			phy-names = "usb";
+> +		};
+> +
+> +		usb@0,2 {
+> +			reg = <0x1000 0 0 0 0>;
+> +			device_type = "pci";
+> +			phys = <&usb0 0>;
+> +			phy-names = "usb";
+> +		};
+>  	};
+>  
+>  	pci1: pci@ee0b0000 {
+> @@ -1147,6 +1161,20 @@
+>  		interrupt-map = <0x0000 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
+>  				 0x0800 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
+>  				 0x1000 0 0 2 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +		usb@0,1 {
+> +			reg = <0x800 0 0 0 0>;
+> +			device_type = "pci";
+> +			phys = <&usb2 0>;
+> +			phy-names = "usb";
+> +		};
+> +
+> +		usb@0,2 {
+> +			reg = <0x1000 0 0 0 0>;
+> +			device_type = "pci";
+> +			phys = <&usb2 0>;
+> +			phy-names = "usb";
+> +		};
+>  	};
+>  
+>  	pciec: pcie@fe000000 {
+> 
