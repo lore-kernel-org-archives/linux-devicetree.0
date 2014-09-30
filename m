@@ -1,77 +1,92 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 00/13] ARM: shmobile: dts: Add chosen/stdout-path
-Date: Tue, 30 Sep 2014 17:05:30 +0900
-Message-ID: <20140930080527.GO16823@verge.net.au>
-References: <1411661609-4280-1-git-send-email-geert+renesas@glider.be>
- <20140930020755.GC10373@verge.net.au>
- <20140930063029.GA30269@verge.net.au>
- <CAMuHMdXdobOLhwNfDaZPPuzQHV+j67__bkLeprLOuEx5jts2XQ@mail.gmail.com>
+From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Subject: Re: [PATCH v8 2/3] dt-bindings: video: Add for rockchip display
+ subsytem
+Date: Tue, 30 Sep 2014 10:10:20 +0200
+Message-ID: <20140930081020.GE24667@phenom.ffwll.local>
+References: <1412057386-19375-1-git-send-email-mark.yao@rock-chips.com>
+ <1412057659-19483-1-git-send-email-mark.yao@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdXdobOLhwNfDaZPPuzQHV+j67__bkLeprLOuEx5jts2XQ@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1412057659-19483-1-git-send-email-mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dbehr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx@rock-chips.c
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 30, 2014 at 09:04:16AM +0200, Geert Uytterhoeven wrote:
-> Hi Simon,
+On Tue, Sep 30, 2014 at 02:14:19PM +0800, Mark Yao wrote:
+> From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > 
-> On Tue, Sep 30, 2014 at 8:30 AM, Simon Horman <horms@verge.net.au> wrote:
-> > On Tue, Sep 30, 2014 at 11:07:56AM +0900, Simon Horman wrote:
-> >> On Thu, Sep 25, 2014 at 06:13:16PM +0200, Geert Uytterhoeven wrote:
-> >> > This patch series adds chosen/stdout-path to the various shmobile DTS files
-> >> > that are used for reference or multi-platform builds.
-> >> >
-> >> > This serves two purposes:
-> >> >   1. It makes automatic console selection work in the absence of a "console="
-> >> >      parameter on the kernel command line, allowing to remove "console="
-> >> >      parameters from chosen/bootargs on many platforms.
-> >> >      Note that these "console=" parameters are still needed in some cases:
-> >> >        a. If console output is wanted on two consoles devices (graphical and
-> >> >           serial consoles), like on armadillo and kzm9g,
-> >> >        b. When using a non-default baud for the serial console, like on
-> >> >           henninger and alt,
-> >> >   2. It will allow the PM domain code to find the PM domain for the console
-> >> >      device, to make "no_console_suspend" work in the DT case.
-> >> >      For now, this will matter on armadillo.
-> >> >
-> >> > The first two patches are small cleanups for emev2 dtsi, on top of which the
-> >> > change for kzm9d is built.
-> >>
-> >> Thanks, I have queued these up for v3.19.
-> >
-> > I spoke a little too soon.
-> >
-> > While testing these patches I noticed that the koelsch patch
-> > cases there to be no kernel output to the console (during boot)
-> > when booting using legacy C.
-> >
-> > I assume that this is due to removing
-> > console=ttySC6,115200 from bootargs.
+> This add a display subsystem comprise the all display interface nodes.
 > 
-> Sorry, in my mind koelsch legacy is already gone ;-)
-> 
-> > I also assume this affects all boards that can still
-> > be booted using legacy C.
-> 
-> Only the ones where the DTS is shared between legacy and
-> reference/multi-platform.
-> Armadillo is not affected, as the console parameters are kept to have
-> output on both graphical and serial console.
-> So that leaves us with lager and koelsch only.
-> 
-> > I have dropped this series for now.
-> 
-> Do you want me to resend with the console= parameter kept for koelsch
-> and lager?
-> Or should we delay this whole series until koelsch and lager legacy
-> have been dropped?
+> Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Acked-by: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+> Reviewed-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-I think it would be best if you reposted the series.
+Just a quick clarification: My ack was only about the drm driver itself, I
+try really hard to stay away from DT insanity ;-) So please drop my ack
+from these two patches.
 
-> IIUC, this is going to happen soon for koelsch, but not for lager?
+Aside: DT patches need to go through a special process and you must cc dt
+maintainers and mailing lists. Your patch seems to lack this, which afaiui
+is a blocker for merging the driver.
 
-Yes, that is my understanding too.
+Thanks, Daniel
+
+> ---
+> Changes in v2:
+> - add DRM master device node to list all display nodes that comprise
+>   the graphics subsystem.
+> 
+> Changes in v3: None
+> 
+> Changes in v4: None
+> 
+> Changes in v5: None
+> 
+> Changes in v6: None
+> 
+> Changes in v7: None
+> 
+> Changes in v8: None
+> 
+>  .../devicetree/bindings/video/rockchip-drm.txt     |   19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/rockchip-drm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/video/rockchip-drm.txt b/Documentation/devicetree/bindings/video/rockchip-drm.txt
+> new file mode 100644
+> index 0000000..7fff582
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/rockchip-drm.txt
+> @@ -0,0 +1,19 @@
+> +Rockchip DRM master device
+> +================================
+> +
+> +The Rockchip DRM master device is a virtual device needed to list all
+> +vop devices or other display interface nodes that comprise the
+> +graphics subsystem.
+> +
+> +Required properties:
+> +- compatible: Should be "rockchip,display-subsystem"
+> +- ports: Should contain a list of phandles pointing to display interface port
+> +  of vop devices. vop definitions as defined in
+> +  Documentation/devicetree/bindings/video/rockchip-vop.txt
+> +
+> +example:
+> +
+> +display-subsystem {
+> +	compatible = "rockchip,display-subsystem";
+> +	ports = <&vopl_out>, <&vopb_out>;
+> +};
+> -- 
+> 1.7.9.5
+> 
+> 
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
