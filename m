@@ -1,148 +1,149 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [RFC 3/7] mfd: devicetree: bindings: Add Qualcomm SMD based RPM
- DT binding
-Date: Tue, 30 Sep 2014 17:16:13 -0600
-Message-ID: <542B39BD.3030208@codeaurora.org>
-References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com> <1412037291-16880-4-git-send-email-bjorn.andersson@sonymobile.com> <85C5C172-D309-41B4-B511-7820BAFDA017@codeaurora.org> <20140930143740.GK28481@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140930143740.GK28481@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Kumar Gala <galak@codeaurora.org>
-Cc: Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Feng Kan <fkan@apm.com>
+Subject: [PATCH RESEND V9 1/6] power: reset: Add generic SYSCON register mapped reset
+Date: Tue, 30 Sep 2014 16:25:03 -0700
+Message-ID: <1412119508-22864-2-git-send-email-fkan@apm.com>
+References: <1412119508-22864-1-git-send-email-fkan@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412119508-22864-1-git-send-email-fkan@apm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux@roeck-us.net, dbaryshkov@gmail.com, catalin.marinas@arm.com, dwmw2@infradead.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patches@apm.com, linux-pm@vger.kernel.org, will.deacon@arm.com
+Cc: Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 9/30/2014 8:37 AM, Bjorn Andersson wrote:
-> On Tue 30 Sep 06:46 PDT 2014, Kumar Gala wrote:
->
->>
->> On Sep 29, 2014, at 7:34 PM, Bjorn Andersson <Bjorn.Andersson@sonymo=
-bile.com> wrote:
->>
->>> diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt=
- b/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
->>> new file mode 100644
->>> index 0000000..a846101
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
->>> @@ -0,0 +1,122 @@
->>> +Qualcomm Resource Power Manager (RPM) over SMD
->>> +
->>> +This driver is used to interface with the Resource Power Manager (=
-RPM) found in
->>> +various Qualcomm platforms. The RPM allows each component in the s=
-ystem to vote
->>> +for state of the system resources, such as clocks, regulators and =
-bus
->>> +frequencies.
->>> +
->>> +- compatible:
->>> +	Usage: required
->>> +	Value type: <string>
->>> +	Definition: must be one of:
->>> +		    "qcom,rpm-msm8974=94
->>
->> Why not =93qcom,rpm-smd=94.  I=92d like to get Jeff H=92s input on h=
-ow
->> what we do here for compat and distinguish the A-family RPM support =
-vs
->> B-family/RPM-SMD support.
->>
->
-> I don't see anything indicating changes in the actual communication, =
-but as
-> this also encodes what resources are exposed we have to keep this spe=
-cific.
->
-> I'm not sure what you mean with distinguish the A and B family, they =
-are
-> completely different and there are no overlap in compatibles or imple=
-mentation.
->
-> The overlap is in how children are communicating with the rpm, but th=
-is is an
-> implementation detail - and noted in that patch as a future improveme=
-nt.
->
->
-> I forgot to add Jeff, but did send him a separate email asking for hi=
-s input on
-> all this.
->
+Add a generic SYSCON register mapped reset mechanism.
 
-Yep.  I saw the series.  Still doing a deep dive.
+Signed-off-by: Feng Kan <fkan@apm.com>
+---
+ drivers/power/reset/Kconfig         |  5 ++
+ drivers/power/reset/Makefile        |  1 +
+ drivers/power/reset/syscon-reboot.c | 96 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 102 insertions(+)
+ create mode 100644 drivers/power/reset/syscon-reboot.c
 
-The rpm-smd driver (and the A family equivalent) is outside of my area=20
-of expertise, but I have some familiarity with it as it is a SMD client=
-=2E=20
-  Internally we have a singular compat for all of B family, but I=20
-haven't been able to figure out how that works to expose all of the=20
-resources.  I'll talk to my contact later in the week to see what the=20
-differences are.
-
-Is the per target compat the way to do this though?  The way its=20
-currently done means we'll have atleast a dozen tables in=20
-qcom-smd-rpm.c, and I can't imagine they will have anything more than=20
-minor differences from the msm8x74_resource_table that currently exists=
-=20
-in patch 6 of the series.  Why wouldn't one table that is a superset of=
-=20
-all supported targets work?
-
->>> +
->>> +- qcom,smd-channels:
->>> +	Usage: required
->>> +	Value type: <stringlist>
->>> +	Definition: Shared Memory Channel used for communication with the=
- RPM
->>> +
->>
->> This needs more details.
->>
->
-> Not sure what more to add here. It should contain the name of the cha=
-nnel used
-> for communication with the rpm. For all current platforms this would =
-be
-> "rpm_requests".
->
->>> +- #address-cells:
->>> +	Usage: required
->>> +	Value type: <u32>
->>> +	Definition: must be 1
->>> +
->>> +- #size-cells:
->>> +	Usage: required
->>> +	Value type: <u32>
->>> +	Definition: must be 0
->>> +
->>> +=3D SUBDEVICES
->>
->> As I mentioned for the the RPM binding on a-family, we should split =
-out the
->> devices into their own binding specs.
->>
->
-> Please actually read https://lkml.org/lkml/2014/3/10/567, it's now th=
-e third
-> time I send you that link. If you don't like it then ask Rob to revis=
-e his
-> statement.
->
-> For me it makes sense to consolidate the RPM binding in one document =
-rather
-> than spreading it out in 10 different documents with some implicit
-> dependencies.
->
-> Regards,
-> Bjorn
->
-
-
-Jeffrey Hugo
---=20
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,=20
-hosted by The Linux Foundation.
+diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+index 1915dde..a863fa1 100644
+--- a/drivers/power/reset/Kconfig
++++ b/drivers/power/reset/Kconfig
+@@ -143,4 +143,9 @@ config POWER_RESET_KEYSTONE
+ 	help
+ 	  Reboot support for the KEYSTONE SoCs.
+ 
++config POWER_RESET_SYSCON
++	bool "Generic SYSCON regmap reset driver"
++	depends on POWER_RESET && MFD_SYSCON && OF
++	help
++	  Reboot support for generic SYSCON mapped register reset.
+ endif
+diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+index 01e401d..76ce1c5 100644
+--- a/drivers/power/reset/Makefile
++++ b/drivers/power/reset/Makefile
+@@ -16,3 +16,4 @@ obj-$(CONFIG_POWER_RESET_VERSATILE) += arm-versatile-reboot.o
+ obj-$(CONFIG_POWER_RESET_VEXPRESS) += vexpress-poweroff.o
+ obj-$(CONFIG_POWER_RESET_XGENE) += xgene-reboot.o
+ obj-$(CONFIG_POWER_RESET_KEYSTONE) += keystone-reset.o
++obj-$(CONFIG_POWER_RESET_SYSCON) += syscon-reboot.o
+diff --git a/drivers/power/reset/syscon-reboot.c b/drivers/power/reset/syscon-reboot.c
+new file mode 100644
+index 0000000..948e0ee
+--- /dev/null
++++ b/drivers/power/reset/syscon-reboot.c
+@@ -0,0 +1,96 @@
++/*
++ * Generic Syscon Reboot Driver
++ *
++ * Copyright (c) 2013, Applied Micro Circuits Corporation
++ * Author: Feng Kan <fkan@apm.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++#include <linux/io.h>
++#include <linux/of_device.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/notifier.h>
++#include <linux/mfd/syscon.h>
++#include <linux/regmap.h>
++#include <linux/reboot.h>
++
++struct syscon_reboot_context {
++	struct regmap *map;
++	u32 offset;
++	u32 mask;
++	struct notifier_block restart_handler;
++};
++
++static struct syscon_reboot_context *syscon_reboot_ctx;
++
++static int syscon_restart_handle(struct notifier_block *this,
++					unsigned long mode, void *cmd)
++{
++	struct syscon_reboot_context *ctx = syscon_reboot_ctx;
++	unsigned long timeout;
++
++	/* Issue the reboot */
++	if (ctx->map)
++		regmap_write(ctx->map, ctx->offset, ctx->mask);
++
++	timeout = jiffies + HZ;
++	while (time_before(jiffies, timeout))
++		cpu_relax();
++
++	pr_emerg("Unable to restart system\n");
++	return NOTIFY_DONE;
++}
++
++static int syscon_reboot_probe(struct platform_device *pdev)
++{
++	struct syscon_reboot_context *ctx;
++	struct device *dev = &pdev->dev;
++	int err;
++
++	ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++
++	ctx->map = syscon_regmap_lookup_by_phandle(dev->of_node, "regmap");
++	if (IS_ERR(ctx->map))
++		return PTR_ERR(ctx->map);
++
++	if (of_property_read_u32(pdev->dev.of_node, "offset", &ctx->offset))
++		return -EINVAL;
++
++	if (of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask))
++		return -EINVAL;
++
++	ctx->restart_handler.notifier_call = syscon_restart_handle;
++	ctx->restart_handler.priority = 128;
++	err = register_restart_handler(&ctx->restart_handler);
++	if (err)
++		dev_err(dev, "can't register restart notifier (err=%d)\n", err);
++
++	syscon_reboot_ctx = ctx;
++
++	return 0;
++}
++
++static struct of_device_id syscon_reboot_of_match[] = {
++	{ .compatible = "syscon-reboot" },
++	{}
++};
++
++static struct platform_driver syscon_reboot_driver = {
++	.probe = syscon_reboot_probe,
++	.driver = {
++		.name = "syscon-reboot",
++		.of_match_table = syscon_reboot_of_match,
++	},
++};
++module_platform_driver(syscon_reboot_driver);
+-- 
+1.9.1
