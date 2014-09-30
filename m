@@ -1,45 +1,177 @@
-From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
-Subject: Re: [PATCH v5 0/8] arch: arm64: Enable support for Samsung Exynos7 SoC
-Date: Tue, 30 Sep 2014 20:42:34 +0530
-Message-ID: <CAM4voa=Hsux0+rccSvDJsNTFakZwuwYwjkDkkNFfndFm03Pn3g@mail.gmail.com>
-References: <1411361228-18279-1-git-send-email-a.kesavan@samsung.com>
-	<541FE357.5090000@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH v2 1/4] ARM: dts: apq8064: add RPM regulators support
+Date: Tue, 30 Sep 2014 08:14:39 -0700
+Message-ID: <20140930151437.GM28481@sonymobile.com>
+References: <1412086159-20894-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1412086188-20940-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <541FE357.5090000@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Naveen Krishna <naveenkrishna.ch@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1412086188-20940-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+On Tue 30 Sep 07:09 PDT 2014, Srinivas Kandagatla wrote:
 
-On Mon, Sep 22, 2014 at 2:22 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hi Abhilash,
->
-> On 22.09.2014 06:47, Abhilash Kesavan wrote:
->> Changes since v4:
->> - Fixed comments from Tomasz Figa:
->>       - Changed the namespace prefix from exynos to samsung
->>       - Defined bindings to take all input clocks
->>       - Sorted the Kconfig entries alphabetically in clock Makefile
->>       - Used consistent 1 tab line breaks across the clock file
->>       - Statically initialized the samsung_cmu_info struct
->> - Enabled exynos7 in the arm64 defconfig as per Catalin Marinas' comment.
->> - Added Kukjin Kim's ack along with Thomas Abraham's tested and reviewed tags.
->>
->
-> The clock patches look good to me, but since they are doing quite a lot
-> of code moving I'd prefer to take them through clk tree. Based on the
-> fact that there are no code dependencies between clock patches and
-> remaining ones and Exynos7 is a new material for 3.18, I'm inclined to
-> apply them to my tree if nobody minds.
+> This patch adds rpm node to apq8064 dt as rpm would be used by other
+> devices for regulator support. Also adds all the regulators in the rpm.
+> 
 
-Will you be picking up the clock changes soon ?
+Some comments on the compatibles, based on rpm-regulator-8960 msm-3.4.
 
-Regards,
-Abhilash
->
-> Best regards,
-> Tomasz
+After giving this some more thought I think it would be good to defer the
+voltage definition to the dts files, at least for the ldos (as these are being
+re-purposed).
+
+That way the dts implementor will be the one frying their components and not us
+because some default value kicking in because someone miss-spelled or forgot to
+override a certain voltage.
+
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  arch/arm/boot/dts/qcom-apq8064.dtsi | 297 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 297 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+
+[..]
+
+> +			pm8921_s5: pm8921-s5 {
+> +				compatible		= "qcom,rpm-pm8921-smps";
+
+qcom,rpm-pm8921-ftsmps
+
+> +				reg			= <QCOM_RPM_PM8921_SMPS5>;
+> +				regulator-min-microvolt	= < 850000>;
+> +				regulator-max-microvolt	= <1300000>;
+> +			};
+> +
+> +			pm8921_s6: pm8921-s6 {
+> +				compatible		= "qcom,rpm-pm8921-smps";
+
+qcom,rpm-pm8921-ftsmps
+
+> +				reg			= <QCOM_RPM_PM8921_SMPS6>;
+> +				regulator-min-microvolt	= < 850000>;
+> +				regulator-max-microvolt	= <1300000>;
+> +			};
+> +
+> +			pm8921_s7: pm8921-s7 {
+> +				compatible		= "qcom,rpm-pm8921-smps";
+> +				reg			= <QCOM_RPM_PM8921_SMPS7>;
+> +				regulator-min-microvolt	= < 500000>;
+> +				regulator-max-microvolt	= <1350000>;
+> +			};
+> +
+> +			pm8921_s8: pm8921-s8 {
+> +				compatible		= "qcom,rpm-pm8921-smps";
+> +				reg			= <QCOM_RPM_PM8921_SMPS8>;
+> +				regulator-min-microvolt	= <1500000>;
+> +				regulator-max-microvolt	= <2350000>;
+> +			};
+> +
+> +			/* PMOS LDO */
+> +			pm8921_l1: pm8921-l1 {
+> +				compatible		= "qcom,rpm-pm8921-pldo";
+
+qcom,rpm-pm8921-nldo
+
+> +				reg			= <QCOM_RPM_PM8921_LDO1>;
+> +				regulator-min-microvolt	= <1000000>;
+> +				regulator-max-microvolt	= <1450000>;
+> +			};
+> +
+> +			pm8921_l2: pm8921-l2 {
+> +				compatible		= "qcom,rpm-pm8921-pldo";
+
+qcom,rpm-pm8921-nldo
+
+> +				reg			= <QCOM_RPM_PM8921_LDO2>;
+> +				regulator-min-microvolt	= <1200000>;
+> +				regulator-max-microvolt	= <1200000>;
+> +			};
+> +
+
+[..]
+
+> +
+> +			pm8921_l24: pm8921-l24 {
+> +				compatible		= "qcom,rpm-pm8921-pldo";
+
+qcom,rpm-pm8921-nldo1200
+
+> +				reg			= <QCOM_RPM_PM8921_LDO24>;
+> +				regulator-min-microvolt = <0750000>;
+> +				regulator-max-microvolt = <1250000>;
+> +			};
+> +
+> +			pm8921_l25: pm8921-l25 {
+> +				compatible		= "qcom,rpm-pm8921-pldo";
+
+qcom,rpm-pm8921-nldo1200
+
+> +				reg			= <QCOM_RPM_PM8921_LDO25>;
+> +				regulator-min-microvolt = <0750000>;
+> +				regulator-max-microvolt = <1250000>;
+> +			};
+> +
+> +			pm8921_l26: pm8921-l26 {
+> +				compatible		= "qcom,rpm-pm8921-pldo";
+
+qcom,rpm-pm8921-nldo1200
+
+> +				reg			= <QCOM_RPM_PM8921_LDO26>;
+> +				regulator-min-microvolt = <0750000>;
+> +				regulator-max-microvolt = <1250000>;
+> +			};
+> +
+> +			pm8921_l27: pm8921-l27 {
+> +				compatible		= "qcom,rpm-pm8921-pldo";
+
+qcom,rpm-pm8921-nldo1200
+
+> +				reg			= <QCOM_RPM_PM8921_LDO27>;
+> +				regulator-min-microvolt = <0750000>;
+> +				regulator-max-microvolt = <1250000>;
+> +			};
+> +
+> +			pm8921_l28: pm8921-l28 {
+> +				compatible		= "qcom,rpm-pm8921-pldo";
+
+qcom,rpm-pm8921-nldo1200
+
+> +				reg			= <QCOM_RPM_PM8921_LDO28>;
+> +				regulator-min-microvolt = <0750000>;
+> +				regulator-max-microvolt = <1500000>;
+> +			};
+> +
+
+[..]
+
+> +
+
+			pm8921_usb_switch: pm8921-usb-switch {
+				compatible = "qcom,rpm-pm8921-switch";
+				reg = <QCOM_RPM_USB_OTG_SWITCH>;
+			};
+
+			pm8921_hdmi_switch: pm8921-hdmi-switch {
+				compatible = "qcom,rpm-pm8921-switch";
+				reg = <QCOM_RPM_HDMI_SWITCH>;
+			};
+
+			pm8921_ncp: pm8921-ncp {
+				compatible = "qcom,rpm-pm8921-ncp";
+				reg = <QCOM_RPM_PM8921_NCP>;
+			};
+> +		};
+> +
+>  		/* Temporary fixed regulator */
+>  		vsdcc_fixed: vsdcc-regulator {
+>  			compatible = "regulator-fixed";
+> -- 
+> 1.9.1
+> 
