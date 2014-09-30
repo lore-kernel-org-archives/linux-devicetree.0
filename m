@@ -1,82 +1,77 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: DT: apq8064: add rpm support
-Date: Tue, 30 Sep 2014 08:49:31 +0100
-Message-ID: <542A608B.5010408@linaro.org>
-References: <1411982044-7873-1-git-send-email-srinivas.kandagatla@linaro.org> <1411982092-7922-1-git-send-email-srinivas.kandagatla@linaro.org> <20140930051138.GH28481@sonymobile.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 00/13] ARM: shmobile: dts: Add chosen/stdout-path
+Date: Tue, 30 Sep 2014 17:05:30 +0900
+Message-ID: <20140930080527.GO16823@verge.net.au>
+References: <1411661609-4280-1-git-send-email-geert+renesas@glider.be>
+ <20140930020755.GC10373@verge.net.au>
+ <20140930063029.GA30269@verge.net.au>
+ <CAMuHMdXdobOLhwNfDaZPPuzQHV+j67__bkLeprLOuEx5jts2XQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140930051138.GH28481-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXdobOLhwNfDaZPPuzQHV+j67__bkLeprLOuEx5jts2XQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Sep 30, 2014 at 09:04:16AM +0200, Geert Uytterhoeven wrote:
+> Hi Simon,
+> 
+> On Tue, Sep 30, 2014 at 8:30 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Tue, Sep 30, 2014 at 11:07:56AM +0900, Simon Horman wrote:
+> >> On Thu, Sep 25, 2014 at 06:13:16PM +0200, Geert Uytterhoeven wrote:
+> >> > This patch series adds chosen/stdout-path to the various shmobile DTS files
+> >> > that are used for reference or multi-platform builds.
+> >> >
+> >> > This serves two purposes:
+> >> >   1. It makes automatic console selection work in the absence of a "console="
+> >> >      parameter on the kernel command line, allowing to remove "console="
+> >> >      parameters from chosen/bootargs on many platforms.
+> >> >      Note that these "console=" parameters are still needed in some cases:
+> >> >        a. If console output is wanted on two consoles devices (graphical and
+> >> >           serial consoles), like on armadillo and kzm9g,
+> >> >        b. When using a non-default baud for the serial console, like on
+> >> >           henninger and alt,
+> >> >   2. It will allow the PM domain code to find the PM domain for the console
+> >> >      device, to make "no_console_suspend" work in the DT case.
+> >> >      For now, this will matter on armadillo.
+> >> >
+> >> > The first two patches are small cleanups for emev2 dtsi, on top of which the
+> >> > change for kzm9d is built.
+> >>
+> >> Thanks, I have queued these up for v3.19.
+> >
+> > I spoke a little too soon.
+> >
+> > While testing these patches I noticed that the koelsch patch
+> > cases there to be no kernel output to the console (during boot)
+> > when booting using legacy C.
+> >
+> > I assume that this is due to removing
+> > console=ttySC6,115200 from bootargs.
+> 
+> Sorry, in my mind koelsch legacy is already gone ;-)
+> 
+> > I also assume this affects all boards that can still
+> > be booted using legacy C.
+> 
+> Only the ones where the DTS is shared between legacy and
+> reference/multi-platform.
+> Armadillo is not affected, as the console parameters are kept to have
+> output on both graphical and serial console.
+> So that leaves us with lager and koelsch only.
+> 
+> > I have dropped this series for now.
+> 
+> Do you want me to resend with the console= parameter kept for koelsch
+> and lager?
+> Or should we delay this whole series until koelsch and lager legacy
+> have been dropped?
 
+I think it would be best if you reposted the series.
 
-On 30/09/14 06:11, Bjorn Andersson wrote:
+> IIUC, this is going to happen soon for koelsch, but not for lager?
 
->>
->> +		apcs: syscon@2011000 {
->> +			compatible = "syscon";
->> +			reg = <0x2011000 0x1000>;
->> +		};
->> +
->> +		rpm@108000 {
->> +			compatible	= "qcom,rpm-apq8064";
->> +			reg		= <0x108000 0x1000>;
->> +			qcom,ipc = <&apcs 0x8 2>;
->
-> I don't like your indentation, but please stick with one way of doing it :)
->
-I agree, Will fix this in next version.
->> +
->> +			interrupts	= <0 19 0>, <0 21 0>, <0 22 0>;
->> +			interrupt-names = "ack", "err", "wakeup";
->> +
->> +			#address-cells	= <1>;
->> +			#size-cells	= <0>;
->> +
->
-> This part looks good.
->
-> But how about adding all the regulators here as well?
-Yes we can add for the sake of completeness but w.r.t testing only some 
-of them will be tested
-> Like:
->
->                          pm8921_l5: pm8921-l5 {
-> 				compatible = "qcom,rpm-pm8921-pldo";
-> 				reg = <QCOM_RPM_PM8921_LDO5>;
-> 			};
->
-Adding nodes like this should be trival.
-> 			...
->
-> That way we can update the references from this file (while still allowing the
-> dts to override it if needed). I'm not sure if we should add some sane defaults
-> or just completely deferr specifying the voltage ranges to the dts. The benefit
-> of the latter is that the regulators not configured by the dts author will not
-> be accessible.
->
-> But simply listing all the nodes here would be nice and I dont see much reason
-> to postpone this work.
-Ok.. will be done in next version.
-
-
---srini
->
->> +		};
->> +
->>   		/* Temporary fixed regulator */
->>   		vsdcc_fixed: vsdcc-regulator {
->>   			compatible = "regulator-fixed";
->
-> Regards,
-> Bjorn
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, that is my understanding too.
