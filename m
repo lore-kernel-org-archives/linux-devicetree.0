@@ -1,48 +1,75 @@
-From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Subject: Re: [PATCH v8 2/3] dt-bindings: video: Add for rockchip display
- subsytem
-Date: Tue, 30 Sep 2014 10:24:19 +0200
-Message-ID: <20140930082419.GG24667@phenom.ffwll.local>
-References: <1412057386-19375-1-git-send-email-mark.yao@rock-chips.com>
- <1412057659-19483-1-git-send-email-mark.yao@rock-chips.com>
- <20140930081020.GE24667@phenom.ffwll.local>
+From: Kiran Padwal <kiran.padwal@smartplayin.com>
+Subject: Re: [PATCH v2] thermal: Add QPNP PMIC temperature alarm driver
+Date: Tue, 30 Sep 2014 14:16:53 +0530
+Message-ID: <542A6DFD.7020107@smartplayin.com>
+References: <1411651825-14240-1-git-send-email-iivanov@mm-sol.com>   <54254C4E.3070807@smartplayin.com> <1411998865.5395.5.camel@iivanov-dev>  <542A31DF.7020402@smartplayin.com> <1412062606.5395.10.camel@iivanov-dev>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140930081020.GE24667-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dbehr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx@rock-chips
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1412062606.5395.10.camel@iivanov-dev>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, David Collins <collinsd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 30, 2014 at 10:10:20AM +0200, Daniel Vetter wrote:
-> On Tue, Sep 30, 2014 at 02:14:19PM +0800, Mark Yao wrote:
-> > From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > 
-> > This add a display subsystem comprise the all display interface nodes.
-> > 
-> > Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > Signed-off-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > Acked-by: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-> > Reviewed-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Just a quick clarification: My ack was only about the drm driver itself, I
-> try really hard to stay away from DT insanity ;-) So please drop my ack
-> from these two patches.
-> 
-> Aside: DT patches need to go through a special process and you must cc dt
-> maintainers and mailing lists. Your patch seems to lack this, which afaiui
-> is a blocker for merging the driver.
+On Tuesday 30 September 2014 01:06 PM, Ivan T. Ivanov wrote:
+> On Tue, 2014-09-30 at 10:00 +0530, Kiran Padwal wrote:
+>> On Monday 29 September 2014 07:24 PM, Ivan T. Ivanov wrote:
+>>> On Fri, 2014-09-26 at 16:51 +0530, Kiran Padwal wrote:
+>>>> On Thursday 25 September 2014 07:00 PM, Ivan T. Ivanov wrote:
+>>>>> Add support for the temperature alarm peripheral found inside
+>>>>> Qualcomm plug-and-play (QPNP) PMIC chips.  The temperature alarm
+>>>>> peripheral outputs a pulse on an interrupt line whenever the
+>>>>> thermal over temperature stage value changes.  Implement an ISR
+>>>>> to manage this interrupt.
+>>>>>
+>>>>
+>>>> <snip>
+>>>>
+>>>>> + * This function updates the internal temp value based on the
+>>>>> + * current thermal stage and threshold as well as the previous s=
+tage
+>>>>> + */
+>>>>> +static int qpnp_tm_update_temp_no_adc(struct qpnp_tm_chip *chip)
+>>>>> +{
+>>>>> +	unsigned int stage;
+>>>>> +	int rc;
+>>>>> +	u8 reg;
+>>>>> +
+>>>>> +	rc =3D qpnp_tm_read(chip, QPNP_TM_REG_STATUS, &reg);
+>>>>> +	if (rc < 0)
+>>>>> +		return rc;
+>>>>> +
+>>>>> +	stage =3D reg & STATUS_STAGE_MASK;
+>>>>
+>>>> During compilation, getting a waring as below,
+>>>>
+>>>> drivers/thermal/qpnp-temp-alarm.c: In function =E2=80=98qpnp_tm_up=
+date_temp_no_adc=E2=80=99:
+>>>> drivers/thermal/qpnp-temp-alarm.c:135:8: warning: =E2=80=98reg=E2=80=
+=99 may be used uninitialized in this function [-Wmaybe-uninitialized]
+>>>>   stage =3D reg & STATUS_STAGE_MASK;
+>>>
+>>> Could you share compiler version and options which you are using.
+>>> I am unable to trigger this warning. Looking code I can not=20
+>>> see how this could happen.
+>>
+>> I have Linaro cross tool chain with version-4.8.3 and I am simply do=
+ing "make zImage" without any option.
+>=20
+> Hm, no warnings with arm-unknown-linux-gnueabi-gcc (GCC) 4.6.3 and
+> arm-linux-gnueabihf-gcc (crosstool-NG linaro-1.13.1-4.9-2014.09, but
+> indeed arm-linux-gnueabihf-gcc (crosstool-NG linaro-1.13.1-4.8-2014.0=
+3.
+>=20
+> I will say that this is false positive :-). Please update your tool-c=
+hain.
+>=20
 
-With coffee working I've now noticed that DT people are on cc ;-) I guess
-you need to poke them for review, since the drm/driver side looks ready.
-Would be sad if this would miss 3.18 imo.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks to verify, I will do that.
+
+Thanks,
+--Kiran
+
+
