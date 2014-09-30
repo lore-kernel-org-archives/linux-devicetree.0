@@ -1,95 +1,148 @@
-From: Tim Bird <tim.bird@sonymobile.com>
-Subject: [PATCH v3] ARM: dts: Add initial DTS file for Sony Xperia Z1 phone
-Date: Tue, 30 Sep 2014 15:49:49 -0700
-Message-ID: <542B338D.2040909@sonymobile.com>
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: Re: [RFC 3/7] mfd: devicetree: bindings: Add Qualcomm SMD based RPM
+ DT binding
+Date: Tue, 30 Sep 2014 17:16:13 -0600
+Message-ID: <542B39BD.3030208@codeaurora.org>
+References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com> <1412037291-16880-4-git-send-email-bjorn.andersson@sonymobile.com> <85C5C172-D309-41B4-B511-7820BAFDA017@codeaurora.org> <20140930143740.GK28481@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140930143740.GK28481@sonymobile.com>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, Kevin Hilman <khilman@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Kumar Gala <galak@codeaurora.org>
+Cc: Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This DTS has support for the Sony Xperia Z1 phone (codenamed Honami).
-This first version of the DTS supports just a serial console.
+On 9/30/2014 8:37 AM, Bjorn Andersson wrote:
+> On Tue 30 Sep 06:46 PDT 2014, Kumar Gala wrote:
+>
+>>
+>> On Sep 29, 2014, at 7:34 PM, Bjorn Andersson <Bjorn.Andersson@sonymo=
+bile.com> wrote:
+>>
+>>> diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt=
+ b/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
+>>> new file mode 100644
+>>> index 0000000..a846101
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
+>>> @@ -0,0 +1,122 @@
+>>> +Qualcomm Resource Power Manager (RPM) over SMD
+>>> +
+>>> +This driver is used to interface with the Resource Power Manager (=
+RPM) found in
+>>> +various Qualcomm platforms. The RPM allows each component in the s=
+ystem to vote
+>>> +for state of the system resources, such as clocks, regulators and =
+bus
+>>> +frequencies.
+>>> +
+>>> +- compatible:
+>>> +	Usage: required
+>>> +	Value type: <string>
+>>> +	Definition: must be one of:
+>>> +		    "qcom,rpm-msm8974=94
+>>
+>> Why not =93qcom,rpm-smd=94.  I=92d like to get Jeff H=92s input on h=
+ow
+>> what we do here for compat and distinguish the A-family RPM support =
+vs
+>> B-family/RPM-SMD support.
+>>
+>
+> I don't see anything indicating changes in the actual communication, =
+but as
+> this also encodes what resources are exposed we have to keep this spe=
+cific.
+>
+> I'm not sure what you mean with distinguish the A and B family, they =
+are
+> completely different and there are no overlap in compatibles or imple=
+mentation.
+>
+> The overlap is in how children are communicating with the rpm, but th=
+is is an
+> implementation detail - and noted in that patch as a future improveme=
+nt.
+>
+>
+> I forgot to add Jeff, but did send him a separate email asking for hi=
+s input on
+> all this.
+>
 
-changes from V2
- - fixed dtb name in Makefile
+Yep.  I saw the series.  Still doing a deep dive.
 
-changes from v1
- - removed qcom,msm-id attribute
- - removed mis-capitalized Qualcomm word
- - changed dts file name
- - added board-specific compatible-string
+The rpm-smd driver (and the A family equivalent) is outside of my area=20
+of expertise, but I have some familiarity with it as it is a SMD client=
+=2E=20
+  Internally we have a singular compat for all of B family, but I=20
+haven't been able to figure out how that works to expose all of the=20
+resources.  I'll talk to my contact later in the week to see what the=20
+differences are.
 
-Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
-Tested-by: Kevin Hilman <khilman@linaro.org>
----
+Is the per target compat the way to do this though?  The way its=20
+currently done means we'll have atleast a dozen tables in=20
+qcom-smd-rpm.c, and I can't imagine they will have anything more than=20
+minor differences from the msm8x74_resource_table that currently exists=
+=20
+in patch 6 of the series.  Why wouldn't one table that is a superset of=
+=20
+all supported targets work?
 
-This version fixes the dtb name.  I asked previously about adding to qcom_dt_match,
-but apparently board compatibles are being removed from that list in
-mach_qcom/board.c
-See https://lkml.org/lkml/2014/9/24/952
+>>> +
+>>> +- qcom,smd-channels:
+>>> +	Usage: required
+>>> +	Value type: <stringlist>
+>>> +	Definition: Shared Memory Channel used for communication with the=
+ RPM
+>>> +
+>>
+>> This needs more details.
+>>
+>
+> Not sure what more to add here. It should contain the name of the cha=
+nnel used
+> for communication with the rpm. For all current platforms this would =
+be
+> "rpm_requests".
+>
+>>> +- #address-cells:
+>>> +	Usage: required
+>>> +	Value type: <u32>
+>>> +	Definition: must be 1
+>>> +
+>>> +- #size-cells:
+>>> +	Usage: required
+>>> +	Value type: <u32>
+>>> +	Definition: must be 0
+>>> +
+>>> +=3D SUBDEVICES
+>>
+>> As I mentioned for the the RPM binding on a-family, we should split =
+out the
+>> devices into their own binding specs.
+>>
+>
+> Please actually read https://lkml.org/lkml/2014/3/10/567, it's now th=
+e third
+> time I send you that link. If you don't like it then ask Rob to revis=
+e his
+> statement.
+>
+> For me it makes sense to consolidate the RPM binding in one document =
+rather
+> than spreading it out in 10 different documents with some implicit
+> dependencies.
+>
+> Regards,
+> Bjorn
+>
 
-Kevin tested this (modulu re-adding back the qcom,msm-id).  I have a new
-mkqcdtbootimg which works without requiring the qcom,msm-id attribute,
-that I'll send to Kevin shortly (and publish on github).
 
- Documentation/devicetree/bindings/vendor-prefixes.txt |  1 +
- arch/arm/boot/dts/Makefile                            |  3 ++-
- arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts | 17 +++++++++++++++++
- 3 files changed, 20 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index ac7269f..d3a4579 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -128,6 +128,7 @@ sirf	SiRF Technology, Inc.
- smsc	Standard Microsystems Corporation
- snps 	Synopsys, Inc.
- solidrun	SolidRun
-+sony	Sony Corporation
- spansion	Spansion Inc.
- st	STMicroelectronics
- ste	ST-Ericsson
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b8c5cd3..cf58321 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -343,7 +343,8 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-apq8074-dragonboard.dtb \
- 	qcom-apq8084-mtp.dtb \
- 	qcom-msm8660-surf.dtb \
--	qcom-msm8960-cdp.dtb
-+	qcom-msm8960-cdp.dtb \
-+	qcom-msm8974-sony-xperia-honami.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += \
- 	rk3066a-bqcurie2.dtb \
- 	rk3188-radxarock.dtb \
-diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-new file mode 100644
-index 0000000..cccc21b
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-@@ -0,0 +1,17 @@
-+#include "qcom-msm8974.dtsi"
-+
-+/ {
-+	model = "Sony Xperia Z1";
-+	compatible = "sony,xperia-honami", "qcom,msm8974";
-+
-+	memory@0 {
-+		reg = <0 0x40000000>, <0x40000000 0x40000000>;
-+		device_type = "memory";
-+	};
-+};
-+
-+&soc {
-+	serial@f991e000 {
-+		status = "ok";
-+	};
-+};
--- 
-1.8.2.2
+Jeffrey Hugo
+--=20
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,=20
+hosted by The Linux Foundation.
