@@ -1,95 +1,67 @@
-From: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Wed, 1 Oct 2014 12:25:06 +0000
-Message-ID: <ba59ee980d0b48a6b9027741f4420612@BN1PR0301MB0772.namprd03.prod.outlook.com>
-References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
- <10249326.XCThPmSrfL@wuerfel>
- <abb0c775ec2549e3abb0a2218b4eef98@BN1PR0301MB0772.namprd03.prod.outlook.com>
- <1845601.0ISfgfFO3Y@wuerfel>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] drm/i2c:tda998x: Use the HDMI audio CODEC
+Date: Wed, 1 Oct 2014 13:37:08 +0100
+Message-ID: <20141001123708.GZ4273@sirena.org.uk>
+References: <cover.1411547014.git.moinejf@free.fr>
+ <4b3d35a14461ed164956b7f5aa77b29170bc393d.1411547014.git.moinejf@free.fr>
+ <20140930192540.GL4273@sirena.org.uk>
+ <20141001112846.0dbc80ae@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="diT81a9gloLbuVo+"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1845601.0ISfgfFO3Y@wuerfel>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20141001112846.0dbc80ae@armhf>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
- 
-> On Wednesday 01 October 2014 06:35:58 Peter Chen wrote:
-> > > Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for
-> > > ci13xxx
-> > >
-> > > On Tuesday 30 September 2014 20:39:34 Peter Chen wrote:
-> > > > Thanks, Arnd. I had not thought setting dma mask is so
-> > > > complicated, yes, it should check the return value, two things to confirm:
-> > > >
-> > > > - dma_coerce_mask_and_coherent or dma_set_mask_and_coherent,
-> the
-> > > only
-> > > > difference of these two API is the first one do "dev->dma_mask =
-> > > >&dev- coherent_dma_mask;"
-> > > > The reason you suggest choosing dma_set_mask_and_coherent is you
-> > > >do  not want assign dev->dma_mask?
-> > >
-> > > No, that is just the current definition on ARM32 with
-> > > CONFIG_ARCH_MULTIPLATFORM, and that is going to change soon to be
-> DT
-> > > aware.
-> > > dma_set_mask_and_coherent() is supposed to check whether the
-> > > platform can support the respective mask and return an error if it cannot.
-> > >
-> > > > - The second parameter for dma_set_mask_and_coherent is
-> > > > DMA_BIT_MASK(32), is it ok?
-> > > >
-> > > > I just a little confused of what's the operation is "hardcoding the dma
-> mask"?
-> > >
-> > > dma_coerce_mask_and_coherent() will hardcode the dma mask and
-> > > override whatever the platform says is necessary.
-> > >
-> >
-> > So, we should use dma_set_mask_and_coherent() in most of cases in
-> > device driver, and use dma_coerce_mask_and_coherent() only  when the
-> device's dma_mask is wrong?
-> >
-> >
-> 
-> dma_coerce_mask_and_coherent() should really not be used at all. Russell
-> introduced it to convert drivers that were incorrectly setting the dma_mask
-> pointer themselves to something slightly more palatable.
-> 
-> The initial dma_mask is supposed to be set by the platform for each DMA
-> capable device, according to the address width of its upstream bus.
-> For DT based probing, we now set it to 32-bit mask but should really set it to
-> something smaller if the bus is more limited than that.
-> 
-> For devices created by platform code (board files), the platform should call
-> platform_device_register_full() and specify the dma mask in the
-> platform_device_info. Older platforms sometimes define a static platform
-> device structure that has the dma mask set. This works as well but is
-> discouraged for other reasons.
-> 
-> Drivers that require a dma mask that is either smaller than 32-bit (because of
-> device specific quirks) or that know that the device is capable of larger DMA
-> space and want to use that need to call dma_set_mask or
-> dma_set_mask_and_coherent and check the return value.
-> 
-> Ideally all device drivers that want to do DMA should call set_dma_mask or
-> set_dma_mask_and_coherent, even if the device has exactly a 32-bit
-> connection to the upstream bus.
-> 
-> One more complication: if the device is not a DMA master itself but uses a dma
-> engine, you should not use set_dma_mask_and_coherent() but instead use
-> dma_get_mask() on the dmaengine device to query its mask, and also use that
-> same pointer to pass into dma_alloc_coherent and dma_map_*.
-> 
- 
-Thank you very much, Arnd. It makes things clear.
 
-Peter
+--diT81a9gloLbuVo+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Oct 01, 2014 at 11:28:46AM +0200, Jean-Francois Moine wrote:
+> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+
+> > > +	request_module("snd-soc-hdmi-codec");
+> > > +	pdev =3D platform_device_register_resndata(&priv->hdmi->dev,
+> > > +						 "hdmi-audio-codec",
+> > > +						  PLATFORM_DEVID_NONE,
+> > > +						  NULL, 0,
+> > > +						  &tda998x_hdmi_data,
+> > > +						  sizeof tda998x_hdmi_data); =20
+
+> > Why is this request_module() needed?  If there is a good reason for it
+> > we should have some documentation.
+
+> The reason is simple: as the HDMI CODEC is not declared in the DT, the
+> associated module must be loaded in memory.
+
+No, that doesn't make sense - there's absolutely no dependency on DT for
+module loading, non-DT boards work perfectly fine.  Think about this for
+a minute, we don't have lots of request_module() calls in board files.
+You're working around some other bug here.
+
+--diT81a9gloLbuVo+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUK/VzAAoJECTWi3JdVIfQCeoH/RUU/tCbsxm0OWbFFEVXIG8u
+G8Gmihvxh1PHcxbuG8SzC5daFf3Txe4ZhFd5WavEXzfKmzjqtl+NwYd5Zhwu3G9X
+lu+GNZniDIXN6rIoMfIamDzsa4opFYtn0X0mXSO7XLWf5mCKaq5Oe4Lh1qdQGX+V
+x38s/jkWKaMk5PeNhTUFf9CbPnwLslQseoX6eRECKWMFy6k0vLlrHR+goXkclABC
+M6qpC16HwQLL0prmML/GwkDxdALQzg7ktdZsmvlrfXspCdF8TwD2kClo0YG6P8IK
+nJ4V2iAbWkfs1XbSUbbXzzyBVMsXBjLtx0NarOyoMBBInLGBnIw0/MiYXviQzGI=
+=SOfX
+-----END PGP SIGNATURE-----
+
+--diT81a9gloLbuVo+--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
