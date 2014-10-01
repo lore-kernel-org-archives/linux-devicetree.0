@@ -1,106 +1,130 @@
-From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: [PATCH 3/6] ARM: dts: add dts for Tronsmart S89 Elite TV box
-Date: Wed,  1 Oct 2014 23:29:43 +0200
-Message-ID: <1412198986-26534-4-git-send-email-b.galvani@gmail.com>
-References: <1412198986-26534-1-git-send-email-b.galvani@gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] pmbus: ltc2978: add regulator support
+Date: Wed, 1 Oct 2014 14:36:13 -0700
+Message-ID: <20141001213613.GA29312@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1412198986-26534-1-git-send-email-b.galvani@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Victor Wan <victor.wan@amlogic.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Beniamino Galvani <b.galvani@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Carlo Caione <carlo@caione.org>, Jerry Cao <jerry.cao@amlogic.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Cc: jdelvare-l3A5Bk7waGM@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a dts for the Tronsmart S89 Elite, a set-top box based on
-the Amlogic S802 SoC with a 8GiB NAND flash, USB ports, 10/100 Mbps
-Ethernet adapter, WiFi, HDMI and a micro SD slot.
+On Wed, Oct 01, 2014 at 03:18:20PM -0500, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> 
+> Add simple on/off regulator support for ltc2978 and
+> other pmbus parts supported by ltc2978.c
+> 
+> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> 
+> v2: Remove '#include <linux/regulator/machine.h>'
+>     Only one regulator per pmbus device
+>     Get regulator_init_data from pdata or device tree
+> 
+> v3: Support multiple regulators for each chip
+>     Move most code to pmbus_core.c
+>     fixed values for on/off
+> 
+> v4: fix a #endif comment
+>     simplify probe code, remove added switch statement
+>     remove BUG_ON(), add error message and fix num_regulators
+> ---
+>  drivers/hwmon/pmbus/Kconfig   |    7 +++++++
+>  drivers/hwmon/pmbus/ltc2978.c |   37 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 44 insertions(+)
+> 
+> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+> index 6e1e493..79117b7 100644
+> --- a/drivers/hwmon/pmbus/Kconfig
+> +++ b/drivers/hwmon/pmbus/Kconfig
+> @@ -56,6 +56,13 @@ config SENSORS_LTC2978
+>  	  This driver can also be built as a module. If so, the module will
+>  	  be called ltc2978.
+>  
+> +config SENSORS_LTC2978_REGULATOR
+> +	boolean "Regulator support for LTC2974, LTC2978, LTC3880, and LTC3883"
 
-Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
----
- arch/arm/boot/dts/meson8-vega-s89e.dts | 65 ++++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 arch/arm/boot/dts/meson8-vega-s89e.dts
+We will need to update this and SENSORS_LTC2978 and add LTC2977 as well as
+LTM4646 to the list of supported chips.
 
-diff --git a/arch/arm/boot/dts/meson8-vega-s89e.dts b/arch/arm/boot/dts/meson8-vega-s89e.dts
-new file mode 100644
-index 0000000..93c3dfd
---- /dev/null
-+++ b/arch/arm/boot/dts/meson8-vega-s89e.dts
-@@ -0,0 +1,65 @@
-+/*
-+ * Copyright 2014 Beniamino Galvani <b.galvani@gmail.com>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public License
-+ *     along with this program. If not, see <http://www.gnu.org/licenses/>.   
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+
-+/dts-v1/;
-+/include/ "meson8.dtsi"
-+
-+/ {
-+	model = "Tronsmart Vega S89 Elite";
-+	compatible = "tronsmart,vega-s89e", "amlogic,meson8";
-+
-+	aliases {
-+		serial0 = &uart_AO;
-+	};
-+
-+	memory {
-+		reg = <0x40000000 0x80000000>;
-+	};
-+};
-+
-+&uart_AO {
-+	status = "okay";
-+};
--- 
-1.9.1
+Guenter
+
+> +	depends on SENSORS_LTC2978 && REGULATOR
+> +	help
+> +	  If you say yes here you get regulator support for Linear
+> +	  Technology LTC2974, LTC2978, LTC3880, and LTC3883.
+> +
+>  config SENSORS_MAX16064
+>  	tristate "Maxim MAX16064"
+>  	default n
+> diff --git a/drivers/hwmon/pmbus/ltc2978.c b/drivers/hwmon/pmbus/ltc2978.c
+> index e24ed52..422712e 100644
+> --- a/drivers/hwmon/pmbus/ltc2978.c
+> +++ b/drivers/hwmon/pmbus/ltc2978.c
+> @@ -22,6 +22,8 @@
+>  #include <linux/err.h>
+>  #include <linux/slab.h>
+>  #include <linux/i2c.h>
+> +#include <linux/regulator/driver.h>
+> +#include <linux/regulator/of_regulator.h>
+>  #include "pmbus.h"
+>  
+>  enum chips { ltc2974, ltc2977, ltc2978, ltc3880, ltc3883, ltm4676 };
+> @@ -374,6 +376,30 @@ static const struct i2c_device_id ltc2978_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, ltc2978_id);
+>  
+> +#if IS_ENABLED(CONFIG_SENSORS_LTC2978_REGULATOR)
+> +static const struct regulator_desc ltc2978_reg_desc[] = {
+> +	PMBUS_REGULATOR("vout_en", 0),
+> +	PMBUS_REGULATOR("vout_en", 1),
+> +	PMBUS_REGULATOR("vout_en", 2),
+> +	PMBUS_REGULATOR("vout_en", 3),
+> +	PMBUS_REGULATOR("vout_en", 4),
+> +	PMBUS_REGULATOR("vout_en", 5),
+> +	PMBUS_REGULATOR("vout_en", 6),
+> +	PMBUS_REGULATOR("vout_en", 7),
+> +};
+> +
+> +static struct of_regulator_match ltc2978_reg_matches[] = {
+> +	{ .name = "vout_en0" },
+> +	{ .name = "vout_en1" },
+> +	{ .name = "vout_en2" },
+> +	{ .name = "vout_en3" },
+> +	{ .name = "vout_en4" },
+> +	{ .name = "vout_en5" },
+> +	{ .name = "vout_en6" },
+> +	{ .name = "vout_en7" },
+> +};
+> +#endif /* CONFIG_SENSORS_LTC2978_REGULATOR */
+> +
+>  static int ltc2978_probe(struct i2c_client *client,
+>  			 const struct i2c_device_id *id)
+>  {
+> @@ -487,6 +513,17 @@ static int ltc2978_probe(struct i2c_client *client,
+>  	default:
+>  		return -ENODEV;
+>  	}
+> +
+> +#if IS_ENABLED(CONFIG_SENSORS_LTC2978_REGULATOR)
+> +	info->num_regulators = info->pages;
+> +	info->reg_desc = ltc2978_reg_desc;
+> +	info->reg_matches = ltc2978_reg_matches;
+> +	if (info->num_regulators > ARRAY_SIZE(ltc2978_reg_desc)) {
+> +		dev_err(&client->dev, "num_regulators too large!");
+> +		info->num_regulators = ARRAY_SIZE(ltc2978_reg_desc);
+> +	}
+> +#endif
+> +
+>  	return pmbus_do_probe(client, id, info);
+>  }
+>  
+> -- 
+> 1.7.9.5
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
