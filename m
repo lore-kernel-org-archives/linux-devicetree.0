@@ -1,38 +1,83 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 10/15] leds: leds-gpio: Add ACPI probing support
-Date: Wed, 01 Oct 2014 20:22:36 +0200
-Message-ID: <15084898.uePkciO2J1@wuerfel>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <20141001163025.GE23115@dtor-glaptop> <D05191AB.AB380%dvhart@linux.intel.com>
+From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm: dts: Add Altera L2 Cache and OCRAM EDAC
+Date: Wed, 1 Oct 2014 13:38:49 -0500
+Message-ID: <542C4A39.6070804@opensource.altera.com>
+References: <1412181092-27162-1-git-send-email-tthayer@opensource.altera.com> <1412181092-27162-4-git-send-email-tthayer@opensource.altera.com> <542C2F9F.6090603@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <D05191AB.AB380%dvhart@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Darren Hart <dvhart@linux.intel.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <542C2F9F.6090603-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 01 October 2014 11:11:46 Darren Hart wrote:
-> >
-> >No, I think in absence of drv->acpi_match_table ACPI core should just go
-> >and
-> >use drv->of_match_table to do the matching and be done with it.
-> 
-> But then you will match drivers that have of-only support that don't know
-> anything about ACPI and haven't been updated to use the new API. Worse,
-> some of those drivers will assume of node structs and such and potentially
-> panic. Unless I'm sorry mistaken here....
-> 
 
-I don't think that is a huge danger: most drivers tend to check for
-the presence of dev->of_node before calling any of the DT interfaces,
-you'd only ever enter the probe function if the compatible string matches
-(i.e. an old kernel with a new ACPI table), and most users of ACPI
-systems will disable CONFIG_OF at compile time, so the accessors looking
-at the of_node are not there.
+On 10/01/2014 11:45 AM, Dinh Nguyen wrote:
+>
+> On 10/1/14, 11:31 AM, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+>> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>
+>> Adding the device tree entries needed to support the Altera L2
+>> cache and OCRAM EDAC.
+>>
+>> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/socfpga.dtsi |   20 +++++++++++++++++++-
+>>   1 file changed, 19 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+>> index 4d77ad6..f186957 100644
+>> --- a/arch/arm/boot/dts/socfpga.dtsi
+>> +++ b/arch/arm/boot/dts/socfpga.dtsi
+>> @@ -608,7 +608,7 @@
+>>   		};
+>>   
+>>   		L2: l2-cache@fffef000 {
+>> -			compatible = "arm,pl310-cache";
+>> +			compatible = "arm,pl310-cache", "syscon";
+>>   			reg = <0xfffef000 0x1000>;
+>>   			interrupts = <0 38 0x04>;
+>>   			cache-unified;
+>> @@ -628,6 +628,24 @@
+>>   			clock-names = "biu", "ciu";
+>>   		};
+>>   
+>> +		ocram: sram@ffff0000 {
+>> +			compatible = "mmio-sram";
+>> +			reg = <0xffff0000 0x10000>;
+>> +		};
+>> +
+> I sent a patch to add the OCRAM node:
+> http://www.spinics.net/lists/devicetree/msg51117.html
+>
+OK. Thanks.
+>> +		l2edac@xffd08140 {
+> Remove the 'x'.
+Thanks.
+>> +			compatible = "altr,l2-edac";
+>> +			reg = <0xffd08140 0x4>;
+>> +			interrupts = <0 36 1>, <0 37 1>;
+>> +		};
+>> +
+>> +		ocramedac@ffd08144 {
+>> +			compatible = "altr,ocram-edac";
+>> +			reg = <0xffd08144 0x4>;
+>> +			iram = <&ocram>;
+>> +			interrupts = <0 178 1>, <0 179 1>;
+>> +		};
+>> +
+>>   		/* Local timer */
+>>   		timer@fffec600 {
+>>   			compatible = "arm,cortex-a9-twd-timer";
+>>
+> The documentation for these bindings should be included with this patch.
+OK. Thanks.
+>
+> Dinh
 
-In theory it's possible that something goes wrong here, but it's not
-very likely to ever cause problems.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
