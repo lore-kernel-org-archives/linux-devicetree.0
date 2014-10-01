@@ -1,62 +1,59 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH RESEND V9 1/6] power: reset: Add generic SYSCON register
- mapped reset
-Date: Wed, 1 Oct 2014 17:18:47 +0200
-Message-ID: <20141001151847.GC969@earth.universe>
-References: <1412119508-22864-1-git-send-email-fkan@apm.com>
- <1412119508-22864-2-git-send-email-fkan@apm.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3] clocksource: arch_timer: Allow the device tree to
+ specify the physical timer
+Date: Wed, 1 Oct 2014 08:21:49 -0700
+Message-ID: <CAD=FV=WaNGeaXbYcHHBBYosX_0bpZVGCiqi=iuCXamcN3VEEpQ@mail.gmail.com>
+References: <1410454801-14231-1-git-send-email-dianders@chromium.org>
+	<20140926100025.GC4476@leverpostej>
+	<CAPz6YkWZWgm--6EJxoV1s3zqTNpAF6+CBOrRc5qxdm5=hFzj1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="f+W+jCU1fRNres8c"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1412119508-22864-2-git-send-email-fkan@apm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Feng Kan <fkan@apm.com>
-Cc: linux@roeck-us.net, dbaryshkov@gmail.com, catalin.marinas@arm.com, dwmw2@infradead.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patches@apm.com, linux-pm@vger.kernel.org, will.deacon@arm.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPz6YkWZWgm--6EJxoV1s3zqTNpAF6+CBOrRc5qxdm5=hFzj1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
-
-
---f+W+jCU1fRNres8c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Tue, Sep 30, 2014 at 04:25:03PM -0700, Feng Kan wrote:
-> Add a generic SYSCON register mapped reset mechanism.
->=20
-> Signed-off-by: Feng Kan <fkan@apm.com>
+On Mon, Sep 29, 2014 at 10:30 AM, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> On Fri, Sep 26, 2014 at 3:00 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On Thu, Sep 11, 2014 at 06:00:01PM +0100, Doug Anderson wrote:
+>>> +** Optional properties:
+>>> +
+>>> +- arm,use-physical-timer : Don't ever use the virtual timer, just use the
+>>> +  physical one.  Only supported for ARM (not ARM64).
+>>
+>> I'm still not keen on telling the kernel what to do rather than
+>> describing the actual state of affairs and having the kernel decide what
+>> to do. Perhaps what we actually need is:
+>>
+>> - cntvoff-not-fw-configured: Firmware does not configure CNTVOFF, which
+>>   may reset to (different) arbitrary values on each CPU.
+>>
+>> This also doesn't describe that CNTHCTL.PL1PC(T)EN must both be 1. While
+>> that is the reset state, it still feels dodbgy to me to rely on that.
+>>
+>> Mark.
+>
+> Mark, I'm happy to repost it with that name for Doug.
+>
+> I think it's fair to describe this state in the binding, and if a
+> firmware were to put this property into the device-tree for and
+> CNTHCTL.PL1P(T)CEN also have configured to 0, then the kernel can
+> merely consider that to be a broken usage of this property.   We
+> certainly can't protect against all of the possible invalid states
+> caused and probably shouldn't try.  If we implement something like
+> Christopher's suggestion for transitioning from secure svc to NS hyp
+> mode then the kernel can simply ignore this property at that point.
 
-I have merged the driver and its documentation to battery-2.6.git.
-This should make it possible for the changes in arch/arm to be
-merged via ARM maintainers in 3.19.
+I've already talked in person to Sonny about this, but just to post on
+the list too...  I think Mark Rutland's suggestion is a good one and
+I'm more than happy for Sonny to repost that way for me.  Thanks!  :)
 
-Please fix Guenter's comments in an incremental patch.
-
--- Sebastian
-
---f+W+jCU1fRNres8c
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJULBtXAAoJENju1/PIO/qaXt0QAKfkOi4VdkhHh1accK88okd2
-+p+kTrPg59ThLxj/Idk3Ag/nq1F8YDWnTr81PPgjrErWFslBp0G0hVdr5WECIzNL
-DIcpn3vzUgHD24Es1//PIDZ9Jw+HErJL2X3fsnKSOYkKr+UlLI01AJd7Kcu4Ht5g
-hoTeVj9T316KlcTh/fSkQCN6k01+XcOCN83mUshi0hbsVdE7H+6k/anot+W7aqDG
-4EwmmqFdfj1hA87T8eQD0wrRRhItueK12/XSuPdClNRJmNUrK4rDV1B7IXK/S7Lk
-Z17AlZvL6LGM58+LPXDl7zuYcc60xdUwtZgaIBT1N8ptXYqRZn9sMaumo9gLMAmU
-xVHw4QsBJ4KSa/2Nx9FbmJ99gWOgElfz+ex5j0upBckYTBglWb4T82H/yseUPD2O
-BAO16C7rbluODx6N4T6rI3V5T3XgoRdvH8D7xcEYa/avE2Nj6LpC2tF91cJ8myBo
-Ev8FgISgsN7Snsqg6fD91zDyj8XhEgF7nuHSRTfZgtcLC8BwLsgvbJP2WFtPE2V6
-EUKvnfi0JIXD+K0w1v7X68ZZUkgnseww4Xmp1U7OK7JpgOWiB3kRPb7dK49DAhIe
-Z4QF4QoUkKDUAzZe3IXkztobknYjLUHpqAdDwLO0J2onpAioncQfCFyhFt4s+Qwt
-M3aGjXZ6f81rUDSAo/zH
-=OrXN
------END PGP SIGNATURE-----
-
---f+W+jCU1fRNres8c--
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
