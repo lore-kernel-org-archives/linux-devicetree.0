@@ -1,716 +1,412 @@
-From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCH 2/3] edac: altera: Add Altera L2 Cache and OCRAM EDAC Support
-Date: Wed, 1 Oct 2014 11:31:31 -0500
-Message-ID: <1412181092-27162-3-git-send-email-tthayer@opensource.altera.com>
-References: <1412181092-27162-1-git-send-email-tthayer@opensource.altera.com>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] ASoC:codecs: Add a transmitter interface to the
+ HDMI CODEC CODEC
+Date: Wed, 1 Oct 2014 18:45:17 +0200
+Message-ID: <20141001184517.651f7197@armhf>
+References: <cover.1411547014.git.moinejf@free.fr>
+	<50d970aeb1fb8870b654ad01a437341aac58abb6.1411547014.git.moinejf@free.fr>
+	<542C09DC.3030404@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412181092-27162-1-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+In-Reply-To: <542C09DC.3030404-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dinh-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On Wed, 1 Oct 2014 17:04:12 +0300
+Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> wrote:
 
-Adding L2 Cache and On-Chip RAM EDAC support for the
-Altera SoCs using the EDAC_DEVICE framework. The EDAC
-manager abstracts the common probe functionality and
-test triggers. The L2 Cache and OCRAM files handle
-the specific memory functions.
+>=20
+> On 09/24/2014 10:49 AM, Jean-Francois Moine wrote:> The audio=20
+> constraints of the HDMI interface are defined by the EDID
+>  > which is sent by the connected device.
+>  >
+>  > The HDMI transmitters may have one or many audio sources.
+>  >
+>  > This patch adds two functions to the HDMI CODEC:
+>  > - it updates the audio constraints from the EDID,
+>  > - it gives the audio source type to the HDMI transmitter
+>  >    on start of audio streaming.
+>  >
+>  > Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+>  > ---
+>  >   include/sound/hdmi.h    |  20 ++++++
+>  >   sound/soc/codecs/hdmi.c | 174=20
+> ++++++++++++++++++++++++++++++++++++++++++++++--
+>  >   2 files changed, 188 insertions(+), 6 deletions(-)
+>  >   create mode 100644 include/sound/hdmi.h
+>  >
+>  > diff --git a/include/sound/hdmi.h b/include/sound/hdmi.h
+>  > new file mode 100644
+>  > index 0000000..49062c7
+>  > --- /dev/null
+>  > +++ b/include/sound/hdmi.h
+>  > @@ -0,0 +1,20 @@
+>  > +#ifndef SND_HDMI_H
+>  > +#define SND_HDMI_H
+>  > +
+>  > +#include <sound/soc.h>
+>  > +
+>  > +/* platform_data */
+>  > +struct hdmi_data {
+>  > +	int (*get_audio)(struct device *dev,
+>  > +			 int *max_channels,
+>  > +			 int *rate_mask,
+>  > +			 int *fmt);
+>=20
+> This looks good for the api to HDMI ASoC codec.
+>=20
+>  > +	void (*audio_switch)(struct device *dev,
+>  > +			     int port_index,
+>  > +			     unsigned sample_rate,
+>  > +			     int sample_format);
+>=20
+> I see nothing about selecting the i2s format. I do not know too much
+> about tda998x registers but sii9022 can select left and right
+> justified mode, bit-clock and frame-clock polarity etc. Should we nee=
+d
+> a callback that corresponds to snd_soc_dai_ops .set_fmt ?
+>=20
+> SiI9022 also uses an external clock as some kind of reference for aud=
+io
+> and that needs to be divided to right ballpark in relation sample-rat=
+e
+> (I have no idea why this is, I am just talking about
+> experience). Should we need callback that corresponds to
+> snd_soc_dai_ops .set_sysclk?
+>=20
+> Maybe the above two could also be left for later.
 
-Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
- .../bindings/arm/altera/socfpga-l2-edac.txt        |   15 ++
- .../bindings/arm/altera/socfpga-ocram-edac.txt     |   16 ++
- MAINTAINERS                                        |    1 +
- drivers/edac/Kconfig                               |   14 ++
- drivers/edac/Makefile                              |    4 +
- drivers/edac/altera_edac_mgr.c                     |  261 ++++++++++++++++++++
- drivers/edac/altera_edac_mgr.h                     |   56 +++++
- drivers/edac/altera_l2_edac.c                      |  130 ++++++++++
- drivers/edac/altera_ocram_edac.c                   |  107 ++++++++
- 9 files changed, 604 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
- create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
- create mode 100644 drivers/edac/altera_edac_mgr.c
- create mode 100644 drivers/edac/altera_edac_mgr.h
- create mode 100644 drivers/edac/altera_l2_edac.c
- create mode 100644 drivers/edac/altera_ocram_edac.c
+The HDMI CODEC does not interact with the audio controller.
+The audio_switch function just tells the tda998x which is the audio
+source and it gives the parameters which impact the HDMI transmission.
+The modes, clock... must be defined in the audio card definition
+(simple-card or specific card).
 
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
-new file mode 100644
-index 0000000..35b19e3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
-@@ -0,0 +1,15 @@
-+Altera SoCFPGA L2 cache Error Detection and Correction [EDAC]
-+
-+Required Properties:
-+- compatible : Should be "altr,l2-edac"
-+- reg : Address and size for ECC error interrupt clear registers.
-+- interrupts : Should be single bit error interrupt, then double bit error
-+	interrupt. Note the rising edge type.
-+
-+Example:
-+
-+	l2edac@ffd08140 {
-+		compatible = "altr,l2-edac";
-+		reg = <0xffd08140 0x4>;
-+		interrupts = <0 36 1>, <0 37 1>;
-+	};
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
-new file mode 100644
-index 0000000..31ab205
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
-@@ -0,0 +1,16 @@
-+Altera SoCFPGA On-Chip RAM Error Detection and Correction [EDAC]
-+
-+OCRAM ECC Required Properties:
-+- compatible : Should be "altr,ocram-edac"
-+- reg : Address and size for ECC error interrupt clear registers.
-+- iram : phandle to On-Chip RAM definition.
-+- interrupts : Should be single bit error interrupt, then double bit error
-+	interrupt. Note the rising edge type.
-+
-+Example:
-+	ocramedac@ffd08144 {
-+		compatible = "altr,ocram-edac";
-+		reg = <0xffd08144 0x4>;
-+		iram = <&ocram>;
-+		interrupts = <0 178 1>, <0 179 1>;
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9faf1d3..fe9e361 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1386,6 +1386,7 @@ M:	Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
- S:	Maintained
- F:	arch/arm/mach-socfpga/l2_cache.*
- F:	arch/arm/mach-socfpga/ocram.*
-+F:	drivers/edac/altera_*
- 
- ARM/STI ARCHITECTURE
- M:	Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index fd89ca9..77f691b 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -376,4 +376,18 @@ config EDAC_OCTEON_PCI
- 	  Support for error detection and correction on the
- 	  Cavium Octeon family of SOCs.
- 
-+config EDAC_ALTERA_L2C
-+	bool "Altera L2 Cache EDAC"
-+	depends on EDAC_MM_EDAC=y && ARCH_SOCFPGA && CACHE_L2X0
-+	help
-+	  Support for error detection and correction on the
-+	  Altera L2 cache Memory for Altera SoCs.
-+
-+config EDAC_ALTERA_OCRAM
-+	bool "Altera On-Chip RAM EDAC"
-+	depends on EDAC_MM_EDAC=y && ARCH_SOCFPGA && SRAM && GENERIC_ALLOCATOR
-+	help
-+	  Support for error detection and correction on the
-+	  Altera On-Chip RAM Memory for Altera SoCs.
-+
- endif # EDAC
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index c479a24..7618a35 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -65,3 +65,7 @@ obj-$(CONFIG_EDAC_OCTEON_PC)		+= octeon_edac-pc.o
- obj-$(CONFIG_EDAC_OCTEON_L2C)		+= octeon_edac-l2c.o
- obj-$(CONFIG_EDAC_OCTEON_LMC)		+= octeon_edac-lmc.o
- obj-$(CONFIG_EDAC_OCTEON_PCI)		+= octeon_edac-pci.o
-+
-+alt_edac_mgr-y				:= altera_edac_mgr.o
-+obj-$(CONFIG_EDAC_ALTERA_L2C)		+= alt_edac_mgr.o altera_l2_edac.o
-+obj-$(CONFIG_EDAC_ALTERA_OCRAM)		+= alt_edac_mgr.o altera_ocram_edac.o
-diff --git a/drivers/edac/altera_edac_mgr.c b/drivers/edac/altera_edac_mgr.c
-new file mode 100644
-index 0000000..676ccbe
---- /dev/null
-+++ b/drivers/edac/altera_edac_mgr.c
-@@ -0,0 +1,261 @@
-+/*
-+ *  Copyright Altera Corporation (C) 2014. All rights reserved.
-+ *  Copyright 2011-2012 Calxeda, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ * Adapted from the highbank_l2_edac driver
-+ */
-+
-+#include <linux/ctype.h>
-+#include <linux/edac.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/types.h>
-+
-+#include "altera_edac_mgr.h"
-+#include "edac_core.h"
-+#include "edac_module.h"
-+
-+static irqreturn_t altr_edac_mgr_handler(int irq, void *dev_id)
-+{
-+	struct edac_device_ctl_info *dci = dev_id;
-+	struct altr_edac_mgr_dev *drvdata = dci->pvt_info;
-+	const struct ecc_mgr_prv_data *priv = drvdata->data;
-+
-+	if (irq == drvdata->sb_irq) {
-+		if (priv->ce_clear_mask)
-+			writel(priv->ce_clear_mask, drvdata->base);
-+		edac_device_handle_ce(dci, 0, 0, drvdata->edac_dev_name);
-+	}
-+	if (irq == drvdata->db_irq) {
-+		if (priv->ue_clear_mask)
-+			writel(priv->ue_clear_mask, drvdata->base);
-+		edac_device_handle_ue(dci, 0, 0, drvdata->edac_dev_name);
-+		panic("\nEDAC:ECC_MGR[Uncorrectable errors]\n");
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+#ifdef CONFIG_EDAC_DEBUG
-+ssize_t altr_edac_mgr_trig(struct edac_device_ctl_info *edac_dci,
-+			   const char *buffer, size_t count)
-+{
-+	u32 *ptemp, i, error_mask;
-+	int result = 0;
-+	unsigned long flags;
-+	struct altr_edac_mgr_dev *drvdata = edac_dci->pvt_info;
-+	const struct ecc_mgr_prv_data *priv = drvdata->data;
-+	void *generic_ptr = edac_dci->dev;
-+
-+	if (!priv->alloc_mem)
-+		return -ENOMEM;
-+
-+	/* Note that generic_ptr is initialized to the device * but in
-+	 * some init_functions, this is overridden and returns data    */
-+	ptemp = priv->alloc_mem(priv->trig_alloc_sz, &generic_ptr);
-+	if (!ptemp) {
-+		edac_printk(KERN_ERR, EDAC_MGR,
-+			    "Inject: Buffer Allocation error\n");
-+		return -ENOMEM;
-+	}
-+
-+	if (count == 3)
-+		error_mask = priv->ue_set_mask;
-+	else
-+		error_mask = priv->ce_set_mask;
-+
-+	edac_printk(KERN_ALERT, EDAC_MGR,
-+		    "Trigger Error Mask (0x%X)\n", error_mask);
-+
-+	local_irq_save(flags);
-+	/* write ECC corrupted data out. */
-+	for (i = 0; i < (priv->trig_alloc_sz/sizeof(*ptemp)); i++) {
-+		/* Read data so we're in the correct state */
-+		rmb();
-+		if (ACCESS_ONCE(ptemp[i]))
-+			result = -1;
-+		/* Toggle Error bit (it is latched), leave ECC enabled */
-+		writel(error_mask, drvdata->base);
-+		writel(priv->ecc_enable_mask, drvdata->base);
-+		ptemp[i] = i;
-+	}
-+	/* Ensure it has been written out */
-+	wmb();
-+	local_irq_restore(flags);
-+
-+	if (result)
-+		edac_printk(KERN_ERR, EDAC_MGR, "Mem Not Cleared\n");
-+
-+	/* Read out written data. ECC error caused here */
-+	for (i = 0; i < 16; i++)
-+		if (ACCESS_ONCE(ptemp[i]) != i)
-+			edac_printk(KERN_ERR, EDAC_MGR, "Mem Doesn't match\n");
-+
-+	if (priv->free_mem)
-+		priv->free_mem(ptemp, priv->trig_alloc_sz, generic_ptr);
-+
-+	return count;
-+}
-+
-+static void altr_set_sysfs_attr(struct edac_device_ctl_info *edac_dci,
-+				const struct ecc_mgr_prv_data *priv)
-+{
-+	struct edac_dev_sysfs_attribute *ecc_attr = priv->eccmgr_sysfs_attr;
-+
-+	if (ecc_attr) {
-+		edac_dci->sysfs_attributes =  ecc_attr;
-+		edac_printk(KERN_ERR, EDAC_MGR, "Set SysFS trigger\n");
-+	}
-+}
-+#else
-+static void altr_set_sysfs_attr(struct edac_device_ctl_info *edac_dci,
-+				const struct ecc_mgr_prv_data *priv)
-+{}
-+#endif	/* #ifdef CONFIG_EDAC_DEBUG */
-+
-+static const struct of_device_id altr_edac_mgr_of_match[] = {
-+#ifdef CONFIG_EDAC_ALTERA_L2C
-+	{ .compatible = "altr,l2-edac", .data = (void *)&l2ecc_data },
-+#endif
-+#ifdef CONFIG_EDAC_ALTERA_OCRAM
-+	{ .compatible = "altr,ocram-edac", .data = (void *)&ocramecc_data },
-+#endif
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, altr_edac_mgr_of_match);
-+
-+/*
-+ * altr_edac_mgr_probe()
-+ *	This is a generic EDAC device driver that will support
-+ *	various Altera memory devices such as the L2 cache ECC and
-+ *	OCRAM ECC as well as the memories for other peripherals.
-+ *	Module specific initialization is done by passing the
-+ *	function index in the device tree.
-+ */
-+static int altr_edac_mgr_probe(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *dci;
-+	struct altr_edac_mgr_dev *drvdata;
-+	struct resource *r;
-+	int res = 0;
-+	struct device_node *np = pdev->dev.of_node;
-+	char *ecc_name = (char *)np->name;
-+	static int dev_instance;
-+
-+	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!r) {
-+		edac_printk(KERN_ERR, EDAC_MGR,
-+			    "Unable to get mem resource\n");
-+		return -ENODEV;
-+	}
-+
-+	if (!devm_request_mem_region(&pdev->dev, r->start, resource_size(r),
-+				     dev_name(&pdev->dev))) {
-+		edac_printk(KERN_ERR, EDAC_MGR,
-+			    "%s:Error requesting mem region\n", ecc_name);
-+		return -EBUSY;
-+	}
-+
-+	dci = edac_device_alloc_ctl_info(sizeof(*drvdata), ecc_name,
-+					 1, ecc_name, 1, 0, NULL, 0,
-+					 dev_instance++);
-+
-+	if (!dci)
-+		return -ENOMEM;
-+
-+	drvdata = dci->pvt_info;
-+	dci->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, dci);
-+	drvdata->edac_dev_name = ecc_name;
-+
-+	drvdata->base = devm_ioremap(&pdev->dev, r->start, resource_size(r));
-+	if (!drvdata->base) {
-+		edac_printk(KERN_ERR, EDAC_MGR,
-+			    "%s:Unable to map regs\n", ecc_name);
-+		return -ENOMEM;
-+	}
-+
-+	/* Get driver specific data for this EDAC device */
-+	drvdata->data = of_match_node(altr_edac_mgr_of_match, np)->data;
-+
-+	/* Check specific dependencies for the module */
-+	if (drvdata->data->setup) {
-+		res = drvdata->data->setup(pdev, drvdata->base);
-+		if (res < 0)
-+			goto err;
-+	}
-+
-+	drvdata->sb_irq = platform_get_irq(pdev, 0);
-+	res = devm_request_irq(&pdev->dev, drvdata->sb_irq,
-+			       altr_edac_mgr_handler,
-+			       0, dev_name(&pdev->dev), dci);
-+	if (res < 0)
-+		goto err;
-+
-+	drvdata->db_irq = platform_get_irq(pdev, 1);
-+	res = devm_request_irq(&pdev->dev, drvdata->db_irq,
-+			       altr_edac_mgr_handler,
-+			       0, dev_name(&pdev->dev), dci);
-+	if (res < 0)
-+		goto err;
-+
-+	dci->mod_name = "ECC_MGR";
-+	dci->dev_name = drvdata->edac_dev_name;
-+
-+	altr_set_sysfs_attr(dci, drvdata->data);
-+
-+	if (edac_device_add_device(dci))
-+		goto err;
-+
-+	devres_close_group(&pdev->dev, NULL);
-+
-+	return 0;
-+err:
-+	devres_release_group(&pdev->dev, NULL);
-+	edac_device_free_ctl_info(dci);
-+
-+	return res;
-+}
-+
-+static int altr_edac_mgr_remove(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *dci = platform_get_drvdata(pdev);
-+
-+	edac_device_del_device(&pdev->dev);
-+	edac_device_free_ctl_info(dci);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver altr_edac_mgr_driver = {
-+	.probe =  altr_edac_mgr_probe,
-+	.remove = altr_edac_mgr_remove,
-+	.driver = {
-+		.name = "altr_edac_mgr",
-+		.of_match_table = altr_edac_mgr_of_match,
-+	},
-+};
-+module_platform_driver(altr_edac_mgr_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Thor Thayer");
-+MODULE_DESCRIPTION("EDAC Driver for Altera SoC ECC Manager");
-diff --git a/drivers/edac/altera_edac_mgr.h b/drivers/edac/altera_edac_mgr.h
-new file mode 100644
-index 0000000..791037c
---- /dev/null
-+++ b/drivers/edac/altera_edac_mgr.h
-@@ -0,0 +1,56 @@
-+/*
-+ *  Copyright Altera Corporation (C) 2014. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#ifndef ALTERA_EDAC_MGR_H
-+#define ALTERA_EDAC_MGR_H
-+
-+#include <linux/edac.h>
-+#include <linux/platform_device.h>
-+#include <linux/types.h>
-+#include "edac_core.h"
-+
-+#define EDAC_MGR "MGR"
-+
-+struct ecc_mgr_prv_data {
-+	int (*setup)(struct platform_device *pdev, void __iomem *base);
-+	int ce_clear_mask;
-+	int ue_clear_mask;
-+#ifdef CONFIG_EDAC_DEBUG
-+	struct edac_dev_sysfs_attribute *eccmgr_sysfs_attr;
-+	void * (*alloc_mem)(size_t size, void **other);
-+	void (*free_mem)(void *p, size_t size, void *other);
-+	int ecc_enable_mask;
-+	int ce_set_mask;
-+	int ue_set_mask;
-+	int trig_alloc_sz;
-+#endif
-+};
-+
-+struct altr_edac_mgr_dev {
-+	void __iomem *base;
-+	int sb_irq;
-+	int db_irq;
-+	const struct ecc_mgr_prv_data *data;
-+	char *edac_dev_name;
-+};
-+
-+extern const struct ecc_mgr_prv_data l2ecc_data;
-+extern const struct ecc_mgr_prv_data ocramecc_data;
-+
-+ssize_t altr_edac_mgr_trig(struct edac_device_ctl_info *edac_dci,
-+			   const char *buffer, size_t count);
-+
-+#endif	/* #ifndef ALTERA_EDAC_MGR_H */
-diff --git a/drivers/edac/altera_l2_edac.c b/drivers/edac/altera_l2_edac.c
-new file mode 100644
-index 0000000..d3f5d4c
---- /dev/null
-+++ b/drivers/edac/altera_l2_edac.c
-@@ -0,0 +1,130 @@
-+/*
-+ *  Copyright Altera Corporation (C) 2014. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <asm/cacheflush.h>
-+#include <linux/ctype.h>
-+#include <linux/device.h>
-+#include <linux/edac.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/types.h>
-+
-+#include "altera_edac_mgr.h"
-+#include "edac_module.h"
-+
-+/* MPU L2 Register Defines */
-+#define ALTR_MPUL2_CONTROL_OFFSET       0x100
-+#define ALTR_MPUL2_CTL_CACHE_EN_MASK    0x00000001
-+
-+/* L2 ECC Management Group Defines */
-+#define ALTR_MAN_GRP_L2_ECC_OFFSET      0x00
-+#define ALTR_L2_ECC_EN_MASK             0x00000001
-+#define ALTR_L2_ECC_INJS_MASK           0x00000002
-+#define ALTR_L2_ECC_INJD_MASK           0x00000004
-+
-+#ifdef CONFIG_EDAC_DEBUG
-+static void *l2_alloc_mem(size_t size, void **other)
-+{
-+	struct device *dev = *other;
-+	void *ptemp = devm_kzalloc(dev, size, GFP_KERNEL);
-+
-+	if (!ptemp)
-+		return NULL;
-+
-+	/* Make sure everything is written out */
-+	wmb();
-+	flush_cache_all();
-+
-+	return ptemp;
-+}
-+
-+static void l2_free_mem(void *p, size_t size, void *other)
-+{
-+	struct device *dev = other;
-+
-+	if (dev && p)
-+		devm_kfree(dev, p);
-+}
-+
-+static struct edac_dev_sysfs_attribute altr_l2_sysfs_attributes[] = {
-+	{
-+		.attr = { .name = "altr_l2_trigger",
-+			  .mode = (S_IRUGO | S_IWUSR) },
-+		.show = NULL,
-+		.store = altr_edac_mgr_trig
-+	},
-+	{
-+		.attr = {.name = NULL }
-+	}
-+};
-+#endif	/* #ifdef CONFIG_EDAC_DEBUG */
-+
-+/*
-+ * altr_l2_dependencies()
-+ *	Test for L2 cache ECC dependencies upon entry because
-+ *	the preloader/UBoot should have initialized the L2
-+ *	memory and enabled the ECC.
-+ *	Can't turn on ECC here because accessing un-initialized
-+ *	memory will cause CE/UE errors possibly causing an ABORT.
-+ *	Bail if ECC is not on.
-+ *	Test For 1) L2 ECC is enabled and 2) L2 Cache is enabled.
-+ */
-+static int altr_l2_dependencies(struct platform_device *pdev,
-+				void __iomem *base)
-+{
-+	u32 control;
-+	struct regmap *l2_vbase;
-+
-+	control = readl(base) & ALTR_L2_ECC_EN_MASK;
-+	if (!control) {
-+		dev_err(&pdev->dev, "L2: No ECC present, or ECC disabled\n");
-+		return -ENODEV;
-+	}
-+
-+	l2_vbase = syscon_regmap_lookup_by_compatible("arm,pl310-cache");
-+	if (IS_ERR(l2_vbase)) {
-+		dev_err(&pdev->dev,
-+			"L2 ECC:regmap for arm,pl310-cache lookup failed.\n");
-+		return -ENODEV;
-+	}
-+
-+	regmap_read(l2_vbase, ALTR_MPUL2_CONTROL_OFFSET, &control);
-+	if (!(control & ALTR_MPUL2_CTL_CACHE_EN_MASK)) {
-+		dev_err(&pdev->dev, "L2: Cache disabled\n");
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+const struct ecc_mgr_prv_data l2ecc_data = {
-+	.setup = altr_l2_dependencies,
-+	.ce_clear_mask = 0,
-+	.ue_clear_mask = 0,
-+#ifdef CONFIG_EDAC_DEBUG
-+	.eccmgr_sysfs_attr = altr_l2_sysfs_attributes,
-+	.alloc_mem = l2_alloc_mem,
-+	.free_mem = l2_free_mem,
-+	.ecc_enable_mask = ALTR_L2_ECC_EN_MASK,
-+	.ce_set_mask = (ALTR_L2_ECC_EN_MASK | ALTR_L2_ECC_INJS_MASK),
-+	.ue_set_mask = (ALTR_L2_ECC_EN_MASK | ALTR_L2_ECC_INJD_MASK),
-+	.trig_alloc_sz = 4 * 1024,
-+#endif
-+};
-+
-diff --git a/drivers/edac/altera_ocram_edac.c b/drivers/edac/altera_ocram_edac.c
-new file mode 100644
-index 0000000..799b22b
---- /dev/null
-+++ b/drivers/edac/altera_ocram_edac.c
-@@ -0,0 +1,107 @@
-+/*
-+ *  Copyright Altera Corporation (C) 2014. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/ctype.h>
-+#include <linux/edac.h>
-+#include <linux/genalloc.h>
-+#include <linux/of.h>
-+#include "altera_edac_mgr.h"
-+
-+/* OCRAM ECC Management Group Defines */
-+#define ALTR_MAN_GRP_OCRAM_ECC_OFFSET   0x04
-+#define ALTR_OCR_ECC_EN_MASK            0x00000001
-+#define ALTR_OCR_ECC_INJS_MASK          0x00000002
-+#define ALTR_OCR_ECC_INJD_MASK          0x00000004
-+#define ALTR_OCR_ECC_SERR_MASK          0x00000008
-+#define ALTR_OCR_ECC_DERR_MASK          0x00000010
-+
-+#ifdef CONFIG_EDAC_DEBUG
-+static void *ocram_alloc_mem(size_t size, void **other)
-+{
-+	struct device_node *np;
-+	struct gen_pool *gp;
-+	void *sram_addr;
-+
-+	np = of_find_compatible_node(NULL, NULL, "altr,ocram-edac");
-+	if (!np)
-+		return NULL;
-+
-+	gp = of_get_named_gen_pool(np, "iram", 0);
-+	if (!gp)
-+		return NULL;
-+	*other = gp;
-+
-+	sram_addr = (void *)gen_pool_alloc(gp, size);
-+	if (!sram_addr)
-+		return NULL;
-+
-+	memset(sram_addr, 0, size);
-+	wmb();	/* Ensure data is written out */
-+
-+	return sram_addr;
-+}
-+
-+static void ocram_free_mem(void *p, size_t size, void *other)
-+{
-+	gen_pool_free((struct gen_pool *)other, (u32)p, size);
-+}
-+
-+static struct edac_dev_sysfs_attribute altr_ocr_sysfs_attributes[] = {
-+	{
-+		.attr = { .name = "altr_ocram_trigger",
-+			  .mode = (S_IRUGO | S_IWUSR) },
-+		.show = NULL,
-+		.store = altr_edac_mgr_trig
-+	},
-+	{
-+		.attr = {.name = NULL }
-+	}
-+};
-+#endif	/* #ifdef CONFIG_EDAC_DEBUG */
-+
-+/*
-+ * altr_ocram_dependencies()
-+ *	Test for OCRAM cache ECC dependencies upon entry because
-+ *	ECC must be enabled.
-+ */
-+static int altr_ocram_dependencies(struct platform_device *pdev,
-+				   void __iomem *base)
-+{
-+	u32 control;
-+
-+	control = readl(base) & ALTR_OCR_ECC_EN_MASK;
-+	if (!control) {
-+		dev_err(&pdev->dev, "OCRAM: No ECC present, or ECC disabled.\n");
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+const struct ecc_mgr_prv_data ocramecc_data = {
-+	.setup = altr_ocram_dependencies,
-+	.ce_clear_mask = (ALTR_OCR_ECC_EN_MASK | ALTR_OCR_ECC_SERR_MASK),
-+	.ue_clear_mask = (ALTR_OCR_ECC_EN_MASK | ALTR_OCR_ECC_DERR_MASK),
-+#ifdef CONFIG_EDAC_DEBUG
-+	.eccmgr_sysfs_attr = altr_ocr_sysfs_attributes,
-+	.alloc_mem = ocram_alloc_mem,
-+	.free_mem = ocram_free_mem,
-+	.ecc_enable_mask = ALTR_OCR_ECC_EN_MASK,
-+	.ce_set_mask = (ALTR_OCR_ECC_EN_MASK | ALTR_OCR_ECC_INJS_MASK),
-+	.ue_set_mask = (ALTR_OCR_ECC_EN_MASK | ALTR_OCR_ECC_INJD_MASK),
-+	.trig_alloc_sz = (32 * sizeof(u32)),
-+#endif
-+};
--- 
-1.7.9.5
+About the AIF, this one is sent only once in the tda998x driver.
+The values 'refer to stream header' should work in most cases.
 
+The audio source is offered to the HDMI CODEC by the DAIs.
+There are 2 DAIs: the first one is S/PDIF and the second is I2S.
+If your audio controller delivers I2S only, the audio card shall define
+only this one. With a DT (simple-card), this is:
+
+	sound {
+		compatible =3D "simple-audio-card";
+		...
+		simple-audio-card,dai-link {	/* I2S - HDMI */
+			cpu {
+				sound-dai =3D <&audio 0>;
+			};
+			codec {
+				sound-dai =3D <&hdmi 1>;	/* tda998x 2nd DAI */
+			};
+		};
+	};
+
+Without DT, the DAI link is defined the same way:
+
+	.codec_name =3D "tda998x.0-0070";
+	.codec_dai_name =3D "i2s-hifi";
+
+>  > +	int ndais;
+>  > +	struct snd_soc_dai_driver *dais;
+>  > +	struct snd_soc_codec_driver *driver;
+>  > +};
+>=20
+> The need to include sound/soc.h is something I was trying to avoid in
+> my early design for a similar generic HDMI ASoC codec. I came up with
+> this requirement from Mark's comments about my OMAP HDMI audio
+> patches. So the bellow suggestion are really up to Mark.
+>=20
+> If I understand right, the need for ndais, dais, and driver is coming
+> solely from spdif/i2s switching change. Since at least I am not aware
+> of any other DAIs found in HDMI encoders, could we just give the info
+> whether i2s and/or spdif is supporter with a simple bit-field or enum=
+?
+> The snd_soc_dai_driver and snd_soc_codec_driver definitions could the=
+n
+> be all put to ASoC side of source tree.
+>=20
+> I have also been wondering why we do not have SND_SOC_DAIFMT_SPDIF
+> definition in sound/soc-dai.h. With that there would be no need
+> to define two different dais for spdif and i2s. But this is more a
+> suggestion for ASoC core future development. Because I do not current=
+ly
+> have any HW to experiment with this the suggestion should probably be
+> left only as a side note for now.
+
+The kirkwood audio subsystem which is used in the Cubox also has 2
+audio outputs, I2S and S/PDIF. The audio route 'I2S --> HDMI I2S' or
+'S/PDIF --> HDMI S/PDIF + optical S/PDIF' is chosen by the application
+(PCM).
+
+Then, the audio constraints are not the same on the audio controller
+and HDMI transmitter sides. There must be a full description of these
+constraints in the HDMI CODEC. I was thinking to build the DAIs from a
+reduced description in the TDA998x transmitter, but, as all parameters
+are required, it was simpler to include sound/soc.h.
+
+>  > +#endif
+>  > diff --git a/sound/soc/codecs/hdmi.c b/sound/soc/codecs/hdmi.c
+>  > index 1087fd5..6ea2772 100644
+>  > --- a/sound/soc/codecs/hdmi.c
+>  > +++ b/sound/soc/codecs/hdmi.c
+>  > @@ -22,9 +22,146 @@
+>  >   #include <sound/soc.h>
+>  >   #include <linux/of.h>
+>  >   #include <linux/of_device.h>
+>  > +#include <sound/pcm_params.h>
+>  > +#include <sound/hdmi.h>
+>  >
+>  >   #define DRV_NAME "hdmi-audio-codec"
+>  >
+>  > +struct hdmi_priv {
+>  > +	struct hdmi_data hdmi_data;
+>  > +	struct snd_pcm_hw_constraint_list rate_constraints;
+>  > +};
+>  > +
+>  > +static int hdmi_dev_match(struct device *dev, void *data)
+>  > +{
+>  > +	return !strcmp(dev_name(dev), (char *) data);
+>  > +}
+>  > +
+>  > +/* get the codec device */
+>  > +static struct device *hdmi_get_cdev(struct device *dev)
+>  > +{
+>  > +	struct device *cdev;
+>  > +
+>  > +	cdev =3D device_find_child(dev,
+>  > +				 DRV_NAME,
+>  > +				 hdmi_dev_match);
+>  > +	if (!cdev)
+>  > +		dev_err(dev, "Cannot get codec device");
+>  > +	else
+>  > +		put_device(cdev);
+>  > +	return cdev;
+>  > +}
+>  > +
+>  > +static int hdmi_startup(struct snd_pcm_substream *substream,
+>  > +			struct snd_soc_dai *dai)
+>  > +{
+>  > +	struct snd_pcm_runtime *runtime =3D substream->runtime;
+>  > +	struct device *cdev;
+>  > +	struct hdmi_priv *priv;
+>  > +	struct snd_pcm_hw_constraint_list *rate_constraints;
+>  > +	int ret, max_channels, rate_mask, fmt;
+>  > +	u64 formats;
+>  > +	static const u32 hdmi_rates[] =3D {
+>  > +		32000, 44100, 48000, 88200, 96000, 176400, 192000
+>  > +	};
+>  > +
+>  > +	cdev =3D hdmi_get_cdev(dai->dev);
+>  > +	if (!cdev)
+>  > +		return -ENODEV;
+>  > +	priv =3D dev_get_drvdata(cdev);
+>  > +
+>  > +	/* get the EDID values and the rate constraints buffer */
+>  > +	ret =3D priv->hdmi_data.get_audio(dai->dev,
+>  > +					&max_channels, &rate_mask, &fmt);
+>  > +	if (ret < 0)
+>  > +		return ret;				/* no screen */
+>  > +
+>  > +	/* convert the EDID values to audio constraints */
+>  > +	rate_constraints =3D &priv->rate_constraints;
+>  > +	rate_constraints->list =3D hdmi_rates;
+>  > +	rate_constraints->count =3D ARRAY_SIZE(hdmi_rates);
+>  > +	rate_constraints->mask =3D rate_mask;
+>  > +	snd_pcm_hw_constraint_list(runtime, 0,
+>  > +				   SNDRV_PCM_HW_PARAM_RATE,
+>  > +				   rate_constraints);
+>  > +
+>  > +	formats =3D 0;
+>  > +	if (fmt & 1)
+>  > +		formats |=3D SNDRV_PCM_FMTBIT_S16_LE;
+>  > +	if (fmt & 2)
+>  > +		formats |=3D SNDRV_PCM_FMTBIT_S20_3LE;
+>  > +	if (fmt & 4)
+>  > +		formats |=3D SNDRV_PCM_FMTBIT_S24_LE;
+>=20
+> I think we should add here:
+> 		formats |=3D SNDRV_PCM_FMTBIT_S24_3LE;
+> and probably also
+> 		formats |=3D SNDRV_PCM_FMTBIT_S32_LE;
+>=20
+> The S24_3LE is equal to S24_LE at i2s level and the 32bit format woul=
+d
+> help to get better than 16bit audio working with if there is trouble
+> supporting 24bit formats (like I have with wip sii9022 code). Both
+> tda998x and sii9022 are able to play 32bit i2s audio just fine. The 8
+> least significant bits are naturally ignored, but we can set
+> .sig_bits =3D 24 in snd_soc_pcm_stream.
+
+OK.
+
+>  > +	snd_pcm_hw_constraint_mask64(runtime,
+>  > +				SNDRV_PCM_HW_PARAM_FORMAT,
+>  > +				formats);
+>  > +
+>  > +	snd_pcm_hw_constraint_minmax(runtime,
+>  > +				SNDRV_PCM_HW_PARAM_CHANNELS,
+>  > +				1, max_channels);
+>  > +	return 0;
+>  > +}
+>  > +
+>  > +static int hdmi_hw_params(struct snd_pcm_substream *substream,
+>  > +			  struct snd_pcm_hw_params *params,
+>  > +			  struct snd_soc_dai *dai)
+>  > +{
+>  > +	struct device *cdev;
+>  > +	struct hdmi_priv *priv;
+>  > +
+>  > +	cdev =3D hdmi_get_cdev(dai->dev);
+>  > +	if (!cdev)
+>  > +		return -ENODEV;
+>  > +	priv =3D dev_get_drvdata(cdev);
+>  > +
+>  > +	priv->hdmi_data.audio_switch(dai->dev, dai->id,
+>  > +				     params_rate(params),
+>  > +				     params_format(params));
+>  > +	return 0;
+>  > +}
+>  > +
+>  > +static void hdmi_shutdown(struct snd_pcm_substream *substream,
+>  > +			  struct snd_soc_dai *dai)
+>  > +{
+>  > +	struct device *cdev;
+>  > +	struct hdmi_priv *priv;
+>  > +
+>  > +	cdev =3D hdmi_get_cdev(dai->dev);
+>  > +	if (!cdev)
+>  > +		return;
+>  > +	priv =3D dev_get_drvdata(cdev);
+>  > +
+>  > +	priv->hdmi_data.audio_switch(dai->dev, -1, 0, 0);	/* stop */
+>  > +}
+>  > +
+>  > +static const struct snd_soc_dai_ops hdmi_ops =3D {
+>  > +	.startup =3D hdmi_startup,
+>  > +	.hw_params =3D hdmi_hw_params,
+>  > +	.shutdown =3D hdmi_shutdown,
+>  > +};
+>  > +
+>  > +static int hdmi_codec_probe(struct snd_soc_codec *codec)
+>  > +{
+>  > +	struct hdmi_priv *priv;
+>  > +	struct device *dev =3D codec->dev;	/* encoder device */
+>  > +	struct device *cdev;			/* codec device */
+>  > +
+>  > +	cdev =3D hdmi_get_cdev(dev);
+>  > +	if (!cdev)
+>  > +		return -ENODEV;
+>  > +
+>  > +	/* allocate some memory to store
+>  > +	 * the encoder callback functions and the rate constraints */
+>  > +	priv =3D devm_kzalloc(cdev, sizeof *priv, GFP_KERNEL);
+>  > +	if (!priv)
+>  > +		return -ENOMEM;
+>  > +	dev_set_drvdata(cdev, priv);
+>  > +
+>  > +	memcpy(&priv->hdmi_data, cdev->platform_data,
+>  > +				sizeof priv->hdmi_data);
+>  > +	return 0;
+>  > +}
+>  > +
+>  >   static const struct snd_soc_dapm_widget hdmi_widgets[] =3D {
+>  >   	SND_SOC_DAPM_INPUT("RX"),
+>  >   	SND_SOC_DAPM_OUTPUT("TX"),
+>  > @@ -77,13 +214,38 @@ static struct snd_soc_codec_driver hdmi_codec=
+ =3D {
+>  >   	.num_dapm_routes =3D ARRAY_SIZE(hdmi_routes),
+>  >   };
+>  >
+>  > -static int hdmi_codec_probe(struct platform_device *pdev)
+>  > +static int hdmi_codec_dev_probe(struct platform_device *pdev)
+>  >   {
+>  > -	return snd_soc_register_codec(&pdev->dev, &hdmi_codec,
+>  > -			&hdmi_codec_dai, 1);
+>  > +	struct hdmi_data *pdata =3D pdev->dev.platform_data;
+>  > +	struct snd_soc_dai_driver *dais;
+>  > +	struct snd_soc_codec_driver *driver;
+>  > +	int i, ret;
+>  > +
+>  > +	if (!pdata)
+>  > +		return snd_soc_register_codec(&pdev->dev, &hdmi_codec,
+>  > +						&hdmi_codec_dai, 1);
+>  > +
+>  > +	/* creation from a video encoder as a child device */
+>  > +	dais =3D devm_kmemdup(&pdev->dev,
+>  > +			    pdata->dais,
+>  > +			    sizeof *pdata->dais * pdata->ndais,
+>  > +			    GFP_KERNEL);
+>  > +	for (i =3D 0; i < pdata->ndais; i++)
+>  > +		dais[i].ops =3D &hdmi_ops;
+>  > +
+>  > +	driver =3D devm_kmemdup(&pdev->dev,
+>  > +			    pdata->driver,
+>  > +			    sizeof *pdata->driver,
+>  > +			    GFP_KERNEL);
+>  > +	driver->probe =3D hdmi_codec_probe;
+>  > +
+>  > +	/* register the codec on the video encoder */
+>  > +	ret =3D snd_soc_register_codec(pdev->dev.parent, driver,
+>  > +					dais, pdata->ndais);
+>=20
+> Registering the codec under the tda998x driver makes me wonder why
+> would we need the a separate platform device in the first palce. At
+> least it makes it possible to unify the old dummy HDMI codec with the
+> new code, but I am not even sure if that makes eny sense.
+
+The CODEC platform device is needed for 2 reasons:
+- it permits the HDMI transmitter to give the callback functions and th=
+e
+  DAIs to the CODEC,
+- the CODEC needs to memorize the callback functions and the rate
+  constraints, but, as a CODEC, it has no private data, and, on the
+  other side, the drvdata of the HDMI transmitter is already used.
+
+> Maybe we should have another dummy codec to be used in the situations
+> where you really just need a dummy endpoint to satisfy ASoC. AFAIK th=
+e
+> only setups that use the current hdmi codec are BBB HDMI audio and
+> OMAP4+ HDMI audio, which both are currently broken in the upstream.
+
+My patch does not break the dummy codec as soon as the device does not
+get a platform_data at probe time.
+
+>  > +	return ret;
+>  >   }
+>  >
+>  > -static int hdmi_codec_remove(struct platform_device *pdev)
+>  > +static int hdmi_codec_dev_remove(struct platform_device *pdev)
+>  >   {
+>  >   	snd_soc_unregister_codec(&pdev->dev);
+>  >   	return 0;
+>  > @@ -96,8 +258,8 @@ static struct platform_driver hdmi_codec_driver=
+ =3D {
+>  >   		.of_match_table =3D of_match_ptr(hdmi_audio_codec_ids),
+>  >   	},
+>  >
+>  > -	.probe		=3D hdmi_codec_probe,
+>  > -	.remove		=3D hdmi_codec_remove,
+>  > +	.probe		=3D hdmi_codec_dev_probe,
+>  > +	.remove		=3D hdmi_codec_dev_remove,
+>  >   };
+>  >
+>  >   module_platform_driver(hdmi_codec_driver);
+>  >
+>=20
+> What comes to compatibility to the old use of hdmi codec
+> everything appears to be fine after this patch.
+
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
