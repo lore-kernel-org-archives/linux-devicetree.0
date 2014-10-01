@@ -1,89 +1,87 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: [PATCH v6 0/3] new Atmel DMA controller (XDMAC)
-Date: Wed, 1 Oct 2014 16:59:22 +0200
-Message-ID: <1412175565-810-1-git-send-email-ludovic.desroches@atmel.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 2/3] ARM: dts: at_xdmac: add bindings documentation
+Date: Wed, 1 Oct 2014 16:59:24 +0200
+Message-ID: <1412175565-810-3-git-send-email-ludovic.desroches@atmel.com>
+References: <1412175565-810-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, sergei.shtylyov@cogentembedded.com, arnd@arndb.de, vinod.koul@intel.com, nicolas.ferre@atmel.com, josh.wu@atmel.com, Ludovic Desroches <ludovic.desroches@atmel.com>, maxime.ripard@free-electrons.com, plagnioj@jcrosoft.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412175565-810-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add bindings documentation for the new Atmel DMA controller (XDMAC)
+introduced with SAMA5D4.
 
-This set of patches introduces support for the new Atmel DMA controller know as
-XDMAC and available on SAMA5D4.
-
-Since there were no feedback about v5, could you give your ack if you agree with
-this new version.
-
-Changes from:
-- v5
-  - fix a bug when doing memcpy, condition to set the NDE was inverted
-  - replace irqsave locks by bh variant
-  - unmasked channel errors
-- v4
-  - compile the driver if COMPILE_TEST is selected
-  - merge header file into at_xdmac.c
-  - use write memory barriers before starting the channel
-  - init active_xfer to false when taking a descriptor from the free
-  descriptors list
-  - remove dma capabilities mask
-  - use CONFIG_PM instead of CONFIG_PM_SLEEP for prepare function
-  - style fixes
-  - update documentation to add the <chip> compatible description
-  - add maintener entry
-- v3
-  - use dma_get_any_slave_channel instead of dma_request_channel
-  - fix tx_status behavior for non active transfers
-  - rename at_xdmac_terminate_xfer
-  - replace suspend/resume no irq variants by late/early variants
-  - no more use dev res to request the irq, use the legacy way
-  - add slave capabilities
-- v2
-  - documentation updated
-  - fix locking issues
-- v1
-  - add power management stuff
-  - check maxburst value
-  - revert subsys_initcall remove, EPROBE_DEFER not yet available on the kernel
-  version I use to do the tests, moreover other devices are not ready to use it
-- RFC:
-  - DMA_SUCCESS replaced by DMA_COMPLETE
-  - fix memcpy issue caused by a mistake in interfaces used
-  - add filter function
-  - remove some parameters from device tree since we can get them through the
-  dma slave configuration
-  - use readl/writel relaxed
-  - remove subsys_initcall
-  - synchronize irq before killing tasklets
-  - use BIT macro
-  - misc cleanup
-
-Ludovic Desroches (3):
-  dma: at_xdmac: creation of the atmel eXtended DMA Controller driver
-  ARM: dts: at_xdmac: add bindings documentation
-  MAINTAINERS: add entry for Atmel XDMA driver
-
- .../devicetree/bindings/dma/atmel-xdma.txt         |   50 +
- MAINTAINERS                                        |    7 +
- drivers/dma/Kconfig                                |    7 +
- drivers/dma/Makefile                               |    1 +
- drivers/dma/at_xdmac.c                             | 1493 ++++++++++++++++++++
- include/dt-bindings/dma/at91.h                     |   25 +
- 6 files changed, 1583 insertions(+)
+Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/dma/atmel-xdma.txt         | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/dma/atmel-xdma.txt
- create mode 100644 drivers/dma/at_xdmac.c
 
+diff --git a/Documentation/devicetree/bindings/dma/atmel-xdma.txt b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+new file mode 100644
+index 0000000..ae587ad
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+@@ -0,0 +1,50 @@
++* Atmel Extensible Direct Memory Access Controller (XDMAC)
++
++* XDMA Controller
++Required properties:
++- compatible: Should be "atmel,<chip>-dma".
++  <chip> compatible description:
++  - sama5d4: first SoC adding the XDMAC
++- reg: Should contain DMA registers location and length.
++- interrupts: Should contain DMA interrupt.
++- #dma-cells: Must be <2>, used to represent the number of integer cells in
++the dmas property of client devices.
++  - The 1st cell specifies the memory interface (16 most significant bits) and
++  the peripheral interface (16 less significant bits) to use.
++  - The 2nd cell specifies the channel configuration register:
++    - bit 30-24: PERID, peripheral identifier.
++
++Example:
++
++dma1: dma-controller@f0004000 {
++	compatible = "atmel,sama5d4-dma";
++	reg = <0xf0004000 0x200>;
++	interrupts = <50 4 0>;
++	#dma-cells = <2>;
++};
++
++
++* DMA clients
++DMA clients connected to the Atmel XDMA controller must use the format
++described in the dma.txt file, using a two-cell specifier for each channel.
++The three cells in order are:
++1. A phandle pointing to the DMA controller.
++2. The memory interface (16 most significant bits), the peripheral interface
++(16 less significant bits).
++3. Channel configuration register. Configurable fields are:
++  - bit 30-24: PERID, peripheral identifier.
++
++Example:
++
++i2c2: i2c@f8024000 {
++	compatible = "atmel,at91sam9x5-i2c";
++	reg = <0xf8024000 0x4000>;
++	interrupts = <34 4 6>;
++	dmas = <&dma1
++		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
++		AT91_XDMAC_DT_PERID(6)>,
++	       <&dma1
++		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
++		AT91_XDMAC_DT_PERID(7)>;
++	dma-names = "tx", "rx";
++};
 -- 
 2.0.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
