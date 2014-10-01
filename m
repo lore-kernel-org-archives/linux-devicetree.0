@@ -1,46 +1,132 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 1/3] ARM: dts: sun7i: Add spi0_pins_a pinctrl setting
-Date: Wed,  1 Oct 2014 09:26:04 +0200
-Message-ID: <1412148366-18346-2-git-send-email-hdegoede@redhat.com>
-References: <1412148366-18346-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBG6ZV2QQKGQESGV5HCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1412148366-18346-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2] ARM: realview: basic device tree implementation
+Date: Wed,  1 Oct 2014 09:32:05 +0200
+Message-ID: <1412148725-24519-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+This implements basic device tree boot support for the RealView
+platforms, with a basic device tree for ARM PB1176 as an example.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index b22daf3..cb5abef 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -784,6 +784,13 @@
- 				allwinner,pull = <0>;
- 			};
+The implementation is done with a new DT-specific board file
+using only pre-existing bindings for the basic IRQ, timer and
+serial port drivers. A new compatible type is added to the GIC
+for the ARM1176.
+
+This implementation uses the MFD syscon handle from day one to
+access the system controller registers, and register the devices
+using the SoC bus.
+
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v6->v7:
+- Split in two patches, one with the machine changes, one with
+  the device tree and binding portions.
+---
+ arch/arm/mach-realview/Kconfig       | 13 +++++++++++++
+ arch/arm/mach-realview/Makefile      |  1 +
+ arch/arm/mach-realview/realview-dt.c | 32 ++++++++++++++++++++++++++++++++
+ drivers/irqchip/irq-gic.c            |  2 ++
+ 4 files changed, 48 insertions(+)
+ create mode 100644 arch/arm/mach-realview/realview-dt.c
+
+diff --git a/arch/arm/mach-realview/Kconfig b/arch/arm/mach-realview/Kconfig
+index 9db2029aa632..565925f37dc5 100644
+--- a/arch/arm/mach-realview/Kconfig
++++ b/arch/arm/mach-realview/Kconfig
+@@ -1,6 +1,19 @@
+ menu "RealView platform type"
+ 	depends on ARCH_REALVIEW
  
-+			spi0_pins_a: spi0@0 {
-+				allwinner,pins = "PI10", "PI11", "PI12", "PI13", "PI14";
-+				allwinner,function = "spi0";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
++config REALVIEW_DT
++	bool "Support RealView(R) Device Tree based boot"
++	select ARM_GIC
++	select MFD_SYSCON
++	select POWER_RESET
++	select POWER_RESET_VERSATILE
++	select POWER_SUPPLY
++	select SOC_REALVIEW
++	select USE_OF
++	help
++	  Include support for booting the ARM(R) RealView(R) evaluation
++	  boards using a device tree machine description.
 +
- 			spi1_pins_a: spi1@0 {
- 				allwinner,pins = "PI16", "PI17", "PI18", "PI19";
- 				allwinner,function = "spi1";
+ config MACH_REALVIEW_EB
+ 	bool "Support RealView(R) Emulation Baseboard"
+ 	select ARM_GIC
+diff --git a/arch/arm/mach-realview/Makefile b/arch/arm/mach-realview/Makefile
+index 541fa4c109ef..e07fdf7ae8a7 100644
+--- a/arch/arm/mach-realview/Makefile
++++ b/arch/arm/mach-realview/Makefile
+@@ -3,6 +3,7 @@
+ #
+ 
+ obj-y					:= core.o
++obj-$(CONFIG_REALVIEW_DT)		+= realview-dt.o
+ obj-$(CONFIG_MACH_REALVIEW_EB)		+= realview_eb.o
+ obj-$(CONFIG_MACH_REALVIEW_PB11MP)	+= realview_pb11mp.o
+ obj-$(CONFIG_MACH_REALVIEW_PB1176)	+= realview_pb1176.o
+diff --git a/arch/arm/mach-realview/realview-dt.c b/arch/arm/mach-realview/realview-dt.c
+new file mode 100644
+index 000000000000..cc28b89dd48f
+--- /dev/null
++++ b/arch/arm/mach-realview/realview-dt.c
+@@ -0,0 +1,32 @@
++/*
++ * Copyright (C) 2014 Linaro Ltd.
++ *
++ * Author: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2, as
++ * published by the Free Software Foundation.
++ *
++ */
++#include <linux/of_platform.h>
++#include <asm/mach/arch.h>
++#include <asm/hardware/cache-l2x0.h>
++#include "core.h"
++
++static const char *realview_dt_platform_compat[] __initconst = {
++	"arm,realview-eb",
++	"arm,realview-pb1176",
++	"arm,realview-pb11mp",
++	"arm,realview-pba8",
++	"arm,realview-pbx",
++	NULL,
++};
++
++DT_MACHINE_START(REALVIEW_DT, "ARM RealView Machine (Device Tree Support)")
++#ifdef CONFIG_ZONE_DMA
++	.dma_zone_size	= SZ_256M,
++#endif
++	.dt_compat	= realview_dt_platform_compat,
++	.l2c_aux_val = 0x0,
++	.l2c_aux_mask = ~0x0,
++MACHINE_END
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index 4b959e606fe8..4e75e3f24a97 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -1022,6 +1022,8 @@ gic_of_init(struct device_node *node, struct device_node *parent)
+ 	return 0;
+ }
+ IRQCHIP_DECLARE(gic_400, "arm,gic-400", gic_of_init);
++IRQCHIP_DECLARE(arm11mp_gic, "arm,arm11mp-gic", gic_of_init);
++IRQCHIP_DECLARE(arm1176jzf_dc_gic, "arm,arm1176jzf-devchip-gic", gic_of_init);
+ IRQCHIP_DECLARE(cortex_a15_gic, "arm,cortex-a15-gic", gic_of_init);
+ IRQCHIP_DECLARE(cortex_a9_gic, "arm,cortex-a9-gic", gic_of_init);
+ IRQCHIP_DECLARE(cortex_a7_gic, "arm,cortex-a7-gic", gic_of_init);
 -- 
-2.1.0
+1.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
