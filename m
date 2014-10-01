@@ -1,130 +1,111 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v4 4/4] pmbus: ltc2978: add regulator support
-Date: Wed, 1 Oct 2014 14:36:13 -0700
-Message-ID: <20141001213613.GA29312@roeck-us.net>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v3 02/15] Driver core: Unified device properties interface for platform firmware
+Date: Thu, 02 Oct 2014 00:09:44 +0200
+Message-ID: <4390403.PNxQqnBDGX@vostro.rjw.lan>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <7184313.9OdTqVa2eQ@vostro.rjw.lan> <7365448.TlsV4zB2It@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: jdelvare-l3A5Bk7waGM@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <7365448.TlsV4zB2It@wuerfel>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 01, 2014 at 03:18:20PM -0500, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On Wednesday, October 01, 2014 09:47:40 AM Arnd Bergmann wrote:
+> On Wednesday 01 October 2014 04:10:03 Rafael J. Wysocki wrote:
+> > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> > 
+> > Add a uniform interface by which device drivers can request device
+> > properties from the platform firmware by providing a property name
+> > and the corresponding data type.  The purpose of it is to help to
+> > write portable code that won't depend on any particular platform
+> > firmware interface.
+> > 
+> > Three general helper functions, device_get_property(),
+> > device_read_property() and device_read_property_array() are provided.
+> > The first one allows the raw value of a given device property to be
+> > accessed.  The remaining two allow the value of a numeric or string
+> > property and multiple numeric or string values of one array
+> > property to be acquired, respectively.  Static inline wrappers are also
+> > provided for the various property data types that can be passed to
+> > device_read_property() or device_read_property_array() for extra type
+> > checking.
 > 
-> Add simple on/off regulator support for ltc2978 and
-> other pmbus parts supported by ltc2978.c
+> These look great!
 > 
-> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > In addition to that, new generic routines are provided for retrieving
+> > properties from device description objects in the platform firmware
+> > in case a device driver needs/wants to access properties of a child
+> > object of a given device object.  There are cases in which there is
+> > no struct device representation of such child objects and this
+> > additional API is useful then.  Again, three functions are provided,
+> > device_get_child_property(), device_read_child_property(),
+> > device_read_child_property_array(), in analogy with device_get_property(),
+> > device_read_property() and device_read_property_array() described above,
+> > respectively, along with static inline wrappers for all of the propery
+> > data types that can be used.  For all of them, the first argument is
+> > a struct device pointer to the parent device object and the second
+> > argument is a (void *) pointer to the child description provided by
+> > the platform firmware (either ACPI or FDT).
 > 
-> v2: Remove '#include <linux/regulator/machine.h>'
->     Only one regulator per pmbus device
->     Get regulator_init_data from pdata or device tree
-> 
-> v3: Support multiple regulators for each chip
->     Move most code to pmbus_core.c
->     fixed values for on/off
-> 
-> v4: fix a #endif comment
->     simplify probe code, remove added switch statement
->     remove BUG_ON(), add error message and fix num_regulators
-> ---
->  drivers/hwmon/pmbus/Kconfig   |    7 +++++++
->  drivers/hwmon/pmbus/ltc2978.c |   37 +++++++++++++++++++++++++++++++++++++
->  2 files changed, 44 insertions(+)
-> 
-> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-> index 6e1e493..79117b7 100644
-> --- a/drivers/hwmon/pmbus/Kconfig
-> +++ b/drivers/hwmon/pmbus/Kconfig
-> @@ -56,6 +56,13 @@ config SENSORS_LTC2978
->  	  This driver can also be built as a module. If so, the module will
->  	  be called ltc2978.
->  
-> +config SENSORS_LTC2978_REGULATOR
-> +	boolean "Regulator support for LTC2974, LTC2978, LTC3880, and LTC3883"
+> I still have my reservations against the child accessors, and would
+> like to hear what other people think. Passing a void pointer rather
+> than struct fw_dev_node has both advantages and disadvantages, and
+> I won't complain about either one if enough other people on the DT
+> side would like to see the addition of the child functions.
 
-We will need to update this and SENSORS_LTC2978 and add LTC2977 as well as
-LTM4646 to the list of supported chips.
+I actually would rather like to know if the people on the DT side have any
+problems with the child functions.
 
-Guenter
+Because, suppose that they wouldn't like those functions at all.  What are we
+supposed to do, then, honestly?  Add the whole DT vs ACPI logic to the leds-gpio
+and gpio_keys_polled drivers?  But these drivers have no reason whatsoever
+to include that.  Zero.
 
-> +	depends on SENSORS_LTC2978 && REGULATOR
-> +	help
-> +	  If you say yes here you get regulator support for Linear
-> +	  Technology LTC2974, LTC2978, LTC3880, and LTC3883.
-> +
->  config SENSORS_MAX16064
->  	tristate "Maxim MAX16064"
->  	default n
-> diff --git a/drivers/hwmon/pmbus/ltc2978.c b/drivers/hwmon/pmbus/ltc2978.c
-> index e24ed52..422712e 100644
-> --- a/drivers/hwmon/pmbus/ltc2978.c
-> +++ b/drivers/hwmon/pmbus/ltc2978.c
-> @@ -22,6 +22,8 @@
->  #include <linux/err.h>
->  #include <linux/slab.h>
->  #include <linux/i2c.h>
-> +#include <linux/regulator/driver.h>
-> +#include <linux/regulator/of_regulator.h>
->  #include "pmbus.h"
->  
->  enum chips { ltc2974, ltc2977, ltc2978, ltc3880, ltc3883, ltm4676 };
-> @@ -374,6 +376,30 @@ static const struct i2c_device_id ltc2978_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, ltc2978_id);
->  
-> +#if IS_ENABLED(CONFIG_SENSORS_LTC2978_REGULATOR)
-> +static const struct regulator_desc ltc2978_reg_desc[] = {
-> +	PMBUS_REGULATOR("vout_en", 0),
-> +	PMBUS_REGULATOR("vout_en", 1),
-> +	PMBUS_REGULATOR("vout_en", 2),
-> +	PMBUS_REGULATOR("vout_en", 3),
-> +	PMBUS_REGULATOR("vout_en", 4),
-> +	PMBUS_REGULATOR("vout_en", 5),
-> +	PMBUS_REGULATOR("vout_en", 6),
-> +	PMBUS_REGULATOR("vout_en", 7),
-> +};
-> +
-> +static struct of_regulator_match ltc2978_reg_matches[] = {
-> +	{ .name = "vout_en0" },
-> +	{ .name = "vout_en1" },
-> +	{ .name = "vout_en2" },
-> +	{ .name = "vout_en3" },
-> +	{ .name = "vout_en4" },
-> +	{ .name = "vout_en5" },
-> +	{ .name = "vout_en6" },
-> +	{ .name = "vout_en7" },
-> +};
-> +#endif /* CONFIG_SENSORS_LTC2978_REGULATOR */
-> +
->  static int ltc2978_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *id)
->  {
-> @@ -487,6 +513,17 @@ static int ltc2978_probe(struct i2c_client *client,
->  	default:
->  		return -ENODEV;
->  	}
-> +
-> +#if IS_ENABLED(CONFIG_SENSORS_LTC2978_REGULATOR)
-> +	info->num_regulators = info->pages;
-> +	info->reg_desc = ltc2978_reg_desc;
-> +	info->reg_matches = ltc2978_reg_matches;
-> +	if (info->num_regulators > ARRAY_SIZE(ltc2978_reg_desc)) {
-> +		dev_err(&client->dev, "num_regulators too large!");
-> +		info->num_regulators = ARRAY_SIZE(ltc2978_reg_desc);
-> +	}
-> +#endif
-> +
->  	return pmbus_do_probe(client, id, info);
->  }
->  
-> -- 
-> 1.7.9.5
+So suggestions welcome.
+
+[BTW, In principle we also could use something like
+
+typedef union dev_node {
+	struct acpi_device *acpi_node;
+	struct device_node *of_node;
+} dev_node_t;
+
+instead of the (void *) for more type safety.  It still is useful to pass the
+parent pointer along with that, though.]
+
+> > Finally, device_for_each_child_node() is added for iterating over
+> > the children of the device description object associated with a
+> > given device.
+> > 
+> > The interface covers both ACPI and Device Trees.
+> > 
+> > This change set includes material from Mika Westerberg and Aaron Lu.
+> > 
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Regarding device_for_each_child_node(), the syntax is inconsistent
+> with what we normally use, which can probably be changed. All of the
+> DT for_each_* helpers are macros that are used like
+> 
+> 	struct device *dev = ...;
+> 	void *child; /* iterator */
+> 
+> 	device_for_each_child_node(dev, child) {
+> 		u32 something;
+> 		device_child_property_read_u32(dev, child, "propname", &something);
+> 
+> 		do_something(dev, something);
+> 	}
+> 
+> If we get a consensus on having the child interfaces, I'd rather see
+> them done this way than with a callback pointer, for consistency
+> reasons.
+
+That certainly is doable, although the resulting macro would generate a rather
+large chunk of code each time it is used.
+
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
