@@ -1,69 +1,70 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: at91: remove at91sam9g45/9m10 legacy board
- support
-Date: Wed, 1 Oct 2014 17:59:17 +0200
-Message-ID: <20141001155917.GE3907@piout.net>
-References: <1412093987-30241-1-git-send-email-boris.brezillon@free-electrons.com>
- <1412093987-30241-2-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] of: Fix NULL dereference in selftest removal code
+Date: Wed,  1 Oct 2014 17:02:51 +0100
+Message-ID: <1412179371-4053-1-git-send-email-grant.likely@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1412093987-30241-2-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 30/09/2014 at 18:19:42 +0200, Boris Brezillon wrote :
-> Remove legacy support for at91sam9g45/9m10 boards.
-> This include board files removal plus all legacy code for non DT boards
-> support (i.e. at91sam9g45.c and at91sam9g45_devices.c).
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+The selftest code removes its testcase data from the live tree when
+exiting, but if the testcases data tree contains an empty child of the
+root, then it causes an oops due to a NULL dereference. The reason is
+that the code tries to directly dereference the child pointer without
+checking first if a child is actually there.
 
-A tiny nitpick, else
-Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+The solution is to pass the parent node into detach_node_and_children()
+instead of trying to pass the child. This required removing the code
+that attempts to remove all of the sibling nodes in
+detach_node_and_children(), which was never sensible in the first place.
 
+At the same time add a check to make sure the bounds of the nodes list
+are not exceeded by the testdata tree. If they are then abort.
 
-> ---
->  arch/arm/mach-at91/Kconfig.non_dt        |   21 -
->  arch/arm/mach-at91/Makefile              |    4 -
->  arch/arm/mach-at91/at91sam9g45.c         |  403 -------
->  arch/arm/mach-at91/at91sam9g45_devices.c | 1915 ------------------------------
->  arch/arm/mach-at91/board-sam9m10g45ek.c  |  526 --------
->  5 files changed, 2869 deletions(-)
->  delete mode 100644 arch/arm/mach-at91/at91sam9g45_devices.c
->  delete mode 100644 arch/arm/mach-at91/board-sam9m10g45ek.c
-> 
-> diff --git a/arch/arm/mach-at91/at91sam9g45.c b/arch/arm/mach-at91/at91sam9g45.c
-> index 9d45496..f658b69 100644
-> --- a/arch/arm/mach-at91/at91sam9g45.c
-> +++ b/arch/arm/mach-at91/at91sam9g45.c
-> @@ -10,355 +10,13 @@
->   *
->   */
->  
-> -#include <linux/module.h>
-> -#include <linux/dma-mapping.h>
-> -#include <linux/clk/at91_pmc.h>
-> -
-> -#include <asm/irq.h>
-> -#include <asm/mach/arch.h>
->  #include <asm/mach/map.h>
+Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/of/selftest.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-That include is not needed.
-
->  #include <asm/system_misc.h>
-> -#include <mach/at91sam9g45.h>
->  #include <mach/cpu.h>
->  #include <mach/hardware.h>
->  
-
+diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+index a737cb5974de..883e60b04eb5 100644
+--- a/drivers/of/selftest.c
++++ b/drivers/of/selftest.c
+@@ -637,6 +637,8 @@ static int attach_node_and_children(struct device_node *np)
+ 	dup = np;
+ 
+ 	while (dup) {
++		if (WARN_ON(last_node_index >= NO_OF_NODES))
++			return -EINVAL;
+ 		nodes[last_node_index++] = dup;
+ 		dup = dup->sibling;
+ 	}
+@@ -717,10 +719,6 @@ static void detach_node_and_children(struct device_node *np)
+ {
+ 	while (np->child)
+ 		detach_node_and_children(np->child);
+-
+-	while (np->sibling)
+-		detach_node_and_children(np->sibling);
+-
+ 	of_detach_node(np);
+ }
+ 
+@@ -749,8 +747,7 @@ static void selftest_data_remove(void)
+ 		if (nodes[last_node_index]) {
+ 			np = of_find_node_by_path(nodes[last_node_index]->full_name);
+ 			if (strcmp(np->full_name, "/aliases") != 0) {
+-				detach_node_and_children(np->child);
+-				of_detach_node(np);
++				detach_node_and_children(np);
+ 			} else {
+ 				for_each_property_of_node(np, prop) {
+ 					if (strcmp(prop->name, "testcase-alias") == 0)
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
