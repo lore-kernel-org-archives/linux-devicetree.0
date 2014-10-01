@@ -1,73 +1,62 @@
-From: Darren Hart <dvhart@linux.intel.com>
-Subject: Re: [PATCH v3 10/15] leds: leds-gpio: Add ACPI probing support
-Date: Wed, 01 Oct 2014 11:11:46 -0700
-Message-ID: <D05191AB.AB380%dvhart@linux.intel.com>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
- <1852462.V1jlbi8OPt@vostro.rjw.lan>
- <4835699.XutTNxriDg@vostro.rjw.lan>
- <2780318.hxubhI9Rvq@wuerfel>
- <20141001163025.GE23115@dtor-glaptop>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC 7/7] regulator: qcom-smd-rpm: Regulator driver for the
+ Qualcomm RPM
+Date: Wed, 1 Oct 2014 19:13:46 +0100
+Message-ID: <20141001181346.GI4273@sirena.org.uk>
+References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1412037291-16880-8-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20141001163025.GE23115@dtor-glaptop>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="eG1/bcghN0MjPhCR"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1412037291-16880-8-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/1/14, 9:30, "Dmitry Torokhov" <dmitry.torokhov@gmail.com> wrote:
 
->On Wed, Oct 01, 2014 at 10:13:04AM +0200, Arnd Bergmann wrote:
->> On Wednesday 01 October 2014 04:17:02 Rafael J. Wysocki wrote:
->> > Index: linux-pm/drivers/leds/leds-gpio.c
->> > ===================================================================
->> > --- linux-pm.orig/drivers/leds/leds-gpio.c
->> > +++ linux-pm/drivers/leds/leds-gpio.c
->> > @@ -231,6 +231,13 @@ static const struct of_device_id of_gpio
->> >  
->> >  MODULE_DEVICE_TABLE(of, of_gpio_leds_match);
->> >  
->> > +static const struct acpi_device_id acpi_gpio_leds_match[] = {
->> > +       { "PRP0001" }, /* Device Tree shoehorned into ACPI */
->> > +       {},
->> > +};
->> > +
->> > +MODULE_DEVICE_TABLE(acpi, acpi_gpio_leds_match);
->> > +
->> >  static int gpio_led_probe(struct platform_device *pdev)
->> >  {
->> >         struct gpio_led_platform_data *pdata =
->>dev_get_platdata(&pdev->dev);
->> > @@ -286,6 +293,7 @@ static struct platform_driver gpio_led_d
->> >                 .name   = "leds-gpio",
->> >                 .owner  = THIS_MODULE,
->> >                 .of_match_table = of_gpio_leds_match,
->> > +               .acpi_match_table = acpi_gpio_leds_match,
->> >         },
->> >  };
->> 
->> Is this something you'd have to do in every driver you want to support
->> _PRP based probing? For the ".acpi_match_table =" reference, I think
->> you could actually provide a generic acpi_device_id table exported from
->> core code that you refer to, so each driver just does
->> 
->> 	.acpi_match_table = acpi_match_by_of_compatible,
->
->No, I think in absence of drv->acpi_match_table ACPI core should just go
->and
->use drv->of_match_table to do the matching and be done with it.
+--eG1/bcghN0MjPhCR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-But then you will match drivers that have of-only support that don't know
-anything about ACPI and haven't been updated to use the new API. Worse,
-some of those drivers will assume of node structs and such and potentially
-panic. Unless I'm sorry mistaken here....
+On Mon, Sep 29, 2014 at 05:34:51PM -0700, Bjorn Andersson wrote:
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+> According to the datasheet for the PMIC the regulators are indeed programmed in
+> steps, but the steps seems to vary between different regulators and the details
+> are hidden by the RPM that exposes contiguous voltage ranges.
 
+> Either we run with this, add a few more compatibles to encode the steps or have
+> the step coming from devicetree. I prefer the current implementation as that is
+> the cleanest of these.
 
+We have support for this sort of regulator in the core anyway so just
+keep on doing what you're doing.
 
+> +	if (vreg->desc.ops->set_voltage &&
+> +	    (!initdata->constraints.min_uV || !initdata->constraints.max_uV)) {
+> +		dev_err(&pdev->dev, "no voltage specified for regulator\n");
+> +		return -EINVAL;
+> +	}
+
+You shouldn't need to do this - it should be perfectly legal to have the
+ability to set voltages but not use that ability.
+
+--eG1/bcghN0MjPhCR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJULERZAAoJECTWi3JdVIfQkaUH/R8H4Om12BaxasTXJ9kZKzON
+MEc99qV8yvzviRBVokPzsAyt76abtvh2LFCD1adSnjefHCI0/aKqBPKSvhC0y0ll
+VJKwAG6FU04ty3a4Rc3l0DIfAFNmLl/SY1NOIzBPuxr42SjWmdLzqYtmpIXRO3Pv
+xwxZ8koKJI2JAofGu4oEpamsTmRFEheTpWXOgyqJmqdar07Yeo5ZpBxf21r/E2AS
+CRR7hS9SfWtsrPMuiXrcAoTIkiCYWRPnyGkds6bLob96y3eoo04dBq7kJPlt4a7r
+jrGfri6ay0/4XLC/yZ5lF2H1v8DGYfr6naiwTJkzf3EKYYJUG+2byPmeqgATqbQ=
+=c9/Q
+-----END PGP SIGNATURE-----
+
+--eG1/bcghN0MjPhCR--
