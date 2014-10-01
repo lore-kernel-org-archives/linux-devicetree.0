@@ -1,102 +1,64 @@
-From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] ARM: rk3288 : Add PM Domain support
-Date: Wed, 01 Oct 2014 13:25:06 -0700
-Message-ID: <7h38b7v8pp.fsf@deeprootsystems.com>
-References: <1411899774-8484-1-git-send-email-jinkun.hong@rock-chips.com>
-	<7hoatvvimd.fsf@deeprootsystems.com>
-	<CAD=FV=VPT5qiyY==nJbb4DqKMBnj0i-_MhLRVG0ikar2qtP4=A@mail.gmail.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v4 0/4] regulator support for pmbus and ltc2978
+Date: Wed, 1 Oct 2014 15:20:41 -0500
+Message-ID: <alpine.DEB.2.02.1410011519001.2317@atx-linux-37>
+References: <1412190349-16343-1-git-send-email-atull@opensource.altera.com> <20141001200743.GA21388@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=VPT5qiyY==nJbb4DqKMBnj0i-_MhLRVG0ikar2qtP4=A@mail.gmail.com>
-	(Doug Anderson's message of "Wed, 1 Oct 2014 13:07:50 -0700")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: "jinkun.hong" <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-doc@vger.kernel.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141001200743.GA21388@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: jdelvare@suse.de, lm-sensors@lm-sensors.org, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> writes:
+On Wed, 1 Oct 2014, Guenter Roeck wrote:
 
-> Kevin,
->
-> On Wed, Oct 1, 2014 at 9:51 AM, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> +Geert, Ulf
->>
->> "jinkun.hong" <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org> writes:
->>
->>> From: "jinkun.hong" <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>
->>> Use PM Domain framework to manage the clock.
->>
->> Which clock?  This changelog needs a more thorough description.
->
->
-> I think what he meant was:
->
-> Use the generic PM Domain framework for Rockchip
->
-> ...but I agree that he could describe it more.
->
->
->> Also,
->> with this series alone, it's not clear how the power-domain transitions
->> ever happen, since I don't see any devices hooked up to your power
->> domains, or do I see your platform using runtime PM.  In order for this
->> to be reviewed properely, it's important for reviewers to be able to see
->> how this PM domain support will be used.
->
-> I noticed that too.  As the patchset currently stands it only ever disables...
->
->
->> Also, remember that the DT is supposed to reflect the hardware, not the
->> design choices of linux drivers.  Because of that, it's a little
->> surprising to see clocks as properties of a power domain because clocks
->> are usually properties of devices.
->
-> I haven't dug all the way into the hardware to figure out why (or if
-> this is really necessary), but right now the rockchip power domain
-> driver only leaves these clocks on during the powering on and powering
-> off of the power domain.  In other words to turn on the power domain:
->
-> 1. Turn on all clocks
-> 2. Flip the bit that sets the power domain on
-> 3. Wait until hardware says power domain is on.
-> 4. Turn off all the clocks.
->
-> ...and to turn off:
->
-> 1. Turn on all clocks
-> 2. Flip the bit that sets the power domain off
-> 3. Wait until hardware says power domain is off.
-> 2. Turn off all the clocks.
->
-> ...if the above is actually necessary when turning on and off power
-> domains then it seems like it is actually describing the hardware.
+> On Wed, Oct 01, 2014 at 02:05:46PM -0500, atull@opensource.altera.com wrote:
+> > From: Alan Tull <atull@opensource.altera.com>
+> > 
+> > This set of patches adds regulator support for pmbus_core.c and ltc2978.c
+> > 
+> > Each output has individual on/off control.
+> > 
+> > From PMBus_Specification_Part_II_Rev_1-3_20140318.pdf: 12.1.1. OPERATION
+> > Command Bit [7] Bit [7] controls whether the PMBus device output is on or off.
+> > If bit [7] is cleared (equals 0), then the output is off.  If bit [7] is set
+> > (equals 1), then the output is on.
+> > 
+> > Fixes in v4 are not huge: Add device tree bindings documentation for ltc2978.
+> > rename _pmbus_regulator_enable to _pmbus_regulator_on_off simplify
+> > _pmbus_regulator_on_off code s/regulator_regulator/regulator/ fix build break
+> > when !CONFIG_REGULATOR remove unused #define PB_OPERATION_CONTROL_SEQ_OFF fix
+> > a #endif comment simplify probe code, remove added switch statement remove
+> > BUG_ON(), add error message and fix num_regulators
+> > 
+> > Patch 1: document device tree bindings for ltc2978
+> > 
+> > Patch 2: add two helper functions for byte pmbus byte operations * byte write
+> > and byte read/modify/write
+> > 
+> > Patch 3: regulator support added in pmbus_core.c and pmbus.h * regulator_ops
+> > functions (is_enabled, enable, and disable) * gets regulator init data from
+> > device tree or platform data * registers the regulators * header has a macro
+> > for chip drivers to build their regulator_desc data
+> > 
+> > Patch 4: changes for ltc2978.c * Add Kconfig to enable/disable ltc2978
+> > regulator functionality * add regulator_desc and of_regulator_match info * use
+> > same structs for all parts; set num_regulators appropriately.
+> > 
+> Looks like this patch got lost. I did not get it, and I don't see it on lkml
+> either.
+> 
+> Guenter
 
-Yes, I understand. The need to have some *device* clocks enabled when
-powering on/off the power-domain itself is quite common across many
-SoCs.
+Yes I missed it.  Just sent patch 0004 out.
 
-My point is that these clocks are actually properties of *devices*, not
-the power-domain itself.  In the shmobile example I pointed to, the
-clocks are properties of the devices in DT, and the devices are attached
-to the powerdomain.  When the devices are connected to the power-domain,
-the custom attach function looks up all the *device* clocks and and
-addes them to the power-domain using pm_clk_add.
-
-Since the clocks are properties of devices, then the pm_clk
-infrastructure can be used (as the shmobile example shows) so that the
-SoC specific pm-domain doesn't have to manually walk all the clocks, but
-instead can just use pm_clk_suspend/pm_clk_resume.
-
-Kevin
+Alan
 
 
-
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
