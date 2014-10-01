@@ -1,81 +1,56 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v6 partial v3 3/3] usb: gadget: pxa27x_udc: add devicetree support
-Date: Wed,  1 Oct 2014 22:06:16 +0200
-Message-ID: <1412193976-7971-3-git-send-email-robert.jarzmik@free.fr>
-References: <1412193976-7971-1-git-send-email-robert.jarzmik@free.fr>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412193976-7971-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v4 0/4] regulator support for pmbus and ltc2978
+Date: Wed, 1 Oct 2014 13:07:43 -0700
+Message-ID: <20141001200743.GA21388@roeck-us.net>
+References: <1412190349-16343-1-git-send-email-atull@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1412190349-16343-1-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Cc: jdelvare-l3A5Bk7waGM@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for device-tree device discovery. If devicetree is not
-provided, fallback to legacy platform data "discovery".
+On Wed, Oct 01, 2014 at 02:05:46PM -0500, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> 
+> This set of patches adds regulator support for pmbus_core.c and ltc2978.c
+> 
+> Each output has individual on/off control.
+> 
+> From PMBus_Specification_Part_II_Rev_1-3_20140318.pdf: 12.1.1. OPERATION
+> Command Bit [7] Bit [7] controls whether the PMBus device output is on or off.
+> If bit [7] is cleared (equals 0), then the output is off.  If bit [7] is set
+> (equals 1), then the output is on.
+> 
+> Fixes in v4 are not huge: Add device tree bindings documentation for ltc2978.
+> rename _pmbus_regulator_enable to _pmbus_regulator_on_off simplify
+> _pmbus_regulator_on_off code s/regulator_regulator/regulator/ fix build break
+> when !CONFIG_REGULATOR remove unused #define PB_OPERATION_CONTROL_SEQ_OFF fix
+> a #endif comment simplify probe code, remove added switch statement remove
+> BUG_ON(), add error message and fix num_regulators
+> 
+> Patch 1: document device tree bindings for ltc2978
+> 
+> Patch 2: add two helper functions for byte pmbus byte operations * byte write
+> and byte read/modify/write
+> 
+> Patch 3: regulator support added in pmbus_core.c and pmbus.h * regulator_ops
+> functions (is_enabled, enable, and disable) * gets regulator init data from
+> device tree or platform data * registers the regulators * header has a macro
+> for chip drivers to build their regulator_desc data
+> 
+> Patch 4: changes for ltc2978.c * Add Kconfig to enable/disable ltc2978
+> regulator functionality * add regulator_desc and of_regulator_match info * use
+> same structs for all parts; set num_regulators appropriately.
+> 
+Looks like this patch got lost. I did not get it, and I don't see it on lkml
+either.
 
-Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-
----
-Since V1: change OF id mrvl,pxa27x_udc -> marvell,pxa27x-udc
-          This is a consequence of other DT reviews on the marvell
-          namings.
-Since V2: address Mark's comments:
-            - wildcard pxa27x becomes pxa270
-            - pullup gpio is described as standard dt gpio
-            - bool XXX_probe_dt becomes int XXX_probe_dt
-Since v5: split out into 2 patches, this one being the true device-tree port
----
- drivers/usb/gadget/udc/pxa27x_udc.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/usb/gadget/udc/pxa27x_udc.c b/drivers/usb/gadget/udc/pxa27x_udc.c
-index 56b83a6..e2a9643 100644
---- a/drivers/usb/gadget/udc/pxa27x_udc.c
-+++ b/drivers/usb/gadget/udc/pxa27x_udc.c
-@@ -27,6 +27,8 @@
- #include <linux/prefetch.h>
- #include <linux/byteorder/generic.h>
- #include <linux/platform_data/pxa2xx_udc.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- 
- #include <linux/usb.h>
- #include <linux/usb/ch9.h>
-@@ -2400,6 +2402,12 @@ static struct pxa_udc memory = {
- 	}
- };
- 
-+static struct of_device_id udc_pxa_dt_ids[] = {
-+	{ .compatible = "marvell,pxa270-udc" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, udc_pxa_dt_ids);
-+
- /**
-  * pxa_udc_probe - probes the udc device
-  * @_dev: platform device
-@@ -2427,6 +2435,8 @@ static int pxa_udc_probe(struct platform_device *pdev)
- 			udc->gpiod = gpio_to_desc(mach->gpio_pullup);
- 		}
- 		udc->udc_command = mach->udc_command;
-+	} else {
-+		udc->gpiod = devm_gpiod_get(&pdev->dev, NULL);
- 	}
- 
- 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -2618,6 +2628,7 @@ static struct platform_driver udc_driver = {
- 	.driver		= {
- 		.name	= "pxa27x-udc",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(udc_pxa_dt_ids),
- 	},
- 	.probe		= pxa_udc_probe,
- 	.remove		= pxa_udc_remove,
--- 
-2.1.0
-
+Guenter
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
