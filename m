@@ -1,7 +1,7 @@
 From: Josh Cartwright <joshc@codeaurora.org>
-Subject: [PATCH 3/4] ARM: qcom: add description of KPSS WDT for APQ8064
-Date: Wed,  1 Oct 2014 12:03:16 -0500
-Message-ID: <7f7b45ebf488b96c893ed05df57af43d5232798d.1412182773.git.joshc@codeaurora.org>
+Subject: [PATCH 4/4] ARM: qcom: add description of KPSS WDT for MSM8960
+Date: Wed,  1 Oct 2014 12:03:17 -0500
+Message-ID: <bc0f43ba33aee728afb4459090e0234008361be9.1412182773.git.joshc@codeaurora.org>
 References: <cover.1412182773.git.joshc@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,20 +24,20 @@ Cc: linux-arm-msm@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-
 List-Id: devicetree@vger.kernel.org
 
 Describe the Krait Processor Sub-system (KPSS) Watchdog timer in the
-APQ8064 device tree.  Also, add a fixed-clock description of SLEEP_CLK,
+MSM8960 device tree.  Also, add a fixed-clock description of SLEEP_CLK,
 which will do for now.
 
 Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
 ---
- arch/arm/boot/dts/qcom-apq8064.dtsi | 15 +++++++++++++++
+ arch/arm/boot/dts/qcom-msm8960.dtsi | 15 +++++++++++++++
  1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index b3154c0..8439afa 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -66,6 +66,14 @@
- 		interrupts = <1 10 0x304>;
+diff --git a/arch/arm/boot/dts/qcom-msm8960.dtsi b/arch/arm/boot/dts/qcom-msm8960.dtsi
+index e1b0d5c..072866b 100644
+--- a/arch/arm/boot/dts/qcom-msm8960.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8960.dtsi
+@@ -48,6 +48,14 @@
+ 		qcom,no-pc-write;
  	};
  
 +	clocks {
@@ -51,20 +51,20 @@ index b3154c0..8439afa 100644
  	soc: soc {
  		#address-cells = <1>;
  		#size-cells = <1>;
-@@ -119,6 +127,13 @@
+@@ -73,6 +81,13 @@
  			cpu-offset = <0x80000>;
  		};
  
 +		watchdog@208a038 {
-+			compatible = "qcom,kpss-wdt-apq8064";
++			compatible = "qcom,kpss-wdt-msm8960";
 +			reg = <0x0208a038 0x40>;
 +			clocks = <&sleep_clk>;
 +			timeout-sec = <10>;
 +		};
 +
- 		acc0: clock-controller@2088000 {
- 			compatible = "qcom,kpss-acc-v1";
- 			reg = <0x02088000 0x1000>, <0x02008000 0x1000>;
+ 		msmgpio: gpio@800000 {
+ 			compatible = "qcom,msm-gpio";
+ 			gpio-controller;
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 hosted by The Linux Foundation
