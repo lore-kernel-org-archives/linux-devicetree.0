@@ -1,56 +1,71 @@
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm: socfpga: Enable ECC of L2 and OCRAM on startup.
-Date: Wed, 1 Oct 2014 17:18:56 -0500
-Message-ID: <542C7DD0.5030601@opensource.altera.com>
-References: <1412181092-27162-1-git-send-email-tthayer@opensource.altera.com> <1412181092-27162-2-git-send-email-tthayer@opensource.altera.com> <542C3654.1070604@gmail.com> <542C6CFB.4090809@opensource.altera.com> <542C6DBB.9060202@opensource.altera.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v4 4/4] pmbus: ltc2978: add regulator support
+Date: Wed, 1 Oct 2014 17:20:14 -0500
+Message-ID: <alpine.DEB.2.02.1410011713150.5194@atx-linux-37>
+References: <20141001213613.GA29312@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <542C6DBB.9060202-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141001213613.GA29312@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: jdelvare@suse.de, lm-sensors@lm-sensors.org, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 1 Oct 2014, Guenter Roeck wrote:
 
-On 10/01/2014 04:10 PM, Dinh Nguyen wrote:
->
-> On 10/1/14, 4:07 PM, Thor Thayer wrote:
->> On 10/01/2014 12:13 PM, Dinh Nguyen wrote:
->>> On 10/1/14, 11:31 AM, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
->>>> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>>>
-> [...]
->>>>      static void socfpga_cyclone5_restart(enum reboot_mode mode, const
->>>> char *cmd)
->>>> @@ -98,6 +101,13 @@ static void socfpga_cyclone5_restart(enum
->>>> reboot_mode mode, const char *cmd)
->>>>        writel(temp, rst_manager_base_addr + SOCFPGA_RSTMGR_CTRL);
->>>>    }
->>>>    +static void __init socfpga_cyclone5_init(void)
->>>> +{
->>>> +    of_platform_populate(NULL, of_default_bus_match_table,
->>>> +                 NULL, NULL);
->>> Why is this needed?
->>>
->>> Dinh
->> Hi Dinh.
->>
->> Are you asking why the of_platform_populate() is needed? If so, it is
->> used to kick off discovery of devices at the root of the tree.
-> I was asking about of_platform populate(). This was removed in this commit:
->
-> 8b5c18f05 ARM: l2c: socfpga: convert to generic l2c OF initialisation
->
-> Just trying to understand what's the need to add it back?
->
-> Dinh
-It is used to kick off discovery of devices at the root of the tree.  
-This is needed when .init_machine was defined because we're not using 
-the default implementation (which called this function).
+> On Wed, Oct 01, 2014 at 03:18:20PM -0500, atull@opensource.altera.com wrote:
+> > From: Alan Tull <atull@opensource.altera.com>
+> > 
+> > Add simple on/off regulator support for ltc2978 and
+> > other pmbus parts supported by ltc2978.c
+> > 
+> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> > 
+> > v2: Remove '#include <linux/regulator/machine.h>'
+> >     Only one regulator per pmbus device
+> >     Get regulator_init_data from pdata or device tree
+> > 
+> > v3: Support multiple regulators for each chip
+> >     Move most code to pmbus_core.c
+> >     fixed values for on/off
+> > 
+> > v4: fix a #endif comment
+> >     simplify probe code, remove added switch statement
+> >     remove BUG_ON(), add error message and fix num_regulators
+> > ---
+> >  drivers/hwmon/pmbus/Kconfig   |    7 +++++++
+> >  drivers/hwmon/pmbus/ltc2978.c |   37 +++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 44 insertions(+)
+> > 
+> > diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+> > index 6e1e493..79117b7 100644
+> > --- a/drivers/hwmon/pmbus/Kconfig
+> > +++ b/drivers/hwmon/pmbus/Kconfig
+> > @@ -56,6 +56,13 @@ config SENSORS_LTC2978
+> >  	  This driver can also be built as a module. If so, the module will
+> >  	  be called ltc2978.
+> >  
+> > +config SENSORS_LTC2978_REGULATOR
+> > +	boolean "Regulator support for LTC2974, LTC2978, LTC3880, and LTC3883"
+> 
+> We will need to update this and SENSORS_LTC2978 and add LTC2977 as well as
+> LTM4646 to the list of supported chips.
+> 
+> Guenter
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I will add the whole list to the 'help' sections of SENSORS_LTC2978 and
+SENSORS_LTC2978_REGULATOR.
+
+For the tristate/boolean lines, I can't fit the whole list, so I will
+leave them as they are.  Or I could change to 'LTC2978 and compatibles' as
+many others in this Kconfig have.
+
+Alan
+
+> 
+> > +	depends on SENSORS_LTC2978 && REGULATOR
+> > +	help
+> > +	  If you say yes here you get regulator support for Linear
+> > +	  Technology LTC2974, LTC2978, LTC3880, and LTC3883.
+> > +
