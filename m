@@ -1,202 +1,46 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/6] arm64: Add DTS support for Spreadtrum's Shark64 SoC
-Date: Wed, 1 Oct 2014 12:23:33 +0100
-Message-ID: <20141001112332.GB13759@leverpostej>
-References: <1411992293-7729-1-git-send-email-zhang.lyra@gmail.com>
- <1411992293-7729-3-git-send-email-zhang.lyra@gmail.com>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] thermal: Add QPNP PMIC temperature alarm driver
+Date: Wed, 01 Oct 2014 14:36:28 +0300
+Message-ID: <1412163388.26751.39.camel@iivanov-dev>
+References: <1411651825-14240-1-git-send-email-iivanov@mm-sol.com>
+		  <54254C4E.3070807@smartplayin.com> <1411998865.5395.5.camel@iivanov-dev>
+		 <542A31DF.7020402@smartplayin.com> <1412062606.5395.10.camel@iivanov-dev>
+	 <542B088A.1050601@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1411992293-7729-3-git-send-email-zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <542B088A.1050601-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "jslaby-AlSwsSmVLrQ@public.gmane.org" <jslaby-AlSwsSmVLrQ@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "m-karicheri2-l0cyMroinI0@public.gmane.org" <m-karicheri2-l0cyMroinI0@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kern>
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Kiran Padwal <kiran.padwal-edOiRQu9Xnj5XLMNweQjbQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Collins <collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 29, 2014 at 01:04:49PM +0100, zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: "zhizhou.zhang" <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+On Tue, 2014-09-30 at 12:46 -0700, Stephen Boyd wrote:
+> On 09/30/14 00:36, Ivan T. Ivanov wrote:
+> > On Tue, 2014-09-30 at 10:00 +0530, Kiran Padwal wrote:
+> >>
+> >> I have Linaro cross tool chain with version-4.8.3 and I am simply doing "make zImage" without any option.
+> > Hm, no warnings with arm-unknown-linux-gnueabi-gcc (GCC) 4.6.3 and
+> > arm-linux-gnueabihf-gcc (crosstool-NG linaro-1.13.1-4.9-2014.09, but
+> > indeed arm-linux-gnueabihf-gcc (crosstool-NG linaro-1.13.1-4.8-2014.03.
+> >
+> > I will say that this is false positive :-). Please update your tool-chain.
 > 
-> Adds the device tree support for Spreadtrum Shark64 SoC based on ARMv8 architecture.
+> Hopefully you're joking. Once this merges someone will find the warning
+> and complain. Telling them to upgrade their compiler isn't going to work.
+
+If it is known to be buggy why not?
+
 > 
-> Signed-off-by: zhizhou.zhang <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-> Signed-off-by: chunyan.zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/sprd_shark64.dts |  110 ++++++++++++++++++++++++++++++++++
->  1 file changed, 110 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/sprd_shark64.dts
-> 
-> diff --git a/arch/arm64/boot/dts/sprd_shark64.dts b/arch/arm64/boot/dts/sprd_shark64.dts
-> new file mode 100644
-> index 0000000..537cd6d
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/sprd_shark64.dts
-> @@ -0,0 +1,110 @@
-> +/*
-> + * dts file for Spreadtrum(sprd) Shark64 SOC
-> + *
-> + * Copyright (C) 2014,  Spreadtrum Communications Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of
-> + * the License, or (at your option) any later version.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +/memreserve/ 0x80000000 0x00010000;
+> I wonder if checking for rc != 0 instead of rc < 0 would silence the
+> warning? 
 
-What is this protecting?
+No. Anyway, will find some way to silence this warning.
 
-Please add a comment.
+Thanks,
+Ivan
 
-> +
-> +/ {
-> +	model = "shark64 Board";
-> +	compatible = "sprd,shark64";
-
-This feels like it would make more sense as an SoC dtsi to be included
-by various boards (which can override the model and compatible).
-
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	chosen {
-> +		bootargs = "earlycon=serial_sprd,0x70000000";
-
-Can we not use stdout-path for this?
-
-> +      };
-> +
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,armv8";
-
-Can we have the particular CPU name, please?
-
-> +			reg = <0x0 0x0>;
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x8000fff8>;
-
-No PSCI?
-
-What are you using for your bootloader/firmware?
-
-If you must use spin-table, please give each CPU a unique release
-address.
-
-> +		};
-> +		cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,armv8";
-> +			reg = <0x0 0x1>;
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x8000fff8>;
-> +		};
-> +		cpu@2 {
-> +			device_type = "cpu";
-> +			compatible = "arm,armv8";
-> +			reg = <0x0 0x2>;
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x8000fff8>;
-> +		};
-> +		cpu@3 {
-> +			device_type = "cpu";
-> +			compatible = "arm,armv8";
-> +			reg = <0x0 0x3>;
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x8000fff8>;
-> +		};
-> +	};
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		reg = <0 0x80000000 0 0x20000000>;
-> +	};
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +		serial1 = &uart1;
-> +	};
-
-Could you move this up above chosen, please?
-
-> +
-> +	gic: interrupt-controller@12001000 {
-> +		compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
-> +		#interrupt-cells = <3>;
-> +		#address-cells = <0>;
-> +		interrupt-controller;
-> +		reg = <0 0x12001000 0 0x1000>,
-> +		      <0 0x12002000 0 0x1000>;
-
-No GICH or GICV?
-
-Which exception level do your CPUs boot in?
-
-I would strongly recommend booting at EL2. That gives the kernel more
-flexibility to perform fixups (e.g. zeroing CNTVOFF), and requires less
-work in your bootloader.
-
-> +	};
-> +
-> +	intc:interrupt-controller@71400000 {
-> +		compatible = "sprd,intc";
-> +		#interrupt-cells = <0>;
-> +		interrupt-controller;
-> +		reg =	<0 0x71400000 0 0x1000>,
-> +			<0 0x71500000 0 0x1000>,
-> +			<0 0x71600000 0 0x1000>,
-> +			<0 0x71700000 0 0x1000>;
-> +	};
-
-This binding doesn't exist in mainline, and isn't added by this series.
-I'm especially confused by the #interrupt-cells = <0>.
-
-What exactly is this, and how do you intend to use it?
-
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <1 13 0xff01>,
-> +			     <1 14 0xff01>,
-> +			     <1 11 0xff01>,
-> +			     <1 10 0xff01>;
-> +		clock-frequency = <26000000>;
-
-Please have your FW or bootloader program CNTFRQ_EL1 on each CPU, and
-get rid of the clock-frequency property here.
-
-> +	};
-> +
-> +	uart0: uart@70000000 {
-> +		compatible = "sprd,serial";
-> +		reg = <0 0x70000000 0 0x100>;
-> +		interrupts = <0 2 0xf04>;
-> +	};
-
-No clocks/dmas/etc necessary?
-
-Mark.
-
-> +
-> +	uart1: uart@70100000 {
-> +		compatible = "sprd,serial";
-> +		reg = <0 0x70100000 0 0x100>;
-> +		interrupts = <0 3 0xf04>;
-> +	};
-> +};
-> -- 
-> 1.7.9.5
-> 
-> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
