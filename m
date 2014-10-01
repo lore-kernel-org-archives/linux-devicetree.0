@@ -1,96 +1,85 @@
-From: "Shreyas B. Prabhu" <shreyas@linux.vnet.ibm.com>
-Subject: [PATCH v2] cpuidle/powernv: Populate cpuidle state details by querying the device-tree
-Date: Wed,  1 Oct 2014 13:15:02 +0530
-Message-ID: <1412149502-2729-1-git-send-email-shreyas@linux.vnet.ibm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 02/15] Driver core: Unified device properties interface for platform firmware
+Date: Wed, 01 Oct 2014 09:47:40 +0200
+Message-ID: <7365448.TlsV4zB2It@wuerfel>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <1852462.V1jlbi8OPt@vostro.rjw.lan> <7184313.9OdTqVa2eQ@vostro.rjw.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7184313.9OdTqVa2eQ@vostro.rjw.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Preeti U Murthy <preeti@linux.vnet.ibm.com>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Michael Ellerman <mpe@ellerman.id.au>, "Shreyas B. Prabhu" <shreyas@linux.vnet.ibm.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Preeti U Murthy <preeti@linux.vnet.ibm.com>
+On Wednesday 01 October 2014 04:10:03 Rafael J. Wysocki wrote:
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> 
+> Add a uniform interface by which device drivers can request device
+> properties from the platform firmware by providing a property name
+> and the corresponding data type.  The purpose of it is to help to
+> write portable code that won't depend on any particular platform
+> firmware interface.
+> 
+> Three general helper functions, device_get_property(),
+> device_read_property() and device_read_property_array() are provided.
+> The first one allows the raw value of a given device property to be
+> accessed.  The remaining two allow the value of a numeric or string
+> property and multiple numeric or string values of one array
+> property to be acquired, respectively.  Static inline wrappers are also
+> provided for the various property data types that can be passed to
+> device_read_property() or device_read_property_array() for extra type
+> checking.
 
-We hard code the metrics relevant for cpuidle states in the kernel today.
-Instead pick them up from the device tree so that they remain relevant
-and updated for the system that the kernel is running on.
+These look great!
 
-Cc: linux-pm@vger.kernel.org
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Preeti U. Murthy <preeti@linux.vnet.ibm.com>
-Signed-off-by: Shreyas B. Prabhu <shreyas@linux.vnet.ibm.com>
----
-v2:
-Rebased on 3.17-rc7
-Separated from 'powerpc/powernv: Support for fastsleep and winkle'
+> In addition to that, new generic routines are provided for retrieving
+> properties from device description objects in the platform firmware
+> in case a device driver needs/wants to access properties of a child
+> object of a given device object.  There are cases in which there is
+> no struct device representation of such child objects and this
+> additional API is useful then.  Again, three functions are provided,
+> device_get_child_property(), device_read_child_property(),
+> device_read_child_property_array(), in analogy with device_get_property(),
+> device_read_property() and device_read_property_array() described above,
+> respectively, along with static inline wrappers for all of the propery
+> data types that can be used.  For all of them, the first argument is
+> a struct device pointer to the parent device object and the second
+> argument is a (void *) pointer to the child description provided by
+> the platform firmware (either ACPI or FDT).
 
-v1:
-Initial post
-https://lkml.org/lkml/2014/8/25/456
+I still have my reservations against the child accessors, and would
+like to hear what other people think. Passing a void pointer rather
+than struct fw_dev_node has both advantages and disadvantages, and
+I won't complain about either one if enough other people on the DT
+side would like to see the addition of the child functions.
 
-diff --git a/drivers/cpuidle/cpuidle-powernv.c b/drivers/cpuidle/cpuidle-powernv.c
-index a64be57..2426a4b 100644
---- a/drivers/cpuidle/cpuidle-powernv.c
-+++ b/drivers/cpuidle/cpuidle-powernv.c
-@@ -163,7 +163,8 @@ static int powernv_add_idle_states(void)
- 	int nr_idle_states = 1; /* Snooze */
- 	int dt_idle_states;
- 	const __be32 *idle_state_flags;
--	u32 len_flags, flags;
-+	const __be32 *idle_state_latency;
-+	u32 len_flags, flags, latency_ns;
- 	int i;
- 
- 	/* Currently we have snooze statically defined */
-@@ -180,18 +181,32 @@ static int powernv_add_idle_states(void)
- 		return nr_idle_states;
- 	}
- 
-+	idle_state_latency = of_get_property(power_mgt,
-+			"ibm,cpu-idle-state-latencies-ns", NULL);
-+	if (!idle_state_latency) {
-+		pr_warn("DT-PowerMgmt: missing ibm,cpu-idle-state-latencies-ns\n");
-+		return nr_idle_states;
-+	}
-+
- 	dt_idle_states = len_flags / sizeof(u32);
- 
- 	for (i = 0; i < dt_idle_states; i++) {
- 
- 		flags = be32_to_cpu(idle_state_flags[i]);
-+
-+		/* Cpuidle accepts exit_latency in us and we estimate best case
-+		 * target residency to be 10x exit_latency
-+		 */
-+		latency_ns = be32_to_cpu(idle_state_latency[i]);
- 		if (flags & IDLE_USE_INST_NAP) {
- 			/* Add NAP state */
- 			strcpy(powernv_states[nr_idle_states].name, "Nap");
- 			strcpy(powernv_states[nr_idle_states].desc, "Nap");
- 			powernv_states[nr_idle_states].flags = CPUIDLE_FLAG_TIME_VALID;
--			powernv_states[nr_idle_states].exit_latency = 10;
--			powernv_states[nr_idle_states].target_residency = 100;
-+			powernv_states[nr_idle_states].exit_latency =
-+					((unsigned int)latency_ns) / 1000;
-+			powernv_states[nr_idle_states].target_residency =
-+					((unsigned int)latency_ns / 100);
- 			powernv_states[nr_idle_states].enter = &nap_loop;
- 			nr_idle_states++;
- 		}
-@@ -202,8 +217,10 @@ static int powernv_add_idle_states(void)
- 			strcpy(powernv_states[nr_idle_states].desc, "FastSleep");
- 			powernv_states[nr_idle_states].flags =
- 				CPUIDLE_FLAG_TIME_VALID | CPUIDLE_FLAG_TIMER_STOP;
--			powernv_states[nr_idle_states].exit_latency = 300;
--			powernv_states[nr_idle_states].target_residency = 1000000;
-+			powernv_states[nr_idle_states].exit_latency =
-+					((unsigned int)latency_ns) / 1000;
-+			powernv_states[nr_idle_states].target_residency =
-+					((unsigned int)latency_ns / 100);
- 			powernv_states[nr_idle_states].enter = &fastsleep_loop;
- 			nr_idle_states++;
- 		}
+> Finally, device_for_each_child_node() is added for iterating over
+> the children of the device description object associated with a
+> given device.
+> 
+> The interface covers both ACPI and Device Trees.
+> 
+> This change set includes material from Mika Westerberg and Aaron Lu.
+> 
+
+Regarding device_for_each_child_node(), the syntax is inconsistent
+with what we normally use, which can probably be changed. All of the
+DT for_each_* helpers are macros that are used like
+
+	struct device *dev = ...;
+	void *child; /* iterator */
+
+	device_for_each_child_node(dev, child) {
+		u32 something;
+		device_child_property_read_u32(dev, child, "propname", &something);
+
+		do_something(dev, something);
+	}
+
+If we get a consensus on having the child interfaces, I'd rather see
+them done this way than with a callback pointer, for consistency
+reasons.
+
+	Arnd
