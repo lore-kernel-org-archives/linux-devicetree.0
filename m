@@ -1,116 +1,234 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v3 02/15] Driver core: Unified device properties interface for platform firmware
-Date: Thu, 02 Oct 2014 01:01:18 +0200
-Message-ID: <1736273.lW0BdXdkei@vostro.rjw.lan>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <7365448.TlsV4zB2It@wuerfel> <4390403.PNxQqnBDGX@vostro.rjw.lan>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Thu, 2 Oct 2014 07:40:32 +0800
+Message-ID: <20141001234031.GA2757@peterchendt>
+References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1411468088-5702-8-git-send-email-antoine.tenart@free-electrons.com>
+ <20140930001206.GA11657@peterchendt>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <4390403.PNxQqnBDGX@vostro.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140930001206.GA11657@peterchendt>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, October 02, 2014 12:09:44 AM Rafael J. Wysocki wrote:
-> On Wednesday, October 01, 2014 09:47:40 AM Arnd Bergmann wrote:
-> > On Wednesday 01 October 2014 04:10:03 Rafael J. Wysocki wrote:
-> > > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> > > 
-> > > Add a uniform interface by which device drivers can request device
-> > > properties from the platform firmware by providing a property name
-> > > and the corresponding data type.  The purpose of it is to help to
-> > > write portable code that won't depend on any particular platform
-> > > firmware interface.
-> > > 
-> > > Three general helper functions, device_get_property(),
-> > > device_read_property() and device_read_property_array() are provided.
-> > > The first one allows the raw value of a given device property to be
-> > > accessed.  The remaining two allow the value of a numeric or string
-> > > property and multiple numeric or string values of one array
-> > > property to be acquired, respectively.  Static inline wrappers are also
-> > > provided for the various property data types that can be passed to
-> > > device_read_property() or device_read_property_array() for extra type
-> > > checking.
+On Tue, Sep 30, 2014 at 08:12:07AM +0800, Peter Chen wrote:
+> On Tue, Sep 23, 2014 at 12:28:03PM +0200, Antoine Tenart wrote:
+> > Add a USB2 ChipIdea driver for ci13xxx, with optional PHY, clock
+> > and DMA mask, to support USB2 ChipIdea controllers that don't need
+> > specific functions.
 > > 
-> > These look great!
+> > Tested on the Marvell Berlin SoCs USB controllers.
 > > 
-> > > In addition to that, new generic routines are provided for retrieving
-> > > properties from device description objects in the platform firmware
-> > > in case a device driver needs/wants to access properties of a child
-> > > object of a given device object.  There are cases in which there is
-> > > no struct device representation of such child objects and this
-> > > additional API is useful then.  Again, three functions are provided,
-> > > device_get_child_property(), device_read_child_property(),
-> > > device_read_child_property_array(), in analogy with device_get_property(),
-> > > device_read_property() and device_read_property_array() described above,
-> > > respectively, along with static inline wrappers for all of the propery
-> > > data types that can be used.  For all of them, the first argument is
-> > > a struct device pointer to the parent device object and the second
-> > > argument is a (void *) pointer to the child description provided by
-> > > the platform firmware (either ACPI or FDT).
+> > Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  drivers/usb/chipidea/Makefile       |   1 +
+> >  drivers/usb/chipidea/ci_hdrc_usb2.c | 138 ++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 139 insertions(+)
+> >  create mode 100644 drivers/usb/chipidea/ci_hdrc_usb2.c
 > > 
-> > I still have my reservations against the child accessors, and would
-> > like to hear what other people think. Passing a void pointer rather
-> > than struct fw_dev_node has both advantages and disadvantages, and
-> > I won't complain about either one if enough other people on the DT
-> > side would like to see the addition of the child functions.
-> 
-> I actually would rather like to know if the people on the DT side have any
-> problems with the child functions.
-> 
-> Because, suppose that they wouldn't like those functions at all.  What are we
-> supposed to do, then, honestly?  Add the whole DT vs ACPI logic to the leds-gpio
-> and gpio_keys_polled drivers?  But these drivers have no reason whatsoever
-> to include that.  Zero.
-> 
-> So suggestions welcome.
-> 
-> [BTW, In principle we also could use something like
-> 
-> typedef union dev_node {
-> 	struct acpi_device *acpi_node;
-> 	struct device_node *of_node;
-> } dev_node_t;
-> 
-> instead of the (void *) for more type safety.  It still is useful to pass the
-> parent pointer along with that, though.]
-> 
-> > > Finally, device_for_each_child_node() is added for iterating over
-> > > the children of the device description object associated with a
-> > > given device.
-> > > 
-> > > The interface covers both ACPI and Device Trees.
-> > > 
-> > > This change set includes material from Mika Westerberg and Aaron Lu.
-> > > 
-> > 
-> > Regarding device_for_each_child_node(), the syntax is inconsistent
-> > with what we normally use, which can probably be changed. All of the
-> > DT for_each_* helpers are macros that are used like
-> > 
-> > 	struct device *dev = ...;
-> > 	void *child; /* iterator */
-> > 
-> > 	device_for_each_child_node(dev, child) {
-> > 		u32 something;
-> > 		device_child_property_read_u32(dev, child, "propname", &something);
-> > 
-> > 		do_something(dev, something);
-> > 	}
-> > 
-> > If we get a consensus on having the child interfaces, I'd rather see
-> > them done this way than with a callback pointer, for consistency
-> > reasons.
-> 
-> That certainly is doable, although the resulting macro would generate a rather
-> large chunk of code each time it is used.
+> > diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
+> > index 2f099c7df7b5..1fc86a2ca22d 100644
+> > --- a/drivers/usb/chipidea/Makefile
+> > +++ b/drivers/usb/chipidea/Makefile
+> > @@ -10,6 +10,7 @@ ci_hdrc-$(CONFIG_USB_OTG_FSM)		+= otg_fsm.o
+> >  
+> >  # Glue/Bridge layers go here
+> >  
+> > +obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_usb2.o
+> >  obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_msm.o
+> >  obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_zevio.o
+> >  
+> > diff --git a/drivers/usb/chipidea/ci_hdrc_usb2.c b/drivers/usb/chipidea/ci_hdrc_usb2.c
+> > new file mode 100644
+> > index 000000000000..6eae1de587f2
+> > --- /dev/null
+> > +++ b/drivers/usb/chipidea/ci_hdrc_usb2.c
+> > @@ -0,0 +1,138 @@
+> > +/*
+> > + * Copyright (C) 2014 Marvell Technology Group Ltd.
+> > + *
+> > + * Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > + *
+> > + * This file is licensed under the terms of the GNU General Public
+> > + * License version 2. This program is licensed "as is" without any
+> > + * warranty of any kind, whether express or implied.
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/dma-mapping.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/phy/phy.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/usb/chipidea.h>
+> > +#include <linux/usb/hcd.h>
+> > +#include <linux/usb/ulpi.h>
+> > +
+> > +#include "ci.h"
+> > +
+> > +struct ci_hdrc_usb2_priv {
+> > +	struct platform_device	*ci_pdev;
+> > +	struct clk		*clk;
+> > +};
+> > +
+> > +static int ci_hdrc_usb2_dt_probe(struct device *dev,
+> > +				 struct ci_hdrc_platform_data *ci_pdata)
+> > +{
+> > +	ci_pdata->phy = of_phy_get(dev->of_node, 0);
+> > +	if (IS_ERR(ci_pdata->phy)) {
+> > +		if (PTR_ERR(ci_pdata->phy) == -EPROBE_DEFER)
+> > +			return -EPROBE_DEFER;
+> > +
+> > +		/* PHY is optional */
+> > +		ci_pdata->phy = NULL;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct ci_hdrc_platform_data ci_default_pdata = {
+> > +	.capoffset	= DEF_CAPOFFSET,
+> > +	.flags		= CI_HDRC_REQUIRE_TRANSCEIVER |
+> > +			  CI_HDRC_DISABLE_STREAMING,
+> > +};
+> > +
+> > +static int ci_hdrc_usb2_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct ci_hdrc_usb2_priv *priv;
+> > +	struct ci_hdrc_platform_data *ci_pdata = dev_get_platdata(&pdev->dev);
+> > +	int ret;
+> > +
+> > +	if (!ci_pdata)
+> > +		ci_pdata = &ci_default_pdata;
+> > +
+> > +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > +	if (!priv)
+> > +		return -ENOMEM;
+> > +
+> > +	priv->clk = devm_clk_get(dev, NULL);
+> > +	if (!IS_ERR(priv->clk)) {
+> > +		ret = clk_prepare_enable(priv->clk);
+> > +		if (ret) {
+> > +			dev_err(dev, "failed to enable the clock: %d\n", ret);
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> > +	if (dev->of_node) {
+> > +		ret = ci_hdrc_usb2_dt_probe(dev, ci_pdata);
+> > +		if (ret)
+> > +			goto clk_err;
+> > +	} else {
+> > +		ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+> > +		if (ret)
+> > +			goto clk_err;
+> > +	}
+>
+	
+Hi Antoine, if you pay attention the discussion for this patch, you should
+know to do change for your next revision
 
-On a second thought I'm not so sure, because we need to iterate either this
-way or that way depending on a condition evaluated at run time.  I have no
-idea how to do that in a macro at the moment.
+- Call below unconditionally:
+> > +		ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+> > +		if (ret)
+> > +			goto clk_err;
+
+-Do not need function ci_hdrc_usb2_dt_probe, we need to cover
+both dt and non-dt, but there is nothing we can to differentiate now,
+The phy handle should be moved to core driver, since your generic phy
+driver are still not accepted, I can't do it by myself. Either you or
+I can do it after your generic phy support series has been accepted.
+
+> > +		ret = ci_hdrc_usb2_dt_probe(dev, ci_pdata);
+
+- Others are ok
+
+- The sequence of patch sets:
+1. The generic PHY support for chipidea idea
+2. Move getting PHY from individual glue layer to core driver
+3. The generic chipidea driver 
+
+Peter
+
+> > +
+> > +	ci_pdata->name = dev_name(&pdev->dev);
+> > +
+> > +	priv->ci_pdev = ci_hdrc_add_device(dev, pdev->resource,
+> > +					   pdev->num_resources, ci_pdata);
+> > +	if (IS_ERR(priv->ci_pdev)) {
+> > +		ret = PTR_ERR(priv->ci_pdev);
+> > +		if (ret != -EPROBE_DEFER)
+> > +			dev_err(dev,
+> > +				"failed to register ci_hdrc platform device: %d\n",
+> > +				ret);
+> > +		goto clk_err;
+> > +	}
+> > +
+> > +	platform_set_drvdata(pdev, priv);
+> > +
+> > +	pm_runtime_no_callbacks(dev);
+> > +	pm_runtime_enable(dev);
+> > +
+> > +	return 0;
+> > +
+> > +clk_err:
+> > +	if (!IS_ERR(priv->clk))
+> > +		clk_disable_unprepare(priv->clk);
+> > +	return ret;
+> > +}
+> > +
+> > +static int ci_hdrc_usb2_remove(struct platform_device *pdev)
+> > +{
+> > +	struct ci_hdrc_usb2_priv *priv = platform_get_drvdata(pdev);
+> > +
+> > +	pm_runtime_disable(&pdev->dev);
+> > +	ci_hdrc_remove_device(priv->ci_pdev);
+> > +	clk_disable_unprepare(priv->clk);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id ci_hdrc_usb2_of_match[] = {
+> > +	{ .compatible = "chipidea,usb2" },
+> > +	{ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, ci_hdrc_usb2_of_match);
+> > +
+> > +static struct platform_driver ci_hdrc_usb2_driver = {
+> > +	.probe	= ci_hdrc_usb2_probe,
+> > +	.remove	= ci_hdrc_usb2_remove,
+> > +	.driver	= {
+> > +		.name		= "chipidea-usb2",
+> > +		.owner		= THIS_MODULE,
+> > +		.of_match_table	= of_match_ptr(ci_hdrc_usb2_of_match),
+> > +	},
+> > +};
+> > +module_platform_driver(ci_hdrc_usb2_driver);
+> > +
+> > +MODULE_DESCRIPTION("ChipIdea HDRC USB2 binding for ci13xxx");
+> > +MODULE_AUTHOR("Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
+> > +MODULE_LICENSE("GPL");
+> > -- 
+> > 1.9.1
+> > 
+> 
+> -- 
+> Best Regards,
+> Peter Chen
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 -- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
