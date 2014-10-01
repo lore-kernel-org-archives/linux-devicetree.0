@@ -1,68 +1,64 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] drm/i2c:tda998x: Use the HDMI audio CODEC
-Date: Wed, 1 Oct 2014 13:37:08 +0100
-Message-ID: <20141001123708.GZ4273@sirena.org.uk>
-References: <cover.1411547014.git.moinejf@free.fr>
- <4b3d35a14461ed164956b7f5aa77b29170bc393d.1411547014.git.moinejf@free.fr>
- <20140930192540.GL4273@sirena.org.uk>
- <20141001112846.0dbc80ae@armhf>
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Wed, 1 Oct 2014 14:39:14 +0200
+Message-ID: <20141001123914.GA25307@kwain>
+References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1411468088-5702-8-git-send-email-antoine.tenart@free-electrons.com>
+ <20140929150837.GD8912@kwain>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="diT81a9gloLbuVo+"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20141001112846.0dbc80ae@armhf>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20140929150837.GD8912@kwain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de, arnd@arndb.de
+Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Peter, Arnd, Felipe,
 
---diT81a9gloLbuVo+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 29, 2014 at 05:08:37PM +0200, Antoine Tenart wrote:
+> On Tue, Sep 23, 2014 at 12:28:03PM +0200, Antoine Tenart wrote:
+> > Add a USB2 ChipIdea driver for ci13xxx, with optional PHY, clock
+> > and DMA mask, to support USB2 ChipIdea controllers that don't need
+> > specific functions.
+>=20
+> Did we agree on the modifications needed to get this accepted? If so,
+> can one of you sum up what's need to be done, I got a bit lost readin=
+g
+> all the discussions on this thread.
+>=20
+> Anyway, that would be good to get this series accepted as the Berlin =
+USB
+> support depends on it. This series has been out since the beginning o=
+f
+> June and non-critical changes can be added by future series.
 
-On Wed, Oct 01, 2014 at 11:28:46AM +0200, Jean-Francois Moine wrote:
-> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+I'm seriously considering sending a new version with dt-only support as=
+ I
+don't need the other case. There are still many discussions between the
+three of you regarding DMA support, which is not a problem for my use
+case. As this is not a modification of an existing driver, future
+additions can be done to support more cases later and we do not need
+this driver to handle all possible cases right now as this won't be a
+regression.
 
-> > > +	request_module("snd-soc-hdmi-codec");
-> > > +	pdev =3D platform_device_register_resndata(&priv->hdmi->dev,
-> > > +						 "hdmi-audio-codec",
-> > > +						  PLATFORM_DEVID_NONE,
-> > > +						  NULL, 0,
-> > > +						  &tda998x_hdmi_data,
-> > > +						  sizeof tda998x_hdmi_data); =20
+Please, can one of you sum up the modifications needed to get this
+accepted, if any. If the dt part is fine for you, I'll resend this
+series with dt-only support. The platform compatibility can surely be
+added later, when needed by someone, and when an agreement on how to do
+it is reached.
 
-> > Why is this request_module() needed?  If there is a good reason for it
-> > we should have some documentation.
+I'm afraid this series is currently blocked by implementation related
+discussions not linked with the USB Berlin support, while this could be
+done as a follow up series.
 
-> The reason is simple: as the HDMI CODEC is not declared in the DT, the
-> associated module must be loaded in memory.
+Thanks,
 
-No, that doesn't make sense - there's absolutely no dependency on DT for
-module loading, non-DT boards work perfectly fine.  Think about this for
-a minute, we don't have lots of request_module() calls in board files.
-You're working around some other bug here.
+Antoine
 
---diT81a9gloLbuVo+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUK/VzAAoJECTWi3JdVIfQCeoH/RUU/tCbsxm0OWbFFEVXIG8u
-G8Gmihvxh1PHcxbuG8SzC5daFf3Txe4ZhFd5WavEXzfKmzjqtl+NwYd5Zhwu3G9X
-lu+GNZniDIXN6rIoMfIamDzsa4opFYtn0X0mXSO7XLWf5mCKaq5Oe4Lh1qdQGX+V
-x38s/jkWKaMk5PeNhTUFf9CbPnwLslQseoX6eRECKWMFy6k0vLlrHR+goXkclABC
-M6qpC16HwQLL0prmML/GwkDxdALQzg7ktdZsmvlrfXspCdF8TwD2kClo0YG6P8IK
-nJ4V2iAbWkfs1XbSUbbXzzyBVMsXBjLtx0NarOyoMBBInLGBnIw0/MiYXviQzGI=
-=SOfX
------END PGP SIGNATURE-----
-
---diT81a9gloLbuVo+--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
