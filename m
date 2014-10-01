@@ -1,80 +1,41 @@
-From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm: dts: Add Altera L2 Cache and OCRAM EDAC
-Date: Wed, 01 Oct 2014 11:45:19 -0500
-Message-ID: <542C2F9F.6090603@gmail.com>
-References: <1412181092-27162-1-git-send-email-tthayer@opensource.altera.com> <1412181092-27162-4-git-send-email-tthayer@opensource.altera.com>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v2 0/3] ARM: rk3288 : Add PM Domain support
+Date: Wed, 01 Oct 2014 09:51:06 -0700
+Message-ID: <7hoatvvimd.fsf@deeprootsystems.com>
+References: <1411899774-8484-1-git-send-email-jinkun.hong@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412181092-27162-4-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1411899774-8484-1-git-send-email-jinkun.hong@rock-chips.com>
+	(jinkun hong's message of "Sun, 28 Sep 2014 03:22:51 -0700")
+Sender: linux-doc-owner@vger.kernel.org
+To: "jinkun.hong" <jinkun.hong@rock-chips.com>
+Cc: Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
++Geert, Ulf
 
+"jinkun.hong" <jinkun.hong@rock-chips.com> writes:
 
-On 10/1/14, 11:31 AM, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> 
-> Adding the device tree entries needed to support the Altera L2
-> cache and OCRAM EDAC.
-> 
-> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> ---
->  arch/arm/boot/dts/socfpga.dtsi |   20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index 4d77ad6..f186957 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -608,7 +608,7 @@
->  		};
->  
->  		L2: l2-cache@fffef000 {
-> -			compatible = "arm,pl310-cache";
-> +			compatible = "arm,pl310-cache", "syscon";
->  			reg = <0xfffef000 0x1000>;
->  			interrupts = <0 38 0x04>;
->  			cache-unified;
-> @@ -628,6 +628,24 @@
->  			clock-names = "biu", "ciu";
->  		};
->  
-> +		ocram: sram@ffff0000 {
-> +			compatible = "mmio-sram";
-> +			reg = <0xffff0000 0x10000>;
-> +		};
-> +
+> From: "jinkun.hong" <jinkun.hong@rock-chips.com>
+>
+> Use PM Domain framework to manage the clock.
 
-I sent a patch to add the OCRAM node:
-http://www.spinics.net/lists/devicetree/msg51117.html
+Which clock?  This changelog needs a more thorough description.  Also,
+with this series alone, it's not clear how the power-domain transitions
+ever happen, since I don't see any devices hooked up to your power
+domains, or do I see your platform using runtime PM.  In order for this
+to be reviewed properely, it's important for reviewers to be able to see
+how this PM domain support will be used.
 
-> +		l2edac@xffd08140 {
-Remove the 'x'.
-> +			compatible = "altr,l2-edac";
-> +			reg = <0xffd08140 0x4>;
-> +			interrupts = <0 36 1>, <0 37 1>;
-> +		};
-> +
-> +		ocramedac@ffd08144 {
-> +			compatible = "altr,ocram-edac";
-> +			reg = <0xffd08144 0x4>;
-> +			iram = <&ocram>;
-> +			interrupts = <0 178 1>, <0 179 1>;
-> +		};
-> +
->  		/* Local timer */
->  		timer@fffec600 {
->  			compatible = "arm,cortex-a9-twd-timer";
-> 
+Also, remember that the DT is supposed to reflect the hardware, not the
+design choices of linux drivers.  Because of that, it's a little
+surprising to see clocks as properties of a power domain because clocks
+are usually properties of devices.
 
-The documentation for these bindings should be included with this patch.
+I suggest you have a look at the sh-mobile implementation of DT-based
+power domains by Geert[1], which shows how he's hooking up device clocks.
 
-Dinh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kevin
+
+[1] http://marc.info/?l=linux-pm&m=141166256415448&w=2
