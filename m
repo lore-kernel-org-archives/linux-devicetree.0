@@ -1,56 +1,66 @@
-From: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Wed, 1 Oct 2014 06:35:58 +0000
-Message-ID: <abb0c775ec2549e3abb0a2218b4eef98@BN1PR0301MB0772.namprd03.prod.outlook.com>
-References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
- <3366285.QN2R3CQNzG@wuerfel> <20140930123933.GA25395@peterchendt>
- <10249326.XCThPmSrfL@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <10249326.XCThPmSrfL@wuerfel>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: [PATCH v2 2/6] hwrng: atmel: use clk_prepapre_enable/_disable_unprepare
+Date: Wed,  1 Oct 2014 09:13:59 +0200
+Message-ID: <1412147639-4796-1-git-send-email-boris.brezillon@free-electrons.com>
+References: <1412093987-30241-3-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412093987-30241-3-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Peter Korsgaard <jacmet@sunsite.dk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
+Use clk_prepare_enable/_disable_unprepare instead of clk_enable/disable
+to work properly with the CCF.
+
+Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+Acked-by: Peter Korsgaard <peter@korsgaard.com>
+---
+Changes since v1:
+- fix typo in commit message
+
+ drivers/char/hw_random/atmel-rng.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/char/hw_random/atmel-rng.c b/drivers/char/hw_random/atmel-rng.c
+index 851bc7e..644ec48 100644
+--- a/drivers/char/hw_random/atmel-rng.c
++++ b/drivers/char/hw_random/atmel-rng.c
+@@ -67,7 +67,7 @@ static int atmel_trng_probe(struct platform_device *pdev)
+ 	if (IS_ERR(trng->clk))
+ 		return PTR_ERR(trng->clk);
  
-> Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-> 
-> On Tuesday 30 September 2014 20:39:34 Peter Chen wrote:
-> > Thanks, Arnd. I had not thought setting dma mask is so complicated,
-> > yes, it should check the return value, two things to confirm:
-> >
-> > - dma_coerce_mask_and_coherent or dma_set_mask_and_coherent, the
-> only
-> > difference of these two API is the first one do "dev->dma_mask = &dev-
-> >coherent_dma_mask;"
-> > The reason you suggest choosing dma_set_mask_and_coherent is you do
-> > not want assign dev->dma_mask?
-> 
-> No, that is just the current definition on ARM32 with
-> CONFIG_ARCH_MULTIPLATFORM, and that is going to change soon to be DT
-> aware.
-> dma_set_mask_and_coherent() is supposed to check whether the platform
-> can support the respective mask and return an error if it cannot.
-> 
-> > - The second parameter for dma_set_mask_and_coherent is
-> > DMA_BIT_MASK(32), is it ok?
-> >
-> > I just a little confused of what's the operation is "hardcoding the dma mask"?
-> 
-> dma_coerce_mask_and_coherent() will hardcode the dma mask and override
-> whatever the platform says is necessary.
-> 
-
-So, we should use dma_set_mask_and_coherent() in most of cases in device driver,
-and use dma_coerce_mask_and_coherent() only  when the device's dma_mask is wrong?
-
-Peter
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-	ret = clk_enable(trng->clk);
++	ret = clk_prepare_enable(trng->clk);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -95,7 +95,7 @@ static int atmel_trng_remove(struct platform_device *pdev)
+ 	hwrng_unregister(&trng->rng);
+ 
+ 	writel(TRNG_KEY, trng->base + TRNG_CR);
+-	clk_disable(trng->clk);
++	clk_disable_unprepare(trng->clk);
+ 
+ 	return 0;
+ }
+@@ -105,7 +105,7 @@ static int atmel_trng_suspend(struct device *dev)
+ {
+ 	struct atmel_trng *trng = dev_get_drvdata(dev);
+ 
+-	clk_disable(trng->clk);
++	clk_disable_unprepare(trng->clk);
+ 
+ 	return 0;
+ }
+@@ -114,7 +114,7 @@ static int atmel_trng_resume(struct device *dev)
+ {
+ 	struct atmel_trng *trng = dev_get_drvdata(dev);
+ 
+-	return clk_enable(trng->clk);
++	return clk_prepare_enable(trng->clk);
+ }
+ 
+ static const struct dev_pm_ops atmel_trng_pm_ops = {
+-- 
+1.9.1
