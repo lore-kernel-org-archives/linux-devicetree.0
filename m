@@ -1,53 +1,42 @@
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm: socfpga: Enable ECC of L2 and OCRAM on startup.
-Date: Wed, 1 Oct 2014 16:10:19 -0500
-Message-ID: <542C6DBB.9060202@opensource.altera.com>
-References: <1412181092-27162-1-git-send-email-tthayer@opensource.altera.com> <1412181092-27162-2-git-send-email-tthayer@opensource.altera.com> <542C3654.1070604@gmail.com> <542C6CFB.4090809@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/6] ARM: add machine and dts files for Amlogic Meson8
+Date: Wed,  1 Oct 2014 23:29:40 +0200
+Message-ID: <1412198986-26534-1-git-send-email-b.galvani@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <542C6CFB.4090809-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+this patchset introduces a machine definition and dts files for
+Amlogic Meson8, which is a family of quad-core Cortex-A9 SoCs used in
+tablets and set-top boxes.
 
-On 10/1/14, 4:07 PM, Thor Thayer wrote:
-> 
-> On 10/01/2014 12:13 PM, Dinh Nguyen wrote:
->>
->> On 10/1/14, 11:31 AM, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
->>> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>>
-[...]
->>>     static void socfpga_cyclone5_restart(enum reboot_mode mode, const
->>> char *cmd)
->>> @@ -98,6 +101,13 @@ static void socfpga_cyclone5_restart(enum
->>> reboot_mode mode, const char *cmd)
->>>       writel(temp, rst_manager_base_addr + SOCFPGA_RSTMGR_CTRL);
->>>   }
->>>   +static void __init socfpga_cyclone5_init(void)
->>> +{
->>> +    of_platform_populate(NULL, of_default_bus_match_table,
->>> +                 NULL, NULL);
->> Why is this needed?
->>
->> Dinh
-> Hi Dinh.
-> 
-> Are you asking why the of_platform_populate() is needed? If so, it is
-> used to kick off discovery of devices at the root of the tree.
+Beniamino Galvani (6):
+  ARM: meson: add meson8 machine definition
+  ARM: dts: add dtsi for Amlogic Meson8 SoCs
+  ARM: dts: add dts for Tronsmart S89 Elite TV box
+  of: add vendor prefix for Tronsmart
+  ARM: document Tronsmart compatible properties
+  ARM: meson: document meson8 compatible properties
 
-I was asking about of_platform populate(). This was removed in this commit:
+ Documentation/devicetree/bindings/arm/amlogic.txt  |  8 +-
+ .../devicetree/bindings/arm/tronsmart.txt          |  7 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ arch/arm/boot/dts/meson8-vega-s89e.dts             | 65 ++++++++++++++++
+ arch/arm/boot/dts/meson8.dtsi                      | 90 ++++++++++++++++++++++
+ arch/arm/mach-meson/Kconfig                        |  5 ++
+ arch/arm/mach-meson/meson.c                        |  8 ++
+ 7 files changed, 181 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/tronsmart.txt
+ create mode 100644 arch/arm/boot/dts/meson8-vega-s89e.dts
+ create mode 100644 arch/arm/boot/dts/meson8.dtsi
 
-8b5c18f05 ARM: l2c: socfpga: convert to generic l2c OF initialisation
+-- 
+1.9.1
 
-Just trying to understand what's the need to add it back?
-
-Dinh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
