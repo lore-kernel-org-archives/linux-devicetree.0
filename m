@@ -1,60 +1,57 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v3 10/15] leds: leds-gpio: Add ACPI probing support
-Date: Wed, 1 Oct 2014 09:30:25 -0700
-Message-ID: <20141001163025.GE23115@dtor-glaptop>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
- <1852462.V1jlbi8OPt@vostro.rjw.lan>
- <4835699.XutTNxriDg@vostro.rjw.lan>
- <2780318.hxubhI9Rvq@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2780318.hxubhI9Rvq@wuerfel>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: [PATCH v5 0/4] Qualcomm SPMI PMIC pin controller drivers
+Date: Wed,  1 Oct 2014 19:30:54 +0300
+Message-ID: <1412181058-29179-1-git-send-email-iivanov@mm-sol.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 01, 2014 at 10:13:04AM +0200, Arnd Bergmann wrote:
-> On Wednesday 01 October 2014 04:17:02 Rafael J. Wysocki wrote:
-> > Index: linux-pm/drivers/leds/leds-gpio.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/leds/leds-gpio.c
-> > +++ linux-pm/drivers/leds/leds-gpio.c
-> > @@ -231,6 +231,13 @@ static const struct of_device_id of_gpio
-> >  
-> >  MODULE_DEVICE_TABLE(of, of_gpio_leds_match);
-> >  
-> > +static const struct acpi_device_id acpi_gpio_leds_match[] = {
-> > +       { "PRP0001" }, /* Device Tree shoehorned into ACPI */
-> > +       {},
-> > +};
-> > +
-> > +MODULE_DEVICE_TABLE(acpi, acpi_gpio_leds_match);
-> > +
-> >  static int gpio_led_probe(struct platform_device *pdev)
-> >  {
-> >         struct gpio_led_platform_data *pdata = dev_get_platdata(&pdev->dev);
-> > @@ -286,6 +293,7 @@ static struct platform_driver gpio_led_d
-> >                 .name   = "leds-gpio",
-> >                 .owner  = THIS_MODULE,
-> >                 .of_match_table = of_gpio_leds_match,
-> > +               .acpi_match_table = acpi_gpio_leds_match,
-> >         },
-> >  };
-> 
-> Is this something you'd have to do in every driver you want to support
-> _PRP based probing? For the ".acpi_match_table =" reference, I think
-> you could actually provide a generic acpi_device_id table exported from
-> core code that you refer to, so each driver just does
-> 
-> 	.acpi_match_table = acpi_match_by_of_compatible,
+Changes since v4:
 
-No, I think in absence of drv->acpi_match_table ACPI core should just go and
-use drv->of_match_table to do the matching and be done with it.
+- Use PMIC name in compatible string.
+- PINCTRL_QCOM_SPMI_PMIC from Kconfig symbol.
+- Remove pmic string from drivers file names.
+- Fixed coding style issues.
+- Use qcom-spmi-gpio and qcom-spmi-mpp from dirver names,
+  to be similar to qcom-spmi-iadc, qcom-spmi-vadc and 
+  qcom-spmi-temp-alarm drivers.
 
-Thanks.
+Short description:
+
+Patches adds pin control drivers for Multi-Purpose Pin (MPP) and
+General-purpose pin (GPIO) controllers found in Qualcomm SPMI based
+PMIC chips.
+
+MPP's are enhanced GPIO's with analog circuits, which support 
+analog and digital input/output.
+
+v4: https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg725568.html
+
+Bjorn Andersson (1):
+  pinctrl: Device tree bindings for Qualcomm PMIC GPIO block
+
+Ivan T. Ivanov (3):
+  pinctrl: Device tree bindings for Qualcomm PMIC MPP block
+  pinctrl: Qualcomm SPMI PMIC GPIO pin controller driver
+  pinctrl: Qualcomm SPMI PMIC MPP pin controller driver
+
+ .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 215 +++++
+ .../devicetree/bindings/pinctrl/qcom,pmic-mpp.txt  | 162 ++++
+ drivers/pinctrl/qcom/Kconfig                       |  13 +
+ drivers/pinctrl/qcom/Makefile                      |   2 +
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           | 937 ++++++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-spmi-mpp.c            | 953 +++++++++++++++++++++
+ include/dt-bindings/pinctrl/qcom,pmic-gpio.h       | 142 +++
+ include/dt-bindings/pinctrl/qcom,pmic-mpp.h        |  44 +
+ 8 files changed, 2468 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
+ create mode 100644 include/dt-bindings/pinctrl/qcom,pmic-gpio.h
+ create mode 100644 include/dt-bindings/pinctrl/qcom,pmic-mpp.h
 
 -- 
-Dmitry
+1.9.1
