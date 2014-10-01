@@ -1,43 +1,120 @@
-From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/6] ARM: add machine and dts files for Amlogic Meson8
-Date: Wed,  1 Oct 2014 23:29:40 +0200
-Message-ID: <1412198986-26534-1-git-send-email-b.galvani@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: [PATCH 2/6] ARM: dts: add dtsi for Amlogic Meson8 SoCs
+Date: Wed,  1 Oct 2014 23:29:42 +0200
+Message-ID: <1412198986-26534-3-git-send-email-b.galvani@gmail.com>
+References: <1412198986-26534-1-git-send-email-b.galvani@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412198986-26534-1-git-send-email-b.galvani@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Carlo Caione <carlo@caione.org>, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Beniamino Galvani <b.galvani@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add a dtsi for the Amlogic Meson8 SoCs. It differs from the Meson6
+dtsi for the number of Cortex-A9 cores (4 vs 2) and for the
+frequency of clk81.
 
-this patchset introduces a machine definition and dts files for
-Amlogic Meson8, which is a family of quad-core Cortex-A9 SoCs used in
-tablets and set-top boxes.
-
-Beniamino Galvani (6):
-  ARM: meson: add meson8 machine definition
-  ARM: dts: add dtsi for Amlogic Meson8 SoCs
-  ARM: dts: add dts for Tronsmart S89 Elite TV box
-  of: add vendor prefix for Tronsmart
-  ARM: document Tronsmart compatible properties
-  ARM: meson: document meson8 compatible properties
-
- Documentation/devicetree/bindings/arm/amlogic.txt  |  8 +-
- .../devicetree/bindings/arm/tronsmart.txt          |  7 ++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- arch/arm/boot/dts/meson8-vega-s89e.dts             | 65 ++++++++++++++++
- arch/arm/boot/dts/meson8.dtsi                      | 90 ++++++++++++++++++++++
- arch/arm/mach-meson/Kconfig                        |  5 ++
- arch/arm/mach-meson/meson.c                        |  8 ++
- 7 files changed, 181 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/tronsmart.txt
- create mode 100644 arch/arm/boot/dts/meson8-vega-s89e.dts
+Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+---
+ arch/arm/boot/dts/meson8.dtsi | 90 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 90 insertions(+)
  create mode 100644 arch/arm/boot/dts/meson8.dtsi
 
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+new file mode 100644
+index 0000000..7b3fc1e
+--- /dev/null
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -0,0 +1,90 @@
++/*
++ * Copyright 2014 Carlo Caione <carlo@caione.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this library; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/include/ "meson.dtsi"
++
++/ {
++	model = "Amlogic Meson8 SoC";
++	compatible = "amlogic,meson8";
++
++	interrupt-parent = <&gic>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@200 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <0x200>;
++		};
++
++		cpu@201 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <0x201>;
++		};
++
++		cpu@202 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <0x202>;
++		};
++
++		cpu@203 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <0x203>;
++		};
++	};
++
++	clk81: clk@0 {
++		#clock-cells = <0>;
++		compatible = "fixed-clock";
++		clock-frequency = <141666666>;
++	};
++}; /* end of / */
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
