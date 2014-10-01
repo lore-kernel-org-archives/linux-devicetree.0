@@ -1,48 +1,96 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v3 10/15] leds: leds-gpio: Add ACPI probing support
-Date: Wed, 1 Oct 2014 14:59:01 +0300
-Message-ID: <20141001115901.GD1786@lahna.fi.intel.com>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
- <2780318.hxubhI9Rvq@wuerfel>
- <20141001091309.GY1786@lahna.fi.intel.com>
- <5364565.aEcZqpzdLW@wuerfel>
+From: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Wed, 1 Oct 2014 12:25:06 +0000
+Message-ID: <ba59ee980d0b48a6b9027741f4420612@BN1PR0301MB0772.namprd03.prod.outlook.com>
+References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
+ <10249326.XCThPmSrfL@wuerfel>
+ <abb0c775ec2549e3abb0a2218b4eef98@BN1PR0301MB0772.namprd03.prod.outlook.com>
+ <1845601.0ISfgfFO3Y@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5364565.aEcZqpzdLW@wuerfel>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1845601.0ISfgfFO3Y@wuerfel>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 01, 2014 at 12:01:34PM +0200, Arnd Bergmann wrote:
-> On Wednesday 01 October 2014 12:13:09 Mika Westerberg wrote:
-> > 
-> > > Regarding the MODULE_DEVICE_TABLE, I suspect the above won't work the
-> > > way you are hoping for, because once you get to dozens or hundreds of
-> > > drivers doing this, each device will show up with the same string,
-> > > so udev will try to load all the modules that list "PRP0001". That
-> > > doesn't look right. With the code from patch 3, you can probably drop
-> > > the acpi MODULE_DEVICE_TABLE() entirely and get the correct behavior.
-> > 
-> > It actually works like this now:
-> > 
-> >  # cd /sys/bus/platform/devices/PRP0001\:00/
-> >  DRIVER=leds-gpio
-> >  MODALIAS=of:Nprp0001TacpiCgpio-leds
-> > 
-> >  # cat modalias 
-> >  of:Nprp0001TacpiCgpio-leds
-> > 
-> > In other words the modalias changes to be of:Nprp0001Tacpi, e.g
-> > name=prp0001, type=acpi and then list of compatible values.
-> > 
-> > Udev then loads only module that matches the modalias so it should not
-> > load everything listing PRP0001 in their MODULE_DEVICE_TABLE().
+ 
+> On Wednesday 01 October 2014 06:35:58 Peter Chen wrote:
+> > > Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for
+> > > ci13xxx
+> > >
+> > > On Tuesday 30 September 2014 20:39:34 Peter Chen wrote:
+> > > > Thanks, Arnd. I had not thought setting dma mask is so
+> > > > complicated, yes, it should check the return value, two things to confirm:
+> > > >
+> > > > - dma_coerce_mask_and_coherent or dma_set_mask_and_coherent,
+> the
+> > > only
+> > > > difference of these two API is the first one do "dev->dma_mask =
+> > > >&dev- coherent_dma_mask;"
+> > > > The reason you suggest choosing dma_set_mask_and_coherent is you
+> > > >do  not want assign dev->dma_mask?
+> > >
+> > > No, that is just the current definition on ARM32 with
+> > > CONFIG_ARCH_MULTIPLATFORM, and that is going to change soon to be
+> DT
+> > > aware.
+> > > dma_set_mask_and_coherent() is supposed to check whether the
+> > > platform can support the respective mask and return an error if it cannot.
+> > >
+> > > > - The second parameter for dma_set_mask_and_coherent is
+> > > > DMA_BIT_MASK(32), is it ok?
+> > > >
+> > > > I just a little confused of what's the operation is "hardcoding the dma
+> mask"?
+> > >
+> > > dma_coerce_mask_and_coherent() will hardcode the dma mask and
+> > > override whatever the platform says is necessary.
+> > >
+> >
+> > So, we should use dma_set_mask_and_coherent() in most of cases in
+> > device driver, and use dma_coerce_mask_and_coherent() only  when the
+> device's dma_mask is wrong?
+> >
+> >
 > 
-> I'm not completely following yet. I can see how this works now, but
-> how is this better than just using the existing modalias for OF?
+> dma_coerce_mask_and_coherent() should really not be used at all. Russell
+> introduced it to convert drivers that were incorrectly setting the dma_mask
+> pointer themselves to something slightly more palatable.
+> 
+> The initial dma_mask is supposed to be set by the platform for each DMA
+> capable device, according to the address width of its upstream bus.
+> For DT based probing, we now set it to 32-bit mask but should really set it to
+> something smaller if the bus is more limited than that.
+> 
+> For devices created by platform code (board files), the platform should call
+> platform_device_register_full() and specify the dma mask in the
+> platform_device_info. Older platforms sometimes define a static platform
+> device structure that has the dma mask set. This works as well but is
+> discouraged for other reasons.
+> 
+> Drivers that require a dma mask that is either smaller than 32-bit (because of
+> device specific quirks) or that know that the device is capable of larger DMA
+> space and want to use that need to call dma_set_mask or
+> dma_set_mask_and_coherent and check the return value.
+> 
+> Ideally all device drivers that want to do DMA should call set_dma_mask or
+> set_dma_mask_and_coherent, even if the device has exactly a 32-bit
+> connection to the upstream bus.
+> 
+> One more complication: if the device is not a DMA master itself but uses a dma
+> engine, you should not use set_dma_mask_and_coherent() but instead use
+> dma_get_mask() on the dmaengine device to query its mask, and also use that
+> same pointer to pass into dma_alloc_coherent and dma_map_*.
+> 
+ 
+Thank you very much, Arnd. It makes things clear.
 
-You mean using just what of_device_get_modalias() would create? In that
-case, what do we put to name and type fields?
+Peter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
