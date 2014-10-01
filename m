@@ -1,382 +1,73 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/2] ARM: realview: add device tree and bindings for PB1176
-Date: Wed,  1 Oct 2014 09:32:16 +0200
-Message-ID: <1412148736-24560-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 01/15] ACPI: Add support for device specific properties
+Date: Wed, 01 Oct 2014 09:38:12 +0200
+Message-ID: <2755973.W1sLsHLeIR@wuerfel>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <1852462.V1jlbi8OPt@vostro.rjw.lan> <1630006.5YHObY0h44@vostro.rjw.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1630006.5YHObY0h44@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: linux-kernel@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-As a first example, add device tree and bindings for the
-RealView PB1176.
+On Wednesday 01 October 2014 04:08:56 Rafael J. Wysocki wrote:
+> From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> 
+> Device Tree is used in many embedded systems to describe the system
+> configuration to the OS. It supports attaching properties or name-value
+> pairs to the devices it describe. With these properties one can pass
+> additional information to the drivers that would not be available
+> otherwise.
+> 
+> ACPI is another configuration mechanism (among other things) typically
+> seen, but not limited to, x86 machines. ACPI allows passing arbitrary
+> data from methods but there has not been mechanism equivalent to Device
+> Tree until the introduction of _DSD in the recent publication of the
+> ACPI 5.1 specification.
+> 
+> In order to facilitate ACPI usage in systems where Device Tree is
+> typically used, it would be beneficial to standardize a way to retrieve
+> Device Tree style properties from ACPI devices, which is what we do in
+> this patch.
+> 
+> If a given device described in ACPI namespace wants to export properties it
+> must implement _DSD method (Device Specific Data, introduced with ACPI 5.1)
+> that returns the properties in a package of packages. For example:
+> 
+>         Name (_DSD, Package () {
+>                 ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>                 Package () {
+>                         Package () {"name1", <VALUE1>},
+>                         Package () {"name2", <VALUE2>},
+>                         ...
+>                 }
+>         })
+> 
+> The UUID reserved for properties is daffd814-6eba-4d8c-8a91-bc9bbf4aa301
+> and is documented in the ACPI 5.1 companion document called "_DSD
+> Implementation Guide" [1], [2].
+> 
+> We add several helper functions that can be used to extract these
+> properties and convert them to different Linux data types.
+> 
+> The ultimate goal is that we only have one device property API that
+> retrieves the requested properties from Device Tree or from ACPI
+> transparent to the caller.
+> 
+> [1] http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel.htm
+> [2] http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
+> 
+> Reviewed-by: Hanjun Guo <hanjun.guo@linaro.org>
+> Reviewed-by: Josh Triplett <josh@joshtriplett.org>
+> Signed-off-by: Darren Hart <dvhart@linux.intel.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
 
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v6->v7:
-- Split in two patches.
----
- Documentation/devicetree/bindings/arm/arm-boards |  65 ++++++
- Documentation/devicetree/bindings/arm/gic.txt    |   1 +
- arch/arm/boot/dts/Makefile                       |   1 +
- arch/arm/boot/dts/arm-realview-pb1176.dts        | 247 +++++++++++++++++++++++
- 4 files changed, 314 insertions(+)
- create mode 100644 arch/arm/boot/dts/arm-realview-pb1176.dts
+Looks good to me.
 
-diff --git a/Documentation/devicetree/bindings/arm/arm-boards b/Documentation/devicetree/bindings/arm/arm-boards
-index c554ed3d44fb..556c8665fdbf 100644
---- a/Documentation/devicetree/bindings/arm/arm-boards
-+++ b/Documentation/devicetree/bindings/arm/arm-boards
-@@ -92,3 +92,68 @@ Required nodes:
- - core-module: the root node to the Versatile platforms must have
-   a core-module with regs and the compatible strings
-   "arm,core-module-versatile", "syscon"
-+
-+ARM RealView Boards
-+-------------------
-+The RealView boards cover tailored evaluation boards that are used to explore
-+the ARM11 and Cortex A-8 and Cortex A-9 processors.
-+
-+Required properties (in root node):
-+	/* RealView Emulation Baseboard */
-+	compatible = "arm,realview-eb";
-+	 /* RealView Platform Baseboard for ARM1176JZF-S */
-+	compatible = "arm,realview-pb1176";
-+	/* RealView Platform Baseboard for ARM11 MPCore */
-+	compatible = "arm,realview-pb11mp";
-+	/* RealView Platform Baseboard for Cortex A-8 */
-+	compatible = "arm,realview-pba8";
-+	/* RealView Platform Baseboard Explore for Cortex A-9 */
-+	compatible = "arm,realview-pbx";
-+
-+Required nodes:
-+
-+- soc: some node of the RealView platforms must be the SoC
-+  node that contain the SoC-specific devices, withe the compatible
-+  string set to one of these tuples:
-+   "arm,realview-eb-soc", "simple-bus"
-+   "arm,realview-pb1176-soc", "simple-bus"
-+   "arm,realview-pb11mp-soc", "simple-bus"
-+   "arm,realview-pba8-soc", "simple-bus"
-+   "arm,realview-pbx-soc", "simple-bus"
-+
-+- syscon: some subnode of the RealView SoC node must be a
-+  system controller node pointing to the control registers,
-+  with the compatible string set to one of these tuples:
-+   "arm,realview-eb-syscon", "syscon"
-+   "arm,realview-pb1176-syscon", "syscon"
-+   "arm,realview-pb11mp-syscon", "syscon"
-+   "arm,realview-pba8-syscon", "syscon"
-+   "arm,realview-pbx-syscon", "syscon"
-+
-+  Required properties for the system controller:
-+  - regs: the location and size of the system controller registers,
-+    one range of 0x1000 bytes.
-+
-+Example:
-+
-+/dts-v1/;
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include "skeleton.dtsi"
-+
-+/ {
-+	model = "ARM RealView PB1176 with device tree";
-+	compatible = "arm,realview-pb1176";
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "arm,realview-pb1176-soc", "simple-bus";
-+		ranges;
-+
-+		syscon: syscon@10000000 {
-+			compatible = "arm,realview-syscon", "syscon";
-+			reg = <0x10000000 0x1000>;
-+		};
-+
-+	};
-+};
-diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-index c7d2fa156678..b38608af66db 100644
---- a/Documentation/devicetree/bindings/arm/gic.txt
-+++ b/Documentation/devicetree/bindings/arm/gic.txt
-@@ -17,6 +17,7 @@ Main node required properties:
- 	"arm,cortex-a7-gic"
- 	"arm,arm11mp-gic"
- 	"brcm,brahma-b15-gic"
-+	"arm,arm1176jzf-devchip-gic"
- - interrupt-controller : Identifies the node as an interrupt controller
- - #interrupt-cells : Specifies the number of cells needed to encode an
-   interrupt source.  The type shall be a <u32> and the value shall be 3.
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b8c5cd3ddeb9..e55d28eed151 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -344,6 +344,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-apq8084-mtp.dtb \
- 	qcom-msm8660-surf.dtb \
- 	qcom-msm8960-cdp.dtb
-+dtb-$(CONFIG_ARCH_REALVIEW) += arm-realview-pb1176.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += \
- 	rk3066a-bqcurie2.dtb \
- 	rk3188-radxarock.dtb \
-diff --git a/arch/arm/boot/dts/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm-realview-pb1176.dts
-new file mode 100644
-index 000000000000..3135939cd13f
---- /dev/null
-+++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
-@@ -0,0 +1,247 @@
-+/*
-+ * Copyright 2014 Linaro Ltd
-+ *
-+ * Permission is hereby granted, free of charge, to any person obtaining a copy
-+ * of this software and associated documentation files (the "Software"), to deal
-+ * in the Software without restriction, including without limitation the rights
-+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-+ * copies of the Software, and to permit persons to whom the Software is
-+ * furnished to do so, subject to the following conditions:
-+ *
-+ * The above copyright notice and this permission notice shall be included in
-+ * all copies or substantial portions of the Software.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-+ * THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include "skeleton.dtsi"
-+
-+/ {
-+	model = "ARM RealView PB1176";
-+	compatible = "arm,realview-pb1176";
-+
-+	chosen { };
-+
-+	aliases {
-+		serial0 = &pb1176_serial0;
-+		serial1 = &pb1176_serial1;
-+		serial2 = &pb1176_serial2;
-+		serial3 = &pb1176_serial3;
-+	};
-+
-+	memory {
-+		/* 128 MiB memory @ 0x0 */
-+		reg = <0x00000000 0x08000000>;
-+	};
-+
-+	xtal24mhz: xtal24mhz@24M {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+	};
-+
-+	timclk: timclk@1M {
-+		#clock-cells = <0>;
-+		compatible = "fixed-factor-clock";
-+		clock-div = <24>;
-+		clock-mult = <1>;
-+		clocks = <&xtal24mhz>;
-+	};
-+
-+	uartclk: uartclk@24M {
-+		#clock-cells = <0>;
-+		compatible = "fixed-factor-clock";
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+		clocks = <&xtal24mhz>;
-+	};
-+
-+	/* FIXME: this actually hangs off the PLL clocks */
-+	pclk: pclk@0 {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <0>;
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "arm,realview-pb1176-soc", "simple-bus";
-+		regmap = <&syscon>;
-+		ranges;
-+
-+		syscon: syscon@10000000 {
-+			compatible = "arm,realview-pb1176-syscon", "syscon";
-+			reg = <0x10000000 0x1000>;
-+
-+			led@08.0 {
-+				compatible = "register-bit-led";
-+				offset = <0x08>;
-+				mask = <0x01>;
-+				label = "versatile:0";
-+				linux,default-trigger = "heartbeat";
-+				default-state = "on";
-+			};
-+			led@08.1 {
-+				compatible = "register-bit-led";
-+				offset = <0x08>;
-+				mask = <0x02>;
-+				label = "versatile:1";
-+				linux,default-trigger = "mmc0";
-+				default-state = "off";
-+			};
-+			led@08.2 {
-+				compatible = "register-bit-led";
-+				offset = <0x08>;
-+				mask = <0x04>;
-+				label = "versatile:2";
-+				linux,default-trigger = "cpu0";
-+				default-state = "off";
-+			};
-+			led@08.3 {
-+				compatible = "register-bit-led";
-+				offset = <0x08>;
-+				mask = <0x08>;
-+				label = "versatile:3";
-+				default-state = "off";
-+			};
-+			led@08.4 {
-+				compatible = "register-bit-led";
-+				offset = <0x08>;
-+				mask = <0x10>;
-+				label = "versatile:4";
-+				default-state = "off";
-+			};
-+			led@08.5 {
-+				compatible = "register-bit-led";
-+				offset = <0x08>;
-+				mask = <0x20>;
-+				label = "versatile:5";
-+				default-state = "off";
-+			};
-+			led@08.6 {
-+				compatible = "register-bit-led";
-+				offset = <0x08>;
-+				mask = <0x40>;
-+				label = "versatile:6";
-+				default-state = "off";
-+			};
-+			led@08.7 {
-+				compatible = "register-bit-led";
-+				offset = <0x08>;
-+				mask = <0x80>;
-+				label = "versatile:7";
-+				default-state = "off";
-+			};
-+		};
-+
-+		/* Primary DevChip GIC synthesized with the CPU */
-+		intc_dc1176: interrupt-controller@10120000 {
-+			compatible = "arm,arm1176jzf-devchip-gic", "arm,arm11mp-gic";
-+			#interrupt-cells = <3>;
-+			#address-cells = <1>;
-+			interrupt-controller;
-+			reg = <0x10121000 0x1000>,
-+			      <0x10120000 0x100>;
-+		};
-+
-+		/* This GIC on the board is cascaded off the DevChip GIC */
-+		intc_pb1176: interrupt-controller@10040000 {
-+			compatible = "arm,arm1176jzf-devchip-gic", "arm,arm11mp-gic";
-+			#interrupt-cells = <3>;
-+			#address-cells = <1>;
-+			interrupt-controller;
-+			reg = <0x10041000 0x1000>,
-+			      <0x10040000 0x100>;
-+			interrupt-parent = <&intc_dc1176>;
-+			interrupts = <0 31 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		L2: l2-cache {
-+			compatible = "arm,l220-cache";
-+			reg = <0x10110000 0x1000>;
-+			interrupt-parent = <&intc_dc1176>;
-+			interrupts = <0 13 IRQ_TYPE_LEVEL_HIGH>;
-+			cache-unified;
-+			cache-level = <2>;
-+			/*
-+			 * Override default cache size, sets and
-+			 * associativity as these may be erroneously set
-+			 * up by boot loader(s).
-+			 */
-+			arm,override-auxreg;
-+			cache-size = <131072>; // 128kB
-+			cache-sets = <512>;
-+			cache-line-size = <32>;
-+		};
-+
-+		pmu {
-+			compatible = "arm,arm1176-pmu";
-+			interrupt-parent = <&intc_dc1176>;
-+			interrupts = <0 7 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		timer01: timer@10104000 {
-+			compatible = "arm,sp804", "arm,primecell";
-+			reg = <0x10104000 0x1000>;
-+			interrupt-parent = <&intc_dc1176>;
-+			interrupts = <0 8 IRQ_TYPE_LEVEL_HIGH>, <0 9 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&timclk>, <&timclk>, <&pclk>;
-+			clock-names = "timer1", "timer2", "apb_pclk";
-+		};
-+
-+		timer23: timer@10105000 {
-+			compatible = "arm,sp804", "arm,primecell";
-+			reg = <0x10105000 0x1000>;
-+			interrupt-parent = <&intc_dc1176>;
-+			interrupts = <0 10 IRQ_TYPE_LEVEL_HIGH>;
-+			arm,sp804-has-irq = <1>;
-+			clocks = <&timclk>, <&timclk>, <&pclk>;
-+			clock-names = "timer1", "timer2", "apb_pclk";
-+		};
-+
-+		pb1176_serial0: serial@1010c000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x1010c000 0x1000>;
-+			interrupt-parent = <&intc_dc1176>;
-+			interrupts = <0 18 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&uartclk>, <&pclk>;
-+			clock-names = "uartclk", "apb_pclk";
-+		};
-+
-+		pb1176_serial1: serial@1010d000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x1010d000 0x1000>;
-+			interrupt-parent = <&intc_dc1176>;
-+			interrupts = <0 19 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&uartclk>, <&pclk>;
-+			clock-names = "uartclk", "apb_pclk";
-+		};
-+
-+		pb1176_serial2: serial@1010e000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x1010e000 0x1000>;
-+			interrupt-parent = <&intc_dc1176>;
-+			interrupts = <0 20 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&uartclk>, <&pclk>;
-+			clock-names = "uartclk", "apb_pclk";
-+		};
-+
-+		pb1176_serial3: serial@1010f000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x1010f000 0x1000>;
-+			interrupt-parent = <&intc_dc1176>;
-+			interrupts = <0 21 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&uartclk>, <&pclk>;
-+			clock-names = "uartclk", "apb_pclk";
-+		};
-+	};
-+};
--- 
-1.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Arnd Bergmann <arnd@arndb.de>
