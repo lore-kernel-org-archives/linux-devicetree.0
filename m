@@ -1,53 +1,38 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] spi: orion: support armada extended baud rates
-Date: Wed, 1 Oct 2014 19:22:34 +0100
-Message-ID: <20141001182234.GK4273@sirena.org.uk>
-References: <1411910644-7174-1-git-send-email-gerg@uclinux.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 10/15] leds: leds-gpio: Add ACPI probing support
+Date: Wed, 01 Oct 2014 20:22:36 +0200
+Message-ID: <15084898.uePkciO2J1@wuerfel>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <20141001163025.GE23115@dtor-glaptop> <D05191AB.AB380%dvhart@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fVx4YFaxe8of50Zh"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1411910644-7174-1-git-send-email-gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <D05191AB.AB380%dvhart@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Darren Hart <dvhart@linux.intel.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday 01 October 2014 11:11:46 Darren Hart wrote:
+> >
+> >No, I think in absence of drv->acpi_match_table ACPI core should just go
+> >and
+> >use drv->of_match_table to do the matching and be done with it.
+> 
+> But then you will match drivers that have of-only support that don't know
+> anything about ACPI and haven't been updated to use the new API. Worse,
+> some of those drivers will assume of node structs and such and potentially
+> panic. Unless I'm sorry mistaken here....
+> 
 
---fVx4YFaxe8of50Zh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I don't think that is a huge danger: most drivers tend to check for
+the presence of dev->of_node before calling any of the DT interfaces,
+you'd only ever enter the probe function if the compatible string matches
+(i.e. an old kernel with a new ACPI table), and most users of ACPI
+systems will disable CONFIG_OF at compile time, so the accessors looking
+at the of_node are not there.
 
-On Sun, Sep 28, 2014 at 11:24:04PM +1000, gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org wrote:
-> From: Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
->=20
-> The Armada SoC family implementation of this SPI hardware module has
-> extended the configuration register to allow for a wider range of SPI
-> clock rates. Specifically the Serial Baud Rate Pre-selection bits in the
-> SPI Interface Configuration Register now also use bits 6 and 7 as well.
+In theory it's possible that something goes wrong here, but it's not
+very likely to ever cause problems.
 
-Applied, thanks.
-
---fVx4YFaxe8of50Zh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJULEZpAAoJECTWi3JdVIfQhfQH/ipU7M0HgrjQ9KESRMBHBu3K
-FyrffsZIU+opj2S16xu7SLsrqKbUHnGO9Ue41/xXOuh9vH4SpeqeqrT39QBN4GDn
-j1/pkG9hFvTD2B4iD7ve2ggE0vzUOwNVrb9UjdY6VbMVBPo+m42u/xKdIGS1akob
-DPiC0l7OYBAmu8/N2Ct2R3h1qyyF8jSm7Qo/xPKP37k7XVqT8EyXYDX5Sis47Vul
-qg9p50DddEa+9GuaOQoMdM15IRFhBDR3amYnuTkDMvYxtLSASpz8UWZpGwRpjwSL
-IZidh20mRj+b0mg3syghh2IxVHZy6vBchC7DIHvtqXdt36IJUU3swy7Rb0xXQe4=
-=qB2B
------END PGP SIGNATURE-----
-
---fVx4YFaxe8of50Zh--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
