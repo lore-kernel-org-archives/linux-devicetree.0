@@ -1,61 +1,38 @@
-From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/6] ARM: meson: add meson8 machine definition
-Date: Wed,  1 Oct 2014 23:29:41 +0200
-Message-ID: <1412198986-26534-2-git-send-email-b.galvani@gmail.com>
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: [PATCH 6/6] ARM: meson: document meson8 compatible properties
+Date: Wed,  1 Oct 2014 23:29:46 +0200
+Message-ID: <1412198986-26534-7-git-send-email-b.galvani@gmail.com>
 References: <1412198986-26534-1-git-send-email-b.galvani@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412198986-26534-1-git-send-email-b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412198986-26534-1-git-send-email-b.galvani@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Carlo Caione <carlo@caione.org>, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Beniamino Galvani <b.galvani@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a machine definition for Amlogic Meson8 SoCs.
+Add device tree bindings documentation for Amlogic Meson8 SoCs.
 
-Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
 ---
- arch/arm/mach-meson/Kconfig | 5 +++++
- arch/arm/mach-meson/meson.c | 8 ++++++++
- 2 files changed, 13 insertions(+)
+ Documentation/devicetree/bindings/arm/amlogic.txt | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
-index 2c1154e..b289e8e 100644
---- a/arch/arm/mach-meson/Kconfig
-+++ b/arch/arm/mach-meson/Kconfig
-@@ -10,4 +10,9 @@ config MACH_MESON6
- 	default ARCH_MESON
- 	select MESON6_TIMER
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+index 7eece72..8fe8150 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.txt
++++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+@@ -2,7 +2,9 @@ Amlogic MesonX device tree bindings
+ -------------------------------------------
  
-+config MACH_MESON8
-+	bool "Amlogic Meson8 SoCs support"
-+	default ARCH_MESON
-+	select MESON6_TIMER
-+
- endif
-diff --git a/arch/arm/mach-meson/meson.c b/arch/arm/mach-meson/meson.c
-index 5ee064f..e95d6ae 100644
---- a/arch/arm/mach-meson/meson.c
-+++ b/arch/arm/mach-meson/meson.c
-@@ -21,7 +21,15 @@ static const char * const m6_common_board_compat[] = {
- 	NULL,
- };
+ Boards with the Amlogic Meson6 SoC shall have the following properties:
++  Required root node property:
++    compatible: "amlogic,meson6"
  
-+static const char * const m8_common_board_compat[] = {
-+	"amlogic,meson8",
-+	NULL,
-+};
-+
- DT_MACHINE_START(AML8726_MX, "Amlogic Meson6 platform")
- 	.dt_compat	= m6_common_board_compat,
- MACHINE_END
- 
-+DT_MACHINE_START(MESON8, "Amlogic Meson8 platform")
-+	.dt_compat	= m8_common_board_compat,
-+MACHINE_END
+-Required root node property:
+-
+-compatible = "amlogic,meson6";
++Boards with the Amlogic Meson8 SoC shall have the following properties:
++  Required root node property:
++    compatible: "amlogic,meson8";
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
