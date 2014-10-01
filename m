@@ -1,43 +1,129 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 10/15] leds: leds-gpio: Add ACPI probing support
-Date: Wed, 01 Oct 2014 16:14:20 +0200
-Message-ID: <6852466.Q5TXcWChqW@wuerfel>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <2043842.LxdgdYRbIF@wuerfel> <20141001140441.GF1786@lahna.fi.intel.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v6 2/2] drm/i2c:tda998x: Use the HDMI audio CODEC
+Date: Wed, 1 Oct 2014 15:23:41 +0100
+Message-ID: <20141001142340.GR5182@n2100.arm.linux.org.uk>
+References: <cover.1411547014.git.moinejf@free.fr>
+ <4b3d35a14461ed164956b7f5aa77b29170bc393d.1411547014.git.moinejf@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141001140441.GF1786-3PARRvDOhMZrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Darren Hart <dvhart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <4b3d35a14461ed164956b7f5aa77b29170bc393d.1411547014.git.moinejf@free.fr>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Andrew Jackson <Andrew.Jackson@arm.com>, linux-kernel@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 01 October 2014 17:04:41 Mika Westerberg wrote:
-> 
-> > On the question what to put into the name and type fields, that is
-> > unrelated. The type is supposed to be for the 'device_type' property
-> > in DT, which we should never rely on in a driver that supports both
-> > APCI and DT. In Linux we only use that for "pci", "cpu" and "memory",
-> > all of which have their own way of getting probed in ACPI.
-> > The "name" is normally ignored in DT as well, except for backwards
-> > compatibility with old bindings, but I would argue that you should not
-> > just put "prp0001" in there. Either leave it empty like type, or use
-> > the name of the device as it appears in the ACPI tables, such as "DEV0"
-> > or "PWM".
-> 
-> OK, I think it makes sense to leave them empty. I remember I tried that
-> at some point but it didn't work without N and T fields. Is there some
-> example what to put there in case of empty?
-> 
-> Something like "of:N*T*Cgpio-leds" perhaps?
+On Wed, Sep 24, 2014 at 10:11:21AM +0200, Jean-Francois Moine wrote:
+> This patch interfaces the HDMI transmitter with the audio system.
+...
 
-Sorry, don't know. If I read the code right, the type field in DT ends
-up being "<NULL>" for any device that doesn't set the device_type 
-property, but that seems a bit silly and probably isn't worth copying.
+> +struct tda998x_priv2 {
+> +	struct tda998x_priv base;
+> +	struct drm_encoder encoder;
+> +	struct drm_connector connector;
+>  };
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+NAK on moving this up here.  It was specifically placed below the core
+and below the older drm_slave_encoder code because nothing but the new
+component based interfaces to TDA998x have any business knowing that
+these are packaged up in this way.
+
+> +static void tda998x_create_audio_codec(struct tda998x_priv *priv)
+> +{
+> +	struct platform_device *pdev;
+> +	struct module *module;
+> +
+> +	request_module("snd-soc-hdmi-codec");
+> +	pdev = platform_device_register_resndata(&priv->hdmi->dev,
+> +						 "hdmi-audio-codec",
+> +						  PLATFORM_DEVID_NONE,
+> +						  NULL, 0,
+> +						  &tda998x_hdmi_data,
+> +						  sizeof tda998x_hdmi_data);
+> +	if (IS_ERR(pdev)) {
+> +		dev_err(&priv->hdmi->dev, "cannot create codec: %ld\n",
+> +			PTR_ERR(pdev));
+> +		return;
+> +	}
+> +
+> +	priv->pdev_codec = pdev;
+> +	module = pdev->dev.driver->owner;
+> +	if (module)
+> +		try_module_get(module);
+
+This is really not on.  Firstly, registering a platform device has no
+guarantee that it will bind to a driver.  So, pdev->dev.driver may be
+NULL here -> kernel oops.
+
+Secondly, what's the purpose of the unchecked try_module_get() there?
+You can't stop the device being unbound from its driver, so all you're
+doing is possibly locking the module into module space for no other
+benefit.
+
+> @@ -1167,12 +1390,19 @@ tda998x_encoder_set_property(struct drm_encoder *encoder,
+>  
+>  static void tda998x_destroy(struct tda998x_priv *priv)
+>  {
+> +	struct module *module;
+> +
+>  	/* disable all IRQs and free the IRQ handler */
+>  	cec_write(priv, REG_CEC_RXSHPDINTENA, 0);
+>  	reg_clear(priv, REG_INT_FLAGS_2, INT_FLAGS_2_EDID_BLK_RD);
+>  	if (priv->hdmi->irq)
+>  		free_irq(priv->hdmi->irq, priv);
+>  
+> +	if (priv->pdev_codec) {
+> +		module = priv->pdev_codec->dev.driver->owner;
+> +		module_put(module);
+
+This is wrong for all the reasons the other part above is wrong.
+Userspace can decide to unbind the platform device from the associated
+platform driver whenever it wishes.  At that point,
+priv->pdev_codec->dev.driver becomes NULL.
+
+So, please get rid of this.
+
+> +		platform_device_del(priv->pdev_codec);
+
+This leaks the memory associated with the platform device.
+
+> @@ -1395,15 +1660,13 @@ static int tda998x_encoder_init(struct i2c_client *client,
+>  	encoder_slave->slave_priv = priv;
+>  	encoder_slave->slave_funcs = &tda998x_encoder_slave_funcs;
+>  
+> +	/* set the drvdata pointer to priv2 for CODEC calls */
+> +	dev_set_drvdata(&client->dev,
+> +			container_of(priv, struct tda998x_priv2, base));
+> +
+>  	return 0;
+>  }
+>  
+> -struct tda998x_priv2 {
+> -	struct tda998x_priv base;
+> -	struct drm_encoder encoder;
+> -	struct drm_connector connector;
+> -};
+> -
+
+I would prefer this structure to stay here, as code above this point should
+have no business knowing how these are packaged together.  I would suggest
+either:
+
+- moving the audio codec code below this point, or
+- storing struct tda998x_priv in the device private pointer, and
+  converting it to struct tda998x_priv2 via container_of() where
+  necessary below this point.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
