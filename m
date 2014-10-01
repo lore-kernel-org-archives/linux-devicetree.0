@@ -1,38 +1,106 @@
 From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: [PATCH 6/6] ARM: meson: document meson8 compatible properties
-Date: Wed,  1 Oct 2014 23:29:46 +0200
-Message-ID: <1412198986-26534-7-git-send-email-b.galvani@gmail.com>
+Subject: [PATCH 3/6] ARM: dts: add dts for Tronsmart S89 Elite TV box
+Date: Wed,  1 Oct 2014 23:29:43 +0200
+Message-ID: <1412198986-26534-4-git-send-email-b.galvani@gmail.com>
 References: <1412198986-26534-1-git-send-email-b.galvani@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1412198986-26534-1-git-send-email-b.galvani@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Carlo Caione <carlo@caione.org>, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Beniamino Galvani <b.galvani@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Victor Wan <victor.wan@amlogic.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Beniamino Galvani <b.galvani@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Carlo Caione <carlo@caione.org>, Jerry Cao <jerry.cao@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings documentation for Amlogic Meson8 SoCs.
+This adds a dts for the Tronsmart S89 Elite, a set-top box based on
+the Amlogic S802 SoC with a 8GiB NAND flash, USB ports, 10/100 Mbps
+Ethernet adapter, WiFi, HDMI and a micro SD slot.
 
 Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
 ---
- Documentation/devicetree/bindings/arm/amlogic.txt | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/meson8-vega-s89e.dts | 65 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+ create mode 100644 arch/arm/boot/dts/meson8-vega-s89e.dts
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
-index 7eece72..8fe8150 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.txt
-+++ b/Documentation/devicetree/bindings/arm/amlogic.txt
-@@ -2,7 +2,9 @@ Amlogic MesonX device tree bindings
- -------------------------------------------
- 
- Boards with the Amlogic Meson6 SoC shall have the following properties:
-+  Required root node property:
-+    compatible: "amlogic,meson6"
- 
--Required root node property:
--
--compatible = "amlogic,meson6";
-+Boards with the Amlogic Meson8 SoC shall have the following properties:
-+  Required root node property:
-+    compatible: "amlogic,meson8";
+diff --git a/arch/arm/boot/dts/meson8-vega-s89e.dts b/arch/arm/boot/dts/meson8-vega-s89e.dts
+new file mode 100644
+index 0000000..93c3dfd
+--- /dev/null
++++ b/arch/arm/boot/dts/meson8-vega-s89e.dts
+@@ -0,0 +1,65 @@
++/*
++ * Copyright 2014 Beniamino Galvani <b.galvani@gmail.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public License
++ *     along with this program. If not, see <http://www.gnu.org/licenses/>.   
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++
++/dts-v1/;
++/include/ "meson8.dtsi"
++
++/ {
++	model = "Tronsmart Vega S89 Elite";
++	compatible = "tronsmart,vega-s89e", "amlogic,meson8";
++
++	aliases {
++		serial0 = &uart_AO;
++	};
++
++	memory {
++		reg = <0x40000000 0x80000000>;
++	};
++};
++
++&uart_AO {
++	status = "okay";
++};
 -- 
 1.9.1
