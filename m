@@ -1,110 +1,77 @@
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH 2/3] edac: altera: Add Altera L2 Cache and OCRAM EDAC
- Support
-Date: Wed, 1 Oct 2014 14:10:52 -0500
-Message-ID: <542C51BC.5050004@opensource.altera.com>
-References: <1412181092-27162-1-git-send-email-tthayer@opensource.altera.com> <1412181092-27162-3-git-send-email-tthayer@opensource.altera.com> <20141001165353.GB28440@leverpostej>
+From: <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCH v4 0/4] regulator support for pmbus and ltc2978
+Date: Wed, 1 Oct 2014 14:05:46 -0500
+Message-ID: <1412190349-16343-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141001165353.GB28440@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "dinh-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinh-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org" <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, "bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org" <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org
+Cc: lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-On 10/01/2014 11:53 AM, Mark Rutland wrote:
-> On Wed, Oct 01, 2014 at 05:31:31PM +0100, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
->> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>
->> Adding L2 Cache and On-Chip RAM EDAC support for the
->> Altera SoCs using the EDAC_DEVICE framework. The EDAC
->> manager abstracts the common probe functionality and
->> test triggers. The L2 Cache and OCRAM files handle
->> the specific memory functions.
->>
->> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->> ---
->>   .../bindings/arm/altera/socfpga-l2-edac.txt        |   15 ++
->>   .../bindings/arm/altera/socfpga-ocram-edac.txt     |   16 ++
->>   MAINTAINERS                                        |    1 +
->>   drivers/edac/Kconfig                               |   14 ++
->>   drivers/edac/Makefile                              |    4 +
->>   drivers/edac/altera_edac_mgr.c                     |  261 ++++++++++++++++++++
->>   drivers/edac/altera_edac_mgr.h                     |   56 +++++
->>   drivers/edac/altera_l2_edac.c                      |  130 ++++++++++
->>   drivers/edac/altera_ocram_edac.c                   |  107 ++++++++
->>   9 files changed, 604 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
->>   create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
->>   create mode 100644 drivers/edac/altera_edac_mgr.c
->>   create mode 100644 drivers/edac/altera_edac_mgr.h
->>   create mode 100644 drivers/edac/altera_l2_edac.c
->>   create mode 100644 drivers/edac/altera_ocram_edac.c
->>
->> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
->> new file mode 100644
->> index 0000000..35b19e3
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
->> @@ -0,0 +1,15 @@
->> +Altera SoCFPGA L2 cache Error Detection and Correction [EDAC]
->> +
->> +Required Properties:
->> +- compatible : Should be "altr,l2-edac"
-> That string looks too generic.
->
-> Given the EDAC seems to be a portion of the L2, is there not already an
-> L2 binding?
->
-> Just because Linux expects two drivers doesn't mean we should partition
-> the HW description this way.
-Thank you for the quick feedback.
-What should the string look like? I was trying to keep it short with the 
-altr, prefix but I don't mind changing it to something better.
-We're using the ARM PL310 L2 cache controller. The ECC is separate from 
-the PL310 IP and is part of the System Manager. This is true of ECC for 
-both the L2 and OCRAM.
-I followed the Calxeda Highbank L2 EDAC implementation since ours is 
-similar. The Calxeda Highbank implementation had a separate binding file 
-and a device node under soc.
+This set of patches adds regulator support for pmbus_core.c and ltc2978.c
 
->> +- reg : Address and size for ECC error interrupt clear registers.
->> +- interrupts : Should be single bit error interrupt, then double bit error
->> +       interrupt. Note the rising edge type.
->> +
->> +Example:
->> +
->> +       l2edac@ffd08140 {
->> +               compatible = "altr,l2-edac";
->> +               reg = <0xffd08140 0x4>;
->> +               interrupts = <0 36 1>, <0 37 1>;
->> +       };
->> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
->> new file mode 100644
->> index 0000000..31ab205
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
->> @@ -0,0 +1,16 @@
->> +Altera SoCFPGA On-Chip RAM Error Detection and Correction [EDAC]
->> +
->> +OCRAM ECC Required Properties:
->> +- compatible : Should be "altr,ocram-edac"
->> +- reg : Address and size for ECC error interrupt clear registers.
->> +- iram : phandle to On-Chip RAM definition.
-> Why not just describe this in the OCRAM node? Surely the register is
-> within the OCRAM controller?
-The ECC registers not in the OCRAM controller but they are in the System 
-Manager.  Maybe both the L2 cache and OCRAM ECC bindings should live 
-there and the device tree node for System Manager would have OCRAM and 
-L2 cache sub-nodes.
+Each output has individual on/off control.
 
-Thanks,
+>From PMBus_Specification_Part_II_Rev_1-3_20140318.pdf:
+12.1.1. OPERATION Command Bit [7]
+  Bit [7] controls whether the PMBus device output is on or off.
+   If bit [7] is cleared (equals 0), then the output is off.
+   If bit [7] is set (equals 1), then the output is on.
 
-Thor
-> Mark.
+Fixes in v4 are not huge:
+  Add device tree bindings documentation for ltc2978.
+  rename _pmbus_regulator_enable to _pmbus_regulator_on_off
+  simplify _pmbus_regulator_on_off code
+  s/regulator_regulator/regulator/
+  fix build break when !CONFIG_REGULATOR
+  remove unused #define PB_OPERATION_CONTROL_SEQ_OFF
+  fix a #endif comment
+  simplify probe code, remove added switch statement
+  remove BUG_ON(), add error message and fix num_regulators
+
+Patch 1: document device tree bindings for ltc2978
+
+Patch 2: add two helper functions for byte pmbus byte operations
+  * byte write and byte read/modify/write
+
+Patch 3: regulator support added in pmbus_core.c and pmbus.h
+  * regulator_ops functions (is_enabled, enable, and disable)
+  * gets regulator init data from device tree or platform data
+  * registers the regulators
+  * header has a macro for chip drivers to build their
+    regulator_desc data
+
+Patch 4: changes for ltc2978.c
+  * Add Kconfig to enable/disable ltc2978 regulator functionality
+  * add regulator_desc and of_regulator_match info
+  * use same structs for all parts; set num_regulators appropriately.
+
+Alan Tull (3):
+  pmbus: core: add helpers for byte write and read modify write
+  pmbus: add regulator support
+  pmbus: ltc2978: add regulator support
+
+Alan Tull (4):
+  hwmon: ltc2978: device tree bindings documentation
+  pmbus: core: add helpers for byte write and read modify write
+  pmbus: add regulator support
+  pmbus: ltc2978: add regulator support
+
+ .../devicetree/bindings/hwmon/ltc2978.txt          |   42 +++++
+ drivers/hwmon/pmbus/Kconfig                        |    7 +
+ drivers/hwmon/pmbus/ltc2978.c                      |   37 +++++
+ drivers/hwmon/pmbus/pmbus.h                        |   26 ++++
+ drivers/hwmon/pmbus/pmbus_core.c                   |  160 ++++++++++++++++++++
+ include/linux/i2c/pmbus.h                          |    4 +
+ 6 files changed, 276 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/ltc2978.txt
+
+-- 
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
