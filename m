@@ -1,7 +1,7 @@
 From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 4/4] ARM: dts: keystone-k2l: fix mdio io start address
-Date: Wed, 1 Oct 2014 13:37:34 +0300
-Message-ID: <1412159854-21143-5-git-send-email-grygorii.strashko@ti.com>
+Subject: [PATCH 3/4] ARM: dts: keystone-k2e: fix mdio io start address
+Date: Wed, 1 Oct 2014 13:37:33 +0300
+Message-ID: <1412159854-21143-4-git-send-email-grygorii.strashko@ti.com>
 References: <1412159854-21143-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,25 +12,25 @@ To: santosh.shilimkar-l0cyMroinI0@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The K2L MDIO io space has different start address.
-Hence, fix it to be 0x26200f00 according to TRM.
+The K2E MDIO io space has different start address.
+Hence, fix it to be 0x24200f00 according to TRM.
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/k2l.dtsi | 4 ++++
+ arch/arm/boot/dts/k2e.dtsi | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/k2l.dtsi b/arch/arm/boot/dts/k2l.dtsi
-index 1f7f479..5e44983 100644
---- a/arch/arm/boot/dts/k2l.dtsi
-+++ b/arch/arm/boot/dts/k2l.dtsi
-@@ -53,3 +53,7 @@
+diff --git a/arch/arm/boot/dts/k2e.dtsi b/arch/arm/boot/dts/k2e.dtsi
+index 0e25f79..13b0feb 100644
+--- a/arch/arm/boot/dts/k2e.dtsi
++++ b/arch/arm/boot/dts/k2e.dtsi
+@@ -80,3 +80,7 @@
  		};
  	};
  };
 +
 +&mdio {
-+	reg = <0x26200f00 0x100>;
++	reg = <0x24200f00 0x100>;
 +};
 -- 
 1.9.1
