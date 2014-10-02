@@ -1,103 +1,52 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v2 0/3] ARM: rk3288 : Add PM Domain support
-Date: Thu, 02 Oct 2014 08:36:16 -0700
-Message-ID: <7hr3yqtrf3.fsf@deeprootsystems.com>
-References: <1411899774-8484-1-git-send-email-jinkun.hong@rock-chips.com>
-	<7hoatvvimd.fsf@deeprootsystems.com>
-	<CAD=FV=VPT5qiyY==nJbb4DqKMBnj0i-_MhLRVG0ikar2qtP4=A@mail.gmail.com>
-	<7h38b7v8pp.fsf@deeprootsystems.com> <542D1F1B.8040501@ti.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: vf500/vf610: support VF500 SoC
+Date: Thu, 02 Oct 2014 17:53:37 +0200
+Message-ID: <20f4e3a1932756c92443d380a7f42f56@agner.ch>
+References: <1412261724-11073-1-git-send-email-stefan@agner.ch>
+ <8882221.sfQOLcQs3p@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <542D1F1B.8040501@ti.com> (Grygorii Strashko's message of "Thu, 2
-	Oct 2014 12:47:07 +0300")
-Sender: linux-doc-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Doug Anderson <dianders@chromium.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Russell King <linux@arm.linux.org.uk>, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "jinkun.hong" <jinkun.hong@rock-chips.com>, Randy Dunlap <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8882221.sfQOLcQs3p@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Grygorii Strashko <grygorii.strashko@ti.com> writes:
+Am 2014-10-02 17:28, schrieb Arnd Bergmann:
+> On Thursday 02 October 2014 16:55:23 Stefan Agner wrote:
+>> The VF500 is essentially the same SoC, but with only one core and
+>> without L1 cache. The VF610 is therefore a superset of the VF500.
+>> Move allmost all periperals to vf500.dtsi which is then included
+>> and enhanced by vf610.dtsi.
+>>
+>> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+>> ---
+>> Somehow using -M -B switches create a unapplyable patch, hence I
+>> generated one without those options. Sorry about that.
+>>
+>>  arch/arm/boot/dts/vf500.dtsi | 498 ++++++++++++++++++++++++++++++++++++++++++
+>>  arch/arm/boot/dts/vf610.dtsi | 507 +------------------------------------------
+>>  2 files changed, 510 insertions(+), 495 deletions(-)
+>>  create mode 100644 arch/arm/boot/dts/vf500.dtsi
+> 
+> I think it would be better to create one extra file that contains the common
+> parts and is included by both vf500 and vf610.
+> 
 
-> Hi,
->
-> On 10/01/2014 11:25 PM, Kevin Hilman wrote:
->> Doug Anderson <dianders@chromium.org> writes:
->> 
->>>
->>> On Wed, Oct 1, 2014 at 9:51 AM, Kevin Hilman <khilman@kernel.org> wrote:
->>>> +Geert, Ulf
->>>>
->>>> "jinkun.hong" <jinkun.hong@rock-chips.com> writes:
->>>>
->>>>> From: "jinkun.hong" <jinkun.hong@rock-chips.com>
->>>>>
->>>>> Use PM Domain framework to manage the clock.
->>>>
->>>> Which clock?  This changelog needs a more thorough description.
->>>
->>>
->>> I think what he meant was:
->>>
->>> Use the generic PM Domain framework for Rockchip
->>>
->>> ...but I agree that he could describe it more.
->>>
->>>
->>>> Also,
->>>> with this series alone, it's not clear how the power-domain transitions
->>>> ever happen, since I don't see any devices hooked up to your power
->>>> domains, or do I see your platform using runtime PM.  In order for this
->>>> to be reviewed properely, it's important for reviewers to be able to see
->>>> how this PM domain support will be used.
->>>
->>> I noticed that too.  As the patchset currently stands it only ever disables...
->>>
->>>
->>>> Also, remember that the DT is supposed to reflect the hardware, not the
->>>> design choices of linux drivers.  Because of that, it's a little
->>>> surprising to see clocks as properties of a power domain because clocks
->>>> are usually properties of devices.
->>>
->>> I haven't dug all the way into the hardware to figure out why (or if
->>> this is really necessary), but right now the rockchip power domain
->>> driver only leaves these clocks on during the powering on and powering
->>> off of the power domain.  In other words to turn on the power domain:
->>>
->>> 1. Turn on all clocks
->>> 2. Flip the bit that sets the power domain on
->>> 3. Wait until hardware says power domain is on.
->>> 4. Turn off all the clocks.
->>>
->>> ...and to turn off:
->>>
->>> 1. Turn on all clocks
->>> 2. Flip the bit that sets the power domain off
->>> 3. Wait until hardware says power domain is off.
->>> 2. Turn off all the clocks.
->>>
->>> ...if the above is actually necessary when turning on and off power
->>> domains then it seems like it is actually describing the hardware.
->> 
->> Yes, I understand. The need to have some *device* clocks enabled when
->> powering on/off the power-domain itself is quite common across many
->> SoCs.
->> 
->> My point is that these clocks are actually properties of *devices*, not
->> the power-domain itself.  In the shmobile example I pointed to, the
->> clocks are properties of the devices in DT, and the devices are attached
->> to the powerdomain.  When the devices are connected to the power-domain,
->> the custom attach function looks up all the *device* clocks and and
->> addes them to the power-domain using pm_clk_add.
->
-> Sorry, but this is not quite right :(
-> Patches from Geert will add only first clock for device and not all
-> of them. 
-> The right way to add all clocks for device from DT using 
-> generic PM domain represented in my series:
->  
->  ARM: keystone: pm: switch to use generic pm domains
->  http://www.mail-archive.com/linux-kernel@vger.kernel.org/msg735601.html
+I also thought about that. But when looking at the product variants, its
+clear that VF500 really contains only features, which are part of all
+other Vybrids (VF3xx series excluded, but these series is not really
+suitable for Linux due to lack of external memory). So vf500.dtsi would
+always be a oneliner (#include <vf.dtsi>).
 
-Thanks for clarifying.
+Also I disliked this idea because of the somewhat unclear naming
+(vf.dtsi? vfxxx.dtsi?)
 
-Kevin
+--
+Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
