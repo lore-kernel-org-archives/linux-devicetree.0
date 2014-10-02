@@ -1,81 +1,70 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: at91/dt: sam9x5: Add CAN device nodes
-Date: Thu, 2 Oct 2014 12:57:16 +0200
-Message-ID: <20141002105716.GG3907@piout.net>
-References: <1412246294-27370-1-git-send-email-alexander.stein@systec-electronic.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/3] edac: altera: Add Altera L2 Cache and OCRAM EDAC
+ Support
+Date: Thu, 2 Oct 2014 11:58:28 +0100
+Message-ID: <20141002105828.GG5788@leverpostej>
+References: <1412181092-27162-1-git-send-email-tthayer@opensource.altera.com>
+ <1412181092-27162-3-git-send-email-tthayer@opensource.altera.com>
+ <20141001165353.GB28440@leverpostej>
+ <542C51BC.5050004@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1412246294-27370-1-git-send-email-alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+In-Reply-To: <542C51BC.5050004-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: "dinh-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinh-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org" <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, "bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org" <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+> >> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
+> >> @@ -0,0 +1,15 @@
+> >> +Altera SoCFPGA L2 cache Error Detection and Correction [EDAC]
+> >> +
+> >> +Required Properties:
+> >> +- compatible : Should be "altr,l2-edac"
+> > That string looks too generic.
+> >
+> > Given the EDAC seems to be a portion of the L2, is there not already an
+> > L2 binding?
+> >
+> > Just because Linux expects two drivers doesn't mean we should partition
+> > the HW description this way.
+> Thank you for the quick feedback.
+> What should the string look like? I was trying to keep it short with the 
+> altr, prefix but I don't mind changing it to something better.
+> We're using the ARM PL310 L2 cache controller. The ECC is separate from 
+> the PL310 IP and is part of the System Manager. This is true of ECC for 
+> both the L2 and OCRAM.
 
-On 02/10/2014 at 12:38:14 +0200, Alexander Stein wrote :
-> Add the missing CAN devices node including their pin muxing and clocks.
-> 
-> Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-> ---
-> I could actually only test CAN1 due to the hardware I had available. Also
-> CAN0 conflicts with DBGU pins, which I had to use.
-> 
->  arch/arm/boot/dts/at91sam9x5.dtsi | 48 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-> index e1a5c70..0a2164e 100644
-> --- a/arch/arm/boot/dts/at91sam9x5.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-> @@ -763,6 +795,22 @@
->  					};
->  				};
->  
-> +				can0 {
-> +					pinctrl_can0_rx_tx: can0_rx_tx {
-> +						atmel,pins =
-> +							<AT91_PIOA 9 AT91_PERIPH_B AT91_PINCTRL_NONE	/* PA9 periph B RX */
-> +							 AT91_PIOA 10 AT91_PERIPH_B AT91_PINCTRL_NONE>;	/* PA10 periph B TX */
+Ah, I see. Apologies, I assumed that this was part of the L2C.
 
-I would stop adding that comment as this is pretty clear that your are
-setting PA9 and P10 to periph B. A more useful kind of comment is what
-pin it conflicts with. Maybe something like:
+[...]
 
-							<AT91_PIOA 9 AT91_PERIPH_B AT91_PINCTRL_NONE	/* CANRX0, conflicts with DRXD */
+> >> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
+> >> new file mode 100644
+> >> index 0000000..31ab205
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
+> >> @@ -0,0 +1,16 @@
+> >> +Altera SoCFPGA On-Chip RAM Error Detection and Correction [EDAC]
+> >> +
+> >> +OCRAM ECC Required Properties:
+> >> +- compatible : Should be "altr,ocram-edac"
+> >> +- reg : Address and size for ECC error interrupt clear registers.
+> >> +- iram : phandle to On-Chip RAM definition.
+> > Why not just describe this in the OCRAM node? Surely the register is
+> > within the OCRAM controller?
+> The ECC registers not in the OCRAM controller but they are in the System 
+> Manager.  Maybe both the L2 cache and OCRAM ECC bindings should live 
+> there and the device tree node for System Manager would have OCRAM and 
+> L2 cache sub-nodes.
 
-> +					};
-> +				};
-> +
-> +				can1 {
-> +					pinctrl_can1_rx_tx: can1_rx_tx {
-> +						atmel,pins =
-> +							<AT91_PIOA 6 AT91_PERIPH_B AT91_PINCTRL_NONE	/* PA6 periph B RX */
-> +							 AT91_PIOA 5 AT91_PERIPH_B AT91_PINCTRL_NONE>;	/* PA5 periph B TX */
+It certainly sounds like the ECC registers should be described as a
+portion of the system manager somehow.
 
-ditto
-
-> +					};
-> +				};
-> +
->  				pioA: gpio@fffff400 {
->  					compatible = "atmel,at91sam9x5-gpio", "atmel,at91rm9200-gpio";
->  					reg = <0xfffff400 0x200>;
-> -- 
-> 2.0.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
