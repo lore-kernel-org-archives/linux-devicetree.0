@@ -1,51 +1,75 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH v6 2/2] drm/i2c:tda998x: Use the HDMI audio CODEC
-Date: Thu, 2 Oct 2014 20:37:10 +0200
-Message-ID: <20141002203710.03e035f1@armhf>
-References: <cover.1411547014.git.moinejf@free.fr>
- <4b3d35a14461ed164956b7f5aa77b29170bc393d.1411547014.git.moinejf@free.fr>
- <542C0A2C.6010802@ti.com>
+From: <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCH v5 0/4] This set of patches adds regulator support for pmbus_core.c and ltc2978.c
+Date: Thu, 2 Oct 2014 13:37:47 -0500
+Message-ID: <1412275071-6417-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <542C0A2C.6010802@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Jackson <Andrew.Jackson@arm.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org
+Cc: lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAxIE9jdCAyMDE0IDE3OjA1OjMyICswMzAwCkp5cmkgU2FyaGEgPGpzYXJoYUB0aS5j
-b20+IHdyb3RlOgoKPiA+ICAgCWNhc2UgQUZNVF9JMlM6Cj4gID4gICAJCXJlZ193cml0ZShwcml2
-LCBSRUdfTVVYX0FQLCBNVVhfQVBfU0VMRUNUX0kyUyk7Cj4gID4gICAJCWNsa3NlbF9haXAgPSBB
-SVBfQ0xLU0VMX0FJUF9JMlM7Cj4gID4gICAJCWNsa3NlbF9mcyA9IEFJUF9DTEtTRUxfRlNfQUNM
-SzsKPiAgPiAtCQljdHNfbiA9IENUU19OX00oMykgfCBDVFNfTl9LKDMpOwo+ICA+ICsKPiAgPiAr
-CQkvKiB3aXRoIEkyUyBpbnB1dCwgdGhlIENUU19OIHByZWRpdmlkZXIgZGVwZW5kcyBvbgo+ICA+
-ICsJCSAqIHRoZSBzYW1wbGUgd2lkdGggKi8KPiAgPiArCQlzd2l0Y2ggKHByaXYtPmF1ZGlvX3Nh
-bXBsZV9mb3JtYXQpIHsKPiAgPiArCQljYXNlIFNORFJWX1BDTV9GT1JNQVRfUzE2X0xFOgo+ICA+
-ICsJCQljdHNfbiA9IENUU19OX00oMykgfCBDVFNfTl9LKDEpOwo+ICA+ICsJCQlicmVhazsKPiAg
-PiArCQljYXNlIFNORFJWX1BDTV9GT1JNQVRfUzI0X0xFOgo+ICA+ICsJCQljdHNfbiA9IENUU19O
-X00oMykgfCBDVFNfTl9LKDIpOwo+ICA+ICsJCQlicmVhazsKPiAgPiArCQlkZWZhdWx0OiAgCj4g
-Cj4gU2V0dGluZyB0aGUgZGVmYXVsdCBoZXJlIGRvZXMgbm90IHJlYWxseSBoZWxwLCBiZWNhdXNl
-Cj4gcHJpdi0+YXVkaW9fc2FtcGxlX2Zvcm1hdCBpcyBpbml0aWFsaXplZCB0byBTTkRSVl9QQ01f
-Rk9STUFUX1MyNF9MRSBpbgo+IHRkYTk5OHhfZW5jb2Rlcl9zZXRfY29uZmlnKCkuIEJ1dCBJIGFt
-IE9rIHdpdGggdGhlIGRlZmF1bHQgYmVpbmcKPiBjaGFuZ2VkIGZvciAyNCBiaXQgc2FtcGxlcyBv
-biBpMnMgaW50ZXJmYWNlLgo+IAo+ICA+ICsJCWNhc2UgU05EUlZfUENNX0ZPUk1BVF9TMzJfTEU6
-Cj4gID4gKwkJCWN0c19uID0gQ1RTX05fTSgzKSB8IENUU19OX0soMyk7Cj4gID4gKwkJCWJyZWFr
-Owo+ICA+ICsJCX0KCkkgbG9va2VkIGFnYWluIGF0IHRoZSBvcmlnaW5hbCBkcml2ZXIgYW5kIHRo
-ZXkgc2V0IEsgPSAxIGZvciAxNiBiaXRzCmFuZCBLID0gMyBmb3IgMjQgb3IgMzIgYml0cy4KCkFu
-eXdheSwgbGV0dGluZyBLID0gMyBmb3IgMTYgYml0cyB3b3JrcyBmb3IgbWUsIHNvLCBJIHdpbGwg
-bm90IGNoYW5nZQp0aGlzIGNvZGUgaW4gdGhlIG5leHQgdmVyc2lvbi4KClRoYW5rcy4KCi0tIApL
-ZW4gYXIgYydoZW50YcOxCXwJICAgICAgKiogQnJlaXpoIGhhIExpbnV4IGF0YXYhICoqCkplZgkJ
-fAkJaHR0cDovL21vaW5lamYuZnJlZS5mci8KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+
+Each output has individual on/off control.
+
+>From PMBus_Specification_Part_II_Rev_1-3_20140318.pdf:
+12.1.1. OPERATION Command Bit [7]
+  Bit [7] controls whether the PMBus device output is on or off.
+   If bit [7] is cleared (equals 0), then the output is off.
+   If bit [7] is set (equals 1), then the output is on.
+
+This patchset now uses "regulator: of: Provide simplified DT parsing method"
+I don't see this patch in Linus's tree or for-next yet, so I applied it to my branch.
+
+New in v5:
+  clean whitespace in the DT bindings document
+  add prototypes for the two new functions in pmbus_core.c
+  use "regulator: of: Provide simplified DT parsing method"
+   - remove #include <linux/regulator/of_regulator.h>
+   - remove of_regulator_match in pmbus_driver_info
+   - add of_match and regulators_node for regulator_desc macro
+   - remove pmbus_regulator_parse_dt
+   - remove unneeded 'else' that set init_data and of_node
+
+Patch 1: document device tree bindings for ltc2978
+
+Patch 2: add two helper functions for byte pmbus byte operations
+  * byte write and byte read/modify/write
+
+Patch 3: regulator support added in pmbus_core.c and pmbus.h
+  * regulator_ops functions (is_enabled, enable, and disable)
+  * gets regulator init data from device tree or platform data
+  * registers the regulators
+  * header has a macro for chip drivers to build their
+    regulator_desc data
+
+Patch 4: changes for ltc2978.c
+  * Add Kconfig to enable/disable ltc2978 regulator functionality.
+  * Update list of parts supported in Kconfig.
+  * add regulator_desc info.
+  * use same structs for all parts; set num_regulators appropriately.
+
+Alan Tull (4):
+  hwmon: ltc2978: device tree bindings documentation
+  pmbus: core: add helpers for byte write and read modify write
+  pmbus: add regulator support
+  pmbus: ltc2978: add regulator support
+
+ .../devicetree/bindings/hwmon/ltc2978.txt          |   41 +++++++
+ drivers/hwmon/pmbus/Kconfig                        |   11 +-
+ drivers/hwmon/pmbus/ltc2978.c                      |   24 ++++
+ drivers/hwmon/pmbus/pmbus.h                        |   30 +++++
+ drivers/hwmon/pmbus/pmbus_core.c                   |  118 ++++++++++++++++++++
+ include/linux/i2c/pmbus.h                          |    4 +
+ 6 files changed, 226 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/ltc2978.txt
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
