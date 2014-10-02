@@ -1,49 +1,102 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] PCI: xilinx: Trivial fix in DT example
-Date: Thu, 2 Oct 2014 12:09:31 +0100
-Message-ID: <20141002110931.GH5788@leverpostej>
-References: <4a72f98ee8564b6b040d6301e2719e37ddfea663.1412246470.git.michal.simek@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4a72f98ee8564b6b040d6301e2719e37ddfea663.1412246470.git.michal.simek@xilinx.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "monstr@monstr.eu" <monstr@monstr.eu>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jiri Kosina <trivial@kernel.org>, Srikanth Thokala <sthokal@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Subject: [PATCH v2 1/1] ARM: at91/dt: sam9x5: Add CAN device nodes
+Date: Thu,  2 Oct 2014 13:19:45 +0200
+Message-ID: <1412248785-28269-1-git-send-email-alexander.stein@systec-electronic.com>
+References: <20141002105716.GG3907@piout.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141002105716.GG3907-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 02, 2014 at 11:41:19AM +0100, Michal Simek wrote:
-> Good to have it properly describe for c&p cases.
+Add the missing CAN devices node including their pin muxing and clocks.
 
-Yup.
+Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+---
+Changes in v2:
+* Adjusted pinmux comment
 
-> 
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+ arch/arm/boot/dts/at91sam9x5.dtsi | 48 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+index e1a5c70..e3f11f2 100644
+--- a/arch/arm/boot/dts/at91sam9x5.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+@@ -363,6 +363,16 @@
+ 						#clock-cells = <0>;
+ 						reg = <28>;
+ 					};
++
++					can0_clk: can0_clk {
++						#clock-cells = <0>;
++						reg = <29>;
++					};
++
++					can1_clk: can1_clk {
++						#clock-cells = <0>;
++						reg = <30>;
++					};
+ 				};
+ 			};
+ 
+@@ -407,6 +417,28 @@
+ 				};
+ 			};
+ 
++			can0: can@f8000000 {
++				compatible = "atmel,at91sam9x5-can";
++				reg = <0xf8000000 0x300>;
++				interrupts = <29 IRQ_TYPE_LEVEL_HIGH 3>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_can0_rx_tx>;
++				clocks = <&can0_clk>;
++				clock-names = "can_clk";
++				status = "disabled";
++			};
++
++			can1: can@f8004000 {
++				compatible = "atmel,at91sam9x5-can";
++				reg = <0xf8004000 0x300>;
++				interrupts = <30 IRQ_TYPE_LEVEL_HIGH 3>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_can1_rx_tx>;
++				clocks = <&can1_clk>;
++				clock-names = "can_clk";
++				status = "disabled";
++			};
++
+ 			tcb0: timer@f8008000 {
+ 				compatible = "atmel,at91sam9x5-tcb";
+ 				reg = <0xf8008000 0x100>;
+@@ -763,6 +795,22 @@
+ 					};
+ 				};
+ 
++				can0 {
++					pinctrl_can0_rx_tx: can0_rx_tx {
++						atmel,pins =
++							<AT91_PIOA 9 AT91_PERIPH_B AT91_PINCTRL_NONE	/* CANRX, conflicts with DRXD */
++							 AT91_PIOA 10 AT91_PERIPH_B AT91_PINCTRL_NONE>;	/* CANTX, conflicts with DTXD */
++					};
++				};
++
++				can1 {
++					pinctrl_can1_rx_tx: can1_rx_tx {
++						atmel,pins =
++							<AT91_PIOA 6 AT91_PERIPH_B AT91_PINCTRL_NONE	/* CANRX, conflicts with RXD1 */
++							 AT91_PIOA 5 AT91_PERIPH_B AT91_PINCTRL_NONE>;	/* CANTX, conflicts with TXD1 */
++					};
++				};
++
+ 				pioA: gpio@fffff400 {
+ 					compatible = "atmel,at91sam9x5-gpio", "atmel,at91rm9200-gpio";
+ 					reg = <0xfffff400 0x200>;
+-- 
+2.0.4
 
-Mark.
-
-> ---
-> 
-> Based on linux-next. File should be in pci tree.
-> ---
->  Documentation/devicetree/bindings/pci/xilinx-pcie.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/xilinx-pcie.txt b/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
-> index 3e2c88d97ad4..02f979a48aeb 100644
-> --- a/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
-> @@ -58,5 +58,5 @@ Example:
->  			interrupt-controller;
->  			#address-cells = <0>;
->  			#interrupt-cells = <1>;
-> -		}
-> +		};
->  	};
-> --
-> 1.8.2.3
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
