@@ -1,69 +1,87 @@
 From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4 4/4] pmbus: ltc2978: add regulator support
-Date: Wed, 01 Oct 2014 18:26:17 -0700
-Message-ID: <542CA9B9.4050602@roeck-us.net>
-References: <20141001213613.GA29312@roeck-us.net> <alpine.DEB.2.02.1410011713150.5194@atx-linux-37>
+Subject: Re: [PATCH v4 0/4] regulator support for pmbus and ltc2978
+Date: Wed, 01 Oct 2014 20:25:09 -0700
+Message-ID: <542CC595.1050102@roeck-us.net>
+References: <1412190349-16343-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1410011713150.5194@atx-linux-37>
+In-Reply-To: <1412190349-16343-1-git-send-email-atull@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: atull <atull@opensource.altera.com>
-Cc: jdelvare@suse.de, lm-sensors@lm-sensors.org, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+To: atull@opensource.altera.com, jdelvare@suse.de
+Cc: lm-sensors@lm-sensors.org, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/2014 03:20 PM, atull wrote:
-> On Wed, 1 Oct 2014, Guenter Roeck wrote:
+On 10/01/2014 12:05 PM, atull@opensource.altera.com wrote:
+> From: Alan Tull <atull@opensource.altera.com>
 >
->> On Wed, Oct 01, 2014 at 03:18:20PM -0500, atull@opensource.altera.com wrote:
->>> From: Alan Tull <atull@opensource.altera.com>
->>>
->>> Add simple on/off regulator support for ltc2978 and
->>> other pmbus parts supported by ltc2978.c
->>>
->>> Signed-off-by: Alan Tull <atull@opensource.altera.com>
->>>
->>> v2: Remove '#include <linux/regulator/machine.h>'
->>>      Only one regulator per pmbus device
->>>      Get regulator_init_data from pdata or device tree
->>>
->>> v3: Support multiple regulators for each chip
->>>      Move most code to pmbus_core.c
->>>      fixed values for on/off
->>>
->>> v4: fix a #endif comment
->>>      simplify probe code, remove added switch statement
->>>      remove BUG_ON(), add error message and fix num_regulators
->>> ---
->>>   drivers/hwmon/pmbus/Kconfig   |    7 +++++++
->>>   drivers/hwmon/pmbus/ltc2978.c |   37 +++++++++++++++++++++++++++++++++++++
->>>   2 files changed, 44 insertions(+)
->>>
->>> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
->>> index 6e1e493..79117b7 100644
->>> --- a/drivers/hwmon/pmbus/Kconfig
->>> +++ b/drivers/hwmon/pmbus/Kconfig
->>> @@ -56,6 +56,13 @@ config SENSORS_LTC2978
->>>   	  This driver can also be built as a module. If so, the module will
->>>   	  be called ltc2978.
->>>
->>> +config SENSORS_LTC2978_REGULATOR
->>> +	boolean "Regulator support for LTC2974, LTC2978, LTC3880, and LTC3883"
->>
->> We will need to update this and SENSORS_LTC2978 and add LTC2977 as well as
->> LTM4646 to the list of supported chips.
->>
->> Guenter
+> This set of patches adds regulator support for pmbus_core.c and ltc2978.c
 >
-> I will add the whole list to the 'help' sections of SENSORS_LTC2978 and
-> SENSORS_LTC2978_REGULATOR.
+> Each output has individual on/off control.
 >
-> For the tristate/boolean lines, I can't fit the whole list, so I will
-> leave them as they are.  Or I could change to 'LTC2978 and compatibles' as
-> many others in this Kconfig have.
+>>From PMBus_Specification_Part_II_Rev_1-3_20140318.pdf:
+> 12.1.1. OPERATION Command Bit [7]
+>    Bit [7] controls whether the PMBus device output is on or off.
+>     If bit [7] is cleared (equals 0), then the output is off.
+>     If bit [7] is set (equals 1), then the output is on.
 >
-Yes, that makes sense.
+> Fixes in v4 are not huge:
+>    Add device tree bindings documentation for ltc2978.
+>    rename _pmbus_regulator_enable to _pmbus_regulator_on_off
+>    simplify _pmbus_regulator_on_off code
+>    s/regulator_regulator/regulator/
+>    fix build break when !CONFIG_REGULATOR
+>    remove unused #define PB_OPERATION_CONTROL_SEQ_OFF
+>    fix a #endif comment
+>    simplify probe code, remove added switch statement
+>    remove BUG_ON(), add error message and fix num_regulators
+>
+> Patch 1: document device tree bindings for ltc2978
+>
+> Patch 2: add two helper functions for byte pmbus byte operations
+>    * byte write and byte read/modify/write
+>
+> Patch 3: regulator support added in pmbus_core.c and pmbus.h
+>    * regulator_ops functions (is_enabled, enable, and disable)
+>    * gets regulator init data from device tree or platform data
+>    * registers the regulators
+>    * header has a macro for chip drivers to build their
+>      regulator_desc data
+>
+> Patch 4: changes for ltc2978.c
+>    * Add Kconfig to enable/disable ltc2978 regulator functionality
+>    * add regulator_desc and of_regulator_match info
+>    * use same structs for all parts; set num_regulators appropriately.
+>
+> Alan Tull (3):
+>    pmbus: core: add helpers for byte write and read modify write
+>    pmbus: add regulator support
+>    pmbus: ltc2978: add regulator support
+>
+> Alan Tull (4):
+>    hwmon: ltc2978: device tree bindings documentation
+>    pmbus: core: add helpers for byte write and read modify write
+>    pmbus: add regulator support
+>    pmbus: ltc2978: add regulator support
+>
+>   .../devicetree/bindings/hwmon/ltc2978.txt          |   42 +++++
+>   drivers/hwmon/pmbus/Kconfig                        |    7 +
+>   drivers/hwmon/pmbus/ltc2978.c                      |   37 +++++
+>   drivers/hwmon/pmbus/pmbus.h                        |   26 ++++
+>   drivers/hwmon/pmbus/pmbus_core.c                   |  160 ++++++++++++++++++++
+>   include/linux/i2c/pmbus.h                          |    4 +
+>   6 files changed, 276 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/hwmon/ltc2978.txt
+>
+
+Overall looks ok. There is a whitespace error in patch #1, and the revision history
+should be after --- since we don't want it in the commit log. I fixed those up,
+and applied the series to my local hwmon-next branch. I'll do some more testing
+on a real system and then push it into -next. That should happen tomorrow
+unless I encounter some problems.
+
+We can take care of the Kconfig messages with a follow-up patch.
 
 Thanks,
 Guenter
