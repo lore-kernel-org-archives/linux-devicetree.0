@@ -1,51 +1,48 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: vf500/vf610: support VF500 SoC
-Date: Thu, 02 Oct 2014 17:53:37 +0200
-Message-ID: <20f4e3a1932756c92443d380a7f42f56@agner.ch>
-References: <1412261724-11073-1-git-send-email-stefan@agner.ch>
- <8882221.sfQOLcQs3p@wuerfel>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ASoC: simple-card: Add mic and hp detect gpios.
+Date: Thu, 2 Oct 2014 16:53:50 +0100
+Message-ID: <20141002155350.GU4273@sirena.org.uk>
+References: <1412198720-2326-1-git-send-email-dgreid@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="R9lH2i8s2YEs6mH7"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8882221.sfQOLcQs3p@wuerfel>
+Content-Disposition: inline
+In-Reply-To: <1412198720-2326-1-git-send-email-dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 2014-10-02 17:28, schrieb Arnd Bergmann:
-> On Thursday 02 October 2014 16:55:23 Stefan Agner wrote:
->> The VF500 is essentially the same SoC, but with only one core and
->> without L1 cache. The VF610 is therefore a superset of the VF500.
->> Move allmost all periperals to vf500.dtsi which is then included
->> and enhanced by vf610.dtsi.
->>
->> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
->> ---
->> Somehow using -M -B switches create a unapplyable patch, hence I
->> generated one without those options. Sorry about that.
->>
->>  arch/arm/boot/dts/vf500.dtsi | 498 ++++++++++++++++++++++++++++++++++++++++++
->>  arch/arm/boot/dts/vf610.dtsi | 507 +------------------------------------------
->>  2 files changed, 510 insertions(+), 495 deletions(-)
->>  create mode 100644 arch/arm/boot/dts/vf500.dtsi
-> 
-> I think it would be better to create one extra file that contains the common
-> parts and is included by both vf500 and vf610.
-> 
 
-I also thought about that. But when looking at the product variants, its
-clear that VF500 really contains only features, which are part of all
-other Vybrids (VF3xx series excluded, but these series is not really
-suitable for Linux due to lack of external memory). So vf500.dtsi would
-always be a oneliner (#include <vf.dtsi>).
+--R9lH2i8s2YEs6mH7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Also I disliked this idea because of the somewhat unclear naming
-(vf.dtsi? vfxxx.dtsi?)
+On Wed, Oct 01, 2014 at 02:25:20PM -0700, Dylan Reid wrote:
+> Allow Headphone and Microphone jack detect gpios to be specified in
+> device tree.  This will allow a few systems including rk3288_max98090
+> to use simple-card instead of having their own board file.
 
---
-Stefan
+Applied, thanks.
+
+--R9lH2i8s2YEs6mH7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJULXUNAAoJECTWi3JdVIfQKY8H/3bwSnGiY0yhRfJ7CxbA1qzw
+kHX9C3U4qI4WaSRH5lc8tFVxbTALuPz9MVXG3AwBqhK92iDtQokx30aOLjIkeFC6
+EjQeHhJfxm4gqQcvWQQ5kXB6768NOoDoCupxJS4x+WwneXkmeMupJCtrL2xtBzuc
+cIkZMGV1OFJRBpxyabiz0h/xp2S8bF9zG4TM03MRCvgm8ixOVE5xUgOSI4slIewC
+fn1fn68dzNgK2BGUJOY/YvOvwcc6x98nqoYqDnAR7RGKXQdEsg+2ovWuF0C17aDM
+X/5wdx4vS1UzgAA+5niMwvSQTgtFIGJ5Uy7VhFemjSXbSZ3SuH19QKlyG5ekTvI=
+=HWVJ
+-----END PGP SIGNATURE-----
+
+--R9lH2i8s2YEs6mH7--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
