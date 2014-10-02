@@ -1,13 +1,13 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Subject: Re: [PATCH 1/2] arm: shimobile: r8a7790: add HS-USB device node
-Date: Thu, 2 Oct 2014 20:40:08 +0900
-Message-ID: <542D3998.7000303@renesas.com>
-References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412237073-1288-2-git-send-email-yoshihiro.shimoda.uh@renesas.com> <542D21BD.8020709@cogentembedded.com>
+Date: Thu, 2 Oct 2014 20:41:01 +0900
+Message-ID: <542D39CD.7010402@renesas.com>
+References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412237073-1288-2-git-send-email-yoshihiro.shimoda.uh@renesas.com> <542D2214.9050803@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <542D21BD.8020709-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <542D2214.9050803-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
@@ -15,7 +15,7 @@ List-Id: devicetree@vger.kernel.org
 
 Hello.
 
-(2014/10/02 18:58), Sergei Shtylyov wrote:
+(2014/10/02 18:59), Sergei Shtylyov wrote:
 > On 10/2/2014 12:04 PM, Yoshihiro Shimoda wrote:
 > 
 >> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
@@ -37,31 +37,28 @@ Hello.
 >> +        reg = <0 0xe6590000 0 0x100>;
 >> +        interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
 >> +        clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
-> 
->    I don't see where are you handling this prop in the driver...
-
-Thank you for the point. I misunderstood this prop.
-Since the driver is using pm_runtime functions, I thought that
-this device node needs this prop.
-
-So, I will remove this. And, I will also modify the Documentation.
-
 >> +        renesas,buswait_bwait = <4>;
+>> +        phys = <&usb0 1>;
+>> +        phy-names = "usb";
 > 
->    This prop is named "renesas,buswait" now.
+>    You need.
+> 
+>    status = "disabled";
+> 
+> since you're enabling the device node in the board .dts.
 
-Thank you for the point. I will fix it.
+Thank you for the point again.
+I will add this.
 
 Best regards,
 Yoshihiro Shimoda
 
->> " +        phys = <&usb0 1>;
->> +        phy-names = "usb";
->> +    };
->>   };
-> 
 > WBR, Sergei
 > 
+> -- 
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
