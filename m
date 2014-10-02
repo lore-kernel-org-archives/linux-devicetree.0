@@ -1,44 +1,52 @@
-From: Janusz Uzycki <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
-Subject: [PATCH RESEND] serial: mxs-auart: add sysrq support
-Date: Thu,  2 Oct 2014 20:11:36 +0200
-Message-ID: <1412273496-10610-2-git-send-email-j.uzycki@elproma.com.pl>
-References: <20140929014129.GA8687@kroah.com>
- <1412273496-10610-1-git-send-email-j.uzycki@elproma.com.pl>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412273496-10610-1-git-send-email-j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Janusz Uzycki <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
+From: Carlo Caione <carlo@caione.org>
+Subject: Re: [PATCH 1/6] ARM: meson: add meson8 machine definition
+Date: Thu, 2 Oct 2014 20:29:57 +0200
+Message-ID: <20141002182957.GA15355@nuc>
+References: <1412198986-26534-1-git-send-email-b.galvani@gmail.com>
+ <1412198986-26534-2-git-send-email-b.galvani@gmail.com>
+ <11073411.IcmTkIICYA@wuerfel>
+ <20141002170519.GA29052@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141002170519.GA29052@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Beniamino Galvani <b.galvani@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Victor Wan <victor.wan@amlogic.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-When using mxs-auart based console, sometime we need the sysrq function
-to help debugging kernel. The sysrq code is basically there,
-this patch just simply enable it.
+On gio, ott 02, 2014 at 07:05:19 +0200, Beniamino Galvani wrote:
+> On Thu, Oct 02, 2014 at 11:24:54AM +0200, Arnd Bergmann wrote:
+> > On Wednesday 01 October 2014 23:29:41 Beniamino Galvani wrote:
+> > > 
+> > > +static const char * const m8_common_board_compat[] = {
+> > > +       "amlogic,meson8",
+> > > +       NULL,
+> > > +};
+> > > +
+> > >  DT_MACHINE_START(AML8726_MX, "Amlogic Meson6 platform")
+> > >         .dt_compat      = m6_common_board_compat,
+> > >  MACHINE_END
+> > >  
+> > > +DT_MACHINE_START(MESON8, "Amlogic Meson8 platform")
+> > > +       .dt_compat      = m8_common_board_compat,
+> > > +MACHINE_END
+> > > 
+> > 
+> > I'd just add the meson8 string to the m6_common_board_compat list and
+> > rename it.
+> 
+> From what I've seen so far the two families are very similar and share
+> most of the IP cores, so a unique DT machine is a good idea.
+> 
+> Does the MACH_MESON8 Kconfig symbol still make sense or can I drop it
+> and rename MACH_MESON6 to MACH_MESON?
 
-Signed-off-by: Janusz Uzycki <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
----
- drivers/tty/serial/mxs-auart.c | 4 ++++
- 1 file changed, 4 insertions(+)
+I would still leave two different MACH_ for meson6 and meson8 since the
+two architectures aren't _so_ similar.
 
-diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
-index eafce41..e838e84 100644
---- a/drivers/tty/serial/mxs-auart.c
-+++ b/drivers/tty/serial/mxs-auart.c
-@@ -14,6 +14,10 @@
-  * http://www.gnu.org/copyleft/gpl.html
-  */
- 
-+#if defined(CONFIG_SERIAL_MXS_AUART_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
-+#define SUPPORT_SYSRQ
-+#endif
-+
- #include <linux/kernel.h>
- #include <linux/errno.h>
- #include <linux/init.h>
+thanks,
+
 -- 
-1.7.11.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Carlo Caione
