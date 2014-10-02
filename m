@@ -1,37 +1,104 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH] ASoC: simple-card: Add mic and hp detect
- gpios.
-Date: Thu, 02 Oct 2014 18:25:23 +0200
-Message-ID: <542D7C73.20801@metafoo.de>
-References: <1412198720-2326-1-git-send-email-dgreid@chromium.org>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v3 02/15] Driver core: Unified device properties interface for platform firmware
+Date: Thu, 02 Oct 2014 18:50:05 +0200
+Message-ID: <3362983.vANcYgNxxP@vostro.rjw.lan>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <4390403.PNxQqnBDGX@vostro.rjw.lan> <6092163.dWXI6rWTCu@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412198720-2326-1-git-send-email-dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-Cc: sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <6092163.dWXI6rWTCu@wuerfel>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/2014 11:25 PM, Dylan Reid wrote:
-> diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-> index c2e9841..72d94b7 100644
-> --- a/Documentation/devicetree/bindings/sound/simple-card.txt
-> +++ b/Documentation/devicetree/bindings/sound/simple-card.txt
-> @@ -17,6 +17,10 @@ Optional properties:
->   					  source.
->   - simple-audio-card,mclk-fs             : Multiplication factor between stream rate and codec
->     					  mclk.
-> +- simple-audio-card,hp_det_gpio		: Reference to GPIO that signals when
-> +					  headphones are attached.
-> +- simple-audio-card,mic_det_gpio	: Reference to GPIO that signals when
+On Thursday, October 02, 2014 09:46:29 AM Arnd Bergmann wrote:
+> On Thursday 02 October 2014 00:09:44 Rafael J. Wysocki wrote:
+> > On Wednesday, October 01, 2014 09:47:40 AM Arnd Bergmann wrote:
+> > > On Wednesday 01 October 2014 04:10:03 Rafael J. Wysocki wrote:
+> > > I still have my reservations against the child accessors, and would
+> > > like to hear what other people think. Passing a void pointer rather
+> > > than struct fw_dev_node has both advantages and disadvantages, and
+> > > I won't complain about either one if enough other people on the DT
+> > > side would like to see the addition of the child functions.
+> > 
+> > I actually would rather like to know if the people on the DT side have any
+> > problems with the child functions.
+> 
+> Sure, any kind of feedback would be helpful really. 
+> 
+> > Because, suppose that they wouldn't like those functions at all.  What are we
+> > supposed to do, then, honestly?  Add the whole DT vs ACPI logic to the leds-gpio
+> > and gpio_keys_polled drivers?  But these drivers have no reason whatsoever
+> > to include that.  Zero.
+> > 
+> > So suggestions welcome.
+> > 
+> > [BTW, In principle we also could use something like
+> > 
+> > typedef union dev_node {
+> > 	struct acpi_device *acpi_node;
+> > 	struct device_node *of_node;
+> > } dev_node_t;
+> > 
+> > instead of the (void *) for more type safety.  It still is useful to pass the
+> > parent pointer along with that, though.]
+> 
+> Yes, I'm not worried about the implementation details.
+> 
+> > > > Finally, device_for_each_child_node() is added for iterating over
+> > > > the children of the device description object associated with a
+> > > > given device.
+> > > > 
+> > > > The interface covers both ACPI and Device Trees.
+> > > > 
+> > > > This change set includes material from Mika Westerberg and Aaron Lu.
+> > > > 
+> > > 
+> > > Regarding device_for_each_child_node(), the syntax is inconsistent
+> > > with what we normally use, which can probably be changed. All of the
+> > > DT for_each_* helpers are macros that are used like
+> > > 
+> > > 	struct device *dev = ...;
+> > > 	void *child; /* iterator */
+> > > 
+> > > 	device_for_each_child_node(dev, child) {
+> > > 		u32 something;
+> > > 		device_child_property_read_u32(dev, child, "propname", &something);
+> > > 
+> > > 		do_something(dev, something);
+> > > 	}
+> > > 
+> > > If we get a consensus on having the child interfaces, I'd rather see
+> > > them done this way than with a callback pointer, for consistency
+> > > reasons.
+> > 
+> > That certainly is doable, although the resulting macro would generate a rather
+> > large chunk of code each time it is used.
+> 
+> 
+> #define device_for_each_child_node(dev, child) \
+> 	for (child = device_get_next_child_node(dev, NULL), child, \
+> 	     child = device_get_next_child_node(dev, child))
+> 
+> void *device_get_next_child_node(struct device *dev, void *child)
+> {
+> 	if (IS_ENABLED(CONFIG_OF) && dev->of_node)
+> 		return of_get_next_child(dev->of_node, child);
+> 	else if (IS_ENABLED(CONFIG_ACPI) && ...)
+> 		return acpi_get_next_child(dev, child);
+> 	return NULL;
+> }
+> 
+> Not any more code than what we have today for the DT-only case, and it's
+> really just a function call in a loop.
 
-The code has this correct, the "_"s should be "-"s.
+OK, I see what you mean.
 
-- Lars
+Now we have the if () on every iteration instead of just doing that once
+upfront.  Not a big deal I suppose, but slightly ugly to me.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
