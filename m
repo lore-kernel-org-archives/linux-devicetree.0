@@ -1,57 +1,91 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] ARM: dts: mt8135: Add pinctrl node for mt8135.
-Date: Thu, 2 Oct 2014 16:02:58 +0200
-Message-ID: <CACRpkdbtN-BDEwpJO2swnOjCe3UJhD5WOXXKBV0hPOe2M2=k7Q@mail.gmail.com>
-References: <1411443545-24951-1-git-send-email-srv_hongzhou.yang@mediatek.com>
-	<1411443545-24951-5-git-send-email-srv_hongzhou.yang@mediatek.com>
-	<CACRpkda-K7w-bY0uSdnZvzEKEeQg38oExoHPSW61kEv9Wv20mA@mail.gmail.com>
-	<20140924124044.GC4992@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140924124044.GC4992-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "Hongzhou.Yang" <srv_hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dandan.he-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: [PATCH v2] w1: ds2482: add support for ds2482-101 sleep pin
+Date: Thu,  2 Oct 2014 16:06:36 +0200
+Message-ID: <1412258796-12814-1-git-send-email-s.trumtrar@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Evgeniy Polyakov <zbr@ioremap.net>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, kernel@pengutronix.de, Steffen Trumtrar <s.trumtrar@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 24, 2014 at 2:40 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> On Wed, Sep 24, 2014 at 01:23:09PM +0200, Linus Walleij wrote:
+The ds2482-101 version of the chip has an active-low sleep pin. Add this as a
+gpio to the probe function and describe the DT binding accordingly.
 
->> I haven't got to reviewing the driver, but this looks just wrong.
->>
->> Have the magic numbers in the driver.
->>
->> Use strings to describe functions, not integers.
->
-> Interrupts, clocks, gpios, dma channels, nearly everything in the device tree is
-> arbitrarily numbered. Instead of "irq-i2c0" we have <0 36 IRQ_TYPE_LEVEL_HIGH>
-> in the device tree. These numbers can be resolved efficiently in the
-> driver by shifting them to get a bitmask or by adding them as offset to
-> a register base.
-> Why do you want to make pinctrl different?
+Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+---
 
-Because pin control is about combining groups of pins with
-certain functions.
+Changes since v1:
+	- rebased to next-20141001
 
-> Thanks to the recently
-> introduced defines in the device trees these numbers are not magic at
-> all anymore.
+ Documentation/devicetree/bindings/w1/ds2482.txt | 18 ++++++++++++++++++
+ drivers/w1/masters/ds2482.c                     |  9 +++++++++
+ 2 files changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/w1/ds2482.txt
 
-Yeah that is good but not what I'm after here.
-
->> We need to move toward standardized device tree bindings
->> for this stuff, and that means using strings, not magic
->> numbers.
->
-> Agreed for standardized device tree bindings, but not for using strings.
-
-What is the alternative? Device Tree is very much about strings,
-as is shown by the pin config bindings.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/w1/ds2482.txt b/Documentation/devicetree/bindings/w1/ds2482.txt
+new file mode 100644
+index 000000000000..e065207ab4b8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/w1/ds2482.txt
+@@ -0,0 +1,18 @@
++ds2482 devicetree bindings
++
++Required properties:
++
++ - compatible: "dallas,ds2482"
++
++Optional properties:
++
++ - sleep-gpios: if specified, the ds2482 has a low-active sleep-pin (ds2482-101).
++
++Example:
++
++	1wire@18 {
++		compatible = "dallas,ds2482";
++		reg = <0x18>;
++		sleep-gpios = <&gpio4 2 0>;
++	};
++
+diff --git a/drivers/w1/masters/ds2482.c b/drivers/w1/masters/ds2482.c
+index e76a9b39abb2..d9e7fd479224 100644
+--- a/drivers/w1/masters/ds2482.c
++++ b/drivers/w1/masters/ds2482.c
+@@ -18,6 +18,7 @@
+ #include <linux/slab.h>
+ #include <linux/i2c.h>
+ #include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ #include <asm/delay.h>
+ 
+ #include "../w1.h"
+@@ -128,6 +129,7 @@ struct ds2482_data {
+ 	u8			channel;
+ 	u8			read_prt;	/* see DS2482_PTR_CODE_xxx */
+ 	u8			reg_config;
++	struct gpio_desc	*slpz_gpio;
+ };
+ 
+ 
+@@ -449,6 +451,7 @@ static int ds2482_probe(struct i2c_client *client,
+ 			const struct i2c_device_id *id)
+ {
+ 	struct ds2482_data *data;
++	struct gpio_desc *gpio;
+ 	int err = -ENODEV;
+ 	int temp1;
+ 	int idx;
+@@ -466,6 +469,12 @@ static int ds2482_probe(struct i2c_client *client,
+ 	data->client = client;
+ 	i2c_set_clientdata(client, data);
+ 
++	gpio = devm_gpiod_get(&client->dev, "sleep");
++	if (!IS_ERR(gpio)) {
++		data->slpz_gpio = gpio;
++		gpiod_direction_output(data->slpz_gpio, 1);
++	}
++
+ 	/* Reset the device (sets the read_ptr to status) */
+ 	if (ds2482_send_cmd(data, DS2482_CMD_RESET) < 0) {
+ 		dev_warn(&client->dev, "DS2482 reset failed.\n");
+-- 
+2.1.0
