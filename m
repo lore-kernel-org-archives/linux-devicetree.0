@@ -1,38 +1,44 @@
-From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: meson: add meson8 machine definition
-Date: Thu, 2 Oct 2014 19:08:48 +0200
-Message-ID: <20141002170848.GB29052@gmail.com>
-References: <1412198986-26534-1-git-send-email-b.galvani@gmail.com>
- <1412198986-26534-2-git-send-email-b.galvani@gmail.com>
- <6568653.UtyvOjrQBb@wuerfel>
+From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC][PATCH 1/4] regulator: Add helper function to get "poweroff-source"
+ property
+Date: Thu, 02 Oct 2014 19:43:00 +0200
+Message-ID: <542D8EA4.6080903@gmail.com>
+References: <1412098186-5042-1-git-send-email-romain.perier@gmail.com> <20141001180759.GH4273@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6568653.UtyvOjrQBb@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141001180759.GH4273-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?windows-1252?Q?=22heiko=40sntech=2Ede_?= =?windows-1252?Q?=3E=3E_Heiko_St=FCbner=22?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 02, 2014 at 11:28:14AM +0200, Arnd Bergmann wrote:
-> On Wednesday 01 October 2014 23:29:41 Beniamino Galvani wrote:
-> >  DT_MACHINE_START(AML8726_MX, "Amlogic Meson6 platform")
-> >         .dt_compat      = m6_common_board_compat,
-> >  MACHINE_END
-> >  
-> > +DT_MACHINE_START(MESON8, "Amlogic Meson8 platform")
-> > +       .dt_compat      = m8_common_board_compat,
-> > +MACHINE_END
-> 
-> One more thing: since this is a cortex-a9, don't you have to enable
-> the l2x0 cache controller explicitly? I think you need a
-> ".l2c_aux_mask   = ~0," entry here.
+Adding the corresponding drivers and DT maintainers to the loop (parts=20
+of the kernel which use this property)
 
-Will do, thanks.
-
-Beniamino
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Le 01/10/2014 20:07, Mark Brown a =E9crit :
+> On Tue, Sep 30, 2014 at 05:29:43PM +0000, Romain Perier wrote:
+>
+>> +/**
+>> + * of_get_regulator_poweroff_source - Get poweroff-source for given=
+ device_node
+>> + * @np: Pointer to the given device_node
+>> + *
+>> + * return true if present false otherwise
+>> + */
+>> +bool of_get_regulator_poweroff_source(const struct device_node *np)
+>> +{
+>> +	return of_property_read_bool(np, "poweroff-source");
+>> +}
+>> +EXPORT_SYMBOL_GPL(of_get_regulator_poweroff_source);
+> This isn't really a regulator specific thing - it's common for the
+> actual implementation to be to simply cut power but it could be
+> something that doesn't look like a regulator doing it like a system
+> monitor.  I'd rename this to something like is_system_poweroff_source=
+().
+>
+> You probably also want to CC the DT maintainers on this and add some
+> documentation of this as a standard property, not entirely sure where
+> exactly but I'm sure the DT people could advise.
