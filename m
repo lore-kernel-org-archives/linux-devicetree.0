@@ -1,73 +1,99 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: sun7i: Add Mele M3 board
-Date: Thu, 2 Oct 2014 14:25:49 +0200
-Message-ID: <20141002122549.GB4039@lukather>
-References: <1412173537-8538-1-git-send-email-hdegoede@redhat.com>
- <1412173537-8538-2-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 04/15] ACPI: Document ACPI device specific properties
+Date: Thu, 02 Oct 2014 14:46:30 +0200
+Message-ID: <15893883.nvuW3ndylz@wuerfel>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <2466832.0XJezjdvYs@wuerfel> <20141002121508.GM1786@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="O5XBE6gyVG5Rl6Rj"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBTEKWWQQKGQEVW5H23Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1412173537-8538-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20141002121508.GM1786@lahna.fi.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thursday 02 October 2014 15:15:08 Mika Westerberg wrote:
+> > I thought when we had discussed the subsystem specific bindings, the
+> > consensus there was to have subsystem specific accessors and
+> > properties/tables.
+> > 
+> > I would argue that for everything that ACPI already has (interrupts,
+> > registers, gpio, dmaengine, ...) the native method should be used,
+> > possibly using _DSD to provide naming for otherwise anonymous references.
+> 
+> Absolutely. That's precisely what we do in the GPIO patch of this
+> series. E.g we use ACPI GpioIo/GpioInt _CRS resources but give name to
+> the GPIOs with the help of _DSD.
 
---O5XBE6gyVG5Rl6Rj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok, I've looked at the example again:
 
-On Wed, Oct 01, 2014 at 04:25:37PM +0200, Hans de Goede wrote:
-> The Mele M3 is yet another Allwinnner based Android top set box from Mele.
->=20
-> It uses a housing similar to the A2000, but without the USM sata storage =
-slot
-> at the top.
->=20
-> It features an A20 SoC, 1G RAM, 4G eMMC (unique for Allwinner devices),
-> 100Mbit ethernet, HDMI out, 3 USB A receptacles, VGA, and A/V OUT connect=
-ions.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
++       Device (DEV0)
++       {
++               Name (_CRS, ResourceTemplate () {
++                       GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
++                               "\\_SB.PCI0.LPC", 0, ResourceConsumer) {0}
++                       GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
++                               "\\_SB.PCI0.LPC", 0, ResourceConsumer) {1}
++                       ...
++               })
++
++               Name (_DSD, Package () {
++                       ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++                       Package () {
++                               Package () {"reset-gpio", {^DEV0, 0, 0, 0}},
++                               Package () {"shutdown-gpio", {^DEV0, 1, 0, 0}},
++                       }
++               })
++       }
 
-Queued for 3.19, thanks!
+tell me if I'm interpreting this right: you use _CRS to define a reference
+to the actual GPIO controller here, but then in your _DSD you have something
+that is a bit like the DT gpio binding, except that it doesn't refer to
+a GPIO controller but to the GPIO using device itself.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+When a driver calls dev_get_named_gpiod_from_child, you then lookup the
+"reset-gpio" (or other) properties to find the reference to the _CRS.
 
---O5XBE6gyVG5Rl6Rj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Why can't you instead have a "gpio-names" property in _DSD that just
+links from a string to an index as we do in all the other bindings?
+It sounds to me like that would be simpler and more consistent with
+the way things are done in ACPI, and have no effect that would be visible
+to the driver.
+ 
+> For things that don't have correspondence in ACPI but have well defined
+> existing DT schema, like PWMs, we should follow that.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Only for stuff that is visible to drivers. I think it's important
+that a driver calling pwm_get() today should keep working with
+ACPI when the pwm subsystem is extended to support that.
 
-iQIcBAEBAgAGBQJULURNAAoJEBx+YmzsjxAgu2cP/iMzK3rRNwPXQwEHicTWNayn
-1HQL81yHljRevCHkPRA26VYQ6gJd2iGU/AwOJcwsoj1dY2TDv5MpLkf9/CJ0M/+A
-v04YW6p2QAc9ds7MKrdspGy3R9CFs6tmQq4fF/o1Abf8INkusm28YEj1aVBYO882
-cJJgCzJMEile8CSDgVGVyfocAvZJU7S3ri9qcpiwoNDqrwuKdamfNXxbTLxZ1XD3
-yZhJ4kLQr1XBonHwyrQgW3VmkPhDwcIFFXjnf9/lZu/ev9lRG+w1raAb0Q9hfWg0
-Q5UI0rNb22tcAIX0+ms7iDnjU7h36QaHls3Qtm5uf5jV8bFhKFyVfmqw7hv7i0AJ
-rn5Rou6apwvcdXLJJ4Ptv+nWFFBK3B/FugmBHQ3N0u7RegST6rBvlw4Z8dtwiAIZ
-0a94Cb/MqiZhD4G6BYVNtixxxfPMQnks+Hr8vc5gHtX66DDX+sYTF00eWVb+nvV1
-vHOjLhJKU0sYHhC70lltRgPU+OaavKWCuNyBHV5QTJF/SW35a6TbKOQ0ZHjnXunZ
-f+rMTJLD7FiidLchP1v2WhBTKm6+jhRx1c0kwf9Tu5IhjLdDUVfF/uqFpJPw/e76
-tiOcums3Bn/kP6EtlutveITPRomfkifa/rPHiSuCJpQkQz2aWDAjE07b2lOEUjzd
-rj3j8jfw9uAvcrNWo5SG
-=0cNv
------END PGP SIGNATURE-----
+However, that does not necessarily mean using #pwm-cells and pwm-names
+properties when there is a better way to express the same in ACPI
+syntax. AFAICT, the #foo-names is completely redundant for ACPI
+as the length of a property in a list of similar elements is part
+of the binary data (if not, please correct me), and I already commented
+that I think the foo-names stuff could be encoded in the package
+directly in a way we can't do in DT.
 
---O5XBE6gyVG5Rl6Rj--
+Even if you want to do automatic translation between DT and ACPI,
+I think it would be possible to treat these two the same:
+
+(forgive any syntax errors)
+
+	Name (_DSD, Package () {
+		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+		Package () {
+			Package () { "pwms" { "led-red", ^PWM0, 0, 10 },
+					    { "led-green", ^PWM0, 1, 20 }},
+	}
+
+vs.
+
+	pwm-slave {
+		pwms = <&pwm0 0 10>, <&pwm1 1 20>;
+		pwm-names = "led-red", "led-green";
+	};
+
+
+	Arnd
