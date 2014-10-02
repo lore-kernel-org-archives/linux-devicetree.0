@@ -1,53 +1,25 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v10 0/4] APM X-Gene PCIe host controller
-Date: Thu, 2 Oct 2014 08:36:16 -0600
-Message-ID: <CAErSpo4i4+0c6Qy9w3tKXex2M7Q=Ry8aG-cbO1_uiC8wtD7puQ@mail.gmail.com>
-References: <1411765707-28822-1-git-send-email-tinamdar@apm.com>
- <20141001191403.GC22713@google.com> <2135522.DVGa59N1mx@wuerfel>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v3 04/15] ACPI: Document ACPI device specific properties
+Date: Thu, 2 Oct 2014 17:38:09 +0300
+Message-ID: <20141002143809.GQ1786@lahna.fi.intel.com>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
+ <15893883.nvuW3ndylz@wuerfel>
+ <20141002133654.GP1786@lahna.fi.intel.com>
+ <3986527.L7rDZAb4g5@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <2135522.DVGa59N1mx@wuerfel>
-Sender: linux-doc-owner@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3986527.L7rDZAb4g5@wuerfel>
+Sender: linux-acpi-owner@vger.kernel.org
 To: Arnd Bergmann <arnd@arndb.de>
-Cc: Tanmay Inamdar <tinamdar@apm.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 2, 2014 at 6:20 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wednesday 01 October 2014 13:14:03 Bjorn Helgaas wrote:
->> On Fri, Sep 26, 2014 at 02:08:23PM -0700, Tanmay Inamdar wrote:
->> > This patch adds support for AppliedMicro X-Gene PCIe host controller. The
->> > driver is tested on X-Gene platform with different gen1/2/3 PCIe endpoint
->> > cards.
->> >
->> > X-Gene PCIe controller driver has depedency on the pcie arm64 arch support.
->> > Liviu Dudau from ARM has sent a patch set for pcie arm64 arch support and
->> > support for creating generic pcie bridge from device tree. Liviu's patches
->> > are available here
->> > https://lkml.org/lkml/2014/9/23/852
->> >
->> > If someone wishes to test PCIe on X-Gene with this patch set, above mentioned
->> > patches from Liviu must be applied before the patches in this patch set. Also
->> > please use latest xgene u-boot firmware.
->>
->> I applied these on pci/host-xgene (based on pci/host-generic).  I hope to
->> merge these for v3.18.  It'd be nice to have a device tree person like Arnd
->> or Rob take a look at the arch/arm64/boot/dts/ bits.
->
-> Those changes should normally go through the arm-soc tree, but we
-> have not done that so far for arm64 stuff, so I'm not blaming anybody.
->
-> The dts changes all look good to me, and I think it's ok to have them
-> go through your tree this time.
->
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
->
-> In the future, we should all have an eye on this more to ensure that
-> the .dts changes all go through arm-soc.
+On Thu, Oct 02, 2014 at 04:29:03PM +0200, Arnd Bergmann wrote:
+> Is this a limitation in the way that the AML syntax and compiler works,
+> or is this a decision you made specifically for the _DSD syntax and that
+> could still be changed if there is an overwhelming interest?
 
-The arch/arm64/boot/dts patch is at the tip of my branch, and I'd be
-more than happy to drop it.  It would be nice to have it in v3.18
-along with the driver, though, so I'll keep it until somebody chimes
-in to put it in arm-soc.
-
-Bjorn
+It is only limitation of the _DSD device property UUID specification and
+our implementation. It can be changed if needed.
