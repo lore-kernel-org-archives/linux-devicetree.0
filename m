@@ -1,49 +1,103 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/2] arm: shimobile: r8a7790: add HS-USB device node
-Date: Thu, 02 Oct 2014 16:08:24 +0400
-Message-ID: <542D4038.5000504@cogentembedded.com>
-References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412237073-1288-2-git-send-email-yoshihiro.shimoda.uh@renesas.com> <542D21BD.8020709@cogentembedded.com> <542D3998.7000303@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <542D3998.7000303@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] of/selftest: Add a test for duplicate phandles
+Date: Thu,  2 Oct 2014 13:11:49 +0100
+Message-ID: <1412251909-5579-1-git-send-email-grant.likely@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+All phandles in the tree should be unique. Add a testcase to make sure
+that this is so.
 
-On 10/02/2014 03:40 PM, Yoshihiro Shimoda wrote:
+Note: this testcase fails on the current kernel because the selftest
+code itself ends up adding duplicate phandles. Before this testcase is
+merged the selftest code needs to be modified to resolve phandles before
+adding them.
 
->>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->>> ---
->>>    arch/arm/boot/dts/r8a7790.dtsi |   10 ++++++++++
->>>    1 file changed, 10 insertions(+)
+Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+---
+ drivers/of/selftest.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
->>> diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
->>> index 2380fd5..fd9fc37 100644
->>> --- a/arch/arm/boot/dts/r8a7790.dtsi
->>> +++ b/arch/arm/boot/dts/r8a7790.dtsi
->>> @@ -1314,4 +1314,14 @@
->>>                ssi9: ssi@9 { interrupts = <0 379 IRQ_TYPE_LEVEL_HIGH>; };
->>>            };
->>>        };
->>> +
->>> +    hsusb: usb@e6590000 {
->>> +        compatible = "renesas,usbhs-r8a7790";
->>> +        reg = <0 0xe6590000 0 0x100>;
->>> +        interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
->>> +        clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
+diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+index 953b5eb1d09d..634eb79bfe47 100644
+--- a/drivers/of/selftest.c
++++ b/drivers/of/selftest.c
+@@ -7,6 +7,7 @@
+ #include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/errno.h>
++#include <linux/hashtable.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_fdt.h>
+@@ -192,6 +193,51 @@ static void __init of_selftest_check_tree_linkage(void)
+ 	pr_info("allnodes list size (%i); sibling lists size (%i)\n", allnode_count, child_count);
+ }
+ 
++struct node_hash {
++	struct hlist_node node;
++	struct device_node *np;
++};
++
++static void __init of_selftest_check_phandles(void)
++{
++	struct device_node *np;
++	struct node_hash *nh;
++	struct hlist_node *tmp;
++	int i, dup_count = 0, phandle_count = 0;
++	DECLARE_HASHTABLE(ht, 8);
++
++	hash_init(ht);
++	for_each_of_allnodes(np) {
++		if (!np->phandle)
++			continue;
++
++		hash_for_each_possible(ht, nh, node, np->phandle) {
++			if (nh->np->phandle == np->phandle) {
++				pr_info("Duplicate phandle! %i used by %s and %s\n",
++					np->phandle, nh->np->full_name, np->full_name);
++				dup_count++;
++				break;
++			}
++		}
++
++		nh = kzalloc(sizeof(*nh), GFP_KERNEL);
++		if (WARN_ON(!nh))
++			return;
++
++		nh->np = np;
++		hash_add(ht, &nh->node, np->phandle);
++		phandle_count++;
++	}
++	selftest(dup_count == 0, "Found %i duplicates in %i phandles\n",
++		 dup_count, phandle_count);
++
++	/* Clean up */
++	hash_for_each_safe(ht, i, tmp, nh, node) {
++		hash_del(&nh->node);
++		kfree(nh);
++	}
++}
++
+ static void __init of_selftest_parse_phandle_with_args(void)
+ {
+ 	struct device_node *np;
+@@ -825,6 +871,7 @@ static int __init of_selftest(void)
+ 
+ 	pr_info("start of selftest - you will see error messages\n");
+ 	of_selftest_check_tree_linkage();
++	of_selftest_check_phandles();
+ 	of_selftest_find_node_by_name();
+ 	of_selftest_dynamic();
+ 	of_selftest_parse_phandle_with_args();
+-- 
+1.9.1
 
->>     I don't see where are you handling this prop in the driver...
-
-> Thank you for the point. I misunderstood this prop.
-> Since the driver is using pm_runtime functions, I thought that
-> this device node needs this prop.
-
-    Ah, I've overlooked the RPM related code. No need to remove the prop then.
-
-WBR, Sergei
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
