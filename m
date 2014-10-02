@@ -1,65 +1,68 @@
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm: socfpga: Enable ECC of L2 and OCRAM on startup.
-Date: Thu, 2 Oct 2014 06:38:00 -0500
-Message-ID: <542D3918.3040909@opensource.altera.com>
-References: <1412181092-27162-1-git-send-email-tthayer@opensource.altera.com> <1412181092-27162-2-git-send-email-tthayer@opensource.altera.com> <542C3654.1070604@gmail.com> <542C6CFB.4090809@opensource.altera.com> <542C6DBB.9060202@opensource.altera.com> <542C7DD0.5030601@opensource.altera.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm: shimobile: r8a7790: add HS-USB device node
+Date: Thu, 2 Oct 2014 20:40:08 +0900
+Message-ID: <542D3998.7000303@renesas.com>
+References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412237073-1288-2-git-send-email-yoshihiro.shimoda.uh@renesas.com> <542D21BD.8020709@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <542C7DD0.5030601-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <542D21BD.8020709-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
-
-On 10/1/14, 5:18 PM, Thor Thayer wrote:
+(2014/10/02 18:58), Sergei Shtylyov wrote:
+> On 10/2/2014 12:04 PM, Yoshihiro Shimoda wrote:
 > 
-> On 10/01/2014 04:10 PM, Dinh Nguyen wrote:
->>
->> On 10/1/14, 4:07 PM, Thor Thayer wrote:
->>> On 10/01/2014 12:13 PM, Dinh Nguyen wrote:
->>>> On 10/1/14, 11:31 AM, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
->>>>> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>>>>
->> [...]
->>>>>      static void socfpga_cyclone5_restart(enum reboot_mode mode, const
->>>>> char *cmd)
->>>>> @@ -98,6 +101,13 @@ static void socfpga_cyclone5_restart(enum
->>>>> reboot_mode mode, const char *cmd)
->>>>>        writel(temp, rst_manager_base_addr + SOCFPGA_RSTMGR_CTRL);
->>>>>    }
->>>>>    +static void __init socfpga_cyclone5_init(void)
->>>>> +{
->>>>> +    of_platform_populate(NULL, of_default_bus_match_table,
->>>>> +                 NULL, NULL);
->>>> Why is this needed?
->>>>
->>>> Dinh
->>> Hi Dinh.
->>>
->>> Are you asking why the of_platform_populate() is needed? If so, it is
->>> used to kick off discovery of devices at the root of the tree.
->> I was asking about of_platform populate(). This was removed in this
->> commit:
->>
->> 8b5c18f05 ARM: l2c: socfpga: convert to generic l2c OF initialisation
->>
->> Just trying to understand what's the need to add it back?
->>
->> Dinh
-> It is used to kick off discovery of devices at the root of the tree. 
-> This is needed when .init_machine was defined because we're not using
-> the default implementation (which called this function).
+>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/r8a7790.dtsi |   10 ++++++++++
+>>   1 file changed, 10 insertions(+)
 > 
+>> diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+>> index 2380fd5..fd9fc37 100644
+>> --- a/arch/arm/boot/dts/r8a7790.dtsi
+>> +++ b/arch/arm/boot/dts/r8a7790.dtsi
+>> @@ -1314,4 +1314,14 @@
+>>               ssi9: ssi@9 { interrupts = <0 379 IRQ_TYPE_LEVEL_HIGH>; };
+>>           };
+>>       };
+>> +
+>> +    hsusb: usb@e6590000 {
+>> +        compatible = "renesas,usbhs-r8a7790";
+>> +        reg = <0 0xe6590000 0 0x100>;
+>> +        interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
+>> +        clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
+> 
+>    I don't see where are you handling this prop in the driver...
 
-Then, can you please add a separate patch to fix up the removal of the call?
+Thank you for the point. I misunderstood this prop.
+Since the driver is using pm_runtime functions, I thought that
+this device node needs this prop.
 
-Thanks,
-Dinh
+So, I will remove this. And, I will also modify the Documentation.
+
+>> +        renesas,buswait_bwait = <4>;
+> 
+>    This prop is named "renesas,buswait" now.
+
+Thank you for the point. I will fix it.
+
+Best regards,
+Yoshihiro Shimoda
+
+>> " +        phys = <&usb0 1>;
+>> +        phy-names = "usb";
+>> +    };
+>>   };
+> 
+> WBR, Sergei
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
