@@ -1,36 +1,56 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] of: Fix padding in _OF_DECLARE macro definition
-Date: Thu,  2 Oct 2014 16:01:10 +0200
-Message-ID: <1412258470-23940-1-git-send-email-thierry.reding@gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] ARM: dts: mt8135: Add pinctrl node for mt8135.
+Date: Thu, 2 Oct 2014 16:02:58 +0200
+Message-ID: <CACRpkdbtN-BDEwpJO2swnOjCe3UJhD5WOXXKBV0hPOe2M2=k7Q@mail.gmail.com>
+References: <1411443545-24951-1-git-send-email-srv_hongzhou.yang@mediatek.com>
+	<1411443545-24951-5-git-send-email-srv_hongzhou.yang@mediatek.com>
+	<CACRpkda-K7w-bY0uSdnZvzEKEeQg38oExoHPSW61kEv9Wv20mA@mail.gmail.com>
+	<20140924124044.GC4992@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140924124044.GC4992-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "Hongzhou.Yang" <srv_hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dandan.he-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Wed, Sep 24, 2014 at 2:40 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> On Wed, Sep 24, 2014 at 01:23:09PM +0200, Linus Walleij wrote:
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- include/linux/of.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>> I haven't got to reviewing the driver, but this looks just wrong.
+>>
+>> Have the magic numbers in the driver.
+>>
+>> Use strings to describe functions, not integers.
+>
+> Interrupts, clocks, gpios, dma channels, nearly everything in the device tree is
+> arbitrarily numbered. Instead of "irq-i2c0" we have <0 36 IRQ_TYPE_LEVEL_HIGH>
+> in the device tree. These numbers can be resolved efficiently in the
+> driver by shifting them to get a bitmask or by adding them as offset to
+> a register base.
+> Why do you want to make pinctrl different?
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 6c4363b8ddc3..951e9ee7d3e0 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -772,7 +772,7 @@ static inline int of_get_available_child_count(const struct device_node *np)
- 		 = { .compatible = compat,				\
- 		     .data = (fn == (fn_type)NULL) ? fn : fn  }
- #else
--#define _OF_DECLARE(table, name, compat, fn, fn_type)					\
-+#define _OF_DECLARE(table, name, compat, fn, fn_type)			\
- 	static const struct of_device_id __of_table_##name		\
- 		__attribute__((unused))					\
- 		 = { .compatible = compat,				\
--- 
-2.1.0
+Because pin control is about combining groups of pins with
+certain functions.
 
+> Thanks to the recently
+> introduced defines in the device trees these numbers are not magic at
+> all anymore.
+
+Yeah that is good but not what I'm after here.
+
+>> We need to move toward standardized device tree bindings
+>> for this stuff, and that means using strings, not magic
+>> numbers.
+>
+> Agreed for standardized device tree bindings, but not for using strings.
+
+What is the alternative? Device Tree is very much about strings,
+as is shown by the pin config bindings.
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
