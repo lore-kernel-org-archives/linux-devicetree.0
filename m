@@ -1,35 +1,30 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/2] arm: shmobile: lager: enable HS-USB
-Date: Thu, 2 Oct 2014 17:04:33 +0900
-Message-ID: <1412237073-1288-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/3] arm: shimobile: add HS-USB device node on r8a7791
+Date: Thu, 2 Oct 2014 17:05:32 +0900
+Message-ID: <1412237135-1668-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/r8a7790-lager.dts |    5 +++++
- 1 file changed, 5 insertions(+)
+ This series is based on Simon's renesas.git branch and
+renesas-devel-20141002-v3.17-rc7 tag. If we use the generic phy
+driver for R-Car Gen2 (drivers/phy/phy-rcar-gen2.c), we can use
+the HS-USB on koelsch and henninger.
 
-diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-index 1698591..4badd0a 100644
---- a/arch/arm/boot/dts/r8a7790-lager.dts
-+++ b/arch/arm/boot/dts/r8a7790-lager.dts
-@@ -445,3 +445,8 @@
- 		};
- 	};
- };
-+
-+&hsusb {
-+	status = "okay";
-+	renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_LOW>;
-+};
+Yoshihiro Shimoda (3):
+  arm: shimobile: r8a7791: add HS-USB device node
+  arm: shmobile: koelsch: enable HS-USB
+  arm: shmobile: henninger: enable HS-USB
+
+ arch/arm/boot/dts/r8a7791-henninger.dts |    5 +++++
+ arch/arm/boot/dts/r8a7791-koelsch.dts   |    5 +++++
+ arch/arm/boot/dts/r8a7791.dtsi          |   10 ++++++++++
+ 3 files changed, 20 insertions(+)
+
 -- 
 1.7.9.5
 
