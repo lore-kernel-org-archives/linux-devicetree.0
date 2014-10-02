@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 1/3] arm: shimobile: r8a7791: add HS-USB device node
-Date: Thu, 2 Oct 2014 17:05:33 +0900
-Message-ID: <1412237135-1668-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 2/3] arm: shmobile: koelsch: enable HS-USB
+Date: Thu, 2 Oct 2014 17:05:34 +0900
+Message-ID: <1412237135-1668-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1412237135-1668-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,28 +14,22 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- arch/arm/boot/dts/r8a7791.dtsi |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/r8a7791-koelsch.dts |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index d343099..393adcb 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -1300,4 +1300,14 @@
- 			ssi9: ssi@9 { interrupts = <0 379 IRQ_TYPE_LEVEL_HIGH>; };
+diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
+index 3f55c16..b3dac1a 100644
+--- a/arch/arm/boot/dts/r8a7791-koelsch.dts
++++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
+@@ -495,3 +495,8 @@
  		};
  	};
-+
-+	hsusb: usb@e6590000 {
-+		compatible = "renesas,usbhs-r8a7791";
-+		reg = <0 0xe6590000 0 0x100>;
-+		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp7_clks R8A7791_CLK_HSUSB>;
-+		renesas,buswait_bwait = <4>;
-+		phys = <&usb0 1>;
-+		phy-names = "usb";
-+	};
  };
++
++&hsusb {
++	status = "okay";
++	renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_LOW>;
++};
 -- 
 1.7.9.5
 
