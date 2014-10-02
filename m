@@ -1,99 +1,71 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 04/15] ACPI: Document ACPI device specific properties
-Date: Thu, 02 Oct 2014 14:46:30 +0200
-Message-ID: <15893883.nvuW3ndylz@wuerfel>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <2466832.0XJezjdvYs@wuerfel> <20141002121508.GM1786@lahna.fi.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20141002121508.GM1786@lahna.fi.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] ARM: zynq: DT: Add cadence watchdog node
+Date: Thu,  2 Oct 2014 15:11:27 +0200
+Message-ID: <2079bb5b538a78c720cc7a1517c227376da1a3ba.1412255481.git.michal.simek@xilinx.com>
+Content-Type: multipart/signed;
+    boundary="=_mimegpg-monstr-desktop-3789-1412255487-0001";
+    micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 02 October 2014 15:15:08 Mika Westerberg wrote:
-> > I thought when we had discussed the subsystem specific bindings, the
-> > consensus there was to have subsystem specific accessors and
-> > properties/tables.
-> > 
-> > I would argue that for everything that ACPI already has (interrupts,
-> > registers, gpio, dmaengine, ...) the native method should be used,
-> > possibly using _DSD to provide naming for otherwise anonymous references.
-> 
-> Absolutely. That's precisely what we do in the GPIO patch of this
-> series. E.g we use ACPI GpioIo/GpioInt _CRS resources but give name to
-> the GPIOs with the help of _DSD.
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
 
-Ok, I've looked at the example again:
+--=_mimegpg-monstr-desktop-3789-1412255487-0001
 
-+       Device (DEV0)
-+       {
-+               Name (_CRS, ResourceTemplate () {
-+                       GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
-+                               "\\_SB.PCI0.LPC", 0, ResourceConsumer) {0}
-+                       GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
-+                               "\\_SB.PCI0.LPC", 0, ResourceConsumer) {1}
-+                       ...
-+               })
+Add the cadence watchdog node to the Zynq devicetree.
+
+Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+
+ arch/arm/boot/dts/zynq-7000.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index 2690e6d01f71..ea2651cd92ec 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -314,5 +314,16 @@
+ 			reg = <0xf8f00600 0x20>;
+ 			clocks = <&clkc 4>;
+ 		};
 +
-+               Name (_DSD, Package () {
-+                       ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-+                       Package () {
-+                               Package () {"reset-gpio", {^DEV0, 0, 0, 0}},
-+                               Package () {"shutdown-gpio", {^DEV0, 1, 0, 0}},
-+                       }
-+               })
-+       }
-
-tell me if I'm interpreting this right: you use _CRS to define a reference
-to the actual GPIO controller here, but then in your _DSD you have something
-that is a bit like the DT gpio binding, except that it doesn't refer to
-a GPIO controller but to the GPIO using device itself.
-
-When a driver calls dev_get_named_gpiod_from_child, you then lookup the
-"reset-gpio" (or other) properties to find the reference to the _CRS.
-
-Why can't you instead have a "gpio-names" property in _DSD that just
-links from a string to an index as we do in all the other bindings?
-It sounds to me like that would be simpler and more consistent with
-the way things are done in ACPI, and have no effect that would be visible
-to the driver.
- 
-> For things that don't have correspondence in ACPI but have well defined
-> existing DT schema, like PWMs, we should follow that.
-
-Only for stuff that is visible to drivers. I think it's important
-that a driver calling pwm_get() today should keep working with
-ACPI when the pwm subsystem is extended to support that.
-
-However, that does not necessarily mean using #pwm-cells and pwm-names
-properties when there is a better way to express the same in ACPI
-syntax. AFAICT, the #foo-names is completely redundant for ACPI
-as the length of a property in a list of similar elements is part
-of the binary data (if not, please correct me), and I already commented
-that I think the foo-names stuff could be encoded in the package
-directly in a way we can't do in DT.
-
-Even if you want to do automatic translation between DT and ACPI,
-I think it would be possible to treat these two the same:
-
-(forgive any syntax errors)
-
-	Name (_DSD, Package () {
-		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-		Package () {
-			Package () { "pwms" { "led-red", ^PWM0, 0, 10 },
-					    { "led-green", ^PWM0, 1, 20 }},
-	}
-
-vs.
-
-	pwm-slave {
-		pwms = <&pwm0 0 10>, <&pwm1 1 20>;
-		pwm-names = "led-red", "led-green";
-	};
++		watchdog0: watchdog@f8005000 {
++			clocks = <&clkc 45>;
++			compatible = "xlnx,zynq-wdt-r1p2";
++			device_type = "watchdog";
++			interrupt-parent = <&intc>;
++			interrupts = <0 9 1>;
++			reg = <0xf8005000 0x1000>;
++			reset = <0>;
++			timeout-sec = <10>;
++		};
+ 	};
+ };
+--
+1.8.2.3
 
 
-	Arnd
+--=_mimegpg-monstr-desktop-3789-1412255487-0001
+Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEABECAAYFAlQtTv8ACgkQykllyylKDCF1iACfcj/wTl9A6n18jlexoPqZsIXM
+nkMAniS+P4ihESUnBau++sTtCuBbp3Sp
+=/ZMu
+-----END PGP SIGNATURE-----
+
+--=_mimegpg-monstr-desktop-3789-1412255487-0001--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
