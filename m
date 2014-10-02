@@ -1,91 +1,57 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH v3 2/2] usb: renesas_usbhs: Add device tree support for
- R-Car H2 and M2
-Date: Thu, 2 Oct 2014 09:05:11 +0900
-Message-ID: <542C96B7.4030407@renesas.com>
-References: <5406A664.2050501@renesas.com> <54298A38.5030703@cogentembedded.com> <542A7D29.3010805@renesas.com> <542B21DE.4010903@cogentembedded.com> <542C547C.1080601@cogentembedded.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v5 07/11] mmc: sdio: Convert to
+ dev_pm_domain_attach|detach()
+Date: Wed, 1 Oct 2014 17:27:05 -0700
+Message-ID: <20141002002705.GA29177@dtor-ws>
+References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
+ <1411151264-16245-8-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <542C547C.1080601@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, kuninori morimoto <kuninori.morimoto.gx@renesas.com>, Ulrich Hecht <ulrich.hecht@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1411151264-16245-8-git-send-email-ulf.hansson@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>li
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi Ulf,
 
-(2014/10/02 4:22), Sergei Shtylyov wrote:
-> On 10/01/2014 01:34 AM, Sergei Shtylyov wrote:
+On Fri, Sep 19, 2014 at 08:27:40PM +0200, Ulf Hansson wrote:
+> Previously only the ACPI PM domain was supported by the sdio bus.
 > 
->>>>> This driver supports other SoCs, but they need boards/Soc depend code.
->>>>> So, this patch adds device tree support for R-Car H2 and M2 initially.
+> Let's convert to the common attach/detach functions for PM domains,
+> which currently means we are extending the support to include the
+> generic PM domain as well.
 > 
->>>>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->>>>> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
->>>>> ---
->>>>>    drivers/usb/renesas_usbhs/common.c |   44
->>>>> ++++++++++++++++++++++++++++++++++++
->>>>>    1 file changed, 44 insertions(+)
+> Cc: linux-mmc@vger.kernel.org
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Reviewed-by: Kevin Hilman <khilman@linaro.org>
+> ---
+>  drivers/mmc/core/sdio_bus.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
->>>>> diff --git a/drivers/usb/renesas_usbhs/common.c
->>>>> b/drivers/usb/renesas_usbhs/common.c
->>>>> index 1b9bf8d..b3b6813 100644
->>>>> --- a/drivers/usb/renesas_usbhs/common.c
->>>>> +++ b/drivers/usb/renesas_usbhs/common.c
->> [...]
->>>>> @@ -438,6 +440,43 @@ static int usbhsc_drvcllbck_notify_hotplug(struct
->>>>> platform_device *pdev)
->>>> [...]
->>>>> +static struct renesas_usbhs_platform_info *usbhs_parse_dt(struct device
->>>>> *dev)
->>>>> +{
->>>>> +    struct renesas_usbhs_platform_info *info;
->>>>> +    struct renesas_usbhs_driver_param *dparam;
->>>>> +    const struct of_device_id *of_id = of_match_device(usbhs_of_match, dev);
->>>>> +    u32 tmp;
->>>>> +    int gpio;
->>>>> +
->>>>> +    info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
->>>>> +    if (!info)
->>>>> +        return NULL;
->>>>> +
->>>>> +    dparam = &info->driver_param;
->>>>> +    dparam->type = of_id ? (u32)of_id->data : 0;
->>>>> +    if (!of_property_read_u32(dev->of_node, "renesas,buswait", &tmp))
->>>>> +        dparam->buswait_bwait = tmp;
->>>>> +    gpio = of_get_named_gpio_flags(dev->of_node, "renesas,enable-gpio", 0,
->>>>> +                       NULL);
->>>>> +    if (gpio > 0)
->>>>> +        dparam->enable_gpio = gpio;
->>>>> +
->>>>> +    return info;
-> 
->>>>      I don't see where you parse the optional "phy" property. It should exist
->>>> for the Lager and Koelsch boards you target.
-> 
-> [...]
-> 
->>> About using the phy driver in renesas_usbhs driver, I intend to modify
->>> the drivers/usb/renesas_usbhs/rcar.c.
-> 
->>     Hm, it slready supports 'struct usb_phy'. Also PHYs are not limited to
->> R-Car Gen2 SoCs...
-> 
->     OK, let's do this locally to rcar2.c for now. But since you still haven't 
-> provided the patches and I'm tasked with the USBHS support, I have to take the 
-> further development in my hands.
+> diff --git a/drivers/mmc/core/sdio_bus.c b/drivers/mmc/core/sdio_bus.c
+> index 4fa8fef9..1df0fc6 100644
+> --- a/drivers/mmc/core/sdio_bus.c
+> +++ b/drivers/mmc/core/sdio_bus.c
+> @@ -315,7 +315,7 @@ int sdio_add_func(struct sdio_func *func)
+>  	ret = device_add(&func->dev);
+>  	if (ret == 0) {
+>  		sdio_func_set_present(func);
+> -		acpi_dev_pm_attach(&func->dev, false);
+> +		dev_pm_domain_attach(&func->dev, false);
 
-Thank you for the reply. And, I'm sorry for the deleyed response.
-I will submit the patches (add support generic phy in rcar.c and device node
-for some SoCs) today.
+Admittedly it is not brought in by your change, but I am a bit worried
+about this code. In all other busses we attach power domain to a device
+before probing it (and detach if probe fails). Why here we only attach
+it to power domain after adding the device to the bus? If driver for the
+function has already been loaded the probe() would run without device
+being attached to a power domain...
 
-Best regards,
-Yoshihiro Shimoda
+Adding Aaron as he's the author of the original change.
 
->>> Best regards,
->>> Yoshihiro Shimoda
-> 
-> WBR, Sergei
-> 
+Thanks.
+
+-- 
+Dmitry
