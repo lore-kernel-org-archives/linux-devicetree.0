@@ -1,58 +1,164 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: ath10k: calibration data through Device Tree?
-Date: Thu, 2 Oct 2014 14:29:15 +0100
-Message-ID: <20141002132914.GN5788@leverpostej>
-References: <87tx3mmx4s.fsf@kamboji.qca.qualcomm.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v3 04/15] ACPI: Document ACPI device specific properties
+Date: Thu, 2 Oct 2014 16:36:54 +0300
+Message-ID: <20141002133654.GP1786@lahna.fi.intel.com>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
+ <2466832.0XJezjdvYs@wuerfel>
+ <20141002121508.GM1786@lahna.fi.intel.com>
+ <15893883.nvuW3ndylz@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <87tx3mmx4s.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <15893883.nvuW3ndylz@wuerfel>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-> ath10k is a wireless driver for Qualcomm Atheros 802.11ac hardware and
-> located in drivers/net/wireless/ath/ath10k/. Currently it only supports
-> PCI devices.
+On Thu, Oct 02, 2014 at 02:46:30PM +0200, Arnd Bergmann wrote:
+> On Thursday 02 October 2014 15:15:08 Mika Westerberg wrote:
+> > > I thought when we had discussed the subsystem specific bindings, the
+> > > consensus there was to have subsystem specific accessors and
+> > > properties/tables.
+> > > 
+> > > I would argue that for everything that ACPI already has (interrupts,
+> > > registers, gpio, dmaengine, ...) the native method should be used,
+> > > possibly using _DSD to provide naming for otherwise anonymous references.
+> > 
+> > Absolutely. That's precisely what we do in the GPIO patch of this
+> > series. E.g we use ACPI GpioIo/GpioInt _CRS resources but give name to
+> > the GPIOs with the help of _DSD.
 > 
-> Some of the devices store the calibration data to the host flash and the
-> bootloader reads the data from the flash. And now we need a method to
-> deliver the calibration data from bootloader to ath10k. 
+> Ok, I've looked at the example again:
+> 
+> +       Device (DEV0)
+> +       {
+> +               Name (_CRS, ResourceTemplate () {
+> +                       GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
+> +                               "\\_SB.PCI0.LPC", 0, ResourceConsumer) {0}
+> +                       GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
+> +                               "\\_SB.PCI0.LPC", 0, ResourceConsumer) {1}
+> +                       ...
+> +               })
+> +
+> +               Name (_DSD, Package () {
+> +                       ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> +                       Package () {
+> +                               Package () {"reset-gpio", {^DEV0, 0, 0, 0}},
+> +                               Package () {"shutdown-gpio", {^DEV0, 1, 0, 0}},
+> +                       }
+> +               })
+> +       }
+> 
+> tell me if I'm interpreting this right: you use _CRS to define a reference
+> to the actual GPIO controller here, but then in your _DSD you have something
+> that is a bit like the DT gpio binding, except that it doesn't refer to
+> a GPIO controller but to the GPIO using device itself.
 
-What does this calibration data consist of?
+That's right. However, it is not limited to the device itself, it can be
+parent device for example. Typically not the GPIO controller, though.
 
-What happens if you don't have the calibration data? Is it a critical
-requirement for the use of the device, or does its absence simply result
-in degraded performance?
+> When a driver calls dev_get_named_gpiod_from_child, you then lookup the
+> "reset-gpio" (or other) properties to find the reference to the _CRS.
 
-What do you do on non-DT systems? Where does the information come from
-in that case?
+That's right.
 
-I'm somewhat puzzled as to why a discoverable PCI device would require
-non-discoverable information to use.
+> Why can't you instead have a "gpio-names" property in _DSD that just
+> links from a string to an index as we do in all the other bindings?
+> It sounds to me like that would be simpler and more consistent with
+> the way things are done in ACPI, and have no effect that would be visible
+> to the driver.
 
-> * The calibration data is now 2116 bytes, in the future it might be
->   longer. The data is unique for each radio and is created at the
->   factory.
+The ACPI GpioIo/GpioInt entry can also contain pinlist, for example:
 
-Why would this change in future? Who is in charge of providing this
-information, and deciding upon the format thereof?
 
-> * ath10k must be able to reliably map the PCI device (=radio) to the
->   correct calibration data. Maybe with using PCI bus and slot numbers?
+            Name (_CRS, ResourceTemplate () {
+                GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
+                        "\\_SB.PCI0.LPC", 0, ResourceConsumer) {10, 21, 50, 13} <-- this is the pinlist
+                ...
+            })
 
-I guess we'd have to do something along those lines.
+            Device (BTN0)
+            {
+                Name (_DSD, Package () {
+                    ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+                    Package () {
+		        ...
+                        Package () {"gpios", Package () {^^BTNS, 0, 2, 1}},
+                    }
+                })
+            }
 
-I'd like to get a better understanding of the problem before we start
-figuring out how to pass an arbitrary blob of information around.
+Format of the package is:
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  { reference, crs_index, pin_index, active_low },
+
+So {^^BTNS, 0, 2, 1} will select pin 50 and mark it as active_low.
+
+In addition to name we also use it to select correct pin in pinlist and
+provide additional active_low information which would not be available
+for plain GpioIo() resource.
+
+> > For things that don't have correspondence in ACPI but have well defined
+> > existing DT schema, like PWMs, we should follow that.
+> 
+> Only for stuff that is visible to drivers. I think it's important
+> that a driver calling pwm_get() today should keep working with
+> ACPI when the pwm subsystem is extended to support that.
+
+Of course.
+
+> However, that does not necessarily mean using #pwm-cells and pwm-names
+> properties when there is a better way to express the same in ACPI
+> syntax. AFAICT, the #foo-names is completely redundant for ACPI
+> as the length of a property in a list of similar elements is part
+> of the binary data (if not, please correct me), and I already commented
+> that I think the foo-names stuff could be encoded in the package
+> directly in a way we can't do in DT.
+
+Yes, it can be included in the package, however see below.
+
+> Even if you want to do automatic translation between DT and ACPI,
+> I think it would be possible to treat these two the same:
+> 
+> (forgive any syntax errors)
+> 
+> 	Name (_DSD, Package () {
+> 		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> 		Package () {
+> 			Package () { "pwms" { "led-red", ^PWM0, 0, 10 },
+> 					    { "led-green", ^PWM0, 1, 20 }},
+
+Even though the above would fit better in ACPI, it is not allowed to
+have multiple values for a single property. One reason for that is that
+we validate each property and check that they match what is expected and
+having strict set of possible values makes it easier.
+
+Putting everything to a single package results this:
+
+		Package () { "pwms", Package () {"led-red", ^PWM0, 0, 10, "led-green", ^PWM0, 1, 10 }}
+
+But I think the below looks better:
+
+		Package () { "pwms", Package () {^PWM0, 0, 10, ^PWM0, 1, 10 }}
+		Package () { "pwm-names", Package () {"led-red", "led-green"}}
+
+and it is trivial to match with the corresponding DT fragment.
+
+> 	}
+> 
+> vs.
+> 
+> 	pwm-slave {
+> 		pwms = <&pwm0 0 10>, <&pwm1 1 20>;
+> 		pwm-names = "led-red", "led-green";
+> 	};
+> 
+
+I don't have strong feelings which way it should be. The current
+implementation limits references so that you can have only integer
+arguments, like {ref0, int, int, ref1, int} but if people think it is
+better to allow strings there as well, it can be changed.
+
+I would like to get comments from Darren and Rafael about this, though.
