@@ -1,75 +1,59 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v1 4/4] ARM: dts: k2hk-evm: attach net, qmss and knav_dmas
- to keystone-gpc
-Date: Thu, 2 Oct 2014 15:18:14 -0400
-Message-ID: <542DA4F6.2020009@ti.com>
-References: <1412001499-19369-1-git-send-email-grygorii.strashko@ti.com> <1412001499-19369-5-git-send-email-grygorii.strashko@ti.com>
+From: Tanmay Inamdar <tinamdar@apm.com>
+Subject: Re: [PATCH v10 0/4] APM X-Gene PCIe host controller
+Date: Thu, 2 Oct 2014 12:24:09 -0700
+Message-ID: <CACoXjc=dymmxz0zC0+0Gj0CE9qtseZnae6C6S2PBEeGU-cvgFA@mail.gmail.com>
+References: <1411765707-28822-1-git-send-email-tinamdar@apm.com>
+	<20141001191403.GC22713@google.com>
+	<2135522.DVGa59N1mx@wuerfel>
+	<CAErSpo4i4+0c6Qy9w3tKXex2M7Q=Ry8aG-cbO1_uiC8wtD7puQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1412001499-19369-5-git-send-email-grygorii.strashko@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, khilman@linaro.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, ulf.hansson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAErSpo4i4+0c6Qy9w3tKXex2M7Q=Ry8aG-cbO1_uiC8wtD7puQ@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 29 September 2014 10:38 AM, Grygorii Strashko wrote:
-> Attach Keystone 2s nodes for NetCP, NetCPx, QMSS, KNAV-DMA devices
-> to the TI Keystone 2 Generic PM Controller.
-> 
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
->  arch/arm/boot/dts/k2hk-evm.dts | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/k2hk-evm.dts b/arch/arm/boot/dts/k2hk-evm.dts
-> index 91371f7..c1ceaa2 100644
-> --- a/arch/arm/boot/dts/k2hk-evm.dts
-> +++ b/arch/arm/boot/dts/k2hk-evm.dts
-> @@ -58,6 +58,7 @@
->  				clock-output-names = "refclk-ddr3b";
->  			};
->  		};
-> +
-Stray change ?
+On Thu, Oct 2, 2014 at 7:36 AM, Bjorn Helgaas <bhelgaas@google.com> wrote:
+> On Thu, Oct 2, 2014 at 6:20 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Wednesday 01 October 2014 13:14:03 Bjorn Helgaas wrote:
+>>> On Fri, Sep 26, 2014 at 02:08:23PM -0700, Tanmay Inamdar wrote:
+>>> > This patch adds support for AppliedMicro X-Gene PCIe host controller. The
+>>> > driver is tested on X-Gene platform with different gen1/2/3 PCIe endpoint
+>>> > cards.
+>>> >
+>>> > X-Gene PCIe controller driver has depedency on the pcie arm64 arch support.
+>>> > Liviu Dudau from ARM has sent a patch set for pcie arm64 arch support and
+>>> > support for creating generic pcie bridge from device tree. Liviu's patches
+>>> > are available here
+>>> > https://lkml.org/lkml/2014/9/23/852
+>>> >
+>>> > If someone wishes to test PCIe on X-Gene with this patch set, above mentioned
+>>> > patches from Liviu must be applied before the patches in this patch set. Also
+>>> > please use latest xgene u-boot firmware.
+>>>
+>>> I applied these on pci/host-xgene (based on pci/host-generic).  I hope to
+>>> merge these for v3.18.  It'd be nice to have a device tree person like Arnd
+>>> or Rob take a look at the arch/arm64/boot/dts/ bits.
+>>
+>> Those changes should normally go through the arm-soc tree, but we
+>> have not done that so far for arm64 stuff, so I'm not blaming anybody.
+>>
+>> The dts changes all look good to me, and I think it's ok to have them
+>> go through your tree this time.
+>>
+>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>>
+>> In the future, we should all have an eye on this more to ensure that
+>> the .dts changes all go through arm-soc.
+>
+> The arch/arm64/boot/dts patch is at the tip of my branch, and I'd be
+> more than happy to drop it.  It would be nice to have it in v3.18
+> along with the driver, though, so I'll keep it until somebody chimes
+> in to put it in arm-soc.
+>
 
->  		qmss: qmss@2a40000 {
->  			compatible = "ti,keystone-navigator-qmss";
->  			dma-coherent;
-> @@ -65,6 +66,8 @@
->  			#size-cells = <1>;
->  			clocks = <&chipclk13>;
->  			ranges;
-> +			power-domains = <&pm_controller>;
-> +
->  			queue-range	= <0 0x4000>;
->  			linkram0	= <0x100000 0x8000>;
->  			linkram1	= <0x0 0x10000>;
-> @@ -198,6 +201,8 @@
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges;
-> +			power-domains = <&pm_controller>;
-> +
->  			ti,navigator-cloud-address = <0x23a80000 0x23a90000
->  						   0x23aa0000 0x23ab0000>;
->  
-> @@ -229,6 +234,7 @@
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges;
-> +			power-domains = <&pm_controller>;
->  
->  			clocks = <&clkpa>, <&clkcpgmac>, <&chipclk12>;
->  			dma-coherent;
-> @@ -307,6 +313,7 @@
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges;
-> +			power-domains = <&pm_controller>;
->  
->  			clocks = <&clkxge>;
->  			clock-names = "clk_xge";
-> 
+Thanks Bjorn and Arnd.
 
+> Bjorn
