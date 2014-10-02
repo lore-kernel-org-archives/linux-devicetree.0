@@ -1,34 +1,56 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 04/15] ACPI: Document ACPI device specific properties
-Date: Thu, 02 Oct 2014 16:55:56 +0200
-Message-ID: <2072038.Vir4futZot@wuerfel>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <3986527.L7rDZAb4g5@wuerfel> <20141002143809.GQ1786@lahna.fi.intel.com>
+From: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
+Subject: Re: ath10k: calibration data through Device Tree?
+Date: Thu, 2 Oct 2014 17:55:57 +0300
+Message-ID: <87d2aamsg2.fsf@kamboji.qca.qualcomm.com>
+References: <87tx3mmx4s.fsf@kamboji.qca.qualcomm.com>
+	<3548219.ad4Qe1WtGp@wuerfel> <87lhoymvln.fsf@kamboji.qca.qualcomm.com>
+	<2397903.vznsjdQh6x@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20141002143809.GQ1786@lahna.fi.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2397903.vznsjdQh6x@wuerfel> (Arnd Bergmann's message of "Thu, 2
+	Oct 2014 16:19:28 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 02 October 2014 17:38:09 Mika Westerberg wrote:
-> On Thu, Oct 02, 2014 at 04:29:03PM +0200, Arnd Bergmann wrote:
-> > Is this a limitation in the way that the AML syntax and compiler works,
-> > or is this a decision you made specifically for the _DSD syntax and that
-> > could still be changed if there is an overwhelming interest?
-> 
-> It is only limitation of the _DSD device property UUID specification and
-> our implementation. It can be changed if needed.
+Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
 
-Ok, I see. I think it would be nice if this could be changed in order
-to avoid having to copy the #xxx-cells and xxx-names properties from
-DT, by providing a more natural syntax.
+> On Thursday 02 October 2014 16:47:48 Kalle Valo wrote:
+>> >
+>> > When you know the PCI bus/device/function ID of the device, you can put
+>> > a device node in the dts file that corresponds to the PCI dev, and you
+>> > can find the of_node pointer from pci_dev->dev.of_node. 
+>> 
+>> For me that's easier said than done as I'm a total newbie with Device
+>> Tree  Can you give any pointers or examples how to do that in
+>> practise, please? Especially "node in the dts file that corresponds to
+>> the PCI dev" part is puzzling me.
+>
+> See the recent patch "[PATCH v4] ARM: shmobile: r8a7791: link PCI USB
+> devices to USB PHY" where someone does the same thing to supply additional
+> data to a PCI device node in shmobile.
+>
+> Basically you just need to add a node under your PCI host controller node
+> with "reg = <0x800 0 0 0 0>" (or whatever the address is and put the
+> properties in there. See www.openfirmware.org/1275/bindings/pci/pci2_1.pdf
+> for the description of how to construct the addresses.
 
-I'm not blaming you though if you don't want to go through the pain of
-updating the spec though, and I won't complain loudly if you don't.
+Excellent, thanks. I'll study these and try to learn more.
 
-Maybe someone else has an opinion on the matter.
+> I notice that there are no Qualcomm or Atheros PCI host controller drivers
+> in Linux though, so you first have to write a driver that allows probing
+> the PCI bus, and get the binding reviewed for that before you can add
+> it to the dts files. Is this for ipq8064 or something else?
 
-	Arnd
+But now I'm lost again :) I want ath10k and this feature to work with
+all possible PCI controllers, not just with Qualcomm controllers. So why
+do I need to wait for Qualcomm PCI host controller driver?
+
+-- 
+Kalle Valo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
