@@ -1,70 +1,91 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 02/15] Driver core: Unified device properties
- interface for platform firmware
-Date: Wed, 1 Oct 2014 17:03:25 -0700
-Message-ID: <20141002000325.GC17093@kroah.com>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
- <1852462.V1jlbi8OPt@vostro.rjw.lan>
- <7184313.9OdTqVa2eQ@vostro.rjw.lan>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH v3 2/2] usb: renesas_usbhs: Add device tree support for
+ R-Car H2 and M2
+Date: Thu, 2 Oct 2014 09:05:11 +0900
+Message-ID: <542C96B7.4030407@renesas.com>
+References: <5406A664.2050501@renesas.com> <54298A38.5030703@cogentembedded.com> <542A7D29.3010805@renesas.com> <542B21DE.4010903@cogentembedded.com> <542C547C.1080601@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7184313.9OdTqVa2eQ@vostro.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: linux-kernel@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <542C547C.1080601@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, kuninori morimoto <kuninori.morimoto.gx@renesas.com>, Ulrich Hecht <ulrich.hecht@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 01, 2014 at 04:10:03AM +0200, Rafael J. Wysocki wrote:
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> 
-> Add a uniform interface by which device drivers can request device
-> properties from the platform firmware by providing a property name
-> and the corresponding data type.  The purpose of it is to help to
-> write portable code that won't depend on any particular platform
-> firmware interface.
-> 
-> Three general helper functions, device_get_property(),
-> device_read_property() and device_read_property_array() are provided.
-> The first one allows the raw value of a given device property to be
-> accessed.  The remaining two allow the value of a numeric or string
-> property and multiple numeric or string values of one array
-> property to be acquired, respectively.  Static inline wrappers are also
-> provided for the various property data types that can be passed to
-> device_read_property() or device_read_property_array() for extra type
-> checking.
-> 
-> In addition to that, new generic routines are provided for retrieving
-> properties from device description objects in the platform firmware
-> in case a device driver needs/wants to access properties of a child
-> object of a given device object.  There are cases in which there is
-> no struct device representation of such child objects and this
-> additional API is useful then.  Again, three functions are provided,
-> device_get_child_property(), device_read_child_property(),
-> device_read_child_property_array(), in analogy with device_get_property(),
-> device_read_property() and device_read_property_array() described above,
-> respectively, along with static inline wrappers for all of the propery
-> data types that can be used.  For all of them, the first argument is
-> a struct device pointer to the parent device object and the second
-> argument is a (void *) pointer to the child description provided by
-> the platform firmware (either ACPI or FDT).
-> 
-> Finally, device_for_each_child_node() is added for iterating over
-> the children of the device description object associated with a
-> given device.
-> 
-> The interface covers both ACPI and Device Trees.
-> 
-> This change set includes material from Mika Westerberg and Aaron Lu.
-> 
-> Signed-off-by: Aaron Lu <aaron.lu@intel.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
-> 
-> Greg, please let me know if you're fine with this one.
+Hello.
 
-Looks good to me:
+(2014/10/02 4:22), Sergei Shtylyov wrote:
+> On 10/01/2014 01:34 AM, Sergei Shtylyov wrote:
+> 
+>>>>> This driver supports other SoCs, but they need boards/Soc depend code.
+>>>>> So, this patch adds device tree support for R-Car H2 and M2 initially.
+> 
+>>>>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>>>>> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>>>>> ---
+>>>>>    drivers/usb/renesas_usbhs/common.c |   44
+>>>>> ++++++++++++++++++++++++++++++++++++
+>>>>>    1 file changed, 44 insertions(+)
+> 
+>>>>> diff --git a/drivers/usb/renesas_usbhs/common.c
+>>>>> b/drivers/usb/renesas_usbhs/common.c
+>>>>> index 1b9bf8d..b3b6813 100644
+>>>>> --- a/drivers/usb/renesas_usbhs/common.c
+>>>>> +++ b/drivers/usb/renesas_usbhs/common.c
+>> [...]
+>>>>> @@ -438,6 +440,43 @@ static int usbhsc_drvcllbck_notify_hotplug(struct
+>>>>> platform_device *pdev)
+>>>> [...]
+>>>>> +static struct renesas_usbhs_platform_info *usbhs_parse_dt(struct device
+>>>>> *dev)
+>>>>> +{
+>>>>> +    struct renesas_usbhs_platform_info *info;
+>>>>> +    struct renesas_usbhs_driver_param *dparam;
+>>>>> +    const struct of_device_id *of_id = of_match_device(usbhs_of_match, dev);
+>>>>> +    u32 tmp;
+>>>>> +    int gpio;
+>>>>> +
+>>>>> +    info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
+>>>>> +    if (!info)
+>>>>> +        return NULL;
+>>>>> +
+>>>>> +    dparam = &info->driver_param;
+>>>>> +    dparam->type = of_id ? (u32)of_id->data : 0;
+>>>>> +    if (!of_property_read_u32(dev->of_node, "renesas,buswait", &tmp))
+>>>>> +        dparam->buswait_bwait = tmp;
+>>>>> +    gpio = of_get_named_gpio_flags(dev->of_node, "renesas,enable-gpio", 0,
+>>>>> +                       NULL);
+>>>>> +    if (gpio > 0)
+>>>>> +        dparam->enable_gpio = gpio;
+>>>>> +
+>>>>> +    return info;
+> 
+>>>>      I don't see where you parse the optional "phy" property. It should exist
+>>>> for the Lager and Koelsch boards you target.
+> 
+> [...]
+> 
+>>> About using the phy driver in renesas_usbhs driver, I intend to modify
+>>> the drivers/usb/renesas_usbhs/rcar.c.
+> 
+>>     Hm, it slready supports 'struct usb_phy'. Also PHYs are not limited to
+>> R-Car Gen2 SoCs...
+> 
+>     OK, let's do this locally to rcar2.c for now. But since you still haven't 
+> provided the patches and I'm tasked with the USBHS support, I have to take the 
+> further development in my hands.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Thank you for the reply. And, I'm sorry for the deleyed response.
+I will submit the patches (add support generic phy in rcar.c and device node
+for some SoCs) today.
+
+Best regards,
+Yoshihiro Shimoda
+
+>>> Best regards,
+>>> Yoshihiro Shimoda
+> 
+> WBR, Sergei
+> 
