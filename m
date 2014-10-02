@@ -1,25 +1,19 @@
-From: Arnd Bergmann <arnd@arndb.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Subject: Re: [PATCH 1/6] ARM: meson: add meson8 machine definition
-Date: Thu, 02 Oct 2014 11:24:54 +0200
-Message-ID: <11073411.IcmTkIICYA@wuerfel>
+Date: Thu, 02 Oct 2014 11:28:14 +0200
+Message-ID: <6568653.UtyvOjrQBb@wuerfel>
 References: <1412198986-26534-1-git-send-email-b.galvani@gmail.com> <1412198986-26534-2-git-send-email-b.galvani@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1412198986-26534-2-git-send-email-b.galvani@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Beniamino Galvani <b.galvani@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Victor Wan <victor.wan@amlogic.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Carlo Caione <carlo@caione.org>, Jerry Cao <jerry.cao@amlogic.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412198986-26534-2-git-send-email-b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On Wednesday 01 October 2014 23:29:41 Beniamino Galvani wrote:
-> 
-> +static const char * const m8_common_board_compat[] = {
-> +       "amlogic,meson8",
-> +       NULL,
-> +};
-> +
 >  DT_MACHINE_START(AML8726_MX, "Amlogic Meson6 platform")
 >         .dt_compat      = m6_common_board_compat,
 >  MACHINE_END
@@ -27,9 +21,13 @@ On Wednesday 01 October 2014 23:29:41 Beniamino Galvani wrote:
 > +DT_MACHINE_START(MESON8, "Amlogic Meson8 platform")
 > +       .dt_compat      = m8_common_board_compat,
 > +MACHINE_END
-> 
 
-I'd just add the meson8 string to the m6_common_board_compat list and
-rename it.
+One more thing: since this is a cortex-a9, don't you have to enable
+the l2x0 cache controller explicitly? I think you need a
+".l2c_aux_mask   = ~0," entry here.
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
