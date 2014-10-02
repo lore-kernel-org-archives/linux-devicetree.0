@@ -1,122 +1,92 @@
-From: <atull@opensource.altera.com>
-Subject: [PATCH v5 4/4] pmbus: ltc2978: add regulator support
-Date: Thu, 2 Oct 2014 13:37:51 -0500
-Message-ID: <1412275071-6417-5-git-send-email-atull@opensource.altera.com>
+From: <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCH v5 2/4] pmbus: core: add helpers for byte write and read modify write
+Date: Thu, 2 Oct 2014 13:37:49 -0500
+Message-ID: <1412275071-6417-3-git-send-email-atull@opensource.altera.com>
 References: <1412275071-6417-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1412275071-6417-1-git-send-email-atull@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux@roeck-us.net, jdelvare@suse.de
-Cc: lm-sensors@lm-sensors.org, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com, Alan Tull <atull@opensource.altera.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412275071-6417-1-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org
+Cc: lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alan Tull <atull@opensource.altera.com>
+From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Add simple on/off regulator support for ltc2978 and
-other pmbus parts supported by ltc2978.c
+Add two helper functions:
+ * pmbus_write_byte_data  = paged byte write
+ * pmbus_update_byte_data = paged byte read/modify/write
 
-Signed-off-by: Alan Tull <atull@opensource.altera.com>
+Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 ---
-v2: Remove '#include <linux/regulator/machine.h>'
-    Only one regulator per pmbus device
-    Get regulator_init_data from pdata or device tree
-
-v3: Support multiple regulators for each chip
-    Move most code to pmbus_core.c
-    fixed values for on/off
-
-v4: fix a #endif comment
-    simplify probe code, remove added switch statement
-    remove BUG_ON(), add error message and fix num_regulators
-
-v5: Kconfig: update list of supported chips
-    use "regulator: of: Provide simplified DT parsing method"
-    remove #include <linux/regulator/of_regulator.h>
-    remove of_regulator_match
+v2: add prototypes for the two new functions
 ---
- drivers/hwmon/pmbus/Kconfig   |   11 +++++++++--
- drivers/hwmon/pmbus/ltc2978.c |   24 ++++++++++++++++++++++++
- 2 files changed, 33 insertions(+), 2 deletions(-)
+ drivers/hwmon/pmbus/pmbus.h      |    4 ++++
+ drivers/hwmon/pmbus/pmbus_core.c |   31 +++++++++++++++++++++++++++++++
+ 2 files changed, 35 insertions(+)
 
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index 6e1e493..a674cd8 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -47,15 +47,22 @@ config SENSORS_LM25066
- 	  be called lm25066.
- 
- config SENSORS_LTC2978
--	tristate "Linear Technologies LTC2974, LTC2978, LTC3880, and LTC3883"
-+	tristate "Linear Technologies LTC2978 and compatibles"
- 	default n
- 	help
- 	  If you say yes here you get hardware monitoring support for Linear
--	  Technology LTC2974, LTC2978, LTC3880, and LTC3883.
-+	  Technology LTC2974, LTC2977, LTC2978, LTC3880, LTC3883, and LTM4676.
- 
- 	  This driver can also be built as a module. If so, the module will
- 	  be called ltc2978.
- 
-+config SENSORS_LTC2978_REGULATOR
-+	boolean "Regulator support for LTC2978 and compatibles"
-+	depends on SENSORS_LTC2978 && REGULATOR
-+	help
-+	  If you say yes here you get regulator support for Linear
-+	  Technology LTC2974, LTC2977, LTC2978, LTC3880, LTC3883, and LTM4676.
-+
- config SENSORS_MAX16064
- 	tristate "Maxim MAX16064"
- 	default n
-diff --git a/drivers/hwmon/pmbus/ltc2978.c b/drivers/hwmon/pmbus/ltc2978.c
-index e24ed52..efac4bf 100644
---- a/drivers/hwmon/pmbus/ltc2978.c
-+++ b/drivers/hwmon/pmbus/ltc2978.c
-@@ -22,6 +22,7 @@
- #include <linux/err.h>
- #include <linux/slab.h>
- #include <linux/i2c.h>
-+#include <linux/regulator/driver.h>
- #include "pmbus.h"
- 
- enum chips { ltc2974, ltc2977, ltc2978, ltc3880, ltc3883, ltm4676 };
-@@ -374,6 +375,19 @@ static const struct i2c_device_id ltc2978_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, ltc2978_id);
- 
-+#if IS_ENABLED(CONFIG_SENSORS_LTC2978_REGULATOR)
-+static const struct regulator_desc ltc2978_reg_desc[] = {
-+	PMBUS_REGULATOR("vout_en", 0),
-+	PMBUS_REGULATOR("vout_en", 1),
-+	PMBUS_REGULATOR("vout_en", 2),
-+	PMBUS_REGULATOR("vout_en", 3),
-+	PMBUS_REGULATOR("vout_en", 4),
-+	PMBUS_REGULATOR("vout_en", 5),
-+	PMBUS_REGULATOR("vout_en", 6),
-+	PMBUS_REGULATOR("vout_en", 7),
-+};
-+#endif /* CONFIG_SENSORS_LTC2978_REGULATOR */
-+
- static int ltc2978_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
-@@ -487,6 +501,16 @@ static int ltc2978_probe(struct i2c_client *client,
- 	default:
- 		return -ENODEV;
- 	}
-+
-+#if IS_ENABLED(CONFIG_SENSORS_LTC2978_REGULATOR)
-+	info->num_regulators = info->pages;
-+	info->reg_desc = ltc2978_reg_desc;
-+	if (info->num_regulators > ARRAY_SIZE(ltc2978_reg_desc)) {
-+		dev_err(&client->dev, "num_regulators too large!");
-+		info->num_regulators = ARRAY_SIZE(ltc2978_reg_desc);
-+	}
-+#endif
-+
- 	return pmbus_do_probe(client, id, info);
+diff --git a/drivers/hwmon/pmbus/pmbus.h b/drivers/hwmon/pmbus/pmbus.h
+index fa9beb3..3ae79a7 100644
+--- a/drivers/hwmon/pmbus/pmbus.h
++++ b/drivers/hwmon/pmbus/pmbus.h
+@@ -375,6 +375,10 @@ int pmbus_read_word_data(struct i2c_client *client, u8 page, u8 reg);
+ int pmbus_write_word_data(struct i2c_client *client, u8 page, u8 reg, u16 word);
+ int pmbus_read_byte_data(struct i2c_client *client, int page, u8 reg);
+ int pmbus_write_byte(struct i2c_client *client, int page, u8 value);
++int pmbus_write_byte_data(struct i2c_client *client, int page, u8 reg,
++			  u8 value);
++int pmbus_update_byte_data(struct i2c_client *client, int page, u8 reg,
++			   u8 mask, u8 value);
+ void pmbus_clear_faults(struct i2c_client *client);
+ bool pmbus_check_byte_register(struct i2c_client *client, int page, int reg);
+ bool pmbus_check_word_register(struct i2c_client *client, int page, int reg);
+diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
+index 291d11f..d6c3701 100644
+--- a/drivers/hwmon/pmbus/pmbus_core.c
++++ b/drivers/hwmon/pmbus/pmbus_core.c
+@@ -253,6 +253,37 @@ int pmbus_read_byte_data(struct i2c_client *client, int page, u8 reg)
  }
+ EXPORT_SYMBOL_GPL(pmbus_read_byte_data);
  
++int pmbus_write_byte_data(struct i2c_client *client, int page, u8 reg, u8 value)
++{
++	int rv;
++
++	rv = pmbus_set_page(client, page);
++	if (rv < 0)
++		return rv;
++
++	return i2c_smbus_write_byte_data(client, reg, value);
++}
++EXPORT_SYMBOL_GPL(pmbus_write_byte_data);
++
++int pmbus_update_byte_data(struct i2c_client *client, int page, u8 reg,
++			   u8 mask, u8 value)
++{
++	unsigned int tmp;
++	int rv;
++
++	rv = pmbus_read_byte_data(client, page, reg);
++	if (rv < 0)
++		return rv;
++
++	tmp = (rv & ~mask) | (value & mask);
++
++	if (tmp != rv)
++		rv = pmbus_write_byte_data(client, page, reg, tmp);
++
++	return rv;
++}
++EXPORT_SYMBOL_GPL(pmbus_update_byte_data);
++
+ /*
+  * _pmbus_read_byte_data() is similar to pmbus_read_byte_data(), but checks if
+  * a device specific mapping function exists and calls it if necessary.
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
