@@ -1,73 +1,47 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v3 04/15] ACPI: Document ACPI device specific properties
-Date: Thu, 2 Oct 2014 15:15:08 +0300
-Message-ID: <20141002121508.GM1786@lahna.fi.intel.com>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
- <1979325.jM0BQzDCTX@wuerfel>
- <20141002104123.GJ1786@lahna.fi.intel.com>
- <2466832.0XJezjdvYs@wuerfel>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v10 0/4] APM X-Gene PCIe host controller
+Date: Thu, 02 Oct 2014 14:20:49 +0200
+Message-ID: <2135522.DVGa59N1mx@wuerfel>
+References: <1411765707-28822-1-git-send-email-tinamdar@apm.com> <20141001191403.GC22713@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2466832.0XJezjdvYs@wuerfel>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141001191403.GC22713@google.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Tanmay Inamdar <tinamdar@apm.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@apm.com, jcm@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 02, 2014 at 01:51:24PM +0200, Arnd Bergmann wrote:
-> On Thursday 02 October 2014 13:41:23 Mika Westerberg wrote:
-> > On Wed, Oct 01, 2014 at 09:59:14AM +0200, Arnd Bergmann wrote:
-> > > On Wednesday 01 October 2014 04:11:20 Rafael J. Wysocki wrote:
-> > > > From: Mika Westerberg <mika.westerberg@linux.intel.com>
+On Wednesday 01 October 2014 13:14:03 Bjorn Helgaas wrote:
+> On Fri, Sep 26, 2014 at 02:08:23PM -0700, Tanmay Inamdar wrote:
+> > This patch adds support for AppliedMicro X-Gene PCIe host controller. The
+> > driver is tested on X-Gene platform with different gen1/2/3 PCIe endpoint
+> > cards.
 > > 
-> > > > +The referenced ACPI device is returned in args->adev if found.
-> > > > +
-> > > > +In addition to simple object references it is also possible to have object
-> > > > +references with arguments. These are represented in ASL as follows:
-> > > > +
-> > > > +	Device (\_SB.PCI0.PWM)
-> > > > +	{
-> > > > +		Name (_DSD, Package () {
-> > > > +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > > > +			Package () {
-> > > > +				Package () {"#pwm-cells", 2}
-> > > > +			}
-> > > > +		})
-> > > > +	}
-> > > > +
-> > > 
-> > > Similarly, the "#foo-cells" syntax is an artifact of the limitations of the
-> > > DT syntax, and I'd assume there would be a better way to encode this
-> > > in ACPI. Also, a "cell" in Open Firmware is defined as a big-endian
-> > > 32-bit value, which doesn't directly correspond to something in ACPI,
-> > > and the '#' character is an artifact of the use of the Forth language
-> > > in Open Firmware, which you also don't have here.
+> > X-Gene PCIe controller driver has depedency on the pcie arm64 arch support.
+> > Liviu Dudau from ARM has sent a patch set for pcie arm64 arch support and
+> > support for creating generic pcie bridge from device tree. Liviu's patches
+> > are available here
+> > https://lkml.org/lkml/2014/9/23/852
 > > 
-> > Same here, we tried to make it follow closely the DT description. It is
-> > probably not the best/optimal encoding for ACPI but it is documented
-> > well in Documentation/devicetree/bindings so why not use it.
-> > 
-> > The summary email from Darren at KS also mentions that for the existing
-> > drivers, the existing schemas should be common for both implementations [1].
-> > 
-> > For new bindings we probably should look out if they can be better
-> > represented using ACPI types.
-> > 
-> > [1] http://lwn.net/Articles/609373/
+> > If someone wishes to test PCIe on X-Gene with this patch set, above mentioned
+> > patches from Liviu must be applied before the patches in this patch set. Also
+> > please use latest xgene u-boot firmware.
 > 
-> I thought when we had discussed the subsystem specific bindings, the
-> consensus there was to have subsystem specific accessors and
-> properties/tables.
-> 
-> I would argue that for everything that ACPI already has (interrupts,
-> registers, gpio, dmaengine, ...) the native method should be used,
-> possibly using _DSD to provide naming for otherwise anonymous references.
+> I applied these on pci/host-xgene (based on pci/host-generic).  I hope to
+> merge these for v3.18.  It'd be nice to have a device tree person like Arnd
+> or Rob take a look at the arch/arm64/boot/dts/ bits.
 
-Absolutely. That's precisely what we do in the GPIO patch of this
-series. E.g we use ACPI GpioIo/GpioInt _CRS resources but give name to
-the GPIOs with the help of _DSD.
+Those changes should normally go through the arm-soc tree, but we
+have not done that so far for arm64 stuff, so I'm not blaming anybody.
 
-For things that don't have correspondence in ACPI but have well defined
-existing DT schema, like PWMs, we should follow that.
+The dts changes all look good to me, and I think it's ok to have them
+go through your tree this time.
+
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+
+In the future, we should all have an eye on this more to ensure that
+the .dts changes all go through arm-soc.
+
+	Arnd
