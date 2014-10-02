@@ -1,33 +1,125 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: meson: add meson8 machine definition
-Date: Thu, 02 Oct 2014 11:28:14 +0200
-Message-ID: <6568653.UtyvOjrQBb@wuerfel>
-References: <1412198986-26534-1-git-send-email-b.galvani@gmail.com> <1412198986-26534-2-git-send-email-b.galvani@gmail.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v2 0/3] ARM: rk3288 : Add PM Domain support
+Date: Thu, 2 Oct 2014 12:47:07 +0300
+Message-ID: <542D1F1B.8040501@ti.com>
+References: <1411899774-8484-1-git-send-email-jinkun.hong@rock-chips.com>
+ <7hoatvvimd.fsf@deeprootsystems.com>
+ <CAD=FV=VPT5qiyY==nJbb4DqKMBnj0i-_MhLRVG0ikar2qtP4=A@mail.gmail.com>
+ <7h38b7v8pp.fsf@deeprootsystems.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412198986-26534-2-git-send-email-b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <7h38b7v8pp.fsf@deeprootsystems.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kevin Hilman <khilman@kernel.org>, Doug Anderson <dianders@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "jinkun.hong" <jinkun.hong@rock-chips.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 01 October 2014 23:29:41 Beniamino Galvani wrote:
->  DT_MACHINE_START(AML8726_MX, "Amlogic Meson6 platform")
->         .dt_compat      = m6_common_board_compat,
->  MACHINE_END
->  
-> +DT_MACHINE_START(MESON8, "Amlogic Meson8 platform")
-> +       .dt_compat      = m8_common_board_compat,
-> +MACHINE_END
+Hi,
 
-One more thing: since this is a cortex-a9, don't you have to enable
-the l2x0 cache controller explicitly? I think you need a
-".l2c_aux_mask   = ~0," entry here.
+On 10/01/2014 11:25 PM, Kevin Hilman wrote:
+> Doug Anderson <dianders@chromium.org> writes:
+> 
+>>
+>> On Wed, Oct 1, 2014 at 9:51 AM, Kevin Hilman <khilman@kernel.org> wrote:
+>>> +Geert, Ulf
+>>>
+>>> "jinkun.hong" <jinkun.hong@rock-chips.com> writes:
+>>>
+>>>> From: "jinkun.hong" <jinkun.hong@rock-chips.com>
+>>>>
+>>>> Use PM Domain framework to manage the clock.
+>>>
+>>> Which clock?  This changelog needs a more thorough description.
+>>
+>>
+>> I think what he meant was:
+>>
+>> Use the generic PM Domain framework for Rockchip
+>>
+>> ...but I agree that he could describe it more.
+>>
+>>
+>>> Also,
+>>> with this series alone, it's not clear how the power-domain transitions
+>>> ever happen, since I don't see any devices hooked up to your power
+>>> domains, or do I see your platform using runtime PM.  In order for this
+>>> to be reviewed properely, it's important for reviewers to be able to see
+>>> how this PM domain support will be used.
+>>
+>> I noticed that too.  As the patchset currently stands it only ever disables...
+>>
+>>
+>>> Also, remember that the DT is supposed to reflect the hardware, not the
+>>> design choices of linux drivers.  Because of that, it's a little
+>>> surprising to see clocks as properties of a power domain because clocks
+>>> are usually properties of devices.
+>>
+>> I haven't dug all the way into the hardware to figure out why (or if
+>> this is really necessary), but right now the rockchip power domain
+>> driver only leaves these clocks on during the powering on and powering
+>> off of the power domain.  In other words to turn on the power domain:
+>>
+>> 1. Turn on all clocks
+>> 2. Flip the bit that sets the power domain on
+>> 3. Wait until hardware says power domain is on.
+>> 4. Turn off all the clocks.
+>>
+>> ...and to turn off:
+>>
+>> 1. Turn on all clocks
+>> 2. Flip the bit that sets the power domain off
+>> 3. Wait until hardware says power domain is off.
+>> 2. Turn off all the clocks.
+>>
+>> ...if the above is actually necessary when turning on and off power
+>> domains then it seems like it is actually describing the hardware.
+> 
+> Yes, I understand. The need to have some *device* clocks enabled when
+> powering on/off the power-domain itself is quite common across many
+> SoCs.
+> 
+> My point is that these clocks are actually properties of *devices*, not
+> the power-domain itself.  In the shmobile example I pointed to, the
+> clocks are properties of the devices in DT, and the devices are attached
+> to the powerdomain.  When the devices are connected to the power-domain,
+> the custom attach function looks up all the *device* clocks and and
+> addes them to the power-domain using pm_clk_add.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sorry, but this is not quite right :(
+Patches from Geert will add only first clock for device and not all
+of them. The right way to add all clocks for device from DT using 
+generic PM domain represented in my series:
+ 
+ ARM: keystone: pm: switch to use generic pm domains
+ http://www.mail-archive.com/linux-kernel@vger.kernel.org/msg735601.html
+
+> 
+> Since the clocks are properties of devices, then the pm_clk
+> infrastructure can be used (as the shmobile example shows) so that the
+> SoC specific pm-domain doesn't have to manually walk all the clocks, but
+> instead can just use pm_clk_suspend/pm_clk_resume.
+
+This might not work if more then one device connected to PM domain.
+Then some clocks might be part of GPD if they needed to power on/off it.
+But Kevin is right and even in this case, pm_clk infrastructure can still be used,
+because RK PM domain is Platform device and clocks can be attached to it
+using pm_clk API. I did it in my RFC series https://lkml.org/lkml/2014/9/25/365
+- all clacks attached to PM domain in .probe
+- then pm_clk_suspend/pm_clk_resume used in .power_off/.power_on callbacks
+
+Benefits: there is no need to implement custom lists of clocks
+struct rockchip_pm_domain {
+	struct clk			**clks;
+
+Regards,
+-grygorii
