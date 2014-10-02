@@ -1,92 +1,24 @@
-From: <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCH v5 2/4] pmbus: core: add helpers for byte write and read modify write
-Date: Thu, 2 Oct 2014 13:37:49 -0500
-Message-ID: <1412275071-6417-3-git-send-email-atull@opensource.altera.com>
-References: <1412275071-6417-1-git-send-email-atull@opensource.altera.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: tegra: Enable the mic-detect gpio on Acer Chromebook
+ 13
+Date: Thu, 02 Oct 2014 12:46:38 -0600
+Message-ID: <542D9D8E.7080307@wwwdotorg.org>
+References: <1412268212-3458-1-git-send-email-dgreid@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412275071-6417-1-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org
-Cc: lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412268212-3458-1-git-send-email-dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On 10/02/2014 10:43 AM, Dylan Reid wrote:
+> Enables the gpio-base mic detection on the Acer Chromebook 13.  This
+> gpio is set by the jack-detection chip when it notices either of the
+> TRRS type headsets with a microphone.
 
-Add two helper functions:
- * pmbus_write_byte_data  = paged byte write
- * pmbus_update_byte_data = paged byte read/modify/write
-
-Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
-v2: add prototypes for the two new functions
----
- drivers/hwmon/pmbus/pmbus.h      |    4 ++++
- drivers/hwmon/pmbus/pmbus_core.c |   31 +++++++++++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
-
-diff --git a/drivers/hwmon/pmbus/pmbus.h b/drivers/hwmon/pmbus/pmbus.h
-index fa9beb3..3ae79a7 100644
---- a/drivers/hwmon/pmbus/pmbus.h
-+++ b/drivers/hwmon/pmbus/pmbus.h
-@@ -375,6 +375,10 @@ int pmbus_read_word_data(struct i2c_client *client, u8 page, u8 reg);
- int pmbus_write_word_data(struct i2c_client *client, u8 page, u8 reg, u16 word);
- int pmbus_read_byte_data(struct i2c_client *client, int page, u8 reg);
- int pmbus_write_byte(struct i2c_client *client, int page, u8 value);
-+int pmbus_write_byte_data(struct i2c_client *client, int page, u8 reg,
-+			  u8 value);
-+int pmbus_update_byte_data(struct i2c_client *client, int page, u8 reg,
-+			   u8 mask, u8 value);
- void pmbus_clear_faults(struct i2c_client *client);
- bool pmbus_check_byte_register(struct i2c_client *client, int page, int reg);
- bool pmbus_check_word_register(struct i2c_client *client, int page, int reg);
-diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
-index 291d11f..d6c3701 100644
---- a/drivers/hwmon/pmbus/pmbus_core.c
-+++ b/drivers/hwmon/pmbus/pmbus_core.c
-@@ -253,6 +253,37 @@ int pmbus_read_byte_data(struct i2c_client *client, int page, u8 reg)
- }
- EXPORT_SYMBOL_GPL(pmbus_read_byte_data);
- 
-+int pmbus_write_byte_data(struct i2c_client *client, int page, u8 reg, u8 value)
-+{
-+	int rv;
-+
-+	rv = pmbus_set_page(client, page);
-+	if (rv < 0)
-+		return rv;
-+
-+	return i2c_smbus_write_byte_data(client, reg, value);
-+}
-+EXPORT_SYMBOL_GPL(pmbus_write_byte_data);
-+
-+int pmbus_update_byte_data(struct i2c_client *client, int page, u8 reg,
-+			   u8 mask, u8 value)
-+{
-+	unsigned int tmp;
-+	int rv;
-+
-+	rv = pmbus_read_byte_data(client, page, reg);
-+	if (rv < 0)
-+		return rv;
-+
-+	tmp = (rv & ~mask) | (value & mask);
-+
-+	if (tmp != rv)
-+		rv = pmbus_write_byte_data(client, page, reg, tmp);
-+
-+	return rv;
-+}
-+EXPORT_SYMBOL_GPL(pmbus_update_byte_data);
-+
- /*
-  * _pmbus_read_byte_data() is similar to pmbus_read_byte_data(), but checks if
-  * a device specific mapping function exists and calls it if necessary.
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+(I assume this one patch will go through the Tegra tree, and the other 
+through the ASoC tree)
