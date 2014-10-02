@@ -1,43 +1,78 @@
-From: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
-Subject: ath10k: calibration data through Device Tree?
-Date: Thu, 2 Oct 2014 16:14:43 +0300
-Message-ID: <87tx3mmx4s.fsf@kamboji.qca.qualcomm.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v4 3/4] pmbus: add regulator support
+Date: Thu, 02 Oct 2014 06:22:14 -0700
+Message-ID: <542D5186.7060908@roeck-us.net>
+References: <1412190349-16343-1-git-send-email-atull@opensource.altera.com> <1412190349-16343-4-git-send-email-atull@opensource.altera.com> <20141002112011.GS4273@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141002112011.GS4273@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, atull@opensource.altera.com
+Cc: jdelvare@suse.de, lm-sensors@lm-sensors.org, lgirdwood@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Device Tree gurus,
+On 10/02/2014 04:20 AM, Mark Brown wrote:
+> On Wed, Oct 01, 2014 at 02:05:49PM -0500, atull@opensource.altera.com wrote:
+>> From: Alan Tull <atull@opensource.altera.com>
+>>
+>> Add support for simple on/off control of each channel.
+>
+> This is basically fine but the regulator API has moved on a bit with the
+> DT handling over the time you've been working on this.
+>
+>> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+>>
+>> v2: Remove '#include <linux/regulator/machine.h>'
+>>      Only one regulator per pmbus device
+>
+> Put this after the --- as covered in SubmittingPatches.
+>
+>> +static int _pmbus_regulator_on_off(struct regulator_dev *rdev, bool enable)
+>> +{
+>> +	struct device *dev = rdev_get_dev(rdev);
+>> +	struct i2c_client *client = to_i2c_client(dev->parent);
+>> +	u8 page = rdev_get_id(rdev);
+>> +
+>> +	return pmbus_update_byte_data(client, page, PMBUS_OPERATION,
+>> +				      PB_OPERATION_CONTROL_ON,
+>> +				      enable ? PB_OPERATION_CONTROL_ON : 0);
+>> +}
+>> +
+>> +static int pmbus_regulator_enable(struct regulator_dev *rdev)
+>> +{
+>> +	return _pmbus_regulator_on_off(rdev, 1);
+>> +}
+>
+> I'm not sure factoring out the code actually won much here.
+>
+>> +	np_regulators = of_get_child_by_name(dev->of_node, "regulators");
+>> +	if (!np_regulators)
+>> +		return 0;
+>> +
+>> +	ret = of_regulator_match(dev, np_regulators, info->reg_matches,
+>> +				 info->num_regulators);
+>> +	of_node_put(np_regulators);
+>
+> We now have helpers in the regulator core for this - set of_match and
+> regulators_node in the regulator descriptor and the core will resolve
+> this stuff for you and...
+>
+>> +		if (pdata && pdata->reg_init_data) {
+>> +			config.init_data = &pdata->reg_init_data[i];
+>> +		} else {
+>> +			config.init_data = info->reg_matches[i].init_data;
+>> +			config.of_node = info->reg_matches[i].of_node;
+>> +		}
+>
+> ...you can just drop the else case (and check for reg_init_data) here.
+>
 
-ath10k is a wireless driver for Qualcomm Atheros 802.11ac hardware and
-located in drivers/net/wireless/ath/ath10k/. Currently it only supports
-PCI devices.
+Guess we'll need another version after all.
 
-Some of the devices store the calibration data to the host flash and the
-bootloader reads the data from the flash. And now we need a method to
-deliver the calibration data from bootloader to ath10k. Basically our
-requirements are:
+Alan, in that case please provide prototyles for the new API functions
+introduced in patch 2/4.
 
-* ath10k must support any number of radios (one radio per PCI device).
-
-* The calibration data is now 2116 bytes, in the future it might be
-  longer. The data is unique for each radio and is created at the
-  factory.
-
-* ath10k must be able to reliably map the PCI device (=radio) to the
-  correct calibration data. Maybe with using PCI bus and slot numbers?
-
-We have been trying to find similar cases from other drivers but no
-luck. Basically my question is how to do this properly with Device Tree?
-Especially how to map the calibration data to correct PCI device? Are
-there any examples which would help us to implement this?
-
--- 
-Kalle Valo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Guenter
