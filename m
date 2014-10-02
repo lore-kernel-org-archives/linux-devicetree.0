@@ -1,111 +1,47 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: [PATCH 1/1] of: Add a function to read 64-bit arrays
-Date: Fri,  3 Oct 2014 00:59:23 +0300
-Message-ID: <1412287163-10222-1-git-send-email-sakari.ailus@iki.fi>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [RFC 5/7] soc: qcom: Add Shared Memory Driver
+Date: Thu, 02 Oct 2014 15:38:18 -0700
+Message-ID: <542DD3DA.1010909@codeaurora.org>
+References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com> <1412037291-16880-6-git-send-email-bjorn.andersson@sonymobile.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1412037291-16880-6-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Implement of_property_read_u64_array() for reading 64-bit arrays.
+On 09/29/14 17:34, Bjorn Andersson wrote:
+> +
+> +#define GET_RX_CHANNEL_INFO(channel, param) \
+> +	(channel->rx_info_word ? \
+> +		channel->rx_info_word->param : \
+> +		channel->rx_info->param)
+> +
+> +#define GET_TX_CHANNEL_INFO(channel, param) \
+> +	(channel->rx_info_word ? \
+> +		channel->tx_info_word->param : \
+> +		channel->tx_info->param)
+> +
+> +#define SET_RX_CHANNEL_INFO(channel, param, value) \
+> +	(channel->rx_info_word ? \
+> +		(channel->rx_info_word->param = value) : \
+> +		(channel->rx_info->param = value))
+> +
+> +#define SET_TX_CHANNEL_INFO(channel, param, value) \
+> +	(channel->rx_info_word ? \
 
-This is needed for e.g. reading the valid link frequencies in the smiapp
-driver.
+Drive-by review: Should this be tx_info_word? Given that it works I
+wonder why not just have a flag indicating if we should use word aligned
+read/write vs. byte aligned.
 
-Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
----
-Hi,
+> +		(channel->tx_info_word->param = value) : \
+> +		(channel->tx_info->param = value))
+> +
 
-While the smiapp (found in drivers/media/i2c/smiapp/) OF support which needs
-this isn't in yet, other drivers such as mt9v032 which would be reading the
-valid link frequency control values will need reading arrays. This might
-make it to v4l2-of.c in the end.
 
- drivers/of/base.c  |   44 ++++++++++++++++++++++++++++++++++++--------
- include/linux/of.h |    3 +++
- 2 files changed, 39 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index d8574ad..35e24f4 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1214,6 +1214,41 @@ int of_property_read_u32_array(const struct device_node *np,
- EXPORT_SYMBOL_GPL(of_property_read_u32_array);
- 
- /**
-+ * of_property_read_u64_array - Find and read an array of 64 bit integers
-+ * from a property.
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ * @out_values:	pointer to return value, modified only if return value is 0.
-+ * @sz:		number of array elements to read
-+ *
-+ * Search for a property in a device node and read 64-bit value(s) from
-+ * it. Returns 0 on success, -EINVAL if the property does not exist,
-+ * -ENODATA if property does not have a value, and -EOVERFLOW if the
-+ * property data isn't large enough.
-+ *
-+ * The out_values is modified only if a valid u32 value can be decoded.
-+ */
-+int of_property_read_u64_array(const struct device_node *np,
-+			       const char *propname, u64 *out_value, size_t sz)
-+{
-+	const __be32 *val = of_find_property_value_of_size(
-+		np, propname, sz * sizeof(*out_value));
-+
-+	if (IS_ERR(val))
-+		return PTR_ERR(val);
-+
-+	while (sz--) {
-+		*out_value = of_read_number(val, 2);
-+		out_value++;
-+		val += 2;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_property_read_u64_array);
-+
-+/**
-  * of_property_read_u64 - Find and read a 64 bit integer from a property
-  * @np:		device node from which the property value is to be read.
-  * @propname:	name of the property to be searched.
-@@ -1229,14 +1264,7 @@ EXPORT_SYMBOL_GPL(of_property_read_u32_array);
- int of_property_read_u64(const struct device_node *np, const char *propname,
- 			 u64 *out_value)
- {
--	const __be32 *val = of_find_property_value_of_size(np, propname,
--						sizeof(*out_value));
--
--	if (IS_ERR(val))
--		return PTR_ERR(val);
--
--	*out_value = of_read_number(val, 2);
--	return 0;
-+	return of_property_read_u64_array(np, propname, out_value, 1);
- }
- EXPORT_SYMBOL_GPL(of_property_read_u64);
- 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 6c4363b..e84533f 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -263,6 +263,9 @@ extern int of_property_read_u32_array(const struct device_node *np,
- 				      size_t sz);
- extern int of_property_read_u64(const struct device_node *np,
- 				const char *propname, u64 *out_value);
-+extern int of_property_read_u64_array(const struct device_node *np,
-+				      const char *propname, u64 *out_value,
-+				      size_t sz);
- 
- extern int of_property_read_string(struct device_node *np,
- 				   const char *propname,
 -- 
-1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
