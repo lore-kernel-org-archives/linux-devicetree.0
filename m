@@ -1,28 +1,45 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 0/2] arm: shimobile: add HS-USB device node on r8a7790
-Date: Thu, 2 Oct 2014 17:04:31 +0900
-Message-ID: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 1/2] arm: shimobile: r8a7790: add HS-USB device node
+Date: Thu, 2 Oct 2014 17:04:32 +0900
+Message-ID: <1412237073-1288-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
- This series is based on Simon's renesas.git branch and
-renesas-devel-20141002-v3.17-rc7 tag. If we use the generic phy
-driver for R-Car Gen2 (drivers/phy/phy-rcar-gen2.c), we can use
-the HS-USB on lager.
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/r8a7790.dtsi |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Yoshihiro Shimoda (2):
-  arm: shimobile: r8a7790: add HS-USB device node
-  arm: shmobile: lager: enable HS-USB
-
- arch/arm/boot/dts/r8a7790-lager.dts |    5 +++++
- arch/arm/boot/dts/r8a7790.dtsi      |   10 ++++++++++
- 2 files changed, 15 insertions(+)
-
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 2380fd5..fd9fc37 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -1314,4 +1314,14 @@
+ 			ssi9: ssi@9 { interrupts = <0 379 IRQ_TYPE_LEVEL_HIGH>; };
+ 		};
+ 	};
++
++	hsusb: usb@e6590000 {
++		compatible = "renesas,usbhs-r8a7790";
++		reg = <0 0xe6590000 0 0x100>;
++		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
++		renesas,buswait_bwait = <4>;
++		phys = <&usb0 1>;
++		phy-names = "usb";
++	};
+ };
 -- 
 1.7.9.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
