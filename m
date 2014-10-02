@@ -1,50 +1,50 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v3 10/15] leds: leds-gpio: Add ACPI probing support
-Date: Thu, 2 Oct 2014 12:55:36 +0300
-Message-ID: <20141002095536.GI1786@lahna.fi.intel.com>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
- <2043842.LxdgdYRbIF@wuerfel>
- <20141001140441.GF1786@lahna.fi.intel.com>
- <6852466.Q5TXcWChqW@wuerfel>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/2] arm: shimobile: r8a7790: add HS-USB device node
+Date: Thu, 02 Oct 2014 13:58:21 +0400
+Message-ID: <542D21BD.8020709@cogentembedded.com>
+References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412237073-1288-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6852466.Q5TXcWChqW@wuerfel>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1412237073-1288-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 01, 2014 at 04:14:20PM +0200, Arnd Bergmann wrote:
-> On Wednesday 01 October 2014 17:04:41 Mika Westerberg wrote:
-> > 
-> > > On the question what to put into the name and type fields, that is
-> > > unrelated. The type is supposed to be for the 'device_type' property
-> > > in DT, which we should never rely on in a driver that supports both
-> > > APCI and DT. In Linux we only use that for "pci", "cpu" and "memory",
-> > > all of which have their own way of getting probed in ACPI.
-> > > The "name" is normally ignored in DT as well, except for backwards
-> > > compatibility with old bindings, but I would argue that you should not
-> > > just put "prp0001" in there. Either leave it empty like type, or use
-> > > the name of the device as it appears in the ACPI tables, such as "DEV0"
-> > > or "PWM".
-> > 
-> > OK, I think it makes sense to leave them empty. I remember I tried that
-> > at some point but it didn't work without N and T fields. Is there some
-> > example what to put there in case of empty?
-> > 
-> > Something like "of:N*T*Cgpio-leds" perhaps?
-> 
-> Sorry, don't know. If I read the code right, the type field in DT ends
-> up being "<NULL>" for any device that doesn't set the device_type 
-> property, but that seems a bit silly and probably isn't worth copying.
+On 10/2/2014 12:04 PM, Yoshihiro Shimoda wrote:
 
-OK, I checked and udev wants to have both N and T but they can be left
-empty. If there are no objections the modalias will look like this:
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>   arch/arm/boot/dts/r8a7790.dtsi |   10 ++++++++++
+>   1 file changed, 10 insertions(+)
 
-[root@mnw01 ~]# cat /sys/bus/spi/devices/spi-PRP0001\:00/modalias 
-of:Nat25TCatmel,at25
+> diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+> index 2380fd5..fd9fc37 100644
+> --- a/arch/arm/boot/dts/r8a7790.dtsi
+> +++ b/arch/arm/boot/dts/r8a7790.dtsi
+> @@ -1314,4 +1314,14 @@
+>   			ssi9: ssi@9 { interrupts = <0 379 IRQ_TYPE_LEVEL_HIGH>; };
+>   		};
+>   	};
+> +
+> +	hsusb: usb@e6590000 {
+> +		compatible = "renesas,usbhs-r8a7790";
+> +		reg = <0 0xe6590000 0 0x100>;
+> +		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
 
-In other words name is the ACPI device name (AT25) in lower case, T is
-left empty and C is the compatible property.
+    I don't see where are you handling this prop in the driver...
+
+> +		renesas,buswait_bwait = <4>;
+
+    This prop is named "renesas,buswait" now.
+
+>" +		phys = <&usb0 1>;
+> +		phy-names = "usb";
+> +	};
+>   };
+
+WBR, Sergei
+
