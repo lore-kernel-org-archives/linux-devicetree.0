@@ -1,95 +1,70 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v4 3/4] pmbus: add regulator support
-Date: Thu, 2 Oct 2014 13:43:30 -0500
-Message-ID: <alpine.DEB.2.02.1410021341570.11795@atx-linux-37>
-References: <1412190349-16343-1-git-send-email-atull@opensource.altera.com> <1412190349-16343-4-git-send-email-atull@opensource.altera.com> <20141002112011.GS4273@sirena.org.uk> <542D5186.7060908@roeck-us.net>
+From: Andy Lutomirski <luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org>
+Subject: Re: ath10k: calibration data through Device Tree?
+Date: Thu, 02 Oct 2014 12:05:27 -0700
+Message-ID: <542DA1F7.9090904@amacapital.net>
+References: <87tx3mmx4s.fsf@kamboji.qca.qualcomm.com>	<20141002132914.GN5788@leverpostej> <87ppeamvr9.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <542D5186.7060908@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Mark Brown <broonie@kernel.org>, jdelvare@suse.de, lm-sensors@lm-sensors.org, lgirdwood@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87ppeamvr9.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2 Oct 2014, Guenter Roeck wrote:
-
-> On 10/02/2014 04:20 AM, Mark Brown wrote:
-> > On Wed, Oct 01, 2014 at 02:05:49PM -0500, atull@opensource.altera.com wrote:
-> > > From: Alan Tull <atull@opensource.altera.com>
-> > > 
-> > > Add support for simple on/off control of each channel.
-> > 
-> > This is basically fine but the regulator API has moved on a bit with the
-> > DT handling over the time you've been working on this.
-> > 
-> > > Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> > > 
-> > > v2: Remove '#include <linux/regulator/machine.h>'
-> > >      Only one regulator per pmbus device
-> > 
-> > Put this after the --- as covered in SubmittingPatches.
-> > 
-> > > +static int _pmbus_regulator_on_off(struct regulator_dev *rdev, bool
-> > > enable)
-> > > +{
-> > > +	struct device *dev = rdev_get_dev(rdev);
-> > > +	struct i2c_client *client = to_i2c_client(dev->parent);
-> > > +	u8 page = rdev_get_id(rdev);
-> > > +
-> > > +	return pmbus_update_byte_data(client, page, PMBUS_OPERATION,
-> > > +				      PB_OPERATION_CONTROL_ON,
-> > > +				      enable ? PB_OPERATION_CONTROL_ON : 0);
-> > > +}
-> > > +
-> > > +static int pmbus_regulator_enable(struct regulator_dev *rdev)
-> > > +{
-> > > +	return _pmbus_regulator_on_off(rdev, 1);
-> > > +}
-> > 
-> > I'm not sure factoring out the code actually won much here.
-> > 
-> > > +	np_regulators = of_get_child_by_name(dev->of_node, "regulators");
-> > > +	if (!np_regulators)
-> > > +		return 0;
-> > > +
-> > > +	ret = of_regulator_match(dev, np_regulators, info->reg_matches,
-> > > +				 info->num_regulators);
-> > > +	of_node_put(np_regulators);
-> > 
-> > We now have helpers in the regulator core for this - set of_match and
-> > regulators_node in the regulator descriptor and the core will resolve
-> > this stuff for you and...
-> > 
-> > > +		if (pdata && pdata->reg_init_data) {
-> > > +			config.init_data = &pdata->reg_init_data[i];
-> > > +		} else {
-> > > +			config.init_data = info->reg_matches[i].init_data;
-> > > +			config.of_node = info->reg_matches[i].of_node;
-> > > +		}
-> > 
-> > ...you can just drop the else case (and check for reg_init_data) here.
-> > 
+On 10/02/2014 06:44 AM, Kalle Valo wrote:
+> Hi Mark,
 > 
-> Guess we'll need another version after all.
+> Mark Rutland <mark.rutland-5wv7dgnIgG8-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org> writes:
 > 
-> Alan, in that case please provide prototyles for the new API functions
-> introduced in patch 2/4.
+>>> ath10k is a wireless driver for Qualcomm Atheros 802.11ac hardware and
+>>> located in drivers/net/wireless/ath/ath10k/. Currently it only supports
+>>> PCI devices.
+>>>
+>>> Some of the devices store the calibration data to the host flash and the
+>>> bootloader reads the data from the flash. And now we need a method to
+>>> deliver the calibration data from bootloader to ath10k. 
+>>
+>> What does this calibration data consist of?
 > 
-> Thanks,
-> Guenter
-
-OK I have sent out v5 which uses the simplified DT parsing method.
-
-I added the prototypes and made the other fixes requested.
-
-Alan
-
-
+> From ath10k point of view it's just a binary blob which we push to the
+> firmware before we start it. ath10k does not parse it in any way.
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+>> What happens if you don't have the calibration data? Is it a critical
+>> requirement for the use of the device, or does its absence simply result
+>> in degraded performance?
 > 
+> From my point of view the device should not be used if it doesn't
+> contain the correct calibration data. I guess it could work somehow but
+> there's no guarantee about the perfomance.
+> 
+>> What do you do on non-DT systems? Where does the information come from
+>> in that case?
+> 
+> Currently ath10k only supports having the calibration data in the OTP
+> area inside the QCA98XX chip. But some manufacturers want to store it on
+> the host file, I assume because of the flexibility it provides. And
+> that's why we have the need for Device Tree support.
+
+To give an actual concrete example that might be what Kalle is talking
+about:
+
+I have a TP-Link Archer C7, which has a mips cpu and an ath10k minipcie
+device.  For whatever reason (I honestly have no clue whatsoever why the
+hardware works this way), the calibration data is on a host flash
+partition, not on the minipcie device's ROM or flash or whatever it is.
+
+Needless to say, the mainline ath10k driver won't load on it.  (An old
+version used to load without calibration data.  It didn't work very well.)
+
+Presuambly the idea is that, if things like this used DT (which mine
+doesn't, I presume), then ath10k could get the calibration data via DT.
+ And maybe some vendors of ARM-based wifi devices are planning on
+playing similar games, and they do use DT.
+
+--Andy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
