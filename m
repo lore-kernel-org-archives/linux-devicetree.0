@@ -1,45 +1,69 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: ath10k: calibration data through Device Tree?
-Date: Thu, 02 Oct 2014 16:19:28 +0200
-Message-ID: <2397903.vznsjdQh6x@wuerfel>
-References: <87tx3mmx4s.fsf@kamboji.qca.qualcomm.com> <3548219.ad4Qe1WtGp@wuerfel> <87lhoymvln.fsf@kamboji.qca.qualcomm.com>
+From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm: socfpga: Enable ECC of L2 and OCRAM on startup.
+Date: Thu, 2 Oct 2014 09:32:18 -0500
+Message-ID: <542D61F2.70500@opensource.altera.com>
+References: <1412181092-27162-1-git-send-email-tthayer@opensource.altera.com> <1412181092-27162-2-git-send-email-tthayer@opensource.altera.com> <542C3654.1070604@gmail.com> <542C6CFB.4090809@opensource.altera.com> <542C6DBB.9060202@opensource.altera.com> <542C7DD0.5030601@opensource.altera.com> <542D3918.3040909@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87lhoymvln.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
+In-Reply-To: <542D3918.3040909-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 02 October 2014 16:47:48 Kalle Valo wrote:
-> >
-> > When you know the PCI bus/device/function ID of the device, you can put
-> > a device node in the dts file that corresponds to the PCI dev, and you
-> > can find the of_node pointer from pci_dev->dev.of_node. 
-> 
-> For me that's easier said than done as I'm a total newbie with Device
-> Tree  Can you give any pointers or examples how to do that in
-> practise, please? Especially "node in the dts file that corresponds to
-> the PCI dev" part is puzzling me.
 
-See the recent patch "[PATCH v4] ARM: shmobile: r8a7791: link PCI USB
-devices to USB PHY" where someone does the same thing to supply additional
-data to a PCI device node in shmobile.
+On 10/02/2014 06:38 AM, Dinh Nguyen wrote:
+>
+> On 10/1/14, 5:18 PM, Thor Thayer wrote:
+>> On 10/01/2014 04:10 PM, Dinh Nguyen wrote:
+>>> On 10/1/14, 4:07 PM, Thor Thayer wrote:
+>>>> On 10/01/2014 12:13 PM, Dinh Nguyen wrote:
+>>>>> On 10/1/14, 11:31 AM, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+>>>>>> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>>>>>
+>>> [...]
+>>>>>>       static void socfpga_cyclone5_restart(enum reboot_mode mode, const
+>>>>>> char *cmd)
+>>>>>> @@ -98,6 +101,13 @@ static void socfpga_cyclone5_restart(enum
+>>>>>> reboot_mode mode, const char *cmd)
+>>>>>>         writel(temp, rst_manager_base_addr + SOCFPGA_RSTMGR_CTRL);
+>>>>>>     }
+>>>>>>     +static void __init socfpga_cyclone5_init(void)
+>>>>>> +{
+>>>>>> +    of_platform_populate(NULL, of_default_bus_match_table,
+>>>>>> +                 NULL, NULL);
+>>>>> Why is this needed?
+>>>>>
+>>>>> Dinh
+>>>> Hi Dinh.
+>>>>
+>>>> Are you asking why the of_platform_populate() is needed? If so, it is
+>>>> used to kick off discovery of devices at the root of the tree.
+>>> I was asking about of_platform populate(). This was removed in this
+>>> commit:
+>>>
+>>> 8b5c18f05 ARM: l2c: socfpga: convert to generic l2c OF initialisation
+>>>
+>>> Just trying to understand what's the need to add it back?
+>>>
+>>> Dinh
+>> It is used to kick off discovery of devices at the root of the tree.
+>> This is needed when .init_machine was defined because we're not using
+>> the default implementation (which called this function).
+>>
+> Then, can you please add a separate patch to fix up the removal of the call?
+>
+> Thanks,
+> Dinh
+I don't understand - maybe I'm missing something. This function call is 
+needed to kick off discovery at the root of the tree.
 
-Basically you just need to add a node under your PCI host controller node
-with "reg = <0x800 0 0 0 0>" (or whatever the address is and put the
-properties in there. See www.openfirmware.org/1275/bindings/pci/pci2_1.pdf
-for the description of how to construct the addresses.
+When I defined a .init_machine function in our platform code, this 
+function needed to be added.
 
-I notice that there are no Qualcomm or Atheros PCI host controller drivers
-in Linux though, so you first have to write a driver that allows probing
-the PCI bus, and get the binding reviewed for that before you can add
-it to the dts files. Is this for ipq8064 or something else?
-
-	Arnd
-
+Thor
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
