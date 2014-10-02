@@ -1,128 +1,182 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 2/4] ARM: qcom: add description of KPSS WDT for IPQ8064
-Date: Thu, 02 Oct 2014 12:08:38 -0700
-Message-ID: <542DA2B6.3020201@codeaurora.org>
-References: <cover.1412182773.git.joshc@codeaurora.org> <50c0ec1514173ce07641a95839e939dcda41b110.1412182773.git.joshc@codeaurora.org> <20141001172855.GL10233@codeaurora.org> <20141001181557.GQ868@joshc.qualcomm.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v1 2/4] ARM: keystone: pm: switch to use generic pm domains
+Date: Thu, 2 Oct 2014 15:17:40 -0400
+Message-ID: <542DA4D4.4070202@ti.com>
+References: <1412001499-19369-1-git-send-email-grygorii.strashko@ti.com> <1412001499-19369-3-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141001181557.GQ868@joshc.qualcomm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1412001499-19369-3-git-send-email-grygorii.strashko@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, khilman@linaro.org
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, ulf.hansson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/14 11:15, Josh Cartwright wrote:
-> Yeah, the description of this thing is a bit awkward.
+On Monday 29 September 2014 10:38 AM, Grygorii Strashko wrote:
+> This patch switches Keystone 2 PM code to use Generic PM domains
+> instead of PM clock domains because of the lack of DT support
+> for the last.
+> 
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+>  .../devicetree/bindings/power/ti,keystone-gpc.txt  |  31 ++++++
+>  arch/arm/mach-keystone/Kconfig                     |   1 +
+>  arch/arm/mach-keystone/pm_domain.c                 | 115 ++++++++++++++-------
+>  3 files changed, 110 insertions(+), 37 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/ti,keystone-gpc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/ti,keystone-gpc.txt b/Documentation/devicetree/bindings/power/ti,keystone-gpc.txt
+> new file mode 100644
+> index 0000000..43af1fc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/ti,keystone-gpc.txt
+> @@ -0,0 +1,31 @@
+> +* TI Keystone 2 Generic PM Controller
+> +
+> +The TI Keystone 2 Generic PM Controller is responsible for Clock gating
+> +for each controlled IP module.
+> +
+> +Required properties:
+> +- compatible: Should be "ti,keystone-gpc"
+> +- #power-domain-cells: Should be 0, see below:
+> +
+> +The gpc node is a power-controller as documented by the generic power domain
+> +bindings in Documentation/devicetree/bindings/power/power_domain.txt.
+> +
+> +Example:
+> +
+> +	pm_controller: pm-controller {
+> +		compatible = "ti,keystone-gpc";
+'gpc' doesn't make it clear. May be 'keystone-powerdomain' ?
+> +		#power-domain-cells = <0>;
+> +	};
+> +
+> +	netcp: netcp@2090000 {
+> +		reg = <0x2620110 0x8>;
+> +		reg-names = "efuse";
+> +		...
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +		power-domains = <&pm_controller>;
+> +
+> +		clocks = <&clkpa>, <&clkcpgmac>, <&chipclk12>;
+> +		dma-coherent;
+> +	}
+> diff --git a/arch/arm/mach-keystone/Kconfig b/arch/arm/mach-keystone/Kconfig
+> index e571084..0132bde 100644
+> --- a/arch/arm/mach-keystone/Kconfig
+> +++ b/arch/arm/mach-keystone/Kconfig
+> @@ -9,6 +9,7 @@ config ARCH_KEYSTONE
+>  	select COMMON_CLK_KEYSTONE
+>  	select ARCH_SUPPORTS_BIG_ENDIAN
+>  	select ZONE_DMA if ARM_LPAE
+> +	select PM_GENERIC_DOMAINS if PM
+>  	help
+>  	  Support for boards based on the Texas Instruments Keystone family of
+>  	  SoCs.
+> diff --git a/arch/arm/mach-keystone/pm_domain.c b/arch/arm/mach-keystone/pm_domain.c
+> index ca79dda..3eb5257 100644
+> --- a/arch/arm/mach-keystone/pm_domain.c
+> +++ b/arch/arm/mach-keystone/pm_domain.c
+> @@ -12,69 +12,110 @@
+>   * version 2, as published by the Free Software Foundation.
+>   */
+>  
+> +#include <linux/clk.h>
+>  #include <linux/init.h>
+> -#include <linux/pm_runtime.h>
+>  #include <linux/pm_clock.h>
+> +#include <linux/pm_domain.h>
+>  #include <linux/platform_device.h>
+> -#include <linux/clk-provider.h>
+>  #include <linux/of.h>
+>  
+> -#ifdef CONFIG_PM_RUNTIME
+> -static int keystone_pm_runtime_suspend(struct device *dev)
+> +#ifdef CONFIG_PM_GENERIC_DOMAINS
+> +
+> +struct keystone_domain {
+> +	struct generic_pm_domain base;
+> +	struct device	*dev;
+> +};
+> +
+> +void keystone_pm_domain_attach_dev(struct device *dev)
+>  {
+> +	struct clk *clk;
+>  	int ret;
+> +	int i = 0;
+>  
+>  	dev_dbg(dev, "%s\n", __func__);
+>  
+> -	ret = pm_generic_runtime_suspend(dev);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = pm_clk_suspend(dev);
+> +	ret = pm_clk_create(dev);
+>  	if (ret) {
+> -		pm_generic_runtime_resume(dev);
+> -		return ret;
+> +		dev_err(dev, "pm_clk_create failed %d\n", ret);
+> +		return;
+> +	};
+> +
+> +	while ((clk = of_clk_get(dev->of_node, i++)) && !IS_ERR(clk)) {
+> +		ret = pm_clk_add_clk(dev, clk);
+> +		if (ret) {
+> +			dev_err(dev, "pm_clk_add_clk failed %d\n", ret);
+> +			goto clk_err;
+> +		};
+>  	}
+>  
+> -	return 0;
+> +	if (!IS_ENABLED(CONFIG_PM_RUNTIME)) {
+> +		ret = pm_clk_resume(dev);
+> +		if (ret) {
+> +			dev_err(dev, "pm_clk_resume failed %d\n", ret);
+> +			goto clk_err;
+> +		};
+> +	}
+> +	return;
+> +
+> +clk_err:
+> +	pm_clk_destroy(dev);
+>  }
+>  
+> -static int keystone_pm_runtime_resume(struct device *dev)
+> +void keystone_pm_domain_detach_dev(struct device *dev)
+>  {
+>  	dev_dbg(dev, "%s\n", __func__);
+> -
+> -	pm_clk_resume(dev);
+> -
+> -	return pm_generic_runtime_resume(dev);
+> +	pm_clk_destroy(dev);
+>  }
+> -#endif
+>  
+> -static struct dev_pm_domain keystone_pm_domain = {
+> -	.ops = {
+> -		SET_RUNTIME_PM_OPS(keystone_pm_runtime_suspend,
+> -				   keystone_pm_runtime_resume, NULL)
+> -		USE_PLATFORM_PM_SLEEP_OPS
+> +static const struct keystone_domain keystone_domain = {
+> +	.base = {
+> +		.name = "keystone",
+> +		.attach_dev = keystone_pm_domain_attach_dev,
+> +		.detach_dev = keystone_pm_domain_detach_dev,
+> +		.dev_ops = {
+> +			.stop = pm_clk_suspend,
+> +			.start = pm_clk_resume,
+> +		},
+> +		.power_off_latency_ns = 25000,
+> +		.power_on_latency_ns = 2000000,
+Did you cook up these numbers ?
 
-:-/ I tried to make the binding future proof.
+Other than that patch looks fine to me. If Kevin is happy
+with overall approach then we can proceed with this.
 
->
-> I'm not sure how I'd feel about just just adding "qcom,kpss-wdt" to the
-> timer node compatible.  I'm wondering if the WDT(s) should be a
-> subnode(s) of the timer node instead?
-
-But then we don't make the timers subnodes? That seems odd. What's the
-benefit of multiple sub-nodes for the watchdogs?
-
-It would also be fine to use the current compatible string and just
-append the extra two interrupts for the two watchdogs and then make an
-optional clocks property and deprecate the clock-frequency property.
-
->
-> The percpu-ness of the two WDTs makes configuration even more
-> interesting, as it's possible you'd want to independently configure
-> timeouts for CPU0_WDT0 and CPU1_WDT0, supporting this with a coalesced
-> timer/wdt would be cumbersome.
-
-We already do similar things for the timers on each cpu. It doesn't seem
-that bad, but that's a matter of opinion.
-
->
-> Something like this perhaps:
->
-> 	timer@200a000 {
-> 		compatible = "qcom,kpss-timer", "qcom,msm-timer";
-> 		interrupts = <1 1 0x301>,
-> 			     <1 2 0x301>,
-> 			     <1 3 0x301>;
-> 		reg = <0x0200a000 0x100>;
-> 		clock-frequency = <25000000>,
-> 				  <32768>;
-> 		cpu-offset = <0x80000>;
->
-> 		#address-cells = <1>;
-> 		#size-cells = <1>;
-> 		ranges;
->
-> 		cpu0_wdt0: watchdog@208a038 {
-> 			compatible = "qcom,kpss-wdt";
-> 			reg = <0x208a038 0x40>;
-> 			interrupts = <1 4 0x301>,
-> 			clocks = <&sleep_clk>;
-> 			timeout-sec = <10>;
-> 			cpu = <&cpu0>;
-> 		};
->
-> 		cpu0_wdt1: watchdog@208a060 {
-> 			compatible = "qcom,kpss-wdt";
-> 			reg = <0x208a060 0x40>;
-> 			interrupts = <1 5 0x301>,
-> 			clocks = <&sleep_clk>;
-> 			timeout-sec = <20>;
-> 			cpu = <&cpu0>;
-> 		};
->
-> 		cpu1_wdt0: watchdog@209a038 {
-> 			compatible = "qcom,kpss-wdt";
-> 			reg = <0x209a038 0x40>;
-> 			interrupts = <1 4 0x301>,
-> 			clocks = <&sleep_clk>;
-> 			timeout-sec = <8>;
-> 			cpu = <&cpu1>;
-> 		};
->
-> 		cpu1_wdt1: watchdog@209a060 {
-> 			compatible = "qcom,kpss-wdt";
-> 			reg = <0x209a060 0x40>;
-> 			interrupts = <1 5 0x301>,
-> 			clocks = <&sleep_clk>;
-> 			timeout-sec = <15>;
-> 			cpu = <&cpu1>;
-> 		};
-> 	};
->
->
-
-I'm thinking:
-
-                timer@200a000 {
-                        compatible = "qcom,kpss-timer", "qcom,msm-timer";
-                        interrupts = <1 1 0x301>,
-                                     <1 2 0x301>,
-                                     <1 3 0x301>,
-				     <1 4 0x301>,
-				     <1 5 0x301>;
-                        reg = <0x0200a000 0x100>;
-                        clock-frequency = <27000000>,
-                                          <32768>;
-			clocks = <&cxo>, <&sleep_clk>;
-			clock-names = "ref", "sleep";
-                        cpu-offset = <0x80000>;
-                };
-
-Can you explain the need for the cpu handle? Luckily this device only
-exists in configurations that have up to 4 CPUs and so mapping the
-logical CPU number to the watchdog for that CPU is "easy" in that we can
-convert the CPU from logical to physical and then do the math taking
-into account the cpu-offset to figure out where the non-aliased
-registers are. Once we get into pairs of watchdogs for different
-clusters this isn't so easy and it's better to have the phandle
-somewhere (either in the watchdog node or the cpu node) and then have
-multiple nodes for the watchdog block per-cpu so that we can map the CPU
-to the device. We realized this when making the saw binding.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Regards,
+Santosh
