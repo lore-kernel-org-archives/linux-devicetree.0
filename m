@@ -1,66 +1,98 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 04/15] ACPI: Document ACPI device specific properties
-Date: Thu, 02 Oct 2014 16:29:03 +0200
-Message-ID: <3986527.L7rDZAb4g5@wuerfel>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <15893883.nvuW3ndylz@wuerfel> <20141002133654.GP1786@lahna.fi.intel.com>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] ARM: dts: mt8135: Add pinctrl node for mt8135.
+Date: Thu, 02 Oct 2014 16:28:56 +0200
+Message-ID: <1412260136.4875.9.camel@pengutronix.de>
+References: <1411443545-24951-1-git-send-email-srv_hongzhou.yang@mediatek.com>
+	 <1411443545-24951-5-git-send-email-srv_hongzhou.yang@mediatek.com>
+	 <CACRpkda-K7w-bY0uSdnZvzEKEeQg38oExoHPSW61kEv9Wv20mA@mail.gmail.com>
+	 <20140924124044.GC4992@pengutronix.de>
+	 <CACRpkdbtN-BDEwpJO2swnOjCe3UJhD5WOXXKBV0hPOe2M2=k7Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20141002133654.GP1786@lahna.fi.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdbtN-BDEwpJO2swnOjCe3UJhD5WOXXKBV0hPOe2M2=k7Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Hongzhou.Yang" <srv_hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, dandan.he-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kern>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 02 October 2014 16:36:54 Mika Westerberg wrote:
+Hi Linus,
+
+Am Donnerstag, den 02.10.2014, 16:02 +0200 schrieb Linus Walleij:
+> On Wed, Sep 24, 2014 at 2:40 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > On Wed, Sep 24, 2014 at 01:23:09PM +0200, Linus Walleij wrote:
 > 
-> > Even if you want to do automatic translation between DT and ACPI,
-> > I think it would be possible to treat these two the same:
-> > 
-> > (forgive any syntax errors)
-> > 
-> >       Name (_DSD, Package () {
-> >               ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> >               Package () {
-> >                       Package () { "pwms" { "led-red", ^PWM0, 0, 10 },
-> >                                           { "led-green", ^PWM0, 1, 20 }},
+> >> I haven't got to reviewing the driver, but this looks just wrong.
+> >>
+> >> Have the magic numbers in the driver.
+> >>
+> >> Use strings to describe functions, not integers.
+> >
+> > Interrupts, clocks, gpios, dma channels, nearly everything in the device tree is
+> > arbitrarily numbered. Instead of "irq-i2c0" we have <0 36 IRQ_TYPE_LEVEL_HIGH>
+> > in the device tree. These numbers can be resolved efficiently in the
+> > driver by shifting them to get a bitmask or by adding them as offset to
+> > a register base.
+> > Why do you want to make pinctrl different?
 > 
-> Even though the above would fit better in ACPI, it is not allowed to
-> have multiple values for a single property. One reason for that is that
-> we validate each property and check that they match what is expected and
-> having strict set of possible values makes it easier.
-
-Ok, so you basically have the same limitation that we have in DT.
-
-We have syntactical sugar in dtc that allows us to write
-
-
-	pwms = <&pwm0 0 10>, <&pwm1 1 20>;
-
-or
-
-	pwms = <&pwm0 0 10   &pwm1 1 20>;
-
-but the binary representation of the two is the same. This is the
-only reason why we need the #size-cells property and I guess you
-do too.	
-
-> Putting everything to a single package results this:
+> Because pin control is about combining groups of pins with
+> certain functions.
 > 
->                 Package () { "pwms", Package () {"led-red", ^PWM0, 0, 10, "led-green", ^PWM0, 1, 10 }}
+> > Thanks to the recently
+> > introduced defines in the device trees these numbers are not magic at
+> > all anymore.
 > 
-> But I think the below looks better:
+> Yeah that is good but not what I'm after here.
 > 
->                 Package () { "pwms", Package () {^PWM0, 0, 10, ^PWM0, 1, 10 }}
->                 Package () { "pwm-names", Package () {"led-red", "led-green"}}
+> >> We need to move toward standardized device tree bindings
+> >> for this stuff, and that means using strings, not magic
+> >> numbers.
+> >
+> > Agreed for standardized device tree bindings, but not for using strings.
+> 
+> What is the alternative? Device Tree is very much about strings,
+> as is shown by the pin config bindings.
+> 
+Mhm, maybe we are still talking about different things but I just don't
+get your point. Traditionally DT is more about plain numbers than
+strings. Look at the early examples of PCI or other bus bindings,
+defined back in the IEEE 1275 days. Almost everything back then has
+been mapped to plain numbers.
 
-Ok, if you have no way to separate the individual entries in a list of
-references, I don't care much, and I can see the "pwm-names" as being more
-consistent with the DT syntax.
+Using strings only bloats the DT, not only in it's source form, but also
+as a compiled DTB. Having a verbose string based binding is just painful
+to work with (I can tell from experience here, as I personally built the
+pinmux setup for two Tegra boards). Working with a condensed number
+based binding like the one used on i.MX is much easier IMHO.
 
-Is this a limitation in the way that the AML syntax and compiler works,
-or is this a decision you made specifically for the _DSD syntax and that
-could still be changed if there is an overwhelming interest?
+Most importantly I don't see any benefit in writing:
+pin_state_a {
+	pins = "i2c0_scl", "i2c0_sda";
+	function = "i2c0";
+};
 
-	Arnd
+instead of
+#include <dt-binding/pinctrl/mediatek_foo.h>
+pin_state_a {
+	pins = <I2C0_SCL>, <I2C0_SDA>;
+	function = <I2C0>;
+}
+
+Using plain integers makes it much easier to index into pinctrl driver
+specific arrays without doing all this string matching in the kernel. It
+seems we are eating CPU cycles here for no good reason.
+
+Could you please explain where you see the benefit of using strings
+instead of plain integers with proper binding defines attached to them?
+
+Regards,
+Lucas
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
