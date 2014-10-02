@@ -1,164 +1,652 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v3 04/15] ACPI: Document ACPI device specific properties
-Date: Thu, 2 Oct 2014 16:36:54 +0300
-Message-ID: <20141002133654.GP1786@lahna.fi.intel.com>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
- <2466832.0XJezjdvYs@wuerfel>
- <20141002121508.GM1786@lahna.fi.intel.com>
- <15893883.nvuW3ndylz@wuerfel>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/4] ARM: mediatek: Add Pinctrl/GPIO driver for mt8135.
+Date: Thu, 2 Oct 2014 15:38:24 +0200
+Message-ID: <CACRpkdYY7e0OQL1YTEASxJw7E0FPAyOrPi0g93A9aRbfss0Vpw@mail.gmail.com>
+References: <1411443545-24951-1-git-send-email-srv_hongzhou.yang@mediatek.com>
+	<1411443545-24951-3-git-send-email-srv_hongzhou.yang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <15893883.nvuW3ndylz@wuerfel>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1411443545-24951-3-git-send-email-srv_hongzhou.yang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Hongzhou.Yang" <srv_hongzhou.yang@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dandan.he@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 02, 2014 at 02:46:30PM +0200, Arnd Bergmann wrote:
-> On Thursday 02 October 2014 15:15:08 Mika Westerberg wrote:
-> > > I thought when we had discussed the subsystem specific bindings, the
-> > > consensus there was to have subsystem specific accessors and
-> > > properties/tables.
-> > > 
-> > > I would argue that for everything that ACPI already has (interrupts,
-> > > registers, gpio, dmaengine, ...) the native method should be used,
-> > > possibly using _DSD to provide naming for otherwise anonymous references.
-> > 
-> > Absolutely. That's precisely what we do in the GPIO patch of this
-> > series. E.g we use ACPI GpioIo/GpioInt _CRS resources but give name to
-> > the GPIOs with the help of _DSD.
-> 
-> Ok, I've looked at the example again:
-> 
-> +       Device (DEV0)
-> +       {
-> +               Name (_CRS, ResourceTemplate () {
-> +                       GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
-> +                               "\\_SB.PCI0.LPC", 0, ResourceConsumer) {0}
-> +                       GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
-> +                               "\\_SB.PCI0.LPC", 0, ResourceConsumer) {1}
-> +                       ...
-> +               })
+On Tue, Sep 23, 2014 at 5:39 AM, Hongzhou.Yang
+<srv_hongzhou.yang@mediatek.com> wrote:
+
+> From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+>
+> The mediatek SoCs have GPIO controller that handle both the muxing
+> and GPIOs.
+>
+> The GPIO controller have pinmux, pull enable, pull select, direction
+> and output high/low control.
+>
+> This driver include common and mt8135 part. It implements the pinctrl
+> part and gpio part.
+>
+> Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
+(...)
+> diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
+> new file mode 100644
+> index 0000000..bae4be6
+> --- /dev/null
+> +++ b/drivers/pinctrl/mediatek/Kconfig
+> @@ -0,0 +1,12 @@
+> +if ARCH_MEDIATEK
 > +
-> +               Name (_DSD, Package () {
-> +                       ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> +                       Package () {
-> +                               Package () {"reset-gpio", {^DEV0, 0, 0, 0}},
-> +                               Package () {"shutdown-gpio", {^DEV0, 1, 0, 0}},
-> +                       }
-> +               })
+> +config PINCTRL_MTK_COMMON
+> +       bool
+> +       select PINMUX
+> +       select GENERIC_PINCONF
+
+This should most certainly select GPIOLIB_IRQCHIP, I'm
+pretty sure you can use the common chained irqchip handling.
+
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mt8135.c
+(...)
+> +postcore_initcall(mtk_pinctrl_init);
+
+Why? We prefer to use module_init() these days, and employ deferred
+probe to order module probe order. Is there some problem with this?
+
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+(...)
+> +#include <linux/io.h>
+> +#include <linux/gpio.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/irqchip/chained_irq.h>
+
+These two includes go away with GPIOLIB_IRQCHIP
+
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/pinctrl/consumer.h>
+> +#include <linux/pinctrl/machine.h>
+> +#include <linux/pinctrl/pinctrl.h>
+> +#include <linux/pinctrl/pinconf.h>
+> +#include <linux/pinctrl/pinconf-generic.h>
+> +#include <linux/pinctrl/pinmux.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <dt-bindings/pinctrl/mt65xx.h>
+> +
+> +#include "../pinconf.h"
+> +#include "pinctrl-mtk-common.h"
+> +
+> +#define PINMUX_MAX_VAL 8
+> +#define MAX_GPIO_MODE_PER_REG 5
+> +#define GPIO_MODE_BITS        3
+> +
+> +static const char * const mt_gpio_functions[] = {
+> +       "func0", "func1", "func2", "func3",
+> +       "func4", "func5", "func6", "func7",
+> +};
+> +
+> +static void __iomem *mt_get_base_addr(struct mt_pinctrl *pctl,
+> +               unsigned long pin)
+> +{
+> +       if (pin >= pctl->devdata->type1_start && pin < pctl->devdata->type1_end)
+> +               return pctl->membase2;
+> +       return pctl->membase1;
+> +}
+> +
+> +static void mt_pctrl_write_reg(struct mt_pinctrl *pctl,
+> +               unsigned long pin,
+> +               u32 reg, u32 d)
+> +{
+> +       writel(d, mt_get_base_addr(pctl, pin) + reg);
+> +}
+
+1) Don't you want to use writel_relaxed() and
+2) What does this helper really buy you? I would prefer to
+  inline this everywhere it's used. At the least tag this
+  function as inline.
+
+> +static unsigned int mt_get_port(unsigned long pin)
+> +{
+> +       return ((pin >> 4) & 0xf) << 4;
+
+Isn't that equivalent to
+return pin & 0xf0;
+
+Add a comment explaining what's going on here.
+
+
+> +static int mt_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
+> +                       struct pinctrl_gpio_range *range,
+> +                       unsigned offset,
+> +                       bool input)
+> +{
+> +       unsigned int reg_addr;
+> +       unsigned int bit;
+> +       struct mt_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +       reg_addr = mt_get_port(offset) + pctl->devdata->dir_offset;
+> +       bit = 1 << (offset & 0xf);
+
+#include <linux/bitops.h>
+
+bit = BIT(offset & 0xf);
+
+> +       if (input)
+> +               reg_addr += (4 << 1);
+
+What is wrong with reg_add += 8;
+
+> +       else
+> +               reg_addr += 4;
+> +
+> +       writel(bit, pctl->membase1 + reg_addr);
+
+Note: here you're not using mt_pctrl_write_reg().
+And I think you should use writel_relaxed().
+
+> +static void mt_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+> +{
+> +       unsigned int reg_addr;
+> +       unsigned int bit;
+> +       struct mt_pinctrl *pctl = dev_get_drvdata(chip->dev);
+> +
+> +       reg_addr = mt_get_port(offset) + pctl->devdata->dout_offset;
+> +       bit = 1 << (offset & 0xf);
+
+BIT(offset & 0xf)
+
+> +       if (value)
+> +               writel(bit, pctl->membase1 + reg_addr + 4);
+> +       else
+> +               writel(bit, pctl->membase1 + reg_addr + (4 << 1));
+
++8
+
+> +static int mt_gpio_set_pull_conf(struct pinctrl_dev *pctldev,
+> +               unsigned long pin, enum pin_config_param param,
+> +               enum pin_config_param argument)
+> +{
+> +       unsigned int reg_pullen, reg_pullsel;
+> +       unsigned int bit;
+> +       struct mt_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +       int pullen = 0;
+> +       int pullsel = 0;
+> +
+> +       bit = 1 << (pin & 0xf);
+
+BIT
+
+> +       switch (param) {
+> +       case PIN_CONFIG_BIAS_DISABLE:
+> +               pullen = 0;
+> +               pullsel = 0;
+> +               break;
+> +       case PIN_CONFIG_BIAS_PULL_UP:
+> +               mt_pmx_gpio_set_direction(pctldev, NULL, pin, 1);
+> +               pullen = 1;
+> +               pullsel = 1;
+> +               break;
+> +       case PIN_CONFIG_BIAS_PULL_DOWN:
+> +               mt_pmx_gpio_set_direction(pctldev, NULL, pin, 1);
+> +               pullen = 1;
+> +               pullsel = 0;
+> +               break;
+> +
+> +       case PIN_CONFIG_INPUT_ENABLE:
+> +               mt_pmx_gpio_set_direction(pctldev, NULL, pin, 1);
+> +               break;
+> +
+> +       case PIN_CONFIG_OUTPUT:
+> +               mt_pmx_gpio_set_direction(pctldev, NULL, pin, 0);
+> +               mt_gpio_set(pctl->chip, pin, argument);
+> +               return 0;
+> +
+> +       default:
+> +               return -EINVAL;
 > +       }
-> 
-> tell me if I'm interpreting this right: you use _CRS to define a reference
-> to the actual GPIO controller here, but then in your _DSD you have something
-> that is a bit like the DT gpio binding, except that it doesn't refer to
-> a GPIO controller but to the GPIO using device itself.
 
-That's right. However, it is not limited to the device itself, it can be
-parent device for example. Typically not the GPIO controller, though.
+Cut the whitespace newlines above I think.
 
-> When a driver calls dev_get_named_gpiod_from_child, you then lookup the
-> "reset-gpio" (or other) properties to find the reference to the _CRS.
+> +       if (pullen)
+> +               reg_pullen = mt_get_port(pin) +
+> +                       pctl->devdata->pullen_offset + 4;
+> +       else
+> +               reg_pullen = mt_get_port(pin) +
+> +                       pctl->devdata->pullen_offset + (4 << 1);
 
-That's right.
++8
 
-> Why can't you instead have a "gpio-names" property in _DSD that just
-> links from a string to an index as we do in all the other bindings?
-> It sounds to me like that would be simpler and more consistent with
-> the way things are done in ACPI, and have no effect that would be visible
-> to the driver.
+> +
+> +       if (pullsel)
+> +               reg_pullsel = mt_get_port(pin) +
+> +                       pctl->devdata->pullsel_offset + 4;
+> +       else
+> +               reg_pullsel = mt_get_port(pin) +
+> +                       pctl->devdata->pullsel_offset + (4 << 1);
 
-The ACPI GpioIo/GpioInt entry can also contain pinlist, for example:
++8
+
+> +       mt_pctrl_write_reg(pctl, pin, reg_pullen, bit);
+> +       mt_pctrl_write_reg(pctl, pin, reg_pullsel, bit);
+> +       return 0;
+> +}
+(...)
+> +static int mt_pctrl_is_function_valid(struct mt_pinctrl *pctl,
+> +               u32 pin_num, u32 fnum)
+
+Return type should be bool.
+
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < pctl->devdata->npins; i++) {
+> +               const struct mt_desc_pin *pin = pctl->devdata->pins + i;
+> +
+> +               if (pin->pin.number == pin_num) {
+> +                       struct mt_desc_function *func = pin->functions + fnum;
+> +
+> +                       if (func->name)
+> +                               return 1;
+> +                       else
+> +                               return 0;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+
+return true/false;
+
+> +static int mt_pctrl_dt_node_to_map_func(struct mt_pinctrl *pctl, u32 pin,
+> +               u32 fnum, struct pinctrl_map **maps)
+> +static int mt_pctrl_dt_node_to_map_config(struct mt_pinctrl *pctl, u32 pin,
+> +               unsigned long *configs, unsigned num_configs,
+> +               struct pinctrl_map **maps)
+> +static void mt_pctrl_dt_free_map(struct pinctrl_dev *pctldev,
+> +                                   struct pinctrl_map *map,
+> +                                   unsigned num_maps)
+> +static int mt_pctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
+> +                                     struct device_node *node,
+> +                                     struct pinctrl_map **map,
+> +                                     unsigned *num_maps)
+
+I'm worried about the escalating number of custom function->group
+and pin config bindings, so I have submitted patches to fix this up and
+allow for all-generic bindings to be used.
+
+See:
+http://marc.info/?l=devicetree&m=141223584006648&w=2
+http://marc.info/?l=devicetree&m=141223586106655&w=2
+
+> +       pins = of_find_property(node, "mediatek,pinfunc", NULL);
+
+So I want to get rid of "mediatek,pinfunc" and just use "function"
+for this.
+
+> +       err = pinconf_generic_parse_dt_config(node, &configs, &num_configs);
+> +       if (num_configs)
+> +               has_config = 1;
+
+This implicitly uses "pins", which is nice.
+
+> +static int mt_gpio_set_mode(struct pinctrl_dev *pctldev,
+> +               unsigned long pin, unsigned long mode)
+> +{
+> +       unsigned int reg_addr;
+> +       unsigned char bit;
+> +       unsigned int val;
+> +       unsigned long flags;
+> +       unsigned int mask = (1L << GPIO_MODE_BITS) - 1;
+> +       struct mt_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +       reg_addr = ((pin / 5) << 4) + pctl->devdata->pinmux_offset;
+
+That 5 and 4 needs some explanation, or atleast being #defined
+for readability.
+
+> +       spin_lock_irqsave(&pctl->lock, flags);
+> +       val = readl(pctl->membase1 + reg_addr);
+
+readl_relaxed()?
+
+> +static struct mt_desc_function *
+> +mt_pctrl_desc_find_irq_by_name(struct mt_pinctrl *pctl,
+> +                                        const char *pin_name)
+
+Why is it called *find_irq_by_name if it returns a
+function? Seems more like find_function_from_pin_name
+really.
+
+And I don't know if that is such a good idea.
+
+> +{
+> +       int i, j;
+> +
+> +       for (i = 0; i < pctl->devdata->npins; i++) {
+> +               const struct mt_desc_pin *pin = pctl->devdata->pins + i;
+> +
+> +               if (!strcmp(pin->pin.name, pin_name)) {
+> +                       struct mt_desc_function *func = pin->functions;
+> +
+> +                       for (j = 0; j < PINMUX_MAX_VAL; j++) {
+> +                               if (func->irqnum != 255)
+
+So why does it end at 255? Seems pretty arbitrary.
+
+> +                                       return func;
+> +
+> +                               func++;
+> +                       }
+> +               }
+> +       }
+> +
+> +       return NULL;
+> +}
 
 
-            Name (_CRS, ResourceTemplate () {
-                GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
-                        "\\_SB.PCI0.LPC", 0, ResourceConsumer) {10, 21, 50, 13} <-- this is the pinlist
-                ...
-            })
+> +static int mt_pmx_enable(struct pinctrl_dev *pctldev,
+> +                           unsigned function,
+> +                           unsigned group)
 
-            Device (BTN0)
-            {
-                Name (_DSD, Package () {
-                    ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-                    Package () {
-		        ...
-                        Package () {"gpios", Package () {^^BTNS, 0, 2, 1}},
-                    }
-                })
-            }
+This is typically named pmx_set_mux() nowadays, please
+use the pin control development tree at this point, the change will
+be upstream in v3.18.
 
-Format of the package is:
+> +static const struct pinmux_ops mt_pmx_ops = {
+> +       .get_functions_count    = mt_pmx_get_funcs_cnt,
+> +       .get_function_name      = mt_pmx_get_func_name,
+> +       .get_function_groups    = mt_pmx_get_func_groups,
+> +       .enable                 = mt_pmx_enable,
 
-  { reference, crs_index, pin_index, active_low },
+.set_mux =...
 
-So {^^BTNS, 0, 2, 1} will select pin 50 and mark it as active_low.
+> +static int mt_gpio_request(struct gpio_chip *chip, unsigned offset)
+> +{
+> +       return pinctrl_request_gpio(chip->base + offset);
+> +}
+> +
+> +static void mt_gpio_free(struct gpio_chip *chip, unsigned offset)
+> +{
+> +       pinctrl_free_gpio(chip->base + offset);
+> +}
+>
+> +static int mt_gpio_direction_input(struct gpio_chip *chip,
+> +                                       unsigned offset)
+> +{
+> +       return pinctrl_gpio_direction_input(chip->base + offset);
+> +}
+> +
+> +static int mt_gpio_direction_output(struct gpio_chip *chip,
+> +                                       unsigned offset, int value)
+> +{
+> +       return pinctrl_gpio_direction_output(chip->base + offset);
+> +}
 
-In addition to name we also use it to select correct pin in pinlist and
-provide additional active_low information which would not be available
-for plain GpioIo() resource.
+This is nice.
 
-> > For things that don't have correspondence in ACPI but have well defined
-> > existing DT schema, like PWMs, we should follow that.
-> 
-> Only for stuff that is visible to drivers. I think it's important
-> that a driver calling pwm_get() today should keep working with
-> ACPI when the pwm subsystem is extended to support that.
+> +static int mt_gpio_get_direction(struct gpio_chip *chip, unsigned offset)
+> +{
+> +       unsigned int reg_addr;
+> +       unsigned int bit;
+> +       unsigned int read_val = 0;
+> +
+> +       struct mt_pinctrl *pctl = dev_get_drvdata(chip->dev);
+> +
+> +       reg_addr =  mt_get_port(offset) + pctl->devdata->dir_offset;
+> +       bit = 1 << (offset & 0xf);
 
-Of course.
+bit = BIT(offset & 0xf);
 
-> However, that does not necessarily mean using #pwm-cells and pwm-names
-> properties when there is a better way to express the same in ACPI
-> syntax. AFAICT, the #foo-names is completely redundant for ACPI
-> as the length of a property in a list of similar elements is part
-> of the binary data (if not, please correct me), and I already commented
-> that I think the foo-names stuff could be encoded in the package
-> directly in a way we can't do in DT.
+> +       read_val = readl(pctl->membase1 + reg_addr);
+> +       return ((read_val & bit) != 0) ? 1 : 0;
 
-Yes, it can be included in the package, however see below.
+No do it like this:
 
-> Even if you want to do automatic translation between DT and ACPI,
-> I think it would be possible to treat these two the same:
-> 
-> (forgive any syntax errors)
-> 
-> 	Name (_DSD, Package () {
-> 		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> 		Package () {
-> 			Package () { "pwms" { "led-red", ^PWM0, 0, 10 },
-> 					    { "led-green", ^PWM0, 1, 20 }},
+return !!(read_val & bit);
 
-Even though the above would fit better in ACPI, it is not allowed to
-have multiple values for a single property. One reason for that is that
-we validate each property and check that they match what is expected and
-having strict set of possible values makes it easier.
+> +static int mt_gpio_get(struct gpio_chip *chip, unsigned offset)
+> +{
+> +       unsigned int reg_addr;
+> +       unsigned int bit;
+> +       unsigned int read_val = 0;
+> +       struct mt_pinctrl *pctl = dev_get_drvdata(chip->dev);
+> +
+> +       if (mt_gpio_get_direction(chip, offset))
+> +               reg_addr = mt_get_port(offset) + pctl->devdata->dout_offset;
+> +       else
+> +               reg_addr = mt_get_port(offset) + pctl->devdata->din_offset;
+> +
+> +       bit = 1 << (offset & 0xf);
+> +       read_val = readl(pctl->membase1 + reg_addr);
+> +       return ((read_val & bit) != 0) ? 1 : 0;
+> +}
 
-Putting everything to a single package results this:
+Same comments on this function.
 
-		Package () { "pwms", Package () {"led-red", ^PWM0, 0, 10, "led-green", ^PWM0, 1, 10 }}
+> +static int mt_gpio_of_xlate(struct gpio_chip *gc,
+> +                               const struct of_phandle_args *gpiospec,
+> +                               u32 *flags)
+> +{
+> +       int pin;
+> +
+> +       pin = gpiospec->args[0];
+> +
+> +       if (pin > (gc->base + gc->ngpio))
+> +               return -EINVAL;
+> +
+> +       if (flags)
+> +               *flags = gpiospec->args[1];
+> +
+> +       return pin;
+> +}
 
-But I think the below looks better:
+Why do you need your own xlate function to do this?
 
-		Package () { "pwms", Package () {^PWM0, 0, 10, ^PWM0, 1, 10 }}
-		Package () { "pwm-names", Package () {"led-red", "led-green"}}
+What is wrong with of_gpio_simple_xlate() which seems to do
+the same thing?
 
-and it is trivial to match with the corresponding DT fragment.
+Incidentally that is what you will get if you just leave this
+pointer in the vtable as unassigned.
 
-> 	}
-> 
-> vs.
-> 
-> 	pwm-slave {
-> 		pwms = <&pwm0 0 10>, <&pwm1 1 20>;
-> 		pwm-names = "led-red", "led-green";
-> 	};
-> 
+> +static int mt_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
+> +{
+> +       struct mt_pinctrl *pctl = dev_get_drvdata(chip->dev);
+> +       struct mt_pinctrl_group *g = pctl->groups + offset;
+> +       struct mt_desc_function *desc = mt_pctrl_desc_find_irq_by_name(
+> +                       pctl, g->name);
+> +       if (!desc)
+> +               return -EINVAL;
+> +
+> +       mt_gpio_set_mode(pctl->pctl_dev, g->pin, desc->muxval);
 
-I don't have strong feelings which way it should be. The current
-implementation limits references so that you can have only integer
-arguments, like {ref0, int, int, ref1, int} but if people think it is
-better to allow strings there as well, it can be changed.
+No mode setting in the .to_irq() function, that makes the irqchip
+not orthogonal to the gpio_chip.
 
-I would like to get comments from Darren and Rafael about this, though.
+> +       return desc->irqnum;
+> +}
+
+By the way use GPIOLIB_IRQCHIP for this and get rid
+of .to_irq altogether.
+
+(...)
+> +static int mt_pctrl_build_state(struct platform_device *pdev)
+> +{
+> +       struct mt_pinctrl *pctl = platform_get_drvdata(pdev);
+> +       int i;
+> +
+> +       pctl->ngroups = pctl->devdata->npins;
+> +
+> +       pctl->groups = devm_kzalloc(&pdev->dev,
+> +                                   pctl->ngroups * sizeof(*pctl->groups),
+> +                                   GFP_KERNEL);
+> +       if (!pctl->groups)
+> +               return -ENOMEM;
+> +
+> +       pctl->grp_names = devm_kzalloc(&pdev->dev,
+> +                                   pctl->ngroups * sizeof(*pctl->grp_names),
+> +                                   GFP_KERNEL);
+> +       if (!pctl->grp_names)
+> +               return -ENOMEM;
+> +
+> +       for (i = 0; i < pctl->devdata->npins; i++) {
+> +               const struct mt_desc_pin *pin = pctl->devdata->pins + i;
+> +               struct mt_pinctrl_group *group = pctl->groups + i;
+> +               const char **func_grp;
+> +
+> +               group->name = pin->pin.name;
+> +               group->pin = pin->pin.number;
+> +
+> +               func_grp = pctl->grp_names;
+> +               while (*func_grp)
+> +                       func_grp++;
+> +
+> +               *func_grp = pin->pin.name;
+> +       }
+> +
+> +       return 0;
+> +}
+
+I don't understand what this function is doing so atleast it need
+and explanation in kerneldoc above it.
+
+(...)
+> +       ret = gpiochip_add(pctl->chip);
+> +       if (ret) {
+> +               ret = -EINVAL;
+> +               goto pctrl_error;
+> +       }
+
+Here  you should be using gpiochip_irqchip_add()
+followed by gpiochip_set_chained_irqchip().
+
+> +       for (i = 0; i < pctl->devdata->npins; i++) {
+> +               const struct mt_desc_pin *pin = pctl->devdata->pins + i;
+> +
+> +               ret = gpiochip_add_pin_range(pctl->chip, dev_name(&pdev->dev),
+> +                                            pin->pin.number,
+> +                                            pin->pin.number, 1);
+> +               if (ret) {
+> +                       ret = -EINVAL;
+> +                       goto chip_error;
+> +               }
+
+Seems complicated but I don't know how complicated
+your GPIO ranges are indeed.
+
+> +chip_error:
+> +       if (gpiochip_remove(pctl->chip))
+
+We have removed the return value from gpiochip_remove() so rebase
+to upstream here. No if(..)
+
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common.h
+(...)
+> +struct mt_desc_pin {
+> +       struct pinctrl_pin_desc pin;
+> +       const char *chip;
+> +       struct mt_desc_function *functions;
+
+Why does a pin need to know about functions...
+
+> +};
+
+Don't invent custom pin container structures. Look:
+
+/**
+ * struct pinctrl_pin_desc - boards/machines provide information on their
+ * pins, pads or other muxable units in this struct
+ * @number: unique pin number from the global pin number space
+ * @name: a name for this pin
+ * @drv_data: driver-defined per-pin data. pinctrl core does not touch this
+ */
+struct pinctrl_pin_desc {
+        unsigned number;
+        const char *name;
+        void *drv_data;
+};
+
+You add your stuff to drv_data() rather than including this struct
+into your own struct.
+
+> +#define MT_PIN(_pin, _pad, _chip, ...)                         \
+> +       {                                                       \
+> +               .pin = _pin,                                    \
+> +               .chip = _chip,                                  \
+> +               .functions = (struct mt_desc_function[]){       \
+> +                       __VA_ARGS__, { } },                     \
+> +       }
+> +
+> +#define MT_FUNCTION(_val, _name)                               \
+> +       {                                                       \
+> +               .name = _name,                                  \
+> +               .muxval = _val,                                 \
+> +               .irqnum = 255,                                  \
+
+255 eh?
+
+> +       }
+> +
+> +#define MT_FUNCTION_IRQ(_val, _name, _irq)                     \
+> +       {                                                       \
+> +               .name = _name,                                  \
+> +               .muxval = _val,                                 \
+> +               .irqnum = _irq,                                 \
+> +       }
+> +
+> +struct mt_pinctrl_group {
+> +       const char      *name;
+> +       unsigned long   config;
+> +       unsigned        pin;
+> +};
+> +
+> +struct mt_gpio_devdata {
+> +       const struct mt_desc_pin *pins;
+> +       int npins;
+> +       unsigned int dir_offset;
+> +       unsigned int ies_offset;
+> +       unsigned int pullen_offset;
+> +       unsigned int pullsel_offset;
+> +       unsigned int drv_offset;
+> +       unsigned int invser_offset;
+> +       unsigned int dout_offset;
+> +       unsigned int din_offset;
+> +       unsigned int pinmux_offset;
+> +       unsigned short type1_start;
+> +       unsigned short type1_end;
+> +};
+
+Add some kerneldoc for this struct as it't not apparently
+self-evident.
+
+> +static const struct mt_desc_pin mt_pins_mt8135[] = {
+> +       MT_PIN(
+> +               PINCTRL_PIN(0, "MSDC0_DAT7"),
+> +               "D21", "mt8135",
+> +               MT_FUNCTION(0, "GPIO0"),
+> +               MT_FUNCTION(1, "MSDC0_DAT7"),
+> +               MT_FUNCTION_IRQ(2, "EINT49", 49),
+> +               MT_FUNCTION(3, "I2SOUT_DAT"),
+> +               MT_FUNCTION(4, "DAC_DAT_OUT"),
+> +               MT_FUNCTION(5, "PCM1_DO"),
+> +               MT_FUNCTION(6, "SPI1_MO"),
+> +               MT_FUNCTION(7, "NALE")
+> +       ),
+
+I don't think this is a good idea and to encode all functions in a pin,
+rather the revers is custom: define all functions and collect arrays
+of pin numbers in the definitions of pin groups, then map the functions
+and groups of pins together.
+
+Look at other drivers for examples..
+
+I don't like the device tree bindings for the very same reason: it moves
+all this numeric encoding of pin-functions into the device tree instead
+of combining group+function strings like most drivers do.
+
+Is there some special reason to why you're turning this on its head?
+
+Yours,
+Linus Walleij
