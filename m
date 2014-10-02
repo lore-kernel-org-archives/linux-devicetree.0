@@ -1,70 +1,128 @@
-From: Andy Lutomirski <luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org>
-Subject: Re: ath10k: calibration data through Device Tree?
-Date: Thu, 02 Oct 2014 12:05:27 -0700
-Message-ID: <542DA1F7.9090904@amacapital.net>
-References: <87tx3mmx4s.fsf@kamboji.qca.qualcomm.com>	<20141002132914.GN5788@leverpostej> <87ppeamvr9.fsf@kamboji.qca.qualcomm.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 2/4] ARM: qcom: add description of KPSS WDT for IPQ8064
+Date: Thu, 02 Oct 2014 12:08:38 -0700
+Message-ID: <542DA2B6.3020201@codeaurora.org>
+References: <cover.1412182773.git.joshc@codeaurora.org> <50c0ec1514173ce07641a95839e939dcda41b110.1412182773.git.joshc@codeaurora.org> <20141001172855.GL10233@codeaurora.org> <20141001181557.GQ868@joshc.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87ppeamvr9.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141001181557.GQ868@joshc.qualcomm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/02/2014 06:44 AM, Kalle Valo wrote:
-> Hi Mark,
-> 
-> Mark Rutland <mark.rutland-5wv7dgnIgG8-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org> writes:
-> 
->>> ath10k is a wireless driver for Qualcomm Atheros 802.11ac hardware and
->>> located in drivers/net/wireless/ath/ath10k/. Currently it only supports
->>> PCI devices.
->>>
->>> Some of the devices store the calibration data to the host flash and the
->>> bootloader reads the data from the flash. And now we need a method to
->>> deliver the calibration data from bootloader to ath10k. 
->>
->> What does this calibration data consist of?
-> 
-> From ath10k point of view it's just a binary blob which we push to the
-> firmware before we start it. ath10k does not parse it in any way.
-> 
->> What happens if you don't have the calibration data? Is it a critical
->> requirement for the use of the device, or does its absence simply result
->> in degraded performance?
-> 
-> From my point of view the device should not be used if it doesn't
-> contain the correct calibration data. I guess it could work somehow but
-> there's no guarantee about the perfomance.
-> 
->> What do you do on non-DT systems? Where does the information come from
->> in that case?
-> 
-> Currently ath10k only supports having the calibration data in the OTP
-> area inside the QCA98XX chip. But some manufacturers want to store it on
-> the host file, I assume because of the flexibility it provides. And
-> that's why we have the need for Device Tree support.
+On 10/01/14 11:15, Josh Cartwright wrote:
+> Yeah, the description of this thing is a bit awkward.
 
-To give an actual concrete example that might be what Kalle is talking
-about:
+:-/ I tried to make the binding future proof.
 
-I have a TP-Link Archer C7, which has a mips cpu and an ath10k minipcie
-device.  For whatever reason (I honestly have no clue whatsoever why the
-hardware works this way), the calibration data is on a host flash
-partition, not on the minipcie device's ROM or flash or whatever it is.
+>
+> I'm not sure how I'd feel about just just adding "qcom,kpss-wdt" to the
+> timer node compatible.  I'm wondering if the WDT(s) should be a
+> subnode(s) of the timer node instead?
 
-Needless to say, the mainline ath10k driver won't load on it.  (An old
-version used to load without calibration data.  It didn't work very well.)
+But then we don't make the timers subnodes? That seems odd. What's the
+benefit of multiple sub-nodes for the watchdogs?
 
-Presuambly the idea is that, if things like this used DT (which mine
-doesn't, I presume), then ath10k could get the calibration data via DT.
- And maybe some vendors of ARM-based wifi devices are planning on
-playing similar games, and they do use DT.
+It would also be fine to use the current compatible string and just
+append the extra two interrupts for the two watchdogs and then make an
+optional clocks property and deprecate the clock-frequency property.
 
---Andy
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> The percpu-ness of the two WDTs makes configuration even more
+> interesting, as it's possible you'd want to independently configure
+> timeouts for CPU0_WDT0 and CPU1_WDT0, supporting this with a coalesced
+> timer/wdt would be cumbersome.
+
+We already do similar things for the timers on each cpu. It doesn't seem
+that bad, but that's a matter of opinion.
+
+>
+> Something like this perhaps:
+>
+> 	timer@200a000 {
+> 		compatible = "qcom,kpss-timer", "qcom,msm-timer";
+> 		interrupts = <1 1 0x301>,
+> 			     <1 2 0x301>,
+> 			     <1 3 0x301>;
+> 		reg = <0x0200a000 0x100>;
+> 		clock-frequency = <25000000>,
+> 				  <32768>;
+> 		cpu-offset = <0x80000>;
+>
+> 		#address-cells = <1>;
+> 		#size-cells = <1>;
+> 		ranges;
+>
+> 		cpu0_wdt0: watchdog@208a038 {
+> 			compatible = "qcom,kpss-wdt";
+> 			reg = <0x208a038 0x40>;
+> 			interrupts = <1 4 0x301>,
+> 			clocks = <&sleep_clk>;
+> 			timeout-sec = <10>;
+> 			cpu = <&cpu0>;
+> 		};
+>
+> 		cpu0_wdt1: watchdog@208a060 {
+> 			compatible = "qcom,kpss-wdt";
+> 			reg = <0x208a060 0x40>;
+> 			interrupts = <1 5 0x301>,
+> 			clocks = <&sleep_clk>;
+> 			timeout-sec = <20>;
+> 			cpu = <&cpu0>;
+> 		};
+>
+> 		cpu1_wdt0: watchdog@209a038 {
+> 			compatible = "qcom,kpss-wdt";
+> 			reg = <0x209a038 0x40>;
+> 			interrupts = <1 4 0x301>,
+> 			clocks = <&sleep_clk>;
+> 			timeout-sec = <8>;
+> 			cpu = <&cpu1>;
+> 		};
+>
+> 		cpu1_wdt1: watchdog@209a060 {
+> 			compatible = "qcom,kpss-wdt";
+> 			reg = <0x209a060 0x40>;
+> 			interrupts = <1 5 0x301>,
+> 			clocks = <&sleep_clk>;
+> 			timeout-sec = <15>;
+> 			cpu = <&cpu1>;
+> 		};
+> 	};
+>
+>
+
+I'm thinking:
+
+                timer@200a000 {
+                        compatible = "qcom,kpss-timer", "qcom,msm-timer";
+                        interrupts = <1 1 0x301>,
+                                     <1 2 0x301>,
+                                     <1 3 0x301>,
+				     <1 4 0x301>,
+				     <1 5 0x301>;
+                        reg = <0x0200a000 0x100>;
+                        clock-frequency = <27000000>,
+                                          <32768>;
+			clocks = <&cxo>, <&sleep_clk>;
+			clock-names = "ref", "sleep";
+                        cpu-offset = <0x80000>;
+                };
+
+Can you explain the need for the cpu handle? Luckily this device only
+exists in configurations that have up to 4 CPUs and so mapping the
+logical CPU number to the watchdog for that CPU is "easy" in that we can
+convert the CPU from logical to physical and then do the math taking
+into account the cpu-offset to figure out where the non-aliased
+registers are. Once we get into pairs of watchdogs for different
+clusters this isn't so easy and it's better to have the phandle
+somewhere (either in the watchdog node or the cpu node) and then have
+multiple nodes for the watchdog block per-cpu so that we can map the CPU
+to the device. We realized this when making the saw binding.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
