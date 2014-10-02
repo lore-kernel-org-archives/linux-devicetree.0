@@ -1,98 +1,53 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] ARM: dts: mt8135: Add pinctrl node for mt8135.
-Date: Thu, 02 Oct 2014 16:28:56 +0200
-Message-ID: <1412260136.4875.9.camel@pengutronix.de>
-References: <1411443545-24951-1-git-send-email-srv_hongzhou.yang@mediatek.com>
-	 <1411443545-24951-5-git-send-email-srv_hongzhou.yang@mediatek.com>
-	 <CACRpkda-K7w-bY0uSdnZvzEKEeQg38oExoHPSW61kEv9Wv20mA@mail.gmail.com>
-	 <20140924124044.GC4992@pengutronix.de>
-	 <CACRpkdbtN-BDEwpJO2swnOjCe3UJhD5WOXXKBV0hPOe2M2=k7Q@mail.gmail.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v10 0/4] APM X-Gene PCIe host controller
+Date: Thu, 2 Oct 2014 08:36:16 -0600
+Message-ID: <CAErSpo4i4+0c6Qy9w3tKXex2M7Q=Ry8aG-cbO1_uiC8wtD7puQ@mail.gmail.com>
+References: <1411765707-28822-1-git-send-email-tinamdar@apm.com>
+ <20141001191403.GC22713@google.com> <2135522.DVGa59N1mx@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdbtN-BDEwpJO2swnOjCe3UJhD5WOXXKBV0hPOe2M2=k7Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Hongzhou.Yang" <srv_hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, dandan.he-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kern>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <2135522.DVGa59N1mx@wuerfel>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Tanmay Inamdar <tinamdar@apm.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Thu, Oct 2, 2014 at 6:20 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wednesday 01 October 2014 13:14:03 Bjorn Helgaas wrote:
+>> On Fri, Sep 26, 2014 at 02:08:23PM -0700, Tanmay Inamdar wrote:
+>> > This patch adds support for AppliedMicro X-Gene PCIe host controller. The
+>> > driver is tested on X-Gene platform with different gen1/2/3 PCIe endpoint
+>> > cards.
+>> >
+>> > X-Gene PCIe controller driver has depedency on the pcie arm64 arch support.
+>> > Liviu Dudau from ARM has sent a patch set for pcie arm64 arch support and
+>> > support for creating generic pcie bridge from device tree. Liviu's patches
+>> > are available here
+>> > https://lkml.org/lkml/2014/9/23/852
+>> >
+>> > If someone wishes to test PCIe on X-Gene with this patch set, above mentioned
+>> > patches from Liviu must be applied before the patches in this patch set. Also
+>> > please use latest xgene u-boot firmware.
+>>
+>> I applied these on pci/host-xgene (based on pci/host-generic).  I hope to
+>> merge these for v3.18.  It'd be nice to have a device tree person like Arnd
+>> or Rob take a look at the arch/arm64/boot/dts/ bits.
+>
+> Those changes should normally go through the arm-soc tree, but we
+> have not done that so far for arm64 stuff, so I'm not blaming anybody.
+>
+> The dts changes all look good to me, and I think it's ok to have them
+> go through your tree this time.
+>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>
+> In the future, we should all have an eye on this more to ensure that
+> the .dts changes all go through arm-soc.
 
-Am Donnerstag, den 02.10.2014, 16:02 +0200 schrieb Linus Walleij:
-> On Wed, Sep 24, 2014 at 2:40 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > On Wed, Sep 24, 2014 at 01:23:09PM +0200, Linus Walleij wrote:
-> 
-> >> I haven't got to reviewing the driver, but this looks just wrong.
-> >>
-> >> Have the magic numbers in the driver.
-> >>
-> >> Use strings to describe functions, not integers.
-> >
-> > Interrupts, clocks, gpios, dma channels, nearly everything in the device tree is
-> > arbitrarily numbered. Instead of "irq-i2c0" we have <0 36 IRQ_TYPE_LEVEL_HIGH>
-> > in the device tree. These numbers can be resolved efficiently in the
-> > driver by shifting them to get a bitmask or by adding them as offset to
-> > a register base.
-> > Why do you want to make pinctrl different?
-> 
-> Because pin control is about combining groups of pins with
-> certain functions.
-> 
-> > Thanks to the recently
-> > introduced defines in the device trees these numbers are not magic at
-> > all anymore.
-> 
-> Yeah that is good but not what I'm after here.
-> 
-> >> We need to move toward standardized device tree bindings
-> >> for this stuff, and that means using strings, not magic
-> >> numbers.
-> >
-> > Agreed for standardized device tree bindings, but not for using strings.
-> 
-> What is the alternative? Device Tree is very much about strings,
-> as is shown by the pin config bindings.
-> 
-Mhm, maybe we are still talking about different things but I just don't
-get your point. Traditionally DT is more about plain numbers than
-strings. Look at the early examples of PCI or other bus bindings,
-defined back in the IEEE 1275 days. Almost everything back then has
-been mapped to plain numbers.
+The arch/arm64/boot/dts patch is at the tip of my branch, and I'd be
+more than happy to drop it.  It would be nice to have it in v3.18
+along with the driver, though, so I'll keep it until somebody chimes
+in to put it in arm-soc.
 
-Using strings only bloats the DT, not only in it's source form, but also
-as a compiled DTB. Having a verbose string based binding is just painful
-to work with (I can tell from experience here, as I personally built the
-pinmux setup for two Tegra boards). Working with a condensed number
-based binding like the one used on i.MX is much easier IMHO.
-
-Most importantly I don't see any benefit in writing:
-pin_state_a {
-	pins = "i2c0_scl", "i2c0_sda";
-	function = "i2c0";
-};
-
-instead of
-#include <dt-binding/pinctrl/mediatek_foo.h>
-pin_state_a {
-	pins = <I2C0_SCL>, <I2C0_SDA>;
-	function = <I2C0>;
-}
-
-Using plain integers makes it much easier to index into pinctrl driver
-specific arrays without doing all this string matching in the kernel. It
-seems we are eating CPU cycles here for no good reason.
-
-Could you please explain where you see the benefit of using strings
-instead of plain integers with proper binding defines attached to them?
-
-Regards,
-Lucas
--- 
-Pengutronix e.K.             | Lucas Stach                 |
-Industrial Linux Solutions   | http://www.pengutronix.de/  |
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bjorn
