@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 2/3] arm: shmobile: koelsch: enable HS-USB
-Date: Thu, 2 Oct 2014 17:05:34 +0900
-Message-ID: <1412237135-1668-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 3/3] arm: shmobile: henninger: enable HS-USB
+Date: Thu, 2 Oct 2014 17:05:35 +0900
+Message-ID: <1412237135-1668-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1412237135-1668-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,14 +14,14 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- arch/arm/boot/dts/r8a7791-koelsch.dts |    5 +++++
+ arch/arm/boot/dts/r8a7791-henninger.dts |    5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
-index 3f55c16..b3dac1a 100644
---- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-+++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-@@ -495,3 +495,8 @@
+diff --git a/arch/arm/boot/dts/r8a7791-henninger.dts b/arch/arm/boot/dts/r8a7791-henninger.dts
+index fee8bef..d0800d2 100644
+--- a/arch/arm/boot/dts/r8a7791-henninger.dts
++++ b/arch/arm/boot/dts/r8a7791-henninger.dts
+@@ -299,3 +299,8 @@
  		};
  	};
  };
