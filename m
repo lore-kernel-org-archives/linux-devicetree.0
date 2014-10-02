@@ -1,40 +1,23 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: ath10k: calibration data through Device Tree?
-Date: Thu, 02 Oct 2014 17:58:19 +0200
-Message-ID: <7004963.mtH2SDQocr@wuerfel>
-References: <87tx3mmx4s.fsf@kamboji.qca.qualcomm.com> <2397903.vznsjdQh6x@wuerfel> <87d2aamsg2.fsf@kamboji.qca.qualcomm.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 2/2] regulator: add mxs regulator driver
+Date: Thu, 2 Oct 2014 13:18:26 -0300
+Message-ID: <CAOMZO5BzUEsOt_J6YBPOjg2BQdiYW6Y9thys+8Ri5j05znjV8w@mail.gmail.com>
+References: <1411779588-22031-1-git-send-email-stefan.wahren@i2se.com>
+	<1411779588-22031-3-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87d2aamsg2.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1411779588-22031-3-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawn.guo@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 02 October 2014 17:55:57 Kalle Valo wrote:
-> 
-> > I notice that there are no Qualcomm or Atheros PCI host controller drivers
-> > in Linux though, so you first have to write a driver that allows probing
-> > the PCI bus, and get the binding reviewed for that before you can add
-> > it to the dts files. Is this for ipq8064 or something else?
-> 
-> But now I'm lost again  I want ath10k and this feature to work with
-> all possible PCI controllers, not just with Qualcomm controllers. So why
-> do I need to wait for Qualcomm PCI host controller driver?
+On Fri, Sep 26, 2014 at 9:59 PM, Stefan Wahren <stefan.wahren@i2se.com> wrote:
 
-Sorry, my fault. You can definitely do this with any SoC that uses DT
-for probing the PCI. I was merely assuming that you were asking about
-ipq because the wifi chips and SoCs tend to come bundled from the
-same manufacturer in embedded systems, and the MIPS based QCA SoCs
-currently don't use DT.
+> +config REGULATOR_MXS
+> +       tristate "Freescale MXS on-chip regulators"
+> +       depends on ARCH_MXS
+> +       default y if ARCH_MXS
 
-For any machine that does not use DT, it would be much harder to
-solve this problem though.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I would suggest removing this 'default y if ARCH_MXS' line. Thanks
