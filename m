@@ -1,46 +1,124 @@
-From: Orson Zhai <orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/6] Documentation: DT: Add bindings for Spreadtrum serial
-Date: Thu, 02 Oct 2014 23:08:35 +0800
-Message-ID: <542D6A73.9020505@gmail.com>
-References: <1411992293-7729-1-git-send-email-zhang.lyra@gmail.com> <1411992293-7729-2-git-send-email-zhang.lyra@gmail.com> <20141001112149.GA13759@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 2/2] of/selftest: Use the resolver to fixup phandles
+Date: Thu,  2 Oct 2014 16:27:04 +0100
+Message-ID: <1412263624-21838-3-git-send-email-grant.likely@linaro.org>
+References: <1412263624-21838-1-git-send-email-grant.likely@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141001112149.GA13759@leverpostej>
+In-Reply-To: <1412263624-21838-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "jslaby-AlSwsSmVLrQ@public.gmane.org" <jslaby-AlSwsSmVLrQ@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "m-karicheri2-l0cyMroinI0@public.gmane.org" <m-karicheri2-l0cyMroinI0@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "chunyan.zhang" <chunyan>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The selftest data ends up causing duplicate phandles in the live tree
+for the time that the testcase data is inserted into the live tree. This
+is obviously a bad situation because anything attempting to read the
+tree while the selftests are running make resolve phandles to one of the
+testcase data nodes. Fix the problem by using the of_resolve_phandles()
+function to eliminate duplicates.
 
-On 2014=E5=B9=B410=E6=9C=8801=E6=97=A5 19:21, Mark Rutland wrote:
->> diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt =
-b/Documentation/devicetree/bindings/serial/of-serial.txt
->> >index 7705477..a0bb1d1 100644
->> >--- a/Documentation/devicetree/bindings/serial/of-serial.txt
->> >+++ b/Documentation/devicetree/bindings/serial/of-serial.txt
->> >@@ -14,6 +14,7 @@ Required properties:
->> >  	- "altr,16550-FIFO32"
->> >  	- "altr,16550-FIFO64"
->> >  	- "altr,16550-FIFO128"
->> >+	- "sprd,serial"
-> Is there not a more specific name? I'd imagine you might build a
-> different uart in future.
-AFAIK, sprd's uart is re-used the same ip core in ARM 32bit chip.
-so it is neither 16550 or pl011 compatible.
->
-> I didn't spot "sprd" in vendor-prefixes.txt in mainline. Is there a
-> patch adding that?
-sorry for missing it. we'll add it at patch V2.
-thanks for reviewing! :)
->
-> Mark.
->
+Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/of/Kconfig                     |  1 +
+ drivers/of/selftest.c                  |  9 ++++++++-
+ drivers/of/testcase-data/testcases.dts | 35 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 44 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index 6b81a36f6420..1a13f5b722c5 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -11,6 +11,7 @@ config OF_SELFTEST
+ 	bool "Device Tree Runtime self tests"
+ 	depends on OF_IRQ && OF_EARLY_FLATTREE
+ 	select OF_DYNAMIC
++	select OF_RESOLVE
+ 	help
+ 	  This option builds in test cases for the device tree infrastructure
+ 	  that are executed once at boot time, and the results dumped to the
+diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+index 634eb79bfe47..c80cd6258b1e 100644
+--- a/drivers/of/selftest.c
++++ b/drivers/of/selftest.c
+@@ -25,7 +25,7 @@ static struct selftest_results {
+ 	int failed;
+ } selftest_results;
+ 
+-#define NO_OF_NODES 2
++#define NO_OF_NODES 3
+ static struct device_node *nodes[NO_OF_NODES];
+ static int last_node_index;
+ static bool selftest_live_tree;
+@@ -765,6 +765,7 @@ static int __init selftest_data_add(void)
+ 	extern uint8_t __dtb_testcases_begin[];
+ 	extern uint8_t __dtb_testcases_end[];
+ 	const int size = __dtb_testcases_end - __dtb_testcases_begin;
++	int rc;
+ 
+ 	if (!size) {
+ 		pr_warn("%s: No testcase data to attach; not running tests\n",
+@@ -785,6 +786,12 @@ static int __init selftest_data_add(void)
+ 		pr_warn("%s: No tree to attach; not running tests\n", __func__);
+ 		return -ENODATA;
+ 	}
++	of_node_set_flag(selftest_data_node, OF_DETACHED);
++	rc = of_resolve_phandles(selftest_data_node);
++	if (rc) {
++		pr_err("%s: Failed to resolve phandles (rc=%i)\n", __func__, rc);
++		return -EINVAL;
++	}
+ 
+ 	if (!of_allnodes) {
+ 		/* enabling flag for removing nodes */
+diff --git a/drivers/of/testcase-data/testcases.dts b/drivers/of/testcase-data/testcases.dts
+index 219ef9324e9c..6994e15c24bf 100644
+--- a/drivers/of/testcase-data/testcases.dts
++++ b/drivers/of/testcase-data/testcases.dts
+@@ -13,3 +13,38 @@
+ #include "tests-interrupts.dtsi"
+ #include "tests-match.dtsi"
+ #include "tests-platform.dtsi"
++
++/*
++ * phandle fixup data - generated by dtc patches that aren't upstream.
++ * This data must be regenerated whenever phandle references are modified in
++ * the testdata tree.
++ *
++ * The format of this data may be subject to change. For the time being consider
++ * this a kernel-internal data format.
++ */
++/ { __local_fixups__ {
++	fixup = "/testcase-data/testcase-device2:interrupt-parent:0",
++		"/testcase-data/testcase-device1:interrupt-parent:0",
++		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:60",
++		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:52",
++		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:44",
++		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:36",
++		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:24",
++		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:8",
++		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:0",
++		"/testcase-data/interrupts/interrupts1:interrupt-parent:0",
++		"/testcase-data/interrupts/interrupts0:interrupt-parent:0",
++		"/testcase-data/interrupts/intmap1:interrupt-map:12",
++		"/testcase-data/interrupts/intmap0:interrupt-map:52",
++		"/testcase-data/interrupts/intmap0:interrupt-map:36",
++		"/testcase-data/interrupts/intmap0:interrupt-map:16",
++		"/testcase-data/interrupts/intmap0:interrupt-map:4",
++		"/testcase-data/phandle-tests/consumer-a:phandle-list-bad-args:12",
++		"/testcase-data/phandle-tests/consumer-a:phandle-list-bad-args:0",
++		"/testcase-data/phandle-tests/consumer-a:phandle-list:56",
++		"/testcase-data/phandle-tests/consumer-a:phandle-list:52",
++		"/testcase-data/phandle-tests/consumer-a:phandle-list:40",
++		"/testcase-data/phandle-tests/consumer-a:phandle-list:24",
++		"/testcase-data/phandle-tests/consumer-a:phandle-list:8",
++		"/testcase-data/phandle-tests/consumer-a:phandle-list:0";
++}; };
+-- 
+1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
