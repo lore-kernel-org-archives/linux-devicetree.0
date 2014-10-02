@@ -1,100 +1,110 @@
-From: Andy Lutomirski <luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org>
-Subject: Re: ath10k: calibration data through Device Tree?
-Date: Thu, 2 Oct 2014 12:35:09 -0700
-Message-ID: <CALCETrV_LoCJ_DHcyQ2ztyXfdH2vAF0r7OX29_nPj6gMcodBig@mail.gmail.com>
-References: <87tx3mmx4s.fsf@kamboji.qca.qualcomm.com> <20141002132914.GN5788@leverpostej>
- <87ppeamvr9.fsf@kamboji.qca.qualcomm.com> <542DA1F7.9090904@amacapital.net> <CAJ-VmomR+AzsUVqSik=ejntHHhQf_wj9kU==uCqWyk27M7Gp9w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: [PATCH 1/1] of: Add a function to read 64-bit arrays
+Date: Fri,  3 Oct 2014 00:59:23 +0300
+Message-ID: <1412287163-10222-1-git-send-email-sakari.ailus@iki.fi>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJ-VmomR+AzsUVqSik=ejntHHhQf_wj9kU==uCqWyk27M7Gp9w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adrian Chadd <adrian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
-Cc: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 2, 2014 at 12:28 PM, Adrian Chadd <adrian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org> wrote:
-> On 2 October 2014 12:05, Andy Lutomirski <luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org> wrote:
->> On 10/02/2014 06:44 AM, Kalle Valo wrote:
->>> Hi Mark,
->>>
->>> Mark Rutland <mark.rutland-5wv7dgnIgG8-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org> writes:
->>>
->>>>> ath10k is a wireless driver for Qualcomm Atheros 802.11ac hardware and
->>>>> located in drivers/net/wireless/ath/ath10k/. Currently it only supports
->>>>> PCI devices.
->>>>>
->>>>> Some of the devices store the calibration data to the host flash and the
->>>>> bootloader reads the data from the flash. And now we need a method to
->>>>> deliver the calibration data from bootloader to ath10k.
->>>>
->>>> What does this calibration data consist of?
->>>
->>> From ath10k point of view it's just a binary blob which we push to the
->>> firmware before we start it. ath10k does not parse it in any way.
->>>
->>>> What happens if you don't have the calibration data? Is it a critical
->>>> requirement for the use of the device, or does its absence simply result
->>>> in degraded performance?
->>>
->>> From my point of view the device should not be used if it doesn't
->>> contain the correct calibration data. I guess it could work somehow but
->>> there's no guarantee about the perfomance.
->>>
->>>> What do you do on non-DT systems? Where does the information come from
->>>> in that case?
->>>
->>> Currently ath10k only supports having the calibration data in the OTP
->>> area inside the QCA98XX chip. But some manufacturers want to store it on
->>> the host file, I assume because of the flexibility it provides. And
->>> that's why we have the need for Device Tree support.
->>
->> To give an actual concrete example that might be what Kalle is talking
->> about:
->>
->> I have a TP-Link Archer C7, which has a mips cpu and an ath10k minipcie
->> device.  For whatever reason (I honestly have no clue whatsoever why the
->> hardware works this way), the calibration data is on a host flash
->> partition, not on the minipcie device's ROM or flash or whatever it is.
->
-> The hardware works this way because it's what's being chosen at
-> manufacturing time.
->
-> It _used_ to be this way because then the manufacturers could choose
-> whether to put the serial EEPROM on the wireless card or on board - or
-> just save that particular component and load in the same data from the
-> existing SPI flash chip that holds the firmware.
->
-> With OTP they'd have to include writing OTP data out to the chip as
-> part of the manufacturing process, rather than just "load in data via
-> JTAG or uboot".
+Implement of_property_read_u64_array() for reading 64-bit arrays.
 
-I always assumed that vendors like TP-Link bought pre-calibrated
-minipcie cards from someone else.  I guess I was wrong :)
+This is needed for e.g. reading the valid link frequencies in the smiapp
+driver.
 
->
-> It also means they can re-do the calibration or configuration space
-> for the device rather than the "One Time Programmable" bits which (a)
-> will eventually run out of space for programming, (b) occasionally may
-> error during programming, or (c) may end up writing the wrong data
-> during programming time, making a chip or a whole batch of chips
-> useless.
->
->> Needless to say, the mainline ath10k driver won't load on it.  (An old
->> version used to load without calibration data.  It didn't work very well.)
->
-> I'm surprised it worked at all. :)
+Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+---
+Hi,
 
-My gf's Macbook didn't think it worked.  My supremely crappy old Intel
-card thought it did, at least as well as it thought that anything
-worked.  Go figure.
+While the smiapp (found in drivers/media/i2c/smiapp/) OF support which needs
+this isn't in yet, other drivers such as mt9v032 which would be reading the
+valid link frequency control values will need reading arrays. This might
+make it to v4l2-of.c in the end.
 
-Perhaps unsurprisingly, the OpenWRT patch that enables it to work for
-real (by shoving a file into /lib/firmware that's contains a copy of
-data read from flash) hasn't made it upstream.  I assume that the
-purpose of this discussion is to settle on a real solution.
+ drivers/of/base.c  |   44 ++++++++++++++++++++++++++++++++++++--------
+ include/linux/of.h |    3 +++
+ 2 files changed, 39 insertions(+), 8 deletions(-)
 
---Andy
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index d8574ad..35e24f4 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1214,6 +1214,41 @@ int of_property_read_u32_array(const struct device_node *np,
+ EXPORT_SYMBOL_GPL(of_property_read_u32_array);
+ 
+ /**
++ * of_property_read_u64_array - Find and read an array of 64 bit integers
++ * from a property.
++ *
++ * @np:		device node from which the property value is to be read.
++ * @propname:	name of the property to be searched.
++ * @out_values:	pointer to return value, modified only if return value is 0.
++ * @sz:		number of array elements to read
++ *
++ * Search for a property in a device node and read 64-bit value(s) from
++ * it. Returns 0 on success, -EINVAL if the property does not exist,
++ * -ENODATA if property does not have a value, and -EOVERFLOW if the
++ * property data isn't large enough.
++ *
++ * The out_values is modified only if a valid u32 value can be decoded.
++ */
++int of_property_read_u64_array(const struct device_node *np,
++			       const char *propname, u64 *out_value, size_t sz)
++{
++	const __be32 *val = of_find_property_value_of_size(
++		np, propname, sz * sizeof(*out_value));
++
++	if (IS_ERR(val))
++		return PTR_ERR(val);
++
++	while (sz--) {
++		*out_value = of_read_number(val, 2);
++		out_value++;
++		val += 2;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_property_read_u64_array);
++
++/**
+  * of_property_read_u64 - Find and read a 64 bit integer from a property
+  * @np:		device node from which the property value is to be read.
+  * @propname:	name of the property to be searched.
+@@ -1229,14 +1264,7 @@ EXPORT_SYMBOL_GPL(of_property_read_u32_array);
+ int of_property_read_u64(const struct device_node *np, const char *propname,
+ 			 u64 *out_value)
+ {
+-	const __be32 *val = of_find_property_value_of_size(np, propname,
+-						sizeof(*out_value));
+-
+-	if (IS_ERR(val))
+-		return PTR_ERR(val);
+-
+-	*out_value = of_read_number(val, 2);
+-	return 0;
++	return of_property_read_u64_array(np, propname, out_value, 1);
+ }
+ EXPORT_SYMBOL_GPL(of_property_read_u64);
+ 
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 6c4363b..e84533f 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -263,6 +263,9 @@ extern int of_property_read_u32_array(const struct device_node *np,
+ 				      size_t sz);
+ extern int of_property_read_u64(const struct device_node *np,
+ 				const char *propname, u64 *out_value);
++extern int of_property_read_u64_array(const struct device_node *np,
++				      const char *propname, u64 *out_value,
++				      size_t sz);
+ 
+ extern int of_property_read_string(struct device_node *np,
+ 				   const char *propname,
+-- 
+1.7.10.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
