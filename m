@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/2] arm: shimobile: r8a7790: add HS-USB device node
-Date: Thu, 2 Oct 2014 17:04:32 +0900
-Message-ID: <1412237073-1288-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 2/2] arm: shmobile: lager: enable HS-USB
+Date: Thu, 2 Oct 2014 17:04:33 +0900
+Message-ID: <1412237073-1288-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,28 +14,22 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r8a7790.dtsi |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/r8a7790-lager.dts |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index 2380fd5..fd9fc37 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -1314,4 +1314,14 @@
- 			ssi9: ssi@9 { interrupts = <0 379 IRQ_TYPE_LEVEL_HIGH>; };
+diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+index 1698591..4badd0a 100644
+--- a/arch/arm/boot/dts/r8a7790-lager.dts
++++ b/arch/arm/boot/dts/r8a7790-lager.dts
+@@ -445,3 +445,8 @@
  		};
  	};
-+
-+	hsusb: usb@e6590000 {
-+		compatible = "renesas,usbhs-r8a7790";
-+		reg = <0 0xe6590000 0 0x100>;
-+		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
-+		renesas,buswait_bwait = <4>;
-+		phys = <&usb0 1>;
-+		phy-names = "usb";
-+	};
  };
++
++&hsusb {
++	status = "okay";
++	renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_LOW>;
++};
 -- 
 1.7.9.5
 
