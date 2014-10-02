@@ -1,50 +1,106 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ASoC: rockchip-max98090: add driver for rockchip
- board using a max98090
-Date: Thu, 2 Oct 2014 11:22:16 +0100
-Message-ID: <20141002102216.GN4273@sirena.org.uk>
-References: <1410507807-15795-1-git-send-email-jay.xu@rock-chips.com>
- <1412238960-4220-1-git-send-email-jay.xu@rock-chips.com>
+From: Alexander Stein <alexander.stein@systec-electronic.com>
+Subject: [PATCH 1/1] ARM: at91/dt: sam9x5: Add CAN device nodes
+Date: Thu,  2 Oct 2014 12:38:14 +0200
+Message-ID: <1412246294-27370-1-git-send-email-alexander.stein@systec-electronic.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Is40wmw6z7H9MUbF"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1412238960-4220-1-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org, Alexander Stein <alexander.stein@systec-electronic.com>
 List-Id: devicetree@vger.kernel.org
 
+Add the missing CAN devices node including their pin muxing and clocks.
 
---Is40wmw6z7H9MUbF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Alexander Stein <alexander.stein@systec-electronic.com>
+---
+I could actually only test CAN1 due to the hardware I had available. Also
+CAN0 conflicts with DBGU pins, which I had to use.
 
-On Thu, Oct 02, 2014 at 04:36:00PM +0800, Jianqun wrote:
-> The driver is used for rockchip board using a max98090.
-> Test on RK3288 board with max98090.
+ arch/arm/boot/dts/at91sam9x5.dtsi | 48 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-I'm missing patch 1?
-
---Is40wmw6z7H9MUbF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJULSdYAAoJECTWi3JdVIfQJOwH/3/qmoPvZ6T66LIO4NIb7+ur
-x6ttQ4ZXAa2oXU9d8QgXXO5RI2ORsnWW0mKXrVCv2kCuP3NSz67+P6at1o7ZfAVF
-/kngISzBF3Aluj9luzET3MfKjJWofXy0svNk/8+tO26D40NpKXfY+3geHJilGbna
-5e9m0wTG3+Z8NFzxH1NDfTLqEHLesPbJtJp+xI+2F7JbKnv6inyTecZiMGAKrUcq
-SOQMkh1/dNDltOrgZURZbd8NHvWYQI4gJR3tT4913eUmURJsTQADL67Z6dpNVlNi
-QpmAhauyDZV1hUcIc6NzaCVLsm4rDsj7UAFLjqlEK4aF+55g8BzliDYmqdne/yQ=
-=atmM
------END PGP SIGNATURE-----
-
---Is40wmw6z7H9MUbF--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+index e1a5c70..0a2164e 100644
+--- a/arch/arm/boot/dts/at91sam9x5.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+@@ -363,6 +363,16 @@
+ 						#clock-cells = <0>;
+ 						reg = <28>;
+ 					};
++
++					can0_clk: can0_clk {
++						#clock-cells = <0>;
++						reg = <29>;
++					};
++
++					can1_clk: can1_clk {
++						#clock-cells = <0>;
++						reg = <30>;
++					};
+ 				};
+ 			};
+ 
+@@ -407,6 +417,28 @@
+ 				};
+ 			};
+ 
++			can0: can@f8000000 {
++				compatible = "atmel,at91sam9x5-can";
++				reg = <0xf8000000 0x300>;
++				interrupts = <29 IRQ_TYPE_LEVEL_HIGH 3>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_can0_rx_tx>;
++				clocks = <&can0_clk>;
++				clock-names = "can_clk";
++				status = "disabled";
++			};
++
++			can1: can@f8004000 {
++				compatible = "atmel,at91sam9x5-can";
++				reg = <0xf8004000 0x300>;
++				interrupts = <30 IRQ_TYPE_LEVEL_HIGH 3>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_can1_rx_tx>;
++				clocks = <&can1_clk>;
++				clock-names = "can_clk";
++				status = "disabled";
++			};
++
+ 			tcb0: timer@f8008000 {
+ 				compatible = "atmel,at91sam9x5-tcb";
+ 				reg = <0xf8008000 0x100>;
+@@ -763,6 +795,22 @@
+ 					};
+ 				};
+ 
++				can0 {
++					pinctrl_can0_rx_tx: can0_rx_tx {
++						atmel,pins =
++							<AT91_PIOA 9 AT91_PERIPH_B AT91_PINCTRL_NONE	/* PA9 periph B RX */
++							 AT91_PIOA 10 AT91_PERIPH_B AT91_PINCTRL_NONE>;	/* PA10 periph B TX */
++					};
++				};
++
++				can1 {
++					pinctrl_can1_rx_tx: can1_rx_tx {
++						atmel,pins =
++							<AT91_PIOA 6 AT91_PERIPH_B AT91_PINCTRL_NONE	/* PA6 periph B RX */
++							 AT91_PIOA 5 AT91_PERIPH_B AT91_PINCTRL_NONE>;	/* PA5 periph B TX */
++					};
++				};
++
+ 				pioA: gpio@fffff400 {
+ 					compatible = "atmel,at91sam9x5-gpio", "atmel,at91rm9200-gpio";
+ 					reg = <0xfffff400 0x200>;
+-- 
+2.0.4
