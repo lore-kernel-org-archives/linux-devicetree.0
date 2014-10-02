@@ -1,91 +1,46 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: [PATCH v2] w1: ds2482: add support for ds2482-101 sleep pin
-Date: Thu,  2 Oct 2014 16:06:36 +0200
-Message-ID: <1412258796-12814-1-git-send-email-s.trumtrar@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Evgeniy Polyakov <zbr@ioremap.net>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, kernel@pengutronix.de, Steffen Trumtrar <s.trumtrar@pengutronix.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: ath10k: calibration data through Device Tree?
+Date: Thu, 02 Oct 2014 16:19:28 +0200
+Message-ID: <2397903.vznsjdQh6x@wuerfel>
+References: <87tx3mmx4s.fsf@kamboji.qca.qualcomm.com> <3548219.ad4Qe1WtGp@wuerfel> <87lhoymvln.fsf@kamboji.qca.qualcomm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87lhoymvln.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The ds2482-101 version of the chip has an active-low sleep pin. Add this as a
-gpio to the probe function and describe the DT binding accordingly.
+On Thursday 02 October 2014 16:47:48 Kalle Valo wrote:
+> >
+> > When you know the PCI bus/device/function ID of the device, you can put
+> > a device node in the dts file that corresponds to the PCI dev, and you
+> > can find the of_node pointer from pci_dev->dev.of_node. 
+> 
+> For me that's easier said than done as I'm a total newbie with Device
+> Tree  Can you give any pointers or examples how to do that in
+> practise, please? Especially "node in the dts file that corresponds to
+> the PCI dev" part is puzzling me.
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
----
+See the recent patch "[PATCH v4] ARM: shmobile: r8a7791: link PCI USB
+devices to USB PHY" where someone does the same thing to supply additional
+data to a PCI device node in shmobile.
 
-Changes since v1:
-	- rebased to next-20141001
+Basically you just need to add a node under your PCI host controller node
+with "reg = <0x800 0 0 0 0>" (or whatever the address is and put the
+properties in there. See www.openfirmware.org/1275/bindings/pci/pci2_1.pdf
+for the description of how to construct the addresses.
 
- Documentation/devicetree/bindings/w1/ds2482.txt | 18 ++++++++++++++++++
- drivers/w1/masters/ds2482.c                     |  9 +++++++++
- 2 files changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/w1/ds2482.txt
+I notice that there are no Qualcomm or Atheros PCI host controller drivers
+in Linux though, so you first have to write a driver that allows probing
+the PCI bus, and get the binding reviewed for that before you can add
+it to the dts files. Is this for ipq8064 or something else?
 
-diff --git a/Documentation/devicetree/bindings/w1/ds2482.txt b/Documentation/devicetree/bindings/w1/ds2482.txt
-new file mode 100644
-index 000000000000..e065207ab4b8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/w1/ds2482.txt
-@@ -0,0 +1,18 @@
-+ds2482 devicetree bindings
-+
-+Required properties:
-+
-+ - compatible: "dallas,ds2482"
-+
-+Optional properties:
-+
-+ - sleep-gpios: if specified, the ds2482 has a low-active sleep-pin (ds2482-101).
-+
-+Example:
-+
-+	1wire@18 {
-+		compatible = "dallas,ds2482";
-+		reg = <0x18>;
-+		sleep-gpios = <&gpio4 2 0>;
-+	};
-+
-diff --git a/drivers/w1/masters/ds2482.c b/drivers/w1/masters/ds2482.c
-index e76a9b39abb2..d9e7fd479224 100644
---- a/drivers/w1/masters/ds2482.c
-+++ b/drivers/w1/masters/ds2482.c
-@@ -18,6 +18,7 @@
- #include <linux/slab.h>
- #include <linux/i2c.h>
- #include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
- #include <asm/delay.h>
- 
- #include "../w1.h"
-@@ -128,6 +129,7 @@ struct ds2482_data {
- 	u8			channel;
- 	u8			read_prt;	/* see DS2482_PTR_CODE_xxx */
- 	u8			reg_config;
-+	struct gpio_desc	*slpz_gpio;
- };
- 
- 
-@@ -449,6 +451,7 @@ static int ds2482_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
- {
- 	struct ds2482_data *data;
-+	struct gpio_desc *gpio;
- 	int err = -ENODEV;
- 	int temp1;
- 	int idx;
-@@ -466,6 +469,12 @@ static int ds2482_probe(struct i2c_client *client,
- 	data->client = client;
- 	i2c_set_clientdata(client, data);
- 
-+	gpio = devm_gpiod_get(&client->dev, "sleep");
-+	if (!IS_ERR(gpio)) {
-+		data->slpz_gpio = gpio;
-+		gpiod_direction_output(data->slpz_gpio, 1);
-+	}
-+
- 	/* Reset the device (sets the read_ptr to status) */
- 	if (ds2482_send_cmd(data, DS2482_CMD_RESET) < 0) {
- 		dev_warn(&client->dev, "DS2482 reset failed.\n");
--- 
-2.1.0
+	Arnd
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
