@@ -1,59 +1,52 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH] PCI: xilinx: Trivial fix in DT example
-Date: Thu,  2 Oct 2014 12:41:19 +0200
-Message-ID: <4a72f98ee8564b6b040d6301e2719e37ddfea663.1412246470.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-12709-1412246479-0001";
-    micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, monstr@monstr.eu, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jiri Kosina <trivial@kernel.org>, Srikanth Thokala <sthokal@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 10/15] leds: leds-gpio: Add ACPI probing support
+Date: Thu, 02 Oct 2014 12:44:11 +0200
+Message-ID: <2433277.SBXQyCNNAQ@wuerfel>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <6852466.Q5TXcWChqW@wuerfel> <20141002095536.GI1786@lahna.fi.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20141002095536.GI1786@lahna.fi.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-This is a MIME GnuPG-signed message.  If you see this text, it means that
-your E-mail or Usenet software does not support MIME signed messages.
-The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
-To open this message correctly you will need to install E-mail or Usenet
-software that supports modern Internet standards.
+On Thursday 02 October 2014 12:55:36 Mika Westerberg wrote:
+> On Wed, Oct 01, 2014 at 04:14:20PM +0200, Arnd Bergmann wrote:
+> > On Wednesday 01 October 2014 17:04:41 Mika Westerberg wrote:
+> > > 
+> > > > On the question what to put into the name and type fields, that is
+> > > > unrelated. The type is supposed to be for the 'device_type' property
+> > > > in DT, which we should never rely on in a driver that supports both
+> > > > APCI and DT. In Linux we only use that for "pci", "cpu" and "memory",
+> > > > all of which have their own way of getting probed in ACPI.
+> > > > The "name" is normally ignored in DT as well, except for backwards
+> > > > compatibility with old bindings, but I would argue that you should not
+> > > > just put "prp0001" in there. Either leave it empty like type, or use
+> > > > the name of the device as it appears in the ACPI tables, such as "DEV0"
+> > > > or "PWM".
+> > > 
+> > > OK, I think it makes sense to leave them empty. I remember I tried that
+> > > at some point but it didn't work without N and T fields. Is there some
+> > > example what to put there in case of empty?
+> > > 
+> > > Something like "of:N*T*Cgpio-leds" perhaps?
+> > 
+> > Sorry, don't know. If I read the code right, the type field in DT ends
+> > up being "<NULL>" for any device that doesn't set the device_type 
+> > property, but that seems a bit silly and probably isn't worth copying.
+> 
+> OK, I checked and udev wants to have both N and T but they can be left
+> empty. If there are no objections the modalias will look like this:
+> 
+> [root@mnw01 ~]# cat /sys/bus/spi/devices/spi-PRP0001\:00/modalias 
+> of:Nat25TCatmel,at25
+> 
+> In other words name is the ACPI device name (AT25) in lower case, T is
+> left empty and C is the compatible property.
 
---=_mimegpg-monstr-desktop-12709-1412246479-0001
+Yes, seems ok to me.
 
-Good to have it properly describe for c&p cases.
-
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
-
-Based on linux-next. File should be in pci tree.
----
- Documentation/devicetree/bindings/pci/xilinx-pcie.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/pci/xilinx-pcie.txt b/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
-index 3e2c88d97ad4..02f979a48aeb 100644
---- a/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
-@@ -58,5 +58,5 @@ Example:
- 			interrupt-controller;
- 			#address-cells = <0>;
- 			#interrupt-cells = <1>;
--		}
-+		};
- 	};
---
-1.8.2.3
-
-
---=_mimegpg-monstr-desktop-12709-1412246479-0001
-Content-Type: application/pgp-signature
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEABECAAYFAlQtK88ACgkQykllyylKDCFqOACfTpsYIRkVyNAasDNXG9oSm9XV
-vV4AmQH/4k0Pz54vHyp+QkjfNNerZcuO
-=I1Po
------END PGP SIGNATURE-----
-
---=_mimegpg-monstr-desktop-12709-1412246479-0001--
+	Arnd
