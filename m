@@ -1,84 +1,85 @@
-From: Benoit Masson <benoitm@perenite.com>
-Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
-Date: Fri, 3 Oct 2014 17:29:21 +0200
-Message-ID: <A9781A2E-F3CA-4E8A-833C-D167B456D9F7@perenite.com>
-References: <1411157684-6991-1-git-send-email-sebastian.hesselbarth@gmail.com> <-7443282711873112734@unknownmsgid> <20141003141102.GJ3895@titan.lakedaemon.net> <542EBB93.108@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <542EBB93.108@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Benoit Masson <yahoo@perenite.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: ath10k: calibration data through Device Tree?
+Date: Fri, 03 Oct 2014 17:29:54 +0200
+Message-ID: <2386503.dNPayhXJTQ@wuerfel>
+References: <87tx3mmx4s.fsf@kamboji.qca.qualcomm.com> <87ppeamvr9.fsf@kamboji.qca.qualcomm.com> <542DA1F7.9090904@amacapital.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <542DA1F7.9090904-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Lutomirski <luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org>
+Cc: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thursday 02 October 2014 12:05:27 Andy Lutomirski wrote:
+> On 10/02/2014 06:44 AM, Kalle Valo wrote:
+> > Hi Mark,
+> > 
+> > Mark Rutland <mark.rutland-5wv7dgnIgG8-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org> writes:
+> > 
+> >>> ath10k is a wireless driver for Qualcomm Atheros 802.11ac hardware and
+> >>> located in drivers/net/wireless/ath/ath10k/. Currently it only supports
+> >>> PCI devices.
+> >>>
+> >>> Some of the devices store the calibration data to the host flash and the
+> >>> bootloader reads the data from the flash. And now we need a method to
+> >>> deliver the calibration data from bootloader to ath10k. 
+> >>
+> >> What does this calibration data consist of?
+> > 
+> > From ath10k point of view it's just a binary blob which we push to the
+> > firmware before we start it. ath10k does not parse it in any way.
+> > 
+> >> What happens if you don't have the calibration data? Is it a critical
+> >> requirement for the use of the device, or does its absence simply result
+> >> in degraded performance?
+> > 
+> > From my point of view the device should not be used if it doesn't
+> > contain the correct calibration data. I guess it could work somehow but
+> > there's no guarantee about the perfomance.
+> > 
+> >> What do you do on non-DT systems? Where does the information come from
+> >> in that case?
+> > 
+> > Currently ath10k only supports having the calibration data in the OTP
+> > area inside the QCA98XX chip. But some manufacturers want to store it on
+> > the host file, I assume because of the flexibility it provides. And
+> > that's why we have the need for Device Tree support.
+> 
+> To give an actual concrete example that might be what Kalle is talking
+> about:
+> 
+> I have a TP-Link Archer C7, which has a mips cpu and an ath10k minipcie
+> device.  For whatever reason (I honestly have no clue whatsoever why the
+> hardware works this way), the calibration data is on a host flash
+> partition, not on the minipcie device's ROM or flash or whatever it is.
 
-Le 3 oct. 2014 =E0 17:06, Sebastian Hesselbarth <sebastian.hesselbarth@=
-gmail.com> a =E9crit :
+Just to clarify: is this data specific to the design of the device and
+identical for all parts in a manufacture run, or does each individual
+board have to be calibrated separately?
 
-> On 10/03/2014 04:11 PM, Jason Cooper wrote:
->> On Sun, Sep 21, 2014 at 04:11:23PM +0200, Benoit Masson wrote:
->>>> Le 19 sept. 2014 =E0 22:14, Sebastian Hesselbarth <sebastian.hesse=
-lbarth@gmail.com> a =E9crit :
->>>> this is a patch set preparing barebox support for ix4-300d. As usu=
-al,
->>>> I stumbled upon a few nice-to-haves before actually touching ix4-3=
-00d
->>>> dts. As it is a mach-mvebu thing, I just added the related mailing
->>>> lists instead of each of the DT maintainers.
->>>>=20
->>>> First 5 patches consolidate SoC-specific pinctrl nodes to one comm=
-on
->>>> node in armada-xp.dtsi, compatible overwrites for each SoC, and no=
-de
->>>> alias usage for each board. Also, ge{0,1} pinctrl settings are mov=
-ed
->>>> to the common node from one board specific node.
->>>>=20
->>>> Last 3 patches then use that ge{0,1} pinctrl settings on ix4-300d =
-which
->>>> is vital for bootloader init. During exploration of ix4-300d, I al=
-so
->>>> found a i2c eeprom that has not been added to the dts, yet. Finall=
-y,
->>>> there is only one 74hc595 on ix4 mainboard while dts property is s=
-et
->>>> for two.
->>>>=20
->>>> I cannot recall in detail what is on that eeprom, but IIRC it is n=
-othing
->>>> important. Some reg,addr pairs for some init stuff that should hav=
-e
->>>> already been done by stock u-boot. Anyway, adding the node will do=
- no
->>>> harm.
->>>>=20
->>>> Patches are based on v3.17-rc1 and intended for v3.18 but I am not=
- in
->>>> a hurry. I only compile tested this, so a formal Tested-by from Be=
-noit
->>>> for the ix4 and any other Armada XP board would be great.
->>>=20
->>> I'm not sure what to test since I only receive some patch from the
->>> series of 8. Should I get all 8 or only those you sent me. I'll be
->>> able to test during next week.
->>=20
->> Did you ever get a chance to test this series?
->=20
-> Uhm, I never prepared a branch for Benoit to test. I have pushed the
-> patches with Thomas Acked-by's and renamed eeprom node based on
-> v3.17-rc1 to
->=20
-> https://github.com/shesselba/linux-dove.git devel/mvebu-ix4
->=20
-Hi tahnks, that was my last question, because I was lost about which to=
- apply from the list of 8.
+> Needless to say, the mainline ath10k driver won't load on it.  (An old
+> version used to load without calibration data.  It didn't work very well.)
+> 
+> Presuambly the idea is that, if things like this used DT (which mine
+> doesn't, I presume), then ath10k could get the calibration data via DT.
+>  And maybe some vendors of ARM-based wifi devices are planning on
+> playing similar games, and they do use DT.
 
-Also I've noted you did some other patch for Armada XP not related to i=
-x-4-300d, are they included here or should I get them too ?
+Yes, this makes sense. I would also very much love to see DT support for
+arch/mips/ath79 in general, it seems like a nice platform that is used
+in a lot of devices with good openwrt support, and using DT would make
+it easier to support additional devices.
 
-I'll test those over Sunday night.
+>From a system design point, it's still horrible that you have to use
+DT for a device that is on a discoverable bus like PCI, but as you describe,
+the reality is that products are shipping that use ath10k PCI devices
+without this data in them.
 
-Benoit
-> Sebastian
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
