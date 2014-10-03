@@ -1,71 +1,44 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] hwmon: ltc2978: device tree bindings documentation
-Date: Fri, 3 Oct 2014 14:05:59 +0100
-Message-ID: <20141003130559.GJ26643@leverpostej>
-References: <1412275071-6417-1-git-send-email-atull@opensource.altera.com>
- <1412275071-6417-2-git-send-email-atull@opensource.altera.com>
- <20141003122736.GH26643@leverpostej>
- <542E9E9B.4090307@roeck-us.net>
+From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] i2c: hix5hd2: add i2c controller driver
+Date: Fri, 03 Oct 2014 21:15:07 +0800
+Message-ID: <542EA15B.70605@linaro.org>
+References: <1412079628-6316-1-git-send-email-zhangfei.gao@linaro.org> <1412079628-6316-3-git-send-email-zhangfei.gao@linaro.org> <20141003120926.GF1349@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <542E9E9B.4090307-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: "atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "jdelvare-l3A5Bk7waGM@public.gmane.org" <jdelvare-l3A5Bk7waGM@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141003120926.GF1349@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 03, 2014 at 02:03:23PM +0100, Guenter Roeck wrote:
-> On 10/03/2014 05:27 AM, Mark Rutland wrote:
-> > On Thu, Oct 02, 2014 at 07:37:48PM +0100, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> >> From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> >>
-> >> Add device tree bindings documentation for ltc2978.
-> >>
-> >> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> >> ---
-> >> v2: clean whitespace
-> >> ---
-> >>   .../devicetree/bindings/hwmon/ltc2978.txt          |   41 ++++++++++++++++++++
-> >>   1 file changed, 41 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/hwmon/ltc2978.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/hwmon/ltc2978.txt b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
-> >> new file mode 100644
-> >> index 0000000..b2d9c4d
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
-> >> @@ -0,0 +1,41 @@
-> >> +ltc2978
-> >> +
-> >> +Required properties:
-> >> + - compatible: one of: ltc2974, ltc2977, ltc2978, ltc3880, ltc3883, ltm4676
-> >
-> > Could we please format this like:
-> >
-> > - compatible: should contain one of:
-> >    * "ltc2974"
-> >    * "ltc2977"
-> >    * "ltc2978"
-> >    * "ltc3880"
-> >    * "ltc3883"
-> >    * "ltm4676"
-> >
-> > Given the file name, are these all variants of ltc2978?
-> >
-> 
-> All the chips supported by the ltc2978 driver. Some are variants
-> of the ltc2978, some have different functionality.
 
-Ok.
 
-> 
-> [ should those be "linear,ltc2974" and so on ? ]
+On 10/03/2014 08:09 PM, Wolfram Sang wrote:
+> Hi,
+>
+> On Tue, Sep 30, 2014 at 08:20:27PM +0800, Zhangfei Gao wrote:
+>> From: Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>
+>> I2C drivers for hix5hd2 soc series, including following chipset
+>> Hi3716CV200, Hi3719CV100, Hi3718CV100, Hi3719MV100, Hi3718MV100.
+>>
+>> Signed-off-by: Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Looks good to me. You probably want to have a look at this patch
+> http://patchwork.ozlabs.org/patch/394648/
+>
+> an do something similar here, I guess.
+>
+> BTW what tests have you performed?
+>
 
-Good point; yes they should. That will need a vendor-prefixes.txt
-addition.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks Wolfram for the info, will update accordingly.
+
+Currently Wei help do the test via I2C device interface, on a specific 
+board with i2c device.
+We do the test after the board is up, also no i2c activity during probe.
+
+Thanks
