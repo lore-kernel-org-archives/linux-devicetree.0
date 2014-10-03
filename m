@@ -1,54 +1,57 @@
-From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 1/3] i2c: hix5hd2: add devicetree documentation
-Date: Fri,  3 Oct 2014 23:35:47 +0800
-Message-ID: <1412350549-2607-2-git-send-email-zhangfei.gao@linaro.org>
-References: <1412350549-2607-1-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412350549-2607-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
+Date: Fri, 03 Oct 2014 17:41:23 +0200
+Message-ID: <542EC3A3.1060605@gmail.com>
+References: <1411157684-6991-1-git-send-email-sebastian.hesselbarth@gmail.com> <-7443282711873112734@unknownmsgid> <20141003141102.GJ3895@titan.lakedaemon.net> <542EBB93.108@gmail.com> <A9781A2E-F3CA-4E8A-833C-D167B456D9F7@perenite.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <A9781A2E-F3CA-4E8A-833C-D167B456D9F7@perenite.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Masson <benoitm@perenite.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Benoit Masson <yahoo@perenite.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+On 10/03/2014 05:29 PM, Benoit Masson wrote:
+> Le 3 oct. 2014 =E0 17:06, Sebastian Hesselbarth <sebastian.hesselbart=
+h@gmail.com> a =E9crit :
+>> On 10/03/2014 04:11 PM, Jason Cooper wrote:
+>>> On Sun, Sep 21, 2014 at 04:11:23PM +0200, Benoit Masson wrote:
+>>>>> Le 19 sept. 2014 =E0 22:14, Sebastian Hesselbarth <sebastian.hess=
+elbarth@gmail.com> a =E9crit :
+[...]
+>>>>> Patches are based on v3.17-rc1 and intended for v3.18 but I am no=
+t in
+>>>>> a hurry. I only compile tested this, so a formal Tested-by from B=
+enoit
+>>>>> for the ix4 and any other Armada XP board would be great.
+>>>>
+>>>> I'm not sure what to test since I only receive some patch from the
+>>>> series of 8. Should I get all 8 or only those you sent me. I'll be
+>>>> able to test during next week.
+>>>
+>>> Did you ever get a chance to test this series?
+>>
+>> Uhm, I never prepared a branch for Benoit to test. I have pushed the
+>> patches with Thomas Acked-by's and renamed eeprom node based on
+>> v3.17-rc1 to
+>>
+>> https://github.com/shesselba/linux-dove.git devel/mvebu-ix4
+>>
+[...]
+> Also I've noted you did some other patch for Armada XP not related to=
+ ix-4-300d,
+ > are they included here or should I get them too ?
 
-Signed-off-by: Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/i2c/i2c-hix5hd2.txt        |   25 ++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-hix5hd2.txt
+No, they are neither included nor is there any need to test. They are
+about pcie-lanes property but it is more or less unused on Linux.
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-hix5hd2.txt b/Documentation/devicetree/bindings/i2c/i2c-hix5hd2.txt
-new file mode 100644
-index 0000000..660b7ba
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-hix5hd2.txt
-@@ -0,0 +1,25 @@
-+I2C for Hisilicon hix5hd2 chipset platform
-+
-+Required properties:
-+- compatible: Must be "hisilicon,hix5hd2-i2c"
-+- reg: physical base address of the controller and length of memory mapped
-+     region.
-+- interrupts: interrupt number to the cpu.
-+- #address-cells = <1>;
-+- #size-cells = <0>;
-+- clocks: phandles to input clocks.
-+
-+Optional properties:
-+- clock-frequency: Desired I2C bus frequency in Hz, otherwise defaults to 100000
-+- Child nodes conforming to i2c bus binding
-+
-+Examples:
-+I2C0@f8b10000 {
-+	compatible = "hisilicon,hix5hd2-i2c";
-+	reg = <0xf8b10000 0x1000>;
-+	interrupts = <0 38 4>;
-+	clocks = <&clock HIX5HD2_I2C0_RST>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "disabled";
-+}
--- 
-1.7.9.5
+It is too late for v3.18 anyway, so I'll resend them once v3.18-rc1
+drops.
+
+> I'll test those over Sunday night.
+
+Ok, great!
+
+Sebastian
