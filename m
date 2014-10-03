@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 12/13] ARM: shmobile: alt dts: Add chosen/stdout-path
-Date: Fri,  3 Oct 2014 17:11:43 +0200
-Message-ID: <1412349104-18724-13-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v2 06/13] ARM: shmobile: armadillo800eva dts: Add chosen/stdout-path
+Date: Fri,  3 Oct 2014 17:11:37 +0200
+Message-ID: <1412349104-18724-7-git-send-email-geert+renesas@glider.be>
 References: <1412349104-18724-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1412349104-18724-1-git-send-email-geert+renesas@glider.be>
@@ -12,31 +12,36 @@ List-Id: devicetree@vger.kernel.org
 
 Add a stdout-path property so that automatic console selection works
 in the absence of a "console=" parameter on the kernel command line.
+In addition, this will allow the PM domain code to find the PM domain
+for the console device.
 
-Note that we have to keep the "console=ttySC0,38400" parameter in
-chosen/bootargs, else the console will use the default setting of 115200
-baud.
+Note that we have to keep the "console=ttySC1" parameter in
+chosen/bootargs, else we only get console messages on tty0, and because
+this DTS is shared between legacy and multi-platform.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
+This is a prerequisite for working "no_console_suspend" support in
+"[PATCH] ARM: shmobile: R-Mobile: Add DT support for PM domains".
+
 v2:
-  - No changes
+  - Add second reason for keeping "console="
 ---
- arch/arm/boot/dts/r8a7794-alt.dts | 1 +
+ arch/arm/boot/dts/r8a7740-armadillo800eva.dts | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a7794-alt.dts
-index 79d06ef017a05b77..8aec51268b7d8177 100644
---- a/arch/arm/boot/dts/r8a7794-alt.dts
-+++ b/arch/arm/boot/dts/r8a7794-alt.dts
-@@ -21,6 +21,7 @@
+diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
+index effb7b46f13172d5..2703428557fce9fa 100644
+--- a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
++++ b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
+@@ -25,6 +25,7 @@
  
  	chosen {
- 		bootargs = "console=ttySC0,38400 ignore_loglevel rw root=/dev/nfs ip=dhcp";
-+		stdout-path = &scif2;
+ 		bootargs = "console=tty0 console=ttySC1,115200 earlyprintk=sh-sci.1,115200 ignore_loglevel root=/dev/nfs ip=dhcp rw";
++		stdout-path = &scifa1;
  	};
  
- 	memory@40000000 {
+ 	memory {
 -- 
 1.9.1
 
