@@ -1,89 +1,57 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2] i2c: axxia: Add I2C driver for AXM55xx
-Date: Fri, 3 Oct 2014 12:36:30 +0200
-Message-ID: <20141003103630.GB1349@katana>
-References: <1411983159-4692-1-git-send-email-anders.berg@avagotech.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 1/4] arm64: defconfig: increase NR_CPUS range to 2-128
+Date: Fri, 3 Oct 2014 11:58:39 +0100
+Message-ID: <20141003105839.GD26643@leverpostej>
+References: <1411635840-24038-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+ <1411635840-24038-2-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qlTNgmc+xy1dBmNv"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1411983159-4692-1-git-send-email-anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1411635840-24038-2-git-send-email-ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Sep 25, 2014 at 10:03:56AM +0100, Ganapatrao Kulkarni wrote:
+> Raising the maximum limit to 128. This is needed for Cavium's
+> Thunder systems that will have 96 cores on Multi-node system.
 
---qlTNgmc+xy1dBmNv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Has this been tested on any such systems?
 
-> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> index 2ac87fa..8983474 100644
-> --- a/drivers/i2c/busses/Kconfig
-> +++ b/drivers/i2c/busses/Kconfig
-> @@ -77,6 +77,17 @@ config I2C_AMD8111
->  	  This driver can also be built as a module.  If so, the module
->  	  will be called i2c-amd8111.
-> =20
-> +config I2C_AXXIA
-> +	tristate "Axxia I2C controller"
-> +	depends on ARCH_AXXIA || COMPILE_TEST
-> +	default ARCH_AXXIA
-> +	help
-> +	  Say yes if you want to support the I2C bus on Axxia platforms.
-> +
-> +	  Please note that this controller is limited to transfers of maximum
-> +	  255 bytes in length. Any attempt to to a larger transfer will return
-> +	  an error.
-> +
->  config I2C_I801
->  	tristate "Intel 82801 (ICH/PCH)"
->  	depends on PCI
-> diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
-> index 49bf07e..5899edb 100644
-> --- a/drivers/i2c/busses/Makefile
-> +++ b/drivers/i2c/busses/Makefile
-> @@ -12,6 +12,7 @@ obj-$(CONFIG_I2C_ALI15X3)	+=3D i2c-ali15x3.o
->  obj-$(CONFIG_I2C_AMD756)	+=3D i2c-amd756.o
->  obj-$(CONFIG_I2C_AMD756_S4882)	+=3D i2c-amd756-s4882.o
->  obj-$(CONFIG_I2C_AMD8111)	+=3D i2c-amd8111.o
-> +obj-$(CONFIG_I2C_AXXIA)		+=3D i2c-axxia.o
->  obj-$(CONFIG_I2C_I801)		+=3D i2c-i801.o
->  obj-$(CONFIG_I2C_ISCH)		+=3D i2c-isch.o
->  obj-$(CONFIG_I2C_ISMT)		+=3D i2c-ismt.o
+Mark.
 
-Please put it to the embedded section.
-
-=2E..
-
-> +	idev->adapter.class =3D I2C_CLASS_HWMON;
-
-Being a DT driver, you most probably don't need this.
-
-
---qlTNgmc+xy1dBmNv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJULnwuAAoJEBQN5MwUoCm2CkwQAJ+cYBA7ZhgbaqjFDiRKauCu
-+O+RBpsc1ckfgH0ThqudovAlIcuWRGvc8rbHQMs4R6DNGCZ+qxygPgR+XjotHE3n
-QQl3ER3NmG30EViE7pwoNR+IBEkdk7pJ8e2LGb08hfI1QT6ROdNTtV21TjVgEY1w
-eu28PEbJPJ3bbhMt/DyA9nTPYd8L3LCMR4JeuHAO5m9syMAsgLOm7RcAa2UVjbRk
-DIcnCbDrUCQvxcBycQes4q4eGTfKi+F9P7KfrcNFpwPqBAXHB6t/UhxCgJHAT1jt
-dk0MwqFImngWLfgGM8O3yiwETsR4AVPausjfCmvhVdgctUh85wFsY+sqnA9sVest
-s2O6Z4u9oVoEhsAZwfS0zZVnNbnzx3pkZ+ZpDIY9F166qMdmVIiCKNFfSBrI9g1b
-zdZxW0T8d1momDu14PzrW0HUjdKhx+ID3ZfeGUzxeMJk3XEnGrs4DdmWQIb+Jry5
-pHeUhFmZKXDHcl/dSGO107KdUPCP7OuN2oSZwvNlxsB9R9/2pZhedvUn6Rg4CubM
-3hvVxUrEiRrkX7xUAC78nNje780+XZ1ldUqJpJ41gPCurgyhYW0ML130mWB2GCaO
-swEAvOCmIC/jQ6FmBVJe/LD1rr7qfnxboIb1YQZLKZQGIZ/vNc+3COGu25d3Phrd
-Vbr9O4o7R3sTj+1c1EmK
-=08YL
------END PGP SIGNATURE-----
-
---qlTNgmc+xy1dBmNv--
+> 
+> Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm64/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 4d42453..a409105 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -296,8 +296,8 @@ config SCHED_SMT
+>  	  places. If unsure say N here.
+>  
+>  config NR_CPUS
+> -	int "Maximum number of CPUs (2-64)"
+> -	range 2 64
+> +	int "Maximum number of CPUs (2-128)"
+> +	range 2 128
+>  	depends on SMP
+>  	# These have to remain sorted largest to smallest
+>  	default "64"
+> -- 
+> 1.8.1.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
