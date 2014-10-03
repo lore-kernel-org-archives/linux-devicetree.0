@@ -1,82 +1,82 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] dt-bindings: Add a clocks property to
- the simple-framebuffer binding
-Date: Fri, 3 Oct 2014 10:57:28 -0500
-Message-ID: <CAL_JsqKU2n8p=YfJua3k-mR40bG_4SiZY8_-SL-MXtuWN5NeHg@mail.gmail.com>
-References: <1412345120-24588-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD62P6P6EQIP5DV3UECRUBBK2BGOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1412345120-24588-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 00/12] SDHCI PXA cleanup and clocks
+Date: Fri,  3 Oct 2014 17:55:35 +0200
+Message-ID: <1412351747-4188-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 3, 2014 at 9:05 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> A simple-framebuffer node represents a framebuffer setup by the firmware /
-> bootloader. Such a framebuffer may have a number of clocks in use, add a
-> property to communicate this to the OS.
->
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> --
-> Changes in v2:
-> -Added Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Changes in v3:
-> -Updated description to make clear simplefb deals with more then just memory
+This patch set does a little cleanup on PXA v2/v3 drivers and
+adds an additional, optional core clock to v3 driver that is
+required on Marvell Berlin BG2 and BG2CD SoCs.
 
-NAK. "Fixing" the description is not what I meant and does not address
-my concerns. Currently, simplefb is configuration data. It is
-auxiliary data about how a chunk of memory is used. Using it or not
-has no side effects on the hardware setup, but you are changing that
-aspect. You are mixing in a hardware description that is simply
-inaccurate.
+Patch 1 removes the unused private driver data from pxav2 driver.
 
-The kernel has made the decision to turn off "unused" clocks. If its
-determination of what is unused is wrong, then it is not a problem to
-fix in DT.
+Patch 2 is a fix for pxav3 driver to honor MMC_DDR52 timing on
+uhs signaling. AFAICS, up to now there was no user affected by it
+but Sony NSZ-GS7 will be.
 
-Rob
+Patch 3 moves struct sdhci_pxa from global include to the only
+driver using it now. Patch 4 removes the unused clk_enable from
+it.
 
-> ---
->  Documentation/devicetree/bindings/video/simple-framebuffer.txt | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-> index 70c26f3..91176ee 100644
-> --- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-> @@ -1,8 +1,8 @@
->  Simple Framebuffer
->
-> -A simple frame-buffer describes a raw memory region that may be rendered to,
-> -with the assumption that the display hardware has already been set up to scan
-> -out from that buffer.
-> +A simple frame-buffer describes a frame-buffer setup by firmware or
-> +the bootloader, with the assumption that the display hardware has already
-> +been set up to scan out from the memory pointed to by the ref property.
->
->  Required properties:
->  - compatible: "simple-framebuffer"
-> @@ -14,6 +14,9 @@ Required properties:
->    - r5g6b5 (16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b).
->    - a8b8g8r8 (32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r).
->
-> +Optional properties:
-> +- clocks : List of clocks used by the framebuffer
-> +
->  Example:
->
->         framebuffer {
-> --
-> 2.1.0
->
+Patch 5 removes some wrong and unnecessary checks on struct clk
+from v3 driver. Patch 6 moves the struct clk for I/O clock to
+the private driver data, while Patch 7 prepares the driver for
+named clocks.
+
+Patch 8 adds support for an additional, optional core clock that
+is now also documented in the binding with Patch 9.
+
+Patches 10-12 finally add corresponding sdhci nodes to berlin2
+and berlin2cd, Chromecast and NSZ-GS7 DT files.
+
+The patches are currently based on next-20141003 and are intended
+for v3.19, i.e. I'll resend the series as soon as v3.18-rc1 drops.
+
+A branch with the patches applied on top of next-201410-03 can be
+found on
+
+git://git.infradead.org/users/hesselba/linux-berlin.git devel/bg2-bg2cd-sdhci-v1
+
+Sebastian Hesselbarth (12):
+  mmc: sdhci-pxav2: Drop unused struct sdhci_pxa
+  mmc: sdhci-pxav3: Respect MMC_DDR52 timing on uhs signaling
+  mmc: sdhci-pxav3: Move private driver data to driver source
+  mmc: sdhci-pxav3: Remove unused clk_enable from sdhci_pxa
+  mmc: sdhci-pxav3: Remove checks for mandatory host clock
+  mmc: sdhci-pxav3: Move I/O clock to private data
+  mmc: sdhci-pxav3: Try to get named I/O clock first
+  mmc: sdhci-pxav3: Get optional core clock
+  mmc: sdhci-pxav3: Document clocks and additional clock-names property
+  ARM: dts: berlin: Add SDHCI controller nodes to BG2/BG2CD
+  ARM: dts: berlin: Enable WiFi on Google Chromecast
+  ARM: dts: berlin: Enable eMMC on Sony NSZ-GS7
+
+ .../devicetree/bindings/mmc/sdhci-pxa.txt          |  7 +++
+ arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts         |  7 +++
+ arch/arm/boot/dts/berlin2.dtsi                     | 34 ++++++++++++
+ arch/arm/boot/dts/berlin2cd-google-chromecast.dts  |  9 ++++
+ arch/arm/boot/dts/berlin2cd.dtsi                   |  9 ++++
+ drivers/mmc/host/sdhci-pxav2.c                     | 15 ++----
+ drivers/mmc/host/sdhci-pxav3.c                     | 60 ++++++++++++++--------
+ include/linux/platform_data/pxa_sdhci.h            |  5 --
+ 8 files changed, 108 insertions(+), 38 deletions(-)
+
+---
+Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+-- 
+2.1.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
