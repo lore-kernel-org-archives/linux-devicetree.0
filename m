@@ -1,91 +1,41 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 01/13] ARM: shmobile: emev2 dtsi: Use generic names for device nodes
-Date: Fri,  3 Oct 2014 17:11:32 +0200
-Message-ID: <1412349104-18724-2-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 08/13] ARM: shmobile: marzen dts: Add chosen/stdout-path
+Date: Fri,  3 Oct 2014 17:11:39 +0200
+Message-ID: <1412349104-18724-9-git-send-email-geert+renesas@glider.be>
 References: <1412349104-18724-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412349104-18724-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1412349104-18724-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-smu -> clocks
-sti -> timer
-uart -> serial
+Add a stdout-path property so that automatic console selection works
+in the absence of a "console=" parameter on the kernel command line.
 
-All but "clocks" are defined in ePAPR v1.1.
+Note that we have to keep the "console=" parameter in chosen/bootargs,
+as this DTS is shared between legacy and multi-platform.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v2:
-  - No changes
+  - Keep "console="
 ---
- arch/arm/boot/dts/emev2.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/r8a7779-marzen.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/emev2.dtsi b/arch/arm/boot/dts/emev2.dtsi
-index 00eeed3721b63bfe..5fe9212b6bc5e50b 100644
---- a/arch/arm/boot/dts/emev2.dtsi
-+++ b/arch/arm/boot/dts/emev2.dtsi
-@@ -55,7 +55,7 @@
- 			     <0 121 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/r8a7779-marzen.dts b/arch/arm/boot/dts/r8a7779-marzen.dts
+index c160404e4d405eb2..9e1b859190ca48e4 100644
+--- a/arch/arm/boot/dts/r8a7779-marzen.dts
++++ b/arch/arm/boot/dts/r8a7779-marzen.dts
+@@ -25,6 +25,7 @@
+ 
+ 	chosen {
+ 		bootargs = "console=ttySC2,115200 ignore_loglevel root=/dev/nfs ip=on";
++		stdout-path = &scif2;
  	};
  
--	smu@e0110000 {
-+	clocks@e0110000 {
- 		compatible = "renesas,emev2-smu";
- 		reg = <0xe0110000 0x10000>;
- 		#address-cells = <2>;
-@@ -129,7 +129,7 @@
- 		};
- 	};
- 
--	sti@e0180000 {
-+	timer@e0180000 {
- 		compatible = "renesas,em-sti";
- 		reg = <0xe0180000 0x54>;
- 		interrupts = <0 125 IRQ_TYPE_LEVEL_HIGH>;
-@@ -137,7 +137,7 @@
- 		clock-names = "sclk";
- 	};
- 
--	uart@e1020000 {
-+	serial@e1020000 {
- 		compatible = "renesas,em-uart";
- 		reg = <0xe1020000 0x38>;
- 		interrupts = <0 8 IRQ_TYPE_LEVEL_HIGH>;
-@@ -145,7 +145,7 @@
- 		clock-names = "sclk";
- 	};
- 
--	uart@e1030000 {
-+	serial@e1030000 {
- 		compatible = "renesas,em-uart";
- 		reg = <0xe1030000 0x38>;
- 		interrupts = <0 9 IRQ_TYPE_LEVEL_HIGH>;
-@@ -153,7 +153,7 @@
- 		clock-names = "sclk";
- 	};
- 
--	uart@e1040000 {
-+	serial@e1040000 {
- 		compatible = "renesas,em-uart";
- 		reg = <0xe1040000 0x38>;
- 		interrupts = <0 10 IRQ_TYPE_LEVEL_HIGH>;
-@@ -161,7 +161,7 @@
- 		clock-names = "sclk";
- 	};
- 
--	uart@e1050000 {
-+	serial@e1050000 {
- 		compatible = "renesas,em-uart";
- 		reg = <0xe1050000 0x38>;
- 		interrupts = <0 11 IRQ_TYPE_LEVEL_HIGH>;
+ 	memory {
 -- 
 1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
