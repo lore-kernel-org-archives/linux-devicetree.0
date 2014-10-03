@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 13/13] ARM: shmobile: kzm9g-reference dts: Add chosen/stdout-path
-Date: Fri,  3 Oct 2014 17:11:44 +0200
-Message-ID: <1412349104-18724-14-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v2 09/13] ARM: shmobile: lager dts: Add chosen/stdout-path
+Date: Fri,  3 Oct 2014 17:11:40 +0200
+Message-ID: <1412349104-18724-10-git-send-email-geert+renesas@glider.be>
 References: <1412349104-18724-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1412349104-18724-1-git-send-email-geert+renesas@glider.be>
@@ -12,32 +12,32 @@ List-Id: devicetree@vger.kernel.org
 
 Add a stdout-path property so that automatic console selection works
 in the absence of a "console=" parameter on the kernel command line.
-In addition, this will allow the PM domain code to find the PM domain
-for the console device.
 
-Note that we have to keep the "console=ttySC4" parameter in
-chosen/bootargs, else we only get console messages on tty0.
+Note that we have to keep the "console=" parameter in chosen/bootargs,
+as this DTS is shared between legacy and multi-platform.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v2:
-  - No changes
+  - Keep "console=",
+  - Update for 3a8912c2f983dbb2 ("ARM: shmobile: r8a7790: switch from
+    scif to scifa")
 ---
- arch/arm/boot/dts/sh73a0-kzm9g-reference.dts | 1 +
+ arch/arm/boot/dts/r8a7790-lager.dts | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-index 30ef97e99dc53ea7..0dac0e66ccad8f74 100644
---- a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-+++ b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-@@ -40,6 +40,7 @@
+diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+index 1698591d530a14df..719979e29bf8d47c 100644
+--- a/arch/arm/boot/dts/r8a7790-lager.dts
++++ b/arch/arm/boot/dts/r8a7790-lager.dts
+@@ -25,6 +25,7 @@
  
  	chosen {
- 		bootargs = "console=tty0 console=ttySC4,115200 root=/dev/nfs ip=dhcp ignore_loglevel rw";
-+		stdout-path = &scifa4;
+ 		bootargs = "console=ttySC6,115200 ignore_loglevel rw root=/dev/nfs ip=dhcp";
++		stdout-path = &scifa0;
  	};
  
- 	memory {
+ 	memory@40000000 {
 -- 
 1.9.1
 
