@@ -1,82 +1,74 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] clk: sunxi: Specify number of child clocks for
- divs clocks
-Date: Fri, 3 Oct 2014 16:05:23 +0200
-Message-ID: <20141003140523.GL4039@lukather>
-References: <1411807795-6575-1-git-send-email-wens@csie.org>
- <1411807795-6575-2-git-send-email-wens@csie.org>
- <20140930154043.GN4081@lukather>
- <CAGb2v64RPi2J4gpWu7X15xSx89guPSoEs2_7Bxs9ywj023fabA@mail.gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
+Date: Fri, 3 Oct 2014 10:11:02 -0400
+Message-ID: <20141003141102.GJ3895@titan.lakedaemon.net>
+References: <1411157684-6991-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <-7443282711873112734@unknownmsgid>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Kc9HNjpzOXVc7FFU"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v64RPi2J4gpWu7X15xSx89guPSoEs2_7Bxs9ywj023fabA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <-7443282711873112734@unknownmsgid>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Benoit Masson <benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Benoit,
 
---Kc9HNjpzOXVc7FFU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Sep 30, 2014 at 11:56:24PM +0800, Chen-Yu Tsai wrote:
-> On Tue, Sep 30, 2014 at 11:40 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > On Sat, Sep 27, 2014 at 04:49:49PM +0800, Chen-Yu Tsai wrote:
-> >> Currently sunxi_divs_clk_setup assumes the number of child clocks
-> >> to be the same as the number of clock-output-names, and a maximum
-> >> of SUNXI_DIVS_MAX_QTY child clocks.
-> >>
-> >> On sun6i, PLL6 only has 1 child clock, but the parent would be used
-> >> as well, thereby also having it's own clock-output-names entry. This
-> >> results in an extra bogus clock being registered.
+On Sun, Sep 21, 2014 at 04:11:23PM +0200, Benoit Masson wrote:
+> > Le 19 sept. 2014 =E0 22:14, Sebastian Hesselbarth <sebastian.hessel=
+barth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> a =E9crit :
+> > this is a patch set preparing barebox support for ix4-300d. As usua=
+l,
+> > I stumbled upon a few nice-to-haves before actually touching ix4-30=
+0d
+> > dts. As it is a mach-mvebu thing, I just added the related mailing
+> > lists instead of each of the DT maintainers.
 > >
-> > Isn't PLL6 having two childs as well?
+> > First 5 patches consolidate SoC-specific pinctrl nodes to one commo=
+n
+> > node in armada-xp.dtsi, compatible overwrites for each SoC, and nod=
+e
+> > alias usage for each board. Also, ge{0,1} pinctrl settings are move=
+d
+> > to the common node from one board specific node.
+> >
+> > Last 3 patches then use that ge{0,1} pinctrl settings on ix4-300d w=
+hich
+> > is vital for bootloader init. During exploration of ix4-300d, I als=
+o
+> > found a i2c eeprom that has not been added to the dts, yet. Finally=
+,
+> > there is only one 74hc595 on ix4 mainboard while dts property is se=
+t
+> > for two.
+> >
+> > I cannot recall in detail what is on that eeprom, but IIRC it is no=
+thing
+> > important. Some reg,addr pairs for some init stuff that should have
+> > already been done by stock u-boot. Anyway, adding the node will do =
+no
+> > harm.
+> >
+> > Patches are based on v3.17-rc1 and intended for v3.18 but I am not =
+in
+> > a hurry. I only compile tested this, so a formal Tested-by from Ben=
+oit
+> > for the ix4 and any other Armada XP board would be great.
 >=20
-> No. It has one child, the normal PLL6 output clock.
->=20
-> The last "clock-output-names" entry refers to the factors clock itself,
-> in this case, the 2x clock output.
+> I'm not sure what to test since I only receive some patch from the
+> series of 8. Should I get all 8 or only those you sent me. I'll be
+> able to test during next week.
 
-Hmmm, OK, I guess that's one way to see it too :)
+Did you ever get a chance to test this series?
 
-Thanks!
-Maxime
+thx,
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---Kc9HNjpzOXVc7FFU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJULq0jAAoJEBx+YmzsjxAgJKEQAL0Yx1cyySGcPlZUAK3594MT
-wXzT20jfNaxXKghL6nHWZ3YGAN4Hz5w8dk/vMewoJbEjA4itsS0K76nXMGp6ngOm
-uqxzBGQez1EFL5LSSQqed4+qkWFuLgt4epstAsx/gMzxbMJNoHcpSv4TG6dYYILC
-gfn4T070ZIZe7YnXZKLHDM37EiD9nj9oQaOK8CVdGE2d2JAK/Wxp+xHfu+jwg+uu
-KddOZ+zAWOebE4FM0yqGG351i5zDim/yB+OF/qs70TXW7LCMCJnnKWDfKNsdjXt7
-wFJIYkfBo+aRwMQ+byeKkfrtCEhJJB7fv5Dqb7LUOhM1cK08Y6thTcur3hoVSeXG
-Bc5s/5N4nqTKLe/yGHOGZW41fv8p74PpyadMd1wdiMEV2n6lqXFXhIUktdYldcPU
-0HNj9DdHdKjco35/2ttfrSKF9ChLsiqdt1skPGDkibLv+r8XNBu+8aAjYO/sPU4l
-+DvwKkKIjmfpVabQeWnX77gTEIgErtx/cePEfRuMIFTqTLrqbeC/apXL6beOK1Og
-miHOTIH0ZVE6yI2b8I+7hKdgD5M6YDxzbg5/18XTSCJ0g/25tLGmuI8ozdXMQehk
-ms/i4N/8WVa1UH40kHqCGxdUbuiKX2o7CsCv+TFo7/JDeth4/0QYfZmDFGN/eKHi
-HnIa2WZqKv39cvc2MeFV
-=r31I
------END PGP SIGNATURE-----
-
---Kc9HNjpzOXVc7FFU--
+Jason.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
