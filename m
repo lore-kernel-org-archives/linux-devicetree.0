@@ -1,49 +1,56 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 1/2] DT: add binding for mxs regulator
-Date: Fri, 3 Oct 2014 13:46:03 +0200 (CEST)
-Message-ID: <20237989.191677.1412336763673.JavaMail.open-xchange@oxbaltgw03.schlund.de>
-References: <1411779588-22031-1-git-send-email-stefan.wahren@i2se.com> <1411779588-22031-2-git-send-email-stefan.wahren@i2se.com> <20140929110919.GB2432@leverpostej> <54294832.8000702@i2se.com> <20140929124137.GD2432@leverpostej> <54295A2F.3070700@i2se.com> <20140929132334.GE2432@leverpostej>
-Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v3] i2c: axxia: Add I2C driver for AXM55xx
+Date: Fri, 3 Oct 2014 13:50:48 +0200
+Message-ID: <20141003115048.GD1349@katana>
+References: <1412334482-20720-1-git-send-email-anders.berg@avagotech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140929132334.GE2432@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BI5RvnYi6R4T2M87"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1412334482-20720-1-git-send-email-anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-hi Fabio,
 
-> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> hat am 29. September 2014 um 15:23
-> geschrieben:
->
-> I would prefer a top level node for the subsystem that is not a
-> simple-bus.
->
-> Give it a compatible string and a well-defined set of base properties
-> (looks like you just need the reg for now). Match that and probe the
-> child nodes as appropriate.
->
-> > >> Do we need a extra driver?
-> > > Perhaps, but it's relatively simple to match on a compatible string and
-> > > probe children if you just wantto start small for now.
->
-> Mark.
+--BI5RvnYi6R4T2M87
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-i would name the driver for the power subsystem "mxs_power.c" and use the
-compatibel string "fsl,imx28-power" for i.MX28.
+On Fri, Oct 03, 2014 at 01:08:02PM +0200, Anders Berg wrote:
+> Add I2C bus driver for the controller found in the LSI Axxia family SoCs.=
+ The
+> driver implements 10-bit addressing and SMBus transfer modes via emulation
+> (including SMBus block data read).
+>=20
+> Signed-off-by: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
 
-Now the question: where should i take?
+Applied to for-next, thanks!
 
-arch/arm/mach-mxs/ or drivers/power/
 
-Regards
+--BI5RvnYi6R4T2M87
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJULo2YAAoJEBQN5MwUoCm2Y1kP/RfjWt5XHUteCijbnSjB1p3O
+j6KUATQY06csp+zjHyu82TzE2hieP4Wsgc6ELJcJgZa8DPd8mDScbJAS5tyelCa2
+oAhmRcQZURiMzGXx+nvDGfjmqE9Pd42vUReMQkoBSHTB1YQyZHzLm+pOZZ5a+aUX
+aYq3Eag71YXMx2+T1jVGkDBBdvSkWt0EQJiJw6R0p+SQwcu5BKmU1Vlmm6nkHW8j
+TdUpZd1zSb2FGvS3N/s1s58SFCnxCafcvU793tU0osyGZUUzCpRxAIEBMWC9c6qN
+HyIrw0bYeL0YmCoA830wlmAiZnPRgi9/ebMdCEVq1AAW7wOL7L0P/KeOju+fRxch
+ZVx4qq81KCaZJ62O1MDehMbKPQ5J2Z02RxyU5GbNpC4f1H9dZaUQMwGVZOByr1Oa
+dsbfsqATXG5TrJxwzSmhBZYLKHmhNg6BX8i6Uoubb3WiaFHf5eor1Suvd3imTmiW
+SVrasCiZfaVXz/pxK4BmotdLRY2rz5ifPgQ7QdaSsUsni92AGAr/0oiL8DA7M1Fc
+ctez0VQT6ysPxC1mAMlvcJFzyjR2fXOtkINh/TTQLGWb9R5VnGGVLDltknZFLDHa
+GLW1SyxtYSJgH7YzmqAec7hO9QcMagBcWIDkJTLKyTOPIs/IPeZwKhobFUcMwVfr
+zKRFAYb+7Omgxe2ZTWCM
+=MJII
+-----END PGP SIGNATURE-----
+
+--BI5RvnYi6R4T2M87--
