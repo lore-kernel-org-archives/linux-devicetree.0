@@ -1,75 +1,49 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 3/4] pmbus: add regulator support
-Date: Fri, 3 Oct 2014 17:42:06 +0100
-Message-ID: <20141003164206.GD3594@sirena.org.uk>
-References: <1412275071-6417-1-git-send-email-atull@opensource.altera.com>
- <1412275071-6417-4-git-send-email-atull@opensource.altera.com>
- <20141003142746.GA24441@sirena.org.uk>
- <542EBF56.1000500@roeck-us.net>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: ath10k: calibration data through Device Tree?
+Date: Fri, 03 Oct 2014 18:42:24 +0200
+Message-ID: <2162399.E7Ru1MI0QH@wuerfel>
+References: <87tx3mmx4s.fsf@kamboji.qca.qualcomm.com> <2386503.dNPayhXJTQ@wuerfel> <20141003162513.GW26643@leverpostej>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="BI5RvnYi6R4T2M87"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <542EBF56.1000500@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: atull@opensource.altera.com, jdelvare@suse.de, lm-sensors@lm-sensors.org, lgirdwood@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141003162513.GW26643@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Andy Lutomirski <luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org>, Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Friday 03 October 2014 17:25:13 Mark Rutland wrote:
+> > From a system design point, it's still horrible that you have to use
+> > DT for a device that is on a discoverable bus like PCI, but as you describe,
+> > the reality is that products are shipping that use ath10k PCI devices
+> > without this data in them.
+> 
+> I'd see any DT property for this as a workaround, the use of which
+> should be discouraged.
 
---BI5RvnYi6R4T2M87
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+By extension though, any use of DT is really a workaround for the fact
+that embedded systems and SoCs don't use discoverable buses, and it should
+be discouraged. x86 SoCs actually get this right to a large degree by
+making on-chip devices appear as PCI devices that can be used standalone,
+although Intel's latest generation SoCs are regressing in this regard
+and you still need DT (or something like it) to describe off-chip devices
+there.
 
-On Fri, Oct 03, 2014 at 08:23:02AM -0700, Guenter Roeck wrote:
+> A fun question that springs to mind is can the ath10k chip be removed,
+> and if so am I able to place it into a non-DT system (whereupon I have
+> no calibration data, so it won't work)?
 
-> do you have an immutable branch or tag I could merge to get
-> the necessary regulator patches ?
+Some can be removed, others cannot. If the chip is on a removable pcie
+mini card and doesn't have that data on the card itself, it's already
+impossible to put it into another system. I don't think we need to solve
+that case.
 
-The following changes since commit 7d1311b93e58ed55f3a31cc8f94c4b8fe988a2b9:
+We have similar issues with removable but nondiscoverable USB and SDIO
+devices, e.g. when they are lacking the PROM for the mac address.
 
-  Linux 3.17-rc1 (2014-08-16 10:40:26 -0600)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-simple-of
-
-for you to fetch changes up to ef126a4a8112998a9d4dcea166781331f1020f76:
-
-  regulator: of: Add stub OF match function for !OF case (2014-09-10 16:40:07 +0100)
-
-----------------------------------------------------------------
-regulator: Simplified OF matching
-
-Provide a simplified way of matching regulators in DT in order to save
-some fiddly code in drivers.
-
-----------------------------------------------------------------
-Mark Brown (2):
-      regulator: of: Provide simplified DT parsing method
-      regulator: of: Add stub OF match function for !OF case
-
- drivers/regulator/core.c         | 10 +++++---
- drivers/regulator/internal.h     | 14 +++++++++++
- drivers/regulator/of_regulator.c | 51 ++++++++++++++++++++++++++++++++++++++++
- include/linux/regulator/driver.h |  4 ++++
- 4 files changed, 76 insertions(+), 3 deletions(-)
-
---BI5RvnYi6R4T2M87
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJULtHeAAoJECTWi3JdVIfQsCwH/3eBNoYsT6dWvay/mUbX5u0K
-tALmzkghlLPIrdCtus6jKLTwRhGG+vMdWPZbmKN6ydsxswmIwHmIL/QoQow9jvZs
-H455o+nbFLqk3hl9RdHzK1Y7v9oiz0PWVE84vK1+22i/UVeJGVZc8JLBMhN22PlP
-UIz8dj83JTEZDSbfzgTh+rtOD2+g+TuYQYYoRoX5Kh7J0IKfNRH2l9902way+mWG
-5Ke6AoCKWQDh4niRXnRrsHWDPRaZmHh0lncmmHYfSGXfoMZTEMisW7jPwcSEslHV
-dfNy4vwcvkFMFmGqwqYsiPez43z0IG8UDBino9fWK1J1Rm9D/jLfLvw17d3Y08A=
-=PWOq
------END PGP SIGNATURE-----
-
---BI5RvnYi6R4T2M87--
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
