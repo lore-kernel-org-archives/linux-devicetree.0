@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 04/13] ARM: shmobile: genmai dts: Add chosen/stdout-path
-Date: Fri,  3 Oct 2014 17:11:35 +0200
-Message-ID: <1412349104-18724-5-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v2 10/13] ARM: shmobile: henninger dts: Add chosen/stdout-path
+Date: Fri,  3 Oct 2014 17:11:41 +0200
+Message-ID: <1412349104-18724-11-git-send-email-geert+renesas@glider.be>
 References: <1412349104-18724-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1412349104-18724-1-git-send-email-geert+renesas@glider.be>
@@ -13,30 +13,30 @@ List-Id: devicetree@vger.kernel.org
 Add a stdout-path property so that automatic console selection works
 in the absence of a "console=" parameter on the kernel command line.
 
-Remove the now-superfluous "console=" parameter from chosen/bootargs.
+Note that we have to keep the "console=ttySC0,38400" parameter in
+chosen/bootargs, else the console will use the default setting of 115200
+baud.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v2:
   - No changes
 ---
- arch/arm/boot/dts/r7s72100-genmai.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/r8a7791-henninger.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/r7s72100-genmai.dts b/arch/arm/boot/dts/r7s72100-genmai.dts
-index a3ed23c0a8f58abd..1518c5bcca33d8d1 100644
---- a/arch/arm/boot/dts/r7s72100-genmai.dts
-+++ b/arch/arm/boot/dts/r7s72100-genmai.dts
-@@ -21,7 +21,8 @@
- 	};
+diff --git a/arch/arm/boot/dts/r8a7791-henninger.dts b/arch/arm/boot/dts/r8a7791-henninger.dts
+index fee8befc4c70d29e..ef2cb9217aef9eb8 100644
+--- a/arch/arm/boot/dts/r8a7791-henninger.dts
++++ b/arch/arm/boot/dts/r8a7791-henninger.dts
+@@ -23,6 +23,7 @@
  
  	chosen {
--		bootargs = "console=ttySC2,115200 ignore_loglevel rw root=/dev/nfs ip=dhcp";
-+		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
-+		stdout-path = &scif2;
+ 		bootargs = "console=ttySC0,38400 ignore_loglevel rw root=/dev/nfs ip=dhcp";
++		stdout-path = &scif0;
  	};
  
- 	memory {
+ 	memory@40000000 {
 -- 
 1.9.1
 
