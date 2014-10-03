@@ -1,39 +1,29 @@
-From: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH] ASoC: simple-card: Fix detect gpio documentation.
-Date: Fri,  3 Oct 2014 10:06:08 -0700
-Message-ID: <1412355968-30200-1-git-send-email-dgreid@chromium.org>
+From: Adrian Chadd <adrian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
+Subject: Re: ath10k: calibration data through Device Tree?
+Date: Fri, 3 Oct 2014 10:21:41 -0700
+Message-ID: <CAJ-VmomZzXGBqyQ+xLu1g0hEUfFvnsMoAZrCCfnM9_QfJNwjhg@mail.gmail.com>
+References: <87tx3mmx4s.fsf@kamboji.qca.qualcomm.com>
+	<2386503.dNPayhXJTQ@wuerfel>
+	<20141003162513.GW26643@leverpostej>
+	<2162399.E7Ru1MI0QH@wuerfel>
+	<CALCETrWC9fXckgUGYWA8AcHT5SoxQc-EouV0U-sFr7v6279oow@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALCETrWC9fXckgUGYWA8AcHT5SoxQc-EouV0U-sFr7v6279oow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Andy Lutomirski <luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, "ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The device tree property uses '-' not '_'.
+As far as I'm aware there's no unique identifier in the silicon. It's
+all in the OTP or flash.
 
-Signed-off-by: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- Documentation/devicetree/bindings/sound/simple-card.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The NIC comes up with a standard MAC address, the same for all NICs in
+the family.
 
-diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-index 72d94b7..c3cba60 100644
---- a/Documentation/devicetree/bindings/sound/simple-card.txt
-+++ b/Documentation/devicetree/bindings/sound/simple-card.txt
-@@ -17,9 +17,9 @@ Optional properties:
- 					  source.
- - simple-audio-card,mclk-fs             : Multiplication factor between stream rate and codec
-   					  mclk.
--- simple-audio-card,hp_det_gpio		: Reference to GPIO that signals when
-+- simple-audio-card,hp-det-gpio		: Reference to GPIO that signals when
- 					  headphones are attached.
--- simple-audio-card,mic_det_gpio	: Reference to GPIO that signals when
-+- simple-audio-card,mic-det-gpio	: Reference to GPIO that signals when
- 					  a microphone is attached.
- 
- Optional subnodes:
--- 
-2.1.2.330.g565301e
 
+-a
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
