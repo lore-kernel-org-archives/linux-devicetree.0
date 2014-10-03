@@ -1,180 +1,74 @@
-From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: [PATCH v3] dt-bindings: Add a clocks property
- to the simple-framebuffer binding
-Date: Fri, 3 Oct 2014 18:56:32 -0400
-Message-ID: <CAKON4OxxQ3hp0npr1Zh6w-2-HwMyC+8OxOCBmFFmBZ0N+6N0dw@mail.gmail.com>
-References: <1412345120-24588-1-git-send-email-hdegoede@redhat.com>
-	<CAL_JsqKU2n8p=YfJua3k-mR40bG_4SiZY8_-SL-MXtuWN5NeHg@mail.gmail.com>
-	<542EDE11.3010802@redhat.com>
-	<CAL_Jsq+3c7ToCGaR4Nz7dDXvebBKzzMv85swzy2mzOou+gM5iw@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 1/4] hwmon: ltc2978: device tree bindings documentation
+Date: Sat, 4 Oct 2014 00:13:34 +0100
+Message-ID: <20141003231334.GA4609@sirena.org.uk>
+References: <1412275071-6417-1-git-send-email-atull@opensource.altera.com>
+ <1412275071-6417-2-git-send-email-atull@opensource.altera.com>
+ <20141003122736.GH26643@leverpostej>
+ <542EDCDB.6040406@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBC55LFUF6ALBBIOTXSQQKGQECLKE3II-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAL_Jsq+3c7ToCGaR4Nz7dDXvebBKzzMv85swzy2mzOou+gM5iw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <542EDCDB.6040406@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>, "jdelvare@suse.de" <jdelvare@suse.de>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "delicious.quinoa@gmail.com" <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, "yvanderv@opensource.altera.com" <yvanderv@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 3, 2014 at 4:08 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, Oct 3, 2014 at 12:34 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> Hi,
->>
->> On 10/03/2014 05:57 PM, Rob Herring wrote:
->>> On Fri, Oct 3, 2014 at 9:05 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>>> A simple-framebuffer node represents a framebuffer setup by the firmware /
->>>> bootloader. Such a framebuffer may have a number of clocks in use, add a
->>>> property to communicate this to the OS.
->>>>
->>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>> Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>
->>>> --
->>>> Changes in v2:
->>>> -Added Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>> Changes in v3:
->>>> -Updated description to make clear simplefb deals with more then just memory
->>>
->>> NAK. "Fixing" the description is not what I meant and does not address
->>> my concerns. Currently, simplefb is configuration data. It is
->>> auxiliary data about how a chunk of memory is used. Using it or not
->>> has no side effects on the hardware setup, but you are changing that
->>> aspect. You are mixing in a hardware description that is simply
->>> inaccurate.
->>
->> Memory is hardware too, what simplefb is is best seen as a virtual device, and
->> even virtual devices have hardware resources they need, such as a chunk of memory,
->> which the kernel should not touch other then use it as a framebuffer, likewise
->> on some systems the virtual device needs clocks to keep running.
->>
->>> The kernel has made the decision to turn off "unused" clocks. If its
->>> determination of what is unused is wrong, then it is not a problem to
->>> fix in DT.
->>
->> No, it is up to DT to tell the kernel what clocks are used, that is how it works
->> for any other device. I don't understand why some people keep insisting simplefb
->> for some reason is o so very very special, because it is not special, it needs
->> resources, and it needs to tell the kernel about this or bad things happen.
->
-> No, the DT describes the connections of clocks from h/w block to h/w
-> block. Their use is implied by the connection.
->
-> And yes, as the other thread mentioned DT is more than just hardware
-> information. However, what you are adding IS hardware information and
-> clearly has a place somewhere else. And adding anything which is not
-> hardware description gets much more scrutiny.
->
->> More over it is a bit late to start making objections now. This has already been
->> discussed to death for weeks now, and every argument against this patch has already
->> been countered multiple times (including the one you are making now). Feel free to
->> read the entire thread in the archives under the subject:
->> "[PATCH 4/4] simplefb: add clock handling code"
->
-> You are on v2 and I hardly see any consensus on the v1 thread. Others
-> have made suggestions which I would agree with and you've basically
-> ignored them.
->
->> At one point in time we need to stop bickering and make a decision, that time has
->> come now, so please lets get this discussion over with and merge this, so that
->> we can all move on and spend out time in a more productive manner.
->
-> Not an effective argument to get things merged.
 
-If there is not good solution to deferring clock clean up in the
-kernel, another approach is to change how simple-framebuffer is
-described in the device tree....
+--PEIAKu/WMn1b1Hv9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Right now it is a stand-alone item that looks like a device node, but
-it isn't a device.
+On Fri, Oct 03, 2014 at 10:28:59AM -0700, Guenter Roeck wrote:
+> On 10/03/2014 05:27 AM, Mark Rutland wrote:
 
-framebuffer {
-    compatible = "simple-framebuffer";
-    reg = <0x1d385000 (1600 * 1200 * 2)>;
-    width = <1600>;
-    height = <1200>;
-    stride = <(1600 * 2)>;
-    format = "r5g6b5";
-};
+> >>+Optional properties:
+> >>+ Name of the optional regulator subnode must be "regulators".
+> >>+  - #address-cells must be 1.
 
-How about something like this?
+> >What's the single address cell used for?
 
-reserved-memory {
-    #address-cells = <1>;
-    #size-cells = <1>;
-    ranges;
+> I think this is required by the regulator bindings.
+> Other regulators use the same, though they don't typically
+> mention it in the properties list but only in the examples.
 
-    display_reserved: framebuffer@78000000 {
-        reg = <0x78000000  (1600 * 1200 * 2)>;
-    };
-};
+Nope, nothing to do with regulator that I'm aware of and I've not seen
+any examples (but I don't tend to review users too often).
 
-lcd0: lcd-controller@820000 {
-    compatible = "marvell,dove-lcd";
-    reg = <0x820000 0x1000>;
-    interrupts = <47>;
-    clocks = <&si5351 0>;
-    clock-names = "ext_ref_clk_1";
-};
+> >Mark, what's the preferred scheme for identifying regulators in a
+> >container node?
 
-chosen {
-    boot-framebuffer {
-       compatible = "simple-framebuffer";
-       device = <&lcd0>;
-       framebuffer = <&display_reserved>;
-       width = <1600>;
-       height = <1200>;
-       stride = <(1600 * 2)>;
-       format = "r5g6b5";
-    };
-}
+> >>+  - regulator-name: arbitrary name for regulator
 
+> >Drop the 'aribtarary'. Either this should be the name of the regulator
+> >on the board, or it shouldn't be necessary.
 
-This moves the definition of the boot framebuffer setup into the area
-where bootloader info is suppose to go. Then you can use the phandle
-to follow the actual device chains and protect the clocks and
-regulators. To make that work you are required to provide an accurate
-description of the real video hardware so that this chain can be
-followed.
+> Not sure if it even needs to be documented here. It is already documented
+> in Documentation/devicetree/bindings/regulator/regulator.txt.
 
-The main assumption here is that the syntax for clock and regulators
-is standardized enough that the generic simplefb code can run the
-phandle chain and discover them all. If they aren't then we messed up
-and simplefb gains some complexity to handle the irregular
-descriptions. That is something having a schema for device tree would
-have prevented.
+Document by reference then?  It really should be the name of the supply
+provided by the regulator, that wording is probably good.  Given that
+it's a standard regulator property I'd not document it here at all, just
+refer to the generic bindings and say any suitable properties there can
+be used.
 
-The compatible string should trigger simple-fb into making a 'struct
-device' that isn't hooked to any real hardware. Not clear that we
-should use a compatible = "" here. The device = <> points to the real
-hardware. Run that phandle chain and figure out what clocks need to be
-protected.
+--PEIAKu/WMn1b1Hv9
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Now when the driver for dove-lcd loads there won't be anything already
-attached to the hardware so there is no complex hand off needed.
-dove-lcd will just need to signal simple-fb to exit Exiting will
-decrement the ref counts on clocks/regulators.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-The memory region also allows for a ref count mechanism which allows
-it to be passed from simplefb to dove-lcd. If the ref count goes to
-zero when simplefb exits, it can be reclaimed.
+iQEcBAEBAgAGBQJULy2dAAoJECTWi3JdVIfQJgUH/iGxSy0sCJT8+tCSidfBjYQA
+zNd9zjqXv89bDKeuWLOCR8TXi3Qx5bLigrgEH/NaC0RBrt+XcfvVOnr2oiXiMwbn
+bDHQV++qynsvScxjJ99FO9GYTyVdnzwDs8ek1XRDDbH39W407uIEHgBkCXzdxj1l
+oyD1tXjkMb+VBOMDi1LKBML2MI4kXcBWybk/yUQkeQTDtCmOi0oEq5slLJKrTvI9
+OsM0/pJ8GnzuxrHpmKisghKsKuALEZKDQq0jBR+5OREelhmZgyg/6wLkiVyw4mt5
+Jas4gNN9z6fMn0E+x1Fl89XgzPcL8ETuKp2gDuvaagBcazUzDb80q+O6/lCJCLA=
+=aDrK
+-----END PGP SIGNATURE-----
 
->
-> Rob
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
-
-
-
--- 
-Jon Smirl
-jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+--PEIAKu/WMn1b1Hv9--
