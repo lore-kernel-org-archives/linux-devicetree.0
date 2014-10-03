@@ -1,85 +1,43 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: ath10k: calibration data through Device Tree?
-Date: Fri, 03 Oct 2014 17:29:54 +0200
-Message-ID: <2386503.dNPayhXJTQ@wuerfel>
-References: <87tx3mmx4s.fsf@kamboji.qca.qualcomm.com> <87ppeamvr9.fsf@kamboji.qca.qualcomm.com> <542DA1F7.9090904@amacapital.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <542DA1F7.9090904-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Lutomirski <luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org>
-Cc: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 0/3] i2c: hix5hd2: add i2c controller driver
+Date: Fri,  3 Oct 2014 23:35:46 +0800
+Message-ID: <1412350549-2607-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 02 October 2014 12:05:27 Andy Lutomirski wrote:
-> On 10/02/2014 06:44 AM, Kalle Valo wrote:
-> > Hi Mark,
-> > 
-> > Mark Rutland <mark.rutland-5wv7dgnIgG8-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org> writes:
-> > 
-> >>> ath10k is a wireless driver for Qualcomm Atheros 802.11ac hardware and
-> >>> located in drivers/net/wireless/ath/ath10k/. Currently it only supports
-> >>> PCI devices.
-> >>>
-> >>> Some of the devices store the calibration data to the host flash and the
-> >>> bootloader reads the data from the flash. And now we need a method to
-> >>> deliver the calibration data from bootloader to ath10k. 
-> >>
-> >> What does this calibration data consist of?
-> > 
-> > From ath10k point of view it's just a binary blob which we push to the
-> > firmware before we start it. ath10k does not parse it in any way.
-> > 
-> >> What happens if you don't have the calibration data? Is it a critical
-> >> requirement for the use of the device, or does its absence simply result
-> >> in degraded performance?
-> > 
-> > From my point of view the device should not be used if it doesn't
-> > contain the correct calibration data. I guess it could work somehow but
-> > there's no guarantee about the perfomance.
-> > 
-> >> What do you do on non-DT systems? Where does the information come from
-> >> in that case?
-> > 
-> > Currently ath10k only supports having the calibration data in the OTP
-> > area inside the QCA98XX chip. But some manufacturers want to store it on
-> > the host file, I assume because of the flexibility it provides. And
-> > that's why we have the need for Device Tree support.
-> 
-> To give an actual concrete example that might be what Kalle is talking
-> about:
-> 
-> I have a TP-Link Archer C7, which has a mips cpu and an ath10k minipcie
-> device.  For whatever reason (I honestly have no clue whatsoever why the
-> hardware works this way), the calibration data is on a host flash
-> partition, not on the minipcie device's ROM or flash or whatever it is.
+v4:
+Suggested by Wolfram
+Put runtime pm calls before i2c_add_adapter, in case i2c operation during probe.
 
-Just to clarify: is this data specific to the design of the device and
-identical for all parts in a manufacture run, or does each individual
-board have to be calibrated separately?
+Also remove COMPILE_TEST, since compile test fail with linux-next next-20141003
+Will add back later when readl/writel_relaxed is defined.
 
-> Needless to say, the mainline ath10k driver won't load on it.  (An old
-> version used to load without calibration data.  It didn't work very well.)
-> 
-> Presuambly the idea is that, if things like this used DT (which mine
-> doesn't, I presume), then ath10k could get the calibration data via DT.
->  And maybe some vendors of ARM-based wifi devices are planning on
-> playing similar games, and they do use DT.
+v3:
+Add COMPILE_TEST as dependence to enable compile test
+Remove specific mach info in dts binding to solve the confusion.
 
-Yes, this makes sense. I would also very much love to see DT support for
-arch/mips/ath79 in general, it seems like a nice platform that is used
-in a lot of devices with good openwrt support, and using DT would make
-it easier to support additional devices.
+v2: 
+Modify according to Wolfram's comments 
+including change vector name, coding style, return value etc.
 
->From a system design point, it's still horrible that you have to use
-DT for a device that is on a discoverable bus like PCI, but as you describe,
-the reality is that products are shipping that use ath10k PCI devices
-without this data in them.
+Wei Yan (2):
+  i2c: hix5hd2: add devicetree documentation
+  i2c: hix5hd2: add i2c controller driver
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Zhangfei Gao (1):
+  ARM: dts: hix5hd2: add i2c node
+
+ .../devicetree/bindings/i2c/i2c-hix5hd2.txt        |   25 +
+ arch/arm/boot/dts/hisi-x5hd2.dtsi                  |   60 +++
+ drivers/i2c/busses/Kconfig                         |   10 +
+ drivers/i2c/busses/Makefile                        |    1 +
+ drivers/i2c/busses/i2c-hix5hd2.c                   |  557 ++++++++++++++++++++
+ 5 files changed, 653 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-hix5hd2.txt
+ create mode 100644 drivers/i2c/busses/i2c-hix5hd2.c
+
+-- 
+1.7.9.5
