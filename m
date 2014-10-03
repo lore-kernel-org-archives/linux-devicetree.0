@@ -1,77 +1,82 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 09/15] leds: leds-gpio: Make use of device property API
-Date: Fri, 3 Oct 2014 15:07:28 +0100
-Message-ID: <20141003140728.GO26643@leverpostej>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
- <1852462.V1jlbi8OPt@vostro.rjw.lan>
- <83082601.pjR7TmeO0m@vostro.rjw.lan>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/7] clk: sunxi: Specify number of child clocks for
+ divs clocks
+Date: Fri, 3 Oct 2014 16:05:23 +0200
+Message-ID: <20141003140523.GL4039@lukather>
+References: <1411807795-6575-1-git-send-email-wens@csie.org>
+ <1411807795-6575-2-git-send-email-wens@csie.org>
+ <20140930154043.GN4081@lukather>
+ <CAGb2v64RPi2J4gpWu7X15xSx89guPSoEs2_7Bxs9ywj023fabA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Kc9HNjpzOXVc7FFU"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <83082601.pjR7TmeO0m@vostro.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+In-Reply-To: <CAGb2v64RPi2J4gpWu7X15xSx89guPSoEs2_7Bxs9ywj023fabA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 01, 2014 at 03:16:25AM +0100, Rafael J. Wysocki wrote:
-> From: Max Eliaser <max@meliaserlow.dyndns.tv>
-> 
-> Make use of device property API in this driver so that both OF and ACPI
-> based system can use the same driver.
-> 
-> Signed-off-by: Max Eliaser <max.eliaser@intel.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/leds/leds-gpio.c |   99 +++++++++++++++++++----------------------------
->  1 file changed, 42 insertions(+), 57 deletions(-)
-> 
-> Index: linux-pm/drivers/leds/leds-gpio.c
-> ===================================================================
-> --- linux-pm.orig/drivers/leds/leds-gpio.c
-> +++ linux-pm/drivers/leds/leds-gpio.c
-> @@ -15,13 +15,11 @@
->  #include <linux/gpio.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/leds.h>
-> -#include <linux/of.h>
-> -#include <linux/of_platform.h>
-> -#include <linux/of_gpio.h>
->  #include <linux/slab.h>
->  #include <linux/workqueue.h>
->  #include <linux/module.h>
->  #include <linux/err.h>
-> +#include <linux/property.h>
->  
->  struct gpio_led_data {
->  	struct led_classdev cdev;
-> @@ -171,65 +169,59 @@ static inline int sizeof_gpio_leds_priv(
->  		(sizeof(struct gpio_led_data) * num_leds);
->  }
->  
-> -/* Code to create from OpenFirmware platform devices */
-> -#ifdef CONFIG_OF_GPIO
-> -static struct gpio_leds_priv *gpio_leds_create_of(struct platform_device *pdev)
-> +static int gpio_leds_create_led(struct device *dev, void *child, void *data)
-> +{
-> +	struct gpio_leds_priv *priv = data;
-> +	struct gpio_led led = {};
-> +	const char *state = NULL;
-> +
-> +	led.gpiod = devm_get_named_gpiod_from_child(dev, child, "gpios", 0);
-> +	if (IS_ERR(led.gpiod))
-> +		return PTR_ERR(led.gpiod);
-> +
-> +	device_child_property_read_string(dev, child, "label", &led.name);
-> +	device_child_property_read_string(dev, child, "linux,default-trigger",
-> +					  &led.default_trigger);
-> +
-> +	device_child_property_read_string(dev, child, "linux,default_state",
-> +					  &state);
 
-Do we really want "linux," properties in ACPI tables?
+--Kc9HNjpzOXVc7FFU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Mark.
+On Tue, Sep 30, 2014 at 11:56:24PM +0800, Chen-Yu Tsai wrote:
+> On Tue, Sep 30, 2014 at 11:40 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > On Sat, Sep 27, 2014 at 04:49:49PM +0800, Chen-Yu Tsai wrote:
+> >> Currently sunxi_divs_clk_setup assumes the number of child clocks
+> >> to be the same as the number of clock-output-names, and a maximum
+> >> of SUNXI_DIVS_MAX_QTY child clocks.
+> >>
+> >> On sun6i, PLL6 only has 1 child clock, but the parent would be used
+> >> as well, thereby also having it's own clock-output-names entry. This
+> >> results in an extra bogus clock being registered.
+> >
+> > Isn't PLL6 having two childs as well?
+>=20
+> No. It has one child, the normal PLL6 output clock.
+>=20
+> The last "clock-output-names" entry refers to the factors clock itself,
+> in this case, the 2x clock output.
+
+Hmmm, OK, I guess that's one way to see it too :)
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--Kc9HNjpzOXVc7FFU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJULq0jAAoJEBx+YmzsjxAgJKEQAL0Yx1cyySGcPlZUAK3594MT
+wXzT20jfNaxXKghL6nHWZ3YGAN4Hz5w8dk/vMewoJbEjA4itsS0K76nXMGp6ngOm
+uqxzBGQez1EFL5LSSQqed4+qkWFuLgt4epstAsx/gMzxbMJNoHcpSv4TG6dYYILC
+gfn4T070ZIZe7YnXZKLHDM37EiD9nj9oQaOK8CVdGE2d2JAK/Wxp+xHfu+jwg+uu
+KddOZ+zAWOebE4FM0yqGG351i5zDim/yB+OF/qs70TXW7LCMCJnnKWDfKNsdjXt7
+wFJIYkfBo+aRwMQ+byeKkfrtCEhJJB7fv5Dqb7LUOhM1cK08Y6thTcur3hoVSeXG
+Bc5s/5N4nqTKLe/yGHOGZW41fv8p74PpyadMd1wdiMEV2n6lqXFXhIUktdYldcPU
+0HNj9DdHdKjco35/2ttfrSKF9ChLsiqdt1skPGDkibLv+r8XNBu+8aAjYO/sPU4l
++DvwKkKIjmfpVabQeWnX77gTEIgErtx/cePEfRuMIFTqTLrqbeC/apXL6beOK1Og
+miHOTIH0ZVE6yI2b8I+7hKdgD5M6YDxzbg5/18XTSCJ0g/25tLGmuI8ozdXMQehk
+ms/i4N/8WVa1UH40kHqCGxdUbuiKX2o7CsCv+TFo7/JDeth4/0QYfZmDFGN/eKHi
+HnIa2WZqKv39cvc2MeFV
+=r31I
+-----END PGP SIGNATURE-----
+
+--Kc9HNjpzOXVc7FFU--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
