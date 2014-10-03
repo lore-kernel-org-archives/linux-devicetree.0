@@ -1,65 +1,69 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v3 04/15] ACPI: Document ACPI device specific properties
-Date: Fri, 3 Oct 2014 11:12:33 +0300
-Message-ID: <20141003081233.GU1786@lahna.fi.intel.com>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
- <15893883.nvuW3ndylz@wuerfel>
- <20141002133654.GP1786@lahna.fi.intel.com>
- <26673925.fa6Qhdm5sV@vostro.rjw.lan>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: [PATCH v7 0/2] ASoC: tda998x: add a codec to the HDMI transmitter
+Date: Fri, 3 Oct 2014 10:30:47 +0200
+Message-ID: <cover.1412325047.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <26673925.fa6Qhdm5sV@vostro.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Brown <broonie@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Andrew Jackson <Andrew.Jackson@arm.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 03, 2014 at 04:03:51AM +0200, Rafael J. Wysocki wrote:
-> On Thursday, October 02, 2014 04:36:54 PM Mika Westerberg wrote:
-> > On Thu, Oct 02, 2014 at 02:46:30PM +0200, Arnd Bergmann wrote:
-> > > On Thursday 02 October 2014 15:15:08 Mika Westerberg wrote:
-> 
-> [cut]
-> 
-> > 
-> > Putting everything to a single package results this:
-> > 
-> > 		Package () { "pwms", Package () {"led-red", ^PWM0, 0, 10, "led-green", ^PWM0, 1, 10 }}
-> > 
-> > But I think the below looks better:
-> 
-> I agree.
-> 
-> > 		Package () { "pwms", Package () {^PWM0, 0, 10, ^PWM0, 1, 10 }}
-> > 		Package () { "pwm-names", Package () {"led-red", "led-green"}}
-> > 
-> > and it is trivial to match with the corresponding DT fragment.
-> > 
-> > > 	}
-> > > 
-> > > vs.
-> > > 
-> > > 	pwm-slave {
-> > > 		pwms = <&pwm0 0 10>, <&pwm1 1 20>;
-> > > 		pwm-names = "led-red", "led-green";
-> > > 	};
-> > > 
-> > 
-> > I don't have strong feelings which way it should be. The current
-> > implementation limits references so that you can have only integer
-> > arguments, like {ref0, int, int, ref1, int} but if people think it is
-> > better to allow strings there as well, it can be changed.
-> > 
-> > I would like to get comments from Darren and Rafael about this, though.
-> 
-> In my opinion there needs to be a "canonical" representation of the
-> binding that people always can expect to work.  It seems reasonable to
-> use the one exactly matching the DT representation for that.
-> 
-> In addition to that we can add other representations that the code will
-> also parse correctly as alternatives.  In the future.
+The NXP TDA998x HDMI transmitter may transmit audio to the HDMI link
+from 2 different sources, I2S and S/PDIF.
 
-OK, so if no objections and Arnd promised not to complain too loudly, I
-would like to keep this as is for now.
+This patch set adds an interface between the HDMI transmitter and
+the HDMI CODEC.
+
+The interface is used by the TDA998x driver to update the audio
+constraints from the display characteristics (EDID) and by the audio
+subsystem to connect the chosen audio source to the HDMI link.
+
+v7:
+	- remove the change of the K predivider (Jyri Sarha)
+	- add S24_3LE and S32_LE as possible audio formats (Jyri Sarha)
+	- don't move the struct priv2 definition and use the
+	  slave encoder private data as the device private data
+	  (Russell King)
+	- remove the useless request_module (Russell King/Mark Brown)
+	- don't lock the HDMI module (Russell King)
+	- use platform_device_unregister to remove the codec
+	  (Russell King)
+v6:
+	- extend the HDMI CODEC instead of using a specific CODEC
+v5:
+	- use the TDA998x private data instead of a specific area
+	  for the CODEC interface
+	- the CODEC is TDA998x specific (Mark Brown)
+v4:
+	- remove all the TDA998x specific stuff from the CODEC
+	- move the EDID scan from the CODEC to the TDA998x
+	- move the CODEC to sound/soc (Mark Brown)
+	- update the audio_sample_rate from the EDID (Andrew Jackson)
+v3: fix bad rate (Andrew Jackson)
+v2: check double stream start (Mark Brown)
+
+Jean-Francois Moine (2):
+  ASoC: codecs: Add a transmitter interface to the HDMI CODEC
+  drm/i2c: tda998x: Use the HDMI audio CODEC
+
+ .../devicetree/bindings/drm/i2c/tda998x.txt        |  18 ++
+ drivers/gpu/drm/i2c/Kconfig                        |   1 +
+ drivers/gpu/drm/i2c/tda998x_drv.c                  | 264 ++++++++++++++++++++-
+ include/sound/hdmi.h                               |  20 ++
+ sound/soc/codecs/hdmi.c                            | 176 +++++++++++++-
+ 5 files changed, 460 insertions(+), 19 deletions(-)
+ create mode 100644 include/sound/hdmi.h
+
+-- 
+2.1.1
