@@ -1,82 +1,180 @@
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH 2/3] edac: altera: Add Altera L2 Cache and OCRAM EDAC
- Support
-Date: Fri, 3 Oct 2014 18:01:32 -0500
-Message-ID: <542F2ACC.80409@opensource.altera.com>
-References: <1412181092-27162-1-git-send-email-tthayer@opensource.altera.com> <1412181092-27162-3-git-send-email-tthayer@opensource.altera.com> <20141001165353.GB28440@leverpostej> <542C51BC.5050004@opensource.altera.com> <20141002105828.GG5788@leverpostej>
+From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Re: [PATCH v3] dt-bindings: Add a clocks property
+ to the simple-framebuffer binding
+Date: Fri, 3 Oct 2014 18:56:32 -0400
+Message-ID: <CAKON4OxxQ3hp0npr1Zh6w-2-HwMyC+8OxOCBmFFmBZ0N+6N0dw@mail.gmail.com>
+References: <1412345120-24588-1-git-send-email-hdegoede@redhat.com>
+	<CAL_JsqKU2n8p=YfJua3k-mR40bG_4SiZY8_-SL-MXtuWN5NeHg@mail.gmail.com>
+	<542EDE11.3010802@redhat.com>
+	<CAL_Jsq+3c7ToCGaR4Nz7dDXvebBKzzMv85swzy2mzOou+gM5iw@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141002105828.GG5788@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org" <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, "bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org" <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBC55LFUF6ALBBIOTXSQQKGQECLKE3II-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAL_Jsq+3c7ToCGaR4Nz7dDXvebBKzzMv85swzy2mzOou+gM5iw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 10/02/2014 05:58 AM, Mark Rutland wrote:
->>>> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
->>>> @@ -0,0 +1,15 @@
->>>> +Altera SoCFPGA L2 cache Error Detection and Correction [EDAC]
->>>> +
->>>> +Required Properties:
->>>> +- compatible : Should be "altr,l2-edac"
->>> That string looks too generic.
+On Fri, Oct 3, 2014 at 4:08 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Oct 3, 2014 at 12:34 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> Hi,
+>>
+>> On 10/03/2014 05:57 PM, Rob Herring wrote:
+>>> On Fri, Oct 3, 2014 at 9:05 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>>> A simple-framebuffer node represents a framebuffer setup by the firmware /
+>>>> bootloader. Such a framebuffer may have a number of clocks in use, add a
+>>>> property to communicate this to the OS.
+>>>>
+>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>> Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>
+>>>> --
+>>>> Changes in v2:
+>>>> -Added Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> Changes in v3:
+>>>> -Updated description to make clear simplefb deals with more then just memory
 >>>
->>> Given the EDAC seems to be a portion of the L2, is there not already an
->>> L2 binding?
->>>
->>> Just because Linux expects two drivers doesn't mean we should partition
->>> the HW description this way.
->> Thank you for the quick feedback.
->> What should the string look like? I was trying to keep it short with the
->> altr, prefix but I don't mind changing it to something better.
->> We're using the ARM PL310 L2 cache controller. The ECC is separate from
->> the PL310 IP and is part of the System Manager. This is true of ECC for
->> both the L2 and OCRAM.
-> Ah, I see. Apologies, I assumed that this was part of the L2C.
+>>> NAK. "Fixing" the description is not what I meant and does not address
+>>> my concerns. Currently, simplefb is configuration data. It is
+>>> auxiliary data about how a chunk of memory is used. Using it or not
+>>> has no side effects on the hardware setup, but you are changing that
+>>> aspect. You are mixing in a hardware description that is simply
+>>> inaccurate.
+>>
+>> Memory is hardware too, what simplefb is is best seen as a virtual device, and
+>> even virtual devices have hardware resources they need, such as a chunk of memory,
+>> which the kernel should not touch other then use it as a framebuffer, likewise
+>> on some systems the virtual device needs clocks to keep running.
+>>
+>>> The kernel has made the decision to turn off "unused" clocks. If its
+>>> determination of what is unused is wrong, then it is not a problem to
+>>> fix in DT.
+>>
+>> No, it is up to DT to tell the kernel what clocks are used, that is how it works
+>> for any other device. I don't understand why some people keep insisting simplefb
+>> for some reason is o so very very special, because it is not special, it needs
+>> resources, and it needs to tell the kernel about this or bad things happen.
 >
-> [...]
+> No, the DT describes the connections of clocks from h/w block to h/w
+> block. Their use is implied by the connection.
 >
->>>> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
->>>> new file mode 100644
->>>> index 0000000..31ab205
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
->>>> @@ -0,0 +1,16 @@
->>>> +Altera SoCFPGA On-Chip RAM Error Detection and Correction [EDAC]
->>>> +
->>>> +OCRAM ECC Required Properties:
->>>> +- compatible : Should be "altr,ocram-edac"
->>>> +- reg : Address and size for ECC error interrupt clear registers.
->>>> +- iram : phandle to On-Chip RAM definition.
->>> Why not just describe this in the OCRAM node? Surely the register is
->>> within the OCRAM controller?
->> The ECC registers not in the OCRAM controller but they are in the System
->> Manager.  Maybe both the L2 cache and OCRAM ECC bindings should live
->> there and the device tree node for System Manager would have OCRAM and
->> L2 cache sub-nodes.
-> It certainly sounds like the ECC registers should be described as a
-> portion of the system manager somehow.
+> And yes, as the other thread mentioned DT is more than just hardware
+> information. However, what you are adding IS hardware information and
+> clearly has a place somewhere else. And adding anything which is not
+> hardware description gets much more scrutiny.
 >
-> Thanks,
-> Mark.
-Hi Mark.
+>> More over it is a bit late to start making objections now. This has already been
+>> discussed to death for weeks now, and every argument against this patch has already
+>> been countered multiple times (including the one you are making now). Feel free to
+>> read the entire thread in the archives under the subject:
+>> "[PATCH 4/4] simplefb: add clock handling code"
+>
+> You are on v2 and I hardly see any consensus on the v1 thread. Others
+> have made suggestions which I would agree with and you've basically
+> ignored them.
+>
+>> At one point in time we need to stop bickering and make a decision, that time has
+>> come now, so please lets get this discussion over with and merge this, so that
+>> we can all move on and spend out time in a more productive manner.
+>
+> Not an effective argument to get things merged.
 
-After looking at this, it still seems like adding individual nodes as 
-shown in this patch makes the most sense.
+If there is not good solution to deferring clock clean up in the
+kernel, another approach is to change how simple-framebuffer is
+described in the device tree....
 
-We don't currently have another driver to use as a parent so I'd need to 
-create a driver (System Manager) that only probed these drivers. 
-Although that would make the device tree look nicer, it isn't a clean 
-solution overall.
+Right now it is a stand-alone item that looks like a device node, but
+it isn't a device.
 
-Thanks for looking this over and I appreciate your feedback - it made me 
-mull over other alternatives.
+framebuffer {
+    compatible = "simple-framebuffer";
+    reg = <0x1d385000 (1600 * 1200 * 2)>;
+    width = <1600>;
+    height = <1200>;
+    stride = <(1600 * 2)>;
+    format = "r5g6b5";
+};
 
-Thor
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+How about something like this?
+
+reserved-memory {
+    #address-cells = <1>;
+    #size-cells = <1>;
+    ranges;
+
+    display_reserved: framebuffer@78000000 {
+        reg = <0x78000000  (1600 * 1200 * 2)>;
+    };
+};
+
+lcd0: lcd-controller@820000 {
+    compatible = "marvell,dove-lcd";
+    reg = <0x820000 0x1000>;
+    interrupts = <47>;
+    clocks = <&si5351 0>;
+    clock-names = "ext_ref_clk_1";
+};
+
+chosen {
+    boot-framebuffer {
+       compatible = "simple-framebuffer";
+       device = <&lcd0>;
+       framebuffer = <&display_reserved>;
+       width = <1600>;
+       height = <1200>;
+       stride = <(1600 * 2)>;
+       format = "r5g6b5";
+    };
+}
+
+
+This moves the definition of the boot framebuffer setup into the area
+where bootloader info is suppose to go. Then you can use the phandle
+to follow the actual device chains and protect the clocks and
+regulators. To make that work you are required to provide an accurate
+description of the real video hardware so that this chain can be
+followed.
+
+The main assumption here is that the syntax for clock and regulators
+is standardized enough that the generic simplefb code can run the
+phandle chain and discover them all. If they aren't then we messed up
+and simplefb gains some complexity to handle the irregular
+descriptions. That is something having a schema for device tree would
+have prevented.
+
+The compatible string should trigger simple-fb into making a 'struct
+device' that isn't hooked to any real hardware. Not clear that we
+should use a compatible = "" here. The device = <> points to the real
+hardware. Run that phandle chain and figure out what clocks need to be
+protected.
+
+Now when the driver for dove-lcd loads there won't be anything already
+attached to the hardware so there is no complex hand off needed.
+dove-lcd will just need to signal simple-fb to exit Exiting will
+decrement the ref counts on clocks/regulators.
+
+The memory region also allows for a ref count mechanism which allows
+it to be passed from simplefb to dove-lcd. If the ref count goes to
+zero when simplefb exits, it can be reclaimed.
+
+>
+> Rob
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
+
+
+
+-- 
+Jon Smirl
+jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
