@@ -1,62 +1,75 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 04/15] ACPI: Document ACPI device specific properties
-Date: Fri, 03 Oct 2014 17:02:13 +0200
-Message-ID: <2784760.Rf0vOml5OQ@wuerfel>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <2072038.Vir4futZot@wuerfel> <20141003135610.GM26643@leverpostej>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
+Date: Fri, 03 Oct 2014 17:06:59 +0200
+Message-ID: <542EBB93.108@gmail.com>
+References: <1411157684-6991-1-git-send-email-sebastian.hesselbarth@gmail.com> <-7443282711873112734@unknownmsgid> <20141003141102.GJ3895@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20141003135610.GM26643@leverpostej>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141003141102.GJ3895-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Benoit Masson <benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 03 October 2014 14:56:10 Mark Rutland wrote:
-> On Thu, Oct 02, 2014 at 03:55:56PM +0100, Arnd Bergmann wrote:
-> > On Thursday 02 October 2014 17:38:09 Mika Westerberg wrote:
-> > > On Thu, Oct 02, 2014 at 04:29:03PM +0200, Arnd Bergmann wrote:
-> > > > Is this a limitation in the way that the AML syntax and compiler works,
-> > > > or is this a decision you made specifically for the _DSD syntax and that
-> > > > could still be changed if there is an overwhelming interest?
-> > > 
-> > > It is only limitation of the _DSD device property UUID specification and
-> > > our implementation. It can be changed if needed.
-> > 
-> > Ok, I see. I think it would be nice if this could be changed in order
-> > to avoid having to copy the #xxx-cells and xxx-names properties from
-> > DT, by providing a more natural syntax.
-> 
-> I'd certainly not like to see #foo-cells in _DSD given it should be
-> possible with a package to have a package description like the
-> following:
-> 
->         Package () {
->                 Package () { ^ref1, data, data }, 
->                 Package () { ^ref2, dta, data, data },
->         }
-> 
-> Where the #foo-cells is implicit in each instance. That makes variadic
-> properties possible, and makes it possible to perform validation on each
-> tuple even in the binary format, which we can't do with a DTB
-> 
-> I'm not so sure on foo-names unless we made names an explicit
-> requirement from the start (which I wish was the case on the DT side).
-> Even then we might need other parallel properties anyway (think
-> clock-indicies).
+On 10/03/2014 04:11 PM, Jason Cooper wrote:
+> On Sun, Sep 21, 2014 at 04:11:23PM +0200, Benoit Masson wrote:
+>>> Le 19 sept. 2014 =E0 22:14, Sebastian Hesselbarth <sebastian.hessel=
+barth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> a =E9crit :
+>>> this is a patch set preparing barebox support for ix4-300d. As usua=
+l,
+>>> I stumbled upon a few nice-to-haves before actually touching ix4-30=
+0d
+>>> dts. As it is a mach-mvebu thing, I just added the related mailing
+>>> lists instead of each of the DT maintainers.
+>>>
+>>> First 5 patches consolidate SoC-specific pinctrl nodes to one commo=
+n
+>>> node in armada-xp.dtsi, compatible overwrites for each SoC, and nod=
+e
+>>> alias usage for each board. Also, ge{0,1} pinctrl settings are move=
+d
+>>> to the common node from one board specific node.
+>>>
+>>> Last 3 patches then use that ge{0,1} pinctrl settings on ix4-300d w=
+hich
+>>> is vital for bootloader init. During exploration of ix4-300d, I als=
+o
+>>> found a i2c eeprom that has not been added to the dts, yet. Finally=
+,
+>>> there is only one 74hc595 on ix4 mainboard while dts property is se=
+t
+>>> for two.
+>>>
+>>> I cannot recall in detail what is on that eeprom, but IIRC it is no=
+thing
+>>> important. Some reg,addr pairs for some init stuff that should have
+>>> already been done by stock u-boot. Anyway, adding the node will do =
+no
+>>> harm.
+>>>
+>>> Patches are based on v3.17-rc1 and intended for v3.18 but I am not =
+in
+>>> a hurry. I only compile tested this, so a formal Tested-by from Ben=
+oit
+>>> for the ix4 and any other Armada XP board would be great.
+>>
+>> I'm not sure what to test since I only receive some patch from the
+>> series of 8. Should I get all 8 or only those you sent me. I'll be
+>> able to test during next week.
+>
+> Did you ever get a chance to test this series?
 
-I suppose it might even be possible to define the ACPI references to
-have an optional string, so you can do
+Uhm, I never prepared a branch for Benoit to test. I have pushed the
+patches with Thomas Acked-by's and renamed eeprom node based on
+v3.17-rc1 to
 
-         Package () {
-                 Package () { ^ref1, data, data }, 
-                 Package () { "foo", ^ref2, data, data, data },
-         }
+https://github.com/shesselba/linux-dove.git devel/mvebu-ix4
 
-The parser should be able to interpret both anonymous and named
-references just by looking at the type of the first member.
-You might not want to allow mixing them in a single property, but
-that is more a style question than a technical requirement.
-
-	Arnd
+Sebastian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
