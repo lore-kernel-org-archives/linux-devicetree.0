@@ -1,70 +1,40 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v5 1/4] hwmon: ltc2978: device tree bindings documentation
-Date: Fri, 03 Oct 2014 08:21:29 -0700
-Message-ID: <542EBEF9.1070108@roeck-us.net>
-References: <1412275071-6417-1-git-send-email-atull@opensource.altera.com> <1412275071-6417-2-git-send-email-atull@opensource.altera.com> <20141003122736.GH26643@leverpostej> <542E9E9B.4090307@roeck-us.net> <20141003130559.GJ26643@leverpostej>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v5 3/4] pmbus: add regulator support
+Date: Fri, 03 Oct 2014 08:23:02 -0700
+Message-ID: <542EBF56.1000500@roeck-us.net>
+References: <1412275071-6417-1-git-send-email-atull@opensource.altera.com> <1412275071-6417-4-git-send-email-atull@opensource.altera.com> <20141003142746.GA24441@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141003130559.GJ26643@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "atull@opensource.altera.com" <atull@opensource.altera.com>, "broonie@kernel.org" <broonie@kernel.org>, "jdelvare@suse.de" <jdelvare@suse.de>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "delicious.quinoa@gmail.com" <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, "yvanderv@opensource.altera.com" <yvanderv@opensource.altera.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141003142746.GA24441-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Cc: jdelvare-l3A5Bk7waGM@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/2014 06:05 AM, Mark Rutland wrote:
-> On Fri, Oct 03, 2014 at 02:03:23PM +0100, Guenter Roeck wrote:
->> On 10/03/2014 05:27 AM, Mark Rutland wrote:
->>> On Thu, Oct 02, 2014 at 07:37:48PM +0100, atull@opensource.altera.com wrote:
->>>> From: Alan Tull <atull@opensource.altera.com>
->>>>
->>>> Add device tree bindings documentation for ltc2978.
->>>>
->>>> Signed-off-by: Alan Tull <atull@opensource.altera.com>
->>>> ---
->>>> v2: clean whitespace
->>>> ---
->>>>    .../devicetree/bindings/hwmon/ltc2978.txt          |   41 ++++++++++++++++++++
->>>>    1 file changed, 41 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/hwmon/ltc2978.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/hwmon/ltc2978.txt b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
->>>> new file mode 100644
->>>> index 0000000..b2d9c4d
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
->>>> @@ -0,0 +1,41 @@
->>>> +ltc2978
->>>> +
->>>> +Required properties:
->>>> + - compatible: one of: ltc2974, ltc2977, ltc2978, ltc3880, ltc3883, ltm4676
->>>
->>> Could we please format this like:
->>>
->>> - compatible: should contain one of:
->>>     * "ltc2974"
->>>     * "ltc2977"
->>>     * "ltc2978"
->>>     * "ltc3880"
->>>     * "ltc3883"
->>>     * "ltm4676"
->>>
->>> Given the file name, are these all variants of ltc2978?
->>>
+On 10/03/2014 07:27 AM, Mark Brown wrote:
+> On Thu, Oct 02, 2014 at 01:37:50PM -0500, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+>> From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 >>
->> All the chips supported by the ltc2978 driver. Some are variants
->> of the ltc2978, some have different functionality.
->
-> Ok.
->
+>> Add support for simple on/off control of each channel.
 >>
->> [ should those be "linear,ltc2974" and so on ? ]
+>> To add regulator support, the pmbus part driver needs to add
+>> regulator_desc information and number of regulators to its
+>> pmbus_driver_info struct.
 >
-> Good point; yes they should. That will need a vendor-prefixes.txt
-> addition.
+> Reviewed-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >
-Actually, turns out there already is one, only it is not immediately obvious:
-lltc for "Linear Technology Corporation".
 
+Mark,
+
+do you have an immutable branch or tag I could merge to get
+the necessary regulator patches ?
+
+Thanks,
 Guenter
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
