@@ -1,81 +1,89 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v2 1/7] ARM: sunxi: Introduce Allwinner A80 support
-Date: Fri, 3 Oct 2014 14:23:03 +0800
-Message-ID: <CAGb2v66wMm-wZLmwzf==XSDUy9Z0EbjC_NN9EZvf9DFV8PbwrA@mail.gmail.com>
-References: <1411570141-29960-1-git-send-email-wens@csie.org>
- <1411570141-29960-2-git-send-email-wens@csie.org> <20140925132527.GF15315@lukather>
- <CAGb2v64LwgEZkiuej2KKi+CUU3OkUZaBKJ3ZZn_Y64tDD+LRwg@mail.gmail.com> <20141001093314.GI6884@lukather>
+From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Bug in selftest code
+Date: Thu, 2 Oct 2014 23:59:14 -0700
+Message-ID: <CA+rpMbJ+qhyEBp51y8PBHf5tac6nbVv0sJyNTPGL4PjBy6+PbQ@mail.gmail.com>
+References: <CACxGe6v3beXUfKVWdS3U7NkYM9q+gc=W8iugstfW96OGdG+dpQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141001093314.GI6884@lukather>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Shuge <shuge@allwinnertech.com>, Meng Zhang <kevin@allwinnertech.com>, ctl <ctl@merrii.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6v3beXUfKVWdS3U7NkYM9q+gc=W8iugstfW96OGdG+dpQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 1, 2014 at 5:33 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> On Sat, Sep 27, 2014 at 09:16:02PM +0800, Chen-Yu Tsai wrote:
->> On Thu, Sep 25, 2014 at 9:25 PM, Maxime Ripard
->> <maxime.ripard@free-electrons.com> wrote:
->> > On Wed, Sep 24, 2014 at 10:48:55PM +0800, Chen-Yu Tsai wrote:
->> >> The Allwinner A80 is a new Cortex octo-core A7/A15 big.LITTLE SoC.
->> >> While it's processor cores and interconnecting bus are new, it
->> >> re-uses many peripherals found in earlier Allwinner SoCs.
->> >>
->> >> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->> >> ---
->> >>  arch/arm/mach-sunxi/Kconfig | 5 +++++
->> >>  arch/arm/mach-sunxi/sunxi.c | 9 +++++++++
->> >>  2 files changed, 14 insertions(+)
->> >>
->> >> diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
->> >> index 1aaa1e1..72f222b 100644
->> >> --- a/arch/arm/mach-sunxi/Kconfig
->> >> +++ b/arch/arm/mach-sunxi/Kconfig
->> >> @@ -42,4 +42,9 @@ config MACH_SUN8I
->> >>       select MFD_SUN6I_PRCM
->> >>       select RESET_CONTROLLER
->> >>
->> >> +config MACH_SUN9I
->> >> +     bool "Allwinner A80 (sun9i) SoCs support"
->> >
->> > With the new naming scheme, I wonder wether it makes sense to have the
->> > A80 displayed here and in the machine definition.
->>
->> I expect anything that falls under sun9i to be compatible, or a trimmed
->> down version. But that's just me.
+On Wed, Oct 1, 2014 at 5:53 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Hi Gaurav,
 >
-> Well, compatible is a rather vague notion. They will be different for
-> sure. Maybe not that different, but still.
-
-So what you're saying is we have a MACH_* Kconfig symbol for each SoC.
-As we add or test drivers, we mark them as compatible by adding that
-symbol to the DEPENDS part?
-
-I can live with that.
-
->> We know that Allwinner has released the A33, which should be compatible
->> with the A23, sun8i.
+> I found a bug in the selftest code today. If you apply this patch:
 >
-> Except that it would not be straight forward for an A33 user for
-> example that he needs to enable the A23 support.
-
-Having the SoC name in the description should be enough. But I
-suppose having the SoC name in the symbol is better, as it is
-searchable?
-
-Is this what you want? I think it's a good idea.
-
-
-ChenYu
-
->> And the A83 has been announced, which looks like a trimmed down
->> version of the A80. The next SoC should be arm64, and would not
->> matter here.
->>
->> Kevin, Shuge, could you provide us with the codenames for the A33 and
->> A83, and what earlier SoC they are based on?
+> diff --git a/drivers/of/testcase-data/testcases.dts
+> b/drivers/of/testcase-data/testcases.dts
+> index 219ef9324e9c..9dd482c02357 100644
+> --- a/drivers/of/testcase-data/testcases.dts
+> +++ b/drivers/of/testcase-data/testcases.dts
+> @@ -8,6 +8,8 @@
+>                         };
+>                 };
+>         };
+> +       another-node{
+> +       };
+>  };
+>  #include "tests-phandle.dtsi"
+>  #include "tests-interrupts.dtsi"
 >
-> Even though it would be nice to know, it's not really the issue here.
+> The I get the following oops on boot. The code doesn't properly handle
+> more than one root node to be added. I've not tried to debug it yet.
+
+With this patch on your tree (linux.git), using ARM, versatile_defconfig,
+ all 91 testcases passed as expected. Am I missing something?
+
+>
+> ### dt-test ### end of selftest - 91 passed, 0 failed
+> Unable to handle kernel NULL pointer dereference at virtual address 0000001c
+> pgd = c0004000
+> [0000001c] *pgd=00000000
+> Internal error: Oops: 17 [#1] ARM
+> Modules linked in:
+> CPU: 0 PID: 1 Comm: swapper Not tainted 3.17.0-rc7+ #40
+> task: c782bb20 ti: c782c000 task.ti: c782c000
+> PC is at detach_node_and_children+0x8/0x4c
+> LR is at of_selftest+0x15e8/0x1644
+> pc : [<c025bce0>]    lr : [<c042208c>]    psr: 20000013
+> sp : c782de78  ip : 00000065  fp : 00000000
+> r10: c03a1b90  r9 : c03a1b90  r8 : c032e19c
+> r7 : c0471a54  r6 : 00000000  r5 : c714afdc  r4 : 00000000
+> r3 : 0000006e  r2 : 0000006c  r1 : c03bdbaf  r0 : 00000000
+> Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment kernel
+> Control: 00093177  Table: 07114000  DAC: 00000017
+> Process swapper (pid: 1, stack limit = 0xc782c1c0)
+> Stack: (0xc782de78 to 0xc782e000)
+> de60:                                                       00000000 c042208c
+> de80: c782de90 c039961e 0000000c c7148000 c7148d80 00000001 0000000f 00000002
+> dea0: 0000000c 0000000c c7138c00 c0420aa4 00000000 c782c000 00000000 c01ade54
+> dec0: c0471678 c782def0 c0458ce0 c042f4b0 00000007 c04278f0 c0439b38 c0439b38
+> dee0: c7138c00 c0458ce0 c0420aa4 00000000 c782c000 c0008aa0 c0448ce0 c039b300
+> df00: c045e76c c784e100 c0314000 00000032 00000000 00000000 00000000 c00dc5a8
+> df20: 00000000 c784e160 c7ffc9ec c03223c0 0000005e c0034b90 c03ea090 00000007
+> df40: c7ffc9fc 00000007 00000000 c042f4b0 00000007 c04278f0 c0458ce0 c0409514
+> df60: 0000005e c04278f8 00000000 c0409c90 00000007 00000007 c0409514 00000000
+> df80: 00000000 00000000 00000000 c030adbc 00000000 00000000 00000000 00000000
+> dfa0: 00000000 c030adc4 00000000 c0013fd0 00000000 00000000 00000000 00000000
+> dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> dfe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
+> [<c025bce0>] (detach_node_and_children) from [<c042208c>]
+> (of_selftest+0x15e8/0x1644)
+> [<c042208c>] (of_selftest) from [<c0008aa0>] (do_one_initcall+0x80/0x1c8)
+> [<c0008aa0>] (do_one_initcall) from [<c0409c90>]
+> (kernel_init_freeable+0xec/0x1b4)
+> [<c0409c90>] (kernel_init_freeable) from [<c030adc4>] (kernel_init+0x8/0xec)
+> [<c030adc4>] (kernel_init) from [<c0013fd0>] (ret_from_fork+0x14/0x24)
+> Code: c032dfac c03be438 e92d4010 e1a04000 (e590001c)
+> ---[ end trace a8fecae0e53fc1be ]---
+> Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+>
+> ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
