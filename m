@@ -1,118 +1,66 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 07/13] ARM: shmobile: R-Mobile: Use generic_pm_domain.attach_dev()
- for pm_clk setup
-Date: Fri, 3 Oct 2014 18:01:17 +0200 (CEST)
-Message-ID: <alpine.DEB.2.02.1410031756580.14789@ayla.of.borg>
-References: <1411662520-22795-1-git-send-email-geert+renesas@glider.be> <1411662520-22795-8-git-send-email-geert+renesas@glider.be> <CAMuHMdVZmhpKcRO0rnXFMu7RJ4zFNPdvzuW=TBpvE5B4JviAZA@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v3] dt-bindings: Add a clocks property to
+ the simple-framebuffer binding
+Date: Fri, 3 Oct 2014 18:04:11 +0200
+Message-ID: <CAMuHMdVgaXoGXyJdD8PRufZQYLTSY=_ZWRRo=OtRo3mrg3uEug@mail.gmail.com>
+References: <1412345120-24588-1-git-send-email-hdegoede@redhat.com>
+	<CAL_JsqKU2n8p=YfJua3k-mR40bG_4SiZY8_-SL-MXtuWN5NeHg@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVZmhpKcRO0rnXFMu7RJ4zFNPdvzuW=TBpvE5B4JviAZA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Philipp Zabel <philipp.zabel@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Kevin Hilman <khilman@linaro.org>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCQJP74GSUDRB64RXOQQKGQEJCVUSQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAL_JsqKU2n8p=YfJua3k-mR40bG_4SiZY8_-SL-MXtuWN5NeHg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Sep 2014, Geert Uytterhoeven wrote:
-> On Thu, Sep 25, 2014 at 6:28 PM, Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> > diff --git a/arch/arm/mach-shmobile/pm-rmobile.c b/arch/arm/mach-shmobile/pm-rmobile.c
-> > index 717e6413d29cb998..ae846dfcd69293f7 100644
-> > --- a/arch/arm/mach-shmobile/pm-rmobile.c
-> > +++ b/arch/arm/mach-shmobile/pm-rmobile.c
-> > @@ -101,6 +101,17 @@ static bool rmobile_pd_active_wakeup(struct device *dev)
-> >         return true;
-> >  }
-> >
-> > +static void rmobile_pd_attach_dev(struct device *dev)
-> > +{
-> > +       if (pm_clk_no_clocks(dev))
-> > +               pm_clk_add(dev, NULL);
-> 
-> With !CONFIG_PM_RUNTIME, this doesn't work well in the DT case,
-> as the clocks are no longer enabled by runtime PM
-> (some clocks may have been enabled by boot loader/reset state though).
-> 
-> In the legacy case, this works more or less, as genpd takes over after
-> the pm_clk domain has been initialized, which implies enabling the clocks
-> if !CONFIG_PM_RUNTIME.
-> 
-> Will fix...
+Hi Rob,
 
-The patch below fixes that.
+On Fri, Oct 3, 2014 at 5:57 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Oct 3, 2014 at 9:05 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> A simple-framebuffer node represents a framebuffer setup by the firmware /
+>> bootloader. Such a framebuffer may have a number of clocks in use, add a
+>> property to communicate this to the OS.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> --
+>> Changes in v2:
+>> -Added Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Changes in v3:
+>> -Updated description to make clear simplefb deals with more then just memory
+>
+> NAK. "Fixing" the description is not what I meant and does not address
+> my concerns. Currently, simplefb is configuration data. It is
+> auxiliary data about how a chunk of memory is used. Using it or not
+> has no side effects on the hardware setup, but you are changing that
+> aspect. You are mixing in a hardware description that is simply
+> inaccurate.
+>
+> The kernel has made the decision to turn off "unused" clocks. If its
+> determination of what is unused is wrong, then it is not a problem to
+> fix in DT.
 
-I'll update the whole series, and will repost after v3.18-rc1, after the
-prerequisites are in.
-
->From cf40afcfab65fef8e6e6fa84bd3b49434afcb5eb Mon Sep 17 00:00:00 2001
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Wed, 1 Oct 2014 20:05:53 +0200
-Subject: [PATCH] ARM: shmobile: R-Mobile: Enable module clocks if !CONFIG_PM_RUNTIME
-
-ARM: shmobile: R-Mobile: Enable module clocks if !CONFIG_PM_RUNTIME
-
-If CONFIG_PM_RUNTIME is not set, the clocks must be enabled before the
-devices can be used.  Also add missing pm_clk_create()/pm_clk_destroy()
-calls.
-
-Currently these clocks are enabled by the !CONFIG_PM_RUNTIME version of
-pm_clk_notify, activated by the hack in drivers/sh/pm_runtime.c, but
-this will go away soon (at least for DT, cfr. "[PATCH] drivers: sh:
-Disable PM runtime for multi-platform r8a7740 with genpd").
-
-On detach, disabling the clocks is already handled by pm_clk_destroy().
-On system suspend/resume, disabling/enabling clocks is already handled
-from the genpd->dev_ops.{start,stop}() callbacks.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-This depends on "PM / clock_ops: Fix crash in clocks management code if
-!CONFIG_PM_RUNTIME".
-
- arch/arm/mach-shmobile/pm-rmobile.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/mach-shmobile/pm-rmobile.c b/arch/arm/mach-shmobile/pm-rmobile.c
-index 80be5848adc8f15c..e5a2c568d96cdd6b 100644
---- a/arch/arm/mach-shmobile/pm-rmobile.c
-+++ b/arch/arm/mach-shmobile/pm-rmobile.c
-@@ -121,13 +121,23 @@ static bool rmobile_pd_active_wakeup(struct device *dev)
- 
- static void rmobile_pd_attach_dev(struct device *dev)
- {
--	if (pm_clk_no_clocks(dev))
--		pm_clk_add(dev, NULL);
-+	int error;
-+
-+	error = pm_clk_create(dev);
-+	if (error) {
-+		dev_err(dev, "pm_clk_create failed %d\n", error);
-+		return;
-+	}
-+
-+	pm_clk_add(dev, NULL);
-+
-+	if (!IS_ENABLED(CONFIG_PM_RUNTIME))
-+		pm_clk_resume(dev);
- }
- 
- static void rmobile_pd_detach_dev(struct device *dev)
- {
--	pm_clk_remove(dev, NULL);
-+	pm_clk_destroy(dev);
- }
- 
- static void rmobile_init_pm_domain(struct rmobile_pm_domain *rmobile_pd)
--- 
-1.9.1
+The kernel has made that decision because the driver hadn't told the
+kernel that those clocks had to be enabled.
+The only way for the driver to know which clocks to enable is by adding
+them to the description in DT.
 
 Gr{oetje,eeting}s,
 
-						Geert
+                        Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
 In personal conversations with technical people, I call myself a hacker. But
 when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+                                -- Linus Torvalds
