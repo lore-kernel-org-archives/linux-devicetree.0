@@ -1,7 +1,7 @@
 From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: [PATCH v2 3/6] dtb: Add 10GbE node to APM X-Gene SoC device tree
-Date: Thu,  2 Oct 2014 17:02:45 -0700
-Message-ID: <1412294568-26747-4-git-send-email-isubramanian@apm.com>
+Subject: [PATCH v2 1/6] MAINTAINERS: Update APM X-Gene section
+Date: Thu,  2 Oct 2014 17:02:43 -0700
+Message-ID: <1412294568-26747-2-git-send-email-isubramanian@apm.com>
 References: <1412294568-26747-1-git-send-email-isubramanian@apm.com>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <1412294568-26747-1-git-send-email-isubramanian@apm.com>
@@ -10,67 +10,25 @@ To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, patches@apm.com, kchudgar@apm.com, Iyappan Subramanian <isubramanian@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Added 10GbE interface and clock nodes.
+Updated APM X-Gene ethernet driver maintainers list.
 
 Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
 Signed-off-by: Keyur Chudgar <kchudgar@apm.com>
 ---
- arch/arm64/boot/dts/apm-mustang.dts |  4 ++++
- arch/arm64/boot/dts/apm-storm.dtsi  | 24 ++++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/apm-mustang.dts b/arch/arm64/boot/dts/apm-mustang.dts
-index b2f5622..2ae782b 100644
---- a/arch/arm64/boot/dts/apm-mustang.dts
-+++ b/arch/arm64/boot/dts/apm-mustang.dts
-@@ -32,3 +32,7 @@
- &menet {
- 	status = "ok";
- };
-+
-+&xgenet {
-+	status = "ok";
-+};
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index c0aceef..f69c983 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -176,6 +176,16 @@
- 				clock-output-names = "menetclk";
- 			};
- 
-+			xge0clk: xge0clk@1f61c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f61c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				csr-mask = <0x3>;
-+				clock-output-names = "xge0clk";
-+			};
-+
- 			sataphy1clk: sataphy1clk@1f21c000 {
- 				compatible = "apm,xgene-device-clock";
- 				#clock-cells = <1>;
-@@ -421,5 +431,19 @@
- 
- 			};
- 		};
-+
-+		xgenet: ethernet@1f610000 {
-+			compatible = "apm,xgene-enet";
-+			status = "disabled";
-+			reg = <0x0 0x1f610000 0x0 0xd100>,
-+			      <0x0 0x1f600000 0x0 0X400>,
-+			      <0x0 0x18000000 0x0 0X200>;
-+			reg-names = "enet_csr", "ring_csr", "ring_cmd";
-+			interrupts = <0x0 0x60 0x4>;
-+			dma-coherent;
-+			clocks = <&xge0clk 0>;
-+			local-mac-address = [00 01 73 00 00 04];
-+			phy-connection-type = "xgmii";
-+		};
- 	};
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c2e7a06..6a3d689 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -722,7 +722,6 @@ F:	net/appletalk/
+ APPLIED MICRO (APM) X-GENE SOC ETHERNET DRIVER
+ M:	Iyappan Subramanian <isubramanian@apm.com>
+ M:	Keyur Chudgar <kchudgar@apm.com>
+-M:	Ravi Patel <rapatel@apm.com>
+ S:	Supported
+ F:	drivers/net/ethernet/apm/xgene/
+ F:	Documentation/devicetree/bindings/net/apm-xgene-enet.txt
 -- 
 1.9.1
