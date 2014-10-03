@@ -1,57 +1,88 @@
-From: Alexander Shiyan <shc_work@mail.ru>
-Subject: [PATCH v2 2/2] GPIO: 74xx-mmio: Add DT bindings documentation
-Date: Fri,  3 Oct 2014 11:32:15 +0400
-Message-ID: <1412321535-28441-1-git-send-email-shc_work@mail.ru>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>
+From: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] serial: of-serial: add PM suspend/resume support
+Date: Fri, 3 Oct 2014 15:45:37 +0800
+Message-ID: <542E5421.5070708@nvidia.com>
+References: <1411461252-8730-1-git-send-email-jingchang.lu@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411461252-8730-1-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT binding documentation for the 74xx-mmio GPIO driver.
+Hi,
 
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
----
- .../devicetree/bindings/gpio/gpio-74xx-mmio.txt    | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-74xx-mmio.txt
+This patch might have a potential issue that cause system hard hung 
+immediately when it accesses to registers with no clock. This could 
+happen on many chips that mainline kernel supporting with the setting 
+"no_console_suspend=1" during suspend time.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-74xx-mmio.txt b/Documentation/devicetree/bindings/gpio/gpio-74xx-mmio.txt
-new file mode 100644
-index 0000000..7bb1a9d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-74xx-mmio.txt
-@@ -0,0 +1,30 @@
-+* 74XX MMIO GPIO driver
-+
-+Required properties:
-+- compatible: Should contain one of the following:
-+   "ti,741g125": for 741G125 (1-bit Input),
-+   "ti,741g174": for 741G74 (1-bit Output),
-+   "ti,742g125": for 742G125 (2-bit Input),
-+   "ti,7474"   : for 7474 (2-bit Output),
-+   "ti,74125"  : for 74125 (4-bit Input),
-+   "ti,74175"  : for 74175 (4-bit Output),
-+   "ti,74365"  : for 74365 (6-bit Input),
-+   "ti,74174"  : for 74174 (6-bit Output),
-+   "ti,74244"  : for 74244 (8-bit Input),
-+   "ti,74273"  : for 74273 (8-bit Output),
-+   "ti,741624" : for 741624 (16-bit Input),
-+   "ti,7416374": for 7416374 (16-bit Output).
-+- reg: Physical base address and length where IC resides.
-+- gpio-controller: Marks the device node as a gpio controller.
-+- #gpio-cells: Should be two. The first cell is the pin number and
-+   the second cell is used to specify the GPIO polarity:
-+    0 = Active High,
-+    1 = Active Low.
-+
-+Example:
-+	ctrl: gpio@30008004 {
-+		compatible = "ti,74174";
-+		reg = <0x30008004 0x1>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
--- 
-2.0.4
+On 09/23/2014 04:34 PM, Jingchang Lu wrote:
+> This adds PM suspend/resume support for the of-serial driver
+> to provide power management support on devices attatched to it.
+>
+> Signed-off-by: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>   drivers/tty/serial/of_serial.c | 27 +++++++++++++++++++++++++++
+>   1 file changed, 27 insertions(+)
+>
+> diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
+> index 27981e2..8bc2563 100644
+> --- a/drivers/tty/serial/of_serial.c
+> +++ b/drivers/tty/serial/of_serial.c
+> @@ -240,6 +240,32 @@ static int of_platform_serial_remove(struct platform_device *ofdev)
+>   	return 0;
+>   }
+>
+> +#ifdef CONFIG_PM_SLEEP
+> +static int of_serial_suspend(struct device *dev)
+> +{
+> +	struct of_serial_info *info = dev_get_drvdata(dev);
+> +
+> +	serial8250_suspend_port(info->line);
+> +	if (info->clk)
+The fix would be something like this.
+	if (info->clk && console_suspend_enabled)
 
+> +		clk_disable_unprepare(info->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int of_serial_resume(struct device *dev)
+> +{
+> +	struct of_serial_info *info = dev_get_drvdata(dev);
+> +
+> +	if (info->clk)
+Ditto.
+
+Thanks,
+-Joseph
+> +		clk_prepare_enable(info->clk);
+> +
+> +	serial8250_resume_port(info->line);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +static SIMPLE_DEV_PM_OPS(of_serial_pm_ops, of_serial_suspend, of_serial_resume);
+> +
+>   /*
+>    * A few common types, add more as needed.
+>    */
+> @@ -271,6 +297,7 @@ static struct platform_driver of_platform_serial_driver = {
+>   		.name = "of_serial",
+>   		.owner = THIS_MODULE,
+>   		.of_match_table = of_platform_serial_table,
+> +		.pm = &of_serial_pm_ops,
+>   	},
+>   	.probe = of_platform_serial_probe,
+>   	.remove = of_platform_serial_remove,
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
