@@ -1,59 +1,49 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH] ARM: dts: berlin: Add GPIO leds to Google Chromecast
-Date: Fri,  3 Oct 2014 17:54:57 +0200
-Message-ID: <1412351697-4079-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 11/12] ARM: dts: berlin: Enable WiFi on Google Chromecast
+Date: Fri,  3 Oct 2014 17:55:46 +0200
+Message-ID: <1412351747-4188-12-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1412351747-4188-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1412351747-4188-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
 To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-With GPIO support for Marvell Berlin, now add the two gpio-connected
-LEDs on Google Chromecast.
+With SDHCI for BG2CD, we can now enable the port and allow to access
+AzureWave WiFi/BT module on Google Chromecast.
 
 Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 ---
+Cc: Chris Ball <chris@printf.net>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Antoine Tenart <antoine.tenart@free-electrons.com>
+Cc: linux-mmc@vger.kernel.org
 Cc: devicetree@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-index bcd81ffc495d..0816890a5c0d 100644
+index 0816890a5c0d..bdcaff7c321e 100644
 --- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
 +++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-@@ -11,6 +11,7 @@
- /dts-v1/;
- 
- #include "berlin2cd.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "Google Chromecast";
-@@ -24,6 +25,22 @@
- 		device_type = "memory";
- 		reg = <0x00000000 0x20000000>; /* 512 MB */
+@@ -43,4 +43,13 @@
  	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		white {
-+			label = "white";
-+			gpios = <&portc 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "keep";
-+		};
-+
-+		red {
-+			label = "red";
-+			gpios = <&portc 2 GPIO_ACTIVE_HIGH>;
-+			default-state = "keep";
-+		};
-+	};
  };
  
++/*
++ * AzureWave AW-NH387 (Marvell 88W8787)
++ * 802.11b/g/n + Bluetooth 2.1
++ */
++&sdhci0 {
++	non-removable;
++	status = "okay";
++};
++
  &uart0 { status = "okay"; };
 -- 
 2.1.1
+
