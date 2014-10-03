@@ -1,56 +1,57 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v3] i2c: axxia: Add I2C driver for AXM55xx
-Date: Fri, 3 Oct 2014 13:50:48 +0200
-Message-ID: <20141003115048.GD1349@katana>
-References: <1412334482-20720-1-git-send-email-anders.berg@avagotech.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 0/5] simplefb: Add clock support to simplefb
+Date: Fri,  3 Oct 2014 13:52:00 +0200
+Message-ID: <1412337125-14388-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="BI5RvnYi6R4T2M87"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1412334482-20720-1-git-send-email-anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB3M3XKQQKGQEW2SYO3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Tomi,
 
---BI5RvnYi6R4T2M87
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Here is v2 of the patch-set to add clocks support to simplefb.
 
-On Fri, Oct 03, 2014 at 01:08:02PM +0200, Anders Berg wrote:
-> Add I2C bus driver for the controller found in the LSI Axxia family SoCs.=
- The
-> driver implements 10-bit addressing and SMBus transfer modes via emulation
-> (including SMBus block data read).
->=20
-> Signed-off-by: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
+Changes in v2:
+-Added "simplefb: Add simplefb MAINTAINERS entry" patch
 
-Applied to for-next, thanks!
+If you've followed the discussion sofar, then you know that not everyone
+agrees 100% with this. The primary concern being that this will turn simplefb
+into not-so-simplefb.
 
+However no-one has been able to come up with a workable alternative solution.
 
---BI5RvnYi6R4T2M87
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+We've asked input from Mike Turquette, the clk maintainer, and he agrees
+that the solution in this patch-set is the right way to deal with clocks for
+simplefb, and he has given his Reviewed-by for the dt-bindings patch.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+As for the simplefb code becoming to complex for this, I noticed that
+simplefb currently does not have an active maintainer. I've discussed this
+with Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, the original author of simplefb,
+and with his permisson I'm picking up maintainership of simplefb.
 
-iQIcBAEBAgAGBQJULo2YAAoJEBQN5MwUoCm2Y1kP/RfjWt5XHUteCijbnSjB1p3O
-j6KUATQY06csp+zjHyu82TzE2hieP4Wsgc6ELJcJgZa8DPd8mDScbJAS5tyelCa2
-oAhmRcQZURiMzGXx+nvDGfjmqE9Pd42vUReMQkoBSHTB1YQyZHzLm+pOZZ5a+aUX
-aYq3Eag71YXMx2+T1jVGkDBBdvSkWt0EQJiJw6R0p+SQwcu5BKmU1Vlmm6nkHW8j
-TdUpZd1zSb2FGvS3N/s1s58SFCnxCafcvU793tU0osyGZUUzCpRxAIEBMWC9c6qN
-HyIrw0bYeL0YmCoA830wlmAiZnPRgi9/ebMdCEVq1AAW7wOL7L0P/KeOju+fRxch
-ZVx4qq81KCaZJ62O1MDehMbKPQ5J2Z02RxyU5GbNpC4f1H9dZaUQMwGVZOByr1Oa
-dsbfsqATXG5TrJxwzSmhBZYLKHmhNg6BX8i6Uoubb3WiaFHf5eor1Suvd3imTmiW
-SVrasCiZfaVXz/pxK4BmotdLRY2rz5ifPgQ7QdaSsUsni92AGAr/0oiL8DA7M1Fc
-ctez0VQT6ysPxC1mAMlvcJFzyjR2fXOtkINh/TTQLGWb9R5VnGGVLDltknZFLDHa
-GLW1SyxtYSJgH7YzmqAec7hO9QcMagBcWIDkJTLKyTOPIs/IPeZwKhobFUcMwVfr
-zKRFAYb+7Omgxe2ZTWCM
-=MJII
------END PGP SIGNATURE-----
+And as the new maintainer of simplefb I agree that the approach in this
+patch-set is the best way forward, and I've added my Reviewed-by to Luc's
+patches adding the clocks property support. I fully commit myself to
+actively maintain simplefb for the foreseeable future.
 
---BI5RvnYi6R4T2M87--
+I believe that having the acks of both the clk and simplefb maintainer
+is more then good enough to get this set merged despite not everyone
+agreeing 100% with it (note some people have expressed concerns, but no one
+has actually nacked it).
+
+Therefor I would like to ask you to merge this set for 3.19, or if there is
+still time for 3.18.
+
+Thanks & Regards,
+
+Hans
