@@ -1,47 +1,70 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 06/13] ARM: shmobile: armadillo800eva dts: Add chosen/stdout-path
-Date: Fri,  3 Oct 2014 17:11:37 +0200
-Message-ID: <1412349104-18724-7-git-send-email-geert+renesas@glider.be>
-References: <1412349104-18724-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1412349104-18724-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v5 1/4] hwmon: ltc2978: device tree bindings documentation
+Date: Fri, 03 Oct 2014 08:21:29 -0700
+Message-ID: <542EBEF9.1070108@roeck-us.net>
+References: <1412275071-6417-1-git-send-email-atull@opensource.altera.com> <1412275071-6417-2-git-send-email-atull@opensource.altera.com> <20141003122736.GH26643@leverpostej> <542E9E9B.4090307@roeck-us.net> <20141003130559.GJ26643@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141003130559.GJ26643@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "atull@opensource.altera.com" <atull@opensource.altera.com>, "broonie@kernel.org" <broonie@kernel.org>, "jdelvare@suse.de" <jdelvare@suse.de>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "delicious.quinoa@gmail.com" <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, "yvanderv@opensource.altera.com" <yvanderv@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a stdout-path property so that automatic console selection works
-in the absence of a "console=" parameter on the kernel command line.
-In addition, this will allow the PM domain code to find the PM domain
-for the console device.
+On 10/03/2014 06:05 AM, Mark Rutland wrote:
+> On Fri, Oct 03, 2014 at 02:03:23PM +0100, Guenter Roeck wrote:
+>> On 10/03/2014 05:27 AM, Mark Rutland wrote:
+>>> On Thu, Oct 02, 2014 at 07:37:48PM +0100, atull@opensource.altera.com wrote:
+>>>> From: Alan Tull <atull@opensource.altera.com>
+>>>>
+>>>> Add device tree bindings documentation for ltc2978.
+>>>>
+>>>> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+>>>> ---
+>>>> v2: clean whitespace
+>>>> ---
+>>>>    .../devicetree/bindings/hwmon/ltc2978.txt          |   41 ++++++++++++++++++++
+>>>>    1 file changed, 41 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/hwmon/ltc2978.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/hwmon/ltc2978.txt b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+>>>> new file mode 100644
+>>>> index 0000000..b2d9c4d
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+>>>> @@ -0,0 +1,41 @@
+>>>> +ltc2978
+>>>> +
+>>>> +Required properties:
+>>>> + - compatible: one of: ltc2974, ltc2977, ltc2978, ltc3880, ltc3883, ltm4676
+>>>
+>>> Could we please format this like:
+>>>
+>>> - compatible: should contain one of:
+>>>     * "ltc2974"
+>>>     * "ltc2977"
+>>>     * "ltc2978"
+>>>     * "ltc3880"
+>>>     * "ltc3883"
+>>>     * "ltm4676"
+>>>
+>>> Given the file name, are these all variants of ltc2978?
+>>>
+>>
+>> All the chips supported by the ltc2978 driver. Some are variants
+>> of the ltc2978, some have different functionality.
+>
+> Ok.
+>
+>>
+>> [ should those be "linear,ltc2974" and so on ? ]
+>
+> Good point; yes they should. That will need a vendor-prefixes.txt
+> addition.
+>
+Actually, turns out there already is one, only it is not immediately obvious:
+lltc for "Linear Technology Corporation".
 
-Note that we have to keep the "console=ttySC1" parameter in
-chosen/bootargs, else we only get console messages on tty0, and because
-this DTS is shared between legacy and multi-platform.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-This is a prerequisite for working "no_console_suspend" support in
-"[PATCH] ARM: shmobile: R-Mobile: Add DT support for PM domains".
-
-v2:
-  - Add second reason for keeping "console="
----
- arch/arm/boot/dts/r8a7740-armadillo800eva.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-index effb7b46f13172d5..2703428557fce9fa 100644
---- a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-+++ b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-@@ -25,6 +25,7 @@
- 
- 	chosen {
- 		bootargs = "console=tty0 console=ttySC1,115200 earlyprintk=sh-sci.1,115200 ignore_loglevel root=/dev/nfs ip=dhcp rw";
-+		stdout-path = &scifa1;
- 	};
- 
- 	memory {
--- 
-1.9.1
-
+Guenter
