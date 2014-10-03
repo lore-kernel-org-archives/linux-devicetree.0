@@ -1,74 +1,72 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
-Date: Fri, 3 Oct 2014 10:11:02 -0400
-Message-ID: <20141003141102.GJ3895@titan.lakedaemon.net>
-References: <1411157684-6991-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <-7443282711873112734@unknownmsgid>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v3 04/15] ACPI: Document ACPI device specific properties
+Date: Fri, 03 Oct 2014 16:38:49 +0200
+Message-ID: <7198018.2Bqkjlecz2@vostro.rjw.lan>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <26673925.fa6Qhdm5sV@vostro.rjw.lan> <20141003135826.GN26643@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <-7443282711873112734@unknownmsgid>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benoit Masson <benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20141003135826.GN26643@leverpostej>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Benoit,
+On Friday, October 03, 2014 02:58:26 PM Mark Rutland wrote:
+> On Fri, Oct 03, 2014 at 03:03:51AM +0100, Rafael J. Wysocki wrote:
+> > On Thursday, October 02, 2014 04:36:54 PM Mika Westerberg wrote:
+> > > On Thu, Oct 02, 2014 at 02:46:30PM +0200, Arnd Bergmann wrote:
+> > > > On Thursday 02 October 2014 15:15:08 Mika Westerberg wrote:
+> > 
+> > [cut]
+> > 
+> > > 
+> > > Putting everything to a single package results this:
+> > > 
+> > > 		Package () { "pwms", Package () {"led-red", ^PWM0, 0, 10, "led-green", ^PWM0, 1, 10 }}
+> > > 
+> > > But I think the below looks better:
+> > 
+> > I agree.
+> > 
+> > > 		Package () { "pwms", Package () {^PWM0, 0, 10, ^PWM0, 1, 10 }}
+> > > 		Package () { "pwm-names", Package () {"led-red", "led-green"}}
+> > > 
+> > > and it is trivial to match with the corresponding DT fragment.
+> > > 
+> > > > 	}
+> > > > 
+> > > > vs.
+> > > > 
+> > > > 	pwm-slave {
+> > > > 		pwms = <&pwm0 0 10>, <&pwm1 1 20>;
+> > > > 		pwm-names = "led-red", "led-green";
+> > > > 	};
+> > > > 
+> > > 
+> > > I don't have strong feelings which way it should be. The current
+> > > implementation limits references so that you can have only integer
+> > > arguments, like {ref0, int, int, ref1, int} but if people think it is
+> > > better to allow strings there as well, it can be changed.
+> > > 
+> > > I would like to get comments from Darren and Rafael about this, though.
+> > 
+> > In my opinion there needs to be a "canonical" representation of the
+> > binding that people always can expect to work.  It seems reasonable to
+> > use the one exactly matching the DT representation for that.
+> 
+> I don't follow. The two forms would share the same high-level accessors,
+> but the binary representation is already different. Why should we choose
+> the inferior layout given they are already different binary formats?
 
-On Sun, Sep 21, 2014 at 04:11:23PM +0200, Benoit Masson wrote:
-> > Le 19 sept. 2014 =E0 22:14, Sebastian Hesselbarth <sebastian.hessel=
-barth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> a =E9crit :
-> > this is a patch set preparing barebox support for ix4-300d. As usua=
-l,
-> > I stumbled upon a few nice-to-haves before actually touching ix4-30=
-0d
-> > dts. As it is a mach-mvebu thing, I just added the related mailing
-> > lists instead of each of the DT maintainers.
-> >
-> > First 5 patches consolidate SoC-specific pinctrl nodes to one commo=
-n
-> > node in armada-xp.dtsi, compatible overwrites for each SoC, and nod=
-e
-> > alias usage for each board. Also, ge{0,1} pinctrl settings are move=
-d
-> > to the common node from one board specific node.
-> >
-> > Last 3 patches then use that ge{0,1} pinctrl settings on ix4-300d w=
-hich
-> > is vital for bootloader init. During exploration of ix4-300d, I als=
-o
-> > found a i2c eeprom that has not been added to the dts, yet. Finally=
-,
-> > there is only one 74hc595 on ix4 mainboard while dts property is se=
-t
-> > for two.
-> >
-> > I cannot recall in detail what is on that eeprom, but IIRC it is no=
-thing
-> > important. Some reg,addr pairs for some init stuff that should have
-> > already been done by stock u-boot. Anyway, adding the node will do =
-no
-> > harm.
-> >
-> > Patches are based on v3.17-rc1 and intended for v3.18 but I am not =
-in
-> > a hurry. I only compile tested this, so a formal Tested-by from Ben=
-oit
-> > for the ix4 and any other Armada XP board would be great.
->=20
-> I'm not sure what to test since I only receive some patch from the
-> series of 8. Should I get all 8 or only those you sent me. I'll be
-> able to test during next week.
+Well, why is it inferior in the first place?  It represents the same information
+and I'm not sure why the binary formats matter here?
 
-Did you ever get a chance to test this series?
+If I'm to create a _DSD with that information and have a DT template, it
+surely is easier to copy it exactly than to figure out how to resolve it
+to represent something I can actually put in there. 
 
-thx,
-
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
