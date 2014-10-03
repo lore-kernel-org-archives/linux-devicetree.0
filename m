@@ -1,134 +1,116 @@
 From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 4/4] arm64:numa: adding numa support for arm64
- platforms.
-Date: Fri, 3 Oct 2014 13:13:44 +0100
-Message-ID: <20141003121343.GG26643@leverpostej>
-References: <1411635840-24038-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
- <1411635840-24038-5-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+Subject: Re: [PATCH v5 1/4] hwmon: ltc2978: device tree bindings documentation
+Date: Fri, 3 Oct 2014 13:27:36 +0100
+Message-ID: <20141003122736.GH26643@leverpostej>
+References: <1412275071-6417-1-git-send-email-atull@opensource.altera.com>
+ <1412275071-6417-2-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1411635840-24038-5-git-send-email-ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1412275071-6417-2-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: "atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "jdelvare-l3A5Bk7waGM@public.gmane.org" <jdelvare-l3A5Bk7waGM@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 25, 2014 at 10:03:59AM +0100, Ganapatrao Kulkarni wrote:
-> Adding numa support for arm64 based platforms.
-> This version creates numa mapping by parsing the dt table.
-> cpu to node id mapping is derived from cluster_id as defined in cpu-map.
-> memory to node id mapping is derived from nid property of memory node.
-
-[...]
-
-> +/*
-> + * Too small node sizes may confuse the VM badly. Usually they
-> + * result from BIOS bugs. So dont recognize nodes as standalone
-> + * NUMA entities that have less than this amount of RAM listed:
-> + */
-> +#define NODE_MIN_SIZE (4*1024*1024)
-
-Why do these confuse the VM? what does BIOS have to do with arm64?
-
-> +
-> +#define parent_node(node)      (node)
-
-Huh?
-
-[...]
-
-> @@ -168,6 +191,11 @@ void __init bootmem_init(void)
->         min = PFN_UP(memblock_start_of_DRAM());
->         max = PFN_DOWN(memblock_end_of_DRAM());
+On Thu, Oct 02, 2014 at 07:37:48PM +0100, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 > 
-> +       high_memory = __va((max << PAGE_SHIFT) - 1) + 1;
-> +       max_pfn = max_low_pfn = max;
+> Add device tree bindings documentation for ltc2978.
+> 
+> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> ---
+> v2: clean whitespace
+> ---
+>  .../devicetree/bindings/hwmon/ltc2978.txt          |   41 ++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/ltc2978.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/ltc2978.txt b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+> new file mode 100644
+> index 0000000..b2d9c4d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+> @@ -0,0 +1,41 @@
+> +ltc2978
 > +
-> +       if (IS_ENABLED(CONFIG_NUMA))
-> +               arm64_numa_init();
+> +Required properties:
+> + - compatible: one of: ltc2974, ltc2977, ltc2978, ltc3880, ltc3883, ltm4676
 
-Is this function defined if !CONFIG_NUMA? Surely it must do nothing in
-that case anyway?
+Could we please format this like:
 
-[...]
+- compatible: should contain one of:
+  * "ltc2974"
+  * "ltc2977"
+  * "ltc2978"
+  * "ltc3880"
+  * "ltc3883"
+  * "ltm4676"
 
-> +/*
-> + *  Set the cpu to node and mem mapping
-> + */
-> +void numa_store_cpu_info(cpu)
-> +{
-> +       cpu_to_node_map[cpu] = cpu_topology[cpu].cluster_id;
-> +       cpumask_set_cpu(cpu, node_to_cpumask_map[cpu_to_node_map[cpu]]);
-> +       set_numa_node(cpu_to_node_map[cpu]);
-> +       set_numa_mem(local_memory_node(cpu_to_node_map[cpu]));
-> +}
+Given the file name, are these all variants of ltc2978? 
 
-I don't like this. I think we need to be more explicit in the DT w.r.t.
-the relationship between memory and the CPU hierarchy.
-
-I can imagine that we might end up with systems with multiple levels of
-NUMA hierarchy (using MPIDR_EL1.Aff{3,2}), and I'd rather that we were
-explcit as possible from the start w.r.t. the relationship between
-memory and groups of CPUs such that we don't end up with multiple ways
-of specifying said relationship, and horrible edge cases around implicit
-definitions (e.g. the nid to cluster mapping).
-
-> +/**
-> + * dummy_numa_init - Fallback dummy NUMA init
-> + *
-> + * Used if there's no underlying NUMA architecture, NUMA initialization
-> + * fails, or NUMA is disabled on the command line.
-> + *
-> + * Must online at least one node and add memory blocks that cover all
-> + * allowed memory.  This function must not fail.
-> + */
-> +static int __init dummy_numa_init(void)
-> +{
-> +       pr_info("%s\n",
-> +              numa_off ? "NUMA turned off" : "No NUMA configuration found");
-
-Why not print "NUMA turned off" in numa_setup?
-
-> +       pr_info("Faking a node at [mem %#018Lx-%#018Lx]\n",
-> +              0LLU, PFN_PHYS(max_pfn) - 1);
+> + - reg: I2C address
 > +
-> +       node_set(0, numa_nodes_parsed);
-> +       numa_add_memblk(0, 0, PFN_PHYS(max_pfn));
-> +
-> +       return 0;
-> +}
-> +
-> +/**
-> + * early_init_dt_scan_numa_map - parse memory node and map nid to memory range.
-> + */
-> +int __init early_init_dt_scan_numa_map(unsigned long node, const char *uname,
-> +                                    int depth, void *data)
-> +{
-> +       const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
-> +       const __be32 *reg, *endp, *nid_prop;
-> +       int l, nid;
-> +
-> +       /* We are scanning "memory" nodes only */
-> +       if (type == NULL) {
-> +               /*
-> +                * The longtrail doesn't have a device_type on the
-> +                * /memory node, so look for the node called /memory@0.
-> +                */
-> +               if (depth != 1 || strcmp(uname, "memory@0") != 0)
-> +                       return 0;
+> +Optional properties:
+> + Name of the optional regulator subnode must be "regulators".
+> +  - #address-cells must be 1.
 
-This has no place on arm64.
+What's the single address cell used for?
 
-We limited to longtrail workaround in the core memory parsing to PPC32
-only in commit b44aa25d20e2ef6b (of: Handle memory@0 node on PPC32
-only). This code doesn't need it enabled ever.
+> +  - #size-cells must be 0.
+> +
+> + For each regulator:
+> +  - reg: regulator number
 
-Are you booting using UEFI? This isn't going to work when the memory map
-comes from UEFI and we have no memory nodes in the DTB.
+Which can be...?
+
+What does this correspond to in the HW?
+
+> +  - regulator-compatible: must be vout_en<regulator number> such as vout_en3
+> +    valid range is:
+> +      ltc2977, ltc2978 : vout_en0 - vout_en7
+> +      ltc2974          : vout_en0 - vout_en3
+> +      ltc3880, ltm4676 : vout_en0 - vout_en1
+> +      ltc3883          : vout_en0 only
+
+In other bindings I believe I've seen the node name used for this.
+
+Mark, what's the preferred scheme for identifying regulators in a
+container node?
+
+> +  - regulator-name: arbitrary name for regulator
+
+Drop the 'aribtarary'. Either this should be the name of the regulator
+on the board, or it shouldn't be necessary.
 
 Mark.
+
+> +
+> +Example:
+> +ltc2978@5e {
+> +	compatible = "ltc2978";
+> +	reg = <0x5e>;
+> +	regulators {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		vdacp0_reg: regulator@0 {
+> +			reg = <0>;
+> +			regulator-compatible = "vout_en0";
+> +			regulator-name = "FPGA-2.5V";
+> +		};
+> +		vdacp2_reg: regulator@2 {
+> +			reg = <2>;
+> +			regulator-compatible = "vout_en2";
+> +			regulator-name = "FPGA-1.5V";
+> +		};
+> +	};
+> +};
+> -- 
+> 1.7.9.5
+> 
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
