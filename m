@@ -1,30 +1,130 @@
-From: Adrian Chadd <adrian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
-Subject: Re: ath10k: calibration data through Device Tree?
-Date: Fri, 3 Oct 2014 10:21:41 -0700
-Message-ID: <CAJ-VmomZzXGBqyQ+xLu1g0hEUfFvnsMoAZrCCfnM9_QfJNwjhg@mail.gmail.com>
-References: <87tx3mmx4s.fsf@kamboji.qca.qualcomm.com>
-	<2386503.dNPayhXJTQ@wuerfel>
-	<20141003162513.GW26643@leverpostej>
-	<2162399.E7Ru1MI0QH@wuerfel>
-	<CALCETrWC9fXckgUGYWA8AcHT5SoxQc-EouV0U-sFr7v6279oow@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v5 1/4] hwmon: ltc2978: device tree bindings documentation
+Date: Fri, 03 Oct 2014 10:28:59 -0700
+Message-ID: <542EDCDB.6040406@roeck-us.net>
+References: <1412275071-6417-1-git-send-email-atull@opensource.altera.com> <1412275071-6417-2-git-send-email-atull@opensource.altera.com> <20141003122736.GH26643@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALCETrWC9fXckgUGYWA8AcHT5SoxQc-EouV0U-sFr7v6279oow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Lutomirski <luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, "ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141003122736.GH26643@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>, "broonie@kernel.org" <broonie@kernel.org>
+Cc: "jdelvare@suse.de" <jdelvare@suse.de>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "delicious.quinoa@gmail.com" <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, "yvanderv@opensource.altera.com" <yvanderv@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-As far as I'm aware there's no unique identifier in the silicon. It's
-all in the OTP or flash.
+On 10/03/2014 05:27 AM, Mark Rutland wrote:
+> On Thu, Oct 02, 2014 at 07:37:48PM +0100, atull@opensource.altera.com wrote:
+>> From: Alan Tull <atull@opensource.altera.com>
+>>
+>> Add device tree bindings documentation for ltc2978.
+>>
+>> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+>> ---
+>> v2: clean whitespace
+>> ---
+>>   .../devicetree/bindings/hwmon/ltc2978.txt          |   41 ++++++++++++++++++++
+>>   1 file changed, 41 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/hwmon/ltc2978.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/hwmon/ltc2978.txt b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+>> new file mode 100644
+>> index 0000000..b2d9c4d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+>> @@ -0,0 +1,41 @@
+>> +ltc2978
+>> +
+>> +Required properties:
+>> + - compatible: one of: ltc2974, ltc2977, ltc2978, ltc3880, ltc3883, ltm4676
+>
+> Could we please format this like:
+>
+> - compatible: should contain one of:
+>    * "ltc2974"
+>    * "ltc2977"
+>    * "ltc2978"
+>    * "ltc3880"
+>    * "ltc3883"
+>    * "ltm4676"
+>
+> Given the file name, are these all variants of ltc2978?
+>
+>> + - reg: I2C address
+>> +
+>> +Optional properties:
+>> + Name of the optional regulator subnode must be "regulators".
+>> +  - #address-cells must be 1.
+>
+> What's the single address cell used for?
+>
+I think this is required by the regulator bindings.
+Other regulators use the same, though they don't typically
+mention it in the properties list but only in the examples.
 
-The NIC comes up with a standard MAC address, the same for all NICs in
-the family.
+>> +  - #size-cells must be 0.
+>> +
+>> + For each regulator:
+>> +  - reg: regulator number
+>
+> Which can be...?
+>
+> What does this correspond to in the HW?
+>
+Channel number or index. Pretty much the 0..7 from the name below.
 
+>> +  - regulator-compatible: must be vout_en<regulator number> such as vout_en3
+>> +    valid range is:
+>> +      ltc2977, ltc2978 : vout_en0 - vout_en7
+>> +      ltc2974          : vout_en0 - vout_en3
+>> +      ltc3880, ltm4676 : vout_en0 - vout_en1
+>> +      ltc3883          : vout_en0 only
+>
+> In other bindings I believe I've seen the node name used for this.
+>
+Seems like per-device names are chosen for other regulators.
+PMBus commonly uses the term "VOUT" for output voltages,
+so vout[0-7] should be ok.
 
--a
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Which reminds me: We had earlier asked to drop the "_en" from the strings
+as unnecessary.
+
+> Mark, what's the preferred scheme for identifying regulators in a
+> container node?
+>
+>> +  - regulator-name: arbitrary name for regulator
+>
+> Drop the 'aribtarary'. Either this should be the name of the regulator
+> on the board, or it shouldn't be necessary.
+>
+Not sure if it even needs to be documented here. It is already documented
+in Documentation/devicetree/bindings/regulator/regulator.txt.
+
+> Mark.
+>
+>> +
+>> +Example:
+>> +ltc2978@5e {
+>> +	compatible = "ltc2978";
+>> +	reg = <0x5e>;
+>> +	regulators {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		vdacp0_reg: regulator@0 {
+>> +			reg = <0>;
+>> +			regulator-compatible = "vout_en0";
+>> +			regulator-name = "FPGA-2.5V";
+>> +		};
+>> +		vdacp2_reg: regulator@2 {
+>> +			reg = <2>;
+>> +			regulator-compatible = "vout_en2";
+>> +			regulator-name = "FPGA-1.5V";
+>> +		};
+>> +	};
+>> +};
+>> --
+>> 1.7.9.5
+>>
+>>
+>
