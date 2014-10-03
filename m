@@ -1,66 +1,120 @@
-From: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
-Subject: Re: [PATCH v2] i2c: axxia: Add I2C driver for AXM55xx
-Date: Fri, 3 Oct 2014 13:04:54 +0200
-Message-ID: <CAE0=X_2mCfbmgiP955N9OesJ9Aiz1zW6wmNXE4SPZr4dNxehPw@mail.gmail.com>
-References: <1411983159-4692-1-git-send-email-anders.berg@avagotech.com>
-	<20141003103630.GB1349@katana>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 2/4] arm/arm64:dt:numa: adding numa node mapping for
+ memory nodes.
+Date: Fri, 3 Oct 2014 12:05:21 +0100
+Message-ID: <20141003110521.GE26643@leverpostej>
+References: <1411635840-24038-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+ <1411635840-24038-3-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141003103630.GB1349@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1411635840-24038-3-git-send-email-ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 3, 2014 at 12:36 PM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
->> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
->> index 2ac87fa..8983474 100644
->> --- a/drivers/i2c/busses/Kconfig
->> +++ b/drivers/i2c/busses/Kconfig
->> @@ -77,6 +77,17 @@ config I2C_AMD8111
->>         This driver can also be built as a module.  If so, the module
->>         will be called i2c-amd8111.
->>
->> +config I2C_AXXIA
->> +     tristate "Axxia I2C controller"
->> +     depends on ARCH_AXXIA || COMPILE_TEST
->> +     default ARCH_AXXIA
->> +     help
->> +       Say yes if you want to support the I2C bus on Axxia platforms.
->> +
->> +       Please note that this controller is limited to transfers of maximum
->> +       255 bytes in length. Any attempt to to a larger transfer will return
->> +       an error.
->> +
->>  config I2C_I801
->>       tristate "Intel 82801 (ICH/PCH)"
->>       depends on PCI
->> diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
->> index 49bf07e..5899edb 100644
->> --- a/drivers/i2c/busses/Makefile
->> +++ b/drivers/i2c/busses/Makefile
->> @@ -12,6 +12,7 @@ obj-$(CONFIG_I2C_ALI15X3)   += i2c-ali15x3.o
->>  obj-$(CONFIG_I2C_AMD756)     += i2c-amd756.o
->>  obj-$(CONFIG_I2C_AMD756_S4882)       += i2c-amd756-s4882.o
->>  obj-$(CONFIG_I2C_AMD8111)    += i2c-amd8111.o
->> +obj-$(CONFIG_I2C_AXXIA)              += i2c-axxia.o
->>  obj-$(CONFIG_I2C_I801)               += i2c-i801.o
->>  obj-$(CONFIG_I2C_ISCH)               += i2c-isch.o
->>  obj-$(CONFIG_I2C_ISMT)               += i2c-ismt.o
->
-> Please put it to the embedded section.
->
+On Thu, Sep 25, 2014 at 10:03:57AM +0100, Ganapatrao Kulkarni wrote:
+> Adding Documentation for dt binding for memory to numa node mapping.
 
-OK.
+As I previously commented [1], this binding doesn't specify what a nid
+maps to in terms of the CPU hierarchy, and is thus unusable. The binding
+absolutely must be explicit about this, and NAK until it is.
 
-> ...
->
->> +     idev->adapter.class = I2C_CLASS_HWMON;
->
-> Being a DT driver, you most probably don't need this.
->
+Given we're seeing systems with increasing numbers of CPUs and
+increasingly complex interconnect hierarchies, I would expect at minimum
+that we would refer to elements in the cpu-map to define the
+relationship between memory banks and CPUs.
 
-Right, thanks.  I'll fix up these and submit a v3.
+What does the interconnect/memory hierarchy look like in your system?
 
-/Anders
+Mark.
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/288263.html
+
+> 
+> Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/numa.txt | 60 ++++++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/numa.txt b/Documentation/devicetree/bindings/arm/numa.txt
+> new file mode 100644
+> index 0000000..1cdc6d3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/numa.txt
+> @@ -0,0 +1,60 @@
+> +========================================================
+> +ARM numa id binding description
+> +========================================================
+> +
+> +========================================================
+> +1 - Introduction
+> +========================================================
+> +
+> +The device node  property nid (numa node id) can be added
+> +to memory device node to map the range of memory addresses
+> +as defined in property reg. The property nid maps the memory
+> +range to the numa node id, which is used to find the local
+> +and remote pages on numa aware systems.
+> +
+> +========================================================
+> +2 - nid property
+> +========================================================
+> +nid is required property of memory device node for
+> +numa enabled platforms.
+> +
+> +|------------------------------------------------------|
+> +|Property Type  | Usage | Value Type | Definition      |
+> +|------------------------------------------------------|
+> +|  nid          |  R    |    <u32>   | Numa Node id    |
+> +|               |       |            | for this memory |
+> +|------------------------------------------------------|
+> +
+> +========================================================
+> +4 - Example memory nodes with numa information
+> +========================================================
+> +
+> +Example 1 (2 memory nodes, each mapped to a numa node.):
+> +
+> +	memory@00000000 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x00000000 0x0 0x80000000>;
+> +		nid = <0x0>;
+> +	};
+> +
+> +	memory@10000000000 {
+> +		device_type = "memory";
+> +		reg = <0x100 0x00000000 0x0 0x80000000>;
+> +		nid = <0x1>;
+> +	};
+> +
+> +Example 2 (multiple memory ranges in each memory node and mapped to numa node):
+> +
+> +	memory@00000000 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x00000000 0x0 0x80000000>,
+> +		      <0x1 0x00000000 0x0 0x80000000>;
+> +		nid = <0x0>;
+> +	};
+> +
+> +	memory@10000000000 {
+> +		device_type = "memory";
+> +		reg = <0x100 0x00000000 0x0 0x80000000>;
+> +		reg = <0x100 0x80000000 0x0 0x80000000>;
+> +		nid = <0x1>;
+> +	};
+> -- 
+> 1.8.1.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
