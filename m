@@ -1,68 +1,70 @@
-From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Subject: Re: [PATCH v3 03/15] ACPI: Allow drivers to match using Device Tree compatible property
-Date: Sat, 04 Oct 2014 02:02:17 +0200
-Message-ID: <1573401.WKjUTvdzsT@vostro.rjw.lan>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <20141003134303.GK26643@leverpostej> <20141003175910.GB7507@dtor-ws>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH v5 0/4] Qualcomm SPMI PMIC pin controller drivers
+Date: Fri, 3 Oct 2014 16:53:21 -0700
+Message-ID: <20141003235320.GC28481@sonymobile.com>
+References: <1412181058-29179-1-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141003175910.GB7507@dtor-ws>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Darren Hart <dvhart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1412181058-29179-1-git-send-email-iivanov@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, October 03, 2014 10:59:10 AM Dmitry Torokhov wrote:
-> On Fri, Oct 03, 2014 at 02:43:03PM +0100, Mark Rutland wrote:
-> > Hi Rafael,
-> > 
-> > On Wed, Oct 01, 2014 at 03:10:40AM +0100, Rafael J. Wysocki wrote:
-> > > From: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > > 
-> > > We have lots of existing Device Tree enabled drivers and allocating
-> > > separate _HID for each is not feasible. Instead we allocate special
-> > > _HID "PRP0001" that means that the match should be done using Device
-> > > Tree compatible property using driver's .of_match_table instead.
-> > 
-> > That's hopefully not the precise meaning of "PRP0001" unless we're
-> > attempting no semblance of OS independence here?
-> > 
-> > I'm still of the opinion that marrying ACPI to existing (and often
-> > ill-defined) DT bindings is a bad idea. While it's expedient, I believe
-> > this is going to be a long-term maintenance nightmare.
-> > 
-> > I'm very concerned with the prospect of model mismatch between the two
-> > (e.g. DT clocks properties where ACPI has traditionally been in charge
-> > of clock management). I've not seen any high-level guidelines w.r.t.
-> > what should live in _DSD properties and what should not (at least not in
-> > the ACPI spec itself). There are almost certainly properties that only
-> > make sense if !ACPI, and likely there will be some that only make sense
-> > if ACPI.
-> > 
-> > So I think that in its current level of standardisation, _DSD only makes
-> > sense for simple device properties, and not relationships between
-> > devices, except where ACPI already has some kind of a model (which
-> > currently seems to cover interrupts and GPIOs). I'd also hope that we
-> > could expose a 'clean' subset of DT bidnings (i.e. those which aren't
-> > known to be kept around only for compatibility with legacy DTBs).
-> > 
-> > I do not believe it makes sense to share such a low-level interface.
-> > Given the aforementioned model differences, and the fact that we don't
-> > need to support _every_ device tree binding, I don't see why this can't
-> > be handled with separate probe paths in the drivers we care about (as we
-> > already do for DT vs platform data).
+On Wed 01 Oct 09:30 PDT 2014, Ivan T. Ivanov wrote:
+
+> Changes since v4:
 > 
-> Because as a driver writer I do not want to implement N+1 ways of
-> getting device configuration. I want one API that works independently of
-> the underlying platform. The DT vs platform data is bad enough already.
+> - Use PMIC name in compatible string.
+> - PINCTRL_QCOM_SPMI_PMIC from Kconfig symbol.
+> - Remove pmic string from drivers file names.
+> - Fixed coding style issues.
+> - Use qcom-spmi-gpio and qcom-spmi-mpp from dirver names,
+>   to be similar to qcom-spmi-iadc, qcom-spmi-vadc and 
+>   qcom-spmi-temp-alarm drivers.
+> 
+> Short description:
+> 
+> Patches adds pin control drivers for Multi-Purpose Pin (MPP) and
+> General-purpose pin (GPIO) controllers found in Qualcomm SPMI based
+> PMIC chips.
+> 
+> MPP's are enhanced GPIO's with analog circuits, which support 
+> analog and digital input/output.
+> 
+> v4: https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg725568.html
+> 
+> Bjorn Andersson (1):
+>   pinctrl: Device tree bindings for Qualcomm PMIC GPIO block
+> 
+> Ivan T. Ivanov (3):
+>   pinctrl: Device tree bindings for Qualcomm PMIC MPP block
+>   pinctrl: Qualcomm SPMI PMIC GPIO pin controller driver
+>   pinctrl: Qualcomm SPMI PMIC MPP pin controller driver
+> 
+>  .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 215 +++++
+>  .../devicetree/bindings/pinctrl/qcom,pmic-mpp.txt  | 162 ++++
+>  drivers/pinctrl/qcom/Kconfig                       |  13 +
+>  drivers/pinctrl/qcom/Makefile                      |   2 +
+>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           | 937 ++++++++++++++++++++
+>  drivers/pinctrl/qcom/pinctrl-spmi-mpp.c            | 953 +++++++++++++++++++++
+>  include/dt-bindings/pinctrl/qcom,pmic-gpio.h       | 142 +++
+>  include/dt-bindings/pinctrl/qcom,pmic-mpp.h        |  44 +
+>  8 files changed, 2468 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
+>  create mode 100644 drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+>  create mode 100644 drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
+>  create mode 100644 include/dt-bindings/pinctrl/qcom,pmic-gpio.h
+>  create mode 100644 include/dt-bindings/pinctrl/qcom,pmic-mpp.h
+> 
 
-Well stated, thanks!
+This looks good and I gave it a spin on one of our 8974 devices and verified
+that gpio_keys works :)
 
--- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+
+Regards,
+Bjorn
