@@ -1,88 +1,89 @@
-From: Masami Hiramatsu <masami.hiramatsu.pt-FCd8Q96Dh0JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Re: [PATCH 1/3] arm: socfpga: Enable ECC of L2 and OCRAM on
- startup.
-Date: Fri, 03 Oct 2014 18:51:56 +0900
-Message-ID: <542E71BC.3050606@hitachi.com>
-References: <1412181092-27162-1-git-send-email-tthayer@opensource.altera.com> <1412181092-27162-2-git-send-email-tthayer@opensource.altera.com> <542C3654.1070604@gmail.com> <542C6CFB.4090809@opensource.altera.com> <542C6DBB.9060202@opensource.altera.com> <542C7DD0.5030601@opensource.altera.com> <542D3918.3040909@opensource.altera.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v2] i2c: axxia: Add I2C driver for AXM55xx
+Date: Fri, 3 Oct 2014 12:36:30 +0200
+Message-ID: <20141003103630.GB1349@katana>
+References: <1411983159-4692-1-git-send-email-anders.berg@avagotech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <542D3918.3040909-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qlTNgmc+xy1dBmNv"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1411983159-4692-1-git-send-email-anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dinh,
 
-(2014/10/02 20:38), Dinh Nguyen wrote:
-> On 10/1/14, 5:18 PM, Thor Thayer wrote:
->>
->> On 10/01/2014 04:10 PM, Dinh Nguyen wrote:
->>>
->>> On 10/1/14, 4:07 PM, Thor Thayer wrote:
->>>> On 10/01/2014 12:13 PM, Dinh Nguyen wrote:
->>>>> On 10/1/14, 11:31 AM, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
->>>>>> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>>>>>
->>> [...]
->>>>>>      static void socfpga_cyclone5_restart(enum reboot_mode mode, const
->>>>>> char *cmd)
->>>>>> @@ -98,6 +101,13 @@ static void socfpga_cyclone5_restart(enum
->>>>>> reboot_mode mode, const char *cmd)
->>>>>>        writel(temp, rst_manager_base_addr + SOCFPGA_RSTMGR_CTRL);
->>>>>>    }
->>>>>>    +static void __init socfpga_cyclone5_init(void)
->>>>>> +{
->>>>>> +    of_platform_populate(NULL, of_default_bus_match_table,
->>>>>> +                 NULL, NULL);
->>>>> Why is this needed?
->>>>>
->>>>> Dinh
->>>> Hi Dinh.
->>>>
->>>> Are you asking why the of_platform_populate() is needed? If so, it is
->>>> used to kick off discovery of devices at the root of the tree.
->>> I was asking about of_platform populate(). This was removed in this
->>> commit:
->>>
->>> 8b5c18f05 ARM: l2c: socfpga: convert to generic l2c OF initialisation
->>>
->>> Just trying to understand what's the need to add it back?
->>>
->>> Dinh
->> It is used to kick off discovery of devices at the root of the tree. 
->> This is needed when .init_machine was defined because we're not using
->> the default implementation (which called this function).
->>
-> 
-> Then, can you please add a separate patch to fix up the removal of the call?
+--qlTNgmc+xy1dBmNv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It seems that this patch does enough reasonable thing.
+> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> index 2ac87fa..8983474 100644
+> --- a/drivers/i2c/busses/Kconfig
+> +++ b/drivers/i2c/busses/Kconfig
+> @@ -77,6 +77,17 @@ config I2C_AMD8111
+>  	  This driver can also be built as a module.  If so, the module
+>  	  will be called i2c-amd8111.
+> =20
+> +config I2C_AXXIA
+> +	tristate "Axxia I2C controller"
+> +	depends on ARCH_AXXIA || COMPILE_TEST
+> +	default ARCH_AXXIA
+> +	help
+> +	  Say yes if you want to support the I2C bus on Axxia platforms.
+> +
+> +	  Please note that this controller is limited to transfers of maximum
+> +	  255 bytes in length. Any attempt to to a larger transfer will return
+> +	  an error.
+> +
+>  config I2C_I801
+>  	tristate "Intel 82801 (ICH/PCH)"
+>  	depends on PCI
+> diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
+> index 49bf07e..5899edb 100644
+> --- a/drivers/i2c/busses/Makefile
+> +++ b/drivers/i2c/busses/Makefile
+> @@ -12,6 +12,7 @@ obj-$(CONFIG_I2C_ALI15X3)	+=3D i2c-ali15x3.o
+>  obj-$(CONFIG_I2C_AMD756)	+=3D i2c-amd756.o
+>  obj-$(CONFIG_I2C_AMD756_S4882)	+=3D i2c-amd756-s4882.o
+>  obj-$(CONFIG_I2C_AMD8111)	+=3D i2c-amd8111.o
+> +obj-$(CONFIG_I2C_AXXIA)		+=3D i2c-axxia.o
+>  obj-$(CONFIG_I2C_I801)		+=3D i2c-i801.o
+>  obj-$(CONFIG_I2C_ISCH)		+=3D i2c-isch.o
+>  obj-$(CONFIG_I2C_ISMT)		+=3D i2c-ismt.o
 
-To initialize ECC on OCRAM, socfpga_init_ocram_ecc() must be invoked
-while booting. In that case, he might need this function.
+Please put it to the embedded section.
 
-8b5c18f05 is to replace l2x0_of_init() with .l2c_aux_* fields, and
-this patch has a different reason to call another init function in
-.init_machine. In this case, it is natural to define .init_machine
-handler in this patch.
+=2E..
 
-IOW, both use same socfpga_cyclone5_init() for the function name,
-but those have different purpose. I think it is not reviving the
-old function, but just adding a new function which has same name.
+> +	idev->adapter.class =3D I2C_CLASS_HWMON;
 
-Thank you,
-
--- 
-Masami HIRAMATSU
-Software Platform Research Dept. Linux Technology Research Center
-Hitachi, Ltd., Yokohama Research Laboratory
-E-mail: masami.hiramatsu.pt-FCd8Q96Dh0JBDgjK7y7TUQ@public.gmane.org
+Being a DT driver, you most probably don't need this.
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--qlTNgmc+xy1dBmNv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJULnwuAAoJEBQN5MwUoCm2CkwQAJ+cYBA7ZhgbaqjFDiRKauCu
++O+RBpsc1ckfgH0ThqudovAlIcuWRGvc8rbHQMs4R6DNGCZ+qxygPgR+XjotHE3n
+QQl3ER3NmG30EViE7pwoNR+IBEkdk7pJ8e2LGb08hfI1QT6ROdNTtV21TjVgEY1w
+eu28PEbJPJ3bbhMt/DyA9nTPYd8L3LCMR4JeuHAO5m9syMAsgLOm7RcAa2UVjbRk
+DIcnCbDrUCQvxcBycQes4q4eGTfKi+F9P7KfrcNFpwPqBAXHB6t/UhxCgJHAT1jt
+dk0MwqFImngWLfgGM8O3yiwETsR4AVPausjfCmvhVdgctUh85wFsY+sqnA9sVest
+s2O6Z4u9oVoEhsAZwfS0zZVnNbnzx3pkZ+ZpDIY9F166qMdmVIiCKNFfSBrI9g1b
+zdZxW0T8d1momDu14PzrW0HUjdKhx+ID3ZfeGUzxeMJk3XEnGrs4DdmWQIb+Jry5
+pHeUhFmZKXDHcl/dSGO107KdUPCP7OuN2oSZwvNlxsB9R9/2pZhedvUn6Rg4CubM
+3hvVxUrEiRrkX7xUAC78nNje780+XZ1ldUqJpJ41gPCurgyhYW0ML130mWB2GCaO
+swEAvOCmIC/jQ6FmBVJe/LD1rr7qfnxboIb1YQZLKZQGIZ/vNc+3COGu25d3Phrd
+Vbr9O4o7R3sTj+1c1EmK
+=08YL
+-----END PGP SIGNATURE-----
+
+--qlTNgmc+xy1dBmNv--
