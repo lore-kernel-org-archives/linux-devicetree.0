@@ -1,130 +1,111 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v5 1/4] hwmon: ltc2978: device tree bindings documentation
-Date: Fri, 03 Oct 2014 10:28:59 -0700
-Message-ID: <542EDCDB.6040406@roeck-us.net>
-References: <1412275071-6417-1-git-send-email-atull@opensource.altera.com> <1412275071-6417-2-git-send-email-atull@opensource.altera.com> <20141003122736.GH26643@leverpostej>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH v3] dt-bindings: Add a clocks property
+ to the simple-framebuffer binding
+Date: Fri, 03 Oct 2014 19:34:09 +0200
+Message-ID: <542EDE11.3010802@redhat.com>
+References: <1412345120-24588-1-git-send-email-hdegoede@redhat.com> <CAL_JsqKU2n8p=YfJua3k-mR40bG_4SiZY8_-SL-MXtuWN5NeHg@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141003122736.GH26643@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>, "broonie@kernel.org" <broonie@kernel.org>
-Cc: "jdelvare@suse.de" <jdelvare@suse.de>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "delicious.quinoa@gmail.com" <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, "yvanderv@opensource.altera.com" <yvanderv@opensource.altera.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBGV4XOQQKGQEFOGTWQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAL_JsqKU2n8p=YfJua3k-mR40bG_4SiZY8_-SL-MXtuWN5NeHg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/2014 05:27 AM, Mark Rutland wrote:
-> On Thu, Oct 02, 2014 at 07:37:48PM +0100, atull@opensource.altera.com wrote:
->> From: Alan Tull <atull@opensource.altera.com>
+Hi,
+
+On 10/03/2014 05:57 PM, Rob Herring wrote:
+> On Fri, Oct 3, 2014 at 9:05 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> A simple-framebuffer node represents a framebuffer setup by the firmware /
+>> bootloader. Such a framebuffer may have a number of clocks in use, add a
+>> property to communicate this to the OS.
 >>
->> Add device tree bindings documentation for ltc2978.
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >>
->> Signed-off-by: Alan Tull <atull@opensource.altera.com>
->> ---
->> v2: clean whitespace
->> ---
->>   .../devicetree/bindings/hwmon/ltc2978.txt          |   41 ++++++++++++++++++++
->>   1 file changed, 41 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/hwmon/ltc2978.txt
->>
->> diff --git a/Documentation/devicetree/bindings/hwmon/ltc2978.txt b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
->> new file mode 100644
->> index 0000000..b2d9c4d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
->> @@ -0,0 +1,41 @@
->> +ltc2978
->> +
->> +Required properties:
->> + - compatible: one of: ltc2974, ltc2977, ltc2978, ltc3880, ltc3883, ltm4676
->
-> Could we please format this like:
->
-> - compatible: should contain one of:
->    * "ltc2974"
->    * "ltc2977"
->    * "ltc2978"
->    * "ltc3880"
->    * "ltc3883"
->    * "ltm4676"
->
-> Given the file name, are these all variants of ltc2978?
->
->> + - reg: I2C address
->> +
->> +Optional properties:
->> + Name of the optional regulator subnode must be "regulators".
->> +  - #address-cells must be 1.
->
-> What's the single address cell used for?
->
-I think this is required by the regulator bindings.
-Other regulators use the same, though they don't typically
-mention it in the properties list but only in the examples.
-
->> +  - #size-cells must be 0.
->> +
->> + For each regulator:
->> +  - reg: regulator number
->
-> Which can be...?
->
-> What does this correspond to in the HW?
->
-Channel number or index. Pretty much the 0..7 from the name below.
-
->> +  - regulator-compatible: must be vout_en<regulator number> such as vout_en3
->> +    valid range is:
->> +      ltc2977, ltc2978 : vout_en0 - vout_en7
->> +      ltc2974          : vout_en0 - vout_en3
->> +      ltc3880, ltm4676 : vout_en0 - vout_en1
->> +      ltc3883          : vout_en0 only
->
-> In other bindings I believe I've seen the node name used for this.
->
-Seems like per-device names are chosen for other regulators.
-PMBus commonly uses the term "VOUT" for output voltages,
-so vout[0-7] should be ok.
-
-Which reminds me: We had earlier asked to drop the "_en" from the strings
-as unnecessary.
-
-> Mark, what's the preferred scheme for identifying regulators in a
-> container node?
->
->> +  - regulator-name: arbitrary name for regulator
->
-> Drop the 'aribtarary'. Either this should be the name of the regulator
-> on the board, or it shouldn't be necessary.
->
-Not sure if it even needs to be documented here. It is already documented
-in Documentation/devicetree/bindings/regulator/regulator.txt.
-
-> Mark.
->
->> +
->> +Example:
->> +ltc2978@5e {
->> +	compatible = "ltc2978";
->> +	reg = <0x5e>;
->> +	regulators {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		vdacp0_reg: regulator@0 {
->> +			reg = <0>;
->> +			regulator-compatible = "vout_en0";
->> +			regulator-name = "FPGA-2.5V";
->> +		};
->> +		vdacp2_reg: regulator@2 {
->> +			reg = <2>;
->> +			regulator-compatible = "vout_en2";
->> +			regulator-name = "FPGA-1.5V";
->> +		};
->> +	};
->> +};
 >> --
->> 1.7.9.5
+>> Changes in v2:
+>> -Added Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Changes in v3:
+>> -Updated description to make clear simplefb deals with more then just memory
+> 
+> NAK. "Fixing" the description is not what I meant and does not address
+> my concerns. Currently, simplefb is configuration data. It is
+> auxiliary data about how a chunk of memory is used. Using it or not
+> has no side effects on the hardware setup, but you are changing that
+> aspect. You are mixing in a hardware description that is simply
+> inaccurate.
+
+Memory is hardware too, what simplefb is is best seen as a virtual device, and
+even virtual devices have hardware resources they need, such as a chunk of memory,
+which the kernel should not touch other then use it as a framebuffer, likewise
+on some systems the virtual device needs clocks to keep running.
+
+> The kernel has made the decision to turn off "unused" clocks. If its
+> determination of what is unused is wrong, then it is not a problem to
+> fix in DT.
+
+No, it is up to DT to tell the kernel what clocks are used, that is how it works
+for any other device. I don't understand why some people keep insisting simplefb
+for some reason is o so very very special, because it is not special, it needs
+resources, and it needs to tell the kernel about this or bad things happen.
+
+More over it is a bit late to start making objections now. This has already been
+discussed to death for weeks now, and every argument against this patch has already
+been countered multiple times (including the one you are making now). Feel free to
+read the entire thread in the archives under the subject:
+"[PATCH 4/4] simplefb: add clock handling code"
+
+At one point in time we need to stop bickering and make a decision, that time has
+come now, so please lets get this discussion over with and merge this, so that
+we can all move on and spend out time in a more productive manner.
+
+Regards,
+
+Hans
+
+> 
+> Rob
+> 
+>> ---
+>>  Documentation/devicetree/bindings/video/simple-framebuffer.txt | 9 ++++++---
+>>  1 file changed, 6 insertions(+), 3 deletions(-)
 >>
+>> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+>> index 70c26f3..91176ee 100644
+>> --- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+>> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+>> @@ -1,8 +1,8 @@
+>>  Simple Framebuffer
 >>
->
+>> -A simple frame-buffer describes a raw memory region that may be rendered to,
+>> -with the assumption that the display hardware has already been set up to scan
+>> -out from that buffer.
+>> +A simple frame-buffer describes a frame-buffer setup by firmware or
+>> +the bootloader, with the assumption that the display hardware has already
+>> +been set up to scan out from the memory pointed to by the ref property.
+>>
+>>  Required properties:
+>>  - compatible: "simple-framebuffer"
+>> @@ -14,6 +14,9 @@ Required properties:
+>>    - r5g6b5 (16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b).
+>>    - a8b8g8r8 (32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r).
+>>
+>> +Optional properties:
+>> +- clocks : List of clocks used by the framebuffer
+>> +
+>>  Example:
+>>
+>>         framebuffer {
+>> --
+>> 2.1.0
+>>
+> 
