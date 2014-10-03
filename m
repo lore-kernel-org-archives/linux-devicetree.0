@@ -1,88 +1,65 @@
-From: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] serial: of-serial: add PM suspend/resume support
-Date: Fri, 3 Oct 2014 15:45:37 +0800
-Message-ID: <542E5421.5070708@nvidia.com>
-References: <1411461252-8730-1-git-send-email-jingchang.lu@freescale.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v3 04/15] ACPI: Document ACPI device specific properties
+Date: Fri, 3 Oct 2014 11:12:33 +0300
+Message-ID: <20141003081233.GU1786@lahna.fi.intel.com>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
+ <15893883.nvuW3ndylz@wuerfel>
+ <20141002133654.GP1786@lahna.fi.intel.com>
+ <26673925.fa6Qhdm5sV@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411461252-8730-1-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <26673925.fa6Qhdm5sV@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Oct 03, 2014 at 04:03:51AM +0200, Rafael J. Wysocki wrote:
+> On Thursday, October 02, 2014 04:36:54 PM Mika Westerberg wrote:
+> > On Thu, Oct 02, 2014 at 02:46:30PM +0200, Arnd Bergmann wrote:
+> > > On Thursday 02 October 2014 15:15:08 Mika Westerberg wrote:
+> 
+> [cut]
+> 
+> > 
+> > Putting everything to a single package results this:
+> > 
+> > 		Package () { "pwms", Package () {"led-red", ^PWM0, 0, 10, "led-green", ^PWM0, 1, 10 }}
+> > 
+> > But I think the below looks better:
+> 
+> I agree.
+> 
+> > 		Package () { "pwms", Package () {^PWM0, 0, 10, ^PWM0, 1, 10 }}
+> > 		Package () { "pwm-names", Package () {"led-red", "led-green"}}
+> > 
+> > and it is trivial to match with the corresponding DT fragment.
+> > 
+> > > 	}
+> > > 
+> > > vs.
+> > > 
+> > > 	pwm-slave {
+> > > 		pwms = <&pwm0 0 10>, <&pwm1 1 20>;
+> > > 		pwm-names = "led-red", "led-green";
+> > > 	};
+> > > 
+> > 
+> > I don't have strong feelings which way it should be. The current
+> > implementation limits references so that you can have only integer
+> > arguments, like {ref0, int, int, ref1, int} but if people think it is
+> > better to allow strings there as well, it can be changed.
+> > 
+> > I would like to get comments from Darren and Rafael about this, though.
+> 
+> In my opinion there needs to be a "canonical" representation of the
+> binding that people always can expect to work.  It seems reasonable to
+> use the one exactly matching the DT representation for that.
+> 
+> In addition to that we can add other representations that the code will
+> also parse correctly as alternatives.  In the future.
 
-This patch might have a potential issue that cause system hard hung 
-immediately when it accesses to registers with no clock. This could 
-happen on many chips that mainline kernel supporting with the setting 
-"no_console_suspend=1" during suspend time.
-
-On 09/23/2014 04:34 PM, Jingchang Lu wrote:
-> This adds PM suspend/resume support for the of-serial driver
-> to provide power management support on devices attatched to it.
->
-> Signed-off-by: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->   drivers/tty/serial/of_serial.c | 27 +++++++++++++++++++++++++++
->   1 file changed, 27 insertions(+)
->
-> diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
-> index 27981e2..8bc2563 100644
-> --- a/drivers/tty/serial/of_serial.c
-> +++ b/drivers/tty/serial/of_serial.c
-> @@ -240,6 +240,32 @@ static int of_platform_serial_remove(struct platform_device *ofdev)
->   	return 0;
->   }
->
-> +#ifdef CONFIG_PM_SLEEP
-> +static int of_serial_suspend(struct device *dev)
-> +{
-> +	struct of_serial_info *info = dev_get_drvdata(dev);
-> +
-> +	serial8250_suspend_port(info->line);
-> +	if (info->clk)
-The fix would be something like this.
-	if (info->clk && console_suspend_enabled)
-
-> +		clk_disable_unprepare(info->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static int of_serial_resume(struct device *dev)
-> +{
-> +	struct of_serial_info *info = dev_get_drvdata(dev);
-> +
-> +	if (info->clk)
-Ditto.
-
-Thanks,
--Joseph
-> +		clk_prepare_enable(info->clk);
-> +
-> +	serial8250_resume_port(info->line);
-> +
-> +	return 0;
-> +}
-> +#endif
-> +static SIMPLE_DEV_PM_OPS(of_serial_pm_ops, of_serial_suspend, of_serial_resume);
-> +
->   /*
->    * A few common types, add more as needed.
->    */
-> @@ -271,6 +297,7 @@ static struct platform_driver of_platform_serial_driver = {
->   		.name = "of_serial",
->   		.owner = THIS_MODULE,
->   		.of_match_table = of_platform_serial_table,
-> +		.pm = &of_serial_pm_ops,
->   	},
->   	.probe = of_platform_serial_probe,
->   	.remove = of_platform_serial_remove,
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+OK, so if no objections and Arnd promised not to complain too loudly, I
+would like to keep this as is for now.
