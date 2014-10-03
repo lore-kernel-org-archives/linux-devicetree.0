@@ -1,83 +1,62 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 4/5] simplefb: add goto error path to probe
-Date: Fri,  3 Oct 2014 13:52:04 +0200
-Message-ID: <1412337125-14388-5-git-send-email-hdegoede@redhat.com>
-References: <1412337125-14388-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v3] i2c: axxia: Add I2C driver for AXM55xx
+Date: Fri, 3 Oct 2014 13:55:04 +0200
+Message-ID: <20141003115504.GE1349@katana>
+References: <1412334482-20720-1-git-send-email-anders.berg@avagotech.com>
+ <20141003115048.GD1349@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB6M3XKQQKGQEPMSSVMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1412337125-14388-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Qz2CZ664xQdCRdPu"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141003115048.GD1349@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
 
-Signed-off-by: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
-Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- drivers/video/fbdev/simplefb.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+--Qz2CZ664xQdCRdPu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
-index ec112c1..b7d5c08 100644
---- a/drivers/video/fbdev/simplefb.c
-+++ b/drivers/video/fbdev/simplefb.c
-@@ -220,8 +220,8 @@ static int simplefb_probe(struct platform_device *pdev)
- 
- 	info->apertures = alloc_apertures(1);
- 	if (!info->apertures) {
--		framebuffer_release(info);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto error_fb_release;
- 	}
- 	info->apertures->ranges[0].base = info->fix.smem_start;
- 	info->apertures->ranges[0].size = info->fix.smem_len;
-@@ -231,8 +231,8 @@ static int simplefb_probe(struct platform_device *pdev)
- 	info->screen_base = ioremap_wc(info->fix.smem_start,
- 				       info->fix.smem_len);
- 	if (!info->screen_base) {
--		framebuffer_release(info);
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto error_fb_release;
- 	}
- 	info->pseudo_palette = par->palette;
- 
-@@ -247,14 +247,20 @@ static int simplefb_probe(struct platform_device *pdev)
- 	ret = register_framebuffer(info);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Unable to register simplefb: %d\n", ret);
--		iounmap(info->screen_base);
--		framebuffer_release(info);
--		return ret;
-+		goto error_unmap;
- 	}
- 
- 	dev_info(&pdev->dev, "fb%d: simplefb registered!\n", info->node);
- 
- 	return 0;
-+
-+ error_unmap:
-+	iounmap(info->screen_base);
-+
-+ error_fb_release:
-+	framebuffer_release(info);
-+
-+	return ret;
- }
- 
- static int simplefb_remove(struct platform_device *pdev)
--- 
-2.1.0
+On Fri, Oct 03, 2014 at 01:50:48PM +0200, Wolfram Sang wrote:
+> On Fri, Oct 03, 2014 at 01:08:02PM +0200, Anders Berg wrote:
+> > Add I2C bus driver for the controller found in the LSI Axxia family SoC=
+s. The
+> > driver implements 10-bit addressing and SMBus transfer modes via emulat=
+ion
+> > (including SMBus block data read).
+> >=20
+> > Signed-off-by: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
+>=20
+> Applied to for-next, thanks!
+
+You missed to move the Kconfig part to embedded. Fixed that for you!
+Nonetheless, was a quite smooth driver submission, thanks.
+
+
+--Qz2CZ664xQdCRdPu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJULo6YAAoJEBQN5MwUoCm23c8QAJVgFKe33TnG3nOMQ81JeEeM
+LarFUfOlGCoZw7AaPLWjgEM0A3EIrBgUbtNuWchQBv922na3oULLy4DPgCI0dvvG
+8v0S4xZbCDZ4Ws4gOWX1m2mIasUYGHBjrXFTjjDi2QYIp59tt21lddKwbOEClRGP
+JCSPkum/Nq0a44TuhH692uz5utLnN61XLdP/MALvHE7JdKP9R57JcByD3VxchJie
+CTA+gYf5BQcHz9m7NyRGVAB6JvLn3ZeeHIcFLtSokxnv+DxQc9zcWcjO74ueZqQ+
+Eaagf/OvbLf+PpmfsqJZhgBweDkC789gSWiItP9y0zFlRx0FhE9TJd5k0K4Dikv9
+5edRwv8aGfExNQHP/sejx/JtL3kgcuhPC0nFJBXlQwBTvViMIV8wmU6mXmRshG/P
+JEGyj/wFjP2UoNlKUBW9lEekTvI9VvLDuDji3zpHZ5dT232JIiQKJufGN66IXjmi
+RmKqQZvcp+DjLT5S6pXE9LeFVFQ+glEQCB79AvZMJ50auoj4etezrdoKfwgqdliL
+MYso2ZmmWxJb/AO9OFS1/EuRezxIsfNkKcCyZOlQwvd3JRAezgumDN7seP0I0dmD
+fpvzHaQRl+WKcSLrYGAnJXG82gXDj70tlYi41FM/Mze7+MZk0KIsAPWr1Ojna6wL
+fEQo3Jw6thLClZxs7t+4
+=qIQU
+-----END PGP SIGNATURE-----
+
+--Qz2CZ664xQdCRdPu--
