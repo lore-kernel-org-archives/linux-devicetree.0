@@ -1,69 +1,135 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] i2c: hix5hd2: add i2c controller driver
-Date: Fri, 3 Oct 2014 14:09:26 +0200
-Message-ID: <20141003120926.GF1349@katana>
-References: <1412079628-6316-1-git-send-email-zhangfei.gao@linaro.org>
- <1412079628-6316-3-git-send-email-zhangfei.gao@linaro.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 4/4] arm64:numa: adding numa support for arm64
+ platforms.
+Date: Fri, 3 Oct 2014 13:13:44 +0100
+Message-ID: <20141003121343.GG26643@leverpostej>
+References: <1411635840-24038-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+ <1411635840-24038-5-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0rSojgWGcpz+ezC3"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1412079628-6316-3-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1411635840-24038-5-git-send-email-ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Sep 25, 2014 at 10:03:59AM +0100, Ganapatrao Kulkarni wrote:
+> Adding numa support for arm64 based platforms.
+> This version creates numa mapping by parsing the dt table.
+> cpu to node id mapping is derived from cluster_id as defined in cpu-map.
+> memory to node id mapping is derived from nid property of memory node.
 
---0rSojgWGcpz+ezC3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[...]
 
-Hi,
+> +/*
+> + * Too small node sizes may confuse the VM badly. Usually they
+> + * result from BIOS bugs. So dont recognize nodes as standalone
+> + * NUMA entities that have less than this amount of RAM listed:
+> + */
+> +#define NODE_MIN_SIZE (4*1024*1024)
 
-On Tue, Sep 30, 2014 at 08:20:27PM +0800, Zhangfei Gao wrote:
-> From: Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->=20
-> I2C drivers for hix5hd2 soc series, including following chipset
-> Hi3716CV200, Hi3719CV100, Hi3718CV100, Hi3719MV100, Hi3718MV100.
->=20
-> Signed-off-by: Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Why do these confuse the VM? what does BIOS have to do with arm64?
 
-Looks good to me. You probably want to have a look at this patch
-http://patchwork.ozlabs.org/patch/394648/
+> +
+> +#define parent_node(node)      (node)
 
-an do something similar here, I guess.
+Huh?
 
-BTW what tests have you performed?
+[...]
 
-Thanks,
+> @@ -168,6 +191,11 @@ void __init bootmem_init(void)
+>         min = PFN_UP(memblock_start_of_DRAM());
+>         max = PFN_DOWN(memblock_end_of_DRAM());
+> 
+> +       high_memory = __va((max << PAGE_SHIFT) - 1) + 1;
+> +       max_pfn = max_low_pfn = max;
+> +
+> +       if (IS_ENABLED(CONFIG_NUMA))
+> +               arm64_numa_init();
 
-   Wolfram
+Is this function defined if !CONFIG_NUMA? Surely it must do nothing in
+that case anyway?
 
+[...]
 
---0rSojgWGcpz+ezC3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> +/*
+> + *  Set the cpu to node and mem mapping
+> + */
+> +void numa_store_cpu_info(cpu)
+> +{
+> +       cpu_to_node_map[cpu] = cpu_topology[cpu].cluster_id;
+> +       cpumask_set_cpu(cpu, node_to_cpumask_map[cpu_to_node_map[cpu]]);
+> +       set_numa_node(cpu_to_node_map[cpu]);
+> +       set_numa_mem(local_memory_node(cpu_to_node_map[cpu]));
+> +}
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+I don't like this. I think we need to be more explicit in the DT w.r.t.
+the relationship between memory and the CPU hierarchy.
 
-iQIcBAEBAgAGBQJULpH2AAoJEBQN5MwUoCm277cQALC8EZrzQ1wtmwAK3mNAIh6i
-QkP2wzXAdpG+VDYzBPSmBiaenbh9AI+hDKnbGhu+l/q1kBQy7mr/lwVfRgx/vL0m
-jCOOAAT1IOXqU3s5Pb6Z7Ri7MCyhKBfhyteTV+OdMTUMNF+X/KiUknFsLz4gTQU7
-YHuQErswjuLDNfYTY61k34JyXYAm7b1lMR/WWXq44oHPb/SdJWzBClrt0VRjmJ63
-YBPUojwWyj8YOtUhO7GhV+ziZsQbwNILltKioZ0lOKWczCdSb0bH5A1blRwAQXpn
-bSYqMr+4l4uhyZsJF3yXg/Ynhu+ctrhOgc6D2DXMln43qI9qwrJfOdy6Rnqjvojw
-8GWDN4taTvF6DMmdRoOg+YNZMw7HwnSbPQ6A9MbaSZNTOCZfHhXUqgRxFhfMoGq1
-A8nYFh6yZ9e5IquttAULAuBSrU2ii/UATJT45eoz+XkkU8DXZ2jyHyKPssWtkXJP
-Z1WvaI3fhDGXukX0WhWUylNOPEDjCdCsS+W2f2V5x3IdPyziwkUX3XmppHmIoZ/g
-+por2S0+Bwqh2apPppZMMs5Iy0KR98m4H2Nkud8adI4LrQdE876b2zy4e7mBjBpO
-Wlz7xBcP9Fkk8zhQJYwysIfSHPNcmPz6UpBlebEI0zDQudF0r4nL0mxT91zTRoI0
-og1w4D6TNH8dXyd7IJC9
-=Igv+
------END PGP SIGNATURE-----
+I can imagine that we might end up with systems with multiple levels of
+NUMA hierarchy (using MPIDR_EL1.Aff{3,2}), and I'd rather that we were
+explcit as possible from the start w.r.t. the relationship between
+memory and groups of CPUs such that we don't end up with multiple ways
+of specifying said relationship, and horrible edge cases around implicit
+definitions (e.g. the nid to cluster mapping).
 
---0rSojgWGcpz+ezC3--
+> +/**
+> + * dummy_numa_init - Fallback dummy NUMA init
+> + *
+> + * Used if there's no underlying NUMA architecture, NUMA initialization
+> + * fails, or NUMA is disabled on the command line.
+> + *
+> + * Must online at least one node and add memory blocks that cover all
+> + * allowed memory.  This function must not fail.
+> + */
+> +static int __init dummy_numa_init(void)
+> +{
+> +       pr_info("%s\n",
+> +              numa_off ? "NUMA turned off" : "No NUMA configuration found");
+
+Why not print "NUMA turned off" in numa_setup?
+
+> +       pr_info("Faking a node at [mem %#018Lx-%#018Lx]\n",
+> +              0LLU, PFN_PHYS(max_pfn) - 1);
+> +
+> +       node_set(0, numa_nodes_parsed);
+> +       numa_add_memblk(0, 0, PFN_PHYS(max_pfn));
+> +
+> +       return 0;
+> +}
+> +
+> +/**
+> + * early_init_dt_scan_numa_map - parse memory node and map nid to memory range.
+> + */
+> +int __init early_init_dt_scan_numa_map(unsigned long node, const char *uname,
+> +                                    int depth, void *data)
+> +{
+> +       const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
+> +       const __be32 *reg, *endp, *nid_prop;
+> +       int l, nid;
+> +
+> +       /* We are scanning "memory" nodes only */
+> +       if (type == NULL) {
+> +               /*
+> +                * The longtrail doesn't have a device_type on the
+> +                * /memory node, so look for the node called /memory@0.
+> +                */
+> +               if (depth != 1 || strcmp(uname, "memory@0") != 0)
+> +                       return 0;
+
+This has no place on arm64.
+
+We limited to longtrail workaround in the core memory parsing to PPC32
+only in commit b44aa25d20e2ef6b (of: Handle memory@0 node on PPC32
+only). This code doesn't need it enabled ever.
+
+Are you booting using UEFI? This isn't going to work when the memory map
+comes from UEFI and we have no memory nodes in the DTB.
+
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
