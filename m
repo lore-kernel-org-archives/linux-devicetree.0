@@ -1,46 +1,76 @@
 From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: [PATCH v2 0/6] Add 10GbE support to APM X-Gene SoC ethernet driver
-Date: Thu,  2 Oct 2014 17:02:42 -0700
-Message-ID: <1412294568-26747-1-git-send-email-isubramanian@apm.com>
+Subject: [PATCH v2 3/6] dtb: Add 10GbE node to APM X-Gene SoC device tree
+Date: Thu,  2 Oct 2014 17:02:45 -0700
+Message-ID: <1412294568-26747-4-git-send-email-isubramanian@apm.com>
+References: <1412294568-26747-1-git-send-email-isubramanian@apm.com>
 Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1412294568-26747-1-git-send-email-isubramanian@apm.com>
 Sender: netdev-owner@vger.kernel.org
 To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, patches@apm.com, kchudgar@apm.com, Iyappan Subramanian <isubramanian@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Adding 10GbE support to APM X-Gene SoC ethernet driver.
+Added 10GbE interface and clock nodes.
 
-v2: Address comments from v1
-* created preparatory patch to review before adding new functionality
-* dtb: updated to use tabs consistently
-
-v1:
-* Initial version
+Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+Signed-off-by: Keyur Chudgar <kchudgar@apm.com>
 ---
+ arch/arm64/boot/dts/apm-mustang.dts |  4 ++++
+ arch/arm64/boot/dts/apm-storm.dtsi  | 24 ++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
-Iyappan Subramanian (6):
-  MAINTAINERS: Update APM X-Gene section
-  Documentation: dts: Update section header for APM X-Gene
-  dtb: Add 10GbE node to APM X-Gene SoC device tree
-  drivers: net: xgene: Preparing for adding 10GbE support
-  drivers: net: xgene: Add 10GbE support
-  drivers: net: xgene: Add 10GbE ethtool support
-
- .../devicetree/bindings/net/apm-xgene-enet.txt     |   4 +-
- MAINTAINERS                                        |   1 -
- arch/arm64/boot/dts/apm-mustang.dts                |   4 +
- arch/arm64/boot/dts/apm-storm.dtsi                 |  24 ++
- drivers/net/ethernet/apm/xgene/Makefile            |   3 +-
- .../net/ethernet/apm/xgene/xgene_enet_ethtool.c    |  28 +-
- drivers/net/ethernet/apm/xgene/xgene_enet_hw.c     |  44 ++-
- drivers/net/ethernet/apm/xgene/xgene_enet_hw.h     |  30 +-
- drivers/net/ethernet/apm/xgene/xgene_enet_main.c   |  86 ++++--
- drivers/net/ethernet/apm/xgene/xgene_enet_main.h   |  24 +-
- drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c  | 331 +++++++++++++++++++++
- drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.h  |  57 ++++
- 12 files changed, 563 insertions(+), 73 deletions(-)
- create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
- create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.h
-
+diff --git a/arch/arm64/boot/dts/apm-mustang.dts b/arch/arm64/boot/dts/apm-mustang.dts
+index b2f5622..2ae782b 100644
+--- a/arch/arm64/boot/dts/apm-mustang.dts
++++ b/arch/arm64/boot/dts/apm-mustang.dts
+@@ -32,3 +32,7 @@
+ &menet {
+ 	status = "ok";
+ };
++
++&xgenet {
++	status = "ok";
++};
+diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
+index c0aceef..f69c983 100644
+--- a/arch/arm64/boot/dts/apm-storm.dtsi
++++ b/arch/arm64/boot/dts/apm-storm.dtsi
+@@ -176,6 +176,16 @@
+ 				clock-output-names = "menetclk";
+ 			};
+ 
++			xge0clk: xge0clk@1f61c000 {
++				compatible = "apm,xgene-device-clock";
++				#clock-cells = <1>;
++				clocks = <&socplldiv2 0>;
++				reg = <0x0 0x1f61c000 0x0 0x1000>;
++				reg-names = "csr-reg";
++				csr-mask = <0x3>;
++				clock-output-names = "xge0clk";
++			};
++
+ 			sataphy1clk: sataphy1clk@1f21c000 {
+ 				compatible = "apm,xgene-device-clock";
+ 				#clock-cells = <1>;
+@@ -421,5 +431,19 @@
+ 
+ 			};
+ 		};
++
++		xgenet: ethernet@1f610000 {
++			compatible = "apm,xgene-enet";
++			status = "disabled";
++			reg = <0x0 0x1f610000 0x0 0xd100>,
++			      <0x0 0x1f600000 0x0 0X400>,
++			      <0x0 0x18000000 0x0 0X200>;
++			reg-names = "enet_csr", "ring_csr", "ring_cmd";
++			interrupts = <0x0 0x60 0x4>;
++			dma-coherent;
++			clocks = <&xge0clk 0>;
++			local-mac-address = [00 01 73 00 00 04];
++			phy-connection-type = "xgmii";
++		};
+ 	};
+ };
 -- 
 1.9.1
