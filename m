@@ -1,62 +1,62 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 1/2] i2c: exynos: add support for HSI2C module on Exynos7
-Date: Fri, 3 Oct 2014 03:34:05 +0200
-Message-ID: <20141003013404.GI1323@katana>
-References: <1410859998-29285-1-git-send-email-ch.naveen@samsung.com>
- <1410859998-29285-2-git-send-email-ch.naveen@samsung.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v3 04/15] ACPI: Document ACPI device specific properties
+Date: Fri, 03 Oct 2014 04:03:51 +0200
+Message-ID: <26673925.fa6Qhdm5sV@vostro.rjw.lan>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <15893883.nvuW3ndylz@wuerfel> <20141002133654.GP1786@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="16qp2B0xu0fRvRD7"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1410859998-29285-2-git-send-email-ch.naveen@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Cc: linux-i2c@vger.kernel.org, naveenkrishna.ch@gmail.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, sjg@chromium.org, grundler@chromium.org, linux-kernel@vger.kernel.org, cpgs@samsung.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20141002133654.GP1786@lahna.fi.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thursday, October 02, 2014 04:36:54 PM Mika Westerberg wrote:
+> On Thu, Oct 02, 2014 at 02:46:30PM +0200, Arnd Bergmann wrote:
+> > On Thursday 02 October 2014 15:15:08 Mika Westerberg wrote:
 
---16qp2B0xu0fRvRD7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[cut]
 
-On Tue, Sep 16, 2014 at 03:03:17PM +0530, Naveen Krishna Chatradhi wrote:
-> The HSI2C module on Exynos7 differs in the transfer status
-> bits. Transfer status bits were moved to INT_ENABLE and
-> INT_STATUS registers
->=20
-> This patch adds support for the HSI2C module on Exynos7.
-> 1. Implementes a "hw" field in the variant struct to distinguish
->    the hardware.
-> 2. Updates the dt-new compatible in dt-binding documenation
->=20
-> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
+> 
+> Putting everything to a single package results this:
+> 
+> 		Package () { "pwms", Package () {"led-red", ^PWM0, 0, 10, "led-green", ^PWM0, 1, 10 }}
+> 
+> But I think the below looks better:
 
-Applied to for-next, thanks!
+I agree.
 
+> 		Package () { "pwms", Package () {^PWM0, 0, 10, ^PWM0, 1, 10 }}
+> 		Package () { "pwm-names", Package () {"led-red", "led-green"}}
+> 
+> and it is trivial to match with the corresponding DT fragment.
+> 
+> > 	}
+> > 
+> > vs.
+> > 
+> > 	pwm-slave {
+> > 		pwms = <&pwm0 0 10>, <&pwm1 1 20>;
+> > 		pwm-names = "led-red", "led-green";
+> > 	};
+> > 
+> 
+> I don't have strong feelings which way it should be. The current
+> implementation limits references so that you can have only integer
+> arguments, like {ref0, int, int, ref1, int} but if people think it is
+> better to allow strings there as well, it can be changed.
+> 
+> I would like to get comments from Darren and Rafael about this, though.
 
---16qp2B0xu0fRvRD7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+In my opinion there needs to be a "canonical" representation of the
+binding that people always can expect to work.  It seems reasonable to
+use the one exactly matching the DT representation for that.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+In addition to that we can add other representations that the code will
+also parse correctly as alternatives.  In the future.
 
-iQIcBAEBAgAGBQJULf0MAAoJEBQN5MwUoCm2i3YQAIKvm5Upiuz0wPfoJEDKZeIp
-28fXBYMV0DOCZ/Fqf/Rc3soar5knuAMVLNVnjAVuODim6gw34FC9yszFFjYZcmOv
-UlSvsoLGanxyT3+LAyOcKn01LodzmcwPpxeL0Y1fzNPnaRb9N7Lw/6DK6O1sQHfo
-NIpbo4xJzbGlLwdmuYoao7vVIu8oVerC724UqMQ6RSQBX0KzBRWbb6KX6ZtHgX7R
-I2xRFUJ7etYL5x9yIwz2q1LGefXobY1pDpMpLQ+U/5CuyOITVHotQyF5ABZ8k4ro
-fm/sgpL4V6hIymPxwjeZX2unFyTk9Acgr6+Qn9EDWWar9konzdGHvr5HlFaGkqzM
-nFrHiNSSqnaCrbjpJxI6iSz6QcL6SOh8kiXu9Oun8VQwOt3+rGUVD+Bujlgc5jPc
-gZ+hPcy9JhQbd8dDTviXZvBU09FVASE9NHXadj70s68RaikMWXTlvIIq2D12LhCd
-7oKOnZJqIaoIea3Wmrhx3EBdAcqi2SzxCdySExitvsWHR2PTkwcq05itzl5XjUzX
-YrQkMQlFKxAdajA2oJAa0VV9l63daVnNK9gPurIVqlBC1J8H9GYamxOgd5AUvpKD
-Twrfy8gFWoJwIdF6qErReNENF60SK7mYkdcyAC3eUpWpubS5e+lH44KNVfUgwXG2
-Dm2YmKuya+fQLWNdeKVM
-=eX59
------END PGP SIGNATURE-----
-
---16qp2B0xu0fRvRD7--
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
