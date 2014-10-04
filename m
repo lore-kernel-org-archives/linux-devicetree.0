@@ -1,81 +1,57 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v3 09/15] leds: leds-gpio: Make use of device property API
-Date: Sat, 04 Oct 2014 02:18:10 +0200
-Message-ID: <3474649.PYuASxQ0V3@vostro.rjw.lan>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <83082601.pjR7TmeO0m@vostro.rjw.lan> <20141003140728.GO26643@leverpostej>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [RFC 5/7] soc: qcom: Add Shared Memory Driver
+Date: Fri, 3 Oct 2014 17:02:50 -0700
+Message-ID: <20141004000249.GD28481@sonymobile.com>
+References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1412037291-16880-6-git-send-email-bjorn.andersson@sonymobile.com>
+ <542DD3DA.1010909@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141003140728.GO26643@leverpostej>
+Content-Disposition: inline
+In-Reply-To: <542DD3DA.1010909@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, October 03, 2014 03:07:28 PM Mark Rutland wrote:
-> On Wed, Oct 01, 2014 at 03:16:25AM +0100, Rafael J. Wysocki wrote:
-> > From: Max Eliaser <max@meliaserlow.dyndns.tv>
-> > 
-> > Make use of device property API in this driver so that both OF and ACPI
-> > based system can use the same driver.
-> > 
-> > Signed-off-by: Max Eliaser <max.eliaser@intel.com>
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  drivers/leds/leds-gpio.c |   99 +++++++++++++++++++----------------------------
-> >  1 file changed, 42 insertions(+), 57 deletions(-)
-> > 
-> > Index: linux-pm/drivers/leds/leds-gpio.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/leds/leds-gpio.c
-> > +++ linux-pm/drivers/leds/leds-gpio.c
-> > @@ -15,13 +15,11 @@
-> >  #include <linux/gpio.h>
-> >  #include <linux/gpio/consumer.h>
-> >  #include <linux/leds.h>
-> > -#include <linux/of.h>
-> > -#include <linux/of_platform.h>
-> > -#include <linux/of_gpio.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/workqueue.h>
-> >  #include <linux/module.h>
-> >  #include <linux/err.h>
-> > +#include <linux/property.h>
-> >  
-> >  struct gpio_led_data {
-> >  	struct led_classdev cdev;
-> > @@ -171,65 +169,59 @@ static inline int sizeof_gpio_leds_priv(
-> >  		(sizeof(struct gpio_led_data) * num_leds);
-> >  }
-> >  
-> > -/* Code to create from OpenFirmware platform devices */
-> > -#ifdef CONFIG_OF_GPIO
-> > -static struct gpio_leds_priv *gpio_leds_create_of(struct platform_device *pdev)
-> > +static int gpio_leds_create_led(struct device *dev, void *child, void *data)
-> > +{
-> > +	struct gpio_leds_priv *priv = data;
-> > +	struct gpio_led led = {};
-> > +	const char *state = NULL;
+On Thu 02 Oct 15:38 PDT 2014, Stephen Boyd wrote:
+
+> On 09/29/14 17:34, Bjorn Andersson wrote:
 > > +
-> > +	led.gpiod = devm_get_named_gpiod_from_child(dev, child, "gpios", 0);
-> > +	if (IS_ERR(led.gpiod))
-> > +		return PTR_ERR(led.gpiod);
+> > +#define GET_RX_CHANNEL_INFO(channel, param) \
+> > +	(channel->rx_info_word ? \
+> > +		channel->rx_info_word->param : \
+> > +		channel->rx_info->param)
 > > +
-> > +	device_child_property_read_string(dev, child, "label", &led.name);
-> > +	device_child_property_read_string(dev, child, "linux,default-trigger",
-> > +					  &led.default_trigger);
+> > +#define GET_TX_CHANNEL_INFO(channel, param) \
+> > +	(channel->rx_info_word ? \
+> > +		channel->tx_info_word->param : \
+> > +		channel->tx_info->param)
 > > +
-> > +	device_child_property_read_string(dev, child, "linux,default_state",
-> > +					  &state);
+> > +#define SET_RX_CHANNEL_INFO(channel, param, value) \
+> > +	(channel->rx_info_word ? \
+> > +		(channel->rx_info_word->param = value) : \
+> > +		(channel->rx_info->param = value))
+> > +
+> > +#define SET_TX_CHANNEL_INFO(channel, param, value) \
+> > +	(channel->rx_info_word ? \
 > 
-> Do we really want "linux," properties in ACPI tables?
+> Drive-by review: Should this be tx_info_word? Given that it works I
+> wonder why not just have a flag indicating if we should use word aligned
+> read/write vs. byte aligned.
+> 
 
-Yes, we do.
+You're right, that should be tx - but from the way things both channels will
+always be of the same type, so it will simply work.
 
-"linux" here need not mean this is Linux-specific.
+I had a separate flag, but instead of having 4 members in the struct to
+indicate if I was dealing with word aligned access I had 5. So I dropped it.
 
--- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+> > +		(channel->tx_info_word->param = value) : \
+> > +		(channel->tx_info->param = value))
+> > +
+> 
+
+Regards,
+Bjorn
