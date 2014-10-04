@@ -1,71 +1,106 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 04/15] ACPI: Document ACPI device specific properties
-Date: Sat, 04 Oct 2014 12:59:59 +0200
-Message-ID: <8634377.yRllsv0gms@wuerfel>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <20141003143547.GP26643@leverpostej> <6568619.UkU5qISONv@vostro.rjw.lan>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Sat, 04 Oct 2014 12:51:29 +0100
+Message-ID: <542FDF41.2040106@kernel.org>
+References: <1411563415-11933-1-git-send-email-svarbanov@mm-sol.com>	 <1411563415-11933-2-git-send-email-svarbanov@mm-sol.com>	 <542D1B11.8070600@mm-sol.com> <1412251686.1027.15.camel@iivanov-dev>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6568619.UkU5qISONv-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Darren Hart <dvhart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1412251686.1027.15.camel@iivanov-dev>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: lars <lars@metafoo.de>, sachin.kamat@linaro.org, srinivas.pandruvada@linux.intel.com, linux-iio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 04 October 2014 02:13:23 Rafael J. Wysocki wrote:
-> > Because people get the format wrong regardless of documentation. The
-> > format:
-> > 
-> > Package () {
-> >       Package () { ^ref1, data, data },
-> >       Package () { ^ref2, data },
-> >       Package () { ^ref3, data, data, data },
-> > }
-> > 
-> > Is superior to the format:
-> > 
-> > Package () { ^ref1, data, data, ^ref2, data, ^ref3, data, data, data }
-> > 
-> > Because in the former you have delimiters that can be used to verify
-> > each tuple. Imagine someone misses a data element for one of these
-> > tuples. In the former layout you can detect this easily while in the
-> > latter you cannot.
+On 02/10/14 13:08, Ivan T. Ivanov wrote:
+> +iio maintainers
 > 
-> I agree with this particular thing (although other people seem to have
-> problems with too many package nesting levels) but I'm not sure what that
-> has to do with the example given above (let me quote again):
-> 
-> > Putting everything to a single package results this:
-> > 
-> >       Package () { "pwms", Package () {"led-red", ^PWM0, 0, 10, "led-green", ^PWM0, 1, 10 }}
-> > 
-> > But I think the below looks better:
-> > 
-> >       Package () { "pwms", Package () {^PWM0, 0, 10, ^PWM0, 1, 10 }}
-> >       Package () { "pwm-names", Package () {"led-red", "led-green"}}
-> > 
-> > and it is trivial to match with the corresponding DT fragment.
-> 
-> that I was commenting.  Both cases contains the
-> 
->         Package () { ^ref1, data, data, ^ref2, data, ^ref3, data, data, data }
-> 
-> format that you don't like, don't they?
-> 
+> On Thu, 2014-10-02 at 12:29 +0300, Ivan T. Ivanov wrote:
+>> Hi Stan,
+>>
+>> On 09/24/2014 03:56 PM, Stanimir Varbanov wrote:
+>>
+>> <snip>
+>>
+>>> +static int vadc_get_dt_data(struct vadc_priv *vadc, struct device_node *node)
+>>> +{
+>>> +	struct iio_chan_spec *iio_chan = vadc->iio_chans;
+>>> +	const struct vadc_channels *vadc_chan;
+>>> +	struct vadc_channel_prop prop;
+>>> +	struct device_node *child;
+>>> +	int ret, index = 0;
+>>> +
+>>> +	for_each_available_child_of_node(node, child) {
+>>> +		ret = vadc_get_dt_channel_data(vadc->dev, &prop, child);
+>>> +		if (ret)
+>>> +			return ret;
+>>> +
+>>> +		vadc->chan_props[index] = prop;
+>>> +
+>>> +		vadc_chan = &vadc_chans[prop.channel];
+>>> +
+>>> +		iio_chan->channel = prop.channel;
+>>> +		iio_chan->datasheet_name = vadc_chan->datasheet_name;
+>>> +		iio_chan->info_mask_separate = vadc_chan->info_mask;
+>>> +		iio_chan->type = vadc_chan->type;
+>>> +		iio_chan->indexed = 1;
+>>> +		iio_chan->scan_type.sign = 's';
+>>> +		iio_chan->scan_type.realbits = 15;
+>>> +		iio_chan->scan_type.storagebits = 16;
+>>> +		iio_chan->address = index++;
+>>> +
+>>> +		iio_chan++;
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>
+>> <snip>
+>>
+>>> +static int vadc_probe(struct platform_device *pdev)
+>>> +{
+>>
+>> <snip>
+>>
+>>> +
+>>> +	indio_dev->dev.parent = dev;
+>>> +	indio_dev->dev.of_node = node;
+>>> +	indio_dev->name = pdev->name;
+>>> +	indio_dev->modes = INDIO_DIRECT_MODE;
+>>> +	indio_dev->info = &vadc_info;
+>>> +	indio_dev->channels = vadc->iio_chans;
+>>> +	indio_dev->num_channels = vadc->nchannels;
+>>
+>> This will not work as we thought. Registration will be fine and entries
+>> in sysfs are created as expected, but this is breaking numbering scheme
+>> for client drivers. For us the problem is that iio framework expect channels
+>> numbering to be linear and channel number should not be greater than
+>> channel count. For example even if die temperature channel is always 8, if
+>> I describe only 5 channels in DTS files (4 for reference points measurement)
+>> and 1 for die temperature, clients could not get OF reference to 
+>> temperature
+>> channel using io-channels = <&pm8941_vadc 8>;
+>>
+>> Jonathan, please, could you advise us.
+I'd like to let the solution you proposed sit on the list a little longer.
+It seems fairly sensible, but lets see what others suggest.
 
-There are two independent issues:
-
-a) avoiding the need for "pwm-names" by embedding the name in the
-   "pwms" property
-
-b) avoiding the need for "#pwm-cells" by having explicit separators between
-   entries in a "pwms" property.
-
-It would be possible to do one but not the other.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jonathan
+>>
+>> Regards,
+>> Ivan
+>>
+>>> +
+>>> +	return devm_iio_device_register(dev, indio_dev);
+>>> +}
+>>> +
+>>>
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
