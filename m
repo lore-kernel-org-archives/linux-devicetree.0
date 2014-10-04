@@ -1,41 +1,71 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] serial: mxs-auart: add sysrq support
-Date: Sat, 4 Oct 2014 13:19:03 -0300
-Message-ID: <CAOMZO5Cctk4UNvK2=MC9tf2Fzi1r0+qdn-SXfC-=W9n3T=a+VA@mail.gmail.com>
-References: <20140929014129.GA8687@kroah.com>
-	<1411999905-27044-1-git-send-email-j.uzycki@elproma.com.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1411999905-27044-1-git-send-email-j.uzycki@elproma.com.pl>
-Sender: linux-serial-owner@vger.kernel.org
-To: Janusz Uzycki <j.uzycki@elproma.com.pl>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jiri Slaby <jslaby@suse.cz>, Richard Genoud <richard.genoud@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 1/6] of: Fix NULL dereference in selftest removal code
+Date: Sat,  4 Oct 2014 21:29:57 +0100
+Message-ID: <1412454602-28518-1-git-send-email-grant.likely@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Janusz,
+The selftest code removes its testcase data from the live tree when
+exiting, but if the testcases data tree contains an empty child of the
+root, then it causes an oops due to a NULL dereference. The reason is
+that the code tries to directly dereference the child pointer without
+checking first if a child is actually there.
 
-On Mon, Sep 29, 2014 at 11:11 AM, Janusz Uzycki <j.uzycki@elproma.com.pl> wrote:
->> So I'm deleting all of these now, please resend the latest
->> versions you have, with properly versioning
->> and order information.
->
-> Sure. If you don't want to comment dirty patches
-> I will not send you them.
-> I can send you only the final version, commented before.
->
-> On the moment this patch is ready to apply.
->
-> [PATCH RESEND] serial: mxs-auart: add sysrq support
-> The patch is resent to apply.
+The solution is to pass the parent node into detach_node_and_children()
+instead of trying to pass the child. This required removing the code
+that attempts to remove all of the sibling nodes in
+detach_node_and_children(), which was never sensible in the first place.
 
-What Greg is asking you to do is to provide a proper version
-annotation in your patches.
+At the same time add a check to make sure the bounds of the nodes list
+are not exceeded by the testdata tree. If they are then abort.
 
-For example: [PATCH v2] serial: mxs-auart: add ...
+Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/of/selftest.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-Then if you need to submit it again you should do:
+diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+index a737cb5974de..883e60b04eb5 100644
+--- a/drivers/of/selftest.c
++++ b/drivers/of/selftest.c
+@@ -637,6 +637,8 @@ static int attach_node_and_children(struct device_node *np)
+ 	dup = np;
+ 
+ 	while (dup) {
++		if (WARN_ON(last_node_index >= NO_OF_NODES))
++			return -EINVAL;
+ 		nodes[last_node_index++] = dup;
+ 		dup = dup->sibling;
+ 	}
+@@ -717,10 +719,6 @@ static void detach_node_and_children(struct device_node *np)
+ {
+ 	while (np->child)
+ 		detach_node_and_children(np->child);
+-
+-	while (np->sibling)
+-		detach_node_and_children(np->sibling);
+-
+ 	of_detach_node(np);
+ }
+ 
+@@ -749,8 +747,7 @@ static void selftest_data_remove(void)
+ 		if (nodes[last_node_index]) {
+ 			np = of_find_node_by_path(nodes[last_node_index]->full_name);
+ 			if (strcmp(np->full_name, "/aliases") != 0) {
+-				detach_node_and_children(np->child);
+-				of_detach_node(np);
++				detach_node_and_children(np);
+ 			} else {
+ 				for_each_property_of_node(np, prop) {
+ 					if (strcmp(prop->name, "testcase-alias") == 0)
+-- 
+1.9.1
 
-[PATCH v3] serial: mxs-auart: add ...
-
-Also, always explain below the --- line what changed from one version to another
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
