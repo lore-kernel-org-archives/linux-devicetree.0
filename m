@@ -1,101 +1,120 @@
 From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 4/6] of/selftest: Add a test for duplicate phandles
-Date: Sat,  4 Oct 2014 21:30:00 +0100
-Message-ID: <1412454602-28518-4-git-send-email-grant.likely@linaro.org>
+Subject: [PATCH v2 6/6] of/selftest: Use the resolver to fixup phandles
+Date: Sat,  4 Oct 2014 21:30:02 +0100
+Message-ID: <1412454602-28518-6-git-send-email-grant.likely@linaro.org>
 References: <1412454602-28518-1-git-send-email-grant.likely@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1412454602-28518-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-All phandles in the tree should be unique. Add a testcase to make sure
-that this is so.
-
-Note: this testcase fails on the current kernel because the selftest
-code itself ends up adding duplicate phandles. Before this testcase is
-merged the selftest code needs to be modified to resolve phandles before
-adding them.
+The selftest data ends up causing duplicate phandles in the live tree
+for the time that the testcase data is inserted into the live tree. This
+is obviously a bad situation because anything attempting to read the
+tree while the selftests are running make resolve phandles to one of the
+testcase data nodes. Fix the problem by using the of_resolve_phandles()
+function to eliminate duplicates.
 
 Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/of/selftest.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ drivers/of/Kconfig                     |  1 +
+ drivers/of/selftest.c                  |  9 ++++++++-
+ drivers/of/testcase-data/testcases.dts | 35 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 44 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index 6b81a36f6420..1a13f5b722c5 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -11,6 +11,7 @@ config OF_SELFTEST
+ 	bool "Device Tree Runtime self tests"
+ 	depends on OF_IRQ && OF_EARLY_FLATTREE
+ 	select OF_DYNAMIC
++	select OF_RESOLVE
+ 	help
+ 	  This option builds in test cases for the device tree infrastructure
+ 	  that are executed once at boot time, and the results dumped to the
 diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-index 252a7eda8d6a..4f83e97f8788 100644
+index 4f83e97f8788..4fed34bff5cf 100644
 --- a/drivers/of/selftest.c
 +++ b/drivers/of/selftest.c
-@@ -7,6 +7,7 @@
- #include <linux/clk.h>
- #include <linux/err.h>
- #include <linux/errno.h>
-+#include <linux/hashtable.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_fdt.h>
-@@ -192,6 +193,51 @@ static void __init of_selftest_check_tree_linkage(void)
- 	pr_debug("allnodes list size (%i); sibling lists size (%i)\n", allnode_count, child_count);
- }
+@@ -25,7 +25,7 @@ static struct selftest_results {
+ 	int failed;
+ } selftest_results;
  
-+struct node_hash {
-+	struct hlist_node node;
-+	struct device_node *np;
-+};
-+
-+static void __init of_selftest_check_phandles(void)
-+{
-+	struct device_node *np;
-+	struct node_hash *nh;
-+	struct hlist_node *tmp;
-+	int i, dup_count = 0, phandle_count = 0;
-+	DECLARE_HASHTABLE(ht, 8);
-+
-+	hash_init(ht);
-+	for_each_of_allnodes(np) {
-+		if (!np->phandle)
-+			continue;
-+
-+		hash_for_each_possible(ht, nh, node, np->phandle) {
-+			if (nh->np->phandle == np->phandle) {
-+				pr_info("Duplicate phandle! %i used by %s and %s\n",
-+					np->phandle, nh->np->full_name, np->full_name);
-+				dup_count++;
-+				break;
-+			}
-+		}
-+
-+		nh = kzalloc(sizeof(*nh), GFP_KERNEL);
-+		if (WARN_ON(!nh))
-+			return;
-+
-+		nh->np = np;
-+		hash_add(ht, &nh->node, np->phandle);
-+		phandle_count++;
-+	}
-+	selftest(dup_count == 0, "Found %i duplicates in %i phandles\n",
-+		 dup_count, phandle_count);
-+
-+	/* Clean up */
-+	hash_for_each_safe(ht, i, tmp, nh, node) {
-+		hash_del(&nh->node);
-+		kfree(nh);
-+	}
-+}
-+
- static void __init of_selftest_parse_phandle_with_args(void)
- {
- 	struct device_node *np;
-@@ -825,6 +871,7 @@ static int __init of_selftest(void)
+-#define NO_OF_NODES 2
++#define NO_OF_NODES 3
+ static struct device_node *nodes[NO_OF_NODES];
+ static int last_node_index;
+ static bool selftest_live_tree;
+@@ -765,6 +765,7 @@ static int __init selftest_data_add(void)
+ 	extern uint8_t __dtb_testcases_begin[];
+ 	extern uint8_t __dtb_testcases_end[];
+ 	const int size = __dtb_testcases_end - __dtb_testcases_begin;
++	int rc;
  
- 	pr_info("start of selftest - you will see error messages\n");
- 	of_selftest_check_tree_linkage();
-+	of_selftest_check_phandles();
- 	of_selftest_find_node_by_name();
- 	of_selftest_dynamic();
- 	of_selftest_parse_phandle_with_args();
+ 	if (!size) {
+ 		pr_warn("%s: No testcase data to attach; not running tests\n",
+@@ -785,6 +786,12 @@ static int __init selftest_data_add(void)
+ 		pr_warn("%s: No tree to attach; not running tests\n", __func__);
+ 		return -ENODATA;
+ 	}
++	of_node_set_flag(selftest_data_node, OF_DETACHED);
++	rc = of_resolve_phandles(selftest_data_node);
++	if (rc) {
++		pr_err("%s: Failed to resolve phandles (rc=%i)\n", __func__, rc);
++		return -EINVAL;
++	}
+ 
+ 	if (!of_allnodes) {
+ 		/* enabling flag for removing nodes */
+diff --git a/drivers/of/testcase-data/testcases.dts b/drivers/of/testcase-data/testcases.dts
+index 219ef9324e9c..6994e15c24bf 100644
+--- a/drivers/of/testcase-data/testcases.dts
++++ b/drivers/of/testcase-data/testcases.dts
+@@ -13,3 +13,38 @@
+ #include "tests-interrupts.dtsi"
+ #include "tests-match.dtsi"
+ #include "tests-platform.dtsi"
++
++/*
++ * phandle fixup data - generated by dtc patches that aren't upstream.
++ * This data must be regenerated whenever phandle references are modified in
++ * the testdata tree.
++ *
++ * The format of this data may be subject to change. For the time being consider
++ * this a kernel-internal data format.
++ */
++/ { __local_fixups__ {
++	fixup = "/testcase-data/testcase-device2:interrupt-parent:0",
++		"/testcase-data/testcase-device1:interrupt-parent:0",
++		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:60",
++		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:52",
++		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:44",
++		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:36",
++		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:24",
++		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:8",
++		"/testcase-data/interrupts/interrupts-extended0:interrupts-extended:0",
++		"/testcase-data/interrupts/interrupts1:interrupt-parent:0",
++		"/testcase-data/interrupts/interrupts0:interrupt-parent:0",
++		"/testcase-data/interrupts/intmap1:interrupt-map:12",
++		"/testcase-data/interrupts/intmap0:interrupt-map:52",
++		"/testcase-data/interrupts/intmap0:interrupt-map:36",
++		"/testcase-data/interrupts/intmap0:interrupt-map:16",
++		"/testcase-data/interrupts/intmap0:interrupt-map:4",
++		"/testcase-data/phandle-tests/consumer-a:phandle-list-bad-args:12",
++		"/testcase-data/phandle-tests/consumer-a:phandle-list-bad-args:0",
++		"/testcase-data/phandle-tests/consumer-a:phandle-list:56",
++		"/testcase-data/phandle-tests/consumer-a:phandle-list:52",
++		"/testcase-data/phandle-tests/consumer-a:phandle-list:40",
++		"/testcase-data/phandle-tests/consumer-a:phandle-list:24",
++		"/testcase-data/phandle-tests/consumer-a:phandle-list:8",
++		"/testcase-data/phandle-tests/consumer-a:phandle-list:0";
++}; };
 -- 
 1.9.1
 
