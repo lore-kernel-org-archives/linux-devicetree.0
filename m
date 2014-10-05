@@ -1,118 +1,123 @@
-From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: [PATCH v2 2/7] ARM: dts: add dtsi for Amlogic Meson8 SoCs
-Date: Sun,  5 Oct 2014 23:59:14 +0200
-Message-ID: <1412546359-15062-3-git-send-email-b.galvani@gmail.com>
+From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 7/7] ARM: meson: enable L2 cache
+Date: Sun,  5 Oct 2014 23:59:19 +0200
+Message-ID: <1412546359-15062-8-git-send-email-b.galvani@gmail.com>
 References: <1412546359-15062-1-git-send-email-b.galvani@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1412546359-15062-1-git-send-email-b.galvani@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Carlo Caione <carlo@caione.org>, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Beniamino Galvani <b.galvani@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412546359-15062-1-git-send-email-b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a dtsi for Amlogic Meson8 SoCs. It differs from the Meson6
-dtsi for the number of Cortex-A9 cores (4 vs 2) and for the frequency
-of clk81.
+This enables the L2 cache controller available in Amlogic SoCs.
 
-Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/meson8.dtsi | 88 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
- create mode 100644 arch/arm/boot/dts/meson8.dtsi
+ arch/arm/boot/dts/meson.dtsi  | 7 +++++++
+ arch/arm/boot/dts/meson6.dtsi | 2 ++
+ arch/arm/boot/dts/meson8.dtsi | 4 ++++
+ arch/arm/mach-meson/Kconfig   | 1 +
+ arch/arm/mach-meson/meson.c   | 2 ++
+ 5 files changed, 16 insertions(+)
 
+diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
+index 55feb14..7d27f12 100644
+--- a/arch/arm/boot/dts/meson.dtsi
++++ b/arch/arm/boot/dts/meson.dtsi
+@@ -50,6 +50,13 @@
+ / {
+ 	interrupt-parent = <&gic>;
+ 
++	L2: l2-cache-controller@c4200000 {
++		compatible = "arm,pl310-cache";
++		reg = <0xc4200000 0x1000>;
++		cache-unified;
++		cache-level = <2>;
++	};
++
+ 	gic: interrupt-controller@c4301000 {
+ 		compatible = "arm,cortex-a9-gic";
+ 		reg = <0xc4301000 0x1000>,
+diff --git a/arch/arm/boot/dts/meson6.dtsi b/arch/arm/boot/dts/meson6.dtsi
+index 4ba4912..8b33be1 100644
+--- a/arch/arm/boot/dts/meson6.dtsi
++++ b/arch/arm/boot/dts/meson6.dtsi
+@@ -60,12 +60,14 @@
+ 		cpu@200 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
++			next-level-cache = <&L2>;
+ 			reg = <0x200>;
+ 		};
+ 
+ 		cpu@201 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
++			next-level-cache = <&L2>;
+ 			reg = <0x201>;
+ 		};
+ 	};
 diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-new file mode 100644
-index 0000000..42e4026
---- /dev/null
+index 42e4026..1f442a7 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
 +++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -0,0 +1,88 @@
-+/*
-+ * Copyright 2014 Carlo Caione <carlo@caione.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public License
-+ *     along with this program. If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/include/ "meson.dtsi"
-+
-+/ {
-+	model = "Amlogic Meson8 SoC";
-+	compatible = "amlogic,meson8";
-+
-+	interrupt-parent = <&gic>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@200 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <0x200>;
-+		};
-+
-+		cpu@201 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <0x201>;
-+		};
-+
-+		cpu@202 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <0x202>;
-+		};
-+
-+		cpu@203 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <0x203>;
-+		};
-+	};
-+
-+	clk81: clk@0 {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <141666666>;
-+	};
-+}; /* end of / */
+@@ -58,24 +58,28 @@
+ 		cpu@200 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
++			next-level-cache = <&L2>;
+ 			reg = <0x200>;
+ 		};
+ 
+ 		cpu@201 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
++			next-level-cache = <&L2>;
+ 			reg = <0x201>;
+ 		};
+ 
+ 		cpu@202 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
++			next-level-cache = <&L2>;
+ 			reg = <0x202>;
+ 		};
+ 
+ 		cpu@203 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
++			next-level-cache = <&L2>;
+ 			reg = <0x203>;
+ 		};
+ 	};
+diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
+index b289e8e..18301dc 100644
+--- a/arch/arm/mach-meson/Kconfig
++++ b/arch/arm/mach-meson/Kconfig
+@@ -2,6 +2,7 @@ menuconfig ARCH_MESON
+ 	bool "Amlogic Meson SoCs" if ARCH_MULTI_V7
+ 	select GENERIC_IRQ_CHIP
+ 	select ARM_GIC
++	select CACHE_L2X0
+ 
+ if ARCH_MESON
+ 
+diff --git a/arch/arm/mach-meson/meson.c b/arch/arm/mach-meson/meson.c
+index 8f42d8f..5d6affe 100644
+--- a/arch/arm/mach-meson/meson.c
++++ b/arch/arm/mach-meson/meson.c
+@@ -24,4 +24,6 @@ static const char * const meson_common_board_compat[] = {
+ 
+ DT_MACHINE_START(MESON, "Amlogic Meson platform")
+ 	.dt_compat	= meson_common_board_compat,
++	.l2c_aux_val	= 0,
++	.l2c_aux_mask	= ~0,
+ MACHINE_END
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
