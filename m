@@ -1,147 +1,289 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH] thermal: fix multiple disbalanced device node counters
-Date: Sun, 05 Oct 2014 16:36:32 +0300
-Message-ID: <54314960.1060309@mleia.com>
-References: <1411948066-9118-1-git-send-email-vz@mleia.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH v3] dt-bindings: Add a clocks property
+ to the simple-framebuffer binding
+Date: Sun, 05 Oct 2014 16:27:34 +0200
+Message-ID: <54315556.2050308@redhat.com>
+References: <1412345120-24588-1-git-send-email-hdegoede@redhat.com>	<CAL_JsqKU2n8p=YfJua3k-mR40bG_4SiZY8_-SL-MXtuWN5NeHg@mail.gmail.com>	<542EDE11.3010802@redhat.com>	<CAL_Jsq+3c7ToCGaR4Nz7dDXvebBKzzMv85swzy2mzOou+gM5iw@mail.gmail.com>	<CAKON4OxxQ3hp0npr1Zh6w-2-HwMyC+8OxOCBmFFmBZ0N+6N0dw@mail.gmail.com>	<542FC2E6.5040800@redhat.com>	<CAKON4Owg_ABPJ9JfXqZwj9TQQNSPa8LKgr7U762B6--NTrOVFQ@mail.gmail.com>	<54310955.2090708@redhat.com> <CAKON4OwYg8obyjPp9VL5O4fq6zK5jhd+Jr-v59yisoHqX09iag@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1411948066-9118-1-git-send-email-vz@mleia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBY5KYWQQKGQEVKCWYXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAKON4OwYg8obyjPp9VL5O4fq6zK5jhd+Jr-v59yisoHqX09iag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Eduardo, Zhang,
+Hi,
 
-On 29.09.2014 02:47, Vladimir Zapolskiy wrote:
-> Here on function return all temporarily used device nodes shall
-> decrement their usage counter. The problems are found with device
-> nodes allocated by for_each_child_of_node(), of_parse_phandle()
-> and of_find_node_by_name(), fix all problems at once.
+On 10/05/2014 02:52 PM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> On Sun, Oct 5, 2014 at 5:03 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> Hi,
+>>
+>> On 10/04/2014 02:38 PM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>>> On Sat, Oct 4, 2014 at 5:50 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>>> Hi,
+>>>>
+>>>> On 10/04/2014 12:56 AM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>>>>> On Fri, Oct 3, 2014 at 4:08 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>>> On Fri, Oct 3, 2014 at 12:34 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> On 10/03/2014 05:57 PM, Rob Herring wrote:
+>>>>>>>> On Fri, Oct 3, 2014 at 9:05 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>>>>>>>> A simple-framebuffer node represents a framebuffer setup by the firmware /
+>>>>>>>>> bootloader. Such a framebuffer may have a number of clocks in use, add a
+>>>>>>>>> property to communicate this to the OS.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>>>>>>> Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>>>>>>
+>>>>>>>>> --
+>>>>>>>>> Changes in v2:
+>>>>>>>>> -Added Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>>>>>> Changes in v3:
+>>>>>>>>> -Updated description to make clear simplefb deals with more then just memory
+>>>>>>>>
+>>>>>>>> NAK. "Fixing" the description is not what I meant and does not address
+>>>>>>>> my concerns. Currently, simplefb is configuration data. It is
+>>>>>>>> auxiliary data about how a chunk of memory is used. Using it or not
+>>>>>>>> has no side effects on the hardware setup, but you are changing that
+>>>>>>>> aspect. You are mixing in a hardware description that is simply
+>>>>>>>> inaccurate.
+>>>>>>>
+>>>>>>> Memory is hardware too, what simplefb is is best seen as a virtual device, and
+>>>>>>> even virtual devices have hardware resources they need, such as a chunk of memory,
+>>>>>>> which the kernel should not touch other then use it as a framebuffer, likewise
+>>>>>>> on some systems the virtual device needs clocks to keep running.
+>>>>>>>
+>>>>>>>> The kernel has made the decision to turn off "unused" clocks. If its
+>>>>>>>> determination of what is unused is wrong, then it is not a problem to
+>>>>>>>> fix in DT.
+>>>>>>>
+>>>>>>> No, it is up to DT to tell the kernel what clocks are used, that is how it works
+>>>>>>> for any other device. I don't understand why some people keep insisting simplefb
+>>>>>>> for some reason is o so very very special, because it is not special, it needs
+>>>>>>> resources, and it needs to tell the kernel about this or bad things happen.
+>>>>>>
+>>>>>> No, the DT describes the connections of clocks from h/w block to h/w
+>>>>>> block. Their use is implied by the connection.
+>>>>>>
+>>>>>> And yes, as the other thread mentioned DT is more than just hardware
+>>>>>> information. However, what you are adding IS hardware information and
+>>>>>> clearly has a place somewhere else. And adding anything which is not
+>>>>>> hardware description gets much more scrutiny.
+>>>>>>
+>>>>>>> More over it is a bit late to start making objections now. This has already been
+>>>>>>> discussed to death for weeks now, and every argument against this patch has already
+>>>>>>> been countered multiple times (including the one you are making now). Feel free to
+>>>>>>> read the entire thread in the archives under the subject:
+>>>>>>> "[PATCH 4/4] simplefb: add clock handling code"
+>>>>>>
+>>>>>> You are on v2 and I hardly see any consensus on the v1 thread. Others
+>>>>>> have made suggestions which I would agree with and you've basically
+>>>>>> ignored them.
+>>>>>>
+>>>>>>> At one point in time we need to stop bickering and make a decision, that time has
+>>>>>>> come now, so please lets get this discussion over with and merge this, so that
+>>>>>>> we can all move on and spend out time in a more productive manner.
+>>>>>>
+>>>>>> Not an effective argument to get things merged.
+>>>>>
+>>>>> If there is not good solution to deferring clock clean up in the
+>>>>> kernel, another approach is to change how simple-framebuffer is
+>>>>> described in the device tree....
+>>>>>
+>>>>> Right now it is a stand-alone item that looks like a device node, but
+>>>>> it isn't a device.
+>>>>>
+>>>>> framebuffer {
+>>>>>     compatible = "simple-framebuffer";
+>>>>>     reg = <0x1d385000 (1600 * 1200 * 2)>;
+>>>>>     width = <1600>;
+>>>>>     height = <1200>;
+>>>>>     stride = <(1600 * 2)>;
+>>>>>     format = "r5g6b5";
+>>>>> };
+>>>>>
+>>>>> How about something like this?
+>>>>>
+>>>>> reserved-memory {
+>>>>>     #address-cells = <1>;
+>>>>>     #size-cells = <1>;
+>>>>>     ranges;
+>>>>>
+>>>>>     display_reserved: framebuffer@78000000 {
+>>>>>         reg = <0x78000000  (1600 * 1200 * 2)>;
+>>>>>     };
+>>>>> };
+>>>>>
+>>>>> lcd0: lcd-controller@820000 {
+>>>>>     compatible = "marvell,dove-lcd";
+>>>>>     reg = <0x820000 0x1000>;
+>>>>>     interrupts = <47>;
+>>>>>     clocks = <&si5351 0>;
+>>>>>     clock-names = "ext_ref_clk_1";
+>>>>> };
+>>>>>
+>>>>> chosen {
+>>>>>     boot-framebuffer {
+>>>>>        compatible = "simple-framebuffer";
+>>>>>        device = <&lcd0>;
+>>>>>        framebuffer = <&display_reserved>;
+>>>>>        width = <1600>;
+>>>>>        height = <1200>;
+>>>>>        stride = <(1600 * 2)>;
+>>>>>        format = "r5g6b5";
+>>>>>     };
+>>>>> }
+>>>>>
+>>>>>
+>>>>> This moves the definition of the boot framebuffer setup into the area
+>>>>> where bootloader info is suppose to go. Then you can use the phandle
+>>>>> to follow the actual device chains and protect the clocks and
+>>>>> regulators. To make that work you are required to provide an accurate
+>>>>> description of the real video hardware so that this chain can be
+>>>>> followed.
+>>>>
+>>>> This will not work, first of all multiple blocks may be involved, so
+>>>> the device = in the boot-framebuffer would need to be a list. That in
+>>>> itself is not a problem, the problem is that the blocks used may have
+>>>> multiple clocks, of which the setup mode likely uses only a few.
+>>>>
+>>>> So if we do things this way, we end up keeping way to many clocks
+>>>> enabled.
+>>>
+>>> That doesn't hurt anything.
+>>
+>> <snip lots of stuff based on the above>
+>>
+>> Wrong, that does hurt things. As already discussed simply stopping the
+>> clocks from being disabled by the unused_clks mechanism is not enough,
+>> since clocks may be shared, and we must stop another device driver
+>> sharing the clock and doing clk_enable; probe; clk_disable; disabling
+>> the shared clk, which means calling clk_enable on it to mark it as
+>> being in use. So this will hurt cause it will cause us to enable a bunch
+>> of clks which should not be enabled.
+> 
+> I said earlier that you would need to add a protected mechanism to
+> clocks to handle this phase. When a clock/regulator is protected you
+> can turn it on but you can't turn it off. When simplefb exits it will
+> clear this protected status. When the protected status gets cleared
+> treat it as a ref count decrement and turn off the clock/regulator if
+> indicated to do so. If a clock is protected, all of it parents get the
+> protected bit set too.
+> 
+> Protected mode
+>    you can turn clocks on, but not off
+>    it is ref counted
+>   when it hits zero, look at the normal refcount and set that state
+> 
+> Protected mode is not long lived. It only hangs around until the real
+> device driver loads.
 
-ping. The bugfix is quite straightforward, please review.
+And that has already been nacked by the clk maintainer because it is
+too complicated, and I agree this is tons more complicated then simply
+adding the list of clocks to the simplefb node.
 
-> Signed-off-by: Vladimir Zapolskiy<vz@mleia.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Zhang Rui<rui.zhang@intel.com>
-> Cc: Eduardo Valentin<edubezval@gmail.com>
-> ---
->   drivers/thermal/of-thermal.c |   40 ++++++++++++++++++++++++++++++++--------
->   1 file changed, 32 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
-> index f8eb625..62143ba 100644
-> --- a/drivers/thermal/of-thermal.c
-> +++ b/drivers/thermal/of-thermal.c
-> @@ -387,15 +387,18 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id,
->   				int (*get_trend)(void *, long *))
->   {
->   	struct device_node *np, *child, *sensor_np;
-> +	struct thermal_zone_device *tzd = ERR_PTR(-ENODEV);
->
->   	np = of_find_node_by_name(NULL, "thermal-zones");
->   	if (!np)
->   		return ERR_PTR(-ENODEV);
->
-> -	if (!dev || !dev->of_node)
-> +	if (!dev || !dev->of_node) {
-> +		of_node_put(np);
->   		return ERR_PTR(-EINVAL);
-> +	}
->
-> -	sensor_np = dev->of_node;
-> +	sensor_np = of_node_get(dev->of_node);
->
->   	for_each_child_of_node(np, child) {
->   		struct of_phandle_args sensor_specs;
-> @@ -422,16 +425,21 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id,
->   		}
->
->   		if (sensor_specs.np == sensor_np&&  id == sensor_id) {
-> -			of_node_put(np);
-> -			return thermal_zone_of_add_sensor(child, sensor_np,
-> -							  data,
-> -							  get_temp,
-> -							  get_trend);
-> +			tzd = thermal_zone_of_add_sensor(child, sensor_np,
-> +							 data,
-> +							 get_temp,
-> +							 get_trend);
-> +			of_node_put(sensor_specs.np);
-> +			of_node_put(child);
-> +			goto exit;
->   		}
-> +		of_node_put(sensor_specs.np);
->   	}
-> +exit:
-> +	of_node_put(sensor_np);
->   	of_node_put(np);
->
-> -	return ERR_PTR(-ENODEV);
-> +	return tzd;
->   }
->   EXPORT_SYMBOL_GPL(thermal_zone_of_sensor_register);
->
-> @@ -623,6 +631,7 @@ static int thermal_of_populate_trip(struct device_node *np,
->
->   	/* Required for cooling map matching */
->   	trip->np = np;
-> +	of_node_get(np);
->
->   	return 0;
->   }
-> @@ -730,9 +739,14 @@ finish:
->   	return tz;
->
->   free_tbps:
-> +	for (i = 0; i<  tz->num_tbps; i++)
-> +		of_node_put(tz->tbps[i].cooling_device);
->   	kfree(tz->tbps);
->   free_trips:
-> +	for (i = 0; i<  tz->ntrips; i++)
-> +		of_node_put(tz->trips[i].np);
->   	kfree(tz->trips);
-> +	of_node_put(gchild);
->   free_tz:
->   	kfree(tz);
->   	of_node_put(child);
-> @@ -742,7 +756,13 @@ free_tz:
->
->   static inline void of_thermal_free_zone(struct __thermal_zone *tz)
->   {
-> +	int i;
-> +
-> +	for (i = 0; i<  tz->num_tbps; i++)
-> +		of_node_put(tz->tbps[i].cooling_device);
->   	kfree(tz->tbps);
-> +	for (i = 0; i<  tz->ntrips; i++)
-> +		of_node_put(tz->trips[i].np);
->   	kfree(tz->trips);
->   	kfree(tz);
->   }
-> @@ -814,10 +834,13 @@ int __init of_parse_thermal_zones(void)
->   			/* attempting to build remaining zones still */
->   		}
->   	}
-> +	of_node_put(np);
->
->   	return 0;
->
->   exit_free:
-> +	of_node_put(child);
-> +	of_node_put(np);
->   	of_thermal_free_zone(tz);
->
->   	/* no memory available, so free what we have built */
-> @@ -859,4 +882,5 @@ void of_thermal_destroy_zones(void)
->   		kfree(zone->ops);
->   		of_thermal_free_zone(zone->devdata);
->   	}
-> +	of_node_put(np);
->   }
+>> I've been thinking more about this, and I understand that people don't
+>> want to put hardware description in the simplefb node, but this is
+>> not hardware description.
+>>
+>> u-boot sets up the display-pipeline to scan out of a certain part of
+>> memory, in order to do this it writes the memory address to some registers
+>> in the display pipeline, so what it is passing is not hardware description
+>> (it is not passing all possible memory addresses for the framebuffer), but
+>> it is passing information about the state in which it has left the display
+>> pipeline, iow it is passing state information.
+> 
+> Giving the buffer to a piece of hardware is more than setting state.
+> The hardware now owns that buffer.  That ownership needs to be managed
+> so that if the hardware decides it doesn't want the buffer it can be
+> returned to the global pool.
+> 
+> That's why the buffer has to go into that reserved memory section, not
+> the chosen section.
 
---
-With best wishes,
-Vladimir
+But is not in the reserved memory section, it is in the simplefb
+section, and we're stuck with this because of backward compatibility.
+
+ An OS doesn't have to process chosen, it is just
+> there for informational purposes. To keep the OS from thinking it owns
+> the memory in that video buffer and can use it for OS purposes, it has
+> to go into that reserved memory section.
+> 
+> The clocks are different. We know exactly who owns those clocks, the
+> graphics hardware.
+> 
+> You want something like this where the state of the entire video path
+> is encoded into the chosen section. But that info is going to vary all
+> over the place with TV output, HDMI output, LCD panels, etc. simplefb
+> isn't going to be simple any more. Plus the purposes of adding all of
+> this complexity is just to handle the half second transition from boot
+> loader control to real driver.
+> 
+>  reserved-memory {
+>      #address-cells = <1>;
+>      #size-cells = <1>;
+>      ranges;
+> 
+>      display_reserved: framebuffer@78000000 {
+>          reg = <0x78000000  (1600 * 1200 * 2)>;
+>      };
+>  };
+> 
+>  lcd0: lcd-controller@820000 {
+>      compatible = "marvell,dove-lcd";
+>      reg = <0x820000 0x1000>;
+>      interrupts = <47>;
+>      framebuffer = <&display_reserved>;
+>      clocks = <&si5351 0>;
+>      clock-names = "ext_ref_clk_1";
+>  };
+> 
+>  chosen {
+>      boot-framebuffer {
+>         compatible = "simple-framebuffer";
+>         state {
+>             device = <&lcd0>;
+>             width = <1600>;
+>             height = <1200>;
+>             stride = <(1600 * 2)>;
+>             format = "r5g6b5";
+>             clocks = <&si5351 on 10mhz>;
+
+Right, so here we get a list of clocks which are actually in use
+by the simplefb, just as I've been advocating all the time already.
+
+Note that the clock speed is not necessary, all the kernel needs to
+know is that it must not change it.
+
+So as you seem to agree that we need to pass some sort of clock state
+info, then all we need to agree on now is where to put it, as said adding
+the reg property to a reserved-memory node is out of the question because
+of backward compat, likewise storing width, height and format in a state
+sub-node are out of the question for the same reason. But other then that
+I'm fine with putting the simplefb node under chosen and putting clocks
+in there (without the state subnode) as you suggest above.
+
+So we seem to be in agreement here :)
+
+>            output = "hdmi";
+>            state {
+>                  device = <&hdmi>
+>                  clocks = <&xyz on 12mhz>;
+>           }
+
+That level of detail won't be necessary, simplefb is supposed to be
+simple, the kernel does not need to know which outputs there are, there
+will always be only one for simplefb.
+
+Regards,
+
+Hans
