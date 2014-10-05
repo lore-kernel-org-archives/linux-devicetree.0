@@ -1,43 +1,87 @@
-From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 6/7] ARM: meson: document meson8 compatible properties
-Date: Sun,  5 Oct 2014 23:59:18 +0200
-Message-ID: <1412546359-15062-7-git-send-email-b.galvani@gmail.com>
-References: <1412546359-15062-1-git-send-email-b.galvani@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412546359-15062-1-git-send-email-b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v3 04/15] ACPI: Document ACPI device specific properties
+Date: Mon, 06 Oct 2014 00:26:08 +0200
+Message-ID: <1562586.DiDBZ0QE8j@vostro.rjw.lan>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <6568619.UkU5qISONv@vostro.rjw.lan> <8634377.yRllsv0gms@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <8634377.yRllsv0gms@wuerfel>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings documentation for Amlogic Meson8 SoCs.
+On Saturday, October 04, 2014 12:59:59 PM Arnd Bergmann wrote:
+> On Saturday 04 October 2014 02:13:23 Rafael J. Wysocki wrote:
+> > > Because people get the format wrong regardless of documentation. The
+> > > format:
+> > > 
+> > > Package () {
+> > >       Package () { ^ref1, data, data },
+> > >       Package () { ^ref2, data },
+> > >       Package () { ^ref3, data, data, data },
+> > > }
+> > > 
+> > > Is superior to the format:
+> > > 
+> > > Package () { ^ref1, data, data, ^ref2, data, ^ref3, data, data, data }
+> > > 
+> > > Because in the former you have delimiters that can be used to verify
+> > > each tuple. Imagine someone misses a data element for one of these
+> > > tuples. In the former layout you can detect this easily while in the
+> > > latter you cannot.
+> > 
+> > I agree with this particular thing (although other people seem to have
+> > problems with too many package nesting levels) but I'm not sure what that
+> > has to do with the example given above (let me quote again):
+> > 
+> > > Putting everything to a single package results this:
+> > > 
+> > >       Package () { "pwms", Package () {"led-red", ^PWM0, 0, 10, "led-green", ^PWM0, 1, 10 }}
+> > > 
+> > > But I think the below looks better:
+> > > 
+> > >       Package () { "pwms", Package () {^PWM0, 0, 10, ^PWM0, 1, 10 }}
+> > >       Package () { "pwm-names", Package () {"led-red", "led-green"}}
+> > > 
+> > > and it is trivial to match with the corresponding DT fragment.
+> > 
+> > that I was commenting.  Both cases contains the
+> > 
+> >         Package () { ^ref1, data, data, ^ref2, data, ^ref3, data, data, data }
+> > 
+> > format that you don't like, don't they?
+> > 
+> 
+> There are two independent issues:
+> 
+> a) avoiding the need for "pwm-names" by embedding the name in the
+>    "pwms" property
+> 
+> b) avoiding the need for "#pwm-cells" by having explicit separators between
+>    entries in a "pwms" property.
+> 
+> It would be possible to do one but not the other.
 
-Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/amlogic.txt | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+OK
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
-index 7eece72..8fe8150 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.txt
-+++ b/Documentation/devicetree/bindings/arm/amlogic.txt
-@@ -2,7 +2,9 @@ Amlogic MesonX device tree bindings
- -------------------------------------------
- 
- Boards with the Amlogic Meson6 SoC shall have the following properties:
-+  Required root node property:
-+    compatible: "amlogic,meson6"
- 
--Required root node property:
--
--compatible = "amlogic,meson6";
-+Boards with the Amlogic Meson8 SoC shall have the following properties:
-+  Required root node property:
-+    compatible: "amlogic,meson8";
+So aside from theorethical considerations it's good to look at what the
+current code is doing in my opinion.
+
+In the current patchset, acpi_dev_get_property_reference() is only used
+in one place, which is acpi_get_gpiod_by_index().  That, in turn, is only
+used by acpi_find_gpio() and by dev_get_named_gpiod_from_child() (and its
+devm variant).  acpi_find_gpio() passes 0 as index (which means it only
+cares about the first reference in the list) and the _get_named_gpiod_from_child()
+thigs are used by leds-gpio and gpio-keys-polled.  Each of them also uses
+0 as the index (so they only care about the first reference in the list as well).
+
+Thus, arguably, acpi_dev_get_property_reference() in its current form is
+sufficient for what we need at the moment.  There simply is no need to make
+it more complicated right now and we can extend it in the future if need be.
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
