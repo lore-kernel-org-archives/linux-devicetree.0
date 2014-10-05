@@ -1,45 +1,100 @@
-From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: [PATCH v2 0/7] ARM: meson: add support for Meson8
-Date: Sun,  5 Oct 2014 23:59:12 +0200
-Message-ID: <1412546359-15062-1-git-send-email-b.galvani@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Carlo Caione <carlo@caione.org>, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Beniamino Galvani <b.galvani@gmail.com>
+From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 3/7] ARM: dts: add dts for Tronsmart S89 Elite TV box
+Date: Sun,  5 Oct 2014 23:59:15 +0200
+Message-ID: <1412546359-15062-4-git-send-email-b.galvani@gmail.com>
+References: <1412546359-15062-1-git-send-email-b.galvani@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412546359-15062-1-git-send-email-b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This adds a dts for the Tronsmart S89 Elite, a set-top box based on
+the Amlogic S802 SoC with a 8GiB NAND flash, USB ports, 10/100 Mbps
+Ethernet adapter, WiFi, HDMI and a micro SD slot.
 
-this patchset introduces support for Amlogic Meson8, which is a family
-of quad-core Cortex-A9 SoCs used in tablets and set-top boxes.
-
-Changes since v1:
- - reused the existing DT machine definition and renamed it to be more
-   generic
- - added L2 cache support
-
-Beniamino Galvani (7):
-  ARM: meson: add meson8 support
-  ARM: dts: add dtsi for Amlogic Meson8 SoCs
-  ARM: dts: add dts for Tronsmart S89 Elite TV box
-  of: add vendor prefix for Tronsmart
-  ARM: document Tronsmart compatible properties
-  ARM: meson: document meson8 compatible properties
-  ARM: meson: enable L2 cache
-
- Documentation/devicetree/bindings/arm/amlogic.txt  |  8 +-
- .../devicetree/bindings/arm/tronsmart.txt          |  7 ++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- arch/arm/boot/dts/meson.dtsi                       |  7 ++
- arch/arm/boot/dts/meson6.dtsi                      |  2 +
- arch/arm/boot/dts/meson8-vega-s89e.dts             | 65 +++++++++++++++
- arch/arm/boot/dts/meson8.dtsi                      | 92 ++++++++++++++++++++++
- arch/arm/mach-meson/Kconfig                        |  6 ++
- arch/arm/mach-meson/meson.c                        | 10 ++-
- 9 files changed, 191 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/tronsmart.txt
+Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/meson8-vega-s89e.dts | 65 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
  create mode 100644 arch/arm/boot/dts/meson8-vega-s89e.dts
- create mode 100644 arch/arm/boot/dts/meson8.dtsi
 
+diff --git a/arch/arm/boot/dts/meson8-vega-s89e.dts b/arch/arm/boot/dts/meson8-vega-s89e.dts
+new file mode 100644
+index 0000000..950998f
+--- /dev/null
++++ b/arch/arm/boot/dts/meson8-vega-s89e.dts
+@@ -0,0 +1,65 @@
++/*
++ * Copyright 2014 Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public License
++ *     along with this program. If not, see <http://www.gnu.org/licenses/>.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++
++/dts-v1/;
++/include/ "meson8.dtsi"
++
++/ {
++	model = "Tronsmart Vega S89 Elite";
++	compatible = "tronsmart,vega-s89e", "amlogic,meson8";
++
++	aliases {
++		serial0 = &uart_AO;
++	};
++
++	memory {
++		reg = <0x40000000 0x80000000>;
++	};
++};
++
++&uart_AO {
++	status = "okay";
++};
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
