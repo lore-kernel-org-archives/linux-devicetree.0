@@ -1,552 +1,550 @@
-From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: [PATCH v2 1/2] i2c: add support for Amlogic Meson I2C controller
-Date: Sun,  5 Oct 2014 22:17:11 +0200
-Message-ID: <1412540232-26168-2-git-send-email-b.galvani@gmail.com>
-References: <1412540232-26168-1-git-send-email-b.galvani@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1412540232-26168-1-git-send-email-b.galvani@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Carlo Caione <carlo@caione.org>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Beniamino Galvani <b.galvani@gmail.com>
+From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Fixing boot-time hiccups in your display
+Date: Sun, 5 Oct 2014 16:34:40 -0400
+Message-ID: <CAKON4OxunQNC_Ebf5u9yh9EnGS2A+DdWCRyoFcJWS7GSNoLoqA@mail.gmail.com>
+References: <CAKON4OxRFCvMPMfZhxYNVaxscgAs5AX46YzK-4SU5o6E-iTD1w@mail.gmail.com>
+	<20141005200150.4379.28017@quantum>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBC55LFUF6ALBBYOWY2QQKGQERGSXLKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20141005200150.4379.28017@quantum>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a driver for the I2C controller found in Amlogic Meson SoCs.
+On Sun, Oct 5, 2014 at 4:01 PM, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Quoting jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org (2014-10-05 10:09:52)
+>> I edited the subject line to something more appropriate. This impacts
+>> a lot of platforms and we should be getting more replies from people
+>> on the ARM kernel list. This is likely something that deserves a
+>> Kernel Summit discussion.
+>
+> ELC-E and LPC are just around the corner as well. I am attending both. I
+> suppose some of the others interested in this topic will be present?
+>
+>>
+>> To summarize the problem....
+>>
+>> The BIOS (uboot, etc) may have set various devices up into a working
+>> state before handing off to the kernel.  The most obvious example of
+>> this is the boot display.
+>>
+>> So how do we transition onto the kernel provided device specific
+>> drivers without interrupting these functioning devices?
+>>
+>> This used to be simple, just build everything into the kernel. But
+>> then along came multi-architecture kernels where most drivers are not
+>> built in. Those kernels clean up everything (ie turn off unused
+>> clocks, regulators, etc) right before user space starts. That's done
+>> as a power saving measure.
+>>
+>> Unfortunately that code turns off the clocks and regulators providing
+>> the display on your screen. Which then promptly gets turned back on a
+>> half second later when the boot scripts load the display driver. Let's
+>> all hope the boot doesn't fail while the display is turned off.
+>
+> I would say this is one half of the discussion. How do you ever really
+> know when it is safe to disable these things? In a world with loadable
+> modules the kernel cannot know that everything that is going to be
+> loaded has been loaded. There really is no boundary that makes it easy
+> to say, "OK, now it is truly safe for me to disable these things because
+> I know every possible piece of code that might claim these resources has
+> probed".
 
-Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
----
- drivers/i2c/busses/Kconfig     |   7 +
- drivers/i2c/busses/Makefile    |   1 +
- drivers/i2c/busses/i2c-meson.c | 492 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 500 insertions(+)
- create mode 100644 drivers/i2c/busses/i2c-meson.c
+Humans know where this boundary is and can insert the clean up command
+at the right point in the bootscript. It is also not fatal if the
+command is inserted at the wrong point, things will just needlessly
+flicker. It not even fatal if you never run this command, you'll just
+leave clocks/regulators turned on that could be turned off.
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 2e45ae3..b8e8f63 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -530,6 +530,13 @@ config I2C_KEMPLD
- 	  This driver can also be built as a module. If so, the module
- 	  will be called i2c-kempld.
- 
-+config I2C_MESON
-+	tristate "Amlogic Meson I2C controller"
-+	depends on ARCH_MESON
-+	help
-+	  If you say yes to this option, support will be included for the
-+	  I2C interface on the Amlogic Meson family of SoCs.
-+
- config I2C_MPC
- 	tristate "MPC107/824x/85xx/512x/52xx/83xx/86xx"
- 	depends on PPC
-diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
-index 49bf07e..c7ed7f12 100644
---- a/drivers/i2c/busses/Makefile
-+++ b/drivers/i2c/busses/Makefile
-@@ -51,6 +51,7 @@ obj-$(CONFIG_I2C_IBM_IIC)	+= i2c-ibm_iic.o
- obj-$(CONFIG_I2C_IMX)		+= i2c-imx.o
- obj-$(CONFIG_I2C_IOP3XX)	+= i2c-iop3xx.o
- obj-$(CONFIG_I2C_KEMPLD)	+= i2c-kempld.o
-+obj-$(CONFIG_I2C_MESON)		+= i2c-meson.o
- obj-$(CONFIG_I2C_MPC)		+= i2c-mpc.o
- obj-$(CONFIG_I2C_MV64XXX)	+= i2c-mv64xxx.o
- obj-$(CONFIG_I2C_MXS)		+= i2c-mxs.o
-diff --git a/drivers/i2c/busses/i2c-meson.c b/drivers/i2c/busses/i2c-meson.c
-new file mode 100644
-index 0000000..5e4f13b
---- /dev/null
-+++ b/drivers/i2c/busses/i2c-meson.c
-@@ -0,0 +1,492 @@
-+/*
-+ * I2C bus driver for Amlogic Meson SoCs
-+ *
-+ * Copyright (C) 2014 Beniamino Galvani <b.galvani@gmail.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/completion.h>
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/types.h>
-+
-+/* Meson I2C register map */
-+#define REG_CTRL		0x00
-+#define REG_SLAVE_ADDR		0x04
-+#define REG_TOK_LIST0		0x08
-+#define REG_TOK_LIST1		0x0c
-+#define REG_TOK_WDATA0		0x10
-+#define REG_TOK_WDATA1		0x14
-+#define REG_TOK_RDATA0		0x18
-+#define REG_TOK_RDATA1		0x1c
-+
-+/* Control register fields */
-+#define REG_CTRL_START		BIT(0)
-+#define REG_CTRL_ACK_IGNORE	BIT(1)
-+#define REG_CTRL_STATUS		BIT(2)
-+#define REG_CTRL_ERROR		BIT(3)
-+#define REG_CTRL_CLKDIV_SHIFT	12
-+#define REG_CTRL_CLKDIV_MASK	((BIT(10) - 1) << REG_CTRL_CLKDIV_SHIFT)
-+
-+#define I2C_TIMEOUT_MS		500
-+#define DEFAULT_FREQ		100000
-+
-+enum {
-+	TOKEN_END = 0,
-+	TOKEN_START,
-+	TOKEN_SLAVE_ADDR_WRITE,
-+	TOKEN_SLAVE_ADDR_READ,
-+	TOKEN_DATA,
-+	TOKEN_DATA_LAST,
-+	TOKEN_STOP,
-+};
-+
-+enum {
-+	STATE_IDLE,
-+	STATE_READ,
-+	STATE_WRITE,
-+	STATE_STOP,
-+};
-+
-+/**
-+ * struct meson_i2c - Meson I2C device private data
-+ *
-+ * @adap:	I2C adapter instance
-+ * @dev:	Pointer to device structure
-+ * @regs:	Base address of the device memory mapped registers
-+ * @clk:	Pointer to clock structure
-+ * @irq:	IRQ number
-+ * @msg:	Pointer to the current I2C message
-+ * @state:	Current state in the driver state machine
-+ * @last:	Flag set for the last message in the transfer
-+ * @count:	Number of bytes to be sent/received in current transfer
-+ * @pos:	Current position in the send/receive buffer
-+ * @error:	Flag set when an error is received
-+ * @lock:	To avoid race conditions between irq handler and xfer code
-+ * @done:	Completion used to wait for transfer termination
-+ * @frequency:	Operating frequency of I2C bus clock
-+ * @tokens:	Sequence of tokens to be written to the device
-+ * @num_tokens:	Number of tokens
-+ */
-+struct meson_i2c {
-+	struct i2c_adapter	adap;
-+	struct device		*dev;
-+	void __iomem		*regs;
-+	struct clk		*clk;
-+	int			irq;
-+
-+	struct i2c_msg		*msg;
-+	int			state;
-+	bool			last;
-+	int			count;
-+	int			pos;
-+	int			error;
-+
-+	spinlock_t		lock;
-+	struct completion	done;
-+	unsigned int		frequency;
-+	u32			tokens[2];
-+	int			num_tokens;
-+};
-+
-+static void meson_i2c_set_mask(struct meson_i2c *i2c, int reg, u32 mask,
-+			       u32 val)
-+{
-+	u32 data;
-+
-+	data = readl(i2c->regs + reg);
-+	data &= ~mask;
-+	data |= val & mask;
-+	writel(data, i2c->regs + reg);
-+}
-+
-+static void meson_i2c_reset_tokens(struct meson_i2c *i2c)
-+{
-+	i2c->tokens[0] = 0;
-+	i2c->tokens[1] = 0;
-+	i2c->num_tokens = 0;
-+}
-+
-+static void meson_i2c_add_token(struct meson_i2c *i2c, int token)
-+{
-+	if (i2c->num_tokens < 8)
-+		i2c->tokens[0] |= (token & 0xf) << (i2c->num_tokens * 4);
-+	else
-+		i2c->tokens[1] |= (token & 0xf) << ((i2c->num_tokens % 8) * 4);
-+
-+	i2c->num_tokens++;
-+}
-+
-+static void meson_i2c_write_tokens(struct meson_i2c *i2c)
-+{
-+	writel(i2c->tokens[0], i2c->regs + REG_TOK_LIST0);
-+	writel(i2c->tokens[1], i2c->regs + REG_TOK_LIST1);
-+}
-+
-+static void meson_i2c_set_clk_div(struct meson_i2c *i2c)
-+{
-+	unsigned long clk_rate = clk_get_rate(i2c->clk);
-+	unsigned int div;
-+
-+	div = DIV_ROUND_UP(clk_rate, i2c->frequency * 4);
-+	meson_i2c_set_mask(i2c, REG_CTRL, REG_CTRL_CLKDIV_MASK,
-+			   div << REG_CTRL_CLKDIV_SHIFT);
-+
-+	dev_dbg(i2c->dev, "%s: clk %lu, freq %u, div %u\n", __func__,
-+		clk_rate, i2c->frequency, div);
-+}
-+
-+static void meson_i2c_get_data(struct meson_i2c *i2c, char *buf, int len)
-+{
-+	u32 rdata0, rdata1;
-+	int i;
-+
-+	rdata0 = readl(i2c->regs + REG_TOK_RDATA0);
-+	rdata1 = readl(i2c->regs + REG_TOK_RDATA1);
-+
-+	dev_dbg(i2c->dev, "%s: data %08x %08x len %d\n", __func__,
-+		rdata0, rdata1, len);
-+
-+	for (i = 0; i < min_t(int, 4, len); i++)
-+		*buf++ = (rdata0 >> i * 8) & 0xff;
-+
-+	for (i = 4; i < min_t(int, 8, len); i++)
-+		*buf++ = (rdata1 >> i * 8) & 0xff;
-+}
-+
-+static void meson_i2c_put_data(struct meson_i2c *i2c, char *buf, int len)
-+{
-+	u32 wdata0 = 0, wdata1 = 0;
-+	int i;
-+
-+	for (i = 0; i < min_t(int, 4, len); i++)
-+		wdata0 |= *buf++ << (i * 8);
-+
-+	for (i = 4; i < min_t(int, 8, len); i++)
-+		wdata1 |= *buf++ << ((i - 4) * 8);
-+
-+	writel(wdata0, i2c->regs + REG_TOK_WDATA0);
-+	writel(wdata0, i2c->regs + REG_TOK_WDATA1);
-+
-+	dev_dbg(i2c->dev, "%s: data %08x %08x len %d\n", __func__,
-+		wdata0, wdata1, len);
-+}
-+
-+static void meson_i2c_prepare_xfer(struct meson_i2c *i2c, bool write)
-+{
-+	int i;
-+
-+	i2c->count = min_t(int, i2c->msg->len - i2c->pos, 8);
-+
-+	for (i = 0; i < i2c->count - 1; i++)
-+		meson_i2c_add_token(i2c, TOKEN_DATA);
-+
-+	meson_i2c_add_token(i2c, write ? TOKEN_DATA : TOKEN_DATA_LAST);
-+
-+	if (write)
-+		meson_i2c_put_data(i2c, i2c->msg->buf + i2c->pos, i2c->count);
-+}
-+
-+static void meson_i2c_stop(struct meson_i2c *i2c)
-+{
-+	dev_dbg(i2c->dev, "%s: last %d\n", __func__, i2c->last);
-+
-+	if (i2c->last) {
-+		i2c->state = STATE_STOP;
-+		meson_i2c_add_token(i2c, TOKEN_STOP);
-+	} else {
-+		i2c->state = STATE_IDLE;
-+		complete_all(&i2c->done);
-+	}
-+}
-+
-+static irqreturn_t meson_i2c_irq(int irqno, void *dev_id)
-+{
-+	struct meson_i2c *i2c = dev_id;
-+	unsigned int ctrl;
-+
-+	spin_lock(&i2c->lock);
-+
-+	meson_i2c_reset_tokens(i2c);
-+	ctrl = readl(i2c->regs + REG_CTRL);
-+
-+	dev_dbg(i2c->dev, "irq: state %d, pos %d, count %d, ctrl %08x\n",
-+		i2c->state, i2c->pos, i2c->count, ctrl);
-+
-+	if (ctrl & REG_CTRL_ERROR && i2c->state != STATE_IDLE) {
-+		/*
-+		 * The bit is set when the IGNORE_NAK bit is cleared
-+		 * and the device didn't respond. In this case, the
-+		 * I2C controller automatically generates a STOP
-+		 * condition.
-+		 */
-+		dev_dbg(i2c->dev, "error bit set\n");
-+		i2c->error = -ENXIO;
-+		i2c->state = STATE_IDLE;
-+		complete_all(&i2c->done);
-+		goto out;
-+	}
-+
-+	switch (i2c->state) {
-+	case STATE_READ:
-+		if (i2c->count > 0) {
-+			meson_i2c_get_data(i2c, i2c->msg->buf + i2c->pos,
-+					   i2c->count);
-+			i2c->pos += i2c->count;
-+		}
-+
-+		if (i2c->pos >= i2c->msg->len) {
-+			meson_i2c_stop(i2c);
-+			break;
-+		}
-+
-+		meson_i2c_prepare_xfer(i2c, false);
-+		break;
-+	case STATE_WRITE:
-+		i2c->pos += i2c->count;
-+
-+		if (i2c->pos >= i2c->msg->len) {
-+			meson_i2c_stop(i2c);
-+			break;
-+		}
-+
-+		meson_i2c_prepare_xfer(i2c, true);
-+		break;
-+	case STATE_STOP:
-+		i2c->state = STATE_IDLE;
-+		complete_all(&i2c->done);
-+		break;
-+	case STATE_IDLE:
-+		break;
-+	}
-+
-+out:
-+	if (i2c->state != STATE_IDLE) {
-+		/* Restart the processing */
-+		meson_i2c_write_tokens(i2c);
-+		meson_i2c_set_mask(i2c, REG_CTRL, REG_CTRL_START, 0);
-+		meson_i2c_set_mask(i2c, REG_CTRL, REG_CTRL_START,
-+				   REG_CTRL_START);
-+	}
-+
-+	spin_unlock(&i2c->lock);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void meson_i2c_do_start(struct meson_i2c *i2c, struct i2c_msg *msg)
-+{
-+	int token;
-+
-+	token = (msg->flags & I2C_M_RD) ? TOKEN_SLAVE_ADDR_READ :
-+		TOKEN_SLAVE_ADDR_WRITE;
-+
-+	writel(msg->addr << 1, i2c->regs + REG_SLAVE_ADDR);
-+	meson_i2c_add_token(i2c, TOKEN_START);
-+	meson_i2c_add_token(i2c, token);
-+}
-+
-+static int meson_i2c_xfer_msg(struct meson_i2c *i2c, struct i2c_msg *msg,
-+			      int last)
-+{
-+	unsigned long time_left, flags;
-+	int ret = 0;
-+
-+	i2c->msg = msg;
-+	i2c->last = last;
-+	i2c->pos = 0;
-+	i2c->count = 0;
-+	i2c->error = 0;
-+
-+	meson_i2c_reset_tokens(i2c);
-+
-+	flags = (msg->flags & I2C_M_IGNORE_NAK) ? REG_CTRL_ACK_IGNORE : 0;
-+	meson_i2c_set_mask(i2c, REG_CTRL, REG_CTRL_ACK_IGNORE, flags);
-+
-+	if (!(msg->flags & I2C_M_NOSTART))
-+		meson_i2c_do_start(i2c, msg);
-+
-+	if (msg->flags & I2C_M_RD) {
-+		i2c->state = STATE_READ;
-+		meson_i2c_prepare_xfer(i2c, false);
-+	} else {
-+		i2c->state = STATE_WRITE;
-+		meson_i2c_prepare_xfer(i2c, true);
-+	}
-+
-+	meson_i2c_write_tokens(i2c);
-+	reinit_completion(&i2c->done);
-+
-+	/* Start the transfer */
-+	meson_i2c_set_mask(i2c, REG_CTRL, REG_CTRL_START, REG_CTRL_START);
-+
-+	time_left = msecs_to_jiffies(I2C_TIMEOUT_MS);
-+	time_left = wait_for_completion_timeout(&i2c->done, time_left);
-+
-+	/*
-+	 * Protect access to i2c struct and registers from interrupt
-+	 * handlers triggered by a transfer terminated after the
-+	 * timeout period
-+	 */
-+	spin_lock_irqsave(&i2c->lock, flags);
-+
-+	/* Abort any active operation */
-+	meson_i2c_set_mask(i2c, REG_CTRL, REG_CTRL_START, 0);
-+
-+	if (!time_left) {
-+		i2c->state = STATE_IDLE;
-+		ret = -ETIMEDOUT;
-+	}
-+
-+	if (i2c->error)
-+		ret = i2c->error;
-+
-+	spin_unlock_irqrestore(&i2c->lock, flags);
-+
-+	return ret;
-+}
-+
-+static int meson_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
-+			  int num)
-+{
-+	struct meson_i2c *i2c = adap->algo_data;
-+	int i, ret = 0, count = 0;
-+
-+	clk_enable(i2c->clk);
-+	meson_i2c_set_clk_div(i2c);
-+
-+	for (i = 0; i < num; i++) {
-+		ret = meson_i2c_xfer_msg(i2c, msgs + i, i == num - 1);
-+		if (ret)
-+			break;
-+		count++;
-+	}
-+
-+	clk_disable(i2c->clk);
-+
-+	return ret ? ret : count;
-+}
-+
-+static u32 meson_i2c_func(struct i2c_adapter *adap)
-+{
-+	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
-+}
-+
-+static const struct i2c_algorithm meson_i2c_algorithm = {
-+	.master_xfer	= meson_i2c_xfer,
-+	.functionality	= meson_i2c_func,
-+};
-+
-+static int meson_i2c_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct meson_i2c *i2c;
-+	struct resource *mem;
-+	int ret = 0;
-+
-+	i2c = devm_kzalloc(&pdev->dev, sizeof(struct meson_i2c), GFP_KERNEL);
-+	if (!i2c)
-+		return -ENOMEM;
-+
-+	if (of_property_read_u32(pdev->dev.of_node, "clock-frequency",
-+				 &i2c->frequency))
-+		i2c->frequency = DEFAULT_FREQ;
-+
-+	i2c->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, i2c);
-+
-+	spin_lock_init(&i2c->lock);
-+	init_completion(&i2c->done);
-+
-+	i2c->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(i2c->clk)) {
-+		dev_err(&pdev->dev, "can't get device clock\n");
-+		return PTR_ERR(i2c->clk);
-+	}
-+
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	i2c->regs = devm_ioremap_resource(&pdev->dev, mem);
-+	if (IS_ERR(i2c->regs))
-+		return PTR_ERR(i2c->regs);
-+
-+	i2c->irq = platform_get_irq(pdev, 0);
-+	if (i2c->irq < 0) {
-+		dev_err(&pdev->dev, "can't find IRQ\n");
-+		return i2c->irq;
-+	}
-+
-+	ret = devm_request_irq(&pdev->dev, i2c->irq, meson_i2c_irq,
-+			       0, dev_name(&pdev->dev), i2c);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "can't request IRQ\n");
-+		return ret;
-+	}
-+
-+	ret = clk_prepare(i2c->clk);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "can't prepare clock\n");
-+		return ret;
-+	}
-+
-+	strlcpy(i2c->adap.name, "Meson I2C adapter",
-+		sizeof(i2c->adap.name));
-+	i2c->adap.owner = THIS_MODULE;
-+	i2c->adap.algo = &meson_i2c_algorithm;
-+	i2c->adap.dev.parent = &pdev->dev;
-+	i2c->adap.dev.of_node = np;
-+	i2c->adap.algo_data = i2c;
-+
-+	/*
-+	 * A transfer is triggered when START bit changes from 0 to 1.
-+	 * Ensure that the bit is set to 0 after probe
-+	 */
-+	meson_i2c_set_mask(i2c, REG_CTRL, REG_CTRL_START, 0);
-+
-+	ret = i2c_add_adapter(&i2c->adap);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "can't register adapter\n");
-+		clk_unprepare(i2c->clk);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int meson_i2c_remove(struct platform_device *pdev)
-+{
-+	struct meson_i2c *i2c = platform_get_drvdata(pdev);
-+
-+	i2c_del_adapter(&i2c->adap);
-+	clk_unprepare(i2c->clk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id meson_i2c_match[] = {
-+	{ .compatible = "amlogic,meson6-i2c" },
-+	{ },
-+};
-+
-+static struct platform_driver meson_i2c_driver = {
-+	.probe   = meson_i2c_probe,
-+	.remove  = meson_i2c_remove,
-+	.driver  = {
-+		.name  = "meson-i2c",
-+		.of_match_table = meson_i2c_match,
-+	},
-+};
-+
-+module_platform_driver(meson_i2c_driver);
-+
-+MODULE_DESCRIPTION("Amlogic Meson I2C Bus driver");
-+MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
-+MODULE_LICENSE("GPL v2");
+>
+> Somebody (Geert?) proposed an ioctl for userspace to send such an "all
+> clear" signal, but I dislike that idea. We're talking about managing
+> fairly low-level hardware bits (clocks, regulators) and getting
+> userspace involved feels wrong.
+
+I proposed it, Geert has been commenting on it. This 'all clear' just
+says it is ok now to go clean up the mess the BIOS left.
+
+User space already got involved when we turned the bulk of the device
+drivers into loadable modules on multi-arch kernels. On these kernels
+the system isn't really up when user space starts, it still needs to
+load all of these loadable device drivers. And some of those device
+drivers implement your display.
+
+So I think of it as loading the rest of the kernel via user space,
+then run a command saying 'do power clean up'. Currently 'do power
+clear up' occurs right before user space starts - which is clearly the
+wrong point in time if most of the drivers haven't had a chance to
+load.
+
+
+>
+> Additionally clocks and regulators should be managed by PM Runtime
+> implementations (via generic power domains and friends), so any solution
+> that we come up with today that is specific for the clock and regulator
+> frameworks would need to scale up to other abstraction layers, because
+> those layers would probably like to know that they are not really
+> idle/gated in hardware because the ioctl/garbage collector has not yet
+> happened.
+
+Maybe that is another way to look at this. PM should not be running
+until all of the device drivers have a chance to load. By that I mean
+all of the ones in the boot scripts, not one loaded two hours later by
+hand.
+
+After the bootscript gets the drivers loaded it starts PM running.
+First thing PM does is use the IOCTL to clear out 'boot' mode and turn
+off stuff the BIOS turned on and no Linux driver claimed.
+
+I think it should be pretty obvious to a human when to start PM
+running in the bootscripts.
+
+>
+> The second half of the discussion is specific to simple framebuffer and
+> the desire to keep it extremely simple and narrowly focused. I can
+> understand both sides of the argument and I hope to stay well out of the
+> flame zone.
+
+That discussion is a mess because the first discussion is not solved.
+
+>
+> Even if we do leave simple framebuffer alone, the *idea* behind a very
+> simple, entirely data-driven driver implementation that is meant to be
+> compiled into the kernel image, claim resources early, ensure they stay
+> enabled and then hand-off to a real driver that may be a loadable module
+> is very interesting. It doesn't have to be simplefb. It could be
+> something new. Additionally if this design pattern becomes common across
+> more than just displays then we might want to consider ways of Doing It
+> Right.
+>
+> Regards,
+> Mike
+>
+>>
+>> Below is part of the discussion on how to fix this, but so far no
+>> really good solution has been discovered.
+>>
+>> For the whole history search for the simple-framebuffer threads. There
+>> have been about 1,000 messages.
+>>
+>> On Sun, Oct 5, 2014 at 12:34 PM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> > On Sun, Oct 5, 2014 at 11:36 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>> >> On Sun, Oct 5, 2014 at 11:29 PM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> >>> On Sun, Oct 5, 2014 at 11:17 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>> >>>> On Sun, Oct 5, 2014 at 11:07 PM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> >>>>> On Sun, Oct 5, 2014 at 10:27 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> >>>>>> Hi,
+>> >>>>>>
+>> >>>>>> On 10/05/2014 02:52 PM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> >>>>>>> On Sun, Oct 5, 2014 at 5:03 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> >>>>>>>> Hi,
+>> >>>>>>>>
+>> >>>>>>>> On 10/04/2014 02:38 PM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> >>>>>>>>> On Sat, Oct 4, 2014 at 5:50 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> >>>>>>>>>> Hi,
+>> >>>>>>>>>>
+>> >>>>>>>>>> On 10/04/2014 12:56 AM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> >>>>>>>>>>> On Fri, Oct 3, 2014 at 4:08 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> >>>>>>>>>>>> On Fri, Oct 3, 2014 at 12:34 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> >>>>>>>>>>>>> Hi,
+>> >>>>>>>>>>>>>
+>> >>>>>>>>>>>>> On 10/03/2014 05:57 PM, Rob Herring wrote:
+>> >>>>>>>>>>>>>> On Fri, Oct 3, 2014 at 9:05 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> >>>>>>>>>>>>>>> A simple-framebuffer node represents a framebuffer setup by the firmware /
+>> >>>>>>>>>>>>>>> bootloader. Such a framebuffer may have a number of clocks in use, add a
+>> >>>>>>>>>>>>>>> property to communicate this to the OS.
+>> >>>>>>>>>>>>>>>
+>> >>>>>>>>>>>>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> >>>>>>>>>>>>>>> Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> >>>>>>>>>>>>>>>
+>> >>>>>>>>>>>>>>> --
+>> >>>>>>>>>>>>>>> Changes in v2:
+>> >>>>>>>>>>>>>>> -Added Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> >>>>>>>>>>>>>>> Changes in v3:
+>> >>>>>>>>>>>>>>> -Updated description to make clear simplefb deals with more then just memory
+>> >>>>>>>>>>>>>>
+>> >>>>>>>>>>>>>> NAK. "Fixing" the description is not what I meant and does not address
+>> >>>>>>>>>>>>>> my concerns. Currently, simplefb is configuration data. It is
+>> >>>>>>>>>>>>>> auxiliary data about how a chunk of memory is used. Using it or not
+>> >>>>>>>>>>>>>> has no side effects on the hardware setup, but you are changing that
+>> >>>>>>>>>>>>>> aspect. You are mixing in a hardware description that is simply
+>> >>>>>>>>>>>>>> inaccurate.
+>> >>>>>>>>>>>>>
+>> >>>>>>>>>>>>> Memory is hardware too, what simplefb is is best seen as a virtual device, and
+>> >>>>>>>>>>>>> even virtual devices have hardware resources they need, such as a chunk of memory,
+>> >>>>>>>>>>>>> which the kernel should not touch other then use it as a framebuffer, likewise
+>> >>>>>>>>>>>>> on some systems the virtual device needs clocks to keep running.
+>> >>>>>>>>>>>>>
+>> >>>>>>>>>>>>>> The kernel has made the decision to turn off "unused" clocks. If its
+>> >>>>>>>>>>>>>> determination of what is unused is wrong, then it is not a problem to
+>> >>>>>>>>>>>>>> fix in DT.
+>> >>>>>>>>>>>>>
+>> >>>>>>>>>>>>> No, it is up to DT to tell the kernel what clocks are used, that is how it works
+>> >>>>>>>>>>>>> for any other device. I don't understand why some people keep insisting simplefb
+>> >>>>>>>>>>>>> for some reason is o so very very special, because it is not special, it needs
+>> >>>>>>>>>>>>> resources, and it needs to tell the kernel about this or bad things happen.
+>> >>>>>>>>>>>>
+>> >>>>>>>>>>>> No, the DT describes the connections of clocks from h/w block to h/w
+>> >>>>>>>>>>>> block. Their use is implied by the connection.
+>> >>>>>>>>>>>>
+>> >>>>>>>>>>>> And yes, as the other thread mentioned DT is more than just hardware
+>> >>>>>>>>>>>> information. However, what you are adding IS hardware information and
+>> >>>>>>>>>>>> clearly has a place somewhere else. And adding anything which is not
+>> >>>>>>>>>>>> hardware description gets much more scrutiny.
+>> >>>>>>>>>>>>
+>> >>>>>>>>>>>>> More over it is a bit late to start making objections now. This has already been
+>> >>>>>>>>>>>>> discussed to death for weeks now, and every argument against this patch has already
+>> >>>>>>>>>>>>> been countered multiple times (including the one you are making now). Feel free to
+>> >>>>>>>>>>>>> read the entire thread in the archives under the subject:
+>> >>>>>>>>>>>>> "[PATCH 4/4] simplefb: add clock handling code"
+>> >>>>>>>>>>>>
+>> >>>>>>>>>>>> You are on v2 and I hardly see any consensus on the v1 thread. Others
+>> >>>>>>>>>>>> have made suggestions which I would agree with and you've basically
+>> >>>>>>>>>>>> ignored them.
+>> >>>>>>>>>>>>
+>> >>>>>>>>>>>>> At one point in time we need to stop bickering and make a decision, that time has
+>> >>>>>>>>>>>>> come now, so please lets get this discussion over with and merge this, so that
+>> >>>>>>>>>>>>> we can all move on and spend out time in a more productive manner.
+>> >>>>>>>>>>>>
+>> >>>>>>>>>>>> Not an effective argument to get things merged.
+>> >>>>>>>>>>>
+>> >>>>>>>>>>> If there is not good solution to deferring clock clean up in the
+>> >>>>>>>>>>> kernel, another approach is to change how simple-framebuffer is
+>> >>>>>>>>>>> described in the device tree....
+>> >>>>>>>>>>>
+>> >>>>>>>>>>> Right now it is a stand-alone item that looks like a device node, but
+>> >>>>>>>>>>> it isn't a device.
+>> >>>>>>>>>>>
+>> >>>>>>>>>>> framebuffer {
+>> >>>>>>>>>>>     compatible = "simple-framebuffer";
+>> >>>>>>>>>>>     reg = <0x1d385000 (1600 * 1200 * 2)>;
+>> >>>>>>>>>>>     width = <1600>;
+>> >>>>>>>>>>>     height = <1200>;
+>> >>>>>>>>>>>     stride = <(1600 * 2)>;
+>> >>>>>>>>>>>     format = "r5g6b5";
+>> >>>>>>>>>>> };
+>> >>>>>>>>>>>
+>> >>>>>>>>>>> How about something like this?
+>> >>>>>>>>>>>
+>> >>>>>>>>>>> reserved-memory {
+>> >>>>>>>>>>>     #address-cells = <1>;
+>> >>>>>>>>>>>     #size-cells = <1>;
+>> >>>>>>>>>>>     ranges;
+>> >>>>>>>>>>>
+>> >>>>>>>>>>>     display_reserved: framebuffer@78000000 {
+>> >>>>>>>>>>>         reg = <0x78000000  (1600 * 1200 * 2)>;
+>> >>>>>>>>>>>     };
+>> >>>>>>>>>>> };
+>> >>>>>>>>>>>
+>> >>>>>>>>>>> lcd0: lcd-controller@820000 {
+>> >>>>>>>>>>>     compatible = "marvell,dove-lcd";
+>> >>>>>>>>>>>     reg = <0x820000 0x1000>;
+>> >>>>>>>>>>>     interrupts = <47>;
+>> >>>>>>>>>>>     clocks = <&si5351 0>;
+>> >>>>>>>>>>>     clock-names = "ext_ref_clk_1";
+>> >>>>>>>>>>> };
+>> >>>>>>>>>>>
+>> >>>>>>>>>>> chosen {
+>> >>>>>>>>>>>     boot-framebuffer {
+>> >>>>>>>>>>>        compatible = "simple-framebuffer";
+>> >>>>>>>>>>>        device = <&lcd0>;
+>> >>>>>>>>>>>        framebuffer = <&display_reserved>;
+>> >>>>>>>>>>>        width = <1600>;
+>> >>>>>>>>>>>        height = <1200>;
+>> >>>>>>>>>>>        stride = <(1600 * 2)>;
+>> >>>>>>>>>>>        format = "r5g6b5";
+>> >>>>>>>>>>>     };
+>> >>>>>>>>>>> }
+>> >>>>>>>>>>>
+>> >>>>>>>>>>>
+>> >>>>>>>>>>> This moves the definition of the boot framebuffer setup into the area
+>> >>>>>>>>>>> where bootloader info is suppose to go. Then you can use the phandle
+>> >>>>>>>>>>> to follow the actual device chains and protect the clocks and
+>> >>>>>>>>>>> regulators. To make that work you are required to provide an accurate
+>> >>>>>>>>>>> description of the real video hardware so that this chain can be
+>> >>>>>>>>>>> followed.
+>> >>>>>>>>>>
+>> >>>>>>>>>> This will not work, first of all multiple blocks may be involved, so
+>> >>>>>>>>>> the device = in the boot-framebuffer would need to be a list. That in
+>> >>>>>>>>>> itself is not a problem, the problem is that the blocks used may have
+>> >>>>>>>>>> multiple clocks, of which the setup mode likely uses only a few.
+>> >>>>>>>>>>
+>> >>>>>>>>>> So if we do things this way, we end up keeping way to many clocks
+>> >>>>>>>>>> enabled.
+>> >>>>>>>>>
+>> >>>>>>>>> That doesn't hurt anything.
+>> >>>>>>>>
+>> >>>>>>>> <snip lots of stuff based on the above>
+>> >>>>>>>>
+>> >>>>>>>> Wrong, that does hurt things. As already discussed simply stopping the
+>> >>>>>>>> clocks from being disabled by the unused_clks mechanism is not enough,
+>> >>>>>>>> since clocks may be shared, and we must stop another device driver
+>> >>>>>>>> sharing the clock and doing clk_enable; probe; clk_disable; disabling
+>> >>>>>>>> the shared clk, which means calling clk_enable on it to mark it as
+>> >>>>>>>> being in use. So this will hurt cause it will cause us to enable a bunch
+>> >>>>>>>> of clks which should not be enabled.
+>> >>>>>>>
+>> >>>>>>> I said earlier that you would need to add a protected mechanism to
+>> >>>>>>> clocks to handle this phase. When a clock/regulator is protected you
+>> >>>>>>> can turn it on but you can't turn it off. When simplefb exits it will
+>> >>>>>>> clear this protected status. When the protected status gets cleared
+>> >>>>>>> treat it as a ref count decrement and turn off the clock/regulator if
+>> >>>>>>> indicated to do so. If a clock is protected, all of it parents get the
+>> >>>>>>> protected bit set too.
+>> >>>>>>>
+>> >>>>>>> Protected mode
+>> >>>>>>>    you can turn clocks on, but not off
+>> >>>>>>>    it is ref counted
+>> >>>>>>>   when it hits zero, look at the normal refcount and set that state
+>> >>>>>>>
+>> >>>>>>> Protected mode is not long lived. It only hangs around until the real
+>> >>>>>>> device driver loads.
+>> >>>>>>
+>> >>>>>> And that has already been nacked by the clk maintainer because it is
+>> >>>>>> too complicated, and I agree this is tons more complicated then simply
+>> >>>>>> adding the list of clocks to the simplefb node.
+>> >>>>>>
+>> >>>>>>>> I've been thinking more about this, and I understand that people don't
+>> >>>>>>>> want to put hardware description in the simplefb node, but this is
+>> >>>>>>>> not hardware description.
+>> >>>>>>>>
+>> >>>>>>>> u-boot sets up the display-pipeline to scan out of a certain part of
+>> >>>>>>>> memory, in order to do this it writes the memory address to some registers
+>> >>>>>>>> in the display pipeline, so what it is passing is not hardware description
+>> >>>>>>>> (it is not passing all possible memory addresses for the framebuffer), but
+>> >>>>>>>> it is passing information about the state in which it has left the display
+>> >>>>>>>> pipeline, iow it is passing state information.
+>> >>>>>>>
+>> >>>>>>> Giving the buffer to a piece of hardware is more than setting state.
+>> >>>>>>> The hardware now owns that buffer.  That ownership needs to be managed
+>> >>>>>>> so that if the hardware decides it doesn't want the buffer it can be
+>> >>>>>>> returned to the global pool.
+>> >>>>>>>
+>> >>>>>>> That's why the buffer has to go into that reserved memory section, not
+>> >>>>>>> the chosen section.
+>> >>>>>>
+>> >>>>>> But is not in the reserved memory section, it is in the simplefb
+>> >>>>>> section, and we're stuck with this because of backward compatibility.
+>> >>>>>>
+>> >>>>>>  An OS doesn't have to process chosen, it is just
+>> >>>>>>> there for informational purposes. To keep the OS from thinking it owns
+>> >>>>>>> the memory in that video buffer and can use it for OS purposes, it has
+>> >>>>>>> to go into that reserved memory section.
+>> >>>>>>>
+>> >>>>>>> The clocks are different. We know exactly who owns those clocks, the
+>> >>>>>>> graphics hardware.
+>> >>>>>>>
+>> >>>>>>> You want something like this where the state of the entire video path
+>> >>>>>>> is encoded into the chosen section. But that info is going to vary all
+>> >>>>>>> over the place with TV output, HDMI output, LCD panels, etc. simplefb
+>> >>>>>>> isn't going to be simple any more. Plus the purposes of adding all of
+>> >>>>>>> this complexity is just to handle the half second transition from boot
+>> >>>>>>> loader control to real driver.
+>> >>>>>>>
+>> >>>>>>>  reserved-memory {
+>> >>>>>>>      #address-cells = <1>;
+>> >>>>>>>      #size-cells = <1>;
+>> >>>>>>>      ranges;
+>> >>>>>>>
+>> >>>>>>>      display_reserved: framebuffer@78000000 {
+>> >>>>>>>          reg = <0x78000000  (1600 * 1200 * 2)>;
+>> >>>>>>>      };
+>> >>>>>>>  };
+>> >>>>>>>
+>> >>>>>>>  lcd0: lcd-controller@820000 {
+>> >>>>>>>      compatible = "marvell,dove-lcd";
+>> >>>>>>>      reg = <0x820000 0x1000>;
+>> >>>>>>>      interrupts = <47>;
+>> >>>>>>>      framebuffer = <&display_reserved>;
+>> >>>>>>>      clocks = <&si5351 0>;
+>> >>>>>>>      clock-names = "ext_ref_clk_1";
+>> >>>>>>>  };
+>> >>>>>>>
+>> >>>>>>>  chosen {
+>> >>>>>>>      boot-framebuffer {
+>> >>>>>>>         compatible = "simple-framebuffer";
+>> >>>>>>>         state {
+>> >>>>>>>             device = <&lcd0>;
+>> >>>>>>>             width = <1600>;
+>> >>>>>>>             height = <1200>;
+>> >>>>>>>             stride = <(1600 * 2)>;
+>> >>>>>>>             format = "r5g6b5";
+>> >>>>>>>             clocks = <&si5351 on 10mhz>;
+>> >>>>>>
+>> >>>>>> Right, so here we get a list of clocks which are actually in use
+>> >>>>>> by the simplefb, just as I've been advocating all the time already.
+>> >>>>>>
+>> >>>>>> Note that the clock speed is not necessary, all the kernel needs to
+>> >>>>>> know is that it must not change it.
+>> >>>>>>
+>> >>>>>> So as you seem to agree that we need to pass some sort of clock state
+>> >>>>>> info, then all we need to agree on now is where to put it, as said adding
+>> >>>>>> the reg property to a reserved-memory node is out of the question because
+>> >>>>>> of backward compat, likewise storing width, height and format in a state
+>> >>>>>> sub-node are out of the question for the same reason. But other then that
+>> >>>>>> I'm fine with putting the simplefb node under chosen and putting clocks
+>> >>>>>> in there (without the state subnode) as you suggest above.
+>> >>>>>>
+>> >>>>>> So we seem to be in agreement here :)
+>> >>>>>>
+>> >>>>>>>            output = "hdmi";
+>> >>>>>>>            state {
+>> >>>>>>>                  device = <&hdmi>
+>> >>>>>>>                  clocks = <&xyz on 12mhz>;
+>> >>>>>>>           }
+>> >>>>>>
+>> >>>>>> That level of detail won't be necessary, simplefb is supposed to be
+>> >>>>>> simple, the kernel does not need to know which outputs there are, there
+>> >>>>>> will always be only one for simplefb.
+>> >>>>>
+>> >>>>> I don't agree, but you are going to do it any way so I'll try and help
+>> >>>>> tkeep problem side effects I know of to a minimum. You are relying on
+>> >>>>> the BIOS to provide detailed, accurate information. Relying on BIOSes
+>> >>>>> to do that has historically been a very bad idea.
+>> >>>>>
+>> >>>>> If you go the way of putting this info into the chosen section you are
+>> >>>>> going to have to mark the clocks/regulators in use for all of the
+>> >>>>> outputs too -- hdmi, TV, LCD, backlights, etc, etc. Not going to be
+>> >>>>> useful if the backlight turns off because simplefb hasn't grabbed it.
+>> >>>>>
+>> >>>>> This is the only real difference between the proposals - you want
+>> >>>>> uboot to enumerate what needs to be protected. I don't trust the BIOS
+>> >>>>> to do that reliably so I'd preferred to just protect everything in the
+>> >>>>> device hardware chain until the device specific drivers load.
+>> >>>>>
+>> >>>>> -------------------------------------------------------
+>> >>>>>
+>> >>>>> I also still believe this is a problem up in Linux that we shouldn't
+>> >>>>> be using the device tree to fix.
+>> >>>>>
+>> >>>>> It seems to me that the need for something like a 'protected' mode is
+>> >>>>> a generic problem that could be extended to all hardware. In protected
+>> >>>>> mode things can be turned on but nothing can be turned off.  Only
+>> >>>>> after the kernel has all of the necessary drivers loaded would a small
+>> >>>>> app run that hits an IOCTL and says, ok protected mode is over now
+>> >>>>> clean up these things wasting power.
+>> >>>>
+>> >>>> What happens if some clock needs to be disabled?
+>> >>>> Like clocks that must be gated before setting a new clock rate
+>> >>>> or reparenting. The kernel supports these, and it wouldn't surprise me
+>> >>>> if some driver actually requires this. You might end up blocking that driver
+>> >>>> or breaking its probe function.
+>> >>>
+>> >>> Arggh, using those phandles in the chosen section means uboot is going
+>> >>> to have to get recompiled every time the DTS changes. I think we need
+>> >>> to come up with a scheme that doesn't need for uboot to be aware of
+>> >>> phandles.
+>> >>
+>> >> Why is that? U-boot is perfectly capable of patching device tree blobs.
+>> >>
+>> >> Mainline u-boot already updates the memory node, and if needed,
+>> >> the reserved-memory node as well.
+>> >>
+>> >> Someone just has to write the (ugly) code to do it, which Luc
+>> >> has already done for clock phandles for sunxi.
+>> >
+>> > So uboot is going to contain code to hunt through the Linux provided
+>> > DTB to find the correct phandles for the clocks/regulators and then
+>> > patch those phandles into the chosen section? How is uboot going to
+>> > reconcile it's concept of what those clock/regulators are with a Linux
+>> > provided DTB that is constant state of flux?
+>> >
+>> > I think trying to get uboot to manipulate phandles in a Linux provided
+>> > DTB is an incredibly fragile mechanism that will be prone to breakage.
+>> >
+>> > Much better to come with a scheme where uboot just inserts fixed
+>> > strings into the DTB. That last example device tree I posted removed
+>> > all of the phandles from the chosen section, but it relies on the
+>> > kernel gaining 'boot' mode.
+>> >
+>> >
+>> >>
+>> >> U-boot itself does not need to use the dtb, though that seems
+>> >> like the direction it's headed.
+>> >>
+>> >>> Something like this...
+>> >>> uboot adds the chosen section then Linux would error out if the
+>> >>> framebuffer in the chosen section doesn't match the reserved memory it
+>> >>> is expecting.  Or make uboot smart enough to hunt down the reserved
+>> >>> memory section and patch it like it does with dramsize.
+>> >>
+>> >> And someone probably will. Why is that a problem?
+>> >>
+>> >>
+>> >> ChenYu
+>> >>
+>> >>
+>> >>>
+>> >>>  reserved-memory {
+>> >>>      #address-cells = <1>;
+>> >>>      #size-cells = <1>;
+>> >>>      ranges;
+>> >>>
+>> >>>      display_reserved: framebuffer@78000000 {
+>> >>>          reg = <0x78000000  (1600 * 1200 * 2)>;
+>> >>>      };
+>> >>>  };
+>> >>>
+>> >>>  lcd0: lcd-controller@820000 {
+>> >>>      compatible = "marvell,dove-lcd";
+>> >>>      reg = <0x820000 0x1000>;
+>> >>>      interrupts = <47>;
+>> >>>      framebuffer = <&display_reserved>;
+>> >>>      clocks = <&si5351 0>;
+>> >>>      clock-names = "ext_ref_clk_1";
+>> >>>  };
+>> >>>
+>> >>>  chosen {
+>> >>>      boot-framebuffer {
+>> >>>         framebuffer = <0x78000000>;
+>> >>>         width = <1600>;
+>> >>>         height = <1200>;
+>> >>>         stride = <(1600 * 2)>;
+>> >>>         format = "r5g6b5";
+>> >>>      };
+>> >>>  }
+>> >>>
+>> >>>
+>> >>>
+>> >>>>
+>> >>>> And what if reset controls are asserted then de-asserted in the probe function?
+>> >>>> IIRC there are drivers that do this to reset the underlying hardware.
+>> >>>>
+>> >>>>> Maybe it should be renamed 'boot' mode. To implement this the various
+>> >>>>> 'turn off' functions would get a 'boot' mode flag. In boot mode they
+>> >>>>> track the ref counts but don't turn things off when the ref count hits
+>> >>>>> zero.  Then that ioctl() that the user space app calls runs the chains
+>> >>>>> of all of the clocks/regulators/etc and if the ref count is zero turns
+>> >>>>> them off again and clears 'boot' mode. Doesn't matter if you turn off
+>> >>>>> something again that is already off.
+>> >>>>
+>> >>>> And what if something just happened to be left on that some driver
+>> >>>> wants to turn off? You are assuming everything not used is off,
+>> >>>> which is not always the case.
+>> >
+>> >
+>> >
+>> > --
+>> > Jon Smirl
+>> > jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+>>
+>>
+>>
+>> --
+>> Jon Smirl
+>> jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+
+
+
 -- 
-1.9.1
+Jon Smirl
+jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
