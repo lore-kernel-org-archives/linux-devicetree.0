@@ -1,98 +1,43 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Re: [PATCH v3] dt-bindings: Add a clocks property
- to the simple-framebuffer binding
-Date: Sat, 04 Oct 2014 13:38:37 -0700
-Message-ID: <20141004203837.4379.55504@quantum>
-References: <1412345120-24588-1-git-send-email-hdegoede@redhat.com>
- <CAL_JsqKU2n8p=YfJua3k-mR40bG_4SiZY8_-SL-MXtuWN5NeHg@mail.gmail.com>
- <542EDE11.3010802@redhat.com>
- <CAL_Jsq+3c7ToCGaR4Nz7dDXvebBKzzMv85swzy2mzOou+gM5iw@mail.gmail.com>
- <CAKON4OxrcgWvJM_BCKwLDRBodaFC1h8Csu_srzjJSM=L+gpuaA@mail.gmail.com>
- <CAMuHMdVSyqJA6uTPiemco0guhG1MKgkCBV7Tik-Ndd_fs28=NQ@mail.gmail.com>
- <CAKON4OwZahPqPPqorFvgK+YNeYfqH87FTuX=umhZ42uGR32MMA@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v5 1/4] hwmon: ltc2978: device tree bindings documentation
+Date: Sat, 04 Oct 2014 17:13:53 -0700
+Message-ID: <54308D41.9070806@roeck-us.net>
+References: <1412275071-6417-1-git-send-email-atull@opensource.altera.com> <1412275071-6417-2-git-send-email-atull@opensource.altera.com> <20141003122736.GH26643@leverpostej> <542EDCDB.6040406@roeck-us.net> <20141003231334.GA4609@sirena.org.uk> <542F2FE3.60507@roeck-us.net> <20141004095349.GB4609@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDO333VC4INBBUVVYGQQKGQEQZ2FP3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAKON4OwZahPqPPqorFvgK+YNeYfqH87FTuX=umhZ42uGR32MMA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141004095349.GB4609@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>, "jdelvare@suse.de" <jdelvare@suse.de>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "delicious.quinoa@gmail.com" <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, "yvanderv@opensource.altera.com" <yvanderv@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org (2014-10-03 14:50:24)
-> On Fri, Oct 3, 2014 at 5:26 PM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> > On Fri, Oct 3, 2014 at 10:55 PM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> On Thu, Oct 2, 2014 at 9:46 AM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> >>> On Thu, Oct 2, 2014 at 3:34 PM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >>>> Does the clock and regulator cleanup happen before drivers can load
-> >>>> off from initrd? I didn't think it did but I might be wrong.
-> >>>
-> >>> Yes
-> >>>
-> >>> drivers/base/power/domain.c:late_initcall(genpd_poweroff_unused);
-> >>> drivers/clk/clk.c:late_initcall_sync(clk_disable_unused);
-> >>> drivers/regulator/core.c:late_initcall_sync(regulator_init_complete);
-> >>
-> >> What do you think about putting these calls onto an ioctl somewhere
-> >> and then eliminating the late_initcall(..)? A tiny user space app
-> >> could then hit that ioctl after all of the loadable device drivers are
-> >> loaded. Add the command to make this ioctl call to busybox or udev.
-> >> After all, it is not fatal if these calls aren't made, all they do is
-> >> save power. Add a link in rc.d or somewhere similar to run this app at
-> >> the appropriate time.
-> >>
-> >> Switching these over to an ioctl allows a window to be opened for
-> >> device specific driver loading before the clock/regulator clean up
-> >> happens.
-> >>
-> >> Now all of this mess of protecting clocks and regulator disappears.
-> >> Instead get the device specific drivers written and loaded, then run
-> >> the cleanup app which hits the ioctl(). All of the correct
-> >> clock/regulators will be claimed and then this clean code will do the
-> >> right thing.
-> >>
-> >> From my perspective it appears that this cleanup is being done too
-> >> early which then triggers a need to protect things from cleanup.
-> >
-> > Not doing the cleanup doesn't help.
-> >
-> > If someone else calls clk_disable() on a clock which shares a parent
-> > with the clock you're silently using, that clock will still be disabled.
-> > This can happen at any time.
-> 
-> Could we start all of the regulators and clocks off with a reference
-> count of one, but not do anything to change their state? Then this
-> ioctl() would decrement that extra reference. Removing the extra
-> reference would then disable everything that isn't claimed.
+On 10/04/2014 02:53 AM, Mark Brown wrote:
+> On Fri, Oct 03, 2014 at 04:23:15PM -0700, Guenter Roeck wrote:
+>> On 10/03/2014 04:13 PM, Mark Brown wrote:
+>
+>>> Nope, nothing to do with regulator that I'm aware of and I've not seen
+>>> any examples (but I don't tend to review users too often).
+>
+>> Many examples, really. Just picking one.
+>
+>> Documentation/devicetree/bindings/mfd/tps6507x.txt
+>
+> OK, that's not an actual DTS...  I'm not seeing anything in the code.
+>
+>> 	regulators {
+>>                  #address-cells = <1>;
+>>                  #size-cells = <0>;
+>> 		...
+>
+>> This also uses the reg property for the regulator index
+>> (without explaining it further). Seems to be pretty common.
+>
+> If it's doing that it's nothing to do with the regulator API.
+>
+Since the code does not use those values either, presumably they don't have
+to be specified in the first place. I'll test that with a real system
+next week.
 
-No. That is too ugly.
-
-Regards,
-Mike
-
-> 
-> 
-> >
-> > Gr{oetje,eeting}s,
-> >
-> >                         Geert
-> >
-> > --
-> > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-> >
-> > In personal conversations with technical people, I call myself a hacker. But
-> > when I'm talking to journalists I just say "programmer" or something like that.
-> >                                 -- Linus Torvalds
-> 
-> 
-> 
-> -- 
-> Jon Smirl
-> jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Guenter
