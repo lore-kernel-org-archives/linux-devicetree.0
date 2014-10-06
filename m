@@ -1,53 +1,89 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [RFC PATCH v2 01/16] ACPI: Add support for device specific
- properties
-Date: Mon, 06 Oct 2014 09:25:35 -0700
-Message-ID: <D058106C.ABC8C%dvhart@linux.intel.com>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
- <1410868367-11056-2-git-send-email-mika.westerberg@linux.intel.com>
- <20141006135021.0EB04C43FBE@trevor.secretlab.ca>
- <20141006143248.GE1583@lahna.fi.intel.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2] Input: add i2c/smbus driver for elan touchpad
+Date: Mon, 6 Oct 2014 09:37:03 -0700
+Message-ID: <20141006163703.GB27115@dtor-glaptop>
+References: <1389064083-11018-1-git-send-email-dusonlin@emc.com.tw>
+ <20141003210357.GB4987@dtor-ws>
+ <20141003210651.GC4987@dtor-ws>
+ <20141006092452.GA24686@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20141006143248.GE1583@lahna.fi.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Aaron Lu <aaron.lu@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141006092452.GA24686@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Duson Lin <dusonlin@emc.com.tw>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "bleung@chromium.org" <bleung@chromium.org>, "agnescheng@chromium.org" <agnescheng@chromium.org>, "phoenix@emc.com.tw" <phoenix@emc.com.tw>, "jeff.chuang@emc.com.tw" <jeff.chuang@emc.com.tw>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/6/14, 7:32, "Mika Westerberg" <mika.westerberg@linux.intel.com>
-wrote:
+On Mon, Oct 06, 2014 at 10:24:52AM +0100, Mark Rutland wrote:
+> On Fri, Oct 03, 2014 at 10:06:51PM +0100, Dmitry Torokhov wrote:
+> > [adding devicetree folks...]
+> > 
+> > On Fri, Oct 03, 2014 at 02:03:57PM -0700, Dmitry Torokhov wrote:
+> > > diff --git a/Documentation/devicetree/bindings/input/elan_i2c.txt b/Documentation/devicetree/bindings/input/elan_i2c.txt
+> > > new file mode 100644
+> > > index 0000000..0a6ee7d
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/input/elan_i2c.txt
+> > > @@ -0,0 +1,34 @@
+> > > +Elantech I2C Touchpad
+> > > +
+> > > +Required properties:
+> > > +- compatible: must be "elan,i2c_touchpad".
+> 
+> s/_/-/ in DT strings and property names plase.
+> 
+> The name seems very generic, and you mention the driver supports a
+> variety of touchpads. Please choose a specific device name for the
+> compatible string. Other devices can have that as a fallback entry in
+> addition to a more specific string.
 
->On Mon, Oct 06, 2014 at 02:50:21PM +0100, Grant Likely wrote:
->>
->> > +/* ACPI _DSD device properties UUID:
->>daffd814-6eba-4d8c-8a91-bc9bbf4aa301 */
->> > +static const u8 prp_uuid[16] = {
->> > +	0x14, 0xd8, 0xff, 0xda, 0xba, 0x6e, 0x8c, 0x4d,
->> > +	0x8a, 0x91, 0xbc, 0x9b, 0xbf, 0x4a, 0xa3, 0x01
->> > +};
->> 
->> ?
->> 
->> What is the encoding used here? I see the first 4 bytes for "daffd814"
->> encoded in little endian (0x14 first), and then the remaining values
->> encoded in big-endian for each number. Is this typical for UUID values?
->
->The buffer format is explained in ACPI 5.1 spec, page 823.
->
->I generated the above so that I compiled a _DSD with correct UUID using
->iASL and then disassambled it with the same tool.
->
+Duson, what would be a good model/device name here?
 
-I bugged Mika with the same question, it's a fairly non-intuitive encoding
-:-)
+> 
+> > > +- reg: I2C address of the chip.
+> > > +- interrupt-parent: a phandle for the gpio controller (see interrupt
+> > > +  binding[0]).
+> > > +- interrupts: (gpio) interrupt to which the chip is connected (see interrupt
+> > > +  binding[0]).
+> 
+> If this is an interrupt from the PoV of this device, it doesn't matter
+> if the other end is connected to a hardwired interrupt controller or a
+> gpio. So drop the mention of GPIOs frmom the interrupt properties.
+> 
+> > > +
+> > > +Optional properties:
+> > > +- wakeup-source: touchpad should be configured as a wakeup source.
+> 
+> s/should be configured as/can be used as/
+> 
+> > > +- pinctrl-names: should be "default" (see pinctrl binding [1]).
+> > > +- pinctrl-0: a phandle pointing to the pin settings for the device (see
+> > > +  pinctrl binding [1]).
+> > > +- vcc-supply: a phandle for the regulator supplying 3.3V power.
+> > > +
+> > > +[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> > > +[1]: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> > > +
+> > > +Example:
+> > > +     &i2c1 {
+> > > +             /* ... */
+> > > +
+> > > +             touchpad@15 {
+> > > +                     compatible = "elan,i2c_touchpad";
+> > > +                     reg = <0x15>;
+> > > +                     interrupt-parent = <&gpio4>;
+> > > +                     interrupts = <0x0 IRQ_TYPE_EDGE_FALLING>;
+> > > +                     wakeup-source;
+> > > +             };
+> > > +
+> > > +             /* ... */
+> > > +     };
+> 
+> Otherwise this looks ok.
+
+Thanks Mark.
 
 -- 
-Darren Hart
-Intel Open Source Technology Center
-
-
-
+Dmitry
