@@ -1,94 +1,72 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 00/13] ARM: shmobile: dts: Add chosen/stdout-path
-Date: Mon, 6 Oct 2014 11:40:29 +0900
-Message-ID: <20141006024027.GB23099@verge.net.au>
-References: <1412349104-18724-1-git-send-email-geert+renesas@glider.be>
+From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
+Subject: Re: [PATCH v4 0/6] Add initial support for pinctrl on Exynos7
+Date: Mon, 6 Oct 2014 09:12:25 +0530
+Message-ID: <CAM4voamZhSzEANSpij6oHjEjouqCL+shxHv11Qb8ZiLG81P37g@mail.gmail.com>
+References: <1412087450-10495-1-git-send-email-a.kesavan@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1412349104-18724-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1412087450-10495-1-git-send-email-a.kesavan@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Cc: Naveen Krishna <naveenkrishna.ch@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "robh@kernel.org" <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 03, 2014 at 05:11:31PM +0200, Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus,
-> 
-> This patch series adds chosen/stdout-path to the various shmobile DTS files
-> that are used for reference or multi-platform builds.
-> 
-> This serves two purposes:
->   1. It makes automatic console selection work in the absence of a "console="
->      parameter on the kernel command line, allowing to remove "console="
->      parameters from chosen/bootargs on many platforms.
->      Note that these "console=" parameters are still needed in some cases:
->        a. If console output is wanted on two consoles devices (graphical and
->           serial consoles), like on armadillo and kzm9g,
->        b. When using a non-default baud for the serial console, like on
->           henninger and alt,
->        c. If the DTS is shared between legacy and multi-platform, like on
->           armadillo, koelsch, lager, and marzen,
->   2. It will allow the PM domain code to find the PM domain for the console
->      device, to make "no_console_suspend" work in the DT case.
->      For now, this will matter on armadillo.
-> 
-> The first two patches are small cleanups for emev2 dtsi, on top of which the
-> change for kzm9d is built.
-> 
-> Changes in v2:
->   - Keep "console" for DTSes shared between legacy and multi-platform,
->   - Update for lager switching the console from scif0 to scifa0.
-> 
-> Thanks for applying!
-> 
-> Geert Uytterhoeven (13):
->   ARM: shmobile: emev2 dtsi: Use generic names for device nodes
->   ARM: shmobile: emev2 dtsi: Add uart* labels for easier referencing
->   ARM: shmobile: kzm9d dts: Add chosen/stdout-path
->   ARM: shmobile: genmai dts: Add chosen/stdout-path
->   ARM: shmobile: ape6evm-reference dts: Add chosen/stdout-path
->   ARM: shmobile: armadillo800eva dts: Add chosen/stdout-path
->   ARM: shmobile: bockw-reference dts: Add chosen/stdout-path
->   ARM: shmobile: marzen dts: Add chosen/stdout-path
->   ARM: shmobile: lager dts: Add chosen/stdout-path
->   ARM: shmobile: henninger dts: Add chosen/stdout-path
->   ARM: shmobile: koelsch dts: Add chosen/stdout-path
->   ARM: shmobile: alt dts: Add chosen/stdout-path
->   ARM: shmobile: kzm9g-reference dts: Add chosen/stdout-path
+Hi Linus,
 
-I have not queued-up the kzm9d patch which I have commented on in
-a reply to it.
+On Tue, Sep 30, 2014 at 8:00 PM, Abhilash Kesavan <a.kesavan@samsung.com> wrote:
+> Changes since v3:
+>         - Changed variable name from exynos_wkup_irq_chip to irq_chip
+>         - Added acked-by tag from Tomasz Figa
+>
+> Changes since v2:
+>         - Added a .irq_chip field to the samsung_pin_bank struct
+>         - Consolidated the wakeup and gpio irqd_ops
+>
+> Changes since v1:
+>         - Marked the newly created irq_chip instances as __initdata
+>         - Used kmemdup to keep a copy of the irq_chip
+>         - Change the pinctrl name from sd0_rdqs to sd0_ds as per UM
+>         - Moved the pinctrl enablement for exynos7 into a separate patch
+>         - Added tested-by and reviewed-by tags from Thomas Abraham
+>
+> Following patches have been tested on linux-next (20140926).
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/
+>
+> Following patches are required for this series:
+> 1) "tty/serial: fix config dependencies for samsung serial"
+>    https://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg36208.html
+> 2) "dts, kbuild: Implement support for dtb vendor subdirs" patchset
+>    http://comments.gmane.org/gmane.linux.kbuild.devel/12131
+> 3) "arch: arm64: enable support for Samsung Exynos7 SoC" patchset (v5)
+>    http://www.spinics.net/lists/arm-kernel/msg364014.html
+>
+> Abhilash Kesavan (3):
+>   pinctrl: exynos: Generalize the eint16_31 demux code
+>   pinctrl: exynos: Consolidate irq domain callbacks
+>   pinctrl: exynos: Add irq_chip instance for Exynos7 wakeup interrupts
+>
+> Naveen Krishna Ch (3):
+>   pinctrl: exynos: Add initial driver data for Exynos7
+>   arm64: dts: Add initial pinctrl support to EXYNOS7
+>   arm64: exynos: Enable pinctrl support for Exynos7
+>
+>  .../bindings/pinctrl/samsung-pinctrl.txt           |    3 +
+>  arch/arm64/Kconfig                                 |    2 +
+>  arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi    |  560 ++++++++++++++++++++
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi            |   66 +++
+>  drivers/pinctrl/samsung/pinctrl-exynos.c           |  196 +++++--
+>  drivers/pinctrl/samsung/pinctrl-exynos.h           |    3 +
+>  drivers/pinctrl/samsung/pinctrl-samsung.c          |    2 +
+>  drivers/pinctrl/samsung/pinctrl-samsung.h          |    3 +
+>  8 files changed, 799 insertions(+), 36 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
 
-I have queued up all the other patches for v3.19.
+Does this series look OK to you ?
 
-> 
->  arch/arm/boot/dts/emev2-kzm9d.dts               |  3 ++-
->  arch/arm/boot/dts/emev2.dtsi                    | 12 ++++++------
->  arch/arm/boot/dts/r7s72100-genmai.dts           |  3 ++-
->  arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts |  3 ++-
->  arch/arm/boot/dts/r8a7740-armadillo800eva.dts   |  1 +
->  arch/arm/boot/dts/r8a7778-bockw-reference.dts   |  3 ++-
->  arch/arm/boot/dts/r8a7779-marzen.dts            |  1 +
->  arch/arm/boot/dts/r8a7790-lager.dts             |  1 +
->  arch/arm/boot/dts/r8a7791-henninger.dts         |  1 +
->  arch/arm/boot/dts/r8a7791-koelsch.dts           |  1 +
->  arch/arm/boot/dts/r8a7794-alt.dts               |  1 +
->  arch/arm/boot/dts/sh73a0-kzm9g-reference.dts    |  1 +
->  12 files changed, 21 insertions(+), 10 deletions(-)
-> 
-> -- 
-> 1.9.1
-> 
-> Gr{oetje,eeting}s,
-> 
-> 						Geert
-> 
+Regards,
+Abhilash
+>
 > --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
-> 							    -- Linus Torvalds
-> 
+> 1.7.9.5
+>
