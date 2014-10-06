@@ -1,134 +1,60 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v7 06/11] drm: add DT bindings documentation for
- atmel-hlcdc-dc driver
-Date: Mon, 6 Oct 2014 18:02:17 +0200
-Message-ID: <20141006180217.3b98a67e@bbrezillon>
-References: <1412175188-28278-1-git-send-email-boris.brezillon@free-electrons.com>
- <1412175188-28278-7-git-send-email-boris.brezillon@free-electrons.com>
- <20141006105433.GG25202@ulmo> <20141006141440.32fae2ef@bbrezillon>
- <20141006123506.GC26833@ulmo> <20141006155358.61a2a30c@bbrezillon>
- <20141006142608.GA1744@ulmo>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v3 1/2] ARM: zynq: Add OCM controller driver
+Date: Mon, 6 Oct 2014 09:04:57 -0700
+Message-ID: <2819cd94109f4192a6f6d68e90bc7b2c@BL2FFO11FD039.protection.gbl>
+References: <e65e39088e0f571ee4905172f2f6c84dbc037805.1412599051.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20141006142608.GA1744@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org, Mark Yao <mark.yao@rock-chips.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e65e39088e0f571ee4905172f2f6c84dbc037805.1412599051.git.michal.simek@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, monstr@monstr.eu, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Thierry Reding <treding@nvidia.com>, Andy Gross <agross@codeaurora.org>, Stephen Warren <swarren@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 6 Oct 2014 16:26:10 +0200
-Thierry Reding <thierry.reding@gmail.com> wrote:
+On Mon, 2014-10-06 at 02:38PM +0200, Michal Simek wrote:
+> The driver provide memory allocator which can
+> be used by others drivers to allocate memory inside OCM.
+> All location for 64kB blocks are supported
+> and driver is trying to allocate the largest continuous
+> block of memory.
+>=20
+> Checking mpcore addressing filterring is not done here
+> but could be added in future.
+>=20
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+[...]
+> diff --git a/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocm=
+c.txt b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt
+> new file mode 100644
+> index 000000000000..8ddbd1e5ffc1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt
+> @@ -0,0 +1,17 @@
+> +Device tree bindings for Zynq's OCM controller
+> +
+> +The OCM is divided to 4 64kB segments which can be separately config=
+ured
+> +to low or high location. Location is controlled via SLCR.
+> +
+> +Required properties:
+> + compatible: Compatibility string. Must be "xlnx,zynq-ocmc-1.0".
+> + reg: Specify the base and size of the OCMC registers in the memory =
+map.
+> +      E.g.: reg =3D <0xf800c000 0x1000>;
+> +
+> +Example:
+> +ocmc: ocmc@f800c000 {
 
-> On Mon, Oct 06, 2014 at 03:53:58PM +0200, Boris Brezillon wrote:
-> > On Mon, 6 Oct 2014 14:35:06 +0200
-> > Thierry Reding <thierry.reding@gmail.com> wrote:
-> > 
-> > > On Mon, Oct 06, 2014 at 02:14:40PM +0200, Boris Brezillon wrote:
-> > > > On Mon, 6 Oct 2014 12:54:34 +0200
-> > > > Thierry Reding <thierry.reding@gmail.com> wrote:
-> > > > 
-> > > > > On Wed, Oct 01, 2014 at 04:53:03PM +0200, Boris Brezillon wrote:
-> > > > > > From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> > > > > > 
-> > > > > > The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoCs (i.e.
-> > > > > > at91sam9n12, at91sam9x5 family or sama5d3 family) provides a display
-> > > > > > controller device.
-> > > > > > 
-> > > > > > The HLCDC block provides a single RGB output port, and only supports LCD
-> > > > > > panels connection to LCD panels for now.
-> > > > > > 
-> > > > > > The atmel,panel property link the HLCDC RGB output with the LCD panel
-> > > > > > connected on this port (note that the HLCDC RGB connector implementation
-> > > > > > makes use of the DRM panel framework).
-> > > > > > 
-> > > > > > Connection to other external devices (DRM bridges) might be added later by
-> > > > > > mean of a new atmel,xxx (atmel,bridge) property.
-> > > > > > 
-> > > > > > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> > > > > > ---
-> > > > > >  .../devicetree/bindings/drm/atmel-hlcdc-dc.txt     | 53 ++++++++++++++++++++++
-> > > > > >  1 file changed, 53 insertions(+)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
-> > > > > > 
-> > > > > > diff --git a/Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt b/Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
-> > > > > > new file mode 100644
-> > > > > > index 0000000..ebc1a91
-> > > > > > --- /dev/null
-> > > > > > +++ b/Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
-> > > > > > @@ -0,0 +1,53 @@
-> > > > > > +Device-Tree bindings for Atmel's HLCDC (High LCD Controller) DRM driver
-> > > > > > +
-> > > > > > +The Atmel HLCDC Display Controller is subdevice of the HLCDC MFD device.
-> > > > > > +See ../mfd/atmel-hlcdc.txt for more details.
-> > > > > > +
-> > > > > > +Required properties:
-> > > > > > + - compatible: value should be "atmel,hlcdc-display-controller"
-> > > > > > + - pinctrl-names: the pin control state names. Should contain "default".
-> > > > > > + - pinctrl-0: should contain the default pinctrl states.
-> > > > > > + - #address-cells: should be set to 1.
-> > > > > > + - #size-cells: should be set to 0.
-> > > > > > +
-> > > > > > +Required children nodes:
-> > > > > > + Children nodes are encoding available output ports and their connections
-> > > > > > + to external devices using the OF graph reprensentation (see ../graph.txt).
-> > > > > > + At least one port node is required.
-> > > > > 
-> > > > > Are the connections configurable at runtime? Does the SoC have IP blocks
-> > > > > for HDMI or other types of outputs or does it provide only RGB output to
-> > > > > external blocks?
-> > > > 
-> > > > No, there's only one RGB output port, but you can connect more than one
-> > > > device on the RGB port (should we call it DPI port ?).
-> > > > Actually Atmel connected an HDMI encoder and an LCD panel connected on
-> > > > the same port on their dev kit.
-> > > 
-> > > This was discussed in some other thread if I remember correctly. I still
-> > > think that the HLCDC node should only contain a single output, no matter
-> > > how many encoders or panels get connected.
-> > > 
-> > > So the output represents the set of signals that exit the IP block, but
-> > > what's connected to them on the board is a board-level detail and
-> > > therefore should go into the board DTS.
-> > > 
-> > > In the above case of the Atmel devkit, is there any way to control where
-> > > the signal goes or does it just go to both the panel and HDMI encoder at
-> > > the same time and it's up to the user to properly configure the output
-> > > in order to get either HDMI or panel to display anything?
-> > 
-> > No there's no way to control where the signal goes.
-> > What you can control though, is the activation of the associated
-> > encoder/connectors connected on this bus (using dpms).
-> 
-> But the bus is really only the CRTC, so using DPMS for this is not how
-> it's usually done in DRM. Can't you model both outputs as separate
-> encoders and then attach them to the CRTC? This should work
-> automatically for the framebuffer console and any userspace that can
-> talk KMS.
+memory-controller@...
 
-That's exactly what I'm proposing, except there's a layer in between
-handling the video bus format configuration.
+> +	compatible =3D  "xlnx,zynq-ocmc-1.0";
+> +	interrupt-parent =3D <&intc>;
+> +	interrupts =3D <0 3 4>;
+> +	reg =3D <0xf800c000 0x1000>;
+> +} ;
 
-I just sent you an RFC, proposing an implementation of the DPI/raw-RGB
-bus layer.
-
-> 
-> Perhaps that's already what's being done and I misunderstand what you're
-> saying. I should go back to reviewing the DRM driver. I started this
-> morning, then got interrupted by other things.
-
-No problem. I'm glad to see that things are eventually moving on.
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+	S=C3=B6ren
