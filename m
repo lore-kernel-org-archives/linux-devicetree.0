@@ -1,49 +1,166 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: (unknown)
-Date: Mon,  6 Oct 2014 12:26:02 +0530
-Message-ID: <1412578562-11749-1-git-send-email-stripathi@apm.com>
-Return-path: <linux-ide-owner@vger.kernel.org>
-Subject: 
-Sender: linux-ide-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>, Loc Ho <lho@apm.com>, Ben Hutchings <ben@decadent.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 4/7] ARM: dts: sun9i: Add A80 Optimus Board support
+Date: Mon, 6 Oct 2014 15:02:24 +0800
+Message-ID: <CAGb2v674Eyf-=bes2i-qBEjHvS7sPvs2VDqy4cjNu9cGMiYj-g@mail.gmail.com>
+References: <1411570141-29960-1-git-send-email-wens@csie.org>
+ <1411570141-29960-5-git-send-email-wens@csie.org> <20140925133427.GI15315@lukather>
+ <CAGb2v65Yu=3rgQ+G6USJubKOPzcMJ5bqhe7d9wrYjpT9aFaZuw@mail.gmail.com>
+ <20140929095344.GE4388@lukather> <CAGb2v64-zshYgcPo-WR0TVebUDY3=LKBA9DfTVDKk2PA6VSiUA@mail.gmail.com>
+ <20141001100341.GJ6884@lukather>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141001100341.GJ6884@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Meng Zhang <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, ctl <ctl-HcjymKqD97rQT0dZR+AlfA@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-commit 72f79f9e35bd3f78ee8853f2fcacaa197d23ebac upstream.
-Subject: [PATCH 3.16 350/357] ahci_xgene: Removing NCQ support from the APM X-Gene SoC AHCI SATA Host Controller driver.
+On Wed, Oct 1, 2014 at 6:03 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Mon, Sep 29, 2014 at 06:04:50PM +0800, Chen-Yu Tsai wrote:
+>> On Mon, Sep 29, 2014 at 5:53 PM, Maxime Ripard
+>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> > On Sat, Sep 27, 2014 at 09:10:48PM +0800, Chen-Yu Tsai wrote:
+>> >> On Thu, Sep 25, 2014 at 9:34 PM, Maxime Ripard
+>> >> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> >> > On Wed, Sep 24, 2014 at 10:48:58PM +0800, Chen-Yu Tsai wrote:
+>> >> >> The A80 Optimus Board is was launched with the Allwinner A80 SoC.
+>> >> >> It was jointly developed by Allwinner and Merrii.
+>> >> >>
+>> >> >> This board has a UART port, a JTAG connector, USB host ports, a USB
+>> >> >> 3.0 OTG connector, an HDMI output, a micro SD slot, 8G NAND flash,
+>> >> >> 4G DRAM, a camera sensor interface, a WiFi/BT combo chip, a headphone
+>> >> >> jack, IR receiver, and additional GPIO headers.
+>> >> >>
+>> >> >> This patch adds only basic support.
+>> >> >>
+>> >> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> >> >> ---
+>> >> >>  arch/arm/boot/dts/Makefile              |  2 +
+>> >> >>  arch/arm/boot/dts/sun9i-a80-optimus.dts | 66 +++++++++++++++++++++++++++++++++
+>> >> >>  2 files changed, 68 insertions(+)
+>> >> >>  create mode 100644 arch/arm/boot/dts/sun9i-a80-optimus.dts
+>> >> >>
+>> >> >> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> >> >> index 2f42b18..098f319 100644
+>> >> >> --- a/arch/arm/boot/dts/Makefile
+>> >> >> +++ b/arch/arm/boot/dts/Makefile
+>> >> >> @@ -424,6 +424,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+>> >> >>       sun7i-a20-pcduino3.dtb
+>> >> >>  dtb-$(CONFIG_MACH_SUN8I) += \
+>> >> >>       sun8i-a23-ippo-q8h-v5.dtb
+>> >> >> +dtb-$(CONFIG_MACH_SUN9I) += \
+>> >> >> +     sun9i-a80-optimus.dtb
+>> >> >>  dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb \
+>> >> >>       tegra20-iris-512.dtb \
+>> >> >>       tegra20-medcom-wide.dtb \
+>> >> >> diff --git a/arch/arm/boot/dts/sun9i-a80-optimus.dts b/arch/arm/boot/dts/sun9i-a80-optimus.dts
+>> >> >> new file mode 100644
+>> >> >> index 0000000..f83abab
+>> >> >> --- /dev/null
+>> >> >> +++ b/arch/arm/boot/dts/sun9i-a80-optimus.dts
+>> >> >> @@ -0,0 +1,66 @@
+>> >> >> +/*
+>> >> >> + * Copyright 2014 Chen-Yu Tsai
+>> >> >> + *
+>> >> >> + * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> >> >> + *
+>> >> >> + * This file is dual-licensed: you can use it either under the terms
+>> >> >> + * of the GPL or the X11 license, at your option. Note that this dual
+>> >> >> + * licensing only applies to this file, and not this project as a
+>> >> >> + * whole.
+>> >> >> + *
+>> >> >> + *  a) This library is free software; you can redistribute it and/or
+>> >> >> + *     modify it under the terms of the GNU General Public License as
+>> >> >> + *     published by the Free Software Foundation; either version 2 of the
+>> >> >> + *     License, or (at your option) any later version.
+>> >> >> + *
+>> >> >> + *     This library is distributed in the hope that it will be useful,
+>> >> >> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> >> >> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> >> >> + *     GNU General Public License for more details.
+>> >> >> + *
+>> >> >> + *     You should have received a copy of the GNU General Public
+>> >> >> + *     License along with this library; if not, write to the Free
+>> >> >> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+>> >> >> + *     MA 02110-1301 USA
+>> >> >> + *
+>> >> >> + * Or, alternatively,
+>> >> >> + *
+>> >> >> + *  b) Permission is hereby granted, free of charge, to any person
+>> >> >> + *     obtaining a copy of this software and associated documentation
+>> >> >> + *     files (the "Software"), to deal in the Software without
+>> >> >> + *     restriction, including without limitation the rights to use,
+>> >> >> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> >> >> + *     sell copies of the Software, and to permit persons to whom the
+>> >> >> + *     Software is furnished to do so, subject to the following
+>> >> >> + *     conditions:
+>> >> >> + *
+>> >> >> + *     The above copyright notice and this permission notice shall be
+>> >> >> + *     included in all copies or substantial portions of the Software.
+>> >> >> + *
+>> >> >> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> >> >> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> >> >> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> >> >> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> >> >> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> >> >> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> >> >> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> >> >> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> >> >> + */
+>> >> >> +
+>> >> >> +/dts-v1/;
+>> >> >> +/include/ "sun9i-a80.dtsi"
+>> >> >> +
+>> >> >> +/ {
+>> >> >> +     model = "Merrii A80 Optimus Board";
+>> >> >> +     compatible = "merrii,a80-optimus", "allwinner,sun9i-a80";
+>> >> >> +
+>> >> >> +     chosen {
+>> >> >> +             bootargs = "earlyprintk console=ttyS0,115200";
+>> >> >> +     };
+>> >> >
+>> >> > Since you changed the memory node in the DTSI, you should probably add
+>> >> > one here too, don't you?
+>> >>
+>> >> I thought we left fixing that to the bootloader?
+>> >> I don't see any memory nodes in our other DTS.
+>> >
+>> > Yes, but does the A80 bootloader supports DT and actually fixes it? If
+>> > not, then you'll still have to have a memory node, just like on the
+>> > A31 (and presumably on the A23).
+>>
+>> Not at the moment no. But last I checked none of our board dts files
+>> have separate memory nodes. We only have them in the dtsi, with the
+>> largest supported ram size as its value. Also the bootloader
+>> (u-boot that is) can pass the memory size via atags I think.
+>
+> Only if CONFIG_ARM_ATAG_DTB_COMPAT is set.
 
-This patch removes the NCQ support from the APM X-Gene SoC AHCI
-Host Controller driver as it doesn't support it.
+Right. Last time I checked, this is set in both sunxi_defconfig
+and multiv7_defconfig.
 
-Signed-off-by: Loc Ho <lho@apm.com>
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
-[bwh: Backported to 3.16: host flags are passed to ahci_platform_init_host()]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Acked-by: Suman Tripathi <stripathi@apm.com>
+>> At least I'm only getting 512MB RAM on my Optimus, due to u-boot
+>> incorrectly assuming I only have as much. But that's another problem. :(
+>
+> And does it initialize the rest of the memory?
 
----
- drivers/ata/ahci_xgene.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It does. Very weird. But it may have something to do with the u-boot
+blob not being patched with all dram parameters.
 
---- a/drivers/ata/ahci_xgene.c
-+++ b/drivers/ata/ahci_xgene.c
-@@ -337,7 +337,7 @@ static struct ata_port_operations xgene_
- };
- 
- static const struct ata_port_info xgene_ahci_port_info = {
--	.flags = AHCI_FLAG_COMMON | ATA_FLAG_NCQ,
-+	.flags = AHCI_FLAG_COMMON,
- 	.pio_mask = ATA_PIO4,
- 	.udma_mask = ATA_UDMA6,
- 	.port_ops = &xgene_ahci_ops,
-@@ -484,7 +484,7 @@ static int xgene_ahci_probe(struct platf
- 		goto disable_resources;
- 	}
- 
--	hflags = AHCI_HFLAG_NO_PMP | AHCI_HFLAG_YES_NCQ;
-+	hflags = AHCI_HFLAG_NO_PMP | AHCI_HFLAG_NO_NCQ;
- 
- 	rc = ahci_platform_init_host(pdev, hpriv, &xgene_ahci_port_info,
- 				     hflags, 0, 0);
+>> Would this be a problem when using Android fastboot from the stock
+>> u-boot?
+>
+> IIRC, fastboot passes ATAGS anyway, so as long as you have the
+> configuration option mentionned above, you should be safe.
+
+I take this as an OK for this patch?
+
+
+Cheers
+ChenYu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
