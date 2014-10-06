@@ -1,43 +1,55 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
-Date: Mon, 06 Oct 2014 10:36:03 +0200
-Message-ID: <54325473.5070307@free-electrons.com>
-References: <1411157684-6991-1-git-send-email-sebastian.hesselbarth@gmail.com> <-7443282711873112734@unknownmsgid> <20141003141102.GJ3895@titan.lakedaemon.net> <542EBB93.108@gmail.com> <A9781A2E-F3CA-4E8A-833C-D167B456D9F7@perenite.com> <542EC3A3.1060605@gmail.com> <1ACB5318-863E-40D8-8B27-41F1C0D0A4B8@perenite.com> <54324922.906@gmail.com>
+From: Frans Klaver <frans.klaver@xsens.com>
+Subject: [PATCH v3 0/2] Add support for ltc2952 poweroff
+Date: Mon, 6 Oct 2014 10:40:34 +0200
+Message-ID: <1412584836-27677-1-git-send-email-frans.klaver@xsens.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54324922.906-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Benoit Masson <benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Frans Klaver <frans.klaver@xsens.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Ren=C3=A9=20Moll?= <linux@r-moll.nl>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+This is version 3 of the series that adds support for the ltc2952 power=
+path chip.
 
+This series adds a driver for the LTC2952, an external power control ch=
+ip, which
+signals the OS to shut down. Additionally this driver lets the kernel p=
+ower
+down the board.
 
-> [...]
->> NR_IRQS:16 nr_irqs:16 16
->> L2C: device tree omits to specify unified cache
-> 
-> Jason, Thomas, Gregory,
-> 
-> we should add a "cache-unified" to the l2cc nodes for all SoCs.
+This driver was tested with:
+  - kernel version 3.15.8, 3.17-rc7
+  - ARM based processor (TI AM335x series)
 
-Right,
-I take care of it.
+v2..v3:
+  - Allow absence of button input pin (and document that)
+  - Fix some whitespace issues
+  - Straighten out control flow here and there
+  - Get rid of gpio array. This was only used in setup/cleanup cases. I=
+t never mattered elsewhere
+  - Add some explanation to the commit message that introduces the driv=
+er
+  - Add other contributors
+  - Update Ren=C3=A9's e-mail; his Xsens e-mail is no longer valid
+  - Now also tested on v3.17-rc7
 
+Ren=C3=A9 Moll (2):
+  power: reset: add LTC2952 poweroff support
+  power: reset: document LTC2952 poweroff support
 
-Thanks,
+ .../bindings/power/reset/ltc2952-poweroff.txt      |  31 ++
+ drivers/power/reset/Kconfig                        |  10 +
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/ltc2952-poweroff.c             | 381 +++++++++++++=
+++++++++
+ 4 files changed, 423 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/ltc29=
+52-poweroff.txt
+ create mode 100644 drivers/power/reset/ltc2952-poweroff.c
 
-Gregory
+--=20
+2.1.0
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
