@@ -1,57 +1,43 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] mfd: tps65217: add compatible string for
- subdevices
-Date: Mon, 6 Oct 2014 22:25:36 +0100
-Message-ID: <20141006212536.GH18035@lee--X1>
-References: <3292130.zy6yLkolne@lenovobook>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/2] arm: shmobile: lager: enable HS-USB
+Date: Tue, 07 Oct 2014 01:38:12 +0400
+Message-ID: <54330BC4.2050501@cogentembedded.com>
+References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412237073-1288-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3292130.zy6yLkolne@lenovobook>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johannes Pointner <johannes.pointner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1412237073-1288-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 25 Sep 2014, Johannes Pointner wrote:
+Hello.
 
-> Adds of_compatible strings to mfd_cells for sub devices of the tps652=
-17.
->=20
-> Signed-off-by: Johannes Pointner <johannes.pointner-5O2GiQo/Ci2aMPzRcYMCawC/G2K4zDHf@public.gmane.org=
->
+On 10/02/2014 12:04 PM, Yoshihiro Shimoda wrote:
+
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > ---
->  drivers/mfd/tps65217.c | 2 ++
->  1 file changed, 2 insertions(+)
+>   arch/arm/boot/dts/r8a7790-lager.dts |    5 +++++
+>   1 file changed, 5 insertions(+)
 
-Applied for v3.19.
+> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+> index 1698591..4badd0a 100644
+> --- a/arch/arm/boot/dts/r8a7790-lager.dts
+> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
+> @@ -445,3 +445,8 @@
+>   		};
+>   	};
+>   };
+> +
+> +&hsusb {
+> +	status = "okay";
+> +	renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_LOW>;
+> +};
 
-> diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
-> index 3cc4c70..77708f9 100644
-> --- a/drivers/mfd/tps65217.c
-> +++ b/drivers/mfd/tps65217.c
-> @@ -33,9 +33,11 @@
->  static const struct mfd_cell tps65217s[] =3D {
->  	{
->  		.name =3D "tps65217-pmic",
-> +		.of_compatible =3D "ti,tps65217-pmic",
->  	},
->  	{
->  		.name =3D "tps65217-bl",
-> +		.of_compatible =3D "ti,tps65217-bl",
->  	},
->  };
-> =20
+    Darn, this also misses the PinMux props... I was going to post v2 of these 
+patches but now would need to add that and retest... :-/
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+WBR, Sergei
+
