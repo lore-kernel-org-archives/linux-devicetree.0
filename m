@@ -1,66 +1,26 @@
-From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] ARM: at91/dt: sam9x5: Add CAN device nodes
-Date: Mon, 06 Oct 2014 17:57:04 +0200
-Message-ID: <1553953.Bxvx42RTxh@ws-stein>
-References: <1412605640-29472-1-git-send-email-alexander.stein@systec-electronic.com> <5432B637.1060200@atmel.com>
+From: Carlo Caione <carlo@caione.org>
+Subject: Re: [PATCH v2 0/7] ARM: meson: add support for Meson8
+Date: Mon, 6 Oct 2014 18:01:38 +0200
+Message-ID: <CAOQ7t2Zy0WmrzNE4CQfdLzOvSyFXeeC1DdmJsbodjJmRyPbb5g@mail.gmail.com>
+References: <1412546359-15062-1-git-send-email-b.galvani@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5432B637.1060200-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412546359-15062-1-git-send-email-b.galvani@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Beniamino Galvani <b.galvani@gmail.com>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Carlo Caione <carlo@caione.org>, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean,
+On Sun, Oct 5, 2014 at 11:59 PM, Beniamino Galvani <b.galvani@gmail.com> wrote:
+> Hi,
+>
+> this patchset introduces support for Amlogic Meson8, which is a family
+> of quad-core Cortex-A9 SoCs used in tablets and set-top boxes.
 
-On Monday 06 October 2014 17:33:11, Nicolas Ferre wrote:
-> On 06/10/2014 16:27, Alexander Stein :
-> > Add the missing CAN devices node including their pin muxing and clocks.
-> > 
-> > Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-> > Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> > Changes in v3:
-> > * Match the pin name to the ones in the datasheet.
-> > 
-> >  arch/arm/boot/dts/at91sam9x5.dtsi | 48 +++++++++++++++++++++++++++++++++++++++
-> 
-> Alexander,
-> 
-> In fact, we already have a placeholder for these nodes:
-> arch/arm/boot/dts/at91sam9x5_can.dtsi
-> 
-> The file is only included in SoC device trees which actually contain
-> this peripheral: at91sam9x25 and at91sam9x35 (and not the other variants
-> of this family).
+For the whole patchset
 
-Actually, I can't find anyone including this :-/ If they would I guess I should have hit an error for duplicated labels.
-Is this a mistake no-one includes at91sam9x5_can.dtsi?
+Acked-by: Carlo Caione <carlo@caione.org>
 
-> So, can you please move this addition above into the
-> arch/arm/boot/dts/at91sam9x5_can.dtsi file?
-
-Can you confirm that both (at91sam9x25 and at91sam9x35) have identical peripheral addresses, irq and pinmuxing?
-
-Best regards,
-Alexander
 -- 
-Dipl.-Inf. Alexander Stein
-
-SYS TEC electronic GmbH
-Am Windrad 2
-08468 Heinsdorfergrund
-Tel.: 03765 38600-1156
-Fax: 03765 38600-4100
-Email: alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org
-Website: www.systec-electronic.com
- 
-Managing Director: Dipl.-Phys. Siegmar Schmidt
-Commercial registry: Amtsgericht Chemnitz, HRB 28082
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Carlo Caione
