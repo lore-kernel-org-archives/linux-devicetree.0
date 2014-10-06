@@ -1,60 +1,74 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH v3 1/2] ARM: zynq: Add OCM controller driver
-Date: Mon, 6 Oct 2014 09:04:57 -0700
-Message-ID: <2819cd94109f4192a6f6d68e90bc7b2c@BL2FFO11FD039.protection.gbl>
-References: <e65e39088e0f571ee4905172f2f6c84dbc037805.1412599051.git.michal.simek@xilinx.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
+Date: Mon, 06 Oct 2014 18:13:37 +0200
+Message-ID: <5432BFB1.2060300@gmail.com>
+References: <1411157684-6991-1-git-send-email-sebastian.hesselbarth@gmail.com> <-7443282711873112734@unknownmsgid> <20141003141102.GJ3895@titan.lakedaemon.net> <542EBB93.108@gmail.com> <A9781A2E-F3CA-4E8A-833C-D167B456D9F7@perenite.com> <542EC3A3.1060605@gmail.com> <1ACB5318-863E-40D8-8B27-41F1C0D0A4B8@perenite.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e65e39088e0f571ee4905172f2f6c84dbc037805.1412599051.git.michal.simek@xilinx.com>
+In-Reply-To: <1ACB5318-863E-40D8-8B27-41F1C0D0A4B8@perenite.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, monstr@monstr.eu, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Thierry Reding <treding@nvidia.com>, Andy Gross <agross@codeaurora.org>, Stephen Warren <swarren@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Benoit Masson <benoitm@perenite.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Benoit Masson <yahoo@perenite.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-10-06 at 02:38PM +0200, Michal Simek wrote:
-> The driver provide memory allocator which can
-> be used by others drivers to allocate memory inside OCM.
-> All location for 64kB blocks are supported
-> and driver is trying to allocate the largest continuous
-> block of memory.
->=20
-> Checking mpcore addressing filterring is not done here
-> but could be added in future.
->=20
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-[...]
-> diff --git a/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocm=
-c.txt b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt
-> new file mode 100644
-> index 000000000000..8ddbd1e5ffc1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt
-> @@ -0,0 +1,17 @@
-> +Device tree bindings for Zynq's OCM controller
-> +
-> +The OCM is divided to 4 64kB segments which can be separately config=
-ured
-> +to low or high location. Location is controlled via SLCR.
-> +
-> +Required properties:
-> + compatible: Compatibility string. Must be "xlnx,zynq-ocmc-1.0".
-> + reg: Specify the base and size of the OCMC registers in the memory =
-map.
-> +      E.g.: reg =3D <0xf800c000 0x1000>;
-> +
-> +Example:
-> +ocmc: ocmc@f800c000 {
+On 10/06/2014 01:11 AM, Benoit Masson wrote:
+> Le 3 oct. 2014 =E0 17:41, Sebastian Hesselbarth <sebastian.hesselbart=
+h@gmail.com> a =E9crit :
+>> On 10/03/2014 05:29 PM, Benoit Masson wrote:
+>>> Le 3 oct. 2014 =E0 17:06, Sebastian Hesselbarth <sebastian.hesselba=
+rth@gmail.com> a =E9crit :
+>>>> On 10/03/2014 04:11 PM, Jason Cooper wrote:
+>>>>> On Sun, Sep 21, 2014 at 04:11:23PM +0200, Benoit Masson wrote:
+>>>>>>> Le 19 sept. 2014 =E0 22:14, Sebastian Hesselbarth <sebastian.he=
+sselbarth@gmail.com> a =E9crit :
+>> [...]
+>>>>>>> Patches are based on v3.17-rc1 and intended for v3.18 but I am =
+not in
+>>>>>>> a hurry. I only compile tested this, so a formal Tested-by from=
+ Benoit
+>>>>>>> for the ix4 and any other Armada XP board would be great.
+>>>>>>
+>>>>>> I'm not sure what to test since I only receive some patch from t=
+he
+>>>>>> series of 8. Should I get all 8 or only those you sent me. I'll =
+be
+>>>>>> able to test during next week.
+>>>>>
+>>>>> Did you ever get a chance to test this series?
+>>>>
+>>>> Uhm, I never prepared a branch for Benoit to test. I have pushed t=
+he
+>>>> patches with Thomas Acked-by's and renamed eeprom node based on
+>>>> v3.17-rc1 to
+>>>>
+>>>> https://github.com/shesselba/linux-dove.git devel/mvebu-ix4
+>>>>
+>> [...]
+> Maybe I missed something ? is this branch you sent me a bare fork
+> from mainline 3.17 ? does it includes the armada XP step A0 patch ?
 
-memory-controller@...
+Benoit,
 
-> +	compatible =3D  "xlnx,zynq-ocmc-1.0";
-> +	interrupt-parent =3D <&intc>;
-> +	interrupts =3D <0 3 4>;
-> +	reg =3D <0xf800c000 0x1000>;
-> +} ;
+I prepared more branches with the series
+- on top of v3.17 release:
+https://github.com/shesselba/linux-dove.git devel/mvebu-ix4_v3.17
 
-	S=C3=B6ren
+- on top of next-20141003 (i.e. what will become v3.18-rc1):
+https://github.com/shesselba/linux-dove.git devel/mvebu-ix4_next-201410=
+03
+
+It would be great, if you can test in this order:
+- vanilla v3.17
+- mvebu-ix4_v3.17
+- mvebu-ix4_next-20141003
+
+If any branch fails, you can stop and please report back.
+
+I also have the ix4 but I need more time for a full setup like you
+already seem to have ready. Again, there is no hurry, take your time.
+
+Thanks!
+
+Sebastian
