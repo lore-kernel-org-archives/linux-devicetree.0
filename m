@@ -1,154 +1,150 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/9] mtd: nand: stm_nand_bch: provide Device Tree
- documentation
-Date: Sun, 5 Oct 2014 22:06:26 -0700
-Message-ID: <20141006050626.GF3248@norris-Latitude-E6410>
-References: <1409143344-22458-1-git-send-email-lee.jones@linaro.org>
- <1409143344-22458-6-git-send-email-lee.jones@linaro.org>
+From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 4/4] arm64:numa: adding numa support for arm64 platforms.
+Date: Mon, 6 Oct 2014 10:44:36 +0530
+Message-ID: <CAFpQJXVJtn=PTYTd5icHhfYxsQnEzUP+w9kXXDJSs-M=eGNWVw@mail.gmail.com>
+References: <1411635840-24038-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+	<1411635840-24038-5-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+	<20141003121343.GG26643@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409143344-22458-6-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20141003121343.GG26643@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, pekon-+F4LgK8oP1VBDgjK7y7TUQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 27, 2014 at 01:42:20PM +0100, Lee Jones wrote:
-> This is where we describe the different new and generic options used by
-> the ST BCH driver.
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Reviewed-By: Pekon Gupta <pekon-+F4LgK8oP1VBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mtd/stm-nand.txt | 74 ++++++++++++++++++++++
->  1 file changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/stm-nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/stm-nand.txt b/Documentation/devicetree/bindings/mtd/stm-nand.txt
-> new file mode 100644
-> index 0000000..5872a39
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/stm-nand.txt
-> @@ -0,0 +1,74 @@
-> +STM BCH NAND Support
-> +--------------------
-> +
-> +Required properties:
-> +
-> +- compatible		: Should be "st,nand-bch"
-> +- reg			: Should contain register's location and length
-> +- reg-names		: "emi_nand" - NAND Controller register map
-> +			  "emiss" - External Memory Interface Subsystem base
-> +- interrupts		: Interrupt number
-> +- interrupt-names	: "nand_irq" - NAND Controller IRQ
-> +- st,nand-banks		: Subnode representing one or more "banks" of NAND
-> +			  Flash, connected to an STM NAND Controller (see
-> +			  description below).
+Hi Mark,
 
-Why plural? Shouldn't you have one node for each bank, as they are
-independent? Also, I don't see this property being used anywhere, even
-though it's listed as "required".
-
-Really, this property shouldn't be listed here (under the NAND
-controller node), but should only be listed under the bank description
-below (and it should actually be *used* there).
-
-> +- nand-ecc-strength	: Generic NAND property (See mtd/nand.txt)
-> +			  Options are; 0, 18 or 30. If not present, the driver
-> +			  will choose the strongest scheme compatible if the
-> +			  OOB size.
-
-nand-ecc-strength is optional, not required.
-
-Also, this is probably where you should add a paragraph about how the
-NAND controller node should contain one or more banks, each of which
-represents an attached NAND flash and can be described using the
-following:
-
-> +
-> +Properties describing Bank of NAND Flash ("st,nand-banks"):
-> +
-
-You should list a "compatible" property here (i.e., "st,nand-bank" or
-"st,nand-banks").
-
-> +- st,nand-csn		: Chip select associated with the Bank.
-
-I'm pretty sure a chip select is not very specific to ST. Maybe we
-should have a generic "nand-chip-select" or "nand-cs" property for
-Documentation/devicetree/bindings/mtd/nand.txt. I know of at least one
-other piece of hardware that could use this property.
-
-> +
-> +- st,nand-timing-relax	: [Optional] Number of IP clock cycles by which to
-> +			  "relax" timing configuration.  Required on some boards
-> +			  to accommodate board-level limitations. Applies to
-> +			  ONFI timing mode configuration.
-> +
-> +- nand-on-flash-bbt	: Generic NAND property (See mtd/nand.txt)
-> +
-> +- partitions		: [Optional] Subnode describing MTD partition map
-> +			  (see mtd/partition.txt)
-
-Hmm, does this really need a separate subnode? That doesn't seem to be
-the best description, and it doesn't match standard practice AFAICT.
-Can't you just have the partition nodes be direct subnodes of the NAND
-bank?
-
-> +
-> +Note, during initialisation, the NAND Controller timing registers are configured
-> +according to one of the following methods, in order of precedence:
-> +
-> +	   1. Configuration based on ONFI timing mode, as advertised by the
-> +	      device during ONFI-probing (ONFI-compliant NAND only).
-> +
-> +	   2. Use reset/safe timing values
-> +
-> +Example:
-> +
-> +	nand@fe901000 {
-> +		compatible = "st,nand-bch";
-> +		reg = <0xfe901000 0x1000>, <0xfef00800 0x0800>;
-> +		reg-names = "emi_nand", "emiss";
-> +		interrupts = <0 139 0x0>;
-> +		interrupt-names = "nand_irq";
-> +		nand-ecc-strength = <30>;
-> +
-> +		status = "okay";
-> +
-> +		bank0 {
-
-No "compatible" property? (BTW, be sure to update the *.dts* files if
-we're updating this binding doc.)
-
-> +			/* NAND_BBT_USE_FLASH */
-
-This comment doesn't belong here.
-
-> +			nand-on-flash-bbt;
-> +			st,nand-csn		= <0>;
-> +
-> +			partitions {
-> +				#address-cells = <1>;
-> +				#size-cells = <1>;
-> +
-> +				partition@0{
-> +					label = "NANDFlash1";
-> +					reg = <0x00000000 0x00800000>;
-> +				};
-> +
-> +				partition@800000{
-> +					label = "NANDFlash2";
-> +					reg = <0x00800000 0x0f800000>;
-> +				};
-> +			};
-> +		};
-> +	};
-
-Brian
+On Fri, Oct 3, 2014 at 5:43 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Thu, Sep 25, 2014 at 10:03:59AM +0100, Ganapatrao Kulkarni wrote:
+>> Adding numa support for arm64 based platforms.
+>> This version creates numa mapping by parsing the dt table.
+>> cpu to node id mapping is derived from cluster_id as defined in cpu-map.
+>> memory to node id mapping is derived from nid property of memory node.
+>
+> [...]
+>
+>> +/*
+>> + * Too small node sizes may confuse the VM badly. Usually they
+>> + * result from BIOS bugs. So dont recognize nodes as standalone
+>> + * NUMA entities that have less than this amount of RAM listed:
+>> + */
+>> +#define NODE_MIN_SIZE (4*1024*1024)
+>
+> Why do these confuse the VM? what does BIOS have to do with arm64?
+sneaked in from x86, will remove this.
+>
+>> +
+>> +#define parent_node(node)      (node)
+>
+> Huh?
+for thunder, no hierarchy at numa nodes. shall i put under ifdef or
+separate header file?
+>
+> [...]
+>
+>> @@ -168,6 +191,11 @@ void __init bootmem_init(void)
+>>         min = PFN_UP(memblock_start_of_DRAM());
+>>         max = PFN_DOWN(memblock_end_of_DRAM());
+>>
+>> +       high_memory = __va((max << PAGE_SHIFT) - 1) + 1;
+>> +       max_pfn = max_low_pfn = max;
+>> +
+>> +       if (IS_ENABLED(CONFIG_NUMA))
+>> +               arm64_numa_init();
+>
+> Is this function defined if !CONFIG_NUMA? Surely it must do nothing in
+> that case anyway?
+yes, if is not required, will remove it.
+>
+> [...]
+>
+>> +/*
+>> + *  Set the cpu to node and mem mapping
+>> + */
+>> +void numa_store_cpu_info(cpu)
+>> +{
+>> +       cpu_to_node_map[cpu] = cpu_topology[cpu].cluster_id;
+>> +       cpumask_set_cpu(cpu, node_to_cpumask_map[cpu_to_node_map[cpu]]);
+>> +       set_numa_node(cpu_to_node_map[cpu]);
+>> +       set_numa_mem(local_memory_node(cpu_to_node_map[cpu]));
+>> +}
+>
+> I don't like this. I think we need to be more explicit in the DT w.r.t.
+> the relationship between memory and the CPU hierarchy.
+>
+> I can imagine that we might end up with systems with multiple levels of
+> NUMA hierarchy (using MPIDR_EL1.Aff{3,2}), and I'd rather that we were
+> explcit as possible from the start w.r.t. the relationship between
+> memory and groups of CPUs such that we don't end up with multiple ways
+> of specifying said relationship, and horrible edge cases around implicit
+> definitions (e.g. the nid to cluster mapping).
+are you recomending to have explicit nid attribute to each cpu device node?
+>
+>> +/**
+>> + * dummy_numa_init - Fallback dummy NUMA init
+>> + *
+>> + * Used if there's no underlying NUMA architecture, NUMA initialization
+>> + * fails, or NUMA is disabled on the command line.
+>> + *
+>> + * Must online at least one node and add memory blocks that cover all
+>> + * allowed memory.  This function must not fail.
+>> + */
+>> +static int __init dummy_numa_init(void)
+>> +{
+>> +       pr_info("%s\n",
+>> +              numa_off ? "NUMA turned off" : "No NUMA configuration found");
+>
+> Why not print "NUMA turned off" in numa_setup?
+enters this function only when, numa is turned off or the DT/ACPI
+based numa init fails.
+>
+>> +       pr_info("Faking a node at [mem %#018Lx-%#018Lx]\n",
+>> +              0LLU, PFN_PHYS(max_pfn) - 1);
+>> +
+>> +       node_set(0, numa_nodes_parsed);
+>> +       numa_add_memblk(0, 0, PFN_PHYS(max_pfn));
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +/**
+>> + * early_init_dt_scan_numa_map - parse memory node and map nid to memory range.
+>> + */
+>> +int __init early_init_dt_scan_numa_map(unsigned long node, const char *uname,
+>> +                                    int depth, void *data)
+>> +{
+>> +       const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
+>> +       const __be32 *reg, *endp, *nid_prop;
+>> +       int l, nid;
+>> +
+>> +       /* We are scanning "memory" nodes only */
+>> +       if (type == NULL) {
+>> +               /*
+>> +                * The longtrail doesn't have a device_type on the
+>> +                * /memory node, so look for the node called /memory@0.
+>> +                */
+>> +               if (depth != 1 || strcmp(uname, "memory@0") != 0)
+>> +                       return 0;
+>
+> This has no place on arm64.
+i am not sure that we can move to driver/of, at this moment this is
+arm64 specific binding.
+>
+> We limited to longtrail workaround in the core memory parsing to PPC32
+> only in commit b44aa25d20e2ef6b (of: Handle memory@0 node on PPC32
+> only). This code doesn't need it enabled ever.
+>
+> Are you booting using UEFI? This isn't going to work when the memory map
+tried with bootwrapper, working on to boot from UEFI.
+> comes from UEFI and we have no memory nodes in the DTB.
+yes, there is issue with UEFI boot, since memory node is removed.
+i request UEFI stub dev-team to suggest the possible ways to address this.
+>
+> Mark.
+thanks
+ganapat
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
