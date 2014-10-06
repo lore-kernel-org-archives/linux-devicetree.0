@@ -1,74 +1,62 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
-Date: Mon, 06 Oct 2014 18:13:37 +0200
-Message-ID: <5432BFB1.2060300@gmail.com>
-References: <1411157684-6991-1-git-send-email-sebastian.hesselbarth@gmail.com> <-7443282711873112734@unknownmsgid> <20141003141102.GJ3895@titan.lakedaemon.net> <542EBB93.108@gmail.com> <A9781A2E-F3CA-4E8A-833C-D167B456D9F7@perenite.com> <542EC3A3.1060605@gmail.com> <1ACB5318-863E-40D8-8B27-41F1C0D0A4B8@perenite.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v8 0/2] mfd: add atmel-hlcdc driver
+Date: Mon, 6 Oct 2014 17:23:51 +0100
+Message-ID: <20141006162351.GA3848@lee--X1>
+References: <1412603324-18789-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1ACB5318-863E-40D8-8B27-41F1C0D0A4B8@perenite.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Masson <benoitm@perenite.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Benoit Masson <yahoo@perenite.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1412603324-18789-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/06/2014 01:11 AM, Benoit Masson wrote:
-> Le 3 oct. 2014 =E0 17:41, Sebastian Hesselbarth <sebastian.hesselbart=
-h@gmail.com> a =E9crit :
->> On 10/03/2014 05:29 PM, Benoit Masson wrote:
->>> Le 3 oct. 2014 =E0 17:06, Sebastian Hesselbarth <sebastian.hesselba=
-rth@gmail.com> a =E9crit :
->>>> On 10/03/2014 04:11 PM, Jason Cooper wrote:
->>>>> On Sun, Sep 21, 2014 at 04:11:23PM +0200, Benoit Masson wrote:
->>>>>>> Le 19 sept. 2014 =E0 22:14, Sebastian Hesselbarth <sebastian.he=
-sselbarth@gmail.com> a =E9crit :
->> [...]
->>>>>>> Patches are based on v3.17-rc1 and intended for v3.18 but I am =
-not in
->>>>>>> a hurry. I only compile tested this, so a formal Tested-by from=
- Benoit
->>>>>>> for the ix4 and any other Armada XP board would be great.
->>>>>>
->>>>>> I'm not sure what to test since I only receive some patch from t=
-he
->>>>>> series of 8. Should I get all 8 or only those you sent me. I'll =
-be
->>>>>> able to test during next week.
->>>>>
->>>>> Did you ever get a chance to test this series?
->>>>
->>>> Uhm, I never prepared a branch for Benoit to test. I have pushed t=
-he
->>>> patches with Thomas Acked-by's and renamed eeprom node based on
->>>> v3.17-rc1 to
->>>>
->>>> https://github.com/shesselba/linux-dove.git devel/mvebu-ix4
->>>>
->> [...]
-> Maybe I missed something ? is this branch you sent me a bare fork
-> from mainline 3.17 ? does it includes the armada XP step A0 patch ?
+On Mon, 06 Oct 2014, Boris Brezillon wrote:
+> As proposed in my last atmel-hlcdc series I have split the series in =
+order
+> to get the accepted parts merged.
+>=20
+> This series is the one all others depend on.
+> Could you take it in your tree so that other maintainers can rely on =
+the
+> fact this part will be merged before other parts.
+>=20
+> Moreover, I know this is late, but can you include it in one of your =
+3.18
+> pull request as suggested by Thierry.
+> If you can't, can you provide Thierry and Dave with a stable branch
+> including this driver ?
 
-Benoit,
+It's too late for v3.18.  I stopped taking patches a couple of weeks
+ago.  Looks like you still need a DT Ack too.
 
-I prepared more branches with the series
-- on top of v3.17 release:
-https://github.com/shesselba/linux-dove.git devel/mvebu-ix4_v3.17
+> Best Regards,
+>=20
+> Boris
+>=20
+> Boris Brezillon (2):
+>   mfd: add atmel-hlcdc driver
+>   mfd: add documentation for atmel-hlcdc DT bindings
+>=20
+>  .../devicetree/bindings/mfd/atmel-hlcdc.txt        |  51 +++++++++
+>  drivers/mfd/Kconfig                                |   6 +
+>  drivers/mfd/Makefile                               |   1 +
+>  drivers/mfd/atmel-hlcdc.c                          | 122 +++++++++++=
+++++++++++
+>  include/linux/mfd/atmel-hlcdc.h                    |  85 +++++++++++=
++++
+>  5 files changed, 265 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc=
+=2Etxt
+>  create mode 100644 drivers/mfd/atmel-hlcdc.c
+>  create mode 100644 include/linux/mfd/atmel-hlcdc.h
+>=20
 
-- on top of next-20141003 (i.e. what will become v3.18-rc1):
-https://github.com/shesselba/linux-dove.git devel/mvebu-ix4_next-201410=
-03
-
-It would be great, if you can test in this order:
-- vanilla v3.17
-- mvebu-ix4_v3.17
-- mvebu-ix4_next-20141003
-
-If any branch fails, you can stop and please report back.
-
-I also have the ix4 but I need more time for a full setup like you
-already seem to have ready. Again, there is no hurry, take your time.
-
-Thanks!
-
-Sebastian
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
