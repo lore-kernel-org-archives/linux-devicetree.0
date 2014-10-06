@@ -1,177 +1,247 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
- ps8622 DT properties
-Date: Mon, 06 Oct 2014 16:55:29 +0300
-Message-ID: <2105361.oKR82DcFZc@avalon>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
- <20140925062324.GB12423@ulmo> <54327E28.5050400@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: Eliminate of_allnodes list
+Date: Mon, 6 Oct 2014 08:56:28 -0500
+Message-ID: <CAL_JsqJ+TCfeHF=Rzec0=-hM6Y_vbijQBvyyvL58E67WMYTxEg@mail.gmail.com>
+References: <1412585954-21172-1-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <54327E28.5050400@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, seanpaul@google.com, daniel.vetter@ffwll.ch, joshi@samsung.com, dri-devel@lists.freedesktop.org, ajaynumb@gmail.com, prashanth.g@samsung.com, Ajay Kumar <ajaykumar.rs@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412585954-21172-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi and Thierry,
+On Mon, Oct 6, 2014 at 3:59 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> The device tree structure is composed of two lists; the 'allnodes' list
+> which is a singly linked list containing every node in the tree, and the
+> child->parent structure where each parent node has a singly linked list
+> of children. All of the data in the allnodes list can be easily
+> reproduced with the parent-child lists, so of_allnodes is actually
+> unnecessary. Remove it entirely which saves a bit of memory and
+> simplifies the data structure quite a lot.
+>
+> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>
+> This applies against my current devicetree/next branch on git.secretlab.ca/git/linux
+>
+> I'm not going to try and merge this in v3.18. It's too risky a patch and
+> I only just wrote it. I'll try to get it in for v3.19.
 
-On Monday 06 October 2014 14:34:00 Tomi Valkeinen wrote:
-> On 25/09/14 09:23, Thierry Reding wrote:
-> > How are cameras different? The CPU wants to capture video data from the
-> > camera, so it needs to go look for a video capture device, which in turn
-> > needs to involve a sensor.
-> 
-> Let's say we have an XXX-to-YYY encoder. We use that encoder to convert
-> the SoC's XXX output to YYY, which is then shown on a panel. So, in this
-> case, the encoder's DT node will have a "panel" or "output" phandle,
-> pointing to the panel.
-> 
-> We then use the exact same encoder in a setup in which we have a camera
-> which outputs XXX, which the encoder then converts to YYY, which is then
-> captured by the SoC. Here the "output" phandle would point to the SoC.
+Looks good. A few minor things below.
 
-phandles are pretty simple and versatile, which is one of the reasons why they 
-are widely used. The drawback is that they are used to model totally different 
-concepts, which then get mixed in our brains.
+[...]
 
-The DT nodes that make a complete system are related in many different ways. 
-DT has picked one of those relationships, namely the control parent-child 
-relationship, made it special, and arranged the nodes in a tree structure 
-based on those relationships. As Thierry mentioned this make sense given that 
-DT addresses the lack of discoverability from a CPU point of view.
+> diff --git a/drivers/mfd/vexpress-sysreg.c b/drivers/mfd/vexpress-sysreg.c
+> index 9e21e4fc9599..8f43ab8fd2d6 100644
+> --- a/drivers/mfd/vexpress-sysreg.c
+> +++ b/drivers/mfd/vexpress-sysreg.c
+> @@ -223,7 +223,7 @@ static int vexpress_sysreg_probe(struct platform_device *pdev)
+>         vexpress_config_set_master(vexpress_sysreg_get_master());
+>
+>         /* Confirm board type against DT property, if available */
+> -       if (of_property_read_u32(of_allnodes, "arm,hbi", &dt_hbi) == 0) {
+> +       if (of_property_read_u32(of_root, "arm,hbi", &dt_hbi) == 0) {
 
-As many other relationships between nodes had to be represented in DT phandles 
-got introduced. One of their use cases is to reference resources required by 
-devices, such as GPIOs, clocks and regulators. In those cases the distinction 
-between the resource provider and the resource user is clear. The provider and 
-user roles are clearly identified in the relationship, with the user being the 
-master and the provider being the slave.
+Given this and selftests are the only users in the whole tree, perhaps
+this should just use of_find_node_by_path("/") rather than expose this
+global.
 
-After those first two classes of relationships (control parent/child and 
-resource provider/user), a need to specify data connections in DT arose. 
-Different models got adopted depending on the subsystems and/or devices, all 
-based on phandles.
+>                 u32 id = vexpress_get_procid(VEXPRESS_SITE_MASTER);
+>                 u32 hbi = (id >> SYS_PROCIDx_HBI_SHIFT) & SYS_HBI_MASK;
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 2305dc0382bc..b86beff7b167 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -32,8 +32,8 @@
+>
+>  LIST_HEAD(aliases_lookup);
+>
+> -struct device_node *of_allnodes;
+> -EXPORT_SYMBOL(of_allnodes);
+> +struct device_node *of_root;
+> +EXPORT_SYMBOL(of_root);
+>  struct device_node *of_chosen;
+>  struct device_node *of_aliases;
+>  struct device_node *of_stdout;
+> @@ -48,7 +48,7 @@ struct kset *of_kset;
+>   */
+>  DEFINE_MUTEX(of_mutex);
+>
+> -/* use when traversing tree through the allnext, child, sibling,
+> +/* use when traversing tree through the child, sibling,
+>   * or parent members of struct device_node.
+>   */
+>  DEFINE_RAW_SPINLOCK(devtree_lock);
+> @@ -204,7 +204,7 @@ static int __init of_init(void)
+>         mutex_unlock(&of_mutex);
+>
+>         /* Symlink in /proc as required by userspace ABI */
+> -       if (of_allnodes)
+> +       if (of_root)
+>                 proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
+>
+>         return 0;
+> @@ -245,6 +245,23 @@ struct property *of_find_property(const struct device_node *np,
+>  }
+>  EXPORT_SYMBOL(of_find_property);
+>
+> +struct device_node *__of_find_all_nodes(struct device_node *prev)
+> +{
+> +       struct device_node *np;
+> +       if (!prev)
+> +               np = of_root;
+> +       else if (prev->child) {
+> +               np = prev->child;
+> +       } else {
 
-I believe this use case is different compared to the first two in that it 
-defines connections, not master/slave relationships. The connection doesn't 
-model which entity control or use the other (if any), but how data flows 
-between entities. There is no clear master or slave in that model, different 
-control models can then be implemented in device drivers depending on the use 
-cases, but those are very much implementation details from a DT point of view. 
-The composite device model used for display drivers (and camera drivers for 
-that matter) usually sets all devices on equal footing, and then picks a 
-master (which can be one of the hardware devices, or a virtual logical device) 
-depending on the requirements of the kernel and/or userspace subsystem(s).
+Your braces are inconsistent.
 
-I thus don't think there's any point in arguing which entity is the resource 
-and which entity is the user in this discussion, as that should be unrelated 
-to the DT bindings. If we need to select a single phandle direction from a 
-hardware description point of view, the only direction that makes sense is one 
-based on the data flow direction. Making phandles always point outwards or 
-inwards from the CPU point of view doesn't make sense, especially when the CPU 
-doesn't get involved as a data point in a media pipeline (think about a 
-connector -> processing -> connector pipeline for instance, where data will be 
-processed by hardware only without going through system memory at any point).
+> +               /* Walk back up looking for a sibling, or the end of the structure */
+> +               np = prev;
+> +               while (np->parent && !np->sibling)
+> +                       np = np->parent;
+> +               np = np->sibling; /* Might be null at the end of the tree */
+> +       }
+> +       return np;
 
-Now, we also have to keep in mind that the DT description, while it should 
-model the hardware, also needs to be usable from a software point of view. A 
-hardware model that would precisely describe the system in very convoluted 
-ways wouldn't be very useful. We thus need to select a model that will ease 
-software development, while only describing the hardware and without depending 
-on a particular software implementation. That model should be as simple as 
-possible, but doesn't necessarily need to be the simplest model possible if 
-that would result in many implementation issues.
+[...]
 
-I think the OF graph model is a good candidate here. It is unarguably more 
-complex than a single phandle, but it also makes different software 
-implementations possible while still keeping the DT completely low.
+> diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+> index 4fed34bff5cf..9cc2363a9077 100644
+> --- a/drivers/of/selftest.c
+> +++ b/drivers/of/selftest.c
+> @@ -148,7 +148,7 @@ static void __init of_selftest_dynamic(void)
+>
+>  static int __init of_selftest_check_node_linkage(struct device_node *np)
+>  {
+> -       struct device_node *child, *allnext_index = np;
+> +       struct device_node *child;
+>         int count = 0, rc;
+>
+>         for_each_child_of_node(np, child) {
+> @@ -158,14 +158,6 @@ static int __init of_selftest_check_node_linkage(struct device_node *np)
+>                         return -EINVAL;
+>                 }
+>
+> -               while (allnext_index && allnext_index != child)
+> -                       allnext_index = allnext_index->allnext;
+> -               if (allnext_index != child) {
+> -                       pr_err("Node %s is ordered differently in sibling and allnode lists\n",
+> -                                child->name);
+> -                       return -EINVAL;
+> -               }
+> -
+>                 rc = of_selftest_check_node_linkage(child);
+>                 if (rc < 0)
+>                         return rc;
+> @@ -180,12 +172,12 @@ static void __init of_selftest_check_tree_linkage(void)
+>         struct device_node *np;
+>         int allnode_count = 0, child_count;
+>
+> -       if (!of_allnodes)
+> +       if (!of_root)
 
-> >>> If you go the other way around, how do you detect how things connect?
-> >>> Where do you get the information about the panel so you can trace back
-> >>> to the origin?
-> >> 
-> >> When the panel driver probes, it registers itself as a panel and gets
-> >> its video source. Similarly a bridge in between gets its video source,
-> >> which often would be the SoC, i.e. the origin.
-> > 
-> > That sounds backwards to me. The device tree serves the purpose of
-> > supplementing missing information that can't be probed if hardware is
-> > too stupid. I guess that's one of the primary reasons for structuring it
-> > the way we do, from the CPU point of view, because it allows the CPU to
-> > probe via the device tree.
-> > 
-> > Probing is always done downstream, so you'd start by looking at some
-> > type of bus interface and query it for what devices are present on the
-> > bus. Take for example PCI: the CPU only needs to know how to access the
-> > host bridge and will then probe devices behind each of the ports on that
-> > bridge. Some of those devices will be bridges, too, so it will continue
-> > to probe down the hierarchy.
-> > 
-> > Without DT you don't have a means to know that there was a panel before
-> > you've actually gone and probed your whole hierarchy and found a GPU
-> > with some sort of output that a panel can be connected to. I think it
-> > makes a lot of sense to describe things in the same way in DT.
-> 
-> Maybe I don't quite follow, but it sounds to be you are mixing control
-> and data. For control, all you say is true. The CPU probes the devices
-> on control busses, either with the aid of HW or the aid of DT, going
-> downstream.
-> 
-> But the data paths are a different matter. The CPU/SoC may not even be
-> involved in the whole data path. You could have a sensor on the board
-> directly connected to a panel. Both are controlled by the CPU, but the
-> data path goes from the sensor to the panel (or vice versa). There's no
-> way the data paths can be "CPU centric" in that case.
-> 
-> Also, a difference with the data paths compared to control paths is that
-> they are not strictly needed for operation. An encoder can generate an
-> output without enabling its input (test pattern or maybe blank screen,
-> or maybe a screen with company logo). Or an encoder with two inputs
-> might only get the second input when the user requests a very high res
-> mode. So it is possible that the data paths are lazily initialized.
-> 
-> You do know that there is a panel right after the device is probed
-> according to its control bus. It doesn't mean that the data paths are
-> there yet. In some cases the user space needs to reconfigure the data
-> paths before a panel has an input and can be used to show an image from
-> the SoC's display subsystem.
-> 
-> The point here being that the data path bindings don't really relate to
-> the probing part. You can probe no matter which way the data path
-> bindings go, and no matter if there actually exists (yet) a probed
-> device on the other end of a data path phandle.
-> 
-> While I think having video data connections in DT either way, downstream
-> or upstream, would work, it has felt most natural for me to have the
-> phandles from video sinks to video sources.
-> 
-> The reason for that is that I think the video sink has to be in control
-> of its source. It's the sink that tells the source to start or stop or
-> reconfigure. So I have had need to get the video source from a video
-> sink, but I have never had the need to get the video sinks from video
-> sources.
+This could be !of_have_populated_dt() instead.
 
-We could decide to model all data connections are phandles that go in the data 
-flow direction (source to sink), opposite to the data flow direction (sink to 
-source), or in both directions. The problem with the sink to source direction 
-is that it raises the complexity of implementations for display drivers, as 
-the master driver that will bind all the components together will have a hard 
-time locating the components in DT if all the components point towards it. 
-Modeling the connections in the source to sink direction only would create the 
-exact same problem for video capture (camera) devices. That's why I believe 
-that bidirectional connections would be a better choice.
+>                 return;
+>
+>         for_each_of_allnodes(np)
+>                 allnode_count++;
+> -       child_count = of_selftest_check_node_linkage(of_allnodes);
+> +       child_count = of_selftest_check_node_linkage(of_root);
+>
+>         selftest(child_count > 0, "Device node data structure is corrupted\n");
+>         selftest(child_count == allnode_count, "allnodes list size (%i) doesn't match"
+> @@ -722,33 +714,29 @@ static void update_node_properties(struct device_node *np,
+>   */
+>  static int attach_node_and_children(struct device_node *np)
+>  {
+> -       struct device_node *next, *root = np, *dup;
+> +       struct device_node *next, *dup, *child;
+>
+> -       /* skip root node */
+> -       np = np->child;
+> -       /* storing a copy in temporary node */
+> -       dup = np;
+> +       dup = of_find_node_by_path(np->full_name);
+> +       if (dup) {
+> +               update_node_properties(np, dup);
+> +               return 0;
+> +       }
+>
+> -       while (dup) {
+> +       /* Children of the root need to be remembered for removal */
+> +       if (np->parent == of_root) {
+>                 if (WARN_ON(last_node_index >= NO_OF_NODES))
+>                         return -EINVAL;
+> -               nodes[last_node_index++] = dup;
+> -               dup = dup->sibling;
+> +               nodes[last_node_index++] = np;
+>         }
+> -       dup = NULL;
+>
+> -       while (np) {
+> -               next = np->allnext;
+> -               dup = of_find_node_by_path(np->full_name);
+> -               if (dup)
+> -                       update_node_properties(np, dup);
+> -               else {
+> -                       np->child = NULL;
+> -                       if (np->parent == root)
+> -                               np->parent = of_allnodes;
+> -                       of_attach_node(np);
+> -               }
+> -               np = next;
+> +       child = np->child;
+> +       np->child = NULL;
+> +       np->sibling = NULL;
+> +       of_attach_node(np);
+> +       while (child) {
+> +               next = child->sibling;
+> +               attach_node_and_children(child);
+> +               child = next;
+>         }
+>
+>         return 0;
+> @@ -793,10 +781,10 @@ static int __init selftest_data_add(void)
+>                 return -EINVAL;
+>         }
+>
+> -       if (!of_allnodes) {
+> +       if (!of_root) {
 
--- 
-Regards,
+This could be !of_have_populated_dt() instead.
 
-Laurent Pinchart
+>                 /* enabling flag for removing nodes */
+>                 selftest_live_tree = true;
+> -               of_allnodes = selftest_data_node;
+> +               of_root = selftest_data_node;
+>
+>                 for_each_of_allnodes(np)
+>                         __of_attach_node_sysfs(np);
+> @@ -806,7 +794,14 @@ static int __init selftest_data_add(void)
+>         }
+>
+>         /* attach the sub-tree to live tree */
+> -       return attach_node_and_children(selftest_data_node);
+> +       np = selftest_data_node->child;
+> +       while (np) {
+> +               struct device_node *next = np->sibling;
+> +               np->parent = of_root;
+> +               attach_node_and_children(np);
+> +               np = next;
+> +       }
+
+You have the same loop iteration a couple of times like this. You
+could define an iterator macro.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
