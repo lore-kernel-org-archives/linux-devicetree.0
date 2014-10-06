@@ -1,43 +1,125 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
-Date: Mon, 06 Oct 2014 11:14:55 +0200
-Message-ID: <54325D8F.4050300@free-electrons.com>
-References: <1411157684-6991-1-git-send-email-sebastian.hesselbarth@gmail.com> <-7443282711873112734@unknownmsgid> <20141003141102.GJ3895@titan.lakedaemon.net> <542EBB93.108@gmail.com> <A9781A2E-F3CA-4E8A-833C-D167B456D9F7@perenite.com> <542EC3A3.1060605@gmail.com> <1ACB5318-863E-40D8-8B27-41F1C0D0A4B8@perenite.com> <54324922.906@gmail.com> <BAB12F2D-0142-4362-BA04-59D8E6B16AAE@perenite.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2] Input: add i2c/smbus driver for elan touchpad
+Date: Mon, 6 Oct 2014 10:24:52 +0100
+Message-ID: <20141006092452.GA24686@leverpostej>
+References: <1389064083-11018-1-git-send-email-dusonlin@emc.com.tw>
+ <20141003210357.GB4987@dtor-ws>
+ <20141003210651.GC4987@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <BAB12F2D-0142-4362-BA04-59D8E6B16AAE-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benoit Masson <benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141003210651.GC4987@dtor-ws>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Duson Lin <dusonlin@emc.com.tw>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "bleung@chromium.org" <bleung@chromium.org>, "agnescheng@chromium.org" <agnescheng@chromium.org>, "phoenix@emc.com.tw" <phoenix@emc.com.tw>, "jeff.chuang@emc.com.tw" <jeff.chuang@emc.com.tw>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
-
->>> NR_IRQS:16 nr_irqs:16 16
->>> L2C: device tree omits to specify unified cache
->>
->> Jason, Thomas, Gregory,
->>
->> we should add a "cache-unified" to the l2cc nodes for all SoCs.
+On Fri, Oct 03, 2014 at 10:06:51PM +0100, Dmitry Torokhov wrote:
+> [adding devicetree folks...]
 > 
-> It seems all armada dtsi using marvell,aurora-system-cache doesn't have the "cache-unified" entry isn't this on purpose ?
-> 
+> On Fri, Oct 03, 2014 at 02:03:57PM -0700, Dmitry Torokhov wrote:
+> > Hi Duson,
+> >
+> > On Tue, Jan 07, 2014 at 11:08:03AM +0800, Duson Lin wrote:
+> > > This driver adds support for elan i2c/smbus touchpad found on some
+> > > laptops PC
+> > >
+> >
+> > I was looking at your original patch together with varous other patchs
+> > for the device in ChromeOS trees and I ended up with the following
+> > version. Please take a look and shout if you see something wrong.
+> >
+> > The SMbus portion is untested as I do not have hardware; I2C does work
+> > on actual hardware.
+> >
+> > Thanks.
+> >
+> > --
+> > Dmitry
+> >
+> > Input: driver for Elan I2C/SMbus touchpad
+> >
+> > From: Duson Lin <dusonlin@emc.com.tw>
+> >
+> > This driver supports Elan I2C/SMbous touchpads found in some laptops and
+> > also in many Chromebooks.
+> >
+> > Signed-off-by: Duson Lin <dusonlin@emc.com.tw>
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > ---
+> >  .../devicetree/bindings/input/elan_i2c.txt         |   34 +
+> >  .../devicetree/bindings/vendor-prefixes.txt        |    1
+> >  drivers/input/mouse/Kconfig                        |   30 +
+> >  drivers/input/mouse/Makefile                       |    5
+> >  drivers/input/mouse/elan_i2c.h                     |   86 ++
+> >  drivers/input/mouse/elan_i2c_core.c                | 1129 ++++++++++++++++++++
+> >  drivers/input/mouse/elan_i2c_i2c.c                 |  612 +++++++++++
+> >  drivers/input/mouse/elan_i2c_smbus.c               |  514 +++++++++
+> >  8 files changed, 2411 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/input/elan_i2c.txt
+> >  create mode 100644 drivers/input/mouse/elan_i2c.h
+> >  create mode 100644 drivers/input/mouse/elan_i2c_core.c
+> >  create mode 100644 drivers/input/mouse/elan_i2c_i2c.c
+> >  create mode 100644 drivers/input/mouse/elan_i2c_smbus.c
+> >
+> > diff --git a/Documentation/devicetree/bindings/input/elan_i2c.txt b/Documentation/devicetree/bindings/input/elan_i2c.txt
+> > new file mode 100644
+> > index 0000000..0a6ee7d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/elan_i2c.txt
+> > @@ -0,0 +1,34 @@
+> > +Elantech I2C Touchpad
+> > +
+> > +Required properties:
+> > +- compatible: must be "elan,i2c_touchpad".
 
-No it was not really done in purpose. It was missing from the beginning.
-As the aurora l2cc was not a real l2x0 l2cc we put the minimal configuration.
-But I've just checked and the aurora l2cc is unified too, so a patch
-is coming soon to update the dtsi for Armada 370 and Armada XP.
+s/_/-/ in DT strings and property names plase.
 
+The name seems very generic, and you mention the driver supports a
+variety of touchpads. Please choose a specific device name for the
+compatible string. Other devices can have that as a fallback entry in
+addition to a more specific string.
 
+> > +- reg: I2C address of the chip.
+> > +- interrupt-parent: a phandle for the gpio controller (see interrupt
+> > +  binding[0]).
+> > +- interrupts: (gpio) interrupt to which the chip is connected (see interrupt
+> > +  binding[0]).
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If this is an interrupt from the PoV of this device, it doesn't matter
+if the other end is connected to a hardwired interrupt controller or a
+gpio. So drop the mention of GPIOs frmom the interrupt properties.
+
+> > +
+> > +Optional properties:
+> > +- wakeup-source: touchpad should be configured as a wakeup source.
+
+s/should be configured as/can be used as/
+
+> > +- pinctrl-names: should be "default" (see pinctrl binding [1]).
+> > +- pinctrl-0: a phandle pointing to the pin settings for the device (see
+> > +  pinctrl binding [1]).
+> > +- vcc-supply: a phandle for the regulator supplying 3.3V power.
+> > +
+> > +[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> > +[1]: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> > +
+> > +Example:
+> > +     &i2c1 {
+> > +             /* ... */
+> > +
+> > +             touchpad@15 {
+> > +                     compatible = "elan,i2c_touchpad";
+> > +                     reg = <0x15>;
+> > +                     interrupt-parent = <&gpio4>;
+> > +                     interrupts = <0x0 IRQ_TYPE_EDGE_FALLING>;
+> > +                     wakeup-source;
+> > +             };
+> > +
+> > +             /* ... */
+> > +     };
+
+Otherwise this looks ok.
+
+Mark.
