@@ -1,43 +1,56 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 2/2] arm: shmobile: lager: enable HS-USB
-Date: Tue, 07 Oct 2014 01:38:12 +0400
-Message-ID: <54330BC4.2050501@cogentembedded.com>
-References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412237073-1288-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3] ARM: shmobile: kzm9d dts: Add chosen/stdout-path
+Date: Tue, 7 Oct 2014 08:53:39 +0900
+Message-ID: <20141006235338.GA8379@verge.net.au>
+References: <1412596753-20734-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1412237073-1288-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Content-Disposition: inline
+In-Reply-To: <1412596753-20734-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Mon, Oct 06, 2014 at 01:59:13PM +0200, Geert Uytterhoeven wrote:
+> Add a stdout-path property so that automatic console selection works
+> in the absence of a "console=" parameter on the kernel command line.
+> 
+> Note that we have to keep the "console=ttyS1,115200n81" parameter in
+> chosen/bootargs, else the console will use the default setting of 9600
+> baud.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On 10/02/2014 12:04 PM, Yoshihiro Shimoda wrote:
+Thanks Geert, I have queued this up.
 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > ---
->   arch/arm/boot/dts/r8a7790-lager.dts |    5 +++++
->   1 file changed, 5 insertions(+)
-
-> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-> index 1698591..4badd0a 100644
-> --- a/arch/arm/boot/dts/r8a7790-lager.dts
-> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
-> @@ -445,3 +445,8 @@
->   		};
->   	};
->   };
-> +
-> +&hsusb {
-> +	status = "okay";
-> +	renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_LOW>;
-> +};
-
-    Darn, this also misses the PinMux props... I was going to post v2 of these 
-patches but now would need to add that and retest... :-/
-
-WBR, Sergei
-
+> v3:
+>   - Keep "console="
+> v2:
+>   - No changes
+> ---
+>  arch/arm/boot/dts/emev2-kzm9d.dts | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/emev2-kzm9d.dts b/arch/arm/boot/dts/emev2-kzm9d.dts
+> index a1794cbd23fee319..667d323e80a3e176 100644
+> --- a/arch/arm/boot/dts/emev2-kzm9d.dts
+> +++ b/arch/arm/boot/dts/emev2-kzm9d.dts
+> @@ -25,6 +25,7 @@
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS1,115200n81 ignore_loglevel root=/dev/nfs ip=dhcp";
+> +		stdout-path = &uart1;
+>  	};
+>  
+>  	gpio_keys {
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
