@@ -1,62 +1,154 @@
-From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 1/4] arm64: defconfig: increase NR_CPUS range to 2-128
-Date: Mon, 6 Oct 2014 09:59:00 +0530
-Message-ID: <CAFpQJXWDriyO4tCPGXihPUa=hC9K_-byuLEEtSfw0cU39ipdqA@mail.gmail.com>
-References: <1411635840-24038-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
-	<1411635840-24038-2-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
-	<20141003105839.GD26643@leverpostej>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 5/9] mtd: nand: stm_nand_bch: provide Device Tree
+ documentation
+Date: Sun, 5 Oct 2014 22:06:26 -0700
+Message-ID: <20141006050626.GF3248@norris-Latitude-E6410>
+References: <1409143344-22458-1-git-send-email-lee.jones@linaro.org>
+ <1409143344-22458-6-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141003105839.GD26643@leverpostej>
+Content-Disposition: inline
+In-Reply-To: <1409143344-22458-6-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, pekon-+F4LgK8oP1VBDgjK7y7TUQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 3, 2014 at 4:28 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Thu, Sep 25, 2014 at 10:03:56AM +0100, Ganapatrao Kulkarni wrote:
->> Raising the maximum limit to 128. This is needed for Cavium's
->> Thunder systems that will have 96 cores on Multi-node system.
->
-> Has this been tested on any such systems?
-This is tested on Cavium's Thunder 2 Node Simulator with kernel 3.17-rc5.
-please let us know, if any specific configurations needs to be tested
-with the change.
->
-> Mark.
->
->>
->> Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
->> ---
->>  arch/arm64/Kconfig | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index 4d42453..a409105 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -296,8 +296,8 @@ config SCHED_SMT
->>         places. If unsure say N here.
->>
->>  config NR_CPUS
->> -     int "Maximum number of CPUs (2-64)"
->> -     range 2 64
->> +     int "Maximum number of CPUs (2-128)"
->> +     range 2 128
->>       depends on SMP
->>       # These have to remain sorted largest to smallest
->>       default "64"
->> --
->> 1.8.1.4
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
-thanks
-ganapat
+On Wed, Aug 27, 2014 at 01:42:20PM +0100, Lee Jones wrote:
+> This is where we describe the different new and generic options used by
+> the ST BCH driver.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Reviewed-By: Pekon Gupta <pekon-+F4LgK8oP1VBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mtd/stm-nand.txt | 74 ++++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/stm-nand.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/stm-nand.txt b/Documentation/devicetree/bindings/mtd/stm-nand.txt
+> new file mode 100644
+> index 0000000..5872a39
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/stm-nand.txt
+> @@ -0,0 +1,74 @@
+> +STM BCH NAND Support
+> +--------------------
+> +
+> +Required properties:
+> +
+> +- compatible		: Should be "st,nand-bch"
+> +- reg			: Should contain register's location and length
+> +- reg-names		: "emi_nand" - NAND Controller register map
+> +			  "emiss" - External Memory Interface Subsystem base
+> +- interrupts		: Interrupt number
+> +- interrupt-names	: "nand_irq" - NAND Controller IRQ
+> +- st,nand-banks		: Subnode representing one or more "banks" of NAND
+> +			  Flash, connected to an STM NAND Controller (see
+> +			  description below).
+
+Why plural? Shouldn't you have one node for each bank, as they are
+independent? Also, I don't see this property being used anywhere, even
+though it's listed as "required".
+
+Really, this property shouldn't be listed here (under the NAND
+controller node), but should only be listed under the bank description
+below (and it should actually be *used* there).
+
+> +- nand-ecc-strength	: Generic NAND property (See mtd/nand.txt)
+> +			  Options are; 0, 18 or 30. If not present, the driver
+> +			  will choose the strongest scheme compatible if the
+> +			  OOB size.
+
+nand-ecc-strength is optional, not required.
+
+Also, this is probably where you should add a paragraph about how the
+NAND controller node should contain one or more banks, each of which
+represents an attached NAND flash and can be described using the
+following:
+
+> +
+> +Properties describing Bank of NAND Flash ("st,nand-banks"):
+> +
+
+You should list a "compatible" property here (i.e., "st,nand-bank" or
+"st,nand-banks").
+
+> +- st,nand-csn		: Chip select associated with the Bank.
+
+I'm pretty sure a chip select is not very specific to ST. Maybe we
+should have a generic "nand-chip-select" or "nand-cs" property for
+Documentation/devicetree/bindings/mtd/nand.txt. I know of at least one
+other piece of hardware that could use this property.
+
+> +
+> +- st,nand-timing-relax	: [Optional] Number of IP clock cycles by which to
+> +			  "relax" timing configuration.  Required on some boards
+> +			  to accommodate board-level limitations. Applies to
+> +			  ONFI timing mode configuration.
+> +
+> +- nand-on-flash-bbt	: Generic NAND property (See mtd/nand.txt)
+> +
+> +- partitions		: [Optional] Subnode describing MTD partition map
+> +			  (see mtd/partition.txt)
+
+Hmm, does this really need a separate subnode? That doesn't seem to be
+the best description, and it doesn't match standard practice AFAICT.
+Can't you just have the partition nodes be direct subnodes of the NAND
+bank?
+
+> +
+> +Note, during initialisation, the NAND Controller timing registers are configured
+> +according to one of the following methods, in order of precedence:
+> +
+> +	   1. Configuration based on ONFI timing mode, as advertised by the
+> +	      device during ONFI-probing (ONFI-compliant NAND only).
+> +
+> +	   2. Use reset/safe timing values
+> +
+> +Example:
+> +
+> +	nand@fe901000 {
+> +		compatible = "st,nand-bch";
+> +		reg = <0xfe901000 0x1000>, <0xfef00800 0x0800>;
+> +		reg-names = "emi_nand", "emiss";
+> +		interrupts = <0 139 0x0>;
+> +		interrupt-names = "nand_irq";
+> +		nand-ecc-strength = <30>;
+> +
+> +		status = "okay";
+> +
+> +		bank0 {
+
+No "compatible" property? (BTW, be sure to update the *.dts* files if
+we're updating this binding doc.)
+
+> +			/* NAND_BBT_USE_FLASH */
+
+This comment doesn't belong here.
+
+> +			nand-on-flash-bbt;
+> +			st,nand-csn		= <0>;
+> +
+> +			partitions {
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +
+> +				partition@0{
+> +					label = "NANDFlash1";
+> +					reg = <0x00000000 0x00800000>;
+> +				};
+> +
+> +				partition@800000{
+> +					label = "NANDFlash2";
+> +					reg = <0x00800000 0x0f800000>;
+> +				};
+> +			};
+> +		};
+> +	};
+
+Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
