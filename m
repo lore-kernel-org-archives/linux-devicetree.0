@@ -1,324 +1,45 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 4/7] clk: sunxi: unify sun6i AHB1 clock with proper
- PLL6 pre-divider
-Date: Mon, 6 Oct 2014 21:44:17 +0800
-Message-ID: <CAGb2v65mHGoEy3V_-uxQVP7as_Hj1Byq0VWtPJkbnV7oDbrvhA@mail.gmail.com>
-References: <1411807795-6575-1-git-send-email-wens@csie.org>
- <1411807795-6575-5-git-send-email-wens@csie.org> <20140930155415.GO4081@lukather>
- <CAGb2v660nCkuY1Co6GsW6VYVguGssF4UpWPR-XQGb0oF+XqaCA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v660nCkuY1Co6GsW6VYVguGssF4UpWPR-XQGb0oF+XqaCA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: [PATCH v8 0/2] mfd: add atmel-hlcdc driver
+Date: Mon,  6 Oct 2014 15:48:42 +0200
+Message-ID: <1412603324-18789-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
+Cc: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 6, 2014 at 8:58 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> On Tue, Sep 30, 2014 at 11:54 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> On Sat, Sep 27, 2014 at 04:49:52PM +0800, Chen-Yu Tsai wrote:
->>> This patch unifies the sun6i AHB1 clock, originally supported
->>> with separate mux and divider clks. It also adds support for
->>> the pre-divider on the PLL6 input, thus allowing the clock to
->>> be muxed to PLL6 with proper clock rate calculation.
->>>
->>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/clock/sunxi.txt |   2 +-
->>>  drivers/clk/sunxi/clk-sunxi.c                     | 209 ++++++++++++++++++++++
->>>  2 files changed, 210 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
->>> index 0d84f4b..e862818 100644
->>> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
->>> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
->>> @@ -23,7 +23,7 @@ Required properties:
->>>       "allwinner,sun5i-a10s-ahb-gates-clk" - for the AHB gates on A10s
->>>       "allwinner,sun7i-a20-ahb-gates-clk" - for the AHB gates on A20
->>>       "allwinner,sun6i-a31-ar100-clk" - for the AR100 on A31
->>> -     "allwinner,sun6i-a31-ahb1-mux-clk" - for the AHB1 multiplexer on A31
->>> +     "allwinner,sun6i-a31-ahb1-clk" - for the AHB1 clock on A31
->>>       "allwinner,sun6i-a31-ahb1-gates-clk" - for the AHB1 gates on A31
->>>       "allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
->>>       "allwinner,sun4i-a10-apb0-clk" - for the APB0 clock
->>> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
->>> index 9caebff..7151e2c 100644
->>> --- a/drivers/clk/sunxi/clk-sunxi.c
->>> +++ b/drivers/clk/sunxi/clk-sunxi.c
->>> @@ -19,6 +19,7 @@
->>>  #include <linux/of.h>
->>>  #include <linux/of_address.h>
->>>  #include <linux/reset-controller.h>
->>> +#include <linux/log2.h>
->>>
->>>  #include "clk-factors.h"
->>>
->>> @@ -1357,3 +1358,211 @@ static void __init sun6i_init_clocks(struct device_node *node)
->>>  }
->>>  CLK_OF_DECLARE(sun6i_a31_clk_init, "allwinner,sun6i-a31", sun6i_init_clocks);
->>>  CLK_OF_DECLARE(sun8i_a23_clk_init, "allwinner,sun8i-a23", sun6i_init_clocks);
->>> +
->>> +
->>
->> Drop the extra newline
->
-> OK.
->
->>> +/**
->>> + * sun6i_a31_ahb1_clk_setup() - Setup function for a31 ahb1 composite clk
->>> + */
->>> +
->>> +#define SUN6I_AHB1_MAX_PARENTS               4
->>> +#define SUN6I_AHB1_MUX_PARENT_PLL6   3
->>> +#define SUN6I_AHB1_MUX_SHIFT         12
->>> +#define SUN6I_AHB1_MUX_MASK          0x3
->>> +#define SUN6I_AHB1_MUX_GET_PARENT(reg)       ((reg >> SUN6I_AHB1_MUX_SHIFT) & \
->>> +                                      SUN6I_AHB1_MUX_MASK)
->>> +#define SUN6I_AHB1_DIV_SHIFT         4
->>> +#define SUN6I_AHB1_DIV_MASK          0x3
->>> +#define SUN6I_AHB1_DIV_GET(reg)              ((reg >> SUN6I_AHB1_DIV_SHIFT) & \
->>> +                                      SUN6I_AHB1_DIV_MASK)
->>> +#define SUN6I_AHB1_DIV_SET(reg, div) ((reg & ~(SUN6I_AHB1_DIV_MASK << \
->>> +                                               SUN6I_AHB1_DIV_SHIFT)) | \
->>> +                                      (div << SUN6I_AHB1_DIV_SHIFT))
->>> +#define SUN6I_AHB1_PLL6_DIV_SHIFT    6
->>> +#define SUN6I_AHB1_PLL6_DIV_MASK     0x3
->>> +#define SUN6I_AHB1_PLL6_DIV_GET(reg) ((reg >> SUN6I_AHB1_PLL6_DIV_SHIFT) & \
->>> +                                      SUN6I_AHB1_PLL6_DIV_MASK)
->>> +#define SUN6I_AHB1_PLL6_DIV_SET(reg, div) ((reg & \
->>> +                                         ~(SUN6I_AHB1_PLL6_DIV_MASK << \
->>> +                                           SUN6I_AHB1_PLL6_DIV_SHIFT)) | \
->>> +                                        (div << SUN6I_AHB1_PLL6_DIV_SHIFT))
->>
->> Your indentation looks really odd, and the masks you have should
->> really point to the actual mask, and not just the number of bits.
->
-> It is an attempt to match open parenthesis. Guess that's not a good idea.
-> Will switch to normal indentation. And fix the masks.
+Hi Lee,
 
-Just took a closer look at the code. The reason MUX_MASK is not shifted
-is because clk_mux_ops expects them that way.
+As proposed in my last atmel-hlcdc series I have split the series in order
+to get the accepted parts merged.
 
-I could get rid of SUN6I_AHB1_MUX_GET_PARENT and call clk_mux_ops.get_parent,
-but I don't think that's better.
+This series is the one all others depend on.
+Could you take it in your tree so that other maintainers can rely on the
+fact this part will be merged before other parts.
 
-*_DIV_MASK I will fix. Only issue is line length. :(
+Moreover, I know this is late, but can you include it in one of your 3.18
+pull request as suggested by Thierry.
+If you can't, can you provide Thierry and Dave with a stable branch
+including this driver ?
 
-ChenYu
+Best Regards,
 
->>> +
->>> +struct sun6i_ahb1_clk {
->>> +     struct clk_hw hw;
->>> +     void __iomem *reg;
->>> +};
->>> +
->>> +#define to_sun6i_ahb1_clk(_hw) container_of(_hw, struct sun6i_ahb1_clk, hw)
->>> +
->>> +static unsigned long sun6i_ahb1_clk_recalc_rate(struct clk_hw *hw,
->>> +                                             unsigned long parent_rate)
->>> +{
->>> +     struct sun6i_ahb1_clk *ahb1 = to_sun6i_ahb1_clk(hw);
->>> +     unsigned long rate;
->>> +     u32 reg;
->>> +
->>> +     /* Fetch the register value */
->>> +     reg = readl(ahb1->reg);
->>> +
->>> +     /* apply pre-divider first if parent is pll6 */
->>> +     if (SUN6I_AHB1_MUX_GET_PARENT(reg) == SUN6I_AHB1_MUX_PARENT_PLL6)
->>> +             parent_rate /= SUN6I_AHB1_PLL6_DIV_GET(reg) + 1;
->>> +
->>> +     /* clk divider */
->>> +     rate = parent_rate >> SUN6I_AHB1_DIV_GET(reg);
->>> +
->>> +     return rate;
->>> +}
->>> +
->>> +static long sun6i_ahb1_clk_round(unsigned long rate, u8 *divp, u8 *pre_divp,
->>> +                              u8 parent, unsigned long parent_rate)
->>> +{
->>> +     u8 div, calcp, calcm = 1;
->>> +
->>> +     /* clock can only divide, so we will never be able to achieve
->>> +      * frequencies higher than the parent frequency */
->>
->> Wrong multiline comment style
->
-> I think I've done this twice already. This is from factors clk.
-> I'll send a patch to fix the original.
->
->>> +     if (parent_rate && rate > parent_rate)
->>> +             rate = parent_rate;
->>> +
->>> +     div = DIV_ROUND_UP(parent_rate, rate);
->>> +
->>> +     /* calculate pre-divider if parent is pll6 */
->>> +     if (parent == SUN6I_AHB1_MUX_PARENT_PLL6) {
->>> +             if (div < 4)
->>> +                     calcp = 0;
->>> +             else if (div / 2 < 4)
->>> +                     calcp = 1;
->>> +             else if (div / 4 < 4)
->>> +                     calcp = 2;
->>> +             else
->>> +                     calcp = 3;
->>> +
->>> +             calcm = DIV_ROUND_UP(div, 1 << calcp);
->>> +     } else {
->>> +             calcp = __roundup_pow_of_two(div);
->>> +             calcp = calcp > 3 ? 3 : calcp;
->>> +     }
->>> +
->>> +     if (divp) {
->>> +             *divp = calcp;
->>> +             *pre_divp = calcm - 1;
->>> +     }
->>> +
->>> +     return (parent_rate / calcm) >> calcp;
->>> +}
->>> +
->>> +static long sun6i_ahb1_clk_determine_rate(struct clk_hw *hw, unsigned long rate,
->>> +                                       unsigned long *best_parent_rate,
->>> +                                       struct clk **best_parent_clk)
->>> +{
->>> +     struct clk *clk = hw->clk, *parent, *best_parent = NULL;
->>> +     int i, num_parents;
->>> +     unsigned long parent_rate, best = 0, child_rate, best_child_rate = 0;
->>> +
->>> +     /* find the parent that can help provide the fastest rate <= rate */
->>> +     num_parents = __clk_get_num_parents(clk);
->>> +     for (i = 0; i < num_parents; i++) {
->>> +             parent = clk_get_parent_by_index(clk, i);
->>> +             if (!parent)
->>> +                     continue;
->>> +             if (__clk_get_flags(clk) & CLK_SET_RATE_PARENT)
->>> +                     parent_rate = __clk_round_rate(parent, rate);
->>> +             else
->>> +                     parent_rate = __clk_get_rate(parent);
->>> +
->>> +             child_rate = sun6i_ahb1_clk_round(rate, NULL, NULL, i,
->>> +                                               parent_rate);
->>> +
->>> +             if (child_rate <= rate && child_rate > best_child_rate) {
->>> +                     best_parent = parent;
->>> +                     best = parent_rate;
->>> +                     best_child_rate = child_rate;
->>> +             }
->>> +     }
->>> +
->>> +     if (best_parent)
->>> +             *best_parent_clk = best_parent;
->>> +     *best_parent_rate = best;
->>> +
->>> +     return best_child_rate;
->>> +}
->>> +
->>> +static int sun6i_ahb1_clk_set_rate(struct clk_hw *hw, unsigned long rate,
->>> +                                unsigned long parent_rate)
->>> +{
->>> +     struct sun6i_ahb1_clk *ahb1 = to_sun6i_ahb1_clk(hw);
->>> +     unsigned long flags;
->>> +     u8 div, pre_div, parent;
->>> +     u32 reg;
->>> +
->>> +     spin_lock_irqsave(&clk_lock, flags);
->>
->> Isn't that already taken by the composite clock?
->
-> Last I checked, composite clock just calls the callbacks.
->
->>> +
->>> +     reg = readl(ahb1->reg);
->>> +
->>> +     /* need to know which parent is used to apply pre-divider */
->>> +     parent = SUN6I_AHB1_MUX_GET_PARENT(reg);
->>> +     sun6i_ahb1_clk_round(rate, &div, &pre_div, parent, parent_rate);
->>
->> Haven't you called that already in determine_rate?
->
-> The call in determine_rate only returns a rounded clock rate.
-> Here we actually get the divider values.
-> I will add a comment in sun6i_ahb1_clk_round.
->
->>> +
->>> +     reg = SUN6I_AHB1_DIV_SET(reg, div);
->>> +     reg = SUN6I_AHB1_PLL6_DIV_SET(reg, pre_div);
->>> +     writel(reg, ahb1->reg);
->>> +
->>> +     spin_unlock_irqrestore(&clk_lock, flags);
->>> +
->>> +     return 0;
->>> +}
->>> +
->>> +static const struct clk_ops sun6i_ahb1_clk_ops = {
->>> +     .determine_rate = sun6i_ahb1_clk_determine_rate,
->>> +     .recalc_rate    = sun6i_ahb1_clk_recalc_rate,
->>> +     .set_rate       = sun6i_ahb1_clk_set_rate,
->>> +};
->>> +
->>> +static void __init sun6i_ahb1_clk_setup(struct device_node *node)
->>> +{
->>> +     struct clk *clk;
->>> +     struct sun6i_ahb1_clk *ahb1;
->>> +     struct clk_mux *mux;
->>> +     const char *clk_name = node->name;
->>> +     const char *parents[SUN6I_AHB1_MAX_PARENTS];
->>> +     void __iomem *reg;
->>> +     int i = 0;
->>> +
->>> +     reg = of_iomap(node, 0);
->>
->> of_io_request_and_map please :)
->
-> This is new. Will switch. :)
->
->>> +
->>> +     /* we have a mux, we will have >1 parents */
->>> +     while (i < SUN6I_AHB1_MAX_PARENTS &&
->>> +            (parents[i] = of_clk_get_parent_name(node, i)) != NULL)
->>> +             i++;
->>> +
->>> +     of_property_read_string(node, "clock-output-names", &clk_name);
->>> +
->>> +     ahb1 = kzalloc(sizeof(struct sun6i_ahb1_clk), GFP_KERNEL);
->>> +     if (!ahb1)
->>> +             return;
->>> +
->>> +     mux = kzalloc(sizeof(struct clk_mux), GFP_KERNEL);
->>> +     if (!mux) {
->>> +             kfree(ahb1);
->>> +             return;
->>> +     }
->>> +
->>> +     /* set up clock properties */
->>> +     mux->reg = reg;
->>> +     mux->shift = SUN6I_AHB1_MUX_SHIFT;
->>> +     mux->mask = SUN6I_AHB1_MUX_MASK;
->>> +     mux->lock = &clk_lock;
->>> +     ahb1->reg = reg;
->>> +
->>> +     clk = clk_register_composite(NULL, clk_name, parents, i,
->>> +                                  &mux->hw, &clk_mux_ops,
->>> +                                  &ahb1->hw, &sun6i_ahb1_clk_ops,
->>> +                                  NULL, NULL, 0);
->>> +
->>> +     if (!IS_ERR(clk)) {
->>> +             of_clk_add_provider(node, of_clk_src_simple_get, clk);
->>> +             clk_register_clkdev(clk, clk_name, NULL);
->>> +     }
->>> +}
->>> +
->>> +CLK_OF_DECLARE(sun6i_a31_ahb1, "allwinner,sun6i-a31-ahb1-clk",
->>> +             sun6i_ahb1_clk_setup);
->>> --
->>> 2.1.1
->
-> Thanks!
->
-> ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Boris
+
+Boris Brezillon (2):
+  mfd: add atmel-hlcdc driver
+  mfd: add documentation for atmel-hlcdc DT bindings
+
+ .../devicetree/bindings/mfd/atmel-hlcdc.txt        |  51 +++++++++
+ drivers/mfd/Kconfig                                |   6 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/atmel-hlcdc.c                          | 122 +++++++++++++++++++++
+ include/linux/mfd/atmel-hlcdc.h                    |  85 ++++++++++++++
+ 5 files changed, 265 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
+ create mode 100644 drivers/mfd/atmel-hlcdc.c
+ create mode 100644 include/linux/mfd/atmel-hlcdc.h
+
+-- 
+1.9.1
+
