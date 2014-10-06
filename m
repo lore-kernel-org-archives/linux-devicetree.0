@@ -1,73 +1,62 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH v3 2/2] ARM: zynq: DT: Add OCM controller node
-Date: Mon,  6 Oct 2014 14:38:07 +0200
-Message-ID: <1b10d4e509caac663966788cd2df10120496eb1e.1412599051.git.michal.simek@xilinx.com>
-References: <e65e39088e0f571ee4905172f2f6c84dbc037805.1412599051.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-17186-1412599090-0001";
-    micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e65e39088e0f571ee4905172f2f6c84dbc037805.1412599051.git.michal.simek@xilinx.com>
-In-Reply-To: <e65e39088e0f571ee4905172f2f6c84dbc037805.1412599051.git.michal.simek@xilinx.com>
-References: <e65e39088e0f571ee4905172f2f6c84dbc037805.1412599051.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, Soren Brinkmann <soren.brinkmann@xilinx.com>, Olof Johansson <olof@lixom.net>
-Cc: monstr@monstr.eu, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Subject: [PATCH 1/1] ARM: at91/dt: sam9263: Add CAN device nodes
+Date: Mon,  6 Oct 2014 14:40:07 +0200
+Message-ID: <1412599207-15676-1-git-send-email-alexander.stein@systec-electronic.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is a MIME GnuPG-signed message.  If you see this text, it means that
-your E-mail or Usenet software does not support MIME signed messages.
-The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
-To open this message correctly you will need to install E-mail or Usenet
-software that supports modern Internet standards.
+Add the missing CAN devices node including their pin muxing. The required
+clock node already exists.
 
---=_mimegpg-monstr-desktop-17186-1412599090-0001
-
-Add the on-chip-memory controller node to the Zynq devicetree.
-
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
 ---
+ arch/arm/boot/dts/at91sam9263.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Changes in v3:
-- Extract from OCM driver
-
-Changes in v2: None
-
- arch/arm/boot/dts/zynq-7000.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index 6cc83d4c6c76..b8e87d615635 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -146,6 +146,13 @@
- 			cache-level = <2>;
- 		};
-
-+		ocmc: ocmc@f800c000 {
-+			compatible = "xlnx,zynq-ocmc-1.0";
-+			interrupt-parent = <&intc>;
-+			interrupts = <0 3 4>;
-+			reg = <0xf800c000 0x1000>;
-+		} ;
+diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+index bb23c2d..174ab77 100644
+--- a/arch/arm/boot/dts/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/at91sam9263.dtsi
+@@ -672,6 +672,14 @@
+ 					};
+ 				};
+ 
++				can {
++					pinctrl_can_rx_tx: can_rx_tx {
++						atmel,pins =
++							<AT91_PIOA 14 AT91_PERIPH_A AT91_PINCTRL_NONE	/* CANRX, conflicts with IRQ0 */
++							 AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* CANTX, conflicts with PCK0 */
++					};
++				};
 +
- 		uart0: serial@e0000000 {
- 			compatible = "xlnx,xuartps", "cdns,uart-r1p8";
- 			status = "disabled";
+ 				pioA: gpio@fffff200 {
+ 					compatible = "atmel,at91rm9200-gpio";
+ 					reg = <0xfffff200 0x200>;
+@@ -898,6 +906,17 @@
+ 				clock-names = "pwm_clk";
+ 				status = "disabled";
+ 			};
++
++			can: can@fffac000 {
++				compatible = "atmel,at91sam9263-can";
++				reg = <0xfffac000 0x300>;
++				interrupts = <12 IRQ_TYPE_LEVEL_HIGH 3>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_can_rx_tx>;
++				clocks = <&can_clk>;
++				clock-names = "can_clk";
++				status = "disabled";
++			};
+ 		};
+ 
+ 		fb0: fb@0x00700000 {
+-- 
+2.0.4
+
 --
-1.8.2.3
-
-
---=_mimegpg-monstr-desktop-17186-1412599090-0001
-Content-Type: application/pgp-signature
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEABECAAYFAlQyjTIACgkQykllyylKDCEO0wCfb3pcue06wc/LpNBSwNGWuqkR
-D/YAnjdh68ekd4vxp4XtZmirRozDeoru
-=SrVT
------END PGP SIGNATURE-----
-
---=_mimegpg-monstr-desktop-17186-1412599090-0001--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
