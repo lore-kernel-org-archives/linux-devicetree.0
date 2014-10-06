@@ -1,187 +1,345 @@
-From: Joe.C <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH v2 2/4] ARM: mediatek: Add Pinctrl/GPIO driver for mt8135.
-Date: Mon, 6 Oct 2014 18:35:41 +0800
-Message-ID: <1412591741.19977.527.camel@mtksdaap41>
-References: <1411443545-24951-1-git-send-email-srv_hongzhou.yang@mediatek.com>
- <1411443545-24951-3-git-send-email-srv_hongzhou.yang@mediatek.com>
- <CACRpkdYY7e0OQL1YTEASxJw7E0FPAyOrPi0g93A9aRbfss0Vpw@mail.gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v7 03/11] pwm: add support for atmel-hlcdc-pwm device
+Date: Mon, 6 Oct 2014 12:46:35 +0200
+Message-ID: <20141006104634.GE25202@ulmo>
+References: <1412175188-28278-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1412175188-28278-4-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdYY7e0OQL1YTEASxJw7E0FPAyOrPi0g93A9aRbfss0Vpw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "Hongzhou.Yang" <srv_hongzhou.yang@mediatek.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, dandan.he@mediatek.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============2132900212=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1412175188-28278-4-git-send-email-boris.brezillon@free-electrons.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org, Mark Yao <mark.yao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
 
-Hi Linus,
-
-Thanks for your detail review.
-We'll fix the driver according to your suggestion in next version.
-Please see the inline comments below for thing that I feel deserve
-discussion:
+--===============2132900212==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+SfteS7bOf3dGlBC"
+Content-Disposition: inline
 
 
-On Thu, 2014-10-02 at 15:38 +0200, Linus Walleij wrote:
-(...)
-> > +static struct mt_desc_function *
-> > +mt_pctrl_desc_find_irq_by_name(struct mt_pinctrl *pctl,
-> > +                                        const char *pin_name)
-> 
-> Why is it called *find_irq_by_name if it returns a
-> function? Seems more like find_function_from_pin_name
-> really.
-> 
-> And I don't know if that is such a good idea.
+--+SfteS7bOf3dGlBC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In 8135 & 6589, not every gpio pin support interrupt function. For those
-support interrupt, it will have a EINT function and use a different EINT
-offset number.
-In 8127, EINT support is merged into gpio function, but they still use a
-different EINT offset number.
+On Wed, Oct 01, 2014 at 04:53:00PM +0200, Boris Brezillon wrote:
+[...]
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index b800783..afb896b 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -50,6 +50,16 @@ config PWM_ATMEL
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-atmel.
+> =20
+> +config PWM_ATMEL_HLCDC_PWM
+> +	tristate "Atmel HLCDC PWM support"
+> +	select MFD_ATMEL_HLCDC
+> +	depends on OF
 
-For example, mt8135 pin 0 use function 2 for interrupt support, EINT
-number for this pin is 49.
-        MT_PIN(
-                PINCTRL_PIN(0, "MSDC0_DAT7"),
-                "D21", "mt8135",
-                MT_FUNCTION(0, "GPIO0"),
-                MT_FUNCTION(1, "MSDC0_DAT7"),
-                MT_FUNCTION_IRQ(2, "EINT49", 49),
-                MT_FUNCTION(3, "I2SOUT_DAT"),
-                MT_FUNCTION(4, "DAC_DAT_OUT"),
-                MT_FUNCTION(5, "PCM1_DO"),
-                MT_FUNCTION(6, "SPI1_MO"),
-                MT_FUNCTION(7, "NALE")
-        ),
+This isn't really necessary since MFD_ATMEL_HLCDC already depends on OF.
 
-This function is used to find EINT function for the pin. Maybe we should
-name this mt_pctrl_desc_find_irq_function_from_name to make it more
-clear.
+> diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
+[...]
+> new file mode 100644
+> index 0000000..0238f7a
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-atmel-hlcdc.c
+> @@ -0,0 +1,229 @@
+> +/*
+> + * Copyright (C) 2014 Free Electrons
+> + * Copyright (C) 2014 Atmel
+> + *
+> + * Author: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify =
+it
+> + * under the terms of the GNU General Public License version 2 as publis=
+hed by
+> + * the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful, but W=
+ITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License=
+ for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License alo=
+ng with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/mfd/atmel-hlcdc.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
+> +
+> +#define ATMEL_HLCDC_PWMCVAL_MASK	GENMASK(15, 8)
+> +#define ATMEL_HLCDC_PWMCVAL(x)		((x << 8) & ATMEL_HLCDC_PWMCVAL_MASK)
 
-> > +{
-> > +       int i, j;
-> > +
-> > +       for (i = 0; i < pctl->devdata->npins; i++) {
-> > +               const struct mt_desc_pin *pin = pctl->devdata->pins + i;
-> > +
-> > +               if (!strcmp(pin->pin.name, pin_name)) {
-> > +                       struct mt_desc_function *func = pin->functions;
-> > +
-> > +                       for (j = 0; j < PINMUX_MAX_VAL; j++) {
-> > +                               if (func->irqnum != 255)
-> 
-> So why does it end at 255? Seems pretty arbitrary.
+You might want to use an extra pair of parentheses around the "x" above.
 
-If a function support interrupt, we put its interrupt number in irqnum,
-otherwise it will be 255. Does it make it more clear if we use macro
-name MT_NO_EINT_SUPPORT?
+> +struct atmel_hlcdc_pwm_chip {
 
-> > +static int mt_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
-> > +{
-> > +       struct mt_pinctrl *pctl = dev_get_drvdata(chip->dev);
-> > +       struct mt_pinctrl_group *g = pctl->groups + offset;
-> > +       struct mt_desc_function *desc = mt_pctrl_desc_find_irq_by_name(
-> > +                       pctl, g->name);
-> > +       if (!desc)
-> > +               return -EINVAL;
-> > +
-> > +       mt_gpio_set_mode(pctl->pctl_dev, g->pin, desc->muxval);
-> 
-> No mode setting in the .to_irq() function, that makes the irqchip
-> not orthogonal to the gpio_chip.
+Can we make this...
 
-I see, we should do this in irq_request_resources instead.
+> +	struct pwm_chip chip;
+> +	struct atmel_hlcdc *hlcdc;
+> +	struct clk *cur_clk;
+> +};
+> +
+> +static inline struct atmel_hlcdc_pwm_chip *
+> +pwm_chip_to_atmel_hlcdc_pwm_chip(struct pwm_chip *chip)
 
-> 
-> > +       return desc->irqnum;
-> > +}
-> 
-> By the way use GPIOLIB_IRQCHIP for this and get rid
-> of .to_irq altogether.
-> (...)
-> > +       ret = gpiochip_add(pctl->chip);
-> > +       if (ret) {
-> > +               ret = -EINVAL;
-> > +               goto pctrl_error;
-> > +       }
-> 
-> Here  you should be using gpiochip_irqchip_add()
-> followed by gpiochip_set_chained_irqchip().
+=2E.. and this a little shorter? There is a lot of line-wrapping below
+only because this is very long. It seems like just dropping the
+pwm_chip_ prefix on this function would be enough to not exceed the
+78/80 character limit.
 
-We use a different interrupt number than gpio pin number. I think it
-more nature to use EINT interrupt number as the hw_number, so I think we
-can't use gpiochip_irqchip_add and we still need to provide our
-own .to_irq mapping function.
+> +{
+> +	return container_of(chip, struct atmel_hlcdc_pwm_chip, chip);
+> +}
+> +
+> +static int atmel_hlcdc_pwm_config(struct pwm_chip *c,
+> +				  struct pwm_device *pwm,
+> +				  int duty_ns, int period_ns)
+> +{
+> +	struct atmel_hlcdc_pwm_chip *chip =3D
+> +				pwm_chip_to_atmel_hlcdc_pwm_chip(c);
+> +	struct atmel_hlcdc *hlcdc =3D chip->hlcdc;
+> +	struct clk *new_clk =3D hlcdc->slow_clk;
+> +	u64 pwmcval =3D duty_ns * 256;
+> +	unsigned long clk_freq;
+> +	u64 clk_period_ns;
+> +	u32 pwmcfg;
+> +	int pres;
+> +
+> +	clk_freq =3D clk_get_rate(new_clk);
+> +	clk_period_ns =3D 1000000000;
 
+NSEC_PER_SEC?
 
-> > diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common.h
-> (...)
-> > +static const struct mt_desc_pin mt_pins_mt8135[] = {
-> > +       MT_PIN(
-> > +               PINCTRL_PIN(0, "MSDC0_DAT7"),
-> > +               "D21", "mt8135",
-> > +               MT_FUNCTION(0, "GPIO0"),
-> > +               MT_FUNCTION(1, "MSDC0_DAT7"),
-> > +               MT_FUNCTION_IRQ(2, "EINT49", 49),
-> > +               MT_FUNCTION(3, "I2SOUT_DAT"),
-> > +               MT_FUNCTION(4, "DAC_DAT_OUT"),
-> > +               MT_FUNCTION(5, "PCM1_DO"),
-> > +               MT_FUNCTION(6, "SPI1_MO"),
-> > +               MT_FUNCTION(7, "NALE")
-> > +       ),
-> 
-> I don't think this is a good idea and to encode all functions in a pin,
-> rather the revers is custom: define all functions and collect arrays
-> of pin numbers in the definitions of pin groups, then map the functions
-> and groups of pins together.
-> 
-> Look at other drivers for examples..
-> 
-> I don't like the device tree bindings for the very same reason: it moves
-> all this numeric encoding of pin-functions into the device tree instead
-> of combining group+function strings like most drivers do.
-> 
-> Is there some special reason to why you're turning this on its head?
-> 
-> Yours,
-> Linus Walleij
+> +	clk_period_ns *=3D 256;
 
-Our driver code is based on sunxi driver. We got base source structure
-and this pin descriptor array from sunxi. We follow imx's use of device
-tree macros.
+Perhaps collapse the above two in a single line:
 
-Our pinctrl can set mux for each individual pins, so I think this
-pin_desc array fully describe the capability of pinctrl HW. It is
-generated from datasheet, which can easily prove it correctness.
+	clk_period_ns =3D NSEC_PER_SEC * 256;
 
-With the help of device tree header file, pinctrl users can describe
-pins used by their components easily in device tree. The change could be
-fully tested with their driver to make sure it is correct. Also, we
-don't need to change pinctrl driver just to add or correct a group for
-the component.
+?
 
-While it might still be possible to generate group+function array based
-on datasheet, IMHO the structure will be more complicate and harder to
-prove the correctness.
+> +	do_div(clk_period_ns, clk_freq);
+> +
+> +	if (clk_period_ns > period_ns) {
+> +		new_clk =3D hlcdc->sys_clk;
+> +		clk_freq =3D clk_get_rate(new_clk);
+> +		clk_period_ns =3D 1000000000;
+> +		clk_period_ns *=3D 256;
 
-So we choose to use descriptor array + macros in device tree because it
-is quite simple to generate the pin descriptors and easier to notice if
-there's error in device tree pin groups description.
+Maybe:
 
-Even if we change to use group+function strings as you said, we
-probably will still use this array to find out which function we should
-set for each pin in a group.
+	clk_period_ns =3D NSEC_PER_SEC * 256;
 
-Regards,
-Joe.C
+?
+
+> +		do_div(clk_period_ns, clk_freq);
+> +	}
+> +
+> +	for (pres =3D 0; pres <=3D ATMEL_HLCDC_PWMPS_MAX; pres++) {
+> +		if ((clk_period_ns << pres) >=3D period_ns)
+> +			break;
+> +	}
+
+Technically there's no need for the curly braces.
+
+> +
+> +	if (pres > ATMEL_HLCDC_PWMPS_MAX)
+> +		return -EINVAL;
+
+I think the condition above needs to be "pres =3D=3D ATMEL_HLCDC_PWMPS_MAX",
+otherwise this will never be true.
+
+> +
+> +	pwmcfg =3D ATMEL_HLCDC_PWMPS(pres);
+> +
+> +	if (new_clk !=3D chip->cur_clk) {
+> +		u32 gencfg =3D 0;
+> +
+> +		clk_prepare_enable(new_clk);
+
+This can fail so it needs error-checking.
+
+> +		clk_disable_unprepare(chip->cur_clk);
+> +		chip->cur_clk =3D new_clk;
+> +
+> +		if (new_clk !=3D hlcdc->slow_clk)
+> +			gencfg =3D ATMEL_HLCDC_CLKPWMSEL;
+
+There are lots of negations here, which caused me to think that there
+was a third clock involved here, but it seems like new_clk can either be
+slow_clk or sys_clk.
+
+Perhaps making this condition "new_clk =3D=3D hlcdc->sys_clk" would improve
+clarity here. Maybe a comment somewhere would help?
+
+> +		regmap_update_bits(hlcdc->regmap, ATMEL_HLCDC_CFG(0),
+> +				   ATMEL_HLCDC_CLKPWMSEL, gencfg);
+> +	}
+> +
+> +	do_div(pwmcval, period_ns);
+> +	if (pwmcval > 255)
+
+The PWM core already makes sure that duty_ns <=3D period_ns, so pwmcval
+could be anywhere between 0 and 256 here. Where does the disconnect come
+=66rom? Why not make pwmcval =3D duty_ns * 255 if that's the maximum?
+
+> +		pwmcval =3D 255;
+> +
+> +	pwmcfg |=3D ATMEL_HLCDC_PWMCVAL(pwmcval);
+> +
+> +	regmap_update_bits(hlcdc->regmap, ATMEL_HLCDC_CFG(6),
+> +			   ATMEL_HLCDC_PWMCVAL_MASK | ATMEL_HLCDC_PWMPS_MASK,
+> +			   pwmcfg);
+> +
+> +	return 0;
+> +}
+> +
+> +static int atmel_hlcdc_pwm_set_polarity(struct pwm_chip *c,
+> +					struct pwm_device *pwm,
+> +					enum pwm_polarity polarity)
+> +{
+> +	struct atmel_hlcdc_pwm_chip *chip =3D
+> +				pwm_chip_to_atmel_hlcdc_pwm_chip(c);
+> +	struct atmel_hlcdc *hlcdc =3D chip->hlcdc;
+> +	u32 cfg =3D 0;
+> +
+> +	if (polarity =3D=3D PWM_POLARITY_NORMAL)
+> +		cfg =3D ATMEL_HLCDC_PWMPOL;
+
+That's strange. Inverse polarity is the default on this hardware?
+
+> +static int atmel_hlcdc_pwm_enable(struct pwm_chip *c,
+> +				  struct pwm_device *pwm)
+
+There's no need for line-wrapping here. The above fits on one line just
+fine.
+
+> +{
+> +	struct atmel_hlcdc_pwm_chip *chip =3D
+> +				pwm_chip_to_atmel_hlcdc_pwm_chip(c);
+> +	struct atmel_hlcdc *hlcdc =3D chip->hlcdc;
+> +	u32 status;
+> +
+> +	regmap_write(hlcdc->regmap, ATMEL_HLCDC_EN, ATMEL_HLCDC_PWM);
+> +	while (!regmap_read(hlcdc->regmap, ATMEL_HLCDC_SR, &status) &&
+> +	       !(status & ATMEL_HLCDC_PWM))
+> +		;
+
+This loop isn't very readable. Can you improve it? Perhaps:
+
+	do {
+		err =3D regmap_read(hlcdc->regmap, ATMEL_HLCDC_SR, &status);
+		if (err < 0)
+			return err;
+	} while ((status & ATMEL_HLCDC_PWM) =3D=3D 0);
+
+That also allows errors to be properly propagated. Perhaps you also want
+to put a usleep_range() or similar in there.
+
+> +static void atmel_hlcdc_pwm_disable(struct pwm_chip *c,
+> +				    struct pwm_device *pwm)
+> +{
+> +	struct atmel_hlcdc_pwm_chip *chip =3D
+> +				pwm_chip_to_atmel_hlcdc_pwm_chip(c);
+> +	struct atmel_hlcdc *hlcdc =3D chip->hlcdc;
+> +	u32 status;
+> +
+> +	regmap_write(hlcdc->regmap, ATMEL_HLCDC_DIS, ATMEL_HLCDC_PWM);
+> +	while (!regmap_read(hlcdc->regmap, ATMEL_HLCDC_SR, &status) &&
+> +	       (status & ATMEL_HLCDC_PWM))
+> +		;
+
+Same here.
+
+> +static int atmel_hlcdc_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct atmel_hlcdc_pwm_chip *chip;
+> +	struct device *dev =3D &pdev->dev;
+> +	struct atmel_hlcdc *hlcdc;
+> +	int ret;
+> +
+> +	hlcdc =3D dev_get_drvdata(dev->parent);
+> +	if (!hlcdc)
+> +		return -EINVAL;
+
+Can this really happen?
+
+> +	ret =3D clk_prepare_enable(hlcdc->periph_clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	chip =3D devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
+> +	if (!chip)
+> +		return -ENOMEM;
+
+Don't you want to disable and unprepare the clock here? Perhaps in order
+to avoid this call clk_prepare_enable() only after all resources have
+been allocated.
+
+> +MODULE_ALIAS("platform:atmel-hlcdc-pwm");
+> +MODULE_AUTHOR("Boris Brezillon <boris.brezillon@free-electrons.com>");
+> +MODULE_DESCRIPTION("Atmel HLCDC PWM driver");
+> +MODULE_LICENSE("GPL");
+
+According to the file header this needs to be "GPL v2".
+
+Thierry
+
+--+SfteS7bOf3dGlBC
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUMnMKAAoJEN0jrNd/PrOhchQQALgku/s1ZwEqypiON8EcPUzr
+mjuFb0t0j1gluAEHowLaBaxzD4b/61sfeQ7K+gC97JClldwANCYIRZCkf/nOPqAz
+Y/0k6mjmSKaAmO8/1IQ9ZRY3vdIHqd+G5BqV0RJKsQnRYxj1LP7zuelf/tQz42Mr
+JRNNhRkb9+LqFSoG84x5UuQ6Jsronzwj3EVm3lsKjbaF/wWhOA5/Nqe+dwpoLgk6
+8WHcjkD3CGeJPVac+c5FWXj1v3yM2Gl/PyNxRWjONHOq5qfcOzqifI45bUkRHFFT
+kgmGCxnvZNYWLgZhfSqKTEryb1MWN7pVTjaz10inGtM2BpF9C0zBD3TjgjdZGlM3
+GD2ZiYVrjrPmItnB00O4PHFhfgWNJncI9NB4Ji/0h4qBgSfYneSKvClTT/slDjuw
+6wfIm6aIVRi4nNkOJ3s0ZXdSGitEg/Pa4qCKy+6+Jn5K7f++NzlEpFOqvZc0cw+1
+xAGQVItVBG7hc2lOQHi2pTZ4enPSTtRjy7HbFnZ+ZshF/kJoCnTCiVNuOuJYzInC
+hiduI3b0807uTuE8CWzTtp2WTeHJSDwQShXD4ZCe1e/PaZc7ri/wr9l1ykg+aUyE
+Ipl2eCoWiYXLJK6tp9GIP+/7CLuTXbtGR6cCVuN01VTM6JbwO2oLc4TUA0aRmh37
+QZJi/Zl6eTja2gR9/IUB
+=y87M
+-----END PGP SIGNATURE-----
+
+--+SfteS7bOf3dGlBC--
+
+--===============2132900212==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============2132900212==--
