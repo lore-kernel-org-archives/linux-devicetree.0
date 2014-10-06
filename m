@@ -1,50 +1,120 @@
-From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v6 1/2] mfd/axp20x: extend axp20x to support axp288 pmic
-Date: Mon, 6 Oct 2014 10:17:19 -0700
-Message-ID: <20141006101719.7efb62e8@icelake>
-References: <1411644045-21281-1-git-send-email-jacob.jun.pan@linux.intel.com>
-	<54268DC0.40406@kernel.org>
-	<20141006165209.GC3848@lee--X1>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v5 1/4] hwmon: ltc2978: device tree bindings documentation
+Date: Mon, 6 Oct 2014 10:28:45 -0700
+Message-ID: <20141006172845.GA21902@roeck-us.net>
+References: <1412275071-6417-1-git-send-email-atull@opensource.altera.com>
+ <1412275071-6417-2-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141006165209.GC3848@lee--X1>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, IIO <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICE TREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Zubair Lutfullah <zubair.lutfullah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Angelo Compagnucci <angelo.compag>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1412275071-6417-2-git-send-email-atull@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: atull@opensource.altera.com
+Cc: jdelvare@suse.de, lm-sensors@lm-sensors.org, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 6 Oct 2014 17:52:09 +0100
-Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+On Thu, Oct 02, 2014 at 01:37:48PM -0500, atull@opensource.altera.com wrote:
+> From: Alan Tull <atull@opensource.altera.com>
+> 
+> Add device tree bindings documentation for ltc2978.
+> 
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> ---
+> v2: clean whitespace
+> ---
+>  .../devicetree/bindings/hwmon/ltc2978.txt          |   41 ++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/ltc2978.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/ltc2978.txt b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+> new file mode 100644
+> index 0000000..b2d9c4d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+> @@ -0,0 +1,41 @@
+> +ltc2978
+> +
+> +Required properties:
+> + - compatible: one of: ltc2974, ltc2977, ltc2978, ltc3880, ltc3883, ltm4676
+> + - reg: I2C address
+> +
+> +Optional properties:
+> + Name of the optional regulator subnode must be "regulators".
 
-> Date: Mon, 6 Oct 2014 17:52:09 +0100
-> User-Agent: Mutt/1.5.21 (2010-09-15)
-> 
-> On Sat, 27 Sep 2014, Jonathan Cameron wrote:
-> 
-> > On 25/09/14 12:20, Jacob Pan wrote:  
-> > > X-Powers AXP288 is a customized PMIC for Intel Baytrail-CR
-> > > platforms. Similar to AXP202/209, AXP288 comes with USB charger,
-> > > more LDO and BUCK channels, and AD converters. It also provides
-> > > extended status and interrupt reporting capabilities than the
-> > > devices currently supported in axp20x.c.
-> > >
-> > > In addition to feature extension, this patch also adds ACPI
-> > > binding for enumeration.
-> > >
-> > > This consolidated driver should support more X-Powers' PMICs in
-> > > both device tree and ACPI enumerated platforms.
-> > >
-> > > Signed-off-by: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > > Reviewed-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>  
-> > Reviewed-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > 
-> > (I'm assuming Lee will take the whole series when he is happy with
-> > it).  
-> 
-> I only see patch 1?
-Hi Lee,
-here is #2. will also send you a copy directly.
+This is currently a problem. The regulator core trats it as mandatory,
+meaning I get error messages such as
 
-https://lkml.org/lkml/2014/9/25/538
+ltc2978 5-005e: Failed to find regulator container node
+
+if not specified. We'll have to sort out with the regulator core how this should
+be handled.
+
+> +  - #address-cells must be 1.
+> +  - #size-cells must be 0.
+> +
+
+Checking this out, those do not seem to be necessary.
+
+> + For each regulator:
+> +  - reg: regulator number
+
+This does not seem to be necessary either.
+
+> +  - regulator-compatible: must be vout_en<regulator number> such as vout_en3
+> +    valid range is:
+> +      ltc2977, ltc2978 : vout_en0 - vout_en7
+> +      ltc2974          : vout_en0 - vout_en3
+> +      ltc3880, ltm4676 : vout_en0 - vout_en1
+> +      ltc3883          : vout_en0 only
+
+Besides the unnecessary _en, this is a problem if there is more than one
+supported chip in the system, if DEBUG_FS is enabled, and if names are not
+specified in the devicetree file. I get a lot of error messages in a
+system with a large number of LTC2978 chips.
+
+vout3: Failed to create debugfs directory
+vout4: Failed to create debugfs directory
+vout5: Failed to create debugfs directory
+vout6: Failed to create debugfs directory
+vout7: Failed to create debugfs directory
+vout2: Failed to create debugfs directory
+vout3: Failed to create debugfs directory
+
+and so on (40+ times in my system). We will have to find a solution for this
+problem.
+
+I also get
+
+vout7: no parameters
+
+for each regulator which is a bit annoying with 50+ of those regulators
+in the system.
+
+Guenter
+
+> +  - regulator-name: arbitrary name for regulator
+> +
+> +Example:
+> +ltc2978@5e {
+> +	compatible = "ltc2978";
+> +	reg = <0x5e>;
+> +	regulators {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		vdacp0_reg: regulator@0 {
+> +			reg = <0>;
+> +			regulator-compatible = "vout_en0";
+> +			regulator-name = "FPGA-2.5V";
+> +		};
+> +		vdacp2_reg: regulator@2 {
+> +			reg = <2>;
+> +			regulator-compatible = "vout_en2";
+> +			regulator-name = "FPGA-1.5V";
+> +		};
+> +	};
+> +};
+> -- 
+> 1.7.9.5
+> 
