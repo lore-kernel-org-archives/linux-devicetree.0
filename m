@@ -1,90 +1,50 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] serial: mxs-auart: add sysrq support
-Date: Mon, 6 Oct 2014 08:38:12 -0300
-Message-ID: <CAOMZO5B94UjrpcksXeMRLZ_sV-GPv252xGs8E+y7NLXtMKOxVg@mail.gmail.com>
-References: <20140929014129.GA8687@kroah.com>
-	<1411999905-27044-1-git-send-email-j.uzycki@elproma.com.pl>
-	<CAOMZO5Cctk4UNvK2=MC9tf2Fzi1r0+qdn-SXfC-=W9n3T=a+VA@mail.gmail.com>
-	<54327E41.9070607@elproma.com.pl>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v7 01/11] mfd: add atmel-hlcdc driver
+Date: Mon, 6 Oct 2014 13:38:20 +0200
+Message-ID: <20141006133820.4905847a@bbrezillon>
+References: <1412175188-28278-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1412175188-28278-2-git-send-email-boris.brezillon@free-electrons.com>
+	<20141006104917.GF25202@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <54327E41.9070607@elproma.com.pl>
-Sender: linux-serial-owner@vger.kernel.org
-To: =?UTF-8?Q?Janusz_U=C5=BCycki?= <j.uzycki@elproma.com.pl>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jiri Slaby <jslaby@suse.cz>, Richard Genoud <richard.genoud@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20141006104917.GF25202@ulmo>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org, Rob Clark <robdclark@gmail.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Yao <mark.yao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 6, 2014 at 8:34 AM, Janusz U=C5=BCycki <j.uzycki@elproma.co=
-m.pl> wrote:
-> Hi,
->
-> W dniu 2014-10-04 18:19, Fabio Estevam pisze:
->
->> Janusz,
->>
->> On Mon, Sep 29, 2014 at 11:11 AM, Janusz Uzycki <j.uzycki@elproma.co=
-m.pl>
->> wrote:
->>>>
->>>> So I'm deleting all of these now, please resend the latest
->>>> versions you have, with properly versioning
->>>> and order information.
->>>
->>> Sure. If you don't want to comment dirty patches
->>> I will not send you them.
->>> I can send you only the final version, commented before.
->>>
->>> On the moment this patch is ready to apply.
->>>
->>> [PATCH RESEND] serial: mxs-auart: add sysrq support
->>> The patch is resent to apply.
->>
->> What Greg is asking you to do is to provide a proper version
->> annotation in your patches.
->>
->> For example: [PATCH v2] serial: mxs-auart: add ...
->>
->> Then if you need to submit it again you should do:
->>
->> [PATCH v3] serial: mxs-auart: add ...
->
->
-> I will resend the rest of patches (as v4) this week.
-> This simple patch is independent from the previous patchset so
-> I decided to resubmit it alone ([PATCH RESEND] header used)
-> to apply.
->
-> I rather shouldn't resend the patch again I guess.
-> I sent the same initial version of the patch twice
-> after Greg's email so I did mess enough I think.
->
->> Also, always explain below the --- line what changed from one versio=
-n to
->> another
->
-> I thought composing cover letter is the only solution for resent patc=
-h or
-> series.
-> As I understood this way is appropriate for single patch only (not pa=
-tch
-> set).
-> "Below" - it means between the line and diffstat?
-> Should I add new/second '---' line before diffstat?
+On Mon, 6 Oct 2014 12:49:17 +0200
+Thierry Reding <thierry.reding@gmail.com> wrote:
 
-Just do something like:
+> On Wed, Oct 01, 2014 at 04:52:58PM +0200, Boris Brezillon wrote:
+> [...]
+> > diff --git a/drivers/mfd/atmel-hlcdc.c b/drivers/mfd/atmel-hlcdc.c
+> [...]
+> > @@ -0,0 +1,122 @@
+> > +/*
+> > + * Copyright (C) 2014 Free Electrons
+> > + * Copyright (C) 2014 Atmel
+> > + *
+> > + * Author: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify it
+> > + * under the terms of the GNU General Public License version 2 as published by
+> > + * the Free Software Foundation.
+> [...]
+> > +MODULE_LICENSE("GPL");
+> 
+> Should be "GPL v2" according to the header comment.
 
-When using mxs-auart based console, sometime we need the sysrq function
-to help debugging kernel. The sysrq code is basically there,
-this patch just simply enable it.
+I'll fix that.
 
-Signed-off-by: Janusz Uzycki <j.uzycki@elproma.com.pl>
----
-Changes since v3:
-- bla bla bla
---
-To unsubscribe from this list: send the line "unsubscribe linux-serial"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Thierry
+
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
