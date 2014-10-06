@@ -1,158 +1,386 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v7 06/11] drm: add DT bindings documentation for
- atmel-hlcdc-dc driver
-Date: Mon, 6 Oct 2014 14:35:06 +0200
-Message-ID: <20141006123506.GC26833@ulmo>
-References: <1412175188-28278-1-git-send-email-boris.brezillon@free-electrons.com>
- <1412175188-28278-7-git-send-email-boris.brezillon@free-electrons.com>
- <20141006105433.GG25202@ulmo> <20141006141440.32fae2ef@bbrezillon>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0231112824=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20141006141440.32fae2ef@bbrezillon>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org, Mark Yao <mark.yao@rock-chips.com>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 1/2] ARM: zynq: Add OCM controller driver
+Date: Mon,  6 Oct 2014 14:38:06 +0200
+Message-ID: <e65e39088e0f571ee4905172f2f6c84dbc037805.1412599051.git.michal.simek@xilinx.com>
+Content-Type: multipart/signed;
+    boundary="=_mimegpg-monstr-desktop-17171-1412599087-0001";
+    micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
 
---===============0231112824==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vOmOzSkFvhd7u8Ms"
-Content-Disposition: inline
+--=_mimegpg-monstr-desktop-17171-1412599087-0001
+
+The driver provide memory allocator which can
+be used by others drivers to allocate memory inside OCM.
+All location for 64kB blocks are supported
+and driver is trying to allocate the largest continuous
+block of memory.
+
+Checking mpcore addressing filterring is not done here
+but could be added in future.
+
+Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+
+Changes in v3:
+- Move OCM to drivers/soc
+- Update year
+- Extract DTS node to be able to apply it out of driver
+- Remove generic allocator enabling
+- Extract SLCR part
+- Use const in of_device_id
+- OCM->OCMC
+- Use ocmc-1.0 compatible string
+
+Changes in v2:
+- Change compatibility string to be in xilinx format
+- Fix kernel-doc format
+
+For everybody on-chip SRAM driver "mmio-sram"
+is missing parity IRQ handling not sure how to write
+in generic way and also the memory layout
+can be changed at run time (not currently supported by this driver)
+
+smp-sram trampoline allocation can be used from mmio-sram
+and size allocated via DT but currently no reason for using
+it.
+
+Creating mmio-sram node with setting at run time based on current setting
+is possible but it won't look good.
+One way how to do it is here
+"ARM: mvebu: Add quirk for i2c for the OpenBlocks AX3-4 board"
+(sha1: 85e618a1be2b2092318178d1d66bdad49cbbeeeb)
+but creating nodes at run-time or changing compact strings
+will be just more hacky code.
+
+---
+ .../bindings/arm/zynq/xlnx,zynq-ocmc.txt           |  17 ++
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/zynq/Makefile                          |   1 +
+ drivers/soc/zynq/zynq_ocmc.c                       | 246 +++++++++++++++++++++
+ 4 files changed, 265 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt
+ create mode 100644 drivers/soc/zynq/Makefile
+ create mode 100644 drivers/soc/zynq/zynq_ocmc.c
+
+diff --git a/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt
+new file mode 100644
+index 000000000000..8ddbd1e5ffc1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocmc.txt
+@@ -0,0 +1,17 @@
++Device tree bindings for Zynq's OCM controller
++
++The OCM is divided to 4 64kB segments which can be separately configured
++to low or high location. Location is controlled via SLCR.
++
++Required properties:
++ compatible: Compatibility string. Must be "xlnx,zynq-ocmc-1.0".
++ reg: Specify the base and size of the OCMC registers in the memory map.
++      E.g.: reg = <0xf800c000 0x1000>;
++
++Example:
++ocmc: ocmc@f800c000 {
++	compatible =  "xlnx,zynq-ocmc-1.0";
++	interrupt-parent = <&intc>;
++	interrupts = <0 3 4>;
++	reg = <0xf800c000 0x1000>;
++} ;
+diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+index 3b1b95d932d1..dbe19f721701 100644
+--- a/drivers/soc/Makefile
++++ b/drivers/soc/Makefile
+@@ -4,3 +4,4 @@
+
+ obj-$(CONFIG_ARCH_QCOM)		+= qcom/
+ obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
++obj-$(CONFIG_ARCH_ZYNQ)		+= zynq/
+diff --git a/drivers/soc/zynq/Makefile b/drivers/soc/zynq/Makefile
+new file mode 100644
+index 000000000000..7c6a5612ee66
+--- /dev/null
++++ b/drivers/soc/zynq/Makefile
+@@ -0,0 +1 @@
++obj-y += zynq_ocmc.o
+diff --git a/drivers/soc/zynq/zynq_ocmc.c b/drivers/soc/zynq/zynq_ocmc.c
+new file mode 100644
+index 000000000000..0ad8ad67797b
+--- /dev/null
++++ b/drivers/soc/zynq/zynq_ocmc.c
+@@ -0,0 +1,246 @@
++/*
++ * Copyright (C) 2013 - 2014 Xilinx
++ *
++ * Based on "Generic on-chip SRAM allocation driver"
++ *
++ * Copyright (C) 2012 Philipp Zabel, Pengutronix
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/kernel.h>
++#include <linux/err.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/of_irq.h>
++#include <linux/platform_device.h>
++#include <linux/genalloc.h>
++
++#include <soc/zynq/common.h>
++
++#define ZYNQ_OCMC_HIGHADDR	0xfffc0000
++#define ZYNQ_OCMC_LOWADDR	0x0
++#define ZYNQ_OCMC_BLOCK_SIZE	0x10000
++#define ZYNQ_OCMC_BLOCKS		4
++#define ZYNQ_OCMC_GRANULARITY	32
++
++#define ZYNQ_OCMC_PARITY_CTRL	0x0
++#define ZYNQ_OCMC_PARITY_ENABLE	0x1e
++
++#define ZYNQ_OCMC_PARITY_ERRADDRESS	0x4
++
++#define ZYNQ_OCMC_IRQ_STS		0x8
++#define ZYNQ_OCMC_IRQ_STS_ERR_MASK	0x7
++
++struct zynq_ocmc_dev {
++	void __iomem *base;
++	int irq;
++	struct gen_pool *pool;
++	struct resource res[ZYNQ_OCMC_BLOCKS];
++};
++
++/**
++ * zynq_ocmc_irq_handler - Interrupt service routine of the OCM controller
++ * @irq:	IRQ number
++ * @data:	Pointer to the zynq_ocmc_dev structure
++ *
++ * Return:     IRQ_HANDLED always
++ */
++static irqreturn_t zynq_ocmc_irq_handler(int irq, void *data)
++{
++	u32 sts;
++	u32 err_addr;
++	struct zynq_ocmc_dev *zynq_ocmc = data;
++
++	/* check status */
++	sts = readl(zynq_ocmc->base + ZYNQ_OCMC_IRQ_STS);
++	if (sts & ZYNQ_OCMC_IRQ_STS_ERR_MASK) {
++		/* check error address */
++		err_addr = readl(zynq_ocmc->base + ZYNQ_OCMC_PARITY_ERRADDRESS);
++		pr_err("%s: OCM err intr generated at 0x%04x (stat: 0x%08x).",
++		       __func__, err_addr, sts & ZYNQ_OCMC_IRQ_STS_ERR_MASK);
++	}
++	pr_warn("%s: Interrupt generated by OCM, but no error is found.",
++		__func__);
++
++	return IRQ_HANDLED;
++}
++
++/**
++ * zynq_ocmc_probe - Probe method for the OCM driver
++ * @pdev:	Pointer to the platform_device structure
++ *
++ * This function initializes the driver data structures and the hardware.
++ *
++ * Return:	0 on success and error value on failure
++ */
++static int zynq_ocmc_probe(struct platform_device *pdev)
++{
++	int ret;
++	struct zynq_ocmc_dev *zynq_ocmc;
++	u32 i, ocm_config, curr;
++	struct resource *res;
++
++	ocm_config = zynq_slcr_get_ocm_config();
++
++	zynq_ocmc = devm_kzalloc(&pdev->dev, sizeof(*zynq_ocmc), GFP_KERNEL);
++	if (!zynq_ocmc)
++		return -ENOMEM;
++
++	zynq_ocmc->pool = devm_gen_pool_create(&pdev->dev,
++					       ilog2(ZYNQ_OCMC_GRANULARITY),
++					       -1);
++	if (!zynq_ocmc->pool)
++		return -ENOMEM;
++
++	curr = 0; /* For storing current struct resource for OCM */
++	for (i = 0; i < ZYNQ_OCMC_BLOCKS; i++) {
++		u32 base, start, end;
++
++		/* Setup base address for 64kB OCM block */
++		if (ocm_config & BIT(i))
++			base = ZYNQ_OCMC_HIGHADDR;
++		else
++			base = ZYNQ_OCMC_LOWADDR;
++
++		/* Calculate start and end block addresses */
++		start = i * ZYNQ_OCMC_BLOCK_SIZE + base;
++		end = start + (ZYNQ_OCMC_BLOCK_SIZE - 1);
++
++		/* Concatenate OCM blocks together to get bigger pool */
++		if (i > 0 && start == (zynq_ocmc->res[curr - 1].end + 1)) {
++			zynq_ocmc->res[curr - 1].end = end;
++		} else {
++#ifdef CONFIG_SMP
++			/*
++			 * OCM block if placed at 0x0 has special meaning
++			 * for SMP because jump trampoline is added there.
++			 * Ensure that this address won't be allocated.
++			 */
++			if (!base) {
++				u32 trampoline_code_size =
++					&zynq_secondary_trampoline_end -
++					&zynq_secondary_trampoline;
++				dev_dbg(&pdev->dev,
++					"Allocate reset vector table %dB\n",
++					trampoline_code_size);
++				/* Postpone start offset */
++				start += trampoline_code_size;
++			}
++#endif
++			/* First resource is always initialized */
++			zynq_ocmc->res[curr].start = start;
++			zynq_ocmc->res[curr].end = end;
++			zynq_ocmc->res[curr].flags = IORESOURCE_MEM;
++			curr++; /* Increment curr value */
++		}
++		dev_dbg(&pdev->dev, "OCM block %d, start %x, end %x\n",
++			i, start, end);
++	}
++
++	/*
++	 * Separate pool allocation from OCM block detection to ensure
++	 * the biggest possible pool.
++	 */
++	for (i = 0; i < ZYNQ_OCMC_BLOCKS; i++) {
++		unsigned long size;
++		void __iomem *virt_base;
++
++		/* Skip all zero size resources */
++		if (zynq_ocmc->res[i].end == 0)
++			break;
++		dev_dbg(&pdev->dev, "OCM resources %d, start %x, end %x\n",
++			i, zynq_ocmc->res[i].start, zynq_ocmc->res[i].end);
++		size = resource_size(&zynq_ocmc->res[i]);
++		virt_base = devm_ioremap_resource(&pdev->dev,
++						  &zynq_ocmc->res[i]);
++		if (IS_ERR(virt_base))
++			return PTR_ERR(virt_base);
++
++		ret = gen_pool_add_virt(zynq_ocmc->pool,
++					(unsigned long)virt_base,
++					zynq_ocmc->res[i].start, size, -1);
++		if (ret < 0) {
++			dev_err(&pdev->dev, "Gen pool failed\n");
++			return ret;
++		}
++		dev_info(&pdev->dev, "ZYNQ OCM pool: %ld KiB @ 0x%p\n",
++			 size / 1024, virt_base);
++	}
++
++	/* Get OCM config space */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	zynq_ocmc->base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(zynq_ocmc->base))
++		return PTR_ERR(zynq_ocmc->base);
++
++	/* Allocate OCM parity IRQ */
++	zynq_ocmc->irq = platform_get_irq(pdev, 0);
++	if (zynq_ocmc->irq < 0) {
++		dev_err(&pdev->dev, "irq resource not found\n");
++		return zynq_ocmc->irq;
++	}
++	ret = devm_request_irq(&pdev->dev, zynq_ocmc->irq,
++			       zynq_ocmc_irq_handler,
++			       0, pdev->name, zynq_ocmc);
++	if (ret != 0) {
++		dev_err(&pdev->dev, "request_irq failed\n");
++		return ret;
++	}
++
++	/* Enable parity errors */
++	writel(ZYNQ_OCMC_PARITY_ENABLE,
++	       zynq_ocmc->base + ZYNQ_OCMC_PARITY_CTRL);
++
++	platform_set_drvdata(pdev, zynq_ocmc);
++
++	return 0;
++}
++
++/**
++ * zynq_ocmc_remove - Remove method for the OCM driver
++ * @pdev:	Pointer to the platform_device structure
++ *
++ * Return:	0 on success and error value on failure
++ *
++ * This function is called if a device is physically removed from the system or
++ * if the driver module is being unloaded. It frees all resources allocated to
++ * the device.
++ */
++static int zynq_ocmc_remove(struct platform_device *pdev)
++{
++	struct zynq_ocmc_dev *zynq_ocmc = platform_get_drvdata(pdev);
++
++	if (gen_pool_avail(zynq_ocmc->pool) < gen_pool_size(zynq_ocmc->pool))
++		dev_dbg(&pdev->dev, "removed while SRAM allocated\n");
++
++	return 0;
++}
++
++static const struct of_device_id zynq_ocmc_dt_ids[] = {
++	{ .compatible = "xlnx,zynq-ocmc-1.0" },
++	{ /* end of table */ }
++};
++
++static struct platform_driver zynq_ocmc_driver = {
++	.driver = {
++		.name = "zynq_ocmc",
++		.of_match_table = zynq_ocmc_dt_ids,
++	},
++	.probe = zynq_ocmc_probe,
++	.remove = zynq_ocmc_remove,
++};
++
++static int __init zynq_ocmc_init(void)
++{
++	return platform_driver_register(&zynq_ocmc_driver);
++}
++
++arch_initcall(zynq_ocmc_init);
+--
+1.8.2.3
 
 
---vOmOzSkFvhd7u8Ms
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Oct 06, 2014 at 02:14:40PM +0200, Boris Brezillon wrote:
-> On Mon, 6 Oct 2014 12:54:34 +0200
-> Thierry Reding <thierry.reding@gmail.com> wrote:
->=20
-> > On Wed, Oct 01, 2014 at 04:53:03PM +0200, Boris Brezillon wrote:
-> > > From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> > >=20
-> > > The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoCs (i.=
-e.
-> > > at91sam9n12, at91sam9x5 family or sama5d3 family) provides a display
-> > > controller device.
-> > >=20
-> > > The HLCDC block provides a single RGB output port, and only supports =
-LCD
-> > > panels connection to LCD panels for now.
-> > >=20
-> > > The atmel,panel property link the HLCDC RGB output with the LCD panel
-> > > connected on this port (note that the HLCDC RGB connector implementat=
-ion
-> > > makes use of the DRM panel framework).
-> > >=20
-> > > Connection to other external devices (DRM bridges) might be added lat=
-er by
-> > > mean of a new atmel,xxx (atmel,bridge) property.
-> > >=20
-> > > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> > > ---
-> > >  .../devicetree/bindings/drm/atmel-hlcdc-dc.txt     | 53 ++++++++++++=
-++++++++++
-> > >  1 file changed, 53 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/drm/atmel-hlcdc=
--dc.txt
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt=
- b/Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
-> > > new file mode 100644
-> > > index 0000000..ebc1a91
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
-> > > @@ -0,0 +1,53 @@
-> > > +Device-Tree bindings for Atmel's HLCDC (High LCD Controller) DRM dri=
-ver
-> > > +
-> > > +The Atmel HLCDC Display Controller is subdevice of the HLCDC MFD dev=
-ice.
-> > > +See ../mfd/atmel-hlcdc.txt for more details.
-> > > +
-> > > +Required properties:
-> > > + - compatible: value should be "atmel,hlcdc-display-controller"
-> > > + - pinctrl-names: the pin control state names. Should contain "defau=
-lt".
-> > > + - pinctrl-0: should contain the default pinctrl states.
-> > > + - #address-cells: should be set to 1.
-> > > + - #size-cells: should be set to 0.
-> > > +
-> > > +Required children nodes:
-> > > + Children nodes are encoding available output ports and their connec=
-tions
-> > > + to external devices using the OF graph reprensentation (see ../grap=
-h.txt).
-> > > + At least one port node is required.
-> >=20
-> > Are the connections configurable at runtime? Does the SoC have IP blocks
-> > for HDMI or other types of outputs or does it provide only RGB output to
-> > external blocks?
->=20
-> No, there's only one RGB output port, but you can connect more than one
-> device on the RGB port (should we call it DPI port ?).
-> Actually Atmel connected an HDMI encoder and an LCD panel connected on
-> the same port on their dev kit.
-
-This was discussed in some other thread if I remember correctly. I still
-think that the HLCDC node should only contain a single output, no matter
-how many encoders or panels get connected.
-
-So the output represents the set of signals that exit the IP block, but
-what's connected to them on the board is a board-level detail and
-therefore should go into the board DTS.
-
-In the above case of the Atmel devkit, is there any way to control where
-the signal goes or does it just go to both the panel and HDMI encoder at
-the same time and it's up to the user to properly configure the output
-in order to get either HDMI or panel to display anything?
-
-Thierry
-
---vOmOzSkFvhd7u8Ms
+--=_mimegpg-monstr-desktop-17171-1412599087-0001
 Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Version: GnuPG v1.4.10 (GNU/Linux)
 
-iQIcBAEBAgAGBQJUMox6AAoJEN0jrNd/PrOhKH8P/3P04XFmMXi7at8NXB1wwVvq
-p0GRQYb73x2CPlZq85Glp//cWV02BVMkk3Edwlww8P8G7sHVe8M/jt4SbciZ/Nk+
-k40ZHYaiLq3jdEJcZWLV1bQxnTQa5744cEYe561Ocer3Hs9ZY4Cf0Q4HUa/KPV70
-9LlvJMqBK9jA+DoGUI7N97PfFCL+b9r0+an+7g1txlo6T3gCUpUpm/6BfGRujATe
-2V543TtzWa+arTGs0lLU+93IEhSV5gKCYxSqXrV29qfcxejXoR2cBYancKPy9Iqn
-i3WmBfOPihc8Uxvil6fpy9sHV11ajk2PAEHHTQYgJlokq5FPHiA3+tGw3Ix0TFrH
-tU7vWDUJac9ERDdiW2b159HDDck68fvYpkOk11vS/4eRVzchHtut3QtwkwwosZhP
-shEM3LlEQRgDdZcVh8zmVUhmxNyJPQ0W25jARqQHt4eMfcvLIkHZ+VQFhe+gJKrS
-vwSk4WTNZvHIRh327U4Yu3qi+vUNG/LsrKFqex1ruPHaxd5DK/pIxiCISJMk/TQ/
-r8nvM6hlobxf9Qc8fULsS3zLmPe1kcFpFqlGHRIrJF3TwkwGLb+NKMS4s9dp224g
-Z24ZBE8BemUyp4yAmQxZhgFcN3/xlH0LiVMskU52Ciywra5kivNyQmHwUeKzyB9h
-aLJaFYqhevNcfJj0dohi
-=O2bm
+iEYEABECAAYFAlQyjS8ACgkQykllyylKDCGy6ACbBHlg+OtqyGrUzbpQsSfDaUa6
+/LQAniD0wuUnUTLymdfn45jRex5gE8e+
+=ATzr
 -----END PGP SIGNATURE-----
 
---vOmOzSkFvhd7u8Ms--
-
---===============0231112824==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============0231112824==--
+--=_mimegpg-monstr-desktop-17171-1412599087-0001--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
