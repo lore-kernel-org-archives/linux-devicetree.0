@@ -1,83 +1,160 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/1] ARM: at91/dt: sam9x5: Add CAN device nodes
-Date: Mon, 6 Oct 2014 16:12:03 +0200
-Message-ID: <20141006141203.GB15599@piout.net>
-References: <20141002105716.GG3907@piout.net>
- <1412248785-28269-1-git-send-email-alexander.stein@systec-electronic.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v7 06/11] drm: add DT bindings documentation for
+ atmel-hlcdc-dc driver
+Date: Mon, 6 Oct 2014 16:26:10 +0200
+Message-ID: <20141006142608.GA1744@ulmo>
+References: <1412175188-28278-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1412175188-28278-7-git-send-email-boris.brezillon@free-electrons.com>
+ <20141006105433.GG25202@ulmo>
+ <20141006141440.32fae2ef@bbrezillon>
+ <20141006123506.GC26833@ulmo>
+ <20141006155358.61a2a30c@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1412248785-28269-1-git-send-email-alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20141006155358.61a2a30c@bbrezillon>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org, Rob Clark <robdclark@gmail.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Yao <mark.yao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 02/10/2014 at 13:19:45 +0200, Alexander Stein wrote :
-> Add the missing CAN devices node including their pin muxing and clocks.
-> 
-> Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-> ---
-> Changes in v2:
-> * Adjusted pinmux comment
-> 
->  arch/arm/boot/dts/at91sam9x5.dtsi | 48 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-> index e1a5c70..e3f11f2 100644
-> --- a/arch/arm/boot/dts/at91sam9x5.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-> @@ -763,6 +795,22 @@
->  					};
->  				};
->  
-> +				can0 {
-> +					pinctrl_can0_rx_tx: can0_rx_tx {
-> +						atmel,pins =
-> +							<AT91_PIOA 9 AT91_PERIPH_B AT91_PINCTRL_NONE	/* CANRX, conflicts with DRXD */
-> +							 AT91_PIOA 10 AT91_PERIPH_B AT91_PINCTRL_NONE>;	/* CANTX, conflicts with DTXD */
+--KsGdsel6WgEHnImy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Last nitpick, could you make that be CANRX0 and CANTX0 ?
+On Mon, Oct 06, 2014 at 03:53:58PM +0200, Boris Brezillon wrote:
+> On Mon, 6 Oct 2014 14:35:06 +0200
+> Thierry Reding <thierry.reding@gmail.com> wrote:
+>=20
+> > On Mon, Oct 06, 2014 at 02:14:40PM +0200, Boris Brezillon wrote:
+> > > On Mon, 6 Oct 2014 12:54:34 +0200
+> > > Thierry Reding <thierry.reding@gmail.com> wrote:
+> > >=20
+> > > > On Wed, Oct 01, 2014 at 04:53:03PM +0200, Boris Brezillon wrote:
+> > > > > From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> > > > >=20
+> > > > > The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoCs=
+ (i.e.
+> > > > > at91sam9n12, at91sam9x5 family or sama5d3 family) provides a disp=
+lay
+> > > > > controller device.
+> > > > >=20
+> > > > > The HLCDC block provides a single RGB output port, and only suppo=
+rts LCD
+> > > > > panels connection to LCD panels for now.
+> > > > >=20
+> > > > > The atmel,panel property link the HLCDC RGB output with the LCD p=
+anel
+> > > > > connected on this port (note that the HLCDC RGB connector impleme=
+ntation
+> > > > > makes use of the DRM panel framework).
+> > > > >=20
+> > > > > Connection to other external devices (DRM bridges) might be added=
+ later by
+> > > > > mean of a new atmel,xxx (atmel,bridge) property.
+> > > > >=20
+> > > > > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.co=
+m>
+> > > > > ---
+> > > > >  .../devicetree/bindings/drm/atmel-hlcdc-dc.txt     | 53 ++++++++=
+++++++++++++++
+> > > > >  1 file changed, 53 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/drm/atmel-h=
+lcdc-dc.txt
+> > > > >=20
+> > > > > diff --git a/Documentation/devicetree/bindings/drm/atmel-hlcdc-dc=
+=2Etxt b/Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
+> > > > > new file mode 100644
+> > > > > index 0000000..ebc1a91
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
+> > > > > @@ -0,0 +1,53 @@
+> > > > > +Device-Tree bindings for Atmel's HLCDC (High LCD Controller) DRM=
+ driver
+> > > > > +
+> > > > > +The Atmel HLCDC Display Controller is subdevice of the HLCDC MFD=
+ device.
+> > > > > +See ../mfd/atmel-hlcdc.txt for more details.
+> > > > > +
+> > > > > +Required properties:
+> > > > > + - compatible: value should be "atmel,hlcdc-display-controller"
+> > > > > + - pinctrl-names: the pin control state names. Should contain "d=
+efault".
+> > > > > + - pinctrl-0: should contain the default pinctrl states.
+> > > > > + - #address-cells: should be set to 1.
+> > > > > + - #size-cells: should be set to 0.
+> > > > > +
+> > > > > +Required children nodes:
+> > > > > + Children nodes are encoding available output ports and their co=
+nnections
+> > > > > + to external devices using the OF graph reprensentation (see ../=
+graph.txt).
+> > > > > + At least one port node is required.
+> > > >=20
+> > > > Are the connections configurable at runtime? Does the SoC have IP b=
+locks
+> > > > for HDMI or other types of outputs or does it provide only RGB outp=
+ut to
+> > > > external blocks?
+> > >=20
+> > > No, there's only one RGB output port, but you can connect more than o=
+ne
+> > > device on the RGB port (should we call it DPI port ?).
+> > > Actually Atmel connected an HDMI encoder and an LCD panel connected on
+> > > the same port on their dev kit.
+> >=20
+> > This was discussed in some other thread if I remember correctly. I still
+> > think that the HLCDC node should only contain a single output, no matter
+> > how many encoders or panels get connected.
+> >=20
+> > So the output represents the set of signals that exit the IP block, but
+> > what's connected to them on the board is a board-level detail and
+> > therefore should go into the board DTS.
+> >=20
+> > In the above case of the Atmel devkit, is there any way to control where
+> > the signal goes or does it just go to both the panel and HDMI encoder at
+> > the same time and it's up to the user to properly configure the output
+> > in order to get either HDMI or panel to display anything?
+>=20
+> No there's no way to control where the signal goes.
+> What you can control though, is the activation of the associated
+> encoder/connectors connected on this bus (using dpms).
 
-> +					};
-> +				};
-> +
-> +				can1 {
-> +					pinctrl_can1_rx_tx: can1_rx_tx {
-> +						atmel,pins =
-> +							<AT91_PIOA 6 AT91_PERIPH_B AT91_PINCTRL_NONE	/* CANRX, conflicts with RXD1 */
-> +							 AT91_PIOA 5 AT91_PERIPH_B AT91_PINCTRL_NONE>;	/* CANTX, conflicts with TXD1 */
+But the bus is really only the CRTC, so using DPMS for this is not how
+it's usually done in DRM. Can't you model both outputs as separate
+encoders and then attach them to the CRTC? This should work
+automatically for the framebuffer console and any userspace that can
+talk KMS.
 
-And CANRX1, CANTX1 here so that it is the same as the datasheet.
+Perhaps that's already what's being done and I misunderstand what you're
+saying. I should go back to reviewing the DRM driver. I started this
+morning, then got interrupted by other things.
 
-Then you can add my acked-by.
+Thierry
 
-Thanks !
+--KsGdsel6WgEHnImy
+Content-Type: application/pgp-signature
 
-> +					};
-> +				};
-> +
->  				pioA: gpio@fffff400 {
->  					compatible = "atmel,at91sam9x5-gpio", "atmel,at91rm9200-gpio";
->  					reg = <0xfffff400 0x200>;
-> -- 
-> 2.0.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJUMqaAAAoJEN0jrNd/PrOhPWcQAKI/kaqv6tRhTPQC9CCf0TGu
+HY/0l5y1KDdcQxyQmaFp8NQ7/AIgrr22dCHAIou2umwySJ3FwOWzGaTvtPcoNaVw
+GZRsAjKBkAgmX5uWG83m0kFszN9t7LhfbxdAcmV4blpc4egdibuAkOfdNMHSv03U
+j2f7OegmHxnRGE/KEv08X1/40GE4oLWO+0/oM+mvs7Y0fP6XDvhA0dKZBYHRO/Uw
+SK9AYqTbvtbWjEtWUftn/LmnB3eYI9U5+TSkNBEGV64bM3sQkn2WgTpQEMgqY6zT
+MFYkmIoBLqLUhos09ZaDJDQR0lDmAXh42C5yIY5njkRRM+L7QjgazK1wKE3NmwAM
+VVT/t5UnlWpse085Cu44ejsS3NxTdb1KTNRhNBrEZkWPAnErBFVXM/iwCtuBKlXN
+MeHzi+AB7sGC/CzquZ1BVgFzIpqup7tgnQcccGsHwT20AnT0fWSD61fUQtJU/l2K
+6UJy/RfqPSZ9fyv9AWe5IuvEP/Xck2L+zTwQETj57uVjvg4dcbdd41L+jImVcTBw
+sB03Bsc0xUXZO65cjhqSTml0MPIIxS8t+b0sQUekXA4M+yJRpg/P55s6Qg6fBzX3
+iixc9Qe+kQ+MgiqNstI+s0D2YdmOOTbF5RXKzH25tdx6blT1mBc4kZyBjIhBB3pB
+pLsqi1M55UTvaPBXLDna
+=Z/9P
+-----END PGP SIGNATURE-----
+
+--KsGdsel6WgEHnImy--
