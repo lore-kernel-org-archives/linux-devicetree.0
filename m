@@ -1,124 +1,34 @@
-From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: Fixing boot-time hiccups in your display
-Date: Sun, 5 Oct 2014 19:19:52 -0400
-Message-ID: <CAKON4OzO427-MU4FqmF8AP5V=CXHuGdV1GTptiaJiRY7DLfDRA@mail.gmail.com>
-References: <CAKON4OxRFCvMPMfZhxYNVaxscgAs5AX46YzK-4SU5o6E-iTD1w@mail.gmail.com>
-	<20141005200150.4379.28017@quantum>
-	<CAKON4OxunQNC_Ebf5u9yh9EnGS2A+DdWCRyoFcJWS7GSNoLoqA@mail.gmail.com>
-	<CAGRGNgUcHxWEZmdsM947UuKW-20u+T20ztNqgWxms6iK8-8ugw@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH 1/2] arm: shimobile: r8a7790: add HS-USB device node
+Date: Mon, 6 Oct 2014 09:49:02 +0900
+Message-ID: <5431E6FE.7060909@renesas.com>
+References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412237073-1288-2-git-send-email-yoshihiro.shimoda.uh@renesas.com> <542EB3E7.4090005@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBC55LFUF6ALBBGNEY6QQKGQEDDRAQIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGRGNgUcHxWEZmdsM947UuKW-20u+T20ztNqgWxms6iK8-8ugw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <542EB3E7.4090005@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "horms@verge.net.au" <horms@verge.net.au>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 5, 2014 at 6:36 PM, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Jon,
->
-> On Mon, Oct 6, 2014 at 7:34 AM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Sun, Oct 5, 2014 at 4:01 PM, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> Quoting jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org (2014-10-05 10:09:52)
->>>> I edited the subject line to something more appropriate. This impacts
->>>> a lot of platforms and we should be getting more replies from people
->>>> on the ARM kernel list. This is likely something that deserves a
->>>> Kernel Summit discussion.
->>>
->>> ELC-E and LPC are just around the corner as well. I am attending both. I
->>> suppose some of the others interested in this topic will be present?
->>>
->>>>
->>>> To summarize the problem....
->>>>
->>>> The BIOS (uboot, etc) may have set various devices up into a working
->>>> state before handing off to the kernel.  The most obvious example of
->>>> this is the boot display.
->>>>
->>>> So how do we transition onto the kernel provided device specific
->>>> drivers without interrupting these functioning devices?
->>>>
->>>> This used to be simple, just build everything into the kernel. But
->>>> then along came multi-architecture kernels where most drivers are not
->>>> built in. Those kernels clean up everything (ie turn off unused
->>>> clocks, regulators, etc) right before user space starts. That's done
->>>> as a power saving measure.
->>>>
->>>> Unfortunately that code turns off the clocks and regulators providing
->>>> the display on your screen. Which then promptly gets turned back on a
->>>> half second later when the boot scripts load the display driver. Let's
->>>> all hope the boot doesn't fail while the display is turned off.
->>>
->>> I would say this is one half of the discussion. How do you ever really
->>> know when it is safe to disable these things? In a world with loadable
->>> modules the kernel cannot know that everything that is going to be
->>> loaded has been loaded. There really is no boundary that makes it easy
->>> to say, "OK, now it is truly safe for me to disable these things because
->>> I know every possible piece of code that might claim these resources has
->>> probed".
->>
->> Humans know where this boundary is and can insert the clean up command
->> at the right point in the bootscript. It is also not fatal if the
->> command is inserted at the wrong point, things will just needlessly
->> flicker. It not even fatal if you never run this command, you'll just
->> leave clocks/regulators turned on that could be turned off.
->
-> What about distros? Would this "all clear" point be at the same point
-> in the boot process for every sub-architecture? Would it ever change?
+Hello.
 
-It is not really an "all clear". It is a "BIOS cleanup" command. All
-this clean up does is potentially turn off some clocks/regulators that
-the BIOS left on and no one cares about. It runs around to each
-clock/regulator in the system that the kernel thinks is off, and runs
-the code necessary to ensure that the clock/regulator is really off.
+(2014/10/03 23:34), Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 10/02/2014 12:04 PM, Yoshihiro Shimoda wrote:
+> 
+>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> 
+>     The subject has "shimobile" instead of "shmobile" on both this and R8A7791 
+> patch. And capitalize "arm:" please on all the patches.
 
-The timing of the "BIOS cleanup" point is not really critical.
-Currently it is happening right before user space starts. There are a
-bunch of late_initcalls() that turn off all of the clocks/regulators
-that the BIOS enabled and no Linux driver has claimed.  Unfortunately
-if your display driver hasn't loaded, it is going to turn off your
-display. Of course your display will come right back as soon as the
-device driver loads.
+Thank you for the point. I will fix it.
 
-So the proposal is to turn these late_initcalls() into an IOCTL. The
-power management frameworks would then get a command for calling that
-IOCTL. The logical place to put this command is in your bootscript
-right after all of the loadable drivers have loaded. But... it is not
-critical. If you do it too early your display will still flicker. It
-you don't do it at all you'll do is waste some power. Just move it
-later in the scripts until the things you care about stop flickering.
-Nothing fatal happens if you get it wrong - it is just a power saving
-function.
+Best regards,
+Yoshihiro Shimoda
 
-So how does this get implemented? Is it enough just to add a single
-bit on each clock/regulator that starts off as 1 (ie boot mode). Then
-as the various drivers claim these clocks regulators this bit get
-cleared.  A hole in this scheme is someone who turns off a root clock
-which has children still in boot mode. You can't allow this clock to
-be turned off until all of it's children are out of boot mode. Maybe
-run the kids and look for boot mode? then turn the root clock boot
-mode bit back on and ignore the request to turn it off? All of these
-details need design work.
-
->
-> Thanks,
->
-> --
-> Julian Calaby
->
-> Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> Profile: http://www.google.com/profiles/julian.calaby/
-
-
-
--- 
-Jon Smirl
-jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+> WBR, Sergei
+> 
