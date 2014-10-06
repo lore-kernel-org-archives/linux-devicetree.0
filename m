@@ -1,52 +1,64 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 03/13] ARM: shmobile: kzm9d dts: Add chosen/stdout-path
-Date: Mon, 6 Oct 2014 10:43:28 +0200
-Message-ID: <CAMuHMdUq1ivb0iQ=9YbVc5-BcqxVQ_SyqAkpBKn2X4Uq9WK5Mg@mail.gmail.com>
-References: <1412349104-18724-1-git-send-email-geert+renesas@glider.be>
-	<1412349104-18724-4-git-send-email-geert+renesas@glider.be>
-	<20141006023650.GA23099@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20141006023650.GA23099@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] To remove non-ascii characters in of_selftest.txt
+Date: Mon, 06 Oct 2014 09:56:40 +0100
+Message-ID: <20141006085640.83D8EC40A89@trevor.secretlab.ca>
+References: <1411933087-4272-1-git-send-email-gaurav.minocha.os@gmail.com>
+	<CAMuHMdUvr49-iWUwNDrC6iDkrY_rE2hpynzeFS47j1W-69OfNQ@mail.gmail.com>
+	<CA+rpMb+UDSvn0jDZDoJzcQJjf56PpLMb-ta_9yvpohV26A-3Ow@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+rpMb+UDSvn0jDZDoJzcQJjf56PpLMb-ta_9yvpohV26A-3Ow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On Mon, 29 Sep 2014 13:02:21 -0700
+, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ wrote:
+> On Mon, Sep 29, 2014 at 1:07 AM, Geert Uytterhoeven
+> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> > Hi Gaurav, Grant,
+> >
+> > On Sun, Sep 28, 2014 at 9:38 PM, Gaurav Minocha
+> > <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >> This patch removes the non-ascii characters in
+> >> Documentation/devicetree/of_selftest.txt
+> >
+> > I was wondering against which tree this was, as this file was not in my
+> > local copy of linux-next (which was still at next-20140925).
+> >
+> > Perhaps the filename was wrong?
+> >
+> > So I grepped for "of_fdt_unflatten_device_tree", as this looked like a good
+> > search pattern, cfr.
+> >
+> >>  Secondly, it calls of_fdt_unflatten_device_tree() to unflatten the flattened
+> >
+> > Surprise! No occurrences of  "of_fdt_unflatten_device_tree" found!
+> >
+> > [ more digging ]
+> >
+> > Ah, found it, it went almost straight into Linus' tree, and thus appeared in
+> > next-20140926 after the fact.
+> >
+> > Still:
+> >
+> > $ git grep of_fdt_unflatten_device_tree | cat
+> > Documentation/devicetree/of_selftest.txt:Secondly, it calls
+> > of_fdt_unflatten_device_tree() to unflatten the flattened
+> > $
+> >
+> > So this part of the documentation is not correct.
+> 
+> Yes, my bad. That is supposed to be of_fdt_unflatten_tree.
+> 
+> Will fix it. Thanks!
 
-On Mon, Oct 6, 2014 at 4:36 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Fri, Oct 03, 2014 at 05:11:34PM +0200, Geert Uytterhoeven wrote:
->> Add a stdout-path property so that automatic console selection works
->> in the absence of a "console=" parameter on the kernel command line.
->>
->> Remove the now-superfluous "console=" parameter from chosen/bootargs.
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> In my environment the bootargs portion of this change results
-> in no console output. I am guessing that this is because the
-> console starts with a different terminal speed (though which speed
-> I am unsure).
->
-> If my guess is correct then strictly speaking this is not a bug,
-> though it is a behavioural change. And as such I think at the very
-> least it needs some discussion.
+Applied and typo fixed up. Thanks!
 
-I forgot emev is the only supported SoC not using sh-sci.
-drivers/tty/serial/sh-sci.c:serial_console_setup() defaults to 115200 baud,
-while serial8250_console_setup() defaults to 9600 baud.
-
-So we have to keep the console= parameter. Will resend.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+g.
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
