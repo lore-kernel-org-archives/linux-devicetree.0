@@ -1,83 +1,80 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [PATCH v8 2/2] pwm: add DT bindings documentation for atmel-hlcdc-pwm driver
-Date: Mon,  6 Oct 2014 16:07:03 +0200
-Message-ID: <1412604423-19329-3-git-send-email-boris.brezillon@free-electrons.com>
-References: <1412604423-19329-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1412604423-19329-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: at91/dt: sam9263: Add CAN device nodes
+Date: Mon, 6 Oct 2014 16:09:15 +0200
+Message-ID: <20141006140914.GA15599@piout.net>
+References: <1412599207-15676-1-git-send-email-alexander.stein@systec-electronic.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1412599207-15676-1-git-send-email-alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The HLCDC IP available in some Atmel SoCs (i.e. sam9x5i.e. at91sam9n12,
-at91sam9x5 family or sama5d3 family) provide a PWM device.
+On 06/10/2014 at 14:40:07 +0200, Alexander Stein wrote :
+> Add the missing CAN devices node including their pin muxing. The required
+> clock node already exists.
+> 
+> Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-The DT bindings used for this PWM device is following the default 3 cells
-bindings described in Documentation/devicetree/bindings/pwm/pwm.txt.
+> ---
+>  arch/arm/boot/dts/at91sam9263.dtsi | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+> index bb23c2d..174ab77 100644
+> --- a/arch/arm/boot/dts/at91sam9263.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9263.dtsi
+> @@ -672,6 +672,14 @@
+>  					};
+>  				};
+>  
+> +				can {
+> +					pinctrl_can_rx_tx: can_rx_tx {
+> +						atmel,pins =
+> +							<AT91_PIOA 14 AT91_PERIPH_A AT91_PINCTRL_NONE	/* CANRX, conflicts with IRQ0 */
+> +							 AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* CANTX, conflicts with PCK0 */
+> +					};
+> +				};
+> +
+>  				pioA: gpio@fffff200 {
+>  					compatible = "atmel,at91rm9200-gpio";
+>  					reg = <0xfffff200 0x200>;
+> @@ -898,6 +906,17 @@
+>  				clock-names = "pwm_clk";
+>  				status = "disabled";
+>  			};
+> +
+> +			can: can@fffac000 {
+> +				compatible = "atmel,at91sam9263-can";
+> +				reg = <0xfffac000 0x300>;
+> +				interrupts = <12 IRQ_TYPE_LEVEL_HIGH 3>;
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pinctrl_can_rx_tx>;
+> +				clocks = <&can_clk>;
+> +				clock-names = "can_clk";
+> +				status = "disabled";
+> +			};
+>  		};
+>  
+>  		fb0: fb@0x00700000 {
+> -- 
+> 2.0.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
----
- .../devicetree/bindings/pwm/atmel-hlcdc-pwm.txt    | 50 ++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
-
-diff --git a/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
-new file mode 100644
-index 0000000..9f4f83a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
-@@ -0,0 +1,50 @@
-+Device-Tree bindings for Atmel's HLCDC (High LCD Controller) PWM driver
-+
-+The Atmel HLCDC PWM is subdevice of the HLCDC MFD device.
-+See ../mfd/atmel-hlcdc.txt for more details.
-+
-+Required properties:
-+ - compatible: value should be one of the following:
-+   "atmel,hlcdc-pwm"
-+ - pinctr-names: the pin control state names. Should contain "default".
-+ - pinctrl-0: should contain the pinctrl states described by pinctrl
-+   default.
-+ - #pwm-cells: should be set to 3. This PWM chip use the default 3 cells
-+   bindings defined in Documentation/devicetree/bindings/pwm/pwm.txt.
-+
-+Example:
-+
-+	hlcdc: hlcdc@f0030000 {
-+		compatible = "atmel,sama5d3-hlcdc";
-+		reg = <0xf0030000 0x2000>;
-+		clocks = <&lcdc_clk>, <&lcdck>, <&clk32k>;
-+		clock-names = "periph_clk","sys_clk", "slow_clk";
-+		status = "disabled";
-+
-+		hlcdc-display-controller {
-+			compatible = "atmel,hlcdc-display-controller";
-+			interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <0>;
-+
-+				hlcdc_panel_output: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&panel_input>;
-+				};
-+			};
-+		};
-+
-+		hlcdc_pwm: hlcdc-pwm {
-+			compatible = "atmel,hlcdc-pwm";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_lcd_pwm>;
-+			#pwm-cells = <3>;
-+		};
-+	};
 -- 
-1.9.1
-
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
