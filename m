@@ -1,146 +1,119 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [RFC PATCH v2 01/16] ACPI: Add support for device specific
- properties
-Date: Mon, 06 Oct 2014 14:50:21 +0100
-Message-ID: <20141006135021.0EB04C43FBE@trevor.secretlab.ca>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
-	<1410868367-11056-2-git-send-email-mika.westerberg@linux.intel.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1410868367-11056-2-git-send-email-mika.westerberg@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v7 06/11] drm: add DT bindings documentation for
+ atmel-hlcdc-dc driver
+Date: Mon, 6 Oct 2014 15:53:58 +0200
+Message-ID: <20141006155358.61a2a30c@bbrezillon>
+References: <1412175188-28278-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1412175188-28278-7-git-send-email-boris.brezillon@free-electrons.com>
+ <20141006105433.GG25202@ulmo> <20141006141440.32fae2ef@bbrezillon>
+ <20141006123506.GC26833@ulmo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20141006123506.GC26833@ulmo>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org, Mark Yao <mark.yao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 16 Sep 2014 14:52:32 +0300
-, Mika Westerberg <mika.westerberg@linux.intel.com>
- wrote:
-> Device Tree is used in many embedded systems to describe the system
-> configuration to the OS. It supports attaching properties or name-value
-> pairs to the devices it describe. With these properties one can pass
-> additional information to the drivers that would not be available
-> otherwise.
-> 
-> ACPI is another configuration mechanism (among other things) typically
-> seen, but not limited to, x86 machines. ACPI allows passing arbitrary
-> data from methods but there has not been mechanism equivalent to Device
-> Tree until the introduction of _DSD in the recent publication of the
-> ACPI 5.1 specification.
-> 
-> In order to facilitate ACPI usage in systems where Device Tree is
-> typically used, it would be beneficial to standardize a way to retrieve
-> Device Tree style properties from ACPI devices, which is what we do in
-> this patch.
-> 
-> If a given device described in ACPI namespace wants to export properties it
-> must implement _DSD method (Device Specific Data, introduced with ACPI 5.1)
-> that returns the properties in a package of packages. For example:
-> 
-> 	Name (_DSD, Package () {
-> 		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> 		Package () {
-> 			Package () {"name1", <VALUE1>},
-> 			Package () {"name2", <VALUE2>},
-> 			...
-> 		}
-> 	})
-> 
-> The UUID reserved for properties is daffd814-6eba-4d8c-8a91-bc9bbf4aa301
-> and is documented in the ACPI 5.1 companion document called "_DSD
-> Implementation Guide" [1], [2].
-> 
-> We add several helper functions that can be used to extract these
-> properties and convert them to different Linux data types.
-> 
-> The ultimate goal is that we only have one device property API that
-> retrieves the requested properties from Device Tree or from ACPI
-> transparent to the caller.
-> 
-> [1] http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel.htm
-> [2] http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
-> 
-> Reviewed-by: Hanjun Guo <hanjun.guo@linaro.org>
-> Reviewed-by: Josh Triplett <josh@joshtriplett.org>
-> Signed-off-by: Darren Hart <dvhart@linux.intel.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  drivers/acpi/Makefile   |   1 +
->  drivers/acpi/internal.h |   6 +
->  drivers/acpi/property.c | 364 ++++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/acpi/scan.c     |   2 +
->  include/acpi/acpi_bus.h |   7 +
->  include/linux/acpi.h    |  40 ++++++
->  6 files changed, 420 insertions(+)
->  create mode 100644 drivers/acpi/property.c
-> 
-> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
-> index 505d4d79fe3e..ba2cafe18fe4 100644
-> --- a/drivers/acpi/Makefile
-> +++ b/drivers/acpi/Makefile
-> @@ -46,6 +46,7 @@ acpi-y				+= acpi_pnp.o
->  acpi-y				+= power.o
->  acpi-y				+= event.o
->  acpi-y				+= sysfs.o
-> +acpi-y				+= property.o
->  acpi-$(CONFIG_X86)		+= acpi_cmos_rtc.o
->  acpi-$(CONFIG_DEBUG_FS)		+= debugfs.o
->  acpi-$(CONFIG_ACPI_NUMA)	+= numa.o
-> diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
-> index 4c5cf77e7576..e34290c7af9f 100644
-> --- a/drivers/acpi/internal.h
-> +++ b/drivers/acpi/internal.h
-> @@ -181,4 +181,10 @@ struct platform_device *acpi_create_platform_device(struct acpi_device *adev);
->  bool acpi_osi_is_win8(void);
->  #endif
->  
-> +/*--------------------------------------------------------------------------
-> +				Device properties
-> +  -------------------------------------------------------------------------- */
-> +void acpi_init_properties(struct acpi_device *adev);
-> +void acpi_free_properties(struct acpi_device *adev);
-> +
->  #endif /* _ACPI_INTERNAL_H_ */
-> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> new file mode 100644
-> index 000000000000..c4a3e800e82c
-> --- /dev/null
-> +++ b/drivers/acpi/property.c
-> @@ -0,0 +1,364 @@
-> +/*
-> + * ACPI device specific properties support.
-> + *
-> + * Copyright (C) 2014, Intel Corporation
-> + * All rights reserved.
-> + *
-> + * Authors: Mika Westerberg <mika.westerberg@linux.intel.com>
-> + *          Darren Hart <dvhart@linux.intel.com>
-> + *          Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/device.h>
-> +#include <linux/export.h>
-> +
-> +#include "internal.h"
-> +
-> +/* ACPI _DSD device properties UUID: daffd814-6eba-4d8c-8a91-bc9bbf4aa301 */
-> +static const u8 prp_uuid[16] = {
-> +	0x14, 0xd8, 0xff, 0xda, 0xba, 0x6e, 0x8c, 0x4d,
-> +	0x8a, 0x91, 0xbc, 0x9b, 0xbf, 0x4a, 0xa3, 0x01
-> +};
+On Mon, 6 Oct 2014 14:35:06 +0200
+Thierry Reding <thierry.reding@gmail.com> wrote:
 
-?
+> On Mon, Oct 06, 2014 at 02:14:40PM +0200, Boris Brezillon wrote:
+> > On Mon, 6 Oct 2014 12:54:34 +0200
+> > Thierry Reding <thierry.reding@gmail.com> wrote:
+> > 
+> > > On Wed, Oct 01, 2014 at 04:53:03PM +0200, Boris Brezillon wrote:
+> > > > From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> > > > 
+> > > > The Atmel HLCDC (HLCD Controller) IP available on some Atmel SoCs (i.e.
+> > > > at91sam9n12, at91sam9x5 family or sama5d3 family) provides a display
+> > > > controller device.
+> > > > 
+> > > > The HLCDC block provides a single RGB output port, and only supports LCD
+> > > > panels connection to LCD panels for now.
+> > > > 
+> > > > The atmel,panel property link the HLCDC RGB output with the LCD panel
+> > > > connected on this port (note that the HLCDC RGB connector implementation
+> > > > makes use of the DRM panel framework).
+> > > > 
+> > > > Connection to other external devices (DRM bridges) might be added later by
+> > > > mean of a new atmel,xxx (atmel,bridge) property.
+> > > > 
+> > > > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > > > ---
+> > > >  .../devicetree/bindings/drm/atmel-hlcdc-dc.txt     | 53 ++++++++++++++++++++++
+> > > >  1 file changed, 53 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt b/Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
+> > > > new file mode 100644
+> > > > index 0000000..ebc1a91
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
+> > > > @@ -0,0 +1,53 @@
+> > > > +Device-Tree bindings for Atmel's HLCDC (High LCD Controller) DRM driver
+> > > > +
+> > > > +The Atmel HLCDC Display Controller is subdevice of the HLCDC MFD device.
+> > > > +See ../mfd/atmel-hlcdc.txt for more details.
+> > > > +
+> > > > +Required properties:
+> > > > + - compatible: value should be "atmel,hlcdc-display-controller"
+> > > > + - pinctrl-names: the pin control state names. Should contain "default".
+> > > > + - pinctrl-0: should contain the default pinctrl states.
+> > > > + - #address-cells: should be set to 1.
+> > > > + - #size-cells: should be set to 0.
+> > > > +
+> > > > +Required children nodes:
+> > > > + Children nodes are encoding available output ports and their connections
+> > > > + to external devices using the OF graph reprensentation (see ../graph.txt).
+> > > > + At least one port node is required.
+> > > 
+> > > Are the connections configurable at runtime? Does the SoC have IP blocks
+> > > for HDMI or other types of outputs or does it provide only RGB output to
+> > > external blocks?
+> > 
+> > No, there's only one RGB output port, but you can connect more than one
+> > device on the RGB port (should we call it DPI port ?).
+> > Actually Atmel connected an HDMI encoder and an LCD panel connected on
+> > the same port on their dev kit.
+> 
+> This was discussed in some other thread if I remember correctly. I still
+> think that the HLCDC node should only contain a single output, no matter
+> how many encoders or panels get connected.
+> 
+> So the output represents the set of signals that exit the IP block, but
+> what's connected to them on the board is a board-level detail and
+> therefore should go into the board DTS.
+> 
+> In the above case of the Atmel devkit, is there any way to control where
+> the signal goes or does it just go to both the panel and HDMI encoder at
+> the same time and it's up to the user to properly configure the output
+> in order to get either HDMI or panel to display anything?
 
-What is the encoding used here? I see the first 4 bytes for "daffd814"
-encoded in little endian (0x14 first), and then the remaining values
-encoded in big-endian for each number. Is this typical for UUID values?
+No there's no way to control where the signal goes.
+What you can control though, is the activation of the associated
+encoder/connectors connected on this bus (using dpms).
 
-Otherwise the patch looks okay.
+And yes it's up to the user to choose the appropriate mode:
+- display on only one slave device: in this case you're free to choose
+  any of the mode supported by the slave device
+- display on all slave devices: in this case you'll have to find a mode
+  (drm_display_mode) and an bus format (video_bus_format) that suits all
+  slave devices
 
-g.
 
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
