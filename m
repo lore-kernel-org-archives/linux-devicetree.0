@@ -1,95 +1,40 @@
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm: socfpga: Enable ECC of L2 and OCRAM on startup.
-Date: Mon, 6 Oct 2014 09:47:59 -0500
-Message-ID: <5432AB9F.90803@opensource.altera.com>
-References: <1412181092-27162-1-git-send-email-tthayer@opensource.altera.com> <1412181092-27162-2-git-send-email-tthayer@opensource.altera.com> <5430C764.8080603@hitachi.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 4/7] of: add vendor prefix for Tronsmart
+Date: Mon, 6 Oct 2014 10:07:08 -0500
+Message-ID: <CAL_JsqJS82SzUsZKDom-cNcnWDurtEaJQRDnPnMQiO8u57=Gwg@mail.gmail.com>
+References: <1412546359-15062-1-git-send-email-b.galvani@gmail.com> <1412546359-15062-5-git-send-email-b.galvani@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5430C764.8080603-FCd8Q96Dh0JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masami Hiramatsu <masami.hiramatsu.pt-FCd8Q96Dh0JBDgjK7y7TUQ@public.gmane.org>
-Cc: dinh-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412546359-15062-5-git-send-email-b.galvani@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Beniamino Galvani <b.galvani@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Carlo Caione <carlo@caione.org>, Russell King <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 10/04/2014 11:21 PM, Masami Hiramatsu wrote:
-> (2014/10/02 1:31), tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
->> +void socfpga_init_ocram_ecc(void)
->> +{
->> +	struct device_node *np;
->> +	const __be32 *prop;
->> +	u32 ocr_edac_addr, iram_addr, len;
->> +	void __iomem  *mapped_ocr_edac_addr;
->> +	size_t size;
->> +	struct gen_pool *gp;
->> +
->> +	np = of_find_compatible_node(NULL, NULL, "altr,ocram-edac");
->> +	if (!np) {
->> +		pr_err("SOCFPGA: Unable to find altr,ocram-edac in dtb\n");
->> +		return;
->> +	}
->> +
->> +	prop = of_get_property(np, "reg", &size);
->> +	ocr_edac_addr = be32_to_cpup(prop++);
->> +	len = be32_to_cpup(prop);
->> +	if (!prop || size < sizeof(*prop)) {
->> +		pr_err("SOCFPGA: Unable to find OCRAM ECC mapping in dtb\n");
->> +		return;
->> +	}
->> +
->> +	gp = of_get_named_gen_pool(np, "iram", 0);
->> +	if (!gp) {
->> +		pr_err("SOCFPGA: OCRAM cannot find gen pool\n");
->> +		return;
->> +	}
->> +
->> +	np = of_find_compatible_node(NULL, NULL, "mmio-sram");
->> +	if (!np) {
->> +		pr_err("SOCFPGA: Unable to find mmio-sram in dtb\n");
->> +		return;
->> +	}
->> +	/* Determine the OCRAM address and size */
->> +	prop = of_get_property(np, "reg", &size);
->> +	iram_addr = be32_to_cpup(prop++);
->> +	len = be32_to_cpup(prop);
->> +
->> +	if (!prop || size < sizeof(*prop)) {
->> +		pr_err("SOCFPGA: Unable to find OCRAM mapping in dtb\n");
->> +		return;
->> +	}
->> +
->> +	iram_addr = gen_pool_alloc(gp, len);
->> +	if (iram_addr == 0) {
->> +		pr_err("SOCFPGA: cannot alloc from gen pool\n");
->> +		return;
->> +	}
->> +
->> +	memset((void *)iram_addr, 0, len);
->> +
->> +	mapped_ocr_edac_addr = ioremap(ocr_edac_addr, 4);
->> +
->> +	gen_pool_free(gp, iram_addr, len);
->> +
->> +	/* Clear any pending OCRAM ECC interrupts, then enable ECC */
->> +	writel(0x18, mapped_ocr_edac_addr);
->> +	writel(0x19, mapped_ocr_edac_addr);
-> Should we better iounmap() here?
-> It seems no one can use mapped_ocr_edac_addr afterwords.
+On Sun, Oct 5, 2014 at 4:59 PM, Beniamino Galvani <b.galvani@gmail.com> wrote:
+> This adds Tronsmart to the list of device tree vendor prefixes.
 >
+> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
 
-Yes, I will make this change. Thank you!
+Acked-by: Rob Herring <robh@kernel.org>
 
->> +
->> +	pr_debug("SOCFPGA: Success Initializing OCRAM\n");
->> +}
->> +
-> Thank you,
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 >
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index c681434..92a1798 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -141,6 +141,7 @@ tlm Trusted Logic Mobility
+>  toradex        Toradex AG
+>  toshiba        Toshiba Corporation
+>  toumaz Toumaz
+> +tronsmart      Tronsmart
+>  usi    Universal Scientifc Industrial Co., Ltd.
+>  v3     V3 Semiconductor
+>  variscite      Variscite Ltd.
+> --
+> 1.9.1
 >
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
