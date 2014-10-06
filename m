@@ -1,110 +1,77 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v7 11/11] ARM: at91/dt: enable the LCD panel on
- sama5d3xek boards
-Date: Mon, 6 Oct 2014 13:01:43 +0200
-Message-ID: <20141006110142.GI25202@ulmo>
-References: <1412175188-28278-1-git-send-email-boris.brezillon@free-electrons.com>
- <1412175188-28278-12-git-send-email-boris.brezillon@free-electrons.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 2/4] arm/arm64:dt:numa: adding numa node mapping for
+ memory nodes.
+Date: Mon, 6 Oct 2014 12:08:24 +0100
+Message-ID: <20141006110824.GE24686@leverpostej>
+References: <1411635840-24038-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+ <1411635840-24038-3-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+ <20141003110521.GE26643@leverpostej>
+ <CAFpQJXUaTGS+D8q-GDLRhWFJg88rJToMpVnSHggS5e0HLDvXPw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1609784641=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1412175188-28278-12-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org, Mark Yao <mark.yao@rock-chips.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAFpQJXUaTGS+D8q-GDLRhWFJg88rJToMpVnSHggS5e0HLDvXPw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 06, 2014 at 05:20:14AM +0100, Ganapatrao Kulkarni wrote:
+> Hi Mark,
+> 
+> On Fri, Oct 3, 2014 at 4:35 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Thu, Sep 25, 2014 at 10:03:57AM +0100, Ganapatrao Kulkarni wrote:
+> >> Adding Documentation for dt binding for memory to numa node mapping.
+> >
+> > As I previously commented [1], this binding doesn't specify what a nid
+> > maps to in terms of the CPU hierarchy, and is thus unusable. The binding
+> > absolutely must be explicit about this, and NAK until it is.
+> The nid/numa node id is to map the each memory range/bank to numa node.
 
---===============1609784641==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uJWb33pM2TcUAXIl"
-Content-Disposition: inline
+The issue is what constitutes a "numa node" is not defined. Hence the
+mapping a memory banks to a "nid" is just a mapping to an arbitrary
+number -- the mapping of this number to CPUs isn't defined.
 
+> IIUC, the numa manages the resources based on which node they are tide to.
+> with nid, i am trying to map the memory range to a node.
+> Same follows for the all IO peripherals and for CPUs.
+> for cpus, i am using cluster-id as a node id to map all cpus to node.
 
---uJWb33pM2TcUAXIl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I strongly suspect that this is not going to work for very long. I don't
+think relying on a mapping of nid to a top-level cluster-id is a good
+idea, especially given we have the facility to be more explicit through
+use of the cpu-map.
 
-On Wed, Oct 01, 2014 at 04:53:08PM +0200, Boris Brezillon wrote:
-> From: Boris BREZILLON <boris.brezillon@free-electrons.com>
->=20
-> Enable LCD related nodes.
->=20
-> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> ---
->  arch/arm/boot/dts/sama5d31ek.dts | 20 ++++++++++++++++++++
->  arch/arm/boot/dts/sama5d33ek.dts | 20 ++++++++++++++++++++
->  arch/arm/boot/dts/sama5d34ek.dts | 20 ++++++++++++++++++++
->  arch/arm/boot/dts/sama5d36ek.dts | 20 ++++++++++++++++++++
->  4 files changed, 80 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sama5d31ek.dts b/arch/arm/boot/dts/sama5d3=
-1ek.dts
-> index 04eec0d..6e605fe 100644
-> --- a/arch/arm/boot/dts/sama5d31ek.dts
-> +++ b/arch/arm/boot/dts/sama5d31ek.dts
-> @@ -33,6 +33,10 @@
->  				status =3D "okay";
->  			};
-> =20
-> +			hlcdc: hlcdc@f0030000 {
-> +				status =3D "okay";
-> +			};
-> +
->  			macb1: ethernet@f802c000 {
->  				status =3D "okay";
->  			};
-> @@ -46,6 +50,22 @@
->  		};
->  	};
-> =20
-> +	bl_reg: backlight_regulator {
+We don't need to handle all the possible cases from the start, but I'd
+rather we consistently used the cou-map to explicitly define the
+relationship between CPUs and memory.
 
-No need to repeat the labels if they're already in the .dtsi file.
+> thunder has 2 nodes, in this patch, i have grouped all cpus which
+> belongs to each node under cluster-id(cluster0, cluster1).
+>
+> > Given we're seeing systems with increasing numbers of CPUs and
+> > increasingly complex interconnect hierarchies, I would expect at minimum
+> > that we would refer to elements in the cpu-map to define the
+> > relationship between memory banks and CPUs.
+> >
+> > What does the interconnect/memory hierarchy look like in your system?
+> 
+> In tunder, 2 SoCs (each has 48 cores and ram controllers and IOs) can
+> be connected to form 2 node NUMA system.
+> in a SoC(within node) there is no hierarchy with respect to memory or
+> IO access. However w.r.t GICv3,
+> 48 cores are in each SoC/node are split in to 3 clusters each of 16 cores.
+>
+> the MPIDR mapping for this topology is,
+> Aff0 is mapped to 16 cores within a cluster. Valid range is 0 to 0xf
+> Aff1 is mapped to cluster number, valid values are 0,1 and 2.
+> Aff2 is mapped to Socket-id/node id/SoC number. Valid values are 0 and 1.
 
-Thierry
+Thanks for the information.
 
---uJWb33pM2TcUAXIl
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUMnaWAAoJEN0jrNd/PrOhqLQQAJ67GFu6Rg1ip1QQ1ZQ26b7C
-QoQBfj0fTqI2Oxnfk88131BlNdAu6RkJV2rG4nYUKo/tOnf/+RSp3NF1XMNQelAC
-NBnpYdq00/13HMPHepx6jKweJVLceT1q9WZu649Wiii8RKSnefefUq2VlfGCeLFW
-ttKBQRXXqm90VmApN69AvyRb6hLAWCabZBYWerHKnUJ6hvIUcOMvVXBTNfWGX4O+
-dkwYMXkVrOZAeB1DLwZx1ZSRin3hoInWH/7LqiOyBk2fKKl4Id056GYT2wgC1fIw
-kIHxI548GqJstHEMipWl4sSWTUfeV9hn5pObPL8BsDGVo5Ax9XOg4cMpXMAbfqHm
-/UOC1fhC9wIUfuZkrdlLzWKUAG73ar0qRDa1HK/pyNzL9FpG7SoucfW7oCNeGI0h
-TJh+Hy4xSlcazN767f7ng5ViGOat2FfNgmBV00/DIYe502uv2Z2YquWqw45j5QfE
-7Q2Izqnv1jJKNfxJq4vhA9czYOPgGUG9i4bS1kP3p3wFB1aLyu6MjzkRRjjHyjMq
-vztfZiFZIeDSRg3BZ5wBbURLxayaNizcCMfcB19DjVLVMwUG/7BU+PNVA+BVS/59
-m6iPjs+BqB/B8HoC+roZR41TaIOTPfR9hUeK6MzdsAry+eop/MlPwvvHyGDRgYmL
-fKJF1ERoDy14oev9a6I2
-=CONy
------END PGP SIGNATURE-----
-
---uJWb33pM2TcUAXIl--
-
---===============1609784641==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============1609784641==--
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
