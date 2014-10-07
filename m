@@ -1,58 +1,88 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 3/8] iio: Add support for DA9150 GPADC
-Date: Tue, 7 Oct 2014 14:55:55 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337AB518D23@SW-EX-MBX01.diasemi.com>
-References: <cover.1411396718.git.Adam.Thomson.Opensource@diasemi.com>
- <ee4c56931f326d8ee9c1313c44456bce2dec8b8c.1411396719.git.Adam.Thomson.Opensource@diasemi.com>
- <5426964A.3050407@kernel.org>
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/6] pci, thunder: Add PCIe host controller devicetree
+ bindings
+Date: Tue, 7 Oct 2014 16:01:49 +0100
+Message-ID: <20141007150149.GW4652@e106497-lin.cambridge.arm.com>
+References: <1411573068-12952-1-git-send-email-rric@kernel.org>
+ <1411573068-12952-4-git-send-email-rric@kernel.org>
+ <3082935.e3X4GsVUDn@wuerfel>
+ <20141007142744.GE31556@rric.localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5426964A.3050407-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141007142744.GE31556-vWBEXY7mpu73kLQC+b9v0A@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Richter <robert.richter-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sunil Goutham <sgoutham-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2VwdGVtYmVyIDI3LCAyMDE0IDExOjUwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3RlOg0KDQo+
-IE9uIDIzLzA5LzE0IDExOjUzLCBBZGFtIFRob21zb24gd3JvdGU6DQo+ID4gVGhpcyBwYXRjaCBh
-ZGRzIHN1cHBvcnQgZm9yIERBOTE1MCBDaGFyZ2VyICYgRnVlbC1HYXVnZSBJQyBHUEFEQy4NCg0K
-PiA+ICsNCj4gPiArc3RhdGljIGlubGluZSBpbnQgZGE5MTUwX2dwYWRjX2dwaW9fNnZfdm9sdGFn
-ZV9ub3coaW50IHJhd192YWwpDQo+ID4gK3sNCj4gPiArCS8qIENvbnZlcnQgdG8gbVYgKi8NCj4g
-PiArCXJldHVybiAoNiAqICgocmF3X3ZhbCAqIDEwMDApICsgNTAwKSkgLyAxMDI0Ow0KPiBUaGVz
-ZSBjb3VsZCBhbGwgYmUgZXhwcmVzc2VkIGFzIHJhdyB2YWx1ZXMgd2l0aCBvZmZzZXRzDQo+IGFu
-ZCBzY2FsZXMgKGFuZCB0aGF0IHdvdWxkIGJlIHByZWZlcnJlZCkuDQo+IEUuZy4gVGhpcyBvbmUg
-aGFzIG9mZnNldCA1MDAwMDAgYW5kIHNjYWxlIDYwMDAvMTAyNCBvciBldmVuDQo+IGJldHRlciB1
-c2UgSUlPX1ZBTF9GUkFDVElPTkFMX0xPRzIgZm9yIHNjYWxlIHdpdGggdmFsMSA9IDYwMDANCj4g
-YW5kIHZhbDIgPSAobG9nXzIgMTAyNCkgPSAxMC4NCj4gDQoNCldoYXQgeW91J3ZlIHN1Z2dlc3Rl
-ZCBpc24ndCBjb3JyZWN0LiBUaGUgcHJvYmxlbSBoZXJlIGlzIHRoYXQgdGhlIG9mZnNldCBpcw0K
-YWRkZWQgZmlyc3QgdG8gdGhlIHJhdyBBREMgcmVhZGluZywgd2l0aG91dCBmYWN0b3JpbmcgdGhl
-IEFEQyB2YWx1ZSBhY2NvcmRpbmdseQ0KdG8gbWF0Y2ggdGhlIGZhY3RvciBvZiB0aGUgb2Zmc2V0
-LiBJZiB3ZSB0YWtlIHRoZSBvcmlnaW5hbCBlcXVhdGlvbiBwcm92aWRlZCBmb3INCnRoaXMgY2hh
-bm5lbCBvZiB0aGUgQURDLCB0aGUgb2Zmc2V0IGlzIGFjdHVhbGx5IDAuNSB3aGljaCBzaG91bGQg
-YmUgYWRkZWQgdG8gdGhlDQpyYXcgQURDIHZhbHVlLiBUaGlzIGRvZXNuJ3QgZml0IGludG8gdGhl
-IGltcGxlbWVudGF0aW9uIGluIHRoZSBrZXJuZWwgYXMgd2UNCmNhbid0IHVzZSBmbG9hdGluZyBw
-b2ludC4gSWYgd2UgbXVsdGlwbHkgdGhlIG9mZnNldCBidXQgbm90IHRoZSByYXcgQURDIHZhbHVl
-LA0KdGhlbiBhZGQgdGhlbSBiZWZvcmUgYXBwbHlpbmcgdGhlIHNjYWxlIGZhY3RvciwgdGhlbiB0
-aGUgcmVzdWx0IGlzIHdyb25nIGF0IHRoZQ0KZW5kLiBCYXNpY2FsbHkgeW91IG5lZWQgYSBzY2Fs
-ZSBmb3IgdGhlIHJhdyBBREMgdmFsdWUgdG8gbWF0Y2ggdGhlIG9mZnNldCBzY2FsZQ0Kc28geW91
-IGNhbiBhY2hpZXZlIHRoZSBjb3JyZWN0IHJlc3VsdHMsIHdoaWNoIGlzIHdoYXQgbXkgY2FsY3Vs
-YXRpb24gZG9lcy4NCkJ1dCB0aGF0IHNlZW1zIGltcG9zc2libGUgd2l0aCB0aGUgY3VycmVudCBy
-YXd8b2Zmc2V0fHNjYWxlIG1ldGhvZC4NCg0KPiA+ICsJcmV0ID0gaWlvX21hcF9hcnJheV9yZWdp
-c3RlcihpbmRpb19kZXYsIGRhOTE1MF9ncGFkY19kZWZhdWx0X21hcHMpOw0KPiA+ICsJaWYgKHJl
-dCkgew0KPiA+ICsJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIHJlZ2lzdGVyIElJTyBtYXBzOiAl
-ZFxuIiwgcmV0KTsNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+ICsJfQ0KPiBJJ2Qgc3VnZ2VzdCBk
-b2luZyB0aGUgZGV2bV9yZXF1ZXN0X3RocmVhZF9pcnEgYmVmb3JlIHRoZSBpaW9fbWFwX2FycmF5
-DQo+IHN0dWZmLiAgVGhpcyBpcyBwdXJlbHkgdG8gYXZvaWQgdGhlIG9yZGVyIGR1cmluZyByZW1v
-dmUgbm90IGJlaW5nDQo+IG9idmlvdXNseSBjb3JyZWN0IGFzIGl0IGlzbid0IHRoZSByZXZlcnNl
-IG9mIGR1cmluZyBwcm9iZS4NCg0KT2ssIHNob3VsZCBzdGlsbCB3b3JrIG9rIHRoYXQgd2F5IHNv
-IGNhbiB1cGRhdGUuDQoNCj4gPiArc3RhdGljIGludCBkYTkxNTBfZ3BhZGNfcmVtb3ZlKHN0cnVj
-dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBpaW9fZGV2ICpp
-bmRpb19kZXYgPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsNCj4gPiArDQo+ID4gKwlpaW9f
-bWFwX2FycmF5X3VucmVnaXN0ZXIoaW5kaW9fZGV2KTsNCj4gVHdpY2UgaW4gb25lIGRheS4gIEkn
-bSBkZWZpbml0ZWx5IHRoaW5raW5nIHdlIHNob3VsZCBhZGQgYQ0KPiBkZXZtIHZlcnNpb24gb2Yg
-aWlvX21hcF9hcnJheV9yZWdpc3Rlci4uLg0KDQpJIGFzc3VtZSB5b3UgbWVhbiBoZXJlIHRoYXQg
-aWlvX2RldmljZV91bnJlZ2lzdGVyKCkgc2hvdWxkIGNvbWUgZmlyc3Q/IFdpbGwNCnVwZGF0ZS4N
-Cg==
+On Tue, Oct 07, 2014 at 03:27:44PM +0100, Robert Richter wrote:
+> On 24.09.14 18:06:04, Arnd Bergmann wrote:
+> > > +               compatible =3D "cavium,thunder-pcie";
+> > > +               device_type =3D "pci";
+> > > +               msi-parent =3D <&its>;
+> > > +               bus-range =3D <0 255>;
+> > > +               #size-cells =3D <2>;
+> > > +               #address-cells =3D <3>;
+> > > +               reg =3D <0x8480 0x00000000 0 0x10000000>;  /* Con=
+figuration space */
+> > > +               ranges =3D <0x03000000 0x8010 0x00000000 0x8010 0=
+x00000000 0x70 0x00000000>, /* mem ranges */
+> > > +                       <0x03000000 0x8300 0x00000000 0x8300 0x00=
+000000 0x80 0x00000000>,
+> > > +                       <0x03000000 0x87e0 0x00000000 0x87e0 0x00=
+000000 0x01 0x00000000>;
+> > > +        };
+> >=20
+> > If you claim the entire 0-255 bus range, I think you should also
+> > specify a domain, otherwise it's not predictable which domain you
+> > get.
+>=20
+> Liviu's code assigns a unique id to the domain if missing, see
+> of_pci_get_domain_nr(). So I don't think we need to add a "pci-domain=
+"
+> property here.
+
+Not anymore! That function is gone in v12 onwards. What is in -next has
+a new function called of_get_pci_domain_nr() (slight name change) but
+that only gets the value set in the "linux,pci-domain" property of the
+device node. It is the choice of the host bridge driver to use that
+function or to use pci_get_new_domain_nr() which *does* generate an
+unique id every time it gets called.
+
+>=20
+> Liviu's DT implementation that assigns a unique number differs a bit
+> from ACPI which states: "If _SEG [aka domain number] does not exist,
+> OSPM assumes that all PCI bus segments are in PCI Segment Group 0."
+>=20
+> Maybe of_pci_get_domain_nr() should be similar to ACPI. If there are
+> multiple root bridges, the "pci-domain" property could be forced
+> instead.
+
+Indeed. But the enforcing is left as an exercise to the host bridge
+implementor for the moment.
+
+Best regards,
+Liviu
+
+>=20
+> -Robert
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
