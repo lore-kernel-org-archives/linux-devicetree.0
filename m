@@ -1,115 +1,68 @@
-From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCH 2/2] arm: dts: socfpga: Add SPI nodes & update copyright.
-Date: Tue, 7 Oct 2014 14:48:17 -0500
-Message-ID: <1412711297-31857-3-git-send-email-tthayer@opensource.altera.com>
-References: <1412711297-31857-1-git-send-email-tthayer@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412711297-31857-1-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jkosina-AlSwsSmVLrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC PATCH v2 1/4] regulator: Add helper function to get "poweroff-source" property
+Date: Tue,  7 Oct 2014 19:45:01 +0000
+Message-ID: <1412711104-15902-1-git-send-email-romain.perier@gmail.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Several drivers create their own devicetree property when they register
+poweroff capabilities. This is for example the case for mfd, regulator
+or power drivers which define "vendor,system-power-controller" property.
+This patch adds support for a standard property "poweroff-source"
+which marks the device as able to shutdown the system.
 
-Add 2 SPI nodes to SOCFPGA device tree. Update copyright.
-Update spi-dw.txt with bus-num as an optional property.
-
-Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/spi/spi-dw.txt |    1 +
- arch/arm/boot/dts/socfpga.dtsi                   |   52 ++++++++++++++++++----
- 2 files changed, 45 insertions(+), 8 deletions(-)
+ drivers/regulator/of_regulator.c       | 12 ++++++++++++
+ include/linux/regulator/of_regulator.h |  6 ++++++
+ 2 files changed, 18 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-dw.txt b/Documentation/devicetree/bindings/spi/spi-dw.txt
-index 7b63ed6..f1d54e6 100644
---- a/Documentation/devicetree/bindings/spi/spi-dw.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-dw.txt
-@@ -11,6 +11,7 @@ Required properties:
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index 7a51814..8b898e6 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -240,3 +240,15 @@ struct regulator_init_data *regulator_of_get_init_data(struct device *dev,
  
- Optional properties:
- - cs-gpios: see spi-bus.txt
-+- bus-num: see spi-bus.txt
+ 	return init_data;
+ }
++
++/**
++ * is_system_poweroff_source - Tells if poweroff-source is found for device_node
++ * @np: Pointer to the given device_node
++ *
++ * return true if present false otherwise
++ */
++bool is_system_poweroff_source(const struct device_node *np)
++{
++	return of_property_read_bool(np, "poweroff-source");
++}
++EXPORT_SYMBOL_GPL(is_system_poweroff_source);
+diff --git a/include/linux/regulator/of_regulator.h b/include/linux/regulator/of_regulator.h
+index f921796..9d8fbb2 100644
+--- a/include/linux/regulator/of_regulator.h
++++ b/include/linux/regulator/of_regulator.h
+@@ -20,6 +20,7 @@ extern struct regulator_init_data
+ extern int of_regulator_match(struct device *dev, struct device_node *node,
+ 			      struct of_regulator_match *matches,
+ 			      unsigned int num_matches);
++extern bool is_system_poweroff_source(const struct device_node *np);
+ #else
+ static inline struct regulator_init_data
+ 	*of_get_regulator_init_data(struct device *dev,
+@@ -35,6 +36,11 @@ static inline int of_regulator_match(struct device *dev,
+ {
+ 	return 0;
+ }
++
++static inline bool is_system_poweroff_source(const struct device_node *np)
++{
++	return false;
++}
+ #endif /* CONFIG_OF */
  
- Example:
- 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 4d77ad6..42855bc 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -1,15 +1,14 @@
- /*
-- *  Copyright (C) 2012 Altera <www.altera.com>
-+ * Copyright Altera Corporation (C) 2012-2014. All rights reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-+ * it under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-  *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-  *
-  * You should have received a copy of the GNU General Public License
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-@@ -628,6 +627,43 @@
- 			clock-names = "biu", "ciu";
- 		};
- 
-+		spi0: spi@fff00000 {
-+			compatible = "snps,dw-apb-ssi";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0xfff00000 0x1000>;
-+			interrupts = <0 154 4>;
-+			num-cs = <4>;
-+			bus-num = <0>;
-+			clocks = <&per_base_clk>;
-+
-+			spidev@0 {
-+				compatible = "spidev";
-+				reg = <0>;	/* chip select */
-+				spi-max-frequency = <100000000>;
-+				enable-dma = <1>;
-+			};
-+		};
-+
-+		spi1: spi@fff01000 {
-+			compatible = "snps,dw-apb-ssi";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0xfff01000 0x1000>;
-+			interrupts = <0 156 4>;
-+			num-cs = <4>;
-+			bus-num = <1>;
-+			clocks = <&per_base_clk>;
-+			status = "disabled";
-+
-+			spidev@0 {
-+				compatible = "spidev";
-+				reg = <0>;
-+				spi-max-frequency = <100000000>;
-+				enable-dma = <1>;
-+			};
-+		};
-+
- 		/* Local timer */
- 		timer@fffec600 {
- 			compatible = "arm,cortex-a9-twd-timer";
+ #endif /* __LINUX_OF_REG_H */
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
