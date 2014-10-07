@@ -1,83 +1,57 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm: shmobile: lager: enable HS-USB
-Date: Tue, 7 Oct 2014 12:25:02 +0900
-Message-ID: <54335D0E.6070606@renesas.com>
-References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412237073-1288-3-git-send-email-yoshihiro.shimoda.uh@renesas.com> <542EFDEA.2030906@cogentembedded.com> <5431E984.6000203@renesas.com>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: RE: [PATCH v5 0/8] arch: arm64: Enable support for Samsung Exynos7 SoC
+Date: Tue, 07 Oct 2014 13:16:25 +0900
+Message-ID: <01a501cfe1e5$759fc8c0$60df5a40$@kernel.org>
+References: <1411361228-18279-1-git-send-email-a.kesavan@samsung.com>
+ <541FE357.5090000@gmail.com>
+ <CAM4voa=Hsux0+rccSvDJsNTFakZwuwYwjkDkkNFfndFm03Pn3g@mail.gmail.com>
+ <542AD2AE.6060109@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5431E984.6000203-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org" <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <542AD2AE.6060109@gmail.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Tomasz Figa' <tomasz.figa@gmail.com>, 'Abhilash Kesavan' <kesavan.abhilash@gmail.com>
+Cc: 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>, 'linux-arm-kernel' <linux-arm-kernel@lists.infradead.org>, 'devicetree' <devicetree@vger.kernel.org>, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Naveen Krishna' <naveenkrishna.ch@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-(2014/10/06 9:59), Yoshihiro Shimoda wrote:
-> Hello.
+Tomasz Figa wrote:
 > 
-> (2014/10/04 4:50), Sergei Shtylyov wrote:
->> On 10/02/2014 12:04 PM, Yoshihiro Shimoda wrote:
->>
->>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
->>> ---
->>>   arch/arm/boot/dts/r8a7790-lager.dts |    5 +++++
->>>   1 file changed, 5 insertions(+)
->>
->>> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
->>> index 1698591..4badd0a 100644
->>> --- a/arch/arm/boot/dts/r8a7790-lager.dts
->>> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
->>> @@ -445,3 +445,8 @@
->>>   		};
->>>   	};
->>>   };
->>> +
->>> +&hsusb {
->>> +	status = "okay";
->>> +	renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_LOW>;
->>
->>     It's certainly active-high.
+> On 30.09.2014 17:12, Abhilash Kesavan wrote:
+> > Hi Tomasz,
+> >
+> > On Mon, Sep 22, 2014 at 2:22 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> >> Hi Abhilash,
+> >>
+> >> On 22.09.2014 06:47, Abhilash Kesavan wrote:
+> >>> Changes since v4:
+> >>> - Fixed comments from Tomasz Figa:
+> >>>       - Changed the namespace prefix from exynos to samsung
+> >>>       - Defined bindings to take all input clocks
+> >>>       - Sorted the Kconfig entries alphabetically in clock Makefile
+> >>>       - Used consistent 1 tab line breaks across the clock file
+> >>>       - Statically initialized the samsung_cmu_info struct
+> >>> - Enabled exynos7 in the arm64 defconfig as per Catalin Marinas' comment.
+> >>> - Added Kukjin Kim's ack along with Thomas Abraham's tested and reviewed tags.
+> >>>
+> >>
+> >> The clock patches look good to me, but since they are doing quite a lot
+> >> of code moving I'd prefer to take them through clk tree. Based on the
+> >> fact that there are no code dependencies between clock patches and
+> >> remaining ones and Exynos7 is a new material for 3.18, I'm inclined to
+> >> apply them to my tree if nobody minds.
+> >
+> > Will you be picking up the clock changes soon ?
 > 
-> Since the current code has the following, we have to set the active_low...
-> However, the code is unreadable, I think. So, I will modify the code.
+> I'd like to do so. Kukjin, since clock changes are a part of this
+> series, might I have your Ack for them to be applied separately?
 > 
-> 	/* check GPIO determining if USB function should be enabled */
-> 	if (priv->dparam.enable_gpio) {
-> 		gpio_request_one(priv->dparam.enable_gpio, GPIOF_IN, NULL);
-> 		ret = !gpio_get_value(priv->dparam.enable_gpio);
-> 		gpio_free(priv->dparam.enable_gpio);
-> 		if (ret) {
-> 			dev_warn(&pdev->dev,
-> 				 "USB function not selected (GPIO %d)\n",
-> 				 priv->dparam.enable_gpio);
-> 			ret = -ENOTSUPP;
-> 			goto probe_end_mod_exit;
-> 		}
-> 	}
+Sure, I'm fine so please go ahead with my ack on the changes.
 
-I am confusing about the gpio_get_value()...
-In case of ARM, gpio_get_value() will call gpiod_get_raw_value() finally.
+Acked-by: Kukjin Kim <kgene.kim@samsung.com>
 
-gpio_get_value() in arch/arm/include/asm/gpio.h
- --> __gpio_get_value() in include/asm-generic/gpio.h
-  --> gpiod_get_raw_value() in drivers/gpio/gpiolib.c
+Thanks for your asking.
 
-The gpiod_get_raw_value() doesn't care of the GPIO_ACTIVE_{HIGH,LOW}.
-So, should I add gpiod_is_active_low() or someting in the renesas_usbhs driver?
-Or, Do I misunderstand something?
-
-Best regards,
-Yoshihiro Shimoda
-
-> Best regards,
-> Yoshihiro Shimoda
-> 
->> WBR, Sergei
->>
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Kukjin
