@@ -1,48 +1,55 @@
 From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] arch: arm: boot: dts: Added correct vendor-prefix
- with device name to compatible property
-Date: Tue, 7 Oct 2014 13:08:12 +0100
-Message-ID: <20141007120812.GJ24725@leverpostej>
+Subject: Re: [PATCH v3 3/4] Staging: iio: light: Added correct vendor-prefix
+ for device isl29028
+Date: Tue, 7 Oct 2014 13:08:59 +0100
+Message-ID: <20141007120859.GK24725@leverpostej>
 References: <1412682308-8784-1-git-send-email-darshanapadmadas@gmail.com>
- <1412682308-8784-5-git-send-email-darshanapadmadas@gmail.com>
- <11076749.g7xZQflTCQ@wuerfel>
+ <1412682308-8784-4-git-send-email-darshanapadmadas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <11076749.g7xZQflTCQ@wuerfel>
+In-Reply-To: <1412682308-8784-4-git-send-email-darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 07, 2014 at 12:49:02PM +0100, Arnd Bergmann wrote:
-> On Tuesday 07 October 2014 17:15:08 Darshana Padmadas wrote:
-> >                 /* ALS and Proximity sensor */
-> >                 isl29028@44 {
-> > -                       compatible = "isil,isl29028";
-> > +                       compatible = "isl,isl29028";
-> >                         reg = <0x44>;
-> >                         interrupt-parent = <&gpio>;
-> >                         interrupts = <TEGRA_GPIO(L, 0) IRQ_TYPE_LEVEL_HIGH>;
-> > 
+On Tue, Oct 07, 2014 at 12:45:07PM +0100, Darshana Padmadas wrote:
+> This patch adds the correct vendor-prefix for device isl29028 and
+> maintains deprecated vendor-prefix found by checkpatch warning
+> for older kernel releases.
 > 
-> Does this intentionally list only the new string?
+> Signed-off-by: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+
+> ---
+>  drivers/staging/iio/light/isl29028.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> If we want compatibility between new dts files and old kernels, this would
-> need to be 
+> diff --git a/drivers/staging/iio/light/isl29028.c b/drivers/staging/iio/light/isl29028.c
+> index 6014625..60b02a8 100644
+> --- a/drivers/staging/iio/light/isl29028.c
+> +++ b/drivers/staging/iio/light/isl29028.c
+> @@ -537,7 +537,8 @@ static const struct i2c_device_id isl29028_id[] = {
+>  MODULE_DEVICE_TABLE(i2c, isl29028_id);
+>  
+>  static const struct of_device_id isl29028_of_match[] = {
+> -	{ .compatible = "isil,isl29028", },
+> +	{ .compatible = "isl,isl29028", },
+> +	{ .compatible = "isil,isl29028", }, /* deprecated, don't use */
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, isl29028_of_match);
+> -- 
+> 1.9.1
 > 
-> 	compatible = "isl,isl29028", compatible = "isil,isl29028";
-
-Are we aiming for new dts wto work with old kernels? It's nice if they
-do, but I don't think it should be necessary. Old DTBs should definitely
-work with a new kernel, though.
-
-Personally I'd rather see one string (preferably the canonical one, but
-the deprecated one is ok) than two strings when those strings are for
-the exact same device.
-
-Mark.
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
