@@ -1,47 +1,50 @@
 From: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 0/4] Correct vendor-prefix and document device isl29028
-Date: Tue,  7 Oct 2014 17:15:04 +0530
-Message-ID: <1412682308-8784-1-git-send-email-darshanapadmadas@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH v3 1/4] Documentation: devicetree: bindings: Document correct and deprecated vendor-prefix with device isl29028
+Date: Tue,  7 Oct 2014 17:15:05 +0530
+Message-ID: <1412682308-8784-2-git-send-email-darshanapadmadas@gmail.com>
+References: <1412682308-8784-1-git-send-email-darshanapadmadas@gmail.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412682308-8784-1-git-send-email-darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Patchset documents correct and the deprecated vendor-prefix found by checkpatch 
-warning and also documents information of device isl29028 for compatibility. 
-Patchset also includes corrected vendor-prefix and device name in compatible 
-property for files with checkpatch warning of undocumented string "isil,isl29028". 
+This patch documents the device isl29028 with its vendor-prefix. Undocu=
+mented deprecated vendor-prefix
+found by checkpatch also documented for compatibility reasons.
 
-Darshana Padmadas (4):
-  Documentation: devicetree: bindings: Document correct and deprecated
-    vendor-prefix with device isl29028
-  Documentation: devicetree: bindings: Document deprecated device vendor
-    name to fix related warning
-  Staging: iio: light: Added correct vendor-prefix for device isl29028
-  arch: arm: boot: dts: Added correct vendor-prefix with device name to
-    compatible property  
-  
-Changes in v3: 
-    - In PATCH 1/4 corrected alphabetical order of vendor-prefix and device name. 
-    - In PATCH 2/4 inserted deprecated vendor-prefix in list in alphabetical order 
-      and edited vendor/chip string. 
-    - In PATCH 4/4 dropped deprecated string "isil,isl29028" and included correct 
-      vendor-prefix isl with isl29028 to give "isl,isl29028" for device's compatible 
-      property.
-      
+Signed-off-by: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 2 ++
- Documentation/devicetree/bindings/vendor-prefixes.txt     | 1 +
- drivers/staging/iio/light/isl29028.c                      | 3 ++-
- arch/arm/boot/dts/tegra30-cardhu.dtsi                     | 2 +-
- 4 files changed, 6 insertions(+), 2 deletions(-)
+ 1 file changed, 2 insertions(+)
 
--- 
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt =
+b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index 6af570e..d024613 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -57,6 +57,8 @@ gmt,g751		G751: Digital Temperature Sensor and Therma=
+l Watchdog with Two-Wire In
+ infineon,slb9635tt	Infineon SLB9635 (Soft-) I2C TPM (old protocol, max=
+ 100khz)
+ infineon,slb9645tt	Infineon SLB9645 I2C TPM (new protocol, max 400khz)
+ isl,isl12057		Intersil ISL12057 I2C RTC Chip
++isil,isl29028           Deprecated name, use isl,isl29028 instead
++isl,isl29028            Intersil ISL29028 Ambient Light and Proximity =
+Sensor
+ maxim,ds1050		5 Bit Programmable, Pulse-Width Modulator
+ maxim,max1237		Low-Power, 4-/12-Channel, 2-Wire Serial, 12-Bit ADCs
+ maxim,max6625		9-Bit/12-Bit Temperature Sensors with I=C2=B2C-Compatib=
+le Serial Interface
+--=20
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
