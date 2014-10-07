@@ -1,50 +1,57 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 3/4] pinctrl: Qualcomm SPMI PMIC GPIO pin controller driver
-Date: Tue, 7 Oct 2014 16:14:10 +0200
-Message-ID: <CACRpkdaRZSyPFTHt4CnCUy6Qhcpkvqc4F9P90oA0Dj7PhtXOwg@mail.gmail.com>
-References: <1410792254-24126-1-git-send-email-iivanov@mm-sol.com>
-	<1410792254-24126-4-git-send-email-iivanov@mm-sol.com>
-	<20140924041852.GO10179@sonymobile.com>
-	<1411564172.18580.69.camel@iivanov-dev>
-	<20140930170203.GR28481@sonymobile.com>
+From: Robert Richter <robert.richter@caviumnetworks.com>
+Subject: Re: [PATCH 3/6] pci, thunder: Add PCIe host controller devicetree
+ bindings
+Date: Tue, 7 Oct 2014 16:27:44 +0200
+Message-ID: <20141007142744.GE31556@rric.localhost>
+References: <1411573068-12952-1-git-send-email-rric@kernel.org>
+ <1411573068-12952-4-git-send-email-rric@kernel.org>
+ <3082935.e3X4GsVUDn@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140930170203.GR28481@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, David Collins <collinsd@codeaurora.org>, Wu Fenglin <fenglinw@qti.qualcomm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <3082935.e3X4GsVUDn@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <liviu.dudau@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Robert Richter <rric@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pci@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, Sunil Goutham <sgoutham@cavium.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 30, 2014 at 7:02 PM, Bjorn Andersson
-<bjorn.andersson@sonymobile.com> wrote:
-> On Wed 24 Sep 06:09 PDT 2014, Ivan T. Ivanov wrote:
+On 24.09.14 18:06:04, Arnd Bergmann wrote:
+> > +               compatible = "cavium,thunder-pcie";
+> > +               device_type = "pci";
+> > +               msi-parent = <&its>;
+> > +               bus-range = <0 255>;
+> > +               #size-cells = <2>;
+> > +               #address-cells = <3>;
+> > +               reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
+> > +               ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>, /* mem ranges */
+> > +                       <0x03000000 0x8300 0x00000000 0x8300 0x00000000 0x80 0x00000000>,
+> > +                       <0x03000000 0x87e0 0x00000000 0x87e0 0x00000000 0x01 0x00000000>;
+> > +        };
+> 
+> If you claim the entire 0-255 bus range, I think you should also
+> specify a domain, otherwise it's not predictable which domain you
+> get.
 
->> I am unable to make this work. of_gpio_simple_xlate() didn't know that
->> GPIO range is offset with 1. Requesting last GPIO return error. And
->> debug output looks weird, for example:
->>
->> # cat /sys/kernel/debug/gpio
->> ...
->> GPIOs 220-255, platform/0.c000.gpios, 0.c000.gpios:
->> ...
->>
->> # cat /sys/kernel/debug/pinctrl/0.c000.gpios/gpio-ranges
->> GPIO ranges handled:
->> 1: 0.c000.gpios GPIOS [221 - 256] PINS [0 - 35]
->>
->> Advice, please.
->
-> Looking at of_gpio_simple_xlate() shows that you're right. It doesn't seem to
-> be possible to have a gpiochip that is not 0-based. Then I guess you have to
-> have your own "off-by-one-xlate".
->
-> @Linus, any comments on this? All documentation states that we have
-> gpio1-gpioXX in these chips, so we have to expose it as such or things will be
-> messy.
+Liviu's code assigns a unique id to the domain if missing, see
+of_pci_get_domain_nr(). So I don't think we need to add a "pci-domain"
+property here.
 
-I remember that drivers/pinctrl/nomadik/pinctrl-abx500.c had the
-same problem, but I don't remember how we solved it sadly :-/
+Liviu's DT implementation that assigns a unique number differs a bit
+from ACPI which states: "If _SEG [aka domain number] does not exist,
+OSPM assumes that all PCI bus segments are in PCI Segment Group 0."
 
-Yours,
-Linus Walleij
+Maybe of_pci_get_domain_nr() should be similar to ACPI. If there are
+multiple root bridges, the "pci-domain" property could be forced
+instead.
+
+-Robert
