@@ -1,75 +1,40 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
- ps8622 DT properties
-Date: Tue, 7 Oct 2014 11:25:56 +0300
-Message-ID: <5433A394.4000406@ti.com>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com> <353158006.4Zqtrv9CtX@avalon> <543390E2.1080108@ti.com> <5749335.iMpaHR0UO8@avalon>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 04/44] m68k: Replace mach_power_off with pm_power_off
+Date: Tue, 7 Oct 2014 10:29:52 +0200
+Message-ID: <CAMuHMdVK+h0DAysDrfYQSwN9zjygTpHRkdkfeDucyoTBN5f=+w@mail.gmail.com>
+References: <1412659726-29957-1-git-send-email-linux@roeck-us.net>
+	<1412659726-29957-5-git-send-email-linux@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="itQ4forRl4AGIpLGRtkPS6hUU2cfTPp9C"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5749335.iMpaHR0UO8@avalon>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Ajay kumar <ajaynumb@gmail.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, InKi Dae <inki.dae@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-m68k-owner@vger.kernel.org>
+In-Reply-To: <1412659726-29957-5-git-send-email-linux@roeck-us.net>
+Sender: linux-m68k-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "adi-buildroot-devel@lists.sourceforge.net" <adi-buildroot-devel@lists.sourceforge.net>, driverdevel <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lguest@lists.ozlabs.org, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, alpha <linux-alpha@vger.kernel.org>, "moderated list:PANASONIC MN10300..." <linux-am33-list@redhat.com>, Cris <linux-cris-kernel@axis.com>, linux-efi@vger.kernel.org, "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>, linux-m32r-ja@ml.linux-m32r.org, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, linux-s390 <linux-s390@vger.kernel.org>, linux-tegra@vger.kernel.org, "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, openipmi-developer@lists.sourceforge.net, uml-devel <user-mode-linux-devel@lists.s>
 List-Id: devicetree@vger.kernel.org
 
---itQ4forRl4AGIpLGRtkPS6hUU2cfTPp9C
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On Tue, Oct 7, 2014 at 7:28 AM, Guenter Roeck <linux@roeck-us.net> wrote:
+> Replace mach_power_off with pm_power_off to simplify the subsequent
+> move of pm_power_off to generic code.
 
-On 07/10/14 10:23, Laurent Pinchart wrote:
+Thanks!
 
->> You mean the bridge driver would somehow take a peek into panel1 and
->> panel2 nodes, looking for bridge specific properties? Sounds somewhat
->> fragile to me... How would the bridge driver know a property is for th=
-e
->> bridge?
->=20
-> No, I mean the bridge driver should call the API provided by the panel =
-objects=20
-> to get information about the panels, and compute its configuration para=
-meters=20
-> from those. I'm not sure if that's possible though, it depends on wheth=
-er the=20
-> bridge parameters can be computed from information provided by the pane=
-l.
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Greg Ungerer <gerg@uclinux.org>
+> Cc: Joshua Thompson <funaho@jurai.org>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 
-Right. My example tried to show a case where they can't be queried. The
-board or the wiring causes signal degradation, which can be fixed by
-increasing the bridge output voltage slightly.
+Looks OK, so since you said it builds ;-)
 
-So it has nothing really to do with the panel, but the board.
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-I fully admit that it is a purely theoretical case, and I don't have any
-real use cases in mind right now.
+Gr{oetje,eeting}s,
 
- Tomi
+                        Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
---itQ4forRl4AGIpLGRtkPS6hUU2cfTPp9C
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUM6OUAAoJEPo9qoy8lh71ZkcP/R9y97p/bScA7pAnvaIJAxUO
-5GM2WADTIp6aUJhaXCTyDlYoAOuoWsS+v5l0m+Titvgdw3TAysyBIsYEi4Poa03W
-a1yf67/565W8DIYGWiRaYKNrzZW9a7yn8Wu6mOubxW4hgop1mLrjr0chRMlk0nYj
-eKKPTES4OLBJYILFJ5R/urLON7V0hvdNBnub0NyzxJCobbVlF/jYZ1C3d7TUeu/q
-aOMlILZJlMBJWEEkfq+0pqrOWdUGVu2nm2fuZiZK6TpcMX/OqUdp5k2T9mJY2CzG
-v4Tr81ytKdvqBFc0K/i86sBP0AbKGcSDMqhmqBV89s6LOCeQ+GYLLdVqO5bu5TkH
-K1sF/kMAEKUboFolEBq0+0QOWJG7831xT7uglXrpvChK0QRP9SpUOTeKwCev82/F
-9cKBubRc+vEEYrgOkQ25vtyUN0bnQFwHfCyayKsh2Uvum0ROjfffYOsSLOZThA2d
-dJJqWjGJzWauVZjtIvPHJJ1BARMpLI0U9grzQpjKm07P8evTFK24Mp9BrDOgxwrL
-8vZL7Efw1f6WdXEwVMLmZSDAg7TbpbJAkOMK9mrqwi1c1ZyiF54OwgiiKoCc1q/e
-wyt10h5o1gKl4T2WXwUM8nCQVIope6r2y5Xk3WqF0OxntzjXOkWN0kc3lRGhWzeV
-ezuDLlre58eQ7Fzq79mz
-=BqxK
------END PGP SIGNATURE-----
-
---itQ4forRl4AGIpLGRtkPS6hUU2cfTPp9C--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
