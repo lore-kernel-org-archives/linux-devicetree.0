@@ -1,164 +1,159 @@
-Return-Path: <djkurtz@google.com>
+Return-Path: <darshanapadmadas@gmail.com>
 MIME-Version: 1.0
-Sender: djkurtz@google.com
-In-Reply-To: <4094180.e6s5oT6HgP@phil>
-References: <1412965848-18663-1-git-send-email-djkurtz@chromium.org>
- <1412965848-18663-4-git-send-email-djkurtz@chromium.org> <4094180.e6s5oT6HgP@phil>
-From: Daniel Kurtz <djkurtz@chromium.org>
-Date: Tue, 14 Oct 2014 15:22:24 +0800
-Message-ID: <CAGS+omCtRup=a+QiEZF9jk3pkJ6whtO9Ycoxa0Y7nnh2sWAphA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] ARM: dts: rk3288: add VOP iommu nodes
-Content-Type: multipart/alternative; boundary=001a11c2ca04ac3aaa05055ce11d
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, Grant Grundler <grundler@chromium.org>, Simon Xue <xxm@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+In-Reply-To: <20141007123514.GP24725@leverpostej>
+References: <1412682308-8784-1-git-send-email-darshanapadmadas@gmail.com>
+	<11076749.g7xZQflTCQ@wuerfel>
+	<20141007120812.GJ24725@leverpostej>
+	<8401228.DSnFf2fgRn@wuerfel>
+	<20141007123514.GP24725@leverpostej>
+Date: Tue, 7 Oct 2014 19:17:34 +0530
+Message-ID: <CAEZObdLz-77b41tE=TLb0iFyhOsAyW+UV7YfAyFbMYRBJvRwTg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] arch: arm: boot: dts: Added correct vendor-prefix
+ with device name to compatible property
+From: Darshana Padmadas <darshanapadmadas@gmail.com>
+Content-Type: multipart/alternative; boundary=089e013c6b8e1035b60504d571c2
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
---001a11c2ca04ac3aaa05055ce11d
+--089e013c6b8e1035b60504d571c2
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 14, 2014 at 6:33 AM, Heiko St=C3=BCbner <heiko@sntech.de> wrote=
-:
+So we stick to using just the new string, right? Any more changes to this
+patch ?
 
-> Hi Daniel,
->
-> Am Samstag, 11. Oktober 2014, 02:30:48 schrieb Daniel Kurtz:
-> > Add device nodes for the VOP iommus.
-> > Device nodes for other iommus will be added in later patches.
+On Tue, Oct 7, 2014 at 6:05 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+
+> On Tue, Oct 07, 2014 at 01:31:23PM +0100, Arnd Bergmann wrote:
+> > On Tuesday 07 October 2014 13:08:12 Mark Rutland wrote:
+> > > On Tue, Oct 07, 2014 at 12:49:02PM +0100, Arnd Bergmann wrote:
+> > > > On Tuesday 07 October 2014 17:15:08 Darshana Padmadas wrote:
+> > > > >                 /* ALS and Proximity sensor */
+> > > > >                 isl29028@44 {
+> > > > > -                       compatible =3D "isil,isl29028";
+> > > > > +                       compatible =3D "isl,isl29028";
+> > > > >                         reg =3D <0x44>;
+> > > > >                         interrupt-parent =3D <&gpio>;
+> > > > >                         interrupts =3D <TEGRA_GPIO(L, 0)
+> IRQ_TYPE_LEVEL_HIGH>;
+> > > > >
+> > > >
+> > > > Does this intentionally list only the new string?
+> > > >
+> > > > If we want compatibility between new dts files and old kernels, thi=
+s
+> would
+> > > > need to be
+> > > >
+> > > >       compatible =3D "isl,isl29028", compatible =3D "isil,isl29028"=
+;
+> > >
+> > > Are we aiming for new dts wto work with old kernels? It's nice if the=
+y
+> > > do, but I don't think it should be necessary. Old DTBs should
+> definitely
+> > > work with a new kernel, though.
+> > >
+> > > Personally I'd rather see one string (preferably the canonical one, b=
+ut
+> > > the deprecated one is ok) than two strings when those strings are for
+> > > the exact same device.
+> > >
 > >
-> > The iommu nodes use the #iommu-cells property as described in:
-> >   Documentation/devicetree/bindings/iommu/iommu.txt
-> >
-> > Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-> > Signed-off-by: Simon Xue <xxm@rock-chips.com>
-> > ---
-> >  arch/arm/boot/dts/rk3288.dtsi | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/rk3288.dtsi
-> b/arch/arm/boot/dts/rk3288.dtsi
-> > index 5950b0a..cbc92fa 100644
-> > --- a/arch/arm/boot/dts/rk3288.dtsi
-> > +++ b/arch/arm/boot/dts/rk3288.dtsi
-> > @@ -271,6 +271,24 @@
-> >               status =3D "disabled";
-> >       };
-> >
-> > +     vopb_mmu: iommu@0xff930300 {
+> > Ok, fair enough. I think we should have the new name in dts files
+> > normally then, in order to avoid spreading the mistake further when
+> > someone copies it.
 >
-> please use the address without the 0x here ... iommu@ff930300
+> Sounds good to me.
+>
+> Mark.
 >
 
-I've been doing it wrong for a while and noone else noticed :-).  Thanks!
-I will resend.
 
 
-> Thanks
-> Heiko
->
-> > +             compatible =3D "rockchip,iommu";
-> > +             reg =3D <0xff930300 0x100>;
-> > +             interrupts =3D <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-> > +             interrupt-names =3D "vopb_mmu";
-> > +             #iommu-cells =3D <0>;
-> > +             status =3D "disabled";
-> > +     };
-> > +
-> > +     vopl_mmu: iommu@0xff940300 {
-> > +             compatible =3D "rockchip,iommu";
-> > +             reg =3D <0xff940300 0x100>;
-> > +             interrupts =3D <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-> > +             interrupt-names =3D "vopl_mmu";
-> > +             #iommu-cells =3D <0>;
-> > +             status =3D "disabled";
-> > +     };
-> > +
-> >       gic: interrupt-controller@ffc01000 {
-> >               compatible =3D "arm,gic-400";
-> >               interrupt-controller;
->
->
+--=20
 
---001a11c2ca04ac3aaa05055ce11d
+Regards
+Darshana Padmadas <http://darshanapadmadas.wordpress.com>
+=E0=A4=9C=E0=A5=8D=E0=A4=9E=E0=A4=BE=E0=A4=A8=E0=A4=82 =E0=A4=AA=E0=A4=B0=
+=E0=A4=AE=E0=A4=82 =E0=A4=A7=E0=A5=8D=E0=A4=AF=E0=A5=87=E0=A4=AF=E0=A4=AE=
+=E0=A5=8D
+
+--089e013c6b8e1035b60504d571c2
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">On Tue, Oct 14, 2014 at 6:33 AM, Heiko St=C3=BCbner <span dir=3D"ltr">&=
-lt;<a href=3D"mailto:heiko@sntech.de" target=3D"_blank">heiko@sntech.de</a>=
-&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0=
- 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">Hi Daniel,<br>
+<div dir=3D"ltr">So we stick to using just the new string, right? Any more =
+changes to this patch ?<br></div><div class=3D"gmail_extra"><br><div class=
+=3D"gmail_quote">On Tue, Oct 7, 2014 at 6:05 PM, Mark Rutland <span dir=3D"=
+ltr">&lt;<a href=3D"mailto:mark.rutland@arm.com" target=3D"_blank">mark.rut=
+land@arm.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" sty=
+le=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div c=
+lass=3D"HOEnZb"><div class=3D"h5">On Tue, Oct 07, 2014 at 01:31:23PM +0100,=
+ Arnd Bergmann wrote:<br>
+&gt; On Tuesday 07 October 2014 13:08:12 Mark Rutland wrote:<br>
+&gt; &gt; On Tue, Oct 07, 2014 at 12:49:02PM +0100, Arnd Bergmann wrote:<br=
+>
+&gt; &gt; &gt; On Tuesday 07 October 2014 17:15:08 Darshana Padmadas wrote:=
 <br>
-Am Samstag, 11. Oktober 2014, 02:30:48 schrieb Daniel Kurtz:<br>
-<span class=3D"">&gt; Add device nodes for the VOP iommus.<br>
-&gt; Device nodes for other iommus will be added in later patches.<br>
+&gt; &gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0/* ALS and Proximity sensor */<br>
+&gt; &gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0isl29028@44 {<br>
+&gt; &gt; &gt; &gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quot;isil,isl29028&quot;;<br=
+>
+&gt; &gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quot;isl,isl29028&quot;;<br>
+&gt; &gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0reg =3D &lt;0x44&gt;;<br>
+&gt; &gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0interrupt-parent =3D &lt;&amp;gpio&gt;;<b=
+r>
+&gt; &gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0interrupts =3D &lt;TEGRA_GPIO(L, 0) IRQ_T=
+YPE_LEVEL_HIGH&gt;;<br>
+&gt; &gt; &gt; &gt;<br>
+&gt; &gt; &gt;<br>
+&gt; &gt; &gt; Does this intentionally list only the new string?<br>
+&gt; &gt; &gt;<br>
+&gt; &gt; &gt; If we want compatibility between new dts files and old kerne=
+ls, this would<br>
+&gt; &gt; &gt; need to be<br>
+&gt; &gt; &gt;<br>
+&gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quot;isl,isl29028&=
+quot;, compatible =3D &quot;isil,isl29028&quot;;<br>
+&gt; &gt;<br>
+&gt; &gt; Are we aiming for new dts wto work with old kernels? It&#39;s nic=
+e if they<br>
+&gt; &gt; do, but I don&#39;t think it should be necessary. Old DTBs should=
+ definitely<br>
+&gt; &gt; work with a new kernel, though.<br>
+&gt; &gt;<br>
+&gt; &gt; Personally I&#39;d rather see one string (preferably the canonica=
+l one, but<br>
+&gt; &gt; the deprecated one is ok) than two strings when those strings are=
+ for<br>
+&gt; &gt; the exact same device.<br>
+&gt; &gt;<br>
 &gt;<br>
-&gt; The iommu nodes use the #iommu-cells property as described in:<br>
-&gt;=C2=A0 =C2=A0Documentation/devicetree/bindings/iommu/iommu.txt<br>
-&gt;<br>
-&gt; Signed-off-by: Daniel Kurtz &lt;<a href=3D"mailto:djkurtz@chromium.org=
-">djkurtz@chromium.org</a>&gt;<br>
-&gt; Signed-off-by: Simon Xue &lt;<a href=3D"mailto:xxm@rock-chips.com">xxm=
-@rock-chips.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 arch/arm/boot/dts/rk3288.dtsi | 18 ++++++++++++++++++<br>
-&gt;=C2=A0 1 file changed, 18 insertions(+)<br>
-&gt;<br>
-&gt; diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.=
-dtsi<br>
-&gt; index 5950b0a..cbc92fa 100644<br>
-&gt; --- a/arch/arm/boot/dts/rk3288.dtsi<br>
-&gt; +++ b/arch/arm/boot/dts/rk3288.dtsi<br>
-&gt; @@ -271,6 +271,24 @@<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0status =3D &quot=
-;disabled&quot;;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
-&gt;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0vopb_mmu: iommu@0xff930300 {<br>
+&gt; Ok, fair enough. I think we should have the new name in dts files<br>
+&gt; normally then, in order to avoid spreading the mistake further when<br=
+>
+&gt; someone copies it.<br>
 <br>
-</span>please use the address without the 0x here ... iommu@ff930300<br></b=
-lockquote><div><br></div><div>I&#39;ve been doing it wrong for a while and =
-noone else noticed :-).=C2=A0 Thanks!</div><div>I will resend.</div><div>=
-=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;bo=
-rder-left:1px #ccc solid;padding-left:1ex">
-Thanks<br>
-<span class=3D"HOEnZb"><font color=3D"#888888">Heiko<br>
-</font></span><div class=3D"HOEnZb"><div class=3D"h5"><br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quot;=
-rockchip,iommu&quot;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0reg =3D &lt;0xff93030=
-0 0x100&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0interrupts =3D &lt;GI=
-C_SPI 15 IRQ_TYPE_LEVEL_HIGH&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0interrupt-names =3D &=
-quot;vopb_mmu&quot;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0#iommu-cells =3D &lt;=
-0&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0status =3D &quot;disa=
-bled&quot;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0};<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0vopl_mmu: iommu@0xff940300 {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quot;=
-rockchip,iommu&quot;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0reg =3D &lt;0xff94030=
-0 0x100&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0interrupts =3D &lt;GI=
-C_SPI 16 IRQ_TYPE_LEVEL_HIGH&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0interrupt-names =3D &=
-quot;vopl_mmu&quot;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0#iommu-cells =3D &lt;=
-0&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0status =3D &quot;disa=
-bled&quot;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0};<br>
-&gt; +<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0gic: interrupt-controller@ffc01000 {<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &=
-quot;arm,gic-400&quot;;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0interrupt-contro=
-ller;<br>
-<br>
-</div></div></blockquote></div><br></div></div>
+</div></div>Sounds good to me.<br>
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+Mark.<br>
+</font></span></blockquote></div><br><br clear=3D"all"><br>-- <br><div dir=
+=3D"ltr"><span style=3D"line-height:1.6em"><br>Regards <br><a href=3D"http:=
+//darshanapadmadas.wordpress.com" target=3D"_blank">Darshana Padmadas</a></=
+span><div><span style=3D"color:rgb(51,51,51);font-family:Georgia,Times,&#39=
+;Times New Roman&#39;,serif;font-size:15px;line-height:21px">=E0=A4=9C=E0=
+=A5=8D=E0=A4=9E=E0=A4=BE=E0=A4=A8=E0=A4=82 =E0=A4=AA=E0=A4=B0=E0=A4=AE=E0=
+=A4=82 =E0=A4=A7=E0=A5=8D=E0=A4=AF=E0=A5=87=E0=A4=AF=E0=A4=AE=E0=A5=8D=C2=
+=A0</span><br></div></div>
+</div>
 
---001a11c2ca04ac3aaa05055ce11d--
+--089e013c6b8e1035b60504d571c2--
