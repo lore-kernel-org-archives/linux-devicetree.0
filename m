@@ -1,59 +1,84 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] arch: arm: boot: dts: Added correct vendor-prefix
- with device name to compatible property
-Date: Tue, 7 Oct 2014 13:35:14 +0100
-Message-ID: <20141007123514.GP24725@leverpostej>
-References: <1412682308-8784-1-git-send-email-darshanapadmadas@gmail.com>
- <11076749.g7xZQflTCQ@wuerfel>
- <20141007120812.GJ24725@leverpostej>
- <8401228.DSnFf2fgRn@wuerfel>
+From: Frans Klaver <fransklaver-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 1/2] sbs-battery: add forced instantiation from device tree
+Date: Tue, 7 Oct 2014 14:37:03 +0200
+Message-ID: <CAH6sp9O+EnmvSHtXBSKuHT-hQJx3xE1SQxb1kzdYs37Yv+71CA@mail.gmail.com>
+References: <1411564278-17207-1-git-send-email-frans.klaver@xsens.com>
+	<1411564278-17207-2-git-send-email-frans.klaver@xsens.com>
+	<20140924131655.GG5729@leverpostej>
+	<20140924142222.GC22872@ci00147.xsens-tech.local>
+	<20140924143848.GH5729@leverpostej>
+	<20140924151448.GD22872@ci00147.xsens-tech.local>
+	<20140924153431.GJ5729@leverpostej>
+	<20140924185933.GA2221@gmail.com>
+	<20140925092715.GA3524@leverpostej>
+	<CAH6sp9O=Hb3uGk3=5Gc+bb+AAZVZu=xHqNnUBHPG8BJUn==ZzQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <8401228.DSnFf2fgRn@wuerfel>
-Content-Language: en-US
+In-Reply-To: <CAH6sp9O=Hb3uGk3=5Gc+bb+AAZVZu=xHqNnUBHPG8BJUn==ZzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 07, 2014 at 01:31:23PM +0100, Arnd Bergmann wrote:
-> On Tuesday 07 October 2014 13:08:12 Mark Rutland wrote:
-> > On Tue, Oct 07, 2014 at 12:49:02PM +0100, Arnd Bergmann wrote:
-> > > On Tuesday 07 October 2014 17:15:08 Darshana Padmadas wrote:
-> > > >                 /* ALS and Proximity sensor */
-> > > >                 isl29028@44 {
-> > > > -                       compatible = "isil,isl29028";
-> > > > +                       compatible = "isl,isl29028";
-> > > >                         reg = <0x44>;
-> > > >                         interrupt-parent = <&gpio>;
-> > > >                         interrupts = <TEGRA_GPIO(L, 0) IRQ_TYPE_LEVEL_HIGH>;
-> > > > 
-> > > 
-> > > Does this intentionally list only the new string?
-> > > 
-> > > If we want compatibility between new dts files and old kernels, this would
-> > > need to be 
-> > > 
-> > >       compatible = "isl,isl29028", compatible = "isil,isl29028";
-> > 
-> > Are we aiming for new dts wto work with old kernels? It's nice if they
-> > do, but I don't think it should be necessary. Old DTBs should definitely
-> > work with a new kernel, though.
-> > 
-> > Personally I'd rather see one string (preferably the canonical one, but
-> > the deprecated one is ok) than two strings when those strings are for
-> > the exact same device.
-> > 
-> 
-> Ok, fair enough. I think we should have the new name in dts files
-> normally then, in order to avoid spreading the mistake further when
-> someone copies it.
+Olof, Anton,
 
-Sounds good to me.
+Care to pitch in?
 
-Mark.
+Thanks,
+Frans
+
+On Thu, Sep 25, 2014 at 11:32 AM, Frans Klaver <fransklaver-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Sep 25, 2014 at 11:27 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On Wed, Sep 24, 2014 at 07:59:34PM +0100, Frans Klaver wrote:
+>>> On Wed, Sep 24, 2014 at 04:34:32PM +0100, Mark Rutland wrote:
+>>> > On Wed, Sep 24, 2014 at 04:14:48PM +0100, Frans Klaver wrote:
+>>> > > On Wed, Sep 24, 2014 at 03:38:49PM +0100, Mark Rutland wrote:
+>>> > > > On Wed, Sep 24, 2014 at 03:22:22PM +0100, Frans Klaver wrote:
+>>> > > > You mention that there's a GPIO that can be used to detect the battery
+>>> > > > presence. Why can't the driver always probe and then on check for the
+>>> > > > presence of the battery dynamically using that GPIO? That should cover
+>>> > > > both cases.
+>>> > >
+>>> > > I would say that this was the case before [1] was done. The GPIO is
+>>> > > optional and if not configured, the presence or absence of the battery
+>>> > > is detected by checking a status register much like probe() currently
+>>> > > does. It seems all cases were covered before that patch. If you worry
+>>> > > about speed, you should use the GPIO. I wonder if we might be able to
+>>> > > revert [1] without doing much harm.
+>>> >
+>>> > But reverting that would re-introduce the lag on some systems, no? Given
+>>> > the wording of the original commit I would guess that the GPIO wasn't
+>>> > available. Perhaps Olof or Anton can enlighten us?
+>>>
+>>> It probably would yes. The battery_detect gpio was last touched in 2011, the
+>>> probe check was added somewhere in 2012.
+>>
+>> We can't revert it unless we know doing so won't reintroduce the
+>> problem. From the above it sounds like we can't revert it.
+>>
+>>> We could keep it as a compile option.
+>>
+>> Perhaps.
+>>
+>>> > In the cases where a GPIO is available, I think we should be able to be
+>>> > less pessimistic. Is a GPIO available in your case?
+>>>
+>>> We don't have the battery_detect pin available. Incidentally, a bit of
+>>> lag reading out the battery is not a problem for us.
+>>
+>> So now we're back at sqaure one. The hardware is likely identical in the
+>> your case and the care-about-lag case. Whether or not you care about lag
+>> is a property of the user rather than the HW, so I don't think that
+>> belongs in the dt.
+>>
+>> It would be interesting to know what the lag was adversely affecting.
+>> Perhaps there's another way around this.
+>
+> Exactly. I can imagine this really being a problem if the i2c bus
+> already has a lot of priority traffic.
+>
+> Frans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
