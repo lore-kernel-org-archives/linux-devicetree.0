@@ -1,88 +1,65 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/6] pci, thunder: Add PCIe host controller devicetree
- bindings
-Date: Tue, 7 Oct 2014 16:01:49 +0100
-Message-ID: <20141007150149.GW4652@e106497-lin.cambridge.arm.com>
-References: <1411573068-12952-1-git-send-email-rric@kernel.org>
- <1411573068-12952-4-git-send-email-rric@kernel.org>
- <3082935.e3X4GsVUDn@wuerfel>
- <20141007142744.GE31556@rric.localhost>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device
+ properties interface
+Date: Tue, 07 Oct 2014 18:37:46 +0300
+Message-ID: <1412696266.7701.5.camel@linux.intel.com>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
+	 <2809308.3y5s7TV5Ip@wuerfel> <D04730D8.A9DB0%dvhart@linux.intel.com>
+	 <6744174.JquHLt80n3@wuerfel> <20140926032131.GC40523@vmdeb7>
+	 <CACRpkdbehhsDxikCV1bJjBm581MCcu2DRSmiQQXHG09EmjLNBQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141007142744.GE31556-vWBEXY7mpu73kLQC+b9v0A@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Richter <robert.richter-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sunil Goutham <sgoutham-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbehhsDxikCV1bJjBm581MCcu2DRSmiQQXHG09EmjLNBQ@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Darren Hart <dvhart@infradead.org>, Len Brown <Len.Brown@intel.com>, Arnd Bergmann <arnd@arndb.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, David Woodhouse <david.woodhouse@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Aaron Lu <aaron.lu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 07, 2014 at 03:27:44PM +0100, Robert Richter wrote:
-> On 24.09.14 18:06:04, Arnd Bergmann wrote:
-> > > +               compatible =3D "cavium,thunder-pcie";
-> > > +               device_type =3D "pci";
-> > > +               msi-parent =3D <&its>;
-> > > +               bus-range =3D <0 255>;
-> > > +               #size-cells =3D <2>;
-> > > +               #address-cells =3D <3>;
-> > > +               reg =3D <0x8480 0x00000000 0 0x10000000>;  /* Con=
-figuration space */
-> > > +               ranges =3D <0x03000000 0x8010 0x00000000 0x8010 0=
-x00000000 0x70 0x00000000>, /* mem ranges */
-> > > +                       <0x03000000 0x8300 0x00000000 0x8300 0x00=
-000000 0x80 0x00000000>,
-> > > +                       <0x03000000 0x87e0 0x00000000 0x87e0 0x00=
-000000 0x01 0x00000000>;
-> > > +        };
-> >=20
-> > If you claim the entire 0-255 bus range, I think you should also
-> > specify a domain, otherwise it's not predictable which domain you
-> > get.
->=20
-> Liviu's code assigns a unique id to the domain if missing, see
-> of_pci_get_domain_nr(). So I don't think we need to add a "pci-domain=
-"
-> property here.
+On Tue, 2014-10-07 at 15:37 +0200, Linus Walleij wrote:
+> On Fri, Sep 26, 2014 at 5:21 AM, Darren Hart <dvhart@infradead.org> wrote:
+> > On Wed, Sep 24, 2014 at 11:12:36AM +0200, Arnd Bergmann wrote:
+> 
+> > So as Mika has pointed out, LEDs aren't the only ones affected. Several drivers
+> > will need to walk through non-device child nodes, and it seems to me that having
+> > a firmware-independent mechanism to do so benefits the drivers by both making
+> > them smaller and by increasing the reusability of new drivers and drivers
+> > updated to use the new API across platforms.
+> 
+> In a recent round of reviews, for the OF case, that led to drivers
+> which used device_initcall() without being a module, getting a match
+> and handle to the parent device, and then walking over the nodes
+> and instantiating child objects (Linux devices usually) in the process.
+> 
+> It was done as a response to the remark from Rob Herring that
+> we were modeling things in the device tree as devices when they
+> really weren't, we were just doing it that way because it fits the
+> Linux device model and it's easier.
+> 
+> So we have that case too.
+> 
+> The question is if it's anything close to generalizable.
+> 
+> > Grant, Linus W? Thoughts?
+> 
+> I'm uncertain on the whole subject, I called on the others
+> because of that...
+> 
+> For a while I had Andy Schevenko patch the GPIO and
+> SFI core too, but it timed out due to no response from Len
+> Brown. (Maybe I should just merge that stuff!) Do you (Intel) also
+> want to unify the Medfield SFI thing into this or have you
+> given up on it?
 
-Not anymore! That function is gone in v12 onwards. What is in -next has
-a new function called of_get_pci_domain_nr() (slight name change) but
-that only gets the value set in the "linux,pci-domain" property of the
-device node. It is the choice of the host bridge driver to use that
-function or to use pci_get_new_domain_nr() which *does* generate an
-unique id every time it gets called.
+I think SFI is quite outdated stuff, though I have still Medfield device
+close to me.
 
->=20
-> Liviu's DT implementation that assigns a unique number differs a bit
-> from ACPI which states: "If _SEG [aka domain number] does not exist,
-> OSPM assumes that all PCI bus segments are in PCI Segment Group 0."
->=20
-> Maybe of_pci_get_domain_nr() should be similar to ACPI. If there are
-> multiple root bridges, the "pci-domain" property could be forced
-> instead.
+I don't think there will be any new platform with SFI (on the other hand
+we never know :-) ). Thus, my opinion you may go ahead without worrying
+about SFI.
 
-Indeed. But the enforcing is left as an exercise to the host bridge
-implementor for the moment.
+-- 
+Andy Shevchenko <andriy.shevchenko@intel.com>
+Intel Finland Oy
 
-Best regards,
-Liviu
-
->=20
-> -Robert
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
