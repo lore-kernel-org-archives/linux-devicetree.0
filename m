@@ -1,86 +1,92 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/4] Input: pmic8xxx-keypad - add support keypad found in pm8941
-Date: Tue,  7 Oct 2014 12:50:47 +0300
-Message-ID: <1412675448-11990-4-git-send-email-iivanov@mm-sol.com>
-References: <1412675448-11990-1-git-send-email-iivanov@mm-sol.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412675448-11990-1-git-send-email-iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v8 1/2] pwm: add support for atmel-hlcdc-pwm device
+Date: Tue, 7 Oct 2014 11:55:56 +0200
+Message-ID: <20141007095556.GB12631@ulmo>
+References: <1412604423-19329-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1412604423-19329-2-git-send-email-boris.brezillon@free-electrons.com>
+ <20141007084514.GE24254@ulmo>
+ <20141007111411.57448c57@bbrezillon>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZoaI/ZTpAVc4A5k6"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141007111411.57448c57@bbrezillon>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Controller seems to be the same. Just access to it is over SPMI bus
-and registers and bits are reshuffled. Hopefully this is nicely
-abstracted by regmap helpers.
 
-Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
----
- .../bindings/input/qcom,pm8xxx-keypad.txt          |  1 +
- drivers/input/keyboard/pmic8xxx-keypad.c           | 27 ++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
+--ZoaI/ZTpAVc4A5k6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt b/Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt
-index 7d8cb92..2b60f8a 100644
---- a/Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt
-+++ b/Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt
-@@ -8,6 +8,7 @@ PROPERTIES
- 	Definition: must be one of:
- 		    "qcom,pm8058-keypad"
- 		    "qcom,pm8921-keypad"
-+		    "qcom,pm8941-keypad"
- 
- - reg:
- 	Usage: required
-diff --git a/drivers/input/keyboard/pmic8xxx-keypad.c b/drivers/input/keyboard/pmic8xxx-keypad.c
-index b82d161..2d4fa07 100644
---- a/drivers/input/keyboard/pmic8xxx-keypad.c
-+++ b/drivers/input/keyboard/pmic8xxx-keypad.c
-@@ -136,6 +136,32 @@ static const struct pmic8xxx_kp_info ssbi_kp = {
- 	.row_hold	= REG_FIELD(0x149, 6, 7),
- };
- 
-+static const struct pmic8xxx_kp_info spmi_kp = {
-+	.max_rows	= 10,
-+	.min_rows	= 2,
-+	.max_cols	= 8,
-+	.min_cols	= 1,
-+
-+	.rows_select = {
-+		1, 2, 3, 4, 5, 6, 7,
-+		8, 9, 10
-+	},
-+
-+	.recent_data	= 0xa87c,
-+	.old_data	= 0xa85c,
-+	.read_stride	= 2,
-+
-+	.events		= REG_FIELD(0xa808, 0, 1),
-+	.scan_rows	= REG_FIELD(0xa840, 0, 3),
-+	.scan_cols	= REG_FIELD(0xa840, 4, 6),
-+	.enable		= REG_FIELD(0xa846, 7, 7),
-+
-+	.read_state	= REG_FIELD(0xa844, 0, 0),
-+	.dbonce		= REG_FIELD(0xa842, 0, 1),
-+	.pause		= REG_FIELD(0xa842, 3, 5),
-+	.row_hold	= REG_FIELD(0xa842, 6, 7),
-+};
-+
- static u8 pmic8xxx_col_state(struct pmic8xxx_kp *kp, u8 col)
- {
- 	/* all keys pressed on that particular row? */
-@@ -715,6 +741,7 @@ static SIMPLE_DEV_PM_OPS(pm8xxx_kp_pm_ops,
- static const struct of_device_id pm8xxx_match_table[] = {
- 	{ .compatible = "qcom,pm8058-keypad", .data = (void *)&ssbi_kp },
- 	{ .compatible = "qcom,pm8921-keypad", .data = (void *)&ssbi_kp },
-+	{ .compatible = "qcom,pm8941-keypad", .data = (void *)&spmi_kp },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, pm8xxx_match_table);
--- 
-1.9.1
+On Tue, Oct 07, 2014 at 11:14:11AM +0200, Boris Brezillon wrote:
+> On Tue, 7 Oct 2014 10:45:16 +0200 Thierry Reding <thierry.reding@gmail.co=
+m> wrote:
+> > On Mon, Oct 06, 2014 at 04:07:02PM +0200, Boris Brezillon wrote:
+[...]
+> > > +static int atmel_hlcdc_pwm_remove(struct platform_device *pdev)
+> > > +{
+> > > +	struct atmel_hlcdc_pwm *chip =3D platform_get_drvdata(pdev);
+> > > +	int ret;
+> > > +
+> > > +	ret =3D pwmchip_remove(&chip->chip);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	clk_disable_unprepare(chip->hlcdc->periph_clk);
+> >=20
+> > You might want to call clk_disable_unprepare() regardless of whether or
+> > not pwmchip_remove() failed. You could simply leave out the above check
+> > for ret and instead...
+>=20
+> Are you sure of this one, if pwmchip_remove fails, then the PWM chip
+> might still be used. And if we disable the clock the PWM chip won't work
+> anymore.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The return value of .remove() isn't really used, so if built as a module
+the PWM chip will disappear anyway. Even if not built as a module the
+managed resources are going to go away anyway, so for all intents and
+purposes the PWM chip will be defunct.
+
+A long time ago there were some discussions about adding reference
+counting to the PWM chip and PWM devices to better handle this situation
+but it has never really proven to be an issue thus far.
+
+Perhaps a better way to solve this would be to make pwmchip_remove() not
+return an error and instead WARN in the single case where it can fail
+(if one of the PWM devices it exposes is still in use). That way users
+will still get an appropriate warning that something's awry and it would
+play more nicely with an advanced mechanism to keep PWM devices alive
+beyond the lifetime of a driver to cope with removal.
+
+Irrespective of the above it's probably fine either way, since if
+pwmchip_remove() fails you're in a pretty bad place anyway.
+
+Thierry
+
+--ZoaI/ZTpAVc4A5k6
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUM7isAAoJEN0jrNd/PrOhDsEP/13UL68OGeiQW61vnHESk7/D
+MNXcg5iJsNeujQTG/WpzSa3K8rxCLb7+sYcWxmI20BvqYPogYz0J7a1L2rwFaDyF
+HKRpdc4uXnnCP5DJOvs4z3qTbXMwW8vXE16uwl2OrrLwlSrovl53L3XcPiy8jjsS
+c7qsjBTopqPJe1wkINHO5evKTIrwTwHzB3FXLY865qIQzRSx8qRlpFRhiTEnMYlP
+u/bcp2U+QYmf8eBJ2vLflYZDHBtYCBCRBBLqiTdLZcBeVISk8+roNPRX7SRNcnkH
+D1WpR6JYIllw7QuRMd39jiqmy/+jubunIbuD/NtRJm+ERet9H3gmPSJ9SZKK7Gxz
+7ELIn1JYS5LxmXwl/q/847UifB5kWuWA1egld4xgg5TWeVgK9RiC2BAH7zc7SMEo
+aNMGFo20tUC1W4XJBx4BPj49asz3g5YWV0Z74PwscwzJHIfiO69c/jpBrIQ7GkHX
+uA2QPeWw00o3HJbqMOmRcc8DoSjKUP5KEoYhKPy5dQT6bFUeJsshvGXUnDIPgbZa
+RbClZ0Uqjyv1aG5n+r0ciJghyx5y1I7KadPdxE225ofkw/w9vaTkalncblOYyiHu
+xzAIz9niS6rtYn4O1VlwNxX8ORnu7r1R9Ka3mn4HUSfvo3262Ih06CntN+g63ML3
+Rk0RM4gcA9x6TaOPtK9c
+=yaPz
+-----END PGP SIGNATURE-----
+
+--ZoaI/ZTpAVc4A5k6--
