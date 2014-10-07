@@ -1,45 +1,83 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/2] input: Add Qualcomm PM8941 power key driver
-Date: Mon, 6 Oct 2014 19:50:57 -0700
-Message-ID: <20141007025057.GA26419@dtor-glaptop>
-References: <1412644321-27683-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1412644321-27683-2-git-send-email-bjorn.andersson@sonymobile.com>
- <20141007013001.GD39707@dtor-ws>
- <20141007015141.GG28481@sonymobile.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm: shmobile: lager: enable HS-USB
+Date: Tue, 7 Oct 2014 12:25:02 +0900
+Message-ID: <54335D0E.6070606@renesas.com>
+References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412237073-1288-3-git-send-email-yoshihiro.shimoda.uh@renesas.com> <542EFDEA.2030906@cogentembedded.com> <5431E984.6000203@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141007015141.GG28481@sonymobile.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "Cavin, Courtney" <Courtney.Cavin@sonymobile.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5431E984.6000203-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org" <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 06, 2014 at 06:52:51PM -0700, Bjorn Andersson wrote:
-> On Mon 06 Oct 18:30 PDT 2014, Dmitry Torokhov wrote:
-> 
-> > Hi Bjorn,
-> > 
-> 
-> Hi,
-> 
-> > On Mon, Oct 06, 2014 at 06:12:00PM -0700, Bjorn Andersson wrote:
-> > > +
-> > > +	rc = devm_request_threaded_irq(&pdev->dev, pwrkey->irq,
-> > > +				NULL, pm8941_pwrkey_irq,
-> > > +				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
-> > 
-> > Do we need to hard-code IRQ flags like this? I'd rather we respect DT
-> > data.
-> > 
-> 
-> We could "move" it to DT but I don't think there's any other combination of
-> these flags would make sense. If you insist I can remove it though.
+Hello.
 
-No, that's fine if you are certain we want to react on both edges always.
+(2014/10/06 9:59), Yoshihiro Shimoda wrote:
+> Hello.
+> 
+> (2014/10/04 4:50), Sergei Shtylyov wrote:
+>> On 10/02/2014 12:04 PM, Yoshihiro Shimoda wrote:
+>>
+>>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>>> ---
+>>>   arch/arm/boot/dts/r8a7790-lager.dts |    5 +++++
+>>>   1 file changed, 5 insertions(+)
+>>
+>>> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+>>> index 1698591..4badd0a 100644
+>>> --- a/arch/arm/boot/dts/r8a7790-lager.dts
+>>> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
+>>> @@ -445,3 +445,8 @@
+>>>   		};
+>>>   	};
+>>>   };
+>>> +
+>>> +&hsusb {
+>>> +	status = "okay";
+>>> +	renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_LOW>;
+>>
+>>     It's certainly active-high.
+> 
+> Since the current code has the following, we have to set the active_low...
+> However, the code is unreadable, I think. So, I will modify the code.
+> 
+> 	/* check GPIO determining if USB function should be enabled */
+> 	if (priv->dparam.enable_gpio) {
+> 		gpio_request_one(priv->dparam.enable_gpio, GPIOF_IN, NULL);
+> 		ret = !gpio_get_value(priv->dparam.enable_gpio);
+> 		gpio_free(priv->dparam.enable_gpio);
+> 		if (ret) {
+> 			dev_warn(&pdev->dev,
+> 				 "USB function not selected (GPIO %d)\n",
+> 				 priv->dparam.enable_gpio);
+> 			ret = -ENOTSUPP;
+> 			goto probe_end_mod_exit;
+> 		}
+> 	}
 
-Thanks.
+I am confusing about the gpio_get_value()...
+In case of ARM, gpio_get_value() will call gpiod_get_raw_value() finally.
 
--- 
-Dmitry
+gpio_get_value() in arch/arm/include/asm/gpio.h
+ --> __gpio_get_value() in include/asm-generic/gpio.h
+  --> gpiod_get_raw_value() in drivers/gpio/gpiolib.c
+
+The gpiod_get_raw_value() doesn't care of the GPIO_ACTIVE_{HIGH,LOW}.
+So, should I add gpiod_is_active_low() or someting in the renesas_usbhs driver?
+Or, Do I misunderstand something?
+
+Best regards,
+Yoshihiro Shimoda
+
+> Best regards,
+> Yoshihiro Shimoda
+> 
+>> WBR, Sergei
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
