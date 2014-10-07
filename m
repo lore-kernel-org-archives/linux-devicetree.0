@@ -1,63 +1,79 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] ARM: at91/dt: sam9x5: Add CAN device nodes
-Date: Tue, 7 Oct 2014 09:54:05 +0200
-Message-ID: <54339C1D.5000501@atmel.com>
-References: <1412605640-29472-1-git-send-email-alexander.stein@systec-electronic.com> <5432B637.1060200@atmel.com> <1553953.Bxvx42RTxh@ws-stein>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 12/44] mfd: ab8500-sysctrl: Register with kernel poweroff
+ handler
+Date: Tue, 7 Oct 2014 09:00:48 +0100
+Message-ID: <20141007080048.GB25331@lee--X1>
+References: <1412659726-29957-1-git-send-email-linux@roeck-us.net>
+ <1412659726-29957-13-git-send-email-linux@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1553953.Bxvx42RTxh@ws-stein>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-parisc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1412659726-29957-13-git-send-email-linux@roeck-us.net>
+Sender: linux-parisc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, adi-buildroot-devel@lists.sourceforge.net, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lguest@lists.ozlabs.org, linux-acpi@vger.kernel.org, linux-alpha@vger.kernel.org, linux-am33-list@redhat.com, linux-cris-kernel@axis.com, linux-efi@vger.kernel.org, linux-hexagon@vger.kernel.org, linux-m32r-ja@ml.linux-m32r.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org, linux-xtensa@linux-xtensa.org, openipmi-developer@lists.sourceforge.net, user-mode-linux-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-metag@vger.kernel.org, linux-mips@linux-mips.org, linux-parisc@vger.kernel.org, linux-pm@vger.kernel.org, linux-sh@vger.kernel.org, xen-devel@lists.xenproject.orgLinus Walleij <lin>
 List-Id: devicetree@vger.kernel.org
 
-On 06/10/2014 17:57, Alexander Stein :
-> Hi Jean,
+On Mon, 06 Oct 2014, Guenter Roeck wrote:
 
-s/Jean/Nicolas/
+> Register with kernel poweroff handler instead of setting pm_power_off
+> directly. Register with a low priority value of 64 to reflect that
+> the original code only sets pm_power_off if it was not already set.
+>=20
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Samuel Ortiz <sameo@linux.intel.com>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+>  drivers/mfd/ab8500-sysctrl.c | 26 +++++++++++++++-----------
+>  1 file changed, 15 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/drivers/mfd/ab8500-sysctrl.c b/drivers/mfd/ab8500-sysctr=
+l.c
+> index 8e0dae5..677438f 100644
+> --- a/drivers/mfd/ab8500-sysctrl.c
+> +++ b/drivers/mfd/ab8500-sysctrl.c
+> @@ -6,6 +6,7 @@
 
-;-)
+[...]
 
-> On Monday 06 October 2014 17:33:11, Nicolas Ferre wrote:
->> On 06/10/2014 16:27, Alexander Stein :
->>> Add the missing CAN devices node including their pin muxing and clocks.
->>>
->>> Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
->>> Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> ---
->>> Changes in v3:
->>> * Match the pin name to the ones in the datasheet.
->>>
->>>  arch/arm/boot/dts/at91sam9x5.dtsi | 48 +++++++++++++++++++++++++++++++++++++++
->>
->> Alexander,
->>
->> In fact, we already have a placeholder for these nodes:
->> arch/arm/boot/dts/at91sam9x5_can.dtsi
->>
->> The file is only included in SoC device trees which actually contain
->> this peripheral: at91sam9x25 and at91sam9x35 (and not the other variants
->> of this family).
-> 
-> Actually, I can't find anyone including this :-/ If they would I guess I should have hit an error for duplicated labels.
-> Is this a mistake no-one includes at91sam9x5_can.dtsi?
+> +static int ab8500_power_off(struct notifier_block *this, unsigned lo=
+ng unused1,
+> +			    void *unused2)
+>  {
+>  	sigset_t old;
+>  	sigset_t all;
+> @@ -34,11 +36,6 @@ static void ab8500_power_off(void)
+>  	struct power_supply *psy;
+>  	int ret;
+> =20
+> -	if (sysctrl_dev =3D=3D NULL) {
+> -		pr_err("%s: sysctrl not initialized\n", __func__);
+> -		return;
+> -	}
 
-Yes it is. It should be included in
-arch/arm/boot/dts/at91sam9x[23]5.dtsi files.
+Can you explain the purpose of this change please?
 
->> So, can you please move this addition above into the
->> arch/arm/boot/dts/at91sam9x5_can.dtsi file?
-> 
-> Can you confirm that both (at91sam9x25 and at91sam9x35) have identical peripheral addresses, irq and pinmuxing?
+>  	/*
+>  	 * If we have a charger connected and we're powering off,
+>  	 * reboot into charge-only mode.
+> @@ -83,8 +80,15 @@ shutdown:
+>  					 AB8500_STW4500CTRL1_SWRESET4500N);
+>  		(void)sigprocmask(SIG_SETMASK, &old, NULL);
+>  	}
+> +
+> +	return NOTIFY_DONE;
+>  }
 
-Absolutely, the same.
-
-Thanks, bye.
--- 
-Nicolas Ferre
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-parisc"=
+ in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
