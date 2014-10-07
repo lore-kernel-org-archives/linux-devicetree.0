@@ -1,71 +1,119 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ASoC: simple-card: Add mic and hp detect gpios.
-Date: Tue, 7 Oct 2014 15:10:01 +0200
-Message-ID: <CAMuHMdV39fM_TCa+WSvswij6dxD2vwfJT+FueBtxndpsymP9CQ@mail.gmail.com>
-References: <1412198720-2326-1-git-send-email-dgreid@chromium.org>
-	<20141002155350.GU4273@sirena.org.uk>
-	<CAMuHMdWh=sXAD59T1T=gvROX+fbF6=gFo6C0nkJdfnCrdNrwYg@mail.gmail.com>
-	<20141007123856.GF4609@sirena.org.uk>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v8 1/2] mfd: add atmel-hlcdc driver
+Date: Tue, 7 Oct 2014 15:16:24 +0200
+Message-ID: <5433E7A8.60001@atmel.com>
+References: <1412603324-18789-2-git-send-email-boris.brezillon@free-electrons.com> <20141007094427.GW25331@lee--X1> <20141007094727.GA12631@ulmo> <20141007095932.GY25331@lee--X1> <20141007100632.GA31575@ulmo> <20141007101743.GA25331@lee--X1> <20141007111304.GA1539@ulmo> <20141007113814.GA3693@lee--X1> <20141007134112.40179e8a@bbrezillon> <20141007115529.GA17434@ulmo> <20141007122224.GD3693@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20141007123856.GF4609@sirena.org.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
-Cc: Dylan Reid <dgreid@chromium.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, jay.xu@rock-chips.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, sonnyrao@chromium.org, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20141007122224.GD3693@lee--X1>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-(re-added some context, CC Linus, Alexandre, linux-gpio)
+Hi Lee,
 
-On Tue, Oct 7, 2014 at 2:38 PM, Mark Brown <broonie@kernel.org> wrote:
-> On Tue, Oct 07, 2014 at 02:32:57PM +0200, Geert Uytterhoeven wrote:
->> Unfortunately there's no equivalent code for platform data, and the
->> uninitialized default of 0 for gpio_hp_det and gpio_mic_det doesn't
->> play well with asm-generic's gpio_is_valid():
+On 07/10/2014 14:22, Lee Jones :
+> On Tue, 07 Oct 2014, Thierry Reding wrote:
+>> On Tue, Oct 07, 2014 at 01:41:12PM +0200, Boris Brezillon wrote:
+>>> On Tue, 7 Oct 2014 12:38:14 +0100
+>>> Lee Jones <lee.jones@linaro.org> wrote:
+>>>
+>>>> On Tue, 07 Oct 2014, Thierry Reding wrote:
+>>>>
+>>>>> On Tue, Oct 07, 2014 at 11:17:43AM +0100, Lee Jones wrote:
+>>>>>> On Tue, 07 Oct 2014, Thierry Reding wrote:
+>>>>>>
+>>>>>>> On Tue, Oct 07, 2014 at 10:59:32AM +0100, Lee Jones wrote:
+>>>>>>>> On Tue, 07 Oct 2014, Thierry Reding wrote:
+>>>>>>>>
+>>>>>>>>> On Tue, Oct 07, 2014 at 10:44:27AM +0100, Lee Jones wrote:
+>>>>>>>>>> On Mon, 06 Oct 2014, Boris Brezillon wrote:
+>>>>>>>>>>
+>>>>>>>>>>> The HLCDC IP available on some Atmel SoCs (i.e. at91sam9n12, at91sam9x5
+>>>>>>>>>>> family or sama5d3 family) exposes 2 subdevices:
+>>>>>>>>>>> - a display controller (controlled by a DRM driver)
+>>>>>>>>>>> - a PWM chip
+>>>>>>>>>>>
+>>>>>>>>>>> The MFD device provides a regmap and several clocks (those connected
+>>>>>>>>>>> to this hardware block) to its subdevices.
+>>>>>>>>>>>
+>>>>>>>>>>> This way concurrent accesses to the iomem range are handled by the regmap
+>>>>>>>>>>> framework, and each subdevice can safely access HLCDC registers.
+>>>>>>>>>>>
+>>>>>>>>>>> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+>>>>>>>>>>> Acked-by: Lee Jones <lee.jones@linaro.org>
+>>>>>>>>>>> Tested-by: Anthony Harivel <anthony.harivel@emtrion.de>
+>>>>>>>>>>> Tested-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+>>>>>>>>>>> ---
+>>>>>>>>>>>  drivers/mfd/Kconfig             |   6 ++
+>>>>>>>>>>>  drivers/mfd/Makefile            |   1 +
+>>>>>>>>>>>  drivers/mfd/atmel-hlcdc.c       | 122 ++++++++++++++++++++++++++++++++++++++++
+>>>>>>>>>>>  include/linux/mfd/atmel-hlcdc.h |  85 ++++++++++++++++++++++++++++
+>>>>>>>>>>>  4 files changed, 214 insertions(+)
+>>>>>>>>>>>  create mode 100644 drivers/mfd/atmel-hlcdc.c
+>>>>>>>>>>>  create mode 100644 include/linux/mfd/atmel-hlcdc.h
+>>>>>>>>>>
+>>>>>>>>>> Applied for v3.19.
+>>>>>>>>>
+>>>>>>>>> Will you provide a stable branch that I can pull into the PWM tree?
+>>>>>>>>
+>>>>>>>> I hadn't planned on it.  What do you need that for?
+>>>>>>>
+>>>>>>> Because the PWM driver depends on this series. But if you prefer you
+>>>>>>> could also take the PWM driver through your tree.
+>>>>>>
+>>>>>> Probably better to deal with that via Kconfig.
+>>>>>
+>>>>> Do you have any suggestions? The PWM driver currently selects the
+>>>>> MFD_ATMEL_HLCDC symbol, which as I understand will cause a Kconfig error
+>>>>> if the latter isn't defined.
+>>>>
+>>>> s/select/depends on/ for the desired effect.
+>>>>
+>>>
+>>> Don't forget the atmel-hlcdc.h header file which is referenced by both
+>>> the DRM and the PWM drivers.
 >>
->> static inline bool gpio_is_valid(int number)
->> {
->>         return number >= 0 && number < ARCH_NR_GPIOS;
->> }
+>> The depends on will prevent the PWM driver from being built until MFD
+>> becomes available, so the missing header file shouldn't be a problem.
 >>
->> Hence on r8a7740/armadillo-legacy, which uses platform devices instead of DT:
->
->>     sh-mobile-hdmi sh-mobile-hdmi: SH Mobile HDMI Audio Codec
->>     sh-mobile-hdmi sh-mobile-hdmi: ASoC: DAPM unknown pin Headphones
->>     sh-mobile-hdmi sh-mobile-hdmi: ASoC: DAPM unknown pin Mic Jack
->
->> After that the kernel log is spammed ca. 7 times per second with:
->
->>     sh-mobile-hdmi sh-mobile-hdmi: ASoC: DAPM unknown pin Headphones
->
->> Reverting commit 3fe240326cc395c66 ("ASoC: simple-card: Add mic and
->> hp detect gpios.") fixes this.
->
-> The fix here is to not allow 0 as a GPIO in the core code (which
-> should've been there already).
+>> That said, Nicolas Ferre (Cc'ing) at some point requested this to become
+>> a select (or at least for the DRM driver, but I guess the same applies
+>> to PWM) on the grounds that a depends on will make it more difficult to
+>> enable the driver.
+> 
+> It's not that much more difficult.  It just entails enabling 3 instead
+> of 2 config options.
 
-Unfortunately it's not there.
+Yes it is more difficult. Believe me, it's a mess, but...
 
-And it's not as simple as changing the definition of gpio_is_valid()
-(crash in gpio_get_value()):
+> Once all of the required components are merged,
+> feel free to drop back to 'select'.  This is easier than sharing round
+> immutable branches all over the place.
 
-    gpiochip_add: GPIOs 0..211 (r8a7740_pfc) failed to register
-    sh-pfc pfc-r8a7740: failed to init GPIO chip, ignoring...
-    sh-pfc pfc-r8a7740: r8a7740_pfc support registered
-    Unable to handle kernel NULL pointer dereference at virtual address 0000004c
+.. I agree with this option of moving to an easier-to-merge solution and
+then dealing with the ease of use.
 
-Quoting Linus (https://lkml.org/lkml/2014/9/4/464):
-"Fixing the old global GPIO numberspace API is a waste of time IMO".
+>> So we have two options here: 1) turn the select into a depends on here
+>> and allow the dependency to be resolved that way, or 2) solve the
+>> dependency by making sure the MFD part is merged first (either by
+>> pulling the MFD tree into the PWM and DRM trees or waiting for a full
+>> cycle for the MFD changes to land).
+>>
+>> I don't mind either way.
+> 
+> I'll go with either of the two suggestions above.
 
-Hence I've just sent a patch to initialize the GPIO numbers with -ENOENT.
+So, Lee and Thierry, you can both take your part in your respective
+trees with the change (1) described above and with my:
 
-Gr{oetje,eeting}s,
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 
-                        Geert
+(if you feel it is needed).
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks, bye,
+-- 
+Nicolas Ferre
