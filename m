@@ -1,139 +1,51 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3] clocksource: arch_timer: Allow the device tree to
- specify uninitialized CNTVOFF
-Date: Tue, 7 Oct 2014 11:21:59 +0100
-Message-ID: <20141007102158.GA24725@leverpostej>
-References: <1412663852-32681-1-git-send-email-sonnyrao@chromium.org>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCH 11/13] gpio: Support for unified device properties interface
+Date: Tue, 7 Oct 2014 19:22:13 +0900
+Message-ID: <CAAVeFuJwONbZ30jk6B1jPDdUUMSkh7Va4BZFt08+w60yoO=NBw@mail.gmail.com>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan> <2052507.JjE2hdgEYc@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1412663852-32681-1-git-send-email-sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <2052507.JjE2hdgEYc@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sonny,
+On Tue, Oct 7, 2014 at 9:18 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> From: Mika Westerberg <mika.westerberg@linux.intel.com>
+>
+> Some drivers need to deal with only firmware representation of its
+> GPIOs. An example would be a GPIO button array driver where each button
+> is described as a separate firmware node in device tree. Typically these
+> child nodes do not have physical representation in the Linux device
+> model.
+>
+> In order to help device drivers to handle such firmware child nodes we
+> add dev[m]_get_named_gpiod_from_child() that takes a child firmware
+> node pointer as its second argument (the first one is the parent device
+> itself), finds the GPIO using whatever is the underlying firmware
+> method, and requests the GPIO properly.
+>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-This looks generally fine, but there are a couple of minor changes below
-that I would like to see (removing arm64/armv8 confusion, and describing
-the problem more precisely).
+...
 
-On Tue, Oct 07, 2014 at 07:37:32AM +0100, Sonny Rao wrote:
-> From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> 
-> Some 32-bit (ARMv7) systems are architected like this:
-> 
-> * The firmware doesn't know and doesn't care about hypervisor mode and
->   we don't want to add the complexity of hypervisor there.
-> 
-> * The firmware isn't involved in SMP bringup or resume.
-> 
-> * The ARCH timer come up with an uninitialized offset (CNTVOFF)
->   between the virtual and physical counters.  Each core gets a
->   different random offset.
-> 
-> * The device boots in "Secure SVC" mode.
-> 
-> * Nothing has touched the reset value of CNTHCTL.PL1PCEN or
->   CNTHCTL.PL1PCTEN (both default to 1 at reset)
-> 
-> On systems like the above, it doesn't make sense to use the virtual
-> counter.  There's nobody managing the offset and each time a core goes
-> down and comes back up it will get reinitialized to some other random
-> value.
-> 
-> This adds an optional property which can inform the kernel of this
-> situation, and firmware is free to remove the property if it is going
-> to initialize the CNTVOFF registers when each CPU comes out of reset.
-> 
-> Currently, the best course of action in this case is to use the
-> physical timer, which is why it is important that CNTHCTL hasn't been
-> changed from its reset value and it's a reasonable assumption given
-> that the firmware has never entered HYP mode.
-> 
-> Note that it's been said that ARM64 (ARMv8) systems the firmware and
-> kernel really can't be architected as described above.  That means
-> using the physical timer like this really only makes sense for ARMv7
-> systems.
+> +/* Child properties interface */
+> +struct gpio_desc *dev_get_named_gpiod_from_child(struct device *dev, void *child,
+> +                                                const char *propname, int index);
+> +struct gpio_desc *devm_get_named_gpiod_from_child(struct device *dev, void *child,
+> +                                                 const char *propname, int index);
 
-Please drop the mention of arm64 here, and just say ARMv8 (they aren't
-quite the same thing, and this confuses the matter). The differences
-w.r.t. privilege boundaries and reset values are properties of ARMv8,
-and would also apply to a 32-bit kernel.
+I see the reason for these functions and am not opposed to them.
+However, I wonder if we could not replace propname by a con_id that
+would be resolved to one of con_id-gpio for DT and whatever naming
+convention ACPI is using?
 
-> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
-> Changes in v2:
-> - Add "#ifdef CONFIG_ARM" as per Will Deacon
-> 
-> Changes in v3:
-> - change property name to arm,cntvoff-not-fw-configured and specify
->   that the value of CNTHCTL.PL1PC(T)EN must still be the reset value
->   of 1 as per Mark Rutland
-> ---
->  Documentation/devicetree/bindings/arm/arch_timer.txt | 8 ++++++++
->  drivers/clocksource/arm_arch_timer.c                 | 9 +++++++++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
-> index 37b2caf..67837c9 100644
-> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-> @@ -22,6 +22,14 @@ to deliver its interrupts via SPIs.
->  - always-on : a boolean property. If present, the timer is powered through an
->    always-on power domain, therefore it never loses context.
->  
-> +** Optional properties:
-> +
-> +- arm,cntvoff-not-fw-configured : Firmware does not initialize
-> +  CNTVOFF, which may reset to arbitrary and different values on each
-> +  CPU.  CNTHCTL.PL1PC(T)EN must both be 1, which is the reset value
-> +  specificed by the architecture.   Only supported for ARM (not ARM64).
-
-Could we change this to:
-
-- arm,cpu-registers-not-fw-configured: Firmware does not initialize any
-  of the generic timer CPU registers, which contain their
-  architecturally-defined reset values. Only supported for 32-bit
-  systems which follow the ARMv7 architected reset values.
-
-That should match your case precisely, and we can derive the reset
-values of CNTVOFF and CNTHCTL from the architecture.
-
-> +
-> +
->  Example:
->  
->  	timer {
-> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-> index bd8da15..234d7b9 100644
-> --- a/drivers/clocksource/arm_arch_timer.c
-> +++ b/drivers/clocksource/arm_arch_timer.c
-> @@ -668,6 +668,15 @@ static void __init arch_timer_init(struct device_node *np)
->  		arch_timer_ppi[i] = irq_of_parse_and_map(np, i);
->  	arch_timer_detect_rate(NULL, np);
->  
-> +#ifdef CONFIG_ARM
-> +	/*
-> +	 * If we cannot rely on firmware initializing the CNTVOFF then
-> +	 * we should use the physical timers instead.
-> +	 */
-> +	if (of_property_read_bool(np, "arm,cntvoff-not-fw-configured"))
-> +		arch_timer_use_virtual = false;
-> +#endif
-
-This would need fixing up similarly to "arm,cpu-registers-not-fw-configured".
-
-With that:
-
-Reviewed-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This would prevent users to name GPIOs outside of the conventions
+defined in the bindings and be generally safer. Is there a particular
+reason (used by some old code?) for the current direct property
+access? If not, maybe we could call a slightly-modified of_find_gpio()
+to resolve the GPIO property for DT, and the equivalent function for
+ACPI?
