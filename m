@@ -1,91 +1,58 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH 2/2] input: pm8941-pwrkey: Add DT binding documentation
-Date: Tue, 7 Oct 2014 13:53:24 -0500
-Message-ID: <9E29A717-A001-409E-9CAC-28E47B149F0E@codeaurora.org>
-References: <1412644321-27683-1-git-send-email-bjorn.andersson@sonymobile.com> <1412644321-27683-3-git-send-email-bjorn.andersson@sonymobile.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1412644321-27683-3-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Bjorn Andersson <Bjorn.Andersson@sonymobile.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-msm@vger.kernel.org, Courtney Cavin <courtney.cavin@sonymobile.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 2/2] arm: shmobile: lager: enable HS-USB
+Date: Tue, 07 Oct 2014 23:15:50 +0400
+Message-ID: <54343BE6.2020903@cogentembedded.com>
+References: <1412680220-4552-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412680220-4552-3-git-send-email-yoshihiro.shimoda.uh@renesas.com> <5433D18B.6050208@cogentembedded.com> <5433DA52.2020005@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <5433DA52.2020005@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
-On Oct 6, 2014, at 8:12 PM, Bjorn Andersson <Bjorn.Andersson@sonymobile.com> wrote:
+On 10/07/2014 04:19 PM, Yoshihiro Shimoda wrote:
 
-> From: Courtney Cavin <courtney.cavin@sonymobile.com>
-> 
-> Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
-> .../bindings/input/qcom,pm8941-pwrkey.txt          |   43 ++++++++++++++++++++
-> 1 file changed, 43 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-> new file mode 100644
-> index 0000000..4d75e2c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-> @@ -0,0 +1,43 @@
-> +Qualcomm PM8941 PMIC Power Key
-> +
-> +PROPERTIES
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: must be one of:
-> +		    "qcom,pm8941-pwrkey"
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: base address of registers for block
-> +
-> +- interrupts:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: key change interrupt; The format of the specifier is
-> +		    defined by the binding document describing the node's
-> +		    interrupt parent.
-> +
-> +- debounce:
-> +	Usage: optional
-> +	Value type: <u32>
-> +	Definition: time in microseconds that key must be pressed or released
-> +		    for state change interrupt to trigger.
-> +
-> +- bias-pull-up:
-> +	Usage: optional
-> +	Value type: <empty>
+>>> Since this board doesn't have USB ID pin, we assumes the GP5_18 (USB0_PWEN)
+>>> is an ID pin because the gpio is high when the SW5 is Pin 3 side.
 
-boolean, is probably better than <empty> here.
+>>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>>> ---
+>>>    arch/arm/boot/dts/r8a7790-lager.dts |    5 +++++
+>>>    1 file changed, 5 insertions(+)
 
-> +	Definition: presence of this property indicates that the KPDPWR_N pin
-> +		    should be configured for pull up.
-> +
-> +EXAMPLE
-> +
-> +	pwrkey@800 {
-> +		compatible = "qcom,pm8941-pwrkey";
-> +		reg = <0x800>;
-> +		interrupts = <0x0 0x8 0 0>;
-> +		debounce = <15625>;
-> +		bias-pull-up;
-> +	};
-> -- 
-> 1.7.9.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+>>> index 719979e..011254a 100644
+>>> --- a/arch/arm/boot/dts/r8a7790-lager.dts
+>>> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
+>>> @@ -446,3 +446,8 @@
+>>>            };
+>>>        };
+>>>    };
+>>> +
+>>> +&hsusb {
+>>> +    status = "okay";
+>>> +    renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_HIGH>;
+>>> +};
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+>>     As I said before, this is not enough. We need pinctrl-related props. Same is true for other boards.
+
+> Thank you very much for the point again.
+> Finally I understood what you said before.
+> I will start studying the pinctrl world.
+
+    Looks like it will be quicker if I post v3 of your patches.
+
+    Unfortunately, there'll be pinctrl-related error messages in the log if 
+the internal PCI and HS-USB drivers are enabled together but everything should 
+still work.
+
+> Best regards,
+> Yoshihiro Shimoda
+
+WBR, Sergei
 
