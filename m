@@ -1,44 +1,58 @@
-From: Kever Yang <kever.yang@rock-chips.com>
-Subject: [PATCH 2/2] ARM: dts: enable init rate for clock
-Date: Tue,  7 Oct 2014 17:33:58 +0800
-Message-ID: <1412674438-26160-3-git-send-email-kever.yang@rock-chips.com>
-References: <1412674438-26160-1-git-send-email-kever.yang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1412674438-26160-1-git-send-email-kever.yang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, Mike Turquette <mturquette@linaro.org>
-Cc: dianders@chromium.org, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, dkl@rock-chips.com, Kever Yang <kever.yang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm: shmobile: lager: enable HS-USB
+Date: Tue, 07 Oct 2014 13:42:47 +0400
+Message-ID: <5433B597.6030509@cogentembedded.com>
+References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412237073-1288-3-git-send-email-yoshihiro.shimoda.uh@renesas.com> <54330BC4.2050501@cogentembedded.com> <543331C4.90608@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <543331C4.90608-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org" <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We need to initialize PLL rate and some of bus clock rate while
-kernel init, for there is no other module will do that.
+Hello.
 
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
----
+On 10/7/2014 4:20 AM, Yoshihiro Shimoda wrote:
 
- arch/arm/boot/dts/rk3288.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+>>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>>> ---
+>>>    arch/arm/boot/dts/r8a7790-lager.dts |    5 +++++
+>>>    1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 874e66d..2f4519b 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -455,6 +455,16 @@
- 		rockchip,grf = <&grf>;
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
-+		assigned-clocks = <&cru PLL_GPLL>, <&cru PLL_CPLL>,
-+				  <&cru PLL_NPLL>, <&cru ACLK_CPU>,
-+				  <&cru HCLK_CPU>, <&cru PCLK_CPU>,
-+				  <&cru ACLK_PERI>, <&cru HCLK_PERI>,
-+				  <&cru PCLK_PERI>;
-+		assigned-clock-rates = <594000000>, <400000000>,
-+				       <500000000>, <300000000>,
-+				       <150000000>, <75000000>,
-+				       <300000000>, <150000000>,
-+				       <75000000>;
- 	};
- 
- 	grf: syscon@ff770000 {
--- 
-1.9.1
+>>> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+>>> index 1698591..4badd0a 100644
+>>> --- a/arch/arm/boot/dts/r8a7790-lager.dts
+>>> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
+>>> @@ -445,3 +445,8 @@
+>>>    		};
+>>>    	};
+>>>    };
+>>> +
+>>> +&hsusb {
+>>> +	status = "okay";
+>>> +	renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_LOW>;
+>>> +};
+
+>>      Darn, this also misses the PinMux props... I was going to post v2 of these
+>> patches but now would need to add that and retest... :-/
+
+> I'm sorry for the my delayed work... I will submit v2 patches today.
+
+> By the way, I cannot understand that "this also misses the PinMux props".
+> According to the original "legacy" code in board-lager.c, it uses gpio5 18:
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=36be7686caa05334ca8d52df157b373a41d8d9f1
+
+    Right. But there are also USB0 pins.
+
+> Best regards,
+> Yoshihiro Shimoda
+
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
