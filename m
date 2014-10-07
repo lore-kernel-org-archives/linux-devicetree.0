@@ -1,77 +1,49 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v8 1/2] mfd: add atmel-hlcdc driver
-Date: Tue, 7 Oct 2014 11:17:43 +0100
-Message-ID: <20141007101743.GA25331@lee--X1>
-References: <1412603324-18789-1-git-send-email-boris.brezillon@free-electrons.com>
- <1412603324-18789-2-git-send-email-boris.brezillon@free-electrons.com>
- <20141007094427.GW25331@lee--X1>
- <20141007094727.GA12631@ulmo>
- <20141007095932.GY25331@lee--X1>
- <20141007100632.GA31575@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141007100632.GA31575@ulmo>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Samuel Ortiz <sameo@linux.intel.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 0/4] usb: dwc3/phy-exynos5-usbdrd: Extend support to Exynos7
+Date: Tue,  7 Oct 2014 15:49:32 +0530
+Message-ID: <1412677176-3850-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 07 Oct 2014, Thierry Reding wrote:
+Adding required support for clocks and additional VBUS regulators
+to enable USB 3.0 support on Exynos7 SoC.
 
-> On Tue, Oct 07, 2014 at 10:59:32AM +0100, Lee Jones wrote:
-> > On Tue, 07 Oct 2014, Thierry Reding wrote:
-> >=20
-> > > On Tue, Oct 07, 2014 at 10:44:27AM +0100, Lee Jones wrote:
-> > > > On Mon, 06 Oct 2014, Boris Brezillon wrote:
-> > > >=20
-> > > > > The HLCDC IP available on some Atmel SoCs (i.e. at91sam9n12, =
-at91sam9x5
-> > > > > family or sama5d3 family) exposes 2 subdevices:
-> > > > > - a display controller (controlled by a DRM driver)
-> > > > > - a PWM chip
-> > > > >=20
-> > > > > The MFD device provides a regmap and several clocks (those co=
-nnected
-> > > > > to this hardware block) to its subdevices.
-> > > > >=20
-> > > > > This way concurrent accesses to the iomem range are handled b=
-y the regmap
-> > > > > framework, and each subdevice can safely access HLCDC registe=
-rs.
-> > > > >=20
-> > > > > Signed-off-by: Boris Brezillon <boris.brezillon@free-electron=
-s.com>
-> > > > > Acked-by: Lee Jones <lee.jones@linaro.org>
-> > > > > Tested-by: Anthony Harivel <anthony.harivel@emtrion.de>
-> > > > > Tested-by: Ludovic Desroches <ludovic.desroches@atmel.com>
-> > > > > ---
-> > > > >  drivers/mfd/Kconfig             |   6 ++
-> > > > >  drivers/mfd/Makefile            |   1 +
-> > > > >  drivers/mfd/atmel-hlcdc.c       | 122 ++++++++++++++++++++++=
-++++++++++++++++++
-> > > > >  include/linux/mfd/atmel-hlcdc.h |  85 ++++++++++++++++++++++=
-++++++
-> > > > >  4 files changed, 214 insertions(+)
-> > > > >  create mode 100644 drivers/mfd/atmel-hlcdc.c
-> > > > >  create mode 100644 include/linux/mfd/atmel-hlcdc.h
-> > > >=20
-> > > > Applied for v3.19.
-> > >=20
-> > > Will you provide a stable branch that I can pull into the PWM tre=
-e?
-> >=20
-> > I hadn't planned on it.  What do you need that for?
->=20
-> Because the PWM driver depends on this series. But if you prefer you
-> could also take the PWM driver through your tree.
+This series depends for ACRH_EXYNOS7 support on following series:
+[PATCH v5 0/8] arch: arm64: Enable support for Samsung Exynos7 SoC
+http://www.spinics.net/lists/linux-samsung-soc/msg37047.html
 
-Probably better to deal with that via Kconfig.
+The series is based on usb-next branch.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Changes since v1:
+ -- Addressed review comments for unnecessary warning messages after
+    clk_get() fails for dwc3-exynos and phy-exynos5-usbdrd.
+ -- Assigned "exynos->sclk" as well as "phy_drd->utmiclk" and
+    "phy_drd->pipeclk" to NULL in case of clk_get() failure to avoid
+    unnecessary check for clock.
+ -- Modified dependency for symbol PHY_EXYNOS5_USBDRD to depend on
+    ARCH_EXYNOS which includes both Exynos5 as well as Exynos7.
+ -- Dropped [PATCH 4/5] usb: dwc3: Adding Kconfig dependency for Exynos7
+    from v1 of this series, since its not required now.
+
+Vivek Gautam (4):
+  dwc3: exynos: Add support for SCLK present on Exynos7
+  phy: exynos5-usbdrd: Add pipe-clk and utmi-clk support
+  phy: exynos5-usbdrd: Add facility for VBUS-BOOST-5V supply
+  phy: exynos7-usbdrd: Update dependency for ARCH_EXYNOS
+
+ .../devicetree/bindings/phy/samsung-phy.txt        |    4 ++
+ drivers/phy/Kconfig                                |    2 +-
+ drivers/phy/phy-exynos5-usbdrd.c                   |   52 +++++++++++++++++++-
+ drivers/usb/dwc3/dwc3-exynos.c                     |   16 ++++++
+ 4 files changed, 71 insertions(+), 3 deletions(-)
+
+-- 
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
