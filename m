@@ -1,83 +1,84 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/3] ASoC: tegra: add tegra sgtl5000
-	machine driver
-Date: Tue, 7 Oct 2014 18:54:02 +0100
-Message-ID: <20141007175402.GT4609@sirena.org.uk>
-References: <cover.1412381377.git.marcel@ziswiler.com>
- <74ea4fe20e653d2da555c8d7dd1478746bccd529.1412381377.git.marcel@ziswiler.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 2/2] ARM: dts: enable init rate for clock
+Date: Tue, 07 Oct 2014 20:27:46 +0200
+Message-ID: <1854393.Qf7h4x8eso@phil>
+References: <1412674438-26160-1-git-send-email-kever.yang@rock-chips.com> <1412674438-26160-3-git-send-email-kever.yang@rock-chips.com> <CAD=FV=UNXUuJbRpECV0Ay0hR02Dg=rBw+XScvMdfngzWfCqp4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6502297671497960065=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <74ea4fe20e653d2da555c8d7dd1478746bccd529.1412381377.git.marcel@ziswiler.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Marcel Ziswiler <marcel@ziswiler.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux@arm.linux.org.uk, Stephen Warren <swarren@wwwdotorg.org>, Liam Girdwood <lgirdwood@gmail.com>, stefan@agner.ch, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=UNXUuJbRpECV0Ay0hR02Dg=rBw+XScvMdfngzWfCqp4w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Kever Yang <kever.yang@rock-chips.com>, Mike Turquette <mturquette@linaro.org>, Sonny Rao <sonnyrao@chromium.org>, Addy Ke <addy.ke@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, han jiang <hj@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, =?utf-8?B?5oi05YWL6ZyWIChKYWNrKQ==?= <dkl@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Am Dienstag, 7. Oktober 2014, 10:03:19 schrieb Doug Anderson:
+> Kever,
+> 
+> On Tue, Oct 7, 2014 at 2:33 AM, Kever Yang <kever.yang@rock-chips.com> 
+wrote:
+> > We need to initialize PLL rate and some of bus clock rate while
+> > kernel init, for there is no other module will do that.
+> > 
+> > Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+> > ---
+> > 
+> >  arch/arm/boot/dts/rk3288.dtsi | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> > index 874e66d..2f4519b 100644
+> > --- a/arch/arm/boot/dts/rk3288.dtsi
+> > +++ b/arch/arm/boot/dts/rk3288.dtsi
+> > @@ -455,6 +455,16 @@
+> > 
+> >                 rockchip,grf = <&grf>;
+> >                 #clock-cells = <1>;
+> >                 #reset-cells = <1>;
+> > 
+> > +               assigned-clocks = <&cru PLL_GPLL>, <&cru PLL_CPLL>,
+> > +                                 <&cru PLL_NPLL>, <&cru ACLK_CPU>,
+> > +                                 <&cru HCLK_CPU>, <&cru PCLK_CPU>,
+> > +                                 <&cru ACLK_PERI>, <&cru HCLK_PERI>,
+> > +                                 <&cru PCLK_PERI>;
+> > +               assigned-clock-rates = <594000000>, <400000000>,
+> > +                                      <500000000>, <300000000>,
+> 
+> When I boot up, I see that ACLK_CPU was 297000000.  You specified
+> 300000000.  Did you expect to get 300?  If you expected 297, I think
+> you should put 297.  If you expected 300 then we have some debugging
+> to do.  Note: I'm not quite sure how you'd expect to get 300 given
+> that none of the PLLs divide evenly to 300...
 
---===============6502297671497960065==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Z1gw0Ba8VHj8Ap4r"
-Content-Disposition: inline
+I'd think 300 is simply the target value. I.e. take the closest rate <= 300 
+MHz, same for 150 etc. I somehow like the approach of specifying what the rate 
+_should_ ideally be :-) .
 
-
---Z1gw0Ba8VHj8Ap4r
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Oct 04, 2014 at 02:15:43AM +0200, Marcel Ziswiler wrote:
-> This binding and driver describe/support playback to headphones, and
-> capture from line-in and microphone.
->=20
-> This driver is useful for the Toradex Apalis T30 and Colibri T30 modules.
->=20
-> Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
-> Reviewed-by: Stephen Warren <swarren@nvidia.com>
-> ---
-> Changes in v3:
-> - Revert to not using simple-audio-card being incompatible with tegra.
-> - Rebased to for-next.
-
-I can't help but think that't there's still room for a Tegra simple card
-here, there doesn't seem to be anything particularly CODEC specific
-about the driver here - it *could* use simple-card were it not for the
-CPU side.  This also seems like a specific example of the same problem
-we see with supporting DPCM in simple-card, we need a way for CPUs to
-be able to say that they need some general setup that covers the CPU
-internal configuration.
-
---Z1gw0Ba8VHj8Ap4r
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUNCi5AAoJECTWi3JdVIfQEAQH/i4sms+iNsBEGLCrkZmdPBR+
-NdQBJrohsOUj0V4xeOOspSVUlM3PeR2PDEh7QxNInRnFRmi8+r8cqmgX49AOhFr5
-vk3s+aIJY+vjhpctHG3uzwKvJC/4pdem+oV1qdgjSTs1EmZIMpiilRzavx/Etugu
-ZYfVxeC7xNVsaYnBhIVSC+7mF4vDRaf+cPpfAGls7VkkuEw4X8eFs5hwKLMctY+r
-RBxeiqQ6Qh7++Esj6nJE4Z9wFpxePhKnN4hfjcoka21U6oSfBaQkdp8VVEExEY8E
-ms9B4g+ErcvtPJVoBnLaWXTcO9eXc5Dr49PmqDyvaUn5Q5tFcIEsvGqjBre63vg=
-=ZNY2
------END PGP SIGNATURE-----
-
---Z1gw0Ba8VHj8Ap4r--
-
---===============6502297671497960065==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Also reduces the amount of thougths necessary (and possible head-scratching) 
+when adapting the pll rates to some other constraints (child-clocks already 
+have the target rates and cannot drop to some even stranger value).
 
 
---===============6502297671497960065==--
+Heiko
+
+
+> 
+> > +                                      <150000000>, <75000000>,
+> 
+> Similarly, I see 148500000, 74250000
+> 
+> > +                                      <300000000>, <150000000>,
+> 
+> 297000000, 148500000
+> 
+> > +                                      <75000000>;
+> 
+> 74250000
+> 
+> >         };
+> >         
+> >         grf: syscon@ff770000 {
+> > 
+> > --
+> > 1.9.1
