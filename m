@@ -1,59 +1,71 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 1/2] ARM: shmobile: r8a7790: add HS-USB device node
-Date: Wed, 08 Oct 2014 00:23:16 +0400
-Message-ID: <2254854.tSoZel4tS4@wasted.cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3 2/2] ARM: shmobile: lager: enable HS-USB
+Date: Wed, 08 Oct 2014 00:26:06 +0400
+Message-ID: <2298118.7qjLAFjuvd@wasted.cogentembedded.com>
 References: <2438577.UAUDMkTTWI@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2438577.UAUDMkTTWI-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <2438577.UAUDMkTTWI@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, yoshihiro.shimoda.uh@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Define the R8A7790 generic part of the HS-USB device node. It is up to the board
-file to enable the device.
+Enable HS-USB device for the Lager board, defining the GPIO that the driver
+should check when probing. Since this board doesn't have the OTG ID pin, we
+assume that GP5_18 (USB0_PWEN) is an ID pin because it is 1 when the SW5 is
+in position 2-3 (meaning USB function) and 0 in other positions.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-[Sergei: fixed summary, added changelog]
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Note that there will be pinctrl-related error messages if both internal PCI
+and HS-USB drivers are enabled but they should be just ignored.
+
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+[Sergei: added pin function/group and prop, moved device node, fixed summary,
+supplemented changelog]
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
 ---
 Changes in version 3:
+- added pin function/group and the pinctrl-related prop;
+- moved the HS-USB node to precede the USB PHY node;
 - uppercased "arm" in the summary;
-- added changelog.
+- supplemented changelog.
 
- arch/arm/boot/dts/r8a7790.dtsi |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/r8a7790-lager.dts |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
+Index: renesas/arch/arm/boot/dts/r8a7790-lager.dts
 ===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7790.dtsi
-@@ -600,6 +600,17 @@
- 		status = "disabled";
+--- renesas.orig/arch/arm/boot/dts/r8a7790-lager.dts
++++ renesas/arch/arm/boot/dts/r8a7790-lager.dts
+@@ -226,6 +226,11 @@
+ 		renesas,function = "usb0";
  	};
  
-+	hsusb: usb@e6590000 {
-+		compatible = "renesas,usbhs-r8a7790";
-+		reg = <0 0xe6590000 0 0x100>;
-+		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
-+		renesas,buswait = <4>;
-+		phys = <&usb0 1>;
-+		phy-names = "usb";
-+		status = "disabled";
++	hsusb_pins: usb0 {
++		renesas,groups = "usb0_ovc_vbus";
++		renesas,function = "usb0";
 +	};
 +
- 	usbphy: usb-phy@e6590100 {
- 		compatible = "renesas,usb-phy-r8a7790";
- 		reg = <0 0xe6590100 0 0x100>;
+ 	usb1_pins: usb1 {
+ 		renesas,groups = "usb1";
+ 		renesas,function = "usb1";
+@@ -425,6 +430,13 @@
+ 	pinctrl-names = "default";
+ };
+ 
++&hsusb {
++	status = "okay";
++	pinctrl-0 = <&hsusb_pins>;
++	pinctrl-names = "default";
++	renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_HIGH>;
++};
++
+ &usbphy {
+ 	status = "okay";
+ };
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
