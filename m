@@ -1,114 +1,86 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: [PATCH 3/8] ASoC: fsl_sai: Add indentation for binding
-	doc to increase readability
-Date: Tue,  7 Oct 2014 12:29:06 -0700
-Message-ID: <50d58e1906b2e3e8b9f5fded5758c69f5ca39bbc.1412708790.git.nicoleotsuka@gmail.com>
-References: <cover.1412708790.git.nicoleotsuka@gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: RE: [PATCH 3/8] iio: Add support for DA9150 GPADC
+Date: Tue, 07 Oct 2014 20:36:36 +0100
+Message-ID: <3B049606-083E-4220-ADBF-71D74C0A9D9F@kernel.org>
+References: <cover.1411396718.git.Adam.Thomson.Opensource@diasemi.com> <ee4c56931f326d8ee9c1313c44456bce2dec8b8c.1411396719.git.Adam.Thomson.Opensource@diasemi.com> <5426964A.3050407@kernel.org> <2E89032DDAA8B9408CB92943514A0337AB518D23@SW-EX-MBX01.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <cover.1412708790.git.nicoleotsuka@gmail.com>
-In-Reply-To: <cover.1412708790.git.nicoleotsuka@gmail.com>
-References: <cover.1412708790.git.nicoleotsuka@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <2E89032DDAA8B9408CB92943514A0337AB518D23@SW-EX-MBX01.diasemi.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch refines the DT binding doc for more readability by adding
-extra blank lines and indentations.
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
- .../devicetree/bindings/sound/fsl-sai.txt          | 66 ++++++++++++++--------
- 1 file changed, 41 insertions(+), 25 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-index 4956b14..044e5d7 100644
---- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-@@ -5,32 +5,48 @@ which provides a synchronous audio interface that supports fullduplex
- serial interfaces with frame synchronization such as I2S, AC97, TDM, and
- codec/DSP interfaces.
- 
--
- Required properties:
--- compatible: Compatible list, contains "fsl,vf610-sai" or "fsl,imx6sx-sai".
--- reg: Offset and length of the register set for the device.
--- clocks: Must contain an entry for each entry in clock-names.
--- clock-names : Must include the "bus" for register access and "mclk1" "mclk2"
--  "mclk3" for bit clock and frame clock providing.
--- dmas : Generic dma devicetree binding as described in
--  Documentation/devicetree/bindings/dma/dma.txt.
--- dma-names : Two dmas have to be defined, "tx" and "rx".
--- pinctrl-names: Must contain a "default" entry.
--- pinctrl-NNN: One property must exist for each entry in pinctrl-names.
--  See ../pinctrl/pinctrl-bindings.txt for details of the property values.
--- big-endian: Boolean property, required if all the FTM_PWM registers
--  are big-endian rather than little-endian.
--- lsb-first: Configures whether the LSB or the MSB is transmitted first for
--  the fifo data. If this property is absent, the MSB is transmitted first as
--  default, or the LSB is transmitted first.
--- fsl,sai-synchronous-rx: This is a boolean property. If present, indicating
--  that SAI will work in the synchronous mode (sync Tx with Rx) which means
--  both the transimitter and receiver will send and receive data by following
--  receiver's bit clocks and frame sync clocks.
--- fsl,sai-asynchronous: This is a boolean property. If present, indicating
--  that SAI will work in the asynchronous mode, which means both transimitter
--  and receiver will send and receive data by following their own bit clocks
--  and frame sync clocks separately.
-+
-+  - compatible		: Compatible list, contains "fsl,vf610-sai" or
-+			  "fsl,imx6sx-sai".
-+
-+  - reg			: Offset and length of the register set for the device.
-+
-+  - clocks		: Must contain an entry for each entry in clock-names.
-+
-+  - clock-names		: Must include the "bus" for register access and
-+			  "mclk1", "mclk2", "mclk3" for bit clock and frame
-+			  clock providing.
-+  - dmas		: Generic dma devicetree binding as described in
-+			  Documentation/devicetree/bindings/dma/dma.txt.
-+
-+  - dma-names		: Two dmas have to be defined, "tx" and "rx".
-+
-+  - pinctrl-names	: Must contain a "default" entry.
-+
-+  - pinctrl-NNN		: One property must exist for each entry in
-+			  pinctrl-names. See ../pinctrl/pinctrl-bindings.txt
-+			  for details of the property values.
-+
-+  - big-endian		: Boolean property, required if all the FTM_PWM
-+			  registers are big-endian rather than little-endian.
-+
-+  - lsb-first		: Configures whether the LSB or the MSB is transmitted
-+			  first for the fifo data. If this property is absent,
-+			  the MSB is transmitted first as default, or the LSB
-+			  is transmitted first.
-+
-+  - fsl,sai-synchronous-rx: This is a boolean property. If present, indicating
-+			  that SAI will work in the synchronous mode (sync Tx
-+			  with Rx) which means both the transimitter and the
-+			  receiver will send and receive data by following
-+			  receiver's bit clocks and frame sync clocks.
-+
-+  - fsl,sai-asynchronous: This is a boolean property. If present, indicating
-+			  that SAI will work in the asynchronous mode, which
-+			  means both transimitter and receiver will send and
-+			  receive data by following their own bit clocks and
-+			  frame sync clocks separately.
- 
- Note:
- - If both fsl,sai-asynchronous and fsl,sai-synchronous-rx are absent, the
+On October 7, 2014 3:55:55 PM GMT+01:00, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com> wrote:
+>On September 27, 2014 11:50, Jonathan Cameron wrote:
+>
+>> On 23/09/14 11:53, Adam Thomson wrote:
+>> > This patch adds support for DA9150 Charger & Fuel-Gauge IC GPADC.
+>
+>> > +
+>> > +static inline int da9150_gpadc_gpio_6v_voltage_now(int raw_val)
+>> > +{
+>> > +	/* Convert to mV */
+>> > +	return (6 * ((raw_val * 1000) + 500)) / 1024;
+>> These could all be expressed as raw values with offsets
+>> and scales (and that would be preferred).
+>> E.g. This one has offset 500000 and scale 6000/1024 or even
+>> better use IIO_VAL_FRACTIONAL_LOG2 for scale with val1 = 6000
+>> and val2 = (log_2 1024) = 10.
+>> 
+>
+>What you've suggested isn't correct. The problem here is that the
+>offset is
+>added first to the raw ADC reading, without factoring the ADC value
+>accordingly
+>to match the factor of the offset. If we take the original equation
+>provided for
+>this channel of the ADC, the offset is actually 0.5 which should be
+>added to the
+>raw ADC value. This doesn't fit into the implementation in the kernel
+>as we
+>can't use floating point. If we multiply the offset but not the raw ADC
+>value,
+>then add them before applying the scale factor, then the result is
+>wrong at the
+>end. Basically you need a scale for the raw ADC value to match the
+>offset scale
+>so you can achieve the correct results, which is what my calculation
+>does.
+>But that seems impossible with the current raw|offset|scale method.
+Oops got that wrong.  The fixed point maths to fix the in kernel interface isn't exactly
+ difficult but indeed it does not handle this currently.
+>
+>> > +	ret = iio_map_array_register(indio_dev,
+>da9150_gpadc_default_maps);
+>> > +	if (ret) {
+>> > +		dev_err(dev, "Failed to register IIO maps: %d\n", ret);
+>> > +		return ret;
+>> > +	}
+>> I'd suggest doing the devm_request_thread_irq before the
+>iio_map_array
+>> stuff.  This is purely to avoid the order during remove not being
+>> obviously correct as it isn't the reverse of during probe.
+>
+>Ok, should still work ok that way so can update.
+>
+>> > +static int da9150_gpadc_remove(struct platform_device *pdev)
+>> > +{
+>> > +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+>> > +
+>> > +	iio_map_array_unregister(indio_dev);
+>> Twice in one day.  I'm definitely thinking we should add a
+>> devm version of iio_map_array_register...
+>
+>I assume you mean here that iio_device_unregister() should come first?
+>Will
+>update.
+Nope just that such a new function might be useful.
+
 -- 
-1.9.1
+Sent from my Android phone with K-9 Mail. Please excuse my brevity.
