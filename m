@@ -1,115 +1,64 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v8 1/2] mfd: add atmel-hlcdc driver
-Date: Tue, 7 Oct 2014 13:00:28 +0100
-Message-ID: <20141007120028.GC3693@lee--X1>
-References: <1412603324-18789-2-git-send-email-boris.brezillon@free-electrons.com>
- <20141007094427.GW25331@lee--X1>
- <20141007094727.GA12631@ulmo>
- <20141007095932.GY25331@lee--X1>
- <20141007100632.GA31575@ulmo>
- <20141007101743.GA25331@lee--X1>
- <20141007111304.GA1539@ulmo>
- <20141007113814.GA3693@lee--X1>
- <20141007134112.40179e8a@bbrezillon>
- <20141007115928.GB3693@lee--X1>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] Documentation: devicetree: bindings: Document
+ correct and deprecated vendor-prefix with device isl29028
+Date: Tue, 7 Oct 2014 13:02:49 +0100
+Message-ID: <20141007120249.GH24725@leverpostej>
+References: <1412682308-8784-1-git-send-email-darshanapadmadas@gmail.com>
+ <1412682308-8784-2-git-send-email-darshanapadmadas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20141007115928.GB3693@lee--X1>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+In-Reply-To: <1412682308-8784-2-git-send-email-darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 07 Oct 2014, Lee Jones wrote:
-
-> On Tue, 07 Oct 2014, Boris Brezillon wrote:
+On Tue, Oct 07, 2014 at 12:45:05PM +0100, Darshana Padmadas wrote:
+> This patch documents the device isl29028 with its vendor-prefix. Undo=
+cumented deprecated vendor-prefix
+> found by checkpatch also documented for compatibility reasons.
 >=20
-> > On Tue, 7 Oct 2014 12:38:14 +0100
-> > Lee Jones <lee.jones@linaro.org> wrote:
-> >=20
-> > > On Tue, 07 Oct 2014, Thierry Reding wrote:
-> > >=20
-> > > > On Tue, Oct 07, 2014 at 11:17:43AM +0100, Lee Jones wrote:
-> > > > > On Tue, 07 Oct 2014, Thierry Reding wrote:
-> > > > >=20
-> > > > > > On Tue, Oct 07, 2014 at 10:59:32AM +0100, Lee Jones wrote:
-> > > > > > > On Tue, 07 Oct 2014, Thierry Reding wrote:
-> > > > > > >=20
-> > > > > > > > On Tue, Oct 07, 2014 at 10:44:27AM +0100, Lee Jones wro=
-te:
-> > > > > > > > > On Mon, 06 Oct 2014, Boris Brezillon wrote:
-> > > > > > > > >=20
-> > > > > > > > > > The HLCDC IP available on some Atmel SoCs (i.e. at9=
-1sam9n12, at91sam9x5
-> > > > > > > > > > family or sama5d3 family) exposes 2 subdevices:
-> > > > > > > > > > - a display controller (controlled by a DRM driver)
-> > > > > > > > > > - a PWM chip
-> > > > > > > > > >=20
-> > > > > > > > > > The MFD device provides a regmap and several clocks=
- (those connected
-> > > > > > > > > > to this hardware block) to its subdevices.
-> > > > > > > > > >=20
-> > > > > > > > > > This way concurrent accesses to the iomem range are=
- handled by the regmap
-> > > > > > > > > > framework, and each subdevice can safely access HLC=
-DC registers.
-> > > > > > > > > >=20
-> > > > > > > > > > Signed-off-by: Boris Brezillon <boris.brezillon@fre=
-e-electrons.com>
-> > > > > > > > > > Acked-by: Lee Jones <lee.jones@linaro.org>
-> > > > > > > > > > Tested-by: Anthony Harivel <anthony.harivel@emtrion=
-=2Ede>
-> > > > > > > > > > Tested-by: Ludovic Desroches <ludovic.desroches@atm=
-el.com>
-> > > > > > > > > > ---
-> > > > > > > > > >  drivers/mfd/Kconfig             |   6 ++
-> > > > > > > > > >  drivers/mfd/Makefile            |   1 +
-> > > > > > > > > >  drivers/mfd/atmel-hlcdc.c       | 122 ++++++++++++=
-++++++++++++++++++++++++++++
-> > > > > > > > > >  include/linux/mfd/atmel-hlcdc.h |  85 ++++++++++++=
-++++++++++++++++
-> > > > > > > > > >  4 files changed, 214 insertions(+)
-> > > > > > > > > >  create mode 100644 drivers/mfd/atmel-hlcdc.c
-> > > > > > > > > >  create mode 100644 include/linux/mfd/atmel-hlcdc.h
-> > > > > > > > >=20
-> > > > > > > > > Applied for v3.19.
-> > > > > > > >=20
-> > > > > > > > Will you provide a stable branch that I can pull into t=
-he PWM tree?
-> > > > > > >=20
-> > > > > > > I hadn't planned on it.  What do you need that for?
-> > > > > >=20
-> > > > > > Because the PWM driver depends on this series. But if you p=
-refer you
-> > > > > > could also take the PWM driver through your tree.
-> > > > >=20
-> > > > > Probably better to deal with that via Kconfig.
-> > > >=20
-> > > > Do you have any suggestions? The PWM driver currently selects t=
-he
-> > > > MFD_ATMEL_HLCDC symbol, which as I understand will cause a Kcon=
-fig error
-> > > > if the latter isn't defined.
-> > >=20
-> > > s/select/depends on/ for the desired effect.
-> > >=20
-> >=20
-> > Don't forget the atmel-hlcdc.h header file which is referenced by b=
-oth
-> > the DRM and the PWM drivers.
+> Signed-off-by: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-I should probably attempt to finish this sentence.
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 
-> If you use 'depends on' the DRM and PWM drivers won't even attempt to
-> compile...
-
-=2E.. if the MFD driver (and thus the header file) is not present.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> ---
+>  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.tx=
+t b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> index 6af570e..d024613 100644
+> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> @@ -57,6 +57,8 @@ gmt,g751		G751: Digital Temperature Sensor and Ther=
+mal Watchdog with Two-Wire In
+>  infineon,slb9635tt	Infineon SLB9635 (Soft-) I2C TPM (old protocol, m=
+ax 100khz)
+>  infineon,slb9645tt	Infineon SLB9645 I2C TPM (new protocol, max 400kh=
+z)
+>  isl,isl12057		Intersil ISL12057 I2C RTC Chip
+> +isil,isl29028           Deprecated name, use isl,isl29028 instead
+> +isl,isl29028            Intersil ISL29028 Ambient Light and Proximit=
+y Sensor
+>  maxim,ds1050		5 Bit Programmable, Pulse-Width Modulator
+>  maxim,max1237		Low-Power, 4-/12-Channel, 2-Wire Serial, 12-Bit ADCs
+>  maxim,max6625		9-Bit/12-Bit Temperature Sensors with I=C3=82=C2=B2C-=
+Compatible Serial Interface
+> --=20
+> 1.9.1
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
