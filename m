@@ -1,66 +1,38 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 06/44] gpio-poweroff: Drop reference to pm_power_off from
- devicetree bindings
-Date: Tue, 7 Oct 2014 12:03:32 +0100
-Message-ID: <20141007110332.GF24725@leverpostej>
-References: <1412659726-29957-1-git-send-email-linux@roeck-us.net>
- <1412659726-29957-7-git-send-email-linux@roeck-us.net>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 0/2] arm: shimobile: add HS-USB device node on r8a7790
+Date: Tue, 7 Oct 2014 20:10:18 +0900
+Message-ID: <1412680220-4552-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1412659726-29957-7-git-send-email-linux@roeck-us.net>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "adi-buildroot-devel@lists.sourceforge.net" <adi-buildroot-devel@lists.sourceforge.net>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lguest@lists.ozlabs.org" <lguest@lists.ozlabs.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>, "linux-am33-list@redhat.com" <linux-am33-list@redhat.com>, "linux-cris-kernel@axis.com" <linux-cris-kernel@axis.com>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "linux-hexagon@vger.kernel.org" <linux-hexagon@vger.kernel.org>, "linux-m32r-ja@ml.linux-m32r.org" <linux-m32r-ja@ml.linux-m32r.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>lin
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 07, 2014 at 06:28:08AM +0100, Guenter Roeck wrote:
-> pm_power_off is an implementation detail. Replace it with a more generic
-> description of the driver's functionality.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
+ This series is based on Simon's renesas.git branch and
+renesas-devel-20141007-v3.17 tag. If we use the generic phy
+driver for R-Car Gen2 (drivers/phy/phy-rcar-gen2.c), we can use
+the HS-USB on lager.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+Changes from v1:
+ - Correct typo of git log in patch 1.
+ - Change the placement of hsusb node in patch 1.
+ - Add git log comment in patch 2.
+ - Fix the gpio prop in patch 2.
 
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio-poweroff.txt | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt b/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
-> index d4eab92..c95a1a6 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
-> @@ -2,12 +2,12 @@ Driver a GPIO line that can be used to turn the power off.
->  
->  The driver supports both level triggered and edge triggered power off.
->  At driver load time, the driver will request the given gpio line and
-> -install a pm_power_off handler. If the optional properties 'input' is
-> -not found, the GPIO line will be driven in the inactive
-> +install a handler to power off the system. If the optional properties
-> +'input' is not found, the GPIO line will be driven in the inactive
->  state. Otherwise its configured as an input.
->  
-> -When the pm_power_off is called, the gpio is configured as an output,
-> -and drive active, so triggering a level triggered power off
-> +When the the poweroff handler is called, the gpio is configured as an
-> +output, and drive active, so triggering a level triggered power off
->  condition. This will also cause an inactive->active edge condition, so
->  triggering positive edge triggered power off. After a delay of 100ms,
->  the GPIO is set to inactive, thus causing an active->inactive edge,
-> @@ -24,7 +24,7 @@ Required properties:
->  
->  Optional properties:
->  - input : Initially configure the GPIO line as an input. Only reconfigure
-> -  it to an output when the pm_power_off function is called. If this optional
-> +  it to an output when the poweroff handler is called. If this optional
->    property is not specified, the GPIO is initialized as an output in its
->    inactive state.
->  
-> -- 
-> 1.9.1
-> 
-> 
+Yoshihiro Shimoda (2):
+  arm: shmobile: r8a7790: add HS-USB device node
+  arm: shmobile: lager: enable HS-USB
+
+ arch/arm/boot/dts/r8a7790-lager.dts |    5 +++++
+ arch/arm/boot/dts/r8a7790.dtsi      |   11 +++++++++++
+ 2 files changed, 16 insertions(+)
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
