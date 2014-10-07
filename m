@@ -1,79 +1,81 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm: shmobile: lager: enable HS-USB
-Date: Tue, 07 Oct 2014 13:46:13 +0400
-Message-ID: <5433B665.9040302@cogentembedded.com>
-References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412237073-1288-3-git-send-email-yoshihiro.shimoda.uh@renesas.com> <542EFDEA.2030906@cogentembedded.com> <5431E984.6000203@renesas.com> <54335D0E.6070606@renesas.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v8 1/2] mfd: add atmel-hlcdc driver
+Date: Tue, 7 Oct 2014 11:47:28 +0200
+Message-ID: <20141007094727.GA12631@ulmo>
+References: <1412603324-18789-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1412603324-18789-2-git-send-email-boris.brezillon@free-electrons.com>
+ <20141007094427.GW25331@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54335D0E.6070606-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org" <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141007094427.GW25331@lee--X1>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Samuel Ortiz <sameo@linux.intel.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/7/2014 7:25 AM, Yoshihiro Shimoda wrote:
 
->>>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
->>>> ---
->>>>    arch/arm/boot/dts/r8a7790-lager.dts |    5 +++++
->>>>    1 file changed, 5 insertions(+)
+--jI8keyz6grp/JLjh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->>>> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
->>>> index 1698591..4badd0a 100644
->>>> --- a/arch/arm/boot/dts/r8a7790-lager.dts
->>>> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
->>>> @@ -445,3 +445,8 @@
->>>>    		};
->>>>    	};
->>>>    };
->>>> +
->>>> +&hsusb {
->>>> +	status = "okay";
->>>> +	renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_LOW>;
+On Tue, Oct 07, 2014 at 10:44:27AM +0100, Lee Jones wrote:
+> On Mon, 06 Oct 2014, Boris Brezillon wrote:
+>=20
+> > The HLCDC IP available on some Atmel SoCs (i.e. at91sam9n12, at91sam9x5
+> > family or sama5d3 family) exposes 2 subdevices:
+> > - a display controller (controlled by a DRM driver)
+> > - a PWM chip
+> >=20
+> > The MFD device provides a regmap and several clocks (those connected
+> > to this hardware block) to its subdevices.
+> >=20
+> > This way concurrent accesses to the iomem range are handled by the regm=
+ap
+> > framework, and each subdevice can safely access HLCDC registers.
+> >=20
+> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > Acked-by: Lee Jones <lee.jones@linaro.org>
+> > Tested-by: Anthony Harivel <anthony.harivel@emtrion.de>
+> > Tested-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+> > ---
+> >  drivers/mfd/Kconfig             |   6 ++
+> >  drivers/mfd/Makefile            |   1 +
+> >  drivers/mfd/atmel-hlcdc.c       | 122 ++++++++++++++++++++++++++++++++=
+++++++++
+> >  include/linux/mfd/atmel-hlcdc.h |  85 ++++++++++++++++++++++++++++
+> >  4 files changed, 214 insertions(+)
+> >  create mode 100644 drivers/mfd/atmel-hlcdc.c
+> >  create mode 100644 include/linux/mfd/atmel-hlcdc.h
+>=20
+> Applied for v3.19.
 
->>>      It's certainly active-high.
+Will you provide a stable branch that I can pull into the PWM tree?
 
->> Since the current code has the following, we have to set the active_low...
->> However, the code is unreadable, I think. So, I will modify the code.
->>
->> 	/* check GPIO determining if USB function should be enabled */
->> 	if (priv->dparam.enable_gpio) {
->> 		gpio_request_one(priv->dparam.enable_gpio, GPIOF_IN, NULL);
->> 		ret = !gpio_get_value(priv->dparam.enable_gpio);
->> 		gpio_free(priv->dparam.enable_gpio);
->> 		if (ret) {
->> 			dev_warn(&pdev->dev,
->> 				 "USB function not selected (GPIO %d)\n",
->> 				 priv->dparam.enable_gpio);
->> 			ret = -ENOTSUPP;
->> 			goto probe_end_mod_exit;
->> 		}
->> 	}
+Thierry
 
-> I am confusing about the gpio_get_value()...
-> In case of ARM, gpio_get_value() will call gpiod_get_raw_value() finally.
+--jI8keyz6grp/JLjh
+Content-Type: application/pgp-signature
 
-> gpio_get_value() in arch/arm/include/asm/gpio.h
->   --> __gpio_get_value() in include/asm-generic/gpio.h
->    --> gpiod_get_raw_value() in drivers/gpio/gpiolib.c
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> The gpiod_get_raw_value() doesn't care of the GPIO_ACTIVE_{HIGH,LOW}.
-> So, should I add gpiod_is_active_low() or someting in the renesas_usbhs driver?
+iQIcBAEBAgAGBQJUM7avAAoJEN0jrNd/PrOhEqkQAIXdUJhVuKHDPwRfaEwUP1nk
+M4LkzZO/Hv0uiFqnYSd7Ep2vmdAA8eh+MPw4dgv34V0Fe0jt9FPKRgeAGiMSZCnr
+E+ix4XzOle4tTHVonfGA2qM8aVaqx7cSWOJXASIQow+6KCofa8zdqdg98EnuiW3f
+wOO9bWUzup0o2yf/o9mzw5VFljqDnazUWdVPbDqY/QDNloo/617ctsrZyw175Pf0
+FJ04FRNOIH5Ml9JzHffpbJ215703fUdlxz8sMpz1q3Wf4HZebIMM2V2AjLC65T15
+2xxKjDi/etKmza6pmB3Ud9WAvP9dbmPrcGeGiKY6XCBemVMDcorVmxvJ0zUxm7OI
+sleaYQ9O1Scp53c11BGGnRyJRak0XA0NLnS+44MocmV/ZxzxZJp9Ks2glnUu8Lqn
+2bj3C57xfijVJ+xX3TDMN7YI672bCiG4qvYi1O1zSWEiAAzJRD7JHaGJvInVY/lU
+maViMJP/qt4jKljFp3DKjCZiD1scrqhiQ1cpQReO0zIvrvcNBNTlil0NHyWZn2w/
+jqRHkOhKOlAi7vmjmohVJu58FU8QmEti/jWZTtGvLKKTUbpDhbIewaujXrQjx3cz
+4uxyNZ10kiU3ADMFO+ZxCLCVZvJ1eM4tKA8fvENsBnaPpgt9vXA+Li7Af69XhtiW
+jz8zTjsIhIGyQdmJvozV
+=0tDY
+-----END PGP SIGNATURE-----
 
-    Why do you still think it's active-low?!
-
-> Or, Do I misunderstand something?
-
-    Look at the above code again.
-
-> Best regards,
-> Yoshihiro Shimoda
-
-WBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--jI8keyz6grp/JLjh--
