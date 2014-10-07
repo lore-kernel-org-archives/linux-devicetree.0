@@ -1,130 +1,57 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH 2/4] ARM: qcom: add description of KPSS WDT for IPQ8064
-Date: Tue, 7 Oct 2014 17:10:44 -0500
-Message-ID: <20141007221044.GR868@joshc.qualcomm.com>
-References: <cover.1412182773.git.joshc@codeaurora.org>
- <50c0ec1514173ce07641a95839e939dcda41b110.1412182773.git.joshc@codeaurora.org>
- <20141001172855.GL10233@codeaurora.org>
- <20141001181557.GQ868@joshc.qualcomm.com>
- <542DA2B6.3020201@codeaurora.org>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [tpmdd-devel] [PATCH 00/16] ST33 I2C TPM driver cleanup
+Date: Tue, 7 Oct 2014 16:25:25 -0600
+Message-ID: <20141007222525.GD2366@obsidianresearch.com>
+References: <1412712189-1234-1-git-send-email-christophe-h.ricard@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <542DA2B6.3020201@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1412712189-1234-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 02, 2014 at 12:08:38PM -0700, Stephen Boyd wrote:
-[..]
-> On 10/01/14 11:15, Josh Cartwright wrote:
-> > The percpu-ness of the two WDTs makes configuration even more
-> > interesting, as it's possible you'd want to independently configure
-> > timeouts for CPU0_WDT0 and CPU1_WDT0, supporting this with a coalesced
-> > timer/wdt would be cumbersome.
+On Tue, Oct 07, 2014 at 10:02:53PM +0200, Christophe Ricard wrote:
+> Hi Peter,
 > 
-> We already do similar things for the timers on each cpu. It doesn't seem
-> that bad, but that's a matter of opinion.
+> The following patchset brings:
+> - Some few code clean up from code style up to structure
+> - Device tree support keeping static platform data configuration support.
+> - Fix irq support.
+> - Update the GPLv2 license header
 
-I think the difference in this case is that each of the 2 per-cpu WDTs
-can conceivably be registered independently, each with their own default
-timeout configuration.  If we wanted to allow the most flexibility, it
-seemed to me that making use of subnodes would be the best, but maybe
-you have some other idea.
+I really don't have much to say about this - it looks like the older
+driver was never being used so if you have reviewed and tested it
+again in a new system I think that is an improvement..
 
-> > Something like this perhaps:
-> >
-> > 	timer@200a000 {
-> > 		compatible = "qcom,kpss-timer", "qcom,msm-timer";
-> > 		interrupts = <1 1 0x301>,
-> > 			     <1 2 0x301>,
-> > 			     <1 3 0x301>;
-> > 		reg = <0x0200a000 0x100>;
-> > 		clock-frequency = <25000000>,
-> > 				  <32768>;
-> > 		cpu-offset = <0x80000>;
-> >
-> > 		#address-cells = <1>;
-> > 		#size-cells = <1>;
-> > 		ranges;
-> >
-> > 		cpu0_wdt0: watchdog@208a038 {
-> > 			compatible = "qcom,kpss-wdt";
-> > 			reg = <0x208a038 0x40>;
-> > 			interrupts = <1 4 0x301>,
-> > 			clocks = <&sleep_clk>;
-> > 			timeout-sec = <10>;
-> > 			cpu = <&cpu0>;
-> > 		};
-> >
-> > 		cpu0_wdt1: watchdog@208a060 {
-> > 			compatible = "qcom,kpss-wdt";
-> > 			reg = <0x208a060 0x40>;
-> > 			interrupts = <1 5 0x301>,
-> > 			clocks = <&sleep_clk>;
-> > 			timeout-sec = <20>;
-> > 			cpu = <&cpu0>;
-> > 		};
-> >
-> > 		cpu1_wdt0: watchdog@209a038 {
-> > 			compatible = "qcom,kpss-wdt";
-> > 			reg = <0x209a038 0x40>;
-> > 			interrupts = <1 4 0x301>,
-> > 			clocks = <&sleep_clk>;
-> > 			timeout-sec = <8>;
-> > 			cpu = <&cpu1>;
-> > 		};
-> >
-> > 		cpu1_wdt1: watchdog@209a060 {
-> > 			compatible = "qcom,kpss-wdt";
-> > 			reg = <0x209a060 0x40>;
-> > 			interrupts = <1 5 0x301>,
-> > 			clocks = <&sleep_clk>;
-> > 			timeout-sec = <15>;
-> > 			cpu = <&cpu1>;
-> > 		};
-> > 	};
-> >
-> >
-> 
-> I'm thinking:
-> 
->                 timer@200a000 {
->                         compatible = "qcom,kpss-timer", "qcom,msm-timer";
->                         interrupts = <1 1 0x301>,
->                                      <1 2 0x301>,
->                                      <1 3 0x301>,
->                                      <1 4 0x301>,
->                                      <1 5 0x301>;
->                         reg = <0x0200a000 0x100>;
->                         clock-frequency = <27000000>,
->                                           <32768>;
->                         clocks = <&cxo>, <&sleep_clk>;
->                         clock-names = "ref", "sleep";
->                         cpu-offset = <0x80000>;
->                 };
+Can you put this on a github or something? It would be nice to see the
+file new .c file rather than looking at patches..
+ 
+>   tpm/tpm_i2c_stm_st33: Move tpm registers to tpm_i2c_stm_st33.c
+>   tpm/tpm_i2c_stm_st33: Add new tpm_stm_dev structure and remove
+>     tpm_i2c_buffer[0], [1] buffer.
 
-Where'd the default timeout configuration go?  Or, should we have one
-timeout-sec property and not allow setting the default timeouts per WDT
-instance?  Or no configurable timeout at all?
+I'm very happy to see this, this is much better than the old way.
 
-> Can you explain the need for the cpu handle? Luckily this device only
-> exists in configurations that have up to 4 CPUs and so mapping the
-> logical CPU number to the watchdog for that CPU is "easy" in that we can
-> convert the CPU from logical to physical and then do the math taking
-> into account the cpu-offset to figure out where the non-aliased
-> registers are. Once we get into pairs of watchdogs for different
-> clusters this isn't so easy and it's better to have the phandle
-> somewhere (either in the watchdog node or the cpu node) and then have
-> multiple nodes for the watchdog block per-cpu so that we can map the CPU
-> to the device. We realized this when making the saw binding.
+>   tpm/tpm_i2c_stm_st33: Replace err/rc/ret by r for a function return
+>     code
 
-Ah, yeah, now that I think about it, it's fairly straightforward to map
-backward using the parent cpu-offset to determine the corresponding CPU,
-so it wouldn't be necessary.
+This is very churny, and I didn't think 'r' was a kernel convention..
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+>   tpm/tpm_i2c_stm_st33: Replace tpm_st33_* function with tpm_stm_*
+
+What is the part branding? We still have 'st33' in various places..
+ 
+>   tpm/tpm_i2c_stm_st33: Add devicetree structure
+>   tpm: dts: st33zp24_i2c: Add DTS Documentation
+
+Peter: FYI, the protocol for device tree stuff is to wait for an ack
+from the device tree maintainers on the documentation patch..
+
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
