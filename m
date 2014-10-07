@@ -1,66 +1,87 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 2/8] mfd: da9150: Add DT binding documentation for core
-Date: Tue, 7 Oct 2014 13:47:01 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337AB518CFE@SW-EX-MBX01.diasemi.com>
-References: <cover.1411396718.git.Adam.Thomson.Opensource@diasemi.com>
- <b71815ff49a1cabe2c7907a96cc1be34f924648e.1411396719.git.Adam.Thomson.Opensource@diasemi.com>
- <5426932E.7060609@kernel.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
+Date: Tue, 07 Oct 2014 15:52:27 +0200
+Message-ID: <3659934.boXsmm8jcn@wuerfel>
+References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com> <3256560.C0cZnIlnAv@wuerfel> <20141007120659.GA30590@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5426932E.7060609-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141007120659.GA30590@e102568-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>, rmk+kernel@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-T24gU2VwdGVtYmVyIDI3LCAyMDE0IDExOjM3LCBKb25hdGhhbiBDYW1lcm9uIHdyb3RlOg0KDQo+
-IE9uIDIzLzA5LzE0IDExOjUzLCBBZGFtIFRob21zb24gd3JvdGU6DQo+ID4gU2lnbmVkLW9mZi1i
-eTogQWRhbSBUaG9tc29uIDxBZGFtLlRob21zb24uT3BlbnNvdXJjZUBkaWFzZW1pLmNvbT4NCj4g
-T2J2aW91c2x5IHRoaXMgcmVhbGx5IHdhbnRzIGEgcmV2aWV3IGZyb20gb25lIG9mIHRoZSBkZXZp
-Y2UgdHJlZSBndXlzLCBidXQgSQ0KPiBoYXZlIGEgZmV3DQo+IGJpdHMgYmFzZWQgb24gd2hhdCBN
-YXJrIGhhcyByZWNlbnRseSBzYWlkIGluIG90aGVyIHJldmlld3MgOykNCj4gPiAtLS0NCj4gPiAg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9kYTkxNTAudHh0IHwgNDENCj4g
-KysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0MSBpbnNlcnRp
-b25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbWZkL2RhOTE1MC50eHQNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2RhOTE1MC50eHQNCj4gYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2RhOTE1MC50eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEw
-MDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLmQ3ZGUxNTANCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4g
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9kYTkxNTAudHh0DQo+
-ID4gQEAgLTAsMCArMSw0MSBAQA0KPiA+ICtEaWFsb2cgU2VtaWNvbmR1Y3RvciBEQTkxNTAgQ29t
-YmluZWQgQ2hhcmdlci9GdWVsLUdhdWdlIE1GRCBiaW5kaW5ncw0KPiA+ICsNCj4gPiArREE5MTUw
-IGNvbnNpc3RzIG9mIGEgZ3JvdXAgb2Ygc3ViLWRldmljZXMgKEkyQyBPbmx5KToNCj4gV2hhdCBk
-b2VzIEkyQyBvbmx5IGFkZCB0byB0aGUgZGVzY3JpcHRpb24/DQoNCk5vdGhpbmcgcmVhbGx5LiBX
-aWxsIHJlbW92ZS4NCg0KPiA+ICsNCj4gPiArRGV2aWNlCQkJIERlc2NyaXB0aW9uDQo+ID4gKy0t
-LS0tLQkJCSAtLS0tLS0tLS0tLQ0KPiA+ICtkYTkxNTAtZ3BhZGMJCTogSUlPIC0gR1BBREMNCj4g
-R2l2ZW4gdXN1YWwgYXZlcnNpb24gdG8gYW55dGhpbmcgZHJpdmVyIHNwZWNpZmljIGluIHRoZSBk
-ZXZpY2UgdHJlZSBkZXNjcmlwdGlvbg0KPiB5b3UgcHJvYmFibHkNCj4ganVzdCB3YW50IHRvIGRl
-c2NyaWJlIHdoYXQgdGhleSBkbyByYXRoZXIgdGhhbiB3aGF0IHN1YnN5c3RlbSBwcm92aWRlcyB0
-aGUgZHJpdmVyLg0KDQpPaywgY2FuIHVwZGF0ZSBhY2NvcmRpbmdseS4NCg0KPiANCj4gPiArZGE5
-MTUwLWNoYXJnZXIJCTogUG93ZXIgU3VwcGx5IChDaGFyZ2VyKQ0KPiA+ICsNCj4gPiArPT09PT09
-DQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICstIGNvbXBhdGlibGUgOiBT
-aG91bGQgYmUgImRsZyxkYTkxNTAiDQo+ID4gKy0gcmVnOiBTcGVjaWZpZXMgdGhlIEkyQyBzbGF2
-ZSBhZGRyZXNzDQo+ID4gKy0gaW50ZXJydXB0LXBhcmVudDogU3BlY2lmaWVzIHRoZSBwaGFuZGxl
-IG9mIHRoZSBpbnRlcnJ1cHQgY29udHJvbGxlciB0byB3aGljaA0KPiA+ICsgIHRoZSBJUlFzIGZy
-b20gZGE5MTUwIGFyZSBkZWxpdmVyZWQgdG8uDQo+ID4gKy0gaW50ZXJydXB0czogSVJRIGxpbmUg
-aW5mbyBmb3IgZGE5MTUwIGNoaXAuDQo+IENyb3NzIHJlZmVyIHRvIHRoZSBzdGFuZGFyZCBpbnRl
-cnJ1cHRzIGRvYyBmb3IgdGhlc2UuLi4NCj4gDQoNCk9rLCBjYW4gZG8gdGhhdC4NCg0KPiA+ICst
-IGludGVycnVwdC1jb250cm9sbGVyOiBkYTkxNTAgaGFzIGludGVybmFsIElSUXMgKG93biBJUlEg
-ZG9tYWluKS4NCj4gPiArDQo+ID4gK1N1Yi1kZXZpY2VzOg0KPiA+ICstIGRhOTE1MC1ncGFkYzog
-U2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vYWRjL2RhOTE1MC0NCj4g
-Z3BhZGMudHh0DQo+ID4gKy0gZGE5MTUwLWNoYXJnZXI6IFNlZSBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcG93ZXIvZGE5MTUwLQ0KPiBjaGFyZ2VyLnR4dA0KPiA+ICsNCj4gPiAr
-DQo+ID4gK0V4YW1wbGU6DQo+ID4gKw0KPiA+ICsJY2hhcmdlcl9mZzogZGE5MTUwQDU4IHsNCj4g
-PiArCQljb21wYXRpYmxlID0gImRsZyxkYTkxNTAiOw0KPiA+ICsJCXJlZyA9IDwweDU4PjsNCj4g
-PiArCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvNj47DQo+ID4gKwkJaW50ZXJydXB0cyA9IDwx
-MSBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiA+ICsJCWludGVycnVwdC1jb250cm9sbGVyOw0KPiA+
-ICsNCj4gPiArCQlncGFkYzogZGE5MTUwLWdwYWRjIHsNCj4gPiArCQkJLi4uDQo+ID4gKwkJfTsN
-Cj4gPiArDQo+ID4gKwkJZGE5MTUwLWNoYXJnZXIgew0KPiA+ICsJCQkuLi4NCj4gPiArCQl9Ow0K
-PiA+ICsJfTsNCj4gPiAtLQ0KPiA+IDEuOS4zDQo+ID4NCj4gPiAtLQ0KPiA+IFRvIHVuc3Vic2Ny
-aWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51eC1paW8i
-IGluDQo+ID4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5v
-cmcNCj4gPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21h
-am9yZG9tby1pbmZvLmh0bWwNCj4gPg0K
+On Tuesday 07 October 2014 13:06:59 Lorenzo Pieralisi wrote:
+> On Wed, Oct 01, 2014 at 10:38:45AM +0100, Arnd Bergmann wrote:
+> 
+> [...]
+> 
+> > pci_mmap_page_range could either get generalized some more in an attempt
+> > to have a __weak default implementation that works on ARM, or it could
+> > be changed to lose the dependency on pci_sys_data instead. In either
+> > case, the change would involve using the generic pci_host_bridge_window
+> > list.
+> 
+> On ARM pci_mmap_page_range requires pci_sys_data to retrieve its
+> mem_offset parameter. I had a look, and I do not understand *why*
+> it is required in that function, so I am asking. That function
+> is basically used to map PCI resources to userspace, IIUC, through
+> /proc or /sysfs file mappings. As far as I understand those mappings
+> expect VMA pgoff to be the CPU address when files representing resources
+> are mmapped from /proc and 0 when mmapped from /sys (I mean from
+> userspace, then VMA pgoff should be updated by the kernel to map the
+> resource).
+
+Applying the mem_offset is certainly the more intuitive way, since
+that lets you read the PCI BAR values from a device and access the
+device with the appropriate offsets.
+
+> Question is: why pci_mmap_page_range() should apply an additional
+> shift to the VMA pgoff based on pci_sys_data.mem_offset, which represents
+> the offset from cpu->bus offset. I do not understand that. PowerPC
+> does not seem to apply that fix-up (in PowerPC __pci_mmap_make_offset there
+> is commented out code which prevents the pci_mem_offset shift to be
+> applied). I think it all boils down to what the userspace interface is
+> expecting when the memory areas are mmapped, if anyone has comments on
+> this that is appreciated.
+
+The important part is certainly that whatever transformation is done
+by pci_resource_to_user() gets undone by __pci_mmap_make_offset().
+
+In case of PowerPC and Microblaze, the mem_offset handling is commented
+out in both, to work around X11 trying to use the same values on
+/dev/mem. However, they do have the respective fixup for io_offset.
+
+sparc applies the offset in both places for both io_offset and mem_offset.
+xtensa applies only io_offset in __pci_mmap_make_offset but neither
+  in pci_resource_to_user. This probably works because the mem_offset is
+  always zero there.
+mips applies a different fixup (for 36-bit addressing), but not the
+  mem_offset.
+
+Every other architecture applies no offset here, neither in __pci_mmap_make_offset/pci_mmap_page_range nor in pci_resource_to_user
+
+The only hint I could find for how the ARM version came to be is
+from the historic kernel tree git log for linux-2.5.42, which added
+the current code as
+
+    2002/10/13 11:05:47+01:00 rmk
+    [ARM] Update pcibios_enable_device, supply pci_mmap_page_range()
+    Update pcibios_enable_device to only enable requested resources,
+    mainly for IDE.  Supply a pci_mmap_page_range() function to allow
+    user space to mmap PCI regions.
+
+At that point, only two platforms had a nonzero mem_offset:
+footbridge/dc21285 and integrator/pci_v3. Both were using VGA,
+and presumably used this to make X work. (rmk might remember
+details).
+
+The code at the time matched what powerpc and sparc did, but then
+both implemented pci_resource_to_user() in order for libpciaccess
+to work correctly (bcea1db16b for sparc, 463ce0e103f for powerpc),
+and later powerpc changed it again to not apply the offset in
+pci_resource_to_user or pci_mmap_page_range in 396a1a5832ae.
+
+	Arnd
