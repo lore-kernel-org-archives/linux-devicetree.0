@@ -1,58 +1,91 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 2/2] arm: shmobile: lager: enable HS-USB
-Date: Tue, 07 Oct 2014 23:15:50 +0400
-Message-ID: <54343BE6.2020903@cogentembedded.com>
-References: <1412680220-4552-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412680220-4552-3-git-send-email-yoshihiro.shimoda.uh@renesas.com> <5433D18B.6050208@cogentembedded.com> <5433DA52.2020005@renesas.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: enable init rate for clock
+Date: Tue, 7 Oct 2014 12:20:38 -0700
+Message-ID: <CAD=FV=WwXXQ6941WuATBiNqZ0sM3EkSo-EHHoqn3uGmZdNvW5w@mail.gmail.com>
+References: <1412674438-26160-1-git-send-email-kever.yang@rock-chips.com>
+	<1412674438-26160-3-git-send-email-kever.yang@rock-chips.com>
+	<CAD=FV=UNXUuJbRpECV0Ay0hR02Dg=rBw+XScvMdfngzWfCqp4w@mail.gmail.com>
+	<1854393.Qf7h4x8eso@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5433DA52.2020005@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1854393.Qf7h4x8eso@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, han jiang <hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?5oi05YWL6ZyWIChKYWNrKQ==?= <dkl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Heiko,
 
-On 10/07/2014 04:19 PM, Yoshihiro Shimoda wrote:
+On Tue, Oct 7, 2014 at 11:27 AM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> w=
+rote:
+> Am Dienstag, 7. Oktober 2014, 10:03:19 schrieb Doug Anderson:
+>> Kever,
+>>
+>> On Tue, Oct 7, 2014 at 2:33 AM, Kever Yang <kever.yang-TNX95d0MmH5qZ5pVbMyqKg@public.gmane.org=
+m>
+> wrote:
+>> > We need to initialize PLL rate and some of bus clock rate while
+>> > kernel init, for there is no other module will do that.
+>> >
+>> > Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> > ---
+>> >
+>> >  arch/arm/boot/dts/rk3288.dtsi | 10 ++++++++++
+>> >  1 file changed, 10 insertions(+)
+>> >
+>> > diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3=
+288.dtsi
+>> > index 874e66d..2f4519b 100644
+>> > --- a/arch/arm/boot/dts/rk3288.dtsi
+>> > +++ b/arch/arm/boot/dts/rk3288.dtsi
+>> > @@ -455,6 +455,16 @@
+>> >
+>> >                 rockchip,grf =3D <&grf>;
+>> >                 #clock-cells =3D <1>;
+>> >                 #reset-cells =3D <1>;
+>> >
+>> > +               assigned-clocks =3D <&cru PLL_GPLL>, <&cru PLL_CPL=
+L>,
+>> > +                                 <&cru PLL_NPLL>, <&cru ACLK_CPU>=
+,
+>> > +                                 <&cru HCLK_CPU>, <&cru PCLK_CPU>=
+,
+>> > +                                 <&cru ACLK_PERI>, <&cru HCLK_PER=
+I>,
+>> > +                                 <&cru PCLK_PERI>;
+>> > +               assigned-clock-rates =3D <594000000>, <400000000>,
+>> > +                                      <500000000>, <300000000>,
+>>
+>> When I boot up, I see that ACLK_CPU was 297000000.  You specified
+>> 300000000.  Did you expect to get 300?  If you expected 297, I think
+>> you should put 297.  If you expected 300 then we have some debugging
+>> to do.  Note: I'm not quite sure how you'd expect to get 300 given
+>> that none of the PLLs divide evenly to 300...
+>
+> I'd think 300 is simply the target value. I.e. take the closest rate =
+<=3D 300
+> MHz, same for 150 etc. I somehow like the approach of specifying what=
+ the rate
+> _should_ ideally be :-) .
+>
+> Also reduces the amount of thougths necessary (and possible head-scra=
+tching)
+> when adapting the pll rates to some other constraints (child-clocks a=
+lready
+> have the target rates and cannot drop to some even stranger value).
 
->>> Since this board doesn't have USB ID pin, we assumes the GP5_18 (USB0_PWEN)
->>> is an ID pin because the gpio is high when the SW5 is Pin 3 side.
+OK, fair enough.  I guess maybe I've overly paranoid and like to make
+sure that someone has thought through exactly what various core clocks
+should be and made sure that the voltage matched and that clocks were
+never out of spec.  ...but if others really like specifying more ideal
+values then I'm OK with it.  I will say that I'd really like the PLLs
+to be exact, though.  I think those are now...
 
->>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->>> ---
->>>    arch/arm/boot/dts/r8a7790-lager.dts |    5 +++++
->>>    1 file changed, 5 insertions(+)
-
->>> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
->>> index 719979e..011254a 100644
->>> --- a/arch/arm/boot/dts/r8a7790-lager.dts
->>> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
->>> @@ -446,3 +446,8 @@
->>>            };
->>>        };
->>>    };
->>> +
->>> +&hsusb {
->>> +    status = "okay";
->>> +    renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_HIGH>;
->>> +};
-
->>     As I said before, this is not enough. We need pinctrl-related props. Same is true for other boards.
-
-> Thank you very much for the point again.
-> Finally I understood what you said before.
-> I will start studying the pinctrl world.
-
-    Looks like it will be quicker if I post v3 of your patches.
-
-    Unfortunately, there'll be pinctrl-related error messages in the log if 
-the internal PCI and HS-USB drivers are enabled together but everything should 
-still work.
-
-> Best regards,
-> Yoshihiro Shimoda
-
-WBR, Sergei
-
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
