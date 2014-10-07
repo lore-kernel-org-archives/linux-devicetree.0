@@ -1,69 +1,44 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: simple-card: Add mic and hp detect gpios.
-Date: Tue, 7 Oct 2014 17:36:54 +0100
-Message-ID: <20141007163654.GJ4609@sirena.org.uk>
-References: <1412198720-2326-1-git-send-email-dgreid@chromium.org>
- <20141002155350.GU4273@sirena.org.uk>
- <CAMuHMdWh=sXAD59T1T=gvROX+fbF6=gFo6C0nkJdfnCrdNrwYg@mail.gmail.com>
- <20141007123856.GF4609@sirena.org.uk>
- <CAMuHMdV39fM_TCa+WSvswij6dxD2vwfJT+FueBtxndpsymP9CQ@mail.gmail.com>
+From: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
+Subject: Re: ath10k: calibration data through Device Tree?
+Date: Tue, 7 Oct 2014 19:44:43 +0300
+Message-ID: <87vbnvhls4.fsf@kamboji.qca.qualcomm.com>
+References: <87tx3mmx4s.fsf@kamboji.qca.qualcomm.com>
+	<20141002132914.GN5788@leverpostej>
+	<87ppeamvr9.fsf@kamboji.qca.qualcomm.com>
+	<542DA1F7.9090904@amacapital.net>
+	<CAJ-VmomR+AzsUVqSik=ejntHHhQf_wj9kU==uCqWyk27M7Gp9w@mail.gmail.com>
+	<CALCETrV_LoCJ_DHcyQ2ztyXfdH2vAF0r7OX29_nPj6gMcodBig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gVeFDRGtAQ0W7qcm"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdV39fM_TCa+WSvswij6dxD2vwfJT+FueBtxndpsymP9CQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dylan Reid <dgreid@chromium.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, jay.xu@rock-chips.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, sonnyrao@chromium.org, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALCETrV_LoCJ_DHcyQ2ztyXfdH2vAF0r7OX29_nPj6gMcodBig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+	(Andy Lutomirski's message of "Thu, 2 Oct 2014 12:35:09 -0700")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Lutomirski <luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org>
+Cc: Adrian Chadd <adrian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Andy Lutomirski <luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org> writes:
 
---gVeFDRGtAQ0W7qcm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Perhaps unsurprisingly, the OpenWRT patch that enables it to work for
+> real (by shoving a file into /lib/firmware that's contains a copy of
+> data read from flash) hasn't made it upstream.  I assume that the
+> purpose of this discussion is to settle on a real solution.
 
-On Tue, Oct 07, 2014 at 03:10:01PM +0200, Geert Uytterhoeven wrote:
-> On Tue, Oct 7, 2014 at 2:38 PM, Mark Brown <broonie@kernel.org> wrote:
+I'm hoping to have ath10k support three different methods to get
+calibration data:
 
-> > The fix here is to not allow 0 as a GPIO in the core code (which
-> > should've been there already).
+1) OTP (already supported)
 
-> Unfortunately it's not there.
+2) Device Tree (under discussion)
 
-> And it's not as simple as changing the definition of gpio_is_valid()
-> (crash in gpio_get_value()):
+3) from a file
 
->     gpiochip_add: GPIOs 0..211 (r8a7740_pfc) failed to register
->     sh-pfc pfc-r8a7740: failed to init GPIO chip, ignoring...
->     sh-pfc pfc-r8a7740: r8a7740_pfc support registered
->     Unable to handle kernel NULL pointer dereference at virtual address 0000004c
+I'm hoping to send patches for 2) and 3) soon.
 
-Right, obviously it's not going to work if the platform actually uses 0
-as a valid GPIO.
-
-> Quoting Linus (https://lkml.org/lkml/2014/9/4/464):
-> "Fixing the old global GPIO numberspace API is a waste of time IMO".
-
-> Hence I've just sent a patch to initialize the GPIO numbers with -ENOENT.
-
-I do think it's worth renumbering the platforms since it's *relatively*
-little work per platform compared to completing the gpiod transition.
-
---gVeFDRGtAQ0W7qcm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUNBalAAoJECTWi3JdVIfQ50UH/jlCUwuw+qpYsFxnMr6HgFWm
-o56BLqUOI12FQpV7cZbOVwDFcXXZJ+VWfl1oJbcPcLcmR8M830I2BVrtPg4jNud2
-2kZRaPrpt4m2kLeLsQ2e1pUUlWNrlfgwv8mXDrQL2OKdvY+c95J0x7Z7ZBJNPbAB
-569Qx53AicNeRZH9s2jm9lPh9EtseSL51p5VBlRjvMTESSUgMdz+uzGsi1fwEbgU
-Uxk0EsBbQ2zwvDAVicTtdgR4jawavgz9+YOF7iFmo+GCfSm+Z3N9VNQPG6FjoB89
-wRqGwrn2NoV2tJKXdAjIIY+JmaRm+LIfgWRC3N4Yn59A5EPsW/oczRnbBSs/qXk=
-=FKzE
------END PGP SIGNATURE-----
-
---gVeFDRGtAQ0W7qcm--
+-- 
+Kalle Valo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
