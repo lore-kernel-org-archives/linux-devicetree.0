@@ -1,74 +1,65 @@
-From: Kiran Padwal <kiran.padwal@smartplayin.com>
-Subject: Re: [PATCH 1/2] input: Add Qualcomm PM8941 power key driver
-Date: Tue, 07 Oct 2014 15:24:11 +0530
-Message-ID: <5433B843.5060200@smartplayin.com>
-References: <1412644321-27683-1-git-send-email-bjorn.andersson@sonymobile.com> <1412644321-27683-2-git-send-email-bjorn.andersson@sonymobile.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v8 1/2] mfd: add atmel-hlcdc driver
+Date: Tue, 7 Oct 2014 10:59:32 +0100
+Message-ID: <20141007095932.GY25331@lee--X1>
+References: <1412603324-18789-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1412603324-18789-2-git-send-email-boris.brezillon@free-electrons.com>
+ <20141007094427.GW25331@lee--X1>
+ <20141007094727.GA12631@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1412644321-27683-2-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-msm@vger.kernel.org, Courtney Cavin <courtney.cavin@sonymobile.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141007094727.GA12631@ulmo>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Samuel Ortiz <sameo@linux.intel.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 07 October 2014 06:42 AM, Bjorn Andersson wrote:
-> From: Courtney Cavin <courtney.cavin@sonymobile.com>
-> 
-> Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->  drivers/input/misc/Kconfig         |   12 +++
->  drivers/input/misc/Makefile        |    1 +
->  drivers/input/misc/pm8941-pwrkey.c |  196 ++++++++++++++++++++++++++++++++++++
+On Tue, 07 Oct 2014, Thierry Reding wrote:
 
-<snip>
+> On Tue, Oct 07, 2014 at 10:44:27AM +0100, Lee Jones wrote:
+> > On Mon, 06 Oct 2014, Boris Brezillon wrote:
+> >=20
+> > > The HLCDC IP available on some Atmel SoCs (i.e. at91sam9n12, at91=
+sam9x5
+> > > family or sama5d3 family) exposes 2 subdevices:
+> > > - a display controller (controlled by a DRM driver)
+> > > - a PWM chip
+> > >=20
+> > > The MFD device provides a regmap and several clocks (those connec=
+ted
+> > > to this hardware block) to its subdevices.
+> > >=20
+> > > This way concurrent accesses to the iomem range are handled by th=
+e regmap
+> > > framework, and each subdevice can safely access HLCDC registers.
+> > >=20
+> > > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.co=
+m>
+> > > Acked-by: Lee Jones <lee.jones@linaro.org>
+> > > Tested-by: Anthony Harivel <anthony.harivel@emtrion.de>
+> > > Tested-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+> > > ---
+> > >  drivers/mfd/Kconfig             |   6 ++
+> > >  drivers/mfd/Makefile            |   1 +
+> > >  drivers/mfd/atmel-hlcdc.c       | 122 ++++++++++++++++++++++++++=
+++++++++++++++
+> > >  include/linux/mfd/atmel-hlcdc.h |  85 ++++++++++++++++++++++++++=
+++
+> > >  4 files changed, 214 insertions(+)
+> > >  create mode 100644 drivers/mfd/atmel-hlcdc.c
+> > >  create mode 100644 include/linux/mfd/atmel-hlcdc.h
+> >=20
+> > Applied for v3.19.
+>=20
+> Will you provide a stable branch that I can pull into the PWM tree?
 
-> +
-> +	platform_set_drvdata(pdev, pwrkey);
-> +	device_init_wakeup(&pdev->dev, 1);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pm8941_pwrkey_remove(struct platform_device *pdev)
-> +{
-> +	device_init_wakeup(&pdev->dev, 0);
+I hadn't planned on it.  What do you need that for?
 
-Shouldn't we unregister input device?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id pm8941_pwr_key_id_table[] = {
-> +	{ .compatible = "qcom,pm8941-pwrkey" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, pm8941_pwr_key_id_table);
-> +
-> +static struct platform_driver pm8941_pwrkey_driver = {
-> +	.probe		= pm8941_pwrkey_probe,
-> +	.remove		= pm8941_pwrkey_remove,
-> +	.driver		= {
-> +		.name	= "pm8941-pwrkey",
-> +		.owner	= THIS_MODULE,
-
-This field can be removed because this driver which use the
-module_platform_driver api as this is overridden in
-platform_driver_register.
-
-> +		.pm	= &pm8941_pwr_key_pm_ops,
-> +		.of_match_table = of_match_ptr(pm8941_pwr_key_id_table),
-> +	},
-> +};
-> +module_platform_driver(pm8941_pwrkey_driver);
-> +
-> +MODULE_DESCRIPTION("PM8941 Power Key driver");
-> +MODULE_LICENSE("GPL v2");
-
-May be you can add module author name.
-
-Thanks,
---Kiran
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
