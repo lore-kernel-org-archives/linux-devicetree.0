@@ -1,71 +1,55 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: [PATCH] of/selftest: Move hash table off stack to fix large frame size
-Date: Tue,  7 Oct 2014 11:36:05 +0100
-Message-ID: <1412678165-12087-1-git-send-email-grant.likely@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>
+From: Ajay kumar <ajaynumb@gmail.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
+ ps8622 DT properties
+Date: Tue, 7 Oct 2014 16:06:55 +0530
+Message-ID: <CAEC9eQPq28GFS+1GweECM9QHfCM+LzOL9ySq05i6RfVG6-2ubQ@mail.gmail.com>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
+	<5419760A.7020908@ti.com>
+	<CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com>
+	<5419B52D.4060107@ti.com>
+	<CAEC9eQO2rfmVEKTCUJk+SpfdeUr81gN3stYV3wE6yR3E=-zonA@mail.gmail.com>
+	<541C279A.2030601@ti.com>
+	<CAEC9eQMQrM289J+ukkshKtTo9dB=G4cvg-4zF6LR6snqE5BL0A@mail.gmail.com>
+	<541C3D95.7080200@ti.com>
+	<CAEC9eQNshrP6wW_9mEDbFR5hRpW6Hy=GBFzV=rf05Wpxz6gtiw@mail.gmail.com>
+	<5433C0CC.5040804@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5433C0CC.5040804@ti.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: David Airlie <airlied@linux.ie>, Ajay Kumar <ajaykumar.rs@samsung.com>, InKi Dae <inki.dae@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-The new testcase that checks phandle consistency was using a hash table
-on the stack which made the frame size much large than it should be. Fix
-the problem by moving the hash table into the file scope.
+On Tue, Oct 7, 2014 at 4:00 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> On 20/09/14 14:22, Ajay kumar wrote:
+>
+>> Well, I am okay with using video ports to describe the relationship
+>> between the encoder, bridge and the panel.
+>> But, its just that I need to make use of 2 functions when phandle
+>> does it using just one function ;)
+>> -        panel_node = of_parse_phandle(dev->of_node, "panel", 0)
+>> +       endpoint = of_graph_get_next_endpoint(dev->of_node, NULL);
+>> +       if (!endpoint)
+>> +               return -EPROBE_DEFER;
+>> +
+>> +       panel_node = of_graph_get_remote_port_parent(endpoint);
+>> +       if (!panel_node)
+>> +               return -EPROBE_DEFER;
+>>
+>>
+>> If nobody else has objections over using of_graph functions instead
+>> of phandles, I can respin this patchset by making use of video ports.
+>
+> The discussion did digress somewhat.
+>
+> As a clarification, I'm in no way nack'ing this series because it
+> doesn't use the graphs for video connections. I don't see the simple
+> phandle bindings used here as broken as such.
+Well, I am okay with any approach you guys decide on. I desperately want
+this to get this in since it has been floating around for quite sometime.
+The more we drag this, the more rework for me since the number of platforms
+using bridge support is increasing daily!
 
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
----
-
-This patch applies on my devicetree/next branch, which I'm going to ask
-Linux to pull later this week.
-
-g.
-
- drivers/of/selftest.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-index 4fed34bff5cf..78001270a598 100644
---- a/drivers/of/selftest.c
-+++ b/drivers/of/selftest.c
-@@ -198,20 +198,19 @@ struct node_hash {
- 	struct device_node *np;
- };
- 
-+static DEFINE_HASHTABLE(phandle_ht, 8);
- static void __init of_selftest_check_phandles(void)
- {
- 	struct device_node *np;
- 	struct node_hash *nh;
- 	struct hlist_node *tmp;
- 	int i, dup_count = 0, phandle_count = 0;
--	DECLARE_HASHTABLE(ht, 8);
- 
--	hash_init(ht);
- 	for_each_of_allnodes(np) {
- 		if (!np->phandle)
- 			continue;
- 
--		hash_for_each_possible(ht, nh, node, np->phandle) {
-+		hash_for_each_possible(phandle_ht, nh, node, np->phandle) {
- 			if (nh->np->phandle == np->phandle) {
- 				pr_info("Duplicate phandle! %i used by %s and %s\n",
- 					np->phandle, nh->np->full_name, np->full_name);
-@@ -225,14 +224,14 @@ static void __init of_selftest_check_phandles(void)
- 			return;
- 
- 		nh->np = np;
--		hash_add(ht, &nh->node, np->phandle);
-+		hash_add(phandle_ht, &nh->node, np->phandle);
- 		phandle_count++;
- 	}
- 	selftest(dup_count == 0, "Found %i duplicates in %i phandles\n",
- 		 dup_count, phandle_count);
- 
- 	/* Clean up */
--	hash_for_each_safe(ht, i, tmp, nh, node) {
-+	hash_for_each_safe(phandle_ht, i, tmp, nh, node) {
- 		hash_del(&nh->node);
- 		kfree(nh);
- 	}
--- 
-1.9.1
+Ajay
