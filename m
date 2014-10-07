@@ -1,84 +1,52 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 2/2] ARM: dts: enable init rate for clock
-Date: Tue, 07 Oct 2014 20:27:46 +0200
-Message-ID: <1854393.Qf7h4x8eso@phil>
-References: <1412674438-26160-1-git-send-email-kever.yang@rock-chips.com> <1412674438-26160-3-git-send-email-kever.yang@rock-chips.com> <CAD=FV=UNXUuJbRpECV0Ay0hR02Dg=rBw+XScvMdfngzWfCqp4w@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH 0/2] Qualcomm PM8941 power key driver
+Date: Tue, 7 Oct 2014 11:46:41 -0700
+Message-ID: <20141007184640.GB31125@sonymobile.com>
+References: <1412644321-27683-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1412672510.1027.57.camel@iivanov-dev>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=UNXUuJbRpECV0Ay0hR02Dg=rBw+XScvMdfngzWfCqp4w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Kever Yang <kever.yang@rock-chips.com>, Mike Turquette <mturquette@linaro.org>, Sonny Rao <sonnyrao@chromium.org>, Addy Ke <addy.ke@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, han jiang <hj@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, =?utf-8?B?5oi05YWL6ZyWIChKYWNrKQ==?= <dkl@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1412672510.1027.57.camel@iivanov-dev>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 7. Oktober 2014, 10:03:19 schrieb Doug Anderson:
-> Kever,
-> 
-> On Tue, Oct 7, 2014 at 2:33 AM, Kever Yang <kever.yang@rock-chips.com> 
-wrote:
-> > We need to initialize PLL rate and some of bus clock rate while
-> > kernel init, for there is no other module will do that.
-> > 
-> > Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-> > ---
-> > 
-> >  arch/arm/boot/dts/rk3288.dtsi | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> > index 874e66d..2f4519b 100644
-> > --- a/arch/arm/boot/dts/rk3288.dtsi
-> > +++ b/arch/arm/boot/dts/rk3288.dtsi
-> > @@ -455,6 +455,16 @@
-> > 
-> >                 rockchip,grf = <&grf>;
-> >                 #clock-cells = <1>;
-> >                 #reset-cells = <1>;
-> > 
-> > +               assigned-clocks = <&cru PLL_GPLL>, <&cru PLL_CPLL>,
-> > +                                 <&cru PLL_NPLL>, <&cru ACLK_CPU>,
-> > +                                 <&cru HCLK_CPU>, <&cru PCLK_CPU>,
-> > +                                 <&cru ACLK_PERI>, <&cru HCLK_PERI>,
-> > +                                 <&cru PCLK_PERI>;
-> > +               assigned-clock-rates = <594000000>, <400000000>,
-> > +                                      <500000000>, <300000000>,
-> 
-> When I boot up, I see that ACLK_CPU was 297000000.  You specified
-> 300000000.  Did you expect to get 300?  If you expected 297, I think
-> you should put 297.  If you expected 300 then we have some debugging
-> to do.  Note: I'm not quite sure how you'd expect to get 300 given
-> that none of the PLLs divide evenly to 300...
-
-I'd think 300 is simply the target value. I.e. take the closest rate <= 300 
-MHz, same for 150 etc. I somehow like the approach of specifying what the rate 
-_should_ ideally be :-) .
-
-Also reduces the amount of thougths necessary (and possible head-scratching) 
-when adapting the pll rates to some other constraints (child-clocks already 
-have the target rates and cannot drop to some even stranger value).
-
-
-Heiko
-
+On Tue 07 Oct 02:01 PDT 2014, Ivan T. Ivanov wrote:
 
 > 
-> > +                                      <150000000>, <75000000>,
+> Hi Bjorn,
 > 
-> Similarly, I see 148500000, 74250000
-> 
-> > +                                      <300000000>, <150000000>,
-> 
-> 297000000, 148500000
-> 
-> > +                                      <75000000>;
-> 
-> 74250000
-> 
-> >         };
-> >         
-> >         grf: syscon@ff770000 {
+> On Mon, 2014-10-06 at 18:11 -0700, Bjorn Andersson wrote:
+> > These patches add dt bindings and a device driver for the power key block in
+> > the Qualcomm PM8941 pmic.
 > > 
-> > --
-> > 1.9.1
+> > Courtney Cavin (2):
+> >   input: Add Qualcomm PM8941 power key driver
+> >   input: pm8941-pwrkey: Add DT binding documentation
+> > 
+> >  .../bindings/input/qcom,pm8941-pwrkey.txt          |   43 +++++
+> >  drivers/input/misc/Kconfig                         |   12 ++
+> >  drivers/input/misc/Makefile                        |    1 +
+> >  drivers/input/misc/pm8941-pwrkey.c                 |  196 ++++++++++++++++++++
+> >  4 files changed, 252 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+> >  create mode 100644 drivers/input/misc/pm8941-pwrkey.c
+> 
+> Any reason why we cannot reuse pm8xxx-pwrkey driver? It have been
+> converted to regmap already. 
+> 
+
+The boilerplate code is the same, but configuration registers have different
+layout and values written in them are different. The pm8xxx block have separate
+interrupts for press and release events while pm8941 have one interrupt for
+both, so the pm8941 must read out the irq status bits to figure out which event
+it was.
+
+Maybe if we introduce some vagueness related to interrupts in the dt binding
+documentation for pm8xxx we could simply reuse that binding.
+
+Regards,
+Bjorn
