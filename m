@@ -1,44 +1,47 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 2/2] arm: shmobile: lager: enable HS-USB
-Date: Tue, 07 Oct 2014 15:42:03 +0400
-Message-ID: <5433D18B.6050208@cogentembedded.com>
-References: <1412680220-4552-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412680220-4552-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1412680220-4552-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org
+From: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/4] Correct vendor-prefix and document device isl29028
+Date: Tue,  7 Oct 2014 17:15:04 +0530
+Message-ID: <1412682308-8784-1-git-send-email-darshanapadmadas@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/7/2014 3:10 PM, Yoshihiro Shimoda wrote:
+Patchset documents correct and the deprecated vendor-prefix found by checkpatch 
+warning and also documents information of device isl29028 for compatibility. 
+Patchset also includes corrected vendor-prefix and device name in compatible 
+property for files with checkpatch warning of undocumented string "isil,isl29028". 
 
-> Since this board doesn't have USB ID pin, we assumes the GP5_18 (USB0_PWEN)
-> is an ID pin because the gpio is high when the SW5 is Pin 3 side.
+Darshana Padmadas (4):
+  Documentation: devicetree: bindings: Document correct and deprecated
+    vendor-prefix with device isl29028
+  Documentation: devicetree: bindings: Document deprecated device vendor
+    name to fix related warning
+  Staging: iio: light: Added correct vendor-prefix for device isl29028
+  arch: arm: boot: dts: Added correct vendor-prefix with device name to
+    compatible property  
+  
+Changes in v3: 
+    - In PATCH 1/4 corrected alphabetical order of vendor-prefix and device name. 
+    - In PATCH 2/4 inserted deprecated vendor-prefix in list in alphabetical order 
+      and edited vendor/chip string. 
+    - In PATCH 4/4 dropped deprecated string "isil,isl29028" and included correct 
+      vendor-prefix isl with isl29028 to give "isl,isl29028" for device's compatible 
+      property.
+      
+ Documentation/devicetree/bindings/i2c/trivial-devices.txt | 2 ++
+ Documentation/devicetree/bindings/vendor-prefixes.txt     | 1 +
+ drivers/staging/iio/light/isl29028.c                      | 3 ++-
+ arch/arm/boot/dts/tegra30-cardhu.dtsi                     | 2 +-
+ 4 files changed, 6 insertions(+), 2 deletions(-)
 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->   arch/arm/boot/dts/r8a7790-lager.dts |    5 +++++
->   1 file changed, 5 insertions(+)
+-- 
+1.9.1
 
-> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-> index 719979e..011254a 100644
-> --- a/arch/arm/boot/dts/r8a7790-lager.dts
-> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
-> @@ -446,3 +446,8 @@
->   		};
->   	};
->   };
-> +
-> +&hsusb {
-> +	status = "okay";
-> +	renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_HIGH>;
-> +};
-
-    As I said before, this is not enough. We need pinctrl-related props. Same 
-is true for other boards.
-
-WBR, Sergei
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
