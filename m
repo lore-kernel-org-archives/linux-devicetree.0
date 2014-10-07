@@ -1,52 +1,50 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] Documentation: devicetree: bindings: Document
- deprecated device vendor name to fix related warning
-Date: Tue, 7 Oct 2014 13:03:22 +0100
-Message-ID: <20141007120322.GI24725@leverpostej>
-References: <1412682308-8784-1-git-send-email-darshanapadmadas@gmail.com>
- <1412682308-8784-3-git-send-email-darshanapadmadas@gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
+Date: Tue, 7 Oct 2014 13:06:59 +0100
+Message-ID: <20141007120659.GA30590@e102568-lin.cambridge.arm.com>
+References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <2430078.s4snyh5OoF@wuerfel>
+ <20141001084626.GZ841@e106497-lin.cambridge.arm.com>
+ <3256560.C0cZnIlnAv@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3256560.C0cZnIlnAv@wuerfel>
 Content-Disposition: inline
-In-Reply-To: <1412682308-8784-3-git-send-email-darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 07, 2014 at 12:45:06PM +0100, Darshana Padmadas wrote:
-> This patch documents deprecated vendor name of device isl29028 for compatibility with older kernels.
-> 
-> Signed-off-by: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Wed, Oct 01, 2014 at 10:38:45AM +0100, Arnd Bergmann wrote:
 
-Acked-by: Mark Rutland Mark.rutland-5wv7dgnIgG8@public.gmane.org>
+[...]
 
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index ac7269f..e2503b8 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -68,6 +68,7 @@ img	Imagination Technologies Ltd.
->  intel	Intel Corporation
->  intercontrol	Inter Control Group
->  isee	ISEE 2007 S.L.
-> +isil 	Intersil (deprecated, use isl)
->  isl	Intersil
->  karo	Ka-Ro electronics GmbH
->  keymile	Keymile GmbH
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> pci_mmap_page_range could either get generalized some more in an attempt
+> to have a __weak default implementation that works on ARM, or it could
+> be changed to lose the dependency on pci_sys_data instead. In either
+> case, the change would involve using the generic pci_host_bridge_window
+> list.
+
+On ARM pci_mmap_page_range requires pci_sys_data to retrieve its
+mem_offset parameter. I had a look, and I do not understand *why*
+it is required in that function, so I am asking. That function
+is basically used to map PCI resources to userspace, IIUC, through
+/proc or /sysfs file mappings. As far as I understand those mappings
+expect VMA pgoff to be the CPU address when files representing resources
+are mmapped from /proc and 0 when mmapped from /sys (I mean from
+userspace, then VMA pgoff should be updated by the kernel to map the
+resource).
+
+Question is: why pci_mmap_page_range() should apply an additional
+shift to the VMA pgoff based on pci_sys_data.mem_offset, which represents
+the offset from cpu->bus offset. I do not understand that. PowerPC
+does not seem to apply that fix-up (in PowerPC __pci_mmap_make_offset there
+is commented out code which prevents the pci_mem_offset shift to be
+applied). I think it all boils down to what the userspace interface is
+expecting when the memory areas are mmapped, if anyone has comments on
+this that is appreciated.
+
+Thanks,
+Lorenzo
