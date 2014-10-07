@@ -1,25 +1,39 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] Documentation: devicetree: bindings: Document deprecated device vendor name to fix related warning
-Date: Tue, 07 Oct 2014 13:46:43 +0200
-Message-ID: <2309790.jXoa7If3jO@wuerfel>
-References: <1412682308-8784-1-git-send-email-darshanapadmadas@gmail.com> <1412682308-8784-3-git-send-email-darshanapadmadas@gmail.com>
+Subject: Re: [PATCH v3 4/4] arch: arm: boot: dts: Added correct vendor-prefix with device name to compatible property
+Date: Tue, 07 Oct 2014 13:49:02 +0200
+Message-ID: <11076749.g7xZQflTCQ@wuerfel>
+References: <1412682308-8784-1-git-send-email-darshanapadmadas@gmail.com> <1412682308-8784-5-git-send-email-darshanapadmadas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412682308-8784-3-git-send-email-darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1412682308-8784-5-git-send-email-darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 07 October 2014 17:15:06 Darshana Padmadas wrote:
-> This patch documents deprecated vendor name of device isl29028 for compatibility with older kernels.
-> 
-> Signed-off-by: Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Tuesday 07 October 2014 17:15:08 Darshana Padmadas wrote:
+>                 /* ALS and Proximity sensor */
+>                 isl29028@44 {
+> -                       compatible = "isil,isl29028";
+> +                       compatible = "isl,isl29028";
+>                         reg = <0x44>;
+>                         interrupt-parent = <&gpio>;
+>                         interrupts = <TEGRA_GPIO(L, 0) IRQ_TYPE_LEVEL_HIGH>;
 > 
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Does this intentionally list only the new string?
+
+If we want compatibility between new dts files and old kernels, this would
+need to be 
+
+	compatible = "isl,isl29028", compatible = "isil,isl29028";
+
+I don't know if we want to go that far though, given that this is
+only a staging driver.
+
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
