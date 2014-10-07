@@ -1,105 +1,47 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v8 2/2] pwm: add DT bindings documentation for
- atmel-hlcdc-pwm driver
-Date: Tue, 7 Oct 2014 11:05:37 +0200
-Message-ID: <20141007110537.02c17651@bbrezillon>
-References: <1412604423-19329-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1412604423-19329-3-git-send-email-boris.brezillon@free-electrons.com>
-	<20141007084705.GF24254@ulmo>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 05/13] misc: at25: Make use of device property API
+Date: Tue, 7 Oct 2014 11:10:23 +0200
+Message-ID: <CAMuHMdXHRbbjf8WJHwtZEgdctmVSMzjOKXfd9a1YcHundBG4-Q@mail.gmail.com>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan>
+	<1443736.WYtVLjNfzc@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20141007084705.GF24254@ulmo>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1443736.WYtVLjNfzc@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 7 Oct 2014 10:47:05 +0200
-Thierry Reding <thierry.reding@gmail.com> wrote:
+On Tue, Oct 7, 2014 at 2:14 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> @@ -301,35 +301,33 @@ static ssize_t at25_mem_write(struct memory_accessor *mem, const char *buf,
+>
+>  /*-------------------------------------------------------------------------*/
+>
+> -static int at25_np_to_chip(struct device *dev,
+> -                          struct device_node *np,
+> -                          struct spi_eeprom *chip)
+> +static int at25_fw_to_chip(struct device *dev, struct spi_eeprom *chip)
+>  {
+>         u32 val;
+>
+>         memset(chip, 0, sizeof(*chip));
+> -       strncpy(chip->name, np->name, sizeof(chip->name));
+> +       strncpy(chip->name, "at25", sizeof(chip->name));
 
-> On Mon, Oct 06, 2014 at 04:07:03PM +0200, Boris Brezillon wrote:
-> > The HLCDC IP available in some Atmel SoCs (i.e. sam9x5i.e. at91sam9n12,
-> > at91sam9x5 family or sama5d3 family) provide a PWM device.
-> > 
-> > The DT bindings used for this PWM device is following the default 3 cells
-> > bindings described in Documentation/devicetree/bindings/pwm/pwm.txt.
-> > 
-> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> > ---
-> >  .../devicetree/bindings/pwm/atmel-hlcdc-pwm.txt    | 50 ++++++++++++++++++++++
-> >  1 file changed, 50 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
-> > new file mode 100644
-> > index 0000000..9f4f83a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
-> > @@ -0,0 +1,50 @@
-> > +Device-Tree bindings for Atmel's HLCDC (High LCD Controller) PWM driver
-> > +
-> > +The Atmel HLCDC PWM is subdevice of the HLCDC MFD device.
-> > +See ../mfd/atmel-hlcdc.txt for more details.
-> > +
-> > +Required properties:
-> > + - compatible: value should be one of the following:
-> > +   "atmel,hlcdc-pwm"
-> > + - pinctr-names: the pin control state names. Should contain "default".
-> > + - pinctrl-0: should contain the pinctrl states described by pinctrl
-> > +   default.
-> > + - #pwm-cells: should be set to 3. This PWM chip use the default 3 cells
-> > +   bindings defined in Documentation/devicetree/bindings/pwm/pwm.txt.
-> 
-> Maybe "... defined in pwm.txt in this directory."?
+So this changes chip->name from "eeprom" (or whatever name the DTS
+writer used; "eeprom" is the ePAPR-compliant name) to "at25"?
 
-No problem, I'll change that.
+Note:The example in Documentation/devicetree/bindings/misc/at25.txt
+uses "at25", not "eeprom".
 
-> 
-> > +
-> > +Example:
-> > +
-> > +	hlcdc: hlcdc@f0030000 {
-> > +		compatible = "atmel,sama5d3-hlcdc";
-> > +		reg = <0xf0030000 0x2000>;
-> > +		clocks = <&lcdc_clk>, <&lcdck>, <&clk32k>;
-> > +		clock-names = "periph_clk","sys_clk", "slow_clk";
-> > +		status = "disabled";
-> > +
-> > +		hlcdc-display-controller {
-> > +			compatible = "atmel,hlcdc-display-controller";
-> > +			interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
-> > +			pinctrl-names = "default";
-> > +			pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +
-> > +			port@0 {
-> > +				#address-cells = <1>;
-> > +				#size-cells = <0>;
-> > +				reg = <0>;
-> > +
-> > +				hlcdc_panel_output: endpoint@0 {
-> > +					reg = <0>;
-> > +					remote-endpoint = <&panel_input>;
-> > +				};
-> > +			};
-> > +		};
-> 
-> Perhaps leave out the display controller node in this example since it
-> isn't relevant and could be confusing.
+Gr{oetje,eeting}s,
 
-Sure, I'll remove it.
+                        Geert
 
-> 
-> Both of the above are really only minor issues, so either way:
-> 
-> Acked-by: Thierry Reding <thierry.reding@gmail.com>
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
