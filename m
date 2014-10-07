@@ -1,39 +1,105 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH 0/2] Qualcomm PM8941 power key driver
-Date: Tue, 07 Oct 2014 12:01:50 +0300
-Message-ID: <1412672510.1027.57.camel@iivanov-dev>
-References: <1412644321-27683-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v8 2/2] pwm: add DT bindings documentation for
+ atmel-hlcdc-pwm driver
+Date: Tue, 7 Oct 2014 11:05:37 +0200
+Message-ID: <20141007110537.02c17651@bbrezillon>
+References: <1412604423-19329-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1412604423-19329-3-git-send-email-boris.brezillon@free-electrons.com>
+	<20141007084705.GF24254@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1412644321-27683-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20141007084705.GF24254@ulmo>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 7 Oct 2014 10:47:05 +0200
+Thierry Reding <thierry.reding@gmail.com> wrote:
 
-Hi Bjorn,
-
-On Mon, 2014-10-06 at 18:11 -0700, Bjorn Andersson wrote:
-> These patches add dt bindings and a device driver for the power key block in
-> the Qualcomm PM8941 pmic.
+> On Mon, Oct 06, 2014 at 04:07:03PM +0200, Boris Brezillon wrote:
+> > The HLCDC IP available in some Atmel SoCs (i.e. sam9x5i.e. at91sam9n12,
+> > at91sam9x5 family or sama5d3 family) provide a PWM device.
+> > 
+> > The DT bindings used for this PWM device is following the default 3 cells
+> > bindings described in Documentation/devicetree/bindings/pwm/pwm.txt.
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > ---
+> >  .../devicetree/bindings/pwm/atmel-hlcdc-pwm.txt    | 50 ++++++++++++++++++++++
+> >  1 file changed, 50 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+> > new file mode 100644
+> > index 0000000..9f4f83a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+> > @@ -0,0 +1,50 @@
+> > +Device-Tree bindings for Atmel's HLCDC (High LCD Controller) PWM driver
+> > +
+> > +The Atmel HLCDC PWM is subdevice of the HLCDC MFD device.
+> > +See ../mfd/atmel-hlcdc.txt for more details.
+> > +
+> > +Required properties:
+> > + - compatible: value should be one of the following:
+> > +   "atmel,hlcdc-pwm"
+> > + - pinctr-names: the pin control state names. Should contain "default".
+> > + - pinctrl-0: should contain the pinctrl states described by pinctrl
+> > +   default.
+> > + - #pwm-cells: should be set to 3. This PWM chip use the default 3 cells
+> > +   bindings defined in Documentation/devicetree/bindings/pwm/pwm.txt.
 > 
-> Courtney Cavin (2):
->   input: Add Qualcomm PM8941 power key driver
->   input: pm8941-pwrkey: Add DT binding documentation
+> Maybe "... defined in pwm.txt in this directory."?
+
+No problem, I'll change that.
+
 > 
->  .../bindings/input/qcom,pm8941-pwrkey.txt          |   43 +++++
->  drivers/input/misc/Kconfig                         |   12 ++
->  drivers/input/misc/Makefile                        |    1 +
->  drivers/input/misc/pm8941-pwrkey.c                 |  196 ++++++++++++++++++++
->  4 files changed, 252 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
->  create mode 100644 drivers/input/misc/pm8941-pwrkey.c
+> > +
+> > +Example:
+> > +
+> > +	hlcdc: hlcdc@f0030000 {
+> > +		compatible = "atmel,sama5d3-hlcdc";
+> > +		reg = <0xf0030000 0x2000>;
+> > +		clocks = <&lcdc_clk>, <&lcdck>, <&clk32k>;
+> > +		clock-names = "periph_clk","sys_clk", "slow_clk";
+> > +		status = "disabled";
+> > +
+> > +		hlcdc-display-controller {
+> > +			compatible = "atmel,hlcdc-display-controller";
+> > +			interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
+> > +			pinctrl-names = "default";
+> > +			pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +
+> > +			port@0 {
+> > +				#address-cells = <1>;
+> > +				#size-cells = <0>;
+> > +				reg = <0>;
+> > +
+> > +				hlcdc_panel_output: endpoint@0 {
+> > +					reg = <0>;
+> > +					remote-endpoint = <&panel_input>;
+> > +				};
+> > +			};
+> > +		};
+> 
+> Perhaps leave out the display controller node in this example since it
+> isn't relevant and could be confusing.
 
-Any reason why we cannot reuse pm8xxx-pwrkey driver? It have been
-converted to regmap already. 
+Sure, I'll remove it.
 
-Regards,
-Ivan 
+> 
+> Both of the above are really only minor issues, so either way:
+> 
+> Acked-by: Thierry Reding <thierry.reding@gmail.com>
+
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
