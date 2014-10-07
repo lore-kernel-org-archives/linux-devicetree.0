@@ -1,83 +1,52 @@
-From: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 7/7] arm: dts: qcom: Add idle states device nodes for 8084
-Date: Tue,  7 Oct 2014 15:31:25 -0600
-Message-ID: <1412717485-16892-7-git-send-email-lina.iyer@linaro.org>
-References: <1412717485-16892-1-git-send-email-lina.iyer@linaro.org>
+From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/3] Pinctrl driver for Amlogic Meson SoCs
+Date: Tue,  7 Oct 2014 23:32:53 +0200
+Message-ID: <1412717576-19737-1-git-send-email-b.galvani@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412717485-16892-1-git-send-email-lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, msivasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add allowable C-States for each cpu using the cpu-idle-states node.
-Support standby and standalone power collapse (power down that does not
-affect any SoC idle states) for each cpu.
+Hi,
 
-Signed-off-by: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/qcom-apq8084.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+this series introduces a driver for Amlogic Meson pinctrl and GPIOs,
+adding the basic infrastructure for all the SoCs of the Meson family
+and configuration data specific for the Meson8.
 
-diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
-index 1581b12..68eb4bb1 100644
---- a/arch/arm/boot/dts/qcom-apq8084.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
-@@ -19,6 +19,7 @@
- 			next-level-cache = <&L2>;
- 			qcom,acc = <&acc0>;
- 			qcom,saw = <&saw0>;
-+			cpu-idle-states = <&CPU_STBY &CPU_SPC>;
- 		};
- 
- 		cpu@1 {
-@@ -29,6 +30,7 @@
- 			next-level-cache = <&L2>;
- 			qcom,acc = <&acc1>;
- 			qcom,saw = <&saw1>;
-+			cpu-idle-states = <&CPU_STBY &CPU_SPC>;
- 		};
- 
- 		cpu@2 {
-@@ -39,6 +41,7 @@
- 			next-level-cache = <&L2>;
- 			qcom,acc = <&acc2>;
- 			qcom,saw = <&saw2>;
-+			cpu-idle-states = <&CPU_STBY &CPU_SPC>;
- 		};
- 
- 		cpu@3 {
-@@ -49,6 +52,7 @@
- 			next-level-cache = <&L2>;
- 			qcom,acc = <&acc3>;
- 			qcom,saw = <&saw3>;
-+			cpu-idle-states = <&CPU_STBY &CPU_SPC>;
- 		};
- 
- 		L2: l2-cache {
-@@ -56,6 +60,22 @@
- 			cache-level = <2>;
- 			qcom,saw = <&saw_l2>;
- 		};
-+
-+		idle-states {
-+			CPU_STBY: standby {
-+				compatible = "qcom,idle-state-stby", "arm,idle-state";
-+				entry-latency-us = <1>;
-+				exit-latency-us = <1>;
-+				min-residency-us = <2>;
-+			};
-+
-+			CPU_SPC: spc {
-+				compatible = "qcom,idle-state-spc", "arm,idle-state";
-+				entry-latency-us = <150>;
-+				exit-latency-us = <200>;
-+				min-residency-us = <2000>;
-+			};
-+		};
- 	};
- 
- 	cpu-pmu {
+The last patch depends on a previous series that adds meson8 device
+tree files and can be found here:
+
+http://lwn.net/Articles/615033/
+
+I tested the pinmux and GPIO functionalities on a Tronsmart Vega S89e
+TV box and everything seems to work, however I'm not so familiar with
+the pinctrl subsystem and thus any feedback is very welcome.
+
+Beniamino Galvani (3):
+  pinctrl: add driver for Amlogic Meson SoCs
+  pinctrl: meson: add device tree bindings documentation
+  ARM: dts: meson8: add pinctrl and gpio nodes
+
+ .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |  80 ++
+ arch/arm/boot/dts/meson8-vega-s89e.dts             |  16 +-
+ arch/arm/boot/dts/meson8.dtsi                      |  35 +
+ arch/arm/mach-meson/Kconfig                        |   3 +
+ drivers/pinctrl/Kconfig                            |   8 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/meson/Makefile                     |   2 +
+ drivers/pinctrl/meson/pinctrl-meson.c              | 823 +++++++++++++++++++++
+ drivers/pinctrl/meson/pinctrl-meson.h              | 217 ++++++
+ drivers/pinctrl/meson/pinctrl-meson8.c             | 374 ++++++++++
+ include/dt-bindings/gpio/meson8-gpio.h             | 155 ++++
+ 11 files changed, 1713 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+ create mode 100644 drivers/pinctrl/meson/Makefile
+ create mode 100644 drivers/pinctrl/meson/pinctrl-meson.c
+ create mode 100644 drivers/pinctrl/meson/pinctrl-meson.h
+ create mode 100644 drivers/pinctrl/meson/pinctrl-meson8.c
+ create mode 100644 include/dt-bindings/gpio/meson8-gpio.h
+
 -- 
 1.9.1
 
