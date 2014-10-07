@@ -1,52 +1,57 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] arch: arm: boot: dts: Added correct vendor-prefix with device name to compatible property
-Date: Tue, 07 Oct 2014 14:31:23 +0200
-Message-ID: <8401228.DSnFf2fgRn@wuerfel>
-References: <1412682308-8784-1-git-send-email-darshanapadmadas@gmail.com> <11076749.g7xZQflTCQ@wuerfel> <20141007120812.GJ24725@leverpostej>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] ASoC: simple-card: Add mic and hp detect gpios.
+Date: Tue, 7 Oct 2014 14:32:57 +0200
+Message-ID: <CAMuHMdWh=sXAD59T1T=gvROX+fbF6=gFo6C0nkJdfnCrdNrwYg@mail.gmail.com>
+References: <1412198720-2326-1-git-send-email-dgreid@chromium.org>
+	<20141002155350.GU4273@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141007120812.GJ24725@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20141002155350.GU4273@sirena.org.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Dylan Reid <dgreid@chromium.org>
+Cc: ALSA Development Mailing List <alsa-devel@alsa-project.org>, jay.xu@rock-chips.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, sonnyrao@chromium.org, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 07 October 2014 13:08:12 Mark Rutland wrote:
-> On Tue, Oct 07, 2014 at 12:49:02PM +0100, Arnd Bergmann wrote:
-> > On Tuesday 07 October 2014 17:15:08 Darshana Padmadas wrote:
-> > >                 /* ALS and Proximity sensor */
-> > >                 isl29028@44 {
-> > > -                       compatible = "isil,isl29028";
-> > > +                       compatible = "isl,isl29028";
-> > >                         reg = <0x44>;
-> > >                         interrupt-parent = <&gpio>;
-> > >                         interrupts = <TEGRA_GPIO(L, 0) IRQ_TYPE_LEVEL_HIGH>;
-> > > 
-> > 
-> > Does this intentionally list only the new string?
-> > 
-> > If we want compatibility between new dts files and old kernels, this would
-> > need to be 
-> > 
-> >       compatible = "isl,isl29028", compatible = "isil,isl29028";
-> 
-> Are we aiming for new dts wto work with old kernels? It's nice if they
-> do, but I don't think it should be necessary. Old DTBs should definitely
-> work with a new kernel, though.
-> 
-> Personally I'd rather see one string (preferably the canonical one, but
-> the deprecated one is ok) than two strings when those strings are for
-> the exact same device.
-> 
+Hi Mark, Dylan,
 
-Ok, fair enough. I think we should have the new name in dts files
-normally then, in order to avoid spreading the mistake further when
-someone copies it.
+On Thu, Oct 2, 2014 at 5:53 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Wed, Oct 01, 2014 at 02:25:20PM -0700, Dylan Reid wrote:
+>> Allow Headphone and Microphone jack detect gpios to be specified in
+>> device tree.  This will allow a few systems including rk3288_max98090
+>> to use simple-card instead of having their own board file.
+>
+> Applied, thanks.
 
-	Arnd
+Unfortunately there's no equivalent code for platform data, and the
+uninitialized default of 0 for gpio_hp_det and gpio_mic_det doesn't
+play well with asm-generic's gpio_is_valid():
+
+static inline bool gpio_is_valid(int number)
+{
+        return number >= 0 && number < ARCH_NR_GPIOS;
+}
+
+Hence on r8a7740/armadillo-legacy, which uses platform devices instead of DT:
+
+    sh-mobile-hdmi sh-mobile-hdmi: SH Mobile HDMI Audio Codec
+    sh-mobile-hdmi sh-mobile-hdmi: ASoC: DAPM unknown pin Headphones
+    sh-mobile-hdmi sh-mobile-hdmi: ASoC: DAPM unknown pin Mic Jack
+
+After that the kernel log is spammed ca. 7 times per second with:
+
+    sh-mobile-hdmi sh-mobile-hdmi: ASoC: DAPM unknown pin Headphones
+
+Reverting commit 3fe240326cc395c66 ("ASoC: simple-card: Add mic and
+hp detect gpios.") fixes this.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
