@@ -1,112 +1,61 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 20/44] power/reset: restart-poweroff: Register with
- kernel poweroff handler
-Date: Tue, 7 Oct 2014 18:06:38 +0200
-Message-ID: <20141007160638.GE19005@lunn.ch>
-References: <1412659726-29957-1-git-send-email-linux@roeck-us.net>
- <1412659726-29957-21-git-send-email-linux@roeck-us.net>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for ps8622 DT properties
+Date: Tue, 07 Oct 2014 19:14:39 +0300
+Message-ID: <1624504.9igBAHRpEu@avalon>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com> <5749335.iMpaHR0UO8@avalon> <5433A394.4000406@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1412659726-29957-21-git-send-email-linux@roeck-us.net>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-m32r-ja@ml.linux-m32r.org, linux-mips@linux-mips.org, linux-efi@vger.kernel.org, linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, devel@driverdev.osuosl.org, linux-s390@vger.kernel.org, lguest@lists.ozlabs.org, linux-c6x-dev@linux-c6x.org, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, linux-hexagon@vger.kernel.org, linux-acpi@vger.kernel.org, xen-devel@lists.xenproject.org, linux-xtensa@linux-xtensa.org, user-mode-linux-devel@lists.sourceforge.net, linux-pm@vger.kernel.org, adi-buildroot-devel@lists.sourceforge.net, linux-m68k@lists.linux-m68k.org, linux-am33-list@redhat.com, linux-tegra@vger.kernel.org, openipmi-developer@lists.sourceforge.net, linux-metag@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-cris-kernel@axis.com, linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.o
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5433A394.4000406@ti.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Ajay kumar <ajaynumb@gmail.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, InKi Dae <inki.dae@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 06, 2014 at 10:28:22PM -0700, Guenter Roeck wrote:
-> Register with kernel poweroff handler instead of seting pm_power_off
-> directly.  Register as poweroff handler of last resort since the driver
-> does not really power off the system but executes a restart.
+Hi Tomi,
 
-I would not say last resort, this is how it is designed to work. There
-is no way to turn the power off from with linux, it is designed that
-u-boot will put the hardware into minimal power consumption until the
-"power" button is pressed.
-
-Other than that, 
-
-Acked-by: Andrew Lunn <andrew@lunn.ch>
-
-Thanks
-	Andrew
-
+On Tuesday 07 October 2014 11:25:56 Tomi Valkeinen wrote:
+> On 07/10/14 10:23, Laurent Pinchart wrote:
+> >> You mean the bridge driver would somehow take a peek into panel1 and
+> >> panel2 nodes, looking for bridge specific properties? Sounds somewhat
+> >> fragile to me... How would the bridge driver know a property is for the
+> >> bridge?
+> > 
+> > No, I mean the bridge driver should call the API provided by the panel
+> > objects to get information about the panels, and compute its
+> > configuration parameters from those. I'm not sure if that's possible
+> > though, it depends on whether the bridge parameters can be computed from
+> > information provided by the panel.
+>
+> Right. My example tried to show a case where they can't be queried. The
+> board or the wiring causes signal degradation, which can be fixed by
+> increasing the bridge output voltage slightly.
 > 
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
-> Cc: David Woodhouse <dwmw2@infradead.org>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
->  drivers/power/reset/restart-poweroff.c | 25 ++++++++++++-------------
->  1 file changed, 12 insertions(+), 13 deletions(-)
+> So it has nothing really to do with the panel, but the board.
 > 
-> diff --git a/drivers/power/reset/restart-poweroff.c b/drivers/power/reset/restart-poweroff.c
-> index edd707e..5437697 100644
-> --- a/drivers/power/reset/restart-poweroff.c
-> +++ b/drivers/power/reset/restart-poweroff.c
-> @@ -12,35 +12,34 @@
->   */
->  #include <linux/kernel.h>
->  #include <linux/init.h>
-> +#include <linux/notifier.h>
->  #include <linux/platform_device.h>
->  #include <linux/of_platform.h>
->  #include <linux/module.h>
-> +#include <linux/pm.h>
->  #include <linux/reboot.h>
-> -#include <asm/system_misc.h>
->  
-> -static void restart_poweroff_do_poweroff(void)
-> +static int restart_poweroff_do_poweroff(struct notifier_block *this,
-> +					unsigned long unused1, void *unused2)
->  {
->  	reboot_mode = REBOOT_HARD;
->  	machine_restart(NULL);
-> +
-> +	return NOTIFY_DONE;
->  }
->  
-> +static struct notifier_block restart_poweroff_handler = {
-> +	.notifier_call = restart_poweroff_do_poweroff,
-> +};
-> +
->  static int restart_poweroff_probe(struct platform_device *pdev)
->  {
-> -	/* If a pm_power_off function has already been added, leave it alone */
-> -	if (pm_power_off != NULL) {
-> -		dev_err(&pdev->dev,
-> -			"pm_power_off function already registered");
-> -		return -EBUSY;
-> -	}
-> -
-> -	pm_power_off = &restart_poweroff_do_poweroff;
-> -	return 0;
-> +	return register_poweroff_handler(&restart_poweroff_handler);
->  }
->  
->  static int restart_poweroff_remove(struct platform_device *pdev)
->  {
-> -	if (pm_power_off == &restart_poweroff_do_poweroff)
-> -		pm_power_off = NULL;
-> +	unregister_poweroff_handler(&restart_poweroff_handler);
->  
->  	return 0;
->  }
-> -- 
-> 1.9.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> I fully admit that it is a purely theoretical case, and I don't have any
+> real use cases in mind right now.
+
+Still, I agree with you that we might need to configure the bridge differently 
+depending on the selected output with parameters that are not specific to the 
+bridge.
+
+There's two use cases I can think of. In the first one the panels are 
+connected directly to the bridge. The bridge should have two links from its 
+output port, one to each panel. If we use the OF graph bindings then the 
+bridge output port node would have two endpoint nodes, and configuration 
+parameters can be stored in the endpoint nodes.
+
+In the second use case another element would be present between the bridge and 
+the two panels. In that case there would be a single link between the bridge 
+and that other element. If the bridge needs to be configured differently 
+depending on the selected panel using parameters that can't be queried from 
+the panels, then we'll have a problem. I'm not sure whether this use case has 
+practical applications as board-related parameters seem to me that they 
+pertain to physical links.
+
+-- 
+Regards,
+
+Laurent Pinchart
