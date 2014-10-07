@@ -1,108 +1,81 @@
-From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3] clocksource: arch_timer: Allow the device tree to specify uninitialized CNTVOFF
-Date: Mon,  6 Oct 2014 23:37:32 -0700
-Message-ID: <1412663852-32681-1-git-send-email-sonnyrao@chromium.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm: shmobile: lager: enable HS-USB
+Date: Tue, 7 Oct 2014 16:03:25 +0900
+Message-ID: <5433903D.5050108@renesas.com>
+References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412237073-1288-3-git-send-email-yoshihiro.shimoda.uh@renesas.com> <542EFDEA.2030906@cogentembedded.com> <5431E984.6000203@renesas.com> <54335D0E.6070606@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54335D0E.6070606-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org" <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Hello.
 
-Some 32-bit (ARMv7) systems are architected like this:
+(2014/10/07 12:25), Yoshihiro Shimoda wrote:
+> Hello.
+> 
+> (2014/10/06 9:59), Yoshihiro Shimoda wrote:
+>> Hello.
+>>
+>> (2014/10/04 4:50), Sergei Shtylyov wrote:
+>>> On 10/02/2014 12:04 PM, Yoshihiro Shimoda wrote:
+>>>
+< snip >
+>>>> +&hsusb {
+>>>> +	status = "okay";
+>>>> +	renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_LOW>;
+>>>
+>>>     It's certainly active-high.
+>>
+>> Since the current code has the following, we have to set the active_low...
+>> However, the code is unreadable, I think. So, I will modify the code.
+>>
+>> 	/* check GPIO determining if USB function should be enabled */
+>> 	if (priv->dparam.enable_gpio) {
+>> 		gpio_request_one(priv->dparam.enable_gpio, GPIOF_IN, NULL);
+>> 		ret = !gpio_get_value(priv->dparam.enable_gpio);
+>> 		gpio_free(priv->dparam.enable_gpio);
+>> 		if (ret) {
+>> 			dev_warn(&pdev->dev,
+>> 				 "USB function not selected (GPIO %d)\n",
+>> 				 priv->dparam.enable_gpio);
+>> 			ret = -ENOTSUPP;
+>> 			goto probe_end_mod_exit;
+>> 		}
+>> 	}
+> 
+> I am confusing about the gpio_get_value()...
+> In case of ARM, gpio_get_value() will call gpiod_get_raw_value() finally.
+> 
+> gpio_get_value() in arch/arm/include/asm/gpio.h
+>  --> __gpio_get_value() in include/asm-generic/gpio.h
+>   --> gpiod_get_raw_value() in drivers/gpio/gpiolib.c
+> 
+> The gpiod_get_raw_value() doesn't care of the GPIO_ACTIVE_{HIGH,LOW}.
+> So, should I add gpiod_is_active_low() or someting in the renesas_usbhs driver?
+> Or, Do I misunderstand something?
 
-* The firmware doesn't know and doesn't care about hypervisor mode and
-  we don't want to add the complexity of hypervisor there.
+I looked at the gpio-keys driver, and then I understand the renesas_usbhs driver should
+have the gpio flags from of_get_named_gpio_flags().
 
-* The firmware isn't involved in SMP bringup or resume.
+So, I will try to modify the renesas_usbhs driver.
 
-* The ARCH timer come up with an uninitialized offset (CNTVOFF)
-  between the virtual and physical counters.  Each core gets a
-  different random offset.
+Best regards,
+Yoshihiro Shimoda
 
-* The device boots in "Secure SVC" mode.
-
-* Nothing has touched the reset value of CNTHCTL.PL1PCEN or
-  CNTHCTL.PL1PCTEN (both default to 1 at reset)
-
-On systems like the above, it doesn't make sense to use the virtual
-counter.  There's nobody managing the offset and each time a core goes
-down and comes back up it will get reinitialized to some other random
-value.
-
-This adds an optional property which can inform the kernel of this
-situation, and firmware is free to remove the property if it is going
-to initialize the CNTVOFF registers when each CPU comes out of reset.
-
-Currently, the best course of action in this case is to use the
-physical timer, which is why it is important that CNTHCTL hasn't been
-changed from its reset value and it's a reasonable assumption given
-that the firmware has never entered HYP mode.
-
-Note that it's been said that ARM64 (ARMv8) systems the firmware and
-kernel really can't be architected as described above.  That means
-using the physical timer like this really only makes sense for ARMv7
-systems.
-
-Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-Changes in v2:
-- Add "#ifdef CONFIG_ARM" as per Will Deacon
-
-Changes in v3:
-- change property name to arm,cntvoff-not-fw-configured and specify
-  that the value of CNTHCTL.PL1PC(T)EN must still be the reset value
-  of 1 as per Mark Rutland
----
- Documentation/devicetree/bindings/arm/arch_timer.txt | 8 ++++++++
- drivers/clocksource/arm_arch_timer.c                 | 9 +++++++++
- 2 files changed, 17 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
-index 37b2caf..67837c9 100644
---- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-+++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-@@ -22,6 +22,14 @@ to deliver its interrupts via SPIs.
- - always-on : a boolean property. If present, the timer is powered through an
-   always-on power domain, therefore it never loses context.
- 
-+** Optional properties:
-+
-+- arm,cntvoff-not-fw-configured : Firmware does not initialize
-+  CNTVOFF, which may reset to arbitrary and different values on each
-+  CPU.  CNTHCTL.PL1PC(T)EN must both be 1, which is the reset value
-+  specificed by the architecture.   Only supported for ARM (not ARM64).
-+
-+
- Example:
- 
- 	timer {
-diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-index bd8da15..234d7b9 100644
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -668,6 +668,15 @@ static void __init arch_timer_init(struct device_node *np)
- 		arch_timer_ppi[i] = irq_of_parse_and_map(np, i);
- 	arch_timer_detect_rate(NULL, np);
- 
-+#ifdef CONFIG_ARM
-+	/*
-+	 * If we cannot rely on firmware initializing the CNTVOFF then
-+	 * we should use the physical timers instead.
-+	 */
-+	if (of_property_read_bool(np, "arm,cntvoff-not-fw-configured"))
-+		arch_timer_use_virtual = false;
-+#endif
-+
- 	/*
- 	 * If HYP mode is available, we know that the physical timer
- 	 * has been configured to be accessible from PL1. Use it, so
--- 
-1.8.3.2
-
+> Best regards,
+> Yoshihiro Shimoda
+> 
+>> Best regards,
+>> Yoshihiro Shimoda
+>>
+>>> WBR, Sergei
+>>>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
