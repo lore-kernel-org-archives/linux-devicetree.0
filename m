@@ -1,115 +1,38 @@
-From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Subject: [PATCH v4 1/1] ARM: at91/dt: sam9x5: Add CAN device nodes
-Date: Tue,  7 Oct 2014 13:51:50 +0200
-Message-ID: <1412682710-14219-1-git-send-email-alexander.stein@systec-electronic.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3] iio: iadc: Qualcomm SPMI PMIC current ADC driver
+Date: Tue, 07 Oct 2014 14:54:30 +0300
+Message-ID: <1412682870.1027.58.camel@iivanov-dev>
+References: <1412180088-24683-1-git-send-email-iivanov@mm-sol.com>
+	 <542FE207.2080508@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <542FE207.2080508-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the missing CAN devices node including their pin muxing to the shared
-.dtsi for at91sam9x5. Actually include this file.
-While at it, fix white spaces of can1_clk.
+On Sat, 2014-10-04 at 13:03 +0100, Jonathan Cameron wrote:
+> On 01/10/14 17:14, Ivan T. Ivanov wrote:
+> > The current ADC is peripheral of Qualcomm SPMI PMIC chips. It has
+> > 16 bits resolution and register space inside PMIC accessible across
+> > SPMI bus.
+> >
+> > The driver registers itself through IIO interface.
+> >
+> > Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> Looks good to me.  I would however like to wait for Mark Rutland to
+> say whether he is happy with the bindings (and the rest if he
+> feels like it ;)
+> 
+> Given the merge window will open shortly and hence the IIO merge
+> window is long closed, we aren't in a particular rush at the moment.
 
-Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
----
-Changes in v4:
-* Move can related descriptions to at91sam9x5_can.dtsi
-* Actually include this file in at91sam9x[23]5.dtsi
+Sure. Thank you.
+Ivan
 
- arch/arm/boot/dts/at91sam9x25.dtsi    |  1 +
- arch/arm/boot/dts/at91sam9x35.dtsi    |  1 +
- arch/arm/boot/dts/at91sam9x5_can.dtsi | 48 ++++++++++++++++++++++++++++++++---
- 3 files changed, 46 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/at91sam9x25.dtsi b/arch/arm/boot/dts/at91sam9x25.dtsi
-index c255421..3c5fa33 100644
---- a/arch/arm/boot/dts/at91sam9x25.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x25.dtsi
-@@ -10,6 +10,7 @@
- #include "at91sam9x5_usart3.dtsi"
- #include "at91sam9x5_macb0.dtsi"
- #include "at91sam9x5_macb1.dtsi"
-+#include "at91sam9x5_can.dtsi"
- 
- / {
- 	model = "Atmel AT91SAM9X25 SoC";
-diff --git a/arch/arm/boot/dts/at91sam9x35.dtsi b/arch/arm/boot/dts/at91sam9x35.dtsi
-index 8eac66c..499cdc8 100644
---- a/arch/arm/boot/dts/at91sam9x35.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x35.dtsi
-@@ -8,6 +8,7 @@
- 
- #include "at91sam9x5.dtsi"
- #include "at91sam9x5_macb0.dtsi"
-+#include "at91sam9x5_can.dtsi"
- 
- / {
- 	model = "Atmel AT91SAM9X35 SoC";
-diff --git a/arch/arm/boot/dts/at91sam9x5_can.dtsi b/arch/arm/boot/dts/at91sam9x5_can.dtsi
-index f44ab77..3579232 100644
---- a/arch/arm/boot/dts/at91sam9x5_can.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5_can.dtsi
-@@ -20,10 +20,50 @@
- 						reg = <29>;
- 					};
- 
--                                        can1_clk: can1_clk {
--                                                #clock-cells = <0>;
--                                                reg = <30>;
--                                        };
-+					can1_clk: can1_clk {
-+						#clock-cells = <0>;
-+						reg = <30>;
-+					};
-+				};
-+			};
-+
-+			can0: can@f8000000 {
-+				compatible = "atmel,at91sam9x5-can";
-+				reg = <0xf8000000 0x300>;
-+				interrupts = <29 IRQ_TYPE_LEVEL_HIGH 3>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_can0_rx_tx>;
-+				clocks = <&can0_clk>;
-+				clock-names = "can_clk";
-+				status = "disabled";
-+			};
-+
-+			can1: can@f8004000 {
-+				compatible = "atmel,at91sam9x5-can";
-+				reg = <0xf8004000 0x300>;
-+				interrupts = <30 IRQ_TYPE_LEVEL_HIGH 3>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_can1_rx_tx>;
-+				clocks = <&can1_clk>;
-+				clock-names = "can_clk";
-+				status = "disabled";
-+			};
-+
-+			pinctrl@fffff400 {
-+				can0 {
-+					pinctrl_can0_rx_tx: can0_rx_tx {
-+						atmel,pins =
-+							<AT91_PIOA 9 AT91_PERIPH_B AT91_PINCTRL_NONE	/* CANRX0, conflicts with DRXD */
-+							AT91_PIOA 10 AT91_PERIPH_B AT91_PINCTRL_NONE>;	/* CANTX0, conflicts with DTXD */
-+					};
-+				};
-+
-+				can1 {
-+					pinctrl_can1_rx_tx: can1_rx_tx {
-+						atmel,pins =
-+							<AT91_PIOA 6 AT91_PERIPH_B AT91_PINCTRL_NONE	/* CANRX1, conflicts with RXD1 */
-+							AT91_PIOA 5 AT91_PERIPH_B AT91_PINCTRL_NONE>;	/* CANTX1, conflicts with TXD1 */
-+					};
- 				};
- 			};
- 		};
--- 
-2.0.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> Jonathan
