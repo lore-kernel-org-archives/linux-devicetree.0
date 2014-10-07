@@ -1,91 +1,61 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH 1/2] input: Add Qualcomm PM8941 power key driver
-Date: Tue, 7 Oct 2014 16:30:46 -0700
-Message-ID: <20141007233045.GD31125@sonymobile.com>
-References: <1412644321-27683-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1412644321-27683-2-git-send-email-bjorn.andersson@sonymobile.com>
- <5433B843.5060200@smartplayin.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device properties interface
+Date: Wed, 08 Oct 2014 01:57:11 +0200
+Message-ID: <2748359.x48UaePcbM@vostro.rjw.lan>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <20140926032131.GC40523@vmdeb7> <CACRpkdbehhsDxikCV1bJjBm581MCcu2DRSmiQQXHG09EmjLNBQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5433B843.5060200@smartplayin.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kiran Padwal <kiran.padwal@smartplayin.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "Cavin, Courtney" <Courtney.Cavin@sonymobile.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbehhsDxikCV1bJjBm581MCcu2DRSmiQQXHG09EmjLNBQ@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Len Brown <Len.Brown@intel.com>, Arnd Bergmann <arnd@arndb.de>, David Woodhouse <david.woodhouse@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Aaron Lu <aaron.lu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 07 Oct 02:54 PDT 2014, Kiran Padwal wrote:
+On Tuesday, October 07, 2014 03:37:04 PM Linus Walleij wrote:
+> On Fri, Sep 26, 2014 at 5:21 AM, Darren Hart <dvhart@infradead.org> wrote:
+> > On Wed, Sep 24, 2014 at 11:12:36AM +0200, Arnd Bergmann wrote:
+> 
+> > So as Mika has pointed out, LEDs aren't the only ones affected. Several drivers
+> > will need to walk through non-device child nodes, and it seems to me that having
+> > a firmware-independent mechanism to do so benefits the drivers by both making
+> > them smaller and by increasing the reusability of new drivers and drivers
+> > updated to use the new API across platforms.
+> 
+> In a recent round of reviews, for the OF case, that led to drivers
+> which used device_initcall() without being a module, getting a match
+> and handle to the parent device, and then walking over the nodes
+> and instantiating child objects (Linux devices usually) in the process.
+> 
+> It was done as a response to the remark from Rob Herring that
+> we were modeling things in the device tree as devices when they
+> really weren't, we were just doing it that way because it fits the
+> Linux device model and it's easier.
+> 
+> So we have that case too.
+> 
+> The question is if it's anything close to generalizable.
 
-> On Tuesday 07 October 2014 06:42 AM, Bjorn Andersson wrote:
-> > From: Courtney Cavin <courtney.cavin@sonymobile.com>
-> > 
-> > Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> > ---
-> >  drivers/input/misc/Kconfig         |   12 +++
-> >  drivers/input/misc/Makefile        |    1 +
-> >  drivers/input/misc/pm8941-pwrkey.c |  196 ++++++++++++++++++++++++++++++++++++
-> 
-> <snip>
-> 
-> > +
-> > +	platform_set_drvdata(pdev, pwrkey);
-> > +	device_init_wakeup(&pdev->dev, 1);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int pm8941_pwrkey_remove(struct platform_device *pdev)
-> > +{
-> > +	device_init_wakeup(&pdev->dev, 0);
-> 
-> Shouldn't we unregister input device?
-> 
+Well, OK.
 
-It's allocated with devm_input_allocate_device() so I assumed that it goes away
-upon the device being removed. Looking at input_register_device() seems to
-confirm that.
+Can you please have a look at these patchse in v4:
 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id pm8941_pwr_key_id_table[] = {
-> > +	{ .compatible = "qcom,pm8941-pwrkey" },
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, pm8941_pwr_key_id_table);
-> > +
-> > +static struct platform_driver pm8941_pwrkey_driver = {
-> > +	.probe		= pm8941_pwrkey_probe,
-> > +	.remove		= pm8941_pwrkey_remove,
-> > +	.driver		= {
-> > +		.name	= "pm8941-pwrkey",
-> > +		.owner	= THIS_MODULE,
-> 
-> This field can be removed because this driver which use the
-> module_platform_driver api as this is overridden in
-> platform_driver_register.
-> 
+https://patchwork.kernel.org/patch/5040161/
+https://patchwork.kernel.org/patch/5040081/
+https://patchwork.kernel.org/patch/5040061/
 
-Thanks
+We now have an ACK from Dmitry on the gpio_keys_polled thing and Bryan
+said he was OK with the leds changes already in v2 (IIRC).
 
-> > +		.pm	= &pm8941_pwr_key_pm_ops,
-> > +		.of_match_table = of_match_ptr(pm8941_pwr_key_id_table),
-> > +	},
-> > +};
-> > +module_platform_driver(pm8941_pwrkey_driver);
-> > +
-> > +MODULE_DESCRIPTION("PM8941 Power Key driver");
-> > +MODULE_LICENSE("GPL v2");
-> 
-> May be you can add module author name.
-> 
+Also Alexandre is saying that he's not opposed to the changes in
+https://patchwork.kernel.org/patch/5040161/, although there may be a better
+way.
 
-Courtney based this driver on the skeleton from pmic8xxx-pwrkey, so I don't
-think it's right to say that there's any particular author. And you have the
-git log...
+And we have AKCs from Greg on the driver core changes, so it looks like
+GPIO really is the only missing thing and we need that code to support
+our hardware.
 
-Regards,
-Bjorn
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
