@@ -1,112 +1,47 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] clocksource: arch_timer: Allow the device tree to
- specify uninitialized CNTVOFF
-Date: Tue, 7 Oct 2014 11:46:54 -0500
-Message-ID: <CAL_JsqKF+Yk_yhy+UjWL6A1T-kF9kYXxBRGyZap=24kg9L_3Jg@mail.gmail.com>
-References: <1412663852-32681-1-git-send-email-sonnyrao@chromium.org> <20141007102158.GA24725@leverpostej>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 05/44] mfd: as3722: Drop reference to pm_power_off from
+ devicetree bindings
+Date: Tue, 7 Oct 2014 17:58:35 +0100
+Message-ID: <20141007165835.GE27216@leverpostej>
+References: <1412659726-29957-1-git-send-email-linux@roeck-us.net>
+ <1412659726-29957-6-git-send-email-linux@roeck-us.net>
+ <543412F7.8040909@landley.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141007102158.GA24725@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <543412F7.8040909-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "adi-buildroot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <adi-buildroot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org" <devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lguest-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <lguest-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-alpha-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-alpha-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-am33-list-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <linux-am33-list-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "linux-cris-kernel-VrBV9hrLPhE@public.gmane.org" <linux-cris-kernel-VrBV9hrLPhE@public.gmane.org>, "linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-hexagon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-hexagon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-m32r-ja-rQhvJZKUsGBRYuoOT4C5/9i2O/JbrIOy@public.gmane.org" <linux-m32r-ja-rQhvJZKUsGBRYuoOT4C5/9i2O/JbrIOy@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-s390-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 7, 2014 at 5:21 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi Sonny,
->
-> This looks generally fine, but there are a couple of minor changes below
-> that I would like to see (removing arm64/armv8 confusion, and describing
-> the problem more precisely).
->
-> On Tue, Oct 07, 2014 at 07:37:32AM +0100, Sonny Rao wrote:
->> From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>
->> Some 32-bit (ARMv7) systems are architected like this:
->>
->> * The firmware doesn't know and doesn't care about hypervisor mode and
->>   we don't want to add the complexity of hypervisor there.
->>
->> * The firmware isn't involved in SMP bringup or resume.
->>
->> * The ARCH timer come up with an uninitialized offset (CNTVOFF)
->>   between the virtual and physical counters.  Each core gets a
->>   different random offset.
->>
->> * The device boots in "Secure SVC" mode.
->>
->> * Nothing has touched the reset value of CNTHCTL.PL1PCEN or
->>   CNTHCTL.PL1PCTEN (both default to 1 at reset)
->>
->> On systems like the above, it doesn't make sense to use the virtual
->> counter.  There's nobody managing the offset and each time a core goes
->> down and comes back up it will get reinitialized to some other random
->> value.
->>
->> This adds an optional property which can inform the kernel of this
->> situation, and firmware is free to remove the property if it is going
->> to initialize the CNTVOFF registers when each CPU comes out of reset.
->>
->> Currently, the best course of action in this case is to use the
->> physical timer, which is why it is important that CNTHCTL hasn't been
->> changed from its reset value and it's a reasonable assumption given
->> that the firmware has never entered HYP mode.
->>
->> Note that it's been said that ARM64 (ARMv8) systems the firmware and
->> kernel really can't be architected as described above.  That means
->> using the physical timer like this really only makes sense for ARMv7
->> systems.
->
-> Please drop the mention of arm64 here, and just say ARMv8 (they aren't
-> quite the same thing, and this confuses the matter). The differences
-> w.r.t. privilege boundaries and reset values are properties of ARMv8,
-> and would also apply to a 32-bit kernel.
->
->> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> ---
->> Changes in v2:
->> - Add "#ifdef CONFIG_ARM" as per Will Deacon
->>
->> Changes in v3:
->> - change property name to arm,cntvoff-not-fw-configured and specify
->>   that the value of CNTHCTL.PL1PC(T)EN must still be the reset value
->>   of 1 as per Mark Rutland
->> ---
->>  Documentation/devicetree/bindings/arm/arch_timer.txt | 8 ++++++++
->>  drivers/clocksource/arm_arch_timer.c                 | 9 +++++++++
->>  2 files changed, 17 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
->> index 37b2caf..67837c9 100644
->> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
->> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
->> @@ -22,6 +22,14 @@ to deliver its interrupts via SPIs.
->>  - always-on : a boolean property. If present, the timer is powered through an
->>    always-on power domain, therefore it never loses context.
->>
->> +** Optional properties:
->> +
->> +- arm,cntvoff-not-fw-configured : Firmware does not initialize
->> +  CNTVOFF, which may reset to arbitrary and different values on each
->> +  CPU.  CNTHCTL.PL1PC(T)EN must both be 1, which is the reset value
->> +  specificed by the architecture.   Only supported for ARM (not ARM64).
->
-> Could we change this to:
->
-> - arm,cpu-registers-not-fw-configured: Firmware does not initialize any
->   of the generic timer CPU registers, which contain their
->   architecturally-defined reset values. Only supported for 32-bit
->   systems which follow the ARMv7 architected reset values.
+On Tue, Oct 07, 2014 at 05:21:11PM +0100, Rob Landley wrote:
+> On 10/07/14 00:28, Guenter Roeck wrote:
+> > Devicetree bindings are supposed to be operating system independent
+> > and should thus not describe how a specific functionality is implemented
+> > in Linux.
+> 
+> So your argument is that linux/Documentation/devicetree/bindings should
+> not be specific to Linux. Merely hosted in the Linux kernel source
+> repository.
 
-Bikeshedding a bit, but it seems a bit wordy. Are you hoping people
-will get tired of typing it and fix their firmware instead? ;) Perhaps
-"arm,reg-need-init" or "arm,broken-fw-cfg". The latter name implies
-you don't really want to have that option.
+Precisely. If nothing else as a general guideline this keeps us honest,
+and prevents us from embedding arbitrary implementation details into
+bidnings that cause pain later when we want to change things at either
+end.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+There are already otehr users of these bindings, so we can't really
+claim they're strictly Linux-specific anyhow.
+
+> Well that's certainly a point of view.
+
+As far as I am aware, it's the point of view shared by the device tree
+maintainers, and it's been that way for a while.
+
+I don't really follow your concern. For one thing were this followed
+more strictly this file wouldn't need patching at all to correct for
+this Linux-internal rework...
+
+Thanks,
+Mark.
