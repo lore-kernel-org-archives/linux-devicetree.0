@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 01/16] tpm/tpm_i2c_stm_st33: Update Kconfig in order to be inline to other similar product
-Date: Tue,  7 Oct 2014 21:44:46 +0200
-Message-ID: <1412711101-988-2-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH 02/16] tpm/tpm_i2c_stm_st33: Fix few coding style error reported by scripts/checkpatch.pl
+Date: Tue,  7 Oct 2014 21:44:47 +0200
+Message-ID: <1412711101-988-3-git-send-email-christophe-h.ricard@st.com>
 References: <1412711101-988-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1412711101-988-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,54 +10,50 @@ To: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@publi
 Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-STMicroelectronics i2c tpm is the only one to have a different tristate
-label.
-
-Rename it "TPM Interface Specification 1.2 Interface (I2C - STMicroelectronics)"
+Fix:
+- WARNING: Missing a blank line after declarations
+- WARNING: braces {} are not necessary for any arm of this statement
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/char/tpm/Kconfig | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/char/tpm/tpm_i2c_stm_st33.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index c54cac3..21abb0e 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -63,6 +63,16 @@ config TCG_TIS_I2C_NUVOTON
- 	  To compile this driver as a module, choose M here; the module
- 	  will be called tpm_i2c_nuvoton.
- 
-+config TCG_ST33_I2C
-+	tristate "TPM Interface Specification 1.2 Interface (I2C - STMicroelectronics)"
-+	depends on I2C
-+	depends on GPIOLIB
-+	---help---
-+	  If you have a TPM security chip from STMicroelectronics working with
-+	  an I2C bus say Yes and it will be accessible from within Linux.
-+	  To compile this driver as a module, choose M here; the module will be
-+	  called tpm_stm_st33_i2c.
+diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
+index 4669e37..52d80ef 100644
+--- a/drivers/char/tpm/tpm_i2c_stm_st33.c
++++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
+@@ -157,6 +157,7 @@ static int read8_reg(struct i2c_client *client, u8 tpm_register,
+ static void clear_interruption(struct i2c_client *client)
+ {
+ 	u8 interrupt;
 +
- config TCG_NSC
- 	tristate "National Semiconductor TPM Interface"
- 	depends on X86
-@@ -100,16 +110,6 @@ config TCG_IBMVTPM
- 	  will be accessible from within Linux.  To compile this driver
- 	  as a module, choose M here; the module will be called tpm_ibmvtpm.
+ 	I2C_READ_DATA(client, TPM_INT_STATUS, &interrupt, 1);
+ 	I2C_WRITE_DATA(client, TPM_INT_STATUS, &interrupt, 1);
+ 	I2C_READ_DATA(client, TPM_INT_STATUS, &interrupt, 1);
+@@ -233,6 +234,7 @@ static u8 tpm_stm_i2c_status(struct tpm_chip *chip)
+ {
+ 	struct i2c_client *client;
+ 	u8 data;
++
+ 	client = (struct i2c_client *)TPM_VPRIV(chip);
  
--config TCG_ST33_I2C
--	tristate "STMicroelectronics ST33 I2C TPM"
--	depends on I2C
--	depends on GPIOLIB
--	---help---
--	  If you have a TPM security chip from STMicroelectronics working with
--	  an I2C bus say Yes and it will be accessible from within Linux.
--	  To compile this driver as a module, choose M here; the module will be
--	  called tpm_stm_st33_i2c.
--
- config TCG_XEN
- 	tristate "XEN TPM Interface"
- 	depends on TCG_TPM && XEN
+ 	I2C_READ_DATA(client, TPM_STS, &data, 1);
+@@ -784,11 +786,11 @@ static int tpm_st33_i2c_pm_suspend(struct device *dev)
+ 	struct st33zp24_platform_data *pin_infos = dev->platform_data;
+ 	int ret = 0;
+ 
+-	if (power_mgt) {
++	if (power_mgt)
+ 		gpio_set_value(pin_infos->io_lpcpd, 0);
+-	} else {
++	else
+ 		ret = tpm_pm_suspend(dev);
+-	}
++
+ 	return ret;
+ }				/* tpm_st33_i2c_suspend() */
+ 
 -- 
 1.9.1
 
