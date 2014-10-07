@@ -1,133 +1,52 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v8 1/2] mfd: add atmel-hlcdc driver
-Date: Tue, 7 Oct 2014 13:22:24 +0100
-Message-ID: <20141007122224.GD3693@lee--X1>
-References: <1412603324-18789-2-git-send-email-boris.brezillon@free-electrons.com>
- <20141007094427.GW25331@lee--X1>
- <20141007094727.GA12631@ulmo>
- <20141007095932.GY25331@lee--X1>
- <20141007100632.GA31575@ulmo>
- <20141007101743.GA25331@lee--X1>
- <20141007111304.GA1539@ulmo>
- <20141007113814.GA3693@lee--X1>
- <20141007134112.40179e8a@bbrezillon>
- <20141007115529.GA17434@ulmo>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] arch: arm: boot: dts: Added correct vendor-prefix with device name to compatible property
+Date: Tue, 07 Oct 2014 14:31:23 +0200
+Message-ID: <8401228.DSnFf2fgRn@wuerfel>
+References: <1412682308-8784-1-git-send-email-darshanapadmadas@gmail.com> <11076749.g7xZQflTCQ@wuerfel> <20141007120812.GJ24725@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141007115529.GA17434@ulmo>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Samuel Ortiz <sameo@linux.intel.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141007120812.GJ24725@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 07 Oct 2014, Thierry Reding wrote:
-> On Tue, Oct 07, 2014 at 01:41:12PM +0200, Boris Brezillon wrote:
-> > On Tue, 7 Oct 2014 12:38:14 +0100
-> > Lee Jones <lee.jones@linaro.org> wrote:
-> >=20
-> > > On Tue, 07 Oct 2014, Thierry Reding wrote:
-> > >=20
-> > > > On Tue, Oct 07, 2014 at 11:17:43AM +0100, Lee Jones wrote:
-> > > > > On Tue, 07 Oct 2014, Thierry Reding wrote:
-> > > > >=20
-> > > > > > On Tue, Oct 07, 2014 at 10:59:32AM +0100, Lee Jones wrote:
-> > > > > > > On Tue, 07 Oct 2014, Thierry Reding wrote:
-> > > > > > >=20
-> > > > > > > > On Tue, Oct 07, 2014 at 10:44:27AM +0100, Lee Jones wro=
-te:
-> > > > > > > > > On Mon, 06 Oct 2014, Boris Brezillon wrote:
-> > > > > > > > >=20
-> > > > > > > > > > The HLCDC IP available on some Atmel SoCs (i.e. at9=
-1sam9n12, at91sam9x5
-> > > > > > > > > > family or sama5d3 family) exposes 2 subdevices:
-> > > > > > > > > > - a display controller (controlled by a DRM driver)
-> > > > > > > > > > - a PWM chip
-> > > > > > > > > >=20
-> > > > > > > > > > The MFD device provides a regmap and several clocks=
- (those connected
-> > > > > > > > > > to this hardware block) to its subdevices.
-> > > > > > > > > >=20
-> > > > > > > > > > This way concurrent accesses to the iomem range are=
- handled by the regmap
-> > > > > > > > > > framework, and each subdevice can safely access HLC=
-DC registers.
-> > > > > > > > > >=20
-> > > > > > > > > > Signed-off-by: Boris Brezillon <boris.brezillon@fre=
-e-electrons.com>
-> > > > > > > > > > Acked-by: Lee Jones <lee.jones@linaro.org>
-> > > > > > > > > > Tested-by: Anthony Harivel <anthony.harivel@emtrion=
-=2Ede>
-> > > > > > > > > > Tested-by: Ludovic Desroches <ludovic.desroches@atm=
-el.com>
-> > > > > > > > > > ---
-> > > > > > > > > >  drivers/mfd/Kconfig             |   6 ++
-> > > > > > > > > >  drivers/mfd/Makefile            |   1 +
-> > > > > > > > > >  drivers/mfd/atmel-hlcdc.c       | 122 ++++++++++++=
-++++++++++++++++++++++++++++
-> > > > > > > > > >  include/linux/mfd/atmel-hlcdc.h |  85 ++++++++++++=
-++++++++++++++++
-> > > > > > > > > >  4 files changed, 214 insertions(+)
-> > > > > > > > > >  create mode 100644 drivers/mfd/atmel-hlcdc.c
-> > > > > > > > > >  create mode 100644 include/linux/mfd/atmel-hlcdc.h
-> > > > > > > > >=20
-> > > > > > > > > Applied for v3.19.
-> > > > > > > >=20
-> > > > > > > > Will you provide a stable branch that I can pull into t=
-he PWM tree?
-> > > > > > >=20
-> > > > > > > I hadn't planned on it.  What do you need that for?
-> > > > > >=20
-> > > > > > Because the PWM driver depends on this series. But if you p=
-refer you
-> > > > > > could also take the PWM driver through your tree.
-> > > > >=20
-> > > > > Probably better to deal with that via Kconfig.
-> > > >=20
-> > > > Do you have any suggestions? The PWM driver currently selects t=
-he
-> > > > MFD_ATMEL_HLCDC symbol, which as I understand will cause a Kcon=
-fig error
-> > > > if the latter isn't defined.
-> > >=20
-> > > s/select/depends on/ for the desired effect.
-> > >=20
-> >=20
-> > Don't forget the atmel-hlcdc.h header file which is referenced by b=
-oth
-> > the DRM and the PWM drivers.
->=20
-> The depends on will prevent the PWM driver from being built until MFD
-> becomes available, so the missing header file shouldn't be a problem.
->=20
-> That said, Nicolas Ferre (Cc'ing) at some point requested this to bec=
-ome
-> a select (or at least for the DRM driver, but I guess the same applie=
-s
-> to PWM) on the grounds that a depends on will make it more difficult =
-to
-> enable the driver.
+On Tuesday 07 October 2014 13:08:12 Mark Rutland wrote:
+> On Tue, Oct 07, 2014 at 12:49:02PM +0100, Arnd Bergmann wrote:
+> > On Tuesday 07 October 2014 17:15:08 Darshana Padmadas wrote:
+> > >                 /* ALS and Proximity sensor */
+> > >                 isl29028@44 {
+> > > -                       compatible = "isil,isl29028";
+> > > +                       compatible = "isl,isl29028";
+> > >                         reg = <0x44>;
+> > >                         interrupt-parent = <&gpio>;
+> > >                         interrupts = <TEGRA_GPIO(L, 0) IRQ_TYPE_LEVEL_HIGH>;
+> > > 
+> > 
+> > Does this intentionally list only the new string?
+> > 
+> > If we want compatibility between new dts files and old kernels, this would
+> > need to be 
+> > 
+> >       compatible = "isl,isl29028", compatible = "isil,isl29028";
+> 
+> Are we aiming for new dts wto work with old kernels? It's nice if they
+> do, but I don't think it should be necessary. Old DTBs should definitely
+> work with a new kernel, though.
+> 
+> Personally I'd rather see one string (preferably the canonical one, but
+> the deprecated one is ok) than two strings when those strings are for
+> the exact same device.
+> 
 
-It's not that much more difficult.  It just entails enabling 3 instead
-of 2 config options.  Once all of the required components are merged,
-feel free to drop back to 'select'.  This is easier than sharing round
-immutable branches all over the place.
+Ok, fair enough. I think we should have the new name in dts files
+normally then, in order to avoid spreading the mistake further when
+someone copies it.
 
-> So we have two options here: 1) turn the select into a depends on her=
-e
-> and allow the dependency to be resolved that way, or 2) solve the
-> dependency by making sure the MFD part is merged first (either by
-> pulling the MFD tree into the PWM and DRM trees or waiting for a full
-> cycle for the MFD changes to land).
->=20
-> I don't mind either way.
-
-I'll go with either of the two suggestions above.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
