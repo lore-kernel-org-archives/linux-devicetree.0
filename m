@@ -1,124 +1,68 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
-Date: Tue, 7 Oct 2014 15:47:50 +0100
-Message-ID: <20141007144750.GB30590@e102568-lin.cambridge.arm.com>
-References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com>
- <3256560.C0cZnIlnAv@wuerfel>
- <20141007120659.GA30590@e102568-lin.cambridge.arm.com>
- <3659934.boXsmm8jcn@wuerfel>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
+ ps8622 DT properties
+Date: Tue, 07 Oct 2014 17:49:24 +0300
+Message-ID: <2230493.RvivJykn5T@avalon>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
+ <5433C0CC.5040804@ti.com>
+ <CAEC9eQPq28GFS+1GweECM9QHfCM+LzOL9ySq05i6RfVG6-2ubQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <3659934.boXsmm8jcn@wuerfel>
-Content-Disposition: inline
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "rmk+kernel@arm.linux.org.uk" <rmk+kernel@arm.linux.org.uk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAEC9eQPq28GFS+1GweECM9QHfCM+LzOL9ySq05i6RfVG6-2ubQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Ajay kumar <ajaynumb@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 07, 2014 at 02:52:27PM +0100, Arnd Bergmann wrote:
-> On Tuesday 07 October 2014 13:06:59 Lorenzo Pieralisi wrote:
-> > On Wed, Oct 01, 2014 at 10:38:45AM +0100, Arnd Bergmann wrote:
+Hi Ajay,
+
+On Tuesday 07 October 2014 16:06:55 Ajay kumar wrote:
+> On Tue, Oct 7, 2014 at 4:00 PM, Tomi Valkeinen wrote:
+> > On 20/09/14 14:22, Ajay kumar wrote:
+> >> Well, I am okay with using video ports to describe the relationship
+> >> between the encoder, bridge and the panel.
+> >> But, its just that I need to make use of 2 functions when phandle
+> >> does it using just one function ;)
+> >> -        panel_node = of_parse_phandle(dev->of_node, "panel", 0)
+> >> +       endpoint = of_graph_get_next_endpoint(dev->of_node, NULL);
+> >> +       if (!endpoint)
+> >> +               return -EPROBE_DEFER;
+> >> +
+> >> +       panel_node = of_graph_get_remote_port_parent(endpoint);
+> >> +       if (!panel_node)
+> >> +               return -EPROBE_DEFER;
+> >> 
+> >> 
+> >> If nobody else has objections over using of_graph functions instead
+> >> of phandles, I can respin this patchset by making use of video ports.
 > > 
-> > [...]
+> > The discussion did digress somewhat.
 > > 
-> > > pci_mmap_page_range could either get generalized some more in an attempt
-> > > to have a __weak default implementation that works on ARM, or it could
-> > > be changed to lose the dependency on pci_sys_data instead. In either
-> > > case, the change would involve using the generic pci_host_bridge_window
-> > > list.
-> > 
-> > On ARM pci_mmap_page_range requires pci_sys_data to retrieve its
-> > mem_offset parameter. I had a look, and I do not understand *why*
-> > it is required in that function, so I am asking. That function
-> > is basically used to map PCI resources to userspace, IIUC, through
-> > /proc or /sysfs file mappings. As far as I understand those mappings
-> > expect VMA pgoff to be the CPU address when files representing resources
-> > are mmapped from /proc and 0 when mmapped from /sys (I mean from
-> > userspace, then VMA pgoff should be updated by the kernel to map the
-> > resource).
+> > As a clarification, I'm in no way nack'ing this series because it
+> > doesn't use the graphs for video connections. I don't see the simple
+> > phandle bindings used here as broken as such.
 > 
-> Applying the mem_offset is certainly the more intuitive way, since
-> that lets you read the PCI BAR values from a device and access the
-> device with the appropriate offsets.
+> Well, I am okay with any approach you guys decide on. I desperately want
+> this to get this in since it has been floating around for quite sometime.
+> The more we drag this, the more rework for me since the number of platforms
+> using bridge support is increasing daily!
 
-Ok, but I am referring to this snippet (drivers/pci/pci-sysfs.c):
+I won't nack this patch either. I'm however concerned that we'll run straight 
+into the wall if we don't come up with an agreement on a standard way to 
+describe connections in DT for display devices, which is why I would prefer 
+the ps8622 bindings to use OF graph to describe connections.
 
-/* pci_mmap_page_range() expects the same kind of entry as coming
- * from /proc/bus/pci/ which is a "user visible" value. If this is
- * different from the resource itself, arch will do necessary fixup.
- */
-pci_resource_to_user(pdev, i, res, &start, &end);
+-- 
+Regards,
 
---> Here start represents a CPU physical address, if pci_resource_to_user()
-    does not fix it up, correct ?
-
-vma->vm_pgoff += start >> PAGE_SHIFT;
-
-[...]
-
-return pci_mmap_page_range(...);
-
-pci_mmap_page_range() applies (mem_offset >> PAGE_SHIFT) to pgoff in the
-ARM implemention.
-
-Is not there a mismatch here on platforms where mem_offset != 0 ?
-
-> > Question is: why pci_mmap_page_range() should apply an additional
-> > shift to the VMA pgoff based on pci_sys_data.mem_offset, which represents
-> > the offset from cpu->bus offset. I do not understand that. PowerPC
-> > does not seem to apply that fix-up (in PowerPC __pci_mmap_make_offset there
-> > is commented out code which prevents the pci_mem_offset shift to be
-> > applied). I think it all boils down to what the userspace interface is
-> > expecting when the memory areas are mmapped, if anyone has comments on
-> > this that is appreciated.
-> 
-> The important part is certainly that whatever transformation is done
-> by pci_resource_to_user() gets undone by __pci_mmap_make_offset().
-
-Exactly, it does not seem to be the case above, that's why I asked.
-
-> In case of PowerPC and Microblaze, the mem_offset handling is commented
-> out in both, to work around X11 trying to use the same values on
-> /dev/mem. However, they do have the respective fixup for io_offset.
-> 
-> sparc applies the offset in both places for both io_offset and mem_offset.
-> xtensa applies only io_offset in __pci_mmap_make_offset but neither
->   in pci_resource_to_user. This probably works because the mem_offset is
->   always zero there.
-> mips applies a different fixup (for 36-bit addressing), but not the
->   mem_offset.
-> 
-> Every other architecture applies no offset here, neither in __pci_mmap_make_offset/pci_mmap_page_range nor in pci_resource_to_user
-> 
-> The only hint I could find for how the ARM version came to be is
-> from the historic kernel tree git log for linux-2.5.42, which added
-> the current code as
-> 
->     2002/10/13 11:05:47+01:00 rmk
->     [ARM] Update pcibios_enable_device, supply pci_mmap_page_range()
->     Update pcibios_enable_device to only enable requested resources,
->     mainly for IDE.  Supply a pci_mmap_page_range() function to allow
->     user space to mmap PCI regions.
-> 
-> At that point, only two platforms had a nonzero mem_offset:
-> footbridge/dc21285 and integrator/pci_v3. Both were using VGA,
-> and presumably used this to make X work. (rmk might remember
-> details).
-
-I think that, as I mentioned, it boils down to what the userspace
-interface (proc/sys and they seem to differ) is supposed to be passed
-from userspace processes upon mmap.
-
-> The code at the time matched what powerpc and sparc did, but then
-> both implemented pci_resource_to_user() in order for libpciaccess
-> to work correctly (bcea1db16b for sparc, 463ce0e103f for powerpc),
-> and later powerpc changed it again to not apply the offset in
-> pci_resource_to_user or pci_mmap_page_range in 396a1a5832ae.
-
-I will keep investigating, thank you for your help, any further comments
-appreciated.
-
-Lorenzo
-
+Laurent Pinchart
