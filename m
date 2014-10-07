@@ -1,58 +1,63 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: simple-card: Add mic and hp detect gpios.
-Date: Tue, 7 Oct 2014 13:38:56 +0100
-Message-ID: <20141007123856.GF4609@sirena.org.uk>
-References: <1412198720-2326-1-git-send-email-dgreid@chromium.org>
- <20141002155350.GU4273@sirena.org.uk>
- <CAMuHMdWh=sXAD59T1T=gvROX+fbF6=gFo6C0nkJdfnCrdNrwYg@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESUBMIT PATCH v3 7/8] regulator: sky81452: Add compatible
+ string for device binding
+Date: Tue, 7 Oct 2014 13:52:21 +0100
+Message-ID: <20141007125221.GG4609@sirena.org.uk>
+References: <1412657745-7812-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1412658667-8196-1-git-send-email-jack.yoo@skyworksinc.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0rEjiS+nMGFQ7Kkj"
-Return-path: <linux-sh-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="wZwWzkkm73dI25u3"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdWh=sXAD59T1T=gvROX+fbF6=gFo6C0nkJdfnCrdNrwYg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Dylan Reid <dgreid@chromium.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, jay.xu@rock-chips.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, sonnyrao@chromium.org, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>
+In-Reply-To: <1412658667-8196-1-git-send-email-jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---0rEjiS+nMGFQ7Kkj
+--wZwWzkkm73dI25u3
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Oct 07, 2014 at 02:32:57PM +0200, Geert Uytterhoeven wrote:
+On Tue, Oct 07, 2014 at 02:11:07PM +0900, Gyungoh Yoo wrote:
+> Signed-off-by: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
 
-> Hence on r8a7740/armadillo-legacy, which uses platform devices instead of DT:
+Several problems here:
 
->     sh-mobile-hdmi sh-mobile-hdmi: SH Mobile HDMI Audio Codec
->     sh-mobile-hdmi sh-mobile-hdmi: ASoC: DAPM unknown pin Headphones
->     sh-mobile-hdmi sh-mobile-hdmi: ASoC: DAPM unknown pin Mic Jack
+ - I don't have patches 1-6 or the cover letter for this series - what
+   are the dependencies?
+ - I can't see any sign that my concerns about the driver not actually
+   being reusable have been addressed here.
+ - This patch appears to do way more than add a compatible string, for
+   example:
 
-> After that the kernel log is spammed ca. 7 times per second with:
+> -	np = of_get_child_by_name(dev->parent->of_node, "regulator");
+> -	if (unlikely(!np)) {
+> +	if (!np) {
+>  		dev_err(dev, "regulator node not found");
+> -		return NULL;
+> +		return ERR_PTR(-ENODATA);
 
->     sh-mobile-hdmi sh-mobile-hdmi: ASoC: DAPM unknown pin Headphones
-
-> Reverting commit 3fe240326cc395c66 ("ASoC: simple-card: Add mic and
-> hp detect gpios.") fixes this.
-
-The fix here is to not allow 0 as a GPIO in the core code (which
-should've been there already).
-
---0rEjiS+nMGFQ7Kkj
+--wZwWzkkm73dI25u3
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBAgAGBQJUM97fAAoJECTWi3JdVIfQgtwH/i+yPeaZ+B5GLPdNvOkI9xwh
-RhJDZX600KVNGxpTjx4Qvgl03QnQEm63sNGzHTAZOvGR7L2NlmPimIq9DFMfMpWg
-dB4HAYiq2h0AN8be1sFmSaRlvEz5Wa1KWY+sxKYbJI3lGVRAaQlVtFkNzBZvac2l
-mljjnWa3aZa7uRNwad+ygxfMyB1b3nFg6O5aUuWooYQo86ZONTrNKt2Dbuhg3ckQ
-3xnlLdcOoB3QLisnxoE9duV/F+60bkqakS1BrFkgM8rRWxKVDsDENv9RKfzCU6po
-reBOZIitIgUR7jfTWi5poaXhyfZZtEAV+batFEGQWzQGSPyAtRdQQqVm991uP3k=
-=SH2v
+iQEcBAEBAgAGBQJUM+IEAAoJECTWi3JdVIfQYvQH/A6k+JAGfqKBx33HBmfSuDks
+Tz/nTvj0KlH6/AB9rlUHZEl6pawKsVdKFYnWSZt4dIbHtQbVY96DgRM+OG+WiP2x
+0W7/PBqg4nmXKWZbxQh9YhxBMXfdyoJEpkQhocqg5KWsb/6OAyxlb1Ba/O+dMQVJ
+jtJix5+InoKTZLBX4zlQBPL7gp5ZcGRuMLbJSa7vmNRCdwwOu3pO2S5o+ZmUuYSp
+lv8DywC3iS4ToFYI81b3aLtTkGobLp4bGBJTjuwpLI48GFt10aNl/Yd/WC4clb/m
+lcz/LYjG5qf3tAFsUpG3gtEgOih27VjYRyE7ix5h1CSFZEvSyDJFt+fHcSNsAVA=
+=hwNA
 -----END PGP SIGNATURE-----
 
---0rEjiS+nMGFQ7Kkj--
+--wZwWzkkm73dI25u3--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
