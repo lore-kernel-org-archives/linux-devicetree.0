@@ -1,44 +1,39 @@
-From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RESUBMIT PATCH v3 8/8] devicetree: regulator: sky81452: Add compatible string for device binding
-Date: Tue,  7 Oct 2014 14:13:11 +0900
-Message-ID: <1412658791-8250-1-git-send-email-jack.yoo@skyworksinc.com>
-References: <1412657745-7812-1-git-send-email-jack.yoo@skyworksinc.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412657745-7812-1-git-send-email-jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 03/44] hibernate: Call have_kernel_poweroff instead of checking pm_power_off
+Date: Mon,  6 Oct 2014 22:28:05 -0700
+Message-ID: <1412659726-29957-4-git-send-email-linux@roeck-us.net>
+References: <1412659726-29957-1-git-send-email-linux@roeck-us.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412659726-29957-1-git-send-email-linux@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: adi-buildroot-devel@lists.sourceforge.net, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lguest@lists.ozlabs.org, linux-acpi@vger.kernel.org, linux-alpha@vger.kernel.org, linux-am33-list@redhat.com, linux-cris-kernel@axis.com, linux-efi@vger.kernel.org, linux-hexagon@vger.kernel.org, linux-m32r-ja@ml.linux-m32r.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org, linux-xtensa@linux-xtensa.org, openipmi-developer@lists.sourceforge.net, user-mode-linux-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-metag@vger.kernel.org, linux-mips@linux-mips.org, linux-parisc@vger.kernel.org, linux-pm@vger.kernel.org, linux-sh@vger.kernel.org, xen-devel@lists.xenproject.org, Guenter Roeck <linux@roeck-us.net>, Rafael J. W
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
----
- Documentation/devicetree/bindings/regulator/sky81452-regulator.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Poweroff handlers may now be installed with register_poweroff_handler.
+Use the new API function have_kernel_poweroff to determine if a poweroff
+handler has been installed.
 
-diff --git a/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt b/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
-index 882455e..7b9ff18 100644
---- a/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
-@@ -1,6 +1,7 @@
- SKY81452 voltage regulator
- 
- Required properties:
-+- compatible	: Must be "skyworks,sky81452-regulator"
- - any required generic properties defined in regulator.txt
- 
- Optional properties:
-@@ -9,6 +10,7 @@ Optional properties:
- Example:
- 
- 	regulator {
-+		compatible = "skyworks,sky81452-regulator";
- 		/* generic regulator properties */
- 		regulator-name = "touch_en";
- 		regulator-min-microvolt = <4500000>;
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Len Brown <len.brown@intel.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ kernel/power/hibernate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+index a9dfa79..20353c5 100644
+--- a/kernel/power/hibernate.c
++++ b/kernel/power/hibernate.c
+@@ -602,7 +602,7 @@ static void power_down(void)
+ 	case HIBERNATION_PLATFORM:
+ 		hibernation_platform_enter();
+ 	case HIBERNATION_SHUTDOWN:
+-		if (pm_power_off)
++		if (have_kernel_poweroff())
+ 			kernel_power_off();
+ 		break;
+ #ifdef CONFIG_SUSPEND
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
