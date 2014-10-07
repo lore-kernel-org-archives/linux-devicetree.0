@@ -1,61 +1,28 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for ps8622 DT properties
-Date: Tue, 07 Oct 2014 19:14:39 +0300
-Message-ID: <1624504.9igBAHRpEu@avalon>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com> <5749335.iMpaHR0UO8@avalon> <5433A394.4000406@ti.com>
+From: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Subject: Re: [PATCH 05/44] mfd: as3722: Drop reference to pm_power_off from
+ devicetree bindings
+Date: Tue, 07 Oct 2014 11:21:11 -0500
+Message-ID: <543412F7.8040909@landley.net>
+References: <1412659726-29957-1-git-send-email-linux@roeck-us.net> <1412659726-29957-6-git-send-email-linux@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5433A394.4000406@ti.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Ajay kumar <ajaynumb@gmail.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, InKi Dae <inki.dae@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412659726-29957-6-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: adi-buildroot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lguest-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-alpha-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-am33-list-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-cris-kernel-VrBV9hrLPhE@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hexagon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-m32r-ja-rQhvJZKUsGBRYuoOT4C5/9i2O/JbrIOy@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-s390-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, user-mode-linux-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org, linux-ia64-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-m68k-cunTk1MwBs8S/qaLPR03pWD2FQJk+8+b@public.gmane.org, linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-parisc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Pawel Moll <pa>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi,
+On 10/07/14 00:28, Guenter Roeck wrote:
+> Devicetree bindings are supposed to be operating system independent
+> and should thus not describe how a specific functionality is implemented
+> in Linux.
 
-On Tuesday 07 October 2014 11:25:56 Tomi Valkeinen wrote:
-> On 07/10/14 10:23, Laurent Pinchart wrote:
-> >> You mean the bridge driver would somehow take a peek into panel1 and
-> >> panel2 nodes, looking for bridge specific properties? Sounds somewhat
-> >> fragile to me... How would the bridge driver know a property is for the
-> >> bridge?
-> > 
-> > No, I mean the bridge driver should call the API provided by the panel
-> > objects to get information about the panels, and compute its
-> > configuration parameters from those. I'm not sure if that's possible
-> > though, it depends on whether the bridge parameters can be computed from
-> > information provided by the panel.
->
-> Right. My example tried to show a case where they can't be queried. The
-> board or the wiring causes signal degradation, which can be fixed by
-> increasing the bridge output voltage slightly.
-> 
-> So it has nothing really to do with the panel, but the board.
-> 
-> I fully admit that it is a purely theoretical case, and I don't have any
-> real use cases in mind right now.
+So your argument is that linux/Documentation/devicetree/bindings should
+not be specific to Linux. Merely hosted in the Linux kernel source
+repository.
 
-Still, I agree with you that we might need to configure the bridge differently 
-depending on the selected output with parameters that are not specific to the 
-bridge.
+Well that's certainly a point of view.
 
-There's two use cases I can think of. In the first one the panels are 
-connected directly to the bridge. The bridge should have two links from its 
-output port, one to each panel. If we use the OF graph bindings then the 
-bridge output port node would have two endpoint nodes, and configuration 
-parameters can be stored in the endpoint nodes.
-
-In the second use case another element would be present between the bridge and 
-the two panels. In that case there would be a single link between the bridge 
-and that other element. If the bridge needs to be configured differently 
-depending on the selected panel using parameters that can't be queried from 
-the panels, then we'll have a problem. I'm not sure whether this use case has 
-practical applications as board-related parameters seem to me that they 
-pertain to physical links.
-
--- 
-Regards,
-
-Laurent Pinchart
+Rob
