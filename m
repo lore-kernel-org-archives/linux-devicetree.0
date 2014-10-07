@@ -1,72 +1,55 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v8 1/2] mfd: add atmel-hlcdc driver
-Date: Tue, 7 Oct 2014 14:28:41 +0100
-Message-ID: <20141007132841.GE3693@lee--X1>
-References: <20141007094727.GA12631@ulmo>
- <20141007095932.GY25331@lee--X1>
- <20141007100632.GA31575@ulmo>
- <20141007101743.GA25331@lee--X1>
- <20141007111304.GA1539@ulmo>
- <20141007113814.GA3693@lee--X1>
- <20141007134112.40179e8a@bbrezillon>
- <20141007115529.GA17434@ulmo>
- <20141007122224.GD3693@lee--X1>
- <5433E7A8.60001@atmel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device
+ properties interface
+Date: Tue, 7 Oct 2014 15:37:04 +0200
+Message-ID: <CACRpkdbehhsDxikCV1bJjBm581MCcu2DRSmiQQXHG09EmjLNBQ@mail.gmail.com>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
+	<2809308.3y5s7TV5Ip@wuerfel>
+	<D04730D8.A9DB0%dvhart@linux.intel.com>
+	<6744174.JquHLt80n3@wuerfel>
+	<20140926032131.GC40523@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5433E7A8.60001@atmel.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Samuel Ortiz <sameo@linux.intel.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20140926032131.GC40523@vmdeb7>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Len Brown <Len.Brown@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, David Woodhouse <david.woodhouse@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Aaron Lu <aaron.lu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-> >> That said, Nicolas Ferre (Cc'ing) at some point requested this to =
-become
-> >> a select (or at least for the DRM driver, but I guess the same app=
-lies
-> >> to PWM) on the grounds that a depends on will make it more difficu=
-lt to
-> >> enable the driver.
-> >=20
-> > It's not that much more difficult.  It just entails enabling 3 inst=
-ead
-> > of 2 config options.
->=20
-> Yes it is more difficult. Believe me, it's a mess, but...
->=20
-> > Once all of the required components are merged,
-> > feel free to drop back to 'select'.  This is easier than sharing ro=
-und
-> > immutable branches all over the place.
->=20
-> .. I agree with this option of moving to an easier-to-merge solution =
-and
-> then dealing with the ease of use.
->=20
-> >> So we have two options here: 1) turn the select into a depends on =
-here
-> >> and allow the dependency to be resolved that way, or 2) solve the
-> >> dependency by making sure the MFD part is merged first (either by
-> >> pulling the MFD tree into the PWM and DRM trees or waiting for a f=
-ull
-> >> cycle for the MFD changes to land).
-> >>
-> >> I don't mind either way.
-> >=20
-> > I'll go with either of the two suggestions above.
->=20
-> So, Lee and Thierry, you can both take your part in your respective
-> trees with the change (1) described above and with my:
->=20
-> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+On Fri, Sep 26, 2014 at 5:21 AM, Darren Hart <dvhart@infradead.org> wrote:
+> On Wed, Sep 24, 2014 at 11:12:36AM +0200, Arnd Bergmann wrote:
 
-Works for me.  The MFD part has already been applied.
+> So as Mika has pointed out, LEDs aren't the only ones affected. Several drivers
+> will need to walk through non-device child nodes, and it seems to me that having
+> a firmware-independent mechanism to do so benefits the drivers by both making
+> them smaller and by increasing the reusability of new drivers and drivers
+> updated to use the new API across platforms.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+In a recent round of reviews, for the OF case, that led to drivers
+which used device_initcall() without being a module, getting a match
+and handle to the parent device, and then walking over the nodes
+and instantiating child objects (Linux devices usually) in the process.
+
+It was done as a response to the remark from Rob Herring that
+we were modeling things in the device tree as devices when they
+really weren't, we were just doing it that way because it fits the
+Linux device model and it's easier.
+
+So we have that case too.
+
+The question is if it's anything close to generalizable.
+
+> Grant, Linus W? Thoughts?
+
+I'm uncertain on the whole subject, I called on the others
+because of that...
+
+For a while I had Andy Schevenko patch the GPIO and
+SFI core too, but it timed out due to no response from Len
+Brown. (Maybe I should just merge that stuff!) Do you (Intel) also
+want to unify the Medfield SFI thing into this or have you
+given up on it?
+
+Yours,
+Linus Walleij
