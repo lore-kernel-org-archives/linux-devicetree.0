@@ -1,107 +1,79 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v8 2/2] mfd: add documentation for atmel-hlcdc DT bindings
-Date: Tue, 7 Oct 2014 10:44:47 +0100
-Message-ID: <20141007094447.GX25331@lee--X1>
-References: <1412603324-18789-1-git-send-email-boris.brezillon@free-electrons.com>
- <1412603324-18789-3-git-send-email-boris.brezillon@free-electrons.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm: shmobile: lager: enable HS-USB
+Date: Tue, 07 Oct 2014 13:46:13 +0400
+Message-ID: <5433B665.9040302@cogentembedded.com>
+References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412237073-1288-3-git-send-email-yoshihiro.shimoda.uh@renesas.com> <542EFDEA.2030906@cogentembedded.com> <5431E984.6000203@renesas.com> <54335D0E.6070606@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1412603324-18789-3-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54335D0E.6070606-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org" <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 06 Oct 2014, Boris Brezillon wrote:
+On 10/7/2014 7:25 AM, Yoshihiro Shimoda wrote:
 
-> The HLCDC IP available on some Atmel SoCs (i.e. at91sam9n12, at91sam9=
-x5
-> family or sama5d3 family) exposes 2 subdevices:
-> - a display controller (controlled by a DRM driver)
-> - a PWM chip
->=20
-> This patch adds documentation for atmel-hlcdc DT bindings.
->=20
-> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> Tested-by: Anthony Harivel <anthony.harivel@emtrion.de>
-> Tested-by: Ludovic Desroches <ludovic.desroches@atmel.com>
-> ---
->  .../devicetree/bindings/mfd/atmel-hlcdc.txt        | 51 ++++++++++++=
-++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc=
-=2Etxt
+>>>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>>>> ---
+>>>>    arch/arm/boot/dts/r8a7790-lager.dts |    5 +++++
+>>>>    1 file changed, 5 insertions(+)
 
-Applied for v3.19.
+>>>> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+>>>> index 1698591..4badd0a 100644
+>>>> --- a/arch/arm/boot/dts/r8a7790-lager.dts
+>>>> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
+>>>> @@ -445,3 +445,8 @@
+>>>>    		};
+>>>>    	};
+>>>>    };
+>>>> +
+>>>> +&hsusb {
+>>>> +	status = "okay";
+>>>> +	renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_LOW>;
 
-> diff --git a/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt b/=
-Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
-> new file mode 100644
-> index 0000000..f64de95a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
-> @@ -0,0 +1,51 @@
-> +Device-Tree bindings for Atmel's HLCDC (High LCD Controller) MFD dri=
-ver
-> +
-> +Required properties:
-> + - compatible: value should be one of the following:
-> +   "atmel,sama5d3-hlcdc"
-> + - reg: base address and size of the HLCDC device registers.
-> + - clock-names: the name of the 3 clocks requested by the HLCDC devi=
-ce.
-> +   Should contain "periph_clk", "sys_clk" and "slow_clk".
-> + - clocks: should contain the 3 clocks requested by the HLCDC device=
-=2E
-> + - interrupts: should contain the description of the HLCDC interrupt=
- line
-> +
-> +The HLCDC IP exposes two subdevices:
-> + - a PWM chip: see ../pwm/atmel-hlcdc-pwm.txt
-> + - a Display Controller: see ../drm/atmel-hlcdc-dc.txt
-> +
-> +Example:
-> +
-> +	hlcdc: hlcdc@f0030000 {
-> +		compatible =3D "atmel,sama5d3-hlcdc";
-> +		reg =3D <0xf0030000 0x2000>;
-> +		clocks =3D <&lcdc_clk>, <&lcdck>, <&clk32k>;
-> +		clock-names =3D "periph_clk","sys_clk", "slow_clk";
-> +		interrupts =3D <36 IRQ_TYPE_LEVEL_HIGH 0>;
-> +		status =3D "disabled";
-> +
-> +		hlcdc-display-controller {
-> +			compatible =3D "atmel,hlcdc-display-controller";
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +
-> +			port@0 {
-> +				#address-cells =3D <1>;
-> +				#size-cells =3D <0>;
-> +				reg =3D <0>;
-> +
-> +				hlcdc_panel_output: endpoint@0 {
-> +					reg =3D <0>;
-> +					remote-endpoint =3D <&panel_input>;
-> +				};
-> +			};
-> +		};
-> +
-> +		hlcdc_pwm: hlcdc-pwm {
-> +			compatible =3D "atmel,hlcdc-pwm";
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&pinctrl_lcd_pwm>;
-> +			#pwm-cells =3D <3>;
-> +		};
-> +	};
+>>>      It's certainly active-high.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+>> Since the current code has the following, we have to set the active_low...
+>> However, the code is unreadable, I think. So, I will modify the code.
+>>
+>> 	/* check GPIO determining if USB function should be enabled */
+>> 	if (priv->dparam.enable_gpio) {
+>> 		gpio_request_one(priv->dparam.enable_gpio, GPIOF_IN, NULL);
+>> 		ret = !gpio_get_value(priv->dparam.enable_gpio);
+>> 		gpio_free(priv->dparam.enable_gpio);
+>> 		if (ret) {
+>> 			dev_warn(&pdev->dev,
+>> 				 "USB function not selected (GPIO %d)\n",
+>> 				 priv->dparam.enable_gpio);
+>> 			ret = -ENOTSUPP;
+>> 			goto probe_end_mod_exit;
+>> 		}
+>> 	}
+
+> I am confusing about the gpio_get_value()...
+> In case of ARM, gpio_get_value() will call gpiod_get_raw_value() finally.
+
+> gpio_get_value() in arch/arm/include/asm/gpio.h
+>   --> __gpio_get_value() in include/asm-generic/gpio.h
+>    --> gpiod_get_raw_value() in drivers/gpio/gpiolib.c
+
+> The gpiod_get_raw_value() doesn't care of the GPIO_ACTIVE_{HIGH,LOW}.
+> So, should I add gpiod_is_active_low() or someting in the renesas_usbhs driver?
+
+    Why do you still think it's active-low?!
+
+> Or, Do I misunderstand something?
+
+    Look at the above code again.
+
+> Best regards,
+> Yoshihiro Shimoda
+
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
