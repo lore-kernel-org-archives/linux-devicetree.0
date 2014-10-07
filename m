@@ -1,71 +1,47 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v3 2/2] ARM: shmobile: lager: enable HS-USB
-Date: Wed, 08 Oct 2014 00:26:06 +0400
-Message-ID: <2298118.7qjLAFjuvd@wasted.cogentembedded.com>
-References: <2438577.UAUDMkTTWI@wasted.cogentembedded.com>
+From: Peter =?iso-8859-15?q?H=FCwe?= <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH 00/16] ST33 I2C TPM driver cleanup
+Date: Tue, 7 Oct 2014 22:30:12 +0200
+Message-ID: <201410072230.13113.PeterHuewe@gmx.de>
+References: <1412712189-1234-1-git-send-email-christophe-h.ricard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <2438577.UAUDMkTTWI@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, yoshihiro.shimoda.uh@renesas.com
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412712189-1234-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Hi Christophe,
 
-Enable HS-USB device for the Lager board, defining the GPIO that the driver
-should check when probing. Since this board doesn't have the OTG ID pin, we
-assume that GP5_18 (USB0_PWEN) is an ID pin because it is 1 when the SW5 is
-in position 2-3 (meaning USB function) and 0 in other positions.
 
-Note that there will be pinctrl-related error messages if both internal PCI
-and HS-USB drivers are enabled but they should be just ignored.
+Am Dienstag, 7. Oktober 2014, 22:02:53 schrieb Christophe Ricard:
+> Hi Peter,
+> 
+> The following patchset brings:
+> - Some few code clean up from code style up to structure
+> - Device tree support keeping static platform data configuration support.
+> - Fix irq support.
+> - Update the GPLv2 license header
+> 
+> This patchset apply on top of James Morris linux-security tree
+> on top of 594081ee7145cc30a3977cb4e218f81213b63dc5 on next branch
+> Hope i am targetting to correct tree.
+> 
+> The full patchset got also crosschecked by Jean-Luc here in copy.
+> 
+> Best Regards
+> Christophe
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-[Sergei: added pin function/group and prop, moved device node, fixed summary,
-supplemented changelog]
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
----
-Changes in version 3:
-- added pin function/group and the pinctrl-related prop;
-- moved the HS-USB node to precede the USB PHY node;
-- uppercased "arm" in the summary;
-- supplemented changelog.
+I'll try to have a look at them as soon as possible - but with the ELCE/Linux 
+Con comming up next week (TPM minisummit! ;) it's a bit hectic at the moment.
 
- arch/arm/boot/dts/r8a7790-lager.dts |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7790-lager.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7790-lager.dts
-+++ renesas/arch/arm/boot/dts/r8a7790-lager.dts
-@@ -226,6 +226,11 @@
- 		renesas,function = "usb0";
- 	};
- 
-+	hsusb_pins: usb0 {
-+		renesas,groups = "usb0_ovc_vbus";
-+		renesas,function = "usb0";
-+	};
-+
- 	usb1_pins: usb1 {
- 		renesas,groups = "usb1";
- 		renesas,function = "usb1";
-@@ -425,6 +430,13 @@
- 	pinctrl-names = "default";
- };
- 
-+&hsusb {
-+	status = "okay";
-+	pinctrl-0 = <&hsusb_pins>;
-+	pinctrl-names = "default";
-+	renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_HIGH>;
-+};
-+
- &usbphy {
- 	status = "okay";
- };
-
+Thanks,
+Peter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
