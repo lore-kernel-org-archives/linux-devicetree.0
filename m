@@ -1,31 +1,59 @@
-From: Richard Weinberger <richard@nod.at>
-Subject: Re: [PATCH 08/44] kernel: Move pm_power_off to common code
-Date: Tue, 07 Oct 2014 15:58:47 +0200
-Message-ID: <5433F197.8040801@nod.at>
-References: <1412659726-29957-1-git-send-email-linux@roeck-us.net>
- <1412659726-29957-9-git-send-email-linux@roeck-us.net>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2 1/4] dwc3: exynos: Add support for SCLK present on
+ Exynos7
+Date: Tue, 7 Oct 2014 09:11:18 -0500
+Message-ID: <20141007141118.GD24720@saruman>
+References: <1412677176-3850-1-git-send-email-gautam.vivek@samsung.com>
+ <1412677176-3850-2-git-send-email-gautam.vivek@samsung.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1412659726-29957-9-git-send-email-linux@roeck-us.net>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org
-Cc: Jonas Bonn <jonas@southpole.se>, linux-mips@linux-mips.org, linux-efi@vger.kernel.org, linux-ia64@vger.kernel.org, Steven Miao <realmz6@gmail.com>, linux-xtensa@linux-xtensa.org, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Howells <dhowells@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, Paul Mackerras <paulus@samba.org>, Ralf Baechle <ralf@linux-mips.org>, Pavel Machek <pavel@ucw.cz>, "H. Peter Anvin" <hpa@zytor.com>, Guan Xuetao <gxt@mprc.pku.edu.cn>, Thomas Gleixner <tglx@linutronix.de>, Lennox Wu <lennox.wu@gmail.com>, Hans-Christian Egtvedt <egtvedt@samfundet.no>, devel@driverdev.osuosl.org, linux-s390@vger.kernel.org, Jesper Nilsson <jesper.nilsson@axis.com>, lguest@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-c6x-dev@linux-c6x.org, Len Brown <len.brown@intel.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZARJHfwaSJQLOEUz"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1412677176-3850-2-git-send-email-gautam.vivek@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, balbi@ti.com, kgene.kim@samsung.com, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Am 07.10.2014 07:28, schrieb Guenter Roeck:
->  arch/um/kernel/reboot.c            |  2 --
+--ZARJHfwaSJQLOEUz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Richard Weinberger <richard@nod.at>
+On Tue, Oct 07, 2014 at 03:49:33PM +0530, Vivek Gautam wrote:
+> Exynos7 also has a separate special gate clock going to the IP
+> apart from the usual AHB clock. So add support for the same.
+>=20
+> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
 
-Thanks,
-//richard
+I'll take this one once -rc1 is tagged. The others have no direct
+dependency on this so I'll leave them to Kishon.
+
+--=20
+balbi
+
+--ZARJHfwaSJQLOEUz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUM/SGAAoJEIaOsuA1yqREvX4P/RVgtnSXBdISraqbxtUS55Fs
+A2s4SsiKJu7YOyMUhjvAaxD6yyXUBrlHwVPJ+fCgjRxBByiVoUim0rJ3I0Z+vVeS
+F+WqnwZJB9QdhhsDiZreNmikQ7toD6n1Va2PGop6Djd/VkJP4l5MuN/KDKMtbtAt
+RNQE463LlIS7h+OVtXLAUbRQCITjwq0VRxdMnQfnYpps73Cquyw89kfgl/fB1F94
+fdupFPVKJM153ExAQXWeKejuF2q0bdGyIg8QVDpGfMWV0Sf2AUqKWGtXqznBMrKp
+92ptlX5YSPYKH2/854wJhOSMDyw/0SjojMLqo4qxld3+FEAHll3wiZHsOX++vJvY
+Bw7ZgrlxdJpYdbOJaHn4D6tdjznGewWHcybjtLkEWNIdctKKRyKlvyxmUQS5d+ae
+J1k5QjPZ5oiBD/FJkXpQSovtDgEaI5A054ZDjn8mmh6BlWM2PT8mM9zJCxRPdIB/
+2mHKmMIWxIu7CDxCMc1UL/y0Pv+ScdS/RtwCYfScv2jaHJejt/2qnOWTFggQ/nzU
+qKmoKf+t+qimJ8xq06eQ4HyOa6QW3e0NJTOsFr9r4JGDN/ZBuWhb2szSFgTBPzqy
+1UAj0TUG0VrRC4aOoP00emix7Eo5obf8FLUbiDHYQgfQlBmqAF1RGrObj2z/3nrK
+5GUjOskMAp9cos8jSkkI
+=bVzM
+-----END PGP SIGNATURE-----
+
+--ZARJHfwaSJQLOEUz--
