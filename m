@@ -1,58 +1,35 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 3/4] watchdog: st_wdt: Provide binding documentation for ST's LPC Watchdog driver
-Date: Tue,  7 Oct 2014 15:36:11 +0100
-Message-ID: <1412692572-14031-4-git-send-email-lee.jones@linaro.org>
-References: <1412692572-14031-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1412692572-14031-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: lee.jones@linaro.org, kernel@stlinux.com, wim@iguana.be, linux-watchdog@vger.kernel.org, linux@roeck-us.net, devicetree@vger.kernel.org, David Paris <david.paris@st.com>
+From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH v5 3/4] pmbus: add regulator support
+Date: Tue, 7 Oct 2014 09:38:10 -0500
+Message-ID: <alpine.DEB.2.02.1410070937540.9610@atx-linux-37>
+References: <1412275071-6417-1-git-send-email-atull@opensource.altera.com> <1412275071-6417-4-git-send-email-atull@opensource.altera.com> <20141003142746.GA24441@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141003142746.GA24441-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: David Paris <david.paris@st.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- .../devicetree/bindings/watchdog/st-lpc-wdt.txt    | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt
+On Fri, 3 Oct 2014, Mark Brown wrote:
 
-diff --git a/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt b/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt
-new file mode 100644
-index 0000000..520ce90
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt
-@@ -0,0 +1,30 @@
-+STMicroelectronics LPC Watchdog
-+===============================
-+
-+Required properties
-+
-+- compatible 	: Must be one of:
-+			"st,stih407-watchdog"
-+			"st,stih416-watchdog"
-+			"st,stih415-watchdog"
-+			"st,stid127-watchdog"
-+- reg		: LPC registers base address + range
-+- reg-names	: Register map "base" and "syscfg-en" are compulsory. "type" is
-+		  platform dependent and not required for the STiH407
-+- clock-names 	: Should be "lpc_wdt"
-+- clocks	: Clock used by LPC device
-+- timeout-sec	: Watchdog timeout in seconds
-+- st,syscfg	: Syscfg node used to configure CPU reset type and mask
-+- st,warm_reset	: If present, reset type will be 'warm'. If not, it will be cold
-+
-+Example:
-+	watchdog@fde05000 {
-+		compatible	= "st,stih416-lpc-watchdog";
-+		reg		= <0xfde05000 0x1000> <0x204 0x4>;
-+		reg-names	= "base", "syscfg-en"
-+		clock-names	= "lpc_wdt";
-+		clocks 		= <&clk_s_d3_flexgen CLK_LPC_0>;
-+		timeout-sec	= <600>;
-+		st,syscfg	= <&syscfg_core>;
-+		st,warm_reset;
-+	};
--- 
-1.9.1
+> On Thu, Oct 02, 2014 at 01:37:50PM -0500, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> > From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > 
+> > Add support for simple on/off control of each channel.
+> > 
+> > To add regulator support, the pmbus part driver needs to add
+> > regulator_desc information and number of regulators to its
+> > pmbus_driver_info struct.
+> 
+> Reviewed-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+
+Thanks!
+
+Alan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
