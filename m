@@ -1,81 +1,116 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm: shmobile: lager: enable HS-USB
-Date: Tue, 7 Oct 2014 16:03:25 +0900
-Message-ID: <5433903D.5050108@renesas.com>
-References: <1412237073-1288-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <1412237073-1288-3-git-send-email-yoshihiro.shimoda.uh@renesas.com> <542EFDEA.2030906@cogentembedded.com> <5431E984.6000203@renesas.com> <54335D0E.6070606@renesas.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
+ ps8622 DT properties
+Date: Tue, 7 Oct 2014 10:06:10 +0300
+Message-ID: <543390E2.1080108@ti.com>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com> <20140923144509.GF5982@ulmo> <542283DE.5040909@ti.com> <353158006.4Zqtrv9CtX@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54335D0E.6070606-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org" <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="MvlkbJLE7MAhNI2kc0gsXGtLcvW8miOFi"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <353158006.4Zqtrv9CtX@avalon>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Ajay kumar <ajaynumb@gmail.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, InKi Dae <inki.dae@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+--MvlkbJLE7MAhNI2kc0gsXGtLcvW8miOFi
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-(2014/10/07 12:25), Yoshihiro Shimoda wrote:
-> Hello.
-> 
-> (2014/10/06 9:59), Yoshihiro Shimoda wrote:
->> Hello.
+On 06/10/14 17:40, Laurent Pinchart wrote:
+
+>> But seriously speaking, I was thinking about this. I'd really like to
+>> have a generic video-mux node, that would still somehow allow us to ha=
+ve
+>> device specific configurations for the video sources and sinks (which
+>> the endpoints provide us), without endpoints.
 >>
->> (2014/10/04 4:50), Sergei Shtylyov wrote:
->>> On 10/02/2014 12:04 PM, Yoshihiro Shimoda wrote:
->>>
-< snip >
->>>> +&hsusb {
->>>> +	status = "okay";
->>>> +	renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_LOW>;
->>>
->>>     It's certainly active-high.
+>> The reason endpoints don't feel right in this case is that it makes
+>> sense that the mux has a single input and two outputs, but with
+>> endpoints we need two endpoints from the bridge (which is still ok), b=
+ut
+>> we also need two endpoitns in the mux's input side, which doesn't feel=
+
+>> right.
 >>
->> Since the current code has the following, we have to set the active_low...
->> However, the code is unreadable, I think. So, I will modify the code.
+>> I came up with the following. It's quite ugly, though. I hope someone
+>> has ideas how it could be done in a neater way:
 >>
->> 	/* check GPIO determining if USB function should be enabled */
->> 	if (priv->dparam.enable_gpio) {
->> 		gpio_request_one(priv->dparam.enable_gpio, GPIOF_IN, NULL);
->> 		ret = !gpio_get_value(priv->dparam.enable_gpio);
->> 		gpio_free(priv->dparam.enable_gpio);
->> 		if (ret) {
->> 			dev_warn(&pdev->dev,
->> 				 "USB function not selected (GPIO %d)\n",
->> 				 priv->dparam.enable_gpio);
->> 			ret = -ENOTSUPP;
->> 			goto probe_end_mod_exit;
->> 		}
->> 	}
-> 
-> I am confusing about the gpio_get_value()...
-> In case of ARM, gpio_get_value() will call gpiod_get_raw_value() finally.
-> 
-> gpio_get_value() in arch/arm/include/asm/gpio.h
->  --> __gpio_get_value() in include/asm-generic/gpio.h
->   --> gpiod_get_raw_value() in drivers/gpio/gpiolib.c
-> 
-> The gpiod_get_raw_value() doesn't care of the GPIO_ACTIVE_{HIGH,LOW}.
-> So, should I add gpiod_is_active_low() or someting in the renesas_usbhs driver?
-> Or, Do I misunderstand something?
-
-I looked at the gpio-keys driver, and then I understand the renesas_usbhs driver should
-have the gpio flags from of_get_named_gpio_flags().
-
-So, I will try to modify the renesas_usbhs driver.
-
-Best regards,
-Yoshihiro Shimoda
-
-> Best regards,
-> Yoshihiro Shimoda
-> 
->> Best regards,
->> Yoshihiro Shimoda
+>> bridge1234 {
+>> 	bridge1234-cfg1: config1 {
+>> 		high-voltage;
+>> 	};
 >>
->>> WBR, Sergei
->>>
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> 	bridge1234-cfg2: config2 {
+>> 		low-voltage;
+>> 	};
+>>
+>> 	output =3D <&mux>;
+>> };
+>>
+>> mux: video-gpio-mux {
+>> 	gpio =3D <123>;
+>>
+>> 	outputs =3D <&panel1 &panel2>;
+>> 	input-configs =3D <&bridge1234-cfg1 &bridge1234-cfg2>;
+>> };
+>>
+>> panel1: panel-foo {
+>>
+>> };
+>>
+>> panel2: panel-foo {
+>>
+>> };
+>>
+>> So the bridge node has configuration sets. These might be compared to
+>> pinmux nodes. And the mux has a list of input-configs. When panel1 is =
+to
+>> be enabled, "bridge1234-cfg1" config becomes active, and the bridge is=
+
+>> given this configuration.
+>>
+>> I have to say the endpoint system feels cleaner than the above, but
+>> perhaps it's possible to improve the method above somehow.
+>=20
+> Isn't it possible for the bridge to compute its configuration at runtim=
+e by=20
+> querying properties of the downstream video entities ? That would solve=
+ the=20
+> problem neatly.
+
+You mean the bridge driver would somehow take a peek into panel1 and
+panel2 nodes, looking for bridge specific properties? Sounds somewhat
+fragile to me... How would the bridge driver know a property is for the
+bridge?
+
+ Tomi
+
+
+
+--MvlkbJLE7MAhNI2kc0gsXGtLcvW8miOFi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUM5DqAAoJEPo9qoy8lh71oYcQAKSTFpRixvYktSf3tmaL/Vy1
+Kasr0gVwI/vX2VLgLkmfdda+vh9a0PwbsMyopGpCKPeWSS90C4JG8TqfpNHOXvck
+j4KqqTqxITtfNsAOXUccypiLYfmItneUMAW6MkXHpSax4d/qnk5m6VbJnek3VSGu
+VHSjnewOwYFNQDEJCBv9ZX/RMZwtEDWb4KMAkilZxHtpG1UX32GVeUu4GQfltMmB
+EuH+ytXS1PI0HnrWjeOAI/pZ0rLk9uR4jEt9+VZ4J9hupt+cTJke2B23vSvMTa+t
+zr288J2QL0OTUZ2TY025rl8Xv/d1JATc+zdjDcxZ9HozGpx9kKOS4WejUlr8lale
+ltgiET47wNm+HKdt/+rjrQ9QZeLCS7NmHPwQxBiyzgGWKC5xbs9rKu0pcBD1O/8f
+mRZqLko5XXvRwld+k66/LdMhQ0vHN6GkjO7+uloOUGAyKH1IZb1DmByvQ5bQHjhy
+fA5TynLAqnOa+gmoAsBHuBqAOSSuD3EmLpa1hDF6CDlV5B/1njWg4aPe7VoNXw/e
+Nk/N+/5KC0WASqey6qPhd/fPHoHB6pMYhutQ0IT26tSlx441j1SZCJNGFvM4xsNY
+3Et9PvJWfw2ceNI4f2SfWR2+VlEoRKmcAvJ7m9CHf8/JMYAK60pZNAhKGJSGGY7e
+pwqRCPNfq1uq+0ovqo53
+=K6jW
+-----END PGP SIGNATURE-----
+
+--MvlkbJLE7MAhNI2kc0gsXGtLcvW8miOFi--
