@@ -1,89 +1,29 @@
-From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v5 3/3] ARM: dts: hix5hd2: add i2c node
-Date: Tue,  7 Oct 2014 09:04:13 +0800
-Message-ID: <1412643853-11115-4-git-send-email-zhangfei.gao@linaro.org>
-References: <1412643853-11115-1-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412643853-11115-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH 0/2] Qualcomm PM8941 power key driver
+Date: Mon, 6 Oct 2014 18:11:59 -0700
+Message-ID: <1412644321-27683-1-git-send-email-bjorn.andersson@sonymobile.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/hisi-x5hd2.dtsi |   60 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+These patches add dt bindings and a device driver for the power key block in
+the Qualcomm PM8941 pmic.
 
-diff --git a/arch/arm/boot/dts/hisi-x5hd2.dtsi b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-index d3d99fb..17d0637 100644
---- a/arch/arm/boot/dts/hisi-x5hd2.dtsi
-+++ b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-@@ -476,5 +476,65 @@
-                         interrupts = <0 70 4>;
-                         clocks = <&clock HIX5HD2_SATA_CLK>;
- 		};
-+
-+		i2c0: i2c@b10000 {
-+			compatible = "hisilicon,hix5hd2-i2c";
-+			reg = <0xb10000 0x1000>;
-+			interrupts = <0 38 4>;
-+			clocks = <&clock HIX5HD2_I2C0_RST>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c1: i2c@b11000 {
-+			compatible = "hisilicon,hix5hd2-i2c";
-+			reg = <0xb11000 0x1000>;
-+			interrupts = <0 39 4>;
-+			clocks = <&clock HIX5HD2_I2C1_RST>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@b12000 {
-+			compatible = "hisilicon,hix5hd2-i2c";
-+			reg = <0xb12000 0x1000>;
-+			interrupts = <0 40 4>;
-+			clocks = <&clock HIX5HD2_I2C2_RST>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c3: i2c@b13000 {
-+			compatible = "hisilicon,hix5hd2-i2c";
-+			reg = <0xb13000 0x1000>;
-+			interrupts = <0 41 4>;
-+			clocks = <&clock HIX5HD2_I2C3_RST>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c4: i2c@b16000 {
-+			compatible = "hisilicon,hix5hd2-i2c";
-+			reg = <0xb16000 0x1000>;
-+			interrupts = <0 43 4>;
-+			clocks = <&clock HIX5HD2_I2C4_RST>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c5: i2c@b17000 {
-+			compatible = "hisilicon,hix5hd2-i2c";
-+			reg = <0xb17000 0x1000>;
-+			interrupts = <0 44 4>;
-+			clocks = <&clock HIX5HD2_I2C5_RST>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
- 	};
- };
+Courtney Cavin (2):
+  input: Add Qualcomm PM8941 power key driver
+  input: pm8941-pwrkey: Add DT binding documentation
+
+ .../bindings/input/qcom,pm8941-pwrkey.txt          |   43 +++++
+ drivers/input/misc/Kconfig                         |   12 ++
+ drivers/input/misc/Makefile                        |    1 +
+ drivers/input/misc/pm8941-pwrkey.c                 |  196 ++++++++++++++++++++
+ 4 files changed, 252 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+ create mode 100644 drivers/input/misc/pm8941-pwrkey.c
+
 -- 
 1.7.9.5
