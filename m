@@ -1,53 +1,32 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm: dts: socfpga: Add SPI nodes & update copyright.
-Date: Wed, 8 Oct 2014 00:12:00 +0100
-Message-ID: <20141007231200.GR4609@sirena.org.uk>
-References: <1412711297-31857-1-git-send-email-tthayer@opensource.altera.com>
- <1412711297-31857-3-git-send-email-tthayer@opensource.altera.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v8 2/7] arm: dts: qcom: Add power-controller device node
+ for 8974 Krait CPUs
+Date: Tue, 07 Oct 2014 16:17:07 -0700
+Message-ID: <54347473.5010605@codeaurora.org>
+References: <1412718106-17049-1-git-send-email-lina.iyer@linaro.org> <1412718106-17049-3-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kPepdeVVZyud5ZkI"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1412711297-31857-3-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: jkosina-AlSwsSmVLrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1412718106-17049-3-git-send-email-lina.iyer@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: daniel.lezcano@linaro.org, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 10/07/2014 02:41 PM, Lina Iyer wrote:
+> @@ -144,7 +148,27 @@
+>   			};
+>   		};
+>   
+> -		saw_l2: regulator@f9012000 {
+> +		saw0: power-controller@f9089000 {
+> +			compatible = "qcom,msm8974-saw2-v2.1-cpu";
+> +			reg = <0xf9089000 0x1000>;
 
---kPepdeVVZyud5ZkI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Please add the aliases.
 
-On Tue, Oct 07, 2014 at 02:48:17PM -0500, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
 
-> Add 2 SPI nodes to SOCFPGA device tree. Update copyright.
-> Update spi-dw.txt with bus-num as an optional property.
-
-Again, this is just randomly mixing multiple changes.  Also why are we
-adding a bus-num property - bus numbers are an implementation detail of
-Linux and I can't see any reason to put them in the device tree.  If
-there were one the binding would need to explain what they were.
-
---kPepdeVVZyud5ZkI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUNHNAAAoJECTWi3JdVIfQLMQH/17DH64GaK/WL3gS//He087f
-9bzMa7NZ4go/wIuwoFHKFGCg1VSjTYAUig/TU+hxJOEUKMZkQLLBGHjXF9snQ1iF
-bZ7iBNXMR2wNR/ShN/IafpdcFjPjAq4RUyQqGg0MgFc3jMDc71i3VxbJ1SnlijD7
-JMPzcJdz50KlbyaH8lm/x07xINKZjNzjLRJ3Y8jFnYHHVfKHN12nZJE459d8EoDZ
-bg+6ju7KQpwta19GPyNtsk3KS5e/IQ0kgQ9p0hySt3bHCpIUuFwXviI1cz+dR/Ug
-r5YMs9fSH8swW8NErRsjN/AG+b287L/Jtp4Ie4abH/gp3rLU71aTwJR5rdLOuuo=
-=vvxe
------END PGP SIGNATURE-----
-
---kPepdeVVZyud5ZkI--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
