@@ -1,94 +1,39 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for ps8622 DT properties
-Date: Tue, 07 Oct 2014 10:23:46 +0300
-Message-ID: <5749335.iMpaHR0UO8@avalon>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com> <353158006.4Zqtrv9CtX@avalon> <543390E2.1080108@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3] clocksource: arch_timer: Allow the device tree to specify uninitialized CNTVOFF
+Date: Tue, 07 Oct 2014 09:40:57 +0200
+Message-ID: <2943095.1HCacZ7zIg@wuerfel>
+References: <1412663852-32681-1-git-send-email-sonnyrao@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <543390E2.1080108@ti.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Ajay kumar <ajaynumb@gmail.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, InKi Dae <inki.dae@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412663852-32681-1-git-send-email-sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi,
-
-On Tuesday 07 October 2014 10:06:10 Tomi Valkeinen wrote:
-> On 06/10/14 17:40, Laurent Pinchart wrote:
-> >> But seriously speaking, I was thinking about this. I'd really like to
-> >> have a generic video-mux node, that would still somehow allow us to have
-> >> device specific configurations for the video sources and sinks (which
-> >> the endpoints provide us), without endpoints.
-> >> 
-> >> The reason endpoints don't feel right in this case is that it makes
-> >> sense that the mux has a single input and two outputs, but with
-> >> endpoints we need two endpoints from the bridge (which is still ok), but
-> >> we also need two endpoitns in the mux's input side, which doesn't feel
-> >> right.
-> >> 
-> >> I came up with the following. It's quite ugly, though. I hope someone
-> >> has ideas how it could be done in a neater way:
-> >> 
-> >> bridge1234 {
-> >> 
-> >> 	bridge1234-cfg1: config1 {
-> >> 	
-> >> 		high-voltage;
-> >> 	
-> >> 	};
-> >> 	
-> >> 	bridge1234-cfg2: config2 {
-> >> 	
-> >> 		low-voltage;
-> >> 	
-> >> 	};
-> >> 	
-> >> 	output = <&mux>;
-> >> 
-> >> };
-> >> 
-> >> mux: video-gpio-mux {
-> >> 
-> >> 	gpio = <123>;
-> >> 	
-> >> 	outputs = <&panel1 &panel2>;
-> >> 	input-configs = <&bridge1234-cfg1 &bridge1234-cfg2>;
-> >> 
-> >> };
-> >> 
-> >> panel1: panel-foo {
-> >> 
-> >> };
-> >> 
-> >> panel2: panel-foo {
-> >> 
-> >> };
-> >> 
-> >> So the bridge node has configuration sets. These might be compared to
-> >> pinmux nodes. And the mux has a list of input-configs. When panel1 is to
-> >> be enabled, "bridge1234-cfg1" config becomes active, and the bridge is
-> >> given this configuration.
-> >> 
-> >> I have to say the endpoint system feels cleaner than the above, but
-> >> perhaps it's possible to improve the method above somehow.
-> > 
-> > Isn't it possible for the bridge to compute its configuration at runtime
-> > by querying properties of the downstream video entities ? That would solve
-> > the problem neatly.
+On Monday 06 October 2014 23:37:32 Sonny Rao wrote:
 > 
-> You mean the bridge driver would somehow take a peek into panel1 and
-> panel2 nodes, looking for bridge specific properties? Sounds somewhat
-> fragile to me... How would the bridge driver know a property is for the
-> bridge?
+> +#ifdef CONFIG_ARM
+> +       /*
+> +        * If we cannot rely on firmware initializing the CNTVOFF then
+> +        * we should use the physical timers instead.
+> +        */
+> +       if (of_property_read_bool(np, "arm,cntvoff-not-fw-configured"))
+> +               arch_timer_use_virtual = false;
+> +#endif
+> +
+> 
 
-No, I mean the bridge driver should call the API provided by the panel objects 
-to get information about the panels, and compute its configuration parameters 
-from those. I'm not sure if that's possible though, it depends on whether the 
-bridge parameters can be computed from information provided by the panel.
+Sorry for the nitpicking, but can this please use
 
--- 
-Regards,
+	if (IS_ENABLED(CONFIG_ARM))
 
-Laurent Pinchart
+to avoid the ugly #ifdef?
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
