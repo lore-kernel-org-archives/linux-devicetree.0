@@ -1,36 +1,69 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 05/44] mfd: as3722: Drop reference to pm_power_off from
- devicetree bindings
-Date: Tue, 7 Oct 2014 09:31:31 -0700
-Message-ID: <20141007163131.GE28835@roeck-us.net>
-References: <1412659726-29957-1-git-send-email-linux@roeck-us.net>
- <1412659726-29957-6-git-send-email-linux@roeck-us.net>
- <543412F7.8040909@landley.net>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: simple-card: Add mic and hp detect gpios.
+Date: Tue, 7 Oct 2014 17:36:54 +0100
+Message-ID: <20141007163654.GJ4609@sirena.org.uk>
+References: <1412198720-2326-1-git-send-email-dgreid@chromium.org>
+ <20141002155350.GU4273@sirena.org.uk>
+ <CAMuHMdWh=sXAD59T1T=gvROX+fbF6=gFo6C0nkJdfnCrdNrwYg@mail.gmail.com>
+ <20141007123856.GF4609@sirena.org.uk>
+ <CAMuHMdV39fM_TCa+WSvswij6dxD2vwfJT+FueBtxndpsymP9CQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gVeFDRGtAQ0W7qcm"
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <543412F7.8040909@landley.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Landley <rob@landley.net>
-Cc: linux-kernel@vger.kernel.org, adi-buildroot-devel@lists.sourceforge.net, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lguest@lists.ozlabs.org, linux-acpi@vger.kernel.org, linux-alpha@vger.kernel.org, linux-am33-list@redhat.com, linux-cris-kernel@axis.com, linux-efi@vger.kernel.org, linux-hexagon@vger.kernel.org, linux-m32r-ja@ml.linux-m32r.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org, linux-xtensa@linux-xtensa.org, openipmi-developer@lists.sourceforge.net, user-mode-linux-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-metag@vger.kernel.org, linux-mips@linux-mips.org, linux-parisc@vger.kernel.org, linux-pm@vger.kernel.org, linux-sh@vger.kernel.org, xen-devel@lists.xenproject.org, Rob Herring <robh+>
+In-Reply-To: <CAMuHMdV39fM_TCa+WSvswij6dxD2vwfJT+FueBtxndpsymP9CQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dylan Reid <dgreid@chromium.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, jay.xu@rock-chips.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, sonnyrao@chromium.org, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 07, 2014 at 11:21:11AM -0500, Rob Landley wrote:
-> On 10/07/14 00:28, Guenter Roeck wrote:
-> > Devicetree bindings are supposed to be operating system independent
-> > and should thus not describe how a specific functionality is implemented
-> > in Linux.
-> 
-> So your argument is that linux/Documentation/devicetree/bindings should
-> not be specific to Linux. Merely hosted in the Linux kernel source
-> repository.
-> 
-> Well that's certainly a point of view.
-> 
-Not specifically my argument, really, and nothing new either. But, yes, I do
-think that devicetree bindings descriptions should not include implementation
-details, especially since those may change over time (as is the case here).
 
-Thanks,
-Guenter
+--gVeFDRGtAQ0W7qcm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Oct 07, 2014 at 03:10:01PM +0200, Geert Uytterhoeven wrote:
+> On Tue, Oct 7, 2014 at 2:38 PM, Mark Brown <broonie@kernel.org> wrote:
+
+> > The fix here is to not allow 0 as a GPIO in the core code (which
+> > should've been there already).
+
+> Unfortunately it's not there.
+
+> And it's not as simple as changing the definition of gpio_is_valid()
+> (crash in gpio_get_value()):
+
+>     gpiochip_add: GPIOs 0..211 (r8a7740_pfc) failed to register
+>     sh-pfc pfc-r8a7740: failed to init GPIO chip, ignoring...
+>     sh-pfc pfc-r8a7740: r8a7740_pfc support registered
+>     Unable to handle kernel NULL pointer dereference at virtual address 0000004c
+
+Right, obviously it's not going to work if the platform actually uses 0
+as a valid GPIO.
+
+> Quoting Linus (https://lkml.org/lkml/2014/9/4/464):
+> "Fixing the old global GPIO numberspace API is a waste of time IMO".
+
+> Hence I've just sent a patch to initialize the GPIO numbers with -ENOENT.
+
+I do think it's worth renumbering the platforms since it's *relatively*
+little work per platform compared to completing the gpiod transition.
+
+--gVeFDRGtAQ0W7qcm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUNBalAAoJECTWi3JdVIfQ50UH/jlCUwuw+qpYsFxnMr6HgFWm
+o56BLqUOI12FQpV7cZbOVwDFcXXZJ+VWfl1oJbcPcLcmR8M830I2BVrtPg4jNud2
+2kZRaPrpt4m2kLeLsQ2e1pUUlWNrlfgwv8mXDrQL2OKdvY+c95J0x7Z7ZBJNPbAB
+569Qx53AicNeRZH9s2jm9lPh9EtseSL51p5VBlRjvMTESSUgMdz+uzGsi1fwEbgU
+Uxk0EsBbQ2zwvDAVicTtdgR4jawavgz9+YOF7iFmo+GCfSm+Z3N9VNQPG6FjoB89
+wRqGwrn2NoV2tJKXdAjIIY+JmaRm+LIfgWRC3N4Yn59A5EPsW/oczRnbBSs/qXk=
+=FKzE
+-----END PGP SIGNATURE-----
+
+--gVeFDRGtAQ0W7qcm--
