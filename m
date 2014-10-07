@@ -1,102 +1,53 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 2/4] ARM: qcom: add description of KPSS WDT for IPQ8064
-Date: Tue, 07 Oct 2014 16:07:43 -0700
-Message-ID: <5434723F.70800@codeaurora.org>
-References: <cover.1412182773.git.joshc@codeaurora.org> <50c0ec1514173ce07641a95839e939dcda41b110.1412182773.git.joshc@codeaurora.org> <20141001172855.GL10233@codeaurora.org> <20141001181557.GQ868@joshc.qualcomm.com> <542DA2B6.3020201@codeaurora.org> <20141007221044.GR868@joshc.qualcomm.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm: dts: socfpga: Add SPI nodes & update copyright.
+Date: Wed, 8 Oct 2014 00:12:00 +0100
+Message-ID: <20141007231200.GR4609@sirena.org.uk>
+References: <1412711297-31857-1-git-send-email-tthayer@opensource.altera.com>
+ <1412711297-31857-3-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141007221044.GR868@joshc.qualcomm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="kPepdeVVZyud5ZkI"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1412711297-31857-3-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Cc: jkosina-AlSwsSmVLrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/2014 03:10 PM, Josh Cartwright wrote:
-> On Thu, Oct 02, 2014 at 12:08:38PM -0700, Stephen Boyd wrote:
-> [..]
->> On 10/01/14 11:15, Josh Cartwright wrote:
->>> Something like this perhaps:
->>>
->>> 	timer@200a000 {
->>> 		compatible = "qcom,kpss-timer", "qcom,msm-timer";
->>> 		interrupts = <1 1 0x301>,
->>> 			     <1 2 0x301>,
->>> 			     <1 3 0x301>;
->>> 		reg = <0x0200a000 0x100>;
->>> 		clock-frequency = <25000000>,
->>> 				  <32768>;
->>> 		cpu-offset = <0x80000>;
->>>
->>> 		#address-cells = <1>;
->>> 		#size-cells = <1>;
->>> 		ranges;
->>>
->>> 		cpu0_wdt0: watchdog@208a038 {
->>> 			compatible = "qcom,kpss-wdt";
->>> 			reg = <0x208a038 0x40>;
->>> 			interrupts = <1 4 0x301>,
->>> 			clocks = <&sleep_clk>;
->>> 			timeout-sec = <10>;
->>> 			cpu = <&cpu0>;
->>> 		};
->>>
->>> 		cpu0_wdt1: watchdog@208a060 {
->>> 			compatible = "qcom,kpss-wdt";
->>> 			reg = <0x208a060 0x40>;
->>> 			interrupts = <1 5 0x301>,
->>> 			clocks = <&sleep_clk>;
->>> 			timeout-sec = <20>;
->>> 			cpu = <&cpu0>;
->>> 		};
->>>
->>> 		cpu1_wdt0: watchdog@209a038 {
->>> 			compatible = "qcom,kpss-wdt";
->>> 			reg = <0x209a038 0x40>;
->>> 			interrupts = <1 4 0x301>,
->>> 			clocks = <&sleep_clk>;
->>> 			timeout-sec = <8>;
->>> 			cpu = <&cpu1>;
->>> 		};
->>>
->>> 		cpu1_wdt1: watchdog@209a060 {
->>> 			compatible = "qcom,kpss-wdt";
->>> 			reg = <0x209a060 0x40>;
->>> 			interrupts = <1 5 0x301>,
->>> 			clocks = <&sleep_clk>;
->>> 			timeout-sec = <15>;
->>> 			cpu = <&cpu1>;
->>> 		};
->>> 	};
->>>
->>>
->> I'm thinking:
->>
->>                  timer@200a000 {
->>                          compatible = "qcom,kpss-timer", "qcom,msm-timer";
->>                          interrupts = <1 1 0x301>,
->>                                       <1 2 0x301>,
->>                                       <1 3 0x301>,
->>                                       <1 4 0x301>,
->>                                       <1 5 0x301>;
->>                          reg = <0x0200a000 0x100>;
->>                          clock-frequency = <27000000>,
->>                                            <32768>;
->>                          clocks = <&cxo>, <&sleep_clk>;
->>                          clock-names = "ref", "sleep";
->>                          cpu-offset = <0x80000>;
->>                  };
-> Where'd the default timeout configuration go?  Or, should we have one
-> timeout-sec property and not allow setting the default timeouts per WDT
-> instance?  Or no configurable timeout at all?
 
-Ah sorry. How about a timeout-sec-0, timeout-sec-1 property that is 
-per-cpu and maps to the first and second watchdog timer? Something like:
+--kPepdeVVZyud5ZkI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-timeout-sec-wdt0 = <10 8>;
-timeout-sec-wdt1 = <20 15>;
+On Tue, Oct 07, 2014 at 02:48:17PM -0500, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+> Add 2 SPI nodes to SOCFPGA device tree. Update copyright.
+> Update spi-dw.txt with bus-num as an optional property.
+
+Again, this is just randomly mixing multiple changes.  Also why are we
+adding a bus-num property - bus numbers are an implementation detail of
+Linux and I can't see any reason to put them in the device tree.  If
+there were one the binding would need to explain what they were.
+
+--kPepdeVVZyud5ZkI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUNHNAAAoJECTWi3JdVIfQLMQH/17DH64GaK/WL3gS//He087f
+9bzMa7NZ4go/wIuwoFHKFGCg1VSjTYAUig/TU+hxJOEUKMZkQLLBGHjXF9snQ1iF
+bZ7iBNXMR2wNR/ShN/IafpdcFjPjAq4RUyQqGg0MgFc3jMDc71i3VxbJ1SnlijD7
+JMPzcJdz50KlbyaH8lm/x07xINKZjNzjLRJ3Y8jFnYHHVfKHN12nZJE459d8EoDZ
+bg+6ju7KQpwta19GPyNtsk3KS5e/IQ0kgQ9p0hySt3bHCpIUuFwXviI1cz+dR/Ug
+r5YMs9fSH8swW8NErRsjN/AG+b287L/Jtp4Ie4abH/gp3rLU71aTwJR5rdLOuuo=
+=vvxe
+-----END PGP SIGNATURE-----
+
+--kPepdeVVZyud5ZkI--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
