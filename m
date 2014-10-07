@@ -1,51 +1,157 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v5 3/3] ARM: dts: hix5hd2: add i2c node
-Date: Tue, 7 Oct 2014 19:14:10 +0200
-Message-ID: <20141007171410.GD1577@katana>
-References: <1412643853-11115-1-git-send-email-zhangfei.gao@linaro.org>
- <1412643853-11115-4-git-send-email-zhangfei.gao@linaro.org>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 09/12] input: gpio_keys_polled - Add support for GPIO
+ descriptors
+Date: Tue, 7 Oct 2014 10:29:47 -0700
+Message-ID: <20141007172947.GH16469@dtor-ws>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan>
+ <1740633.d3tSWZ2Q0u@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3Gf/FFewwPeBMqCJ"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1412643853-11115-4-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1740633.d3tSWZ2Q0u-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Darren Hart <dvhart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Oct 07, 2014 at 02:16:47AM +0200, Rafael J. Wysocki wrote:
+> From: Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> 
+> GPIO descriptors are the preferred way over legacy GPIO numbers
+> nowadays. Convert the driver to use GPIO descriptors internally but
+> still allow passing legacy GPIO numbers from platform data to support
+> existing platforms.
+> 
+> Signed-off-by: Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Acked-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 
---3Gf/FFewwPeBMqCJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Tue, Oct 07, 2014 at 09:04:13AM +0800, Zhangfei Gao wrote:
-> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-This one should go via arm-soc.
+Acked-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
 
---3Gf/FFewwPeBMqCJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> ---
+>  drivers/input/keyboard/gpio_keys_polled.c | 39 +++++++++++++++++++++----------
+>  include/linux/gpio_keys.h                 |  3 +++
+>  2 files changed, 30 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
+> index 432d363..b7a514c 100644
+> --- a/drivers/input/keyboard/gpio_keys_polled.c
+> +++ b/drivers/input/keyboard/gpio_keys_polled.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/ioport.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/gpio.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/gpio_keys.h>
+>  #include <linux/of.h>
+>  #include <linux/of_platform.h>
+> @@ -51,15 +52,14 @@ static void gpio_keys_polled_check_state(struct input_dev *input,
+>  	int state;
+>  
+>  	if (bdata->can_sleep)
+> -		state = !!gpio_get_value_cansleep(button->gpio);
+> +		state = !!gpiod_get_value_cansleep(button->gpiod);
+>  	else
+> -		state = !!gpio_get_value(button->gpio);
+> +		state = !!gpiod_get_value(button->gpiod);
+>  
+>  	if (state != bdata->last_state) {
+>  		unsigned int type = button->type ?: EV_KEY;
+>  
+> -		input_event(input, type, button->code,
+> -			    !!(state ^ button->active_low));
+> +		input_event(input, type, button->code, state);
+>  		input_sync(input);
+>  		bdata->count = 0;
+>  		bdata->last_state = state;
+> @@ -259,7 +259,6 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
+>  	for (i = 0; i < pdata->nbuttons; i++) {
+>  		struct gpio_keys_button *button = &pdata->buttons[i];
+>  		struct gpio_keys_button_data *bdata = &bdev->data[i];
+> -		unsigned int gpio = button->gpio;
+>  		unsigned int type = button->type ?: EV_KEY;
+>  
+>  		if (button->wakeup) {
+> @@ -267,15 +266,31 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
+>  			return -EINVAL;
+>  		}
+>  
+> -		error = devm_gpio_request_one(&pdev->dev, gpio, GPIOF_IN,
+> -					      button->desc ? : DRV_NAME);
+> -		if (error) {
+> -			dev_err(dev, "unable to claim gpio %u, err=%d\n",
+> -				gpio, error);
+> -			return error;
+> +		/*
+> +		 * Legacy GPIO number so request the GPIO here and
+> +		 * convert it to descriptor.
+> +		 */
+> +		if (!button->gpiod && gpio_is_valid(button->gpio)) {
+> +			unsigned flags = 0;
+> +
+> +			if (button->active_low)
+> +				flags |= GPIOF_ACTIVE_LOW;
+> +
+> +			error = devm_gpio_request_one(&pdev->dev, button->gpio,
+> +					flags, button->desc ? : DRV_NAME);
+> +			if (error) {
+> +				dev_err(dev, "unable to claim gpio %u, err=%d\n",
+> +					button->gpio, error);
+> +				return error;
+> +			}
+> +
+> +			button->gpiod = gpio_to_desc(button->gpio);
+>  		}
+>  
+> -		bdata->can_sleep = gpio_cansleep(gpio);
+> +		if (IS_ERR(button->gpiod))
+> +			return PTR_ERR(button->gpiod);
+> +
+> +		bdata->can_sleep = gpiod_cansleep(button->gpiod);
+>  		bdata->last_state = -1;
+>  		bdata->threshold = DIV_ROUND_UP(button->debounce_interval,
+>  						pdata->poll_interval);
+> diff --git a/include/linux/gpio_keys.h b/include/linux/gpio_keys.h
+> index 8b62246..ee2d8c6 100644
+> --- a/include/linux/gpio_keys.h
+> +++ b/include/linux/gpio_keys.h
+> @@ -2,6 +2,7 @@
+>  #define _GPIO_KEYS_H
+>  
+>  struct device;
+> +struct gpio_desc;
+>  
+>  /**
+>   * struct gpio_keys_button - configuration parameters
+> @@ -17,6 +18,7 @@ struct device;
+>   *			disable button via sysfs
+>   * @value:		axis value for %EV_ABS
+>   * @irq:		Irq number in case of interrupt keys
+> + * @gpiod:		GPIO descriptor
+>   */
+>  struct gpio_keys_button {
+>  	unsigned int code;
+> @@ -29,6 +31,7 @@ struct gpio_keys_button {
+>  	bool can_disable;
+>  	int value;
+>  	unsigned int irq;
+> +	struct gpio_desc *gpiod;
+>  };
+>  
+>  /**
+> -- 
+> 1.9.3
+> 
+> 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUNB9iAAoJEBQN5MwUoCm2NG8P/iHtUZzvejJ310biXYrFZ8qr
-E82g4YSSwD7TkPX4WfbR+hcROQgGbe72xt2Ue2s3sid7KFbPrYH0fpJR1u+oww9H
-oDF/ezh0132FLtYUF2t65LK9E6afoXcq2S5w4ezVsT0Cry0NZN0NwRnmEbkU7F2b
-NKUCpyCBR4IYO4dYSo5un9HxxSxwityXaCpuLfPYC1xu2OEl75Ypse2wERRdZsF+
-QIjoaXpUaRFceQMqJuuPo7VGxMOu/1S4TAWM+D5m90Ux9cgj369/cHRtITLwxd/u
-WXy+SDR1ytlIhpe5ugLS5Ibs8lzXGyZHTe/pC7Lb4duAwlDj3CskDm5taanUj7Zj
-ip+dLYr+q/rJ5bIs/6BOAiEYNO8BFDC+nYbPZ4uhr5+l/EhLpd4e0LvA90eeVsD7
-k87P6kk8qNMvYo3XVkw4uiBxb/PDScLoDhLapJpF8SeuzkDmxoyZrkDzO8vvg9s/
-mOD9pprWSThGsi0cwYpMvu4HWO9vUs4V3mx/I/u7Aoz5n9F8+AIvnLoE+9u2ZDSH
-pWhoGpdQwZ9VX8QYn/9u3WRl8dUkBu1HZl143cvzTCoJOMVqSzrxWmZXnnSm4czS
-+P4Gf/O1wXYJrZlbnGWxtEyWQ3m+NKFQRqyeJSeyoVH/5uSgt78okBNJLeNyxEdr
-0S48utrKkHK5EhIh07j7
-=qJ7J
------END PGP SIGNATURE-----
-
---3Gf/FFewwPeBMqCJ--
+-- 
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
