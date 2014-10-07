@@ -1,48 +1,102 @@
-From: Steven Newbury <steve-MOftb3VP07atmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH v9 1/3] drm: rockchip: Add basic drm driver
-Date: Tue, 07 Oct 2014 23:26:16 +0100
-Message-ID: <1412720776.2797.8.camel@snewbury.org.uk>
-References: <1412081870-27535-1-git-send-email-mark.yao@rock-chips.com>
-	 <1412082181-27703-1-git-send-email-mark.yao@rock-chips.com>
-	 <542AB0B2.6000207@samsung.com> <54336474.1010503@rock-chips.com>
-	 <54338484.5070809@samsung.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 2/4] ARM: qcom: add description of KPSS WDT for IPQ8064
+Date: Tue, 07 Oct 2014 16:07:43 -0700
+Message-ID: <5434723F.70800@codeaurora.org>
+References: <cover.1412182773.git.joshc@codeaurora.org> <50c0ec1514173ce07641a95839e939dcda41b110.1412182773.git.joshc@codeaurora.org> <20141001172855.GL10233@codeaurora.org> <20141001181557.GQ868@joshc.qualcomm.com> <542DA2B6.3020201@codeaurora.org> <20141007221044.GR868@joshc.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-3Ej4YuX3v57Rb2M1m87J"
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54338484.5070809-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree@vg
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141007221044.GR868@joshc.qualcomm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 10/07/2014 03:10 PM, Josh Cartwright wrote:
+> On Thu, Oct 02, 2014 at 12:08:38PM -0700, Stephen Boyd wrote:
+> [..]
+>> On 10/01/14 11:15, Josh Cartwright wrote:
+>>> Something like this perhaps:
+>>>
+>>> 	timer@200a000 {
+>>> 		compatible = "qcom,kpss-timer", "qcom,msm-timer";
+>>> 		interrupts = <1 1 0x301>,
+>>> 			     <1 2 0x301>,
+>>> 			     <1 3 0x301>;
+>>> 		reg = <0x0200a000 0x100>;
+>>> 		clock-frequency = <25000000>,
+>>> 				  <32768>;
+>>> 		cpu-offset = <0x80000>;
+>>>
+>>> 		#address-cells = <1>;
+>>> 		#size-cells = <1>;
+>>> 		ranges;
+>>>
+>>> 		cpu0_wdt0: watchdog@208a038 {
+>>> 			compatible = "qcom,kpss-wdt";
+>>> 			reg = <0x208a038 0x40>;
+>>> 			interrupts = <1 4 0x301>,
+>>> 			clocks = <&sleep_clk>;
+>>> 			timeout-sec = <10>;
+>>> 			cpu = <&cpu0>;
+>>> 		};
+>>>
+>>> 		cpu0_wdt1: watchdog@208a060 {
+>>> 			compatible = "qcom,kpss-wdt";
+>>> 			reg = <0x208a060 0x40>;
+>>> 			interrupts = <1 5 0x301>,
+>>> 			clocks = <&sleep_clk>;
+>>> 			timeout-sec = <20>;
+>>> 			cpu = <&cpu0>;
+>>> 		};
+>>>
+>>> 		cpu1_wdt0: watchdog@209a038 {
+>>> 			compatible = "qcom,kpss-wdt";
+>>> 			reg = <0x209a038 0x40>;
+>>> 			interrupts = <1 4 0x301>,
+>>> 			clocks = <&sleep_clk>;
+>>> 			timeout-sec = <8>;
+>>> 			cpu = <&cpu1>;
+>>> 		};
+>>>
+>>> 		cpu1_wdt1: watchdog@209a060 {
+>>> 			compatible = "qcom,kpss-wdt";
+>>> 			reg = <0x209a060 0x40>;
+>>> 			interrupts = <1 5 0x301>,
+>>> 			clocks = <&sleep_clk>;
+>>> 			timeout-sec = <15>;
+>>> 			cpu = <&cpu1>;
+>>> 		};
+>>> 	};
+>>>
+>>>
+>> I'm thinking:
+>>
+>>                  timer@200a000 {
+>>                          compatible = "qcom,kpss-timer", "qcom,msm-timer";
+>>                          interrupts = <1 1 0x301>,
+>>                                       <1 2 0x301>,
+>>                                       <1 3 0x301>,
+>>                                       <1 4 0x301>,
+>>                                       <1 5 0x301>;
+>>                          reg = <0x0200a000 0x100>;
+>>                          clock-frequency = <27000000>,
+>>                                            <32768>;
+>>                          clocks = <&cxo>, <&sleep_clk>;
+>>                          clock-names = "ref", "sleep";
+>>                          cpu-offset = <0x80000>;
+>>                  };
+> Where'd the default timeout configuration go?  Or, should we have one
+> timeout-sec property and not allow setting the default timeouts per WDT
+> instance?  Or no configurable timeout at all?
 
---=-3Ej4YuX3v57Rb2M1m87J
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Ah sorry. How about a timeout-sec-0, timeout-sec-1 property that is 
+per-cpu and maps to the first and second watchdog timer? Something like:
 
-I've just been discussing how this relates to rk29xx on #etnaviv.  I=20
-looked through the patch and it's good to see it's not limited to=20
-supporting Mali GPUs.  I see no reason this wouldn't be compatible=20
-with etna_viv for rk29xx (or future Rockchip designs with alternative=20
-GPUs) as long as the rest of the infrastructure to support rk29 is in=20
-place iommu (ARM SMMU?) driver, for example.
+timeout-sec-wdt0 = <10 8>;
+timeout-sec-wdt1 = <20 15>;
 
-IMHO it's vital to keep a logical separation between the video display=20
-hardware and the graphics processor on SoCs.
-
-
---=-3Ej4YuX3v57Rb2M1m87J
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEABECAAYFAlQ0aIwACgkQGcb56gMuC61YdQCgroIqzaz6iZoEizQwqvTsmlZd
-1SgAnjRCWI26AASReJl6LwPDw2BmKaIK
-=WXIm
------END PGP SIGNATURE-----
-
---=-3Ej4YuX3v57Rb2M1m87J--
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
