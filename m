@@ -1,56 +1,103 @@
-From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/3] Pinctrl driver for Amlogic Meson SoCs
-Date: Tue,  7 Oct 2014 23:32:53 +0200
-Message-ID: <1412717576-19737-1-git-send-email-b.galvani@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: [PATCH 3/3] ARM: dts: meson8: add pinctrl and gpio nodes
+Date: Tue,  7 Oct 2014 23:32:56 +0200
+Message-ID: <1412717576-19737-4-git-send-email-b.galvani@gmail.com>
+References: <1412717576-19737-1-git-send-email-b.galvani@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412717576-19737-1-git-send-email-b.galvani@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Beniamino Galvani <b.galvani@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add pinctrl node to meson8.dtsi and gpio-leds node to
+meson8-vega-s89e.dts
 
-this series introduces a driver for Amlogic Meson pinctrl and GPIOs,
-adding the basic infrastructure for all the SoCs of the Meson family
-and configuration data specific for the Meson8.
+Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+---
+ arch/arm/boot/dts/meson8-vega-s89e.dts | 16 +++++++++++++++-
+ arch/arm/boot/dts/meson8.dtsi          | 35 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 50 insertions(+), 1 deletion(-)
 
-The last patch depends on a previous series that adds meson8 device
-tree files and can be found here:
-
-http://lwn.net/Articles/615033/
-
-I tested the pinmux and GPIO functionalities on a Tronsmart Vega S89e
-TV box and everything seems to work, however I'm not so familiar with
-the pinctrl subsystem and thus any feedback is very welcome.
-
-Beniamino Galvani (3):
-  pinctrl: add driver for Amlogic Meson SoCs
-  pinctrl: meson: add device tree bindings documentation
-  ARM: dts: meson8: add pinctrl and gpio nodes
-
- .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |  80 ++
- arch/arm/boot/dts/meson8-vega-s89e.dts             |  16 +-
- arch/arm/boot/dts/meson8.dtsi                      |  35 +
- arch/arm/mach-meson/Kconfig                        |   3 +
- drivers/pinctrl/Kconfig                            |   8 +
- drivers/pinctrl/Makefile                           |   1 +
- drivers/pinctrl/meson/Makefile                     |   2 +
- drivers/pinctrl/meson/pinctrl-meson.c              | 823 +++++++++++++++++++++
- drivers/pinctrl/meson/pinctrl-meson.h              | 217 ++++++
- drivers/pinctrl/meson/pinctrl-meson8.c             | 374 ++++++++++
- include/dt-bindings/gpio/meson8-gpio.h             | 155 ++++
- 11 files changed, 1713 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
- create mode 100644 drivers/pinctrl/meson/Makefile
- create mode 100644 drivers/pinctrl/meson/pinctrl-meson.c
- create mode 100644 drivers/pinctrl/meson/pinctrl-meson.h
- create mode 100644 drivers/pinctrl/meson/pinctrl-meson8.c
- create mode 100644 include/dt-bindings/gpio/meson8-gpio.h
-
+diff --git a/arch/arm/boot/dts/meson8-vega-s89e.dts b/arch/arm/boot/dts/meson8-vega-s89e.dts
+index 950998f..70a05c1 100644
+--- a/arch/arm/boot/dts/meson8-vega-s89e.dts
++++ b/arch/arm/boot/dts/meson8-vega-s89e.dts
+@@ -45,7 +45,9 @@
+ 
+ 
+ /dts-v1/;
+-/include/ "meson8.dtsi"
++#include "meson8.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/gpio/meson8-gpio.h>
+ 
+ / {
+ 	model = "Tronsmart Vega S89 Elite";
+@@ -58,8 +60,20 @@
+ 	memory {
+ 		reg = <0x40000000 0x80000000>;
+ 	};
++
++	gpio-leds {
++		compatible = "gpio-leds";
++
++		power {
++			gpios = <&gpio_ao GPIO_TEST_N GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "none";
++		};
++	};
++
+ };
+ 
+ &uart_AO {
+ 	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart_ao_a>;
+ };
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index 1f442a7..59c3af0 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -89,4 +89,39 @@
+ 		compatible = "fixed-clock";
+ 		clock-frequency = <141666666>;
+ 	};
++
++	pinctrl: pinctrl@c1109880 {
++		compatible = "amlogic,meson8-pinctrl";
++		reg = <0xc1109880 0x10>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		gpio: banks@c11080b0 {
++			reg = <0xc11080b0 0x28>,
++			      <0xc11080e4 0x18>,
++			      <0xc1108120 0x18>,
++			      <0xc1108030 0x30>;
++			reg-names = "mux", "pull-enable", "pull", "gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
++
++		gpio_ao: ao-bank@c1108030 {
++			reg = <0xc8100014 0x4>,
++			      <0xc810002c 0x4>,
++			      <0xc8100024 0x8>;
++			reg-names = "mux", "pull", "gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
++
++		uart_ao_a: uart_ao_a {
++			uart_ao_a {
++				pins = "uart_tx_ao_a", "uart_rx_ao_a";
++				function = "uart_ao";
++			};
++		};
++	};
++
+ }; /* end of / */
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
