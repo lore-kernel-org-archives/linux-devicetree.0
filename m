@@ -1,82 +1,34 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: [PATCH v8 7/7] arm: dts: qcom: Add idle states device nodes for 8084
-Date: Tue,  7 Oct 2014 15:41:46 -0600
-Message-ID: <1412718106-17049-8-git-send-email-lina.iyer@linaro.org>
-References: <1412718106-17049-1-git-send-email-lina.iyer@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1412718106-17049-1-git-send-email-lina.iyer@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, Lina Iyer <lina.iyer@linaro.org>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [tpmdd-devel] [PATCH 15/16] tpm/tpm_i2c_stm_st33: Add delay
+ before release_locality to make sure irq are cleared
+Date: Tue, 7 Oct 2014 15:56:33 -0600
+Message-ID: <20141007215633.GA10616@obsidianresearch.com>
+References: <1412712189-1234-1-git-send-email-christophe-h.ricard@st.com>
+ <1412712189-1234-16-git-send-email-christophe-h.ricard@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1412712189-1234-16-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add allowable C-States for each cpu using the cpu-idle-states node.
-Support standby and standalone power collapse (power down that does not
-affect any SoC idle states) for each cpu.
+On Tue, Oct 07, 2014 at 10:03:08PM +0200, Christophe Ricard wrote:
+> In order to manage irq, locality must be active. As Status Ready
+> interrupt is activated, when going back into ready state with the
+> cancel function, we need to add a little delay to make sure the irq
+> is going to be serviced before the release_locality is hit.
 
-Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
----
- arch/arm/boot/dts/qcom-apq8084.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Using a delay for this seems pretty sketchy, is this supposed to be
+waiting for a level sensitive IRQ to desassert? or a queued IRQ to be
+delivered?
 
-diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
-index 1581b12..68eb4bb1 100644
---- a/arch/arm/boot/dts/qcom-apq8084.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
-@@ -19,6 +19,7 @@
- 			next-level-cache = <&L2>;
- 			qcom,acc = <&acc0>;
- 			qcom,saw = <&saw0>;
-+			cpu-idle-states = <&CPU_STBY &CPU_SPC>;
- 		};
- 
- 		cpu@1 {
-@@ -29,6 +30,7 @@
- 			next-level-cache = <&L2>;
- 			qcom,acc = <&acc1>;
- 			qcom,saw = <&saw1>;
-+			cpu-idle-states = <&CPU_STBY &CPU_SPC>;
- 		};
- 
- 		cpu@2 {
-@@ -39,6 +41,7 @@
- 			next-level-cache = <&L2>;
- 			qcom,acc = <&acc2>;
- 			qcom,saw = <&saw2>;
-+			cpu-idle-states = <&CPU_STBY &CPU_SPC>;
- 		};
- 
- 		cpu@3 {
-@@ -49,6 +52,7 @@
- 			next-level-cache = <&L2>;
- 			qcom,acc = <&acc3>;
- 			qcom,saw = <&saw3>;
-+			cpu-idle-states = <&CPU_STBY &CPU_SPC>;
- 		};
- 
- 		L2: l2-cache {
-@@ -56,6 +60,22 @@
- 			cache-level = <2>;
- 			qcom,saw = <&saw_l2>;
- 		};
-+
-+		idle-states {
-+			CPU_STBY: standby {
-+				compatible = "qcom,idle-state-stby", "arm,idle-state";
-+				entry-latency-us = <1>;
-+				exit-latency-us = <1>;
-+				min-residency-us = <2>;
-+			};
-+
-+			CPU_SPC: spc {
-+				compatible = "qcom,idle-state-spc", "arm,idle-state";
-+				entry-latency-us = <150>;
-+				exit-latency-us = <200>;
-+				min-residency-us = <2000>;
-+			};
-+		};
- 	};
- 
- 	cpu-pmu {
--- 
-1.9.1
+What is the harm without the udelay?
+
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
