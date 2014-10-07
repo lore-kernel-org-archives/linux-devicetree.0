@@ -1,38 +1,60 @@
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: dw: Initialize of_node to discover DT node children
-Date: Tue, 7 Oct 2014 15:59:26 -0500
-Message-ID: <5434542E.6020405@opensource.altera.com>
-References: <1412711297-31857-1-git-send-email-tthayer@opensource.altera.com> <1412711297-31857-2-git-send-email-tthayer@opensource.altera.com> <20141007204026.GK4609@sirena.org.uk>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] ARM: shmobile: lager: enable HS-USB
+Date: Wed, 08 Oct 2014 01:00:35 +0400
+Message-ID: <54345473.8060305@cogentembedded.com>
+References: <2438577.UAUDMkTTWI@wasted.cogentembedded.com> <2298118.7qjLAFjuvd@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141007204026.GK4609-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: jkosina-AlSwsSmVLrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2298118.7qjLAFjuvd-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 10/08/2014 12:26 AM, Sergei Shtylyov wrote:
 
-On 10/07/2014 03:40 PM, Mark Brown wrote:
-> On Tue, Oct 07, 2014 at 02:48:16PM -0500, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
->> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>
->> 1. The of_node element must be initialized to enable discovery of node
->> children. The discovery takes place in the of_register_spi_devices() function.
->> 2. Grabbing the bus-num from the device tree.
->> 3. Update the SOCFPGA configuration.
-> No, each of these should be in a separate patch - it's especially bad to
-> be updating the defconfig in the same patch as the driver, these changes
-> should be totally unrelated.
-OK. I will split these and remove the defconfig.
+> From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
-Dinh pointed the defconfig issue out to me as well.
+> Enable HS-USB device for the Lager board, defining the GPIO that the driver
+> should check when probing. Since this board doesn't have the OTG ID pin, we
+> assume that GP5_18 (USB0_PWEN) is an ID pin because it is 1 when the SW5 is
+> in position 2-3 (meaning USB function) and 0 in other positions.
 
-Thanks for reviewing,
+> Note that there will be pinctrl-related error messages if both internal PCI
+> and HS-USB drivers are enabled but they should be just ignored.
 
-Thor
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> [Sergei: added pin function/group and prop, moved device node, fixed summary,
+> supplemented changelog]
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+
+> ---
+> Changes in version 3:
+> - added pin function/group and the pinctrl-related prop;
+> - moved the HS-USB node to precede the USB PHY node;
+> - uppercased "arm" in the summary;
+> - supplemented changelog.
+
+>   arch/arm/boot/dts/r8a7790-lager.dts |   12 ++++++++++++
+>   1 file changed, 12 insertions(+)
+
+> Index: renesas/arch/arm/boot/dts/r8a7790-lager.dts
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7790-lager.dts
+> +++ renesas/arch/arm/boot/dts/r8a7790-lager.dts
+> @@ -226,6 +226,11 @@
+>   		renesas,function = "usb0";
+>   	};
+>
+> +	hsusb_pins: usb0 {
+
+    Oops, forgot to rename the node. :-/ Although dtc didn't protest.
+
+WBR, Sergei
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
