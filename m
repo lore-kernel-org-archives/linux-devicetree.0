@@ -1,59 +1,29 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 11/16] tpm/tpm_i2c_stm_st33: Remove useless i2c read on interrupt registers
-Date: Tue,  7 Oct 2014 21:44:56 +0200
-Message-ID: <1412711101-988-12-git-send-email-christophe-h.ricard@st.com>
-References: <1412711101-988-1-git-send-email-christophe-h.ricard@st.com>
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH 1/2] spi: dw: Initialize of_node to discover DT node children
+Date: Tue, 7 Oct 2014 14:42:47 -0500
+Message-ID: <54344237.9010809@opensource.altera.com>
+References: <1412711297-31857-1-git-send-email-tthayer@opensource.altera.com> <1412711297-31857-2-git-send-email-tthayer@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412711101-988-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <1412711297-31857-2-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org
-Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jkosina-AlSwsSmVLrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Remove useless i2c read on TPM_INT_ENABLE and TPM_INT_STATUS
+On 10/07/2014 02:48 PM, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> 
+> 1. The of_node element must be initialized to enable discovery of node
+> children. The discovery takes place in the of_register_spi_devices() function.
+> 2. Grabbing the bus-num from the device tree.
+> 3. Update the SOCFPGA configuration.
 
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
----
- drivers/char/tpm/tpm_i2c_stm_st33.c | 9 ---------
- 1 file changed, 9 deletions(-)
+updating the socfpga_defconfig should be a separate patch.
 
-diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
-index e99bb78..660ff8b 100644
---- a/drivers/char/tpm/tpm_i2c_stm_st33.c
-+++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
-@@ -187,7 +187,6 @@ static u8 clear_interruption(struct tpm_stm_dev *tpm_dev)
- 
- 	I2C_READ_DATA(tpm_dev, TPM_INT_STATUS, &interrupt, 1);
- 	I2C_WRITE_DATA(tpm_dev, TPM_INT_STATUS, &interrupt, 1);
--	I2C_READ_DATA(tpm_dev, TPM_INT_STATUS, &interrupt, 1);
- 
- 	return interrupt;
- } /* clear_interruption() */
-@@ -753,10 +752,6 @@ tpm_stm_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 			goto _tpm_clean_answer;
- 		}
- 
--		r = I2C_READ_DATA(tpm_dev, TPM_INT_ENABLE, &intmask, 1);
--		if (r < 0)
--			goto _tpm_clean_answer;
--
- 		intmask |= TPM_INTF_CMD_READY_INT
- 			|  TPM_INTF_FIFO_AVALAIBLE_INT
- 			|  TPM_INTF_WAKE_UP_READY_INT
-@@ -773,10 +768,6 @@ tpm_stm_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 		if (r < 0)
- 			goto _tpm_clean_answer;
- 
--		r = I2C_READ_DATA(tpm_dev, TPM_INT_STATUS, &intmask, 1);
--		if (r < 0)
--			goto _tpm_clean_answer;
--
- 		chip->vendor.irq = client->irq;
- 
- 		tpm_gen_interrupt(chip);
--- 
-1.9.1
-
+Dinh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
