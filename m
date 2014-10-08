@@ -1,32 +1,49 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] ARM: meson: add support for Meson8
-Date: Wed, 08 Oct 2014 21:30:09 +0200
-Message-ID: <59241134.gsbhNQV8Wa@wuerfel>
-References: <1412546359-15062-1-git-send-email-b.galvani@gmail.com>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: Re: [PATCH v2 3/3] ARM: dts: qcom: Add SDHC nodes for APQ8084
+ platform
+Date: Wed, 8 Oct 2014 14:45:41 -0500
+Message-ID: <20141008194541.GV868@joshc.qualcomm.com>
+References: <1409672443-4289-1-git-send-email-gdjakov@mm-sol.com>
+ <1409672443-4289-4-git-send-email-gdjakov@mm-sol.com>
+ <CAP71WjxYibPGBC=x4eA-Lmjg_Mc7cCB20VSvf59C_AW7PYNE=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412546359-15062-1-git-send-email-b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAP71WjxYibPGBC=x4eA-Lmjg_Mc7cCB20VSvf59C_AW7PYNE=A@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Cc: Georgi Djakov <gdjakov@mm-sol.com>, Kumar Gala <galak@codeaurora.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, iivanov@mm-sol.com
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 05 October 2014 23:59:12 Beniamino Galvani wrote:
+On Wed, Oct 08, 2014 at 09:18:44PM +0200, Nicolas Dechesne wrote:
+> Georgi,
 > 
-> this patchset introduces support for Amlogic Meson8, which is a family
-> of quad-core Cortex-A9 SoCs used in tablets and set-top boxes.
+> On Tue, Sep 2, 2014 at 5:40 PM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
+> > Enable support for the two SD host controllers on the APQ8084 platform
+> > by adding the required nodes to the DT files.
+> > On the IFC6540 board, the first controller is connected to the onboard
+> > eMMC and the second is connected to a micro-SD card slot.
 > 
-> Changes since v1:
->  - reused the existing DT machine definition and renamed it to be more
->    generic
->  - added L2 cache support
+> testing this set of patch on IFC6540, i noticed that not all
+> partitions from the eMMC are detected. booting [1] which is basically
+> 3.17-rc7 with a few additional patches, i can see the following
+> relevant mmc traces:
+> 
+> [    1.162587] mmc0: BKOPS_EN bit is not set
+> [    1.315357] mmc0: new HS200 MMC card at address 0001
+> [    1.318098] mmcblk0: mmc0:0001 SEM16G 14.6 GiB
+> [    1.330377] mmcblk0boot0: mmc0:0001 SEM16G partition 1 4.00 MiB
+> [    1.333652] mmcblk0boot1: mmc0:0001 SEM16G partition 2 4.00 MiB
+> [    1.345424] mmcblk0rpmb: mmc0:0001 SEM16G partition 3 4.00 MiB
+> [    1.358135]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15
+> [    1.365902]  mmcblk0boot1: p1
+> [    1.367833]  mmcblk0boot0: unknown partition table
 
-Looks all good to me
+This has bitten me more times than I care to admit, but have you checked
+that you've set CONFIG_MMC_BLOCK_MINORS higher than 16?  Perhaps we
+should be doing that in qcom_defconfig if we aren't already.
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
