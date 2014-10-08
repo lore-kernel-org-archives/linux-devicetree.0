@@ -1,91 +1,30 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: simple-card: Add mic and hp detect
-	gpios.
-Date: Wed, 8 Oct 2014 12:40:24 +0100
-Message-ID: <20141008114024.GW4609@sirena.org.uk>
-References: <1412198720-2326-1-git-send-email-dgreid@chromium.org>
- <20141002155350.GU4273@sirena.org.uk>
- <CAMuHMdWh=sXAD59T1T=gvROX+fbF6=gFo6C0nkJdfnCrdNrwYg@mail.gmail.com>
- <20141007123856.GF4609@sirena.org.uk>
- <CAMuHMdV39fM_TCa+WSvswij6dxD2vwfJT+FueBtxndpsymP9CQ@mail.gmail.com>
- <20141007163654.GJ4609@sirena.org.uk>
- <CAAVeFuJB=bF3g2czT1ed1UX85R_hBXqFAKdeLJcASRcXQujFJw@mail.gmail.com>
- <CACRpkdY+KQ1OMh565desoqVP-AUJL-VjFx-D5LiaNpXs5oOsnA@mail.gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 1/6] ARM: cygnus: Initial support for Broadcom Cygnus
+	SoC
+Date: Wed, 8 Oct 2014 12:41:12 +0100
+Message-ID: <20141008114112.GG5182@n2100.arm.linux.org.uk>
+References: <sbranden@broadcom.com> <1412746025-11998-1-git-send-email-sbranden@broadcom.com> <1412746025-11998-2-git-send-email-sbranden@broadcom.com> <20141008081112.GB5182@n2100.arm.linux.org.uk> <54351D49.7040104@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7756922123913068394=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CACRpkdY+KQ1OMh565desoqVP-AUJL-VjFx-D5LiaNpXs5oOsnA@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sonny Rao <sonnyrao@chromium.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Dylan Reid <dgreid@chromium.org>, jay.xu@rock-chips.com, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54351D49.7040104@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Scott Branden <sbranden@broadcom.com>
+Cc: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>, JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 08, 2014 at 04:17:29AM -0700, Scott Branden wrote:
+> Thanks - was unaware of this functionality.  Will add .l2c_aux_val and  
+> .l2c_aux mask to DT_MATCHINE_START.  BUT, what happens when we need to  
+> add trustzone support and make SMC call to secure monitor?
 
---===============7756922123913068394==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HRz4dlJa0zmFsB3a"
-Content-Disposition: inline
+You will then need to implement the .l2c_write_sec initialiser in the
+same place.
 
+Note that there's work to revise the trustzone support in this area
+which will probably be merged for 3.19.
 
---HRz4dlJa0zmFsB3a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Oct 08, 2014 at 10:50:00AM +0200, Linus Walleij wrote:
-> On Wed, Oct 8, 2014 at 9:05 AM, Alexandre Courbot <gnurou@gmail.com> wrote:
-
-> > But transition to gpiod is the way to ultimately fix this issue, as
-> > well as many others. Not to mention that renumbering GPIOs will
-> > certainly make a few users of the GPIO sysfs (another abomination,
-> > agreed) unhappy. I can only recommend switching drivers to gpiod when
-> > such issues are spotted.
-
-> Yeah that is another issue ... we end up in catch 22 situations like
-> that, renumber the GPIOs, OK, then we break the ABI.
-
-> Admittedly that "ABI" is something people break all the time,
-> /sys/*gpioN just isnt what it should be, not stable at all.
-
-> I'm not against renumbering GPIO if it's minor effort, but if it
-> start to consume hundreds of hours and regressions and what not,
-> that time is better spent focusing on the gpiod transition.
-
-My guess is that it's relatively little work for most platforms - with
-the systems I've done enough work on to notice everything is keyed off a
-few defines in the header file.  Things tend to be worse in out of tree
-code but mainline's generally been pretty good.
-
---HRz4dlJa0zmFsB3a
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUNSKnAAoJECTWi3JdVIfQUC4IAIIKAItpa7qYGixEZO6V2j+v
-DO22WyxAr59ZyS+dRaPwsWC/gtBFYdGs8QtiawoXRec1LqYH6ZxyJSCXBFFMRb1I
-H+ddDAB4JtKJGYv9Ci0kvW19C0gnVwDICaAb5a0KcA8vT7gh9WmPOlnJqceU6Glv
-tZUb3TyW8PVHeJBvHAPF3o/wGPHcao/RPeeIEZArJVbGZCcnVJKlR90AtMXx/WgV
-8bWp4DHr8ki+L9kWi7JePf1r/xy2Dq70RJhnQsiJqhF0cj0eQHgsEt/yx5tIlKni
-EhWrsU3awr0E8sNAJ7/G2e9Dv24HsjdjKogWzQ84CjEk8NT6EFPIFO6jpQ2B2fM=
-=ZYo0
------END PGP SIGNATURE-----
-
---HRz4dlJa0zmFsB3a--
-
---===============7756922123913068394==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============7756922123913068394==--
+-- 
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
