@@ -1,42 +1,50 @@
-From: =?gbk?B?WHVldGFvIEd1YW4g?= <gxt@pku.edu.cn>
-Subject: =?utf-8?Q?=E5=9B=9E=E5=A4=8D=EF=BC=9A_[PATCH_08/44]_kernel:_Mov?=
- =?utf-8?Q?e_pm=5Fpower=5Foff_to_common_code?=
-Date: Wed, 8 Oct 2014 19:06:32 +0800 (CST)
-Message-ID: <218135571.28324.1412766392198.JavaMail.root@bj-mail03.pku.edu.cn>
-References: <1412659726-29957-9-git-send-email-linux@roeck-us.net>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [RFC PATCH 0/2] mfd: syscon: declare holes in syscon register
+ maps
+Date: Wed, 8 Oct 2014 13:12:37 +0200
+Message-ID: <54351C25.70604@st.com>
+References: <54244655.1090801@st.com> <1412688148-20835-1-git-send-email-seraphin.bonnaffe@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1412659726-29957-9-git-send-email-linux@roeck-us.net>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kernel@vger.kernel.org, adi-buildroot-devel@lists.sourceforge.net, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lguest@lists.ozlabs.org, linux-acpi@vger.kernel.org, linux-alpha@vger.kernel.org, linux-am33-list@redhat.com, linux-cris-kernel@axis.com, linux-efi@vger.kernel.org, linux-hexagon@vger.kernel.org, linux-m32r-ja@ml.linux-m32r.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org, linux-xtensa@linux-xtensa.org, openipmi-developer@lists.sourceforge.net, user-mode-linux-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org, linux-ia64@vger.kernel.org, linux-m68k@vger.kernel.org, linux-metag@vger.kernel.org, linux-mips@linux-mips.org, linux-parisc@vger.kernel.org, linux-pm@vg
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412688148-20835-1-git-send-email-seraphin.bonnaffe@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Seraphin Bonnaffe <seraphin.bonnaffe@st.com>, b29396@freescale.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org
+Cc: sameo@linux.intel.com, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
+Hi Seraphin,
 
------ Guenter Roeck <linux@roeck-us.net> =E5=86=99=E9=81=93=EF=BC=9A
-> pm_power_off is defined for all architectures. Move it to common code=
-=2E
->=20
-> Have all architectures call do_kernel_poweroff instead of pm_power_of=
-f.
-> Some architectures point pm_power_off to machine_power_off. For those=
-,
-> call do_kernel_poweroff from machine_power_off instead.
->=20
+On 10/07/2014 03:22 PM, Seraphin Bonnaffe wrote:
+> In reply to mail: Holes management in syscon driver.
+> 
+> Hi Dong, Maxime, Lee, all,
+> 
+> Regmap also offers .rd_table and .wr_table structures that can be used to
+> specify valid ranges within agiven regmap configuration.
+> 
+> This patch uses these structures to declare holes in a syscon instance.
+> It takes the description from DT, and fills in the structures accordingly.
+> 
+> Can I have your opinion on this implementation ?
 
-=46or UniCore32 part,
+As discussed face to face, it looks fine to me.
 
-Acked-by: Xuetao Guan <gxt@mprc.pku.edu.cn>
+But we would like green light in the new "holes" property introduced.
 
-Thanks
-Xuetao
+Thanks,
+Maxime
+
+> 
+> Thanks and Regards,
+> Seraphin
+> 
+> Seraphin Bonnaffe (2):
+>    mfd: syscon: Document new DT binding "holes"
+>    mfd: syscon: specify rd_table and wr_table from DT
+> 
+>   Documentation/devicetree/bindings/mfd/syscon.txt |  5 ++++
+>   drivers/mfd/syscon.c                             | 35 ++++++++++++++++++++++++
+>   2 files changed, 40 insertions(+)
+> 
