@@ -1,64 +1,145 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v13 00/12] Support for creating generic PCI host bridges
- from DT
-Date: Wed, 8 Oct 2014 10:13:21 +0100
-Message-ID: <20141008091321.GC4652@e106497-lin.cambridge.arm.com>
-References: <1412000971-9242-1-git-send-email-Liviu.Dudau@arm.com>
- <20140929194335.GA13747@google.com>
- <20140930103942.GO841@e106497-lin.cambridge.arm.com>
- <20140930161805.GB5625@google.com>
- <20140930165431.GV841@e106497-lin.cambridge.arm.com>
- <20141008074428.GD20256@rric.localhost>
+From: Johannes Pointner <johannes.pointner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] dt: bindings: tps65217: add compatible property
+ for subnodes
+Date: Wed, 8 Oct 2014 11:14:50 +0200
+Message-ID: <CAJKbBDCSrPd=JGP2sfk1D-eNf55iYBKUqBtqA=4m6r5xL6oYnQ@mail.gmail.com>
+References: <1660410.j399mvljTo@lenovobook>
+	<20141006212232.GF18035@lee--X1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141008074428.GD20256@rric.localhost>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Richter <rric@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Yinghai Lu <yinghai@kernel.org>, Jiang Liu <jiang.liu@linux.intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141006212232.GF18035@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 08, 2014 at 08:44:28AM +0100, Robert Richter wrote:
-> Liviu, Bjorn,
->=20
-> On 30.09.14 17:54:31, Liviu Dudau wrote:
-> > On Tue, Sep 30, 2014 at 05:18:05PM +0100, Bjorn Helgaas wrote:
-> > > OK, I rebuilt pci/host-generic from scratch.  It consists of your=
- v13
-> > > patches + Arnd's build fix for pci_pio_to_address() in !CONFIG_OF=
- configs.
-> >=20
-> > Something went wrong with the integration, patch 02 adds another de=
-finition of=20
-> > of_pci_range_to_resource() before it is moved out of the header fil=
-e for some reason.
->=20
-> I assume pci/host-generic is the latest now with this issue fixed as
-> the commit date is 2014-10-01 past you message above, right? So is it
-> ok to rebase our host controller driver onto pci/host-generic or will
-> there be further updates or any other branch that is newer?
+2014-10-06 23:22 GMT+02:00 Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> On Thu, 25 Sep 2014, Johannes Pointner wrote:
+>
+>> Add documentation for compatible property of subnodes.
+>>
+>> Signed-off-by: Johannes Pointner <johannes.pointner-5O2GiQo/Ci2aMPzRcYMCaw@public.gmane.org=
+m>
+>> ---
+>>  Documentation/devicetree/bindings/regulator/tps65217.txt         | =
+7 ++++++-
+>>  .../devicetree/bindings/video/backlight/tps65217-backlight.txt   | =
+9 ++++++---
+>>  2 files changed, 12 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/regulator/tps65217.tx=
+t b/Documentation/devicetree/bindings/regulator/tps65217.txt
+>> index 4f05d20..8ae3a3b 100644
+>> --- a/Documentation/devicetree/bindings/regulator/tps65217.txt
+>> +++ b/Documentation/devicetree/bindings/regulator/tps65217.txt
+>> @@ -14,6 +14,9 @@ Required properties:
+>>  Optional properties:
+>>  - ti,pmic-shutdown-controller: Telling the PMIC to shutdown on PWR_=
+EN toggle.
+>>
+>> +Required subnode properties:
+>> +- compatible: "ti,tps65217-pmic"
+>> +
+>>    The valid names for regulators are:
+>>    tps65217: dcdc1, dcdc2, dcdc3, ldo1, ldo2, ldo3 and ldo4
+>>
+>> @@ -23,9 +26,11 @@ Example:
+>>
+>>       tps: tps@24 {
+>>               compatible =3D "ti,tps65217";
+>> +             reg =3D <0x24>;
+>>               ti,pmic-shutdown-controller;
+>>
+>> -             regulators {
+>> +             tps_pmic: regulators {
+>
+> How is the tps_pmic label used?
+>
+>> +                     compatible =3D "ti,tps65217-pmic";
+>
+> I'd like to see a '\n' here.
+I will add a newline here.
+>
+>>                       dcdc1_reg: dcdc1 {
+>>                               regulator-min-microvolt =3D <900000>;
+>>                               regulator-max-microvolt =3D <1800000>;
+>> diff --git a/Documentation/devicetree/bindings/video/backlight/tps65=
+217-backlight.txt b/Documentation/devicetree/bindings/video/backlight/t=
+ps65217-backlight.txt
+>> index 5fb9279..f92f154 100644
+>> --- a/Documentation/devicetree/bindings/video/backlight/tps65217-bac=
+klight.txt
+>> +++ b/Documentation/devicetree/bindings/video/backlight/tps65217-bac=
+klight.txt
+>> @@ -6,19 +6,22 @@ used to drive LEDs for use as backlights.
+>>  Required properties:
+>>  - compatible: "ti,tps65217"
+>>  - reg: I2C slave address
+>> -- backlight: node for specifying WLED1 and WLED2 lines in TPS65217
+>> +- backlight: subnode for specifying WLED1 and WLED2 lines in TPS652=
+17
+>> +
+>> +Required subnode properties:
+>> +- compatible: "ti,tps65217-bl"
+>>  - isel: selection bit, valid values: 1 for ISEL1 (low-level) and 2 =
+for ISEL2 (high-level)
+>>  - fdim: PWM dimming frequency, valid values: 100, 200, 500, 1000
+>>  - default-brightness: valid values: 0-100
+>>
+>> -Each regulator is defined using the standard binding for regulators=
+=2E
+>>
+>>  Example:
+>>
+>>       tps: tps@24 {
+>>               reg =3D <0x24>;
+>>               compatible =3D "ti,tps65217";
+>
+> I'd like to see a '\n' here.
+I will add a newline here.
+>
+>> -             backlight {
+>> +             tps_bl: backlight {
+>
+> Same here.  Is this label used?
+>
+>> +                     compatible =3D "ti,tps65217-bl";
+>>                       isel =3D <1>;  /* 1 - ISET1, 2 ISET2 */
+>>                       fdim =3D <100>; /* TPS65217_BL_FDIM_100HZ */
+>>                       default-brightness =3D <50>;
+>
+> --
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
 
-You can rebase either on top of Bjorn's next branch or use linux-next. =
-Hope to
-see it in v3.18 soon.
+Regarding the labels: The backlight label could be used like the
+following. I use it like this in my tests with the tilcdc panel driver
+which has a backlight support.
 
-Best regards,
-Liviu
+    panel {
+        backlight =3D <&tps_bl>;
 
->=20
-> Thanks,
->=20
-> -Robert
->=20
+        panel-info {
+            ac-bias        =3D <255>;
+            ac-bias-intrpt    =3D <0>;
+            dma-burst-sz    =3D <16>;
+            bpp        =3D <32>;
+            fdd        =3D <0x80>;
+            sync-edge    =3D <0>;
+            sync-ctrl    =3D <1>;
+            .
+            .
+            .
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+I'm not sure if there could be actual use for the pmic label, but I
+thought if I add a label to backlight, I have to add one to the pmic
+too to keep it similar.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
