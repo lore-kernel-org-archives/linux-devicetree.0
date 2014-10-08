@@ -1,63 +1,47 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] ASoC: simple-card: Add mic and hp detect
-	gpios.
-Date: Wed, 8 Oct 2014 10:50:00 +0200
-Message-ID: <CACRpkdY+KQ1OMh565desoqVP-AUJL-VjFx-D5LiaNpXs5oOsnA@mail.gmail.com>
-References: <1412198720-2326-1-git-send-email-dgreid@chromium.org>
- <20141002155350.GU4273@sirena.org.uk>
- <CAMuHMdWh=sXAD59T1T=gvROX+fbF6=gFo6C0nkJdfnCrdNrwYg@mail.gmail.com>
- <20141007123856.GF4609@sirena.org.uk>
- <CAMuHMdV39fM_TCa+WSvswij6dxD2vwfJT+FueBtxndpsymP9CQ@mail.gmail.com>
- <20141007163654.GJ4609@sirena.org.uk>
- <CAAVeFuJB=bF3g2czT1ed1UX85R_hBXqFAKdeLJcASRcXQujFJw@mail.gmail.com>
+From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESUBMIT PATCH v3 7/8] regulator: sky81452: Add compatible
+ string for device binding
+Date: Wed, 8 Oct 2014 17:51:29 +0900
+Message-ID: <20141008085129.GA3362@jack-ThinkPad-T520>
+References: <1412657745-7812-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1412658667-8196-1-git-send-email-jack.yoo@skyworksinc.com>
+ <20141007125221.GG4609@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CAAVeFuJB=bF3g2czT1ed1UX85R_hBXqFAKdeLJcASRcXQujFJw@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Linux-sh list <linux-sh@vger.kernel.org>, Sonny Rao <sonnyrao@chromium.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Dylan Reid <dgreid@chromium.org>, jay.xu@rock-chips.com, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141007125221.GG4609-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 8, 2014 at 9:05 AM, Alexandre Courbot <gnurou@gmail.com> wrote:
-> On Wed, Oct 8, 2014 at 1:36 AM, Mark Brown <broonie@kernel.org> wrote:
->> On Tue, Oct 07, 2014 at 03:10:01PM +0200, Geert Uytterhoeven wrote:
+On Tue, Oct 07, 2014 at 01:52:21PM +0100, Mark Brown wrote:
+> On Tue, Oct 07, 2014 at 02:11:07PM +0900, Gyungoh Yoo wrote:
+> > Signed-off-by: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
+> 
+> Several problems here:
+> 
+>  - I don't have patches 1-6 or the cover letter for this series - what
+>    are the dependencies?
+>  - I can't see any sign that my concerns about the driver not actually
+>    being reusable have been addressed here.
+>  - This patch appears to do way more than add a compatible string, for
+>    example:
 
->> Right, obviously it's not going to work if the platform actually uses 0
->> as a valid GPIO.
->>
->>> Quoting Linus (https://lkml.org/lkml/2014/9/4/464):
->>> "Fixing the old global GPIO numberspace API is a waste of time IMO".
->>
->>> Hence I've just sent a patch to initialize the GPIO numbers with -ENOENT.
->>
->> I do think it's worth renumbering the platforms since it's *relatively*
->> little work per platform compared to completing the gpiod transition.
->
-> But transition to gpiod is the way to ultimately fix this issue, as
-> well as many others. Not to mention that renumbering GPIOs will
-> certainly make a few users of the GPIO sysfs (another abomination,
-> agreed) unhappy. I can only recommend switching drivers to gpiod when
-> such issues are spotted.
+I am sorry the recipients of each patch and cover letter was different.
+I will resubmit soon.
 
-Yeah that is another issue ... we end up in catch 22 situations like
-that, renumber the GPIOs, OK, then we break the ABI.
+> 
+> > -	np = of_get_child_by_name(dev->parent->of_node, "regulator");
+> > -	if (unlikely(!np)) {
+> > +	if (!np) {
+> >  		dev_err(dev, "regulator node not found");
+> > -		return NULL;
+> > +		return ERR_PTR(-ENODATA);
 
-Admittedly that "ABI" is something people break all the time,
-/sys/*gpioN just isnt what it should be, not stable at all.
 
-I'm not against renumbering GPIO if it's minor effort, but if it
-start to consume hundreds of hours and regressions and what not,
-that time is better spent focusing on the gpiod transition.
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
