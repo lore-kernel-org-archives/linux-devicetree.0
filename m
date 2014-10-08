@@ -1,57 +1,54 @@
-From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: cygnus: Initial support for Broadcom Cygnus
- SoC
-Date: Wed, 8 Oct 2014 11:45:46 -0700
-Message-ID: <5435865A.4070702@broadcom.com>
-References: <1412746025-11998-2-git-send-email-sbranden@broadcom.com> <10762659.VISiZ3vSSN@wuerfel> <543565DC.8010704@broadcom.com> <34012512.W8VifyXY4H@wuerfel>
+From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Subject: Re: [PATCH v2 3/3] ARM: dts: qcom: Add SDHC nodes for APQ8084 platform
+Date: Wed, 8 Oct 2014 21:18:44 +0200
+Message-ID: <CAP71WjxYibPGBC=x4eA-Lmjg_Mc7cCB20VSvf59C_AW7PYNE=A@mail.gmail.com>
+References: <1409672443-4289-1-git-send-email-gdjakov@mm-sol.com> <1409672443-4289-4-git-send-email-gdjakov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <34012512.W8VifyXY4H@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1409672443-4289-4-git-send-email-gdjakov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Georgi Djakov <gdjakov@mm-sol.com>
+Cc: Kumar Gala <galak@codeaurora.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, iivanov@mm-sol.com
 List-Id: devicetree@vger.kernel.org
 
-On 14-10-08 11:12 AM, Arnd Bergmann wrote:
-> On Wednesday 08 October 2014 09:27:08 Scott Branden wrote:
->> On 14-10-08 06:28 AM, Arnd Bergmann wrote:
->>> On Wednesday 08 October 2014 05:27:24 Scott Branden wrote:
->>>>>
->>>>> I don't think you need per-board config options. The main option
->>>>> above should be enough.
->>>> This is not a per-board config option.  This is actually a per-SoC
->>>> uArchtecture selection.  More major uArchectures will be added to the
->>>> IPROC.  Will Change comment to "Support Broadcom Cygnus SoC"
->>>
->>> Ok, sounds fine, but remove ARCH_BCM_IPROC then. There should be
->>> no need for a three-level deep hierarchy (BCM -> IPROC -> CYGNUS)
->>>
->> I do not need a 3-deep hierarchy, I need a 2-deep hierarchy for IPROC
->> and CYGNUS (and future SoCs that have IPROC Architecture in common).  I
->> can move IPROC out of the mach-bcm directory if you like a create a new
->> directory?  But it looks like the purpose of mach-bcm is to consolidate
->> all Broadcom chipsets in it?
->
-> Yes, better leave it all in mach-bcm. You really shouldn't need much
-> code at all that is soc specific, so adding new directories is not
-> encouraged. We have some platforms that need no code at all, and on
-> arm64 that is required.
->
-> Isn't Northstar also IPROC? That one didn't seem to need the symbol.
-Yes, Northstar is an older version of IPROC.  We may be able to 
-consolidate it under the IPROC family as we upstream additional SoCs and 
-drivers.  Have the commonality with ARCH_BCM_IPROC will allow this.
->
-> Could you make ARCH_BCM_IPROC a silent symbol that is just selected
-> by each SoC family specific symbol?
-OK, I will make ARCH_BCM_IPROC a silent symbol.
->
-> 	Arnd
->
+Georgi,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, Sep 2, 2014 at 5:40 PM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
+> Enable support for the two SD host controllers on the APQ8084 platform
+> by adding the required nodes to the DT files.
+> On the IFC6540 board, the first controller is connected to the onboard
+> eMMC and the second is connected to a micro-SD card slot.
+
+testing this set of patch on IFC6540, i noticed that not all
+partitions from the eMMC are detected. booting [1] which is basically
+3.17-rc7 with a few additional patches, i can see the following
+relevant mmc traces:
+
+[    1.162587] mmc0: BKOPS_EN bit is not set
+[    1.315357] mmc0: new HS200 MMC card at address 0001
+[    1.318098] mmcblk0: mmc0:0001 SEM16G 14.6 GiB
+[    1.330377] mmcblk0boot0: mmc0:0001 SEM16G partition 1 4.00 MiB
+[    1.333652] mmcblk0boot1: mmc0:0001 SEM16G partition 2 4.00 MiB
+[    1.345424] mmcblk0rpmb: mmc0:0001 SEM16G partition 3 4.00 MiB
+[    1.358135]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15
+[    1.365902]  mmcblk0boot1: p1
+[    1.367833]  mmcblk0boot0: unknown partition table
+
+on the same board, booting the board vendor kernel (which is based on
+QCOM 3.10 tree), i can see much more partitions:
+
+[    7.662379] mmc0: BKOPS_EN bit = 0
+[    7.673036] mmc0: new HS200 MMC card at address 0001
+[    7.673784] mmcblk0: mmc0:0001 SEM16G 14.6 GiB
+[    7.674311] mmcblk0rpmb: mmc0:0001 SEM16G partition 3 4.00 MiB
+[    7.677967]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13
+p14 p15 p16 p17 p18 p19 p20 p21 p22 p23 p24\
+ p25
+
+the complete dmesg log for can be found in our board lab, at [2]
+
+cheers
+
+[1] https://git.linaro.org/landing-teams/working/qualcomm/kernel.git/commit/b538bdefecd11bd0278cc31164e1078c1722e5a8
+[2] http://armv7.com/scheduler/job/11726/log_file#L_11_11
