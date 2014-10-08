@@ -1,91 +1,43 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v3 2/3] ARM: shmobile: koelsch: enable HS-USB
-Date: Wed, 8 Oct 2014 13:22:05 -0500
-Message-ID: <20141008182205.GL22688@saruman>
-References: <1511869.4ca9KHmSFr@wasted.cogentembedded.com>
- <8674731.7YYzQeH0h1@wasted.cogentembedded.com>
- <20141008180513.GJ22688@saruman>
- <54357D76.4050104@cogentembedded.com>
- <20141008180852.GK22688@saruman>
- <54357E6F.1080702@cogentembedded.com>
-Reply-To: <balbi@ti.com>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCH 1/2] spi: dw: Initialize of_node to discover DT node children
+Date: Wed, 8 Oct 2014 13:27:25 -0500
+Message-ID: <5435820D.3020401@opensource.altera.com>
+References: <1412711297-31857-1-git-send-email-tthayer@opensource.altera.com>	 <1412711297-31857-2-git-send-email-tthayer@opensource.altera.com> <1412756241.7701.7.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="E6lVPAHcXg6biC3t"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54357E6F.1080702@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: balbi@ti.com, horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, yoshihiro.shimoda.uh@renesas.com
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1412756241.7701.7.camel@linux.intel.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: broonie@kernel.org, jkosina@suse.cz, pawel.moll@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dinguyen@opensource.altera.com, linux-spi@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, tthayer.linux@gmail.com, tthayer@altera.com, axel.lin@ingics.com, baruch@tkos.co.il
 List-Id: devicetree@vger.kernel.org
 
---E6lVPAHcXg6biC3t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 08, 2014 at 10:11:59PM +0400, Sergei Shtylyov wrote:
-> On 10/08/2014 10:08 PM, Felipe Balbi wrote:
->=20
-> >>>>From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->=20
-> >>>>Enable HS-USB device for the Koelsch board, defining the GPIO that th=
-e driver
-> >>>>should check when probing (which is the ID output from MAX3355 OTG ch=
-ip).
->=20
-> >>>>Note that there will be pinctrl-related error messages if both intern=
-al PCI
-> >>>>and HS-USB drivers are enabled but they should be just ignored.
->=20
-> >>>>Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> >>>>[Sergei: added pin function/group and prop, moved device node, fixed =
-summary,
-> >>>>added changelog]
-> >>>>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->=20
-> >>>>---
-> >>>>Changes in version 3:
-> >>>>- added pinctrl-related properties;
->=20
-> >>>did you miss pinctrl here ?
->=20
-> >>     No, AFAICS. Or what do you mean?
->=20
-> >usb0_pins doesn't appear to be defined anywhere.
->=20
->    They are defined in the same file, just not in this patch. If you're
-> looking at some of the USB trees or Linus' tree, the corresponding patch
-> just hasn't hit them yet, it's in renesas.git ATM.
+On 10/08/2014 03:17 AM, Andy Shevchenko wrote:
+> On Tue, 2014-10-07 at 14:48 -0500, tthayer@opensource.altera.com wrote:
+>> From: Thor Thayer <tthayer@opensource.altera.com>
+>>
+>> 1. The of_node element must be initialized to enable discovery of node
+>> children. The discovery takes place in the of_register_spi_devices() function.
+>> 2. Grabbing the bus-num from the device tree.
+>> 3. Update the SOCFPGA configuration.
+> []
+>
+>> --- a/drivers/spi/spi-dw.c
+>> +++ b/drivers/spi/spi-dw.c
+>> @@ -671,6 +671,9 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+>>   	master->cleanup = dw_spi_cleanup;
+>>   	master->transfer_one_message = dw_spi_transfer_one_message;
+>>   	master->max_speed_hz = dws->max_freq;
+>> +#if defined(CONFIG_OF)
+>> +	master->dev.of_node = dev->of_node;
+>> +#endif
+> I'm not sure you need this #ifdef surrounded an assignment.
+> If I'm wrong then you probably have to use if (IS_ENABLED(CONFIG_OF)).
+>
+Hi Andy.
 
-oh, alright then. :-)
+Good point. I will remove those.
 
-cheers
-
---=20
-balbi
-
---E6lVPAHcXg6biC3t
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUNYDNAAoJEIaOsuA1yqRE+jAP/iThRIVHetyuMSV2P8a3TnQa
-R+rQEZ0vMy0BlFcxyBtOffkUppkTql5jFEmbDSlOfBqE6XW2ozCbnXZ23beHSR5X
-J71QyC7szCjpseRvTm6lHmNrc9ob8dlBuFTrRh3rH40HGJf2VfutIfc2IO8laq6K
-hDWC+ISbstRomyb5zqx+5VdyqxVVar8I2DETRtETAdIVULPUl6o6VCXbjdIDgKpS
-2v/+GckcggfVW51y/TNtBvtpoEoTExSmsiZGvjfLrbGcv7LVKnFp8IR60JhnV+Ud
-2seqsrJOq0k7vrBKb8yRSmvHH4tFdJY0KiDwbMiknuiMYsWQ5M71//Y/VtmNIXIL
-LV3cDKhbL0s96DzWjBNNIHWQ3q6W2Fosf4gZufJ82GdF6jAs1MXIBv4iUbZnPxfj
-320eJNgZrsZr1OS5LTvZMSQ2wdXUe+hMSNcLdekqFP6ldXmUQ8jZGrdL0w3b4bN4
-HyzPrudf5W2x8tOLnC5AfEvT264vyfxIOr9sh5MvIPAx3ZwW+IGSV8eYmJFi/bxz
-+XcuY91rjB2nzseVQ0IzacEh+spc3TRCqNCd4/2qBl2Zk90924JJrOCiLRyVNriJ
-zW/mrX+6YsbTSLZfl3N0Ks4+6aZDw+OOUTBW7KwPm4ccteHvTTipk2QpiHSSdX/z
-1Ohu3ApbtAdAWfartDo0
-=xk3K
------END PGP SIGNATURE-----
-
---E6lVPAHcXg6biC3t--
+Thank you for reviewing.
