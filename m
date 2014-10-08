@@ -1,36 +1,42 @@
-From: Scott Branden <sbranden@broadcom.com>
-Subject: Re: [PATCH 4/6] ARM: cygnus defconfig : Initial defconfig for Broadcom
- Cygnus SoC
-Date: Wed, 8 Oct 2014 04:01:06 -0700
-Message-ID: <54351972.5030803@broadcom.com>
-References: <1412746025-11998-5-git-send-email-sbranden@broadcom.com> <1996601.jhvNxNYxnl@wuerfel>
+From: =?gbk?B?WHVldGFvIEd1YW4g?= <gxt@pku.edu.cn>
+Subject: =?utf-8?Q?=E5=9B=9E=E5=A4=8D=EF=BC=9A_[PATCH_08/44]_kernel:_Mov?=
+ =?utf-8?Q?e_pm=5Fpower=5Foff_to_common_code?=
+Date: Wed, 8 Oct 2014 19:06:32 +0800 (CST)
+Message-ID: <218135571.28324.1412766392198.JavaMail.root@bj-mail03.pku.edu.cn>
+References: <1412659726-29957-9-git-send-email-linux@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1996601.jhvNxNYxnl@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>, JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1412659726-29957-9-git-send-email-linux@roeck-us.net>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, adi-buildroot-devel@lists.sourceforge.net, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lguest@lists.ozlabs.org, linux-acpi@vger.kernel.org, linux-alpha@vger.kernel.org, linux-am33-list@redhat.com, linux-cris-kernel@axis.com, linux-efi@vger.kernel.org, linux-hexagon@vger.kernel.org, linux-m32r-ja@ml.linux-m32r.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org, linux-xtensa@linux-xtensa.org, openipmi-developer@lists.sourceforge.net, user-mode-linux-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org, linux-ia64@vger.kernel.org, linux-m68k@vger.kernel.org, linux-metag@vger.kernel.org, linux-mips@linux-mips.org, linux-parisc@vger.kernel.org, linux-pm@vg
 List-Id: devicetree@vger.kernel.org
 
-On 14-10-08 12:58 AM, Arnd Bergmann wrote:
-> On Tuesday 07 October 2014 22:27:03 Scott Branden wrote:
->> From: Jonathan Richardson <jonathar@broadcom.com>
->>
->> Tested-by: Jonathan Richardson <jonathar@broadcom.com>
->> Reviewed-by: JD (Jiandong) Zheng <jdzheng@broadcom.com>
->> Signed-off-by: Scott Branden <sbranden@broadcom.com>
->
-> Do you actually need a separate defconfig?
->
-> If possible, just add your drivers to multi_v7_defconfig, otherwise
-> include a justification in the patch changelog why your platform
-> should have its own defconfig file.
-We need a separate defconfig so that customers and developers have some 
-chance of understanding what kernel drivers apply to their SoC.  That 
-way they can optimize kernel size if desired.  Will update patch 
-changelog in next version.
->
-> 	Arnd
->
+
+----- Guenter Roeck <linux@roeck-us.net> =E5=86=99=E9=81=93=EF=BC=9A
+> pm_power_off is defined for all architectures. Move it to common code=
+=2E
+>=20
+> Have all architectures call do_kernel_poweroff instead of pm_power_of=
+f.
+> Some architectures point pm_power_off to machine_power_off. For those=
+,
+> call do_kernel_poweroff from machine_power_off instead.
+>=20
+
+=46or UniCore32 part,
+
+Acked-by: Xuetao Guan <gxt@mprc.pku.edu.cn>
+
+Thanks
+Xuetao
