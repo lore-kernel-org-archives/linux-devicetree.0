@@ -1,65 +1,65 @@
-From: Christophe RICARD <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [tpmdd-devel] [PATCH 07/16] tpm/tpm_i2c_stm_st33: Add devicetree
- structure
-Date: Wed, 08 Oct 2014 07:47:58 +0200
-Message-ID: <5434D00E.7000602@gmail.com>
-References: <1412712189-1234-1-git-send-email-christophe-h.ricard@st.com> <1412712189-1234-8-git-send-email-christophe-h.ricard@st.com> <20141007223025.GE2366@obsidianresearch.com>
+From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
+Subject: Re: [PATCH v5 0/8] arch: arm64: Enable support for Samsung Exynos7 SoC
+Date: Wed, 8 Oct 2014 11:18:33 +0530
+Message-ID: <CAM4voak5DpRHghgF=EdmPCHeenMFZQeOTsm9QLE1fSXDoM1a+g@mail.gmail.com>
+References: <1411361228-18279-1-git-send-email-a.kesavan@samsung.com>
+	<541FE357.5090000@gmail.com>
+	<CAM4voa=Hsux0+rccSvDJsNTFakZwuwYwjkDkkNFfndFm03Pn3g@mail.gmail.com>
+	<542AD2AE.6060109@gmail.com>
+	<01a501cfe1e5$759fc8c0$60df5a40$@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141007223025.GE2366-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <01a501cfe1e5$759fc8c0$60df5a40$@kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Naveen Krishna <naveenkrishna.ch@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
+Hi Tomasz,
 
-On 08/10/2014 00:30, Jason Gunthorpe wrote:
-> On Tue, Oct 07, 2014 at 10:03:00PM +0200, Christophe Ricard wrote:
+On Tue, Oct 7, 2014 at 9:46 AM, Kukjin Kim <kgene@kernel.org> wrote:
+> Tomasz Figa wrote:
+>>
+>> On 30.09.2014 17:12, Abhilash Kesavan wrote:
+>> > Hi Tomasz,
+>> >
+>> > On Mon, Sep 22, 2014 at 2:22 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+>> >> Hi Abhilash,
+>> >>
+>> >> On 22.09.2014 06:47, Abhilash Kesavan wrote:
+>> >>> Changes since v4:
+>> >>> - Fixed comments from Tomasz Figa:
+>> >>>       - Changed the namespace prefix from exynos to samsung
+>> >>>       - Defined bindings to take all input clocks
+>> >>>       - Sorted the Kconfig entries alphabetically in clock Makefile
+>> >>>       - Used consistent 1 tab line breaks across the clock file
+>> >>>       - Statically initialized the samsung_cmu_info struct
+>> >>> - Enabled exynos7 in the arm64 defconfig as per Catalin Marinas' comment.
+>> >>> - Added Kukjin Kim's ack along with Thomas Abraham's tested and reviewed tags.
+>> >>>
+>> >>
+>> >> The clock patches look good to me, but since they are doing quite a lot
+>> >> of code moving I'd prefer to take them through clk tree. Based on the
+>> >> fact that there are no code dependencies between clock patches and
+>> >> remaining ones and Exynos7 is a new material for 3.18, I'm inclined to
+>> >> apply them to my tree if nobody minds.
+>> >
+>> > Will you be picking up the clock changes soon ?
+>>
+>> I'd like to do so. Kukjin, since clock changes are a part of this
+>> series, might I have your Ack for them to be applied separately?
+>>
+> Sure, I'm fine so please go ahead with my ack on the changes.
 >
->> +_irq_probe:
->> +	/* IRQ */
->> +	r = irq_of_parse_and_map(pp, 0);
->> +	if (r < 0) {
->> +		pr_err("Unable to get irq, error: %d\n", r);
->> +		interrupts = 0;
->> +		goto _end;
->> +	}
->> +	interrupts = 1;
->> +	client->irq = r;
-> client->irq is already set correctly by of_i2c_register_devices - so I
-> don't think this sequence is necessary?
-May be you are right. I will crosscheck.
->> +	if (interrupts) {
->> +		r = devm_gpio_request_one(&client->dev, pdata->io_serirq,
->> +					GPIOF_IN, "TPM IO_SERIRQ");
-> Similarly, I wonder if pdata->io_serirq is just duplication of
-> client->irq and that should be set by the creator instead?
-pdata->io_serirq stores the gpio number which will be converted into irq 
-number.
-pdata->io_serirq is only use by static platform configuration not 
-devicetree configuration
->> +#ifdef CONFIG_OF
->> +static const struct of_device_id of_st33zp24_i2c_match[] = {
->> +	{ .compatible = "st,st33zp24_i2c", },
->> +	{}
->> +};
-> missing:
+> Acked-by: Kukjin Kim <kgene.kim@samsung.com>
 >
-> MODULE_DEVICE_TABLE(of, of_st33zp24_i2c_match);
-Oops. Good catch :).
->> +		#ifdef CONFIG_OF
->> +			.of_match_table = of_match_ptr(of_st33zp24_i2c_match),
->> +		#endif
-> The #ifdef is unnecessary, the of_match_ptr macro takes care of that
-> already.
-Ok will clean that.
->
-> Jason
+> Thanks for your asking.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can you please pick up the clock changes now that Kukjin has ack'ed it.
+
+Thanks,
+Abhilash
+>
+> - Kukjin
+>
