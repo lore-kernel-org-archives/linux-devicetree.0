@@ -1,42 +1,39 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [tpmdd-devel] [PATCH 14/16] tpm/tpm_i2c_stm_st33: Fix potential
- bug in tpm_stm_i2c_send
-Date: Wed, 8 Oct 2014 10:27:54 -0600
-Message-ID: <20141008162754.GB4153@obsidianresearch.com>
-References: <1412712189-1234-1-git-send-email-christophe-h.ricard@st.com>
- <1412712189-1234-15-git-send-email-christophe-h.ricard@st.com>
- <20141007220425.GB10616@obsidianresearch.com>
- <5434CC35.5090104@gmail.com>
- <CALD+uuxM2018GrkDL+6fUbWijYTRYbqB-YFNQRkCj=ZEkPkgng@mail.gmail.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 1/5] regulator: of: Add regulator-initial-mode parse support
+Date: Wed, 08 Oct 2014 18:29:26 +0200
+Message-ID: <54356666.4090003@collabora.co.uk>
+References: <1412775847-15213-1-git-send-email-javier.martinez@collabora.co.uk> <1412775847-15213-2-git-send-email-javier.martinez@collabora.co.uk> <20141008142511.GA4609@sirena.org.uk> <54354C7D.7090104@collabora.co.uk> <20141008151220.GE4609@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CALD+uuxM2018GrkDL+6fUbWijYTRYbqB-YFNQRkCj=ZEkPkgng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Christophe RICARD <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>, Jean-Luc BLANC <jean-luc.blanc-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20141008151220.GE4609@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Doug Anderson <dianders@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 08, 2014 at 09:38:39AM +0200, Christophe Ricard wrote:
->    I would just add an additional comment to my previous message.
->    After reviewing Documentation/stable_kernel_rules.txt, it looks like it
->    is *not* necessary to send this patch marked as stable because of the
->    following rule:
->    "- It must fix a real bug that bothers people (not a, "This could be a
->    problem..." type thing)."
->    As argued previously this patch is more an algorithm fix luckily never
->    seen with the current ST33 I2C TPM devices.
->    I looks like a "This could be a problem..."
->    Do you agree with this ?
+On 10/08/2014 05:12 PM, Mark Brown wrote:
+> On Wed, Oct 08, 2014 at 04:38:53PM +0200, Javier Martinez Canillas wrote:
+>> On 10/08/2014 04:25 PM, Mark Brown wrote:
+> 
+>> > That doesn't mean that the definition of those modes is something we can
+>> > sensibly provide in generic code, especially in a completely
+>> > undocumented fashion (perhaps you've done that later in the patch series
+>> > but bisection also applies to reviewability).
+> 
+>> As a general question, now that the convention is for DT binding docs to go
+>> in a separate patch, should the DT documentation be added before or after
+>> that code using these bindings is added?
+> 
+> It fairly obviously needs to go before so that reviewers can tell if the
+> code is actually implementing the binding.
+> 
 
-Yes, please clarify your patch description with something like:
+Well, is not fairly obvious to me. One can also say the opposite, why the
+kernel is documenting a DT binding that is not (currently) implemented?
 
-'This never happens in practice because the burst count is XXX bytes
-and the largest TPM command is YYY bytes.'
+That's why what makes the most sense for me is what the old convention did,
+add the DT binding docs in the same patch that implements the binding.
 
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Anyways, thanks for letting me know what is the convention today.
