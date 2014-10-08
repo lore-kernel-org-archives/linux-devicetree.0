@@ -1,54 +1,86 @@
-From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Subject: Re: [PATCH v2 3/3] ARM: dts: qcom: Add SDHC nodes for APQ8084 platform
-Date: Wed, 8 Oct 2014 21:18:44 +0200
-Message-ID: <CAP71WjxYibPGBC=x4eA-Lmjg_Mc7cCB20VSvf59C_AW7PYNE=A@mail.gmail.com>
-References: <1409672443-4289-1-git-send-email-gdjakov@mm-sol.com> <1409672443-4289-4-git-send-email-gdjakov@mm-sol.com>
+From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCHv2] arm: dts: socfpga: Add SPI nodes to SOCFPGA DT.
+Date: Wed, 8 Oct 2014 14:27:08 -0500
+Message-ID: <1412796428-3255-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1409672443-4289-4-git-send-email-gdjakov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Georgi Djakov <gdjakov@mm-sol.com>
-Cc: Kumar Gala <galak@codeaurora.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, iivanov@mm-sol.com
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Georgi,
+From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-On Tue, Sep 2, 2014 at 5:40 PM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
-> Enable support for the two SD host controllers on the APQ8084 platform
-> by adding the required nodes to the DT files.
-> On the IFC6540 board, the first controller is connected to the onboard
-> eMMC and the second is connected to a micro-SD card slot.
+Add 2 SPI nodes to SOCFPGA device tree.
 
-testing this set of patch on IFC6540, i noticed that not all
-partitions from the eMMC are detected. booting [1] which is basically
-3.17-rc7 with a few additional patches, i can see the following
-relevant mmc traces:
+Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+---
+v2: Remove extra files. Move SPIDEV into board specific file.
+---
+ arch/arm/boot/dts/socfpga.dtsi          |   24 ++++++++++++++++++++++++
+ arch/arm/boot/dts/socfpga_cyclone5.dtsi |   10 ++++++++++
+ 2 files changed, 34 insertions(+)
 
-[    1.162587] mmc0: BKOPS_EN bit is not set
-[    1.315357] mmc0: new HS200 MMC card at address 0001
-[    1.318098] mmcblk0: mmc0:0001 SEM16G 14.6 GiB
-[    1.330377] mmcblk0boot0: mmc0:0001 SEM16G partition 1 4.00 MiB
-[    1.333652] mmcblk0boot1: mmc0:0001 SEM16G partition 2 4.00 MiB
-[    1.345424] mmcblk0rpmb: mmc0:0001 SEM16G partition 3 4.00 MiB
-[    1.358135]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15
-[    1.365902]  mmcblk0boot1: p1
-[    1.367833]  mmcblk0boot0: unknown partition table
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 4d77ad6..d81bc2d3 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -628,6 +628,30 @@
+ 			clock-names = "biu", "ciu";
+ 		};
+ 
++		spi0: spi@fff00000 {
++			compatible = "snps,dw-apb-ssi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0xfff00000 0x1000>;
++			interrupts = <0 154 4>;
++			num-cs = <4>;
++			bus-num = <0>;
++			clocks = <&spi_m_clk>;
++			status = "disabled";
++		};
++
++		spi1: spi@fff01000 {
++			compatible = "snps,dw-apb-ssi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0xfff01000 0x1000>;
++			interrupts = <0 156 4>;
++			num-cs = <4>;
++			bus-num = <1>;
++			clocks = <&spi_m_clk>;
++			status = "disabled";
++		};
++
+ 		/* Local timer */
+ 		timer@fffec600 {
+ 			compatible = "arm,cortex-a9-twd-timer";
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+index bf51182..85c6b5c 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
++++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+@@ -48,5 +48,15 @@
+ 		sysmgr@ffd08000 {
+ 			cpu1-start-addr = <0xffd080c4>;
+ 		};
++
++		spi0: spi@fff00000 {
++			status = "okay";
++
++			spidev@0 {
++				compatible = "spidev";
++				reg = <0>;	/* chip select */
++				spi-max-frequency = <100000000>;
++			};
++		};
+ 	};
+ };
+-- 
+1.7.9.5
 
-on the same board, booting the board vendor kernel (which is based on
-QCOM 3.10 tree), i can see much more partitions:
-
-[    7.662379] mmc0: BKOPS_EN bit = 0
-[    7.673036] mmc0: new HS200 MMC card at address 0001
-[    7.673784] mmcblk0: mmc0:0001 SEM16G 14.6 GiB
-[    7.674311] mmcblk0rpmb: mmc0:0001 SEM16G partition 3 4.00 MiB
-[    7.677967]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13
-p14 p15 p16 p17 p18 p19 p20 p21 p22 p23 p24\
- p25
-
-the complete dmesg log for can be found in our board lab, at [2]
-
-cheers
-
-[1] https://git.linaro.org/landing-teams/working/qualcomm/kernel.git/commit/b538bdefecd11bd0278cc31164e1078c1722e5a8
-[2] http://armv7.com/scheduler/job/11726/log_file#L_11_11
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
