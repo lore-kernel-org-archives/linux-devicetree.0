@@ -1,155 +1,84 @@
-From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] hwmon: ltc2978: device tree bindings
- documentation
-Date: Wed, 8 Oct 2014 11:12:29 -0500
-Message-ID: <alpine.DEB.2.02.1410081103110.18439@atx-linux-37>
-References: <1412275071-6417-1-git-send-email-atull@opensource.altera.com> <1412275071-6417-2-git-send-email-atull@opensource.altera.com> <20141006172845.GA21902@roeck-us.net>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 5/5] ARM: dts: Add initial regulator mode on exynos Peach
+ boards
+Date: Wed, 08 Oct 2014 18:25:00 +0200
+Message-ID: <5435655C.8090803@collabora.co.uk>
+References: <1412775847-15213-1-git-send-email-javier.martinez@collabora.co.uk> <1412775847-15213-6-git-send-email-javier.martinez@collabora.co.uk> <20141008145627.GD4609@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141006172845.GA21902-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: jdelvare-l3A5Bk7waGM@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20141008145627.GD4609@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Doug Anderson <dianders@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 6 Oct 2014, Guenter Roeck wrote:
+On 10/08/2014 04:56 PM, Mark Brown wrote:
+> On Wed, Oct 08, 2014 at 03:44:07PM +0200, Javier Martinez Canillas wrote:
+> 
+>> The regulator core now has support to choose a default initial
+>> operating mode for regulators from DT. Set the initial opmode
+>> for the max77802 PMIC regulators with the same modes that are
+>> used in the downstream ChromeOS kernel, in order to allow the
+>> system to lower power at suspend time.
+> 
+> The stated goal of this change doesn't appear to correspond to what it
+> actually does.  It's saying that we want to be able to set the regulator
+> into low power modes on suspend which is a sensible and useful thing to
+> want to do (especially for regulators which don't have physical suspend
+> modes which we currently make any effort to handle) but what the change
+> actually does is cause us to set the default state of supplies on boot.
+> 
 
-> On Thu, Oct 02, 2014 at 01:37:48PM -0500, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> > From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > 
-> > Add device tree bindings documentation for ltc2978.
-> > 
-> > Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > ---
-> > v2: clean whitespace
-> > ---
-> >  .../devicetree/bindings/hwmon/ltc2978.txt          |   41 ++++++++++++++++++++
-> >  1 file changed, 41 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/hwmon/ltc2978.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/hwmon/ltc2978.txt b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
-> > new file mode 100644
-> > index 0000000..b2d9c4d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
-> > @@ -0,0 +1,41 @@
-> > +ltc2978
-> > +
-> > +Required properties:
-> > + - compatible: one of: ltc2974, ltc2977, ltc2978, ltc3880, ltc3883, ltm4676
-> > + - reg: I2C address
-> > +
-> > +Optional properties:
-> > + Name of the optional regulator subnode must be "regulators".
-> 
-> This is currently a problem. The regulator core trats it as mandatory,
-> meaning I get error messages such as
-> 
-> ltc2978 5-005e: Failed to find regulator container node
-> 
-> if not specified. We'll have to sort out with the regulator core how this should
-> be handled.
-> 
-> > +  - #address-cells must be 1.
-> > +  - #size-cells must be 0.
-> > +
-> 
-> Checking this out, those do not seem to be necessary.
+Well, setting a regulator into low power mode on suspend is something
+that Chanwoo's series tried to address. At least on v3 since he removed
+regulator-mode property for the regulator-state-{standby,mem,disk} on v4.
 
-I just tried it, and don't see a need for it myself.
-	 
-> 
-> > + For each regulator:
-> > +  - reg: regulator number
-> 
-> This does not seem to be necessary either.
+What this series tried to solve is when you have to set a opmode on boot
+to change how the physical suspend is managed by the PMIC.
 
-Same here.  For some reason I thought they were required.  
-I'll take them out of the bindings doc.
+In the Maxim77802 PMIC is even trickier since not all the modes have the
+semantics. That is the value 0x1 could have different meanings depending
+of the regulator.
 
+> The device tree should describe what it's trying to achieve, otherwise
+> even if things happen to work right now it's going to be vulnerable to
+> being broken by future kernel changes which take what it's saying at
+> face value.
 > 
-> > +  - regulator-compatible: must be vout_en<regulator number> such as vout_en3
-> > +    valid range is:
-> > +      ltc2977, ltc2978 : vout_en0 - vout_en7
-> > +      ltc2974          : vout_en0 - vout_en3
-> > +      ltc3880, ltm4676 : vout_en0 - vout_en1
-> > +      ltc3883          : vout_en0 only
+>>  			buck2_reg: BUCK2 {
+>> @@ -201,6 +203,7 @@
+>>  				regulator-always-on;
+>>  				regulator-boot-on;
+>>  				regulator-ramp-delay = <12500>;
+>> +				regulator-initial-mode = <REGULATOR_MODE_STANDBY>;
+>>  			};
 > 
-> Besides the unnecessary _en,
+> This appears to set the supply which is labelled as VDD_ARM into standby
+> mode by default (from a first glance the change appears to set all
+> supplies into standby mode) and of course we currently have no way of
+> changing the mode at runtime in DT systems.  Are you *really* sure this
+> is a good idea of which an electrical engineer would approve, CPU cores
+> are typically one of the most demanding workloads available for a
+> regulator?
+> 
 
-I don't mind taking out the '_en'.  I was trying to name these
-after pin names on the device.  I thought that was the norm.
-If someone adds voltage support later, that will look even
-weirder, so I agree that should change.
+Well, the standby mode for this regulator is actually:
 
-> this is a problem if there is more than one
-> supported chip in the system, if DEBUG_FS is enabled, and if names are not
-> specified in the devicetree file. I get a lot of error messages in a
-> system with a large number of LTC2978 chips.
-> 
-> vout3: Failed to create debugfs directory
-> vout4: Failed to create debugfs directory
-> vout5: Failed to create debugfs directory
-> vout6: Failed to create debugfs directory
-> vout7: Failed to create debugfs directory
-> vout2: Failed to create debugfs directory
-> vout3: Failed to create debugfs directory
-> 
-> and so on (40+ times in my system). We will have to find a solution for this
-> problem.
+Output ON/OFF Controlled by PWRREQ
+	PWRREQ=HIGH (1): Output ON in Normal Mode
+	PWRREQ=LOW (0): Output OFF
 
-Note that whatever name is here is going to be the compatible
-string for this particular regulator output in the DT.
+this means that when the Soc enters into suspend mode a pin is toggled
+and that pin is connected to the PWRREQ line in the PMIC to signal that
+the SoC has entered in sleep mode so the regulator has to be OFF.
 
-It seems like this can't be the only case of this in the kernel.
-I imagine there are lots of boards with multiple regulators but
-no regulator info specified. I'll have to dig a bit to see why
-this isn't an issue for other regulator drivers.
+When the SoC leaves sleep mode and is resumed again, the pin is toggled
+so the PMIC puts the regulator in ON again.
 
-> 
-> I also get
-> 
-> vout7: no parameters
-> 
-> for each regulator which is a bit annoying with 50+ of those regulators
-> in the system.
+There is other mode that instead of turning off the regulator, keeps it
+enabled but in low power mode.
 
-Yes I see that and tried to make it stop (but couldn't).  It is not
-really helpful information.
-
-Alan
-
-> 
-> Guenter
-> 
-> > +  - regulator-name: arbitrary name for regulator
-> > +
-> > +Example:
-> > +ltc2978@5e {
-> > +	compatible = "ltc2978";
-> > +	reg = <0x5e>;
-> > +	regulators {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		vdacp0_reg: regulator@0 {
-> > +			reg = <0>;
-> > +			regulator-compatible = "vout_en0";
-> > +			regulator-name = "FPGA-2.5V";
-> > +		};
-> > +		vdacp2_reg: regulator@2 {
-> > +			reg = <2>;
-> > +			regulator-compatible = "vout_en2";
-> > +			regulator-name = "FPGA-1.5V";
-> > +		};
-> > +	};
-> > +};
-> > -- 
-> > 1.7.9.5
-> > 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Javier
