@@ -1,57 +1,110 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/5] regulator: of: Add regulator-initial-mode parse
- support
-Date: Wed, 8 Oct 2014 16:12:20 +0100
-Message-ID: <20141008151220.GE4609@sirena.org.uk>
-References: <1412775847-15213-1-git-send-email-javier.martinez@collabora.co.uk>
- <1412775847-15213-2-git-send-email-javier.martinez@collabora.co.uk>
- <20141008142511.GA4609@sirena.org.uk>
- <54354C7D.7090104@collabora.co.uk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v1 1/3] gpio: Add APM X-Gene standby GPIO controller driver
+Date: Wed, 08 Oct 2014 17:13:28 +0200
+Message-ID: <1843196.sbXNmZyoMx@wuerfel>
+References: <1412779948-28769-1-git-send-email-yvo@apm.com> <1412779948-28769-2-git-send-email-yvo@apm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3qTVFk/EjXyDmsv5"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54354C7D.7090104@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Doug Anderson <dianders@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1412779948-28769-2-git-send-email-yvo@apm.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Y Vo <yvo@apm.com>, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Tin Huynh <tnhuynh@apm.com>, patches@apm.com, Toan Le <toanle@apm.com>, Phong Vo <pvo@apm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday 08 October 2014 21:52:26 Y Vo wrote:
+> +
+> +#define GICD_SPI_BASE			0x78010000
 
---3qTVFk/EjXyDmsv5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+You can't hardcode register locations. Please use the proper interfaces
+to do whatever you want.
 
-On Wed, Oct 08, 2014 at 04:38:53PM +0200, Javier Martinez Canillas wrote:
-> On 10/08/2014 04:25 PM, Mark Brown wrote:
+It's probably not ok to map any GIC registers into the GPIO driver,
+it should operate as a nested irqchip.
 
-> > That doesn't mean that the definition of those modes is something we can
-> > sensibly provide in generic code, especially in a completely
-> > undocumented fashion (perhaps you've done that later in the patch series
-> > but bisection also applies to reviewability).
+> +
+> +static int xgene_gpio_sb_get(struct gpio_chip *gc, u32 gpio)
+> +{
+> +	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
+> +	struct xgene_gpio_sb *chip = to_xgene_gpio_sb(mm_gc);
+> +	u32 data;
+> +
+> +	if (chip->irq[gpio]) {
+> +		data = ioread32(chip->gic_regs + GICD_SPIR1);
+> +	} else {
+> +		data = ioread32(mm_gc->regs + MPA_GPIO_IN_ADDR);
+> +	}
+> +
+> +	return (data &  GPIO_MASK(gpio)) ? 1 : 0;
+> +}
 
-> As a general question, now that the convention is for DT binding docs to go
-> in a separate patch, should the DT documentation be added before or after
-> that code using these bindings is added?
+This should not assume that a particular upstream irqchip is used,
+and more importantly it should not touch its registers.
 
-It fairly obviously needs to go before so that reviewers can tell if the
-code is actually implementing the binding.
+> +static int apm_gpio_sb_to_irq(struct gpio_chip *gc, u32 gpio)
+> +{
+> +	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
+> +	struct xgene_gpio_sb *chip = to_xgene_gpio_sb(mm_gc);
+> +
+> +	if (chip->irq[gpio])
+> +		return chip->irq[gpio];
+> +
+> +	return -ENXIO;
+> +}
+> +
+> +static int gpio_sb_probe(struct platform_device *pdev)
+> +{
+> +	struct of_mm_gpio_chip *mm;
+> +	struct xgene_gpio_sb *apm_gc;
+> +	u32 ret, i;
+> +	u32 default_pins[] = {0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D};
 
---3qTVFk/EjXyDmsv5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Why are these hardcoded? The "apm,xgene-gpio-sb" compatible string
+seems very generic, but the list of pins here seems very specific
+to a particular implementation.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> +	mm->gc.ngpio = XGENE_MAX_GPIO_DS;
+> +	apm_gc->nirq = XGENE_MAX_GPIO_DS_IRQ;
+> +
+> +	apm_gc->gic_regs = ioremap(GICD_SPI_BASE, 16);
+> +	if (!apm_gc->gic_regs)
+> +		return -ENOMEM;
+> +
+> +	apm_gc->irq = devm_kzalloc(&pdev->dev, sizeof(u32) * XGENE_MAX_GPIO_DS,
+> +				   GFP_KERNEL);
+> +	if (!apm_gc->irq)
+> +		return -ENOMEM;
+> +	memset(apm_gc->irq, 0, sizeof(u32) * XGENE_MAX_GPIO_DS);
 
-iQEcBAEBAgAGBQJUNVRTAAoJECTWi3JdVIfQtg4H/i+ZNi9+Fmd/Rzq3xk4Tj29I
-vNR5T6mPodulKKjwx+IBh02pLMHwB6gKkgeHxKGG62KcbY9rCW6+50TQ/WYsGHz7
-4lXOu8Hp6Hhmg49V2j4OC2yAGCmh/VfTkJAYF+jWoQn//6xlkZTf2qejX2khcxtu
-a3TuNsfsK6eOFbWuxwI6/5qp7Bq/836Og6lZHklkyWSi3P7nO9UUb+7b/gPfy6Ry
-WscjLuH4QcQ86XzsZtb4Gvui8HqAr+RCj/nq9wJBqWVb/UuIOATXWzYG3z3kASn7
-/YIz3JHRjDOdY9Y7/A00quD5aCwQnLAbA2CvbotxHY/bp/aU/p8ZeSFTiTwTSuY=
-=5lir
------END PGP SIGNATURE-----
+kzalloc implies memset.
 
---3qTVFk/EjXyDmsv5--
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	mm->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	if (!mm->regs)
+> +		return PTR_ERR(mm->regs);
+> +
+> +	for (i = 0; i < apm_gc->nirq; i++) {
+> +		apm_gc->irq[default_pins[i]] = platform_get_irq(pdev, i);
+> +		xgene_gpio_set_bit(mm->regs + MPA_GPIO_SEL_LO,
+> +				   default_pins[i] * 2, 1);
+> +		xgene_gpio_set_bit(mm->regs + MPA_GPIO_INT_LVL, i, 1);
+> +	}
+> +	mm->gc.of_node = pdev->dev.of_node;
+> +	ret = gpiochip_add(&mm->gc);
+> +	if (ret)
+> +		dev_err(&pdev->dev, "failed to register X-Gene GPIO Standby driver");
+> +	else
+> +		dev_info(&pdev->dev, "X-Gene GPIO Standby driver registered\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static int xgene_gpio_sb_probe(struct platform_device *pdev)
+> +{
+> +	return gpio_sb_probe(pdev);
+> +}
+
+This function is pointless, just call the real one instead.
+
+	ARnd
