@@ -1,65 +1,28 @@
-From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
-Subject: Re: [PATCH v5 0/8] arch: arm64: Enable support for Samsung Exynos7 SoC
-Date: Wed, 8 Oct 2014 11:18:33 +0530
-Message-ID: <CAM4voak5DpRHghgF=EdmPCHeenMFZQeOTsm9QLE1fSXDoM1a+g@mail.gmail.com>
-References: <1411361228-18279-1-git-send-email-a.kesavan@samsung.com>
-	<541FE357.5090000@gmail.com>
-	<CAM4voa=Hsux0+rccSvDJsNTFakZwuwYwjkDkkNFfndFm03Pn3g@mail.gmail.com>
-	<542AD2AE.6060109@gmail.com>
-	<01a501cfe1e5$759fc8c0$60df5a40$@kernel.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/2] ARM: shmobile: add USB3.0 device node on r8a7790
+Date: Wed, 8 Oct 2014 15:24:28 +0900
+Message-ID: <1412749470-6028-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <01a501cfe1e5$759fc8c0$60df5a40$@kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Naveen Krishna <naveenkrishna.ch@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+ This series is based on Simon's renesas.git branch and
+renesas-devel-20141007-v3.17 tag. If we use the generic phy
+driver for R-Car Gen2 (drivers/phy/phy-rcar-gen2.c), we can use
+the USB3.0 on lager.
 
-On Tue, Oct 7, 2014 at 9:46 AM, Kukjin Kim <kgene@kernel.org> wrote:
-> Tomasz Figa wrote:
->>
->> On 30.09.2014 17:12, Abhilash Kesavan wrote:
->> > Hi Tomasz,
->> >
->> > On Mon, Sep 22, 2014 at 2:22 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
->> >> Hi Abhilash,
->> >>
->> >> On 22.09.2014 06:47, Abhilash Kesavan wrote:
->> >>> Changes since v4:
->> >>> - Fixed comments from Tomasz Figa:
->> >>>       - Changed the namespace prefix from exynos to samsung
->> >>>       - Defined bindings to take all input clocks
->> >>>       - Sorted the Kconfig entries alphabetically in clock Makefile
->> >>>       - Used consistent 1 tab line breaks across the clock file
->> >>>       - Statically initialized the samsung_cmu_info struct
->> >>> - Enabled exynos7 in the arm64 defconfig as per Catalin Marinas' comment.
->> >>> - Added Kukjin Kim's ack along with Thomas Abraham's tested and reviewed tags.
->> >>>
->> >>
->> >> The clock patches look good to me, but since they are doing quite a lot
->> >> of code moving I'd prefer to take them through clk tree. Based on the
->> >> fact that there are no code dependencies between clock patches and
->> >> remaining ones and Exynos7 is a new material for 3.18, I'm inclined to
->> >> apply them to my tree if nobody minds.
->> >
->> > Will you be picking up the clock changes soon ?
->>
->> I'd like to do so. Kukjin, since clock changes are a part of this
->> series, might I have your Ack for them to be applied separately?
->>
-> Sure, I'm fine so please go ahead with my ack on the changes.
->
-> Acked-by: Kukjin Kim <kgene.kim@samsung.com>
->
-> Thanks for your asking.
+Yoshihiro Shimoda (2):
+  ARM: shmobile: r8a7790: add USB3.0 device node
+  ARM: shmobile: lager: enable USB3.0
 
-Can you please pick up the clock changes now that Kukjin has ack'ed it.
+ arch/arm/boot/dts/r8a7790-lager.dts |    6 ++++++
+ arch/arm/boot/dts/r8a7790.dtsi      |   10 ++++++++++
+ 2 files changed, 16 insertions(+)
 
-Thanks,
-Abhilash
->
-> - Kukjin
->
+-- 
+1.7.9.5
+
