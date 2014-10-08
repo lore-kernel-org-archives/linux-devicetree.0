@@ -1,118 +1,156 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 0/7] clk: sun6i: Unify AHB1 clock and fix
- rate calculation
-Date: Thu, 9 Oct 2014 11:16:50 +0800
-Message-ID: <CAGb2v65KDOmwHAgFT6Gx8mtKTGEEYfbx6UVhz74V15J1O4odjg@mail.gmail.com>
-References: <1410000448-9999-1-git-send-email-wens@csie.org>
- <20140911203623.GJ31276@lukather> <20140926002544.19023.39287@quantum>
- <CAGb2v67QkjfH2U9YGUVcwisNakNs_=zEEWghiGkaGkm-A8aK=w@mail.gmail.com> <20140926185334.19023.12876@quantum>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] thermal: fix multiple disbalanced device node counters
+Date: Wed, 8 Oct 2014 09:08:26 -0400
+Message-ID: <20141008130824.GA16170@developer>
+References: <1411948066-9118-1-git-send-email-vz@mleia.com>
+ <1412818737.13621.3.camel@rzhang1-toshiba>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBNX426QQKGQESWZUHII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20140926185334.19023.12876@quantum>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1412818737.13621.3.camel@rzhang1-toshiba>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 27, 2014 at 2:53 AM, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Quoting Chen-Yu Tsai (2014-09-25 17:55:27)
->> On Fri, Sep 26, 2014 at 8:25 AM, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > Quoting Maxime Ripard (2014-09-11 13:36:23)
->> >> Hi Chen-Yu,
->> >>
->> >> On Sat, Sep 06, 2014 at 06:47:21PM +0800, Chen-Yu Tsai wrote:
->> >> > Hi everyone,
->> >> >
->> >> > This series unifies the mux and divider parts of the AHB1 clock found
->> >> > on sun6i and sun8i, while also adding support for the pre-divider on
->> >> > the PLL6 input.
->> >> >
->> >> > The rate calculation logic must factor in which parent it is using to
->> >> > calculate the rate, to decide whether to use the pre-divider or not.
->> >> > This is beyond the original factors clk design in sunxi. To avoid
->> >> > feature bloat, this is implemented as a seperate composite clk.
->> >> >
->> >> > The new clock driver is registered with a separate OF_CLK_DECLARE.
->> >> > This is done so that assigned-clocks* properties on the clk provider
->> >> > node can actually work. The clock framework arranges the clock setup
->> >> > order by checking whether all clock parents are available, by checking
->> >> > the node matching OF_CLK_DECLARE.
->> >> >
->> >> > However, the sunxi clk driver is based on the root node compatible,
->> >> > has no defined dependencies (parents), and is setup before the fixed-rate
->> >> > clocks. Thus when the ahb1 clock is added, all parents have rate = 0.
->> >> > There is no way to calculate the required clock factors to set a default
->> >> > clock rate under these circumstances. This happens when we set the
->> >> > defaults in the clock node (provider), rather than a clock consumer.
->> >> >
->> >> > I can think of 2 ways to solve the dependency issue, but neither is
->> >> > pretty. One would be to move the root fixed-rate clocks into the sunxi
->> >> > clk driver. The other would be separating all the clocks into individual
->> >> > OF_CLK_DECLARE statements, which adds a lot of boilerplate code.
->> >>
->> >> I don't know what Mike thinks of this, but I'd prefer the second.
->> >
->> > I do not fully understand the problem. Ideally the clock driver should
->> > have some way to fail with EPROBE_DEFER until the fixed-rate clocks are
->> > registered. Those fixed-rate parents are enumerated in your dts, right?
->> > Why isn't this enough?
->>
->> This is due to the way the sunxi clock driver is setup. The clock driver's
->> OF_CLK_DECLARE matches against the "soc" node, not the individual clock
->> nodes. When the setup function is called, it just registers all the
->> supported clocks. There are no dependencies listed.
->>
->> Unfortunately, the fixed-factor clock is in the middle of the whole clock
->> tree. The sunxi clock driver provides its parents _and_ its children.
->> Naturally the clock framework then probes the fixed-factor clock after
->> the sunxi ones. Any attempts to change the state of clocks under the
->> unavailable fixed-factor clock, such as done by of_clk_set_defaults(),
->> would get an incomplete clock, likely with no parents and parent_rate = 0.
->> That is until of_clk_init() finishes and all clocks are properly hooked
->> up.
->>
->> Anyway, this problem only occurred when I added clk-assigned-* defaults
->> to the clock provider node, which is not the case anymore.
->
-> Makes sense. I guess you could ignore the problem until you need to use
-> the assigned defaults.
+On Thu, Oct 09, 2014 at 09:38:57AM +0800, Zhang Rui wrote:
+> Hi, Eduardo,
+> 
+> On Mon, 2014-09-29 at 02:47 +0300, Vladimir Zapolskiy wrote:
+> > Here on function return all temporarily used device nodes shall
+> > decrement their usage counter. The problems are found with device
+> > nodes allocated by for_each_child_of_node(), of_parse_phandle()
+> > and of_find_node_by_name(), fix all problems at once.
+> > 
+> can you please take this patch?
 
-An update on this. Improper ordering of clock probing also affects
-sunxi's clock protection code.
+Yes, Applied. Thanks.
 
-Currently we have 2 mechanisms for protecting clocks.
-
-  a) A list of clock names in sunxi/clk-sunxi.c, fetched and enabled
-     using clkdev.
-  b) Enabling clocks right after they are registered. Used for separated
-     clock drivers like sun5i-a13-mbus and sun8i-a23-mbus.
-
-One issue I ran across was when most of the clock tree is registered using
-independent CLK_OF_DECLAREs, as I'm doing for the A80, if the protected
-clocks list is handled before the clock tree is complete, the prepare
-and enable calls are not correctly propagated to the parents that arrive
-later on.
-
-This happens to the ahb*_sdram gates.
-
->> The second method i proposed is to have OF_CLK_DECLAREs for each individual
->> clock. An example can be found here:
->>
->>   https://github.com/wens/linux/commit/1276898da02a93da4af163ed5bdc88cdead565dc
->>
->> This does add a lot of boilerplate code. Not really happy about it. But
->> it seems the proper way to split up the driver.
->
-> Yeah, this is OK. Ugly, but OK.
-
-Thanks.
-
-ChenYu
+> 
+> thanks,
+> rui
+> > Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> > Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  drivers/thermal/of-thermal.c |   40 ++++++++++++++++++++++++++++++++--------
+> >  1 file changed, 32 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+> > index f8eb625..62143ba 100644
+> > --- a/drivers/thermal/of-thermal.c
+> > +++ b/drivers/thermal/of-thermal.c
+> > @@ -387,15 +387,18 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id,
+> >  				int (*get_trend)(void *, long *))
+> >  {
+> >  	struct device_node *np, *child, *sensor_np;
+> > +	struct thermal_zone_device *tzd = ERR_PTR(-ENODEV);
+> >  
+> >  	np = of_find_node_by_name(NULL, "thermal-zones");
+> >  	if (!np)
+> >  		return ERR_PTR(-ENODEV);
+> >  
+> > -	if (!dev || !dev->of_node)
+> > +	if (!dev || !dev->of_node) {
+> > +		of_node_put(np);
+> >  		return ERR_PTR(-EINVAL);
+> > +	}
+> >  
+> > -	sensor_np = dev->of_node;
+> > +	sensor_np = of_node_get(dev->of_node);
+> >  
+> >  	for_each_child_of_node(np, child) {
+> >  		struct of_phandle_args sensor_specs;
+> > @@ -422,16 +425,21 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id,
+> >  		}
+> >  
+> >  		if (sensor_specs.np == sensor_np && id == sensor_id) {
+> > -			of_node_put(np);
+> > -			return thermal_zone_of_add_sensor(child, sensor_np,
+> > -							  data,
+> > -							  get_temp,
+> > -							  get_trend);
+> > +			tzd = thermal_zone_of_add_sensor(child, sensor_np,
+> > +							 data,
+> > +							 get_temp,
+> > +							 get_trend);
+> > +			of_node_put(sensor_specs.np);
+> > +			of_node_put(child);
+> > +			goto exit;
+> >  		}
+> > +		of_node_put(sensor_specs.np);
+> >  	}
+> > +exit:
+> > +	of_node_put(sensor_np);
+> >  	of_node_put(np);
+> >  
+> > -	return ERR_PTR(-ENODEV);
+> > +	return tzd;
+> >  }
+> >  EXPORT_SYMBOL_GPL(thermal_zone_of_sensor_register);
+> >  
+> > @@ -623,6 +631,7 @@ static int thermal_of_populate_trip(struct device_node *np,
+> >  
+> >  	/* Required for cooling map matching */
+> >  	trip->np = np;
+> > +	of_node_get(np);
+> >  
+> >  	return 0;
+> >  }
+> > @@ -730,9 +739,14 @@ finish:
+> >  	return tz;
+> >  
+> >  free_tbps:
+> > +	for (i = 0; i < tz->num_tbps; i++)
+> > +		of_node_put(tz->tbps[i].cooling_device);
+> >  	kfree(tz->tbps);
+> >  free_trips:
+> > +	for (i = 0; i < tz->ntrips; i++)
+> > +		of_node_put(tz->trips[i].np);
+> >  	kfree(tz->trips);
+> > +	of_node_put(gchild);
+> >  free_tz:
+> >  	kfree(tz);
+> >  	of_node_put(child);
+> > @@ -742,7 +756,13 @@ free_tz:
+> >  
+> >  static inline void of_thermal_free_zone(struct __thermal_zone *tz)
+> >  {
+> > +	int i;
+> > +
+> > +	for (i = 0; i < tz->num_tbps; i++)
+> > +		of_node_put(tz->tbps[i].cooling_device);
+> >  	kfree(tz->tbps);
+> > +	for (i = 0; i < tz->ntrips; i++)
+> > +		of_node_put(tz->trips[i].np);
+> >  	kfree(tz->trips);
+> >  	kfree(tz);
+> >  }
+> > @@ -814,10 +834,13 @@ int __init of_parse_thermal_zones(void)
+> >  			/* attempting to build remaining zones still */
+> >  		}
+> >  	}
+> > +	of_node_put(np);
+> >  
+> >  	return 0;
+> >  
+> >  exit_free:
+> > +	of_node_put(child);
+> > +	of_node_put(np);
+> >  	of_thermal_free_zone(tz);
+> >  
+> >  	/* no memory available, so free what we have built */
+> > @@ -859,4 +882,5 @@ void of_thermal_destroy_zones(void)
+> >  		kfree(zone->ops);
+> >  		of_thermal_free_zone(zone->devdata);
+> >  	}
+> > +	of_node_put(np);
+> >  }
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
