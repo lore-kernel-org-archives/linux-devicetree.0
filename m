@@ -1,47 +1,48 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH v3 2/2] ARM: shmobile: lager: enable HS-USB
-Date: Wed, 8 Oct 2014 13:51:02 +0900
-Message-ID: <5434C2B6.2030008@renesas.com>
-References: <2438577.UAUDMkTTWI@wasted.cogentembedded.com> <2298118.7qjLAFjuvd@wasted.cogentembedded.com>
+From: Christophe RICARD <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [tpmdd-devel] [PATCH 13/16] tpm/tpm_i2c_stm_st33: Add tpm_lock
+ mutex for safe irq management
+Date: Wed, 08 Oct 2014 07:21:22 +0200
+Message-ID: <5434C9D2.7080003@gmail.com>
+References: <1412712189-1234-1-git-send-email-christophe-h.ricard@st.com> <1412712189-1234-14-git-send-email-christophe-h.ricard@st.com> <20141007215630.GB2366@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <2298118.7qjLAFjuvd@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "horms@verge.net.au" <horms@verge.net.au>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141007215630.GB2366-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi Jason,
 
-(2014/10/08 5:26), Sergei Shtylyov wrote:
-> From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> 
-> Enable HS-USB device for the Lager board, defining the GPIO that the driver
-> should check when probing. Since this board doesn't have the OTG ID pin, we
-> assume that GP5_18 (USB0_PWEN) is an ID pin because it is 1 when the SW5 is
-> in position 2-3 (meaning USB function) and 0 in other positions.
-> 
-< snip >
-> Index: renesas/arch/arm/boot/dts/r8a7790-lager.dts
-> ===================================================================
-> --- renesas.orig/arch/arm/boot/dts/r8a7790-lager.dts
-> +++ renesas/arch/arm/boot/dts/r8a7790-lager.dts
-> @@ -226,6 +226,11 @@
->  		renesas,function = "usb0";
->  	};
->  
-> +	hsusb_pins: usb0 {
-> +		renesas,groups = "usb0_ovc_vbus";
+Here i want to prevent a TPM TIS write command sent when a TPM TIS read 
+command is on going on the bus.
+Basically:
+- a TPM TIS write looks like the following format: <W reg data>
+- a TPM TIS read looks like the following format: <W reg dummy><R data>
 
-Thank you for the v3 patch.
-I tested this, and kernel log said "GP_5_19 already requested".
-However, the hsusb on lager uses GP_5_18. Is this correct behavior?
+If an interrupt occur a TPM TIS read might be interrupted by a TPM TIS 
+write to clear the pending interrupt giving potentially something like that:
+<W reg dummy><W reg data> <R data>
+The TPM behavior in this situation is unknown...
 
-sh-pfc e6060000.pfc: pin GP_5_19 already requested by ee090000.pci; cannot claim for e6590000.usb
-sh-pfc e6060000.pfc: pin-179 (e6590000.usb) status -22
-sh-pfc e6060000.pfc: could not request pin 179 (GP_5_19) from group usb0_ovc_vbus  on device sh-pfc
+Best Regards
+Christophe
+On 07/10/2014 23:56, Jason Gunthorpe wrote:
+> On Tue, Oct 07, 2014 at 10:03:06PM +0200, Christophe Ricard wrote:
+>> Adding tpm_lock mutex in order to guarantee that a i2c_read_data or a
+>> i2c_write_data will not get interrupted by a threaded interrupt.
+> Can you elaborate on this?
+>
+> Any call from the TPM core itself through 'ops' is locked already, and
+> I don't see this driver's IRQ handler doing I2C ops..
+>
+> What scenario is this protecting against?
+>
+> Jason
 
-Best regards,
-Yoshihiro Shimoda
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
