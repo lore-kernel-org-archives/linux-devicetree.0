@@ -1,115 +1,63 @@
-From: Robert Richter <robert.richter@caviumnetworks.com>
-Subject: Re: [PATCH 3/6] pci, thunder: Add PCIe host controller devicetree
- bindings
-Date: Wed, 8 Oct 2014 10:49:27 +0200
-Message-ID: <20141008084927.GH31556@rric.localhost>
-References: <1411573068-12952-1-git-send-email-rric@kernel.org>
- <1411573068-12952-4-git-send-email-rric@kernel.org>
- <3082935.e3X4GsVUDn@wuerfel>
- <20141007142744.GE31556@rric.localhost>
- <20141007150149.GW4652@e106497-lin.cambridge.arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] ASoC: simple-card: Add mic and hp detect
+	gpios.
+Date: Wed, 8 Oct 2014 10:50:00 +0200
+Message-ID: <CACRpkdY+KQ1OMh565desoqVP-AUJL-VjFx-D5LiaNpXs5oOsnA@mail.gmail.com>
+References: <1412198720-2326-1-git-send-email-dgreid@chromium.org>
+ <20141002155350.GU4273@sirena.org.uk>
+ <CAMuHMdWh=sXAD59T1T=gvROX+fbF6=gFo6C0nkJdfnCrdNrwYg@mail.gmail.com>
+ <20141007123856.GF4609@sirena.org.uk>
+ <CAMuHMdV39fM_TCa+WSvswij6dxD2vwfJT+FueBtxndpsymP9CQ@mail.gmail.com>
+ <20141007163654.GJ4609@sirena.org.uk>
+ <CAAVeFuJB=bF3g2czT1ed1UX85R_hBXqFAKdeLJcASRcXQujFJw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141007150149.GW4652@e106497-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Robert Richter <rric@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sunil Goutham <sgoutham@cavium.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAAVeFuJB=bF3g2czT1ed1UX85R_hBXqFAKdeLJcASRcXQujFJw@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Linux-sh list <linux-sh@vger.kernel.org>, Sonny Rao <sonnyrao@chromium.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Dylan Reid <dgreid@chromium.org>, jay.xu@rock-chips.com, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07.10.14 16:01:49, Liviu Dudau wrote:
-> On Tue, Oct 07, 2014 at 03:27:44PM +0100, Robert Richter wrote:
-> > On 24.09.14 18:06:04, Arnd Bergmann wrote:
-> > > > +               compatible = "cavium,thunder-pcie";
-> > > > +               device_type = "pci";
-> > > > +               msi-parent = <&its>;
-> > > > +               bus-range = <0 255>;
-> > > > +               #size-cells = <2>;
-> > > > +               #address-cells = <3>;
-> > > > +               reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
-> > > > +               ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>, /* mem ranges */
-> > > > +                       <0x03000000 0x8300 0x00000000 0x8300 0x00000000 0x80 0x00000000>,
-> > > > +                       <0x03000000 0x87e0 0x00000000 0x87e0 0x00000000 0x01 0x00000000>;
-> > > > +        };
-> > > 
-> > > If you claim the entire 0-255 bus range, I think you should also
-> > > specify a domain, otherwise it's not predictable which domain you
-> > > get.
-> > 
-> > Liviu's code assigns a unique id to the domain if missing, see
-> > of_pci_get_domain_nr(). So I don't think we need to add a "pci-domain"
-> > property here.
-> 
-> Not anymore! That function is gone in v12 onwards. What is in -next has
-> a new function called of_get_pci_domain_nr() (slight name change) but
-> that only gets the value set in the "linux,pci-domain" property of the
-> device node. It is the choice of the host bridge driver to use that
-> function or to use pci_get_new_domain_nr() which *does* generate an
-> unique id every time it gets called.
+On Wed, Oct 8, 2014 at 9:05 AM, Alexandre Courbot <gnurou@gmail.com> wrote:
+> On Wed, Oct 8, 2014 at 1:36 AM, Mark Brown <broonie@kernel.org> wrote:
+>> On Tue, Oct 07, 2014 at 03:10:01PM +0200, Geert Uytterhoeven wrote:
 
-I am quite confused a bit on which is the latest code base now. I was
-looking into Bjorn's pci/host-generic and there is a different
-implemetation:
+>> Right, obviously it's not going to work if the platform actually uses 0
+>> as a valid GPIO.
+>>
+>>> Quoting Linus (https://lkml.org/lkml/2014/9/4/464):
+>>> "Fixing the old global GPIO numberspace API is a waste of time IMO".
+>>
+>>> Hence I've just sent a patch to initialize the GPIO numbers with -ENOENT.
+>>
+>> I do think it's worth renumbering the platforms since it's *relatively*
+>> little work per platform compared to completing the gpiod transition.
+>
+> But transition to gpiod is the way to ultimately fix this issue, as
+> well as many others. Not to mention that renumbering GPIOs will
+> certainly make a few users of the GPIO sysfs (another abomination,
+> agreed) unhappy. I can only recommend switching drivers to gpiod when
+> such issues are spotted.
 
-----
-/**
- * This function will try to obtain the host bridge domain number by
- * using of_alias_get_id() call with "pci-domain" as a stem.  If that
- * fails, a local allocator will be used.  The local allocator can
- * be requested to return a new domain_nr if the information is missing
- * from the device tree.
- *
- * @node: device tree node with the domain information
- * @allocate_if_missing: if DT lacks information about the domain nr,
- * allocate a new number.
- *
- * Returns the associated domain number from DT, or a new domain number
- * if DT information is missing and @allocate_if_missing is true.  If
- * @allocate_if_missing is false then the last allocated domain number
- * will be returned.
- */
-int of_pci_get_domain_nr(struct device_node *node, bool allocate_if_missing)
-{
-        int domain;
+Yeah that is another issue ... we end up in catch 22 situations like
+that, renumber the GPIOs, OK, then we break the ABI.
 
-        domain = atomic_read(&of_domain_nr);
-        if (domain == -1) {
-                /* first run, get max defined domain nr in device tree */
-                domain = of_get_max_pci_domain_nr();
-                /* then set the start value for allocator to be max + 1 */
-                atomic_set(&of_domain_nr, domain + 1);
-        }
-        domain = of_alias_get_id(node, "pci-domain");
-        if (domain == -ENODEV) {
-                domain = atomic_read(&of_domain_nr);
-                if (allocate_if_missing)
-                        atomic_inc(&of_domain_nr);
-        }
+Admittedly that "ABI" is something people break all the time,
+/sys/*gpioN just isnt what it should be, not stable at all.
 
-        return domain;
-}
-EXPORT_SYMBOL_GPL(of_pci_get_domain_nr);
-----
+I'm not against renumbering GPIO if it's minor effort, but if it
+start to consume hundreds of hours and regressions and what not,
+that time is better spent focusing on the gpiod transition.
 
-This differs also from v13. Please check.
-
-It would be good to have a stable code base to work with, so I would
-prefer incremental patches on top of Bjorn's pci/host-generic.
-
-> > Liviu's DT implementation that assigns a unique number differs a bit
-> > from ACPI which states: "If _SEG [aka domain number] does not exist,
-> > OSPM assumes that all PCI bus segments are in PCI Segment Group 0."
-> > 
-> > Maybe of_pci_get_domain_nr() should be similar to ACPI. If there are
-> > multiple root bridges, the "pci-domain" property could be forced
-> > instead.
-> 
-> Indeed. But the enforcing is left as an exercise to the host bridge
-> implementor for the moment.
-
-Right, can be added later.
-
-Thanks,
-
--Robert
+Yours,
+Linus Walleij
