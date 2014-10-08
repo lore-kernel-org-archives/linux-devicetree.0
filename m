@@ -1,151 +1,63 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 2/2] dt: bindings: tps65217: add compatible property
- for subnodes
-Date: Wed, 8 Oct 2014 11:47:17 +0100
-Message-ID: <20141008104717.GG20647@lee--X1>
-References: <1660410.j399mvljTo@lenovobook>
- <20141006212232.GF18035@lee--X1>
- <CAJKbBDCSrPd=JGP2sfk1D-eNf55iYBKUqBtqA=4m6r5xL6oYnQ@mail.gmail.com>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/6] dt-bindings: Document Broadcom Cygnus SoC and clock
+ driver
+Date: Wed, 8 Oct 2014 03:58:15 -0700
+Message-ID: <543518C7.9070809@broadcom.com>
+References: <1412746025-11998-4-git-send-email-sbranden@broadcom.com> <2480056.Cs3dr8EM2e@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJKbBDCSrPd=JGP2sfk1D-eNf55iYBKUqBtqA=4m6r5xL6oYnQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johannes Pointner <johannes.pointner@gmail.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2480056.Cs3dr8EM2e@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 08 Oct 2014, Johannes Pointner wrote:
+On 14-10-08 12:57 AM, Arnd Bergmann wrote:
+> On Tuesday 07 October 2014 22:27:02 Scott Branden wrote:
+>> diff --git a/Documentation/devicetree/bindings/arm/cygnus.txt b/Documentation/devicetree/bindings/arm/cygnus.txt
+>> new file mode 100644
+>> index 0000000..a210377
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/cygnus.txt
+>> @@ -0,0 +1,12 @@
+>> +Broadcom Cygnus device tree bindings
+>> +------------------------------------
+>> +
+>> +All Cygnus boards shall have the following properties:
+>> +
+>> +Required root node property:
+>> +       - compatible = "brcm,cygnus";
+>
+> Can you add a more specific model number for the soc as well?
+> I assume that cygnus refers to more than one model, so you
+> should probably list both the family and the individual
+> SoC type here.
+Add specific model numbers does not seem necessary because they are not 
+needed to be specified in the device tree for compatible purposes for 
+the kernel to work.  Plus, the list of model numbers will continue to 
+grow over time and compatible strings would need to be added to the 
+kernel for no apparent reason?
+>
+>> +Boards variants shall have the following additional properties:
+>> +
+>> +Required root node property for the BCM911360_ENTPHN board:
+>> +       - compatible = "brcm,bcm911360_entphn";
+>>
+>
+> We normally don't list specific boards here, since it's hard to
+> keep up.
+Thanks - removed specific boards from file and moved the cygnus.txt file 
+to devicetree/bindings/arm/bcm/cygnus.txt in next version.  This seems 
+to be like the appropriate place to put this document. We will need to 
+add back in board specific bindings when ALSA support is added.  But 
+that will be a later commit to deal with.
+>
+> 	Arnd
+>
 
-> 2014-10-06 23:22 GMT+02:00 Lee Jones <lee.jones@linaro.org>:
-> > On Thu, 25 Sep 2014, Johannes Pointner wrote:
-> >
-> >> Add documentation for compatible property of subnodes.
-> >>
-> >> Signed-off-by: Johannes Pointner <johannes.pointner@br-automation.=
-com>
-> >> ---
-> >>  Documentation/devicetree/bindings/regulator/tps65217.txt         =
-| 7 ++++++-
-> >>  .../devicetree/bindings/video/backlight/tps65217-backlight.txt   =
-| 9 ++++++---
-> >>  2 files changed, 12 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/regulator/tps65217.=
-txt b/Documentation/devicetree/bindings/regulator/tps65217.txt
-> >> index 4f05d20..8ae3a3b 100644
-> >> --- a/Documentation/devicetree/bindings/regulator/tps65217.txt
-> >> +++ b/Documentation/devicetree/bindings/regulator/tps65217.txt
-> >> @@ -14,6 +14,9 @@ Required properties:
-> >>  Optional properties:
-> >>  - ti,pmic-shutdown-controller: Telling the PMIC to shutdown on PW=
-R_EN toggle.
-> >>
-> >> +Required subnode properties:
-> >> +- compatible: "ti,tps65217-pmic"
-> >> +
-> >>    The valid names for regulators are:
-> >>    tps65217: dcdc1, dcdc2, dcdc3, ldo1, ldo2, ldo3 and ldo4
-> >>
-> >> @@ -23,9 +26,11 @@ Example:
-> >>
-> >>       tps: tps@24 {
-> >>               compatible =3D "ti,tps65217";
-> >> +             reg =3D <0x24>;
-> >>               ti,pmic-shutdown-controller;
-> >>
-> >> -             regulators {
-> >> +             tps_pmic: regulators {
-> >
-> > How is the tps_pmic label used?
-> >
-> >> +                     compatible =3D "ti,tps65217-pmic";
-> >
-> > I'd like to see a '\n' here.
-> I will add a newline here.
-> >
-> >>                       dcdc1_reg: dcdc1 {
-> >>                               regulator-min-microvolt =3D <900000>=
-;
-> >>                               regulator-max-microvolt =3D <1800000=
->;
-> >> diff --git a/Documentation/devicetree/bindings/video/backlight/tps=
-65217-backlight.txt b/Documentation/devicetree/bindings/video/backlight=
-/tps65217-backlight.txt
-> >> index 5fb9279..f92f154 100644
-> >> --- a/Documentation/devicetree/bindings/video/backlight/tps65217-b=
-acklight.txt
-> >> +++ b/Documentation/devicetree/bindings/video/backlight/tps65217-b=
-acklight.txt
-> >> @@ -6,19 +6,22 @@ used to drive LEDs for use as backlights.
-> >>  Required properties:
-> >>  - compatible: "ti,tps65217"
-> >>  - reg: I2C slave address
-> >> -- backlight: node for specifying WLED1 and WLED2 lines in TPS6521=
-7
-> >> +- backlight: subnode for specifying WLED1 and WLED2 lines in TPS6=
-5217
-> >> +
-> >> +Required subnode properties:
-> >> +- compatible: "ti,tps65217-bl"
-> >>  - isel: selection bit, valid values: 1 for ISEL1 (low-level) and =
-2 for ISEL2 (high-level)
-> >>  - fdim: PWM dimming frequency, valid values: 100, 200, 500, 1000
-> >>  - default-brightness: valid values: 0-100
-> >>
-> >> -Each regulator is defined using the standard binding for regulato=
-rs.
-> >>
-> >>  Example:
-> >>
-> >>       tps: tps@24 {
-> >>               reg =3D <0x24>;
-> >>               compatible =3D "ti,tps65217";
-> >
-> > I'd like to see a '\n' here.
-> I will add a newline here.
-> >
-> >> -             backlight {
-> >> +             tps_bl: backlight {
-> >
-> > Same here.  Is this label used?
-> >
-> >> +                     compatible =3D "ti,tps65217-bl";
-> >>                       isel =3D <1>;  /* 1 - ISET1, 2 ISET2 */
-> >>                       fdim =3D <100>; /* TPS65217_BL_FDIM_100HZ */
-> >>                       default-brightness =3D <50>;
-> >
->=20
-> Regarding the labels: The backlight label could be used like the
-> following. I use it like this in my tests with the tilcdc panel drive=
-r
-> which has a backlight support.
->=20
->     panel {
->         backlight =3D <&tps_bl>;
->=20
->         panel-info {
->             ac-bias        =3D <255>;
->             ac-bias-intrpt    =3D <0>;
->             dma-burst-sz    =3D <16>;
->             bpp        =3D <32>;
->             fdd        =3D <0x80>;
->             sync-edge    =3D <0>;
->             sync-ctrl    =3D <1>;
->             .
->             .
->             .
->=20
-> I'm not sure if there could be actual use for the pmic label, but I
-> thought if I add a label to backlight, I have to add one to the pmic
-> too to keep it similar.
-
-No, not at all.  If it's not used, you should remove it.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
