@@ -1,50 +1,75 @@
-From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] ARM: dts: sun9i: Add A80 Optimus Board support
-Date: Wed, 08 Oct 2014 08:32:21 -0500
-Message-ID: <54353CE5.5070808@gmail.com>
-References: <1412773376-25212-1-git-send-email-wens@csie.org> <1412773376-25212-4-git-send-email-wens@csie.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 3/6] dt-bindings: Document Broadcom Cygnus SoC and clock driver
+Date: Wed, 08 Oct 2014 15:35:27 +0200
+Message-ID: <2797894.oaYXOOJrDl@wuerfel>
+References: <1412746025-11998-4-git-send-email-sbranden@broadcom.com> <2480056.Cs3dr8EM2e@wuerfel> <543518C7.9070809@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412773376-25212-4-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <543518C7.9070809-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Meng Zhang <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday 08 October 2014 03:58:15 Scott Branden wrote:
+> On 14-10-08 12:57 AM, Arnd Bergmann wrote:
+> > On Tuesday 07 October 2014 22:27:02 Scott Branden wrote:
+> >> diff --git a/Documentation/devicetree/bindings/arm/cygnus.txt b/Documentation/devicetree/bindings/arm/cygnus.txt
+> >> new file mode 100644
+> >> index 0000000..a210377
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/arm/cygnus.txt
+> >> @@ -0,0 +1,12 @@
+> >> +Broadcom Cygnus device tree bindings
+> >> +------------------------------------
+> >> +
+> >> +All Cygnus boards shall have the following properties:
+> >> +
+> >> +Required root node property:
+> >> +       - compatible = "brcm,cygnus";
+> >
+> > Can you add a more specific model number for the soc as well?
+> > I assume that cygnus refers to more than one model, so you
+> > should probably list both the family and the individual
+> > SoC type here.
+> Add specific model numbers does not seem necessary because they are not 
+> needed to be specified in the device tree for compatible purposes for 
+> the kernel to work.  Plus, the list of model numbers will continue to 
+> grow over time and compatible strings would need to be added to the 
+> kernel for no apparent reason?
 
+It's always helpful to have them in the DT though, in case you ever
+need to add a workaround for one of the SoCs.
 
-On 10/8/14, 8:02 AM, Chen-Yu Tsai wrote:
-> The A80 Optimus Board is was launched with the Allwinner A80 SoC.
-> It was jointly developed by Allwinner and Merrii.
-> 
-> This board has a UART port, a JTAG connector, USB host ports, a USB
-> 3.0 OTG connector, an HDMI output, a micro SD slot, 8G NAND flash,
-> 4G DRAM, a camera sensor interface, a WiFi/BT combo chip, a headphone
-> jack, IR receiver, and additional GPIO headers.
-> 
-> This patch adds only basic support.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile              |  2 +
->  arch/arm/boot/dts/sun9i-a80-optimus.dts | 66 +++++++++++++++++++++++++++++++++
->  2 files changed, 68 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun9i-a80-optimus.dts
-> 
-[...]
-> +
-> +/dts-v1/;
-> +/include/ "sun9i-a80.dtsi"
-> +
-> +/ {
-> +	model = "Merrii A80 Optimus Board";
-> +	compatible = "merrii,a80-optimus", "allwinner,sun9i-a80";
+You can change the description to just state the format of the
+more specific model number so you don't need to add the particular
+type to the binding, but I'd definitely recommend listing both
+a generic and a more specific name here, such as
 
-"merrii" should be added to vendor-prefixes.txt
+	compatible = "brcm,bcm123456", "brcm,cygnus";
 
-Dinh
+> >> +Boards variants shall have the following additional properties:
+> >> +
+> >> +Required root node property for the BCM911360_ENTPHN board:
+> >> +       - compatible = "brcm,bcm911360_entphn";
+> >>
+> >
+> > We normally don't list specific boards here, since it's hard to
+> > keep up.
+> Thanks - removed specific boards from file and moved the cygnus.txt file 
+> to devicetree/bindings/arm/bcm/cygnus.txt in next version.  This seems 
+> to be like the appropriate place to put this document. We will need to 
+> add back in board specific bindings when ALSA support is added.  But 
+> that will be a later commit to deal with.
+
+I believe most new alsa drivers can now use the binding from
+Documentation/devicetree/bindings/sound/simple-card.txt
+so you should no longer need a board specific driver or binding
+for those.
+
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
