@@ -1,58 +1,57 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] drm/tegra: Set the dsi lp clk parent and rate
-Date: Wed, 8 Oct 2014 18:11:55 +0300
-Message-ID: <20141008151155.GC4809@tbergstrom-lnx.Nvidia.com>
-References: <1411156429-19797-1-git-send-email-seanpaul@chromium.org>
- <1411376456.2599.1.camel@pengutronix.de>
- <20140922101153.GN1470@ulmo>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/5] regulator: of: Add regulator-initial-mode parse
+ support
+Date: Wed, 8 Oct 2014 16:12:20 +0100
+Message-ID: <20141008151220.GE4609@sirena.org.uk>
+References: <1412775847-15213-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1412775847-15213-2-git-send-email-javier.martinez@collabora.co.uk>
+ <20141008142511.GA4609@sirena.org.uk>
+ <54354C7D.7090104@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3qTVFk/EjXyDmsv5"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140922101153.GN1470@ulmo>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+In-Reply-To: <54354C7D.7090104@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Doug Anderson <dianders@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 22, 2014 at 12:11:54PM +0200, Thierry Reding wrote:
-> * PGP Signed by an unknown key
-> 
-> On Mon, Sep 22, 2014 at 11:00:56AM +0200, Lucas Stach wrote:
-> > Am Freitag, den 19.09.2014, 15:53 -0400 schrieb Sean Paul:
-> > > Per NVidia, this clock rate should be around 70MHz in
-> > > order to properly sample reads on data lane 0. In order
-> > > to achieve this rate, we need to reparent the clock from
-> > > clk_m which can only achieve 12MHz. Add parent_lp to the
-> > > dts bindings and set the parent & rate on init.
-> > > 
-> > > Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > 
-> > NACK
-> > 
-> > You are pushing SoC integration details into the binding of the device.
-> > 
-> > You have two reasonable routes to go here: either the clock driver needs
-> > to be made smarter to reparent the clock in case the required clock rate
-> > could not be achieved with the current parent or you go the easy route
-> > and reparent the clock as part of the initial configuration.
-> 
-> Agreed. There doesn't seem to be a case where it would make sense to
-> have this configurable per-board. Can you achieve the same effect by
-> adding this to the clock initialization table?
-> 
-> Oh, I just see that we have this in the Tegra124 clock initialization
-> table:
-> 
-> 	{TEGRA114_CLK_DSIALP, TEGRA114_CLK_PLL_P, 68000000, 0},
-> 	{TEGRA114_CLK_DSIBLP, TEGRA114_CLK_PLL_P, 68000000, 0},
-> 
-> Doesn't that work for you already? If not that'd be a bug that should be
-> fixed in the clock driver.
 
-This seems the better approach indeed. Unless the rate would differ based
-on board or other external factors.
+--3qTVFk/EjXyDmsv5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Cheers,
+On Wed, Oct 08, 2014 at 04:38:53PM +0200, Javier Martinez Canillas wrote:
+> On 10/08/2014 04:25 PM, Mark Brown wrote:
 
-Peter.
+> > That doesn't mean that the definition of those modes is something we can
+> > sensibly provide in generic code, especially in a completely
+> > undocumented fashion (perhaps you've done that later in the patch series
+> > but bisection also applies to reviewability).
+
+> As a general question, now that the convention is for DT binding docs to go
+> in a separate patch, should the DT documentation be added before or after
+> that code using these bindings is added?
+
+It fairly obviously needs to go before so that reviewers can tell if the
+code is actually implementing the binding.
+
+--3qTVFk/EjXyDmsv5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUNVRTAAoJECTWi3JdVIfQtg4H/i+ZNi9+Fmd/Rzq3xk4Tj29I
+vNR5T6mPodulKKjwx+IBh02pLMHwB6gKkgeHxKGG62KcbY9rCW6+50TQ/WYsGHz7
+4lXOu8Hp6Hhmg49V2j4OC2yAGCmh/VfTkJAYF+jWoQn//6xlkZTf2qejX2khcxtu
+a3TuNsfsK6eOFbWuxwI6/5qp7Bq/836Og6lZHklkyWSi3P7nO9UUb+7b/gPfy6Ry
+WscjLuH4QcQ86XzsZtb4Gvui8HqAr+RCj/nq9wJBqWVb/UuIOATXWzYG3z3kASn7
+/YIz3JHRjDOdY9Y7/A00quD5aCwQnLAbA2CvbotxHY/bp/aU/p8ZeSFTiTwTSuY=
+=5lir
+-----END PGP SIGNATURE-----
+
+--3qTVFk/EjXyDmsv5--
