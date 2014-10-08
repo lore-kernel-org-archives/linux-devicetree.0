@@ -1,52 +1,198 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v13 00/12] Support for creating generic PCI host bridges
- from DT
-Date: Wed, 8 Oct 2014 12:46:07 +0100
-Message-ID: <20141008114606.GG4652@e106497-lin.cambridge.arm.com>
-References: <1412000971-9242-1-git-send-email-Liviu.Dudau@arm.com>
- <20140929194335.GA13747@google.com>
- <20140930103942.GO841@e106497-lin.cambridge.arm.com>
- <20140930161805.GB5625@google.com>
- <20140930165431.GV841@e106497-lin.cambridge.arm.com>
- <20141008074428.GD20256@rric.localhost>
- <20141008091321.GC4652@e106497-lin.cambridge.arm.com>
- <20141008103600.GS20170@rric.localhost>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: cygnus: Initial support for Broadcom Cygnus
+ SoC
+Date: Wed, 8 Oct 2014 05:27:24 -0700
+Message-ID: <54352DAC.3080001@broadcom.com>
+References: <1412746025-11998-2-git-send-email-sbranden@broadcom.com> <4255803.4lcNtQPo2T@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20141008103600.GS20170@rric.localhost>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robert Richter <rric@kernel.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <Will.Deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, linux-arch <linux-arch@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Device Tree ML <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Yinghai Lu <yinghai@kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Sinan Kaya <okaya@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, Jiang Liu <jiang.liu@linux.intel.com>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4255803.4lcNtQPo2T@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBPY3QgMDgsIDIwMTQgYXQgMTE6MzY6MDBBTSArMDEwMCwgUm9iZXJ0IFJpY2h0ZXIg
-d3JvdGU6Cj4gT24gMDguMTAuMTQgMTA6MTM6MjEsIExpdml1IER1ZGF1IHdyb3RlOgo+ID4gT24g
-V2VkLCBPY3QgMDgsIDIwMTQgYXQgMDg6NDQ6MjhBTSArMDEwMCwgUm9iZXJ0IFJpY2h0ZXIgd3Jv
-dGU6Cj4gPiA+IEkgYXNzdW1lIHBjaS9ob3N0LWdlbmVyaWMgaXMgdGhlIGxhdGVzdCBub3cgd2l0
-aCB0aGlzIGlzc3VlIGZpeGVkIGFzCj4gPiA+IHRoZSBjb21taXQgZGF0ZSBpcyAyMDE0LTEwLTAx
-IHBhc3QgeW91IG1lc3NhZ2UgYWJvdmUsIHJpZ2h0PyBTbyBpcyBpdAo+ID4gPiBvayB0byByZWJh
-c2Ugb3VyIGhvc3QgY29udHJvbGxlciBkcml2ZXIgb250byBwY2kvaG9zdC1nZW5lcmljIG9yIHdp
-bGwKPiA+ID4gdGhlcmUgYmUgZnVydGhlciB1cGRhdGVzIG9yIGFueSBvdGhlciBicmFuY2ggdGhh
-dCBpcyBuZXdlcj8KPiA+IAo+ID4gWW91IGNhbiByZWJhc2UgZWl0aGVyIG9uIHRvcCBvZiBCam9y
-bidzIG5leHQgYnJhbmNoIG9yIHVzZSBsaW51eC1uZXh0LiBIb3BlIHRvCj4gPiBzZWUgaXQgaW4g
-djMuMTggc29vbi4KPiAKPiBUaGFua3MgTGl2aXUuIFNvIEkgd2lsbCB1c2UgcGNpL2hvc3QtZ2Vu
-ZXJpYyB3aGljaCBpcyB3aGF0IGlzIGluCj4gcGNpL25leHQ6Cj4gCj4gIGQxZTZkYzkxYjUzMiBh
-cm02NDogQWRkIGFyY2hpdGVjdHVyYWwgc3VwcG9ydCBmb3IgUENJCgpZZXMsIHRoYXQncyB0aGUg
-b25lLgoKQmVzdCByZWdhcmRzLApMaXZpdQoKPiAKPiAtUm9iZXJ0Cj4gCgotLSAKPT09PT09PT09
-PT09PT09PT09PT0KfCBJIHdvdWxkIGxpa2UgdG8gfAp8IGZpeCB0aGUgd29ybGQsICB8CnwgYnV0
-IHRoZXkncmUgbm90IHwKfCBnaXZpbmcgbWUgdGhlICAgfAogXCBzb3VyY2UgY29kZSEgIC8KICAt
-LS0tLS0tLS0tLS0tLS0KICAgIMKvXF8o44OEKV8vwq8KCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Thanks for the review - comments inline.
+
+On 14-10-08 12:54 AM, Arnd Bergmann wrote:
+> On Tuesday 07 October 2014 22:27:00 Scott Branden wrote:
+>> From: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>
+>> Adds initial support for the Cygnus SoC based on Broadcom=E2=80=99s =
+iProc series.
+>>
+>> Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Desmond Liu <desmondl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: JD (Jiandong) Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Tested-by: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ---
+>>   arch/arm/mach-bcm/Kconfig      |   31 ++++++++
+>>   arch/arm/mach-bcm/Makefile     |    3 +
+>>   arch/arm/mach-bcm/bcm_cygnus.c |  166 ++++++++++++++++++++++++++++=
+++++++++++++
+>>   3 files changed, 200 insertions(+)
+>>   create mode 100644 arch/arm/mach-bcm/bcm_cygnus.c
+>>
+>> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+>> index fc93800..2dd3f78 100644
+>> --- a/arch/arm/mach-bcm/Kconfig
+>> +++ b/arch/arm/mach-bcm/Kconfig
+>> @@ -5,6 +5,37 @@ menuconfig ARCH_BCM
+>>
+>>   if ARCH_BCM
+>>
+>> +config ARCH_BCM_IPROC
+>> +	bool "Broadcom ARMv7 iProc boards" if ARCH_MULTI_V7
+>> +	select ARM_GIC
+>> +	select CACHE_L2X0
+>> +	select HAVE_ARM_TWD if LOCAL_TIMERS
+>> +	select HAVE_CLK
+>> +	select CLKSRC_OF
+>> +	select CLKSRC_MMIO
+>> +	select GENERIC_CLOCKEVENTS
+>> +	select ARM_GLOBAL_TIMER
+>> +	select ARCH_REQUIRE_GPIOLIB
+>> +	select ARM_AMBA
+>> +	select PINCTRL
+>> +	select DEBUG_UART_8250
+>
+> A lot of these are implied by ARCH_MULTI_V7, just drop them here.
+>
+> Some others like DEBUG_UART_8250 should remain user-selectable, if
+> the platform works without them.
+>
+Will review.  It looks like DEBUG_UART_8250 actually has to move to=20
+Kconfig.debug as that is where everyone else selects it.
+>> +	help
+>> +	  This enables support for systems based on Broadcom IPROC archite=
+cted SoCs.
+>> +	  The IPROC complex contains one or more ARM CPUs along with commo=
+n
+>> +	  core periperals. Application specific SoCs are created by adding=
+ a
+>> +	  uArchitecture containing peripherals outside of the IPROC comple=
+x.
+>> +	  Currently supported SoCs are Cygnus.
+>> +
+>> +menu "iProc SoC based Machine types"
+>> +	depends on ARCH_BCM_IPROC
+>> +
+>> +	config ARCH_BCM_CYGNUS
+>> +		bool "Support Broadcom Cygnus board"
+>> +		select USB_ARCH_HAS_EHCI if USB_SUPPORT
+>> +		help
+>> +		  Support for Broadcom Cygnus SoC.
+>> +endmenu
+>
+> I don't think you need per-board config options. The main option
+> above should be enough.
+This is not a per-board config option.  This is actually a per-SoC=20
+uArchtecture selection.  More major uArchectures will be added to the=20
+IPROC.  Will Change comment to "Support Broadcom Cygnus SoC"
+>
+>> +
+>> +#define CRMU_MAIL_BOX1      0x03024028
+>> +#define CRMU_SOFT_RESET_CMD 0xFFFFFFFF
+>
+> Never hardcode physical register locations in source. This should com=
+e
+> from DT, and get moved into a regular 'reset' device driver.
+>
+> You probably want to use drivers/power/reset/syscon-reboot.c
+>
+OK, thanks for advice on where to put reset device driver.  Will=20
+investigate.
+>> +/* CRU_RESET register */
+>> +static void * __iomem crmu_mail_box1_reg;
+>> +
+>> +#ifdef CONFIG_NEON
+>> +
+>> +#define CRU_BASE                  0x1800e000
+>> +#define CRU_SIZE                  0x34
+>> +#define CRU_CONTROL_OFFSET        0x0
+>> +#define CRU_PWRDWN_EN_OFFSET      0x4
+>> +#define CRU_PWRDWN_STATUS_OFFSET  0x8
+>> +#define CRU_NEON0_HW_RESET  6
+>> +#define CRU_CLAMP_ON_NEON0  20
+>> +#define CRU_PWRONIN_NEON0   21
+>> +#define CRU_PWRONOUT_NEON0  21
+>> +#define CRU_PWROKIN_NEON0   22
+>> +#define CRU_PWROKOUT_NEON0  22
+>> +#define CRU_STATUS_DELAY_NS 500
+>> +#define CRU_MAX_RETRY_COUNT 10
+>> +#define CRU_RETRY_INTVL_US  1
+>> +
+>> +/* Power up the NEON/VFPv3 block. */
+>> +static void bcm_cygnus_powerup_neon(void)
+>> +{
+>> +	void * __iomem cru_base =3D ioremap(CRU_BASE, CRU_SIZE);
+>> +	u32 reg, i;
+>
+> Same thing here: this should really use the device node for CRU.
+>
+> Can you describe what the CRU is? Is this specific to NEON or is
+> it some general-purpose power management unit?
+>
+It's a central resource unit with a lot of random registers to perform=20
+various operations.  To reduce confusion I'll probably move this out of=
+=20
+the kernel init and into the bootloader.  This will simplify the kernel=
+=20
+init.
+>> +static void __init bcm_cygnus_init(void)
+>> +{
+>> +	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL)=
+;
+>> +
+>> +	l2x0_of_init(0, ~0UL);
+>
+> The l2x0_of_init can be removed now, just move the arguments into the
+> respective fields of the machine descriptor.
+>
+Yes, thanks for pointing this out.
+>> +	crmu_mail_box1_reg =3D ioremap(CRMU_MAIL_BOX1, SZ_4);
+>> +	WARN_ON(!crmu_mail_box1_reg);
+>> +
+>> +#ifdef CONFIG_NEON
+>> +	bcm_cygnus_powerup_neon();
+>> +#endif
+>> +}
+>
+> In general, try to avoid #ifdef, use
+>
+> 	if (IS_ENABLED(CONFIG_NEON))
+> 		bcm_cygnus_powerup_neon();
+>
+> instead.
+>
+>> +
+>> +static const char const *bcm_cygnus_dt_compat[] =3D {
+>> +	"brcm,cygnus",
+>> +	NULL,
+>> +};
+>> +
+>> +DT_MACHINE_START(BCM_CYGNUS_DT, "Broadcom Cygnus SoC")
+>> +	.init_machine =3D bcm_cygnus_init,
+>> +	.map_io =3D debug_ll_io_init,
+>> +	.dt_compat =3D bcm_cygnus_dt_compat,
+>> +	.restart   =3D bcm_cygnus_restart
+>> +MACHINE_END
+>
+> The map_io pointer is unnecessary, and the restart pointer should get
+> set by the reset driver. I hope we can find a way to avoid the
+> bcm_cygnus_init callback as well.
+bcm_cygnus_init callback can be removed by moving initialization to=20
+bootloader.
+>
+> 	Arnd
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
