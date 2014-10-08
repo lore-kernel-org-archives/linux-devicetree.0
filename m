@@ -1,146 +1,115 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RFC 6/7] mfd: qcom-smd-rpm: Driver for the Qualcomm RPM over SMD
-Date: Wed, 8 Oct 2014 09:40:17 +0100
-Message-ID: <20141008084017.GD20647@lee--X1>
-References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1412037291-16880-7-git-send-email-bjorn.andersson@sonymobile.com>
+From: Robert Richter <robert.richter@caviumnetworks.com>
+Subject: Re: [PATCH 3/6] pci, thunder: Add PCIe host controller devicetree
+ bindings
+Date: Wed, 8 Oct 2014 10:49:27 +0200
+Message-ID: <20141008084927.GH31556@rric.localhost>
+References: <1411573068-12952-1-git-send-email-rric@kernel.org>
+ <1411573068-12952-4-git-send-email-rric@kernel.org>
+ <3082935.e3X4GsVUDn@wuerfel>
+ <20141007142744.GE31556@rric.localhost>
+ <20141007150149.GW4652@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1412037291-16880-7-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>
+In-Reply-To: <20141007150149.GW4652@e106497-lin.cambridge.arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Robert Richter <rric@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sunil Goutham <sgoutham@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 29 Sep 2014, Bjorn Andersson wrote:
+On 07.10.14 16:01:49, Liviu Dudau wrote:
+> On Tue, Oct 07, 2014 at 03:27:44PM +0100, Robert Richter wrote:
+> > On 24.09.14 18:06:04, Arnd Bergmann wrote:
+> > > > +               compatible = "cavium,thunder-pcie";
+> > > > +               device_type = "pci";
+> > > > +               msi-parent = <&its>;
+> > > > +               bus-range = <0 255>;
+> > > > +               #size-cells = <2>;
+> > > > +               #address-cells = <3>;
+> > > > +               reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
+> > > > +               ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>, /* mem ranges */
+> > > > +                       <0x03000000 0x8300 0x00000000 0x8300 0x00000000 0x80 0x00000000>,
+> > > > +                       <0x03000000 0x87e0 0x00000000 0x87e0 0x00000000 0x01 0x00000000>;
+> > > > +        };
+> > > 
+> > > If you claim the entire 0-255 bus range, I think you should also
+> > > specify a domain, otherwise it's not predictable which domain you
+> > > get.
+> > 
+> > Liviu's code assigns a unique id to the domain if missing, see
+> > of_pci_get_domain_nr(). So I don't think we need to add a "pci-domain"
+> > property here.
+> 
+> Not anymore! That function is gone in v12 onwards. What is in -next has
+> a new function called of_get_pci_domain_nr() (slight name change) but
+> that only gets the value set in the "linux,pci-domain" property of the
+> device node. It is the choice of the host bridge driver to use that
+> function or to use pci_get_new_domain_nr() which *does* generate an
+> unique id every time it gets called.
 
-> Driver for the Resource Power Manager (RPM) found in Qualcomm 8974 ba=
-sed
-> devices.
-> The driver exposes resources that child drivers can operate on; to
-> implementing regulator, clock and bus frequency drivers.
->=20
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->=20
-> Note that the qcom_rpm_smd_write is equivalent of qcom_rpm_write and =
-there is a
-> possibility of re-using at least the clock implementation on top of t=
-his. This
-> would however require some logic for calling the right implementation=
- so I have
-> not done it at this time to keep things as clean as possible.
->=20
-> An idea for improvement is that in qcom_rpm_smd_write we put the ack_=
-status and
-> completion on the stack and register this with idr using the message =
-id, upon
-> receiving the interrupt we would find the right client and complete t=
-his.
-> Allowing for multiple requests to be in flight at any given time.
->=20
-> I did not implement this because I haven't done any measurements on w=
-hat kind
-> of improvements this could give and it would be a clean iteration ont=
-op of
-> this.
->=20
->  drivers/mfd/Kconfig              |   14 ++
->  drivers/mfd/Makefile             |    1 +
->  drivers/mfd/qcom-smd-rpm.c       |  299 ++++++++++++++++++++++++++++=
-++++++++++
->  include/linux/mfd/qcom-smd-rpm.h |    9 ++
->  4 files changed, 323 insertions(+)
->  create mode 100644 drivers/mfd/qcom-smd-rpm.c
->  create mode 100644 include/linux/mfd/qcom-smd-rpm.h
+I am quite confused a bit on which is the latest code base now. I was
+looking into Bjorn's pci/host-generic and there is a different
+implemetation:
 
+----
+/**
+ * This function will try to obtain the host bridge domain number by
+ * using of_alias_get_id() call with "pci-domain" as a stem.  If that
+ * fails, a local allocator will be used.  The local allocator can
+ * be requested to return a new domain_nr if the information is missing
+ * from the device tree.
+ *
+ * @node: device tree node with the domain information
+ * @allocate_if_missing: if DT lacks information about the domain nr,
+ * allocate a new number.
+ *
+ * Returns the associated domain number from DT, or a new domain number
+ * if DT information is missing and @allocate_if_missing is true.  If
+ * @allocate_if_missing is false then the last allocated domain number
+ * will be returned.
+ */
+int of_pci_get_domain_nr(struct device_node *node, bool allocate_if_missing)
+{
+        int domain;
 
-> +#define RPM_ERR_INVALID_RESOURCE "resource does not exist"
-> +
-> +static bool qcom_rpm_msg_is_invalid_resource(struct qcom_rpm_message=
- *msg)
-> +{
-> +	size_t msg_len =3D sizeof(RPM_ERR_INVALID_RESOURCE) - 1;
-> +
-> +	if (msg->length !=3D msg_len)
-> +		return false;
-> +
-> +	if (memcmp(msg->message, RPM_ERR_INVALID_RESOURCE, msg_len))
-> +		return false;
-> +
-> +	return true;
-> +}
+        domain = atomic_read(&of_domain_nr);
+        if (domain == -1) {
+                /* first run, get max defined domain nr in device tree */
+                domain = of_get_max_pci_domain_nr();
+                /* then set the start value for allocator to be max + 1 */
+                atomic_set(&of_domain_nr, domain + 1);
+        }
+        domain = of_alias_get_id(node, "pci-domain");
+        if (domain == -ENODEV) {
+                domain = atomic_read(&of_domain_nr);
+                if (allocate_if_missing)
+                        atomic_inc(&of_domain_nr);
+        }
 
-You can save yourself a hell of a lot of code by just doing:
+        return domain;
+}
+EXPORT_SYMBOL_GPL(of_pci_get_domain_nr);
+----
 
-if (memcmp(msg->message, RPM_ERR_INVALID_RESOURCE,
-           min(msg_len, sizeof(RPM_ERR_INVALID_RESOURCE))))
+This differs also from v13. Please check.
 
-=2E.. in qcom_smd_rpm_callback().
+It would be good to have a stable code base to work with, so I would
+prefer incremental patches on top of Bjorn's pci/host-generic.
 
-[...]
+> > Liviu's DT implementation that assigns a unique number differs a bit
+> > from ACPI which states: "If _SEG [aka domain number] does not exist,
+> > OSPM assumes that all PCI bus segments are in PCI Segment Group 0."
+> > 
+> > Maybe of_pci_get_domain_nr() should be similar to ACPI. If there are
+> > multiple root bridges, the "pci-domain" property could be forced
+> > instead.
+> 
+> Indeed. But the enforcing is left as an exercise to the host bridge
+> implementor for the moment.
 
-> +static int qcom_smd_rpm_probe(struct qcom_smd_device *sdev)
-> +{
-> +	const struct of_device_id *match;
-> +	struct qcom_smd_rpm *rpm;
-> +
-> +	rpm =3D devm_kzalloc(&sdev->dev, sizeof(*rpm), GFP_KERNEL);
-> +	if (!rpm)
-> +		return -ENOMEM;
-> +
-> +	rpm->dev =3D &sdev->dev;
-> +	mutex_init(&rpm->lock);
-> +	init_completion(&rpm->ack);
-> +
-> +	match =3D of_match_device(qcom_smd_rpm_of_match, &sdev->dev);
+Right, can be added later.
 
-You need to check the return value here.
+Thanks,
 
-> +	rpm->data =3D match->data;
-> +	rpm->rpm_channel =3D sdev->channel;
-> +
-> +	dev_set_drvdata(&sdev->dev, rpm);
-> +
-> +	dev_info(&sdev->dev, "Qualcomm SMD RPM driver probed\n");
-
-Please remove this line.
-
-> +	return of_platform_populate(sdev->dev.of_node, NULL, NULL, &sdev->d=
-ev);
-> +}
-> +
-> +static void qcom_smd_rpm_remove(struct qcom_smd_device *sdev)
-> +{
-> +	dev_set_drvdata(&sdev->dev, NULL);
-
-If you use the proper platform device interface you don't have to do
-this.
-
-> +	of_platform_depopulate(&sdev->dev);
-> +}
-> +
-> +static struct qcom_smd_driver qcom_smd_rpm_driver =3D {
-> +	.probe =3D qcom_smd_rpm_probe,
-> +	.remove =3D qcom_smd_rpm_remove,
-> +	.callback =3D qcom_smd_rpm_callback,
-> +	.driver  =3D {
-> +		.name  =3D "qcom_smd_rpm",
-> +		.owner =3D THIS_MODULE,
-> +		.of_match_table =3D qcom_smd_rpm_of_match,
-> +	},
-> +};
-> +
-> +module_qcom_smd_driver(qcom_smd_rpm_driver);
-
-I don't like this.  What's wrong with the existing platform driver
-code?
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-Robert
