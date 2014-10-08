@@ -1,64 +1,91 @@
-From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
-Subject: Re: [PATCH v4 0/6] Add initial support for pinctrl on Exynos7
-Date: Wed, 8 Oct 2014 16:48:10 +0530
-Message-ID: <CAM4voanSRw16AiSR5WXjfAB3i-+yVGGFKstoGNNTquRpx6qoNQ@mail.gmail.com>
-References: <1412087450-10495-1-git-send-email-a.kesavan@samsung.com>
-	<CAM4voamZhSzEANSpij6oHjEjouqCL+shxHv11Qb8ZiLG81P37g@mail.gmail.com>
-	<CACRpkdZ1zH9NBpCLnvzv6g1Ja01kgrdV0GU8_FY2Hak-5GT_ZQ@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: simple-card: Add mic and hp detect
+	gpios.
+Date: Wed, 8 Oct 2014 12:40:24 +0100
+Message-ID: <20141008114024.GW4609@sirena.org.uk>
+References: <1412198720-2326-1-git-send-email-dgreid@chromium.org>
+ <20141002155350.GU4273@sirena.org.uk>
+ <CAMuHMdWh=sXAD59T1T=gvROX+fbF6=gFo6C0nkJdfnCrdNrwYg@mail.gmail.com>
+ <20141007123856.GF4609@sirena.org.uk>
+ <CAMuHMdV39fM_TCa+WSvswij6dxD2vwfJT+FueBtxndpsymP9CQ@mail.gmail.com>
+ <20141007163654.GJ4609@sirena.org.uk>
+ <CAAVeFuJB=bF3g2czT1ed1UX85R_hBXqFAKdeLJcASRcXQujFJw@mail.gmail.com>
+ <CACRpkdY+KQ1OMh565desoqVP-AUJL-VjFx-D5LiaNpXs5oOsnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZ1zH9NBpCLnvzv6g1Ja01kgrdV0GU8_FY2Hak-5GT_ZQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============7756922123913068394=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CACRpkdY+KQ1OMh565desoqVP-AUJL-VjFx-D5LiaNpXs5oOsnA@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Naveen Krishna <naveenkrishna.ch@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "robh@kernel.org" <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sonny Rao <sonnyrao@chromium.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Dylan Reid <dgreid@chromium.org>, jay.xu@rock-chips.com, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
 
-On Wed, Oct 8, 2014 at 3:52 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, Oct 6, 2014 at 5:42 AM, Abhilash Kesavan
-> <kesavan.abhilash@gmail.com> wrote:
->> On Tue, Sep 30, 2014 at 8:00 PM, Abhilash Kesavan <a.kesavan@samsung.com> wrote:
->>> Changes since v3:
->>>         - Changed variable name from exynos_wkup_irq_chip to irq_chip
->>>         - Added acked-by tag from Tomasz Figa
->>>
->>> Changes since v2:
->>>         - Added a .irq_chip field to the samsung_pin_bank struct
->>>         - Consolidated the wakeup and gpio irqd_ops
->>>
->>> Changes since v1:
->>>         - Marked the newly created irq_chip instances as __initdata
->>>         - Used kmemdup to keep a copy of the irq_chip
->>>         - Change the pinctrl name from sd0_rdqs to sd0_ds as per UM
->>>         - Moved the pinctrl enablement for exynos7 into a separate patch
->>>         - Added tested-by and reviewed-by tags from Thomas Abraham
->
-> OK...
->
->> Does this series look OK to you ?
->
-> I'm waiting for review comments form Tomasz Figa.
+--===============7756922123913068394==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HRz4dlJa0zmFsB3a"
+Content-Disposition: inline
 
-Tomasz had ack'ed my v3 patchset
-(http://www.spinics.net/lists/linux-samsung-soc/msg37387.html). This
-version fixed the minor issues raised by Tomasz in v3 as well.
 
->
-> I have just applied his 5 refactoring patches as the first base
-> for v3.19, I don't know if this stuff will fit nicely on top of these
-> or not, expect to find out during review. Tomasz patches have
-> priority since they have been in-flight for a while and he is listed
-> as maintainer for this driver.
->
-> So could you make sure to get Tomasz review tag and make
-> sure that these patches work on top of his patches? His
-> patches are on my "devel" branch in the pin control tree, but
-> will not be pushed to linux-next until the merge window ends.
+--HRz4dlJa0zmFsB3a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I will re-base this series on your "devel" branch and post a new
-version after testing.
+On Wed, Oct 08, 2014 at 10:50:00AM +0200, Linus Walleij wrote:
+> On Wed, Oct 8, 2014 at 9:05 AM, Alexandre Courbot <gnurou@gmail.com> wrote:
 
-Regards,
-Abhilash
+> > But transition to gpiod is the way to ultimately fix this issue, as
+> > well as many others. Not to mention that renumbering GPIOs will
+> > certainly make a few users of the GPIO sysfs (another abomination,
+> > agreed) unhappy. I can only recommend switching drivers to gpiod when
+> > such issues are spotted.
+
+> Yeah that is another issue ... we end up in catch 22 situations like
+> that, renumber the GPIOs, OK, then we break the ABI.
+
+> Admittedly that "ABI" is something people break all the time,
+> /sys/*gpioN just isnt what it should be, not stable at all.
+
+> I'm not against renumbering GPIO if it's minor effort, but if it
+> start to consume hundreds of hours and regressions and what not,
+> that time is better spent focusing on the gpiod transition.
+
+My guess is that it's relatively little work for most platforms - with
+the systems I've done enough work on to notice everything is keyed off a
+few defines in the header file.  Things tend to be worse in out of tree
+code but mainline's generally been pretty good.
+
+--HRz4dlJa0zmFsB3a
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUNSKnAAoJECTWi3JdVIfQUC4IAIIKAItpa7qYGixEZO6V2j+v
+DO22WyxAr59ZyS+dRaPwsWC/gtBFYdGs8QtiawoXRec1LqYH6ZxyJSCXBFFMRb1I
+H+ddDAB4JtKJGYv9Ci0kvW19C0gnVwDICaAb5a0KcA8vT7gh9WmPOlnJqceU6Glv
+tZUb3TyW8PVHeJBvHAPF3o/wGPHcao/RPeeIEZArJVbGZCcnVJKlR90AtMXx/WgV
+8bWp4DHr8ki+L9kWi7JePf1r/xy2Dq70RJhnQsiJqhF0cj0eQHgsEt/yx5tIlKni
+EhWrsU3awr0E8sNAJ7/G2e9Dv24HsjdjKogWzQ84CjEk8NT6EFPIFO6jpQ2B2fM=
+=ZYo0
+-----END PGP SIGNATURE-----
+
+--HRz4dlJa0zmFsB3a--
+
+--===============7756922123913068394==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7756922123913068394==--
