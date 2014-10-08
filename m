@@ -1,67 +1,64 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/2] drm/tegra: Set the dsi lp clk parent and rate
-Date: Wed, 8 Oct 2014 09:03:06 -0700
-Message-ID: <CAOw6vbJJH=2d-2bP_ia0_Dfn9uT_mp+mSmEbtrm27R2O4ByEXg@mail.gmail.com>
-References: <1411156429-19797-1-git-send-email-seanpaul@chromium.org>
- <1411376456.2599.1.camel@pengutronix.de> <20140922101153.GN1470@ulmo> <20141008151155.GC4809@tbergstrom-lnx.Nvidia.com>
+From: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 2/4] ARM: qcom: add description of KPSS WDT for IPQ8064
+Date: Wed, 8 Oct 2014 11:06:31 -0500
+Message-ID: <20141008160631.GT868@joshc.qualcomm.com>
+References: <cover.1412182773.git.joshc@codeaurora.org>
+ <50c0ec1514173ce07641a95839e939dcda41b110.1412182773.git.joshc@codeaurora.org>
+ <20141001172855.GL10233@codeaurora.org>
+ <20141001181557.GQ868@joshc.qualcomm.com>
+ <542DA2B6.3020201@codeaurora.org>
+ <20141007221044.GR868@joshc.qualcomm.com>
+ <5434723F.70800@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141008151155.GC4809-Rysk9IDjsxmJz7etNGeUX8VPkgjIgRvpAL8bYrjMMd8@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5434723F.70800-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 8, 2014 at 8:11 AM, Peter De Schrijver
-<pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> On Mon, Sep 22, 2014 at 12:11:54PM +0200, Thierry Reding wrote:
->> * PGP Signed by an unknown key
->>
->> On Mon, Sep 22, 2014 at 11:00:56AM +0200, Lucas Stach wrote:
->> > Am Freitag, den 19.09.2014, 15:53 -0400 schrieb Sean Paul:
->> > > Per NVidia, this clock rate should be around 70MHz in
->> > > order to properly sample reads on data lane 0. In order
->> > > to achieve this rate, we need to reparent the clock from
->> > > clk_m which can only achieve 12MHz. Add parent_lp to the
->> > > dts bindings and set the parent & rate on init.
->> > >
->> > > Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> >
->> > NACK
->> >
->> > You are pushing SoC integration details into the binding of the device.
->> >
->> > You have two reasonable routes to go here: either the clock driver needs
->> > to be made smarter to reparent the clock in case the required clock rate
->> > could not be achieved with the current parent or you go the easy route
->> > and reparent the clock as part of the initial configuration.
->>
->> Agreed. There doesn't seem to be a case where it would make sense to
->> have this configurable per-board. Can you achieve the same effect by
->> adding this to the clock initialization table?
->>
->> Oh, I just see that we have this in the Tegra124 clock initialization
->> table:
->>
->>       {TEGRA114_CLK_DSIALP, TEGRA114_CLK_PLL_P, 68000000, 0},
->>       {TEGRA114_CLK_DSIBLP, TEGRA114_CLK_PLL_P, 68000000, 0},
->>
->> Doesn't that work for you already? If not that'd be a bug that should be
->> fixed in the clock driver.
->
-> This seems the better approach indeed. Unless the rate would differ based
-> on board or other external factors.
->
+On Tue, Oct 07, 2014 at 04:07:43PM -0700, Stephen Boyd wrote:
+> On 10/07/2014 03:10 PM, Josh Cartwright wrote:
+> >On Thu, Oct 02, 2014 at 12:08:38PM -0700, Stephen Boyd wrote:
+[..]
+> >>I'm thinking:
+> >>
+> >>                 timer@200a000 {
+> >>                         compatible = "qcom,kpss-timer", "qcom,msm-timer";
+> >>                         interrupts = <1 1 0x301>,
+> >>                                      <1 2 0x301>,
+> >>                                      <1 3 0x301>,
+> >>                                      <1 4 0x301>,
+> >>                                      <1 5 0x301>;
+> >>                         reg = <0x0200a000 0x100>;
+> >>                         clock-frequency = <27000000>,
+> >>                                           <32768>;
+> >>                         clocks = <&cxo>, <&sleep_clk>;
+> >>                         clock-names = "ref", "sleep";
+> >>                         cpu-offset = <0x80000>;
+> >>                 };
+> >Where'd the default timeout configuration go?  Or, should we have one
+> >timeout-sec property and not allow setting the default timeouts per WDT
+> >instance?  Or no configurable timeout at all?
+> 
+> Ah sorry. How about a timeout-sec-0, timeout-sec-1 property that is per-cpu
+> and maps to the first and second watchdog timer? Something like:
+> 
+> timeout-sec-wdt0 = <10 8>;
+> timeout-sec-wdt1 = <20 15>;
 
-Thanks, Peter.
+Okay, yeah, this is much more concise.  I'll take a stab at implementing
+it.
 
-Just to close the loop, the patch: "clk: tegra124: Add init data for
-dsi lp clocks" I sent up last week replaces this one.
+Thanks,
+  Josh
 
-Sean
-
-
-> Cheers,
->
-> Peter.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
