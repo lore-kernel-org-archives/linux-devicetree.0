@@ -1,171 +1,67 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] dt: bindings: tps65217: add compatible property
- for subnodes
-Date: Wed, 8 Oct 2014 14:30:28 +0100
-Message-ID: <20141008133028.GI20647@lee--X1>
-References: <1660410.j399mvljTo@lenovobook>
- <20141006212232.GF18035@lee--X1>
- <CAJKbBDCSrPd=JGP2sfk1D-eNf55iYBKUqBtqA=4m6r5xL6oYnQ@mail.gmail.com>
- <20141008104717.GG20647@lee--X1>
- <CAJKbBDArOMRTBAEiEFZyNbJvhAj9722c_0zvaYN+AhF3Lb-ybQ@mail.gmail.com>
+From: Steven Newbury <steve-MOftb3VP07atmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v9 1/3] drm: rockchip: Add basic drm driver
+Date: Wed, 08 Oct 2014 14:31:25 +0100
+Message-ID: <1412775085.2797.10.camel@snewbury.org.uk>
+References: <1412081870-27535-1-git-send-email-mark.yao@rock-chips.com>
+		 <1412082181-27703-1-git-send-email-mark.yao@rock-chips.com>
+		 <542AB0B2.6000207@samsung.com> <54336474.1010503@rock-chips.com>
+		 <54338484.5070809@samsung.com> <1412720776.2797.8.camel@snewbury.org.uk>
+	 <543490A8.7030807@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAJKbBDArOMRTBAEiEFZyNbJvhAj9722c_0zvaYN+AhF3Lb-ybQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johannes Pointner <johannes.pointner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-X3UhQ3efMecwITDeaM/h"
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <543490A8.7030807-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree@v
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 08 Oct 2014, Johannes Pointner wrote:
 
-> 2014-10-08 12:47 GMT+02:00 Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> > On Wed, 08 Oct 2014, Johannes Pointner wrote:
-> >
-> >> 2014-10-06 23:22 GMT+02:00 Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> >> > On Thu, 25 Sep 2014, Johannes Pointner wrote:
-> >> >
-> >> >> Add documentation for compatible property of subnodes.
-> >> >>
-> >> >> Signed-off-by: Johannes Pointner <johannes.pointner@br-automati=
-on.com>
-> >> >> ---
-> >> >>  Documentation/devicetree/bindings/regulator/tps65217.txt      =
-   | 7 ++++++-
-> >> >>  .../devicetree/bindings/video/backlight/tps65217-backlight.txt=
-   | 9 ++++++---
-> >> >>  2 files changed, 12 insertions(+), 4 deletions(-)
-> >> >>
-> >> >> diff --git a/Documentation/devicetree/bindings/regulator/tps652=
-17.txt b/Documentation/devicetree/bindings/regulator/tps65217.txt
-> >> >> index 4f05d20..8ae3a3b 100644
-> >> >> --- a/Documentation/devicetree/bindings/regulator/tps65217.txt
-> >> >> +++ b/Documentation/devicetree/bindings/regulator/tps65217.txt
-> >> >> @@ -14,6 +14,9 @@ Required properties:
-> >> >>  Optional properties:
-> >> >>  - ti,pmic-shutdown-controller: Telling the PMIC to shutdown on=
- PWR_EN toggle.
-> >> >>
-> >> >> +Required subnode properties:
-> >> >> +- compatible: "ti,tps65217-pmic"
-> >> >> +
-> >> >>    The valid names for regulators are:
-> >> >>    tps65217: dcdc1, dcdc2, dcdc3, ldo1, ldo2, ldo3 and ldo4
-> >> >>
-> >> >> @@ -23,9 +26,11 @@ Example:
-> >> >>
-> >> >>       tps: tps@24 {
-> >> >>               compatible =3D "ti,tps65217";
-> >> >> +             reg =3D <0x24>;
-> >> >>               ti,pmic-shutdown-controller;
-> >> >>
-> >> >> -             regulators {
-> >> >> +             tps_pmic: regulators {
-> >> >
-> >> > How is the tps_pmic label used?
-> >> >
-> >> >> +                     compatible =3D "ti,tps65217-pmic";
-> >> >
-> >> > I'd like to see a '\n' here.
-> >> I will add a newline here.
-> >> >
-> >> >>                       dcdc1_reg: dcdc1 {
-> >> >>                               regulator-min-microvolt =3D <9000=
-00>;
-> >> >>                               regulator-max-microvolt =3D <1800=
-000>;
-> >> >> diff --git a/Documentation/devicetree/bindings/video/backlight/=
-tps65217-backlight.txt b/Documentation/devicetree/bindings/video/backli=
-ght/tps65217-backlight.txt
-> >> >> index 5fb9279..f92f154 100644
-> >> >> --- a/Documentation/devicetree/bindings/video/backlight/tps6521=
-7-backlight.txt
-> >> >> +++ b/Documentation/devicetree/bindings/video/backlight/tps6521=
-7-backlight.txt
-> >> >> @@ -6,19 +6,22 @@ used to drive LEDs for use as backlights.
-> >> >>  Required properties:
-> >> >>  - compatible: "ti,tps65217"
-> >> >>  - reg: I2C slave address
-> >> >> -- backlight: node for specifying WLED1 and WLED2 lines in TPS6=
-5217
-> >> >> +- backlight: subnode for specifying WLED1 and WLED2 lines in T=
-PS65217
-> >> >> +
-> >> >> +Required subnode properties:
-> >> >> +- compatible: "ti,tps65217-bl"
-> >> >>  - isel: selection bit, valid values: 1 for ISEL1 (low-level) a=
-nd 2 for ISEL2 (high-level)
-> >> >>  - fdim: PWM dimming frequency, valid values: 100, 200, 500, 10=
-00
-> >> >>  - default-brightness: valid values: 0-100
-> >> >>
-> >> >> -Each regulator is defined using the standard binding for regul=
-ators.
-> >> >>
-> >> >>  Example:
-> >> >>
-> >> >>       tps: tps@24 {
-> >> >>               reg =3D <0x24>;
-> >> >>               compatible =3D "ti,tps65217";
-> >> >
-> >> > I'd like to see a '\n' here.
-> >> I will add a newline here.
-> >> >
-> >> >> -             backlight {
-> >> >> +             tps_bl: backlight {
-> >> >
-> >> > Same here.  Is this label used?
-> >> >
-> >> >> +                     compatible =3D "ti,tps65217-bl";
-> >> >>                       isel =3D <1>;  /* 1 - ISET1, 2 ISET2 */
-> >> >>                       fdim =3D <100>; /* TPS65217_BL_FDIM_100HZ=
- */
-> >> >>                       default-brightness =3D <50>;
-> >> >
-> >>
-> >> Regarding the labels: The backlight label could be used like the
-> >> following. I use it like this in my tests with the tilcdc panel dr=
-iver
-> >> which has a backlight support.
-> >>
-> >>     panel {
-> >>         backlight =3D <&tps_bl>;
-> >>
-> >>         panel-info {
-> >>             ac-bias        =3D <255>;
-> >>             ac-bias-intrpt    =3D <0>;
-> >>             dma-burst-sz    =3D <16>;
-> >>             bpp        =3D <32>;
-> >>             fdd        =3D <0x80>;
-> >>             sync-edge    =3D <0>;
-> >>             sync-ctrl    =3D <1>;
-> >>             .
-> >>             .
-> >>             .
-> >>
-> >> I'm not sure if there could be actual use for the pmic label, but =
-I
-> >> thought if I add a label to backlight, I have to add one to the pm=
-ic
-> >> too to keep it similar.
-> >
-> > No, not at all.  If it's not used, you should remove it.
+--=-X3UhQ3efMecwITDeaM/h
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, 2014-10-08 at 09:17 +0800, Mark yao wrote:
+> Hi Steven
+>      I'm glad to see you to discuss about rk29xx.
 >=20
-> OK, my mistake, sorry.
-> I'll remove the pmic part of the patch and add the newline to the
-> backlight documentation and resend the patch, if this is OK for you?
+> On 2014=E5=B9=B410=E6=9C=8808=E6=97=A5 06:26, Steven Newbury wrote:
+> > I've just been discussing how this relates to rk29xx on #etnaviv. =20
+> > I
+> > looked through the patch and it's good to see it's not limited to
+> > supporting Mali GPUs.  I see no reason this wouldn't be compatible
+> > with etna_viv for rk29xx (or future Rockchip designs with=20
+> > alternative
+> > GPUs) as long as the rest of the infrastructure to support rk29 is=20
+> > in
+> > place iommu (ARM SMMU?) driver, for example.
+> Now the drm driver only test on rk3288, and future when we add
+> compatible for rk29xx, we
+> would consider to add a non-iommu path for it.
+That's great! I'm working on trying to update the rk29 driver support.=20
+ Getting it supported where possible with the new drivers would make=20
+it much easier, hopefully such that simply creating a new dts file=20
+would produce a working kernel for any useful hardware out there.
 
-Yes, fine.
+> > IMHO it's vital to keep a logical separation between the video=20
+> > display
+> > hardware and the graphics processor on SoCs.
+> Sure, the graphics processor maybe change in different solutions,
+> logical separation is that we
+> try to keep.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=-X3UhQ3efMecwITDeaM/h
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iEYEABECAAYFAlQ1PLEACgkQGcb56gMuC63rJwCfRFIwyIj6FOSIqULpaJIrWWl9
+MioAnj0lnUS5+25TZ24KHThJQOk68I8v
+=FDMG
+-----END PGP SIGNATURE-----
+
+--=-X3UhQ3efMecwITDeaM/h--
