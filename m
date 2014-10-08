@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v3 4/5] devicetree: bindings: Document supported Allwinner sunxi SoCs
-Date: Wed,  8 Oct 2014 21:02:55 +0800
-Message-ID: <1412773376-25212-5-git-send-email-wens@csie.org>
+Subject: [PATCH v3 3/5] ARM: dts: sun9i: Add A80 Optimus Board support
+Date: Wed,  8 Oct 2014 21:02:54 +0800
+Message-ID: <1412773376-25212-4-git-send-email-wens@csie.org>
 References: <1412773376-25212-1-git-send-email-wens@csie.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1412773376-25212-1-git-send-email-wens@csie.org>
@@ -10,31 +10,107 @@ To: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kerne
 Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shuge <shuge@allwinnertech.com>, Meng Zhang <kevin@allwinnertech.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds a list of supported Allwinner SoC bindings.
+The A80 Optimus Board is was launched with the Allwinner A80 SoC.
+It was jointly developed by Allwinner and Merrii.
+
+This board has a UART port, a JTAG connector, USB host ports, a USB
+3.0 OTG connector, an HDMI output, a micro SD slot, 8G NAND flash,
+4G DRAM, a camera sensor interface, a WiFi/BT combo chip, a headphone
+jack, IR receiver, and additional GPIO headers.
+
+This patch adds only basic support.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- Documentation/devicetree/bindings/arm/sunxi.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/sunxi.txt
+ arch/arm/boot/dts/Makefile              |  2 +
+ arch/arm/boot/dts/sun9i-a80-optimus.dts | 66 +++++++++++++++++++++++++++++++++
+ 2 files changed, 68 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun9i-a80-optimus.dts
 
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 14dbc6c..6e5474c 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -426,6 +426,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-pcduino3.dtb
+ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a23-ippo-q8h-v5.dtb
++dtb-$(CONFIG_MACH_SUN9I) += \
++	sun9i-a80-optimus.dtb
+ dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb \
+ 	tegra20-iris-512.dtb \
+ 	tegra20-medcom-wide.dtb \
+diff --git a/arch/arm/boot/dts/sun9i-a80-optimus.dts b/arch/arm/boot/dts/sun9i-a80-optimus.dts
 new file mode 100644
-index 0000000..42941fd
+index 0000000..f83abab
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/sunxi.txt
-@@ -0,0 +1,12 @@
-+Allwinner sunXi Platforms Device Tree Bindings
++++ b/arch/arm/boot/dts/sun9i-a80-optimus.dts
+@@ -0,0 +1,66 @@
++/*
++ * Copyright 2014 Chen-Yu Tsai
++ *
++ * Chen-Yu Tsai <wens@csie.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this library; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
 +
-+Each device tree must specify which Allwinner SoC it uses,
-+using one of the following compatible strings:
++/dts-v1/;
++/include/ "sun9i-a80.dtsi"
 +
-+  allwinner,sun4i-a10
-+  allwinner,sun5i-a10s
-+  allwinner,sun5i-a13
-+  allwinner,sun6i-a31
-+  allwinner,sun7i-a20
-+  allwinner,sun8i-a23
-+  allwinner,sun9i-a80
++/ {
++	model = "Merrii A80 Optimus Board";
++	compatible = "merrii,a80-optimus", "allwinner,sun9i-a80";
++
++	chosen {
++		bootargs = "earlyprintk console=ttyS0,115200";
++	};
++
++	soc {
++		uart0: serial@07000000 {
++			status = "okay";
++		};
++	};
++};
 -- 
 2.1.1
