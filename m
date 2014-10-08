@@ -1,110 +1,84 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v1 1/3] gpio: Add APM X-Gene standby GPIO controller driver
-Date: Wed, 08 Oct 2014 17:13:28 +0200
-Message-ID: <1843196.sbXNmZyoMx@wuerfel>
-References: <1412779948-28769-1-git-send-email-yvo@apm.com> <1412779948-28769-2-git-send-email-yvo@apm.com>
+From: Bill Pringlemeir <bpringlemeir@nbsps.com>
+Subject: Re: [PATCH 1/2] ARM: dts: vf500/vf610: support VF500 SoC
+Date: Wed, 08 Oct 2014 11:57:30 -0400
+Message-ID: <87r3yid05x.fsf@nbsps.com>
+References: <1412261724-11073-1-git-send-email-stefan@agner.ch>
+	<8882221.sfQOLcQs3p@wuerfel>
+	<20f4e3a1932756c92443d380a7f42f56@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1412779948-28769-2-git-send-email-yvo@apm.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Y Vo <yvo@apm.com>, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Tin Huynh <tnhuynh@apm.com>, patches@apm.com, Toan Le <toanle@apm.com>, Phong Vo <pvo@apm.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: shawn.guo@freescale.com, kernel@pengutronix.de, b35083@freescale.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 08 October 2014 21:52:26 Y Vo wrote:
-> +
-> +#define GICD_SPI_BASE			0x78010000
+On  2 Oct 2014, stefan at agner.ch wrote:
 
-You can't hardcode register locations. Please use the proper interfaces
-to do whatever you want.
+> Am 2014-10-02 17:28, schrieb Arnd Bergmann:
+>> On Thursday 02 October 2014 16:55:23 Stefan Agner wrote:
+>>> The VF500 is essentially the same SoC, but with only one core and
+>>> without L1 cache. The VF610 is therefore a superset of the VF500.
+>>> Move allmost all periperals to vf500.dtsi which is then included
+>>> and enhanced by vf610.dtsi.
+>>>
+>>> Signed-off-by: Stefan Agner <stefan at agner.ch>
+>>> ---
+>>> Somehow using -M -B switches create a unapplyable patch, hence I
+>>> generated one without those options. Sorry about that.
+>>>
+>>> arch/arm/boot/dts/vf500.dtsi | 498
+>>> ++++++++++++++++++++++++++++++++++++++++++
+>>> arch/arm/boot/dts/vf610.dtsi | 507
+>>> +------------------------------------------
+>>> 2 files changed, 510 insertions(+), 495 deletions(-)
+>>> create mode 100644 arch/arm/boot/dts/vf500.dtsi
 
-It's probably not ok to map any GIC registers into the GPIO driver,
-it should operate as a nested irqchip.
+>> I think it would be better to create one extra file that contains the
+>> common parts and is included by both vf500 and vf610.
 
-> +
-> +static int xgene_gpio_sb_get(struct gpio_chip *gc, u32 gpio)
-> +{
-> +	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
-> +	struct xgene_gpio_sb *chip = to_xgene_gpio_sb(mm_gc);
-> +	u32 data;
-> +
-> +	if (chip->irq[gpio]) {
-> +		data = ioread32(chip->gic_regs + GICD_SPIR1);
-> +	} else {
-> +		data = ioread32(mm_gc->regs + MPA_GPIO_IN_ADDR);
-> +	}
-> +
-> +	return (data &  GPIO_MASK(gpio)) ? 1 : 0;
-> +}
+> I also thought about that. But when looking at the product variants,
+> its clear that VF500 really contains only features, which are part of
+> all other Vybrids (VF3xx series excluded, but these series is not
+> really suitable for Linux due to lack of external memory). So
+> vf500.dtsi would always be a oneliner (#include <vf.dtsi>).
 
-This should not assume that a particular upstream irqchip is used,
-and more importantly it should not touch its registers.
+> Also I disliked this idea because of the somewhat unclear naming
+> (vf.dtsi? vfxxx.dtsi?)
 
-> +static int apm_gpio_sb_to_irq(struct gpio_chip *gc, u32 gpio)
-> +{
-> +	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
-> +	struct xgene_gpio_sb *chip = to_xgene_gpio_sb(mm_gc);
-> +
-> +	if (chip->irq[gpio])
-> +		return chip->irq[gpio];
-> +
-> +	return -ENXIO;
-> +}
-> +
-> +static int gpio_sb_probe(struct platform_device *pdev)
-> +{
-> +	struct of_mm_gpio_chip *mm;
-> +	struct xgene_gpio_sb *apm_gc;
-> +	u32 ret, i;
-> +	u32 default_pins[] = {0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D};
+Well, I see points from both sides.  I would just like to point out
+there maybe more variants than you may think,
 
-Why are these hardcoded? The "apm,xgene-gpio-sb" compatible string
-seems very generic, but the list of pins here seems very specific
-to a particular implementation.
+ 1. With/without security
+    Secure parts have a CAAM engine and an SNVS real-time clock.  I
+    guess this is the same as the iMX6.
+ 2. With/without M4 (and some camera features)
+    This is the Vf5xx vs VF6xx
+ 3. With/without L2 cache
+    Some VF5xx have the L2
+ 4. Automotive has an OpenVG engine (plus others differences).
 
-> +	mm->gc.ngpio = XGENE_MAX_GPIO_DS;
-> +	apm_gc->nirq = XGENE_MAX_GPIO_DS_IRQ;
-> +
-> +	apm_gc->gic_regs = ioremap(GICD_SPI_BASE, 16);
-> +	if (!apm_gc->gic_regs)
-> +		return -ENOMEM;
-> +
-> +	apm_gc->irq = devm_kzalloc(&pdev->dev, sizeof(u32) * XGENE_MAX_GPIO_DS,
-> +				   GFP_KERNEL);
-> +	if (!apm_gc->irq)
-> +		return -ENOMEM;
-> +	memset(apm_gc->irq, 0, sizeof(u32) * XGENE_MAX_GPIO_DS);
+People may not have boards with these features in the mainline.  They
+maybe added later.  If Arnd's variant is Linux standard for this, then
+it doesn't make sense to special case the Vybrid.  I looked briefly at
+the imx6 and 'quad', 'dual-light', etc.  Whatever the current DT
+structure is for those, it at least doesn't jump out at me?
 
-kzalloc implies memset.
+It looks like 'imx6sl.dtsi' and 'imx6sl.dtsi' both define the SNVS; yet
+I think on some devices these are not present as it is a part option.
+The Vybrid is very close SOC to the iMx6.  Note: I looked at the iMx6
+for a few minutes.  I am not expert on iMx6 **AND** this is not a
+critism, just an example of why Arnd's approach may have some issues.
+People making changes for platform VF5xx will be prone to only put
+changes in VF5xx and not the 'vf.dtsi'.  The VF6xx is most naturally a
+super-set, but even within those parts there are variations.
 
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	mm->regs = devm_ioremap_resource(&pdev->dev, res);
-> +	if (!mm->regs)
-> +		return PTR_ERR(mm->regs);
-> +
-> +	for (i = 0; i < apm_gc->nirq; i++) {
-> +		apm_gc->irq[default_pins[i]] = platform_get_irq(pdev, i);
-> +		xgene_gpio_set_bit(mm->regs + MPA_GPIO_SEL_LO,
-> +				   default_pins[i] * 2, 1);
-> +		xgene_gpio_set_bit(mm->regs + MPA_GPIO_INT_LVL, i, 1);
-> +	}
-> +	mm->gc.of_node = pdev->dev.of_node;
-> +	ret = gpiochip_add(&mm->gc);
-> +	if (ret)
-> +		dev_err(&pdev->dev, "failed to register X-Gene GPIO Standby driver");
-> +	else
-> +		dev_info(&pdev->dev, "X-Gene GPIO Standby driver registered\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static int xgene_gpio_sb_probe(struct platform_device *pdev)
-> +{
-> +	return gpio_sb_probe(pdev);
-> +}
+I think a consistent layout of the includes would be valuable.
+Definitely, the repeated information in the DT is bad.  Is there an
+unwritten standard?  I think it would be useful to point out an example
+that should be the prototype?  Do we have one?  Ie, some SOC family that
+we would like as an example?  Or is this case by case?  Or maybe this is
+only occurring with Freescale parts; but I doubt that.
 
-This function is pointless, just call the real one instead.
-
-	ARnd
+Fwiw,
+Bill Pringlemeir.
