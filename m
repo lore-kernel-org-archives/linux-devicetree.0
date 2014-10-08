@@ -1,43 +1,57 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCH 1/2] spi: dw: Initialize of_node to discover DT node children
-Date: Wed, 8 Oct 2014 13:27:25 -0500
-Message-ID: <5435820D.3020401@opensource.altera.com>
-References: <1412711297-31857-1-git-send-email-tthayer@opensource.altera.com>	 <1412711297-31857-2-git-send-email-tthayer@opensource.altera.com> <1412756241.7701.7.camel@linux.intel.com>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: cygnus: Initial support for Broadcom Cygnus
+ SoC
+Date: Wed, 8 Oct 2014 11:45:46 -0700
+Message-ID: <5435865A.4070702@broadcom.com>
+References: <1412746025-11998-2-git-send-email-sbranden@broadcom.com> <10762659.VISiZ3vSSN@wuerfel> <543565DC.8010704@broadcom.com> <34012512.W8VifyXY4H@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1412756241.7701.7.camel@linux.intel.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: broonie@kernel.org, jkosina@suse.cz, pawel.moll@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dinguyen@opensource.altera.com, linux-spi@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, tthayer.linux@gmail.com, tthayer@altera.com, axel.lin@ingics.com, baruch@tkos.co.il
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <34012512.W8VifyXY4H@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 10/08/2014 03:17 AM, Andy Shevchenko wrote:
-> On Tue, 2014-10-07 at 14:48 -0500, tthayer@opensource.altera.com wrote:
->> From: Thor Thayer <tthayer@opensource.altera.com>
->>
->> 1. The of_node element must be initialized to enable discovery of node
->> children. The discovery takes place in the of_register_spi_devices() function.
->> 2. Grabbing the bus-num from the device tree.
->> 3. Update the SOCFPGA configuration.
-> []
+On 14-10-08 11:12 AM, Arnd Bergmann wrote:
+> On Wednesday 08 October 2014 09:27:08 Scott Branden wrote:
+>> On 14-10-08 06:28 AM, Arnd Bergmann wrote:
+>>> On Wednesday 08 October 2014 05:27:24 Scott Branden wrote:
+>>>>>
+>>>>> I don't think you need per-board config options. The main option
+>>>>> above should be enough.
+>>>> This is not a per-board config option.  This is actually a per-SoC
+>>>> uArchtecture selection.  More major uArchectures will be added to the
+>>>> IPROC.  Will Change comment to "Support Broadcom Cygnus SoC"
+>>>
+>>> Ok, sounds fine, but remove ARCH_BCM_IPROC then. There should be
+>>> no need for a three-level deep hierarchy (BCM -> IPROC -> CYGNUS)
+>>>
+>> I do not need a 3-deep hierarchy, I need a 2-deep hierarchy for IPROC
+>> and CYGNUS (and future SoCs that have IPROC Architecture in common).  I
+>> can move IPROC out of the mach-bcm directory if you like a create a new
+>> directory?  But it looks like the purpose of mach-bcm is to consolidate
+>> all Broadcom chipsets in it?
 >
->> --- a/drivers/spi/spi-dw.c
->> +++ b/drivers/spi/spi-dw.c
->> @@ -671,6 +671,9 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
->>   	master->cleanup = dw_spi_cleanup;
->>   	master->transfer_one_message = dw_spi_transfer_one_message;
->>   	master->max_speed_hz = dws->max_freq;
->> +#if defined(CONFIG_OF)
->> +	master->dev.of_node = dev->of_node;
->> +#endif
-> I'm not sure you need this #ifdef surrounded an assignment.
-> If I'm wrong then you probably have to use if (IS_ENABLED(CONFIG_OF)).
+> Yes, better leave it all in mach-bcm. You really shouldn't need much
+> code at all that is soc specific, so adding new directories is not
+> encouraged. We have some platforms that need no code at all, and on
+> arm64 that is required.
 >
-Hi Andy.
+> Isn't Northstar also IPROC? That one didn't seem to need the symbol.
+Yes, Northstar is an older version of IPROC.  We may be able to 
+consolidate it under the IPROC family as we upstream additional SoCs and 
+drivers.  Have the commonality with ARCH_BCM_IPROC will allow this.
+>
+> Could you make ARCH_BCM_IPROC a silent symbol that is just selected
+> by each SoC family specific symbol?
+OK, I will make ARCH_BCM_IPROC a silent symbol.
+>
+> 	Arnd
+>
 
-Good point. I will remove those.
-
-Thank you for reviewing.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
