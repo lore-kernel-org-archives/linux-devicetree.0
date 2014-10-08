@@ -1,52 +1,52 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 1/5] regulator: of: Add regulator-initial-mode parse support
-Date: Wed, 08 Oct 2014 16:38:53 +0200
-Message-ID: <54354C7D.7090104@collabora.co.uk>
-References: <1412775847-15213-1-git-send-email-javier.martinez@collabora.co.uk> <1412775847-15213-2-git-send-email-javier.martinez@collabora.co.uk> <20141008142511.GA4609@sirena.org.uk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
+Date: Wed, 08 Oct 2014 16:47:43 +0200
+Message-ID: <2323270.n17xqW47JB@wuerfel>
+References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com> <3978481.XNAIA6gzAG@wuerfel> <20141008101942.GA7179@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20141008142511.GA4609@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Doug Anderson <dianders@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20141008101942.GA7179@e102568-lin.cambridge.arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "rmk+kernel@arm.linux.org.uk" <rmk+kernel@arm.linux.org.uk>, "tglx@linutronix.de" <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
-
-Thanks for the feedback.
-
-On 10/08/2014 04:25 PM, Mark Brown wrote:
-> On Wed, Oct 08, 2014 at 03:44:03PM +0200, Javier Martinez Canillas wrote:
+On Wednesday 08 October 2014 11:19:43 Lorenzo Pieralisi wrote:
 > 
->> But currently there isn't a way to do the same with DeviceTrees. Argubly
->> the operating modes are Linux-specific so that information should not be
->> in the DT which should be used to only describe hardware. But regulators
->> having different operating modes is also a hardware property since many
->> PMICs have support to set different modes for their regulators.
-> 
-> That doesn't mean that the definition of those modes is something we can
-> sensibly provide in generic code, especially in a completely
-> undocumented fashion (perhaps you've done that later in the patch series
-> but bisection also applies to reviewability).
-> 
+> Ok. So, unless I am missing something, on platform with mem_offset != 0
+> /proc and /sys interfaces for remapping PCI resources can't work (IIUC
+> the proc interface expects the user to pass in the resource address as
+> seen from /proc/bus/pci/devices - which are not BAR values. Even if the
+> user passed the BAR value to mmap, pci_mmap_fits() in proc_bus_pci_mmap()
+> would fail since it compares the pgoff to resource values, which are not
+> BAR values).
 
-Yes, patch #3 updates the regulator DT binding doc and documents what each
-regulator mode is supposed to be. Basically is just a short description of
-what is already documented in linux/regulator/consumer.h [0].
+I think you are right for the sysfs interface, that one can't possibly
+work because of the incorrect address computation.
 
-If what is enough for you I can reorganize the patch-set so that patch is
-the first one.
+For the /procfs interface, I think it can work as long as the offsets
+used there are coming from the config space dump in /proc/bus/pci/*
+rather than from the /sys/bus/pci/devices/*/resource file.
+ 
+> As things stand I think we can safely remove the mem_offset (and
+> pci_sys_data dependency) from pci_mmap_page_range(). I do not think
+> we can break userspace in any way, basically because it can't work at
+> the moment, again, happy to be corrected if I am wrong, please shout.
 
-As a general question, now that the convention is for DT binding docs to go
-in a separate patch, should the DT documentation be added before or after
-that code using these bindings is added?
+Please look at the procfs interface again. That one can be defined
+in two ways (either like sparc and arm, or like powerpc and microblaze)
+but either one should be able to work with user space that expects
+that interface and break with user space that expects the other one.
 
-That is something that is not explained in
-Documentation/devicetree/bindings/submitting-patches.txt.
+> Or we can add mem_offset to the host bridge (after all architectures like
+> PowerPC and Microblaze have a pci_mem_offset variable in their host
+> controllers), but still, this removes pci_sys_data dependency but does
+> not solve the pci_mmap_page_range() issue.
 
-Best regards,
-Javier
+The host bridge already stores the mem_offset in terms of the resource
+list, so we could readily use that, except that it might break the
+powerpc hack if that is still in use.
 
-[0]: http://lxr.free-electrons.com/source/include/linux/regulator/consumer.h#L40
+	Arnd
