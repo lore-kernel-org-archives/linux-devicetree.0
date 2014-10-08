@@ -1,81 +1,222 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 11/13] gpio: Support for unified device properties interface
-Date: Wed, 08 Oct 2014 02:09:26 +0200
-Message-ID: <1693047.RuqBhhrutB@vostro.rjw.lan>
-References: <2660541.BycO7TFnA2@vostro.rjw.lan> <20141007104021.GN1583@lahna.fi.intel.com> <CAAVeFuL_fNdavtAnG9fWOo6Qin8YG+f1x1QG-5Z37YRC4nQByQ@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v4 2/3] cap11xx: Add support for various cap11xx devices
+Date: Tue, 7 Oct 2014 17:09:56 -0700
+Message-ID: <20141008000956.GN16469@dtor-ws>
+References: <1412051189-22643-1-git-send-email-mranostay@gmail.com>
+ <1412051189-22643-3-git-send-email-mranostay@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAVeFuL_fNdavtAnG9fWOo6Qin8YG+f1x1QG-5Z37YRC4nQByQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1412051189-22643-3-git-send-email-mranostay@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Matt Ranostay <mranostay@gmail.com>
+Cc: galak@codeaurora.org, zonque@gmail.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, October 07, 2014 07:52:02 PM Alexandre Courbot wrote:
-> On Tue, Oct 7, 2014 at 7:40 PM, Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> > On Tue, Oct 07, 2014 at 07:22:13PM +0900, Alexandre Courbot wrote:
-> >> On Tue, Oct 7, 2014 at 9:18 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> >> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
-> >> >
-> >> > Some drivers need to deal with only firmware representation of its
-> >> > GPIOs. An example would be a GPIO button array driver where each button
-> >> > is described as a separate firmware node in device tree. Typically these
-> >> > child nodes do not have physical representation in the Linux device
-> >> > model.
-> >> >
-> >> > In order to help device drivers to handle such firmware child nodes we
-> >> > add dev[m]_get_named_gpiod_from_child() that takes a child firmware
-> >> > node pointer as its second argument (the first one is the parent device
-> >> > itself), finds the GPIO using whatever is the underlying firmware
-> >> > method, and requests the GPIO properly.
-> >> >
-> >> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> >> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >>
-> >> ...
-> >>
-> >> > +/* Child properties interface */
-> >> > +struct gpio_desc *dev_get_named_gpiod_from_child(struct device *dev, void *child,
-> >> > +                                                const char *propname, int index);
-> >> > +struct gpio_desc *devm_get_named_gpiod_from_child(struct device *dev, void *child,
-> >> > +                                                 const char *propname, int index);
-> >>
-> >> I see the reason for these functions and am not opposed to them.
-> >> However, I wonder if we could not replace propname by a con_id that
-> >> would be resolved to one of con_id-gpio for DT and whatever naming
-> >> convention ACPI is using?
-> >
-> > The code in gpio-leds.c and gpio_keys_polled.c refers to "gpios" as the
-> > property name. If we can change that somehow to work with con_id-gpio
-> > instead without breaking things, then why not.
-> >
-> >> This would prevent users to name GPIOs outside of the conventions
-> >> defined in the bindings and be generally safer. Is there a particular
-> >> reason (used by some old code?) for the current direct property
-> >> access? If not, maybe we could call a slightly-modified of_find_gpio()
-> >> to resolve the GPIO property for DT, and the equivalent function for
-> >> ACPI?
-> >
-> > Only reason I can think of is support for the existing properties that
-> > are used directly. Drivers using gpiod_get() and friends do not need
-> > dev_get_named_gpiod_from_child() anyway.
-> 
-> Right. Another thing is that the property handling code (active low
-> only for now) is duplicated again, but that can be addressed
-> separately.
-> 
-> I will have a look at gpio-leds and gpio_keys_polled to see if we
-> cannot make this work at a higher level. It's easier to have the
-> bindings respected if the code itself enforces them.
+Hi Matt,
 
-I'm wondering if that can be done after merging the current work?
+On Mon, Sep 29, 2014 at 09:26:28PM -0700, Matt Ranostay wrote:
+> +	priv->num_channels = cap->num_channels;
+> +	priv->keycodes = devm_kcalloc(dev,
+> +		priv->num_channels, sizeof(u32), GFP_KERNEL);
+> +	if (!priv->keycodes)
+> +		return -ENOMEM;
 
-We'll be able to use the drivers in question with our hardware in the
-meantime then ...
+Instead of allocating keymap separately can we do something like below?
+
+Thanks.
 
 -- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+Dmitry
+
+
+Input: cap11xx - add support for various cap11xx devices
+
+From: Matt Ranostay <mranostay@gmail.com>
+
+Several other variants of the cap11xx device exists with a varying
+number of capacitance detection channels. Add support for creating
+the channels dynamically.
+
+Signed-off-by: Matt Ranostay <mranostay@gmail.com>
+Reviewed-by: Daniel Mack <daniel@zonque.org>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ .../devicetree/bindings/input/cap11xx.txt          |    3 +
+ drivers/input/keyboard/cap11xx.c                   |   62 +++++++++++++-------
+ 2 files changed, 42 insertions(+), 23 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/input/cap11xx.txt b/Documentation/devicetree/bindings/input/cap11xx.txt
+index 738f5f3..8031aa5 100644
+--- a/Documentation/devicetree/bindings/input/cap11xx.txt
++++ b/Documentation/devicetree/bindings/input/cap11xx.txt
+@@ -7,9 +7,10 @@ Required properties:
+ 
+ 	compatible:		Must be on the following, depending on the model:
+ 					"microchip,cap1106"
++					"microchip,cap1126"
++					"microchip,cap1188"
+ 
+ 	reg:			The I2C slave address of the device.
+-				Only 0x28 is valid.
+ 
+ 	interrupts:		Property describing the interrupt line the
+ 				device's ALERT#/CM_IRQ# pin is connected to.
+diff --git a/drivers/input/keyboard/cap11xx.c b/drivers/input/keyboard/cap11xx.c
+index 0da2e83..87fa209 100644
+--- a/drivers/input/keyboard/cap11xx.c
++++ b/drivers/input/keyboard/cap11xx.c
+@@ -1,7 +1,6 @@
+ /*
+  * Input driver for Microchip CAP11xx based capacitive touch sensors
+  *
+- *
+  * (c) 2014 Daniel Mack <linux@zonque.org>
+  *
+  * This program is free software; you can redistribute it and/or modify
+@@ -54,8 +53,6 @@
+ #define CAP11XX_REG_MANUFACTURER_ID	0xfe
+ #define CAP11XX_REG_REVISION		0xff
+ 
+-#define CAP11XX_NUM_CHN 6
+-#define CAP11XX_PRODUCT_ID	0x55
+ #define CAP11XX_MANUFACTURER_ID	0x5d
+ 
+ struct cap11xx_priv {
+@@ -63,7 +60,24 @@ struct cap11xx_priv {
+ 	struct input_dev *idev;
+ 
+ 	/* config */
+-	unsigned short keycodes[CAP11XX_NUM_CHN];
++	u32 keycodes[];
++};
++
++struct cap11xx_hw_model {
++	uint8_t product_id;
++	unsigned int num_channels;
++};
++
++enum {
++	CAP1106,
++	CAP1126,
++	CAP1188,
++};
++
++static const struct cap11xx_hw_model cap11xx_devices[] = {
++	[CAP1106] = { .product_id = 0x55, .num_channels = 6 },
++	[CAP1126] = { .product_id = 0x53, .num_channels = 6 },
++	[CAP1188] = { .product_id = 0x50, .num_channels = 8 },
+ };
+ 
+ static const struct reg_default cap11xx_reg_defaults[] = {
+@@ -150,7 +164,7 @@ static irqreturn_t cap11xx_thread_func(int irq_num, void *data)
+ 	if (ret < 0)
+ 		goto out;
+ 
+-	for (i = 0; i < CAP11XX_NUM_CHN; i++)
++	for (i = 0; i < priv->idev->keycodemax; i++)
+ 		input_report_key(priv->idev, priv->keycodes[i],
+ 				 status & (1 << i));
+ 
+@@ -187,11 +201,16 @@ static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
+ 	struct device *dev = &i2c_client->dev;
+ 	struct cap11xx_priv *priv;
+ 	struct device_node *node;
++	const struct cap11xx_hw_model *cap = &cap11xx_devices[id->driver_data];
+ 	int i, error, irq, gain = 0;
+ 	unsigned int val, rev;
+-	u32 gain32, keycodes[CAP11XX_NUM_CHN];
++	u32 gain32;
++
++	BUG_ON(!cap->num_channels);
+ 
+-	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	priv = devm_kzalloc(dev,
++			    sizeof(*priv) + cap->num_channels * sizeof(u32),
++			    GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
+@@ -203,9 +222,9 @@ static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
+ 	if (error)
+ 		return error;
+ 
+-	if (val != CAP11XX_PRODUCT_ID) {
++	if (val != cap->product_id) {
+ 		dev_err(dev, "Product ID: Got 0x%02x, expected 0x%02x\n",
+-			val, CAP11XX_PRODUCT_ID);
++			val, cap->product_id);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -225,8 +244,8 @@ static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
+ 
+ 	dev_info(dev, "CAP11XX detected, revision 0x%02x\n", rev);
+ 	i2c_set_clientdata(i2c_client, priv);
+-	node = dev->of_node;
+ 
++	node = dev->of_node;
+ 	if (!of_property_read_u32(node, "microchip,sensor-gain", &gain32)) {
+ 		if (is_power_of_2(gain32) && gain32 <= 8)
+ 			gain = ilog2(gain32);
+@@ -234,17 +253,12 @@ static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
+ 			dev_err(dev, "Invalid sensor-gain value %d\n", gain32);
+ 	}
+ 
+-	BUILD_BUG_ON(ARRAY_SIZE(keycodes) != ARRAY_SIZE(priv->keycodes));
+-
+ 	/* Provide some useful defaults */
+-	for (i = 0; i < ARRAY_SIZE(keycodes); i++)
+-		keycodes[i] = KEY_A + i;
++	for (i = 0; i < cap->num_channels; i++)
++		priv->keycodes[i] = KEY_A + i;
+ 
+ 	of_property_read_u32_array(node, "linux,keycodes",
+-				   keycodes, ARRAY_SIZE(keycodes));
+-
+-	for (i = 0; i < ARRAY_SIZE(keycodes); i++)
+-		priv->keycodes[i] = keycodes[i];
++		priv->keycodes, cap->num_channels);
+ 
+ 	error = regmap_update_bits(priv->regmap, CAP11XX_REG_MAIN_CONTROL,
+ 				   CAP11XX_REG_MAIN_CONTROL_GAIN_MASK,
+@@ -268,17 +282,17 @@ static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
+ 	if (of_property_read_bool(node, "autorepeat"))
+ 		__set_bit(EV_REP, priv->idev->evbit);
+ 
+-	for (i = 0; i < CAP11XX_NUM_CHN; i++)
++	for (i = 0; i < cap->num_channels; i++)
+ 		__set_bit(priv->keycodes[i], priv->idev->keybit);
+ 
+ 	__clear_bit(KEY_RESERVED, priv->idev->keybit);
+ 
+ 	priv->idev->keycode = priv->keycodes;
+ 	priv->idev->keycodesize = sizeof(priv->keycodes[0]);
+-	priv->idev->keycodemax = ARRAY_SIZE(priv->keycodes);
++	priv->idev->keycodemax = cap->num_channels;
+ 
+ 	priv->idev->id.vendor = CAP11XX_MANUFACTURER_ID;
+-	priv->idev->id.product = CAP11XX_PRODUCT_ID;
++	priv->idev->id.product = cap->product_id;
+ 	priv->idev->id.version = rev;
+ 
+ 	priv->idev->open = cap11xx_input_open;
+@@ -312,12 +326,16 @@ static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
+ 
+ static const struct of_device_id cap11xx_dt_ids[] = {
+ 	{ .compatible = "microchip,cap1106", },
++	{ .compatible = "microchip,cap1126", },
++	{ .compatible = "microchip,cap1188", },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, cap11xx_dt_ids);
+ 
+ static const struct i2c_device_id cap11xx_i2c_ids[] = {
+-	{ "cap1106", 0 },
++	{ "cap1106", CAP1106 },
++	{ "cap1126", CAP1126 },
++	{ "cap1188", CAP1188 },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(i2c, cap11xx_i2c_ids);
