@@ -1,75 +1,41 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/6] dt-bindings: Document Broadcom Cygnus SoC and clock driver
-Date: Wed, 08 Oct 2014 15:35:27 +0200
-Message-ID: <2797894.oaYXOOJrDl@wuerfel>
-References: <1412746025-11998-4-git-send-email-sbranden@broadcom.com> <2480056.Cs3dr8EM2e@wuerfel> <543518C7.9070809@broadcom.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] of: add vendor prefix for Chipidea
+Date: Wed, 8 Oct 2014 08:40:59 -0500
+Message-ID: <CAL_JsqKLK+sYiSKxKG_XGQi_OsK+gE6kGr1tVQUFYAFfk6CpaQ@mail.gmail.com>
+References: <1410827745-4101-1-git-send-email-peter.chen@freescale.com>
+ <CAL_JsqLVUrxEZKQiHa=-+krnoog0rybEgp8O7pZxbR5TyQx5kA@mail.gmail.com> <20140928002439.GA3324@peterchendt>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <543518C7.9070809-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20140928002439.GA3324@peterchendt>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 08 October 2014 03:58:15 Scott Branden wrote:
-> On 14-10-08 12:57 AM, Arnd Bergmann wrote:
-> > On Tuesday 07 October 2014 22:27:02 Scott Branden wrote:
-> >> diff --git a/Documentation/devicetree/bindings/arm/cygnus.txt b/Documentation/devicetree/bindings/arm/cygnus.txt
-> >> new file mode 100644
-> >> index 0000000..a210377
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/arm/cygnus.txt
-> >> @@ -0,0 +1,12 @@
-> >> +Broadcom Cygnus device tree bindings
-> >> +------------------------------------
-> >> +
-> >> +All Cygnus boards shall have the following properties:
-> >> +
-> >> +Required root node property:
-> >> +       - compatible = "brcm,cygnus";
-> >
-> > Can you add a more specific model number for the soc as well?
-> > I assume that cygnus refers to more than one model, so you
-> > should probably list both the family and the individual
-> > SoC type here.
-> Add specific model numbers does not seem necessary because they are not 
-> needed to be specified in the device tree for compatible purposes for 
-> the kernel to work.  Plus, the list of model numbers will continue to 
-> grow over time and compatible strings would need to be added to the 
-> kernel for no apparent reason?
+Adding Grant as it is in his tree now...
 
-It's always helpful to have them in the DT though, in case you ever
-need to add a workaround for one of the SoCs.
+On Sat, Sep 27, 2014 at 7:24 PM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> On Fri, Sep 26, 2014 at 11:32:49AM -0500, Rob Herring wrote:
+>> On Mon, Sep 15, 2014 at 7:35 PM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>> > Adds chipidea to the list of DT vendor prefixes.
+>> >
+>> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>>
+>> Applied.
+>
+> Hi Rob & Greg,
+>
+> I am sorry I also sent this DT patch to Greg by mistake, and queued by usb tree.
+> Will meet error when linus pulls both of your trees?
 
-You can change the description to just state the format of the
-more specific model number so you don't need to add the particular
-type to the binding, but I'd definitely recommend listing both
-a generic and a more specific name here, such as
+I think git will sort it out okay, but if patches like this are not
+part of a larger series they should go thru the DT tree.
 
-	compatible = "brcm,bcm123456", "brcm,cygnus";
+Also, IIRC, if you put people in cc in the commit, we get notified
+when Greg applies patches.
 
-> >> +Boards variants shall have the following additional properties:
-> >> +
-> >> +Required root node property for the BCM911360_ENTPHN board:
-> >> +       - compatible = "brcm,bcm911360_entphn";
-> >>
-> >
-> > We normally don't list specific boards here, since it's hard to
-> > keep up.
-> Thanks - removed specific boards from file and moved the cygnus.txt file 
-> to devicetree/bindings/arm/bcm/cygnus.txt in next version.  This seems 
-> to be like the appropriate place to put this document. We will need to 
-> add back in board specific bindings when ALSA support is added.  But 
-> that will be a later commit to deal with.
-
-I believe most new alsa drivers can now use the binding from
-Documentation/devicetree/bindings/sound/simple-card.txt
-so you should no longer need a board specific driver or binding
-for those.
-
-	Arnd
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
