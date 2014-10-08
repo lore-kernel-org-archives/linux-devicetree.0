@@ -1,37 +1,22 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCH 2/2] arm: dts: socfpga: Add SPI nodes & update copyright.
-Date: Wed, 8 Oct 2014 13:05:35 -0500
-Message-ID: <54357CEF.8000108@opensource.altera.com>
-References: <1412711297-31857-1-git-send-email-tthayer@opensource.altera.com> <1412711297-31857-3-git-send-email-tthayer@opensource.altera.com> <20141007231200.GR4609@sirena.org.uk>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] Add HS-USB device tree support for R8A7791/Koelsch/Henninger
+ board
+Date: Wed, 08 Oct 2014 22:05:22 +0400
+Message-ID: <54357CE2.9080408@cogentembedded.com>
+References: <1511869.4ca9KHmSFr@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20141007231200.GR4609@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: jkosina@suse.cz, pawel.moll@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dinguyen@opensource.altera.com, linux-spi@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, tthayer.linux@gmail.com, tthayer@altera.com, axel.lin@ingics.com, baruch@tkos.co.il, andriy.shevchenko@linux.intel.com
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1511869.4ca9KHmSFr-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Oops, this should have been [PATCH v 0/3]... :-/
 
-On 10/07/2014 06:12 PM, Mark Brown wrote:
-> On Tue, Oct 07, 2014 at 02:48:17PM -0500,tthayer@opensource.altera.com  wrote:
->
->> Add 2 SPI nodes to SOCFPGA device tree. Update copyright.
->> Update spi-dw.txt with bus-num as an optional property.
-> Again, this is just randomly mixing multiple changes.  Also why are we
-> adding a bus-num property - bus numbers are an implementation detail of
-> Linux and I can't see any reason to put them in the device tree.  If
-> there were one the binding would need to explain what they were.
-OK. I will leave these changes out of the patch.
-
-Sorry about the noise. I saw the spi-summary referenced the bus-num 
-spi<bus-num>.<chip-select> so I thought it could be added to the 
-bindings document. The bus was defaulting to 32766 if the bus wasn't 
-assigned from the device tree (spi32766.0).
-
-Thanks,
-
-Thor
-
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
