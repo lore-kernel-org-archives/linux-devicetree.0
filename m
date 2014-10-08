@@ -1,109 +1,113 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH 2/3] drm/exynos: dp: Remove support for unused dptx-phy
-Date: Wed, 08 Oct 2014 12:10:47 +0900
-Message-ID: <5434AB37.1080603@samsung.com>
-References: <1410786785-9838-1-git-send-email-gautam.vivek@samsung.com>
- <1410786785-9838-3-git-send-email-gautam.vivek@samsung.com>
- <CAFp+6iGaZR+4YQLXe+c2EZ9RwUpX73jr4H_KWyFOvxPWbpAyew@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <CAFp+6iGaZR+4YQLXe+c2EZ9RwUpX73jr4H_KWyFOvxPWbpAyew@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, kishon <kishon@ti.com>, cpgs@samsung.com, ajaykumar.rs@samsung.com
+From: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v10 0/3] Add drm driver for Rockchip Socs
+Date: Wed,  8 Oct 2014 12:22:59 +0800
+Message-ID: <1412742179-32761-1-git-send-email-mark.yao@rock-chips.com>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dbehr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNOuFhCAxMOyblCAwOOydvCAxMTo1NywgVml2ZWsgR2F1dGFtIHdyb3RlOgo+IEhpLAo+
-IAo+IAo+IE9uIE1vbiwgU2VwIDE1LCAyMDE0IGF0IDY6NDMgUE0sIFZpdmVrIEdhdXRhbSA8Z2F1
-dGFtLnZpdmVrQHNhbXN1bmcuY29tPiB3cm90ZToKPj4gTm93IHRoYXQgd2UgaGF2ZSBtb3ZlZCB0
-byBnZW5lcmljIHBoeSBiYXNlZCBiaW5kaW5ncywKPj4gd2UgZG9uJ3QgbmVlZCB0byBoYXZlIGFu
-eSBjb2RlIHJlbGF0ZWQgdG8gb2xkZXIgZHB0eC1waHkuCj4+IE5vYm9keSBpcyB1c2luZyB0aGlz
-IGRwdHgtcGh5IGFueW1vcmUsIHNvIHJlbW92aW5nIHRoZQo+PiBzYW1lLgo+Pgo+PiBTaWduZWQt
-b2ZmLWJ5OiBWaXZlayBHYXV0YW0gPGdhdXRhbS52aXZla0BzYW1zdW5nLmNvbT4KPj4gQ2M6IEpp
-bmdvbyBIYW4gPGpnMS5oYW5Ac2Ftc3VuZy5jb20+Cj4+IC0tLQo+IAo+IElzIHNvbWVvbmUgdGFr
-aW5nIGNhcmUgb2YgdGhpcyBwYXRjaCA/IFdlIGFscmVhZHkgaGF2ZSBnb3QgdGhlIGNvcnJlc3Bv
-bnNkaW5nCj4gZHAtcGh5IHBhdGNoIG1lcmdlZCwgc28gd2Ugc2hvdWxkIGFsc28gZ2V0IHRoaXMg
-cGF0Y2ggaW4uCj4gCgpDYW4gYW55b25lIGdpdmUgbWUgdGVzdGVkLWJ5IGFmdGVyIHRlc3Q/IEkg
-Y2Fubm90IHRlc3QgdGhpcyBtb2R1bGUKYmVjYXVzZSBJIGhhdmUgbm8gYW55IGJvYXJkIGVxdWlw
-cGVkIHdpdGggZHAgcGFuZWwuCgpKaW5nb28gb3Igb3RoZXI/CgpUaGFua3MsCklua2kgRGFlCgo+
-PiAgZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHBfY29yZS5jIHwgICA1OCArKysrKysr
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4+ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5v
-c19kcF9jb3JlLmggfCAgICAyIC0tCj4+ICAyIGZpbGVzIGNoYW5nZWQsIDEzIGluc2VydGlvbnMo
-KyksIDQ3IGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2V4
-eW5vcy9leHlub3NfZHBfY29yZS5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHBf
-Y29yZS5jCj4+IGluZGV4IDRmM2M3ZWIuLjVmZmMxYjIgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMv
-Z3B1L2RybS9leHlub3MvZXh5bm9zX2RwX2NvcmUuYwo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
-ZXh5bm9zL2V4eW5vc19kcF9jb3JlLmMKPj4gQEAgLTEwNTAsMjggKzEwNTAsMTQgQEAgc3RhdGlj
-IGludCBleHlub3NfZHBfY3JlYXRlX2Nvbm5lY3RvcihzdHJ1Y3QgZXh5bm9zX2RybV9kaXNwbGF5
-ICpkaXNwbGF5LAo+Pgo+PiAgc3RhdGljIHZvaWQgZXh5bm9zX2RwX3BoeV9pbml0KHN0cnVjdCBl
-eHlub3NfZHBfZGV2aWNlICpkcCkKPj4gIHsKPj4gLSAgICAgICBpZiAoZHAtPnBoeSkgewo+PiAr
-ICAgICAgIGlmIChkcC0+cGh5KQo+PiAgICAgICAgICAgICAgICAgcGh5X3Bvd2VyX29uKGRwLT5w
-aHkpOwo+PiAtICAgICAgIH0gZWxzZSBpZiAoZHAtPnBoeV9hZGRyKSB7Cj4+IC0gICAgICAgICAg
-ICAgICB1MzIgcmVnOwo+PiAtCj4+IC0gICAgICAgICAgICAgICByZWcgPSBfX3Jhd19yZWFkbChk
-cC0+cGh5X2FkZHIpOwo+PiAtICAgICAgICAgICAgICAgcmVnIHw9IGRwLT5lbmFibGVfbWFzazsK
-Pj4gLSAgICAgICAgICAgICAgIF9fcmF3X3dyaXRlbChyZWcsIGRwLT5waHlfYWRkcik7Cj4+IC0g
-ICAgICAgfQo+PiAgfQo+Pgo+PiAgc3RhdGljIHZvaWQgZXh5bm9zX2RwX3BoeV9leGl0KHN0cnVj
-dCBleHlub3NfZHBfZGV2aWNlICpkcCkKPj4gIHsKPj4gLSAgICAgICBpZiAoZHAtPnBoeSkgewo+
-PiArICAgICAgIGlmIChkcC0+cGh5KQo+PiAgICAgICAgICAgICAgICAgcGh5X3Bvd2VyX29mZihk
-cC0+cGh5KTsKPj4gLSAgICAgICB9IGVsc2UgaWYgKGRwLT5waHlfYWRkcikgewo+PiAtICAgICAg
-ICAgICAgICAgdTMyIHJlZzsKPj4gLQo+PiAtICAgICAgICAgICAgICAgcmVnID0gX19yYXdfcmVh
-ZGwoZHAtPnBoeV9hZGRyKTsKPj4gLSAgICAgICAgICAgICAgIHJlZyAmPSB+KGRwLT5lbmFibGVf
-bWFzayk7Cj4+IC0gICAgICAgICAgICAgICBfX3Jhd193cml0ZWwocmVnLCBkcC0+cGh5X2FkZHIp
-Owo+PiAtICAgICAgIH0KPj4gIH0KPj4KPj4gIHN0YXRpYyB2b2lkIGV4eW5vc19kcF9wb3dlcm9u
-KHN0cnVjdCBleHlub3NfZHJtX2Rpc3BsYXkgKmRpc3BsYXkpCj4+IEBAIC0xMjEwLDM5ICsxMTk2
-LDIxIEBAIHN0YXRpYyBzdHJ1Y3QgdmlkZW9faW5mbyAqZXh5bm9zX2RwX2R0X3BhcnNlX3BkYXRh
-KHN0cnVjdCBkZXZpY2UgKmRldikKPj4KPj4gIHN0YXRpYyBpbnQgZXh5bm9zX2RwX2R0X3BhcnNl
-X3BoeWRhdGEoc3RydWN0IGV4eW5vc19kcF9kZXZpY2UgKmRwKQo+PiAgewo+PiAtICAgICAgIHN0
-cnVjdCBkZXZpY2Vfbm9kZSAqZHBfcGh5X25vZGUgPSBvZl9ub2RlX2dldChkcC0+ZGV2LT5vZl9u
-b2RlKTsKPj4gLSAgICAgICB1MzIgcGh5X2Jhc2U7Cj4+ICAgICAgICAgaW50IHJldCA9IDA7Cj4+
-Cj4+IC0gICAgICAgZHBfcGh5X25vZGUgPSBvZl9maW5kX25vZGVfYnlfbmFtZShkcF9waHlfbm9k
-ZSwgImRwdHgtcGh5Iik7Cj4+IC0gICAgICAgaWYgKCFkcF9waHlfbm9kZSkgewo+PiAtICAgICAg
-ICAgICAgICAgZHAtPnBoeSA9IGRldm1fcGh5X2dldChkcC0+ZGV2LCAiZHAiKTsKPj4gLSAgICAg
-ICAgICAgICAgIHJldHVybiBQVFJfRVJSX09SX1pFUk8oZHAtPnBoeSk7Cj4+IC0gICAgICAgfQo+
-PiAtCj4+IC0gICAgICAgaWYgKG9mX3Byb3BlcnR5X3JlYWRfdTMyKGRwX3BoeV9ub2RlLCAicmVn
-IiwgJnBoeV9iYXNlKSkgewo+PiAtICAgICAgICAgICAgICAgZGV2X2VycihkcC0+ZGV2LCAiZmFp
-bGVkIHRvIGdldCByZWcgZm9yIGRwdHgtcGh5XG4iKTsKPj4gLSAgICAgICAgICAgICAgIHJldCA9
-IC1FSU5WQUw7Cj4+IC0gICAgICAgICAgICAgICBnb3RvIGVycjsKPj4gLSAgICAgICB9Cj4+IC0K
-Pj4gLSAgICAgICBpZiAob2ZfcHJvcGVydHlfcmVhZF91MzIoZHBfcGh5X25vZGUsICJzYW1zdW5n
-LGVuYWJsZS1tYXNrIiwKPj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmZHAtPmVu
-YWJsZV9tYXNrKSkgewo+PiAtICAgICAgICAgICAgICAgZGV2X2VycihkcC0+ZGV2LCAiZmFpbGVk
-IHRvIGdldCBlbmFibGUtbWFzayBmb3IgZHB0eC1waHlcbiIpOwo+PiAtICAgICAgICAgICAgICAg
-cmV0ID0gLUVJTlZBTDsKPj4gLSAgICAgICAgICAgICAgIGdvdG8gZXJyOwo+PiAtICAgICAgIH0K
-Pj4gLQo+PiAtICAgICAgIGRwLT5waHlfYWRkciA9IGlvcmVtYXAocGh5X2Jhc2UsIFNaXzQpOwo+
-PiAtICAgICAgIGlmICghZHAtPnBoeV9hZGRyKSB7Cj4+IC0gICAgICAgICAgICAgICBkZXZfZXJy
-KGRwLT5kZXYsICJmYWlsZWQgdG8gaW9yZW1hcCBkcC1waHlcbiIpOwo+PiAtICAgICAgICAgICAg
-ICAgcmV0ID0gLUVOT01FTTsKPj4gLSAgICAgICAgICAgICAgIGdvdG8gZXJyOwo+PiArICAgICAg
-IGRwLT5waHkgPSBkZXZtX3BoeV9nZXQoZHAtPmRldiwgImRwIik7Cj4+ICsgICAgICAgaWYgKElT
-X0VSUihkcC0+cGh5KSkgewo+PiArICAgICAgICAgICAgICAgcmV0ID0gUFRSX0VSUihkcC0+cGh5
-KTsKPj4gKyAgICAgICAgICAgICAgIGlmIChyZXQgPT0gLUVOT1NZUyB8fCByZXQgPT0gLUVOT0RF
-Vikgewo+PiArICAgICAgICAgICAgICAgICAgICAgICBkcC0+cGh5ID0gTlVMTDsKPj4gKyAgICAg
-ICAgICAgICAgIH0gZWxzZSBpZiAocmV0ID09IC1FUFJPQkVfREVGRVIpIHsKPj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgcmV0dXJuIHJldDsKPj4gKyAgICAgICAgICAgICAgIH0gZWxzZSB7Cj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgIGRldl9lcnIoZHAtPmRldiwgIm5vIERQIHBoeSBjb25m
-aWd1cmVkXG4iKTsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHJldDsKPj4gKyAg
-ICAgICAgICAgICAgIH0KPj4gICAgICAgICB9Cj4+Cj4+IC1lcnI6Cj4+IC0gICAgICAgb2Zfbm9k
-ZV9wdXQoZHBfcGh5X25vZGUpOwo+PiAtCj4+ICAgICAgICAgcmV0dXJuIHJldDsKPj4gIH0KPj4K
-Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RwX2NvcmUuaCBi
-L2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RwX2NvcmUuaAo+PiBpbmRleCBhMWFlZTY5
-Li42NDI2MjAxIDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19k
-cF9jb3JlLmgKPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHBfY29yZS5o
-Cj4+IEBAIC0xNTMsOCArMTUzLDYgQEAgc3RydWN0IGV4eW5vc19kcF9kZXZpY2Ugewo+PiAgICAg
-ICAgIHN0cnVjdCBjbGsgICAgICAgICAgICAgICpjbG9jazsKPj4gICAgICAgICB1bnNpZ25lZCBp
-bnQgICAgICAgICAgICBpcnE7Cj4+ICAgICAgICAgdm9pZCBfX2lvbWVtICAgICAgICAgICAgKnJl
-Z19iYXNlOwo+PiAtICAgICAgIHZvaWQgX19pb21lbSAgICAgICAgICAgICpwaHlfYWRkcjsKPj4g
-LSAgICAgICB1bnNpZ25lZCBpbnQgICAgICAgICAgICBlbmFibGVfbWFzazsKPj4KPj4gICAgICAg
-ICBzdHJ1Y3QgdmlkZW9faW5mbyAgICAgICAqdmlkZW9faW5mbzsKPj4gICAgICAgICBzdHJ1Y3Qg
-bGlua190cmFpbiAgICAgICBsaW5rX3RyYWluOwo+PiAtLQo+PiAxLjcuMTAuNAo+Pgo+IAo+IAo+
-IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+This a series of patches is a DRM Driver for Rockchip Socs, add support
+for vop devices. Future patches will add additional encoders/connectors,
+such as eDP, HDMI.
+
+The basic "crtc" for rockchip is a "VOP" - Video Output Processor.
+the vop devices found on Rockchip rk3288 Soc, rk3288 soc have two similar
+Vop devices. Vop devices support iommu mapping, we use dma-mapping API with
+ARM_DMA_USE_IOMMU.
+
+Changes in v2:
+- add DRM master device node to list all display nodes that comprise
+  the graphics subsystem.
+- use the component framework to defer main drm driver probe
+  until all VOP devices have been probed.
+- use dma-mapping API with ARM_DMA_USE_IOMMU, create dma mapping by
+  master device and each vop device can shared the drm dma mapping.
+- use drm_crtc_init_with_planes and drm_universal_plane_init.
+- remove unnecessary middle layers.
+- add cursor set, move funcs to rockchip drm crtc.
+- add vop reset.
+
+Changes in v3:
+- change "crtc->fb" to "crtc->primary-fb"
+Adviced by Daniel Vetter
+- init cursor plane with universal api, remove unnecessary cursor set,move 
+
+Changes in v4:
+Adviced by David Herrmann
+- remove drm_platform_*() usage, use register drm device directly.
+Adviced by Rob Clark
+- remove special mmap ioctl, do userspace mmap with normal mmap() or mmap offset
+
+Changes in v5:
+Adviced by Arnd Bergmann
+- doing DMA start with a 32-bit masks with dma_mask and dma_coherent_mark
+- fix some incorrect dependencies.
+Adviced by Boris BREZILLON
+- fix some mistake and bugs. 
+Adviced by Daniel Vetter
+- drop all special ioctl and use generic kms ioctl instead.
+Adviced by Rob Clark
+- use unlocked api for drm_fb_helper_restore_fbdev_mode.
+- remove unused rockchip_gem_prime_import_sg_table.
+
+Changes in v6:
+- set gem buffer pitch 64 bytes align, needed by mali gpu.
+Adviced by Daniel Kurtz
+- fix some mistake, bugs, remove unused define, more better code style etc. 
+- use clk_prepare()/unprepare() at probe()/remove() and clk_enable()/disable()
+  at runtime instead of clk_prepare_enable().
+- provide a help function from vop for encoder to do mode config, instead of
+  using drm_diaplay_mode private method.
+- change vop mode_set timing to make it more safely. 
+
+Changes in v7:
+- fix memory leakage problem.
+
+Changes in v8:
+- fix iommu crash when use dual crtc.
+- use frame start interrupt for vsync instead of line flag interrupt,
+because the win config take affect at frame start time, if we use ling flag
+interrupt, the address check often failed.
+Adviced by Daniel Kurtz
+- fix some bugs, mistake, remove unused function
+- keep clock and vop disabled when probe end
+- use drm_plane_helper_check_update to check update_plane if vaild
+
+Changes in v9:
+- fix suspend and resume bug, make iommu attach and detach safely.
+- fix mail info style.
+
+Changes in v10:
+Adviced by Andrzej Hajda
+- check drm_dev if it's NULL at PM suspend/resume
+Adviced by Sean Paul
+- use drm_fb_helper_prepare to init fb_helper funcs
+- Optimized code structure and remove some unnecessary Variables.
+
+Mark yao (3):
+  drm: rockchip: Add basic drm driver
+  dt-bindings: video: Add for rockchip display subsytem
+  dt-bindings: video: Add documentation for rockchip vop
+
+ .../devicetree/bindings/video/rockchip-drm.txt     |   19 +
+ .../devicetree/bindings/video/rockchip-vop.txt     |   58 +
+ drivers/gpu/drm/Kconfig                            |    2 +
+ drivers/gpu/drm/Makefile                           |    1 +
+ drivers/gpu/drm/rockchip/Kconfig                   |   17 +
+ drivers/gpu/drm/rockchip/Makefile                  |    8 +
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |  465 +++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   55 +
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.c         |  200 +++
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.h         |   28 +
+ drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c      |  210 +++
+ drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h      |   20 +
+ drivers/gpu/drm/rockchip/rockchip_drm_gem.c        |  294 ++++
+ drivers/gpu/drm/rockchip/rockchip_drm_gem.h        |   54 +
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c        | 1415 ++++++++++++++++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |  196 +++
+ 16 files changed, 3042 insertions(+)
+
+-- 
+1.7.9.5
