@@ -1,79 +1,76 @@
-From: Y Vo <yvo@apm.com>
-Subject: [PATCH v1 2/3] Documentation: gpio: Add APM X-Gene standby GPIO
- controller DTS binding
-Date: Wed,  8 Oct 2014 21:52:27 +0700
-Message-ID: <1412779948-28769-3-git-send-email-yvo@apm.com>
-References: <1412779948-28769-1-git-send-email-yvo@apm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 5/5] ARM: dts: Add initial regulator mode on exynos Peach
+ boards
+Date: Wed, 8 Oct 2014 15:56:27 +0100
+Message-ID: <20141008145627.GD4609@sirena.org.uk>
+References: <1412775847-15213-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1412775847-15213-6-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1412779948-28769-1-git-send-email-yvo@apm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Tin Huynh <tnhuynh@apm.com>, patches@apm.com, Toan Le <toanle@apm.com>, Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MGdfKiBebYi9ts3p"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1412775847-15213-6-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Doug Anderson <dianders@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Documentation for APM X-Gene standby GPIO controller DTS binding.
 
-Signed-off-by: Y Vo <yvo@apm.com>
----
- .../devicetree/bindings/gpio/gpio-xgene-sb.txt     |   31 ++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
+--MGdfKiBebYi9ts3p
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
-new file mode 100644
-index 0000000..3215e4d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
-@@ -0,0 +1,31 @@
-+APM X-Gene Standby GPIO controller bindings
-+
-+This is a gpio controller in standby domain.
-+
-+There are 20 GPIO pins from 0..21. There is no GPIO_DS14 and GPIO_DS15. 
-+Only GPIO_DS8..GPIO_DS13 support interrupt. IRQ mapping 0x28..0x2d.
-+
-+Required properties:
-+- compatible: "apm,xgene-gpio-sb" for X-Gene Standby GPIO controller
-+- reg: Physical base address and size of the controller's registers
-+- #gpio-cells: Should be two.
-+	- first cell is the pin number
-+	- second cell is used to specify the gpio polarity:
-+		0 = active high
-+		1 = active low
-+- gpio-controller: Marks the device node as a GPIO controller.
-+- interrupts: Shall contains the interrupts.
-+
-+Example:
-+	sbgpio: sbgpio@17001000 {
-+		compatible = "apm,xgene-gpio-sb";
-+		reg = <0x0 0x17001000 0x0 0x400>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		interrupts = 	<0x0 0x28 0x1>,
-+				<0x0 0x29 0x1>,
-+				<0x0 0x2a 0x1>,
-+				<0x0 0x2b 0x1>,
-+				<0x0 0x2c 0x1>,
-+				<0x0 0x2d 0x1>;
-+	};
--- 
-1.7.9.5
+On Wed, Oct 08, 2014 at 03:44:07PM +0200, Javier Martinez Canillas wrote:
 
-CONFIDENTIALITY NOTICE: This e-mail message, including any attachments, 
-is for the sole use of the intended recipient(s) and contains information
-that is confidential and proprietary to Applied Micro Circuits Corporation or its subsidiaries. 
-It is to be used solely for the purpose of furthering the parties' business relationship. 
-All unauthorized review, use, disclosure or distribution is prohibited. 
-If you are not the intended recipient, please contact the sender by reply e-mail 
-and destroy all copies of the original message.
+> The regulator core now has support to choose a default initial
+> operating mode for regulators from DT. Set the initial opmode
+> for the max77802 PMIC regulators with the same modes that are
+> used in the downstream ChromeOS kernel, in order to allow the
+> system to lower power at suspend time.
+
+The stated goal of this change doesn't appear to correspond to what it
+actually does.  It's saying that we want to be able to set the regulator
+into low power modes on suspend which is a sensible and useful thing to
+want to do (especially for regulators which don't have physical suspend
+modes which we currently make any effort to handle) but what the change
+actually does is cause us to set the default state of supplies on boot.
+
+The device tree should describe what it's trying to achieve, otherwise
+even if things happen to work right now it's going to be vulnerable to
+being broken by future kernel changes which take what it's saying at
+face value.
+
+>  			buck2_reg: BUCK2 {
+> @@ -201,6 +203,7 @@
+>  				regulator-always-on;
+>  				regulator-boot-on;
+>  				regulator-ramp-delay = <12500>;
+> +				regulator-initial-mode = <REGULATOR_MODE_STANDBY>;
+>  			};
+
+This appears to set the supply which is labelled as VDD_ARM into standby
+mode by default (from a first glance the change appears to set all
+supplies into standby mode) and of course we currently have no way of
+changing the mode at runtime in DT systems.  Are you *really* sure this
+is a good idea of which an electrical engineer would approve, CPU cores
+are typically one of the most demanding workloads available for a
+regulator?
+
+--MGdfKiBebYi9ts3p
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUNVCaAAoJECTWi3JdVIfQ6d4H/RKFTlRKARoyK/IaHPdtzVmb
+NVVuEoxCYhVGfO6Cde5ZD8i209nASA+XuREQAg0gOYtTnK3i93W+yXxjV7cpjZtS
+jXoMcM1XADBU+rExtMfAr9R2IWPf6bXkCsmS5MdW5tHziWgmxCtkea+T1wZCQL22
+11SoZMb4GefKzBrsBSDi8TKW1bthbXmaSvqUufUVXuge+zWWf3dUbC2IlSQxErS8
+vUfvvwYjcZQi/CSFEiAN5tkrYQZSC9Hg7S4tZAzK8z+UtYBN5g4d8cey6vz91CVV
+ezyhcd2Jud+I5rs9Z/Eq3j6BHZ3NPxnHqyW5trtAlij8zxZV5nvKj1XaTrIRg0o=
+=8jd7
+-----END PGP SIGNATURE-----
+
+--MGdfKiBebYi9ts3p--
