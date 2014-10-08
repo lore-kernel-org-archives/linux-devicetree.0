@@ -1,115 +1,38 @@
-From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v4] clocksource: arch_timer: Allow the device tree to specify uninitialized timer registers
-Date: Wed,  8 Oct 2014 00:33:47 -0700
-Message-ID: <1412753627-28287-1-git-send-email-sonnyrao@chromium.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+From: Robert Richter <rric@kernel.org>
+Subject: Re: [PATCH v13 00/12] Support for creating generic PCI host bridges
+ from DT
+Date: Wed, 8 Oct 2014 09:44:28 +0200
+Message-ID: <20141008074428.GD20256@rric.localhost>
+References: <1412000971-9242-1-git-send-email-Liviu.Dudau@arm.com>
+ <20140929194335.GA13747@google.com>
+ <20140930103942.GO841@e106497-lin.cambridge.arm.com>
+ <20140930161805.GB5625@google.com>
+ <20140930165431.GV841@e106497-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140930165431.GV841@e106497-lin.cambridge.arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Yinghai Lu <yinghai@kernel.org>, Jiang Liu <jiang.liu@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Liviu, Bjorn,
 
-Some 32-bit (ARMv7) systems are architected like this:
+On 30.09.14 17:54:31, Liviu Dudau wrote:
+> On Tue, Sep 30, 2014 at 05:18:05PM +0100, Bjorn Helgaas wrote:
+> > OK, I rebuilt pci/host-generic from scratch.  It consists of your v13
+> > patches + Arnd's build fix for pci_pio_to_address() in !CONFIG_OF configs.
+> 
+> Something went wrong with the integration, patch 02 adds another definition of 
+> of_pci_range_to_resource() before it is moved out of the header file for some reason.
 
-* The firmware doesn't know and doesn't care about hypervisor mode and
-  we don't want to add the complexity of hypervisor there.
+I assume pci/host-generic is the latest now with this issue fixed as
+the commit date is 2014-10-01 past you message above, right? So is it
+ok to rebase our host controller driver onto pci/host-generic or will
+there be further updates or any other branch that is newer?
 
-* The firmware isn't involved in SMP bringup or resume.
+Thanks,
 
-* The ARCH timer come up with an uninitialized offset (CNTVOFF)
-  between the virtual and physical counters.  Each core gets a
-  different random offset.
-
-* The device boots in "Secure SVC" mode.
-
-* Nothing has touched the reset value of CNTHCTL.PL1PCEN or
-  CNTHCTL.PL1PCTEN (both default to 1 at reset)
-
-On systems like the above, it doesn't make sense to use the virtual
-counter.  There's nobody managing the offset and each time a core goes
-down and comes back up it will get reinitialized to some other random
-value.
-
-This adds an optional property which can inform the kernel of this
-situation, and firmware is free to remove the property if it is going
-to initialize the CNTVOFF registers when each CPU comes out of reset.
-
-Currently, the best course of action in this case is to use the
-physical timer, which is why it is important that CNTHCTL hasn't been
-changed from its reset value and it's a reasonable assumption given
-that the firmware has never entered HYP mode.
-
-Note that it's been said that on ARMv8 systems the firmware and
-kernel really can't be architected as described above.  That means
-using the physical timer like this really only makes sense for ARMv7
-systems.
-
-Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Reviewed-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
----
-Changes in v2:
-- Add "#ifdef CONFIG_ARM" as per Will Deacon
-
-Changes in v3:
-- change property name to arm,cntvoff-not-fw-configured and specify
-  that the value of CNTHCTL.PL1PC(T)EN must still be the reset value
-  of 1 as per Mark Rutland
-
-Changes in v4:
-- change property name to arm,cpu-registers-not-fw-configured and
-  specify that all cpu registers must have architected reset values
-  per Mark Rutland
-- change from "#ifdef CONFIG_ARM" to "if (IS_ENABLED(CONFIG_ARM))" per
-  Arnd Bergmann
----
- Documentation/devicetree/bindings/arm/arch_timer.txt | 8 ++++++++
- drivers/clocksource/arm_arch_timer.c                 | 8 ++++++++
- 2 files changed, 16 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
-index 37b2caf..256b4d8 100644
---- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-+++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-@@ -22,6 +22,14 @@ to deliver its interrupts via SPIs.
- - always-on : a boolean property. If present, the timer is powered through an
-   always-on power domain, therefore it never loses context.
- 
-+** Optional properties:
-+
-+- arm,cpu-registers-not-fw-configured : Firmware does not initialize
-+  any of the generic timer CPU registers, which contain their
-+  architecturally-defined reset values. Only supported for 32-bit
-+  systems which follow the ARMv7 architected reset values.
-+
-+
- Example:
- 
- 	timer {
-diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-index 8daf056..799139f 100644
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -654,6 +654,14 @@ static void __init arch_timer_init(struct device_node *np)
- 	arch_timer_detect_rate(NULL, np);
- 
- 	/*
-+	 * If we cannot rely on firmware initializing the timer registers then
-+	 * we should use the physical timers instead.
-+	 */
-+	if (IS_ENABLED(CONFIG_ARM) &&
-+	    of_property_read_bool(np, "arm,cpu-registers-not-fw-configured"))
-+			arch_timer_use_virtual = false;
-+
-+	/*
- 	 * If HYP mode is available, we know that the physical timer
- 	 * has been configured to be accessible from PL1. Use it, so
- 	 * that a guest can use the virtual timer instead.
--- 
-1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Robert
