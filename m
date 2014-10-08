@@ -1,143 +1,59 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [RFC 3/7] mfd: devicetree: bindings: Add Qualcomm SMD based RPM
- DT binding
-Date: Wed, 08 Oct 2014 15:47:06 -0600
-Message-ID: <5435B0DA.1000707@codeaurora.org>
-References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com> <1412037291-16880-4-git-send-email-bjorn.andersson@sonymobile.com> <85C5C172-D309-41B4-B511-7820BAFDA017@codeaurora.org> <20140930143740.GK28481@sonymobile.com> <542B39BD.3030208@codeaurora.org> <20141001000846.GZ28481@sonymobile.com>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: cygnus: Initial support for Broadcom Cygnus
+ SoC
+Date: Wed, 8 Oct 2014 15:16:55 -0700
+Message-ID: <5435B7D7.1030904@broadcom.com>
+References: <1412746025-11998-2-git-send-email-sbranden@broadcom.com> <10762659.VISiZ3vSSN@wuerfel> <543565DC.8010704@broadcom.com> <34012512.W8VifyXY4H@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20141001000846.GZ28481@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <34012512.W8VifyXY4H@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9/30/2014 6:08 PM, Bjorn Andersson wrote:
-> On Tue 30 Sep 16:16 PDT 2014, Jeffrey Hugo wrote:
+On 14-10-08 11:12 AM, Arnd Bergmann wrote:
+> On Wednesday 08 October 2014 09:27:08 Scott Branden wrote:
+>> On 14-10-08 06:28 AM, Arnd Bergmann wrote:
+>>> On Wednesday 08 October 2014 05:27:24 Scott Branden wrote:
+>>>>>
+>>>>> I don't think you need per-board config options. The main option
+>>>>> above should be enough.
+>>>> This is not a per-board config option.  This is actually a per-SoC
+>>>> uArchtecture selection.  More major uArchectures will be added to the
+>>>> IPROC.  Will Change comment to "Support Broadcom Cygnus SoC"
+>>>
+>>> Ok, sounds fine, but remove ARCH_BCM_IPROC then. There should be
+>>> no need for a three-level deep hierarchy (BCM -> IPROC -> CYGNUS)
+>>>
+>> I do not need a 3-deep hierarchy, I need a 2-deep hierarchy for IPROC
+>> and CYGNUS (and future SoCs that have IPROC Architecture in common).  I
+>> can move IPROC out of the mach-bcm directory if you like a create a new
+>> directory?  But it looks like the purpose of mach-bcm is to consolidate
+>> all Broadcom chipsets in it?
 >
->> On 9/30/2014 8:37 AM, Bjorn Andersson wrote:
->>> On Tue 30 Sep 06:46 PDT 2014, Kumar Gala wrote:
->>>
->>>>
->>>> On Sep 29, 2014, at 7:34 PM, Bjorn Andersson <Bjorn.Andersson@sony=
-mobile.com> wrote:
->>>>
->>>>> diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.t=
-xt b/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
->>>>> new file mode 100644
->>>>> index 0000000..a846101
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/mfd/qcom-rpm-smd.txt
->>>>> @@ -0,0 +1,122 @@
->>>>> +Qualcomm Resource Power Manager (RPM) over SMD
->>>>> +
->>>>> +This driver is used to interface with the Resource Power Manager=
- (RPM) found in
->>>>> +various Qualcomm platforms. The RPM allows each component in the=
- system to vote
->>>>> +for state of the system resources, such as clocks, regulators an=
-d bus
->>>>> +frequencies.
->>>>> +
->>>>> +- compatible:
->>>>> +	Usage: required
->>>>> +	Value type: <string>
->>>>> +	Definition: must be one of:
->>>>> +		    "qcom,rpm-msm8974=94
->>>>
->>>> Why not =93qcom,rpm-smd=94.  I=92d like to get Jeff H=92s input on=
- how
->>>> what we do here for compat and distinguish the A-family RPM suppor=
-t vs
->>>> B-family/RPM-SMD support.
->>>>
->>>
->>> I don't see anything indicating changes in the actual communication=
-, but as
->>> this also encodes what resources are exposed we have to keep this s=
-pecific.
->>>
->>> I'm not sure what you mean with distinguish the A and B family, the=
-y are
->>> completely different and there are no overlap in compatibles or imp=
-lementation.
->>>
->>> The overlap is in how children are communicating with the rpm, but =
-this is an
->>> implementation detail - and noted in that patch as a future improve=
-ment.
->>>
->>>
->>> I forgot to add Jeff, but did send him a separate email asking for =
-his input on
->>> all this.
->>>
->>
->> Yep.  I saw the series.  Still doing a deep dive.
->>
->> The rpm-smd driver (and the A family equivalent) is outside of my ar=
-ea
->> of expertise, but I have some familiarity with it as it is a SMD cli=
-ent.
->>    Internally we have a singular compat for all of B family, but I
->> haven't been able to figure out how that works to expose all of the
->> resources.  I'll talk to my contact later in the week to see what th=
-e
->> differences are.
->>
+> Yes, better leave it all in mach-bcm. You really shouldn't need much
+> code at all that is soc specific, so adding new directories is not
+> encouraged. We have some platforms that need no code at all, and on
+> arm64 that is required.
 >
-> That's right, because you have these tables in devicetree in the caf =
-version.
-> You have to have this information somewhere!
+> Isn't Northstar also IPROC? That one didn't seem to need the symbol.
+>
+> Could you make ARCH_BCM_IPROC a silent symbol that is just selected
+> by each SoC family specific symbol?
+It looks like I will also be able to add Northstar under the 
+ARCH_BCM_IPROC.  This will be good momentum to cleaning up and 
+consolidate support going forward.
+I will change the Kconfig such that ARCH_BCM_5301X selects ARCH_BCM_IPROC.
 
-True, it must exist somewhere.  However since its information tied=20
-directly to the hardware, it seems like its information that would fit=20
-right in DT.
-
-I talked to my contact, and it seems like the table attributes vary mor=
-e=20
-than I thought, target to target, so the single table design seems less=
-=20
-plausible.  Its my understanding you've had an offline discussion with=20
-him and some of our regulator guys to discuss the specifics of our=20
-needs.  I'll let them take over as the experts.
-
+Thanks.
 >
->> Is the per target compat the way to do this though?  The way its
->> currently done means we'll have atleast a dozen tables in
->> qcom-smd-rpm.c, and I can't imagine they will have anything more tha=
-n
->> minor differences from the msm8x74_resource_table that currently exi=
-sts
->> in patch 6 of the series.  Why wouldn't one table that is a superset=
- of
->> all supported targets work?
->>
->
-> It would work as long as e.g. QCOM_RPM_PM8941_MVS1 always is vsa numb=
-er 4.
->
-> But sure, it's a much better fit than the family a and this rpm would=
- reject
-> invalid resources, so it might work. But this works without us knowin=
-g about
-> all possible platforms.
->
->
-> But if the case is that multiple platforms expose the same table we c=
-an always
-> tie the same table to multiple compatibles.
->
-> Regards,
-> Bjorn
+> 	Arnd
 >
 
-
---=20
-Jeffrey Hugo
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a=20
-Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
