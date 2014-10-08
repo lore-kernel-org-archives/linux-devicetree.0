@@ -1,54 +1,178 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] ARM: dts: sun9i: Add A80 Optimus Board support
-Date: Wed, 8 Oct 2014 21:41:18 +0800
-Message-ID: <CAGb2v65bPWvcs8CkOVgUhRRfhU6dz=WDt98wRMAjD+Hb3wbk8A@mail.gmail.com>
-References: <1412773376-25212-1-git-send-email-wens@csie.org>
- <1412773376-25212-4-git-send-email-wens@csie.org> <54353CE5.5070808@gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 12/13] leds: leds-gpio: Make use of device property API
+Date: Wed, 08 Oct 2014 16:04:13 +0200
+Message-ID: <2960802.kPr8UT7PvT@vostro.rjw.lan>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan> <1997643.hzLDnYTZoH@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54353CE5.5070808-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Meng Zhang <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1997643.hzLDnYTZoH@vostro.rjw.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bryan Wu <cooloney@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 8, 2014 at 9:32 PM, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
->
-> On 10/8/14, 8:02 AM, Chen-Yu Tsai wrote:
->> The A80 Optimus Board is was launched with the Allwinner A80 SoC.
->> It was jointly developed by Allwinner and Merrii.
->>
->> This board has a UART port, a JTAG connector, USB host ports, a USB
->> 3.0 OTG connector, an HDMI output, a micro SD slot, 8G NAND flash,
->> 4G DRAM, a camera sensor interface, a WiFi/BT combo chip, a headphone
->> jack, IR receiver, and additional GPIO headers.
->>
->> This patch adds only basic support.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/Makefile              |  2 +
->>  arch/arm/boot/dts/sun9i-a80-optimus.dts | 66 +++++++++++++++++++++++++++++++++
->>  2 files changed, 68 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/sun9i-a80-optimus.dts
->>
-> [...]
->> +
->> +/dts-v1/;
->> +/include/ "sun9i-a80.dtsi"
->> +
->> +/ {
->> +     model = "Merrii A80 Optimus Board";
->> +     compatible = "merrii,a80-optimus", "allwinner,sun9i-a80";
->
-> "merrii" should be added to vendor-prefixes.txt
+On Tuesday, October 07, 2014 02:18:45 AM Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Make use of device property API in this driver so that both OF and ACPI
+> based system can use the same driver.
+> 
+> This change contains material from Max Eliaser and Mika Westerberg.
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-A patch for that was already queued by Maxime.
+Bryan, can you please tell me if you are OK with this patch?
 
-ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You said you were for one of the previous versions if I remember correctly,
+but it's changed quite a bit since then, so can you please check this new
+version too?
+
+> ---
+>  drivers/leds/leds-gpio.c |   67 +++++++++++++++++++++--------------------------
+>  1 file changed, 30 insertions(+), 37 deletions(-)
+> 
+> Index: linux-pm/drivers/leds/leds-gpio.c
+> ===================================================================
+> --- linux-pm.orig/drivers/leds/leds-gpio.c
+> +++ linux-pm/drivers/leds/leds-gpio.c
+> @@ -15,13 +15,11 @@
+>  #include <linux/gpio.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/leds.h>
+> -#include <linux/of.h>
+> -#include <linux/of_platform.h>
+> -#include <linux/of_gpio.h>
+>  #include <linux/slab.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/module.h>
+>  #include <linux/err.h>
+> +#include <linux/property.h>
+>  
+>  struct gpio_led_data {
+>  	struct led_classdev cdev;
+> @@ -171,40 +169,41 @@ static inline int sizeof_gpio_leds_priv(
+>  		(sizeof(struct gpio_led_data) * num_leds);
+>  }
+>  
+> -/* Code to create from OpenFirmware platform devices */
+> -#ifdef CONFIG_OF_GPIO
+> -static struct gpio_leds_priv *gpio_leds_create_of(struct platform_device *pdev)
+> +static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
+>  {
+> -	struct device_node *np = pdev->dev.of_node, *child;
+> +	struct device *dev = &pdev->dev;
+>  	struct gpio_leds_priv *priv;
+>  	int count, ret;
+> +	void *child;
+>  
+> -	/* count LEDs in this device, so we know how much to allocate */
+> -	count = of_get_available_child_count(np);
+> +	count = device_get_child_node_count(dev);
+>  	if (!count)
+>  		return ERR_PTR(-ENODEV);
+>  
+> -	for_each_available_child_of_node(np, child)
+> -		if (of_get_gpio(child, 0) == -EPROBE_DEFER)
+> -			return ERR_PTR(-EPROBE_DEFER);
+> -
+> -	priv = devm_kzalloc(&pdev->dev, sizeof_gpio_leds_priv(count),
+> -			GFP_KERNEL);
+> +	priv = devm_kzalloc(dev, sizeof_gpio_leds_priv(count), GFP_KERNEL);
+>  	if (!priv)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> -	for_each_available_child_of_node(np, child) {
+> +	device_for_each_child_node(dev, child) {
+>  		struct gpio_led led = {};
+> -		enum of_gpio_flags flags;
+> -		const char *state;
+> +		const char *state = NULL;
+> +
+> +		led.gpiod = devm_get_named_gpiod_from_child(dev, child,
+> +							    "gpios", 0);
+> +		if (IS_ERR(led.gpiod)) {
+> +			device_put_child_node(dev, child);
+> +			goto err;
+> +		}
+>  
+> -		led.gpio = of_get_gpio_flags(child, 0, &flags);
+> -		led.active_low = flags & OF_GPIO_ACTIVE_LOW;
+> -		led.name = of_get_property(child, "label", NULL) ? : child->name;
+> -		led.default_trigger =
+> -			of_get_property(child, "linux,default-trigger", NULL);
+> -		state = of_get_property(child, "default-state", NULL);
+> -		if (state) {
+> +		device_child_property_read_string(dev, child,
+> +						  "label", &led.name);
+> +		device_child_property_read_string(dev, child,
+> +						  "linux,default-trigger",
+> +						  &led.default_trigger);
+> +
+> +		if (!device_child_property_read_string(dev, child,
+> +						       "linux,default_state",
+> +						       &state)) {
+>  			if (!strcmp(state, "keep"))
+>  				led.default_state = LEDS_GPIO_DEFSTATE_KEEP;
+>  			else if (!strcmp(state, "on"))
+> @@ -213,13 +212,14 @@ static struct gpio_leds_priv *gpio_leds_
+>  				led.default_state = LEDS_GPIO_DEFSTATE_OFF;
+>  		}
+>  
+> -		if (of_get_property(child, "retain-state-suspended", NULL))
+> +		if (!device_get_child_property(dev, child,
+> +					       "retain-state-suspended", NULL))
+>  			led.retain_state_suspended = 1;
+>  
+>  		ret = create_gpio_led(&led, &priv->leds[priv->num_leds++],
+> -				      &pdev->dev, NULL);
+> +				      dev, NULL);
+>  		if (ret < 0) {
+> -			of_node_put(child);
+> +			device_put_child_node(dev, child);
+>  			goto err;
+>  		}
+>  	}
+> @@ -238,13 +238,6 @@ static const struct of_device_id of_gpio
+>  };
+>  
+>  MODULE_DEVICE_TABLE(of, of_gpio_leds_match);
+> -#else /* CONFIG_OF_GPIO */
+> -static struct gpio_leds_priv *gpio_leds_create_of(struct platform_device *pdev)
+> -{
+> -	return ERR_PTR(-ENODEV);
+> -}
+> -#endif /* CONFIG_OF_GPIO */
+> -
+>  
+>  static int gpio_led_probe(struct platform_device *pdev)
+>  {
+> @@ -273,7 +266,7 @@ static int gpio_led_probe(struct platfor
+>  			}
+>  		}
+>  	} else {
+> -		priv = gpio_leds_create_of(pdev);
+> +		priv = gpio_leds_create(pdev);
+>  		if (IS_ERR(priv))
+>  			return PTR_ERR(priv);
+>  	}
+> @@ -300,7 +293,7 @@ static struct platform_driver gpio_led_d
+>  	.driver		= {
+>  		.name	= "leds-gpio",
+>  		.owner	= THIS_MODULE,
+> -		.of_match_table = of_match_ptr(of_gpio_leds_match),
+> +		.of_match_table = of_gpio_leds_match,
+>  	},
+>  };
+>  
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-acpi" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
