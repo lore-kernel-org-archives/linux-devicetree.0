@@ -1,76 +1,92 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH 0/2] Qualcomm PM8941 power key driver
-Date: Wed, 08 Oct 2014 12:50:07 +0300
-Message-ID: <1412761807.13569.12.camel@iivanov-dev>
-References: <1412644321-27683-1-git-send-email-bjorn.andersson@sonymobile.com>
-	 <1412672510.1027.57.camel@iivanov-dev>
-	 <20141007184640.GB31125@sonymobile.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
+Date: Wed, 8 Oct 2014 11:19:43 +0100
+Message-ID: <20141008101942.GA7179@e102568-lin.cambridge.arm.com>
+References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <3659934.boXsmm8jcn@wuerfel>
+ <20141007144750.GB30590@e102568-lin.cambridge.arm.com>
+ <3978481.XNAIA6gzAG@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20141007184640.GB31125@sonymobile.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3978481.XNAIA6gzAG@wuerfel>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "rmk+kernel@arm.linux.org.uk" <rmk+kernel@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-10-07 at 11:46 -0700, Bjorn Andersson wrote:
-> On Tue 07 Oct 02:01 PDT 2014, Ivan T. Ivanov wrote:
-> 
-> > 
-> > Hi Bjorn,
-> > 
-> > On Mon, 2014-10-06 at 18:11 -0700, Bjorn Andersson wrote:
-> > > These patches add dt bindings and a device driver for the power key block in
-> > > the Qualcomm PM8941 pmic.
+On Tue, Oct 07, 2014 at 10:39:47PM +0100, Arnd Bergmann wrote:
+> On Tuesday 07 October 2014 15:47:50 Lorenzo Pieralisi wrote:
+> > On Tue, Oct 07, 2014 at 02:52:27PM +0100, Arnd Bergmann wrote:
+> > > On Tuesday 07 October 2014 13:06:59 Lorenzo Pieralisi wrote:
+> > > > On Wed, Oct 01, 2014 at 10:38:45AM +0100, Arnd Bergmann wrote:
+> > > > 
+> > > > [...]
+> > > > 
+> > > > > pci_mmap_page_range could either get generalized some more in an attempt
+> > > > > to have a __weak default implementation that works on ARM, or it could
+> > > > > be changed to lose the dependency on pci_sys_data instead. In either
+> > > > > case, the change would involve using the generic pci_host_bridge_window
+> > > > > list.
+> > > > 
+> > > > On ARM pci_mmap_page_range requires pci_sys_data to retrieve its
+> > > > mem_offset parameter. I had a look, and I do not understand *why*
+> > > > it is required in that function, so I am asking. That function
+> > > > is basically used to map PCI resources to userspace, IIUC, through
+> > > > /proc or /sysfs file mappings. As far as I understand those mappings
+> > > > expect VMA pgoff to be the CPU address when files representing resources
+> > > > are mmapped from /proc and 0 when mmapped from /sys (I mean from
+> > > > userspace, then VMA pgoff should be updated by the kernel to map the
+> > > > resource).
 > > > 
-> > > Courtney Cavin (2):
-> > >   input: Add Qualcomm PM8941 power key driver
-> > >   input: pm8941-pwrkey: Add DT binding documentation
-> > > 
-> > >  .../bindings/input/qcom,pm8941-pwrkey.txt          |   43 +++++
-> > >  drivers/input/misc/Kconfig                         |   12 ++
-> > >  drivers/input/misc/Makefile                        |    1 +
-> > >  drivers/input/misc/pm8941-pwrkey.c                 |  196 ++++++++++++++++++++
-> > >  4 files changed, 252 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-> > >  create mode 100644 drivers/input/misc/pm8941-pwrkey.c
+> > > Applying the mem_offset is certainly the more intuitive way, since
+> > > that lets you read the PCI BAR values from a device and access the
+> > > device with the appropriate offsets.
 > > 
-> > Any reason why we cannot reuse pm8xxx-pwrkey driver? It have been
-> > converted to regmap already. 
+> > Ok, but I am referring to this snippet (drivers/pci/pci-sysfs.c):
 > > 
+> > /* pci_mmap_page_range() expects the same kind of entry as coming
+> >  * from /proc/bus/pci/ which is a "user visible" value. If this is
+> >  * different from the resource itself, arch will do necessary fixup.
+> >  */
+> > pci_resource_to_user(pdev, i, res, &start, &end);
+> > 
+> > --> Here start represents a CPU physical address, if pci_resource_to_user()
+> >     does not fix it up, correct ?
+> > 
+> > vma->vm_pgoff += start >> PAGE_SHIFT;
+> > 
+> > [...]
+> > 
+> > return pci_mmap_page_range(...);
+> > 
+> > pci_mmap_page_range() applies (mem_offset >> PAGE_SHIFT) to pgoff in the
+> > ARM implemention.
+> > 
+> > Is not there a mismatch here on platforms where mem_offset != 0 ?
 > 
-> The boilerplate code is the same,
+> Yes, I think that's right: ARM never gained its own pci_resource_to_user()
+> implementation, presumably because nobody ran into this problem and
+> debugged it all the way.
 
-The boilerplate code is almost 100% :-)
+Ok. So, unless I am missing something, on platform with mem_offset != 0
+/proc and /sys interfaces for remapping PCI resources can't work (IIUC
+the proc interface expects the user to pass in the resource address as
+seen from /proc/bus/pci/devices - which are not BAR values. Even if the
+user passed the BAR value to mmap, pci_mmap_fits() in proc_bus_pci_mmap()
+would fail since it compares the pgoff to resource values, which are not
+BAR values).
 
->  but configuration registers have different
-> layout and values written in them are different. 
+As things stand I think we can safely remove the mem_offset (and
+pci_sys_data dependency) from pci_mmap_page_range(). I do not think
+we can break userspace in any way, basically because it can't work at
+the moment, again, happy to be corrected if I am wrong, please shout.
 
-We talk about 3 registers and 2 bit defines. struct regmap_field
-should be able to help here.
+Or we can add mem_offset to the host bridge (after all architectures like
+PowerPC and Microblaze have a pci_mem_offset variable in their host
+controllers), but still, this removes pci_sys_data dependency but does
+not solve the pci_mmap_page_range() issue.
 
-> The pm8xxx block have separate
-> interrupts for press and release events while pm8941 have one interrupt for
-> both, so the pm8941 must read out the irq status bits to figure out which event
-> it was.
-
-Optional interrupt property? If both are defined hook old ISR, if its
-only one hook pm8941 ISR?
-
-> 
-> Maybe if we introduce some vagueness related to interrupts in the dt binding
-> documentation for pm8xxx we could simply reuse that binding.
-> 
-
-I would not say vagueness, we just can say that pm8941 did not have
-second interrupt?
-
-Regards,
-Ivan
-
-> Regards,
-> Bjorn
-
-
+Lorenzo
