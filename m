@@ -1,53 +1,190 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2] arm: dts: socfpga: Add SPI nodes to SOCFPGA DT.
-Date: Wed, 8 Oct 2014 21:05:15 +0100
-Message-ID: <20141008200515.GK4609@sirena.org.uk>
-References: <1412796428-3255-1-git-send-email-tthayer@opensource.altera.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v5 1/4] hwmon: ltc2978: device tree bindings documentation
+Date: Wed, 8 Oct 2014 13:12:54 -0700
+Message-ID: <20141008201254.GA21065@roeck-us.net>
+References: <1412275071-6417-1-git-send-email-atull@opensource.altera.com>
+ <1412275071-6417-2-git-send-email-atull@opensource.altera.com>
+ <20141006172845.GA21902@roeck-us.net>
+ <alpine.DEB.2.02.1410081103110.18439@atx-linux-37>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="QSIxHKMNNe9U+x7e"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1412796428-3255-1-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+In-Reply-To: <alpine.DEB.2.02.1410081103110.18439@atx-linux-37>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: jdelvare-l3A5Bk7waGM@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 08, 2014 at 11:12:29AM -0500, atull wrote:
+> On Mon, 6 Oct 2014, Guenter Roeck wrote:
+> 
+> > On Thu, Oct 02, 2014 at 01:37:48PM -0500, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> > > From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > > 
+> > > Add device tree bindings documentation for ltc2978.
+> > > 
+> > > Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > > ---
+> > > v2: clean whitespace
+> > > ---
+> > >  .../devicetree/bindings/hwmon/ltc2978.txt          |   41 ++++++++++++++++++++
+> > >  1 file changed, 41 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/hwmon/ltc2978.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/hwmon/ltc2978.txt b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+> > > new file mode 100644
+> > > index 0000000..b2d9c4d
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+> > > @@ -0,0 +1,41 @@
+> > > +ltc2978
+> > > +
+> > > +Required properties:
+> > > + - compatible: one of: ltc2974, ltc2977, ltc2978, ltc3880, ltc3883, ltm4676
+> > > + - reg: I2C address
+> > > +
+> > > +Optional properties:
+> > > + Name of the optional regulator subnode must be "regulators".
+> > 
+> > This is currently a problem. The regulator core trats it as mandatory,
+> > meaning I get error messages such as
+> > 
+> > ltc2978 5-005e: Failed to find regulator container node
+> > 
+> > if not specified. We'll have to sort out with the regulator core how this should
+> > be handled.
+> > 
+Followup on this: Since the regulator core considers the property to be
+mandatory (which I guess makes some sense for a presumed regulator),
+you'll have to check in the calling code and ensure that a 'regulators'
+entry is there prior to calling the regulator code.
 
---QSIxHKMNNe9U+x7e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> > > +  - #address-cells must be 1.
+> > > +  - #size-cells must be 0.
+> > > +
+> > 
+> > Checking this out, those do not seem to be necessary.
+> 
+> I just tried it, and don't see a need for it myself.
+> 	 
+> > 
+> > > + For each regulator:
+> > > +  - reg: regulator number
+> > 
+> > This does not seem to be necessary either.
+> 
+> Same here.  For some reason I thought they were required.  
+> I'll take them out of the bindings doc.
+> 
+> > 
+> > > +  - regulator-compatible: must be vout_en<regulator number> such as vout_en3
+> > > +    valid range is:
+> > > +      ltc2977, ltc2978 : vout_en0 - vout_en7
+> > > +      ltc2974          : vout_en0 - vout_en3
+> > > +      ltc3880, ltm4676 : vout_en0 - vout_en1
+> > > +      ltc3883          : vout_en0 only
+> > 
+> > Besides the unnecessary _en,
+> 
+> I don't mind taking out the '_en'.  I was trying to name these
+> after pin names on the device.  I thought that was the norm.
+> If someone adds voltage support later, that will look even
+> weirder, so I agree that should change.
+> 
+> > this is a problem if there is more than one
+> > supported chip in the system, if DEBUG_FS is enabled, and if names are not
+> > specified in the devicetree file. I get a lot of error messages in a
+> > system with a large number of LTC2978 chips.
+> > 
+> > vout3: Failed to create debugfs directory
+> > vout4: Failed to create debugfs directory
+> > vout5: Failed to create debugfs directory
+> > vout6: Failed to create debugfs directory
+> > vout7: Failed to create debugfs directory
+> > vout2: Failed to create debugfs directory
+> > vout3: Failed to create debugfs directory
+> > 
+> > and so on (40+ times in my system). We will have to find a solution for this
+> > problem.
+> 
+> Note that whatever name is here is going to be the compatible
+> string for this particular regulator output in the DT.
+> 
+Yes, but I don't want to have to specify dummy names even for unused
+regulator channels. There are lots of those in our systems (see below).
 
-On Wed, Oct 08, 2014 at 02:27:08PM -0500, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> It seems like this can't be the only case of this in the kernel.
+> I imagine there are lots of boards with multiple regulators but
+> no regulator info specified. I'll have to dig a bit to see why
+> this isn't an issue for other regulator drivers.
+> 
+My wild guess is that it is quite atypical to have multiple regulators
+of the same type in a system, so maybe it is as simple as no one hitting
+the problem before.
 
-> +			spidev@0 {
-> +				compatible = "spidev";
-> +				reg = <0>;	/* chip select */
-> +				spi-max-frequency = <100000000>;
-> +			};
+Problem is that we can not add bus numbers and/or the device address
+into the name either. Bus numbers can change across reboots, and
+there can be multiple chips with the same i2c address on different
+busses.
 
-No, if you're putting spidev into the DT that's broken - describe the
-hardware, not the software you're using to control it.
+Example:
 
---QSIxHKMNNe9U+x7e
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+ltc2978-i2c-2-5c
+ltc2978-i2c-5-5d
+ltc2978-i2c-5-5e
+ltc2978-i2c-5-5f
+ltc2978-i2c-5-60
+ltc2978-i2c-5-61
+ltc2978-i2c-5-62
+ltc2978-i2c-11-5c
+ltc2978-i2c-12-5c
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+>From another system:
 
-iQEcBAEBAgAGBQJUNZj6AAoJECTWi3JdVIfQIegH+wVVSusgfUH6dIdrCNCcqe8n
-IESgKRjvAcro2UgVTWsG2qfPZrsIydgLWlLDt+GNQm2N864trm96i65ZVYodYyYP
-cmJVjEjxdeM5fS5xZXr/QWq9NQmkdWQQxmMMdvicEhvsxP8AWv1h/bqL4xw7UMUZ
-Z8tqF0rbIORAuSLgunuYWuDbSx7om17KJHzKMsNOrfX4EHURD6QUn3RqSU74wDZT
-UBdsPQx9UQa8JUxB/B7FY+qPqVl9BVbHQxjog4S/NKt0XAUB6xV982FwW1iTsXio
-abpCakwEo3hKBGSrwldvbywDrNOI5L3qn9/q/kSY4rXmKEzv9VUUsuP21MHcJFE=
-=8aou
------END PGP SIGNATURE-----
+ltc2978-i2c-37-5d
+ltc2978-i2c-37-5e
+ltc2978-i2c-37-5f
+ltc2978-i2c-37-60
+ltc2978-i2c-37-61
+ltc2978-i2c-37-62
+ltc2978-i2c-45-5d
+ltc2978-i2c-45-5e
+ltc2978-i2c-45-5f
+ltc2978-i2c-45-60
+ltc2978-i2c-45-61
+ltc2978-i2c-45-62
+ltc2978-i2c-53-5d
+ltc2978-i2c-53-5f
+ltc2978-i2c-53-60
+ltc2978-i2c-53-61
+ltc2978-i2c-53-62
+ltc2978-i2c-61-5d
+ltc2978-i2c-61-5e
+ltc2978-i2c-69-5d
+ltc2978-i2c-69-5e
+ltc2978-i2c-21-5c
+ltc2978-i2c-22-5c
 
---QSIxHKMNNe9U+x7e--
+Yes, that may be a bit excessive, but it is from real systems.
+
+> > 
+> > I also get
+> > 
+> > vout7: no parameters
+> > 
+> > for each regulator which is a bit annoying with 50+ of those regulators
+> > in the system.
+> 
+> Yes I see that and tried to make it stop (but couldn't).  It is not
+> really helpful information.
+> 
+I think this will have to be fixed in the infrastructure. The message
+should probably be a debug message.
+
+Thanks,
+Guenter
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
