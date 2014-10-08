@@ -1,29 +1,37 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] mtd: docg3: add device-tree support
-Date: Wed, 08 Oct 2014 20:04:15 +0200
-Message-ID: <87oatma15s.fsf@free.fr>
-References: <1411846470-30041-1-git-send-email-robert.jarzmik@free.fr>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCH 2/2] arm: dts: socfpga: Add SPI nodes & update copyright.
+Date: Wed, 8 Oct 2014 13:05:35 -0500
+Message-ID: <54357CEF.8000108@opensource.altera.com>
+References: <1412711297-31857-1-git-send-email-tthayer@opensource.altera.com> <1412711297-31857-3-git-send-email-tthayer@opensource.altera.com> <20141007231200.GR4609@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411846470-30041-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
-	(Robert Jarzmik's message of "Sat, 27 Sep 2014 21:34:29 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141007231200.GR4609@sirena.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: jkosina@suse.cz, pawel.moll@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dinguyen@opensource.altera.com, linux-spi@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, tthayer.linux@gmail.com, tthayer@altera.com, axel.lin@ingics.com, baruch@tkos.co.il, andriy.shevchenko@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> writes:
 
-> Add device-tree support. This is straightforward as docg3 only uses the
-> standard IOMEM resources.
-Brian, David, ping ?
+On 10/07/2014 06:12 PM, Mark Brown wrote:
+> On Tue, Oct 07, 2014 at 02:48:17PM -0500,tthayer@opensource.altera.com  wrote:
+>
+>> Add 2 SPI nodes to SOCFPGA device tree. Update copyright.
+>> Update spi-dw.txt with bus-num as an optional property.
+> Again, this is just randomly mixing multiple changes.  Also why are we
+> adding a bus-num property - bus numbers are an implementation detail of
+> Linux and I can't see any reason to put them in the device tree.  If
+> there were one the binding would need to explain what they were.
+OK. I will leave these changes out of the patch.
 
-Cheers.
+Sorry about the noise. I saw the spi-summary referenced the bus-num 
+spi<bus-num>.<chip-select> so I thought it could be added to the 
+bindings document. The bus was defaulting to 32766 if the bus wasn't 
+assigned from the device tree (spi32766.0).
 
---
-Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+
+Thor
+
+
