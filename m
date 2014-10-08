@@ -1,42 +1,93 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] of: add vendor prefix for Chipidea
-Date: Wed, 8 Oct 2014 08:40:59 -0500
-Message-ID: <CAL_JsqKLK+sYiSKxKG_XGQi_OsK+gE6kGr1tVQUFYAFfk6CpaQ@mail.gmail.com>
-References: <1410827745-4101-1-git-send-email-peter.chen@freescale.com>
- <CAL_JsqLVUrxEZKQiHa=-+krnoog0rybEgp8O7pZxbR5TyQx5kA@mail.gmail.com> <20140928002439.GA3324@peterchendt>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 11/13] gpio: Support for unified device properties interface
+Date: Wed, 08 Oct 2014 16:01:45 +0200
+Message-ID: <2049741.HkpnzptfyW@vostro.rjw.lan>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan> <1693047.RuqBhhrutB@vostro.rjw.lan> <CAAVeFu+MvBUZTrRWB008rcsMzPvEb81TEg=L8RqBz=PJ9J6bwQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140928002439.GA3324@peterchendt>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CAAVeFu+MvBUZTrRWB008rcsMzPvEb81TEg=L8RqBz=PJ9J6bwQ@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Adding Grant as it is in his tree now...
+On Wednesday, October 08, 2014 11:55:08 AM Alexandre Courbot wrote:
+> On Wed, Oct 8, 2014 at 9:09 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > On Tuesday, October 07, 2014 07:52:02 PM Alexandre Courbot wrote:
+> >> On Tue, Oct 7, 2014 at 7:40 PM, Mika Westerberg
+> >> <mika.westerberg@linux.intel.com> wrote:
+> >> > On Tue, Oct 07, 2014 at 07:22:13PM +0900, Alexandre Courbot wrote:
+> >> >> On Tue, Oct 7, 2014 at 9:18 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >> >> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> >> >> >
+> >> >> > Some drivers need to deal with only firmware representation of its
+> >> >> > GPIOs. An example would be a GPIO button array driver where each button
+> >> >> > is described as a separate firmware node in device tree. Typically these
+> >> >> > child nodes do not have physical representation in the Linux device
+> >> >> > model.
+> >> >> >
+> >> >> > In order to help device drivers to handle such firmware child nodes we
+> >> >> > add dev[m]_get_named_gpiod_from_child() that takes a child firmware
+> >> >> > node pointer as its second argument (the first one is the parent device
+> >> >> > itself), finds the GPIO using whatever is the underlying firmware
+> >> >> > method, and requests the GPIO properly.
+> >> >> >
+> >> >> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> >> >> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >> >>
+> >> >> ...
+> >> >>
+> >> >> > +/* Child properties interface */
+> >> >> > +struct gpio_desc *dev_get_named_gpiod_from_child(struct device *dev, void *child,
+> >> >> > +                                                const char *propname, int index);
+> >> >> > +struct gpio_desc *devm_get_named_gpiod_from_child(struct device *dev, void *child,
+> >> >> > +                                                 const char *propname, int index);
+> >> >>
+> >> >> I see the reason for these functions and am not opposed to them.
+> >> >> However, I wonder if we could not replace propname by a con_id that
+> >> >> would be resolved to one of con_id-gpio for DT and whatever naming
+> >> >> convention ACPI is using?
+> >> >
+> >> > The code in gpio-leds.c and gpio_keys_polled.c refers to "gpios" as the
+> >> > property name. If we can change that somehow to work with con_id-gpio
+> >> > instead without breaking things, then why not.
+> >> >
+> >> >> This would prevent users to name GPIOs outside of the conventions
+> >> >> defined in the bindings and be generally safer. Is there a particular
+> >> >> reason (used by some old code?) for the current direct property
+> >> >> access? If not, maybe we could call a slightly-modified of_find_gpio()
+> >> >> to resolve the GPIO property for DT, and the equivalent function for
+> >> >> ACPI?
+> >> >
+> >> > Only reason I can think of is support for the existing properties that
+> >> > are used directly. Drivers using gpiod_get() and friends do not need
+> >> > dev_get_named_gpiod_from_child() anyway.
+> >>
+> >> Right. Another thing is that the property handling code (active low
+> >> only for now) is duplicated again, but that can be addressed
+> >> separately.
+> >>
+> >> I will have a look at gpio-leds and gpio_keys_polled to see if we
+> >> cannot make this work at a higher level. It's easier to have the
+> >> bindings respected if the code itself enforces them.
+> >
+> > I'm wondering if that can be done after merging the current work?
+> >
+> > We'll be able to use the drivers in question with our hardware in the
+> > meantime then ...
+> 
+> Yeah, that's probably ok. The properties in question already exist so
+> we will have to support them anyway ; it's just a matter of seeing
+> whether we can improve the proposed way.
+> 
+> So for now:
+> 
+> Acked-by: Alexandre Courbot <acourbot@nvidia.com>
 
-On Sat, Sep 27, 2014 at 7:24 PM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> On Fri, Sep 26, 2014 at 11:32:49AM -0500, Rob Herring wrote:
->> On Mon, Sep 15, 2014 at 7:35 PM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->> > Adds chipidea to the list of DT vendor prefixes.
->> >
->> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->>
->> Applied.
->
-> Hi Rob & Greg,
->
-> I am sorry I also sent this DT patch to Greg by mistake, and queued by usb tree.
-> Will meet error when linus pulls both of your trees?
+Thanks!
 
-I think git will sort it out okay, but if patches like this are not
-part of a larger series they should go thru the DT tree.
-
-Also, IIRC, if you put people in cc in the commit, we get notified
-when Greg applies patches.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
