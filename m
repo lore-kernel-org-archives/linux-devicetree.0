@@ -1,46 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3 2/3] ARM: shmobile: koelsch: enable HS-USB
-Date: Wed, 08 Oct 2014 22:11:59 +0400
-Message-ID: <54357E6F.1080702@cogentembedded.com>
-References: <1511869.4ca9KHmSFr@wasted.cogentembedded.com> <8674731.7YYzQeH0h1@wasted.cogentembedded.com> <20141008180513.GJ22688@saruman> <54357D76.4050104@cogentembedded.com> <20141008180852.GK22688@saruman>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: cygnus: Initial support for Broadcom Cygnus SoC
+Date: Wed, 08 Oct 2014 20:12:38 +0200
+Message-ID: <34012512.W8VifyXY4H@wuerfel>
+References: <1412746025-11998-2-git-send-email-sbranden@broadcom.com> <10762659.VISiZ3vSSN@wuerfel> <543565DC.8010704@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20141008180852.GK22688@saruman>
-Sender: linux-sh-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, yoshihiro.shimoda.uh@renesas.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <543565DC.8010704-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/08/2014 10:08 PM, Felipe Balbi wrote:
+On Wednesday 08 October 2014 09:27:08 Scott Branden wrote:
+> On 14-10-08 06:28 AM, Arnd Bergmann wrote:
+> > On Wednesday 08 October 2014 05:27:24 Scott Branden wrote:
+> >>>
+> >>> I don't think you need per-board config options. The main option
+> >>> above should be enough.
+> >> This is not a per-board config option.  This is actually a per-SoC
+> >> uArchtecture selection.  More major uArchectures will be added to the
+> >> IPROC.  Will Change comment to "Support Broadcom Cygnus SoC"
+> >
+> > Ok, sounds fine, but remove ARCH_BCM_IPROC then. There should be
+> > no need for a three-level deep hierarchy (BCM -> IPROC -> CYGNUS)
+> >
+> I do not need a 3-deep hierarchy, I need a 2-deep hierarchy for IPROC 
+> and CYGNUS (and future SoCs that have IPROC Architecture in common).  I 
+> can move IPROC out of the mach-bcm directory if you like a create a new 
+> directory?  But it looks like the purpose of mach-bcm is to consolidate 
+> all Broadcom chipsets in it?
 
->>>> From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Yes, better leave it all in mach-bcm. You really shouldn't need much
+code at all that is soc specific, so adding new directories is not
+encouraged. We have some platforms that need no code at all, and on
+arm64 that is required.
 
->>>> Enable HS-USB device for the Koelsch board, defining the GPIO that the driver
->>>> should check when probing (which is the ID output from MAX3355 OTG chip).
+Isn't Northstar also IPROC? That one didn't seem to need the symbol.
 
->>>> Note that there will be pinctrl-related error messages if both internal PCI
->>>> and HS-USB drivers are enabled but they should be just ignored.
+Could you make ARCH_BCM_IPROC a silent symbol that is just selected
+by each SoC family specific symbol?
 
->>>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->>>> [Sergei: added pin function/group and prop, moved device node, fixed summary,
->>>> added changelog]
->>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
->>>> ---
->>>> Changes in version 3:
->>>> - added pinctrl-related properties;
-
->>> did you miss pinctrl here ?
-
->>      No, AFAICS. Or what do you mean?
-
-> usb0_pins doesn't appear to be defined anywhere.
-
-    They are defined in the same file, just not in this patch. If you're 
-looking at some of the USB trees or Linus' tree, the corresponding patch just 
-hasn't hit them yet, it's in renesas.git ATM.
-
-WBR, Sergei
-
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
