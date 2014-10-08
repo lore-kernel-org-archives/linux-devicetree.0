@@ -1,50 +1,40 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [tpmdd-devel] [PATCH 07/16] tpm/tpm_i2c_stm_st33: Add devicetree
- structure
-Date: Wed, 8 Oct 2014 15:37:04 -0600
-Message-ID: <20141008213704.GB13867@obsidianresearch.com>
-References: <1412712189-1234-1-git-send-email-christophe-h.ricard@st.com>
- <1412712189-1234-8-git-send-email-christophe-h.ricard@st.com>
- <20141007223025.GE2366@obsidianresearch.com>
- <5434D00E.7000602@gmail.com>
- <20141008162922.GC4153@obsidianresearch.com>
- <0B9F1C5B86169C4EA9D042C251022E4938EC504766@SAFEX1MAIL3.st.com>
- <20141008205116.GA13867@obsidianresearch.com>
- <0B9F1C5B86169C4EA9D042C251022E4938EC50476E@SAFEX1MAIL3.st.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 12/13] leds: leds-gpio: Make use of device property API
+Date: Thu, 09 Oct 2014 00:02:08 +0200
+Message-ID: <2998434.5IT5NjTfu8@vostro.rjw.lan>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan> <2960802.kPr8UT7PvT@vostro.rjw.lan> <CAK5ve-JTri0ML23gdXTgfRPh+tkJGUj6jHcjEKEVNphwG-PQjw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <0B9F1C5B86169C4EA9D042C251022E4938EC50476E-+EwDPpWUVoSRc5Omjj0epdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe Henri RICARD <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Cc: Christophe RICARD <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "peterhuewe-Mmb7MZpHnFY@public.gmane.org" <peterhuewe-Mmb7MZpHnFY@public.gmane.org>, "ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org" <ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org>, "tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org" <tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Jean-Luc BLANC <jean-luc.blanc-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CAK5ve-JTri0ML23gdXTgfRPh+tkJGUj6jHcjEKEVNphwG-PQjw@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Bryan Wu <cooloney@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 08, 2014 at 11:14:40PM +0200, Christophe Henri RICARD wrote:
+On Wednesday, October 08, 2014 10:47:16 AM Bryan Wu wrote:
+> On Wed, Oct 8, 2014 at 7:04 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > On Tuesday, October 07, 2014 02:18:45 AM Rafael J. Wysocki wrote:
+> >> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >>
+> >> Make use of device property API in this driver so that both OF and ACPI
+> >> based system can use the same driver.
+> >>
+> >> This change contains material from Max Eliaser and Mika Westerberg.
+> >>
+> >> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> >> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Bryan, can you please tell me if you are OK with this patch?
+> >
+> > You said you were for one of the previous versions if I remember correctly,
+> > but it's changed quite a bit since then, so can you please check this new
+> > version too?
+> >
+> 
+> Sure, the new one is even better than before. Please go ahead with my Ack
+> Acked-by: Bryan Wu <cooloney@gmail.com>
 
-> For your information, the lpcpd pin is named like this as per
-> PCClientTPMSpecification is also known as TPMSTB on this product.
-> The TPMSTB pin can be used in order to support D1 and D2 power
-> management state.  I am actually sorry to refer to Microsoft website
-> here ;) :
+Thanks!
 
-So, having the option to enter D1/D2 through that pin in the driver
-seems fine, and it should just be enabled if the driver is told what
-that pin is. No need for a module parameter, and no need for the
-driver to fail probe if it isn't told how to access that GPIO.
-
-However.. suspend/resume are called from the broader PM framework and
-a platform might arrange things so the TPM is put into a deeper sleep
-than D1/D2 (ie entirely powered off because the CPU was put into
-suspend-to-ram and the peripheral power converter was switched off)
-
-Thus the driver really must save the TPM state at suspend, and if the
-volatile state was wiped after resume then it must be restored from
-the saved state.
-
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
