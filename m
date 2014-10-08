@@ -1,84 +1,51 @@
-From: Bill Pringlemeir <bpringlemeir@nbsps.com>
-Subject: Re: [PATCH 1/2] ARM: dts: vf500/vf610: support VF500 SoC
-Date: Wed, 08 Oct 2014 11:57:30 -0400
-Message-ID: <87r3yid05x.fsf@nbsps.com>
-References: <1412261724-11073-1-git-send-email-stefan@agner.ch>
-	<8882221.sfQOLcQs3p@wuerfel>
-	<20f4e3a1932756c92443d380a7f42f56@agner.ch>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 3/5] regulator: dt-bindings: Add regulator-initial-mode
+ support
+Date: Wed, 08 Oct 2014 18:00:47 +0200
+Message-ID: <54355FAF.6060708@collabora.co.uk>
+References: <1412775847-15213-1-git-send-email-javier.martinez@collabora.co.uk> <1412775847-15213-4-git-send-email-javier.martinez@collabora.co.uk> <20141008143439.GB4609@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: shawn.guo@freescale.com, kernel@pengutronix.de, b35083@freescale.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20141008143439.GB4609@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Doug Anderson <dianders@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On  2 Oct 2014, stefan at agner.ch wrote:
+On 10/08/2014 04:34 PM, Mark Brown wrote:
+> On Wed, Oct 08, 2014 at 03:44:05PM +0200, Javier Martinez Canillas wrote:
+> 
+>> +- regulator-initial-mode: initial regulator operating mode. One of following:
+>> +	<1>: REGULATOR_MODE_FAST    - Regulator can handle fast changes.
+>> +	<2>: REGULATOR_MODE_NORMAL  - Normal regulator power supply mode.
+>> +	<4>: REGULATOR_MODE_IDLE    - Regulator runs in a more efficient mode.
+>> +	<8>: REGULATOR_MODE_STANDBY - Regulator runs in the most efficient mode.
+>> +  modes are defined in the dt-bindings/regulator/regulator.h header and can be
+>> +  used in device tree sources files. If no mode is defined, then the OS will not
+>> +  manage the operating mode and the HW default values will be used instead.
+> 
+> ...and as previously and repeatedly discussed this still gives the user
+> no way of telling if or how these modes might correspond to what the
+> chip is capable of doing.  This really needs addressing rather than
+> ignoring, for example by not trying to define the modes in generic
+> bindings.
+> 
 
-> Am 2014-10-02 17:28, schrieb Arnd Bergmann:
->> On Thursday 02 October 2014 16:55:23 Stefan Agner wrote:
->>> The VF500 is essentially the same SoC, but with only one core and
->>> without L1 cache. The VF610 is therefore a superset of the VF500.
->>> Move allmost all periperals to vf500.dtsi which is then included
->>> and enhanced by vf610.dtsi.
->>>
->>> Signed-off-by: Stefan Agner <stefan at agner.ch>
->>> ---
->>> Somehow using -M -B switches create a unapplyable patch, hence I
->>> generated one without those options. Sorry about that.
->>>
->>> arch/arm/boot/dts/vf500.dtsi | 498
->>> ++++++++++++++++++++++++++++++++++++++++++
->>> arch/arm/boot/dts/vf610.dtsi | 507
->>> +------------------------------------------
->>> 2 files changed, 510 insertions(+), 495 deletions(-)
->>> create mode 100644 arch/arm/boot/dts/vf500.dtsi
+Drivers could add custom per-device DT properties. That is how it was
+solved in the ChromeOS kernel. There is a regulator-op-mode DT property
+whose value is just a magic number with the value that has to be written
+in the OPMODE field of the control register of each regulator and that
+is made on the driver probe.
 
->> I think it would be better to create one extra file that contains the
->> common parts and is included by both vf500 and vf610.
+Another option is to not document the standard modes in the generic
+regulator binding but instead on each device DT binding doc. That way
+each device binding can define what are the semantics of the standard
+modes and how correspond to the real modes in the chip.
 
-> I also thought about that. But when looking at the product variants,
-> its clear that VF500 really contains only features, which are part of
-> all other Vybrids (VF3xx series excluded, but these series is not
-> really suitable for Linux due to lack of external memory). So
-> vf500.dtsi would always be a oneliner (#include <vf.dtsi>).
+That way the regulator-initial-mode could still be generic and parsed
+by the core instead of each driver implementing their own custom parsing.
 
-> Also I disliked this idea because of the somewhat unclear naming
-> (vf.dtsi? vfxxx.dtsi?)
-
-Well, I see points from both sides.  I would just like to point out
-there maybe more variants than you may think,
-
- 1. With/without security
-    Secure parts have a CAAM engine and an SNVS real-time clock.  I
-    guess this is the same as the iMX6.
- 2. With/without M4 (and some camera features)
-    This is the Vf5xx vs VF6xx
- 3. With/without L2 cache
-    Some VF5xx have the L2
- 4. Automotive has an OpenVG engine (plus others differences).
-
-People may not have boards with these features in the mainline.  They
-maybe added later.  If Arnd's variant is Linux standard for this, then
-it doesn't make sense to special case the Vybrid.  I looked briefly at
-the imx6 and 'quad', 'dual-light', etc.  Whatever the current DT
-structure is for those, it at least doesn't jump out at me?
-
-It looks like 'imx6sl.dtsi' and 'imx6sl.dtsi' both define the SNVS; yet
-I think on some devices these are not present as it is a part option.
-The Vybrid is very close SOC to the iMx6.  Note: I looked at the iMx6
-for a few minutes.  I am not expert on iMx6 **AND** this is not a
-critism, just an example of why Arnd's approach may have some issues.
-People making changes for platform VF5xx will be prone to only put
-changes in VF5xx and not the 'vf.dtsi'.  The VF6xx is most naturally a
-super-set, but even within those parts there are variations.
-
-I think a consistent layout of the includes would be valuable.
-Definitely, the repeated information in the DT is bad.  Is there an
-unwritten standard?  I think it would be useful to point out an example
-that should be the prototype?  Do we have one?  Ie, some SOC family that
-we would like as an example?  Or is this case by case?  Or maybe this is
-only occurring with Freescale parts; but I doubt that.
-
-Fwiw,
-Bill Pringlemeir.
+Best regards,
+Javier
