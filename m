@@ -1,79 +1,60 @@
-From: Christophe Henri RICARD <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Subject: RE: [tpmdd-devel] [PATCH 07/16] tpm/tpm_i2c_stm_st33: Add
- devicetree structure
-Date: Wed, 8 Oct 2014 23:14:40 +0200
-Message-ID: <0B9F1C5B86169C4EA9D042C251022E4938EC50476E@SAFEX1MAIL3.st.com>
-References: <1412712189-1234-1-git-send-email-christophe-h.ricard@st.com>
- <1412712189-1234-8-git-send-email-christophe-h.ricard@st.com>
- <20141007223025.GE2366@obsidianresearch.com> <5434D00E.7000602@gmail.com>
- <20141008162922.GC4153@obsidianresearch.com>
- <0B9F1C5B86169C4EA9D042C251022E4938EC504766@SAFEX1MAIL3.st.com>
- <20141008205116.GA13867@obsidianresearch.com>
+From: Johannes Pointner <johannes.pointner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 2/2] dt: bindings: tps65217: add compatible property for backlight  subnode
+Date: Wed, 08 Oct 2014 23:20:28 +0200
+Message-ID: <4202809.cQlU8Tr5kS@lenovobook>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141008205116.GA13867-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Christophe RICARD <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "peterhuewe-Mmb7MZpHnFY@public.gmane.org" <peterhuewe-Mmb7MZpHnFY@public.gmane.org>, "ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org" <ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org>, "tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org" <tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Jean-Luc BLANC <jean-luc.blanc-qxv4g6HH51o@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Jason,
+Add documentation for compatible property of backlight subnode.
 
-For your information, the lpcpd pin is named like this as per PCClientTPMSpecification is also known as TPMSTB on this product.
-The TPMSTB pin can be used in order to support D1 and D2 power management state.
-I am actually sorry to refer to Microsoft website here ;) : http://msdn.microsoft.com/en-us/library/windows/hardware/ff543162%28v=vs.85%29.aspx.
-As mention by our product datasheet:
-"In order to reach D1/D2 state, the TPMSTB pin must be connected to a GPIO signal.
-In state D1/D2, the contents of the volatile memory is *preserved*."
+Signed-off-by: Johannes Pointner <johannes.pointner-5O2GiQo/Ci2aMPzRcYMCawC/G2K4zDHf@public.gmane.org>
+---
+Changes since v2:
+1. Removed the pmic part of the patch.
+2. Added newline before subnode in the example.
+---
+ .../devicetree/bindings/video/backlight/tps65217-backlight.txt | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-Also "... the implementation of the LPCPD# pin on a TPM is platform and chipset implementation specific." Cf PCClientTPMSpecification.
-
-I am currently giving the opportunity to an integrator to use this feature. 
-
-I don't mind removing the power_mgt module option but don't you think there might be interest for an integrator to update their TPM power management policy on their platform ?
-
-Best Regards
-Christophe
------Original Message-----
-From: Jason Gunthorpe [mailto:jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org] 
-Sent: mercredi 8 octobre 2014 22:51
-To: Christophe Henri RICARD
-Cc: Christophe RICARD; peterhuewe-Mmb7MZpHnFY@public.gmane.org; ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org; tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org; Jean-Luc BLANC
-Subject: Re: [tpmdd-devel] [PATCH 07/16] tpm/tpm_i2c_stm_st33: Add devicetree structure
-
-On Wed, Oct 08, 2014 at 10:41:36PM +0200, Christophe Henri RICARD wrote:
-> Hi Jason,
-> 
-> I have currently seen both. I agree on the principles as it is 
-> simplifying the code a little bit.  I including this clean up in this 
-> patch Add devicetree structure for a future v2 submission
-
-I was just looking at what the remaining lpcpd GPIO does, and..
-
-1) I think you can probably just make this optional, if it is not
-   specified in the DT or through platform data, just don't fiddle with
-   it. This makes the driver much friendlier - ie it can be manually
-   attached via sysfs for instance.
-
-2) This looks fishy:
-
-static int tpm_st33_i2c_pm_suspend(struct device *dev)
-	if (power_mgt) {
-		gpio_set_value(pin_infos->io_lpcpd, 0);
-	} else {
-		ret = tpm_pm_suspend(dev);
-	}
-
-   I can't think of a reason why the driver wouldn't need to call
-   tpm_pm_suspend to save the internal state? Ditto for restore?
-
-   I'm also suspicious of the power_mgt module option, that should
-   probably go away entirely?
-
-Jason
+diff --git a/Documentation/devicetree/bindings/video/backlight/tps65217-backlight.txt b/Documentation/devicetree/bindings/video/backlight/tps65217-backlight.txt
+index 5fb9279..63ef699 100644
+--- a/Documentation/devicetree/bindings/video/backlight/tps65217-backlight.txt
++++ b/Documentation/devicetree/bindings/video/backlight/tps65217-backlight.txt
+@@ -6,19 +6,23 @@ used to drive LEDs for use as backlights.
+ Required properties:
+ - compatible: "ti,tps65217"
+ - reg: I2C slave address
+-- backlight: node for specifying WLED1 and WLED2 lines in TPS65217
++- backlight: subnode for specifying WLED1 and WLED2 lines in TPS65217
++
++Required subnode properties:
++- compatible: "ti,tps65217-bl"
+ - isel: selection bit, valid values: 1 for ISEL1 (low-level) and 2 for ISEL2 (high-level)
+ - fdim: PWM dimming frequency, valid values: 100, 200, 500, 1000
+ - default-brightness: valid values: 0-100
+ 
+-Each regulator is defined using the standard binding for regulators.
+ 
+ Example:
+ 
+ 	tps: tps@24 {
+ 		reg = <0x24>;
+ 		compatible = "ti,tps65217";
+-		backlight {
++
++		tps_bl: backlight {
++			compatible = "ti,tps65217-bl";
+ 			isel = <1>;  /* 1 - ISET1, 2 ISET2 */
+ 			fdim = <100>; /* TPS65217_BL_FDIM_100HZ */
+ 			default-brightness = <50>;
+-- 
+2.1.2
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
