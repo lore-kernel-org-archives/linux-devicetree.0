@@ -1,39 +1,42 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 1/5] regulator: of: Add regulator-initial-mode parse support
-Date: Wed, 08 Oct 2014 18:29:26 +0200
-Message-ID: <54356666.4090003@collabora.co.uk>
-References: <1412775847-15213-1-git-send-email-javier.martinez@collabora.co.uk> <1412775847-15213-2-git-send-email-javier.martinez@collabora.co.uk> <20141008142511.GA4609@sirena.org.uk> <54354C7D.7090104@collabora.co.uk> <20141008151220.GE4609@sirena.org.uk>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [tpmdd-devel] [PATCH 07/16] tpm/tpm_i2c_stm_st33: Add devicetree
+ structure
+Date: Wed, 8 Oct 2014 10:29:22 -0600
+Message-ID: <20141008162922.GC4153@obsidianresearch.com>
+References: <1412712189-1234-1-git-send-email-christophe-h.ricard@st.com>
+ <1412712189-1234-8-git-send-email-christophe-h.ricard@st.com>
+ <20141007223025.GE2366@obsidianresearch.com>
+ <5434D00E.7000602@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20141008151220.GE4609@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Doug Anderson <dianders@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5434D00E.7000602-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christophe RICARD <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/08/2014 05:12 PM, Mark Brown wrote:
-> On Wed, Oct 08, 2014 at 04:38:53PM +0200, Javier Martinez Canillas wrote:
->> On 10/08/2014 04:25 PM, Mark Brown wrote:
-> 
->> > That doesn't mean that the definition of those modes is something we can
->> > sensibly provide in generic code, especially in a completely
->> > undocumented fashion (perhaps you've done that later in the patch series
->> > but bisection also applies to reviewability).
-> 
->> As a general question, now that the convention is for DT binding docs to go
->> in a separate patch, should the DT documentation be added before or after
->> that code using these bindings is added?
-> 
-> It fairly obviously needs to go before so that reviewers can tell if the
-> code is actually implementing the binding.
-> 
+On Wed, Oct 08, 2014 at 07:47:58AM +0200, Christophe RICARD wrote:
+> >>+	if (interrupts) {
+> >>+		r = devm_gpio_request_one(&client->dev, pdata->io_serirq,
+> >>+					GPIOF_IN, "TPM IO_SERIRQ");
+> >Similarly, I wonder if pdata->io_serirq is just duplication of
+> >client->irq and that should be set by the creator instead?
 
-Well, is not fairly obvious to me. One can also say the opposite, why the
-kernel is documenting a DT binding that is not (currently) implemented?
+> pdata->io_serirq stores the gpio number which will be converted into
+> irq number.  pdata->io_serirq is only use by static platform
+> configuration not devicetree configuration
 
-That's why what makes the most sense for me is what the old convention did,
-add the DT binding docs in the same patch that implements the binding.
+Right, but the driver never uses it as a GPIO, so accepting a GPIO is
+actually less flexible - a platform may connect the TPM to a dedicated
+IRQ pin, for instance.
 
-Anyways, thanks for letting me know what is the convention today.
+The creator should just specify the irq in client->irq, however that is
+typically done..
+
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
