@@ -1,90 +1,40 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
-Date: Thu, 9 Oct 2014 10:04:20 +0100
-Message-ID: <20141009090420.GA16293@e102568-lin.cambridge.arm.com>
-References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com>
- <3978481.XNAIA6gzAG@wuerfel>
- <20141008101942.GA7179@e102568-lin.cambridge.arm.com>
- <2323270.n17xqW47JB@wuerfel>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] reset: socfpga: use arch_initcall for early
+ initialization
+Date: Thu, 09 Oct 2014 11:03:30 +0200
+Message-ID: <1412845410.6809.3.camel@pengutronix.de>
+References: <1412822646-11257-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <2323270.n17xqW47JB@wuerfel>
-Content-Disposition: inline
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "rmk+kernel@arm.linux.org.uk" <rmk+kernel@arm.linux.org.uk>, "tglx@linutronix.de" <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412822646-11257-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 08, 2014 at 03:47:43PM +0100, Arnd Bergmann wrote:
-> On Wednesday 08 October 2014 11:19:43 Lorenzo Pieralisi wrote:
-> > 
-> > Ok. So, unless I am missing something, on platform with mem_offset != 0
-> > /proc and /sys interfaces for remapping PCI resources can't work (IIUC
-> > the proc interface expects the user to pass in the resource address as
-> > seen from /proc/bus/pci/devices - which are not BAR values. Even if the
-> > user passed the BAR value to mmap, pci_mmap_fits() in proc_bus_pci_mmap()
-> > would fail since it compares the pgoff to resource values, which are not
-> > BAR values).
+Am Mittwoch, den 08.10.2014, 21:44 -0500 schrieb
+dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org:
+> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 > 
-> I think you are right for the sysfs interface, that one can't possibly
-> work because of the incorrect address computation.
+> There are certain drivers that are required to get loaded very early using
+> arch_initcall. An example of such a driver is the SOCFPGA's FPGA bridge driver.
+> This driver has to get loaded early because it needs to enable FPGA components
+> that are connected to the bridge.
 > 
-> For the /procfs interface, I think it can work as long as the offsets
-> used there are coming from the config space dump in /proc/bus/pci/*
-> rather than from the /sys/bus/pci/devices/*/resource file.
->  
-> > As things stand I think we can safely remove the mem_offset (and
-> > pci_sys_data dependency) from pci_mmap_page_range(). I do not think
-> > we can break userspace in any way, basically because it can't work at
-> > the moment, again, happy to be corrected if I am wrong, please shout.
-> 
-> Please look at the procfs interface again. That one can be defined
-> in two ways (either like sparc and arm, or like powerpc and microblaze)
-> but either one should be able to work with user space that expects
-> that interface and break with user space that expects the other one.
+> This FPGA bridge driver will using the reset controller API to toggle it's
+> reset bits, thus, it needs the reset driver to be loaded as early as possible
+> in order for it to get used properly.
 
-I agree as long as pci_mmap_page_range() is concerned, but I am
-referring to the pci_mmap_fits() implementation here:
+Without knowing the details, this sounds like the wrong approach. Can't
+the bridge driver return -EPROBE_DEFER until the reset controller is
+available?
 
-	start = vma->vm_pgoff;
-	size = ((pci_resource_len(pdev, resno) - 1) >> PAGE_SHIFT) + 1;
-	pci_start = (mmap_api == PCI_MMAP_PROCFS) ?
-			pci_resource_start(pdev, resno) >> PAGE_SHIFT : 0;
-	if (start >= pci_start && start < pci_start + size &&
-			start + nr <= pci_start + size)
-		return 1;
-	return 0;
+regards
+Philipp
 
-pci_mmap_fits(), when mapping from procfs always check the offset against
-resources, which are fixed-up addresses. If we passed the values dumped
-from the device config space (as pci_mmap_page_range() expects on arm) IMHO
-the check above would fail (always referring to platforms where
-mem_offset != 0).
-
-Last changes where introduced by commit 8c05cd08a, whose commit log adds
-to my confusion:
-
-"[...] I think what we want here is for pci_start to be 0 when mmap_api ==
-PCI_MMAP_PROCFS.[...]"
-
-But that's not what the code does.
-
-I will try to grab an integrator board to give it a go.
-
-> > Or we can add mem_offset to the host bridge (after all architectures like
-> > PowerPC and Microblaze have a pci_mem_offset variable in their host
-> > controllers), but still, this removes pci_sys_data dependency but does
-> > not solve the pci_mmap_page_range() issue.
-> 
-> The host bridge already stores the mem_offset in terms of the resource
-> list, so we could readily use that, except that it might break the
-> powerpc hack if that is still in use.
-
-Well, yes, I am not saying it can't be done by using the resources list,
-I am just trying to understand if that's really useful.
-
-Thank you !
-Lorenzo
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
