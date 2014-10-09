@@ -1,124 +1,74 @@
-From: Christophe Henri RICARD <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Subject: RE: [tpmdd-devel] [PATCH 11/16] tpm/tpm_i2c_stm_st33: Remove
- useless i2c read on interrupt registers
-Date: Thu, 9 Oct 2014 19:35:07 +0200
-Message-ID: <0B9F1C5B86169C4EA9D042C251022E4938EC504B46@SAFEX1MAIL3.st.com>
-References: <1412712189-1234-1-git-send-email-christophe-h.ricard@st.com>
- <1412712189-1234-12-git-send-email-christophe-h.ricard@st.com>
- <20141007220917.GC10616@obsidianresearch.com> <5434CD44.9090606@gmail.com>
- <20141008171140.GD4153@obsidianresearch.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 5/5] ARM: dts: Add initial regulator mode on exynos Peach
+ boards
+Date: Thu, 9 Oct 2014 18:48:48 +0100
+Message-ID: <20141009174848.GW4609@sirena.org.uk>
+References: <20141008195112.GI4609@sirena.org.uk>
+ <54369B59.8000509@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141008171140.GD4153-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Christophe RICARD <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "peterhuewe-Mmb7MZpHnFY@public.gmane.org" <peterhuewe-Mmb7MZpHnFY@public.gmane.org>, "ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org" <ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org>, "tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org" <tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Jean-Luc BLANC <jean-luc.blanc-qxv4g6HH51o@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zOAt2Xc0AZny4u/m"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54369B59.8000509@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Doug Anderson <dianders@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
 
-> If your chip is sane like other TPMs the IRQ pin will *only* be asserted while there is data pending in the out command FIFO, reading the FIFO *should naturally clear the IRQ *and the acking process may be entirely unnecessary and can be removed.
-I believe this assessment is wrong according to existing specifications and current implementation and I will explain you why:
+--zOAt2Xc0AZny4u/m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Our TPM is managing the TPM TIS registers Interrupt Enable and Interrupt Status.
-The TPM register Interrupt Enable support globalIntEnable (bit 31), commandReadyEnable (bit 7), fifoAvailableEnable (bit 6), Wakeup ready enable (bit 5), loc4SoftRelease(bit 3), stsValidIntEnable(bit 1), dataAvailIntEnable(bit 0).
-Except fifoAvailableEnable (bit 6), Wakeup ready enable (bit 5), loc4SoftRelease(bit 3) all of them are specified in the TCG TIS specification.
+On Thu, Oct 09, 2014 at 04:27:37PM +0200, Javier Martinez Canillas wrote:
 
-The TPM register Interrupt Status support commandReadyIntOccured(bit 7), fifoAvailableOccured(bit 6), WakeupReadyOccured(bit 5), loc4SoftRelease(bit 3), localityChangeIntOccured(bit 2), stsValidIntOccured(bit 1), dataAvailIntOccured(bit 0).
-Except fifoAvailableOccured(bit 6), WakeupReadyOccured(bit 5), loc4SoftRelease(bit 3) all of them are specified in the TCG TIS specification.
+> I see, I thought that an operating mode could be anything that alter the
+> regulator behavior either during runtime or when the system is suspended.
+> But under your definition, it is true that most max77802 regulators have
 
-When any enabled interrupt is getting active, the serirq line will get active (high state reversed from lpc implementation) but it will not tell which one. It could be any of the interrupt status register.
-Still according to the TCG_PCClientTPMInterfaceSpecification_TIS, the only when to clear a pending interrupt is to write a 1 to the corresponding bit in the TPM_INT_STATUS register.
+It's not just me, it's the code and all the users and documentation...
 
-According to which one is triggered, the wait queue to wake up is different it could be chip->vendor.read_queue or chip->vendor.int_queue.
-According to other driver implementation:
-- chip->vendor.read_queue is used to signal data availability.
-- chip->vendor.int_queue is used to signal any other interrupt sts_valid_int, cmd_read_int, locality_change_int.
+> only two modes: ON and OFF (and some of them have a third Low Power mode).
 
-As a possible clean up, I can see:
-- the locality_change_int in the handler may not be manage in my isr as it is not supposed to happen in the OS.
-- the interrupt TPM_INTF_LOCALITY_CHANGE_INT, TPM_INTF_FIFO_AVAILABLE_INT, TPM_INTF_WAKE_UP_READY_INT does not need to be activated.
+...but let's be clear, only "on" (normal) and low power are modes here.
+Like I keep saying please think things through - if modes also include
+enable control why would they be treated separately in the API?
 
-The udelay before the release_locality has be chosen small in order to reduce the impact in case the driver is used in polling mode.
+> I think though that a generic way to configure this enable control feature
+> is needed. Maybe adding a new pair of .{get,set}_suspend_control function
+> pointers to struct regulator_ops and an .initial_suspend_ctrl field to the
+> struct regulation_constraints?
 
-I would point out as well the int_queue initialization in the i2c_nuvoton_probe which is never used in the tpm_i2c_nuvoton.c nor in any tpm core file.
+> That way the core could parse a generic DT property and call the function
+> handlers but each driver can document in their own DT bindings what their
+> control values are and how those affects the regulators during suspend?
 
-The only point that could be raised is that there is no TPM 1.2 protocol specification for I2C. During our chip implementation, we tried to fit best to existing documentation. 
-Therefore I believe claiming this I2C TPM implementation or this one should be taken as reference is not appropriate as per previous statement.
+That maps poorly onto a lot of devices which have control schemes which
+are more complex than this, for example placing regulators into groups
+which are then controlled en masse or with internal sequencing options.
+There's also the general taste thing with an API that basically just
+consists of passing a random value through - there's a lack of
+generality there, it wouldn't be possible to write a generic user of the
+API which is a bit of a warning sign.
 
-As a conclusion to this, I believe I can add the clean-up pointed out previously and I will try to respin and rework patch 10, 13 and 7.
+If you just care about the specific "this pin controls enable in sleep
+state" I'd suggest making an interface that very specifically does that.
 
-However, I am not in favor to change to non-threaded irq unless I have a clear and convincing argument to do so.
+--zOAt2Xc0AZny4u/m
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-I will submit a v2 patchset including as much as possible fix/clean according to your feedback soon.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Thank you for your feedback.
+iQEcBAEBAgAGBQJUNsp/AAoJECTWi3JdVIfQsgwH/jd8peCeTLpQHtU3tSZElzrP
+XbMlQgSzUEK0If+zbYk1XNEBT46MmRoKn9Zem222UUu76p9eXvPROlnPtQs7+z7I
+jwnV0v1/209mxQhB9YsGUQO4WU1OPQb4nI30P0vQwaEFGVGpdV4R+JM7OLTl6J0d
+Bgw70d1BdbIoDVbTpkgQItuchYJgY7jm1r2G737+0pEfWOxJm+bzDOXxqNBYL6E5
+YQ8IQazxgJQxixr4Ij39luAqn75d7SxUyHdWi6ptJkWBFWNM5tvsxPgGAV6mXFdk
+Qik6/uS5/xCSFyFL2pQl1i1fwagpPNXSbt5AvsX9nwbjJk4xP46zdZkY0rnQBQk=
+=GylY
+-----END PGP SIGNATURE-----
 
-Best Regards
-Christophe
-
------Original Message-----
-From: Jason Gunthorpe [mailto:jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org] 
-Sent: mercredi 8 octobre 2014 19:12
-To: Christophe RICARD
-Cc: peterhuewe-Mmb7MZpHnFY@public.gmane.org; ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org; tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org; Christophe Henri RICARD; Jean-Luc BLANC
-Subject: Re: [tpmdd-devel] [PATCH 11/16] tpm/tpm_i2c_stm_st33: Remove useless i2c read on interrupt registers
-
-On Wed, Oct 08, 2014 at 07:36:04AM +0200, Christophe RICARD wrote:
-
-> I believe this is completely 2 different things. The delay before the 
-> release locality is to make sure that the isr will be service before 
-> release_locality to guarantee that any pending interrupt are cleared 
-> while the locality is active.
-> Here i just want to save 2 i2c transaction as only 1 write is enough 
-> to get the register change as effective.
-
-I think I follow the interrupt changes a bit better now..
-
-First of all, things are spread out too much, ie patch 10 makes the actual ISR handler change but patch 13 corrects the locking bug introduced in patch 10, and patch 7 switches to the threaded irq required by patch 13 - this should all be in the same patch.
-
-Second, I don't think switching to threaded IRQs and then using I2C transactions in the handler is a great idea. I think you should follow the pattern in the nuvoton driver:
-
-The IRQ handler simply records the interrupt occured, triggers a WQ and disables the IRQ:
-
-static irqreturn_t i2c_nuvoton_int_handler(int dummy, void *dev_id) {
-	struct tpm_chip *chip = dev_id;
-	struct priv_data *priv = chip->vendor.priv;
-
-	priv->intrs++;
-	wake_up(&chip->vendor.read_queue);
-	disable_irq_nosync(chip->vendor.irq);
-	return IRQ_HANDLED;
-}
-
-The ops explicitly enables the IRQ before sleeping waiting on the output FIFO:
-
-	if (chip->vendor.irq && queue) {
-		s32 rc;
-		struct priv_data *priv = chip->vendor.priv;
-		unsigned int cur_intrs = priv->intrs;
-
-		enable_irq(chip->vendor.irq);
-		rc = wait_event_interruptible_timeout(*queue,
-						      cur_intrs != priv->intrs,
-						      timeout);
-		if (rc > 0)
-			return 0;
-
-For your chip you might need to ack the IRQ before writing a new command to the input FIFO.
-
-1) This gets rid of the udelay, the IRQ doesn't do anything so any
-   acks can be sequenced properly with the request_locality
-2) This gets rid of the locking, the IRQ doesn't attempt to ack, and
-   acks can be sequenced before any enable_irq
-
-If your chip is sane like other TPMs the IRQ pin will only be asserted while there is data pending in the out command FIFO, reading the FIFO should naturally clear the IRQ and the acking process may be entirely unnecessary and can be removed. If you have to ack via that weird read/write sequence then it should always be done before submitting a new command to the input fifo.
-
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--zOAt2Xc0AZny4u/m--
