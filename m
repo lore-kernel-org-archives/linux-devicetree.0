@@ -1,84 +1,73 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH RFT 7/8] ARM: berlin: Add BG2CD ethernet DT nodes
-Date: Thu,  9 Oct 2014 14:39:05 +0200
-Message-ID: <1412858346-11334-8-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1412858346-11334-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3 2/3] ARM: shmobile: koelsch: enable HS-USB
+Date: Thu, 09 Oct 2014 16:51:02 +0400
+Message-ID: <543684B6.6060708@cogentembedded.com>
+References: <1511869.4ca9KHmSFr@wasted.cogentembedded.com> <8674731.7YYzQeH0h1@wasted.cogentembedded.com> <5435DFD6.3050609@renesas.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1412858346-11334-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, Florian Fainelli <f.fainelli@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <5435DFD6.3050609@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "horms@verge.net.au" <horms@verge.net.au>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Marvell BG2CD has two fast ethernet controllers with internal PHY,
-add the corresponding nodes to SoC dtsi.
+Hello.
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
----
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: "Antoine T=C3=A9nart" <antoine.tenart@free-electrons.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Eric Miao <eric.y.miao@gmail.com>
-Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/arm/boot/dts/berlin2cd.dtsi | 36 ++++++++++++++++++++++++++++++++=
-++++
- 1 file changed, 36 insertions(+)
+On 10/09/2014 05:07 AM, Yoshihiro Shimoda wrote:
 
-diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berli=
-n2cd.dtsi
-index 68f7032b4686..ee3a22ad4b5f 100644
---- a/arch/arm/boot/dts/berlin2cd.dtsi
-+++ b/arch/arm/boot/dts/berlin2cd.dtsi
-@@ -66,6 +66,42 @@
- 			clocks =3D <&chip CLKID_TWD>;
- 		};
-=20
-+		eth1: ethernet@b90000 {
-+			compatible =3D "marvell,pxa168-eth";
-+			reg =3D <0xb90000 0x10000>;
-+			clocks =3D <&chip CLKID_GETH1>;
-+			interrupts =3D <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-+			/* set by bootloader */
-+			local-mac-address =3D [00 00 00 00 00 00];
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+			phy-handle =3D <&ethphy1>;
-+			status =3D "disabled";
-+
-+			ethphy1: ethernet-phy@0 {
-+				phy-connection-type =3D "mii";
-+				reg =3D <0>;
-+			};
-+		};
-+
-+		eth0: ethernet@e50000 {
-+			compatible =3D "marvell,pxa168-eth";
-+			reg =3D <0xe50000 0x10000>;
-+			clocks =3D <&chip CLKID_GETH0>;
-+			interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+			/* set by bootloader */
-+			local-mac-address =3D [00 00 00 00 00 00];
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+			phy-handle =3D <&ethphy0>;
-+			status =3D "disabled";
-+
-+			ethphy0: ethernet-phy@0 {
-+				phy-connection-type =3D "mii";
-+				reg =3D <0>;
-+			};
-+		};
-+
- 		apb@e80000 {
- 			compatible =3D "simple-bus";
- 			#address-cells =3D <1>;
---=20
-2.1.1
+>> Enable HS-USB device for the Koelsch board, defining the GPIO that the driver
+>> should check when probing (which is the ID output from MAX3355 OTG chip).
+
+>> Note that there will be pinctrl-related error messages if both internal PCI
+>> and HS-USB drivers are enabled but they should be just ignored.
+
+>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>> [Sergei: added pin function/group and prop, moved device node, fixed summary,
+>> added changelog]
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+>> ---
+>> Changes in version 3:
+>> - added pinctrl-related properties;
+>> - moved the HS-USB node to precede the USB PHY node;
+>> - uppercased "arm" in the summary;
+>> - added changelog.
+
+>>   arch/arm/boot/dts/r8a7791-koelsch.dts |    7 +++++++
+>>   1 file changed, 7 insertions(+)
+
+>> Index: renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
+>> ===================================================================
+>> --- renesas.orig/arch/arm/boot/dts/r8a7791-koelsch.dts
+>> +++ renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
+>> @@ -464,6 +464,13 @@
+>>   	pinctrl-names = "default";
+>>   };
+>>
+>> +&hsusb {
+>> +	status = "okay";
+>> +	pinctrl-0 = <&usb0_pins>;
+>> +	pinctrl-names = "default";
+
+> Perhaps I don't understand the pinctrl world yet, but I have a question.
+
+> In r8a7791, the USB0_PWEN is GP7_23 and the USB0_OVC is GP7_24. And,
+> the "usb0_pins" is related to these USB0 pins. But, as you know,
+> the koelsch has a OTG ID pin and it connects to GP5_31 via MAX3355 chip.
+
+    The GPIO pins are not requested via pinctrl.
+
+> So, would you tell me why koelsch needs the pinctrl?
+
+    Because at least USB0_OVC/VBUS is used by HS-USB. I decided not to modify 
+the R8A7791 PFC driver in order to create a group consisting of that signal 
+alone (like on R8A7790), because we don't need to read GP7_23 on these boards, 
+unlike Lager.
+
+> Best regards,
+> Yoshihiro Shimoda
+
+WBR, Sergei
+
