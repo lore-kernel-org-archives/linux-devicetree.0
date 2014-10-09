@@ -1,45 +1,34 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 01/44] kernel: Add support for poweroff handler call chain
-Date: Thu, 9 Oct 2014 13:31:40 +0200
-Message-ID: <CAMuHMdVOBnZ=pyVeGSxbOT9MtRR2iNY4V-PUm0NU=UFQ2pxE_g@mail.gmail.com>
-References: <1412659726-29957-1-git-send-email-linux@roeck-us.net>
-	<1412659726-29957-2-git-send-email-linux@roeck-us.net>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 0/3] gpio: Add APM X-Gene standy platform GPIO driver
+Date: Thu, 9 Oct 2014 13:53:22 +0200
+Message-ID: <CACRpkdZVuvtu+UdaMS59sq4eriJW4mkYBxkCx-2YTwc+V_BCSQ@mail.gmail.com>
+References: <1412779948-28769-1-git-send-email-yvo@apm.com>
+	<20141009094248.GB3869@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-m68k-owner@vger.kernel.org>
-In-Reply-To: <1412659726-29957-2-git-send-email-linux@roeck-us.net>
-Sender: linux-m68k-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "adi-buildroot-devel@lists.sourceforge.net" <adi-buildroot-devel@lists.sourceforge.net>, driverdevel <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lguest@lists.ozlabs.org, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, alpha <linux-alpha@vger.kernel.org>, "moderated list:PANASONIC MN10300..." <linux-am33-list@redhat.com>, Cris <linux-cris-kernel@axis.com>, linux-efi@vger.kernel.org, "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>, linux-m32r-ja@ml.linux-m32r.org, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, linux-s390 <linux-s390@vger.kernel.org>, linux-tegra@vger.kernel.org, "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, openipmi-developer@lists.sourceforge.net, uml-devel <user-mode-linux-devel@lists.s>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20141009094248.GB3869@leverpostej>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Y Vo <yvo@apm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Tin Huynh <tnhuynh@apm.com>, "patches@apm.com" <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 7, 2014 at 7:28 AM, Guenter Roeck <linux@roeck-us.net> wrote:
-> +int register_poweroff_handler_simple(void (*handler)(void), int priority)
-> +{
-> +       char symname[KSYM_NAME_LEN];
-> +
-> +       if (poweroff_handler_data.handler) {
-> +               lookup_symbol_name((unsigned long)poweroff_handler_data.handler,
-> +                                  symname);
-> +               pr_warn("Poweroff function already registered (%s)", symname);
-> +               lookup_symbol_name((unsigned long)handler, symname);
-> +               pr_cont(", cannot register %s\n", symname);
+On Thu, Oct 9, 2014 at 11:42 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+>> CONFIDENTIALITY NOTICE: This e-mail message, including any attachments,
+>> is for the sole use of the intended recipient(s) and contains information
+>> that is confidential and proprietary to Applied Micro Circuits Corporation or its subsidiaries.
+>> It is to be used solely for the purpose of furthering the parties' business relationship.
+>> All unauthorized review, use, disclosure or distribution is prohibited.
+>> If you are not the intended recipient, please contact the sender by reply e-mail
+>> and destroy all copies of the original message.
+>
+> You will need to resend this series without this disclaimer on each and
+> every patch.
 
-Doesn't %ps work to look up symbols?
+Good point, haha, I wonder if the GPIO maintainer is "intended audience"?
 
-pr_warn("Poweroff function already registered (%ps), cannot register
-%ps\n", poweroff_handler_data.handler, handler);
+So many insecurities in this world, no matter what you do, some legal person
+think you're doing the wrong thing...
 
-> +               return -EBUSY;
-> +       }
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Yours,
+Linus Walleij
