@@ -1,97 +1,59 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/4] watchdog: st_wdt: Provide binding documentation for
- ST's LPC Watchdog driver
-Date: Thu, 9 Oct 2014 10:56:49 +0100
-Message-ID: <20141009095649.GC3869@leverpostej>
-References: <1412760810-23199-1-git-send-email-lee.jones@linaro.org>
- <1412760810-23199-4-git-send-email-lee.jones@linaro.org>
+From: Ajay kumar <ajaynumb@gmail.com>
+Subject: Re: [PATCH 0/3] drm-exynos-dp/phy-exynos-dp: Refactor to use
+ pmu-system-controller and dp driver cleanup
+Date: Thu, 9 Oct 2014 15:48:09 +0530
+Message-ID: <CAEC9eQPMNcGxUZVAh6ou6a=6V9bAgmwZAn5ra4=EkoosNURWPg@mail.gmail.com>
+References: <1410786785-9838-1-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1412760810-23199-4-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org" <kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Paris <david.paris-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1410786785-9838-1-git-send-email-gautam.vivek@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: InKi Dae <inki.dae@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, LKML <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, kishon@ti.com, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 08, 2014 at 10:33:29AM +0100, Lee Jones wrote:
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: David Paris <david.paris-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/watchdog/st-lpc-wdt.txt    | 30 ++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt b/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt
-> new file mode 100644
-> index 0000000..520ce90
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt
-> @@ -0,0 +1,30 @@
-> +STMicroelectronics LPC Watchdog
-> +===============================
-> +
-> +Required properties
-> +
-> +- compatible 	: Must be one of:
-> +			"st,stih407-watchdog"
-> +			"st,stih416-watchdog"
-> +			"st,stih415-watchdog"
-> +			"st,stid127-watchdog"
-> +- reg		: LPC registers base address + range
+Hi,
 
-s/range/size/
-
-Please append something like "one entryfor each entry in reg-names".
-
-> +- reg-names	: Register map "base" and "syscfg-en" are compulsory. "type" is
-> +		  platform dependent and not required for the STiH407
-
-I don't understand the mention of "type".
-
-Additionally, "syscfg-en" looks to be a portion of another device
-(shared system controller?), and probably should be described by
-reference.
-
-> +- clock-names 	: Should be "lpc_wdt"
-> +- clocks	: Clock used by LPC device
-> +- timeout-sec	: Watchdog timeout in seconds
-> +- st,syscfg	: Syscfg node used to configure CPU reset type and mask
-
-Does this relate to the syscfg-en entry in the reg proeprty?
-
-> +- st,warm_reset	: If present, reset type will be 'warm'. If not, it will be cold
-
-s/_/-/ in property names.
-
-Why does this need to be in the binding? It seems like a choice rather
-than a property of the system.
-
-Mark.
-
-> +
-> +Example:
-> +	watchdog@fde05000 {
-> +		compatible	= "st,stih416-lpc-watchdog";
-> +		reg		= <0xfde05000 0x1000> <0x204 0x4>;
-> +		reg-names	= "base", "syscfg-en"
-> +		clock-names	= "lpc_wdt";
-> +		clocks 		= <&clk_s_d3_flexgen CLK_LPC_0>;
-> +		timeout-sec	= <600>;
-> +		st,syscfg	= <&syscfg_core>;
-> +		st,warm_reset;
-> +	};
-> -- 
-> 1.9.1
-> 
+On Mon, Sep 15, 2014 at 6:43 PM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
+> These patches are based on 'for-next' branch of kgene's linux-samsung tree.
+>
+> Refactoring the exynos-dp-video phy to use pmu-system-controller handle
+> and access the register using mfd-syscon and regmap.
+> Simultaneously, removing the support for older dptx-phy, since it's obsolete
+> now and noone uses it.
+>
+> Vivek Gautam (3):
+>   phy: exynos-dp-video: Use syscon support to control pmu register
+>   drm/exynos: dp: Remove support for unused dptx-phy
+>   arm: dts: Exynos5: Use pmu_system_controller phandle for dp phy
+>
+>  .../devicetree/bindings/phy/samsung-phy.txt        |    7 +-
+>  arch/arm/boot/dts/exynos5250.dtsi                  |    2 +-
+>  arch/arm/boot/dts/exynos5420.dtsi                  |    4 +-
+>  drivers/gpu/drm/exynos/exynos_dp_core.c            |   58 ++++-----------
+>  drivers/gpu/drm/exynos/exynos_dp_core.h            |    2 -
+>  drivers/phy/phy-exynos-dp-video.c                  |   76 ++++++++++++++------
+>  6 files changed, 75 insertions(+), 74 deletions(-)
+>
 > --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> 1.7.10.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+I have tested this patchset on exynos5800-peach-pi, and I can see DP
+display with the above patches.
+
+Ajay
