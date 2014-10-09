@@ -1,52 +1,65 @@
-From: Kever Yang <kever.yang@rock-chips.com>
-Subject: [PATCH 2/2] ARM: dts: rockchip: add reset for CPU nodes
-Date: Fri, 10 Oct 2014 15:25:15 -0700
-Message-ID: <1412979915-19746-3-git-send-email-kever.yang@rock-chips.com>
-References: <1412979915-19746-1-git-send-email-kever.yang@rock-chips.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 0/3] iio: exynos-adc: use syscon instead of ioremap
+Date: Thu, 09 Oct 2014 21:05:25 +0100
+Message-ID: <5436EA85.90900@kernel.org>
+References: <1410857931-4980-1-git-send-email-ch.naveen@samsung.com> <541EC1C2.6090608@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1412979915-19746-1-git-send-email-kever.yang@rock-chips.com>
+In-Reply-To: <541EC1C2.6090608@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: dianders@chromium.org, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, linux-rockchip@lists.infradead.org, Kever Yang <kever.yang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, cw00.choi@samsung.com, gregkh@linuxfoundation.org, naveenkrishna.ch@gmail.com, lars@metafoo.de, cpgs@samsung.com, grundler@chromium.org, Kukjin Kim <kgene.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch add reset for CPU nodes to use the reset controller.
-
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
----
-
- arch/arm/boot/dts/rk3288.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 5e9c56d..291014d 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -53,21 +53,25 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a12";
- 			reg = <0x500>;
-+			resets = <&cru SRST_CORE0>;
- 		};
- 		cpu@501 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a12";
- 			reg = <0x501>;
-+			resets = <&cru SRST_CORE1>;
- 		};
- 		cpu@502 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a12";
- 			reg = <0x502>;
-+			resets = <&cru SRST_CORE2>;
- 		};
- 		cpu@503 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a12";
- 			reg = <0x503>;
-+			resets = <&cru SRST_CORE3>;
- 		};
- 	};
- 
--- 
-1.9.1
+On 21/09/14 13:17, Jonathan Cameron wrote:
+> On 16/09/14 09:58, Naveen Krishna Chatradhi wrote:
+>> Changes since v1:
+>> 1. Rebased on top of togreg branch of IIO git.
+>>
+>> This patch set does the following
+>> 1. Use the syscon and Regmap API instead of ioremappaing the
+>>    ADC_PHY register from PMU.
+>> 2. Updates the Documentation in exynos-adc.txt with syscon phandle
+>>    for the ADC nodes.
+>> 3. Updates the Dts files for Exynos3250, Exynos4x12, Exynos5250,
+>>    Exynos5420 with the syscon phandle.
+>>
+>> Tested on Exynos5420 based Peach PIT and Exynos5800 based Peach PI
+>> by verifying sysfs entries provided by HWMON based NTC thermistors.
+>>
+>> Tested-By for Exynos3250, Exynos4x12 would be appreciated.
+> Would definitely be good!
+> 
+> The main issue I have with this series is that it breaks backward
+> compatibility with old device trees and newer kernels.
+> 
+> Now I appreciate that sometimes there are reasons to do it but want this
+> to have deeper consideration (and acks to show it) from the Exynos side
+> of things and preferably from the device tree side of things as well.
+> 
+> cc'd Kukjin Kim for the Exynos side of things as the listed Maintainer.
+> 
+> Otherwise, the series looks fine to me.
+Kukjin? Sorry to pester, but this has been sat in my waiting queue for a
+while now.
+>>
+>> Naveen Krishna Chatradhi (3):
+>>   iio: exyno-adc: use syscon for PMU register access
+>>   Documentation: dt-bindings: update exynos-adc.txt with syscon handle
+>>   ARM: dts: exynos: Add sysreg phandle to ADC node
+>>
+>>  .../devicetree/bindings/arm/samsung/exynos-adc.txt |    9 ++++--
+>>  arch/arm/boot/dts/exynos3250.dtsi                  |    3 +-
+>>  arch/arm/boot/dts/exynos4x12.dtsi                  |    3 +-
+>>  arch/arm/boot/dts/exynos5250.dtsi                  |    3 +-
+>>  arch/arm/boot/dts/exynos5420.dtsi                  |    3 +-
+>>  drivers/iio/adc/exynos_adc.c                       |   30 ++++++++++++++------
+>>  6 files changed, 36 insertions(+), 15 deletions(-)
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
