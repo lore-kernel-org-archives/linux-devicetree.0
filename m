@@ -1,59 +1,72 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH RFT 0/8] Marvell PXA168 libphy handling and Berlin
- Ethernet
-Date: Thu, 9 Oct 2014 16:47:04 +0200
-Message-ID: <20141009164704.7286fc3f@free-electrons.com>
-References: <1412858346-11334-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<20141009163315.2a9e1806@free-electrons.com>
-	<54369EAC.5040301@gmail.com>
+From: Frans Klaver <frans.klaver@xsens.com>
+Subject: [PATCH v4 0/2] Add support for ltc2952 poweroff
+Date: Thu, 9 Oct 2014 16:50:40 +0200
+Message-ID: <1412866242-6474-1-git-send-email-frans.klaver@xsens.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54369EAC.5040301-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?UTF-8?B?VMOpbmFydA==?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Frans Klaver <frans.klaver@xsens.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Ren=C3=A9=20Moll?= <linux@r-moll.nl>, Tjerk Hofmeijer <tjerk.hofmeijer@xsens.com>, Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Sebastian Hesselbarth,
+This is version 4 of the series that adds support for the ltc2952 power=
+path chip.
 
-On Thu, 09 Oct 2014 16:41:48 +0200, Sebastian Hesselbarth wrote:
+This series adds a driver for the LTC2952, an external power control ch=
+ip, which
+signals the OS to shut down. Additionally this driver lets the kernel p=
+ower
+down the board.
 
-> > Hum, in mvneta, we already disabled the automatic negotiation and use
-> > libphy. What makes you think the current mvneta driver is wrong in this
-> > respect?
-> 
-> I didn't check mvneta, but remember Ezequiel didn't clear all AN bits
-> in the barebox driver (which is based on Linux mvneta). Just mentioned
-> that I'll have a closer look at it.
+This driver was tested with:
+  - kernel version 3.15.8, 3.17
+  - ARM based processor (TI AM335x series)
 
-Ah, ok.
+v3..v4:
+  - Rename *kill to *poweroff
+  - Use managed resources (devm_*) where possible
+  - Handle irq failures on trigger gpio as if no trigger input was defi=
+ned
+  - Drop no-op suspend/resume functions
+  - Check value before starting timer - it may be possible that the tim=
+er fails
+    to start on first pass, but starts on second pass. While this is un=
+likely,
+    it will throw off the entire system. Just check the actual gpio val=
+ue to be
+    sure.=20
+  - Reduce, almost eliminate, use of globals (I dislike them)
+  - Fix some style issues
+  - Now also tested on v3.17
 
-> But I agree, regarding libphy support mvneta is probably the best
-> already.
+v2..v3:
+  - Allow absence of button input pin (and document that)
+  - Fix some whitespace issues
+  - Straighten out control flow here and there
+  - Get rid of gpio array. This was only used in setup/cleanup cases. I=
+t never mattered elsewhere
+  - Add some explanation to the commit message that introduces the driv=
+er
+  - Add other contributors
+  - Update Ren=C3=A9's e-mail; his Xsens e-mail is no longer valid
+  - Now also tested on v3.17-rc7
 
-Well, I initially remember that the original driver coming from Marvell
-was using the HW PHY stuff, and that I changed that because it would
-not integrate well with the kernel libphy.
+Ren=C3=A9 Moll (2):
+  power: reset: add LTC2952 poweroff support
+  power: reset: document LTC2952 poweroff support
 
-A drawback of this is that because the hardware has built-in PHY
-polling which triggers a MAC interrupt when the PHY status changes, they
-typically don't wire up the PHY interrupt. Therefore, since we're not
-able to use the MAC interrupt for PHY event notifications, we rely on
-software PHY polling, which means that link up / link down events take
-a few seconds to be noticed by the kernel. Unfortunately, I don't think
-the hardware allows to use the hardware PHY polling to get link changes
-interrupt, but not let the hardware configure the PHY itself.
+ .../bindings/power/reset/ltc2952-poweroff.txt      |  31 ++
+ drivers/power/reset/Kconfig                        |  10 +
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/ltc2952-poweroff.c             | 327 +++++++++++++=
+++++++++
+ 4 files changed, 369 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/ltc29=
+52-poweroff.txt
+ create mode 100644 drivers/power/reset/ltc2952-poweroff.c
 
-Best regards,
+--=20
+2.1.0
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
