@@ -1,82 +1,64 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v8 4/7] qcom: pm: Add cpu low power mode functions
-Date: Thu, 9 Oct 2014 12:00:57 -0700
-Message-ID: <20141009190057.GA5493@codeaurora.org>
-References: <1412718106-17049-1-git-send-email-lina.iyer@linaro.org>
- <1412718106-17049-5-git-send-email-lina.iyer@linaro.org>
- <5435E245.1090507@codeaurora.org>
- <20141009155643.GB1277@ilina-mac.local>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/5] regulator: dt-bindings: Add regulator-initial-mode
+ support
+Date: Thu, 9 Oct 2014 20:01:07 +0100
+Message-ID: <20141009190107.GY4609@sirena.org.uk>
+References: <1412775847-15213-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1412775847-15213-4-git-send-email-javier.martinez@collabora.co.uk>
+ <1412844355.1316.15.camel@AMDC1943>
+ <5436A403.1050109@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OvHFI8f/INxOklTC"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20141009155643.GB1277@ilina-mac.local>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>
-Cc: daniel.lezcano@linaro.org, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+In-Reply-To: <5436A403.1050109@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/09, Lina Iyer wrote:
-> On Wed, Oct 08 2014 at 19:17 -0600, Stephen Boyd wrote:
-> 
-> >>+static int __init qcom_pm_device_init(void)
-> >>+{
-> >>+	platform_device_register(&qcom_cpuidle_device);
-> >>+
-> >
-> >This is wrong. We're going to register a platform device whenever
-> >this file is included in a kernel. This is then going to try and
-> >probe the qcom_cpuidle device which is going to fail and print an
-> >error message if we're not running on a qcom device.
-> Why would this file be compiled on a non-qcom target? The file has a
-> dependency on ARCH_QCOM (as it should be) and would not be compiled on a
-> non-qcom target.
 
-We will compile this file on non-qcom devices in a multi-platform
-kernel build. Actually that looks like it would be a problem
-because cpuidle_register() will blow away any other registered
-driver on non-qcom devices.
+--OvHFI8f/INxOklTC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> >This is one reason why I've been arguing to get rid of this file
-> >and just put it inside the spm driver. That way we don't ever add
-> >the cpuidle device and:
-> That is a poor excuse for removing this file, which has a purpose.
-> Putting all this SCM code inside SPM is not a good design. SPM is a
-> driver, doesnt know about SCM et al. Why would you want to clobber that
-> file with all these irrelevant code? 8660 does not have a secure mode,
-> but still uses an SPM. So all this code is pretty useless there, not
-> that we are supporting 8660 at this time, just as an example.
+On Thu, Oct 09, 2014 at 05:04:35PM +0200, Javier Martinez Canillas wrote:
 
-On 8660 we still have to tell the secure code where to jump to
-when we come out of power collapse. The only difference is if
-we execute or don't execute the wfi in the kernel.
+> Agree, Mark also pointed out that there is a difference between changing
+> how the regulator will behave on runtime vs changing how the regulator
+> will behave during system suspend. AFAIU from his explanation, the modes
+> defined in consumer.h only applies to the former and conceptually there
+> should be a difference between those two cases even when the Maxim PMIC
+> seems to mix it both in the data-sheet and by using the same field.
 
-The only thing that really matters to me is that we don't add
-useless devices and do things unnecessarily on non-qcom devices
-when this code is compiled in. The easiest way to do that is to
-register a saw driver and then do stuff in probe when the saw
-device appears. We can probably add individual cpuidle devices
-when each CPU's saw probes and register a cpuidle driver once
-based on some static variable after we register the first cpuidle
-device.
+No, that's not accurate at all - you're still not getting the concepts
+of modes or suspend handling in the regulator API.  I really think you
+need to take a step back and try to understand what's currently there
+before trying to make changes here.  We've got a set of operations we
+can use to change the regulator configuration, if you look at the
+existing driver interface you'll see that these are matched with
+equivalent operations for setting the behaviour when in suspend
+(including a set_suspend_mode() operation). =20
 
-> >
-> >a) We know the SPM hardware is configured and ready to be used
-> Its just one line check to see if the SPM hardware exists. There is no
-> error otherwise.
+Like I keep saying abstractions are really important to making sure the
+code is maintainable.
 
-I'm talking about a probe ordering dependency that would become
-explicit if we had one file instead of two.
+--OvHFI8f/INxOklTC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> >b) We don't get this annoying warning and have some weird device
-> >in sysfs on non-qcom devices
-> We wont compile this file on non-qcom device, so the point is moot.
-> Well, we may see the error, if the cpuidle framework is not compiled in.
-> But putthing this in SPM doesnt solve that problem either.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-See above, this file will be compiled and included.
+iQEcBAEBAgAGBQJUNttyAAoJECTWi3JdVIfQAMkH/iLzHrE2nB3YGtgMgRTOPTqv
+IfQzzjtqLgDTqi7czNSSF6eG5b++gmnHLwacddjmg0HkpWNk3ROsMXdskiUOnhd+
+XO3SVpsCagX4yao9PWPpwVZf6LmqVFhA01lmioBpsK55WZN2ds5Un59MangnCjzT
+FjUfJ3YwKOovWt+wQcElaMnaKQSN3iZOWNEJEHQwmczF+mh7AbgfAUvmhbW4d/RP
+4qCWrQfWAr7qRtPdMaqnaMbKbXmRvorRjGq3KoW0Ew1L2ouJ8Apc0xgkG8sZ7LFV
+clP0rWqZFZ3MP4jhKME2tf//JVECh4U9nkWcUvxtLNnTptihm44jApJnktdm4Ac=
+=pNME
+-----END PGP SIGNATURE-----
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--OvHFI8f/INxOklTC--
