@@ -1,103 +1,62 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RFT 0/8] Marvell PXA168 libphy handling and Berlin Ethernet
-Date: Thu,  9 Oct 2014 14:38:58 +0200
-Message-ID: <1412858346-11334-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH RFT 6/8] ARM: berlin: Add BG2 ethernet DT nodes
+Date: Thu,  9 Oct 2014 14:39:04 +0200
+Message-ID: <1412858346-11334-7-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1412858346-11334-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1412858346-11334-1-git-send-email-sebastian.hesselbarth@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, netdev@vger.kernel.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series deals with a removing a IP feature that can be found
-on all currently supported Marvell Ethernet IP (pxa168_eth, mv643xx_eth=
-,
-mvneta). The MAC IP allows to automatically perform PHY auto-negotiatio=
-n
-without software interaction.
-
-However, this feature (a) fundamentally clashes with the way libphy wor=
-ks
-and (b) is unable to deal with quirky PHYs that require special treatme=
-nt.
-In this series, pxa168_eth driver is rewritten to completely disable th=
-at
-feature and properly deal with libphy provided PHYs. The other two driv=
-ers
-are suspect to future patch sets, also removing the code related with i=
-t.
-
-Currently, the patches are based on next-20141009 and will be resent on=
-ce
-v3.18-rc1 drops. This is a Request-For-Test on both BG2Q and MMP/gplug =
-as
-these are the current users of pxa168_eth. A branch with this patches o=
-n
-top of next-20141009 can be found at
-
-git://git.infradead.org/users/hesselba/linux-berlin.git devel/bg2-bg2cd=
--eth-v1
-
-It would be great to get a Tested-byfrom MMP guys on gplug - if they
-have that board somewhere. Also, BG2Q (Antoine) needs a phy-connection-=
-type
-property. My guess is that, if it is using internal PHY, it is "mii", t=
-oo.
-
-Patch 1 adds support for Marvell 88E3016 FastEthernet PHY that is also
-integrated in Marvell Berlin BG2/BG2CD SoCs.
-
-Patch 2 allows to pass phy_interface_t on pxa168_eth platform_data that
-is only used by mach-mmp/gplug. From the board setup, I guessed gplug's
-PHY is connected via RMII. The patch isn't even compile tested, so here
-I need a Tested-by from MMP guys.
-
-Patches 3-5 prepare proper libphy handling and finally remove all in-dr=
-iver
-PHY mangling related to the feature explained above.
-
-Patches 6-8 add corresponding ethernet DT nodes to BG2, BG2CD, and
-BG2-based Sony NSZ-GS7. I have tested all this on GS7 successfully with
-ip=3Ddhcp on 100M FD.
-
-Sebastian Hesselbarth (8):
-  phy: marvell: Add support for 88E3016 FastEthernet PHY
-  net: pxa168_eth: Provide phy_interface mode on platform_data
-  net: pxa168_eth: Prepare proper libphy handling
-  net: pxa168_eth: Remove HW auto-negotiaion
-  net: pxa168_eth: Remove in-driver PHY mangling
-  ARM: berlin: Add BG2 ethernet DT nodes
-  ARM: berlin: Add BG2CD ethernet DT nodes
-  ARM: berlin: Enable ethernet on Sony NSZ-GS7
-
- arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts |   2 +
- arch/arm/boot/dts/berlin2.dtsi             |  36 +++++
- arch/arm/boot/dts/berlin2cd.dtsi           |  36 +++++
- arch/arm/mach-mmp/gplugd.c                 |   2 +
- drivers/net/ethernet/marvell/pxa168_eth.c  | 242 +++++++++++----------=
---------
- drivers/net/phy/marvell.c                  |  46 ++++++
- include/linux/marvell_phy.h                |   1 +
- include/linux/pxa168_eth.h                 |   1 +
- 8 files changed, 218 insertions(+), 148 deletions(-)
-
----
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: "Antoine T=C3=A9nart" <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
---=20
-2.1.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+TWFydmVsbCBCRzIgaGFzIHR3byBmYXN0IGV0aGVybmV0IGNvbnRyb2xsZXJzIHdpdGggaW50ZXJu
+YWwgUEhZLAphZGQgdGhlIGNvcnJlc3BvbmRpbmcgbm9kZXMgdG8gU29DIGR0c2kuCgpTaWduZWQt
+b2ZmLWJ5OiBTZWJhc3RpYW4gSGVzc2VsYmFydGggPHNlYmFzdGlhbi5oZXNzZWxiYXJ0aEBnbWFp
+bC5jb20+Ci0tLQpDYzogIkRhdmlkIFMuIE1pbGxlciIgPGRhdmVtQGRhdmVtbG9mdC5uZXQ+CkNj
+OiAiQW50b2luZSBUw6luYXJ0IiA8YW50b2luZS50ZW5hcnRAZnJlZS1lbGVjdHJvbnMuY29tPgpD
+YzogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+CkNjOiBFcmljIE1pYW8g
+PGVyaWMueS5taWFvQGdtYWlsLmNvbT4KQ2M6IEhhb2ppYW4gWmh1YW5nIDxoYW9qaWFuLnpodWFu
+Z0BnbWFpbC5jb20+CkNjOiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKQ2M6
+IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmcKQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCkNj
+OiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnCi0tLQogYXJjaC9hcm0vYm9vdC9kdHMvYmVy
+bGluMi5kdHNpIHwgMzYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZp
+bGUgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL2JlcmxpbjIuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjIuZHRzaQppbmRleCBk
+N2U4MWUxMjRkZTAuLjVmODJkY2ZjNmFjNiAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMv
+YmVybGluMi5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjIuZHRzaQpAQCAtNzks
+MTEgKzc5LDQ3IEBACiAJCQljbG9ja3MgPSA8JmNoaXAgQ0xLSURfVFdEPjsKIAkJfTsKIAorCQll
+dGgxOiBldGhlcm5ldEBiOTAwMDAgeworCQkJY29tcGF0aWJsZSA9ICJtYXJ2ZWxsLHB4YTE2OC1l
+dGgiOworCQkJcmVnID0gPDB4YjkwMDAwIDB4MTAwMDA+OworCQkJY2xvY2tzID0gPCZjaGlwIENM
+S0lEX0dFVEgxPjsKKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyNCBJUlFfVFlQRV9MRVZFTF9I
+SUdIPjsKKwkJCS8qIHNldCBieSBib290bG9hZGVyICovCisJCQlsb2NhbC1tYWMtYWRkcmVzcyA9
+IFswMCAwMCAwMCAwMCAwMCAwMF07CisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCSNzaXpl
+LWNlbGxzID0gPDA+OworCQkJcGh5LWhhbmRsZSA9IDwmZXRocGh5MT47CisJCQlzdGF0dXMgPSAi
+ZGlzYWJsZWQiOworCisJCQlldGhwaHkxOiBldGhlcm5ldC1waHlAMCB7CisJCQkJcGh5LWNvbm5l
+Y3Rpb24tdHlwZSA9ICJtaWkiOworCQkJCXJlZyA9IDwwPjsKKwkJCX07CisJCX07CisKIAkJY3B1
+LWN0cmxAZGQwMDAwIHsKIAkJCWNvbXBhdGlibGUgPSAibWFydmVsbCxiZXJsaW4tY3B1LWN0cmwi
+OwogCQkJcmVnID0gPDB4ZGQwMDAwIDB4MTAwMDA+OwogCQl9OwogCisJCWV0aDA6IGV0aGVybmV0
+QGU1MDAwMCB7CisJCQljb21wYXRpYmxlID0gIm1hcnZlbGwscHhhMTY4LWV0aCI7CisJCQlyZWcg
+PSA8MHhlNTAwMDAgMHgxMDAwMD47CisJCQljbG9ja3MgPSA8JmNoaXAgQ0xLSURfR0VUSDA+Owor
+CQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDggSVJRX1RZUEVfTEVWRUxfSElHSD47CisJCQkvKiBz
+ZXQgYnkgYm9vdGxvYWRlciAqLworCQkJbG9jYWwtbWFjLWFkZHJlc3MgPSBbMDAgMDAgMDAgMDAg
+MDAgMDBdOworCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkjc2l6ZS1jZWxscyA9IDwwPjsK
+KwkJCXBoeS1oYW5kbGUgPSA8JmV0aHBoeTA+OworCQkJc3RhdHVzID0gImRpc2FibGVkIjsKKwor
+CQkJZXRocGh5MDogZXRoZXJuZXQtcGh5QDAgeworCQkJCXBoeS1jb25uZWN0aW9uLXR5cGUgPSAi
+bWlpIjsKKwkJCQlyZWcgPSA8MD47CisJCQl9OworCQl9OworCiAJCWFwYkBlODAwMDAgewogCQkJ
+Y29tcGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsKIAkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OwotLSAK
+Mi4xLjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
+aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1hcm0ta2VybmVsCg==
