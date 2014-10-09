@@ -1,77 +1,92 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 3/8] iio: Add support for DA9150 GPADC
-Date: Thu, 9 Oct 2014 14:29:17 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337AB5194A4@SW-EX-MBX01.diasemi.com>
-References: <cover.1411396718.git.Adam.Thomson.Opensource@diasemi.com>
- <ee4c56931f326d8ee9c1313c44456bce2dec8b8c.1411396719.git.Adam.Thomson.Opensource@diasemi.com>
- <5426964A.3050407@kernel.org>
- <2E89032DDAA8B9408CB92943514A0337AB518D23@SW-EX-MBX01.diasemi.com>
- <3B049606-083E-4220-ADBF-71D74C0A9D9F@kernel.org>
+From: Joe.C <yingjoe.chen@mediatek.com>
+Subject: [PATCH v3 2/7] genirq: Add more helper functions to support stacked
+ irq_chip
+Date: Thu, 9 Oct 2014 22:29:35 +0800
+Message-ID: <1412864980-20273-3-git-send-email-yingjoe.chen@mediatek.com>
+References: <1412864980-20273-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3B049606-083E-4220-ADBF-71D74C0A9D9F-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1412864980-20273-1-git-send-email-yingjoe.chen@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Sricharan R <r.sricharan@ti.com>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, yingjoe.chen@gmail.com, yh.chen@mediatek.com, nathan.chung@mediatek.com, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Matt Porter <mporter@linaro.org>, Marc Carino <marc.ceeeee@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, hc.yen@mediatek.com, linux-kernel@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-T24gT2N0b2JlciA3LCAyMDE0IDIwOjM3LCBKb25hdGhhbiBDYW1lcm9uIHdyb3RlOg0KDQo+IE9u
-IE9jdG9iZXIgNywgMjAxNCAzOjU1OjU1IFBNIEdNVCswMTowMCwgIk9wZW5zb3VyY2UgW0FkYW0g
-VGhvbXNvbl0iDQo+IDxBZGFtLlRob21zb24uT3BlbnNvdXJjZUBkaWFzZW1pLmNvbT4gd3JvdGU6
-DQo+ID5PbiBTZXB0ZW1iZXIgMjcsIDIwMTQgMTE6NTAsIEpvbmF0aGFuIENhbWVyb24gd3JvdGU6
-DQo+ID4NCj4gPj4gT24gMjMvMDkvMTQgMTE6NTMsIEFkYW0gVGhvbXNvbiB3cm90ZToNCj4gPj4g
-PiBUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3IgREE5MTUwIENoYXJnZXIgJiBGdWVsLUdhdWdl
-IElDIEdQQURDLg0KPiA+DQo+ID4+ID4gKw0KPiA+PiA+ICtzdGF0aWMgaW5saW5lIGludCBkYTkx
-NTBfZ3BhZGNfZ3Bpb182dl92b2x0YWdlX25vdyhpbnQgcmF3X3ZhbCkNCj4gPj4gPiArew0KPiA+
-PiA+ICsJLyogQ29udmVydCB0byBtViAqLw0KPiA+PiA+ICsJcmV0dXJuICg2ICogKChyYXdfdmFs
-ICogMTAwMCkgKyA1MDApKSAvIDEwMjQ7DQo+ID4+IFRoZXNlIGNvdWxkIGFsbCBiZSBleHByZXNz
-ZWQgYXMgcmF3IHZhbHVlcyB3aXRoIG9mZnNldHMNCj4gPj4gYW5kIHNjYWxlcyAoYW5kIHRoYXQg
-d291bGQgYmUgcHJlZmVycmVkKS4NCj4gPj4gRS5nLiBUaGlzIG9uZSBoYXMgb2Zmc2V0IDUwMDAw
-MCBhbmQgc2NhbGUgNjAwMC8xMDI0IG9yIGV2ZW4NCj4gPj4gYmV0dGVyIHVzZSBJSU9fVkFMX0ZS
-QUNUSU9OQUxfTE9HMiBmb3Igc2NhbGUgd2l0aCB2YWwxID0gNjAwMA0KPiA+PiBhbmQgdmFsMiA9
-IChsb2dfMiAxMDI0KSA9IDEwLg0KPiA+Pg0KPiA+DQo+ID5XaGF0IHlvdSd2ZSBzdWdnZXN0ZWQg
-aXNuJ3QgY29ycmVjdC4gVGhlIHByb2JsZW0gaGVyZSBpcyB0aGF0IHRoZQ0KPiA+b2Zmc2V0IGlz
-DQo+ID5hZGRlZCBmaXJzdCB0byB0aGUgcmF3IEFEQyByZWFkaW5nLCB3aXRob3V0IGZhY3Rvcmlu
-ZyB0aGUgQURDIHZhbHVlDQo+ID5hY2NvcmRpbmdseQ0KPiA+dG8gbWF0Y2ggdGhlIGZhY3RvciBv
-ZiB0aGUgb2Zmc2V0LiBJZiB3ZSB0YWtlIHRoZSBvcmlnaW5hbCBlcXVhdGlvbg0KPiA+cHJvdmlk
-ZWQgZm9yDQo+ID50aGlzIGNoYW5uZWwgb2YgdGhlIEFEQywgdGhlIG9mZnNldCBpcyBhY3R1YWxs
-eSAwLjUgd2hpY2ggc2hvdWxkIGJlDQo+ID5hZGRlZCB0byB0aGUNCj4gPnJhdyBBREMgdmFsdWUu
-IFRoaXMgZG9lc24ndCBmaXQgaW50byB0aGUgaW1wbGVtZW50YXRpb24gaW4gdGhlIGtlcm5lbA0K
-PiA+YXMgd2UNCj4gPmNhbid0IHVzZSBmbG9hdGluZyBwb2ludC4gSWYgd2UgbXVsdGlwbHkgdGhl
-IG9mZnNldCBidXQgbm90IHRoZSByYXcgQURDDQo+ID52YWx1ZSwNCj4gPnRoZW4gYWRkIHRoZW0g
-YmVmb3JlIGFwcGx5aW5nIHRoZSBzY2FsZSBmYWN0b3IsIHRoZW4gdGhlIHJlc3VsdCBpcw0KPiA+
-d3JvbmcgYXQgdGhlDQo+ID5lbmQuIEJhc2ljYWxseSB5b3UgbmVlZCBhIHNjYWxlIGZvciB0aGUg
-cmF3IEFEQyB2YWx1ZSB0byBtYXRjaCB0aGUNCj4gPm9mZnNldCBzY2FsZQ0KPiA+c28geW91IGNh
-biBhY2hpZXZlIHRoZSBjb3JyZWN0IHJlc3VsdHMsIHdoaWNoIGlzIHdoYXQgbXkgY2FsY3VsYXRp
-b24NCj4gPmRvZXMuDQo+ID5CdXQgdGhhdCBzZWVtcyBpbXBvc3NpYmxlIHdpdGggdGhlIGN1cnJl
-bnQgcmF3fG9mZnNldHxzY2FsZSBtZXRob2QuDQo+IE9vcHMgZ290IHRoYXQgd3JvbmcuICBUaGUg
-Zml4ZWQgcG9pbnQgbWF0aHMgdG8gZml4IHRoZSBpbiBrZXJuZWwgaW50ZXJmYWNlIGlzbid0IGV4
-YWN0bHkNCj4gIGRpZmZpY3VsdCBidXQgaW5kZWVkIGl0IGRvZXMgbm90IGhhbmRsZSB0aGlzIGN1
-cnJlbnRseS4NCg0KSSBkaWQgaGF2ZSBhIHF1aWNrIGxvb2sgd2hlbiBJIGhhZCBhIHNwYXJlIG1v
-bWVudCwgYW5kIEkgZ3Vlc3MgeW91IGNvdWxkIGRvDQpzb21ldGhpbmcgbGlrZSBoYXZpbmcgYW4g
-b2Zmc2V0IHNjYWxlL2ZhY3RvciB3aGljaCBjYW4gYmUgYXBwbGllZCB0byB0aGUgcmF3DQpyZWFk
-aW5nLCBwcmlvciB0byBhZGRpbmcgdGhlIG9mZnNldC4gTWF5IGJlIGFuIG9wdGlvbiBidXQgSSB0
-aGluayB0aGlzIHdvdWxkDQphbHNvIGhhdmUgdG8gYmUgZXhwb3NlZCB0byB1c2VyLXNwYWNlIGFz
-IEkgYmVsaWV2ZSB0aGUgc2FtZSBwcm9ibGVtIHdvdWxkIHJlc2lkZQ0KdGhlcmUgYXMgd2VsbC4N
-Cg0KPiA+DQo+ID4+ID4gKwlyZXQgPSBpaW9fbWFwX2FycmF5X3JlZ2lzdGVyKGluZGlvX2RldiwN
-Cj4gPmRhOTE1MF9ncGFkY19kZWZhdWx0X21hcHMpOw0KPiA+PiA+ICsJaWYgKHJldCkgew0KPiA+
-PiA+ICsJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIHJlZ2lzdGVyIElJTyBtYXBzOiAlZFxuIiwg
-cmV0KTsNCj4gPj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+PiA+ICsJfQ0KPiA+PiBJJ2Qgc3VnZ2Vz
-dCBkb2luZyB0aGUgZGV2bV9yZXF1ZXN0X3RocmVhZF9pcnEgYmVmb3JlIHRoZQ0KPiA+aWlvX21h
-cF9hcnJheQ0KPiA+PiBzdHVmZi4gIFRoaXMgaXMgcHVyZWx5IHRvIGF2b2lkIHRoZSBvcmRlciBk
-dXJpbmcgcmVtb3ZlIG5vdCBiZWluZw0KPiA+PiBvYnZpb3VzbHkgY29ycmVjdCBhcyBpdCBpc24n
-dCB0aGUgcmV2ZXJzZSBvZiBkdXJpbmcgcHJvYmUuDQo+ID4NCj4gPk9rLCBzaG91bGQgc3RpbGwg
-d29yayBvayB0aGF0IHdheSBzbyBjYW4gdXBkYXRlLg0KPiA+DQo+ID4+ID4gK3N0YXRpYyBpbnQg
-ZGE5MTUwX2dwYWRjX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+PiA+
-ICt7DQo+ID4+ID4gKwlzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2ID0gcGxhdGZvcm1fZ2V0X2Ry
-dmRhdGEocGRldik7DQo+ID4+ID4gKw0KPiA+PiA+ICsJaWlvX21hcF9hcnJheV91bnJlZ2lzdGVy
-KGluZGlvX2Rldik7DQo+ID4+IFR3aWNlIGluIG9uZSBkYXkuICBJJ20gZGVmaW5pdGVseSB0aGlu
-a2luZyB3ZSBzaG91bGQgYWRkIGENCj4gPj4gZGV2bSB2ZXJzaW9uIG9mIGlpb19tYXBfYXJyYXlf
-cmVnaXN0ZXIuLi4NCj4gPg0KPiA+SSBhc3N1bWUgeW91IG1lYW4gaGVyZSB0aGF0IGlpb19kZXZp
-Y2VfdW5yZWdpc3RlcigpIHNob3VsZCBjb21lIGZpcnN0Pw0KPiA+V2lsbA0KPiA+dXBkYXRlLg0K
-PiBOb3BlIGp1c3QgdGhhdCBzdWNoIGEgbmV3IGZ1bmN0aW9uIG1pZ2h0IGJlIHVzZWZ1bC4NCg0K
-OikgT2sgZmFpciBlbm91Z2guDQoNCj4gDQo+IC0tDQo+IFNlbnQgZnJvbSBteSBBbmRyb2lkIHBo
-b25lIHdpdGggSy05IE1haWwuIFBsZWFzZSBleGN1c2UgbXkgYnJldml0eS4NCg==
+From: "Joe.C" <yingjoe.chen@mediatek.com>
+
+Add more helper function for stacked irq_chip to just call parent's
+function.
+
+Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
+---
+ include/linux/irq.h |  5 +++++
+ kernel/irq/chip.c   | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 33 insertions(+)
+
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 07abf5a..6159256 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -437,6 +437,11 @@ extern void handle_nested_irq(unsigned int irq);
+ 
+ #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+ extern void irq_chip_ack_parent(struct irq_data *data);
++extern void irq_chip_mask_parent(struct irq_data *data);
++extern void irq_chip_unmask_parent(struct irq_data *data);
++extern void irq_chip_eoi_parent(struct irq_data *data);
++extern int irq_chip_set_affinity_parent(struct irq_data *data,
++				const struct cpumask *dest, bool force);
+ extern int irq_chip_retrigger_hierarchy(struct irq_data *data);
+ #endif
+ 
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 58ed9ed..0ecc270 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -829,6 +829,34 @@ void irq_chip_ack_parent(struct irq_data *data)
+ 	data->chip->irq_ack(data);
+ }
+ 
++void irq_chip_mask_parent(struct irq_data *data)
++{
++	data = data->parent_data;
++	data->chip->irq_mask(data);
++}
++
++void irq_chip_unmask_parent(struct irq_data *data)
++{
++	data = data->parent_data;
++	data->chip->irq_unmask(data);
++}
++
++void irq_chip_eoi_parent(struct irq_data *data)
++{
++	data = data->parent_data;
++	data->chip->irq_eoi(data);
++}
++
++int irq_chip_set_affinity_parent(struct irq_data *data,
++				 const struct cpumask *dest, bool force)
++{
++	data = data->parent_data;
++	if (data->chip->irq_set_affinity)
++		return data->chip->irq_set_affinity(data, dest, force);
++
++	return -ENOSYS;
++}
++
+ int irq_chip_retrigger_hierarchy(struct irq_data *data)
+ {
+ 	for (data = data->parent_data; data; data = data->parent_data)
+-- 
+1.8.1.1.dirty
