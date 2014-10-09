@@ -1,35 +1,48 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/6] ARM: cygnus: Initial support for Broadcom Cygnus SoC
-Date: Thu, 09 Oct 2014 09:32:33 +0200
-Message-ID: <2721519.urlXjs6OJF@wuerfel>
-References: <1412746025-11998-2-git-send-email-sbranden@broadcom.com>
- <34012512.W8VifyXY4H@wuerfel> <5435B7D7.1030904@broadcom.com>
+From: Jingchang Lu <jingchang.lu@freescale.com>
+Subject: RE: [PATCH] serial: of-serial: add PM suspend/resume support
+Date: Thu, 9 Oct 2014 07:53:47 +0000
+Message-ID: <b315028a386e46dca9abd70b65210bb1@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1411461252-8730-1-git-send-email-jingchang.lu@freescale.com>
+ <542E5421.5070708@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5435B7D7.1030904@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Scott Branden <sbranden@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Richardson <jonathar@broadcom.com>, Antti Palosaari <crope@iki.fi>, bcm-kernel-feedback-list@broadcom.com, Alex Elder <elder@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, Matt Porter <mporter@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christian Daudt <bcm@fixthebug.org>, linux-kernel@vger.kernel.org, JD Zheng <jdzheng@broadcom.com>, Kumar Gala <galak@codeaurora.org>, Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <542E5421.5070708@nvidia.com>
+Content-Language: en-US
+Sender: linux-serial-owner@vger.kernel.org
+To: Joseph Lo <josephl@nvidia.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 08 October 2014 15:16:55 Scott Branden wrote:
-> It looks like I will also be able to add Northstar under the 
-> ARCH_BCM_IPROC.  This will be good momentum to cleaning up and 
-> consolidate support going forward.
-> I will change the Kconfig such that ARCH_BCM_5301X selects ARCH_BCM_IPROC.
-> 
-> 
-
-Ok, sounds good.
-
-	Arnd
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogSm9zZXBoIExvIFttYWlsdG86am9z
+ZXBobEBudmlkaWEuY29tXQ0KPlNlbnQ6IEZyaWRheSwgT2N0b2JlciAwMywgMjAxNCAzOjQ2IFBN
+DQo+VG86IEx1IEppbmdjaGFuZy1CMzUwODM7IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnDQo+
+Q2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBhcm5kQGFybmRiLmRlOyBsaW51eC0NCj5r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1zZXJpYWxAdmdlci5rZXJuZWwub3JnOyBsaW51
+eC1hcm0tDQo+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj5TdWJqZWN0OiBSZTogW1BBVENI
+XSBzZXJpYWw6IG9mLXNlcmlhbDogYWRkIFBNIHN1c3BlbmQvcmVzdW1lIHN1cHBvcnQNCj4NCj5I
+aSwNCj4NCj5UaGlzIHBhdGNoIG1pZ2h0IGhhdmUgYSBwb3RlbnRpYWwgaXNzdWUgdGhhdCBjYXVz
+ZSBzeXN0ZW0gaGFyZCBodW5nDQo+aW1tZWRpYXRlbHkgd2hlbiBpdCBhY2Nlc3NlcyB0byByZWdp
+c3RlcnMgd2l0aCBubyBjbG9jay4gVGhpcyBjb3VsZCBoYXBwZW4NCj5vbiBtYW55IGNoaXBzIHRo
+YXQgbWFpbmxpbmUga2VybmVsIHN1cHBvcnRpbmcgd2l0aCB0aGUgc2V0dGluZw0KPiJub19jb25z
+b2xlX3N1c3BlbmQ9MSIgZHVyaW5nIHN1c3BlbmQgdGltZS4NCj4NCj5PbiAwOS8yMy8yMDE0IDA0
+OjM0IFBNLCBKaW5nY2hhbmcgTHUgd3JvdGU6DQo+PiBUaGlzIGFkZHMgUE0gc3VzcGVuZC9yZXN1
+bWUgc3VwcG9ydCBmb3IgdGhlIG9mLXNlcmlhbCBkcml2ZXIgdG8NCj4+IHByb3ZpZGUgcG93ZXIg
+bWFuYWdlbWVudCBzdXBwb3J0IG9uIGRldmljZXMgYXR0YXRjaGVkIHRvIGl0Lg0KPj4NCj4+IFNp
+Z25lZC1vZmYtYnk6IEppbmdjaGFuZyBMdSA8amluZ2NoYW5nLmx1QGZyZWVzY2FsZS5jb20+DQo+
+PiAtLS0NCj4+ICAgZHJpdmVycy90dHkvc2VyaWFsL29mX3NlcmlhbC5jIHwgMjcgKysrKysrKysr
+KysrKysrKysrKysrKysrKysrDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAyNyBpbnNlcnRpb25zKCsp
+DQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdHR5L3NlcmlhbC9vZl9zZXJpYWwuYw0KPj4g
+Yi9kcml2ZXJzL3R0eS9zZXJpYWwvb2Zfc2VyaWFsLmMgaW5kZXggMjc5ODFlMi4uOGJjMjU2MyAx
+MDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvdHR5L3NlcmlhbC9vZl9zZXJpYWwuYw0KPj4gKysrIGIv
+ZHJpdmVycy90dHkvc2VyaWFsL29mX3NlcmlhbC5jDQo+PiBAQCAtMjQwLDYgKzI0MCwzMiBAQCBz
+dGF0aWMgaW50IG9mX3BsYXRmb3JtX3NlcmlhbF9yZW1vdmUoc3RydWN0DQo+cGxhdGZvcm1fZGV2
+aWNlICpvZmRldikNCj4+ICAgCXJldHVybiAwOw0KPj4gICB9DQo+Pg0KPj4gKyNpZmRlZiBDT05G
+SUdfUE1fU0xFRVANCj4+ICtzdGF0aWMgaW50IG9mX3NlcmlhbF9zdXNwZW5kKHN0cnVjdCBkZXZp
+Y2UgKmRldikgew0KPj4gKwlzdHJ1Y3Qgb2Zfc2VyaWFsX2luZm8gKmluZm8gPSBkZXZfZ2V0X2Ry
+dmRhdGEoZGV2KTsNCj4+ICsNCj4+ICsJc2VyaWFsODI1MF9zdXNwZW5kX3BvcnQoaW5mby0+bGlu
+ZSk7DQo+PiArCWlmIChpbmZvLT5jbGspDQo+VGhlIGZpeCB3b3VsZCBiZSBzb21ldGhpbmcgbGlr
+ZSB0aGlzLg0KPglpZiAoaW5mby0+Y2xrICYmIGNvbnNvbGVfc3VzcGVuZF9lbmFibGVkKQ0KPg0K
+WWVzLCB0aGVyZSB3aWxsIGJlLCBJIHdpbGwgc2VuZCBhIGZpeCBvbiB0aGlzLCB0aGFua3MhDQoN
+CkJlc3QgUmVnYXJkcywNCkppbmdjaGFuZw0K
