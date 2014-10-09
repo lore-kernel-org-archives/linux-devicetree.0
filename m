@@ -1,33 +1,70 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v3] ARM: dts: Add initial DTS file for Sony Xperia Z1 phone
-Date: Thu, 09 Oct 2014 13:47:37 -0700
-Message-ID: <7h4mvdnf6e.fsf@deeprootsystems.com>
-References: <542B338D.2040909@sonymobile.com>
-	<CA+bK7J5x60WyyAp6+hGDf-fyAC=skQu9EdPUabPrzhMCDnOCrA@mail.gmail.com>
-	<6FB01741-5960-45CE-9AB8-20CBE5D9D212@codeaurora.org>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 5/5] ARM: dts: Add initial regulator mode on exynos Peach
+ boards
+Date: Thu, 09 Oct 2014 23:40:17 +0200
+Message-ID: <543700C1.7050909@collabora.co.uk>
+References: <20141008195112.GI4609@sirena.org.uk> <54369B59.8000509@collabora.co.uk> <20141009174848.GW4609@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6FB01741-5960-45CE-9AB8-20CBE5D9D212@codeaurora.org> (Kumar
-	Gala's message of "Thu, 9 Oct 2014 13:22:37 -0500")
+In-Reply-To: <20141009174848.GW4609@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Tim Bird <tbird20d@gmail.com>, Tim Bird <tim.bird@sonymobile.com>, Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Doug Anderson <dianders@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kumar,
+Hello Mark,
 
-Kumar Gala <galak@codeaurora.org> writes:
+Thanks for your feedback.
 
-> Will not make the 3.18 merge window.  I will queue it up for 3.19.
+On 10/09/2014 07:48 PM, Mark Brown wrote:
+> On Thu, Oct 09, 2014 at 04:27:37PM +0200, Javier Martinez Canillas wrote:
+> 
+>> I see, I thought that an operating mode could be anything that alter the
+>> regulator behavior either during runtime or when the system is suspended.
+>> But under your definition, it is true that most max77802 regulators have
+> 
+> It's not just me, it's the code and all the users and documentation...
+> 
 
-Yes, it's too late for the merge window proper, but since it's DT only
-support for new platform, you can submit it as a fix to us (arm-soc) for
-v3.18-rc.
+Sorry, I didn't mean that you are not correct but more that I was wrong
+on my assumptions.
 
-In fact, if you chose (and if it's known to work for v3.17 and/or
-earlier), you can even mark it for stable.  Greg has said he's OK with
-DT-only changes like this that only affect a specific platform to go
-into stable.
+>> only two modes: ON and OFF (and some of them have a third Low Power mode).
+> 
+> ...but let's be clear, only "on" (normal) and low power are modes here.
+> Like I keep saying please think things through - if modes also include
+> enable control why would they be treated separately in the API?
+> 
 
-Kevin
+Right, I got confused again by the terminology in the Maxim data-sheet that
+list output OFF as an opmode but I understand that OFF is not a mode and
+that the regulator API treats it separately.
+
+>> I think though that a generic way to configure this enable control feature
+>> is needed. Maybe adding a new pair of .{get,set}_suspend_control function
+>> pointers to struct regulator_ops and an .initial_suspend_ctrl field to the
+>> struct regulation_constraints?
+> 
+>> That way the core could parse a generic DT property and call the function
+>> handlers but each driver can document in their own DT bindings what their
+>> control values are and how those affects the regulators during suspend?
+> 
+> That maps poorly onto a lot of devices which have control schemes which
+> are more complex than this, for example placing regulators into groups
+> which are then controlled en masse or with internal sequencing options.
+> There's also the general taste thing with an API that basically just
+> consists of passing a random value through - there's a lack of
+> generality there, it wouldn't be possible to write a generic user of the
+> API which is a bit of a warning sign.
+> 
+> If you just care about the specific "this pin controls enable in sleep
+> state" I'd suggest making an interface that very specifically does that.
+> 
+
+Yes, I'll not try to make it generic and will do something that is specific
+to this device.
+
+Best regards,
+Javier
