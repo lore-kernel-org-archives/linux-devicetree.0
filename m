@@ -1,59 +1,35 @@
-From: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [PATCH] gpio: pl061 : fix gpio pl061 request bug
-Date: Thu, 9 Oct 2014 15:26:44 +0800
-Message-ID: <1412839604-9912-1-git-send-email-kong.kongxinwei@hisilicon.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/6] ARM: cygnus: Initial support for Broadcom Cygnus SoC
+Date: Thu, 09 Oct 2014 09:32:33 +0200
+Message-ID: <2721519.urlXjs6OJF@wuerfel>
+References: <1412746025-11998-2-git-send-email-sbranden@broadcom.com>
+ <34012512.W8VifyXY4H@wuerfel> <5435B7D7.1030904@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, z.liuxinliang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
-Cc: k00278426 <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5435B7D7.1030904@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Scott Branden <sbranden@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Richardson <jonathar@broadcom.com>, Antti Palosaari <crope@iki.fi>, bcm-kernel-feedback-list@broadcom.com, Alex Elder <elder@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, Matt Porter <mporter@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christian Daudt <bcm@fixthebug.org>, linux-kernel@vger.kernel.org, JD Zheng <jdzheng@broadcom.com>, Kumar Gala <galak@codeaurora.org>, Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: k00278426 <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+On Wednesday 08 October 2014 15:16:55 Scott Branden wrote:
+> It looks like I will also be able to add Northstar under the 
+> ARCH_BCM_IPROC.  This will be good momentum to cleaning up and 
+> consolidate support going forward.
+> I will change the Kconfig such that ARCH_BCM_5301X selects ARCH_BCM_IPROC.
+> 
+> 
 
-Some gpio controller dts nodes has no "gpio-range" property will cause gpio
-request fail(return -517).
-Maybe in this case gpio request shouldn't go into pinctrl subsystem.
+Ok, sounds good.
 
-This patch try to resolve this gpio request issue.
-
-Signed-off-by: k00278426 <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Signed-off-by: Yunlei He <heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
----
- drivers/gpio/gpio-pl061.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
-index 84b49cf..37ffe38 100644
---- a/drivers/gpio/gpio-pl061.c
-+++ b/drivers/gpio/gpio-pl061.c
-@@ -24,6 +24,7 @@
- #include <linux/slab.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/pm.h>
-+#include <linux/of_address.h>
- 
- #define GPIODIR 0x400
- #define GPIOIS  0x404
-@@ -264,8 +265,10 @@ static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
- 
- 	spin_lock_init(&chip->lock);
- 
--	chip->gc.request = pl061_gpio_request;
--	chip->gc.free = pl061_gpio_free;
-+	if (of_get_property(dev->of_node, "gpio-ranges", NULL)) {
-+		chip->gc.request = pl061_gpio_request;
-+		chip->gc.free = pl061_gpio_free;
-+	}
- 	chip->gc.direction_input = pl061_direction_input;
- 	chip->gc.direction_output = pl061_direction_output;
- 	chip->gc.get = pl061_get_value;
--- 
-1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
