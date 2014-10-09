@@ -1,69 +1,48 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH 0/3] drm-exynos-dp/phy-exynos-dp: Refactor to use
- pmu-system-controller and dp driver cleanup
-Date: Thu, 9 Oct 2014 15:59:03 +0530
-Message-ID: <CAEC9eQMdL7vAou2Mn6vpxHR=Dd9++dnMoM+Xzk3O_W0F7n1CBQ@mail.gmail.com>
-References: <1410786785-9838-1-git-send-email-gautam.vivek@samsung.com>
- <CAEC9eQPMNcGxUZVAh6ou6a=6V9bAgmwZAn5ra4=EkoosNURWPg@mail.gmail.com>
- <CAFp+6iFeiwhXurrZ+bWz0Ht87SX4gPGkOEipCPHgYS2Z0_hocA@mail.gmail.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH 08/44] kernel: Move pm_power_off to common code
+Date: Thu, 9 Oct 2014 11:28:55 +0100
+Message-ID: <20141009102855.GE17836@e104818-lin.cambridge.arm.com>
+References: <1412659726-29957-1-git-send-email-linux@roeck-us.net>
+ <1412659726-29957-9-git-send-email-linux@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAFp+6iFeiwhXurrZ+bWz0Ht87SX4gPGkOEipCPHgYS2Z0_hocA@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, LKML <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, kishon <kishon@ti.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mips-bounce@linux-mips.org>
+Content-Disposition: inline
+In-Reply-To: <1412659726-29957-9-git-send-email-linux@roeck-us.net>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "adi-buildroot-devel@lists.sourceforge.net" <adi-buildroot-devel@lists.sourceforge.net>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lguest@lists.ozlabs.org" <lguest@lists.ozlabs.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>, "linux-am33-list@redhat.com" <linux-am33-list@redhat.com>, "linux-cris-kernel@axis.com" <linux-cris-kernel@axis.com>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "linux-hexagon@vger.kernel.org" <linux-hexagon@vger.kernel.org>, "linux-m32r-ja@ml.linux-m32r.org" <linux-m32r-ja@ml.linux-m32r.org>, "linuxppc-dev@lists.ozlabs.org" <linuxp>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 9, 2014 at 3:56 PM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
-> Ajay,
->
->
-> On Thu, Oct 9, 2014 at 3:48 PM, Ajay kumar <ajaynumb@gmail.com> wrote:
->> Hi,
->>
->> On Mon, Sep 15, 2014 at 6:43 PM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
->>> These patches are based on 'for-next' branch of kgene's linux-samsung tree.
->>>
->>> Refactoring the exynos-dp-video phy to use pmu-system-controller handle
->>> and access the register using mfd-syscon and regmap.
->>> Simultaneously, removing the support for older dptx-phy, since it's obsolete
->>> now and noone uses it.
->>>
->>> Vivek Gautam (3):
->>>   phy: exynos-dp-video: Use syscon support to control pmu register
->>>   drm/exynos: dp: Remove support for unused dptx-phy
->>>   arm: dts: Exynos5: Use pmu_system_controller phandle for dp phy
->>>
->>>  .../devicetree/bindings/phy/samsung-phy.txt        |    7 +-
->>>  arch/arm/boot/dts/exynos5250.dtsi                  |    2 +-
->>>  arch/arm/boot/dts/exynos5420.dtsi                  |    4 +-
->>>  drivers/gpu/drm/exynos/exynos_dp_core.c            |   58 ++++-----------
->>>  drivers/gpu/drm/exynos/exynos_dp_core.h            |    2 -
->>>  drivers/phy/phy-exynos-dp-video.c                  |   76 ++++++++++++++------
->>>  6 files changed, 75 insertions(+), 74 deletions(-)
->>>
->>> --
->>> 1.7.10.4
->>>
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
->>> the body of a message to majordomo@vger.kernel.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->> I have tested this patchset on exynos5800-peach-pi, and I can see DP
->> display with the above patches.
->
-> we expect "Tested-by", if you have tested please give the same.
-Tested-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+On Tue, Oct 07, 2014 at 06:28:10AM +0100, Guenter Roeck wrote:
+> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> index e0ef8ba..db396bb 100644
+> --- a/arch/arm64/kernel/process.c
+> +++ b/arch/arm64/kernel/process.c
+> @@ -94,8 +94,6 @@ void soft_restart(unsigned long addr)
+>  /*
+>   * Function pointers to optional machine specific functions
+>   */
+> -void (*pm_power_off)(void);
+> -EXPORT_SYMBOL_GPL(pm_power_off);
+> 
+>  void (*arm_pm_restart)(enum reboot_mode reboot_mode, const char *cmd);
+> 
+> @@ -155,8 +153,7 @@ void machine_power_off(void)
+>  {
+>         local_irq_disable();
+>         smp_send_stop();
+> -       if (pm_power_off)
+> -               pm_power_off();
+> +       do_kernel_poweroff();
+>  }
 
-Ajay
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
