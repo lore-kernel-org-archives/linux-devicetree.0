@@ -1,80 +1,63 @@
-From: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v3 0/5] ARM: sunxi: Add basic support for Allwinner A80
- SoC
-Date: Thu, 09 Oct 2014 04:54:35 +0200
-Message-ID: <5435F8EB.2040407@suse.de>
-References: <1412773376-25212-1-git-send-email-wens@csie.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v2 7/7] ARM: dts: sun6i: Add required ahb1 clock parent
+ and rates for dma controller
+Date: Thu, 9 Oct 2014 11:01:02 +0800
+Message-ID: <CAGb2v64TE=gzPdFJwfmJfpwWZcsdZQGONh11SawfBXZkWGFKCg@mail.gmail.com>
+References: <1411807795-6575-1-git-send-email-wens@csie.org>
+ <1411807795-6575-8-git-send-email-wens@csie.org>
+ <20140930155533.GP4081@lukather>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="RMdukjvIo3OsAg5WOBniW7Kq2WbgXbNWE"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1412773376-25212-1-git-send-email-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@free-electrons.com>, Shuge <shuge@allwinnertech.com>, Meng Zhang <kevin@allwinnertech.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140930155533.GP4081@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Emilio Lopez <emilio@elopez.com.ar>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---RMdukjvIo3OsAg5WOBniW7Kq2WbgXbNWE
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On Tue, Sep 30, 2014 at 11:55 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> On Sat, Sep 27, 2014 at 04:49:55PM +0800, Chen-Yu Tsai wrote:
+>> The DMA controller requires AHB1 bus clock to be clocked from PLL6.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>> ---
+>>  arch/arm/boot/dts/sun6i-a31.dtsi | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+>> index caf879d..d7845d3 100644
+>> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
+>> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+>> @@ -353,6 +353,11 @@
+>>                       clocks = <&ahb1_gates 6>;
+>>                       resets = <&ahb1_rst 6>;
+>>                       #dma-cells = <1>;
+>> +
+>> +                     /* DMA controller requires AHB1 clocked from PLL6 */
+>> +                     assigned-clocks = <&ahb1>;
+>> +                     assigned-clock-parents = <&pll6 0>;
+>> +                     assigned-clock-rates = <200000000>;
+>
+> Again, I don't think we need the rate change, and that it's the right
+> place to put it.
 
-Hi,
+I'll drop it. As you mentioned on IRC, re-parenting to pll6
+is still required, so I'll keep that bit.
 
-Am 08.10.2014 um 15:02 schrieb Chen-Yu Tsai:
-> This is v3 of the initial Allwinner A80 support series.
-> This patch series adds very basic support for Allwinner's A80 SoC,
-> a big.LITTLE architecture with 4 Cortex-A7s and 4 Cortex-A15s.
->=20
-> Development is done on the A80 Optimus Board, the defacto development
-> board for the A80, with the accompanying SDK as a reference.=20
->=20
-> So far I've been unable to get the board to boot from MMC, or
-> using Android fastboot. I'm using Allwinner's FEL mode to load
-> the bootloader and kernel+dtb image over USB. Notes on my attempts
-> can be found here: http://linux-sunxi.org/User:Wens#A80_Optimus
+Hi, Mike,
 
-Tested-by: Andreas F=E4rber <afaerber@suse.de>
+Is there a recommended way for clock providers to enforce a range
+on clock rates? Tomeu's patches seem to be for clock consumers.
 
-With this patch set on top of Maxime's sunxi-next branch, I get as far
-as searching for the rootfs.
-
-CPUs 1-7 fail to boot with -38, which I guess is due to the vendor
-U-Boot not yet supporting PSCI.
-
-Thanks a lot for your work and help, Chen-Yu!
-
-Regards,
-Andreas
-
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrnbe=
-rg
-
-
---RMdukjvIo3OsAg5WOBniW7Kq2WbgXbNWE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJUNfjrAAoJEPou0S0+fgE/u2gP/j3RXl6WpJu458YhkH+rH6Gd
-6CMV9D2M2clB8y0jbl+XkvQ2C2Y7V0AnrR7LZCCZODU5fd0NYLFoAY28UtdFNVh9
-mtJguueR5dM6Ys5JSjHGZD326uxhu95s9j1dfCbbIS2MzUz+Z836YYQUIIGfR/Ck
-2HWEyF2AF5RqVkv6wKn8k2DlMqsV39k1TzFhw/gjnshb9c/vyxWf1AflInYw2qkG
-jnt/TXBRc0W4Z42GbY2Oy5asbzrABn7iSateGnd7g4L0+ar1OZx3yUT0lDLewhyJ
-0PNwCqAIAdVYTZjGgRFM2+f8zLUCd66ytLV0E7ICXflr9gjUYdUS254jjO6Pw3NJ
-0TmM9qkYHayNBSlWWthFAcQL5BXxCuoHty1xS7F89a5EHpT2gy2xQlLFLOgeCCsZ
-swqMHZOhpU7F/d0fYK/Be4V6Sd+lmrsYJ2Qcovc0kfk9qKDwUr2vfrHtJ5mctudj
-6MMCi58U0UXpeOaFIfu6azd6qHQluY23NJ+mphQdz8+WLlCwut25WP0p4kEsZgC2
-c08nwXjTgYYyt/IzQ7wR970HFjnTahYlOjYd5BcxgkF955pHQju/GELtgmIm1i/U
-wqpsPkP90psEIpzh2+/MFsUcxt2z+4JakaMFNFi9BnCEQZ4qO9IXMBvxnfJ2aDzv
-/5wfaUZc+KGgS1QN1Ace
-=LOA8
------END PGP SIGNATURE-----
-
---RMdukjvIo3OsAg5WOBniW7Kq2WbgXbNWE--
+Cheers
+ChenYu
