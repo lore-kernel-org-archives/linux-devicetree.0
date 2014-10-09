@@ -1,47 +1,33 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH 08/44] kernel: Move pm_power_off to common code
-Date: Thu, 9 Oct 2014 22:24:19 +0200
-Message-ID: <20141009202419.GA16885@amd>
-References: <1412659726-29957-1-git-send-email-linux@roeck-us.net>
- <1412659726-29957-9-git-send-email-linux@roeck-us.net>
- <20141009103847.GC6787@amd> <54368A30.9070101@roeck-us.net>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v3] ARM: dts: Add initial DTS file for Sony Xperia Z1 phone
+Date: Thu, 09 Oct 2014 13:47:37 -0700
+Message-ID: <7h4mvdnf6e.fsf@deeprootsystems.com>
+References: <542B338D.2040909@sonymobile.com>
+	<CA+bK7J5x60WyyAp6+hGDf-fyAC=skQu9EdPUabPrzhMCDnOCrA@mail.gmail.com>
+	<6FB01741-5960-45CE-9AB8-20CBE5D9D212@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <54368A30.9070101@roeck-us.net>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-m32r-ja@ml.linux-m32r.org, linux-mips@linux-mips.org, linux-efi@vger.kernel.org, linux-ia64@vger.kernel.org, Steven Miao <realmz6@gmail.com>, linux-xtensa@linux-xtensa.org, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Howells <dhowells@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, Paul Mackerras <paulus@samba.org>, Ralf Baechle <ralf@linux-mips.org>, "H. Peter Anvin" <hpa@zytor.com>, Guan Xuetao <gxt@mprc.pku.edu.cn>, Thomas Gleixner <tglx@linutronix.de>, Lennox Wu <lennox.wu@gmail.com>, Hans-Christian Egtvedt <egtvedt@samfundet.no>, devel@driverdev.osuosl.org, linux-s390@vger.kernel.org, Jesper Nilsson <jesper.nilsson@axis.com>, lguest@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-c6x-dev@linux-c6x.org, Len Brown <len.brown@intel.com>, "David S. Miller" <davem@d>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6FB01741-5960-45CE-9AB8-20CBE5D9D212@codeaurora.org> (Kumar
+	Gala's message of "Thu, 9 Oct 2014 13:22:37 -0500")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Tim Bird <tbird20d@gmail.com>, Tim Bird <tim.bird@sonymobile.com>, Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Hi Kumar,
 
-> >>@@ -184,6 +179,8 @@ machine_halt(void)
-> >>  void
-> >>  machine_power_off(void)
-> >>  {
-> >>+	do_kernel_poweroff();
-> >>+
-> >
-> >poweroff -> power_off for consistency.
-> >
-> Dunno; matter of personal preference. I started with that, but ultimately went
-> with poweroff to distinguish poweroff handler functions from existing code,
-> specifically kernel_power_off().
+Kumar Gala <galak@codeaurora.org> writes:
 
-That works for you, but once it is merged, it is ugly/confusing typo.
-									Pavel
+> Will not make the 3.18 merge window.  I will queue it up for 3.19.
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Yes, it's too late for the merge window proper, but since it's DT only
+support for new platform, you can submit it as a fix to us (arm-soc) for
+v3.18-rc.
+
+In fact, if you chose (and if it's known to work for v3.17 and/or
+earlier), you can even mark it for stable.  Greg has said he's OK with
+DT-only changes like this that only affect a specific platform to go
+into stable.
+
+Kevin
