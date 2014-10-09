@@ -1,147 +1,80 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH] thermal: fix multiple disbalanced device node counters
-Date: Thu, 09 Oct 2014 09:38:57 +0800
-Message-ID: <1412818737.13621.3.camel@rzhang1-toshiba>
-References: <1411948066-9118-1-git-send-email-vz@mleia.com>
+From: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v3 0/5] ARM: sunxi: Add basic support for Allwinner A80
+ SoC
+Date: Thu, 09 Oct 2014 04:54:35 +0200
+Message-ID: <5435F8EB.2040407@suse.de>
+References: <1412773376-25212-1-git-send-email-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1411948066-9118-1-git-send-email-vz@mleia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="RMdukjvIo3OsAg5WOBniW7Kq2WbgXbNWE"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412773376-25212-1-git-send-email-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@free-electrons.com>, Shuge <shuge@allwinnertech.com>, Meng Zhang <kevin@allwinnertech.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Eduardo,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--RMdukjvIo3OsAg5WOBniW7Kq2WbgXbNWE
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2014-09-29 at 02:47 +0300, Vladimir Zapolskiy wrote:
-> Here on function return all temporarily used device nodes shall
-> decrement their usage counter. The problems are found with device
-> nodes allocated by for_each_child_of_node(), of_parse_phandle()
-> and of_find_node_by_name(), fix all problems at once.
-> 
-can you please take this patch?
+Hi,
 
-thanks,
-rui
-> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Eduardo Valentin <edubezval@gmail.com>
-> ---
->  drivers/thermal/of-thermal.c |   40 ++++++++++++++++++++++++++++++++--------
->  1 file changed, 32 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
-> index f8eb625..62143ba 100644
-> --- a/drivers/thermal/of-thermal.c
-> +++ b/drivers/thermal/of-thermal.c
-> @@ -387,15 +387,18 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id,
->  				int (*get_trend)(void *, long *))
->  {
->  	struct device_node *np, *child, *sensor_np;
-> +	struct thermal_zone_device *tzd = ERR_PTR(-ENODEV);
->  
->  	np = of_find_node_by_name(NULL, "thermal-zones");
->  	if (!np)
->  		return ERR_PTR(-ENODEV);
->  
-> -	if (!dev || !dev->of_node)
-> +	if (!dev || !dev->of_node) {
-> +		of_node_put(np);
->  		return ERR_PTR(-EINVAL);
-> +	}
->  
-> -	sensor_np = dev->of_node;
-> +	sensor_np = of_node_get(dev->of_node);
->  
->  	for_each_child_of_node(np, child) {
->  		struct of_phandle_args sensor_specs;
-> @@ -422,16 +425,21 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id,
->  		}
->  
->  		if (sensor_specs.np == sensor_np && id == sensor_id) {
-> -			of_node_put(np);
-> -			return thermal_zone_of_add_sensor(child, sensor_np,
-> -							  data,
-> -							  get_temp,
-> -							  get_trend);
-> +			tzd = thermal_zone_of_add_sensor(child, sensor_np,
-> +							 data,
-> +							 get_temp,
-> +							 get_trend);
-> +			of_node_put(sensor_specs.np);
-> +			of_node_put(child);
-> +			goto exit;
->  		}
-> +		of_node_put(sensor_specs.np);
->  	}
-> +exit:
-> +	of_node_put(sensor_np);
->  	of_node_put(np);
->  
-> -	return ERR_PTR(-ENODEV);
-> +	return tzd;
->  }
->  EXPORT_SYMBOL_GPL(thermal_zone_of_sensor_register);
->  
-> @@ -623,6 +631,7 @@ static int thermal_of_populate_trip(struct device_node *np,
->  
->  	/* Required for cooling map matching */
->  	trip->np = np;
-> +	of_node_get(np);
->  
->  	return 0;
->  }
-> @@ -730,9 +739,14 @@ finish:
->  	return tz;
->  
->  free_tbps:
-> +	for (i = 0; i < tz->num_tbps; i++)
-> +		of_node_put(tz->tbps[i].cooling_device);
->  	kfree(tz->tbps);
->  free_trips:
-> +	for (i = 0; i < tz->ntrips; i++)
-> +		of_node_put(tz->trips[i].np);
->  	kfree(tz->trips);
-> +	of_node_put(gchild);
->  free_tz:
->  	kfree(tz);
->  	of_node_put(child);
-> @@ -742,7 +756,13 @@ free_tz:
->  
->  static inline void of_thermal_free_zone(struct __thermal_zone *tz)
->  {
-> +	int i;
-> +
-> +	for (i = 0; i < tz->num_tbps; i++)
-> +		of_node_put(tz->tbps[i].cooling_device);
->  	kfree(tz->tbps);
-> +	for (i = 0; i < tz->ntrips; i++)
-> +		of_node_put(tz->trips[i].np);
->  	kfree(tz->trips);
->  	kfree(tz);
->  }
-> @@ -814,10 +834,13 @@ int __init of_parse_thermal_zones(void)
->  			/* attempting to build remaining zones still */
->  		}
->  	}
-> +	of_node_put(np);
->  
->  	return 0;
->  
->  exit_free:
-> +	of_node_put(child);
-> +	of_node_put(np);
->  	of_thermal_free_zone(tz);
->  
->  	/* no memory available, so free what we have built */
-> @@ -859,4 +882,5 @@ void of_thermal_destroy_zones(void)
->  		kfree(zone->ops);
->  		of_thermal_free_zone(zone->devdata);
->  	}
-> +	of_node_put(np);
->  }
+Am 08.10.2014 um 15:02 schrieb Chen-Yu Tsai:
+> This is v3 of the initial Allwinner A80 support series.
+> This patch series adds very basic support for Allwinner's A80 SoC,
+> a big.LITTLE architecture with 4 Cortex-A7s and 4 Cortex-A15s.
+>=20
+> Development is done on the A80 Optimus Board, the defacto development
+> board for the A80, with the accompanying SDK as a reference.=20
+>=20
+> So far I've been unable to get the board to boot from MMC, or
+> using Android fastboot. I'm using Allwinner's FEL mode to load
+> the bootloader and kernel+dtb image over USB. Notes on my attempts
+> can be found here: http://linux-sunxi.org/User:Wens#A80_Optimus
+
+Tested-by: Andreas F=E4rber <afaerber@suse.de>
+
+With this patch set on top of Maxime's sunxi-next branch, I get as far
+as searching for the rootfs.
+
+CPUs 1-7 fail to boot with -38, which I guess is due to the vendor
+U-Boot not yet supporting PSCI.
+
+Thanks a lot for your work and help, Chen-Yu!
+
+Regards,
+Andreas
+
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrnbe=
+rg
 
 
+--RMdukjvIo3OsAg5WOBniW7Kq2WbgXbNWE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJUNfjrAAoJEPou0S0+fgE/u2gP/j3RXl6WpJu458YhkH+rH6Gd
+6CMV9D2M2clB8y0jbl+XkvQ2C2Y7V0AnrR7LZCCZODU5fd0NYLFoAY28UtdFNVh9
+mtJguueR5dM6Ys5JSjHGZD326uxhu95s9j1dfCbbIS2MzUz+Z836YYQUIIGfR/Ck
+2HWEyF2AF5RqVkv6wKn8k2DlMqsV39k1TzFhw/gjnshb9c/vyxWf1AflInYw2qkG
+jnt/TXBRc0W4Z42GbY2Oy5asbzrABn7iSateGnd7g4L0+ar1OZx3yUT0lDLewhyJ
+0PNwCqAIAdVYTZjGgRFM2+f8zLUCd66ytLV0E7ICXflr9gjUYdUS254jjO6Pw3NJ
+0TmM9qkYHayNBSlWWthFAcQL5BXxCuoHty1xS7F89a5EHpT2gy2xQlLFLOgeCCsZ
+swqMHZOhpU7F/d0fYK/Be4V6Sd+lmrsYJ2Qcovc0kfk9qKDwUr2vfrHtJ5mctudj
+6MMCi58U0UXpeOaFIfu6azd6qHQluY23NJ+mphQdz8+WLlCwut25WP0p4kEsZgC2
+c08nwXjTgYYyt/IzQ7wR970HFjnTahYlOjYd5BcxgkF955pHQju/GELtgmIm1i/U
+wqpsPkP90psEIpzh2+/MFsUcxt2z+4JakaMFNFi9BnCEQZ4qO9IXMBvxnfJ2aDzv
+/5wfaUZc+KGgS1QN1Ace
+=LOA8
+-----END PGP SIGNATURE-----
+
+--RMdukjvIo3OsAg5WOBniW7Kq2WbgXbNWE--
