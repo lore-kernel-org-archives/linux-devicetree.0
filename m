@@ -1,134 +1,64 @@
-From: Belisko Marek <marek.belisko@gmail.com>
-Subject: Re: [PATCH v2] Documentation: DT: Document twl4030-madc-battery bindings.
-Date: Thu, 9 Oct 2014 10:02:43 +0200
-Message-ID: <CAAfyv35EdDo5=9HPctzmovH4CQoaGoKmJDgZLUKz1ZVzEsS2Lw@mail.gmail.com>
-References: <1394052739-8589-1-git-send-email-marek@goldelico.com>
-	<1394052739-8589-4-git-send-email-marek@goldelico.com>
-	<20140922110320.GI3290@leverpostej>
-	<CAAfyv352GrgTzKf-XxPNthtoR9rdhssnOSdx1mZ-q=D4okBSAA@mail.gmail.com>
-	<20140926133920.GG7422@leverpostej>
+From: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/6] UIO driver for APM X-Gene QMTM
+Date: Thu, 9 Oct 2014 14:14:33 +0530
+Message-ID: <CAPTm99V-xyXa7WQG2jzDz19gotJ0aQRPk_rb5ukvUpdFyFabfw@mail.gmail.com>
+References: <1412051169-9142-1-git-send-email-ankit.jindal@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140926133920.GG7422@leverpostej>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "dbaryshkov@gmail.com" <dbaryshkov@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "hns@goldelico.com" <hns@goldelico.com>, "sre@debian.org" <sre@debian.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412051169-9142-1-git-send-email-ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Any comments on this patch set.
 
-On Fri, Sep 26, 2014 at 3:39 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Mon, Sep 22, 2014 at 09:35:03PM +0100, Belisko Marek wrote:
->> Hi Mark,
->>
->> On Mon, Sep 22, 2014 at 1:03 PM, Mark Rutland <mark.rutland@arm.com> wrote:
->> > Hi,
->> >
->> > On Wed, Mar 05, 2014 at 08:52:19PM +0000, Marek Belisko wrote:
->> >> Signed-off-by: Marek Belisko <marek@goldelico.com>
->> >> ---
->> >>  .../bindings/power_supply/twl4030_madc_battery.txt | 43 ++++++++++++++++++++++
->> >>  1 file changed, 43 insertions(+)
->> >>  create mode 100644 Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt b/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
->> >> new file mode 100644
->> >> index 0000000..fd0b6d2
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
->> >> @@ -0,0 +1,43 @@
->> >> +twl4030_madc_battery
->> >> +
->> >> +Required properties:
->> >> + - compatible : "ti,twl4030-madc-battery"
->> >
->> > I'm rather confused by this; the code seems to have stripped away all
->> > the twl4030 dependencies and this now seems to be a generic ADC battery
->> > status driver. So why does this need to be specific to twl4030?
->> You are right. Also possibly driver name is incorrect :). Better name could be
->> ti, madc-battery.
->
-> Ok.
->
->> >
->> >> + - capacity : battery capacity in uAh
->> >
->> > I would make the units explicit in the name; "capacity" can be measured
->> > in many ways.
->> OK capacity_uAh should be fine I believe.
->
-> Well, "capacity-uah" to match naming conventions.
-OK.
->
->> >
->> >> + - charging-calibration-data : list of voltage(mV):level(%) values
->> >> +     for charging calibration (see example)
->> >> + - discharging-calibration-data : list of voltage(mV):level(%) values
->> >> +     for discharging calibration (see example)
->> >
->> > Regardless of the prefixing of these property names, the specifics are
->> > unclear to me.
->> Do you suggest to rename it completely or is enough to add "ti, " prefix?
->
-> I'm not suggesting prefixing. I'm suggesting that "calibration data"
-> could mean a variety of things, so having a more specific name would be
-> beneficial.
-Charging and discharging data are used for some kind of interpolation
-within voltage interval.
-So we get volume from ADC and then convert it according
-charging/discharging table to some value
-which is then useded in various battery properties (status,
-charge_now, capacity, time_to_empty_now).
-So maybe battery-charging/discharging-calibration-data could be property name?
+Thanks,
+Ankit
 
+On 30 September 2014 09:56, Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> This patchset enables user space access to APM X-Gene QMTM
+> using UIO framework.
 >
->> > Does this apply to vbat?
->> Yes bat is read and then interpolation algorithm is applied for
->> various power properties.
->> So mapping from voltage to percentage is defined in table.
->> >
->> > Is vbat guaranteed to read in mV?
->> Yes.
->> >
->> > Is any particular order required? The example seems to go be in
->> > descending percentage values.
->> There is done sorting in driver so ordering it's not necessary.
->> >
->> > Is any particular interpolation expected on behalf of the OS, or is this
->> > just an informative set of measurements that hte OS can use as it sees
->> > fit?
->> >
->> >> + - io-channels: Should contain IIO channel specifiers
->> >> +     for each element in io-channel-names.
->> >> +- io-channel-names: Should contain the following values:
->> All 3 statements was copied from rx51-battery and documentation is the same.
->> There is not unit for all channels just raw values which are then
->> converted in driver.
+> The patchset also introduces new type UIO_MEM_PHYS_CACHE
+> for mem regions because APM X-Gene QMTM device supports
+> cache coherency with CPU caches.
 >
-> I don't understand. How do you figure out the mapping of those raw
-> values to sensible units? Surely you need additional information to do
-> so?
-Yes mapping from raw values is done in driver. Like current read from
-iio channel_ichg
-is multiplied by 1000 or read from channel_temp is multiplied by 10 to
-have proper values for
-battery properties.
+> Changes since v1:
+>  - Factor-out formating related change in uio/uio.c as separate patch.
+>  - Use devm_xxx() APIs where appilicable.
+>  - Some cleanups and buggy loop fixed in qmtm_reset().
+>  - Removed open and release functions.
+>  - Use phandle for specifying QMTM qpool resource.
+>  - Removed "uio" from the compatible string.
+>  - Added more information about QMTM in binding documentation.
 >
-> Mark.
-
-BR,
-
-marek
-
--- 
-as simple and primitive as possible
--------------------------------------------------
-Marek Belisko - OPEN-NANDRA
-Freelance Developer
-
-Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-Tel: +421 915 052 184
-skype: marekwhite
-twitter: #opennandra
-web: http://open-nandra.com
+> Ankit Jindal (6):
+>   uio: code style cleanup
+>   uio: Add new UIO_MEM_PHYS_CACHE type for mem regions
+>   Documentation: Update documentation for UIO_MEM_PHYS_CACHE
+>   drivers: uio: Add X-Gene QMTM UIO driver
+>   Documentation: dt-bindings: Add binding info for X-Gene QMTM UIO
+>     driver
+>   MAINTAINERS: Add entry for APM X-Gene QMTM UIO driver
+>
+>  Documentation/DocBook/uio-howto.tmpl               |    5 +-
+>  .../devicetree/bindings/uio/uio_xgene_qmtm.txt     |   53 ++++
+>  MAINTAINERS                                        |    7 +
+>  drivers/uio/Kconfig                                |    8 +
+>  drivers/uio/Makefile                               |    1 +
+>  drivers/uio/uio.c                                  |   23 +-
+>  drivers/uio/uio_xgene_qmtm.c                       |  278 ++++++++++++++++++++
+>  include/linux/uio_driver.h                         |    1 +
+>  8 files changed, 365 insertions(+), 11 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
+>  create mode 100644 drivers/uio/uio_xgene_qmtm.c
+>
+> --
+> 1.7.9.5
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
