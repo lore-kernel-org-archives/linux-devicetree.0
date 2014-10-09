@@ -1,34 +1,60 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 0/3] gpio: Add APM X-Gene standy platform GPIO driver
-Date: Thu, 9 Oct 2014 13:53:22 +0200
-Message-ID: <CACRpkdZVuvtu+UdaMS59sq4eriJW4mkYBxkCx-2YTwc+V_BCSQ@mail.gmail.com>
-References: <1412779948-28769-1-git-send-email-yvo@apm.com>
-	<20141009094248.GB3869@leverpostej>
+From: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH] gpio: pl061 : fix gpio pl061 request bug
+Date: Thu, 9 Oct 2014 20:03:45 +0800
+Message-ID: <1412856225-7640-1-git-send-email-kong.kongxinwei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20141009094248.GB3869@leverpostej>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Y Vo <yvo@apm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Tin Huynh <tnhuynh@apm.com>, "patches@apm.com" <patches@apm.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, liguozhuo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Cc: k00278426 <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Yunlei He <heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 9, 2014 at 11:42 AM, Mark Rutland <mark.rutland@arm.com> wrote:
->> CONFIDENTIALITY NOTICE: This e-mail message, including any attachments,
->> is for the sole use of the intended recipient(s) and contains information
->> that is confidential and proprietary to Applied Micro Circuits Corporation or its subsidiaries.
->> It is to be used solely for the purpose of furthering the parties' business relationship.
->> All unauthorized review, use, disclosure or distribution is prohibited.
->> If you are not the intended recipient, please contact the sender by reply e-mail
->> and destroy all copies of the original message.
->
-> You will need to resend this series without this disclaimer on each and
-> every patch.
+From: k00278426 <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 
-Good point, haha, I wonder if the GPIO maintainer is "intended audience"?
+Some gpio controller dts nodes has no "gpio-range" property will cause gpio
+request fail(return -517).
+Maybe in this case gpio request shouldn't go into pinctrl subsystem.
 
-So many insecurities in this world, no matter what you do, some legal person
-think you're doing the wrong thing...
+This patch try to resolve this gpio request issue.
 
-Yours,
-Linus Walleij
+Signed-off-by: k00278426 <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Signed-off-by: Yunlei He <heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/gpio/gpio-pl061.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
+index 84b49cf..37ffe38 100644
+--- a/drivers/gpio/gpio-pl061.c
++++ b/drivers/gpio/gpio-pl061.c
+@@ -24,6 +24,7 @@
+ #include <linux/slab.h>
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/pm.h>
++#include <linux/of_address.h>
+ 
+ #define GPIODIR 0x400
+ #define GPIOIS  0x404
+@@ -264,8 +265,10 @@ static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
+ 
+ 	spin_lock_init(&chip->lock);
+ 
+-	chip->gc.request = pl061_gpio_request;
+-	chip->gc.free = pl061_gpio_free;
++	if (of_get_property(dev->of_node, "gpio-ranges", NULL)) {
++		chip->gc.request = pl061_gpio_request;
++		chip->gc.free = pl061_gpio_free;
++	}
+ 	chip->gc.direction_input = pl061_direction_input;
+ 	chip->gc.direction_output = pl061_direction_output;
+ 	chip->gc.get = pl061_get_value;
+-- 
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
