@@ -1,39 +1,79 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH RFT 0/8] Marvell PXA168 libphy handling and Berlin Ethernet
-Date: Thu, 09 Oct 2014 19:28:38 +0200
-Message-ID: <5436C5C6.3020406@gmail.com>
-References: <1412858346-11334-1-git-send-email-sebastian.hesselbarth@gmail.com> <20141009163315.2a9e1806@free-electrons.com> <54369EAC.5040301@gmail.com> <20141009164704.7286fc3f@free-electrons.com> <5436A8B2.1030200@gmail.com> <5436BE7F.7000603@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5436BE7F.7000603@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: devicetree@vger.kernel.org, Eric Miao <eric.y.miao@gmail.com>, netdev@vger.kernel.org, =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 2/2] power: reset: document LTC2952 poweroff support
+Date: Thu, 9 Oct 2014 18:32:46 +0100
+Message-ID: <20141009173246.GB466@leverpostej>
+References: <1412866242-6474-1-git-send-email-frans.klaver@xsens.com>
+ <1412866242-6474-3-git-send-email-frans.klaver@xsens.com>
+ <20141009150756.GC18384@leverpostej>
+ <20141009160935.GF31987@roeck-us.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141009160935.GF31987@roeck-us.net>
+Sender: linux-pm-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Frans Klaver <frans.klaver@xsens.com>, Sebastian Reichel <sre@kernel.org>, =?utf-8?B?UmVuw6k=?= Moll <linux@r-moll.nl>, Tjerk Hofmeijer <tjerk.hofmeijer@xsens.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2014 06:57 PM, Florian Fainelli wrote:
-> On 10/09/2014 08:24 AM, Sebastian Hesselbarth wrote:
->> Yeah, but that HW PHY stuff really only works properly with standard
->> compliant PHYs. In particular, the integrated Marvell PHY in Marvell
->> Berlin SoCs does not seem to reflect PHY status on BMCR properly /sigh/.
->> Anyway, I think we can live with PHY polling.
->>
->> BTW, one thing I noticed here is that libphy calls adjust_link
->> over-and-over again although nothing has changed. I guess we can just
->> add some before/after comparison in the libphy state machine and only
->> call adjust_link when something has changed. I'll have to look closer
->> at the state machine first and maybe Florian can comment on this,
->> too.
->
-> There's basically nothing built in the generic libphy that would try to
-> limit the number of times the adjust_link() callback is invoked, some
-> changes went in the bcmgenet driver to avoid that, I have yet to see how
-> much of this logic is transferable to the libphy layer.
+On Thu, Oct 09, 2014 at 05:09:36PM +0100, Guenter Roeck wrote:
+> On Thu, Oct 09, 2014 at 04:07:56PM +0100, Mark Rutland wrote:
+> > Hi,
+> >=20
+> > On Thu, Oct 09, 2014 at 03:50:42PM +0100, Frans Klaver wrote:
+> > > From: Ren=C3=A9 Moll <linux@r-moll.nl>
+> > >=20
+> > > Signed-off-by: Ren=C3=A9 Moll <linux@r-moll.nl>
+> > > Signed-off-by: Tjerk Hofmeijer <tjerk.hofmeijer@xsens.com>
+> > > Signed-off-by: Frans Klaver <frans.klaver@xsens.com>
+> > > ---
+> > >  .../bindings/power/reset/ltc2952-poweroff.txt      | 31 ++++++++=
+++++++++++++++
+> > >  1 file changed, 31 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/power/reset=
+/ltc2952-poweroff.txt
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/power/reset/ltc295=
+2-poweroff.txt b/Documentation/devicetree/bindings/power/reset/ltc2952-=
+poweroff.txt
+> > > new file mode 100644
+> > > index 0000000..c3f3d9e
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/power/reset/ltc2952-power=
+off.txt
+> > > @@ -0,0 +1,31 @@
+> > > +Binding for the LTC2952 PowerPath controller
+> > > +
+> > > +This chip is used to externally trigger a system shut down. Once=
+ the trigger
+> > > +has been sent, the chips watchdog has to be reset to gracefully =
+shut down.
+> >=20
+> > s/chips/chip's/
+> >=20
+> > > If +the Linux systems decides to shut down, it powers off the pla=
+tform
+> > > via the +poweroff signal.
+> >=20
+> > This sentence can go; the binding should describe the hardware rath=
+er
+> > than the Linux behaviour.
+> >=20
+> Maybe find an operating system independent wording and describe what =
+the
+> implementation should do. Or is that out of scope as well ?
 
-Ok, thanks for the clarification. I guess for the final patch series,
-I'll add a check for both registers modified in foo_adjust_link to bail
-out if there is no change. That will save the two register writes per
-second or so and also allow to phy_print_status() after the writels.
+Something like "The platform can be powered off via the poweroff signal=
+"
+would be OK. So long as it's not a description of Linux internals that'=
+s
+fine.=20
 
-Sebastian
+Ideally the binding wouldn't state how the OS should use the device
+either. So if bindings can be worded w.r.t. possible uses of a device
+rather than specific users, that would be preferable unless the entire
+point of the binding is to specify a very specific use.
+
+Thanks,
+Mark.
