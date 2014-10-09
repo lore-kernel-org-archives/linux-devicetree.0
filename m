@@ -1,73 +1,45 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3 2/3] ARM: shmobile: koelsch: enable HS-USB
-Date: Thu, 09 Oct 2014 16:51:02 +0400
-Message-ID: <543684B6.6060708@cogentembedded.com>
-References: <1511869.4ca9KHmSFr@wasted.cogentembedded.com> <8674731.7YYzQeH0h1@wasted.cogentembedded.com> <5435DFD6.3050609@renesas.com>
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH] reset: socfpga: use arch_initcall for early initialization
+Date: Thu, 9 Oct 2014 08:16:18 -0500
+Message-ID: <54368AA2.9000104@opensource.altera.com>
+References: <1412822646-11257-1-git-send-email-dinguyen@opensource.altera.com> <1412845410.6809.3.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5435DFD6.3050609@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "horms@verge.net.au" <horms@verge.net.au>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412845410.6809.3.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi Philipp,
 
-On 10/09/2014 05:07 AM, Yoshihiro Shimoda wrote:
-
->> Enable HS-USB device for the Koelsch board, defining the GPIO that the driver
->> should check when probing (which is the ID output from MAX3355 OTG chip).
-
->> Note that there will be pinctrl-related error messages if both internal PCI
->> and HS-USB drivers are enabled but they should be just ignored.
-
->> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->> [Sergei: added pin function/group and prop, moved device node, fixed summary,
->> added changelog]
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
->> ---
->> Changes in version 3:
->> - added pinctrl-related properties;
->> - moved the HS-USB node to precede the USB PHY node;
->> - uppercased "arm" in the summary;
->> - added changelog.
-
->>   arch/arm/boot/dts/r8a7791-koelsch.dts |    7 +++++++
->>   1 file changed, 7 insertions(+)
-
->> Index: renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
->> ===================================================================
->> --- renesas.orig/arch/arm/boot/dts/r8a7791-koelsch.dts
->> +++ renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
->> @@ -464,6 +464,13 @@
->>   	pinctrl-names = "default";
->>   };
+On 10/9/14, 4:03 AM, Philipp Zabel wrote:
+> Am Mittwoch, den 08.10.2014, 21:44 -0500 schrieb
+> dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org:
+>> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 >>
->> +&hsusb {
->> +	status = "okay";
->> +	pinctrl-0 = <&usb0_pins>;
->> +	pinctrl-names = "default";
+>> There are certain drivers that are required to get loaded very early using
+>> arch_initcall. An example of such a driver is the SOCFPGA's FPGA bridge driver.
+>> This driver has to get loaded early because it needs to enable FPGA components
+>> that are connected to the bridge.
+>>
+>> This FPGA bridge driver will using the reset controller API to toggle it's
+>> reset bits, thus, it needs the reset driver to be loaded as early as possible
+>> in order for it to get used properly.
+> 
+> Without knowing the details, this sounds like the wrong approach. Can't
+> the bridge driver return -EPROBE_DEFER until the reset controller is
+> available?
+> 
 
-> Perhaps I don't understand the pinctrl world yet, but I have a question.
+The bridge driver is also using arch_initcall, as it also needs to get
+loaded early for FPGA IPs to work, and so later driver loading will work
+for the FPGA IPs.
 
-> In r8a7791, the USB0_PWEN is GP7_23 and the USB0_OVC is GP7_24. And,
-> the "usb0_pins" is related to these USB0 pins. But, as you know,
-> the koelsch has a OTG ID pin and it connects to GP5_31 via MAX3355 chip.
-
-    The GPIO pins are not requested via pinctrl.
-
-> So, would you tell me why koelsch needs the pinctrl?
-
-    Because at least USB0_OVC/VBUS is used by HS-USB. I decided not to modify 
-the R8A7791 PFC driver in order to create a group consisting of that signal 
-alone (like on R8A7790), because we don't need to read GP7_23 on these boards, 
-unlike Lager.
-
-> Best regards,
-> Yoshihiro Shimoda
-
-WBR, Sergei
-
+Dinh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
