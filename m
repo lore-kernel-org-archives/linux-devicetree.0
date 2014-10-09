@@ -1,69 +1,36 @@
-From: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] gpio: pl061 : fix gpio pl061 request bug
-Date: Thu, 9 Oct 2014 20:05:17 +0800
-Message-ID: <CAD6h2NTJYNv=t1ncRQBooJFnRbj=iYDU2Ev-6NQERFvgiJfuow@mail.gmail.com>
-References: <1412856225-7640-1-git-send-email-kong.kongxinwei@hisilicon.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 0/6] UIO driver for APM X-Gene QMTM
+Date: Thu, 09 Oct 2014 14:06:54 +0200
+Message-ID: <2114579.IN6EpqPdMv@wuerfel>
+References: <1412051169-9142-1-git-send-email-ankit.jindal@linaro.org> <CAPTm99V-xyXa7WQG2jzDz19gotJ0aQRPk_rb5ukvUpdFyFabfw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412856225-7640-1-git-send-email-kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+In-Reply-To: <CAPTm99V-xyXa7WQG2jzDz19gotJ0aQRPk_rb5ukvUpdFyFabfw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, liguozhuo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Yunlei He <heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+To: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9 October 2014 20:03, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
-> From: k00278426 <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->
-> Some gpio controller dts nodes has no "gpio-range" property will cause gpio
-> request fail(return -517).
-> Maybe in this case gpio request shouldn't go into pinctrl subsystem.
->
-> This patch try to resolve this gpio request issue.
->
-> Signed-off-by: k00278426 <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> Signed-off-by: Yunlei He <heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/gpio/gpio-pl061.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
-> index 84b49cf..37ffe38 100644
-> --- a/drivers/gpio/gpio-pl061.c
-> +++ b/drivers/gpio/gpio-pl061.c
-> @@ -24,6 +24,7 @@
->  #include <linux/slab.h>
->  #include <linux/pinctrl/consumer.h>
->  #include <linux/pm.h>
-> +#include <linux/of_address.h>
->
->  #define GPIODIR 0x400
->  #define GPIOIS  0x404
-> @@ -264,8 +265,10 @@ static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
->
->         spin_lock_init(&chip->lock);
->
-> -       chip->gc.request = pl061_gpio_request;
-> -       chip->gc.free = pl061_gpio_free;
-> +       if (of_get_property(dev->of_node, "gpio-ranges", NULL)) {
-> +               chip->gc.request = pl061_gpio_request;
-> +               chip->gc.free = pl061_gpio_free;
-> +       }
+On Thursday 09 October 2014 14:14:33 Ankit Jindal wrote:
+> On 30 September 2014 09:56, Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > This patchset enables user space access to APM X-Gene QMTM
+> > using UIO framework.
+> >
+> > The patchset also introduces new type UIO_MEM_PHYS_CACHE
+> > for mem regions because APM X-Gene QMTM device supports
+> > cache coherency with CPU caches.
+> 
 
-Hi Xinwei,
+I haven't been able to review the patch in detail yet, but I have
+a very high-level question: how do you decide which driver to use?
 
-Please follow the comments from Linus in the previous mail thread.
+I understand that the normal use case is for the QMTM to be used by
+the kernel directly rather than being exported to user space, and
+that the network driver will just use it if it is there.
 
-Regards
-Haojian
->         chip->gc.direction_input = pl061_direction_input;
->         chip->gc.direction_output = pl061_direction_output;
->         chip->gc.get = pl061_get_value;
-> --
-> 1.9.1
->
->
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
