@@ -1,40 +1,28 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] reset: socfpga: use arch_initcall for early
- initialization
-Date: Thu, 09 Oct 2014 11:03:30 +0200
-Message-ID: <1412845410.6809.3.camel@pengutronix.de>
-References: <1412822646-11257-1-git-send-email-dinguyen@opensource.altera.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v1 0/3] gpio: Add APM X-Gene standy platform GPIO driver
+Date: Thu, 9 Oct 2014 10:42:49 +0100
+Message-ID: <20141009094248.GB3869@leverpostej>
+References: <1412779948-28769-1-git-send-email-yvo@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412822646-11257-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1412779948-28769-1-git-send-email-yvo@apm.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Y Vo <yvo@apm.com>
+Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Tin Huynh <tnhuynh@apm.com>, "patches@apm.com" <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 08.10.2014, 21:44 -0500 schrieb
-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org:
-> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> 
-> There are certain drivers that are required to get loaded very early using
-> arch_initcall. An example of such a driver is the SOCFPGA's FPGA bridge driver.
-> This driver has to get loaded early because it needs to enable FPGA components
-> that are connected to the bridge.
-> 
-> This FPGA bridge driver will using the reset controller API to toggle it's
-> reset bits, thus, it needs the reset driver to be loaded as early as possible
-> in order for it to get used properly.
+> CONFIDENTIALITY NOTICE: This e-mail message, including any attachments, 
+> is for the sole use of the intended recipient(s) and contains information
+> that is confidential and proprietary to Applied Micro Circuits Corporation or its subsidiaries. 
+> It is to be used solely for the purpose of furthering the parties' business relationship. 
+> All unauthorized review, use, disclosure or distribution is prohibited. 
+> If you are not the intended recipient, please contact the sender by reply e-mail 
+> and destroy all copies of the original message.
 
-Without knowing the details, this sounds like the wrong approach. Can't
-the bridge driver return -EPROBE_DEFER until the reset controller is
-available?
+You will need to resend this series without this disclaimer on each and
+every patch.
 
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Mark.
