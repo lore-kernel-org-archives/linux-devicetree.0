@@ -1,94 +1,65 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 08/44] kernel: Move pm_power_off to common code
-Date: Thu, 09 Oct 2014 06:14:24 -0700
-Message-ID: <54368A30.9070101@roeck-us.net>
-References: <1412659726-29957-1-git-send-email-linux@roeck-us.net> <1412659726-29957-9-git-send-email-linux@roeck-us.net> <20141009103847.GC6787@amd>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20141009103847.GC6787@amd>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Pavel Machek <pavel@denx.de>
-Cc: linux-kernel@vger.kernel.org, adi-buildroot-devel@lists.sourceforge.net, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lguest@lists.ozlabs.org, linux-acpi@vger.kernel.org, linux-alpha@vger.kernel.org, linux-am33-list@redhat.com, linux-cris-kernel@axis.com, linux-efi@vger.kernel.org, linux-hexagon@vger.kernel.org, linux-m32r-ja@ml.linux-m32r.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org, linux-xtensa@linux-xtensa.org, openipmi-developer@lists.sourceforge.net, user-mode-linux-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-metag@vger.kernel.org, linux-mips@linux-mips.org, linux-parisc@vger.kernel.orglinux-
+From: Abhilash Kesavan <a.kesavan@samsung.com>
+Subject: [PATCH v5 0/6] Add initial support for pinctrl on Exynos7
+Date: Thu, 09 Oct 2014 19:24:28 +0530
+Message-ID: <1412862874-9335-1-git-send-email-a.kesavan@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, tomasz.figa@gmail.com, linus.walleij@linaro.org
+Cc: linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, naveenkrishna.ch@gmail.com, robh@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2014 03:38 AM, Pavel Machek wrote:
-> Hi!
->
->> @@ -184,6 +179,8 @@ machine_halt(void)
->>   void
->>   machine_power_off(void)
->>   {
->> +	do_kernel_poweroff();
->> +
->
-> poweroff -> power_off for consistency.
->
-Dunno; matter of personal preference. I started with that, but ultimately went
-with poweroff to distinguish poweroff handler functions from existing code,
-specifically kernel_power_off().
+Changes since v4:
+	- Rebased over Tomasz Figa's pinctrl clean-up patches[1]
 
-Does anyone else have an opinion ?
+Changes since v3:
+	- Changed variable name from exynos_wkup_irq_chip to irq_chip
+	- Added acked-by tag from Tomasz Figa
 
->
->> index c4f50a3..1da27d1 100644
->> --- a/arch/blackfin/kernel/reboot.c
->> +++ b/arch/blackfin/kernel/reboot.c
->> @@ -106,6 +107,7 @@ void machine_halt(void)
->>   __attribute__((weak))
->>   void native_machine_power_off(void)
->>   {
->> +	do_kernel_poweroff();
->>   	idle_with_irq_disabled();
->>   }
->>
->
-> So here we handle do_kernel_poweroff() returning,
->
->> diff --git a/arch/cris/kernel/process.c b/arch/cris/kernel/process.c
->> index b78498e..eaafad0 100644
->> --- a/arch/cris/kernel/process.c
->> +++ b/arch/cris/kernel/process.c
->> @@ -60,6 +57,7 @@ void machine_halt(void)
->>
->>   void machine_power_off(void)
->>   {
->> +	do_kernel_poweroff();
->>   }
->>
->
->
-> Here we don't.
->
->> diff --git a/arch/frv/kernel/process.c b/arch/frv/kernel/process.c
->> index 5d40aeb77..a673725 100644
->> --- a/arch/frv/kernel/process.c
->> +++ b/arch/frv/kernel/process.c
->> @@ -107,6 +104,8 @@ void machine_power_off(void)
->>   	gdbstub_exit(0);
->>   #endif
->>
->> +	do_kernel_poweroff();
->> +
->>   	for (;;);
->>   }
->>
->
-> And here we do.
->
-> What is right?
-> 								Pavel
+Changes since v2:
+	- Added a .irq_chip field to the samsung_pin_bank struct
+	- Consolidated the wakeup and gpio irqd_ops
 
-Up to the architecture maintainer to decide. My goal was to not change
-existing behavior if no poweroff handler is registered.
+Changes since v1:
+	- Marked the newly created irq_chip instances as __initdata
+	- Used kmemdup to keep a copy of the irq_chip
+	- Change the pinctrl name from sd0_rdqs to sd0_ds as per UM
+	- Moved the pinctrl enablement for exynos7 into a separate patch
+	- Added tested-by and reviewed-by tags from Thomas Abraham
 
-Guenter
+This series has been tested on linux-next (20141008)
+https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/ with
+the following dependencies and [1].
+ 
+a) Samsung Serial symbol clean-up for exynos7 serial driver enablement (v2)
+   http://www.spinics.net/lists/arm-kernel/msg366947.html
+   http://www.spinics.net/lists/arm-kernel/msg366948.html
+b) "dts, kbuild: Implement support for dtb vendor subdirs" patchset - rebased
+   http://comments.gmane.org/gmane.linux.kbuild.devel/12131
+c) "arch: arm64: enable support for Samsung Exynos7 SoC" patchset (v5) - rebased
+   http://www.spinics.net/lists/arm-kernel/msg364014.html
+
+[1] https://lkml.org/lkml/2014/10/2/476
+
+Abhilash Kesavan (3):
+  pinctrl: exynos: Generalize the eint16_31 demux code
+  pinctrl: exynos: Consolidate irq domain callbacks
+  pinctrl: exynos: Add irq_chip instance for Exynos7 wakeup interrupts
+
+Naveen Krishna Ch (3):
+  pinctrl: exynos: Add initial driver data for Exynos7
+  arm64: dts: Add initial pinctrl support to EXYNOS7
+  arm64: exynos: Enable pinctrl support for Exynos7
+
+ .../bindings/pinctrl/samsung-pinctrl.txt           |    3 +
+ arch/arm64/Kconfig                                 |    2 +
+ arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi    |  560 ++++++++++++++++++++
+ arch/arm64/boot/dts/exynos/exynos7.dtsi            |   66 +++
+ drivers/pinctrl/samsung/pinctrl-exynos.c           |  188 +++++--
+ drivers/pinctrl/samsung/pinctrl-exynos.h           |    3 +
+ drivers/pinctrl/samsung/pinctrl-samsung.c          |    2 +
+ drivers/pinctrl/samsung/pinctrl-samsung.h          |    3 +
+ 8 files changed, 791 insertions(+), 36 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
+
+-- 
+1.7.9.5
