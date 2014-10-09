@@ -1,60 +1,67 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH V4 6/7] MAINTAINERS: Entry for Cygnus/iproc arm
- architecture and clock drivers
-Date: Thu, 09 Oct 2014 16:00:51 -0700
-Message-ID: <1412895651.8770.7.camel@joe-AO725>
-References: <Scott Branden <sbranden@broadcom.com>
-	 <1412894671-5921-1-git-send-email-sbranden@broadcom.com>
-	 <1412894671-5921-7-git-send-email-sbranden@broadcom.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2] arm: dts: socfpga: Add SPI nodes to SOCFPGA DT.
+Date: Fri, 10 Oct 2014 00:05:43 +0100
+Message-ID: <20141009230543.GB18557@sirena.org.uk>
+References: <1412796428-3255-1-git-send-email-tthayer@opensource.altera.com>
+ <20141008200515.GK4609@sirena.org.uk>
+ <5436DFAD.2010902@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1412894671-5921-7-git-send-email-sbranden@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Branden <sbranden@broadcom.com>
-Cc: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>, JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="GPJrCs/72TxItFYR"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5436DFAD.2010902-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-10-09 at 15:44 -0700, Scott Branden wrote:
-> Acked-by: Jonathan Richardson <jonathar@broadcom.com>
-> Signed-off-by: Scott Branden <sbranden@broadcom.com>
-> ---
->  MAINTAINERS |   17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a12edf2..0900082 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2071,9 +2071,24 @@ L:	linux-scsi@vger.kernel.org
->  S:	Supported
->  F:	drivers/scsi/bnx2i/
->  
-> -BROADCOM KONA GPIO DRIVER
-> +BROADCOM CYGNUS/IPROC ARM ARCHITECTURE
->  M:	Ray Jui <rjui@broadcom.com>
-> +M:	Scott Branden <sbranden@broadcom.com>
-> +L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
->  L:	bcm-kernel-feedback-list@broadcom.com
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/arm/bcm/cygnus.txt
-> +F:	arch/arm/boot/dts/bcm-cygnus.dtsi
-> +F:	arch/arm/boot/dts/bcm911360_entphn.dts
-> +F:	arch/arm/configs/bcm_cygnus_defconfig
-> +F:	arch/arm/mach-bcm/bcm_cygnus.c
-> +F:	Documentation/devicetree/bindings/clock/clk-cygnus.txt
-> +F:	Documentation/devicetree/bindings/clock/clk-iproc.txt
-> +F:	drivers/clk/bcm/clk-cygnus.c
-> +F:	drivers/clk/bcm/clk-iproc.c
-> +
-> +BROADCOM KONA GPIO DRIVER
-> +M:	Ray Jui <rjui@broadcom.com>
->  S:	Supported
->  F:	drivers/gpio/gpio-bcm-kona.c
->  F:	Documentation/devicetree/bindings/gpio/gpio-bcm-kona.txt
 
-This drops this L line from BROADCOM KONA GPIO DRIVER
-L:	bcm-kernel-feedback-list@broadcom.com
+--GPJrCs/72TxItFYR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Is that what you want?
+On Thu, Oct 09, 2014 at 02:19:09PM -0500, Thor Thayer wrote:
+
+> There are quite a few instances of the spidev as a child of a spi node in
+> the arch/arm/dts directory
+> - imx6qdl-tx6.dtsi
+> - imx53-tx53.dtsi
+> - tegra30-apalis-eval.dts
+> - spear1340-evb.dts
+
+> I believe the reason these are added to the device tree is that they are
+> automatically probed.
+
+These are all buggy - the DT is there to describe the hardware, not how
+Linux currently implements it.  I see I need to add some code to spidev
+to make it complain loudy if instantiated from DT.
+
+> If there is a different or better way to handle spidev, I'll be happy to do
+> it. This seemed to be the cleanest way and had precedent.
+
+The DT should say what the physical device connected to the bus is using
+whatever binding is appropriate for that device.  If that happens to be
+spidev in current Linux then the appropriate ID should be added to spidev.
+
+--GPJrCs/72TxItFYR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUNxTHAAoJECTWi3JdVIfQP6QH/RBKYoiGGrp/yUKGPmZY8td0
+9SXSI41O7ikgz0xa6twGJKx04MiOdPD23oxtzdEFXjKvJ9ZEdWZLtj3XtydnXy4A
+B3rlg9pHVSTyTJs468oZzWSFYnNQsvicBYQGd5SVKn1VQca4qnTSL+X+pIgevISZ
+LcyViacD2dAQRcdM6uqOQf/gyq0kwCg+C5TYSlumBUbOEWIXsvBMcBMox0eB78q7
+1+mMPSnwIqh08l9Ldzfuaf92WBmVj5KIdEhM/P9AIE+N7aS9WdFXqr03bt/xwhYj
+OWZPAQJP0/UBJsdD7hD7OuxpMPgCyeqoaP0f0l4kzaVZJ28MG+1PYOOosKqqxcE=
+=mfvC
+-----END PGP SIGNATURE-----
+
+--GPJrCs/72TxItFYR--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
