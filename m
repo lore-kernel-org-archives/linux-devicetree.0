@@ -1,48 +1,48 @@
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCHv2] arm: dts: socfpga: Add SPI nodes to SOCFPGA DT.
-Date: Thu, 9 Oct 2014 14:19:09 -0500
-Message-ID: <5436DFAD.2010902@opensource.altera.com>
-References: <1412796428-3255-1-git-send-email-tthayer@opensource.altera.com> <20141008200515.GK4609@sirena.org.uk>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v8 4/7] qcom: pm: Add cpu low power mode functions
+Date: Thu, 9 Oct 2014 12:26:20 -0700
+Message-ID: <20141009192620.GB5493@codeaurora.org>
+References: <1412718106-17049-1-git-send-email-lina.iyer@linaro.org>
+ <1412718106-17049-5-git-send-email-lina.iyer@linaro.org>
+ <5435E245.1090507@codeaurora.org>
+ <20141009155643.GB1277@ilina-mac.local>
+ <20141009190057.GA5493@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141008200515.GK4609-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141009190057.GA5493@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: daniel.lezcano@linaro.org, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 10/09, Stephen Boyd wrote:
+> On 10/09, Lina Iyer wrote:
+> > On Wed, Oct 08 2014 at 19:17 -0600, Stephen Boyd wrote:
+> > 
+> > >>+static int __init qcom_pm_device_init(void)
+> > >>+{
+> > >>+	platform_device_register(&qcom_cpuidle_device);
+> > >>+
+> > >
+> > >This is wrong. We're going to register a platform device whenever
+> > >this file is included in a kernel. This is then going to try and
+> > >probe the qcom_cpuidle device which is going to fail and print an
+> > >error message if we're not running on a qcom device.
+> > Why would this file be compiled on a non-qcom target? The file has a
+> > dependency on ARCH_QCOM (as it should be) and would not be compiled on a
+> > non-qcom target.
+> 
+> We will compile this file on non-qcom devices in a multi-platform
+> kernel build. Actually that looks like it would be a problem
+> because cpuidle_register() will blow away any other registered
+> driver on non-qcom devices.
 
-On 10/08/2014 03:05 PM, Mark Brown wrote:
-> On Wed, Oct 08, 2014 at 02:27:08PM -0500, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
->
->> +			spidev@0 {
->> +				compatible = "spidev";
->> +				reg = <0>;	/* chip select */
->> +				spi-max-frequency = <100000000>;
->> +			};
-> No, if you're putting spidev into the DT that's broken - describe the
-> hardware, not the software you're using to control it.
-Hi Mark,
+Oh right, this won't happen because we won't have the idle states
+in the CPU node. We'll just get the annoying error message
+instead.
 
-There are quite a few instances of the spidev as a child of a spi node 
-in the arch/arm/dts directory
-- imx6qdl-tx6.dtsi
-- imx53-tx53.dtsi
-- tegra30-apalis-eval.dts
-- spear1340-evb.dts
-
-I believe the reason these are added to the device tree is that they are 
-automatically probed.
-
-If there is a different or better way to handle spidev, I'll be happy to 
-do it. This seemed to be the cleanest way and had precedent.
-
-Thanks for reviewing this and I appreciate your input.
-
-Thor
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
