@@ -1,58 +1,41 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 1/5] regulator: of: Add regulator-initial-mode parse support
-Date: Thu, 09 Oct 2014 17:19:47 +0200
-Message-ID: <5436A793.6090204@collabora.co.uk>
-References: <1412775847-15213-1-git-send-email-javier.martinez@collabora.co.uk> <1412775847-15213-2-git-send-email-javier.martinez@collabora.co.uk> <20141008142511.GA4609@sirena.org.uk> <54354C7D.7090104@collabora.co.uk> <20141008151220.GE4609@sirena.org.uk> <54356666.4090003@collabora.co.uk> <20141009102717.GG3869@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH RFT 0/8] Marvell PXA168 libphy handling and Berlin Ethernet
+Date: Thu, 09 Oct 2014 17:24:34 +0200
+Message-ID: <5436A8B2.1030200@gmail.com>
+References: <1412858346-11334-1-git-send-email-sebastian.hesselbarth@gmail.com> <20141009163315.2a9e1806@free-electrons.com> <54369EAC.5040301@gmail.com> <20141009164704.7286fc3f@free-electrons.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20141009102717.GG3869@leverpostej>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Mark Brown <broonie@kernel.org>, Doug Anderson <dianders@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141009164704.7286fc3f@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, netdev@vger.kernel.org, =?ISO-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
-
-On 10/09/2014 12:27 PM, Mark Rutland wrote:
->> 
->> Well, is not fairly obvious to me. One can also say the opposite, why the
->> kernel is documenting a DT binding that is not (currently) implemented?
-> 
-> Checkpatch will complain regarding undocumented bindings, so from a
-> pragmatic point of view the binding must come first.
+On 10/09/2014 04:47 PM, Thomas Petazzoni wrote:
+> Well, I initially remember that the original driver coming from Marvell
+> was using the HW PHY stuff, and that I changed that because it would
+> not integrate well with the kernel libphy.
 >
-> Personally, when I read a patch series I do an initial pass in-order,
-> and having the binding first makes things clearer. I might have some
-> questions regarding the binding that the driver answers later, and it makes it
-> easier to spot undocumented properties or conventions used by the
-> driver. Doing so the other way around usually leaves me with more
-> questions at the end.
->
+> A drawback of this is that because the hardware has built-in PHY
+> polling which triggers a MAC interrupt when the PHY status changes, they
+> typically don't wire up the PHY interrupt. Therefore, since we're not
+> able to use the MAC interrupt for PHY event notifications, we rely on
+> software PHY polling, which means that link up / link down events take
+> a few seconds to be noticed by the kernel. Unfortunately, I don't think
+> the hardware allows to use the hardware PHY polling to get link changes
+> interrupt, but not let the hardware configure the PHY itself.
 
-Thanks a lot for the explanation, it certainly makes sense then to have
-the DT binding before. I'll propose a patch to add that information to
-Documentation/devicetree/bindings/submitting-patches.txt so people
-(like me) who didn't find it obvious can know what the convention is.
- 
->> That's why what makes the most sense for me is what the old convention did,
->> add the DT binding docs in the same patch that implements the binding.
-> 
-> Having a separate patch for the binding is very helpful for those of us
-> doing review. For one thing it helps us to find the binding document,
-> which can be important when a driver is thousands of lines long. For
-> another it means that we can be clear that our Acked-by, Reviewed-by,
-> etc apply to the binding and not necessarily the rest of the code.
-> 
+Yeah, but that HW PHY stuff really only works properly with standard
+compliant PHYs. In particular, the integrated Marvell PHY in Marvell
+Berlin SoCs does not seem to reflect PHY status on BMCR properly /sigh/.
+Anyway, I think we can live with PHY polling.
 
-Agreed.
+BTW, one thing I noticed here is that libphy calls adjust_link
+over-and-over again although nothing has changed. I guess we can just
+add some before/after comparison in the libphy state machine and only
+call adjust_link when something has changed. I'll have to look closer
+at the state machine first and maybe Florian can comment on this,
+too.
 
-> For small patches, this is obviously less of a concern.
-> 
-> Thanks,
-> Mark.
-> 
-
-Best regards,
-Javier
+Sebastian
