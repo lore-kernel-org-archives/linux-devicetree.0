@@ -1,58 +1,74 @@
-From: Kever Yang <kever.yang@rock-chips.com>
-Subject: [PATCH v2 2/2] ARM: dts: enable init rate for clock
-Date: Thu,  9 Oct 2014 21:50:30 -0700
-Message-ID: <1412916630-8256-3-git-send-email-kever.yang@rock-chips.com>
-References: <1412916630-8256-1-git-send-email-kever.yang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1412916630-8256-1-git-send-email-kever.yang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, Mike Turquette <mturquette@linaro.org>
-Cc: dianders@chromium.org, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, dkl@rock-chips.com, Kever Yang <kever.yang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Zhao Qiang <B45475@freescale.com>
+Subject: [PATCH 3/3] ls1021a-twr/qe: add qe node to ls1-twr
+Date: Fri, 10 Oct 2014 14:49:58 +0800
+Message-ID: <1412923798-9757-1-git-send-email-B45475@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, B07421@freescale.com
+Cc: Zhao Qiang <B45475@freescale.com>, R63061@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-We need to initialize PLL rate and some of bus clock rate while
-kernel init, for there is no other module will do that.
-
-Basically on rk3288 we use GPLL for cpu bus, peripheral bus and
-most of peripheral clock, CPLL for devices who require 50M/200M
-clock rate, leave NPLL behind for special requirement from
-display system.
-
-The common-clock-framework will help us to select best source for
-child clocks after we init the PLLs propriety.
-
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-Reviewed-by: Doug Anderson <dianders@chromium.org>
-Tested-by: Doug Anderson <dianders@chromium.org>
----
-
-Changes in v2:
-- add review and test tag
-- add some explanation in commit message
-
- arch/arm/boot/dts/rk3288.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 874e66d..2f4519b 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -455,6 +455,16 @@
- 		rockchip,grf = <&grf>;
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
-+		assigned-clocks = <&cru PLL_GPLL>, <&cru PLL_CPLL>,
-+				  <&cru PLL_NPLL>, <&cru ACLK_CPU>,
-+				  <&cru HCLK_CPU>, <&cru PCLK_CPU>,
-+				  <&cru ACLK_PERI>, <&cru HCLK_PERI>,
-+				  <&cru PCLK_PERI>;
-+		assigned-clock-rates = <594000000>, <400000000>,
-+				       <500000000>, <300000000>,
-+				       <150000000>, <75000000>,
-+				       <300000000>, <150000000>,
-+				       <75000000>;
- 	};
- 
- 	grf: syscon@ff770000 {
--- 
-1.9.1
+YWRkIHFlIG5vZGUgdG8gbHMxMDIxYXR3ciBmZHQuCgpTaWduZWQtb2ZmLWJ5OiBaaGFvIFFpYW5n
+IDxCNDU0NzVAZnJlZXNjYWxlLmNvbT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9sczEwMjFhLXR3
+ci5kdHMgfCAyNCArKysrKysrKysrKysrKysKIGFyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRz
+aSAgICB8IDY0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwogMiBmaWxl
+cyBjaGFuZ2VkLCA4OCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9k
+dHMvbHMxMDIxYS10d3IuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIxYS10d3IuZHRzCmlu
+ZGV4IGE1MmJlN2IuLjQxNTM4N2YgMTAwNzU1Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAy
+MWEtdHdyLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9sczEwMjFhLXR3ci5kdHMKQEAgLTE2
+NCw2ICsxNjQsMzAgQEAKIAl9OwogfTsKIAorJnVxZSB7CisJdGRtYTogdWNjQDIwMDAgeworCQlj
+b21wYXRpYmxlID0gImZzbCx1Y2MtdGRtIjsKKwkJcngtY2xvY2stbmFtZSA9ICJjbGs4IjsKKwkJ
+dHgtY2xvY2stbmFtZSA9ICJjbGs5IjsKKwkJZnNsLHJ4LXN5bmMtY2xvY2sgPSAicnN5bmNfcGlu
+IjsKKwkJZnNsLHR4LXN5bmMtY2xvY2sgPSAidHN5bmNfcGluIjsKKwkJZnNsLHR4LXRpbWVzbG90
+ID0gPDB4ZmZmZmZmZmU+OworCQlmc2wscngtdGltZXNsb3QgPSA8MHhmZmZmZmZmZT47CisJCWZz
+bCx0ZG0tZnJhbWVyLXR5cGUgPSAiZTEiOworCQlmc2wsdGRtLW1vZGUgPSAibm9ybWFsIjsKKwkJ
+ZnNsLHRkbS1pZCA9IDwwPjsKKwkJZnNsLHNpcmFtLWVudHJ5LWlkID0gPDA+OworCX07CisKKwlz
+ZXJpYWw6IHVjY0AyMjAwIHsKKwkJZGV2aWNlX3R5cGUgPSAic2VyaWFsIjsKKwkJY29tcGF0aWJs
+ZSA9ICJ1Y2NfdWFydCI7CisJCXBvcnQtbnVtYmVyID0gPDE+OworCQlyeC1jbG9jay1uYW1lID0g
+ImJyZzIiOworCQl0eC1jbG9jay1uYW1lID0gImJyZzIiOworCX07Cit9OworCiAmcHdtNiB7CiAJ
+c3RhdHVzID0gIm9rYXkiOwogfTsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAy
+MWEuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaQppbmRleCA4MDc0N2RjLi4z
+ZjJhYjg5IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9sczEwMjFhLmR0c2kKKysrIGIv
+YXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIxYS5kdHNpCkBAIC0zMTQsNiArMzE0LDcwIEBACiAJCQlz
+dGF0dXMgPSAiZGlzYWJsZWQiOwogCQl9OwogCisJCXVxZTogdXFlQDI0MDAwMDAgeworCQkJI2Fk
+ZHJlc3MtY2VsbHMgPSA8MT47CisJCQkjc2l6ZS1jZWxscyA9IDwxPjsKKwkJCWRldmljZV90eXBl
+ID0gInFlIjsKKwkJCWNvbXBhdGlibGUgPSAiZnNsLHFlIiwgInNpbXBsZS1idXMiOworCQkJcmFu
+Z2VzID0gPDB4MCAweDAgMHgyNDAwMDAwIDB4NDAwMDA+OworCQkJcmVnID0gPDB4MCAweDI0MDAw
+MDAgMHgwIDB4NDgwPjsKKwkJCWJyZy1mcmVxdWVuY3kgPSA8MTAwMDAwMDAwPjsKKwkJCWJ1cy1m
+cmVxdWVuY3kgPSA8MjAwMDAwMDAwPjsKKworCQkJZnNsLHFlLW51bS1yaXNjcyA9IDwxPjsKKwkJ
+CWZzbCxxZS1udW0tc251bXMgPSA8Mjg+OworCisJCQlxZWljOiBxZWljQDgwIHsKKwkJCQljb21w
+YXRpYmxlID0gImZzbCxxZS1pYyI7CisJCQkJcmVnID0gPDB4ODAgMHg4MD47CisJCQkJI2FkZHJl
+c3MtY2VsbHMgPSA8MD47CisJCQkJaW50ZXJydXB0LWNvbnRyb2xsZXI7CisJCQkJI2ludGVycnVw
+dC1jZWxscyA9IDwxPjsKKwkJCQlpbnRlcnJ1cHRzID0gPDAgMTA5IDB4MDQgMCAxMDkgMHgwND47
+CisJCQl9OworCisJCQlzaTE6IHNpQDcwMCB7CisJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJ
+CQkJI3NpemUtY2VsbHMgPSA8MD47CisJCQkJY29tcGF0aWJsZSA9ICJmc2wscWUtc2kiOworCQkJ
+CXJlZyA9IDwweDcwMCAweDgwPjsKKwkJCX07CisKKwkJCXNpcmFtMTogc2lyYW1AMTAwMCB7CisJ
+CQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkJI3NpemUtY2VsbHMgPSA8MT47CisJCQkJY29t
+cGF0aWJsZSA9ICJmc2wscWUtc2lyYW0iOworCQkJCXJlZyA9IDwweDEwMDAgMHg4MDA+OworCQkJ
+fTsKKworCQkJdWNjQDIwMDAgeworCQkJCWNlbGwtaW5kZXggPSA8MT47CisJCQkJcmVnID0gPDB4
+MjAwMCAweDIwMD47CisJCQkJaW50ZXJydXB0cyA9IDwzMj47CisJCQkJaW50ZXJydXB0LXBhcmVu
+dCA9IDwmcWVpYz47CisJCQl9OworCisJCQl1Y2NAMjIwMCB7CisJCQkJY2VsbC1pbmRleCA9IDwz
+PjsKKwkJCQlyZWcgPSA8MHgyMjAwIDB4MjAwPjsKKwkJCQlpbnRlcnJ1cHRzID0gPDM0PjsKKwkJ
+CQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZxZWljPjsKKwkJCX07CisKKwkJCW11cmFtQDEwMDAwIHsK
+KwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCQkjc2l6ZS1jZWxscyA9IDwxPjsKKwkJCQlj
+b21wYXRpYmxlID0gImZzbCxxZS1tdXJhbSIsICJmc2wsY3BtLW11cmFtIjsKKwkJCQlyYW5nZXMg
+PSA8MHgwIDB4MTAwMDAgMHg2MDAwPjsKKworCQkJCWRhdGEtb25seUAwIHsKKwkJCQkJY29tcGF0
+aWJsZSA9ICJmc2wscWUtbXVyYW0tZGF0YSIsCisJCQkJCSJmc2wsY3BtLW11cmFtLWRhdGEiOwor
+CQkJCQlyZWcgPSA8MHgwIDB4NjAwMD47CisJCQkJfTsKKwkJCX07CisJCX07CisKIAkJbHB1YXJ0
+MDogc2VyaWFsQDI5NTAwMDAgewogCQkJY29tcGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1scHVhcnQi
+OwogCQkJcmVnID0gPDB4MCAweDI5NTAwMDAgMHgwIDB4MTAwMD47Ci0tIAoyLjEuMC4yNy5nOTZk
+YjMyNAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGlu
+dXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRw
+czovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
