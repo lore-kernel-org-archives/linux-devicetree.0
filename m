@@ -1,74 +1,36 @@
-From: Zhao Qiang <B45475@freescale.com>
-Subject: [PATCH 3/3] ls1021a-twr/qe: add qe node to ls1-twr
-Date: Fri, 10 Oct 2014 14:49:58 +0800
-Message-ID: <1412923798-9757-1-git-send-email-B45475@freescale.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v1 1/3] gpio: Add APM X-Gene standby GPIO controller driver
+Date: Fri, 10 Oct 2014 09:26:46 +0200
+Message-ID: <2508938.qoNAztonL9@wuerfel>
+References: <1412779948-28769-1-git-send-email-yvo@apm.com> <2334188.M3m5hnmS5j@wuerfel> <CAL4ahLeZsT4KN22Jgxa8EJD8eEcWwN-wddCFvXY+8Yvb5hCGFA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, B07421@freescale.com
-Cc: Zhao Qiang <B45475@freescale.com>, R63061@freescale.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL4ahLeZsT4KN22Jgxa8EJD8eEcWwN-wddCFvXY+8Yvb5hCGFA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Y Vo <yvo@apm.com>
+Cc: linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Tin Huynh <tnhuynh@apm.com>, patches@apm.com, Toan Le <toanle@apm.com>, Phong Vo <pvo@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-YWRkIHFlIG5vZGUgdG8gbHMxMDIxYXR3ciBmZHQuCgpTaWduZWQtb2ZmLWJ5OiBaaGFvIFFpYW5n
-IDxCNDU0NzVAZnJlZXNjYWxlLmNvbT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9sczEwMjFhLXR3
-ci5kdHMgfCAyNCArKysrKysrKysrKysrKysKIGFyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRz
-aSAgICB8IDY0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwogMiBmaWxl
-cyBjaGFuZ2VkLCA4OCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9k
-dHMvbHMxMDIxYS10d3IuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIxYS10d3IuZHRzCmlu
-ZGV4IGE1MmJlN2IuLjQxNTM4N2YgMTAwNzU1Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAy
-MWEtdHdyLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9sczEwMjFhLXR3ci5kdHMKQEAgLTE2
-NCw2ICsxNjQsMzAgQEAKIAl9OwogfTsKIAorJnVxZSB7CisJdGRtYTogdWNjQDIwMDAgeworCQlj
-b21wYXRpYmxlID0gImZzbCx1Y2MtdGRtIjsKKwkJcngtY2xvY2stbmFtZSA9ICJjbGs4IjsKKwkJ
-dHgtY2xvY2stbmFtZSA9ICJjbGs5IjsKKwkJZnNsLHJ4LXN5bmMtY2xvY2sgPSAicnN5bmNfcGlu
-IjsKKwkJZnNsLHR4LXN5bmMtY2xvY2sgPSAidHN5bmNfcGluIjsKKwkJZnNsLHR4LXRpbWVzbG90
-ID0gPDB4ZmZmZmZmZmU+OworCQlmc2wscngtdGltZXNsb3QgPSA8MHhmZmZmZmZmZT47CisJCWZz
-bCx0ZG0tZnJhbWVyLXR5cGUgPSAiZTEiOworCQlmc2wsdGRtLW1vZGUgPSAibm9ybWFsIjsKKwkJ
-ZnNsLHRkbS1pZCA9IDwwPjsKKwkJZnNsLHNpcmFtLWVudHJ5LWlkID0gPDA+OworCX07CisKKwlz
-ZXJpYWw6IHVjY0AyMjAwIHsKKwkJZGV2aWNlX3R5cGUgPSAic2VyaWFsIjsKKwkJY29tcGF0aWJs
-ZSA9ICJ1Y2NfdWFydCI7CisJCXBvcnQtbnVtYmVyID0gPDE+OworCQlyeC1jbG9jay1uYW1lID0g
-ImJyZzIiOworCQl0eC1jbG9jay1uYW1lID0gImJyZzIiOworCX07Cit9OworCiAmcHdtNiB7CiAJ
-c3RhdHVzID0gIm9rYXkiOwogfTsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAy
-MWEuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaQppbmRleCA4MDc0N2RjLi4z
-ZjJhYjg5IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9sczEwMjFhLmR0c2kKKysrIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIxYS5kdHNpCkBAIC0zMTQsNiArMzE0LDcwIEBACiAJCQlz
-dGF0dXMgPSAiZGlzYWJsZWQiOwogCQl9OwogCisJCXVxZTogdXFlQDI0MDAwMDAgeworCQkJI2Fk
-ZHJlc3MtY2VsbHMgPSA8MT47CisJCQkjc2l6ZS1jZWxscyA9IDwxPjsKKwkJCWRldmljZV90eXBl
-ID0gInFlIjsKKwkJCWNvbXBhdGlibGUgPSAiZnNsLHFlIiwgInNpbXBsZS1idXMiOworCQkJcmFu
-Z2VzID0gPDB4MCAweDAgMHgyNDAwMDAwIDB4NDAwMDA+OworCQkJcmVnID0gPDB4MCAweDI0MDAw
-MDAgMHgwIDB4NDgwPjsKKwkJCWJyZy1mcmVxdWVuY3kgPSA8MTAwMDAwMDAwPjsKKwkJCWJ1cy1m
-cmVxdWVuY3kgPSA8MjAwMDAwMDAwPjsKKworCQkJZnNsLHFlLW51bS1yaXNjcyA9IDwxPjsKKwkJ
-CWZzbCxxZS1udW0tc251bXMgPSA8Mjg+OworCisJCQlxZWljOiBxZWljQDgwIHsKKwkJCQljb21w
-YXRpYmxlID0gImZzbCxxZS1pYyI7CisJCQkJcmVnID0gPDB4ODAgMHg4MD47CisJCQkJI2FkZHJl
-c3MtY2VsbHMgPSA8MD47CisJCQkJaW50ZXJydXB0LWNvbnRyb2xsZXI7CisJCQkJI2ludGVycnVw
-dC1jZWxscyA9IDwxPjsKKwkJCQlpbnRlcnJ1cHRzID0gPDAgMTA5IDB4MDQgMCAxMDkgMHgwND47
-CisJCQl9OworCisJCQlzaTE6IHNpQDcwMCB7CisJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJ
-CQkJI3NpemUtY2VsbHMgPSA8MD47CisJCQkJY29tcGF0aWJsZSA9ICJmc2wscWUtc2kiOworCQkJ
-CXJlZyA9IDwweDcwMCAweDgwPjsKKwkJCX07CisKKwkJCXNpcmFtMTogc2lyYW1AMTAwMCB7CisJ
-CQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkJI3NpemUtY2VsbHMgPSA8MT47CisJCQkJY29t
-cGF0aWJsZSA9ICJmc2wscWUtc2lyYW0iOworCQkJCXJlZyA9IDwweDEwMDAgMHg4MDA+OworCQkJ
-fTsKKworCQkJdWNjQDIwMDAgeworCQkJCWNlbGwtaW5kZXggPSA8MT47CisJCQkJcmVnID0gPDB4
-MjAwMCAweDIwMD47CisJCQkJaW50ZXJydXB0cyA9IDwzMj47CisJCQkJaW50ZXJydXB0LXBhcmVu
-dCA9IDwmcWVpYz47CisJCQl9OworCisJCQl1Y2NAMjIwMCB7CisJCQkJY2VsbC1pbmRleCA9IDwz
-PjsKKwkJCQlyZWcgPSA8MHgyMjAwIDB4MjAwPjsKKwkJCQlpbnRlcnJ1cHRzID0gPDM0PjsKKwkJ
-CQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZxZWljPjsKKwkJCX07CisKKwkJCW11cmFtQDEwMDAwIHsK
-KwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCQkjc2l6ZS1jZWxscyA9IDwxPjsKKwkJCQlj
-b21wYXRpYmxlID0gImZzbCxxZS1tdXJhbSIsICJmc2wsY3BtLW11cmFtIjsKKwkJCQlyYW5nZXMg
-PSA8MHgwIDB4MTAwMDAgMHg2MDAwPjsKKworCQkJCWRhdGEtb25seUAwIHsKKwkJCQkJY29tcGF0
-aWJsZSA9ICJmc2wscWUtbXVyYW0tZGF0YSIsCisJCQkJCSJmc2wsY3BtLW11cmFtLWRhdGEiOwor
-CQkJCQlyZWcgPSA8MHgwIDB4NjAwMD47CisJCQkJfTsKKwkJCX07CisJCX07CisKIAkJbHB1YXJ0
-MDogc2VyaWFsQDI5NTAwMDAgewogCQkJY29tcGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1scHVhcnQi
-OwogCQkJcmVnID0gPDB4MCAweDI5NTAwMDAgMHgwIDB4MTAwMD47Ci0tIAoyLjEuMC4yNy5nOTZk
-YjMyNAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGlu
-dXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRw
-czovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+On Friday 10 October 2014 10:22:34 Y Vo wrote:
+> APM:  There are 6 GPIOs which can support IRQ, they are fixed to use
+> external IRQ from XGIC.  (The XGIC is based on the ARM Generic
+> Interrupt Controller Architecture Specification, Architecture version
+> 2.0, The XGIC provides the mechanism to collect interrupt requests
+> (IRQs) from both on-chip as well as off-chip sources and deliver them
+> to the multiple X-Gene1 cores within the X-Gene1 processor),  So there
+> are no way to read the GPIO DS when configure as an interrupt. They
+> are specific GPIO for boot another boot chip in X-Gene which can
+> access when boot up. So this is hardwire in the GPIO block.
+> GPIO_DS8 ---> External IRQ0 (XGIC40)
+> GPIO_DS9 ---> External IRQ1 (XGIC41)
+> ...
+> GPIO_DS13 ---> External IRQ5(XGIC45)
+
+Could you read the status of the external IRQ line using irq_get_pending()
+or another public interface?
+
+If not, we may have to add an interface for doing this.
+
+	Arnd
