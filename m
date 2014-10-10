@@ -1,141 +1,84 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 09/12] rtc: omap: add support for pmic_power_en
-Date: Fri, 10 Oct 2014 13:07:27 -0500
-Message-ID: <20141010180721.GV31348@saruman>
-References: <1412881594-25678-1-git-send-email-johan@kernel.org>
- <1412881594-25678-10-git-send-email-johan@kernel.org>
-Reply-To: balbi@ti.com
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 3/3] ls1021a-twr/qe: add qe node to ls1-twr
+Date: Fri, 10 Oct 2014 13:08:31 -0500
+Message-ID: <1412964511.13320.606.camel@snotra.buserror.net>
+References: <1412923798-9757-1-git-send-email-B45475@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3460743954257453828=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1412881594-25678-10-git-send-email-johan@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Colin Foe-Parker <colin.foeparker@logicpd.com>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, j-keerthy@ti.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, t-kristo@ti.com, Lokesh Vutla <lokeshvutla@ti.com>, linux-arm-kernel@lists.infradead.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Andrew Morton <akpm@linux-foundation.org>, linux-omap@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412923798-9757-1-git-send-email-B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhao Qiang <B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org, R63061-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============3460743954257453828==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UhXv5VeBZ/Y8lRnC"
-Content-Disposition: inline
+On Fri, 2014-10-10 at 14:49 +0800, Zhao Qiang wrote:
+> add qe node to ls1021atwr fdt.
+> 
+> Signed-off-by: Zhao Qiang <B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/ls1021a-twr.dts | 24 +++++++++++++++
+>  arch/arm/boot/dts/ls1021a.dtsi    | 64 +++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 88 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
+> index a52be7b..415387f 100755
+> --- a/arch/arm/boot/dts/ls1021a-twr.dts
+> +++ b/arch/arm/boot/dts/ls1021a-twr.dts
+> @@ -164,6 +164,30 @@
+>  	};
+>  };
+>  
+> +&uqe {
+> +	tdma: ucc@2000 {
+> +		compatible = "fsl,ucc-tdm";
 
---UhXv5VeBZ/Y8lRnC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Binding?
 
-Hi,
-
-On Thu, Oct 09, 2014 at 09:06:31PM +0200, Johan Hovold wrote:
-> @@ -124,11 +138,18 @@
->   */
->  #define OMAP_RTC_HAS_POWER_UP_RESET	BIT(3)
-> =20
-> +/*
-> + * Some RTC IP revisions can control an external PMIC via the pmic_power=
-_en
-> + * pin.
-> + */
-> +#define OMAP_RTC_HAS_PMIC_MODE		BIT(4)
+> +		rx-clock-name = "clk8";
+> +		tx-clock-name = "clk9";
+> +		fsl,rx-sync-clock = "rsync_pin";
+> +		fsl,tx-sync-clock = "tsync_pin";
+> +		fsl,tx-timeslot = <0xfffffffe>;
+> +		fsl,rx-timeslot = <0xfffffffe>;
+> +		fsl,tdm-framer-type = "e1";
+> +		fsl,tdm-mode = "normal";
+> +		fsl,tdm-id = <0>;
+> +		fsl,siram-entry-id = <0>;
+> +	};
 > +
->  static void __iomem	*rtc_base;
-> =20
->  #define rtc_read(addr)		readb(rtc_base + (addr))
->  #define rtc_write(val, addr)	writeb(val, rtc_base + (addr))
-> =20
-> +#define rtc_readl(addr)		readl(rtc_base + (addr))
+> +	serial: ucc@2200 {
+> +		device_type = "serial";
+> +		compatible = "ucc_uart";
+> +		port-number = <1>;
+> +		rx-clock-name = "brg2";
+> +		tx-clock-name = "brg2";
+> +	};
 
-looks like this should be part of another patch. Or, at a minimum (since
-it's so minor), it deserves a mention on commit log.
+Binding for ucc_uart?  Why device_type?
 
->  #define rtc_writel(val, addr)	writel(val, rtc_base + (addr))
-> =20
-> =20
-> @@ -338,6 +359,61 @@ static int omap_rtc_set_alarm(struct device *dev, st=
-ruct rtc_wkalrm *alm)
->  	return 0;
->  }
-> =20
-> +static struct platform_device *omap_rtc_power_off_dev;
+> +};
 > +
-> +/*
-> + * omap_rtc_poweroff: RTC-controlled power off
-> + *
-> + * The RTC can be used to control an external PMIC via the pmic_power_en=
- pin,
-> + * which can be configured to transition to OFF on ALARM2 events.
-> + *
-> + * Notes:
-> + * The two-second alarm offset is the shortest offset possible as the al=
-arm
-> + * registers must be set before the next timer update and the offset
-> + * calculation is to heavy for everything to be done within a single acc=
-ess
+>  &pwm6 {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+> index 80747dc..3f2ab89 100644
+> --- a/arch/arm/boot/dts/ls1021a.dtsi
+> +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> @@ -314,6 +314,70 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		uqe: uqe@2400000 {
 
-s/to/too
+How does "uqe" differ from "qe"?
 
-> @@ -425,10 +505,12 @@ static int __init omap_rtc_probe(struct platform_de=
-vice *pdev)
->  		rtc_writel(KICK1_VALUE, OMAP_RTC_KICK1_REG);
->  	}
-> =20
-> -	/* clear pending irqs, and set 1/second periodic,
-> -	 * which we'll use instead of update irqs
-> +	/*
-> +	 * disable interrupts
-> +	 *
-> +	 * NOTE: ALARM2 is not cleared on AM3352 if rtc_write (writeb) is used
->  	 */
-> -	rtc_write(0, OMAP_RTC_INTERRUPTS_REG);
-> +	rtc_writel(0, OMAP_RTC_INTERRUPTS_REG);
-
-bug fix, should be part of a separate patch and Cc stable :-)
-
---=20
-balbi
-
---UhXv5VeBZ/Y8lRnC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUOCBfAAoJEIaOsuA1yqRE4w8P/A7gxViyJC0NGSToczXOZsGJ
-JqckNDKhqMQ0pIaWFvfdxCC888R/5Ibwv24W4jugw2dC5nrggKUmwb7wTPibIIv/
-+wgdeuC2cTCsKy81n2xS6ecJkUOKTVqnnHSVYbGmpp1zlPLlGTBeR6J3SnM44JQ5
-Zdqh8rE7/fyLYo7oDJxV50f6WT7yREpygBrxIiLAKqtUMbH7LRkcFTI5ofWg5wB2
-lucMhCQjd8XsjfsOPri3GUZKHEQtYpqSFwbovqhcChoPNFWAxruyMA0eCsBMQmXw
-rYny+Zm02rqat8jw0b70jH+h/aYpd5BXzSs7WlTRvLd7WHwTm1dl+cXVdHIIItDy
-6DTo/Gefuz7BsjX4Xl+rlq5mvIJJ5G7VrUuPAgp1jzim+egsRCCHckISUJHW11TO
-2l6lwDgmehpccMcVGw89e4p0ld8EZ54ZctDg+xN6IJKBAieJa1ucJ80y2uRLn6kB
-dmD+zO1mNlMMH6lObl5pweWLlV/biVaVmGJEB+bWdU9xnT7FjnAoCN+lvJ0hCOis
-n1ffwHuZVJp28LsRnhvf5OtTC6jbvQ9xmK+g5Pu9JnbUIdfv3HKvfYEvSR54aJM4
-imDmlz1hHHDKMwwk+zOMAQkJlgaFK2KPBpHRBBKdqATfeK5RnDXpLyolBUK4CAJQ
-hw1EFpQbUnsb++i0D6tf
-=MO7H
------END PGP SIGNATURE-----
-
---UhXv5VeBZ/Y8lRnC--
+-Scott
 
 
---===============3460743954257453828==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============3460743954257453828==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
