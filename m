@@ -1,46 +1,49 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 08/44] kernel: Move pm_power_off to common code
-Date: Fri, 10 Oct 2014 09:53:52 -0700
-Message-ID: <54380F20.3060800@roeck-us.net>
-References: <1412659726-29957-1-git-send-email-linux@roeck-us.net> <1412659726-29957-9-git-send-email-linux@roeck-us.net> <20141009103847.GC6787@amd> <54368A30.9070101@roeck-us.net> <20141009202419.GA16885@amd>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH v2 3/3] ARM: dts: qcom: Add SDHC nodes for APQ8084 platform
+Date: Fri, 10 Oct 2014 10:14:34 -0700
+Message-ID: <CAJAp7OhV82HyDQSRW4F2z6UD6WZzuopBoUZMeT2pYBdGq-Dqcg@mail.gmail.com>
+References: <1409672443-4289-1-git-send-email-gdjakov@mm-sol.com>
+	<1409672443-4289-4-git-send-email-gdjakov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20141009202419.GA16885@amd>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Pavel Machek <pavel@denx.de>
-Cc: linux-kernel@vger.kernel.org, adi-buildroot-devel@lists.sourceforge.net, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lguest@lists.ozlabs.org, linux-acpi@vger.kernel.org, linux-alpha@vger.kernel.org, linux-am33-list@redhat.com, linux-cris-kernel@axis.com, linux-efi@vger.kernel.org, linux-hexagon@vger.kernel.org, linux-m32r-ja@ml.linux-m32r.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org, linux-xtensa@linux-xtensa.org, openipmi-developer@lists.sourceforge.net, user-mode-linux-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-metag@vger.kernel.org, linux-mips@linux-mips.org, linux-parisc@vger.kernel.orglinux-
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1409672443-4289-4-git-send-email-gdjakov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Georgi Djakov <gdjakov@mm-sol.com>
+Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2014 01:24 PM, Pavel Machek wrote:
-> Hi!
+On Tue, Sep 2, 2014 at 8:40 AM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
+> Enable support for the two SD host controllers on the APQ8084 platform
+> by adding the required nodes to the DT files.
+> On the IFC6540 board, the first controller is connected to the onboard
+> eMMC and the second is connected to a micro-SD card slot.
 >
->>>> @@ -184,6 +179,8 @@ machine_halt(void)
->>>>   void
->>>>   machine_power_off(void)
->>>>   {
->>>> +	do_kernel_poweroff();
->>>> +
->>>
->>> poweroff -> power_off for consistency.
->>>
->> Dunno; matter of personal preference. I started with that, but ultimately went
->> with poweroff to distinguish poweroff handler functions from existing code,
->> specifically kernel_power_off().
->
-> That works for you, but once it is merged, it is ugly/confusing typo.
-> 									Pavel
->
+> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
 
-Ok, no problem, I'll change it.
+Hi Georgi,
 
-Guenter
+This looks sane, but...
+
+> ---
+>  arch/arm/boot/dts/qcom-apq8084-ifc6540.dts |   11 +++++++++++
+>  arch/arm/boot/dts/qcom-apq8084.dtsi        |   23 +++++++++++++++++++++++
+>  2 files changed, 34 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+> index e41cb8a..c9ff108 100644
+> --- a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+> +++ b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+[..]
+> +               sdhci@f98a4900 {
+> +                       cd-gpios = <&tlmm 122 GPIO_ACTIVE_LOW>;
+> +                       bus-width = <4>;
+
+...why do you add this node and leave it disabled in the dts?
+
+> +               };
+>         };
+>  };
+
+Regards,
+Bjorn
