@@ -1,94 +1,70 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCHv5 1/3] regulator: of: Add support for parsing regulator_state
- for suspend state
-Date: Fri, 10 Oct 2014 20:35:33 +0900
-Message-ID: <1412940935-14721-2-git-send-email-cw00.choi@samsung.com>
-References: <1412940935-14721-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1412940935-14721-1-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCHv5 0/3] regulator: of: Add support for parsing regulator suspend
+ state
+Date: Fri, 10 Oct 2014 20:35:32 +0900
+Message-ID: <1412940935-14721-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org
+Cc: lgirdwood@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, kyungmin.park@samsung.com, javier@dowhile0.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The regulation_constraints structure includes specific field to support
-suspend state for global PMIC SUSPEND/HIBERNATE mode. This patch add support
-for parsing regulator_state for suspend state.
+The regulators would set different state/mode according to the kind of suspend
+state. So regulation_constraints structure has already regulator suspend state filed.
+This patch parse regulator suspend state from devicetree file.
 
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- drivers/regulator/of_regulator.c | 39 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+I tested this patch on Rinato board (Samsung Gear 2) included S2MPS14 PMIC.
+- The power-consumption in suspend state is 0.6mA after applied this patchset.
 
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 7a51814..b375ffe 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -19,12 +19,19 @@
- 
- #include "internal.h"
- 
-+const char *const regulator_states[PM_SUSPEND_MAX + 1] = {
-+	[PM_SUSPEND_MEM]	= "regulator-state-mem",
-+	[PM_SUSPEND_MAX]	= "regulator-state-disk",
-+};
-+
- static void of_get_regulation_constraints(struct device_node *np,
- 					struct regulator_init_data **init_data)
- {
- 	const __be32 *min_uV, *max_uV;
- 	struct regulation_constraints *constraints = &(*init_data)->constraints;
--	int ret;
-+	struct regulator_state *suspend_state;
-+	struct device_node *suspend_np;
-+	int ret, i;
- 	u32 pval;
- 
- 	constraints->name = of_get_property(np, "regulator-name", NULL);
-@@ -73,6 +80,36 @@ static void of_get_regulation_constraints(struct device_node *np,
- 	ret = of_property_read_u32(np, "regulator-enable-ramp-delay", &pval);
- 	if (!ret)
- 		constraints->enable_time = pval;
-+
-+	for (i = 0; i < ARRAY_SIZE(regulator_states); i++) {
-+		switch (i) {
-+		case PM_SUSPEND_MEM:
-+			suspend_state = &constraints->state_mem;
-+			break;
-+		case PM_SUSPEND_MAX:
-+			suspend_state = &constraints->state_disk;
-+			break;
-+		case PM_SUSPEND_ON:
-+		case PM_SUSPEND_FREEZE:
-+		case PM_SUSPEND_STANDBY:
-+		default:
-+			continue;
-+		};
-+
-+		suspend_np = of_get_child_by_name(np, regulator_states[i]);
-+		if (!suspend_np || !suspend_state)
-+			continue;
-+
-+		if (of_property_read_bool(suspend_np,
-+					"regulator-on-in-suspend"))
-+			suspend_state->enabled = true;
-+		else if (of_property_read_bool(suspend_np,
-+					"regulator-off-in-suspend"))
-+			suspend_state->disabled = true;
-+
-+		suspend_state = NULL;
-+		suspend_np = NULL;
-+	}
- }
- 
- /**
+For example:
+	ldoX_reg: LDOx {
+		regulator-name = "VAP_XXX_1.2V";
+		regulator-min-microvolt = <1200000>;
+		regulator-max-microvolt = <1200000>;
+		regulator-always-on;
+
+		regulator-state-mem {
+			regulator-off-in-suspend;
+		};
+	};
+
+Changes from v4:
+- Rebase this patchset on for-next branch of regulator.git
+- Remove 'regulator-volt' property
+- Remove 'regulator-initial-state' property
+- Add example patch[1, patch3] based on Rinato board[2] included S2MPS14 PMIC.
+  S2MPS14 PMIC patch[3] has already implemented '.set_suspend_disable()' func
+  to change the regulator state to reduce power-consumption in suspend-state.
+  [1] ARM: dts: Add sleep mode of regulator for exynos3250-rinato board
+  [2] http://www.spinics.net/lists/linux-samsung-soc/msg37636.html
+      - [PATCHv2 0/2] ARM: dts: Add new board dts file for Exynos3250-based Rinato board
+      - This patchset is not yet merged.
+  [3] regulator: s2mps11: Add set_suspend_disable for S2MPS14
+      (commid id: 05be09bb5ec8d12051515087a1983745dc93d906)
+
+Changes from v3:
+- Don't support 'regulator-state-standby' mode
+- Remove 'regulator-mode' property
+
+Changes from v2:
+- Fix over 80 lines by using checkpatch script
+- Rebase this patchset on latest for-next branch of regulator.git
+
+Changes from v1:
+- Check whether regulator-initial-state and regulator-mode is correct or not
+- Add more detailed description about regulator-initial-state, regulator-mode
+  and regulator-state-[standby/mem/disk] for devicetree bindings
+- Modify example of regulator suspend state in bindings documentation
+
+Chanwoo Choi (3):
+  regulator: of: Add support for parsing regulator_state for suspend state
+  dt-bindings: regulator: Add regulator suspend state for PM state
+  ARM: dts: Add sleep mode of regulator for exynos3250-rinato board
+
+ .../devicetree/bindings/regulator/regulator.txt    |  13 +++
+ arch/arm/boot/dts/exynos3250-rinato.dts            | 108 +++++++++++++++++++++
+ drivers/regulator/of_regulator.c                   |  39 +++++++-
+ 3 files changed, 159 insertions(+), 1 deletion(-)
+
 -- 
 1.8.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
