@@ -1,87 +1,81 @@
-From: Caesar Wang <caesar.wang@rock-chips.com>
-Subject: [PATCH v9 3/5] ARM: dts: add RK3288 Thermal data
-Date: Sat, 11 Oct 2014 15:29:21 +0800
-Message-ID: <1413012563-7690-4-git-send-email-caesar.wang@rock-chips.com>
-References: <1413012563-7690-1-git-send-email-caesar.wang@rock-chips.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v3 0/5] ARM: sunxi: Add basic support for Allwinner A80
+ SoC
+Date: Fri, 10 Oct 2014 20:26:23 +0200
+Message-ID: <20141010182623.GP19438@lukather>
+References: <1412773376-25212-1-git-send-email-wens@csie.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="GTGEtWEe6jD60dxL"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413012563-7690-1-git-send-email-caesar.wang@rock-chips.com>
+Content-Disposition: inline
+In-Reply-To: <1412773376-25212-1-git-send-email-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, arnd@arndb.de
-Cc: zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dmitry.torokhov@gmail.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com, Caesar Wang <caesar.wang@rock-chips.com>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shuge <shuge@allwinnertech.com>, Meng Zhang <kevin@allwinnertech.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch changes a dtsi file to contain the thermal data
-on RK3288 and later SoCs. This data will
-enable a thermal shutdown over 125C.
 
-Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
----
- arch/arm/boot/dts/rk3288-thermal.dtsi | 57 +++++++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3288-thermal.dtsi
+--GTGEtWEe6jD60dxL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/rk3288-thermal.dtsi b/arch/arm/boot/dts/rk3288-thermal.dtsi
-new file mode 100644
-index 0000000..c68c090
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-thermal.dtsi
-@@ -0,0 +1,57 @@
-+/*
-+ * Device Tree Source for RK3288 SoC thermal
-+ *
-+ * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+#include <dt-bindings/thermal/thermal.h>
-+
-+reserve_thermal: reserve_thermal {
-+	polling-delay-passive = <500>; /* milliseconds */
-+	polling-delay = <1000>; /* milliseconds */
-+
-+			/* sensor	ID */
-+	thermal-sensors = <&tsadc	0>;
-+
-+};
-+
-+cpu_thermal: cpu_thermal {
-+	polling-delay-passive = <500>; /* milliseconds */
-+	polling-delay = <1000>; /* milliseconds */
-+
-+			/* sensor	ID */
-+	thermal-sensors = <&tsadc	1>;
-+
-+	trips {
-+		cpu_alert0: cpu_alert0 {
-+			temperature = <80000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "passive";
-+		};
-+		cpu_crit: cpu_crit {
-+			temperature = <125000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "critical";
-+		};
-+	};
-+};
-+
-+gpu_thermal: gpu_thermal {
-+	polling-delay-passive = <500>; /* milliseconds */
-+	polling-delay = <1000>; /* milliseconds */
-+
-+			/* sensor	ID */
-+	thermal-sensors = <&tsadc	2>;
-+
-+	trips {
-+		gpu_crit: gpu_crit {
-+			temperature = <125000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "critical";
-+		};
-+	};
-+};
--- 
-1.9.1
+On Wed, Oct 08, 2014 at 09:02:51PM +0800, Chen-Yu Tsai wrote:
+> Hi everyone,
+>=20
+> This is v3 of the initial Allwinner A80 support series.
+> This patch series adds very basic support for Allwinner's A80 SoC,
+> a big.LITTLE architecture with 4 Cortex-A7s and 4 Cortex-A15s.
+>=20
+> Development is done on the A80 Optimus Board, the defacto development
+> board for the A80, with the accompanying SDK as a reference.=20
+>=20
+> So far I've been unable to get the board to boot from MMC, or
+> using Android fastboot. I'm using Allwinner's FEL mode to load
+> the bootloader and kernel+dtb image over USB. Notes on my attempts
+> can be found here: http://linux-sunxi.org/User:Wens#A80_Optimus
+>=20
+>=20
+> Patch 1 introduces the compatible string for the A80.
+>=20
+> Patch 2 adds a barebone dtsi with just the cpu, memory and uart nodes.
+>=20
+> Patch 3 adds a barebone dts for the A80 Optimus Board.
+>=20
+> Patch 4 documents all the Allwinner SoCs we currently support.
+>=20
+> Patch 5 updates the sunxi README with a link to the A80's datasheet.
+
+Applied all of them, thanks!
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--GTGEtWEe6jD60dxL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUOCTPAAoJEBx+YmzsjxAg2YwP/18Q0y5XUzu5Z02TtPkw1YV8
+aFXrgGZAPcQQBf5tZ0exsg1MFWSXvZABzH8JeGunR1ns0LJLhBWju85VLWLrBHJv
+uNz5R0ux5Bq7acLZHL5MDjhhX98+PZKdZPz/PJsEAkTzLkICTuVuX0wL1bUJicws
+TSXM84lnK3/S+NfRRo7buEzyeA/cgTionNvvQMo97A3DPZoOtd/yat15nSXt0297
+6TLVwySbiCdzp5K3T59BG+n4Bs1BBhg7BUCVJPAmdwEOQvA54v1t6MIRMbeY7FMK
+oWk/Qmp1b56UC+v/5x+LG6ji+DjI3tUoVuooURd9+9BJ0U3z6kBevGPQ3KMsxuK3
+C23nbwkfUm2QDcvQBSu9V++BS/edZ3jbm24tW9dt+uiYZnQKbXbV70zyPzpl3bik
+I4+hyFLI0w7WJc26WiVBV3QcgOfO3+KFb18Uf22yG0Z7BpPhqrhbZ7AiLmPmQeyY
+e1ItE8FoWeRnb/uv0SKHyvadLtRW1gmFYDPtNBab+j0LZ+C0puqU4nzgcl8zIW6d
+XWPi5uhc9c5Rku9M3Ya8yJm+YnQFNonW/mCJ5MEdKlNE3WBRcz73PQtGkKp0MxDP
+wFX75DK5eOQSsHKqRJ9Iuezri5AWC2ApgKdwmvnhM3uO+hFRZWyUL8BgFlvZC9XU
+1PnDLtUPU904XTKubUsi
+=f5Op
+-----END PGP SIGNATURE-----
+
+--GTGEtWEe6jD60dxL--
