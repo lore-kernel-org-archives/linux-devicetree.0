@@ -1,38 +1,52 @@
-From: Caesar Wang <caesar.wang@rock-chips.com>
-Subject: [PATCH v8 5/5] ARM: dts: enable Thermal on rk3288-evb board
-Date: Fri, 10 Oct 2014 18:24:15 +0800
-Message-ID: <1412936655-27897-1-git-send-email-caesar.wang@rock-chips.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, arnd@arndb.de
-Cc: zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dmitry.torokhov@gmail.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com, Caesar Wang <caesar.wang@rock-chips.com>
+From: Janusz Uzycki <j.uzycki@elproma.com.pl>
+Subject: [PATCH v2 RESEND] serial: mxs-auart: add sysrq support
+Date: Fri, 10 Oct 2014 13:13:28 +0200
+Message-ID: <1412939608-19933-1-git-send-email-j.uzycki@elproma.com.pl>
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Jiri Slaby <jslaby@suse.cz>, Richard Genoud <richard.genoud@gmail.com>, Fabio Estevam <festevam@gmail.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Janusz Uzycki <j.uzycki@elproma.com.pl>
 List-Id: devicetree@vger.kernel.org
 
-when a thermal temperature over TSHUT.Default to via
-CRU reset the entire chip on rk3288-evb Board
+When using mxs-auart based console, sometime we need the sysrq function
+to help debugging kernel. The sysrq code is basically there,
+this patch just simply enable it.
 
-Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+Signed-off-by: Janusz Uzycki <j.uzycki@elproma.com.pl>
 ---
- arch/arm/boot/dts/rk3288-evb.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+Changes from v1 (the initial version of the patch):
+* the patch was extracted as indendent from my previous patchset
+  "serial: mxs-auart: use mctrl_gpio helpers for handling modem signals (v2.2c)"
+   "[PATCH 4/4] serial: mxs-auart: add sysrq support"
+* removed obvious comment about required order of
+  SUPPORT_SYSRQ define and serial_core.h include
 
-diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-index 2964370..d257cd8 100644
---- a/arch/arm/boot/dts/rk3288-evb.dtsi
-+++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-@@ -101,6 +101,11 @@
- 	status = "okay";
- };
+The patch is resent as ready to apply.
+
+I resend it again because last time
+in conver letter I swapped subject with
+in-reply-to and the patch could be omited.
+This time I've added versioning and changelog.
+
+---
+ drivers/tty/serial/mxs-auart.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
+index eafce41..e838e84 100644
+--- a/drivers/tty/serial/mxs-auart.c
++++ b/drivers/tty/serial/mxs-auart.c
+@@ -14,6 +14,10 @@
+  * http://www.gnu.org/copyleft/gpl.html
+  */
  
-+&tsadc {
-+	tsadc-ht-reset-mode = <0>; /* reset mode 0:CRU 1:GPIO */
-+	status = "okay";
-+};
++#if defined(CONFIG_SERIAL_MXS_AUART_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
++#define SUPPORT_SYSRQ
++#endif
 +
- &pinctrl {
- 	buttons {
- 		pwrbtn: pwrbtn {
+ #include <linux/kernel.h>
+ #include <linux/errno.h>
+ #include <linux/init.h>
 -- 
-1.9.1
-
+1.7.11.3
 
