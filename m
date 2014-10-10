@@ -1,43 +1,42 @@
-From: Robert Nelson <robertcnelson@gmail.com>
-Subject: [PATCH] ARM: dts: am335x-boneblack: set dcdc1 regulator for 1.35v ddr3
-Date: Fri, 10 Oct 2014 15:33:39 -0500
-Message-ID: <1412973219-3674-1-git-send-email-robertcnelson@gmail.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com, devicetree@vger.kernel.org
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Robert Nelson <robertcnelson@gmail.com>, Vagrant Cascadian <vagrant@debian.org>
+From: Matt Ranostay <mranostay@gmail.com>
+Subject: Re: [PATCH v5 2/3] cap11xx: Add support for various cap11xx devices
+Date: Fri, 10 Oct 2014 14:06:54 -0700
+Message-ID: <CAKzfze8phR4-mxUHVnZh+1vZANaL=8T6LKR68bfwy2CA1b2b9Q@mail.gmail.com>
+References: <1412914983-3742-1-git-send-email-mranostay@gmail.com>
+	<1412914983-3742-3-git-send-email-mranostay@gmail.com>
+	<20141010172952.GA32974@dtor-ws>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20141010172952.GA32974@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Kumar Gala <galak@codeaurora.org>, Daniel Mack <zonque@gmail.com>, linux-input@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The TPS65217C used on the boneblack defaults to 1.5v on startup for dcdc1_reg.
-While 1.35v ddr3 memory is actually used. This was discovered by a user during
-a schematic review of his beaglebone-black clone, a u-boot patch will also also
-be submitted.
+No  just an oversight..
 
-Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
-CC: Tony Lindgren <tony@atomide.com>
-CC: Vagrant Cascadian <vagrant@debian.org>
----
- arch/arm/boot/dts/am335x-boneblack.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+Thanks,
 
-diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
-index 901739f..e7c8999 100644
---- a/arch/arm/boot/dts/am335x-boneblack.dts
-+++ b/arch/arm/boot/dts/am335x-boneblack.dts
-@@ -15,6 +15,13 @@
- 	compatible = "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
- };
- 
-+&dcdc1_reg {
-+	/* TPS65217C defaults to 1.5v on powerup while 1.35v DDR3 is used */
-+	regulator-min-microvolt = <1350000>;
-+	regulator-max-microvolt = <1350000>;
-+	regulator-boot-on;
-+};
-+
- &ldo3_reg {
- 	regulator-min-microvolt = <1800000>;
- 	regulator-max-microvolt = <1800000>;
--- 
-2.1.1
+Matt
 
+On Fri, Oct 10, 2014 at 10:29 AM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> Hi Matt,
+>
+> On Thu, Oct 09, 2014 at 09:23:02PM -0700, Matt Ranostay wrote:
+>> @@ -63,7 +60,25 @@ struct cap11xx_priv {
+>>       struct input_dev *idev;
+>>
+>>       /* config */
+>> -     unsigned short keycodes[CAP11XX_NUM_CHN];
+>> +     unsigned int num_channels;
+>> +     u32 keycodes[];
+>
+> Any particular reason you decided to keep num_channels field givfen that
+> the same data is accessible through priv->idev->keycodemax?
+>
+> Thanks.
+>
+> --
+> Dmitry
