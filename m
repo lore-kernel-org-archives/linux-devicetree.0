@@ -1,53 +1,51 @@
-From: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
-Subject: [PATCH] ARM: dts: rockchip: enable DMA on SPI for rk3066 and rk3188
-Date: Fri, 10 Oct 2014 10:04:13 +0200
-Message-ID: <1412928253-5119-1-git-send-email-julien.chauveau@neo-technologies.fr>
+From: Belisko Marek <marek.belisko@gmail.com>
+Subject: Re: [PATCH 0/3] input: tsc2007: Extend for pre-calibration, flipping
+ and rotation
+Date: Fri, 10 Oct 2014 11:28:51 +0200
+Message-ID: <CAAfyv36R-qpQPLHGGv8+QPtwyRWRJc4rPi9GcNwWpuCTGmWuWQ@mail.gmail.com>
+References: <1412108254-19234-1-git-send-email-marek@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1412108254-19234-1-git-send-email-marek@goldelico.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-input@vger.kernel.org, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-According to the RK3066 and RK3188 TRM, the two SPI controllers support DMA
-handshake interface. Add the DMA properties so they can be used when needed.
+Ping. Any objections? Thanks
 
-Signed-off-by: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
----
- arch/arm/boot/dts/rk3xxx.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+On Tue, Sep 30, 2014 at 10:17 PM, Marek Belisko <marek@goldelico.com> wrote:
+> Following series add support to tsc2007 touchscreen driver for pre-calibration,
+> flipping and rotation. Added bindings are documented and used in gta04 device tree.
+>
+> Marek Belisko (3):
+>   input: tsc2007: Add pre-calibration, flipping and rotation
+>   Documentation: dt: input: tsc2007: Document new parameters
+>   arm: dts: omap3-gta04: Extend touchscreen configs
+>
+>  .../bindings/input/touchscreen/tsc2007.txt         | 17 ++++-
+>  arch/arm/boot/dts/omap3-gta04.dtsi                 |  6 ++
+>  drivers/input/touchscreen/tsc2007.c                | 89 +++++++++++++++++++++-
+>  include/linux/i2c/tsc2007.h                        |  6 ++
+>  4 files changed, 111 insertions(+), 7 deletions(-)
+>
+> --
+> 1.9.3
+>
 
-diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index 499468d..9ba92de 100644
---- a/arch/arm/boot/dts/rk3xxx.dtsi
-+++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -367,6 +367,8 @@
- 		reg = <0x20070000 0x1000>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		dmas = <&dmac2 10>, <&dmac2 11>;
-+		dma-names = "tx", "rx";
- 		status = "disabled";
- 	};
- 
-@@ -378,6 +380,8 @@
- 		reg = <0x20074000 0x1000>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		dmas = <&dmac2 12>, <&dmac2 13>;
-+		dma-names = "tx", "rx";
- 		status = "disabled";
- 	};
- };
+BR,
+
+marek
+
 -- 
-1.9.1
+as simple and primitive as possible
+-------------------------------------------------
+Marek Belisko - OPEN-NANDRA
+Freelance Developer
+
+Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+Tel: +421 915 052 184
+skype: marekwhite
+twitter: #opennandra
+web: http://open-nandra.com
