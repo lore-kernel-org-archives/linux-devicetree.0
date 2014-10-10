@@ -1,66 +1,84 @@
-From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH V4 6/7] MAINTAINERS: Entry for Cygnus/iproc arm architecture
- and clock drivers
-Date: Thu, 9 Oct 2014 16:18:07 -0700
-Message-ID: <543717AF.6090500@broadcom.com>
-References: <Scott Branden <sbranden@broadcom.com>	 <1412894671-5921-1-git-send-email-sbranden@broadcom.com>	 <1412894671-5921-7-git-send-email-sbranden@broadcom.com> <1412895651.8770.7.camel@joe-AO725>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] ARM: shmobile: koelsch: enable HS-USB
+Date: Fri, 10 Oct 2014 09:17:28 +0900
+Message-ID: <54372598.8060000@renesas.com>
+References: <1511869.4ca9KHmSFr@wasted.cogentembedded.com> <8674731.7YYzQeH0h1@wasted.cogentembedded.com> <5435DFD6.3050609@renesas.com> <543684B6.6060708@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412895651.8770.7.camel@joe-AO725>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <543684B6.6060708-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org" <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14-10-09 04:00 PM, Joe Perches wrote:
-> On Thu, 2014-10-09 at 15:44 -0700, Scott Branden wrote:
->> Acked-by: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> ---
->>   MAINTAINERS |   17 ++++++++++++++++-
->>   1 file changed, 16 insertions(+), 1 deletion(-)
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index a12edf2..0900082 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -2071,9 +2071,24 @@ L:	linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>   S:	Supported
->>   F:	drivers/scsi/bnx2i/
->>
->> -BROADCOM KONA GPIO DRIVER
->> +BROADCOM CYGNUS/IPROC ARM ARCHITECTURE
->>   M:	Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> +M:	Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> +L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
->>   L:	bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
->> +S:	Maintained
->> +F:	Documentation/devicetree/bindings/arm/bcm/cygnus.txt
->> +F:	arch/arm/boot/dts/bcm-cygnus.dtsi
->> +F:	arch/arm/boot/dts/bcm911360_entphn.dts
->> +F:	arch/arm/configs/bcm_cygnus_defconfig
->> +F:	arch/arm/mach-bcm/bcm_cygnus.c
->> +F:	Documentation/devicetree/bindings/clock/clk-cygnus.txt
->> +F:	Documentation/devicetree/bindings/clock/clk-iproc.txt
->> +F:	drivers/clk/bcm/clk-cygnus.c
->> +F:	drivers/clk/bcm/clk-iproc.c
->> +
->> +BROADCOM KONA GPIO DRIVER
->> +M:	Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>   S:	Supported
->>   F:	drivers/gpio/gpio-bcm-kona.c
->>   F:	Documentation/devicetree/bindings/gpio/gpio-bcm-kona.txt
->
-> This drops this L line from BROADCOM KONA GPIO DRIVER
-> L:	bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
->
-> Is that what you want?
-Wow, sorry.  I'll correct after further comments.
->
+Hello.
 
+(2014/10/09 21:51), Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 10/09/2014 05:07 AM, Yoshihiro Shimoda wrote:
+> 
+>>> Enable HS-USB device for the Koelsch board, defining the GPIO that the driver
+>>> should check when probing (which is the ID output from MAX3355 OTG chip).
+> 
+>>> Note that there will be pinctrl-related error messages if both internal PCI
+>>> and HS-USB drivers are enabled but they should be just ignored.
+> 
+>>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>>> [Sergei: added pin function/group and prop, moved device node, fixed summary,
+>>> added changelog]
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> 
+>>> ---
+>>> Changes in version 3:
+>>> - added pinctrl-related properties;
+>>> - moved the HS-USB node to precede the USB PHY node;
+>>> - uppercased "arm" in the summary;
+>>> - added changelog.
+> 
+>>>   arch/arm/boot/dts/r8a7791-koelsch.dts |    7 +++++++
+>>>   1 file changed, 7 insertions(+)
+> 
+>>> Index: renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
+>>> ===================================================================
+>>> --- renesas.orig/arch/arm/boot/dts/r8a7791-koelsch.dts
+>>> +++ renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
+>>> @@ -464,6 +464,13 @@
+>>>       pinctrl-names = "default";
+>>>   };
+>>>
+>>> +&hsusb {
+>>> +    status = "okay";
+>>> +    pinctrl-0 = <&usb0_pins>;
+>>> +    pinctrl-names = "default";
+> 
+>> Perhaps I don't understand the pinctrl world yet, but I have a question.
+> 
+>> In r8a7791, the USB0_PWEN is GP7_23 and the USB0_OVC is GP7_24. And,
+>> the "usb0_pins" is related to these USB0 pins. But, as you know,
+>> the koelsch has a OTG ID pin and it connects to GP5_31 via MAX3355 chip.
+> 
+>    The GPIO pins are not requested via pinctrl.
+> 
+>> So, would you tell me why koelsch needs the pinctrl?
+> 
+>    Because at least USB0_OVC/VBUS is used by HS-USB. I decided not to modify the R8A7791 PFC driver in order to create a group consisting of that signal alone (like on R8A7790), because we don't need to read GP7_23 on these boards, unlike Lager.
+
+Thank you very much for the reply.
+Finally I understood why it needs the princtrl.
+(I didn't know the HS-USB will use the USB0_OVC/VBUS for detecting VBUS...)
+
+Best regards,
+Yoshihiro Shimoda
+
+>> Best regards,
+>> Yoshihiro Shimoda
+> 
+> WBR, Sergei
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
