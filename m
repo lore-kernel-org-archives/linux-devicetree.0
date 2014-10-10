@@ -1,70 +1,61 @@
 From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCHv5 0/3] regulator: of: Add support for parsing regulator suspend
- state
-Date: Fri, 10 Oct 2014 20:35:32 +0900
-Message-ID: <1412940935-14721-1-git-send-email-cw00.choi@samsung.com>
+Subject: [PATCHv5 2/3] dt-bindings: regulator: Add regulator suspend state for
+ PM state
+Date: Fri, 10 Oct 2014 20:35:34 +0900
+Message-ID: <1412940935-14721-3-git-send-email-cw00.choi@samsung.com>
+References: <1412940935-14721-1-git-send-email-cw00.choi@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1412940935-14721-1-git-send-email-cw00.choi@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: broonie@kernel.org
 Cc: lgirdwood@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, kyungmin.park@samsung.com, javier@dowhile0.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The regulators would set different state/mode according to the kind of suspend
-state. So regulation_constraints structure has already regulator suspend state filed.
-This patch parse regulator suspend state from devicetree file.
+This patch add regulator suspend state to constraint in dt file. The regulation_
+constraints structure already has regulator suspend state field as following.
+The regulator suspend state control the state of regulator according to
+PM (Power Management) state.
+- struct regulator_state state_disk
+- struct regulator_state state_mem
 
-I tested this patch on Rinato board (Samsung Gear 2) included S2MPS14 PMIC.
-- The power-consumption in suspend state is 0.6mA after applied this patchset.
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ Documentation/devicetree/bindings/regulator/regulator.txt | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-For example:
-	ldoX_reg: LDOx {
-		regulator-name = "VAP_XXX_1.2V";
-		regulator-min-microvolt = <1200000>;
-		regulator-max-microvolt = <1200000>;
-		regulator-always-on;
-
-		regulator-state-mem {
-			regulator-off-in-suspend;
-		};
-	};
-
-Changes from v4:
-- Rebase this patchset on for-next branch of regulator.git
-- Remove 'regulator-volt' property
-- Remove 'regulator-initial-state' property
-- Add example patch[1, patch3] based on Rinato board[2] included S2MPS14 PMIC.
-  S2MPS14 PMIC patch[3] has already implemented '.set_suspend_disable()' func
-  to change the regulator state to reduce power-consumption in suspend-state.
-  [1] ARM: dts: Add sleep mode of regulator for exynos3250-rinato board
-  [2] http://www.spinics.net/lists/linux-samsung-soc/msg37636.html
-      - [PATCHv2 0/2] ARM: dts: Add new board dts file for Exynos3250-based Rinato board
-      - This patchset is not yet merged.
-  [3] regulator: s2mps11: Add set_suspend_disable for S2MPS14
-      (commid id: 05be09bb5ec8d12051515087a1983745dc93d906)
-
-Changes from v3:
-- Don't support 'regulator-state-standby' mode
-- Remove 'regulator-mode' property
-
-Changes from v2:
-- Fix over 80 lines by using checkpatch script
-- Rebase this patchset on latest for-next branch of regulator.git
-
-Changes from v1:
-- Check whether regulator-initial-state and regulator-mode is correct or not
-- Add more detailed description about regulator-initial-state, regulator-mode
-  and regulator-state-[standby/mem/disk] for devicetree bindings
-- Modify example of regulator suspend state in bindings documentation
-
-Chanwoo Choi (3):
-  regulator: of: Add support for parsing regulator_state for suspend state
-  dt-bindings: regulator: Add regulator suspend state for PM state
-  ARM: dts: Add sleep mode of regulator for exynos3250-rinato board
-
- .../devicetree/bindings/regulator/regulator.txt    |  13 +++
- arch/arm/boot/dts/exynos3250-rinato.dts            | 108 +++++++++++++++++++++
- drivers/regulator/of_regulator.c                   |  39 +++++++-
- 3 files changed, 159 insertions(+), 1 deletion(-)
-
+diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+index 8607433..aaad615 100644
+--- a/Documentation/devicetree/bindings/regulator/regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+@@ -19,6 +19,15 @@ Optional properties:
+   design requires. This property describes the total system ramp time
+   required due to the combination of internal ramping of the regulator itself,
+   and board design issues such as trace capacitance and load on the supply.
++- regulator-state-mem sub-root node for Suspend-to-RAM mode
++  : suspend to memory, the device goes to sleep, but all data stored in memory,
++  only some external interrupt can wake the device.
++- regulator-state-disk sub-root node for Suspend-to-DISK mode
++  : suspend to disk, this state operates similarly to Suspend-to-RAM,
++  but includes a final step of writing memory contents to disk.
++- regulator-state-[mem/disk] node has following common properties:
++	- regulator-on-in-suspend: regulator should be on in suspend state.
++	- regulator-off-in-suspend: regulator should be off in suspend state.
+ 
+ Deprecated properties:
+ - regulator-compatible: If a regulator chip contains multiple
+@@ -34,6 +43,10 @@ Example:
+ 		regulator-max-microvolt = <2500000>;
+ 		regulator-always-on;
+ 		vin-supply = <&vin>;
++
++		regulator-state-mem {
++			regulator-on-in-suspend;
++		};
+ 	};
+ 
+ Regulator Consumers:
 -- 
 1.8.0
