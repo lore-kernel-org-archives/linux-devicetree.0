@@ -1,83 +1,226 @@
-From: Y Vo <yvo@apm.com>
-Subject: Re: [PATCH v1 1/3] gpio: Add APM X-Gene standby GPIO controller driver
-Date: Fri, 10 Oct 2014 10:22:34 +0700
-Message-ID: <CAL4ahLeZsT4KN22Jgxa8EJD8eEcWwN-wddCFvXY+8Yvb5hCGFA@mail.gmail.com>
-References: <1412779948-28769-1-git-send-email-yvo@apm.com>
-	<1843196.sbXNmZyoMx@wuerfel>
-	<CAL4ahLfpubEqi49gy8T9pyrf=1j__LbAsKUyr5i=koNyp0Mmig@mail.gmail.com>
-	<2334188.M3m5hnmS5j@wuerfel>
+From: Matt Ranostay <mranostay@gmail.com>
+Subject: Re: [PATCH v4 2/3] cap11xx: Add support for various cap11xx devices
+Date: Thu, 9 Oct 2014 20:54:07 -0700
+Message-ID: <CAKzfze9XhuwL0W0vcYjqP1Dqm5yib7xd=UOvvW2_iE1BJzH4CQ@mail.gmail.com>
+References: <1412051189-22643-1-git-send-email-mranostay@gmail.com>
+	<1412051189-22643-3-git-send-email-mranostay@gmail.com>
+	<20141008000956.GN16469@dtor-ws>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <2334188.M3m5hnmS5j@wuerfel>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Tin Huynh <tnhuynh@apm.com>, patches@apm.com, Toan Le <toanle@apm.com>, Phong Vo <pvo@apm.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20141008000956.GN16469@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Kumar Gala <galak@codeaurora.org>, Daniel Mack <zonque@gmail.com>, linux-input@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Arnd,
+Oh good catch! Will resubmitted with v5.
 
-Pls see my answer below:
-
-On Thu, Oct 9, 2014 at 7:13 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thursday 09 October 2014 16:31:18 Y Vo wrote:
->> Dear Arnd,
->>
->> Thanks a lot for your review. Pls see my answer on blue text below.
+On Tue, Oct 7, 2014 at 5:09 PM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> Hi Matt,
 >
-> Please do not send html-encoded email, it will get dropped by all mailing
-> lists.
+> On Mon, Sep 29, 2014 at 09:26:28PM -0700, Matt Ranostay wrote:
+>> +     priv->num_channels = cap->num_channels;
+>> +     priv->keycodes = devm_kcalloc(dev,
+>> +             priv->num_channels, sizeof(u32), GFP_KERNEL);
+>> +     if (!priv->keycodes)
+>> +             return -ENOMEM;
 >
->>
->> On Wed, Oct 8, 2014 at 10:13 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->>
->> > On Wednesday 08 October 2014 21:52:26 Y Vo wrote:
->> > > +
->> > > +#define GICD_SPI_BASE                        0x78010000
->> >
->> > You can't hardcode register locations. Please use the proper interfaces
->> > to do whatever you want.
->> > *APM: We will do that.*
->>
->>
->>
->> >
->> > It's probably not ok to map any GIC registers into the GPIO driver,
->> > it should operate as a nested irqchip.
->> >
->>
->>  *APM: We will find the solution, the problem is we want to read the status
->> of that GPIO in case it is configured IRQ. In this case we must access to
->> GIC to read the true value.*
+> Instead of allocating keymap separately can we do something like below?
 >
-> Can you explain what the hardware does here? Do you mean you have no way
-> to read the GPIO level from the GPIO controller for any pin that is
-> configured as an interrupt?
+> Thanks.
 >
-> Can you route all GPIO pins to arbitrary upstream IRQ lines, or is this
-> hardwired in the GPIO block?
-
-APM:  There are 6 GPIOs which can support IRQ, they are fixed to use
-external IRQ from XGIC.  (The XGIC is based on the ARM Generic
-Interrupt Controller Architecture Specification, Architecture version
-2.0, The XGIC provides the mechanism to collect interrupt requests
-(IRQs) from both on-chip as well as off-chip sources and deliver them
-to the multiple X-Gene1 cores within the X-Gene1 processor),  So there
-are no way to read the GPIO DS when configure as an interrupt. They
-are specific GPIO for boot another boot chip in X-Gene which can
-access when boot up. So this is hardwire in the GPIO block.
-GPIO_DS8 ---> External IRQ0 (XGIC40)
-GPIO_DS9 ---> External IRQ1 (XGIC41)
-...
-GPIO_DS13 ---> External IRQ5(XGIC45)
-
+> --
+> Dmitry
 >
->         Arnd
-CONFIDENTIALITY NOTICE: This e-mail message, including any attachments, 
-is for the sole use of the intended recipient(s) and contains information
-that is confidential and proprietary to Applied Micro Circuits Corporation or its subsidiaries. 
-It is to be used solely for the purpose of furthering the parties' business relationship. 
-All unauthorized review, use, disclosure or distribution is prohibited. 
-If you are not the intended recipient, please contact the sender by reply e-mail 
-and destroy all copies of the original message.
-
+>
+> Input: cap11xx - add support for various cap11xx devices
+>
+> From: Matt Ranostay <mranostay@gmail.com>
+>
+> Several other variants of the cap11xx device exists with a varying
+> number of capacitance detection channels. Add support for creating
+> the channels dynamically.
+>
+> Signed-off-by: Matt Ranostay <mranostay@gmail.com>
+> Reviewed-by: Daniel Mack <daniel@zonque.org>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  .../devicetree/bindings/input/cap11xx.txt          |    3 +
+>  drivers/input/keyboard/cap11xx.c                   |   62 +++++++++++++-------
+>  2 files changed, 42 insertions(+), 23 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/input/cap11xx.txt b/Documentation/devicetree/bindings/input/cap11xx.txt
+> index 738f5f3..8031aa5 100644
+> --- a/Documentation/devicetree/bindings/input/cap11xx.txt
+> +++ b/Documentation/devicetree/bindings/input/cap11xx.txt
+> @@ -7,9 +7,10 @@ Required properties:
+>
+>         compatible:             Must be on the following, depending on the model:
+>                                         "microchip,cap1106"
+> +                                       "microchip,cap1126"
+> +                                       "microchip,cap1188"
+>
+>         reg:                    The I2C slave address of the device.
+> -                               Only 0x28 is valid.
+>
+>         interrupts:             Property describing the interrupt line the
+>                                 device's ALERT#/CM_IRQ# pin is connected to.
+> diff --git a/drivers/input/keyboard/cap11xx.c b/drivers/input/keyboard/cap11xx.c
+> index 0da2e83..87fa209 100644
+> --- a/drivers/input/keyboard/cap11xx.c
+> +++ b/drivers/input/keyboard/cap11xx.c
+> @@ -1,7 +1,6 @@
+>  /*
+>   * Input driver for Microchip CAP11xx based capacitive touch sensors
+>   *
+> - *
+>   * (c) 2014 Daniel Mack <linux@zonque.org>
+>   *
+>   * This program is free software; you can redistribute it and/or modify
+> @@ -54,8 +53,6 @@
+>  #define CAP11XX_REG_MANUFACTURER_ID    0xfe
+>  #define CAP11XX_REG_REVISION           0xff
+>
+> -#define CAP11XX_NUM_CHN 6
+> -#define CAP11XX_PRODUCT_ID     0x55
+>  #define CAP11XX_MANUFACTURER_ID        0x5d
+>
+>  struct cap11xx_priv {
+> @@ -63,7 +60,24 @@ struct cap11xx_priv {
+>         struct input_dev *idev;
+>
+>         /* config */
+> -       unsigned short keycodes[CAP11XX_NUM_CHN];
+> +       u32 keycodes[];
+> +};
+> +
+> +struct cap11xx_hw_model {
+> +       uint8_t product_id;
+> +       unsigned int num_channels;
+> +};
+> +
+> +enum {
+> +       CAP1106,
+> +       CAP1126,
+> +       CAP1188,
+> +};
+> +
+> +static const struct cap11xx_hw_model cap11xx_devices[] = {
+> +       [CAP1106] = { .product_id = 0x55, .num_channels = 6 },
+> +       [CAP1126] = { .product_id = 0x53, .num_channels = 6 },
+> +       [CAP1188] = { .product_id = 0x50, .num_channels = 8 },
+>  };
+>
+>  static const struct reg_default cap11xx_reg_defaults[] = {
+> @@ -150,7 +164,7 @@ static irqreturn_t cap11xx_thread_func(int irq_num, void *data)
+>         if (ret < 0)
+>                 goto out;
+>
+> -       for (i = 0; i < CAP11XX_NUM_CHN; i++)
+> +       for (i = 0; i < priv->idev->keycodemax; i++)
+>                 input_report_key(priv->idev, priv->keycodes[i],
+>                                  status & (1 << i));
+>
+> @@ -187,11 +201,16 @@ static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
+>         struct device *dev = &i2c_client->dev;
+>         struct cap11xx_priv *priv;
+>         struct device_node *node;
+> +       const struct cap11xx_hw_model *cap = &cap11xx_devices[id->driver_data];
+>         int i, error, irq, gain = 0;
+>         unsigned int val, rev;
+> -       u32 gain32, keycodes[CAP11XX_NUM_CHN];
+> +       u32 gain32;
+> +
+> +       BUG_ON(!cap->num_channels);
+>
+> -       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +       priv = devm_kzalloc(dev,
+> +                           sizeof(*priv) + cap->num_channels * sizeof(u32),
+> +                           GFP_KERNEL);
+>         if (!priv)
+>                 return -ENOMEM;
+>
+> @@ -203,9 +222,9 @@ static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
+>         if (error)
+>                 return error;
+>
+> -       if (val != CAP11XX_PRODUCT_ID) {
+> +       if (val != cap->product_id) {
+>                 dev_err(dev, "Product ID: Got 0x%02x, expected 0x%02x\n",
+> -                       val, CAP11XX_PRODUCT_ID);
+> +                       val, cap->product_id);
+>                 return -ENODEV;
+>         }
+>
+> @@ -225,8 +244,8 @@ static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
+>
+>         dev_info(dev, "CAP11XX detected, revision 0x%02x\n", rev);
+>         i2c_set_clientdata(i2c_client, priv);
+> -       node = dev->of_node;
+>
+> +       node = dev->of_node;
+>         if (!of_property_read_u32(node, "microchip,sensor-gain", &gain32)) {
+>                 if (is_power_of_2(gain32) && gain32 <= 8)
+>                         gain = ilog2(gain32);
+> @@ -234,17 +253,12 @@ static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
+>                         dev_err(dev, "Invalid sensor-gain value %d\n", gain32);
+>         }
+>
+> -       BUILD_BUG_ON(ARRAY_SIZE(keycodes) != ARRAY_SIZE(priv->keycodes));
+> -
+>         /* Provide some useful defaults */
+> -       for (i = 0; i < ARRAY_SIZE(keycodes); i++)
+> -               keycodes[i] = KEY_A + i;
+> +       for (i = 0; i < cap->num_channels; i++)
+> +               priv->keycodes[i] = KEY_A + i;
+>
+>         of_property_read_u32_array(node, "linux,keycodes",
+> -                                  keycodes, ARRAY_SIZE(keycodes));
+> -
+> -       for (i = 0; i < ARRAY_SIZE(keycodes); i++)
+> -               priv->keycodes[i] = keycodes[i];
+> +               priv->keycodes, cap->num_channels);
+>
+>         error = regmap_update_bits(priv->regmap, CAP11XX_REG_MAIN_CONTROL,
+>                                    CAP11XX_REG_MAIN_CONTROL_GAIN_MASK,
+> @@ -268,17 +282,17 @@ static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
+>         if (of_property_read_bool(node, "autorepeat"))
+>                 __set_bit(EV_REP, priv->idev->evbit);
+>
+> -       for (i = 0; i < CAP11XX_NUM_CHN; i++)
+> +       for (i = 0; i < cap->num_channels; i++)
+>                 __set_bit(priv->keycodes[i], priv->idev->keybit);
+>
+>         __clear_bit(KEY_RESERVED, priv->idev->keybit);
+>
+>         priv->idev->keycode = priv->keycodes;
+>         priv->idev->keycodesize = sizeof(priv->keycodes[0]);
+> -       priv->idev->keycodemax = ARRAY_SIZE(priv->keycodes);
+> +       priv->idev->keycodemax = cap->num_channels;
+>
+>         priv->idev->id.vendor = CAP11XX_MANUFACTURER_ID;
+> -       priv->idev->id.product = CAP11XX_PRODUCT_ID;
+> +       priv->idev->id.product = cap->product_id;
+>         priv->idev->id.version = rev;
+>
+>         priv->idev->open = cap11xx_input_open;
+> @@ -312,12 +326,16 @@ static int cap11xx_i2c_probe(struct i2c_client *i2c_client,
+>
+>  static const struct of_device_id cap11xx_dt_ids[] = {
+>         { .compatible = "microchip,cap1106", },
+> +       { .compatible = "microchip,cap1126", },
+> +       { .compatible = "microchip,cap1188", },
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(of, cap11xx_dt_ids);
+>
+>  static const struct i2c_device_id cap11xx_i2c_ids[] = {
+> -       { "cap1106", 0 },
+> +       { "cap1106", CAP1106 },
+> +       { "cap1126", CAP1126 },
+> +       { "cap1188", CAP1188 },
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(i2c, cap11xx_i2c_ids);
