@@ -1,22 +1,97 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2 RESEND] serial: mxs-auart: add sysrq support
-Date: Fri, 10 Oct 2014 08:37:12 -0300
-Message-ID: <CAOMZO5BxR4X69LP8HKHRsVFgmaqwQUv328L6fbu4ZvU-Jp61Uw@mail.gmail.com>
-References: <1412939608-19933-1-git-send-email-j.uzycki@elproma.com.pl>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [RFC PATCH v2 1/4] regulator: Add helper function to get
+ "poweroff-source" property
+Date: Fri, 10 Oct 2014 12:47:08 +0100
+Message-ID: <CACxGe6vmBSgGpJgJ51Ki5KbQO65GDw3kSGSxnswYMfE8OGj9gw@mail.gmail.com>
+References: <1412711104-15902-1-git-send-email-romain.perier@gmail.com> <CABgxDoL2cztT6Y0oodtk4Q4jaDc1Rtx_RokxC+f0XykSojrdyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1412939608-19933-1-git-send-email-j.uzycki@elproma.com.pl>
-Sender: linux-serial-owner@vger.kernel.org
-To: Janusz Uzycki <j.uzycki@elproma.com.pl>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jiri Slaby <jslaby@suse.cz>, Richard Genoud <richard.genoud@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CABgxDoL2cztT6Y0oodtk4Q4jaDc1Rtx_RokxC+f0XykSojrdyg@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: PERIER Romain <romain.perier@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, "sameo@linux.intel.com" <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, robh <robh@kernel.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Anton Vorontsov <anton@enomsg.org>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 10, 2014 at 8:13 AM, Janusz Uzycki <j.uzycki@elproma.com.pl> wrote:
-> When using mxs-auart based console, sometime we need the sysrq function
-> to help debugging kernel. The sysrq code is basically there,
-> this patch just simply enable it.
+On Tue, Oct 7, 2014 at 8:43 PM, PERIER Romain <romain.perier@gmail.com> wrote:
+> This is not the final location, I have no idea exactly where I might
+> put this helper function. This is why I ask you your opinion (and
+> also, this is why that's a proposal)
 >
-> Signed-off-by: Janusz Uzycki <j.uzycki@elproma.com.pl>
+> 2014-10-07 21:45 GMT+02:00 Romain Perier <romain.perier@gmail.com>:
+>> Several drivers create their own devicetree property when they register
+>> poweroff capabilities. This is for example the case for mfd, regulator
+>> or power drivers which define "vendor,system-power-controller" property.
+>> This patch adds support for a standard property "poweroff-source"
+>> which marks the device as able to shutdown the system.
+>>
+>> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+>> ---
+>>  drivers/regulator/of_regulator.c       | 12 ++++++++++++
+>>  include/linux/regulator/of_regulator.h |  6 ++++++
+>>  2 files changed, 18 insertions(+)
+>>
+>> diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+>> index 7a51814..8b898e6 100644
+>> --- a/drivers/regulator/of_regulator.c
+>> +++ b/drivers/regulator/of_regulator.c
+>> @@ -240,3 +240,15 @@ struct regulator_init_data *regulator_of_get_init_data(struct device *dev,
+>>
+>>         return init_data;
+>>  }
+>> +
+>> +/**
+>> + * is_system_poweroff_source - Tells if poweroff-source is found for device_node
+>> + * @np: Pointer to the given device_node
+>> + *
+>> + * return true if present false otherwise
+>> + */
+>> +bool is_system_poweroff_source(const struct device_node *np)
+>> +{
+>> +       return of_property_read_bool(np, "poweroff-source");
+>> +}
+>> +EXPORT_SYMBOL_GPL(is_system_poweroff_source);
 
-Reviewed-by: Fabio Estevam <fabio.estevam@freescale.com>
+Hi Romain,
+
+This is an extremely simple wrapper. It may be best to simply make it
+a static inline. It is also generic enough that I don't have a problem
+with it living in include/linux/of.h; but of_regulator.h would be fine
+too.
+
+Since this is a device tree specific function (it doesn't work with
+ACPI or platform_data), you should prefix the function name with of_
+
+g.
+
+
+What I'm more concerned about is the semantics of the property. What
+do the generic code paths gain by standardizing this property? Is it
+expected that
+>> diff --git a/include/linux/regulator/of_regulator.h b/include/linux/regulator/of_regulator.h
+>> index f921796..9d8fbb2 100644
+>> --- a/include/linux/regulator/of_regulator.h
+>> +++ b/include/linux/regulator/of_regulator.h
+>> @@ -20,6 +20,7 @@ extern struct regulator_init_data
+>>  extern int of_regulator_match(struct device *dev, struct device_node *node,
+>>                               struct of_regulator_match *matches,
+>>                               unsigned int num_matches);
+>> +extern bool is_system_poweroff_source(const struct device_node *np);
+>>  #else
+>>  static inline struct regulator_init_data
+>>         *of_get_regulator_init_data(struct device *dev,
+>> @@ -35,6 +36,11 @@ static inline int of_regulator_match(struct device *dev,
+>>  {
+>>         return 0;
+>>  }
+>> +
+>> +static inline bool is_system_poweroff_source(const struct device_node *np)
+>> +{
+>> +       return false;
+>> +}
+>>  #endif /* CONFIG_OF */
+>>
+>>  #endif /* __LINUX_OF_REG_H */
+>> --
+>> 1.9.1
+>>
