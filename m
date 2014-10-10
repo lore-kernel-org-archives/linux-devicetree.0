@@ -1,49 +1,34 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH v2 3/3] ARM: dts: qcom: Add SDHC nodes for APQ8084 platform
-Date: Fri, 10 Oct 2014 10:14:34 -0700
-Message-ID: <CAJAp7OhV82HyDQSRW4F2z6UD6WZzuopBoUZMeT2pYBdGq-Dqcg@mail.gmail.com>
-References: <1409672443-4289-1-git-send-email-gdjakov@mm-sol.com>
-	<1409672443-4289-4-git-send-email-gdjakov@mm-sol.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v5 2/3] cap11xx: Add support for various cap11xx devices
+Date: Fri, 10 Oct 2014 10:29:52 -0700
+Message-ID: <20141010172952.GA32974@dtor-ws>
+References: <1412914983-3742-1-git-send-email-mranostay@gmail.com>
+ <1412914983-3742-3-git-send-email-mranostay@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1409672443-4289-4-git-send-email-gdjakov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Georgi Djakov <gdjakov@mm-sol.com>
-Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1412914983-3742-3-git-send-email-mranostay@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Matt Ranostay <mranostay@gmail.com>
+Cc: galak@codeaurora.org, zonque@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 2, 2014 at 8:40 AM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
-> Enable support for the two SD host controllers on the APQ8084 platform
-> by adding the required nodes to the DT files.
-> On the IFC6540 board, the first controller is connected to the onboard
-> eMMC and the second is connected to a micro-SD card slot.
->
-> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+Hi Matt,
 
-Hi Georgi,
+On Thu, Oct 09, 2014 at 09:23:02PM -0700, Matt Ranostay wrote:
+> @@ -63,7 +60,25 @@ struct cap11xx_priv {
+>  	struct input_dev *idev;
+>  
+>  	/* config */
+> -	unsigned short keycodes[CAP11XX_NUM_CHN];
+> +	unsigned int num_channels;
+> +	u32 keycodes[];
 
-This looks sane, but...
+Any particular reason you decided to keep num_channels field givfen that
+the same data is accessible through priv->idev->keycodemax?
 
-> ---
->  arch/arm/boot/dts/qcom-apq8084-ifc6540.dts |   11 +++++++++++
->  arch/arm/boot/dts/qcom-apq8084.dtsi        |   23 +++++++++++++++++++++++
->  2 files changed, 34 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
-> index e41cb8a..c9ff108 100644
-> --- a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
-> +++ b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
-[..]
-> +               sdhci@f98a4900 {
-> +                       cd-gpios = <&tlmm 122 GPIO_ACTIVE_LOW>;
-> +                       bus-width = <4>;
+Thanks.
 
-...why do you add this node and leave it disabled in the dts?
-
-> +               };
->         };
->  };
-
-Regards,
-Bjorn
+-- 
+Dmitry
