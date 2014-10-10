@@ -1,31 +1,52 @@
-From: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 0/2] Fix up rk3288 smp cpu hotplug
-Date: Fri, 10 Oct 2014 15:25:13 -0700
-Message-ID: <1412979915-19746-1-git-send-email-kever.yang@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Kever Yang <kever.yang@rock-chips.com>
+Subject: [PATCH 2/2] ARM: dts: rockchip: add reset for CPU nodes
+Date: Fri, 10 Oct 2014 15:25:15 -0700
+Message-ID: <1412979915-19746-3-git-send-email-kever.yang@rock-chips.com>
+References: <1412979915-19746-1-git-send-email-kever.yang@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412979915-19746-1-git-send-email-kever.yang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: dianders@chromium.org, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, linux-rockchip@lists.infradead.org, Kever Yang <kever.yang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-For the CA12/CA17 MPCore multiprocessor, the active processors might be
-stalled when the individual processor is powered down.
-For rk3288, we can avoid this prolbem by softreset the processor before
-power it down.
+This patch add reset for CPU nodes to use the reset controller.
 
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+---
 
-Kever Yang (2):
-  ARM: rockchip: fix up rk3288 smp cpu hotplug
-  ARM: dts: rockchip: add reset for CPU nodes
+ arch/arm/boot/dts/rk3288.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
- arch/arm/boot/dts/rk3288.dtsi    |  4 ++++
- arch/arm/mach-rockchip/platsmp.c | 38 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 42 insertions(+)
-
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 5e9c56d..291014d 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -53,21 +53,25 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a12";
+ 			reg = <0x500>;
++			resets = <&cru SRST_CORE0>;
+ 		};
+ 		cpu@501 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a12";
+ 			reg = <0x501>;
++			resets = <&cru SRST_CORE1>;
+ 		};
+ 		cpu@502 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a12";
+ 			reg = <0x502>;
++			resets = <&cru SRST_CORE2>;
+ 		};
+ 		cpu@503 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a12";
+ 			reg = <0x503>;
++			resets = <&cru SRST_CORE3>;
+ 		};
+ 	};
+ 
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
