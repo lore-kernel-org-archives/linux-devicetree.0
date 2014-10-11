@@ -1,7 +1,7 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/5] phy: berlin-sata: Document BG2 compatible
-Date: Sat, 11 Oct 2014 17:41:11 +0200
-Message-ID: <1413042073-14253-4-git-send-email-sebastian.hesselbarth@gmail.com>
+Subject: [PATCH 5/5] ARM: berlin: Enable SATA on Sony NSZ-GS7
+Date: Sat, 11 Oct 2014 17:41:13 +0200
+Message-ID: <1413042073-14253-6-git-send-email-sebastian.hesselbarth@gmail.com>
 References: <1413042073-14253-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=ISO-8859-1
@@ -13,8 +13,9 @@ To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.g
 Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Berlin BG2 SATA PHY is slightly different from currently supported
-BG2Q SATA PHY. Document the new compatible for BG2's PHY.
+Marvell Berlin BG2 based Sony NSZ-GS7 has an unpopulated SATA plug
+on its PCB solder side. As it is quite easy to populate and I have
+done it, enable AHCI and SATA by default.
 
 Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
@@ -24,25 +25,26 @@ Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org=20
 ---
- Documentation/devicetree/bindings/phy/berlin-sata-phy.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/berlin-sata-phy.txt =
-b/Documentation/devicetree/bindings/phy/berlin-sata-phy.txt
-index 88f8c23384c0..c0155f842f62 100644
---- a/Documentation/devicetree/bindings/phy/berlin-sata-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/berlin-sata-phy.txt
-@@ -2,7 +2,9 @@ Berlin SATA PHY
- ---------------
+diff --git a/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts b/arch/arm/boot=
+/dts/berlin2-sony-nsz-gs7.dts
+index c72bfd468d10..0a13e8a5da15 100644
+--- a/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
++++ b/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
+@@ -26,4 +26,11 @@
+ 	};
+ };
 =20
- Required properties:
--- compatible: should be "marvell,berlin2q-sata-phy"
-+- compatible: should be one of
-+    "marvell,berlin2-sata-phy"
-+    "marvell,berlin2q-sata-phy"
- - address-cells: should be 1
- - size-cells: should be 0
- - phy-cells: from the generic PHY bindings, must be 1
++&ahci { status =3D "okay"; };
++
++/* Unpopulated SATA plug on solder side */
++&sata0 { status =3D "okay"; };
++
++&sata_phy { status =3D "okay"; };
++
+ &uart0 { status =3D "okay"; };
 --=20
 2.1.1
 
