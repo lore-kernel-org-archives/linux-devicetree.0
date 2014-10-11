@@ -1,7 +1,7 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH 4/5] ARM: berlin: Add AHCI and SATA PHY nodes to BG2
-Date: Sat, 11 Oct 2014 17:41:12 +0200
-Message-ID: <1413042073-14253-5-git-send-email-sebastian.hesselbarth@gmail.com>
+Subject: [PATCH 1/5] phy: berlin-sata: Move PHY_BASE into private data struct
+Date: Sat, 11 Oct 2014 17:41:09 +0200
+Message-ID: <1413042073-14253-2-git-send-email-sebastian.hesselbarth@gmail.com>
 References: <1413042073-14253-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=ISO-8859-1
@@ -13,72 +13,131 @@ To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 Cc: Kishon Vijay Abraham I <kishon@ti.com>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT nodes for the AHCI controller and SATA PHY found on Marvell
-Berlin2 SoCs.
+Currently, Berlin SATA PHY driver assumes PHY_BASE address being
+constant. While this PHY_BASE is correct for BG2Q, older BG2 PHY_BASE
+is different. Prepare the driver for BG2 support by moving the phy_base
+into private driver data.
 
 Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 ---
-Cc: Kishon Vijay Abraham I <kishon@ti.com>=20
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
 Cc: "Antoine T=C3=A9nart" <antoine.tenart@free-electrons.com>
 Cc: devicetree@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org=20
+Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm/boot/dts/berlin2.dtsi | 40 ++++++++++++++++++++++++++++++++++=
-++++++
- 1 file changed, 40 insertions(+)
+ drivers/phy/phy-berlin-sata.c | 42 ++++++++++++++++++++++++++++-------=
+-------
+ 1 file changed, 28 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2=
-=2Edtsi
-index d7e81e124de0..7bfe51986a35 100644
---- a/arch/arm/boot/dts/berlin2.dtsi
-+++ b/arch/arm/boot/dts/berlin2.dtsi
-@@ -246,6 +246,46 @@
- 			};
- 		};
+diff --git a/drivers/phy/phy-berlin-sata.c b/drivers/phy/phy-berlin-sat=
+a.c
+index 69ced52d72aa..9682b0f66177 100644
+--- a/drivers/phy/phy-berlin-sata.c
++++ b/drivers/phy/phy-berlin-sata.c
+@@ -30,7 +30,7 @@
+ #define MBUS_WRITE_REQUEST_SIZE_128	(BIT(2) << 16)
+ #define MBUS_READ_REQUEST_SIZE_128	(BIT(2) << 19)
 =20
-+		ahci: sata@e90000 {
-+			compatible =3D "marvell,berlin2-ahci", "generic-ahci";
-+			reg =3D <0xe90000 0x1000>;
-+			interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks =3D <&chip CLKID_SATA>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+			status =3D "disabled";
+-#define PHY_BASE		0x200
++#define BG2Q_PHY_BASE		0x200
+=20
+ /* register 0x01 */
+ #define REF_FREF_SEL_25		BIT(0)
+@@ -61,15 +61,16 @@ struct phy_berlin_priv {
+ 	struct clk		*clk;
+ 	struct phy_berlin_desc	**phys;
+ 	unsigned		nphys;
++	u32			phy_base;
+ };
+=20
+-static inline void phy_berlin_sata_reg_setbits(void __iomem *ctrl_reg,=
+ u32 reg,
+-					       u32 mask, u32 val)
++static inline void phy_berlin_sata_reg_setbits(void __iomem *ctrl_reg,
++			       u32 phy_base, u32 reg, u32 mask, u32 val)
+ {
+ 	u32 regval;
+=20
+ 	/* select register */
+-	writel(PHY_BASE + reg, ctrl_reg + PORT_VSR_ADDR);
++	writel(phy_base + reg, ctrl_reg + PORT_VSR_ADDR);
+=20
+ 	/* set bits */
+ 	regval =3D readl(ctrl_reg + PORT_VSR_DATA);
+@@ -103,17 +104,20 @@ static int phy_berlin_sata_power_on(struct phy *p=
+hy)
+ 	writel(regval, priv->base + HOST_VSA_DATA);
+=20
+ 	/* set PHY mode and ref freq to 25 MHz */
+-	phy_berlin_sata_reg_setbits(ctrl_reg, 0x1, 0xff,
+-				    REF_FREF_SEL_25 | PHY_MODE_SATA);
++	phy_berlin_sata_reg_setbits(ctrl_reg, priv->phy_base, 0x01,
++				    0x00ff, REF_FREF_SEL_25 | PHY_MODE_SATA);
+=20
+ 	/* set PHY up to 6 Gbps */
+-	phy_berlin_sata_reg_setbits(ctrl_reg, 0x25, 0xc00, PHY_GEN_MAX_6_0);
++	phy_berlin_sata_reg_setbits(ctrl_reg, priv->phy_base, 0x25,
++				    0x0c00, PHY_GEN_MAX_6_0);
+=20
+ 	/* set 40 bits width */
+-	phy_berlin_sata_reg_setbits(ctrl_reg, 0x23,  0xc00, DATA_BIT_WIDTH_40=
+);
++	phy_berlin_sata_reg_setbits(ctrl_reg, priv->phy_base, 0x23,
++				    0x0c00, DATA_BIT_WIDTH_40);
+=20
+ 	/* use max pll rate */
+-	phy_berlin_sata_reg_setbits(ctrl_reg, 0x2, 0x0, USE_MAX_PLL_RATE);
++	phy_berlin_sata_reg_setbits(ctrl_reg, priv->phy_base, 0x02,
++				    0x0000, USE_MAX_PLL_RATE);
+=20
+ 	/* set Gen3 controller speed */
+ 	regval =3D readl(ctrl_reg + PORT_SCR_CTL);
+@@ -182,9 +186,22 @@ static u32 phy_berlin_power_down_bits[] =3D {
+ 	POWER_DOWN_PHY1,
+ };
+=20
++static u32 bg2q_sata_phy_base =3D BG2Q_PHY_BASE;
 +
-+			sata0: sata-port@0 {
-+				reg =3D <0>;
-+				phys =3D <&sata_phy 0>;
-+				status =3D "disabled";
-+			};
++static const struct of_device_id phy_berlin_sata_of_match[] =3D {
++	{
++		.compatible =3D "marvell,berlin2q-sata-phy",
++		.data =3D &bg2q_sata_phy_base,
++	},
++	{ },
++};
 +
-+			sata1: sata-port@1 {
-+				reg =3D <1>;
-+				phys =3D <&sata_phy 1>;
-+				status =3D "disabled";
-+			};
-+		};
+ static int phy_berlin_sata_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev =3D &pdev->dev;
++	const struct of_device_id *match =3D
++		of_match_node(phy_berlin_sata_of_match, dev->of_node);
++	const u32 *phy_base =3D match->data;
+ 	struct device_node *child;
+ 	struct phy *phy;
+ 	struct phy_provider *phy_provider;
+@@ -218,6 +235,8 @@ static int phy_berlin_sata_probe(struct platform_de=
+vice *pdev)
+ 	if (!priv->phys)
+ 		return -ENOMEM;
+=20
++	priv->phy_base =3D *phy_base;
 +
-+		sata_phy: phy@e900a0 {
-+			compatible =3D "marvell,berlin2-sata-phy";
-+			reg =3D <0xe900a0 0x200>;
-+			clocks =3D <&chip CLKID_SATA>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+			#phy-cells =3D <1>;
-+			status =3D "disabled";
-+
-+			sata-phy@0 {
-+				reg =3D <0>;
-+			};
-+
-+			sata-phy@1 {
-+				reg =3D <1>;
-+			};
-+		};
-+
- 		chip: chip-control@ea0000 {
- 			compatible =3D "marvell,berlin2-chip-ctrl";
- 			#clock-cells =3D <1>;
+ 	dev_set_drvdata(dev, priv);
+ 	spin_lock_init(&priv->lock);
+=20
+@@ -264,11 +283,6 @@ static int phy_berlin_sata_probe(struct platform_d=
+evice *pdev)
+ 	return 0;
+ }
+=20
+-static const struct of_device_id phy_berlin_sata_of_match[] =3D {
+-	{ .compatible =3D "marvell,berlin2q-sata-phy" },
+-	{ },
+-};
+-
+ static struct platform_driver phy_berlin_sata_driver =3D {
+ 	.probe	=3D phy_berlin_sata_probe,
+ 	.driver	=3D {
 --=20
 2.1.1
