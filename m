@@ -1,65 +1,34 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 0/3] iio: exynos-adc: use syscon instead of ioremap
-Date: Thu, 09 Oct 2014 21:05:25 +0100
-Message-ID: <5436EA85.90900@kernel.org>
-References: <1410857931-4980-1-git-send-email-ch.naveen@samsung.com> <541EC1C2.6090608@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <541EC1C2.6090608@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, cw00.choi@samsung.com, gregkh@linuxfoundation.org, naveenkrishna.ch@gmail.com, lars@metafoo.de, cpgs@samsung.com, grundler@chromium.org, Kukjin Kim <kgene.kim@samsung.com>
+From: Matt Ranostay <mranostay@gmail.com>
+Subject: [PATCH v6 0/3] cap1106: add support for cap11xx variants
+Date: Fri, 10 Oct 2014 22:06:51 -0700
+Message-ID: <1413004014-23807-1-git-send-email-mranostay@gmail.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, galak@codeaurora.org, zonque@gmail.com
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Matt Ranostay <mranostay@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 21/09/14 13:17, Jonathan Cameron wrote:
-> On 16/09/14 09:58, Naveen Krishna Chatradhi wrote:
->> Changes since v1:
->> 1. Rebased on top of togreg branch of IIO git.
->>
->> This patch set does the following
->> 1. Use the syscon and Regmap API instead of ioremappaing the
->>    ADC_PHY register from PMU.
->> 2. Updates the Documentation in exynos-adc.txt with syscon phandle
->>    for the ADC nodes.
->> 3. Updates the Dts files for Exynos3250, Exynos4x12, Exynos5250,
->>    Exynos5420 with the syscon phandle.
->>
->> Tested on Exynos5420 based Peach PIT and Exynos5800 based Peach PI
->> by verifying sysfs entries provided by HWMON based NTC thermistors.
->>
->> Tested-By for Exynos3250, Exynos4x12 would be appreciated.
-> Would definitely be good!
-> 
-> The main issue I have with this series is that it breaks backward
-> compatibility with old device trees and newer kernels.
-> 
-> Now I appreciate that sometimes there are reasons to do it but want this
-> to have deeper consideration (and acks to show it) from the Exynos side
-> of things and preferably from the device tree side of things as well.
-> 
-> cc'd Kukjin Kim for the Exynos side of things as the listed Maintainer.
-> 
-> Otherwise, the series looks fine to me.
-Kukjin? Sorry to pester, but this has been sat in my waiting queue for a
-while now.
->>
->> Naveen Krishna Chatradhi (3):
->>   iio: exyno-adc: use syscon for PMU register access
->>   Documentation: dt-bindings: update exynos-adc.txt with syscon handle
->>   ARM: dts: exynos: Add sysreg phandle to ADC node
->>
->>  .../devicetree/bindings/arm/samsung/exynos-adc.txt |    9 ++++--
->>  arch/arm/boot/dts/exynos3250.dtsi                  |    3 +-
->>  arch/arm/boot/dts/exynos4x12.dtsi                  |    3 +-
->>  arch/arm/boot/dts/exynos5250.dtsi                  |    3 +-
->>  arch/arm/boot/dts/exynos5420.dtsi                  |    3 +-
->>  drivers/iio/adc/exynos_adc.c                       |   30 ++++++++++++++------
->>  6 files changed, 36 insertions(+), 15 deletions(-)
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Changes from v5:
+
+ * Removed redundant num_channel from the private structure 
+
+Matt Ranostay (3):
+  cap11xx: make driver generic for variant support
+  cap11xx: Add support for various cap11xx devices
+  cap11xx: support for irq-active-high option
+
+ .../devicetree/bindings/input/cap1106.txt          |  53 ---
+ .../devicetree/bindings/input/cap11xx.txt          |  59 ++++
+ drivers/input/keyboard/Kconfig                     |   8 +-
+ drivers/input/keyboard/Makefile                    |   2 +-
+ drivers/input/keyboard/cap1106.c                   | 341 -------------------
+ drivers/input/keyboard/cap11xx.c                   | 366 +++++++++++++++++++++
+ 6 files changed, 430 insertions(+), 399 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/input/cap1106.txt
+ create mode 100644 Documentation/devicetree/bindings/input/cap11xx.txt
+ delete mode 100644 drivers/input/keyboard/cap1106.c
+ create mode 100644 drivers/input/keyboard/cap11xx.c
+
+-- 
+1.9.1
+
