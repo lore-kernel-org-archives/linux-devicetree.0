@@ -1,33 +1,55 @@
 From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v3 0/6] add basic rk3288 smp support
-Date: Sat, 11 Oct 2014 20:04:15 +0200
-Message-ID: <5162812.g00M9eGW9B@phil>
-References: <1412976370-14468-1-git-send-email-kever.yang@rock-chips.com>
+Subject: Re: [PATCH] ARM: dts: rockchip: enable DMA on SPI for rk3066 and rk3188
+Date: Sat, 11 Oct 2014 20:24:27 +0200
+Message-ID: <4669230.PsEI42KPZh@phil>
+References: <1412928253-5119-1-git-send-email-julien.chauveau@neo-technologies.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1412976370-14468-1-git-send-email-kever.yang@rock-chips.com>
+In-Reply-To: <1412928253-5119-1-git-send-email-julien.chauveau@neo-technologies.fr>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kever Yang <kever.yang@rock-chips.com>
-Cc: dianders@chromium.org, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, linux-rockchip@lists.infradead.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kever,
+Hi Julien,
 
-Am Freitag, 10. Oktober 2014, 14:26:04 schrieb Kever Yang:
-> rk3288 is qual-core CPU Soc, we enable the smp in this patch.
+Am Freitag, 10. Oktober 2014, 10:04:13 schrieb Julien CHAUVEAU:
+> According to the RK3066 and RK3188 TRM, the two SPI controllers support DMA
+> handshake interface. Add the DMA properties so they can be used when needed.
 > 
-> In version 3 we use regmap and pmu syscon for cpu power on/off.
-> This should be work after Pankaj Dubey's patch applied:
-> (https://lkml.org/lkml/2014/9/30/156)
+> Signed-off-by: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
 
-I've tested this series on both a rk3188 as well as a rk3288 and was 
-sucessfully getting the secondary cores bootet.
-
-I did not include patch2 in this, as the whole thing also works when applying 
-the syscon-patch I mention in an individual reply - which also already got 
-accepted for 3.19.
+added the patch to a temporary branch for 3.19
+(on github and will move to kernel.org once 3.18-rc1 is released)
 
 
 Heiko
+
+> ---
+>  arch/arm/boot/dts/rk3xxx.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+> index 499468d..9ba92de 100644
+> --- a/arch/arm/boot/dts/rk3xxx.dtsi
+> +++ b/arch/arm/boot/dts/rk3xxx.dtsi
+> @@ -367,6 +367,8 @@
+>  		reg = <0x20070000 0x1000>;
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+> +		dmas = <&dmac2 10>, <&dmac2 11>;
+> +		dma-names = "tx", "rx";
+>  		status = "disabled";
+>  	};
+> 
+> @@ -378,6 +380,8 @@
+>  		reg = <0x20074000 0x1000>;
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+> +		dmas = <&dmac2 12>, <&dmac2 13>;
+> +		dma-names = "tx", "rx";
+>  		status = "disabled";
+>  	};
+>  };
