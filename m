@@ -1,47 +1,207 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 00/12] rtc: omap: fixes and power-off feature
-Date: Sat, 11 Oct 2014 11:38:19 +0200
-Message-ID: <20141011093819.GA18988@localhost>
-References: <1412881594-25678-1-git-send-email-johan@kernel.org>
- <20141010175409.GL31348@saruman>
+From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3] mtd: atmel_nand: make PMECC lookup table and offset property optional
+Date: Sat, 11 Oct 2014 18:01:50 +0800
+Message-ID: <1413021710-32264-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141010175409.GL31348@saruman>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Johan Hovold <johan@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Andrew Morton <akpm@linux-foundation.org>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, Colin Foe-Parker <colin.foeparker@logicpd.com>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Josh Wu <Josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 10, 2014 at 12:54:22PM -0500, Felipe Balbi wrote:
-> HI,
-> 
-> On Thu, Oct 09, 2014 at 09:06:22PM +0200, Johan Hovold wrote:
-> > This series fixes a few issues with the omap rtc-driver, cleans up a bit
-> > and finally adds support for the PMIC control feature found in some
-> > revisions of this RTC IP block.
-> > 
-> > Ultimately, this allows for powering off the Beaglebone and waking it up
-> > again on RTC alarms.
-> > 
-> > I noticed yesterday that Lokesh Vutla recently posted some patches to
-> > add regulator support to this driver. [1] While that series has some
-> > issues that needs to be addressed, I still think it could be a good idea
-> > to rebase my pmic_power_en patch on top of it as it adds some long
-> > overdue device abstraction. That would be needed anyway in order to
-> > support the new power-off infrastructure that's in the pipe in a clean
-> > way. [2]
-> 
-> is this power-off feature "RTC-only mode" ?
+From: Josh Wu <Josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-Yes, I believe so, at least as long as RTC power is maintained. The
-pmic_power_en pin can otherwise still be used to power off. 
+If there is no PMECC lookup table stored in ROM, or lookup table offset is
+not specified, PMECC driver should build it in DDR by itself.
 
-On the BeagleBone the PMIC can be configured to enter OFF or SLEEP mode
-on power off, where the latter (and default) mode keeps the RTC power
-supply enabled.
+That make the PMECC driver work for some board which doesn't has PMECC
+lookup table in ROM.
 
-Thanks for the fast review, Felipe.
+The PMECC use the BCH algorithm, so based on the build_gf_tables()
+function in lib/bch.c, we can build the Galois Field lookup table.
 
-Johan
+For more information can refer to section 5.4 of PMECC controller
+application note:
+	http://www.atmel.com/images/doc11127.pdf
+
+Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+v1 -> v2:
+  make create_lookup_table() static.
+
+v2 -> v3:
+  rewrite the build_gf_tables() function based on lib/bch.c.
+  add error handling in create_lookup_table().
+
+ .../devicetree/bindings/mtd/atmel-nand.txt         |  6 +-
+ drivers/mtd/nand/atmel_nand.c                      | 81 ++++++++++++++++++++--
+ drivers/mtd/nand/atmel_nand_ecc.h                  |  4 ++
+ 3 files changed, 85 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+index 6edc3b6..1fe6dde 100644
+--- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+@@ -5,7 +5,9 @@ Required properties:
+ - reg : should specify localbus address and size used for the chip,
+ 	and hardware ECC controller if available.
+ 	If the hardware ECC is PMECC, it should contain address and size for
+-	PMECC, PMECC Error Location controller and ROM which has lookup tables.
++	PMECC and PMECC Error Location controller.
++	The PMECC lookup table address and size in ROM is optional. If not
++	specified, driver will build it in runtime.
+ - atmel,nand-addr-offset : offset for the address latch.
+ - atmel,nand-cmd-offset : offset for the command latch.
+ - #address-cells, #size-cells : Must be present if the device has sub-nodes
+@@ -27,7 +29,7 @@ Optional properties:
+   are: 512, 1024.
+ - atmel,pmecc-lookup-table-offset : includes two offsets of lookup table in ROM
+   for different sector size. First one is for sector size 512, the next is for
+-  sector size 1024.
++  sector size 1024. If not specified, driver will build the table in runtime.
+ - nand-bus-width : 8 or 16 bus width if not present 8
+ - nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
+ - Nand Flash Controller(NFC) is a slave driver under Atmel nand flash
+diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
+index 19d1e9d..5c1423a 100644
+--- a/drivers/mtd/nand/atmel_nand.c
++++ b/drivers/mtd/nand/atmel_nand.c
+@@ -127,6 +127,7 @@ struct atmel_nand_host {
+ 	bool			has_pmecc;
+ 	u8			pmecc_corr_cap;
+ 	u16			pmecc_sector_size;
++	bool			has_no_lookup_table;
+ 	u32			pmecc_lookup_table_offset;
+ 	u32			pmecc_lookup_table_offset_512;
+ 	u32			pmecc_lookup_table_offset_1024;
+@@ -1112,12 +1113,66 @@ static int pmecc_choose_ecc(struct atmel_nand_host *host,
+ 	return 0;
+ }
+ 
++static inline int deg(unsigned int poly)
++{
++	/* polynomial degree is the most-significant bit index */
++	return fls(poly) - 1;
++}
++
++static int build_gf_tables(int mm, unsigned int poly,
++		int16_t *index_of, int16_t *alpha_to)
++{
++	unsigned int i, x = 1;
++	const unsigned int k = 1 << deg(poly);
++	unsigned int nn = (1 << mm) - 1;
++
++	/* primitive polynomial must be of degree m */
++	if (k != (1u << mm))
++		return -EINVAL;
++
++	for (i = 0; i < nn; i++) {
++		alpha_to[i] = x;
++		index_of[x] = i;
++		if (i && (x == 1))
++			/* polynomial is not primitive (a^i=1 with 0<i<2^m-1) */
++			return -EINVAL;
++		x <<= 1;
++		if (x & k)
++			x ^= poly;
++	}
++	alpha_to[nn] = 1;
++	index_of[0] = 0;
++
++	return 0;
++}
++
++static uint16_t *create_lookup_table(struct device *dev, int sector_size)
++{
++	int degree = (sector_size == 512) ?
++			PMECC_GF_DIMENSION_13 :
++			PMECC_GF_DIMENSION_14;
++	unsigned int poly = (sector_size == 512) ?
++			PMECC_GF_13_PRIMITIVE_POLY :
++			PMECC_GF_14_PRIMITIVE_POLY;
++	int table_size = (sector_size == 512) ?
++			PMECC_LOOKUP_TABLE_SIZE_512 :
++			PMECC_LOOKUP_TABLE_SIZE_1024;
++
++	int16_t *addr = devm_kzalloc(dev, 2 * table_size * sizeof(uint16_t),
++			GFP_KERNEL);
++	if (addr && build_gf_tables(degree, poly, addr, addr + table_size))
++		return NULL;
++
++	return addr;
++}
++
+ static int atmel_pmecc_nand_init_params(struct platform_device *pdev,
+ 					 struct atmel_nand_host *host)
+ {
+ 	struct mtd_info *mtd = &host->mtd;
+ 	struct nand_chip *nand_chip = &host->nand_chip;
+ 	struct resource *regs, *regs_pmerr, *regs_rom;
++	uint16_t *galois_table;
+ 	int cap, sector_size, err_no;
+ 
+ 	err_no = pmecc_choose_ecc(host, &cap, &sector_size);
+@@ -1163,8 +1218,24 @@ static int atmel_pmecc_nand_init_params(struct platform_device *pdev,
+ 	regs_rom = platform_get_resource(pdev, IORESOURCE_MEM, 3);
+ 	host->pmecc_rom_base = devm_ioremap_resource(&pdev->dev, regs_rom);
+ 	if (IS_ERR(host->pmecc_rom_base)) {
+-		err_no = PTR_ERR(host->pmecc_rom_base);
+-		goto err;
++		if (!host->has_no_lookup_table)
++			/* Don't display the information again */
++			dev_err(host->dev, "Can not get I/O resource for ROM, will build a lookup table in runtime!\n");
++
++		host->has_no_lookup_table = true;
++	}
++
++	if (host->has_no_lookup_table) {
++		/* Build the look-up table in runtime */
++		galois_table = create_lookup_table(host->dev, sector_size);
++		if (!galois_table) {
++			dev_err(host->dev, "Failed to build a lookup table in runtime!\n");
++			err_no = -EINVAL;
++			goto err;
++		}
++
++		host->pmecc_rom_base = (void __iomem *)galois_table;
++		host->pmecc_lookup_table_offset = 0;
+ 	}
+ 
+ 	nand_chip->ecc.size = sector_size;
+@@ -1501,8 +1572,10 @@ static int atmel_of_init_port(struct atmel_nand_host *host,
+ 
+ 	if (of_property_read_u32_array(np, "atmel,pmecc-lookup-table-offset",
+ 			offset, 2) != 0) {
+-		dev_err(host->dev, "Cannot get PMECC lookup table offset\n");
+-		return -EINVAL;
++		dev_err(host->dev, "Cannot get PMECC lookup table offset, will build a lookup table in runtime.\n");
++		host->has_no_lookup_table = true;
++		/* Will build a lookup table and initialize the offset later */
++		return 0;
+ 	}
+ 	if (!offset[0] && !offset[1]) {
+ 		dev_err(host->dev, "Invalid PMECC lookup table offset\n");
+diff --git a/drivers/mtd/nand/atmel_nand_ecc.h b/drivers/mtd/nand/atmel_nand_ecc.h
+index 8a1e9a6..d4035e3 100644
+--- a/drivers/mtd/nand/atmel_nand_ecc.h
++++ b/drivers/mtd/nand/atmel_nand_ecc.h
+@@ -142,6 +142,10 @@
+ #define PMECC_GF_DIMENSION_13			13
+ #define PMECC_GF_DIMENSION_14			14
+ 
++/* Primitive Polynomial used by PMECC */
++#define PMECC_GF_13_PRIMITIVE_POLY		0x201b
++#define PMECC_GF_14_PRIMITIVE_POLY		0x4443
++
+ #define PMECC_LOOKUP_TABLE_SIZE_512		0x2000
+ #define PMECC_LOOKUP_TABLE_SIZE_1024		0x4000
+ 
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
