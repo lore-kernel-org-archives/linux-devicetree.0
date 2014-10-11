@@ -1,52 +1,74 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 4/6] ARM: dts: rockchip: add pmu references to cpus nodes
-Date: Sat, 11 Oct 2014 19:47:09 +0200
-Message-ID: <4066180.uVEMeJn3o5@phil>
-References: <1412976370-14468-1-git-send-email-kever.yang@rock-chips.com> <1412976370-14468-5-git-send-email-kever.yang@rock-chips.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v3 6/6] ARM: dts: rockchip: add intmem node for rk3288 smp support
+Date: Sat, 11 Oct 2014 20:01:01 +0200
+Message-ID: <1772006.xWk9SpEHRu@phil>
+References: <1412976370-14468-1-git-send-email-kever.yang@rock-chips.com> <1412976370-14468-7-git-send-email-kever.yang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1412976370-14468-5-git-send-email-kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412976370-14468-7-git-send-email-kever.yang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kever Yang <kever.yang@rock-chips.com>
+Cc: dianders@chromium.org, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 10. Oktober 2014, 14:26:08 schrieb Kever Yang:
-> This patch add pmu reference and enable-method for smp
+Am Freitag, 10. Oktober 2014, 14:26:10 schrieb Kever Yang:
+> This patch add intmem node des which is needed by platsmp.c
 > 
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 
-there should be no Signed-off from me be included here.
+again without this Signed-off please (also true for patch 5/6 where I forgot to 
+mention it)
 
-
-> Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
 > ---
 > 
 > Changes in v3:
-> - add this patch
+> - remove 'enable-method' from this patch
+> - add compitable name "rockchip,rk3288-pmu-sram" for pmu-intmem
 > 
-> Changes in v2: None
+> Changes in v2:
+> - adjust the alignment
 > 
->  arch/arm/boot/dts/rk3288.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
+>  arch/arm/boot/dts/rk3288.dtsi | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
 > 
 > diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index 06f39be..44108fe 100644
+> index 44108fe..5e9c56d 100644
 > --- a/arch/arm/boot/dts/rk3288.dtsi
 > +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -46,6 +46,8 @@
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +		enable-method = "rockchip,rk3066-smp";
-> +		rockchip,pmu = <&pmu>;
+> @@ -441,6 +441,23 @@
+>  		status = "disabled";
+>  	};
 > 
->  		cpu@500 {
->  			device_type = "cpu";
+> +	bus_intmem@ff700000 {
+> +		compatible = "mmio-sram";
+> +		reg = <0xff700000 0x18000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0xff700000 0x18000>;
+> +		smp-sram@0 {
+> +			compatible = "rockchip,rk3066-smp-sram";
+> +			reg = <0x00 0x10>;
+> +		};
+> +	};
+> +
+> +	pmu_intmem@ff720000 {
+> +		compatible = "mmio-sram", "rockchip,rk3288-pmu-sram";
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+general rule, the more specific compatible should be in front, so
+		compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
+
+This way, if there is a driver for "rockchip,rk3288-pmu-sram" at some point in 
+the future, it will grab the node before the more generic sram driver does.
+
+But in general, what is the pmu sram necessary for, as no part of this series 
+uses it?
+
+> +		reg = <0xff720000 0x4000>;
+> +	};
+> +
+>  	pmu: power-management@ff730000 {
+>  		compatible = "rockchip,rk3066-pmu", "syscon";
+>  		reg = <0xff730000 0x100>;
