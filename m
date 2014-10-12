@@ -1,216 +1,58 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [RFC 4/7] ARM: dts: add support for Vybrid running on Cortex-M4
-Date: Sun, 12 Oct 2014 20:13:58 +0200
-Message-ID: <b3dd902655e9cc4496170a05a907fcce5a687427.1413136383.git.stefan@agner.ch>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC 2/7] clocksource: add dependencies for Vybrid pit
+ clocksource
+Date: Sun, 12 Oct 2014 20:18:21 +0200
+Message-ID: <20141012181821.GQ31554@pengutronix.de>
 References: <cover.1413136383.git.stefan@agner.ch>
+ <603e0f51e88b5643cb42e966cbb1b80b21a55ecf.1413136383.git.stefan@agner.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1413136383.git.stefan-XLVq0VzYD2Y@public.gmane.org>
-In-Reply-To: <cover.1413136383.git.stefan-XLVq0VzYD2Y@public.gmane.org>
-References: <cover.1413136383.git.stefan-XLVq0VzYD2Y@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <603e0f51e88b5643cb42e966cbb1b80b21a55ecf.1413136383.git.stefan-XLVq0VzYD2Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds an initial device tree to run Linux on the Cortex-M4 on
-Vybrid.
+Hello,
 
-HACK: Because we include armv7-m.dtsi, the soc node happens to
-be before the clock node. This is a problem for vf610-clk.c, which
-tries to optain the fixed clocks defined in the clock nodes. But
-because clock drivers are initialized sequencially, and we do not
-have support for deferred probing, the clock initialization fails
-horrible.
-Move the armv7-m.dtsi include to the bottom to temporarily work
-work around this...
+On Sun, Oct 12, 2014 at 08:13:56PM +0200, Stefan Agner wrote:
+> Add the minimal dependencies required to use the Vybrid PIT
+> clocksource driver. Those are not part of the SoC dependencies.
+>=20
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> ---
+>  drivers/clocksource/Kconfig | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfi=
+g
+> index cfd6519..26464dd 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -146,6 +146,8 @@ config FSL_FTM_TIMER
+> =20
+>  config VF_PIT_TIMER
+>  	bool
+> +	select CLKSRC_MMIO
+> +	select CLKSRC_OF
+>  	help
+>  	  Support for Period Interrupt Timer on Freescale Vybrid Family SoC=
+s.
+This one seems to qualify as a fix for the MMU stuff, right?
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
----
-Maybe a dummy soc entry in armv7-m.dtsi also helps here. But a
-hack as well. Is it common acceptable that the kernel depends
-on DTS order?
+Uwe
 
- arch/arm/boot/dts/Makefile     |   1 +
- arch/arm/boot/dts/armv7-m.dtsi |   1 -
- arch/arm/boot/dts/vf610m4.dts  | 144 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 145 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/vf610m4.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b8c5cd3..b1c6c1d 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -64,6 +64,7 @@ dtb-$(CONFIG_ARCH_BRCMSTB) += \
- dtb-$(CONFIG_ARCH_DAVINCI) += da850-enbw-cmc.dtb \
- 	da850-evm.dtb
- dtb-$(CONFIG_ARCH_EFM32) += efm32gg-dk3750.dtb
-+dtb-$(CONFIG_SOC_VF610M4) += vf610m4.dtb
- dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
- 	exynos4210-smdkv310.dtb \
- 	exynos4210-trats.dtb \
-diff --git a/arch/arm/boot/dts/armv7-m.dtsi b/arch/arm/boot/dts/armv7-m.dtsi
-index 5a660d0..0516484 100644
---- a/arch/arm/boot/dts/armv7-m.dtsi
-+++ b/arch/arm/boot/dts/armv7-m.dtsi
-@@ -1,4 +1,3 @@
--#include "skeleton.dtsi"
- 
- / {
- 	nvic: nv-interrupt-controller  {
-diff --git a/arch/arm/boot/dts/vf610m4.dts b/arch/arm/boot/dts/vf610m4.dts
-new file mode 100644
-index 0000000..61488fe
---- /dev/null
-+++ b/arch/arm/boot/dts/vf610m4.dts
-@@ -0,0 +1,144 @@
-+/*
-+ * Device tree for VF610 Cortex-M4 support
-+ */
-+
-+/dts-v1/;
-+#include "skeleton.dtsi"
-+#include "vf610-pinfunc.h"
-+#include <dt-bindings/clock/vf610-clock.h>
-+
-+/ {
-+	model = "VF610 Cortex-M4";
-+	compatible = "fsl,vf610m4";
-+
-+	chosen {
-+		bootargs = "console=ttyLP0,115200 ignore_loglevel ihash_entries=64 dhash_entries=64 earlyprintk clk_ignore_unused init=/linuxrc root=/dev/mmcblk0p2 rootwait";
-+	};
-+
-+	memory {
-+		reg = <0x88000000 0x2000000>;
-+	};
-+
-+	aliases {
-+		serial0 = &uart2;
-+	};
-+
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		sxosc {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <32768>;
-+		};
-+
-+		fxosc {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <24000000>;
-+		};
-+	};
-+
-+	soc {
-+		aips0: aips-bus@40000000 {
-+			compatible = "fsl,aips-bus", "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0x40000000 0x70000>;
-+			ranges;
-+
-+/*
-+			uart0: serial@40027000 {
-+				compatible = "fsl,vf610-lpuart";
-+				reg = <0x40027000 0x1000>;
-+				interrupts = <61>;
-+				clocks = <&clks VF610_CLK_UART0>;
-+				clock-names = "ipg";
-+				status = "okay";
-+			};
-+
-+			uart1: serial@40028000 {
-+				compatible = "fsl,vf610-lpuart";
-+				reg = <0x40028000 0x1000>;
-+				interrupts = <62>;
-+				clocks = <&clks VF610_CLK_UART1>;
-+				clock-names = "ipg";
-+				status = "okay";
-+			};
-+*/
-+			uart2: serial@40029000 {
-+				compatible = "fsl,vf610-lpuart";
-+				reg = <0x40029000 0x1000>;
-+				interrupts = <63>;
-+				clocks = <&clks VF610_CLK_UART2>;
-+				clock-names = "ipg";
-+				status = "okay";
-+			};
-+
-+			pit: pit@40037000 {
-+				compatible = "fsl,vf610-pit";
-+				reg = <0x40037000 0x1000>;
-+				interrupts = <39>;
-+				clocks = <&clks VF610_CLK_PIT>;
-+				clock-names = "pit";
-+			};
-+
-+			iomuxc: iomuxc@40048000 {
-+				compatible = "fsl,vf610-iomuxc";
-+				reg = <0x40048000 0x1000>;
-+				#gpio-range-cells = <3>;
-+
-+				vf610-colibri {
-+					pinctrl_esdhc1: esdhc1grp {
-+						fsl,pins = <
-+							VF610_PAD_PTA24__ESDHC1_CLK	0x31ef
-+							VF610_PAD_PTA25__ESDHC1_CMD	0x31ef
-+							VF610_PAD_PTA26__ESDHC1_DAT0	0x31ef
-+							VF610_PAD_PTA27__ESDHC1_DAT1	0x31ef
-+							VF610_PAD_PTA28__ESDHC1_DATA2	0x31ef
-+							VF610_PAD_PTA29__ESDHC1_DAT3	0x31ef
-+							VF610_PAD_PTB20__GPIO_42	0x219d
-+						>;
-+					};
-+				};
-+			};
-+
-+			anatop@40050000 {
-+				compatible = "fsl,vf610-anatop";
-+				reg = <0x40050000 0x1000>;
-+			};
-+
-+			clks: ccm@4006b000 {
-+				compatible = "fsl,vf610-ccm";
-+				reg = <0x4006b000 0x1000>;
-+				#clock-cells = <1>;
-+			};
-+		};
-+
-+		aips1: aips-bus@40080000 {
-+			compatible = "fsl,aips-bus", "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0x40080000 0x80000>;
-+			ranges;
-+
-+
-+			esdhc1: esdhc@400b2000 {
-+				compatible = "fsl,imx53-esdhc";
-+				reg = <0x400b2000 0x1000>;
-+				interrupts = <28>;
-+				clocks = <&clks VF610_CLK_IPG_BUS>,
-+					<&clks VF610_CLK_PLATFORM_BUS>,
-+					<&clks VF610_CLK_ESDHC1>;
-+				clock-names = "ipg", "ahb", "per";
-+				bus-width = <4>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_esdhc1>;
-+				status = "okay";
-+			};
-+		};
-+	};
-+};
-+
-+#include "armv7-m.dtsi"
--- 
-2.1.2
-
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
