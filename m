@@ -1,81 +1,32 @@
-From: Hartmut Knaack <knaack.h@gmx.de>
-Subject: Re: [PATCH v3 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
-Date: Mon, 13 Oct 2014 00:14:12 +0200
-Message-ID: <543AFD34.5060602@gmx.de>
-References: <1411563415-11933-1-git-send-email-svarbanov@mm-sol.com>  <1411563415-11933-2-git-send-email-svarbanov@mm-sol.com> <1411649225.18580.134.camel@iivanov-dev> <54243533.7080809@mm-sol.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH] audio: sgtl5000: Add MicBias resistor
+ support in DT
+Date: Sun, 12 Oct 2014 19:39:23 -0300
+Message-ID: <CAOMZO5C+20UWCOFRD033y+MEWd-DUBJ15AejBEFxSzn5otySnA@mail.gmail.com>
+References: <1413139149-2485-1-git-send-email-jean-michel.hautbois@vodalys.com>
+	<CAOMZO5BtUPkrpaXtupeLpeng4bPAiZeMZuJdmxx1RoPWhJ874w@mail.gmail.com>
+	<CAL8zT=hKgMYVCHr2x90imRD1eBvsjXZ+subrVmBh0YX-E3Fscw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <54243533.7080809@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>, "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collinsd@c>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL8zT=hKgMYVCHr2x90imRD1eBvsjXZ+subrVmBh0YX-E3Fscw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Stanimir Varbanov schrieb am 25.09.2014 17:30:
-> Hi Ivan,
-> 
-> On 09/25/2014 03:47 PM, Ivan T. Ivanov wrote:
->>
->> Hi Stan, few comment bellow.
->>
->> On Wed, 2014-09-24 at 15:56 +0300, Stanimir Varbanov wrote:
->>> The voltage ADC is peripheral of Qualcomm SPMI PMIC chips. It has
->>> 15bits resolution and register space inside PMIC accessible across
->>> SPMI bus.
->>>
->>> The vadc driver registers itself through IIO interface.
->>>
->>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
->>> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
->>> ---
->>>  drivers/iio/adc/Kconfig                       |   10 +
->>>  drivers/iio/adc/Makefile                      |    1 +
->>>  drivers/iio/adc/qcom-spmi-vadc.c              | 1029 +++++++++++++++++++++++++
->>>  include/dt-bindings/iio/qcom,spmi-pmic-vadc.h |  119 +++
->>>  4 files changed, 1159 insertions(+), 0 deletions(-)
->>>  create mode 100644 drivers/iio/adc/qcom-spmi-vadc.c
->>>  create mode 100644 include/dt-bindings/iio/qcom,spmi-pmic-vadc.h
->>>
->>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
->>> index 11b048a..ec48360 100644
->>> --- a/drivers/iio/adc/Kconfig
->>> +++ b/drivers/iio/adc/Kconfig
->>> @@ -206,6 +206,16 @@ config NAU7802
->>>  	  To compile this driver as a module, choose M here: the
->>>  	  module will be called nau7802.
->>>  
->>> +config QCOM_SPMI_VADC
->>> +	tristate "Qualcomm SPMI PMIC voltage ADC"
->>> +	depends on SPMI
->>
->> + select REGMAP_SPMI
-> 
-> I'd suggest MFD_SPMI_PMIC symbol of the parent driver instead? The
-> parent MFD PMIC driver already selects REGMAP_SPMI and depends on SPMI.
-> 
->>
->> <snip>
->>
->>> +
->>> +static int vadc_read(struct vadc_priv *vadc, u16 offset, u8 *data)
->>> +{
->>> +	return regmap_bulk_read(vadc->regmap, vadc->base + offset, data, 1);
->>
->> just regmap_read() ?
-> 
-> No, regmap_read() expects unsigned int *val as an argument hence I will
-> need temporary variable. I had a comment to rework this on the first
-> version of the patchset.
-> 
->>
->>> +}
->>> +
->>
->> General comment, most of the dev_dbg looks like legitimate dev_err's to me.
-> 
-> I've decided to not flood console with messages. If someone wants to
-> debug why the driver doesn't probed he can define DEBUG.
-> 
-I would also say that whenever you return an error code, it would be a good idea to replace the dev_dbg with dev_err. It should just rarely occur to have such errors, and if memory consumption is no issue, then I don't see a valid reason to go the full way of recompiling, getting the new kernel(-module) on the device and maybe even reboot.
+Hi Jean-Michel,
+
+On Sun, Oct 12, 2014 at 6:42 PM, Jean-Michel Hautbois
+<jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org> wrote:
+
+> You are right of course, second version sent. I have a patch wich adds
+> MicBias voltage support too, but it will be on top of this one, is
+> this a problem ?
+
+In this case you could send a series of two patches: PATCH v3 1/2 and
+PATCH v3 2/2
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
