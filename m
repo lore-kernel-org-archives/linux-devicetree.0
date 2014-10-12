@@ -1,98 +1,54 @@
-From: Jan Kardell <jan.kardell@telliq.com>
-Subject: Re: [PATCH] ARM: dts: am335x-boneblack: set dcdc1 regulator
- for 1.35v ddr3
-Date: Sun, 12 Oct 2014 15:08:24 +0200
-Message-ID: <543A7D48.1080808@telliq.com>
-References: <1412973219-3674-1-git-send-email-robertcnelson@gmail.com>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH] reset: socfpga: use arch_initcall for early
+ initialization
+Date: Sun, 12 Oct 2014 16:30:33 +0200
+Message-ID: <20141012143033.GB378@amd>
+References: <1412822646-11257-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1412973219-3674-1-git-send-email-robertcnelson@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Robert Nelson <robertcnelson@gmail.com>, tony@atomide.com, devicetree@vger.kernel.org
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vagrant Cascadian <vagrant@debian.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1412822646-11257-1-git-send-email-dinguyen@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dinguyen@opensource.altera.com
+Cc: p.zabel@pengutronix.de, dinh.linux@gmail.com, s.trumtrar@pengutronix.de, grant.likely@linaro.org, robh+dt@kernel.org, atull@opensource.altera.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Robert Nelson skrev:
-> The TPS65217C used on the boneblack defaults to 1.5v on startup for d=
-cdc1_reg.
-> While 1.35v ddr3 memory is actually used. This was discovered by a us=
-er during
-> a schematic review of his beaglebone-black clone, a u-boot patch will=
- also also
-> be submitted.
-Isn't it dual voltage, 1,35 or 1,5 V?
+Hi!
 
-And what happens when u-boot voltage does not match the kernel? Found t=
-his:
+> From: Dinh Nguyen <dinguyen@opensource.altera.com>
+> 
+> There are certain drivers that are required to get loaded very early using
+> arch_initcall. An example of such a driver is the SOCFPGA's FPGA bridge driver.
+> This driver has to get loaded early because it needs to enable FPGA components
+> that are connected to the bridge.
+> 
+> This FPGA bridge driver will using the reset controller API to toggle it's
+> reset bits, thus, it needs the reset driver to be loaded as early as possible
+> in order for it to get used properly.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
 
-If the SDRAM is powered up and initialized for the 1.5V operating=20
-voltage range, voltage
-can be reduced to the 1.35V operation range provided that:
-=95 Just prior to reducing the 1.5V operating voltages, no further=20
-commands are issued,
-other than NOPs or COMMAND INHIBITs, and all banks are in the precharge=
-=20
-state.
-=95 The 1.35V operating voltages are stable prior to issuing new comman=
-ds,=20
-other than
-NOPs or COMMAND INHIBITs.
-=95 The DLL is reset and relocked after the 1.35V operating voltages ar=
-e=20
-stable and prior to
-any READ command.
-=95 The ZQ calibration is performed. tZQinit must be satisfied after th=
-e=20
-1.35V operating
-voltages are stable and prior to any READ command.
-
-Actually I'm not sure what this means in practice, but maybe this is a=20
-problem?
-
-//Jan
->
-> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
-> CC: Tony Lindgren <tony@atomide.com>
-> CC: Vagrant Cascadian <vagrant@debian.org>
-> ---
->   arch/arm/boot/dts/am335x-boneblack.dts | 7 +++++++
->   1 file changed, 7 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/d=
-ts/am335x-boneblack.dts
-> index 901739f..e7c8999 100644
-> --- a/arch/arm/boot/dts/am335x-boneblack.dts
-> +++ b/arch/arm/boot/dts/am335x-boneblack.dts
-> @@ -15,6 +15,13 @@
->   	compatible =3D "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33x=
-x";
->   };
->  =20
-> +&dcdc1_reg {
-> +	/* TPS65217C defaults to 1.5v on powerup while 1.35v DDR3 is used *=
-/
-> +	regulator-min-microvolt =3D <1350000>;
-> +	regulator-max-microvolt =3D <1350000>;
-> +	regulator-boot-on;
-> +};
+> +static int __init socfpga_reset_init(void)
+> +{
+> +	return platform_driver_probe(&socfpga_reset_driver,
+> +					socfpga_reset_probe);
+> +}
 > +
->   &ldo3_reg {
->   	regulator-min-microvolt =3D <1800000>;
->   	regulator-max-microvolt =3D <1800000>;
+> +static void __exit socfpga_reset_exit(void)
+> +{
+> +	platform_driver_unregister(&socfpga_reset_driver);
+> +}
+> +
+> +arch_initcall(socfpga_reset_init);
+> +module_exit(socfpga_reset_exit);
 
+That is quite a strange combination. Driver can be module but needs to
+be initialized early? Should we make it always built in?
 
---=20
+>  MODULE_AUTHOR("Steffen Trumtrar <s.trumtrar@pengutronix.de");
+>  MODULE_DESCRIPTION("Socfpga Reset Controller Driver");
 
-"I have always wished for my computer to be as easy to use as my teleph=
-one; my wish has come true because I can no longer figure out how to us=
-e my telephone."
-- Bjarne Stroustrup
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
