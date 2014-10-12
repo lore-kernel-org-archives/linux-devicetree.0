@@ -1,158 +1,67 @@
-From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] audio: sgtl5000: Add MicBias resistor support in DT
-Date: Sun, 12 Oct 2014 20:39:09 +0200
-Message-ID: <1413139149-2485-1-git-send-email-jean-michel.hautbois@vodalys.com>
+From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 07/12] rtc: omap: silence bogus power-up reset message at
+ probe
+Date: Sun, 12 Oct 2014 20:42:40 +0200
+Message-ID: <20141012184240.GA2786@localhost>
+References: <1412881594-25678-1-git-send-email-johan@kernel.org>
+ <1412881594-25678-8-git-send-email-johan@kernel.org>
+ <20141010180054.GS31348@saruman>
+ <20141010180256.GU31348@saruman>
+ <20141011102004.GD18988@localhost>
+ <20141012005007.GC21128@saruman>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141012005007.GC21128@saruman>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some systems may require a different resistor than the default one (4K).
-This adds a property in sgtl5000 codec.
-It keeps the default of 4K when nothing is specified so it does not break
-existing code.
+On Sat, Oct 11, 2014 at 07:50:07PM -0500, Felipe Balbi wrote:
+> Hi,
+>=20
+> On Sat, Oct 11, 2014 at 12:20:04PM +0200, Johan Hovold wrote:
+> > On Fri, Oct 10, 2014 at 01:02:56PM -0500, Felipe Balbi wrote:
+> > > On Fri, Oct 10, 2014 at 01:00:54PM -0500, Felipe Balbi wrote:
+> > > > On Thu, Oct 09, 2014 at 09:06:29PM +0200, Johan Hovold wrote:
+> > > > > Some legacy RTC IP revisions has a power-up reset flag in the=
+ status
+> > > > > register that later revisions lack.
+> > > > >=20
+> > > > > As this flag is always read back as set on later revisions (o=
+r is
+> > > > > overloaded with a different flag), make sure to only clear th=
+e flag and
+> > > > > print the info message on legacy platforms.
+> > > > >=20
+> > > > > Signed-off-by: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > > >=20
+> > > > Reviewed-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> > >=20
+> > > oh, btw. This should be done for DT probes too.
+> >=20
+> > What do you mean? This is for DT probes (of "ti,da830-rtc" and
+> > "ti,am3352-rtc"). DT probing of legacy RTC IPs is currently not
+> > supported.
+> >=20
+> > Are you suggesting I should add a new compatible string for that?
+>=20
+> it seemed to me that you're only passing the new flag through
+> platform_device_id table, not DT table. Did I miss something ?
 
-Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/sound/sgtl5000.txt         | 10 ++++
- sound/soc/codecs/sgtl5000.c                        | 56 ++++++++++++++++++++--
- 2 files changed, 62 insertions(+), 4 deletions(-)
+Ah, that's just the way the driver currently encodes the IP revision
+differences. The platform_device_id entries are references from
+of_device_id data. Should probably clean that up as well.
 
-diff --git a/Documentation/devicetree/bindings/sound/sgtl5000.txt b/Documentation/devicetree/bindings/sound/sgtl5000.txt
-index 955df60..dd38f84 100644
---- a/Documentation/devicetree/bindings/sound/sgtl5000.txt
-+++ b/Documentation/devicetree/bindings/sound/sgtl5000.txt
-@@ -7,10 +7,20 @@ Required properties:
- 
- - clocks : the clock provider of SYS_MCLK
- 
-+- sgtl5000-micbias-resistor : the bias resistor to be used
-+        1 or SGTL5000_MICBIAS_2K - MICBIAS resistor is set to 2K
-+        2 or SGTL5000_MICBIAS_4K - MICBIAS resistor is set to 4K
-+        3 or SGTL5000_MICBIAS_8K - MICBIAS resistor is set to 8K
-+        0 or SGTL5000_MICBIAS_OFF - MICBIAS resistor is not used
-+	If this node is not mentioned or if the value is unknown, then
-+	micbias	resistor is set to 4K.
-+
-+
- Example:
- 
- codec: sgtl5000@0a {
- 	compatible = "fsl,sgtl5000";
- 	reg = <0x0a>;
- 	clocks = <&clks 150>;
-+	sgtl5000-micbias-resistor = <1>;
- };
-diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index 6bb77d7..f538957 100644
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -121,6 +121,13 @@ struct ldo_regulator {
- 	bool enabled;
- };
- 
-+enum sgtl5000_micbias_resistor {
-+	SGTL5000_MICBIAS_OFF = 0,
-+	SGTL5000_MICBIAS_2K = 1,
-+	SGTL5000_MICBIAS_4K = 2,
-+	SGTL5000_MICBIAS_8K = 3,
-+};
-+
- /* sgtl5000 private structure in codec */
- struct sgtl5000_priv {
- 	int sysclk;	/* sysclk rate */
-@@ -131,6 +138,7 @@ struct sgtl5000_priv {
- 	struct regmap *regmap;
- 	struct clk *mclk;
- 	int revision;
-+	enum sgtl5000_micbias_resistor micbias_resistor;
- };
- 
- /*
-@@ -145,12 +153,14 @@ struct sgtl5000_priv {
- static int mic_bias_event(struct snd_soc_dapm_widget *w,
- 	struct snd_kcontrol *kcontrol, int event)
- {
-+	struct sgtl5000_priv *sgtl5000 = snd_soc_codec_get_drvdata(w->codec);
-+
- 	switch (event) {
- 	case SND_SOC_DAPM_POST_PMU:
--		/* change mic bias resistor to 4Kohm */
-+		/* change mic bias resistor */
- 		snd_soc_update_bits(w->codec, SGTL5000_CHIP_MIC_CTRL,
--				SGTL5000_BIAS_R_MASK,
--				SGTL5000_BIAS_R_4k << SGTL5000_BIAS_R_SHIFT);
-+			SGTL5000_BIAS_R_MASK,
-+			sgtl5000->micbias_resistor << SGTL5000_BIAS_R_SHIFT);
- 		break;
- 
- 	case SND_SOC_DAPM_PRE_PMD:
-@@ -1326,7 +1336,16 @@ static int sgtl5000_probe(struct snd_soc_codec *codec)
- 			SGTL5000_HP_ZCD_EN |
- 			SGTL5000_ADC_ZCD_EN);
- 
--	snd_soc_write(codec, SGTL5000_CHIP_MIC_CTRL, 2);
-+	switch (sgtl5000->micbias_resistor) {
-+	case SGTL5000_MICBIAS_2K:
-+	case SGTL5000_MICBIAS_4K:
-+	case SGTL5000_MICBIAS_8K:
-+		snd_soc_update_bits(codec, SGTL5000_CHIP_MIC_CTRL,
-+			SGTL5000_BIAS_R_MASK,
-+			sgtl5000->micbias_resistor << SGTL5000_BIAS_R_SHIFT);
-+	default:
-+		break;
-+	}
- 
- 	/*
- 	 * disable DAP
-@@ -1418,6 +1437,8 @@ static int sgtl5000_i2c_probe(struct i2c_client *client,
- 	struct sgtl5000_priv *sgtl5000;
- 	int ret, reg, rev;
- 	unsigned int mclk;
-+	struct device_node *np = client->dev.of_node;
-+	u32 value;
- 
- 	sgtl5000 = devm_kzalloc(&client->dev, sizeof(struct sgtl5000_priv),
- 								GFP_KERNEL);
-@@ -1470,6 +1491,33 @@ static int sgtl5000_i2c_probe(struct i2c_client *client,
- 	dev_info(&client->dev, "sgtl5000 revision 0x%x\n", rev);
- 	sgtl5000->revision = rev;
- 
-+	if (np) {
-+		if (!of_property_read_u32(np,
-+			"sgtl5000-micbias-resistor", &value)) {
-+			switch (value) {
-+			case 1:
-+				sgtl5000->micbias_resistor =
-+					SGTL5000_MICBIAS_2K;
-+				break;
-+			case 2:
-+				sgtl5000->micbias_resistor =
-+					SGTL5000_MICBIAS_4K;
-+				break;
-+			case 3:
-+				sgtl5000->micbias_resistor =
-+					SGTL5000_MICBIAS_8K;
-+				break;
-+			default:
-+				sgtl5000->micbias_resistor =
-+					SGTL5000_MICBIAS_OFF;
-+				dev_err(&client->dev,
-+					"Unsuitable MicBias resistor\n");
-+			}
-+		} else {
-+			sgtl5000->micbias_resistor = SGTL5000_MICBIAS_4K;
-+		}
-+	}
-+
- 	i2c_set_clientdata(client, sgtl5000);
- 
- 	/* Ensure sgtl5000 will start with sane register values */
--- 
-2.1.1
+Thanks again for the review. I'll post a new version when I'm back from
+D=FCsseldorf and ELC-E/Plumbers.
 
+Johan
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
