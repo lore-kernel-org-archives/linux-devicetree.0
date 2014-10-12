@@ -1,82 +1,68 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: meson: reset: Add reset controller for MesonX SoCs
-Date: Sun, 12 Oct 2014 18:10:41 +0200
-Message-ID: <CAOQ7t2b=94dzC4WS8A3eQhZvwfBgri_QtjHgE9Wr7x71EGx=JQ@mail.gmail.com>
-References: <1413125679-24443-1-git-send-email-carlo@caione.org>
-	<1413125679-24443-2-git-send-email-carlo@caione.org>
-	<20141012160339.GA16293@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [RFC 0/7] ARM: vf610m4: Add Vybrid Cortex-M4 support
+Date: Sun, 12 Oct 2014 20:13:54 +0200
+Message-ID: <cover.1413136383.git.stefan@agner.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141012160339.GA16293-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 12, 2014 at 6:03 PM, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Carlo,
+This adds Vybrid SoC support for the !MMU Cortex-M4 core. The patchset is
+its current state is more a collection of hacks than anything mergabel,
+advice and ideas how to beat it in good shape are welcome. I added some
+thoughts as comments in the individual patches.
 
-Hi Beniamino,
+I wrote also some more info about Vybrid Cortex-M4 support in my blog
+post:
+http://falstaff.agner.ch/2014/10/05/make-it-two-tuxes-on-one-soc/
 
->> [...]
->> +
->> +static int meson_reset_probe(struct platform_device *pdev)
->> +{
->> +     struct meson_reset_data *data;
->> +     struct resource *res;
->> +
->> +     /*
->> +      * The binding was mainlined without the required property.
->> +      * Do not continue, when we encounter an old DT.
->> +      */
->> +     if (!of_find_property(pdev->dev.of_node, "#reset-cells", NULL)) {
->> +             dev_err(&pdev->dev, "%s missing #reset-cells property\n",
->> +                     pdev->dev.of_node->full_name);
->> +             return -EINVAL;
->> +     }
->
-> Probably the above comment was taken from another driver but is not
-> relevant here.
+One thing I noticed that when I move the xipImage below the DRAM base
+address, the kernel freezes:
+...
+Mount-cache hash table entries: 1024 (order: 0, 4096 bytes)
+Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes)
+[freeze]
 
-Right. Lazy copy and paste with brain off
+I think it happens when the scheduler gets started. Any idea what could
+go wrong here?
 
->> +
->> +static int meson_reset_remove(struct platform_device *pdev)
->> +{
->> +     struct meson_reset_data *data = platform_get_drvdata(pdev);
->
-> Don't you need to call platform_set_drvdata() in the probe() function
-> for this to be valid?
+Stefan Agner (7):
+  ARM: vf610: add low level debug support for !MMU
+  clocksource: add dependencies for Vybrid pit clocksource
+  ARM: vf610m4: add new machine and SoC for Vybrid on Cortex-M4
+  ARM: dts: add support for Vybrid running on Cortex-M4
+  irqchip: nvic: increase number of external interrupts to 112
+  ARM: vf610m4: HACK: get dtb pointer from SRC_GPR3
+  ARM: vf610m4: add defconfig for Linux on Vybrids Cortex-M4
 
-Yes. Even though I believe the remove can never happen.
-
->> +
->> +     reset_controller_unregister(&data->rcdev);
->> +
->> +     return 0;
->> +}
->> +
->> +static const struct of_device_id meson_reset_dt_ids[] = {
->> +     { .compatible = "amlogic,meson6-rst-mgr-ao", },
->> +     { /* sentinel */ },
->> +};
->> +
->> +static struct platform_driver meson_reset_driver = {
->> +     .probe  = meson_reset_probe,
->> +     .remove = meson_reset_remove,
->> +     .driver = {
->> +             .name           = "meson-reset",
->> +             .owner          = THIS_MODULE,
->
-> I believe you can drop the owner field.
-
-I will.
-
-Thank you for your review,
+ arch/arm/Kconfig                   |  12 ++++
+ arch/arm/Kconfig.debug             |   4 +-
+ arch/arm/Makefile                  |   1 +
+ arch/arm/boot/dts/Makefile         |   1 +
+ arch/arm/boot/dts/armv7-m.dtsi     |   1 -
+ arch/arm/boot/dts/vf610m4.dts      | 144 +++++++++++++++++++++++++++++++++++++
+ arch/arm/configs/vf610m4_defconfig |  37 ++++++++++
+ arch/arm/include/debug/vf.S        |  10 +++
+ arch/arm/kernel/entry-v7m.S        |   4 +-
+ arch/arm/kernel/head-nommu.S       |   8 +++
+ arch/arm/mach-imx/Kconfig          |  22 ++++++
+ arch/arm/mach-imx/Makefile         |   1 +
+ arch/arm/mach-imx/Makefile.boot    |   0
+ arch/arm/mach-imx/mach-vf610m4.c   |  16 +++++
+ drivers/clocksource/Kconfig        |   2 +
+ drivers/irqchip/irq-nvic.c         |   2 +
+ drivers/mmc/host/Kconfig           |   2 +-
+ drivers/pinctrl/Kconfig            |   2 +-
+ 18 files changed, 262 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm/boot/dts/vf610m4.dts
+ create mode 100644 arch/arm/configs/vf610m4_defconfig
+ create mode 100644 arch/arm/mach-imx/Makefile.boot
+ create mode 100644 arch/arm/mach-imx/mach-vf610m4.c
 
 -- 
-Carlo Caione
+2.1.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
