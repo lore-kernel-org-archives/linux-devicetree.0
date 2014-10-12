@@ -1,33 +1,98 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v1 2/4] ARM: keystone: pm: switch to use generic pm domains
-Date: Sun, 12 Oct 2014 05:57:05 -0700
-Message-ID: <CAMAWPa96Kqg8r3GqJQoiSTspFnHo3gnWxzBtCpei7-nCXN+Dzw@mail.gmail.com>
-References: <1412001499-19369-1-git-send-email-grygorii.strashko@ti.com>
-	<1412001499-19369-3-git-send-email-grygorii.strashko@ti.com>
-	<542DA4D4.4070202@ti.com>
+From: Jan Kardell <jan.kardell@telliq.com>
+Subject: Re: [PATCH] ARM: dts: am335x-boneblack: set dcdc1 regulator
+ for 1.35v ddr3
+Date: Sun, 12 Oct 2014 15:08:24 +0200
+Message-ID: <543A7D48.1080808@telliq.com>
+References: <1412973219-3674-1-git-send-email-robertcnelson@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <542DA4D4.4070202@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@linaro.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, ulf.hansson@linaro.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1412973219-3674-1-git-send-email-robertcnelson@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Robert Nelson <robertcnelson@gmail.com>, tony@atomide.com, devicetree@vger.kernel.org
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vagrant Cascadian <vagrant@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/2/14 12:17 PM, Santosh Shilimkar wrote:
-> On Monday 29 September 2014 10:38 AM, Grygorii Strashko wrote:
->> This patch switches Keystone 2 PM code to use Generic PM domains
->> instead of PM clock domains because of the lack of DT support
->> for the last.
->>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
+Robert Nelson skrev:
+> The TPS65217C used on the boneblack defaults to 1.5v on startup for d=
+cdc1_reg.
+> While 1.35v ddr3 memory is actually used. This was discovered by a us=
+er during
+> a schematic review of his beaglebone-black clone, a u-boot patch will=
+ also also
+> be submitted.
+Isn't it dual voltage, 1,35 or 1,5 V?
 
-[...]
+And what happens when u-boot voltage does not match the kernel? Found t=
+his:
 
->> Other than that patch looks fine to me. If Kevin is happy
->> with overall approach then we can proceed with this.
+If the SDRAM is powered up and initialized for the 1.5V operating=20
+voltage range, voltage
+can be reduced to the 1.35V operation range provided that:
+=95 Just prior to reducing the 1.5V operating voltages, no further=20
+commands are issued,
+other than NOPs or COMMAND INHIBITs, and all banks are in the precharge=
+=20
+state.
+=95 The 1.35V operating voltages are stable prior to issuing new comman=
+ds,=20
+other than
+NOPs or COMMAND INHIBITs.
+=95 The DLL is reset and relocked after the 1.35V operating voltages ar=
+e=20
+stable and prior to
+any READ command.
+=95 The ZQ calibration is performed. tZQinit must be satisfied after th=
+e=20
+1.35V operating
+voltages are stable and prior to any READ command.
 
-Looks good to me:
+Actually I'm not sure what this means in practice, but maybe this is a=20
+problem?
 
-Reviewed-by: Kevin Hilman <khilman@linaro.org>
+//Jan
+>
+> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+> CC: Tony Lindgren <tony@atomide.com>
+> CC: Vagrant Cascadian <vagrant@debian.org>
+> ---
+>   arch/arm/boot/dts/am335x-boneblack.dts | 7 +++++++
+>   1 file changed, 7 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/d=
+ts/am335x-boneblack.dts
+> index 901739f..e7c8999 100644
+> --- a/arch/arm/boot/dts/am335x-boneblack.dts
+> +++ b/arch/arm/boot/dts/am335x-boneblack.dts
+> @@ -15,6 +15,13 @@
+>   	compatible =3D "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33x=
+x";
+>   };
+>  =20
+> +&dcdc1_reg {
+> +	/* TPS65217C defaults to 1.5v on powerup while 1.35v DDR3 is used *=
+/
+> +	regulator-min-microvolt =3D <1350000>;
+> +	regulator-max-microvolt =3D <1350000>;
+> +	regulator-boot-on;
+> +};
+> +
+>   &ldo3_reg {
+>   	regulator-min-microvolt =3D <1800000>;
+>   	regulator-max-microvolt =3D <1800000>;
+
+
+--=20
+
+"I have always wished for my computer to be as easy to use as my teleph=
+one; my wish has come true because I can no longer figure out how to us=
+e my telephone."
+- Bjarne Stroustrup
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
