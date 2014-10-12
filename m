@@ -1,54 +1,37 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH] reset: socfpga: use arch_initcall for early
- initialization
-Date: Sun, 12 Oct 2014 16:30:33 +0200
-Message-ID: <20141012143033.GB378@amd>
-References: <1412822646-11257-1-git-send-email-dinguyen@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1412822646-11257-1-git-send-email-dinguyen@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dinguyen@opensource.altera.com
-Cc: p.zabel@pengutronix.de, dinh.linux@gmail.com, s.trumtrar@pengutronix.de, grant.likely@linaro.org, robh+dt@kernel.org, atull@opensource.altera.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/3] ARM: meson: Add reset controller
+Date: Sun, 12 Oct 2014 16:54:36 +0200
+Message-ID: <1413125679-24443-1-git-send-email-carlo@caione.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Apparently several IPs found in the MesonX SoCs can be reset by programming a
+specific bit in a register in the so called AO (Always-On) domain. From the
+documentation released by Amlogic under NDA it is not clear which devices can
+be reset acting on this register. So far from the sources release by Amlogic it
+seems that at least two IPs use this register for reset: RTC and UART. Since I
+need it to reset the RTC, I wrote this small driver.
 
-> From: Dinh Nguyen <dinguyen@opensource.altera.com>
-> 
-> There are certain drivers that are required to get loaded very early using
-> arch_initcall. An example of such a driver is the SOCFPGA's FPGA bridge driver.
-> This driver has to get loaded early because it needs to enable FPGA components
-> that are connected to the bridge.
-> 
-> This FPGA bridge driver will using the reset controller API to toggle it's
-> reset bits, thus, it needs the reset driver to be loaded as early as possible
-> in order for it to get used properly.
-> 
-> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+Carlo Caione (3):
+  ARM: meson: reset: Add reset controller for MesonX SoCs
+  ARM: meson: DTSI: Enable reset controller
+  ARM: meson: docs: Add docs for MesonX reset controller
 
-> +static int __init socfpga_reset_init(void)
-> +{
-> +	return platform_driver_probe(&socfpga_reset_driver,
-> +					socfpga_reset_probe);
-> +}
-> +
-> +static void __exit socfpga_reset_exit(void)
-> +{
-> +	platform_driver_unregister(&socfpga_reset_driver);
-> +}
-> +
-> +arch_initcall(socfpga_reset_init);
-> +module_exit(socfpga_reset_exit);
-
-That is quite a strange combination. Driver can be module but needs to
-be initialized early? Should we make it always built in?
-
->  MODULE_AUTHOR("Steffen Trumtrar <s.trumtrar@pengutronix.de");
->  MODULE_DESCRIPTION("Socfpga Reset Controller Driver");
+ .../bindings/reset/amlogic,meson6-rst-mgr-ao.txt   |  14 ++
+ arch/arm/boot/dts/meson.dtsi                       |   6 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-meson.c                        | 152 +++++++++++++++++++++
+ 4 files changed, 173 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson6-rst-mgr-ao.txt
+ create mode 100644 drivers/reset/reset-meson.c
 
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
