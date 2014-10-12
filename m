@@ -1,43 +1,46 @@
-From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: [PATCH 2/3] media: rc: meson: document device tree bindings
-Date: Sun, 12 Oct 2014 22:01:54 +0200
-Message-ID: <1413144115-23188-3-git-send-email-b.galvani@gmail.com>
-References: <1413144115-23188-1-git-send-email-b.galvani@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413144115-23188-1-git-send-email-b.galvani@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <m.chehab@samsung.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Carlo Caione <carlo@caione.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Beniamino Galvani <b.galvani@gmail.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH] audio: sgtl5000: Add MicBias resistor
+ support in DT
+Date: Sun, 12 Oct 2014 18:15:32 -0300
+Message-ID: <CAOMZO5BtUPkrpaXtupeLpeng4bPAiZeMZuJdmxx1RoPWhJ874w@mail.gmail.com>
+References: <1413139149-2485-1-git-send-email-jean-michel.hautbois@vodalys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413139149-2485-1-git-send-email-jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds binding documentation for the infrared remote control
-receiver available in Amlogic Meson SoCs.
+On Sun, Oct 12, 2014 at 3:39 PM, Jean-Michel Hautbois
+<jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org> wrote:
 
-Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
----
- Documentation/devicetree/bindings/media/meson-ir.txt | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/meson-ir.txt
+> +       if (np) {
+> +               if (!of_property_read_u32(np,
+> +                       "sgtl5000-micbias-resistor", &value)) {
+> +                       switch (value) {
+> +                       case 1:
+> +                               sgtl5000->micbias_resistor =
+> +                                       SGTL5000_MICBIAS_2K;
+> +                               break;
+> +                       case 2:
+> +                               sgtl5000->micbias_resistor =
+> +                                       SGTL5000_MICBIAS_4K;
+> +                               break;
+> +                       case 3:
+> +                               sgtl5000->micbias_resistor =
+> +                                       SGTL5000_MICBIAS_8K;
+> +                               break;
+> +                       default:
+> +                               sgtl5000->micbias_resistor =
+> +                                       SGTL5000_MICBIAS_OFF;
+> +                               dev_err(&client->dev,
+> +                                       "Unsuitable MicBias resistor\n");
 
-diff --git a/Documentation/devicetree/bindings/media/meson-ir.txt b/Documentation/devicetree/bindings/media/meson-ir.txt
-new file mode 100644
-index 0000000..407848e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/meson-ir.txt
-@@ -0,0 +1,14 @@
-+* Amlogic Meson IR remote control receiver
-+
-+Required properties:
-+ - compatible	: should be "amlogic,meson6-ir"
-+ - reg		: physical base address and length of the device registers
-+ - interrupts	: a single specifier for the interrupt from the device
-+
-+Example:
-+
-+	ir-receiver@c8100480 {
-+		compatible= "amlogic,meson6-ir";
-+		reg = <0xc8100480 0x20>;
-+		interrupts = <0 15 1>;
-+	};
--- 
-1.9.1
+The case 0 should SGTL5000_MICBIAS_OFF and the default should be
+SGTL5000_MICBIAS_4K.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
