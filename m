@@ -1,167 +1,97 @@
-From: Hartmut Knaack <knaack.h@gmx.de>
-Subject: Re: [PATCH v3 2/2] DT: iio: vadc: document dt binding
-Date: Sun, 12 Oct 2014 01:05:12 +0200
-Message-ID: <5439B7A8.9030306@gmx.de>
-References: <1411563415-11933-1-git-send-email-svarbanov@mm-sol.com> <1411563415-11933-3-git-send-email-svarbanov@mm-sol.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 08/12] rtc: omap: restore irq state after reading TC
+ registers
+Date: Sat, 11 Oct 2014 19:47:58 -0500
+Message-ID: <20141012004758.GB21128@saruman>
+References: <1412881594-25678-1-git-send-email-johan@kernel.org>
+ <1412881594-25678-9-git-send-email-johan@kernel.org>
+ <20141010180225.GT31348@saruman>
+ <20141011101201.GC18988@localhost>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1411563415-11933-3-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collinsd@codeaurora.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="GRPZ8SYKNexpdSJ7"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141011101201.GC18988@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Felipe Balbi <balbi@ti.com>, Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Andrew Morton <akpm@linux-foundation.org>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, Colin Foe-Parker <colin.foeparker@logicpd.com>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-two small issues inline.
-Stanimir Varbanov schrieb am 24.09.2014 14:56:
-> Document DT binding for Qualcomm SPMI PMIC voltage ADC
-> driver.
-> 
-> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> ---
->  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  130 ++++++++++++++++++++
->  1 files changed, 130 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> new file mode 100644
-> index 0000000..fa30300
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> @@ -0,0 +1,130 @@
-> +Qualcomm's SPMI PMIC voltage ADC
-> +
-> +SPMI PMIC voltage ADC (VADC) provides interface to clients to read
-> +voltage. A 15 bit ADC is used for voltage measurements. There are multiple
-> +peripherals to the VADC and the scope of the driver is to provide interface
-> +for the USR peripheral of the VADC.
-> +
-> +VADC node:
-> +
-> +- compatible:
-> +    Usage: required
-> +    Value type: <string>
-> +    Definition: Should contain "qcom,spmi-vadc".
-> +
-> +- reg:
-> +    Usage: required
-> +    Value type: <u32>
-> +    Definition: Base address in the SPMI PMIC register map.
-> +
-> +- address-cells:
-> +    Usage: required
-> +    Value type: <u32>
-> +    Definition: Must be one.
-> +
-> +- size-cells:
-> +    Usage: required
-> +    Value type: <u32>
-> +    Definition: Must be zero.
-> +
-> +- interrupts:
-> +    Usage: optional
-> +    Value type: <prop-encoded-array>
-> +    Definition: End of conversion interrupt number. If this property does
-> +            not exist polling will be used instead.
-> +
-> +- interrupt-names:
-> +    Usage: optional
-> +    Value type: <string>
-> +    Definition: Should contain the interrupt name "eoc" (end of conversion).
-> +
-> +Channel node properties:
-> +
-> +- reg:
-> +    Usage: required
-> +    Value type: <u32>
-> +    Definition: AMUX channel number.
-> +            See include/dt-bindings/iio/qcom,spmi-pmic-vadc.h
-> +
-> +- qcom,decimation:
-> +    Usage: optional
-> +    Value type: <u32>
-> +    Definition: Sampling rate to use for the individual channel measurement.
-> +            Quicker measurements can be made by reducing decimation ratio.
-> +            Valid values are 512, 1024, 2048, 4096.
-> +            If property is not found, default value of 512 will be used.
-> +
-> +- qcom,pre-scaling:
-> +    Usage: optional
-> +    Value type: <u32 array>
-> +    Definition: Used for scaling the channel input signal before the signal is
-> +            fed to VADC. The configuration for this node is to know the
-> +            pre-determined ratio and use it for post scaling. Select one from
-> +            the following options.
-> +            <1 1>, <1 3>, <1 4>, <1 6>, <1 20>, <1 8>, <10 81>, <1 10>
-> +            If property is not found default value depending of chip will be used.
-> +
-> +- qcom,ratiometric:
-> +    Usage: optional
-> +    Value type: <empty>
-> +    Definition: Channel calibration type. If this property is specified
-> +            VADC will use the VDD reference(1.8V) and GND for channel
-Missing whitespace before opening parenthesis.
-> +            calibration. If property is not found, channel will be
-> +            calibrated with 625mV and 1.25V reference channels.
-There is a slight majority in using V instead of mv (2 : 1), so why not express everything in V?
-> +            Otherwise the absolute calibration will be used.
-> +
-> +- qcom,hw-settle-time:
-> +    Usage: optional
-> +    Value type: <u32>
-> +    Definition: Time between AMUX getting configured and the ADC starting
-> +            conversion. Delay = 100us * (value) for value < 11, and
-> +            2ms * (value - 10) otherwise.
-> +            Valid values are: 0, 100, 200, 300, 400, 500, 600, 700, 800,
-> +            900 us and 1, 2, 4, 6, 8, 10 ms
-> +            If property is not found, channel will use 0us.
-> +
-> +- qcom,avg-samples:
-> +    Usage: optional
-> +    Value type: <u32>
-> +    Definition: Number of samples to be used for measurement.
-> +            Fast averaging provides the option to obtain a single measurement
-> +            from the ADC that is an average of multiple samples. The value
-> +            selected is 2^(value).
-> +            Valid values are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
-> +            If property is not found, 1 sample will be used.
-> +
-> +NOTE: At least reference channel nodes are required. The reference channels
-> +      might be different depending on PMIC version.
-> +      Reference channels per type of calibration are:
-> +       - absolute
-> +         (VADC_REF_625MV or VADC_SPARE1) and VADC_REF_1250MV
-> +       - ratiomatric
-> +         VADC_GND_REF and VADC_VDD_VADC
-> +
-> +Example:
-> +	/* VADC node */
-> +	pmic_vadc: vadc@3100 {
-> +		compatible = "qcom,spmi-vadc";
-> +		reg = <0x3100 0x100>;
-> +		interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		#io-channel-cells = <1>;
-> +		io-channel-ranges;
-> +
-> +		/* Channel node */
-> +		usb_id_nopull {
-> +			reg = <VADC_LR_MUX10_USB_ID>;
-> +			qcom,decimation = <512>;
-> +			qcom,ratiometric;
-> +			qcom,hw-settle-time = <200>;
-> +			qcom,avg-samples = <1>;
-> +			qcom,pre-scaling = <1 3>;
-> +		};
-> +	};
-> +
-> +	/* IIO client node */
-> +	usb {
-> +		io-channels = <&pmic_vadc VADC_LR_MUX10_USB_ID>;
-> +		io-channel-names = "vadc";
-> +	};
-> 
+--GRPZ8SYKNexpdSJ7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Oct 11, 2014 at 12:12:01PM +0200, Johan Hovold wrote:
+> On Fri, Oct 10, 2014 at 01:02:31PM -0500, Felipe Balbi wrote:
+> > Hi,
+> >=20
+> > On Thu, Oct 09, 2014 at 09:06:30PM +0200, Johan Hovold wrote:
+> > > Make sure to restore local irq state when reading the timer/calendar
+> > > (TC) registers, so that omap_rtc_read_time() can be called with
+> > > interrupts disabled.
+> > >=20
+> > > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > > ---
+> > >  drivers/rtc/rtc-omap.c | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > >=20
+> > > diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
+> > > index 0ef016553a97..62e2e9a9887a 100644
+> > > --- a/drivers/rtc/rtc-omap.c
+> > > +++ b/drivers/rtc/rtc-omap.c
+> > > @@ -239,8 +239,10 @@ static void bcd2tm(struct rtc_time *tm)
+> > > =20
+> > >  static int omap_rtc_read_time(struct device *dev, struct rtc_time *t=
+m)
+> > >  {
+> > > +	unsigned long flags;
+> > > +
+> > >  	/* we don't report wday/yday/isdst ... */
+> > > -	local_irq_disable();
+> > > +	local_irq_save(flags);
+> >=20
+> > you should really convert these to a real spin_lock_irq*(), that's
+> > because local_irq* do not get re-written with RT patchset, so this
+> > pretty much "breaks" RT.
+>=20
+> The driver uses local_irq* throughout to guarantee registers are not
+> read or written during an update event.
+>=20
+> In fact, at least on AM33xx, this is not even necessary when reading (as
+> opposed to writing) the TC registers, but I did not dare change that
+> without knowing how the legacy platforms work in this respect.
+>=20
+> Do you suggest doing this conversion as part of, or on top of, this
+> series?
+
+probably on top of is. Safer that way.
+
+--=20
+balbi
+
+--GRPZ8SYKNexpdSJ7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUOc++AAoJEIaOsuA1yqREjg4P/3+Lk5jKZx74l3U9ZvXHugE9
+ADO+nDrgcesXoyGVp+bQVRNFkLbQdWCSHCyqkjC4Hx2Nxw832W74R+YqrJavfI7S
+5+p4BFSTKEyDFuAKWtdLHLaAHgH2mAqPeMVb2XahX3jMeWH+ntBMf6cdPyf/f3Kb
+GeTM+snI5ccSi7EnROIKMqIsdJLAiMwSkaarjyD9bUTNfievcvIXhf4WFc09sGCd
+5ipRJm8fCWEPYcC7ORlEsUg7yZVyiMr5nbCV/1mO33igEu2f+Ic1XR+KchYmC6CO
+cLK/5pDmg2oU4hWAbhOrup1sTAPKqErtCyFiu0nG0oQYrkE4INYs8VbHwJGg63v2
+06U/WZDMGlICCRxWQ6L0HaEWAijuIrBE+gpHqZ+8vvaiSdVahIY2cwZVo12JJNXr
+wjOQYwVIWh5U/LSnprfzWKQGsR5rfsrlcWRZznQfLI9JtjXvhz+7sgz4THQNC6Tl
+DvC0KpUg046RBz7+om+qJC9RkUPIYoSGVemM2R5i5xrEMKDiubcvKkU39in2OUZ+
+md4z5OGYZkfuYiliJeuet+LFwud7SGzhIsIF7swo5sZoxR9TkRiMdsEome21XRFt
+XkB2O7DYr+DK/tb0UOku9KTiHOE2oU6fxcxrMfzoamP8yZ8jtQ6BGskdJhtyTJ5U
+24ltYEf7YAsPSvB3ZQWR
+=pRpA
+-----END PGP SIGNATURE-----
+
+--GRPZ8SYKNexpdSJ7--
