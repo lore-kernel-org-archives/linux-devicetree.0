@@ -1,86 +1,102 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC 4/7] ARM: dts: add support for Vybrid running on Cortex-M4
-Date: Mon, 13 Oct 2014 13:24:06 +0200
-Message-ID: <2010256.3WXzPqutzu@wuerfel>
-References: <cover.1413136383.git.stefan@agner.ch> <20141013103219.GE14739@leverpostej> <fadc1e22c016f4259819d87ba06d0d99@agner.ch>
+From: Josh Wu <josh.wu@atmel.com>
+Subject: Re: [PATCH v3] mtd: atmel_nand: make PMECC lookup table and offset
+ property optional
+Date: Mon, 13 Oct 2014 19:31:10 +0800
+Message-ID: <543BB7FE.3030604@atmel.com>
+References: <1413021710-32264-1-git-send-email-josh.wu@atmel.com>
+ <20141013111611.GC15326@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fadc1e22c016f4259819d87ba06d0d99-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20141013111611.GC15326@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "voice.shen@atmel.com" <voice.shen@atmel.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 13 October 2014 13:08:12 Stefan Agner wrote:
-> Am 2014-10-13 12:32, schrieb Mark Rutland:
-> > On Sun, Oct 12, 2014 at 07:13:58PM +0100, Stefan Agner wrote:
-> >> This adds an initial device tree to run Linux on the Cortex-M4 on
-> >> Vybrid.
-> >>
-> >> HACK: Because we include armv7-m.dtsi, the soc node happens to
-> >> be before the clock node. This is a problem for vf610-clk.c, which
-> >> tries to optain the fixed clocks defined in the clock nodes. But
-> >> because clock drivers are initialized sequencially, and we do not
-> >> have support for deferred probing, the clock initialization fails
-> >> horrible.
-> >> Move the armv7-m.dtsi include to the bottom to temporarily work
-> >> work around this...
-> >>
-> >> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> >> ---
-> >> Maybe a dummy soc entry in armv7-m.dtsi also helps here. But a
-> >> hack as well. Is it common acceptable that the kernel depends
-> >> on DTS order?
-> > 
-> > The kernel should not depend on DTS ordering. We should sort out
-> > deferred probing if there is an issue with it.
-> > 
-> > [...]
-> 
-> Yes I guess to make this working independent of device tree order, we
-> need to defer probing of vf610-clk when the fixed clocks are not
-> initialized yet. 
-> 
-> Clock initialization (using CLK_OF_DECLARE) doesn't support EPROBE_DEFER
-> currently. 
-> 
-> We seem to have already a work around merged because of this.
-> http://thread.gmane.org/gmane.linux.kernel/1635576
+Hi, Mark
 
-Ah, maybe that's what I remembered. The clock handling should probably
-do something similar to what we do for irqchips, where we probe the
-parents first.
+On 10/13/2014 7:16 PM, Mark Rutland wrote:
+> On Sat, Oct 11, 2014 at 11:01:50AM +0100, Josh Wu wrote:
+>> From: Josh Wu <Josh.wu@atmel.com>
+>>
+>> If there is no PMECC lookup table stored in ROM, or lookup table offset is
+>> not specified, PMECC driver should build it in DDR by itself.
+>>
+>> That make the PMECC driver work for some board which doesn't has PMECC
+>> lookup table in ROM.
+>>
+>> The PMECC use the BCH algorithm, so based on the build_gf_tables()
+>> function in lib/bch.c, we can build the Galois Field lookup table.
+>>
+>> For more information can refer to section 5.4 of PMECC controller
+>> application note:
+>> 	http://www.atmel.com/images/doc11127.pdf
+>>
+>> Signed-off-by: Josh Wu <josh.wu@atmel.com>
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>> v1 -> v2:
+>>    make create_lookup_table() static.
+>>
+>> v2 -> v3:
+>>    rewrite the build_gf_tables() function based on lib/bch.c.
+>>    add error handling in create_lookup_table().
+>>
+>>   .../devicetree/bindings/mtd/atmel-nand.txt         |  6 +-
+>>   drivers/mtd/nand/atmel_nand.c                      | 81 ++++++++++++++++++++--
+>>   drivers/mtd/nand/atmel_nand_ecc.h                  |  4 ++
+>>   3 files changed, 85 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+>> index 6edc3b6..1fe6dde 100644
+>> --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+>> +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+>> @@ -5,7 +5,9 @@ Required properties:
+>>   - reg : should specify localbus address and size used for the chip,
+>>   	and hardware ECC controller if available.
+>>   	If the hardware ECC is PMECC, it should contain address and size for
+>> -	PMECC, PMECC Error Location controller and ROM which has lookup tables.
+>> +	PMECC and PMECC Error Location controller.
+>> +	The PMECC lookup table address and size in ROM is optional. If not
+>> +	specified, driver will build it in runtime.
+>>   - atmel,nand-addr-offset : offset for the address latch.
+>>   - atmel,nand-cmd-offset : offset for the command latch.
+>>   - #address-cells, #size-cells : Must be present if the device has sub-nodes
+>> @@ -27,7 +29,7 @@ Optional properties:
+>>     are: 512, 1024.
+>>   - atmel,pmecc-lookup-table-offset : includes two offsets of lookup table in ROM
+>>     for different sector size. First one is for sector size 512, the next is for
+>> -  sector size 1024.
+>> +  sector size 1024. If not specified, driver will build the table in runtime.
+> I'm not sure we need to mention this in the binding.
+>
+> That said, if we can build this dynamically, can't we always do so, and
+> never need this property?
 
-> Anybody tried to reverse device tree parsing to unveil how many such
-> assumptions are still slumbering?
+Since board like at91sam9x5, sama5d3xek has a rom lookup table. And the 
+sama5d4ek has no rom lookup table.
+To present this, I make this property as optional.
 
-Not that I'm aware of. Sounds like a good thing to try.
+But yes, the pmecc lookup table related properties can be removed as 
+driver can build it in runtime.
+The cost is we need to use more memory to store the table.
 
-> >> +
-> >> +    soc {
-> >> +            aips0: aips-bus@40000000 {
-> >> +                    compatible = "fsl,aips-bus", "simple-bus";
-> >> +                    #address-cells = <1>;
-> >> +                    #size-cells = <1>;
-> >> +                    reg = <0x40000000 0x70000>;
-> > 
-> > Out of curiosity, given that this can be driven as a simple-bus, what do
-> > the aips bus registers allow to be configured?
-> > 
-> 
-> There is a chapter about the AIPS lite bus in the RM, but according to
-> this the AIPS lite bus itself has no registers by itself. 
 
-I just noticed that the only child you list below this node uses
-registers within the area of the bus. I suspect you just confused
-'reg' and 'ranges' here, please use 'ranges' to list which registers
-are visible on the bus, and modify the 'reg' properties of the children
-as necessary.
+>
+> Mark.
+Best Regards,
+Josh Wu
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
