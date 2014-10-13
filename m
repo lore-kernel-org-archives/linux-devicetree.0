@@ -1,102 +1,78 @@
-From: Josh Wu <josh.wu@atmel.com>
-Subject: Re: [PATCH v3] mtd: atmel_nand: make PMECC lookup table and offset
- property optional
-Date: Mon, 13 Oct 2014 19:31:10 +0800
-Message-ID: <543BB7FE.3030604@atmel.com>
-References: <1413021710-32264-1-git-send-email-josh.wu@atmel.com>
- <20141013111611.GC15326@leverpostej>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v5 07/11] mmc: sdio: Convert to dev_pm_domain_attach|detach()
+Date: Mon, 13 Oct 2014 13:44:44 +0200
+Message-ID: <CAPDyKFpbZiCZMsLP+mq-1UWd1ifX1QZosv8UfnW__J26y+hupQ@mail.gmail.com>
+References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
+	<1411151264-16245-8-git-send-email-ulf.hansson@linaro.org>
+	<20141002002705.GA29177@dtor-ws>
+	<543B3D80.1010704@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20141013111611.GC15326@leverpostej>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "voice.shen@atmel.com" <voice.shen@atmel.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <543B3D80.1010704@intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Aaron Lu <aaron.lu@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>Mark Brown <br>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Mark
-
-On 10/13/2014 7:16 PM, Mark Rutland wrote:
-> On Sat, Oct 11, 2014 at 11:01:50AM +0100, Josh Wu wrote:
->> From: Josh Wu <Josh.wu@atmel.com>
+On 13 October 2014 04:48, Aaron Lu <aaron.lu@intel.com> wrote:
+> On 10/02/2014 08:27 AM, Dmitry Torokhov wrote:
+>> Hi Ulf,
 >>
->> If there is no PMECC lookup table stored in ROM, or lookup table offset is
->> not specified, PMECC driver should build it in DDR by itself.
+>> On Fri, Sep 19, 2014 at 08:27:40PM +0200, Ulf Hansson wrote:
+>>> Previously only the ACPI PM domain was supported by the sdio bus.
+>>>
+>>> Let's convert to the common attach/detach functions for PM domains,
+>>> which currently means we are extending the support to include the
+>>> generic PM domain as well.
+>>>
+>>> Cc: linux-mmc@vger.kernel.org
+>>> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+>>> Reviewed-by: Kevin Hilman <khilman@linaro.org>
+>>> ---
+>>>  drivers/mmc/core/sdio_bus.c | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/mmc/core/sdio_bus.c b/drivers/mmc/core/sdio_bus.c
+>>> index 4fa8fef9..1df0fc6 100644
+>>> --- a/drivers/mmc/core/sdio_bus.c
+>>> +++ b/drivers/mmc/core/sdio_bus.c
+>>> @@ -315,7 +315,7 @@ int sdio_add_func(struct sdio_func *func)
+>>>      ret = device_add(&func->dev);
+>>>      if (ret == 0) {
+>>>              sdio_func_set_present(func);
+>>> -            acpi_dev_pm_attach(&func->dev, false);
+>>> +            dev_pm_domain_attach(&func->dev, false);
 >>
->> That make the PMECC driver work for some board which doesn't has PMECC
->> lookup table in ROM.
->>
->> The PMECC use the BCH algorithm, so based on the build_gf_tables()
->> function in lib/bch.c, we can build the Galois Field lookup table.
->>
->> For more information can refer to section 5.4 of PMECC controller
->> application note:
->> 	http://www.atmel.com/images/doc11127.pdf
->>
->> Signed-off-by: Josh Wu <josh.wu@atmel.com>
->> Cc: devicetree@vger.kernel.org
->> ---
->> v1 -> v2:
->>    make create_lookup_table() static.
->>
->> v2 -> v3:
->>    rewrite the build_gf_tables() function based on lib/bch.c.
->>    add error handling in create_lookup_table().
->>
->>   .../devicetree/bindings/mtd/atmel-nand.txt         |  6 +-
->>   drivers/mtd/nand/atmel_nand.c                      | 81 ++++++++++++++++++++--
->>   drivers/mtd/nand/atmel_nand_ecc.h                  |  4 ++
->>   3 files changed, 85 insertions(+), 6 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
->> index 6edc3b6..1fe6dde 100644
->> --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
->> +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
->> @@ -5,7 +5,9 @@ Required properties:
->>   - reg : should specify localbus address and size used for the chip,
->>   	and hardware ECC controller if available.
->>   	If the hardware ECC is PMECC, it should contain address and size for
->> -	PMECC, PMECC Error Location controller and ROM which has lookup tables.
->> +	PMECC and PMECC Error Location controller.
->> +	The PMECC lookup table address and size in ROM is optional. If not
->> +	specified, driver will build it in runtime.
->>   - atmel,nand-addr-offset : offset for the address latch.
->>   - atmel,nand-cmd-offset : offset for the command latch.
->>   - #address-cells, #size-cells : Must be present if the device has sub-nodes
->> @@ -27,7 +29,7 @@ Optional properties:
->>     are: 512, 1024.
->>   - atmel,pmecc-lookup-table-offset : includes two offsets of lookup table in ROM
->>     for different sector size. First one is for sector size 512, the next is for
->> -  sector size 1024.
->> +  sector size 1024. If not specified, driver will build the table in runtime.
-> I'm not sure we need to mention this in the binding.
+>> Admittedly it is not brought in by your change, but I am a bit worried
+>> about this code. In all other busses we attach power domain to a device
+>> before probing it (and detach if probe fails). Why here we only attach
+>> it to power domain after adding the device to the bus? If driver for the
+>> function has already been loaded the probe() would run without device
+>> being attached to a power domain...
 >
-> That said, if we can build this dynamically, can't we always do so, and
-> never need this property?
-
-Since board like at91sam9x5, sama5d3xek has a rom lookup table. And the 
-sama5d4ek has no rom lookup table.
-To present this, I make this property as optional.
-
-But yes, the pmecc lookup table related properties can be removed as 
-driver can build it in runtime.
-The cost is we need to use more memory to store the table.
-
-
+> Sorry for replying late...
 >
-> Mark.
-Best Regards,
-Josh Wu
+> I see your concern, but it should be safe here. The dev_pm_domain_attach
+> does primarily two things(for ACPI based system): assign the pm_domian
+> field so that later system and runtime PM transitions we have proper
+> callbacks for this device; power on the device if needed.
+>
+> I was using Broadcom BCM43241 SDIO wifi card when developing the code,
+> it doesn't need the pm_domain set in its probe function and since the
+> SDIO wifi card is powered on after system boot, no power on is needed
+> either. That's why I added the attach function after device_add to save
+> a little code(detach if probe fails).
+>
+> Feel free to change the sequence if the current one is a bad one, I'm OK
+> with either case.
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Thanks for clarifying this. I plan to change the behaviour according
+to how other buses handles it.
+
+Though, the patch will be a part another patchset that handles a
+related initialization problem for the generic PM domain. I will keep
+you guys on cc when I post it.
+
+Kind regards
+Uffe
