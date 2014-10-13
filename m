@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 12/15] tpm/tpm_i2c_stm_st33: Remove useless i2c read on interrupt registers
-Date: Mon, 13 Oct 2014 22:19:37 +0200
-Message-ID: <1413231580-4970-14-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v2 14/15] tpm/tpm_i2c_stm_st33: Change License header to have up to date address information
+Date: Mon, 13 Oct 2014 22:19:39 +0200
+Message-ID: <1413231580-4970-16-git-send-email-christophe-h.ricard@st.com>
 References: <1413231580-4970-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1413231580-4970-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,47 +10,48 @@ To: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@publi
 Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Remove useless i2c read on TPM_INT_ENABLE and TPM_INT_STATUS
+The Free Software Foundation may have mail address change.
+In order to be sure to have up to date mail address give an url to
+the license which includes accurate informations.
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/char/tpm/tpm_i2c_stm_st33.c | 9 ---------
- 1 file changed, 9 deletions(-)
+ drivers/char/tpm/tpm_i2c_stm_st33.c            | 5 ++---
+ include/linux/platform_data/tpm_i2c_stm_st33.h | 5 ++---
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
-index 388bb64..ed4176e 100644
+index 76b958a..ab366f1 100644
 --- a/drivers/char/tpm/tpm_i2c_stm_st33.c
 +++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
-@@ -184,7 +184,6 @@ static void clear_interruption(struct tpm_stm_dev *tpm_dev)
- 
- 	I2C_READ_DATA(tpm_dev, TPM_INT_STATUS, &interrupt, 1);
- 	I2C_WRITE_DATA(tpm_dev, TPM_INT_STATUS, &interrupt, 1);
--	I2C_READ_DATA(tpm_dev, TPM_INT_STATUS, &interrupt, 1);
- } /* clear_interruption() */
- 
- /*
-@@ -725,10 +724,6 @@ tpm_stm_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 			goto _tpm_clean_answer;
- 		}
- 
--		r = I2C_READ_DATA(tpm_dev, TPM_INT_ENABLE, &intmask, 1);
--		if (r < 0)
--			goto _tpm_clean_answer;
--
- 		intmask |= TPM_INTF_CMD_READY_INT
- 			|  TPM_INTF_STS_VALID_INT
- 			|  TPM_INTF_DATA_AVAIL_INT;
-@@ -742,10 +737,6 @@ tpm_stm_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 		if (r < 0)
- 			goto _tpm_clean_answer;
- 
--		r = I2C_READ_DATA(tpm_dev, TPM_INT_STATUS, &intmask, 1);
--		if (r < 0)
--			goto _tpm_clean_answer;
--
- 		chip->vendor.irq = client->irq;
- 
- 		disable_irq_nosync(chip->vendor.irq);
+@@ -12,9 +12,8 @@
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+- * You should have received a copy of the GNU General Public License along
+- * with this program; if not, write to the Free Software Foundation, Inc.,
+- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  *
+  * STMicroelectronics version 1.2.0, Copyright (C) 2010
+  * STMicroelectronics comes with ABSOLUTELY NO WARRANTY.
+diff --git a/include/linux/platform_data/tpm_i2c_stm_st33.h b/include/linux/platform_data/tpm_i2c_stm_st33.h
+index ec698f2..85775cf 100644
+--- a/include/linux/platform_data/tpm_i2c_stm_st33.h
++++ b/include/linux/platform_data/tpm_i2c_stm_st33.h
+@@ -12,9 +12,8 @@
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+- * You should have received a copy of the GNU General Public License along
+- * with this program; if not, write to the Free Software Foundation, Inc.,
+- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  *
+  * STMicroelectronics version 1.2.0, Copyright (C) 2010
+  * STMicroelectronics comes with ABSOLUTELY NO WARRANTY.
 -- 
 1.9.1
 
