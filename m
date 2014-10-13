@@ -1,146 +1,40 @@
-From: Vivek Gautam <gautam.vivek@samsung.com>
-Subject: Re: [PATCH v2 3/4] phy: exynos5-usbdrd: Add facility for
- VBUS-BOOST-5V supply
-Date: Mon, 13 Oct 2014 10:41:32 +0530
-Message-ID: <CAFp+6iEZhuxV=yTCh4WjApwpvpsr1fmjuACeDZiwPyZdX+5k=w@mail.gmail.com>
-References: <1412677176-3850-1-git-send-email-gautam.vivek@samsung.com>
-	<1412677176-3850-4-git-send-email-gautam.vivek@samsung.com>
-	<00f301cfe6a3$78e90ab0$6abb2010$%tikhomirov@samsung.com>
+From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH] audio: sgtl5000: Add MicBias resistor
+ support in DT
+Date: Mon, 13 Oct 2014 07:46:53 +0200
+Message-ID: <CAL8zT=hXxRz0OfAN1vsE2BTiQKONdtQV6so5JpSsOLV=f6_EFA@mail.gmail.com>
+References: <1413139149-2485-1-git-send-email-jean-michel.hautbois@vodalys.com>
+ <CAOMZO5BtUPkrpaXtupeLpeng4bPAiZeMZuJdmxx1RoPWhJ874w@mail.gmail.com>
+ <CAL8zT=hKgMYVCHr2x90imRD1eBvsjXZ+subrVmBh0YX-E3Fscw@mail.gmail.com> <CAOMZO5C+20UWCOFRD033y+MEWd-DUBJ15AejBEFxSzn5otySnA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <00f301cfe6a3$78e90ab0$6abb2010$%tikhomirov@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anton Tikhomirov <av.tikhomirov@samsung.com>
-Cc: Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, robh+dt <robh+dt@kernel.org>, kishon <kishon@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5C+20UWCOFRD033y+MEWd-DUBJ15AejBEFxSzn5otySnA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 13, 2014 at 10:36 AM, Anton Tikhomirov
-<av.tikhomirov@samsung.com> wrote:
-> Hi Vivek,
+2014-10-13 0:39 GMT+02:00 Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> Hi Jean-Michel,
 >
->> Some Exynos SoCs have a separate regulator controlling a
+> On Sun, Oct 12, 2014 at 6:42 PM, Jean-Michel Hautbois
+> <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org> wrote:
 >
-> I guess you meant the Exynos based *boards* instead of SoCs,
-> since Exynos SoCs don't have any boost regulators.
-
-Right, should be boards instead. Thanks for pointing it out.
-
+>> You are right of course, second version sent. I have a patch wich adds
+>> MicBias voltage support too, but it will be on top of this one, is
+>> this a problem ?
 >
->> Boost 5V supply which goes as input for VBUS regulator.
->> So adding a control for the same in driver, to enable
->> vbus supply on the port.
->>
->> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->> ---
->>  drivers/phy/phy-exynos5-usbdrd.c |   30 ++++++++++++++++++++++++++++--
->>  1 file changed, 28 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/phy/phy-exynos5-usbdrd.c b/drivers/phy/phy-
->> exynos5-usbdrd.c
->> index 013ee84..57e8a0a 100644
->> --- a/drivers/phy/phy-exynos5-usbdrd.c
->> +++ b/drivers/phy/phy-exynos5-usbdrd.c
->> @@ -176,6 +176,7 @@ struct exynos5_usbdrd_phy {
->>       u32 extrefclk;
->>       struct clk *ref_clk;
->>       struct regulator *vbus;
->> +     struct regulator *vbus_boost;
->>  };
->>
->>  static inline
->> @@ -455,11 +456,20 @@ static int exynos5_usbdrd_phy_power_on(struct phy
->> *phy)
->>       clk_prepare_enable(phy_drd->ref_clk);
->>
->>       /* Enable VBUS supply */
->> +     if (phy_drd->vbus_boost) {
->> +             ret = regulator_enable(phy_drd->vbus_boost);
->> +             if (ret) {
->> +                     dev_err(phy_drd->dev,
->> +                             "Failed to enable VBUS boost supply\n");
->> +                     goto fail_vbus;
->> +             }
->> +     }
->> +
->>       if (phy_drd->vbus) {
->>               ret = regulator_enable(phy_drd->vbus);
->>               if (ret) {
->>                       dev_err(phy_drd->dev, "Failed to enable VBUS
->> supply\n");
->> -                     goto fail_vbus;
->> +                     goto fail_vbus_boost;
->>               }
->>       }
->>
->> @@ -468,6 +478,10 @@ static int exynos5_usbdrd_phy_power_on(struct phy
->> *phy)
->>
->>       return 0;
->>
->> +fail_vbus_boost:
->> +     if (phy_drd->vbus_boost)
->> +             regulator_disable(phy_drd->vbus_boost);
->> +
->>  fail_vbus:
->>       clk_disable_unprepare(phy_drd->ref_clk);
->>       clk_disable_unprepare(phy_drd->pipeclk);
->> @@ -489,6 +503,8 @@ static int exynos5_usbdrd_phy_power_off(struct phy
->> *phy)
->>       /* Disable VBUS supply */
->>       if (phy_drd->vbus)
->>               regulator_disable(phy_drd->vbus);
->> +     if (phy_drd->vbus_boost)
->> +             regulator_disable(phy_drd->vbus_boost);
->>
->>       clk_disable_unprepare(phy_drd->ref_clk);
->>       clk_disable_unprepare(phy_drd->pipeclk);
->> @@ -644,7 +660,7 @@ static int exynos5_usbdrd_phy_probe(struct
->> platform_device *pdev)
->>               break;
->>       }
->>
->> -     /* Get Vbus regulator */
->> +     /* Get Vbus regulators */
->>       phy_drd->vbus = devm_regulator_get(dev, "vbus");
->>       if (IS_ERR(phy_drd->vbus)) {
->>               ret = PTR_ERR(phy_drd->vbus);
->> @@ -655,6 +671,16 @@ static int exynos5_usbdrd_phy_probe(struct
->> platform_device *pdev)
->>               phy_drd->vbus = NULL;
->>       }
->>
->> +     phy_drd->vbus_boost = devm_regulator_get(dev, "vbus-boost");
->> +     if (IS_ERR(phy_drd->vbus_boost)) {
->> +             ret = PTR_ERR(phy_drd->vbus_boost);
->> +             if (ret == -EPROBE_DEFER)
->> +                     return ret;
->> +
->> +             dev_warn(dev, "Failed to get VBUS boost supply
->> regulator\n");
->> +             phy_drd->vbus_boost = NULL;
->> +     }
->> +
->>       dev_vdbg(dev, "Creating usbdrd_phy phy\n");
->>
->>       for (i = 0; i < EXYNOS5_DRDPHYS_NUM; i++) {
->> --
->> 1.7.10.4
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> In this case you could send a series of two patches: PATCH v3 1/2 and
+> PATCH v3 2/2
 
+I am using a "big" enum of 8 values, but there may be a nicer way to do it.
+In the datasheet it is said that MICBIAS_VOLT is set in 250mV steps,
+from 1.25V when register is 0 to 3.00V when register is 7.
 
-
--- 
-Best Regards
-Vivek Gautam
-Samsung R&D Institute, Bangalore
-India
+Thanks,
+JM
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
