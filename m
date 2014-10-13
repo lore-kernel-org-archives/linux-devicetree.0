@@ -1,87 +1,55 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 04/12] of: Add NVIDIA Tegra memory controller binding
-Date: Mon, 13 Oct 2014 12:33:46 +0200
-Message-ID: <1413196434-5292-4-git-send-email-thierry.reding@gmail.com>
-References: <1413196434-5292-1-git-send-email-thierry.reding@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RESUBMIT PATCH v4 7/8] regulator: sky81452: Add compatible
+ string for device binding
+Date: Mon, 13 Oct 2014 12:35:12 +0200
+Message-ID: <20141013103512.GJ27755@sirena.org.uk>
+References: <1412657745-7812-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1413179262-27636-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1413179262-27636-8-git-send-email-jack.yoo@skyworksinc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1413196434-5292-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="KOBxLkMFRQI9H+bc"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1413179262-27636-8-git-send-email-jack.yoo@skyworksinc.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gyungoh Yoo <gyungoh@gmail.com>
+Cc: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-The memory controller on NVIDIA Tegra exposes various knobs that can be
-used to tune the behaviour of the clients attached to it.
+--KOBxLkMFRQI9H+bc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-In addition, the memory controller implements an SMMU (IOMMU) which can
-translate I/O virtual addresses to physical addresses for clients. This
-is useful for scatter-gather operation on devices that don't support it
-natively and for virtualization or process separation.
+On Mon, Oct 13, 2014 at 02:47:41PM +0900, Gyungoh Yoo wrote:
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Changes in v3:
-- add missing clocks and clock-names properties
-- add example
+> -	np = of_get_child_by_name(dev->parent->of_node, "regulator");
+> -	if (unlikely(!np)) {
+> +	if (!np) {
+>  		dev_err(dev, "regulator node not found");
+> -		return NULL;
+> +		return ERR_PTR(-ENODATA);
+>  	}
 
- .../memory-controllers/nvidia,tegra-mc.txt         | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
+If you're doing anything here you should convert the code to use the
+simplified interface for parsing regulator data based on putting the
+subnode name and regualtor name in the regulator descriptor.
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
-new file mode 100644
-index 000000000000..f3db93c85eea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
-@@ -0,0 +1,36 @@
-+NVIDIA Tegra Memory Controller device tree bindings
-+===================================================
-+
-+Required properties:
-+- compatible: Should be "nvidia,tegra<chip>-mc"
-+- reg: Physical base address and length of the controller's registers.
-+- clocks: Must contain an entry for each entry in clock-names.
-+  See ../clocks/clock-bindings.txt for details.
-+- clock-names: Must include the following entries:
-+  - mc: the module's clock input
-+- interrupts: The interrupt outputs from the controller.
-+- #iommu-cells: Should be 1. The single cell of the IOMMU specifier defines
-+  the SWGROUP of the master.
-+
-+This device implements an IOMMU that complies with the generic IOMMU binding.
-+See ../iommu/iommu.txt for details.
-+
-+Example:
-+--------
-+
-+	mc: memory-controller@0,70019000 {
-+		compatible = "nvidia,tegra124-mc";
-+		reg = <0x0 0x70019000 0x0 0x1000>;
-+		clocks = <&tegra_car TEGRA124_CLK_MC>;
-+		clock-names = "mc";
-+
-+		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		#iommu-cells = <1>;
-+	};
-+
-+	sdhci@0,700b0000 {
-+		compatible = "nvidia,tegra124-sdhci";
-+		...
-+		iommus = <&mc TEGRA_SWGROUP_SDMMC1A>;
-+	};
--- 
-2.1.2
+--KOBxLkMFRQI9H+bc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUO6rfAAoJECTWi3JdVIfQ9qcH/jzv0A79AYL4sIdrwwwOSc/e
+IUxPbRYbjmlK7e+TAjP8NmNOqneuJjgV2MUbNai1RJadQfcRbiz5PjGYBWPEZ5rK
++DOaG/LfjcR7zbPx38GAYOLlkkaerIin0GlOYrfN5gI3nxbP1CNfbDq8iPToiN6D
+diRwk4tEV6TOOB0x3hJB0JK7yDODExUz7T56BkrTl+FBFJ2QcOkLoYK5W1MbDF53
+JlYddM2P3jdY0jh8BxvKV6gh0uhJTlmXbXAhG7r4e3F1AUGbgcS/cGwMAYhe4eyt
+XrORHpshJTc2TOZ02EWtRzQGPSLoQKaXekt3iyc+xSeUHCOCamOc6oGrXAYtFBo=
+=gpRg
+-----END PGP SIGNATURE-----
+
+--KOBxLkMFRQI9H+bc--
