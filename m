@@ -1,7 +1,7 @@
 From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCHv5 6/6] ARM: imx: Add Freescale LS1021A SMP support
-Date: Mon, 13 Oct 2014 17:36:03 +0800
-Message-ID: <1413192963-11153-7-git-send-email-jingchang.lu@freescale.com>
+Subject: [PATCHv5 4/6] dt-bindings: arm: add Freescale LS1021A SoC device tree binding
+Date: Mon, 13 Oct 2014 17:36:01 +0800
+Message-ID: <1413192963-11153-5-git-send-email-jingchang.lu@freescale.com>
 References: <1413192963-11153-1-git-send-email-jingchang.lu@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,104 +9,60 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1413192963-11153-1-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
-Freescale LS1021A SoCs deploy two cortex-A7 processors,
-this adds bring-up support for the secondary core.
-
-Signed-off-by: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- arch/arm/mach-imx/Makefile       |  2 +-
- arch/arm/mach-imx/common.h       |  1 +
- arch/arm/mach-imx/mach-ls1021a.c |  1 +
- arch/arm/mach-imx/platsmp.c      | 32 ++++++++++++++++++++++++++++++++
- 4 files changed, 35 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/arm/fsl.txt | 38 +++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
-index ce137bc..38d75e2 100644
---- a/arch/arm/mach-imx/Makefile
-+++ b/arch/arm/mach-imx/Makefile
-@@ -89,7 +89,7 @@ obj-$(CONFIG_HAVE_IMX_ANATOP) += anatop.o
- obj-$(CONFIG_HAVE_IMX_GPC) += gpc.o
- obj-$(CONFIG_HAVE_IMX_MMDC) += mmdc.o
- obj-$(CONFIG_HAVE_IMX_SRC) += src.o
--ifdef CONFIG_SOC_IMX6
-+ifneq ($(CONFIG_SOC_IMX6)$(CONFIG_SOC_LS1021A),)
- AFLAGS_headsmp.o :=-Wa,-march=armv7-a
- obj-$(CONFIG_SMP) += headsmp.o platsmp.o
- obj-$(CONFIG_HOTPLUG_CPU) += hotplug.o
-diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
-index 1dabf43..c473ca5 100644
---- a/arch/arm/mach-imx/common.h
-+++ b/arch/arm/mach-imx/common.h
-@@ -157,5 +157,6 @@ static inline void imx_init_l2cache(void) {}
- #endif
- 
- extern struct smp_operations imx_smp_ops;
-+extern struct smp_operations ls1021a_smp_ops;
- 
- #endif
-diff --git a/arch/arm/mach-imx/mach-ls1021a.c b/arch/arm/mach-imx/mach-ls1021a.c
-index 9d2034b..b89c858 100644
---- a/arch/arm/mach-imx/mach-ls1021a.c
-+++ b/arch/arm/mach-imx/mach-ls1021a.c
-@@ -17,5 +17,6 @@ static const char * const ls1021a_dt_compat[] __initconst = {
- };
- 
- DT_MACHINE_START(LS1021A, "Freescale LS1021A")
-+	.smp		= smp_ops(ls1021a_smp_ops),
- 	.dt_compat	= ls1021a_dt_compat,
- MACHINE_END
-diff --git a/arch/arm/mach-imx/platsmp.c b/arch/arm/mach-imx/platsmp.c
-index 771bd25..69b87ca 100644
---- a/arch/arm/mach-imx/platsmp.c
-+++ b/arch/arm/mach-imx/platsmp.c
-@@ -16,6 +16,8 @@
- #include <asm/page.h>
- #include <asm/smp_scu.h>
- #include <asm/mach/map.h>
-+#include <linux/of_address.h>
-+#include <linux/of.h>
- 
- #include "common.h"
- #include "hardware.h"
-@@ -94,3 +96,33 @@ struct smp_operations  imx_smp_ops __initdata = {
- 	.cpu_kill		= imx_cpu_kill,
- #endif
- };
+diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+index e935d7d..4e8b7df 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.txt
++++ b/Documentation/devicetree/bindings/arm/fsl.txt
+@@ -74,3 +74,41 @@ Required root node properties:
+ i.MX6q generic board
+ Required root node properties:
+     - compatible = "fsl,imx6q";
 +
-+#define DCFG_CCSR_SCRATCHRW1	0x200
 +
-+static int ls1021a_boot_secondary(unsigned int cpu, struct task_struct *idle)
-+{
-+	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
++Freescale LS1021A Platform Device Tree Bindings
++------------------------------------------------
 +
-+	return 0;
-+}
++Required root node compatible properties:
++  - compatible = "fsl,ls1021a";
 +
-+static void __init ls1021a_smp_prepare_cpus(unsigned int max_cpus)
-+{
-+	struct device_node *np;
-+	void __iomem *dcfg_base;
-+	unsigned long paddr;
++Freescale LS1021A SoC-specific Device Tree Bindings
++-------------------------------------------
 +
-+	np = of_find_compatible_node(NULL, NULL, "fsl,ls1021a-dcfg");
-+	dcfg_base = of_iomap(np, 0);
-+	BUG_ON(!dcfg_base);
++Freescale SCFG
++  SCFG is the supplemental configuration unit, that provides SoC specific
++configuration and status registers for the chip. Such as getting PEX port
++status.
++  Required properties:
++  - compatible: should be "fsl,ls1021a-scfg"
++  - reg: should contain base address and length of SCFG memory-mapped registers
 +
-+	paddr = virt_to_phys(secondary_startup);
-+	writel_relaxed(cpu_to_be32(paddr), dcfg_base + DCFG_CCSR_SCRATCHRW1);
++Example:
++	scfg: scfg@1570000 {
++		compatible = "fsl,ls1021a-scfg";
++		reg = <0x0 0x1570000 0x0 0x10000>;
++	};
 +
-+	iounmap(dcfg_base);
-+}
++Freescale DCFG
++  DCFG is the device configuration unit, that provides general purpose
++configuration and status for the device. Such as setting the secondary
++core start address and release the secondary core from holdoff and startup.
++  Required properties:
++  - compatible: should be "fsl,ls1021a-dcfg"
++  - reg : should contain base address and length of DCFG memory-mapped registers
 +
-+struct smp_operations  ls1021a_smp_ops __initdata = {
-+	.smp_prepare_cpus	= ls1021a_smp_prepare_cpus,
-+	.smp_boot_secondary	= ls1021a_boot_secondary,
-+};
++Example:
++	dcfg: dcfg@1ee0000 {
++		compatible = "fsl,ls1021a-dcfg";
++		reg = <0x0 0x1ee0000 0x0 0x10000>;
++	};
 -- 
 1.8.0
 
