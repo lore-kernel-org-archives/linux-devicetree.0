@@ -1,214 +1,123 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] DT: iio: vadc: document dt binding
-Date: Mon, 13 Oct 2014 16:00:40 +0100
-Message-ID: <20141013150039.GB16598@leverpostej>
-References: <1411563415-11933-1-git-send-email-svarbanov@mm-sol.com>
- <1411563415-11933-3-git-send-email-svarbanov@mm-sol.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 07/12] rtc: omap: silence bogus power-up reset message at
+ probe
+Date: Mon, 13 Oct 2014 10:56:35 -0500
+Message-ID: <20141013155635.GG21709@saruman>
+References: <1412881594-25678-1-git-send-email-johan@kernel.org>
+ <1412881594-25678-8-git-send-email-johan@kernel.org>
+ <20141010180054.GS31348@saruman> <20141010180256.GU31348@saruman>
+ <20141011102004.GD18988@localhost> <20141012005007.GC21128@saruman>
+ <20141012184240.GA2786@localhost>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1411563415-11933-3-git-send-email-svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============8692125445441232505=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20141012184240.GA2786@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, j-keerthy@ti.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, t-kristo@ti.com, Lokesh Vutla <lokeshvutla@ti.com>, linux-arm-kernel@lists.infradead.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Andrew Morton <akpm@linux-foundation.org>, linux-omap@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 24, 2014 at 01:56:55PM +0100, Stanimir Varbanov wrote:
-> Document DT binding for Qualcomm SPMI PMIC voltage ADC
-> driver.
-> 
-> Signed-off-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  130 ++++++++++++++++++++
->  1 files changed, 130 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> new file mode 100644
-> index 0000000..fa30300
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> @@ -0,0 +1,130 @@
-> +Qualcomm's SPMI PMIC voltage ADC
-> +
-> +SPMI PMIC voltage ADC (VADC) provides interface to clients to read
-> +voltage. A 15 bit ADC is used for voltage measurements. There are multiple
-> +peripherals to the VADC and the scope of the driver is to provide interface
-> +for the USR peripheral of the VADC.
-> +
-> +VADC node:
-> +
-> +- compatible:
-> +    Usage: required
-> +    Value type: <string>
+--===============8692125445441232505==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="wayzTnRSUXKNfBqd"
+Content-Disposition: inline
 
-Technically this is a list of strings.
+--wayzTnRSUXKNfBqd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +    Definition: Should contain "qcom,spmi-vadc".
-> +
-> +- reg:
-> +    Usage: required
-> +    Value type: <u32>
+Hi,
 
-This is an address + size pair, not a u32 (following your example).
+On Sun, Oct 12, 2014 at 08:42:40PM +0200, Johan Hovold wrote:
+> On Sat, Oct 11, 2014 at 07:50:07PM -0500, Felipe Balbi wrote:
+> > Hi,
+> >=20
+> > On Sat, Oct 11, 2014 at 12:20:04PM +0200, Johan Hovold wrote:
+> > > On Fri, Oct 10, 2014 at 01:02:56PM -0500, Felipe Balbi wrote:
+> > > > On Fri, Oct 10, 2014 at 01:00:54PM -0500, Felipe Balbi wrote:
+> > > > > On Thu, Oct 09, 2014 at 09:06:29PM +0200, Johan Hovold wrote:
+> > > > > > Some legacy RTC IP revisions has a power-up reset flag in the s=
+tatus
+> > > > > > register that later revisions lack.
+> > > > > >=20
+> > > > > > As this flag is always read back as set on later revisions (or =
+is
+> > > > > > overloaded with a different flag), make sure to only clear the =
+flag and
+> > > > > > print the info message on legacy platforms.
+> > > > > >=20
+> > > > > > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > > > >=20
+> > > > > Reviewed-by: Felipe Balbi <balbi@ti.com>
+> > > >=20
+> > > > oh, btw. This should be done for DT probes too.
+> > >=20
+> > > What do you mean? This is for DT probes (of "ti,da830-rtc" and
+> > > "ti,am3352-rtc"). DT probing of legacy RTC IPs is currently not
+> > > supported.
+> > >=20
+> > > Are you suggesting I should add a new compatible string for that?
+> >=20
+> > it seemed to me that you're only passing the new flag through
+> > platform_device_id table, not DT table. Did I miss something ?
+>=20
+> Ah, that's just the way the driver currently encodes the IP revision
+> differences. The platform_device_id entries are references from
+> of_device_id data. Should probably clean that up as well.
 
-> +    Definition: Base address in the SPMI PMIC register map.
+oh, alright :-)
 
-And the size, too.
+> Thanks again for the review. I'll post a new version when I'm back from
 
-> +
-> +- address-cells:
-> +    Usage: required
-> +    Value type: <u32>
-> +    Definition: Must be one.
+no problem.
 
-#address-cells.
+--=20
+balbi
 
-What would this cell represent within the ADC?
+--wayzTnRSUXKNfBqd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +
-> +- size-cells:
-> +    Usage: required
-> +    Value type: <u32>
-> +    Definition: Must be zero.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-#size-cells.
+iQIcBAEBAgAGBQJUO/YzAAoJEIaOsuA1yqREP0AQAIkLWaDOJJTpFvhKcAdhb30P
+zrErSKM6Igf2zCVwk4n9is58jsKi1HW2mQwk8DVCAId4vMLg+V3ADYugQqZpvPg1
+ztYe24OoVe4VHZZ4/RJbJBCi3JRcq9LlutiGsTryjOfYwAqH+GdQ6fCf1VRgE251
+ADcH99wB5rRfBSlTKAQuku7UjtYF5AA2CArG+z/433XoZUS8NuCwfkHns5MTxFDE
+JJDNpPnH8d+tS3fq0hQXrrnjFYjBB++CfYbPNLMpkrhUhpnPne7OJfh/3kJ7dKcb
+OQcpHpeia6VvZkdJBQPDYNev/8vxvtIG6ym4ZiY3SkUR5pELv5QnnUjmrLQWkA4y
++YTpXj9gFhT1I+KcSL1fKBoCc7y0YFqJk0DuEFWTxVuGyOcJIr0uCpeMF7jBQkrD
+Ezm7AWmJvblkuxoujUQF2elGYd2GHrl8JicXuE/klXm04LEpXrOnGDVvFUyX2NMj
+DwROaiNIt03B6976O/vweWgA3IiNG2O+gUOim7C+Kl686mVQySidw65F67NB1Tff
+t1wS1Jwt7NN5LVj5+9LJXrZGb0hydzO+kxeT2VciQWj5+kuWFraLcTVhlik1U1C/
+7a3DpU+xla1plmqJnLIOQXBZ4lcfp29tiFintXL9dRexF1oZxDWFLn8RJ/m8Ea7X
+xYoEskPxphUWdLNNoly4
+=yAIG
+-----END PGP SIGNATURE-----
 
-> +
-> +- interrupts:
-> +    Usage: optional
-> +    Value type: <prop-encoded-array>
-> +    Definition: End of conversion interrupt number. If this property does
-> +            not exist polling will be used instead.
+--wayzTnRSUXKNfBqd--
 
-Just say "end of conversion interrupt". The interrupts property is
-standard, and driver behaviour is not a property of the device.
 
-> +
-> +- interrupt-names:
-> +    Usage: optional
-> +    Value type: <string>
-> +    Definition: Should contain the interrupt name "eoc" (end of conversion).
+--===============8692125445441232505==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-If you wish to use interrupt-names, please define interrupts in terms of
-interrupt-names so as to make the relationship clear and to avoid
-redundancy.
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-> +
-> +Channel node properties:
-> +
-> +- reg:
-> +    Usage: required
-> +    Value type: <u32>
-> +    Definition: AMUX channel number.
-> +            See include/dt-bindings/iio/qcom,spmi-pmic-vadc.h
-
-That header should be part of this patch (and this patch should come
-before the driver).
-
-> +
-> +- qcom,decimation:
-> +    Usage: optional
-> +    Value type: <u32>
-> +    Definition: Sampling rate to use for the individual channel measurement.
-> +            Quicker measurements can be made by reducing decimation ratio.
-> +            Valid values are 512, 1024, 2048, 4096.
-> +            If property is not found, default value of 512 will be used.
-
-This description does not make sense. If reducing the value increases
-the sampling rate, this property should not be described as the
-"sampling rate".
-
-This feels like something that should be runtime configurable rather
-than a fixed device property.
-
-> +
-> +- qcom,pre-scaling:
-> +    Usage: optional
-> +    Value type: <u32 array>
-> +    Definition: Used for scaling the channel input signal before the signal is
-> +            fed to VADC. The configuration for this node is to know the
-> +            pre-determined ratio and use it for post scaling. Select one from
-> +            the following options.
-> +            <1 1>, <1 3>, <1 4>, <1 6>, <1 20>, <1 8>, <10 81>, <1 10>
-> +            If property is not found default value depending of chip will be used.
-> +
-> +- qcom,ratiometric:
-> +    Usage: optional
-> +    Value type: <empty>
-> +    Definition: Channel calibration type. If this property is specified
-> +            VADC will use the VDD reference(1.8V) and GND for channel
-> +            calibration. If property is not found, channel will be
-> +            calibrated with 625mV and 1.25V reference channels.
-> +            Otherwise the absolute calibration will be used.
-
-Surely this should be part of the specifier?
-
-> +
-> +- qcom,hw-settle-time:
-> +    Usage: optional
-> +    Value type: <u32>
-> +    Definition: Time between AMUX getting configured and the ADC starting
-> +            conversion. Delay = 100us * (value) for value < 11, and
-> +            2ms * (value - 10) otherwise.
-> +            Valid values are: 0, 100, 200, 300, 400, 500, 600, 700, 800,
-> +            900 us and 1, 2, 4, 6, 8, 10 ms
-> +            If property is not found, channel will use 0us.
-> +
-> +- qcom,avg-samples:
-> +    Usage: optional
-> +    Value type: <u32>
-> +    Definition: Number of samples to be used for measurement.
-> +            Fast averaging provides the option to obtain a single measurement
-> +            from the ADC that is an average of multiple samples. The value
-> +            selected is 2^(value).
-> +            Valid values are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
-> +            If property is not found, 1 sample will be used.
-
-Likewise.
-
-thanks,
-Mark.
-
-> +
-> +NOTE: At least reference channel nodes are required. The reference channels
-> +      might be different depending on PMIC version.
-> +      Reference channels per type of calibration are:
-> +       - absolute
-> +         (VADC_REF_625MV or VADC_SPARE1) and VADC_REF_1250MV
-> +       - ratiomatric
-> +         VADC_GND_REF and VADC_VDD_VADC
-> +
-> +Example:
-> +	/* VADC node */
-> +	pmic_vadc: vadc@3100 {
-> +		compatible = "qcom,spmi-vadc";
-> +		reg = <0x3100 0x100>;
-> +		interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		#io-channel-cells = <1>;
-> +		io-channel-ranges;
-> +
-> +		/* Channel node */
-> +		usb_id_nopull {
-> +			reg = <VADC_LR_MUX10_USB_ID>;
-> +			qcom,decimation = <512>;
-> +			qcom,ratiometric;
-> +			qcom,hw-settle-time = <200>;
-> +			qcom,avg-samples = <1>;
-> +			qcom,pre-scaling = <1 3>;
-> +		};
-> +	};
-> +
-> +	/* IIO client node */
-> +	usb {
-> +		io-channels = <&pmic_vadc VADC_LR_MUX10_USB_ID>;
-> +		io-channel-names = "vadc";
-> +	};
-> -- 
-> 1.7.0.4
-> 
-> 
+--===============8692125445441232505==--
