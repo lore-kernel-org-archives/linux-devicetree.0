@@ -1,56 +1,47 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [v3] spi: orion: support armada extended baud rates
-Date: Mon, 13 Oct 2014 14:48:16 +0200
-Message-ID: <20141013124816.GX27755@sirena.org.uk>
-References: <1411910644-7174-1-git-send-email-gerg@uclinux.org>
- <20141011144857.GA17350@gobelin>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH v2 1/4] regulator: Add helper function to get
+ "poweroff-source" property
+Date: Mon, 13 Oct 2014 15:12:40 +0200
+Message-ID: <20141013131240.GZ27755@sirena.org.uk>
+References: <1412711104-15902-1-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="H/HqDnEH3ZcfIhoq"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="TLkgL7PLGfOLXnur"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20141011144857.GA17350@gobelin>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karl Beldan <karl.beldan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1412711104-15902-1-git-send-email-romain.perier@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Romain Perier <romain.perier@gmail.com>
+Cc: devicetree@vger.kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, heiko@sntech.de, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, robh@kernel.org, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, anton@enomsg.org, ldewangan@nvidia.com, linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---H/HqDnEH3ZcfIhoq
+--TLkgL7PLGfOLXnur
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sat, Oct 11, 2014 at 04:52:04PM +0200, Karl Beldan wrote:
-> On 28/09/14 23:24:04, Greg Ungerer wrote:
-> > @@ -378,6 +452,10 @@ static int orion_spi_probe(struct platform_device *pdev)
+On Tue, Oct 07, 2014 at 07:45:01PM +0000, Romain Perier wrote:
+> Several drivers create their own devicetree property when they register
+> poweroff capabilities. This is for example the case for mfd, regulator
 
-> > +	of_id = of_match_device(orion_spi_of_match_table, &pdev->dev);
-> > +	devdata = of_id->data;
-> > +	spi->devdata = devdata;
+This seems fine from a code point of view but as discussed it's probably
+better placed outside of the regulator API.  Making it a static inline
+doesn't seem like a bad idea either.
 
-> Won't of_match_device return NULL on non-DT systems, and further
-> references oops ?
-
-Yes.
-
---H/HqDnEH3ZcfIhoq
+--TLkgL7PLGfOLXnur
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBAgAGBQJUO8oQAAoJECTWi3JdVIfQDiwH/1XnWWZYDD1GbvG9capkyVd7
-dsg4R4mWOxI8yqB5jhahkVjq6zVuxc0JlU/Z8qlsubENEWJEEqJJZ6gCmrUoPyQu
-WE8rZ2kEBCzvEAiRIRvg3a/7yplvHjrqwf/tkadGUUMGP9jPHQSDb0CGKXAEUX9w
-Bnqa7TheFZYVTon5CTvYLRy7ci21HJMKq/2R/Yn/EqyjRsYjU2kj1LnJLX5IqKL3
-XZuD5j4nchHrHLPzzgdfu3PGXqIvmM6Phx7iwx2m10gXycbtbfubu7hpK7EFzPIq
-mTBdF3c/t5/IYyNF6dr71XlgC4Cr7lox4qRFCBKQ9F/qJTwwtw9oMqloesfvlj0=
-=eBBN
+iQEcBAEBAgAGBQJUO8/IAAoJECTWi3JdVIfQmWwH/16Ow8sIBNQiRAw9ZnnUPFZY
+Jiyl3de1Jmu+PpI94ECMbKpzX1IvrNAqGl70vHLaXv7yVrJFXaKPmdNKanL7NO2S
+L6G3dTSxUwfYbeT1tBQrmgkfvLphagJgMRTrJhEwS7Fv4AZzMM74mcG9/Ev78mMq
+4miYsujyFYa4aW+Xd1OdYFKaMlU1T4aPDwB3vvEJ12exXVUgjqdt8K+o/MtgRfeY
+tVwk8mRu0J55kcpDW4LWHHSXitAafwgjXFmziG6QNXPCWX4Qa0z2cEg/zZ486XM+
+5+JXWCn/suF54lHgGv4xpdysyRekfGofFnRC5uvRhp4ZwUp8jUPSswJI2EctEn8=
+=TFS7
 -----END PGP SIGNATURE-----
 
---H/HqDnEH3ZcfIhoq--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--TLkgL7PLGfOLXnur--
