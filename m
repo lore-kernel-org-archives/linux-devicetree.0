@@ -1,71 +1,113 @@
-From: Aaron Lu <aaron.lu@intel.com>
-Subject: Re: [PATCH v5 07/11] mmc: sdio: Convert to dev_pm_domain_attach|detach()
-Date: Mon, 13 Oct 2014 10:48:32 +0800
-Message-ID: <543B3D80.1010704@intel.com>
-References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org> <1411151264-16245-8-git-send-email-ulf.hansson@linaro.org> <20141002002705.GA29177@dtor-ws>
+From: Anton Tikhomirov <av.tikhomirov@samsung.com>
+Subject: RE: [PATCH v2 1/4] dwc3: exynos: Add support for SCLK present on
+ Exynos7
+Date: Mon, 13 Oct 2014 13:54:59 +0900
+Message-ID: <00f101cfe6a1$d772c5a0$865850e0$%tikhomirov@samsung.com>
+References: <1412677176-3850-1-git-send-email-gautam.vivek@samsung.com>
+ <1412677176-3850-2-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=ks_c_5601-1987
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20141002002705.GA29177@dtor-ws>
-Sender: linux-pm-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>li
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-reply-to: <1412677176-3850-2-git-send-email-gautam.vivek@samsung.com>
+Content-language: en-us
+Sender: linux-omap-owner@vger.kernel.org
+To: 'Vivek Gautam' <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org
+Cc: linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, balbi@ti.com, kgene.kim@samsung.com, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/02/2014 08:27 AM, Dmitry Torokhov wrote:
-> Hi Ulf,
-> 
-> On Fri, Sep 19, 2014 at 08:27:40PM +0200, Ulf Hansson wrote:
->> Previously only the ACPI PM domain was supported by the sdio bus.
->>
->> Let's convert to the common attach/detach functions for PM domains,
->> which currently means we are extending the support to include the
->> generic PM domain as well.
->>
->> Cc: linux-mmc@vger.kernel.org
->> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
->> Reviewed-by: Kevin Hilman <khilman@linaro.org>
->> ---
->>  drivers/mmc/core/sdio_bus.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/mmc/core/sdio_bus.c b/drivers/mmc/core/sdio_bus.c
->> index 4fa8fef9..1df0fc6 100644
->> --- a/drivers/mmc/core/sdio_bus.c
->> +++ b/drivers/mmc/core/sdio_bus.c
->> @@ -315,7 +315,7 @@ int sdio_add_func(struct sdio_func *func)
->>  	ret = device_add(&func->dev);
->>  	if (ret == 0) {
->>  		sdio_func_set_present(func);
->> -		acpi_dev_pm_attach(&func->dev, false);
->> +		dev_pm_domain_attach(&func->dev, false);
-> 
-> Admittedly it is not brought in by your change, but I am a bit worried
-> about this code. In all other busses we attach power domain to a device
-> before probing it (and detach if probe fails). Why here we only attach
-> it to power domain after adding the device to the bus? If driver for the
-> function has already been loaded the probe() would run without device
-> being attached to a power domain...
+Hi Vivek,
 
-Sorry for replying late...
+> Exynos7 also has a separate special gate clock going to the IP
+> apart from the usual AHB clock. So add support for the same.
 
-I see your concern, but it should be safe here. The dev_pm_domain_attach
-does primarily two things(for ACPI based system): assign the pm_domian
-field so that later system and runtime PM transitions we have proper
-callbacks for this device; power on the device if needed.
-
-I was using Broadcom BCM43241 SDIO wifi card when developing the code,
-it doesn't need the pm_domain set in its probe function and since the
-SDIO wifi card is powered on after system boot, no power on is needed
-either. That's why I added the attach function after device_add to save
-a little code(detach if probe fails).
-
-Feel free to change the sequence if the current one is a bad one, I'm OK
-with either case.
+As we discussed before, Exynos7 SoCs have 7 clocks to be controlled
+by the driver. Adding only sclk is not enough. 
 
 > 
-> Adding Aaron as he's the author of the original change.
+> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> ---
+>  drivers/usb/dwc3/dwc3-exynos.c |   16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-
+> exynos.c
+> index 3951a65..7dc6a98 100644
+> --- a/drivers/usb/dwc3/dwc3-exynos.c
+> +++ b/drivers/usb/dwc3/dwc3-exynos.c
+> @@ -35,6 +35,7 @@ struct dwc3_exynos {
+>  	struct device		*dev;
+> 
+>  	struct clk		*clk;
 
-Thanks,
-Aaron
+The clock "clk" in Exynos5 just gated all that above 7 clocks, which
+we should control separately now in Exynos7.
+
+> +	struct clk		*sclk;
+>  	struct regulator	*vdd33;
+>  	struct regulator	*vdd10;
+>  };
+> @@ -139,10 +140,21 @@ static int dwc3_exynos_probe(struct
+> platform_device *pdev)
+>  		return -EINVAL;
+>  	}
+> 
+> +	/*
+> +	 * Exynos7 has a special gate clock going to this IP,
+> +	 * which in earlier SoCs was probably concealed.
+> +	 */
+> +	exynos->sclk = devm_clk_get(dev, "usbdrd30_sclk");
+> +	if (IS_ERR(exynos->sclk)) {
+> +		dev_info(dev, "no sclk specified\n");
+> +		exynos->sclk = NULL;
+> +	}
+> +
+>  	exynos->dev	= dev;
+>  	exynos->clk	= clk;
+> 
+>  	clk_prepare_enable(exynos->clk);
+> +	clk_prepare_enable(exynos->sclk);
+> 
+>  	exynos->vdd33 = devm_regulator_get(dev, "vdd33");
+>  	if (IS_ERR(exynos->vdd33)) {
+> @@ -185,6 +197,7 @@ err4:
+>  err3:
+>  	regulator_disable(exynos->vdd33);
+>  err2:
+> +	clk_disable_unprepare(exynos->sclk);
+>  	clk_disable_unprepare(clk);
+>  	return ret;
+>  }
+> @@ -197,6 +210,7 @@ static int dwc3_exynos_remove(struct
+> platform_device *pdev)
+>  	platform_device_unregister(exynos->usb2_phy);
+>  	platform_device_unregister(exynos->usb3_phy);
+> 
+> +	clk_disable_unprepare(exynos->sclk);
+>  	clk_disable_unprepare(exynos->clk);
+> 
+>  	regulator_disable(exynos->vdd33);
+> @@ -218,6 +232,7 @@ static int dwc3_exynos_suspend(struct device *dev)
+>  {
+>  	struct dwc3_exynos *exynos = dev_get_drvdata(dev);
+> 
+> +	clk_disable(exynos->sclk);
+>  	clk_disable(exynos->clk);
+> 
+>  	regulator_disable(exynos->vdd33);
+> @@ -243,6 +258,7 @@ static int dwc3_exynos_resume(struct device *dev)
+>  	}
+> 
+>  	clk_enable(exynos->clk);
+> +	clk_enable(exynos->sclk);
+> 
+>  	/* runtime set active to reflect active state. */
+>  	pm_runtime_disable(dev);
+> --
+> 1.7.10.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
