@@ -1,7 +1,7 @@
 From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCHv5 4/6] dt-bindings: arm: add Freescale LS1021A SoC device tree binding
-Date: Mon, 13 Oct 2014 17:36:01 +0800
-Message-ID: <1413192963-11153-5-git-send-email-jingchang.lu@freescale.com>
+Subject: [PATCHv5 5/6] ARM: imx: Add initial support for Freescale LS1021A
+Date: Mon, 13 Oct 2014 17:36:02 +0800
+Message-ID: <1413192963-11153-6-git-send-email-jingchang.lu@freescale.com>
 References: <1413192963-11153-1-git-send-email-jingchang.lu@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,60 +9,85 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1413192963-11153-1-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/fsl.txt | 38 +++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+From: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-index e935d7d..4e8b7df 100644
---- a/Documentation/devicetree/bindings/arm/fsl.txt
-+++ b/Documentation/devicetree/bindings/arm/fsl.txt
-@@ -74,3 +74,41 @@ Required root node properties:
- i.MX6q generic board
- Required root node properties:
-     - compatible = "fsl,imx6q";
+The LS1021A SoC is a dual-core Cortex-A7 based processor,
+this add the initial support for it.
+
+Signed-off-by: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/arm/mach-imx/Kconfig        | 14 ++++++++++++++
+ arch/arm/mach-imx/Makefile       |  2 ++
+ arch/arm/mach-imx/mach-ls1021a.c | 21 +++++++++++++++++++++
+ 3 files changed, 37 insertions(+)
+ create mode 100644 arch/arm/mach-imx/mach-ls1021a.c
+
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index 11b2957..49a0096 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -639,6 +639,20 @@ config SOC_VF610
+ 	help
+ 	  This enable support for Freescale Vybrid VF610 processor.
+ 
++config FSL_SOC
++	bool
 +
++config SOC_LS1021A
++	bool "Freescale LS1021A support"
++	select ARM_GIC
++	select HAVE_ARM_ARCH_TIMER
++	select FSL_SOC
++	select PCI_DOMAINS if PCI
++	select ZONE_DMA if ARM_LPAE
 +
-+Freescale LS1021A Platform Device Tree Bindings
-+------------------------------------------------
++	help
++	  This enable support for Freescale LS1021A processor.
 +
-+Required root node compatible properties:
-+  - compatible = "fsl,ls1021a";
+ endif
+ 
+ source "arch/arm/mach-imx/devices/Kconfig"
+diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
+index 6e4fcd8..ce137bc 100644
+--- a/arch/arm/mach-imx/Makefile
++++ b/arch/arm/mach-imx/Makefile
+@@ -110,4 +110,6 @@ obj-$(CONFIG_SOC_IMX53) += mach-imx53.o
+ 
+ obj-$(CONFIG_SOC_VF610) += clk-vf610.o mach-vf610.o
+ 
++obj-$(CONFIG_SOC_LS1021A) += mach-ls1021a.o
 +
-+Freescale LS1021A SoC-specific Device Tree Bindings
-+-------------------------------------------
+ obj-y += devices/
+diff --git a/arch/arm/mach-imx/mach-ls1021a.c b/arch/arm/mach-imx/mach-ls1021a.c
+new file mode 100644
+index 0000000..9d2034b
+--- /dev/null
++++ b/arch/arm/mach-imx/mach-ls1021a.c
+@@ -0,0 +1,21 @@
++/*
++ * Copyright 2013-2014 Freescale Semiconductor, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
 +
-+Freescale SCFG
-+  SCFG is the supplemental configuration unit, that provides SoC specific
-+configuration and status registers for the chip. Such as getting PEX port
-+status.
-+  Required properties:
-+  - compatible: should be "fsl,ls1021a-scfg"
-+  - reg: should contain base address and length of SCFG memory-mapped registers
++#include <asm/mach/arch.h>
 +
-+Example:
-+	scfg: scfg@1570000 {
-+		compatible = "fsl,ls1021a-scfg";
-+		reg = <0x0 0x1570000 0x0 0x10000>;
-+	};
++#include "common.h"
 +
-+Freescale DCFG
-+  DCFG is the device configuration unit, that provides general purpose
-+configuration and status for the device. Such as setting the secondary
-+core start address and release the secondary core from holdoff and startup.
-+  Required properties:
-+  - compatible: should be "fsl,ls1021a-dcfg"
-+  - reg : should contain base address and length of DCFG memory-mapped registers
++static const char * const ls1021a_dt_compat[] __initconst = {
++	"fsl,ls1021a",
++	NULL,
++};
 +
-+Example:
-+	dcfg: dcfg@1ee0000 {
-+		compatible = "fsl,ls1021a-dcfg";
-+		reg = <0x0 0x1ee0000 0x0 0x10000>;
-+	};
++DT_MACHINE_START(LS1021A, "Freescale LS1021A")
++	.dt_compat	= ls1021a_dt_compat,
++MACHINE_END
 -- 
 1.8.0
 
