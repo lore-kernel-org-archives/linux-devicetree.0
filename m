@@ -1,109 +1,53 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: meson: Fix UART compatible
-Date: Mon, 13 Oct 2014 12:44:54 +0200
-Message-ID: <CAOQ7t2ZYYLVAJ8XG-PdeBZJC1YoTdAzt6bdbFxoUwDZaSF_dhw@mail.gmail.com>
-References: <1413141624-8949-1-git-send-email-carlo@caione.org>
-	<20141013101337.GB14739@leverpostej>
+From: Joe.C <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v3 3/7] irqchip: gic: Support hierarchy irq domain.
+Date: Mon, 13 Oct 2014 18:43:16 +0800
+Message-ID: <1413196996.23455.9.camel@mtksdaap41>
+References: <1412864980-20273-1-git-send-email-yingjoe.chen@mediatek.com>
+ <1412864980-20273-4-git-send-email-yingjoe.chen@mediatek.com>
+ <5436BF0C.1030508@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141013101337.GB14739@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5436BF0C.1030508@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Sricharan R <r.sricharan@ti.com>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>, "arm@kernel.org" <arm@kernel.org>, "nathan.chung@mediatek.com" <nathan.chung@mediatek.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Matt Porter <mporter@linaro.org>, Marc Carino <marc.ceeeee@gmail.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 13, 2014 at 12:13 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Sun, Oct 12, 2014 at 08:20:24PM +0100, Carlo Caione wrote:
->> Fix the compatible for the UART to make it consistent with the other
->> compatibles for Meson6 and Meson8 and to avoid problems when the
->> meson8b will be introduced with a different UART driver.
->
-> I don't follow why this would cause problems -- you simply wouldn't use
-> the "amlogic,meson-uart" string for a Meson8b UART because it's not
-> compatible with the programming model of the other UARTs.
+On Thu, 2014-10-09 at 17:59 +0100, Marc Zyngier wrote:
+> On 09/10/14 15:29, Joe.C wrote
+> > @@ -952,7 +988,11 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
+> >  
+> >  	gic_irqs -= hwirq_base; /* calculate # of irqs to allocate */
+> >  
+> > -	if (of_property_read_u32(node, "arm,routable-irqs",
+> > +	if (IS_ENABLED(CONFIG_IRQ_DOMAIN_HIERARCHY) &&
+> > +		of_find_property(node, "arm,irq-domain-hierarchy", NULL))
+> > +		gic->domain = irq_domain_add_linear(node, gic_irqs,
+> > +					&gic_irq_domain_hierarchy_ops, gic);
+> 
+> I really think that looking for a property is the wrong thing to do. If
+> "node" is non-NULL, then we're pretty sure that we're initializing from
+> DT, and that a pure linear domain should be the right thing, leaving the
+> legacy stuff for the few non-DT platforms that are still around.
+> 
+> Thanks,
+> 
+> 	M.
 
-I know it isn't really a _real_ problem. I just want to avoid any
-confusion in the future and I'm pretty sure that changing it at this
-stage of development doesn't cause any trouble (I wouldn't have asked
-otherwise).
+The only reason I introduce "arm,irq-domain-hierarchy" property is
+trying to keep original behavior when hierarchy irq domain is not used.
+Without this, when a board init GIC with DT, all driver will have to use
+devicetree. I'm not sure we want to break things like this. I will
+remove this and just use linear for all DT in my next version.
 
->> Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/meson.dtsi    | 8 ++++----
->>  drivers/tty/serial/meson_uart.c | 4 ++--
->>  2 files changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
->> index e6539ea..a0d34ee 100644
->> --- a/arch/arm/boot/dts/meson.dtsi
->> +++ b/arch/arm/boot/dts/meson.dtsi
->> @@ -76,7 +76,7 @@
->>               };
->>
->>               uart_AO: serial@c81004c0 {
->> -                     compatible = "amlogic,meson-uart";
->> +                     compatible = "amlogic,meson6-uart";
->>                       reg = <0xc81004c0 0x14>;
->>                       interrupts = <0 90 1>;
->>                       clocks = <&clk81>;
->> @@ -84,7 +84,7 @@
->>               };
->>
->>               uart_A: serial@c81084c0 {
->> -                     compatible = "amlogic,meson-uart";
->> +                     compatible = "amlogic,meson6-uart";
->>                       reg = <0xc81084c0 0x14>;
->>                       interrupts = <0 90 1>;
->>                       clocks = <&clk81>;
->> @@ -92,7 +92,7 @@
->>               };
->>
->>               uart_B: serial@c81084dc {
->> -                     compatible = "amlogic,meson-uart";
->> +                     compatible = "amlogic,meson6-uart";
->>                       reg = <0xc81084dc 0x14>;
->>                       interrupts = <0 90 1>;
->>                       clocks = <&clk81>;
->> @@ -100,7 +100,7 @@
->>               };
->>
->>               uart_C: serial@c8108700 {
->> -                     compatible = "amlogic,meson-uart";
->> +                     compatible = "amlogic,meson6-uart";
->>                       reg = <0xc8108700 0x14>;
->>                       interrupts = <0 90 1>;
->>                       clocks = <&clk81>;
->> diff --git a/drivers/tty/serial/meson_uart.c b/drivers/tty/serial/meson_uart.c
->> index 15c7497..4c3de09 100644
->> --- a/drivers/tty/serial/meson_uart.c
->> +++ b/drivers/tty/serial/meson_uart.c
->> @@ -590,7 +590,7 @@ static int meson_uart_remove(struct platform_device *pdev)
->>
->>
->>  static const struct of_device_id meson_uart_dt_match[] = {
->> -     { .compatible = "amlogic,meson-uart" },
->> +     { .compatible = "amlogic,meson6-uart" },
->
-> If this is already in a mainline release, we shouldn't be changing the
-> string unless we're absolutely certain no-one is adversely affected by
-> the removal. We can deprecate the old string while maintaining
-> compatibility, however.
-
-I doubt anybody else is using mainline kernel on Meson SoCs but me and
-Beniamino. IMO better change it now that the development is at an
-early stage.
-
-> There doesn't seem to be a binding document. Please could you add one?
-
-Right. Actually the documentation[1] was submitted together with the
-driver but it seems that it was lost during mainlining
-
-[1] https://patchwork.ozlabs.org/patch/388369/
-
--- 
-Carlo Caione
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Joe.C
