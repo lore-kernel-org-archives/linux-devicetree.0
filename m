@@ -1,51 +1,76 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 3/7] irqchip: gic: Support hierarchy irq domain.
-Date: Mon, 13 Oct 2014 21:51:18 +0200
-Message-ID: <4904191.xcTM1nFGH7@wuerfel>
-References: <1412864980-20273-1-git-send-email-yingjoe.chen@mediatek.com> <1413196996.23455.9.camel@mtksdaap41> <543BC138.3010109@arm.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC 4/7] ARM: dts: add support for Vybrid running on Cortex-M4
+Date: Mon, 13 Oct 2014 21:54:16 +0200
+Message-ID: <5748107.mfAXLUBGQg@wuerfel>
+References: <cover.1413136383.git.stefan@agner.ch> <2010256.3WXzPqutzu@wuerfel> <e7425f34e2149aa495a2e3611854e952@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <543BC138.3010109@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: "Joe.C" <yingjoe.chen@mediatek.com>, Mark Rutland <Mark.Rutland@arm.com>, "arm@kernel.org" <arm@kernel.org>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, "hc.yen@mediatek.com" <hc.yen@mediatek.com>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.com>, "nathan.chung@mediatek.com" <nathan.chung@mediatek.com>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Pawel Moll <Pawel.Moll@arm.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Santosh Shilimkar <santosh.sh>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e7425f34e2149aa495a2e3611854e952-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 13 October 2014 13:10:32 Marc Zyngier wrote:
-> On 13/10/14 11:43, Joe.C wrote:
-> > On Thu, 2014-10-09 at 17:59 +0100, Marc Zyngier wrote:
-> >> On 09/10/14 15:29, Joe.C wrote
-> >>> @@ -952,7 +988,11 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
-> >>>  
-> >>>     gic_irqs -= hwirq_base; /* calculate # of irqs to allocate */
-> >>>  
-> >>> -   if (of_property_read_u32(node, "arm,routable-irqs",
-> >>> +   if (IS_ENABLED(CONFIG_IRQ_DOMAIN_HIERARCHY) &&
-> >>> +           of_find_property(node, "arm,irq-domain-hierarchy", NULL))
-> >>> +           gic->domain = irq_domain_add_linear(node, gic_irqs,
-> >>> +                                   &gic_irq_domain_hierarchy_ops, gic);
+On Monday 13 October 2014 18:11:19 Stefan Agner wrote:
+> Am 2014-10-13 13:24, schrieb Arnd Bergmann:
+> > On Monday 13 October 2014 13:08:12 Stefan Agner wrote:
+> >> Am 2014-10-13 12:32, schrieb Mark Rutland:
+> >> > On Sun, Oct 12, 2014 at 07:13:58PM +0100, Stefan Agner wrote:
+> >> >> This adds an initial device tree to run Linux on the Cortex-M4 on
+> >> >> Vybrid.
+> >> >>
+> >> >> HACK: Because we include armv7-m.dtsi, the soc node happens to
+> >> >> be before the clock node. This is a problem for vf610-clk.c, which
+> >> >> tries to optain the fixed clocks defined in the clock nodes. But
+> >> >> because clock drivers are initialized sequencially, and we do not
+> >> >> have support for deferred probing, the clock initialization fails
+> >> >> horrible.
+> >> >> Move the armv7-m.dtsi include to the bottom to temporarily work
+> >> >> work around this...
+> >> >>
+> >> >> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> >> >> ---
+> >> >> Maybe a dummy soc entry in armv7-m.dtsi also helps here. But a
+> >> >> hack as well. Is it common acceptable that the kernel depends
+> >> >> on DTS order?
+> >> >
+> >> > The kernel should not depend on DTS ordering. We should sort out
+> >> > deferred probing if there is an issue with it.
+> >> >
+> >> > [...]
 > >>
-> >> I really think that looking for a property is the wrong thing to do. If
-> >> "node" is non-NULL, then we're pretty sure that we're initializing from
-> >> DT, and that a pure linear domain should be the right thing, leaving the
-> >> legacy stuff for the few non-DT platforms that are still around.
+> >> Yes I guess to make this working independent of device tree order, we
+> >> need to defer probing of vf610-clk when the fixed clocks are not
+> >> initialized yet.
 > >>
-> >> Thanks,
+> >> Clock initialization (using CLK_OF_DECLARE) doesn't support EPROBE_DEFER
+> >> currently.
 > >>
-> >>      M.
+> >> We seem to have already a work around merged because of this.
+> >> http://thread.gmane.org/gmane.linux.kernel/1635576
 > > 
-> > The only reason I introduce "arm,irq-domain-hierarchy" property is
-> > trying to keep original behavior when hierarchy irq domain is not used.
-> > Without this, when a board init GIC with DT, all driver will have to use
-> > devicetree. I'm not sure we want to break things like this.
+> > Ah, maybe that's what I remembered. The clock handling should probably
+> > do something similar to what we do for irqchips, where we probe the
+> > parents first.
+> > 
 > 
-> I don't think we want to support a "middle of the road" setup, where the
-> GIC is probed by DT, but some devices have hardcoded interrupts.
+> Would parent really work here? I mean, vf610-"clk"'s parent is
+> "aips-bus", then "soc" versus "fxosc"'s parent is "clock" (which I can
+> omit according to Mark), so different branches starting from the root. A
+> depth based initialization order would help, but this looks rather
+> arbitrary.
 
-Agreed. We should work on making GIC DT-only by converting the few remaining
-users instead, and certainly should not add any new board files that
-might use the domain hierarchy code.
+I meant parents in the clock tree not the device tree. The clock parents
+are the nodes listed in the 'clocks' property of a child clock device
+node.
+
+This would be similar to how it works for interrupt-controllers, where
+we follow the "interrupt-parent" properties.
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
