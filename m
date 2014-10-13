@@ -1,78 +1,87 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC 4/7] ARM: dts: add support for Vybrid running on Cortex-M4
-Date: Mon, 13 Oct 2014 11:32:20 +0100
-Message-ID: <20141013103219.GE14739@leverpostej>
-References: <cover.1413136383.git.stefan@agner.ch>
- <b3dd902655e9cc4496170a05a907fcce5a687427.1413136383.git.stefan@agner.ch>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 04/12] of: Add NVIDIA Tegra memory controller binding
+Date: Mon, 13 Oct 2014 12:33:46 +0200
+Message-ID: <1413196434-5292-4-git-send-email-thierry.reding@gmail.com>
+References: <1413196434-5292-1-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <b3dd902655e9cc4496170a05a907fcce5a687427.1413136383.git.stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org" <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1413196434-5292-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 12, 2014 at 07:13:58PM +0100, Stefan Agner wrote:
-> This adds an initial device tree to run Linux on the Cortex-M4 on
-> Vybrid.
-> 
-> HACK: Because we include armv7-m.dtsi, the soc node happens to
-> be before the clock node. This is a problem for vf610-clk.c, which
-> tries to optain the fixed clocks defined in the clock nodes. But
-> because clock drivers are initialized sequencially, and we do not
-> have support for deferred probing, the clock initialization fails
-> horrible.
-> Move the armv7-m.dtsi include to the bottom to temporarily work
-> work around this...
-> 
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> ---
-> Maybe a dummy soc entry in armv7-m.dtsi also helps here. But a
-> hack as well. Is it common acceptable that the kernel depends
-> on DTS order?
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-The kernel should not depend on DTS ordering. We should sort out
-deferred probing if there is an issue with it.
+The memory controller on NVIDIA Tegra exposes various knobs that can be
+used to tune the behaviour of the clients attached to it.
 
-[...]
+In addition, the memory controller implements an SMMU (IOMMU) which can
+translate I/O virtual addresses to physical addresses for clients. This
+is useful for scatter-gather operation on devices that don't support it
+natively and for virtualization or process separation.
 
-> +	clocks {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		sxosc {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <32768>;
-> +		};
-> +
-> +		fxosc {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <24000000>;
-> +		};
-> +	};
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v3:
+- add missing clocks and clock-names properties
+- add example
 
-Please get rid of the clocks node and put these under the root node.
-There is nothing special about clocks, and the kernel in no way handles
-a clocks node specially.
+ .../memory-controllers/nvidia,tegra-mc.txt         | 36 ++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
 
-> +
-> +	soc {
-> +		aips0: aips-bus@40000000 {
-> +			compatible = "fsl,aips-bus", "simple-bus";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			reg = <0x40000000 0x70000>;
-
-Out of curiosity, given that this can be driven as a simple-bus, what do
-the aips bus registers allow to be configured?
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
+new file mode 100644
+index 000000000000..f3db93c85eea
+--- /dev/null
++++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
+@@ -0,0 +1,36 @@
++NVIDIA Tegra Memory Controller device tree bindings
++===================================================
++
++Required properties:
++- compatible: Should be "nvidia,tegra<chip>-mc"
++- reg: Physical base address and length of the controller's registers.
++- clocks: Must contain an entry for each entry in clock-names.
++  See ../clocks/clock-bindings.txt for details.
++- clock-names: Must include the following entries:
++  - mc: the module's clock input
++- interrupts: The interrupt outputs from the controller.
++- #iommu-cells: Should be 1. The single cell of the IOMMU specifier defines
++  the SWGROUP of the master.
++
++This device implements an IOMMU that complies with the generic IOMMU binding.
++See ../iommu/iommu.txt for details.
++
++Example:
++--------
++
++	mc: memory-controller@0,70019000 {
++		compatible = "nvidia,tegra124-mc";
++		reg = <0x0 0x70019000 0x0 0x1000>;
++		clocks = <&tegra_car TEGRA124_CLK_MC>;
++		clock-names = "mc";
++
++		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
++
++		#iommu-cells = <1>;
++	};
++
++	sdhci@0,700b0000 {
++		compatible = "nvidia,tegra124-sdhci";
++		...
++		iommus = <&mc TEGRA_SWGROUP_SDMMC1A>;
++	};
+-- 
+2.1.2
