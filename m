@@ -1,115 +1,55 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 03/12] rtc: omap: fix class-device registration
-Date: Mon, 13 Oct 2014 10:57:07 -0500
-Message-ID: <20141013155707.GH21709@saruman>
-References: <1412881594-25678-1-git-send-email-johan@kernel.org>
- <1412881594-25678-4-git-send-email-johan@kernel.org>
- <20141010175919.GO31348@saruman> <20141011095947.GB18988@localhost>
-Reply-To: balbi@ti.com
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v9 1/5] thermal: rockchip: add driver for thermal
+Date: Mon, 13 Oct 2014 09:11:20 -0700
+Message-ID: <CAD=FV=XHe65wwf8Q9RA0ZDgb5oQLdyjuZDFy4mD01_t6G6WnHQ@mail.gmail.com>
+References: <1413012563-7690-1-git-send-email-caesar.wang@rock-chips.com>
+	<1413012563-7690-2-git-send-email-caesar.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5694704704566830498=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20141011095947.GB18988@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Colin Foe-Parker <colin.foeparker@logicpd.com>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, j-keerthy@ti.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, t-kristo@ti.com, Lokesh Vutla <lokeshvutla@ti.com>, linux-arm-kernel@lists.infradead.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Andrew Morton <akpm@linux-foundation.org>, linux-omap@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1413012563-7690-2-git-send-email-caesar.wang@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Arnd Bergmann <arnd@arndb.de>, zyf <zyf@rock-chips.com>, linux-rockchip@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Eddie Cai <cf@rock-chips.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Derek Basehore <dbasehore@chromium.org>, Tao Huang <huangtao@rock-chips.com>, =?UTF-8?B?6ZmI5riQ6aOe?= <cjf@rock-chips.com>, Shunqian Zheng <zhengsq@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
---===============5694704704566830498==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="byLs0wutDcxFdwtm"
-Content-Disposition: inline
+Caesar,
 
---byLs0wutDcxFdwtm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sat, Oct 11, 2014 at 12:29 AM, Caesar Wang
+<caesar.wang@rock-chips.com> wrote:
 
-Hi,
+> +static void rk_tsadcv2_initialize(int reset_mode, int chn, void __iomem *regs,
+> +                                 unsigned long hw_shut_temp)
+> +{
+> +       u32 shutdown_value;
+> +
+> +       shutdown_value = rk_tsadcv2_temp_to_code(hw_shut_temp);
+> +
+> +       /* Enable measurements at ~ 10 Hz */
+> +       writel_relaxed(0 | TSADCV2_AUTO_TSHUT_POLARITY_HIGH, regs +
+> +                      TSADCV2_AUTO_CON);
+> +       writel_relaxed(TSADCV2_AUTO_PERIOD_TIME, regs + TSADCV2_AUTO_PERIOD);
+> +       writel_relaxed(TSADCV2_AUTO_PERIOD_HT_TIME, regs +
+> +                      TSADCV2_AUTO_PERIOD_HT);
+> +       writel_relaxed(shutdown_value, regs + TSADCV2_COMP_SHUT(chn));
+> +       writel_relaxed(TSADCV2_HIGHT_INT_DEBOUNCE_TIME, regs +
+> +                      TSADCV2_HIGHT_INT_DEBOUNCE);
+> +       writel_relaxed(TSADCV2_HIGHT_TSHUT_DEBOUNCE_TIME, regs +
+> +                      TSADCV2_HIGHT_TSHUT_DEBOUNCE);
+> +
+> +       if (reset_mode == GPIO)
+> +               writel_relaxed(TSADCV2_SHUT_2GPIO_SRC_EN(chn) |
+> +                              TSADCV2_INT_SRC_EN(chn), regs +
+> +                              TSADCV2_INT_EN);
+> +       else
+> +               writel_relaxed(TSADCV2_SHUT_2CRU_SRC_EN(chn) |
+> +                              TSADCV2_INT_SRC_EN(chn) , regs +
+> +                              TSADCV2_INT_EN);
+> +
+> +       writel_relaxed(TSADCV2_AUTO_SRC_EN(chn) | TSADCV2_AUTO_EN, regs +
+> +                      TSADCV2_AUTO_CON);
 
-On Sat, Oct 11, 2014 at 11:59:47AM +0200, Johan Hovold wrote:
-> > > @@ -450,14 +441,14 @@ static int __init omap_rtc_probe(struct platfor=
-m_device *pdev)
-> > > =20
-> > >  	/* handle periodic and alarm irqs */
-> > >  	if (devm_request_irq(&pdev->dev, omap_rtc_timer, rtc_irq, 0,
-> > > -			dev_name(&rtc->dev), rtc)) {
-> > > +			dev_name(&pdev->dev), pdev)) {
-> > >  		pr_debug("%s: RTC timer interrupt IRQ%d already claimed\n",
-> > >  			pdev->name, omap_rtc_timer);
-> > >  		goto fail0;
-> > >  	}
-> > >  	if ((omap_rtc_timer !=3D omap_rtc_alarm) &&
-> > >  		(devm_request_irq(&pdev->dev, omap_rtc_alarm, rtc_irq, 0,
-> > > -			dev_name(&rtc->dev), rtc))) {
-> > > +			dev_name(&pdev->dev), pdev))) {
-> >=20
-> > i don't get it. Why pass pdev as cookie when all you need is rtc ?
-> > Doesn't sound very good to me. Also, IRQ handler *must* be registered
-> > only after RTC is registered. That's because if you request an IRQ here,
-> > you could already have a pending interrupt and since you won't have a
-> > valid rtc pointer you won't be able to clear the interrupt line.
->=20
-> We don't need the class device (rtc pointer) to clear the interrupt
-> line. The iomem base is enough, and that is static until Lokesh adds the
-> struct omap_rtc_dev abstraction. Then we pass that as the cookie.
+Aren't you clobbering the polarity here?
 
-I wonder how that patch will look like ;-)
-
-> And all RTC interrupts have been disabled, and pending interrupts
-> cleared before registering the handlers so that should not be a problem.
->=20
-> To the contrary, once the class device has been registered user-space
-> could enable interrupts at any time and that is why everything should
-> have been set up before.
-
-alright, got it. Thanks
-
---=20
-balbi
-
---byLs0wutDcxFdwtm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUO/ZTAAoJEIaOsuA1yqREX2YQAISJkbdj9LvlLe7tZSIGuarp
-NDlfDeTVp4sUbCMaR4MBT/ROQAF1sw96JC+xjDSEHQNkiLsJSVCt+j8U/HUvoTi5
-omsDTrJtNhTWuAGHXIO+e1pUQlCta6efXWdP/6sCXSb28OMHiFARK0ee//+dOFRy
-0jQsp/Dg8dK4zH6eflxfQrr2mVbFRallq6bj1St+LiKX+SIhayyKYRHBXq93kzEG
-dcpt3MKtL62aYMCD/gGbS1/QAuP7Y9/6uCNw9OHf4Ekd+24YeWJGp7Ez/ZZTBymK
-yvXfe8T7lanUrPU+Cnnolyd67sdp7lDUYmWzqiSD7/BzQcDLRibQjj3cNCp5GHz5
-RR8Pq3KuoUlthzbyKYpnWG50exm4uz7yixjTn609KOQ3E5qLxXgcy3Zw9CmuylXo
-W7BKWffHJFYEWdZz4onDbQLZ6Xlf28Y44yhRBO5D6cK2GrTuJ5Kl6lYgF09hYCHa
-/0SFmEBXkcyiW2wD7tl4A6wEJZ9fG11Jxg90DNl9rSoX/D6OXo2uspprJ7zyZ/Pp
-CuawpYi/M8vCIadFRV4d9uNu5QHj31VrAmR6TanddH562za8KXpgMLK71n2zo1Ap
-D+me7jRLM4BIqMErnvEzYjUJePBDN6WSPKtbfgTq6k4zWr2QZAPMs4UlbpB2XAWn
-56Ni+MgytrVzNDzXcFSI
-=NIq4
------END PGP SIGNATURE-----
-
---byLs0wutDcxFdwtm--
-
-
---===============5694704704566830498==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5694704704566830498==--
+NOTE: I didn't do a full review of this driver, just noticed that
+while looking at another patch and figure'd I'd respond here, too.
