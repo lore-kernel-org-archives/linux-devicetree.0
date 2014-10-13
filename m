@@ -1,78 +1,79 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v5 07/11] mmc: sdio: Convert to dev_pm_domain_attach|detach()
-Date: Mon, 13 Oct 2014 13:44:44 +0200
-Message-ID: <CAPDyKFpbZiCZMsLP+mq-1UWd1ifX1QZosv8UfnW__J26y+hupQ@mail.gmail.com>
-References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
-	<1411151264-16245-8-git-send-email-ulf.hansson@linaro.org>
-	<20141002002705.GA29177@dtor-ws>
-	<543B3D80.1010704@intel.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: Add vendor prefix for Sharp Microelectronics
+Date: Mon, 13 Oct 2014 13:54:10 +0200
+Message-ID: <20141013115409.GB16186@ulmo>
+References: <1406901044-32654-1-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <543B3D80.1010704@intel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Aaron Lu <aaron.lu@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>Mark Brown <br>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ADZbWkCsHQ7r3kzd"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1406901044-32654-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13 October 2014 04:48, Aaron Lu <aaron.lu@intel.com> wrote:
-> On 10/02/2014 08:27 AM, Dmitry Torokhov wrote:
->> Hi Ulf,
->>
->> On Fri, Sep 19, 2014 at 08:27:40PM +0200, Ulf Hansson wrote:
->>> Previously only the ACPI PM domain was supported by the sdio bus.
->>>
->>> Let's convert to the common attach/detach functions for PM domains,
->>> which currently means we are extending the support to include the
->>> generic PM domain as well.
->>>
->>> Cc: linux-mmc@vger.kernel.org
->>> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
->>> Reviewed-by: Kevin Hilman <khilman@linaro.org>
->>> ---
->>>  drivers/mmc/core/sdio_bus.c | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/mmc/core/sdio_bus.c b/drivers/mmc/core/sdio_bus.c
->>> index 4fa8fef9..1df0fc6 100644
->>> --- a/drivers/mmc/core/sdio_bus.c
->>> +++ b/drivers/mmc/core/sdio_bus.c
->>> @@ -315,7 +315,7 @@ int sdio_add_func(struct sdio_func *func)
->>>      ret = device_add(&func->dev);
->>>      if (ret == 0) {
->>>              sdio_func_set_present(func);
->>> -            acpi_dev_pm_attach(&func->dev, false);
->>> +            dev_pm_domain_attach(&func->dev, false);
->>
->> Admittedly it is not brought in by your change, but I am a bit worried
->> about this code. In all other busses we attach power domain to a device
->> before probing it (and detach if probe fails). Why here we only attach
->> it to power domain after adding the device to the bus? If driver for the
->> function has already been loaded the probe() would run without device
->> being attached to a power domain...
->
-> Sorry for replying late...
->
-> I see your concern, but it should be safe here. The dev_pm_domain_attach
-> does primarily two things(for ACPI based system): assign the pm_domian
-> field so that later system and runtime PM transitions we have proper
-> callbacks for this device; power on the device if needed.
->
-> I was using Broadcom BCM43241 SDIO wifi card when developing the code,
-> it doesn't need the pm_domain set in its probe function and since the
-> SDIO wifi card is powered on after system boot, no power on is needed
-> either. That's why I added the attach function after device_add to save
-> a little code(detach if probe fails).
->
-> Feel free to change the sequence if the current one is a bad one, I'm OK
-> with either case.
 
-Thanks for clarifying this. I plan to change the behaviour according
-to how other buses handles it.
+--ADZbWkCsHQ7r3kzd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Though, the patch will be a part another patchset that handles a
-related initialization problem for the generic PM domain. I will keep
-you guys on cc when I post it.
+On Fri, Aug 01, 2014 at 03:50:44PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>=20
+> Use "sharp" as the vendor prefix for Sharp Microelectronics in device
+> tree compatible strings.
+>=20
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Kind regards
-Uffe
+Ping?
+
+>=20
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Docu=
+mentation/devicetree/bindings/vendor-prefixes.txt
+> index 81cc5bb8c821..b833b10da988 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -121,6 +121,7 @@ samsung	Samsung Semiconductor
+>  sbs	Smart Battery System
+>  schindler	Schindler
+>  seagate	Seagate Technology PLC
+> +sharp	Sharp Microelectronics
+>  sil	Silicon Image
+>  silabs	Silicon Laboratories
+>  simtek
+> --=20
+> 2.0.3
+>=20
+
+--ADZbWkCsHQ7r3kzd
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUO71hAAoJEN0jrNd/PrOh37kQAIUCZRo8EtG2yVeylPlEoeCJ
+BWoftxkDSH3O5KPIOB6jcE9KSAueOR7VbkATWp2HolfKEkT+NS5Ef9Vae5aX43Nc
+Q+3xAbAvtVUoVRssh0CFRx/pQn+pg/6upMZU9d0dunDUkoRblqf+czlSiSG8VCU0
+g3JcaVIcVFzjkuSxtpIJR0q4+RAcs5WfEGbqSWBZhtzliDocaBL7X4Zp+lm7DYMN
+p0Yh2fTlYBLe54RYhyYNQMu5qhIGrXXcg9ATQiWrID5tSwOdfR+2Ug6fnarVyK05
+SJPWMfEmv00eMfS7wwidcbPdBsyXEFjw4FcujFxbxBAWe93RgTNUWPW2aoGp5g6B
+7s0qUKdGXR6Do5j8qIReQwCDwdoKe4NzTNXaqHwXeLSiJn1vd+zbn7kgZjE0btQV
+HQTV9Fjy23ImVWipCzz3cR3MHfnZdqgDC8Sh8l/iiwDU3yqwKP84+hBjbtSqXydW
+Se7QmygpO6610NersmAzunLFRJHqCnENtzyaprdfsRxQJoTm3HjL4gubSY9te/63
+cgjku10ow/qIvqPAb+WDEX7WGt1ghrWro5pTWUfpKKe2iIluzpGint1xCNVTY1tI
+iRFwhKUfk3gvF7DfKc5zJpAVWGbFIIFEiKSMqJsJirKx7ZqaqQSAMgizPm/x5oh3
+IZhA1lYLd5H03PA+M8sH
+=UIHB
+-----END PGP SIGNATURE-----
+
+--ADZbWkCsHQ7r3kzd--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
