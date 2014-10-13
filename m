@@ -1,58 +1,72 @@
-From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] audio: sgtl5000: Add MicBias resistor support in DT
-Date: Mon, 13 Oct 2014 12:18:04 +0200
-Message-ID: <CAL8zT=inMsW+qQzp9JDFri8fXQTzWYvjv7VUqxUXyLfRUG3Lhg@mail.gmail.com>
-References: <1413149951-2882-1-git-send-email-jean-michel.hautbois@vodalys.com>
- <20141013100504.GA14739@leverpostej> <20141013101008.GF27755@sirena.org.uk>
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCHv5 0/6] ARM: imx: Add Freescale LS1021A SoC and board support
+Date: Mon, 13 Oct 2014 17:35:57 +0800
+Message-ID: <1413192963-11153-1-git-send-email-jingchang.lu@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141013101008.GF27755-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark (x2 :))
+This series contain the support for Freescale LS1021A CPU and LS1021A-QDS
+and LS1021A-TWR board.
 
-2014-10-13 12:10 GMT+02:00 Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> On Mon, Oct 13, 2014 at 11:05:04AM +0100, Mark Rutland wrote:
->> On Sun, Oct 12, 2014 at 10:39:11PM +0100, Jean-Michel Hautbois wrote:
->> > Some systems may require a different resistor than the default one (4K).
->> > This adds a property in sgtl5000 codec.
->> > It keeps the default of 4K when nothing is specified so it does not break
->> > existing code.
->> >
->> > v2: modify the default case on DT parsing
->
-> Don't include noise like this in the changelog, add it after the --- as
-> covered in SubmittingPatches.
+The LS1021A SoC combines two ARM Cortex-A7 cores that have been optimized
+for high reliability and pack the highest level of integration available
+for sub-3W embedded communications processors and with a comprehensive
+enablement model focused on ease of programmability.
 
-Oups, not intended, too quick to commit sorry...
+The LS1021A SoC shares IPs with i.MX family, Vybrid family and Freescale
+PowerPC platform. 
 
->> > +- sgtl5000-micbias-resistor : the bias resistor to be used
->> > +        1 or SGTL5000_MICBIAS_2K - MICBIAS resistor is set to 2K
->> > +        2 or SGTL5000_MICBIAS_4K - MICBIAS resistor is set to 4K
->> > +        3 or SGTL5000_MICBIAS_8K - MICBIAS resistor is set to 8K
->> > +        0 or SGTL5000_MICBIAS_OFF - MICBIAS resistor is not used
->> > +   If this node is not mentioned or if the value is unknown, then
->> > +   micbias resistor is set to 4K.
->
->> The SGTL5000_MICBIAS_* constants aren't in a DT header, so shouldn't be
->> referenced here.
->
-> Or the constants should be moved of course but...
->
->> Why not have mcbias-resistor-k-ohms as 2, 4, 8, or 0?
->
->> That would be much easier to read as a human.
->
-> ...this is even better.
+For the detail information about LS1021A SoC, please refer to the RM doc.
 
-Yes, I will do that ASAP, and base the micbias-voltage on the same principle.
+---
+changes in v5:
+ remove unideal dts nodes for later add.
+ add X11 license to dts files.
 
-Thanks,
-JM
+changes in v4:
+ add "syscon" compatible to scfg and dcfg dts node.
+ remove mxc_restart in the platform machine desc.
+ remove dma_zone_size defination.
+
+changes in v3:
+ rewrite scfg and dcfg binding doc description.
+ remove sai related node leaving to the driver support.
+
+changes in v2:
+ remove unused nodes.
+ wakeup the secondary core by IPI call to u-boot standby procedure. 
+ add dt-bindings for LS1021A SoC and platform gerenal configuration nodes.
+
+----------------------------------------------------------------
+Jingchang Lu (6):
+	ARM: dts: Add SoC level device tree support for LS1021A
+        ARM: dts: Add initial LS1021A QDS board dts support
+	ARM: dts: Add initial LS1021A TWR board dts support
+	dt-bindings: arm: add Freescale LS1021A SoC device tree binding
+	ARM: imx: Add initial support for Freescale LS1021A
+	ARM: imx: Add Freescale LS1021A SMP support
+
+ Documentation/devicetree/bindings/arm/fsl.txt |  38 +++++
+ arch/arm/boot/dts/Makefile                    |   2 +
+ arch/arm/boot/dts/ls1021a-qds.dts             | 240 ++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/ls1021a-twr.dts             | 127 ++++++++++++++++
+ arch/arm/boot/dts/ls1021a.dtsi                | 405 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-imx/Kconfig                     |  14 ++
+ arch/arm/mach-imx/Makefile                    |   4 +-
+ arch/arm/mach-imx/common.h                    |   1 +
+ arch/arm/mach-imx/mach-ls1021a.c              |  22 +++
+ arch/arm/mach-imx/platsmp.c                   |  32 ++++
+ 10 files changed, 884 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/ls1021a-qds.dts
+ create mode 100755 arch/arm/boot/dts/ls1021a-twr.dts
+ create mode 100644 arch/arm/boot/dts/ls1021a.dtsi
+ create mode 100644 arch/arm/mach-imx/mach-ls1021a.c
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
