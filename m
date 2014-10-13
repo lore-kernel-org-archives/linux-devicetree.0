@@ -1,102 +1,189 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Mon, 13 Oct 2014 16:47:59 +0800
-Message-ID: <20141013084758.GB3314@peterchendt>
-References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
- <2923729.dtX0WmHSV0@wuerfel> <20140924112902.GA23331@peterchendt>
- <2786668.t3YLqX5enD@wuerfel> <20140925141553.GC28045@saruman>
- <20140925233932.GA3026@peterchendt> <20140926003750.GA12770@saruman>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v3 3/7] irqchip: gic: Support hierarchy irq domain.
+Date: Mon, 13 Oct 2014 09:56:20 +0100
+Message-ID: <543B93B4.3040404@arm.com>
+References: <1412864980-20273-1-git-send-email-yingjoe.chen@mediatek.com> <1412864980-20273-4-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140926003750.GA12770@saruman>
+In-Reply-To: <1412864980-20273-4-git-send-email-yingjoe.chen@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com, p.zabel@pengutronix.de, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com
+To: "Joe.C" <yingjoe.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>
+Cc: "arm@kernel.org" <arm@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, "hc.yen@mediatek.com" <hc.yen@mediatek.com>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.com>, "nathan.chung@mediatek.com" <nathan.chung@mediatek.com>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <Pawel.Moll@arm.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Matt Porter <mporter@linaro.org>, Marc Carino <marc.ceeeee@gmail.co>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 25, 2014 at 07:37:50PM -0500, Felipe Balbi wrote:
-> HI,
+On 09/10/14 15:29, Joe.C wrote:
+> From: "Joe.C" <yingjoe.chen@mediatek.com>
 > 
-> On Fri, Sep 26, 2014 at 07:39:34AM +0800, Peter Chen wrote:
-> > On Thu, Sep 25, 2014 at 09:15:53AM -0500, Felipe Balbi wrote:
-> > > On Wed, Sep 24, 2014 at 02:23:38PM +0200, Arnd Bergmann wrote:
-> > > > On Wednesday 24 September 2014 19:29:05 Peter Chen wrote:
-> > > > > 
-> > > > > So, it is IP CORE LIB (you suggest) vs IP CORE Platform Driver
-> > > > > (dwc3, musb, chipidea) you are talking about, right? Except for
-> > > > > creating another platform driver as well as related DT node (optional),
-> > > > > are there any advantages compared to current IP core driver structure?
-> > > > 
-> > > > Having a library module usually requires less code, and is more
-> > > > consistent with other drivers, which helps new developers understand
-> > > > what the driver is doing.
-> > > 
-> > > I beg to differ. You end-up having to pass function pointers through
-> > > platform_data to handle differences which could be handled by the core
-> > > IP.
-> > > 
-> > > > The most important aspect though is the DT binding: once the structure
-> > > > with separate kernel drivers leaks out into the DT format, you can't
-> > > > easily change the driver any more, e.g. to make a property that was
-> > > > introduced for one glue driver more general so it can get handled by
-> > > > the common part. Having a single node lets us convert to the library
-> > > > model later, so that would be a strong reason to keep the DT binding
-> > > > simple, without child nodes.
-> > > > 
-> > > > Following that logic, it turns into another reason for using the library
-> > > > model to start with, because otherwise the child device does not have
-> > > > any DT properties itself and has to rely on the parent device properties,
-> > > > which somewhat complicates the driver structure.
-> > > 
-> > > this is bullcrap. Take a look at
-> > > Documentation/devicetree/bindings/usb/dwc3.txt:
-> > > 
-> > > synopsys DWC3 CORE
-> > > 
-> > > DWC3- USB3 CONTROLLER
-> > > 
-> > > Required properties:
-> > >  - compatible: must be "snps,dwc3"
-> > >  - reg : Address and length of the register set for the device
-> > >  - interrupts: Interrupts used by the dwc3 controller.
-> > > 
-> > > Optional properties:
-> > >  - usb-phy : array of phandle for the PHY device.  The first element
-> > >    in the array is expected to be a handle to the USB2/HS PHY and
-> > >    the second element is expected to be a handle to the USB3/SS PHY
-> > >  - phys: from the *Generic PHY* bindings
-> > >  - phy-names: from the *Generic PHY* bindings
-> > >  - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
-> > > 
-> > > This is usually a subnode to DWC3 glue to which it is connected.
-> > > 
-> > > dwc3@4a030000 {
-> > > 	compatible = "snps,dwc3";
-> > > 	reg = <0x4a030000 0xcfff>;
-> > > 	interrupts = <0 92 4>
-> > > 	usb-phy = <&usb2_phy>, <&usb3,phy>;
-> > > 	tx-fifo-resize;
-> > > };
-> > > 
+> Add support to use gic as a parent for stacked irq domain.
 > 
-> > Is it possible that the glue layer needs to access core register
-> > (eg, portsc.phcd during suspend)? The wrapper IP may wait some signals
-> > at core IP to change.
+> Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
+> ---
+>  drivers/irqchip/irq-gic.c | 56 ++++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 48 insertions(+), 8 deletions(-)
 > 
-> why would a glue layer need to access registers from the core ? That
-> sounds very odd. I haven't seen that and will, definitely, NACK such a
-> patch :-)
+> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+> index dda6dbc..17f5aa6 100644
+> --- a/drivers/irqchip/irq-gic.c
+> +++ b/drivers/irqchip/irq-gic.c
+> @@ -767,19 +767,17 @@ void __init gic_init_physaddr(struct device_node *node)
+>  static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
+>  				irq_hw_number_t hw)
+>  {
+> +	irq_domain_set_hwirq_and_chip(d, irq, hw, &gic_chip, d->host_data);
+>  	if (hw < 32) {
+>  		irq_set_percpu_devid(irq);
+> -		irq_set_chip_and_handler(irq, &gic_chip,
+> -					 handle_percpu_devid_irq);
+> +		irq_set_handler(irq, handle_percpu_devid_irq);
+>  		set_irq_flags(irq, IRQF_VALID | IRQF_NOAUTOEN);
+>  	} else {
+> -		irq_set_chip_and_handler(irq, &gic_chip,
+> -					 handle_fasteoi_irq);
+> +		irq_set_handler(irq, handle_fasteoi_irq);
+>  		set_irq_flags(irq, IRQF_VALID | IRQF_PROBE);
+>  
+>  		gic_routable_irq_domain_ops->map(d, irq, hw);
+>  	}
+> -	irq_set_chip_data(irq, d->host_data);
+>  	return 0;
+>  }
+>  
+> @@ -795,8 +793,6 @@ static int gic_irq_domain_xlate(struct irq_domain *d,
+>  {
+>  	unsigned long ret = 0;
+>  
+> -	if (d->of_node != controller)
+> -		return -EINVAL;
+>  	if (intsize < 3)
+>  		return -EINVAL;
+>  
+> @@ -839,6 +835,46 @@ static struct notifier_block gic_cpu_notifier = {
+>  };
+>  #endif
+>  
+> +
+> +#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
+> +static int gic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> +				unsigned int nr_irqs, void *arg)
+> +{
+> +	int i, ret;
+> +	irq_hw_number_t hwirq;
+> +	unsigned int type = IRQ_TYPE_NONE;
+> +	struct of_phandle_args *irq_data = arg;
+> +
+> +	ret = gic_irq_domain_xlate(domain, irq_data->np, irq_data->args,
+> +				   irq_data->args_count, &hwirq, &type);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < nr_irqs; i++)
+> +		gic_irq_domain_map(domain, virq+i, hwirq+i);
+> +
+> +	return 0;
+> +}
+> +
+> +static void gic_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+> +				unsigned int nr_irqs)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		irq_set_handler(virq + i, NULL);
+> +		irq_domain_set_hwirq_and_chip(domain, virq + i, 0, NULL, NULL);
+> +	}
+> +}
+> +
+> +static const struct irq_domain_ops gic_irq_domain_hierarchy_ops = {
+> +	.alloc = gic_irq_domain_alloc,
+> +	.free = gic_irq_domain_free,
+> +};
+> +#else
+> +#define gic_irq_domain_hierarchy_ops 0
+> +#endif /* CONFIG_IRQ_DOMAIN_HIERARCHY */
+> +
+>  static const struct irq_domain_ops gic_irq_domain_ops = {
+>  	.map = gic_irq_domain_map,
+>  	.unmap = gic_irq_domain_unmap,
+> @@ -952,7 +988,11 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
+>  
+>  	gic_irqs -= hwirq_base; /* calculate # of irqs to allocate */
+>  
+> -	if (of_property_read_u32(node, "arm,routable-irqs",
+> +	if (IS_ENABLED(CONFIG_IRQ_DOMAIN_HIERARCHY) &&
+> +		of_find_property(node, "arm,irq-domain-hierarchy", NULL))
+> +		gic->domain = irq_domain_add_linear(node, gic_irqs,
+> +					&gic_irq_domain_hierarchy_ops, gic);
+> +	else if (of_property_read_u32(node, "arm,routable-irqs",
+>  				 &nr_routable_irqs)) {
+>  		irq_base = irq_alloc_descs(irq_start, 16, gic_irqs,
+>  					   numa_node_id());
 > 
 
-Just have a case for glue layer needs to know core layer's status.
-The controller's wakeup logic is usually at glue layer, but we
-may need to enable different wakeup for roles. Eg, if the current
-role is host (controller is otg capable), we can't enable id wakeup,
-otherwise, the user will complain plug out Micro-AB cable wakes up
-system which is not expected.
+So I've been playing with this over the weekend (with quite a few
+tweaks), and I'm hitting a not-so-nice effect of the automatic platform
+device creation from the device tree.
 
+What happens is the following:
+- Kernel starts
+- GIC gets initialized with a linear domain supporting hierarchy
+- per-cpu timers are up and running
+- platform devices get created from the device tree:
+  - irq_of_parse_and_map()
+  - irq_create_of_mapping()
+  - irq_domain_alloc_irqs()
+
+Here, we start re-allocating interrupts that have already been allocated
+(the timer interrupts). This has a side effect of nuking the
+percpu_dev_id, and everything explodes on the next timer tick. Grmbl.
+
+The main issue here is that we have a single path that:
+- translates the interrupt from DT to HW
+- configures the interrupts
+and that we use it more than once.
+
+The non-hierarchy path works because the the "map" operation takes place
+only once, and virtual interrupts are allocated upfront.
+
+When we switch to this more dynamic way of doing things, the fact that
+the virqs only available at allocation time is screwing us up.
+
+I can see a way out of this, which would involve having a way of
+detecting that a hwirq has already been allocated (which requires having
+the xlate callback instantiated). Something like this (not even
+compile-tested):
+
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index dd8d3ab..6a45821 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -479,6 +479,21 @@ unsigned int irq_create_of_mapping(struct
+of_phandle_args *irq_data)
+ 	}
+
+ 	if (irq_domain_is_hierarchy(domain)) {
++		if (domain->ops->xlate) {
++			/*
++			 * If we've already configured this interrupt,
++			 * don't do it again, or hell will break loose.
++			 */
++			if (domain->ops->xlate(domain, irq_data->np,
++					       irq_data->args,
++					       irq_data->args_count,
++					       &hwirq, &type))
++				return 0;
++
++			virq = irq_find_mapping(domain, hwirq);
++			if (virq)
++				return virq;
++		}
+ 		virq = irq_domain_alloc_irqs(domain, 1, NUMA_NO_NODE, irq_data);
+ 		return virq <= 0 ? 0 : virq;
+ 	}
+
+Thoughts?
+
+	M.
 -- 
-Best Regards,
-Peter Chen
+Jazz is not dead. It just smells funny...
