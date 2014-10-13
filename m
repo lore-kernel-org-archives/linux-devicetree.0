@@ -1,66 +1,84 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v3 3/3] ARM: dts: rk3288: add VOP iommu nodes
-Date: Tue, 14 Oct 2014 00:33:41 +0200
-Message-ID: <4094180.e6s5oT6HgP@phil>
-References: <1412965848-18663-1-git-send-email-djkurtz@chromium.org> <1412965848-18663-4-git-send-email-djkurtz@chromium.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2 1/4] dwc3: exynos: Add support for SCLK present on
+ Exynos7
+Date: Mon, 13 Oct 2014 17:44:09 -0500
+Message-ID: <20141013224409.GB1496@saruman>
+References: <1412677176-3850-1-git-send-email-gautam.vivek@samsung.com>
+ <1412677176-3850-2-git-send-email-gautam.vivek@samsung.com>
+ <00f101cfe6a1$d772c5a0$865850e0$%tikhomirov@samsung.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Bn2rw/3z4jIqBvZU"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1412965848-18663-4-git-send-email-djkurtz@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <00f101cfe6a1$d772c5a0$865850e0$%tikhomirov@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>
-Cc: =?ISO-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>, Grant Grundler <grundler@chromium.org>, Simon Xue <xxm@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Anton Tikhomirov <av.tikhomirov@samsung.com>
+Cc: 'Vivek Gautam' <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, balbi@ti.com, kgene.kim@samsung.com, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+--Bn2rw/3z4jIqBvZU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Am Samstag, 11. Oktober 2014, 02:30:48 schrieb Daniel Kurtz:
-> Add device nodes for the VOP iommus.
-> Device nodes for other iommus will be added in later patches.
-> 
-> The iommu nodes use the #iommu-cells property as described in:
->   Documentation/devicetree/bindings/iommu/iommu.txt
-> 
-> Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-> Signed-off-by: Simon Xue <xxm@rock-chips.com>
-> ---
->  arch/arm/boot/dts/rk3288.dtsi | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index 5950b0a..cbc92fa 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -271,6 +271,24 @@
->  		status = "disabled";
->  	};
-> 
-> +	vopb_mmu: iommu@0xff930300 {
+Hi,
 
-please use the address without the 0x here ... iommu@ff930300
+On Mon, Oct 13, 2014 at 01:54:59PM +0900, Anton Tikhomirov wrote:
+> Hi Vivek,
+>=20
+> > Exynos7 also has a separate special gate clock going to the IP
+> > apart from the usual AHB clock. So add support for the same.
+>=20
+> As we discussed before, Exynos7 SoCs have 7 clocks to be controlled
+> by the driver. Adding only sclk is not enough.=20
+>=20
+> >=20
+> > Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> > ---
+> >  drivers/usb/dwc3/dwc3-exynos.c |   16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> >=20
+> > diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-
+> > exynos.c
+> > index 3951a65..7dc6a98 100644
+> > --- a/drivers/usb/dwc3/dwc3-exynos.c
+> > +++ b/drivers/usb/dwc3/dwc3-exynos.c
+> > @@ -35,6 +35,7 @@ struct dwc3_exynos {
+> >  	struct device		*dev;
+> >=20
+> >  	struct clk		*clk;
+>=20
+> The clock "clk" in Exynos5 just gated all that above 7 clocks, which
+> we should control separately now in Exynos7.
+>=20
 
+should I drop this patch for now ?
 
-Thanks
-Heiko
+--=20
+balbi
 
-> +		compatible = "rockchip,iommu";
-> +		reg = <0xff930300 0x100>;
-> +		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "vopb_mmu";
-> +		#iommu-cells = <0>;
-> +		status = "disabled";
-> +	};
-> +
-> +	vopl_mmu: iommu@0xff940300 {
-> +		compatible = "rockchip,iommu";
-> +		reg = <0xff940300 0x100>;
-> +		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "vopl_mmu";
-> +		#iommu-cells = <0>;
-> +		status = "disabled";
-> +	};
-> +
->  	gic: interrupt-controller@ffc01000 {
->  		compatible = "arm,gic-400";
->  		interrupt-controller;
+--Bn2rw/3z4jIqBvZU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUPFW5AAoJEIaOsuA1yqRE2JAP/jLhi8fw0frOAN+5nxZhVUTi
+ByhmsFu6a7/oaLki/fg1WAz7AdgMH0CJuQZpY3UTlyc+4QUKHz7F/ZUWE49p2NFI
+vwQzYMuWPCh5of6kFMN538d1DbLBSE4JqE0VmP4o8My0zxU96UPABocIA+YTlgmo
+vCK8CPWe6rJ3/Hd78sD16wjANqK86UPGerLMQgIlpDcVTvu9Un8AFE4rumtYR+tF
+PldWc8/tuMp2XO6eV4cTQT/oQD3adBDFDfvBdXZXygmvGOjUVlVdpJ8n+ebwkB1z
+O0k6hfr5thmce3R5QKPLz8EGeg9ukSYgy6EOABoy5Hgo8XAJfMKT9r/7zLU1kdwk
+Y/+dw6Thcnpg2+Y8mpo4XQaaIKNDrDL6wiYGqUm8y03NnKK93wau/tb61NAIZe2m
+QiJvgf0FpvN7Fl2Mu2s2fgMHnYZZgIO/NXJ9V7eEGyyRt2/oucR9hduZ7kU1W2pZ
+dcMHpGG5LgFB2DMiwKdycEbo3JPsIsEJN0iPZ6KRMVKiiCdC7UGk137ZBq3xk8As
+8XEM4e1sdQv8ro/HammIM4mXBRrgLCIzfRk6ZYx3SRVKNPn9GdMEr5MJOmw8av1m
+pecPWxA18bQvuWP3fzBs01sflMSVRgYGboRJNsR3yMIp+XFZysXwoCxZgd3Wsuys
+IJI4eDVoTYvA1EYQOo4C
+=XPMD
+-----END PGP SIGNATURE-----
+
+--Bn2rw/3z4jIqBvZU--
