@@ -1,79 +1,194 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: Add vendor prefix for Sharp Microelectronics
-Date: Mon, 13 Oct 2014 13:54:10 +0200
-Message-ID: <20141013115409.GB16186@ulmo>
-References: <1406901044-32654-1-git-send-email-thierry.reding@gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v3 3/7] irqchip: gic: Support hierarchy irq domain.
+Date: Mon, 13 Oct 2014 13:10:32 +0100
+Message-ID: <543BC138.3010109@arm.com>
+References: <1412864980-20273-1-git-send-email-yingjoe.chen@mediatek.com>  <1412864980-20273-4-git-send-email-yingjoe.chen@mediatek.com>  <5436BF0C.1030508@arm.com> <1413196996.23455.9.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ADZbWkCsHQ7r3kzd"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1406901044-32654-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed;
+ boundary="------------030407050101090003060102"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413196996.23455.9.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Joe.C" <yingjoe.chen@mediatek.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "arm@kernel.org" <arm@kernel.org>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, "hc.yen@mediatek.com" <hc.yen@mediatek.com>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.com>, "nathan.chung@mediatek.com" <nathan.chung@mediatek.com>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <Pawel.Moll@arm.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Santosh Shilimkar <santosh.shilimkar>
 List-Id: devicetree@vger.kernel.org
 
-
---ADZbWkCsHQ7r3kzd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is a multi-part message in MIME format.
+--------------030407050101090003060102
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 01, 2014 at 03:50:44PM +0200, Thierry Reding wrote:
-> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On 13/10/14 11:43, Joe.C wrote:
+> On Thu, 2014-10-09 at 17:59 +0100, Marc Zyngier wrote:
+>> On 09/10/14 15:29, Joe.C wrote
+>>> @@ -952,7 +988,11 @@ void __init gic_init_bases(unsigned int gic_nr, in=
+t irq_start,
+>>> =20
+>>>  =09gic_irqs -=3D hwirq_base; /* calculate # of irqs to allocate */
+>>> =20
+>>> -=09if (of_property_read_u32(node, "arm,routable-irqs",
+>>> +=09if (IS_ENABLED(CONFIG_IRQ_DOMAIN_HIERARCHY) &&
+>>> +=09=09of_find_property(node, "arm,irq-domain-hierarchy", NULL))
+>>> +=09=09gic->domain =3D irq_domain_add_linear(node, gic_irqs,
+>>> +=09=09=09=09=09&gic_irq_domain_hierarchy_ops, gic);
+>>
+>> I really think that looking for a property is the wrong thing to do. If
+>> "node" is non-NULL, then we're pretty sure that we're initializing from
+>> DT, and that a pure linear domain should be the right thing, leaving the
+>> legacy stuff for the few non-DT platforms that are still around.
+>>
+>> Thanks,
+>>
+>> =09M.
 >=20
-> Use "sharp" as the vendor prefix for Sharp Microelectronics in device
-> tree compatible strings.
->=20
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+> The only reason I introduce "arm,irq-domain-hierarchy" property is
+> trying to keep original behavior when hierarchy irq domain is not used.
+> Without this, when a board init GIC with DT, all driver will have to use
+> devicetree. I'm not sure we want to break things like this.
 
-Ping?
+I don't think we want to support a "middle of the road" setup, where the
+GIC is probed by DT, but some devices have hardcoded interrupts.
 
->=20
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Docu=
-mentation/devicetree/bindings/vendor-prefixes.txt
-> index 81cc5bb8c821..b833b10da988 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -121,6 +121,7 @@ samsung	Samsung Semiconductor
->  sbs	Smart Battery System
->  schindler	Schindler
->  seagate	Seagate Technology PLC
-> +sharp	Sharp Microelectronics
->  sil	Silicon Image
->  silabs	Silicon Laboratories
->  simtek
-> --=20
-> 2.0.3
->=20
+> I will remove this and just use linear for all DT in my next version.
 
---ADZbWkCsHQ7r3kzd
-Content-Type: application/pgp-signature
+I came up with the attached patch, which allows me to boot my test
+platform (together with the other fix I posted earlier).
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Thanks,
 
-iQIcBAEBAgAGBQJUO71hAAoJEN0jrNd/PrOh37kQAIUCZRo8EtG2yVeylPlEoeCJ
-BWoftxkDSH3O5KPIOB6jcE9KSAueOR7VbkATWp2HolfKEkT+NS5Ef9Vae5aX43Nc
-Q+3xAbAvtVUoVRssh0CFRx/pQn+pg/6upMZU9d0dunDUkoRblqf+czlSiSG8VCU0
-g3JcaVIcVFzjkuSxtpIJR0q4+RAcs5WfEGbqSWBZhtzliDocaBL7X4Zp+lm7DYMN
-p0Yh2fTlYBLe54RYhyYNQMu5qhIGrXXcg9ATQiWrID5tSwOdfR+2Ug6fnarVyK05
-SJPWMfEmv00eMfS7wwidcbPdBsyXEFjw4FcujFxbxBAWe93RgTNUWPW2aoGp5g6B
-7s0qUKdGXR6Do5j8qIReQwCDwdoKe4NzTNXaqHwXeLSiJn1vd+zbn7kgZjE0btQV
-HQTV9Fjy23ImVWipCzz3cR3MHfnZdqgDC8Sh8l/iiwDU3yqwKP84+hBjbtSqXydW
-Se7QmygpO6610NersmAzunLFRJHqCnENtzyaprdfsRxQJoTm3HjL4gubSY9te/63
-cgjku10ow/qIvqPAb+WDEX7WGt1ghrWro5pTWUfpKKe2iIluzpGint1xCNVTY1tI
-iRFwhKUfk3gvF7DfKc5zJpAVWGbFIIFEiKSMqJsJirKx7ZqaqQSAMgizPm/x5oh3
-IZhA1lYLd5H03PA+M8sH
-=UIHB
------END PGP SIGNATURE-----
+=09M.
+--=20
+Jazz is not dead. It just smells funny...
+--------------030407050101090003060102
+Content-Type: text/x-diff;
+	name=0001-fixup-irqchip-gic-Support-hierarchy-irq-domain.patch
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline;
+ filename*0="0001-fixup-irqchip-gic-Support-hierarchy-irq-domain.patch"
 
---ADZbWkCsHQ7r3kzd--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>From 97d4ea1f0922fb47dd1b09cd2694b7fa5b519db9 Mon Sep 17 00:00:00 2001
+From: Marc Zyngier <marc.zyngier@arm.com>
+Date: Mon, 13 Oct 2014 10:57:28 +0100
+Subject: [PATCH] fixup! irqchip: gic: Support hierarchy irq domain.
+
+---
+ drivers/irqchip/Kconfig   |  1 +
+ drivers/irqchip/irq-gic.c | 53 ++++++++++++++++++++++---------------------=
+----
+ 2 files changed, 26 insertions(+), 28 deletions(-)
+
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index b8632bf..2a48e0a 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -5,6 +5,7 @@ config IRQCHIP
+ config ARM_GIC
+ =09bool
+ =09select IRQ_DOMAIN
++=09select IRQ_DOMAIN_HIERARCHY
+ =09select MULTI_IRQ_HANDLER
+=20
+ config GIC_NON_BANKED
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index 17f5aa6..a99c211 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -835,8 +835,6 @@ static struct notifier_block gic_cpu_notifier =3D {
+ };
+ #endif
+=20
+-
+-#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
+ static int gic_irq_domain_alloc(struct irq_domain *domain, unsigned int vi=
+rq,
+ =09=09=09=09unsigned int nr_irqs, void *arg)
+ {
+@@ -870,10 +868,8 @@ static void gic_irq_domain_free(struct irq_domain *dom=
+ain, unsigned int virq,
+ static const struct irq_domain_ops gic_irq_domain_hierarchy_ops =3D {
+ =09.alloc =3D gic_irq_domain_alloc,
+ =09.free =3D gic_irq_domain_free,
++=09.xlate =3D gic_irq_domain_xlate,
+ };
+-#else
+-#define gic_irq_domain_hierarchy_ops 0
+-#endif /* CONFIG_IRQ_DOMAIN_HIERARCHY */
+=20
+ static const struct irq_domain_ops gic_irq_domain_ops =3D {
+ =09.map =3D gic_irq_domain_map,
+@@ -965,18 +961,6 @@ void __init gic_init_bases(unsigned int gic_nr, int ir=
+q_start,
+ =09=09gic_cpu_map[i] =3D 0xff;
+=20
+ =09/*
+-=09 * For primary GICs, skip over SGIs.
+-=09 * For secondary GICs, skip over PPIs, too.
+-=09 */
+-=09if (gic_nr =3D=3D 0 && (irq_start & 31) > 0) {
+-=09=09hwirq_base =3D 16;
+-=09=09if (irq_start !=3D -1)
+-=09=09=09irq_start =3D (irq_start & ~31) + 16;
+-=09} else {
+-=09=09hwirq_base =3D 32;
+-=09}
+-
+-=09/*
+ =09 * Find out how many interrupts are supported.
+ =09 * The GIC only supports up to 1020 interrupt sources.
+ =09 */
+@@ -986,14 +970,31 @@ void __init gic_init_bases(unsigned int gic_nr, int i=
+rq_start,
+ =09=09gic_irqs =3D 1020;
+ =09gic->gic_irqs =3D gic_irqs;
+=20
+-=09gic_irqs -=3D hwirq_base; /* calculate # of irqs to allocate */
++=09if (node) {=09=09/* DT case */
++=09=09const struct irq_domain_ops *ops =3D &gic_irq_domain_hierarchy_ops;
++
++=09=09if (!of_property_read_u32(node, "arm,routable-irqs",
++=09=09=09=09=09  &nr_routable_irqs)) {
++=09=09=09ops =3D &gic_irq_domain_ops;
++=09=09=09gic_irqs =3D nr_routable_irqs;
++=09=09}
++
++=09=09gic->domain =3D irq_domain_add_linear(node, gic_irqs, ops, gic);
++=09} else {=09=09/* Non-DT case */
++=09=09/*
++=09=09 * For primary GICs, skip over SGIs.
++=09=09 * For secondary GICs, skip over PPIs, too.
++=09=09 */
++=09=09if (gic_nr =3D=3D 0 && (irq_start & 31) > 0) {
++=09=09=09hwirq_base =3D 16;
++=09=09=09if (irq_start !=3D -1)
++=09=09=09=09irq_start =3D (irq_start & ~31) + 16;
++=09=09} else {
++=09=09=09hwirq_base =3D 32;
++=09=09}
++
++=09=09gic_irqs -=3D hwirq_base; /* calculate # of irqs to allocate */
+=20
+-=09if (IS_ENABLED(CONFIG_IRQ_DOMAIN_HIERARCHY) &&
+-=09=09of_find_property(node, "arm,irq-domain-hierarchy", NULL))
+-=09=09gic->domain =3D irq_domain_add_linear(node, gic_irqs,
+-=09=09=09=09=09&gic_irq_domain_hierarchy_ops, gic);
+-=09else if (of_property_read_u32(node, "arm,routable-irqs",
+-=09=09=09=09 &nr_routable_irqs)) {
+ =09=09irq_base =3D irq_alloc_descs(irq_start, 16, gic_irqs,
+ =09=09=09=09=09   numa_node_id());
+ =09=09if (IS_ERR_VALUE(irq_base)) {
+@@ -1004,10 +1005,6 @@ void __init gic_init_bases(unsigned int gic_nr, int =
+irq_start,
+=20
+ =09=09gic->domain =3D irq_domain_add_legacy(node, gic_irqs, irq_base,
+ =09=09=09=09=09hwirq_base, &gic_irq_domain_ops, gic);
+-=09} else {
+-=09=09gic->domain =3D irq_domain_add_linear(node, nr_routable_irqs,
+-=09=09=09=09=09=09    &gic_irq_domain_ops,
+-=09=09=09=09=09=09    gic);
+ =09}
+=20
+ =09if (WARN_ON(!gic->domain))
+--=20
+2.0.4
+
+--------------030407050101090003060102--
