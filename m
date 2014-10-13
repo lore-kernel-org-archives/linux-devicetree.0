@@ -1,75 +1,52 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] audio: sgtl5000: Add MicBias resistor support in DT
-Date: Mon, 13 Oct 2014 12:10:08 +0200
-Message-ID: <20141013101008.GF27755@sirena.org.uk>
-References: <1413149951-2882-1-git-send-email-jean-michel.hautbois@vodalys.com>
- <20141013100504.GA14739@leverpostej>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [RFC 6/7] ARM: vf610m4: HACK: get dtb pointer from
+ =?UTF-8?Q?SRC=5FGPR=33?=
+Date: Mon, 13 Oct 2014 12:10:39 +0200
+Message-ID: <00c5c94bca27e7975ae0d7d7ce3ebfcf@agner.ch>
+References: <cover.1413136383.git.stefan@agner.ch>
+ <2bdc44912522eb02db2e4612738fe9f0545b36d9.1413136383.git.stefan@agner.ch>
+ <1815119.sje1JPFb29@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PHDeMLmKefytWajp"
+Content-Type: text/plain; charset=
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141013100504.GA14739@leverpostej>
+In-Reply-To: <1815119.sje1JPFb29@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Am 2014-10-12 21:00, schrieb Arnd Bergmann:
+> On Sunday 12 October 2014 20:14:00 Stefan Agner wrote:
+>> Get DTB pointer (located in r2) from SRC_GPR3 (argument register
+>> for secondary core)
+>>
+>> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+>> ---
+>> This is clearly a hack but it works around the need of a boot loader
+>> on the Cortex-M4. I guess there is no way neither its acceptable to
+>> do this on machine level..? But then, this can also be done with a
+>> minimal boot loader loaded just in front of the kernel by the m4boot
+>> utility.
+>>
+> 
+> How do you actually enter the kernel on the m4? Do you use a
+> decompressor or XIP_KERNEL at the moment? There are probably 
+> lots of ways to do this, my first idea would be to have a vybrid
+> specific boot wrapper that consists of just a few assembly
+> instructions to set up the initial environment from wherever
+> it gets started.
 
---PHDeMLmKefytWajp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I use the XIP_KERNEL at the moment. There is a special memory area which
+can be accessed through code bus of the Cortex-M4 (the ARM-v7m
+architecture has two buses to the CPU, one for data, one for code. On
+Vybrid you can distinguish between those two buses by using different
+memory areas). So in order to make use of the Code bus, I would like to
+place the kernel there, XIP kernel probably the easiest way to do
+this...
 
-On Mon, Oct 13, 2014 at 11:05:04AM +0100, Mark Rutland wrote:
-> On Sun, Oct 12, 2014 at 10:39:11PM +0100, Jean-Michel Hautbois wrote:
-> > Some systems may require a different resistor than the default one (4K).
-> > This adds a property in sgtl5000 codec.
-> > It keeps the default of 4K when nothing is specified so it does not bre=
-ak
-> > existing code.
-> >=20
-> > v2: modify the default case on DT parsing
-
-Don't include noise like this in the changelog, add it after the --- as
-covered in SubmittingPatches.
-
-> > +- sgtl5000-micbias-resistor : the bias resistor to be used
-> > +        1 or SGTL5000_MICBIAS_2K - MICBIAS resistor is set to 2K
-> > +        2 or SGTL5000_MICBIAS_4K - MICBIAS resistor is set to 4K
-> > +        3 or SGTL5000_MICBIAS_8K - MICBIAS resistor is set to 8K
-> > +        0 or SGTL5000_MICBIAS_OFF - MICBIAS resistor is not used
-> > +	If this node is not mentioned or if the value is unknown, then
-> > +	micbias	resistor is set to 4K.
-
-> The SGTL5000_MICBIAS_* constants aren't in a DT header, so shouldn't be
-> referenced here.
-
-Or the constants should be moved of course but...
-
-> Why not have mcbias-resistor-k-ohms as 2, 4, 8, or 0?
-
-> That would be much easier to read as a human.
-
-=2E..this is even better.
-
---PHDeMLmKefytWajp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUO6UAAAoJECTWi3JdVIfQjw4H/3cFrKjjZwyfwpj0RGP3KXhg
-Wj9tsszXq99xa5CUNpvMvOGcstDZIJTx6DSGJRMFpXfWwz/fGZwiK/aKsYTYObHn
-4B3x3IQB4FnJ9kgNSpkYSeygNMdL6TJwZ7NYE+22ml7hMtZHh77wi0WKAgR0hJbs
-y9O65Om9O+PC/TTv1Ouux8opfhKPeGB/Zm22v+vCkCHkUxbCWzO26+SIyYvrSGfp
-pMlRgKBa8rj+Mracj/In36dZOeOrNwmbLgzc3CTfCqUtfhVQLlh6a0+FGobFiwoV
-H903t3oXJmIg3n5Rudw2BzjNGkMZM4Jc9erV8/ybxfy0ceytkMYvRsnQ7hroXQ4=
-=y50+
------END PGP SIGNATURE-----
-
---PHDeMLmKefytWajp--
+--
+Stefan 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
