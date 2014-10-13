@@ -1,36 +1,58 @@
-From: PERIER Romain <romain.perier@gmail.com>
-Subject: Re: [RFC PATCH v1 4/4] dt-bindings: Document the property
- poweroff-source for act8865 regulator
-Date: Mon, 13 Oct 2014 15:54:20 +0200
-Message-ID: <CABgxDoLkcHJzWa1c+UPNbdWxZrMJ+iQM-2gz=N22xgMBdAJrYA@mail.gmail.com>
-References: <1412711104-15902-1-git-send-email-romain.perier@gmail.com>
-	<1412711104-15902-4-git-send-email-romain.perier@gmail.com>
-	<20141013131713.GB27755@sirena.org.uk>
+From: Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v3 1/7] irqdomain: Fix irq_domain_alloc_irqs return check.
+Date: Mon, 13 Oct 2014 22:13:17 +0800
+Message-ID: <543BDDFD.1030300@linux.intel.com>
+References: <1412864980-20273-1-git-send-email-yingjoe.chen@mediatek.com> <1412864980-20273-2-git-send-email-yingjoe.chen@mediatek.com> <543BC186.2050701@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141013131713.GB27755@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "sameo@linux.intel.com" <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, robh <robh@kernel.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Anton Vorontsov <anton@enomsg.org>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <543BC186.2050701-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Mark,
 
-I did not update the whole serie yet, so, this is the old version... :)
-(my patch about act8865 too, as "is_system_poweroff_source" should be
-prefixed by "of_get" as requested by Grant)
-I noted all your remarks.
 
-Thanks
-
-2014-10-13 15:17 GMT+02:00 Mark Brown <broonie@kernel.org>:
-> On Tue, Oct 07, 2014 at 07:45:04PM +0000, Romain Perier wrote:
->> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+On 2014/10/13 20:11, Marc Zyngier wrote:
+> On 09/10/14 15:29, Joe.C wrote:
+>> From: "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>
+>> Change virq type from unsigned int to int. Otherwise the return value
+>> check for irq_domain_alloc_irqs will always pass.
+>>
+>> Signed-off-by: Joe.C <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 >> ---
->>  Documentation/devicetree/bindings/regulator/act8865-regulator.txt | 4 ++++
->>  1 file changed, 4 insertions(+)
->
-> Should this documentation be put in some central place (and perhaps
-> referenced from this binding) given that we're trying to make it a
-> standard property?  Not sure where it'd fit though...
+>>  kernel/irq/irqdomain.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+>> index 584be46..dd8d3ab 100644
+>> --- a/kernel/irq/irqdomain.c
+>> +++ b/kernel/irq/irqdomain.c
+>> @@ -469,7 +469,7 @@ unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data)
+>>  	struct irq_domain *domain;
+>>  	irq_hw_number_t hwirq;
+>>  	unsigned int type = IRQ_TYPE_NONE;
+>> -	unsigned int virq;
+>> +	int virq;
+>>  
+>>  	domain = irq_data->np ? irq_find_host(irq_data->np) : irq_default_domain;
+>>  	if (!domain) {
+>>
+> 
+> I'd expect this patch to get folded into Jiang's series.
+Hi Mark and Joe,
+	Yes, my next version includes this fixup.
+Regards!
+Gerry
+> 
+> Thanks,
+> 
+> 	M.
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
