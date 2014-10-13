@@ -1,92 +1,102 @@
-From: Jingchang Lu <jingchang.lu@freescale.com>
-Subject: [PATCHv2] serial: of-serial: fix up PM ops on no_console_suspend and port type
-Date: Mon, 13 Oct 2014 15:37:00 +0800
-Message-ID: <1413185820-5920-1-git-send-email-jingchang.lu@freescale.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Mon, 13 Oct 2014 16:47:59 +0800
+Message-ID: <20141013084758.GB3314@peterchendt>
+References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
+ <2923729.dtX0WmHSV0@wuerfel> <20140924112902.GA23331@peterchendt>
+ <2786668.t3YLqX5enD@wuerfel> <20140925141553.GC28045@saruman>
+ <20140925233932.GA3026@peterchendt> <20140926003750.GA12770@saruman>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-serial-owner@vger.kernel.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org
-Cc: peter@hurleysoftware.com, arnd@arndb.de, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jingchang Lu <jingchang.lu@freescale.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140926003750.GA12770@saruman>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com, p.zabel@pengutronix.de, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes commit 2dea53bf57783f243c892e99c10c6921e956aa7e,
-"serial: of-serial: add PM suspend/resume support", which disables
-the uart clock on suspend, but also causes a hardware hang on register
-access if no_console_suspend command line option is used.
+On Thu, Sep 25, 2014 at 07:37:50PM -0500, Felipe Balbi wrote:
+> HI,
+> 
+> On Fri, Sep 26, 2014 at 07:39:34AM +0800, Peter Chen wrote:
+> > On Thu, Sep 25, 2014 at 09:15:53AM -0500, Felipe Balbi wrote:
+> > > On Wed, Sep 24, 2014 at 02:23:38PM +0200, Arnd Bergmann wrote:
+> > > > On Wednesday 24 September 2014 19:29:05 Peter Chen wrote:
+> > > > > 
+> > > > > So, it is IP CORE LIB (you suggest) vs IP CORE Platform Driver
+> > > > > (dwc3, musb, chipidea) you are talking about, right? Except for
+> > > > > creating another platform driver as well as related DT node (optional),
+> > > > > are there any advantages compared to current IP core driver structure?
+> > > > 
+> > > > Having a library module usually requires less code, and is more
+> > > > consistent with other drivers, which helps new developers understand
+> > > > what the driver is doing.
+> > > 
+> > > I beg to differ. You end-up having to pass function pointers through
+> > > platform_data to handle differences which could be handled by the core
+> > > IP.
+> > > 
+> > > > The most important aspect though is the DT binding: once the structure
+> > > > with separate kernel drivers leaks out into the DT format, you can't
+> > > > easily change the driver any more, e.g. to make a property that was
+> > > > introduced for one glue driver more general so it can get handled by
+> > > > the common part. Having a single node lets us convert to the library
+> > > > model later, so that would be a strong reason to keep the DT binding
+> > > > simple, without child nodes.
+> > > > 
+> > > > Following that logic, it turns into another reason for using the library
+> > > > model to start with, because otherwise the child device does not have
+> > > > any DT properties itself and has to rely on the parent device properties,
+> > > > which somewhat complicates the driver structure.
+> > > 
+> > > this is bullcrap. Take a look at
+> > > Documentation/devicetree/bindings/usb/dwc3.txt:
+> > > 
+> > > synopsys DWC3 CORE
+> > > 
+> > > DWC3- USB3 CONTROLLER
+> > > 
+> > > Required properties:
+> > >  - compatible: must be "snps,dwc3"
+> > >  - reg : Address and length of the register set for the device
+> > >  - interrupts: Interrupts used by the dwc3 controller.
+> > > 
+> > > Optional properties:
+> > >  - usb-phy : array of phandle for the PHY device.  The first element
+> > >    in the array is expected to be a handle to the USB2/HS PHY and
+> > >    the second element is expected to be a handle to the USB3/SS PHY
+> > >  - phys: from the *Generic PHY* bindings
+> > >  - phy-names: from the *Generic PHY* bindings
+> > >  - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+> > > 
+> > > This is usually a subnode to DWC3 glue to which it is connected.
+> > > 
+> > > dwc3@4a030000 {
+> > > 	compatible = "snps,dwc3";
+> > > 	reg = <0x4a030000 0xcfff>;
+> > > 	interrupts = <0 92 4>
+> > > 	usb-phy = <&usb2_phy>, <&usb3,phy>;
+> > > 	tx-fifo-resize;
+> > > };
+> > > 
+> 
+> > Is it possible that the glue layer needs to access core register
+> > (eg, portsc.phcd during suspend)? The wrapper IP may wait some signals
+> > at core IP to change.
+> 
+> why would a glue layer need to access registers from the core ? That
+> sounds very odd. I haven't seen that and will, definitely, NACK such a
+> patch :-)
+> 
 
-Also, not every of_serial device is an 8250 port, so the serial8250
-suspend/resume functions should only be applied to a real 8250 port.
+Just have a case for glue layer needs to know core layer's status.
+The controller's wakeup logic is usually at glue layer, but we
+may need to enable different wakeup for roles. Eg, if the current
+role is host (controller is otg capable), we can't enable id wakeup,
+otherwise, the user will complain plug out Micro-AB cable wakes up
+system which is not expected.
 
-Signed-off-by: Jingchang Lu <jingchang.lu@freescale.com>
----
-changes in v2:
- add switch selection on uart type.
-
- drivers/tty/serial/of_serial.c | 42 ++++++++++++++++++++++++++++++++++++------
- 1 file changed, 36 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
-index 8bc2563..b525383 100644
---- a/drivers/tty/serial/of_serial.c
-+++ b/drivers/tty/serial/of_serial.c
-@@ -245,9 +245,24 @@ static int of_serial_suspend(struct device *dev)
- {
- 	struct of_serial_info *info = dev_get_drvdata(dev);
- 
--	serial8250_suspend_port(info->line);
--	if (info->clk)
--		clk_disable_unprepare(info->clk);
-+	switch(info->type) {
-+#ifdef CONFIG_SERIAL_8250
-+	case PORT_8250 ... PORT_MAX_8250:
-+	{
-+		struct uart_8250_port port8250;
-+		port8250 = serial8250_get_port(info->line);
-+
-+		serial8250_suspend_port(info->line);
-+		if (info->clk &&
-+		    (!uart_console(port8250) ||
-+		     (uart_console(port8250) && console_suspend_enabled)))
-+			clk_disable_unprepare(info->clk);
-+		break;
-+	}
-+#endif
-+	default:
-+		break;
-+	}
- 
- 	return 0;
- }
-@@ -256,10 +271,25 @@ static int of_serial_resume(struct device *dev)
- {
- 	struct of_serial_info *info = dev_get_drvdata(dev);
- 
--	if (info->clk)
--		clk_prepare_enable(info->clk);
-+	switch(info->type) {
-+#ifdef CONFIG_SERIAL_8250
-+	case PORT_8250 ... PORT_MAX_8250:
-+	{
-+		struct uart_8250_port port8250;
-+		port8250 = serial8250_get_port(info->line);
-+
-+		if (info->clk &&
-+		    (!uart_console(port8250) ||
-+		     (uart_console(port8250) && console_suspend_enabled)))
-+			clk_prepare_enable(info->clk);
- 
--	serial8250_resume_port(info->line);
-+		serial8250_resume_port(info->line);
-+		break;
-+	}
-+#endif
-+	default:
-+		break;
-+	}
- 
- 	return 0;
- }
 -- 
-1.8.0
-
+Best Regards,
+Peter Chen
