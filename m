@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 09/15] tpm: dts: st33zp24_i2c: Add DTS Documentation
-Date: Mon, 13 Oct 2014 22:19:33 +0200
-Message-ID: <1413231580-4970-10-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v2 09/15] tpm/tpm_i2c_stm_st33/dts/st33zp24_i2c: Add DTS Documentation
+Date: Mon, 13 Oct 2014 22:19:34 +0200
+Message-ID: <1413231580-4970-11-git-send-email-christophe-h.ricard@st.com>
 References: <1413231580-4970-1-git-send-email-christophe-h.ricard@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
