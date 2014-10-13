@@ -1,111 +1,52 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv2] serial: of-serial: fix up PM ops on no_console_suspend
- and port type
-Date: Mon, 13 Oct 2014 09:49:36 +0000
-Message-ID: <32093fd7578143668ceb84feccecd21d@BL2PR03MB467.namprd03.prod.outlook.com>
-References: <1413185820-5920-1-git-send-email-jingchang.lu@freescale.com>
- <543B9E44.109@nvidia.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [RFC 3/7] ARM: vf610m4: add new machine and SoC for Vybrid on
+ Cortex-M4
+Date: Mon, 13 Oct 2014 12:03:12 +0200
+Message-ID: <776a06abd938d507d7798670e6ad27d1@agner.ch>
+References: <cover.1413136383.git.stefan@agner.ch>
+ <d1b3670556c7c7a11092834abf52eedb22c332b7.1413136383.git.stefan@agner.ch>
+ <2790232.XFn8jX0Lfm@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <543B9E44.109-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <2790232.XFn8jX0Lfm@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org" <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-TXkgbWlzdGFrZSwgSSB3aWxsIGZpeCBpdCwgbWFueSB0aGFua3MuDQoNCkJlc3QgUmVnYXJkcywN
-CkppbmdjaGFuZw0KDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBKb3NlcGgg
-TG8gW21haWx0bzpqb3NlcGhsQG52aWRpYS5jb21dDQo+U2VudDogTW9uZGF5LCBPY3RvYmVyIDEz
-LCAyMDE0IDU6NDEgUE0NCj5UbzogTHUgSmluZ2NoYW5nLUIzNTA4MzsgZ3JlZ2toQGxpbnV4Zm91
-bmRhdGlvbi5vcmcNCj5DYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IHBldGVyQGh1cmxl
-eXNvZnR3YXJlLmNvbTsgYXJuZEBhcm5kYi5kZTsNCj5saW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1zZXJpYWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+a2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmcNCj5TdWJqZWN0OiBSZTogW1BBVENIdjJdIHNlcmlhbDogb2Ytc2Vy
-aWFsOiBmaXggdXAgUE0gb3BzIG9uDQo+bm9fY29uc29sZV9zdXNwZW5kIGFuZCBwb3J0IHR5cGUN
-Cj4NCj5IaSwNCj4NCj5PbiAxMC8xMy8yMDE0IDAzOjM3IFBNLCBKaW5nY2hhbmcgTHUgd3JvdGU6
-DQo+PiBUaGlzIHBhdGNoIGZpeGVzIGNvbW1pdCAyZGVhNTNiZjU3NzgzZjI0M2M4OTJlOTljMTBj
-NjkyMWU5NTZhYTdlLA0KPj4gInNlcmlhbDogb2Ytc2VyaWFsOiBhZGQgUE0gc3VzcGVuZC9yZXN1
-bWUgc3VwcG9ydCIsIHdoaWNoIGRpc2FibGVzDQo+PiB0aGUgdWFydCBjbG9jayBvbiBzdXNwZW5k
-LCBidXQgYWxzbyBjYXVzZXMgYSBoYXJkd2FyZSBoYW5nIG9uIHJlZ2lzdGVyDQo+PiBhY2Nlc3Mg
-aWYgbm9fY29uc29sZV9zdXNwZW5kIGNvbW1hbmQgbGluZSBvcHRpb24gaXMgdXNlZC4NCj4+DQo+
-PiBBbHNvLCBub3QgZXZlcnkgb2Zfc2VyaWFsIGRldmljZSBpcyBhbiA4MjUwIHBvcnQsIHNvIHRo
-ZSBzZXJpYWw4MjUwDQo+PiBzdXNwZW5kL3Jlc3VtZSBmdW5jdGlvbnMgc2hvdWxkIG9ubHkgYmUg
-YXBwbGllZCB0byBhIHJlYWwgODI1MCBwb3J0Lg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEppbmdj
-aGFuZyBMdSA8amluZ2NoYW5nLmx1QGZyZWVzY2FsZS5jb20+DQo+PiAtLS0NCj4+IGNoYW5nZXMg
-aW4gdjI6DQo+PiAgIGFkZCBzd2l0Y2ggc2VsZWN0aW9uIG9uIHVhcnQgdHlwZS4NCj4NCj5BZnRl
-ciBhcHBseSB0aGlzLCBpdCBjYW4ndCBidWlsZCBmb3IgbWUuIEkgc3RpbGwgbmVlZCB0byBhcHBs
-eSB0aGUgZml4DQo+bGlrZSBzb21ldGhpbmcgYmVsb3cuDQo+DQo+ZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvdHR5L3NlcmlhbC9vZl9zZXJpYWwuYw0KPmIvZHJpdmVycy90dHkvc2VyaWFsL29mX3Nlcmlh
-bC5jDQo+aW5kZXggZTUzNWY5YzE1NjNkLi4xNGMxZmY0ZTc4MTYgMTAwNjQ0DQo+LS0tIGEvZHJp
-dmVycy90dHkvc2VyaWFsL29mX3NlcmlhbC5jDQo+KysrIGIvZHJpdmVycy90dHkvc2VyaWFsL29m
-X3NlcmlhbC5jDQo+QEAgLTksNiArOSw3IEBADQo+ICAgKiAgMiBvZiB0aGUgTGljZW5zZSwgb3Ig
-KGF0IHlvdXIgb3B0aW9uKSBhbnkgbGF0ZXIgdmVyc2lvbi4NCj4gICAqDQo+ICAgKi8NCj4rI2lu
-Y2x1ZGUgPGxpbnV4L2NvbnNvbGUuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4g
-ICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvZGVsYXkuaD4NCj5A
-QCAtMjQ4LDEzICsyNDksMTMgQEAgc3RhdGljIGludCBvZl9zZXJpYWxfc3VzcGVuZChzdHJ1Y3Qg
-ZGV2aWNlICpkZXYpDQo+ICAjaWZkZWYgQ09ORklHX1NFUklBTF84MjUwDQo+ICAgICAgICAgY2Fz
-ZSBQT1JUXzgyNTAgLi4uIFBPUlRfTUFYXzgyNTA6DQo+ICAgICAgICAgew0KPi0gICAgICAgICAg
-ICAgICBzdHJ1Y3QgdWFydF84MjUwX3BvcnQgcG9ydDgyNTA7DQo+KyAgICAgICAgICAgICAgIHN0
-cnVjdCB1YXJ0XzgyNTBfcG9ydCAqcG9ydDgyNTA7DQo+ICAgICAgICAgICAgICAgICBwb3J0ODI1
-MCA9IHNlcmlhbDgyNTBfZ2V0X3BvcnQoaW5mby0+bGluZSk7DQo+DQo+ICAgICAgICAgICAgICAg
-ICBzZXJpYWw4MjUwX3N1c3BlbmRfcG9ydChpbmZvLT5saW5lKTsNCj4gICAgICAgICAgICAgICAg
-IGlmIChpbmZvLT5jbGsgJiYNCj4tICAgICAgICAgICAgICAgICAgICghdWFydF9jb25zb2xlKHBv
-cnQ4MjUwKSB8fA0KPi0gICAgICAgICAgICAgICAgICAgICh1YXJ0X2NvbnNvbGUocG9ydDgyNTAp
-ICYmIGNvbnNvbGVfc3VzcGVuZF9lbmFibGVkKSkpDQo+KyAgICAgICAgICAgICAgICAgICAoIXVh
-cnRfY29uc29sZSgmcG9ydDgyNTAtPnBvcnQpIHx8DQo+KyAgICAgICAgICAgICAgICAgICAgKHVh
-cnRfY29uc29sZSgmcG9ydDgyNTAtPnBvcnQpICYmDQo+Y29uc29sZV9zdXNwZW5kX2VuYWJsZWQp
-KSkNCj4gICAgICAgICAgICAgICAgICAgICAgICAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGluZm8t
-PmNsayk7DQo+ICAgICAgICAgICAgICAgICBicmVhazsNCj4gICAgICAgICB9DQo+QEAgLTI3NCwx
-MiArMjc1LDEyIEBAIHN0YXRpYyBpbnQgb2Zfc2VyaWFsX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpk
-ZXYpDQo+ICAjaWZkZWYgQ09ORklHX1NFUklBTF84MjUwDQo+ICAgICAgICAgY2FzZSBQT1JUXzgy
-NTAgLi4uIFBPUlRfTUFYXzgyNTA6DQo+ICAgICAgICAgew0KPi0gICAgICAgICAgICAgICBzdHJ1
-Y3QgdWFydF84MjUwX3BvcnQgcG9ydDgyNTA7DQo+KyAgICAgICAgICAgICAgIHN0cnVjdCB1YXJ0
-XzgyNTBfcG9ydCAqcG9ydDgyNTA7DQo+ICAgICAgICAgICAgICAgICBwb3J0ODI1MCA9IHNlcmlh
-bDgyNTBfZ2V0X3BvcnQoaW5mby0+bGluZSk7DQo+DQo+ICAgICAgICAgICAgICAgICBpZiAoaW5m
-by0+Y2xrICYmDQo+LSAgICAgICAgICAgICAgICAgICAoIXVhcnRfY29uc29sZShwb3J0ODI1MCkg
-fHwNCj4tICAgICAgICAgICAgICAgICAgICAodWFydF9jb25zb2xlKHBvcnQ4MjUwKSAmJiBjb25z
-b2xlX3N1c3BlbmRfZW5hYmxlZCkpKQ0KPisgICAgICAgICAgICAgICAgICAgKCF1YXJ0X2NvbnNv
-bGUoJnBvcnQ4MjUwLT5wb3J0KSB8fA0KPisgICAgICAgICAgICAgICAgICAgICh1YXJ0X2NvbnNv
-bGUoJnBvcnQ4MjUwLT5wb3J0KSAmJg0KPmNvbnNvbGVfc3VzcGVuZF9lbmFibGVkKSkpDQo+ICAg
-ICAgICAgICAgICAgICAgICAgICAgIGNsa19wcmVwYXJlX2VuYWJsZShpbmZvLT5jbGspOw0KPg0K
-PiAgICAgICAgICAgICAgICAgc2VyaWFsODI1MF9yZXN1bWVfcG9ydChpbmZvLT5saW5lKTsNCj4N
-Cj4tSm9zZXBoDQo+DQo+Pg0KPj4gICBkcml2ZXJzL3R0eS9zZXJpYWwvb2Zfc2VyaWFsLmMgfCA0
-Mg0KPisrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLQ0KPj4gICAxIGZp
-bGUgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy90dHkvc2VyaWFsL29mX3NlcmlhbC5jDQo+Yi9kcml2ZXJzL3R0eS9z
-ZXJpYWwvb2Zfc2VyaWFsLmMNCj4+IGluZGV4IDhiYzI1NjMuLmI1MjUzODMgMTAwNjQ0DQo+PiAt
-LS0gYS9kcml2ZXJzL3R0eS9zZXJpYWwvb2Zfc2VyaWFsLmMNCj4+ICsrKyBiL2RyaXZlcnMvdHR5
-L3NlcmlhbC9vZl9zZXJpYWwuYw0KPj4gQEAgLTI0NSw5ICsyNDUsMjQgQEAgc3RhdGljIGludCBv
-Zl9zZXJpYWxfc3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+PiAgIHsNCj4+ICAgCXN0cnVj
-dCBvZl9zZXJpYWxfaW5mbyAqaW5mbyA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KPj4NCj4+IC0J
-c2VyaWFsODI1MF9zdXNwZW5kX3BvcnQoaW5mby0+bGluZSk7DQo+PiAtCWlmIChpbmZvLT5jbGsp
-DQo+PiAtCQljbGtfZGlzYWJsZV91bnByZXBhcmUoaW5mby0+Y2xrKTsNCj4+ICsJc3dpdGNoKGlu
-Zm8tPnR5cGUpIHsNCj4+ICsjaWZkZWYgQ09ORklHX1NFUklBTF84MjUwDQo+PiArCWNhc2UgUE9S
-VF84MjUwIC4uLiBQT1JUX01BWF84MjUwOg0KPj4gKwl7DQo+PiArCQlzdHJ1Y3QgdWFydF84MjUw
-X3BvcnQgcG9ydDgyNTA7DQo+PiArCQlwb3J0ODI1MCA9IHNlcmlhbDgyNTBfZ2V0X3BvcnQoaW5m
-by0+bGluZSk7DQo+PiArDQo+PiArCQlzZXJpYWw4MjUwX3N1c3BlbmRfcG9ydChpbmZvLT5saW5l
-KTsNCj4+ICsJCWlmIChpbmZvLT5jbGsgJiYNCj4+ICsJCSAgICAoIXVhcnRfY29uc29sZShwb3J0
-ODI1MCkgfHwNCj4+ICsJCSAgICAgKHVhcnRfY29uc29sZShwb3J0ODI1MCkgJiYgY29uc29sZV9z
-dXNwZW5kX2VuYWJsZWQpKSkNCj4+ICsJCQljbGtfZGlzYWJsZV91bnByZXBhcmUoaW5mby0+Y2xr
-KTsNCj4+ICsJCWJyZWFrOw0KPj4gKwl9DQo+PiArI2VuZGlmDQo+PiArCWRlZmF1bHQ6DQo+PiAr
-CQlicmVhazsNCj4+ICsJfQ0KPj4NCj4+ICAgCXJldHVybiAwOw0KPj4gICB9DQo+PiBAQCAtMjU2
-LDEwICsyNzEsMjUgQEAgc3RhdGljIGludCBvZl9zZXJpYWxfcmVzdW1lKHN0cnVjdCBkZXZpY2Ug
-KmRldikNCj4+ICAgew0KPj4gICAJc3RydWN0IG9mX3NlcmlhbF9pbmZvICppbmZvID0gZGV2X2dl
-dF9kcnZkYXRhKGRldik7DQo+Pg0KPj4gLQlpZiAoaW5mby0+Y2xrKQ0KPj4gLQkJY2xrX3ByZXBh
-cmVfZW5hYmxlKGluZm8tPmNsayk7DQo+PiArCXN3aXRjaChpbmZvLT50eXBlKSB7DQo+PiArI2lm
-ZGVmIENPTkZJR19TRVJJQUxfODI1MA0KPj4gKwljYXNlIFBPUlRfODI1MCAuLi4gUE9SVF9NQVhf
-ODI1MDoNCj4+ICsJew0KPj4gKwkJc3RydWN0IHVhcnRfODI1MF9wb3J0IHBvcnQ4MjUwOw0KPj4g
-KwkJcG9ydDgyNTAgPSBzZXJpYWw4MjUwX2dldF9wb3J0KGluZm8tPmxpbmUpOw0KPj4gKw0KPj4g
-KwkJaWYgKGluZm8tPmNsayAmJg0KPj4gKwkJICAgICghdWFydF9jb25zb2xlKHBvcnQ4MjUwKSB8
-fA0KPj4gKwkJICAgICAodWFydF9jb25zb2xlKHBvcnQ4MjUwKSAmJiBjb25zb2xlX3N1c3BlbmRf
-ZW5hYmxlZCkpKQ0KPj4gKwkJCWNsa19wcmVwYXJlX2VuYWJsZShpbmZvLT5jbGspOw0KPj4NCj4+
-IC0Jc2VyaWFsODI1MF9yZXN1bWVfcG9ydChpbmZvLT5saW5lKTsNCj4+ICsJCXNlcmlhbDgyNTBf
-cmVzdW1lX3BvcnQoaW5mby0+bGluZSk7DQo+PiArCQlicmVhazsNCj4+ICsJfQ0KPj4gKyNlbmRp
-Zg0KPj4gKwlkZWZhdWx0Og0KPj4gKwkJYnJlYWs7DQo+PiArCX0NCj4+DQo+PiAgIAlyZXR1cm4g
-MDsNCj4+ICAgfQ0KPj4NCg==
+Am 2014-10-12 20:51, schrieb Arnd Bergmann:
+> On Sunday 12 October 2014 20:13:57 Stefan Agner wrote:
+>> This patch adds a new machine ARCH_MXCM4 which requires !MMU and
+>> !MULTIARCH and is meant as machine for the hetregenous multi-core
+>> Vybrid/i.MX SoC's to run Linux on the Cortex-M4.
+>>
+>> The first SoC supported is Vybrid on Cortex-M4 (SOC_VF610M4).
+>>
+>> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+>> ---
+>> Not sure whether we really need a new MACH, but since MACH_MXC needs
+>> MULTIARCH, which in turn conflicts with !MMU, I guess there is no
+>> easier way to do it... And then, this also needs a new SOC.
+> 
+> I've carried an experimental patch to enable !MMU in combination with
+> MULTIPLATFORM for a while, it's probably time to do this for real now,
+> especially since we now have two !MMU platforms that can be built
+> together. Independent of the question of whether such a combined kernel
+> could run on real hardware or anybody would want to run such a kernel
+> if it were possible, I think it's very useful to be able to build
+> allmodconfig with MMU disabled and get all drivers for the available
+> platforms for build testing.
+
+Are these patches online somewhere?
+
+That sounds interesting. I guess I can get rid of ARCH_MXCM4 then.
+Still, SOC_VF610M4 will be needed. We just need to make ARCH_MXC also
+available on !MMU and use if to distinguish !MMU/MMU SoC's.
+
+--
+Stefan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
