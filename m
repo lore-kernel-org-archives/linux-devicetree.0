@@ -1,7 +1,7 @@
 From: Gyungoh Yoo <gyungoh@gmail.com>
-Subject: [RESUBMIT PATCH v4 4/8] devicetree: backlight: Add new SKY81452 backlight binding
-Date: Mon, 13 Oct 2014 14:47:38 +0900
-Message-ID: <1413179262-27636-5-git-send-email-jack.yoo@skyworksinc.com>
+Subject: [RESUBMIT PATCH v4 5/8] devicetree: Add vendor prefix for Skyworks Solutions, Inc.
+Date: Mon, 13 Oct 2014 14:47:39 +0900
+Message-ID: <1413179262-27636-6-git-send-email-jack.yoo@skyworksinc.com>
 References: <1412657745-7812-1-git-send-email-jack.yoo@skyworksinc.com>
  <1413179262-27636-1-git-send-email-jack.yoo@skyworksinc.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -20,41 +20,22 @@ Changes v3:
 Nothing
 
 Changes v2:
-Added reg attribute for I2C slave address
+Added vendor prefix for Skyworks Solutions, Inc.
 
- .../video/backlight/sky81452-backlight.txt         | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt b/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
-new file mode 100644
-index 0000000..2c2d947
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
-@@ -0,0 +1,24 @@
-+SKY81452-backlight bindings
-+
-+Required properties:
-+- compatible		: Must be "skyworks,sky81452-backlight"
-+
-+Optional properties:
-+- name			: Name of backlight device. Default is 'lcd-backlight'.
-+- gpio-enable		: GPIO to use to EN pin.
-+- enable		: Enable mask for current sink channel 1 to 6.
-+- ignore-pwm		: Ignore both PWM input
-+- dpwm-mode		: Enable DPWM dimming mode, otherwise Analog dimming mode
-+- phase-shift		: Enable phase shift mode
-+- ovp-level		: Over-voltage protection level. Should be between 14 or 28V.
-+- short-detection-threshold	: It should be one of 4, 5, 6 and 7V.
-+- boost-current-limit	: It should be one of 800, 1100 and 1500mA.
-+
-+Example:
-+
-+	backlight {
-+		compatible = "skyworks,sky81452-backlight";
-+		name = "pwm-backlight";
-+		enable = <0x3F>;
-+		ignore-pwm;
-+	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index f67e3f8..534a583 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -136,6 +136,7 @@ sii	Seiko Instruments, Inc.
+ silergy	Silergy Corp.
+ sirf	SiRF Technology, Inc.
+ sitronix	Sitronix Technology Corporation
++skyworks	Skyworks Solutions, Inc.
+ smsc	Standard Microsystems Corporation
+ snps 	Synopsys, Inc.
+ solidrun	SolidRun
 -- 
 1.9.1
