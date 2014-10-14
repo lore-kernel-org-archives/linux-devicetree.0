@@ -1,58 +1,60 @@
-From: Anton Tikhomirov <av.tikhomirov@samsung.com>
-Subject: RE: [PATCH v2 1/4] dwc3: exynos: Add support for SCLK present on
- Exynos7
-Date: Tue, 14 Oct 2014 10:26:35 +0900
-Message-ID: <001801cfe74d$e4cb23d0$ae616b70$%tikhomirov@samsung.com>
-References: <1412677176-3850-1-git-send-email-gautam.vivek@samsung.com>
- <1412677176-3850-2-git-send-email-gautam.vivek@samsung.com>
- <00f101cfe6a1$d772c5a0$865850e0$%tikhomirov@samsung.com>
- <543C575A.1030105@gmail.com>
+From: Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
+Subject: Re: [v3] spi: orion: support armada extended baud rates
+Date: Tue, 14 Oct 2014 12:03:12 +1000
+Message-ID: <543C8460.1060508@uclinux.org>
+References: <20141011144857.GA17350@gobelin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ks_c_5601-1987
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <543C575A.1030105@gmail.com>
-Content-language: en-us
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Tomasz Figa' <tomasz.figa@gmail.com>, 'Vivek Gautam' <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org
-Cc: linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, balbi@ti.com, kgene.kim@samsung.com, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, kishon@ti.com
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141011144857.GA17350@gobelin>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Karl Beldan <karl.beldan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Karl,
 
-> Hi Anton,
-> 
-> On 13.10.2014 06:54, Anton Tikhomirov wrote:
-> > Hi Vivek,
-> >
-> >> Exynos7 also has a separate special gate clock going to the IP
-> >> apart from the usual AHB clock. So add support for the same.
-> >
-> > As we discussed before, Exynos7 SoCs have 7 clocks to be controlled
-> > by the driver. Adding only sclk is not enough.
-> >
-> 
-> I'm quite interested in this discussion. Has it happened on mailing
-> lists?
+On 12/10/14 00:52, Karl Beldan wrote:
+> On 28/09/14 23:24:04, Greg Ungerer wrote:
+>> @@ -378,6 +452,10 @@ static int orion_spi_probe(struct platform_device *pdev)
+>>  	spi = spi_master_get_devdata(master);
+>>  	spi->master = master;
+>>  
+>> +	of_id = of_match_device(orion_spi_of_match_table, &pdev->dev);
+>> +	devdata = of_id->data;
+>> +	spi->devdata = devdata;
+>> +
+> Won't of_match_device return NULL on non-DT systems, and further
+> references oops ?
 
-No, we used company messenger for the discussion.
+Yes, sure enough.
 
-> 
-> In general, previous SoCs also gave the possibility of controlling all
-> the bus clocks separately, in addition to bulk gates, but there was no
+So I propose to fix with this change.
 
-correct
+diff --git a/drivers/spi/spi-orion.c b/drivers/spi/spi-orion.c
+index acf8e48..c069ccd 100644
+--- a/drivers/spi/spi-orion.c
++++ b/drivers/spi/spi-orion.c
+@@ -453,7 +453,7 @@ static int orion_spi_probe(struct platform_device *pdev)
+        spi->master = master;
+ 
+        of_id = of_match_device(orion_spi_of_match_table, &pdev->dev);
+-       devdata = of_id->data;
++       devdata = (of_id) ? of_id->data : &orion_spi_dev_data;
+        spi->devdata = devdata;
+ 
+        spi->clk = devm_clk_get(&pdev->dev, NULL);
 
-> real advantage in using those, while burdening the clock tree with
-> numerous clocks. Isn't Exynos7 similar in this aspect?
 
-Exynos7 doesn't have "Gating all clocks for USBDRD30" bit. The clocks
-should be controlled separately.
+Mark: This was generated on linux-3.17-rc7 with the first spi-orion
+patch applied. What do you want it generated against?
 
-> 
-> Best regards,
-> Tomasz
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Greg
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
