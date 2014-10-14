@@ -1,89 +1,110 @@
-From: Caesar Wang <caesar.wang@rock-chips.com>
-Subject: [PATCH v10 3/5] ARM: dts: add RK3288 Thermal data
-Date: Wed, 15 Oct 2014 01:10:06 +0800
-Message-ID: <1413306608-11498-4-git-send-email-caesar.wang@rock-chips.com>
-References: <1413306608-11498-1-git-send-email-caesar.wang@rock-chips.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1413306608-11498-1-git-send-email-caesar.wang@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, arnd@arndb.de
-Cc: zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dmitry.torokhov@gmail.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com, Caesar Wang <caesar.wang@rock-chips.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v3 08/15] tpm/tpm_i2c_stm_st33: Add devicetree structure
+Date: Tue, 14 Oct 2014 11:32:09 -0600
+Message-ID: <20141014173209.GD27232@obsidianresearch.com>
+References: <1413231817-5174-1-git-send-email-christophe-h.ricard@st.com>
+ <1413231817-5174-9-git-send-email-christophe-h.ricard@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1413231817-5174-9-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch changes a dtsi file to contain the thermal data
-on RK3288 and later SoCs. This data will
-enable a thermal shutdown over 125C.
+On Mon, Oct 13, 2014 at 10:23:30PM +0200, Christophe Ricard wrote:
+> Add tpm_stm_st33_i2c dts structure keeping backward compatibility
+> with static platform_data support as well.
+> In the mean time the code is made much simpler by:
+> - Moving all gpio_request to devm_gpio_request_one primitive
 
-Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
----
- arch/arm/boot/dts/rk3288-thermal.dtsi | 57 +++++++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3288-thermal.dtsi
+> - Moving request_irq to devm_request_threaded_irq
 
-diff --git a/arch/arm/boot/dts/rk3288-thermal.dtsi b/arch/arm/boot/dts/rk3288-thermal.dtsi
-new file mode 100644
-index 0000000..c68c090
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-thermal.dtsi
-@@ -0,0 +1,57 @@
-+/*
-+ * Device Tree Source for RK3288 SoC thermal
-+ *
-+ * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+#include <dt-bindings/thermal/thermal.h>
-+
-+reserve_thermal: reserve_thermal {
-+	polling-delay-passive = <500>; /* milliseconds */
-+	polling-delay = <1000>; /* milliseconds */
-+
-+			/* sensor	ID */
-+	thermal-sensors = <&tsadc	0>;
-+
-+};
-+
-+cpu_thermal: cpu_thermal {
-+	polling-delay-passive = <500>; /* milliseconds */
-+	polling-delay = <1000>; /* milliseconds */
-+
-+			/* sensor	ID */
-+	thermal-sensors = <&tsadc	1>;
-+
-+	trips {
-+		cpu_alert0: cpu_alert0 {
-+			temperature = <80000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "passive";
-+		};
-+		cpu_crit: cpu_crit {
-+			temperature = <125000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "critical";
-+		};
-+	};
-+};
-+
-+gpu_thermal: gpu_thermal {
-+	polling-delay-passive = <500>; /* milliseconds */
-+	polling-delay = <1000>; /* milliseconds */
-+
-+			/* sensor	ID */
-+	thermal-sensors = <&tsadc	2>;
-+
-+	trips {
-+		gpu_crit: gpu_crit {
-+			temperature = <125000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "critical";
-+		};
-+	};
-+};
--- 
-1.9.1
+This should move to patch 11, and it doesn't look like threaded_irq is
+necessary anymore?
 
+> +		pr_err("Failed to retrieve lpcpd-gpios from dts.\n");
 
+All these prints should be dev_err, I think, clinet->dev looks like it
+must be valid at this point.
+
+This is a general comment actually, all the pr_* prints look like they
+have access to a struct device and should be dev_* prints.
+
+> +	/* GPIO request and configuration */
+> +	r = devm_gpio_request_one(&client->dev, gpio,
+> +			GPIOF_OUT_INIT_HIGH, "TPM IO LPCPD");
+> +	if (r) {
+> +		pr_err("Failed to request lpcpd pin\n");
+
+Ditto
+
+> +		return -ENODEV;
+
+Return r?
+
+> +	pdata = client->dev.platform_data;
+> +	if (pdata == NULL) {
+> +		pr_err("No platform data\n");
+> +		return -EINVAL;
+> +	}
+
+It would be nice if the platform data was optional since it is now
+the case that the only content (io_lpcd) is optional.
+
+> +		if (r) {
+> +			pr_err("%s : reset gpio_request failed\n", __FILE__);
+> +			return -ENODEV;
+
+Ditto
+
+>  	tpm_dev = devm_kzalloc(&client->dev, sizeof(struct tpm_stm_dev),
+>  			       GFP_KERNEL);
+>  	if (!tpm_dev) {
+>  		dev_info(&client->dev, "cannot allocate memory for tpm
+>  			       data\n");
+
+The print is redundant, kzalloc failure already prints lots of stuff
+
+> +	platform_data = client->dev.platform_data;
+> +	if (!platform_data && client->dev.of_node) {
+> +		r = tpm_stm_i2c_of_request_resources(chip);
+> +		if (r) {
+> +			pr_err("No platform data\n");
+
+If we go down this branch then tpm_stm_i2c_of_request_resources
+already printed, so this print is redundant
+
+> +			goto _tpm_clean_answer;
+> +		}
+> +	} else if (platform_data) {
+> +		r = tpm_stm_i2c_request_resources(client, chip);
+> +		if (r) {
+> +			pr_err("Cannot get platform resources\n");
+
+Ditto
+
+> +			goto _tpm_clean_answer;
+> +		}
+> +	} else {
+> +		pr_err("tpm_stm_st33 platform resources not available\n");
+> +		goto _tpm_clean_answer;
+
+Again, would be nice if platform data was optional
+
+>  		intmask |= TPM_INTF_CMD_READY_INT
+> -			|  TPM_INTF_FIFO_AVALAIBLE_INT
+> -			|  TPM_INTF_WAKE_UP_READY_INT
+> -			|  TPM_INTF_LOCALITY_CHANGE_INT
+>  			|  TPM_INTF_STS_VALID_INT
+>  			|  TPM_INTF_DATA_AVAIL_INT;
+
+This hunk should also go to patch 11, I think..
+
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
