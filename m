@@ -1,39 +1,55 @@
-From: Marcin Obara <marcin_obara-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Subject: Re: [tpmdd-devel] [PATCH v3 12/15] tpm/tpm_i2c_stm_st33: Remove
+From: Christophe Henri RICARD <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Subject: RE: [tpmdd-devel] [PATCH v3 12/15] tpm/tpm_i2c_stm_st33: Remove
  useless i2c read on interrupt registers
-Date: Tue, 14 Oct 2014 10:17:48 +0200
-Message-ID: <CAPxFvEPT8wEt4BfZ7112aFpsowXV2WUHvsN5W9=iKUvmRpcBFw@mail.gmail.com>
+Date: Tue, 14 Oct 2014 10:34:19 +0200
+Message-ID: <0B9F1C5B86169C4EA9D042C251022E4938EC74B63E@SAFEX1MAIL3.st.com>
 References: <1413231817-5174-1-git-send-email-christophe-h.ricard@st.com>
 	<1413231817-5174-13-git-send-email-christophe-h.ricard@st.com>
+ <CAPxFvEPT8wEt4BfZ7112aFpsowXV2WUHvsN5W9=iKUvmRpcBFw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413231817-5174-13-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <CAPxFvEPT8wEt4BfZ7112aFpsowXV2WUHvsN5W9=iKUvmRpcBFw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, tpmdd-devel <tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, christophe-h.ricard-qxv4g6HH51o@public.gmane.org
+To: Marcin Obara <marcin_obara-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "peterhuewe-Mmb7MZpHnFY@public.gmane.org" <peterhuewe-Mmb7MZpHnFY@public.gmane.org>, "ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org" <ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org>, "tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org" <tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Luc BLANC <jean-luc.blanc-qxv4g6HH51o@public.gmane.org>, tpmdd-devel <tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Wasn't last read required for flush write?
-
-2014-10-13 22:23 GMT+02:00 Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> Remove useless i2c read on TPM_INT_ENABLE and TPM_INT_STATUS
->
-> Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-> ---
->  drivers/char/tpm/tpm_i2c_stm_st33.c | 9 ---------
->  1 file changed, 9 deletions(-)
->
-> diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
-> index 388bb64..ed4176e 100644
-> --- a/drivers/char/tpm/tpm_i2c_stm_st33.c
-> +++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
-> @@ -184,7 +184,6 @@ static void clear_interruption(struct tpm_stm_dev *tpm_dev)
->
->         I2C_READ_DATA(tpm_dev, TPM_INT_STATUS, &interrupt, 1);
->         I2C_WRITE_DATA(tpm_dev, TPM_INT_STATUS, &interrupt, 1);
-> -       I2C_READ_DATA(tpm_dev, TPM_INT_STATUS, &interrupt, 1);
->  } /* clear_interruption() */
+SGkgTWFyY2luLA0KDQpJbiB0aGUgY3VycmVudCBjbGVhcl9pbnRlcnJ1cHRpb24gZnVuY3Rpb24s
+IHJlYWRpbmcgdGhlIFRQTV9JTlRfU1RBVFVTIGFmdGVyIGEgd3JpdGUgaGFzIG5vIGVmZmVjdCAo
+YWthOiBmbHVzaGluZyB0aGUgY3VycmVudCByZXF1ZXN0KS4NCkkgYW0gcmVtb3ZpbmcgaXQgYmVj
+YXVzZSB0aGUgaW50ZXJydXB0IHZhbHVlIHJldHJpZXZlZCBhZnRlciB0aGlzIHJlYWQgaXMgbmV2
+ZXIgdXNlZC4NCg0KVGhlIG9ubHkgdGhpbmcgSSBjYW4gdGhpbmsgb2Ygd291bGQgdG8gdmVyaWZ5
+IHRoYXQgdGhlIFRQTV9JTlRfU1RBVFVTIGdvdCB0aGUgZXhwZWN0ZWQgc3RhdGUgYW5kIHJldHVy
+biBhIHN0YXR1cyBjb2RlIGluIGNhc2Ugb2YgZXJyb3IuDQpIb3dldmVyLCBJIGJlbGlldmUgaW4g
+Y2FzZSBvZiBzdWNoIHNpdHVhdGlvbiwgdGhlIFRQTSB3aWxsIGdlbmVyYXRlIG90aGVyIGVycm9y
+IHN1Y2ggYXMgdHJhbnNtaXNzaW9uIGVycm9yIHRoYXQgd2lsbCBiZSBkZXRlY3RlZCBvbiB0aGUg
+b3RoZXIgbGF5ZXJzLg0KDQpCZXN0IFJlZ2FyZHMNCkNocmlzdG9waGUNCg0KLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCkZyb206IG1hcmNpbi5vYmFyYUBnbWFpbC5jb20gW21haWx0bzptYXJj
+aW4ub2JhcmFAZ21haWwuY29tXSBPbiBCZWhhbGYgT2YgTWFyY2luIE9iYXJhDQpTZW50OiBtYXJk
+aSAxNCBvY3RvYnJlIDIwMTQgMTA6MTgNClRvOiBDaHJpc3RvcGhlIFJpY2FyZA0KQ2M6IHBldGVy
+aHVld2VAZ214LmRlOyBhc2hsZXlAYXNobGV5bGFpLmNvbTsgdHBtZGRAc2VsaG9yc3QubmV0OyBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgSmVhbi1MdWMgQkxBTkM7IHRwbWRkLWRldmVsOyBD
+aHJpc3RvcGhlIEhlbnJpIFJJQ0FSRA0KU3ViamVjdDogUmU6IFt0cG1kZC1kZXZlbF0gW1BBVENI
+IHYzIDEyLzE1XSB0cG0vdHBtX2kyY19zdG1fc3QzMzogUmVtb3ZlIHVzZWxlc3MgaTJjIHJlYWQg
+b24gaW50ZXJydXB0IHJlZ2lzdGVycw0KDQpXYXNuJ3QgbGFzdCByZWFkIHJlcXVpcmVkIGZvciBm
+bHVzaCB3cml0ZT8NCg0KMjAxNC0xMC0xMyAyMjoyMyBHTVQrMDI6MDAgQ2hyaXN0b3BoZSBSaWNh
+cmQgPGNocmlzdG9waGUucmljYXJkQGdtYWlsLmNvbT46DQo+IFJlbW92ZSB1c2VsZXNzIGkyYyBy
+ZWFkIG9uIFRQTV9JTlRfRU5BQkxFIGFuZCBUUE1fSU5UX1NUQVRVUw0KPg0KPiBTaWduZWQtb2Zm
+LWJ5OiBDaHJpc3RvcGhlIFJpY2FyZCA8Y2hyaXN0b3BoZS1oLnJpY2FyZEBzdC5jb20+DQo+IC0t
+LQ0KPiAgZHJpdmVycy9jaGFyL3RwbS90cG1faTJjX3N0bV9zdDMzLmMgfCA5IC0tLS0tLS0tLQ0K
+PiAgMSBmaWxlIGNoYW5nZWQsIDkgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL2NoYXIvdHBtL3RwbV9pMmNfc3RtX3N0MzMuYyBiL2RyaXZlcnMvY2hhci90cG0vdHBtX2ky
+Y19zdG1fc3QzMy5jDQo+IGluZGV4IDM4OGJiNjQuLmVkNDE3NmUgMTAwNjQ0DQo+IC0tLSBhL2Ry
+aXZlcnMvY2hhci90cG0vdHBtX2kyY19zdG1fc3QzMy5jDQo+ICsrKyBiL2RyaXZlcnMvY2hhci90
+cG0vdHBtX2kyY19zdG1fc3QzMy5jDQo+IEBAIC0xODQsNyArMTg0LDYgQEAgc3RhdGljIHZvaWQg
+Y2xlYXJfaW50ZXJydXB0aW9uKHN0cnVjdCB0cG1fc3RtX2RldiAqdHBtX2RldikNCj4NCj4gICAg
+ICAgICBJMkNfUkVBRF9EQVRBKHRwbV9kZXYsIFRQTV9JTlRfU1RBVFVTLCAmaW50ZXJydXB0LCAx
+KTsNCj4gICAgICAgICBJMkNfV1JJVEVfREFUQSh0cG1fZGV2LCBUUE1fSU5UX1NUQVRVUywgJmlu
+dGVycnVwdCwgMSk7DQo+IC0gICAgICAgSTJDX1JFQURfREFUQSh0cG1fZGV2LCBUUE1fSU5UX1NU
+QVRVUywgJmludGVycnVwdCwgMSk7DQo+ICB9IC8qIGNsZWFyX2ludGVycnVwdGlvbigpICovDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
