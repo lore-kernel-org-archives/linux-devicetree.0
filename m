@@ -1,59 +1,66 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v4 2/3] dt-bindings: iommu: Add documentation for rockchip iommu
-Date: Tue, 14 Oct 2014 15:45:04 +0800
-Message-ID: <1413272705-9111-3-git-send-email-djkurtz@chromium.org>
-References: <1413272705-9111-1-git-send-email-djkurtz@chromium.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413272705-9111-1-git-send-email-djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RESUBMIT PATCH v4 7/8] regulator: sky81452: Add compatible
+ string for device binding
+Date: Tue, 14 Oct 2014 09:56:06 +0200
+Message-ID: <20141014075606.GN27755@sirena.org.uk>
+References: <1412657745-7812-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1413179262-27636-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1413179262-27636-8-git-send-email-jack.yoo@skyworksinc.com>
+ <20141013103512.GJ27755@sirena.org.uk>
+ <20141014011112.GB2751@jack-ThinkPad-T520>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="xvYBvMhxkRoMdQuV"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141014011112.GB2751@jack-ThinkPad-T520>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gyungoh Yoo <gyungoh@gmail.com>
+Cc: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for Rockchip IOMMU.
 
-Signed-off-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- .../devicetree/bindings/iommu/rockchip,iommu.txt   | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+--xvYBvMhxkRoMdQuV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
-new file mode 100644
-index 0000000..810e058a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
-@@ -0,0 +1,26 @@
-+Rockchip IOMMU
-+==============
-+
-+A Rockchip DRM iommu translates io virtual addresses to physical addresses for
-+its master device.  Each slave device is bound to a single master device, and
-+shares its clocks, power domain and irq.
-+
-+Required properties:
-+- compatible      : Should be "rockchip,iommu"
-+- reg             : Address space for the configuration registers
-+- interrupts      : Interrupt specifier for the IOMMU instance
-+- interrupt-names : Interrupt name for the IOMMU instance
-+- #iommu-cells    : Should be <0>.  This indicates the iommu is a
-+                    "single-master" device, and needs no additional information
-+                    to associate with its master device.  See:
-+                    Documentation/devicetree/bindings/iommu/iommu.txt
-+
-+Example:
-+
-+	vopl_mmu: iommu@0xff940300 {
-+		compatible = "rockchip,iommu";
-+		reg = <0xff940300 0x100>;
-+		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "vopl_mmu";
-+		#iommu-cells = <0>;
-+	};
--- 
-2.1.0.rc2.206.gedb03e5
+On Tue, Oct 14, 2014 at 10:11:12AM +0900, Gyungoh Yoo wrote:
+> On Mon, Oct 13, 2014 at 12:35:12PM +0200, Mark Brown wrote:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > If you're doing anything here you should convert the code to use the
+> > simplified interface for parsing regulator data based on putting the
+> > subnode name and regualtor name in the regulator descriptor.
+
+> Thank you for the review.
+
+> The driver has of_device_id.
+
+> static const struct of_device_id sky81452_reg_of_match[] = {
+>         { .compatible = "skyworks,sky81452-regulator", },
+>         { }
+> };
+
+> And the MFD adds the driver with of_compatible="skyworks,sky81452-regulator".
+> MFD core maps the device node and the regulator driver does
+> not need to parse the subnode name.
+
+No, that's for the device (and as I say I don't think this is a good
+idea).  I'm talking about the parsing of the constraints from the DT.
+
+--xvYBvMhxkRoMdQuV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUPNcRAAoJECTWi3JdVIfQHa0H/0Iycj3P7jFC37wp4ebnDZlx
+0X1UlSpJOf8JKOY1NwqifrOwQDtyoKCEXlpCdmEwW81yFeRGKexq4hoFpCa2x7WY
+Q6Tdube51ZRfZmmCBTssomNhrBpDuXW5qDGEaZ9bcib6lJeOsZvjNr0uxVovAg58
+71j9dWMjv+/t4nLx/cX3HvEi6ppoYrSMhynh05Seo1gUPgis0iKYeR8oPG4KUq7k
+RdMY9xK8x3v3/U75S2E3Uqk2NwsLKYBfqW0niqZjJyVbX3KlRMg11lxksNFP8fsj
+oq3P36/53D1RK4scdDMPHQLI1GwVc9dX8xVlXvZMOjQpDjDwWAT4gRYkqU/89r0=
+=hunQ
+-----END PGP SIGNATURE-----
+
+--xvYBvMhxkRoMdQuV--
