@@ -1,54 +1,164 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: [PATCH v5 2/3] dt-bindings: iommu: Add documentation for rockchip iommu
-Date: Tue, 14 Oct 2014 16:02:41 +0800
-Message-ID: <1413273762-32489-3-git-send-email-djkurtz@chromium.org>
-References: <1413273762-32489-1-git-send-email-djkurtz@chromium.org>
+From: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
+Subject: [PATCH v2] ARM: dts: rockchip: add I2S controllers for rk3066 and rk3188
+Date: Tue, 14 Oct 2014 10:16:37 +0200
+Message-ID: <1413274597-15788-1-git-send-email-julien.chauveau@neo-technologies.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413273762-32489-1-git-send-email-djkurtz@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Grant Grundler <grundler@chromium.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>, Daniel Kurtz <djkurtz@chromium.org>, Simon Xue <xxm@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Rockchip
+	SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for Rockchip IOMMU.
+Add the I2S/PCM controller nodes and pin controls for rk3066 and rk3188.
 
-Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-Signed-off-by: Simon Xue <xxm@rock-chips.com>
+Signed-off-by: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
 ---
- .../devicetree/bindings/iommu/rockchip,iommu.txt   | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+ arch/arm/boot/dts/rk3066a.dtsi | 81 ++++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/rk3188.dtsi  | 26 ++++++++++++++
+ 2 files changed, 107 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
-new file mode 100644
-index 0000000..9a55ac3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
-@@ -0,0 +1,26 @@
-+Rockchip IOMMU
-+==============
-+
-+A Rockchip DRM iommu translates io virtual addresses to physical addresses for
-+its master device.  Each slave device is bound to a single master device, and
-+shares its clocks, power domain and irq.
-+
-+Required properties:
-+- compatible      : Should be "rockchip,iommu"
-+- reg             : Address space for the configuration registers
-+- interrupts      : Interrupt specifier for the IOMMU instance
-+- interrupt-names : Interrupt name for the IOMMU instance
-+- #iommu-cells    : Should be <0>.  This indicates the iommu is a
-+                    "single-master" device, and needs no additional information
-+                    to associate with its master device.  See:
-+                    Documentation/devicetree/bindings/iommu/iommu.txt
-+
-+Example:
-+
-+	vopl_mmu: iommu@ff940300 {
-+		compatible = "rockchip,iommu";
-+		reg = <0xff940300 0x100>;
-+		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "vopl_mmu";
-+		#iommu-cells = <0>;
+diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
+index ad9c2db..d75b01a 100644
+--- a/arch/arm/boot/dts/rk3066a.dtsi
++++ b/arch/arm/boot/dts/rk3066a.dtsi
+@@ -53,6 +53,51 @@
+ 		};
+ 	};
+ 
++	i2s0: i2s@10118000 {
++		compatible = "rockchip,rk3066-i2s";
++		reg = <0x10118000 0x2000>;
++		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2s0_bus>;
++		dmas = <&dmac1_s 4>, <&dmac1_s 5>;
++		dma-names = "tx", "rx";
++		clock-names = "i2s_hclk", "i2s_clk";
++		clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>;
++		status = "disabled";
 +	};
++
++	i2s1: i2s@1011a000 {
++		compatible = "rockchip,rk3066-i2s";
++		reg = <0x1011a000 0x2000>;
++		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2s1_bus>;
++		dmas = <&dmac1_s 6>, <&dmac1_s 7>;
++		dma-names = "tx", "rx";
++		clock-names = "i2s_hclk", "i2s_clk";
++		clocks = <&cru HCLK_I2S1>, <&cru SCLK_I2S1>;
++		status = "disabled";
++	};
++
++	i2s2: i2s@1011c000 {
++		compatible = "rockchip,rk3066-i2s";
++		reg = <0x1011c000 0x2000>;
++		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2s2_bus>;
++		dmas = <&dmac1_s 9>, <&dmac1_s 10>;
++		dma-names = "tx", "rx";
++		clock-names = "i2s_hclk", "i2s_clk";
++		clocks = <&cru HCLK_I2S2>, <&cru SCLK_I2S2>;
++		status = "disabled";
++	};
++
+ 	cru: clock-controller@20000000 {
+ 		compatible = "rockchip,rk3066a-cru";
+ 		reg = <0x20000000 0x1000>;
+@@ -405,6 +450,42 @@
+ 						<RK_GPIO3 20 RK_FUNC_1 &pcfg_pull_default>;
+ 			};
+ 		};
++
++		i2s0 {
++			i2s0_bus: i2s0-bus {
++				rockchip,pins = <RK_GPIO0 7 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 8 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 9 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 10 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 11 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 12 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 13 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 14 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 15 RK_FUNC_1 &pcfg_pull_default>;
++			};
++		};
++
++		i2s1 {
++			i2s1_bus: i2s1-bus {
++				rockchip,pins = <RK_GPIO0 16 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 17 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 18 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 19 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 20 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 21 RK_FUNC_1 &pcfg_pull_default>;
++			};
++		};
++
++		i2s2 {
++			i2s2_bus: i2s2-bus {
++				rockchip,pins = <RK_GPIO0 24 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 25 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 26 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 27 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 28 RK_FUNC_1 &pcfg_pull_default>,
++						<RK_GPIO0 29 RK_FUNC_1 &pcfg_pull_default>;
++			};
++		};
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
+index ddaada7..fa3665a 100644
+--- a/arch/arm/boot/dts/rk3188.dtsi
++++ b/arch/arm/boot/dts/rk3188.dtsi
+@@ -65,6 +65,21 @@
+ 		};
+ 	};
+ 
++	i2s0: i2s@1011a000 {
++		compatible = "rockchip,rk3188-i2s", "rockchip,rk3066-i2s";
++		reg = <0x1011a000 0x2000>;
++		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2s0_bus>;
++		dmas = <&dmac1_s 6>, <&dmac1_s 7>;
++		dma-names = "tx", "rx";
++		clock-names = "i2s_hclk", "i2s_clk";
++		clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>;
++		status = "disabled";
++	};
++
+ 	cru: clock-controller@20000000 {
+ 		compatible = "rockchip,rk3188-cru";
+ 		reg = <0x20000000 0x1000>;
+@@ -395,6 +410,17 @@
+ 						<RK_GPIO3 20 RK_FUNC_1 &pcfg_pull_none>;
+ 			};
+ 		};
++
++		i2s0 {
++			i2s0_bus: i2s0-bus {
++				rockchip,pins = <RK_GPIO1 16 RK_FUNC_1 &pcfg_pull_none>,
++						<RK_GPIO1 17 RK_FUNC_1 &pcfg_pull_none>,
++						<RK_GPIO1 18 RK_FUNC_1 &pcfg_pull_none>,
++						<RK_GPIO1 19 RK_FUNC_1 &pcfg_pull_none>,
++						<RK_GPIO1 20 RK_FUNC_1 &pcfg_pull_none>,
++						<RK_GPIO1 21 RK_FUNC_1 &pcfg_pull_none>;
++			};
++		};
+ 	};
+ };
+ 
 -- 
-2.1.0.rc2.206.gedb03e5
+1.9.1
