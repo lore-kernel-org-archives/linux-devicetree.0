@@ -1,78 +1,59 @@
-From: =?UTF-8?B?S3J6eXN6dG9mIEtvesWCb3dza2k=?= <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 1/2] dt-bindings: mfd: s2mps11: add documentation for
- s2mps15 PMIC
-Date: Tue, 14 Oct 2014 10:43:22 +0200
-Message-ID: <543CE22A.1080605@samsung.com>
-References: <1413274468-8765-1-git-send-email-thomas.ab@samsung.com>
- <1413274468-8765-2-git-send-email-thomas.ab@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1413274468-8765-2-git-send-email-thomas.ab@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Abraham <thomas.ab@samsung.com>, lee.jones@linaro.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/8] ARM: ux500: Add initial support for PM domains
+Date: Tue, 14 Oct 2014 11:12:53 +0200
+Message-ID: <1413277981-27451-1-git-send-email-ulf.hansson@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jack Dai <jack.dai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jinkun Hong <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14.10.2014 10:14, Thomas Abraham wrote:
-> Add dt-binding documentation for s2mps15 PMIC device. The s2mps15 device
-> is similar to s2mps11/14 PMIC device and has 27 LDO and 10 buck regulators.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
-> ---
->  Documentation/devicetree/bindings/mfd/s2mps11.txt |   11 ++++++++---
->  1 files changed, 8 insertions(+), 3 deletions(-)
+This patchset enables initial support for PM domains for ux500.
 
-Looks good.
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+The implementation is based upon the generic PM domain and its corresponding
+DT support, which is used to decribe PM domains and tell what devices resides
+in what PM domain.
 
-P.S. Wrong devicetree-discuss@lists.ozlabs.org list? I receive bounces.
+In this initial step, the VAPE PM domain is added and the devices with
+corresponding drivers that properly implements runtime PM support. Especially,
+to gate the VAPE PM domain drivers must implement register context save/restore.
+Typically that must be done from the driver's runtime PM callbacks.
 
-Best regards,
-Krzysztof
+Currently the generic PM domain, doesn't handle IRQ safe devices very well. For
+example, having such device in a PM domain would keep it always powered. The
+DMA controller in ux500, handled by the ste_dma40 driver is configured as IRQ
+safe. That limitation in the generic PM domain needs to be fixed, prior we can
+add the DMA device to the VAPE PM domain.
 
 
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> index 0e4026a..41ee3f5 100644
-> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> @@ -1,5 +1,5 @@
->  
-> -* Samsung S2MPS11, S2MPS14 and S2MPU02 Voltage and Current Regulator
-> +* Samsung S2MPS11/14/15 and S2MPU02 Voltage and Current Regulator
->  
->  The Samsung S2MPS11 is a multi-function device which includes voltage and
->  current regulators, RTC, charger controller and other sub-blocks. It is
-> @@ -7,8 +7,11 @@ interfaced to the host controller using an I2C interface. Each sub-block is
->  addressed by the host system using different I2C slave addresses.
->  
->  Required properties:
-> -- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic"
-> -              or "samsung,s2mpu02-pmic".
-> +- compatible: Should be one of the following
-> +	- "samsung,s2mps11-pmic"
-> +	- "samsung,s2mps14-pmic"
-> +	- "samsung,s2mps15-pmic"
-> +	- "samsung,s2mpu02-pmic"
->  - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
->  
->  Optional properties:
-> @@ -82,12 +85,14 @@ as per the datasheet of s2mps11.
->  		  - valid values for n are:
->  			- S2MPS11: 1 to 38
->  			- S2MPS14: 1 to 25
-> +			- S2MPS15: 1 to 27
->  			- S2MPU02: 1 to 28
->  		  - Example: LDO1, LDO2, LDO28
->  	- BUCKn
->  		  - valid values for n are:
->  			- S2MPS11: 1 to 10
->  			- S2MPS14: 1 to 5
-> +			- S2MPS15: 1 to 10
->  			- S2MPU02: 1 to 7
->  		  - Example: BUCK1, BUCK2, BUCK9
->  
-> 
+Ulf Hansson (8):
+  dt: bindings: ux500: Add documentation for PM domains
+  dt: bindings: ux500: Add header for PM domains specifiers
+  ARM: ux500: Initial support for PM domains
+  ARM: ux500: Enable Kconfig for the generic PM domain
+  ARM: ux500: Add DT node for ux500 PM domains
+  ARM: ux500: Add sdi devices to the VAPE PM domain
+  ARM: ux500: Add spi and ssp devices to the VAPE PM domain
+  ARM: ux500: Add i2c devices to the VAPE PM domain
+
+ .../devicetree/bindings/arm/ux500/power_domain.txt | 35 ++++++++++
+ arch/arm/boot/dts/ste-dbx5x0.dtsi                  | 22 ++++++
+ arch/arm/mach-ux500/Kconfig                        |  1 +
+ arch/arm/mach-ux500/Makefile                       |  1 +
+ arch/arm/mach-ux500/pm.c                           |  4 ++
+ arch/arm/mach-ux500/pm_domains.c                   | 79 ++++++++++++++++++++++
+ arch/arm/mach-ux500/pm_domains.h                   | 17 +++++
+ include/dt-bindings/arm/ux500_pm_domains.h         | 15 ++++
+ 8 files changed, 174 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/ux500/power_domain.txt
+ create mode 100644 arch/arm/mach-ux500/pm_domains.c
+ create mode 100644 arch/arm/mach-ux500/pm_domains.h
+ create mode 100644 include/dt-bindings/arm/ux500_pm_domains.h
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
