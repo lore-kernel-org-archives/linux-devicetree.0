@@ -1,182 +1,91 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 04/13] ACPI: Document ACPI device specific properties
-Date: Tue, 14 Oct 2014 12:42:06 +0300
-Message-ID: <20141014094206.GD2255@lahna.fi.intel.com>
-References: <2660541.BycO7TFnA2@vostro.rjw.lan>
- <4876377.qMEam54Cox@vostro.rjw.lan>
- <20141013124132.4E08BC408F6@trevor.secretlab.ca>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC 4/7] ARM: dts: add support for Vybrid running on Cortex-M4
+Date: Tue, 14 Oct 2014 12:01:54 +0200
+Message-ID: <4791111.YE0gxP7ZrV@wuerfel>
+References: <cover.1413136383.git.stefan@agner.ch> <5748107.mfAXLUBGQg@wuerfel> <7c474d8f876cbf9adaec55af1dffd6c2@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141013124132.4E08BC408F6@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7c474d8f876cbf9adaec55af1dffd6c2-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 13, 2014 at 02:41:32PM +0200, Grant Likely wrote:
-> On Tue, 07 Oct 2014 02:14:06 +0200
-> , "Rafael J. Wysocki" <rjw@rjwysocki.net>
->  wrote:
-> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > 
-> > This document describes the data format and interfaces of ACPI device
-> > specific properties.
-> > 
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Signed-off-by: Darren Hart <dvhart@linux.intel.com>
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  Documentation/acpi/properties.txt |  376 ++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 376 insertions(+)
-> >  create mode 100644 Documentation/acpi/properties.txt
-> > 
-> > Index: linux-pm/Documentation/acpi/properties.txt
-> > ===================================================================
-> > --- /dev/null
-> > +++ linux-pm/Documentation/acpi/properties.txt
-> > @@ -0,0 +1,376 @@
-> > +ACPI device properties
-> > +======================
-> > +This document describes the format and interfaces of ACPI device
-> > +properties as specified in "Device Properties UUID For _DSD" available
-> > +here:
-> > +
-> > +http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
-> > +
-> > +1. Introduction
-> > +---------------
-> > +In systems that use ACPI and want to take advantage of device specific
-> > +properties, there needs to be a standard way to return and extract
-> > +name-value pairs for a given ACPI device.
-> > +
-> > +An ACPI device that wants to export its properties must implement a
-> > +static name called _DSD that takes no arguments and returns a package of
-> > +packages:
-> > +
-> > +	Name (_DSD, Package () {
-> > +		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > +		Package () {
-> > +			Package () {"name1", <VALUE1>},
-> > +			Package () {"name2", <VALUE2>}
-> > +		}
-> > +	})
-> > +
-> > +The UUID identifies contents of the following package. In case of ACPI
-> > +device properties it is daffd814-6eba-4d8c-8a91-bc9bbf4aa301.
-> > +
-> > +In each returned package, the first item is the name and must be a string.
-> > +The corresponding value can be a string, integer, reference, or package. If
-> > +a package it may only contain strings, integers, and references.
-> > +
-> > +An example device where we might need properties is a device that uses
-> > +GPIOs. In addition to the GpioIo/GpioInt resources the driver needs to
-> > +know which GPIO is used for which purpose.
-> > +
-> > +To solve this we add the following ACPI device properties to the device:
-> > +
-> > +	Device (DEV0)
-> > +	{
-> > +		Name (_CRS, ResourceTemplate () {
-> > +			GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
-> > +				"\\_SB.PCI0.LPC", 0, ResourceConsumer) {0}
-> > +			GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
-> > +				"\\_SB.PCI0.LPC", 0, ResourceConsumer) {1}
-> > +			...
-> > +		})
-> > +
-> > +		Name (_DSD, Package () {
-> > +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > +			Package () {
-> > +				Package () {"reset-gpio", {^DEV0, 0, 0, 0}},
-> > +				Package () {"shutdown-gpio", {^DEV0, 1, 0, 0}},
-> > +			}
-> > +		})
-> > +	}
-> > +
-> > +Now the device driver can reference the GPIOs using names instead of
-> > +using indexes.
+On Monday 13 October 2014 23:20:38 Stefan Agner wrote:
+> Ah ok I see. This parent/child relation is not yet part of the Vybrid
+> device tree:
 > 
-> Ummm... so this is kind of odd. Why would arguments be needed for the
-> gpio reference, or a device trying to reference itself (^DEV0) within
-> it's own device.
-
-The reference doesn't need to be the device itself. It can be the parent
-device for example.
-
-Also arguments contain information that is not available in ACPI GpioIo
-resources:
-
- - Name of the GPIO
- - Is the GPIO active low
-
-Remember that we can write the above also like:
-
-		Name (_CRS, ResourceTemplate () {
-			GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
-				"\\_SB.PCI0.LPC", 0, ResourceConsumer) {0, 1}
-			...
-		})
-
-		Name (_DSD, Package () {
-			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-			Package () {
-				Package () {"reset-gpio", {^DEV0, 0, 0, 0}},
-				Package () {"shutdown-gpio", {^DEV0, 0, 1, 0}},
-			}
-		})
-
-So the first two integers are used as indexes in _CRS and in the
-pinlist.
-
-> It looks like it is trying to shoehorn DT design patterns into the ACPI
-> tables when ACPI already has a native method for doing the same thing.
-> That concerns me.
-
-There is no native method in ACPI to do what we are doing.
-
-> [...]
-> > +In addition to simple object references it is also possible to have object
-> > +references with arguments. These are represented in ASL as follows:
-> > +
-> > +	Device (\_SB.PCI0.PWM)
-> > +	{
-> > +		Name (_DSD, Package () {
-> > +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > +			Package () {
-> > +				Package () {"#pwm-cells", 2}
-> > +			}
-> > +		})
-> > +	}
-> > +
-> > +	Device (\_SB.PCI0.BL)
-> > +	{
-> > +		Name (_DSD, Package () {
-> > +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > +			Package () {
-> > +				Package () {
-> > +					"pwms",
-> > +					Package () {
-> > +						\_SB.PCI0.PWM, 0, 5000000,
-> > +						\_SB.PCI0.PWM, 1, 4500000,
-> > +					}
-> > +				}
-> > +			}
-> > +		})
-> > +	}
 > 
-> This worries me even more. #x-cells is a very devicetree oriented
-> pattern that looks wrong for ACPI data. I would expect PWM resources in
-> ACPI to look much like ACPI GPIO resources or Serial bus resources.
+> slowosc: sxosc {
+>         compatible = "fixed-clock";
+>         #clock-cells = <0>;
+>         clock-frequency = <32768>;
+> };
+> fastosc: fxosc {
+>         compatible = "fixed-clock";
+>         #clock-cells = <0>;
+>         clock-frequency = <24000000>;
+> };
+> 
+> ....
+> 
+> clks: ccm@4006b000 {
+>         compatible = "fsl,vf610-ccm";
+>         reg = <0x4006b000 0x1000>;
+>         #clock-cells = <1>;
+> };
+> 
+> So we would need something like:
+> 
+> clocks = <&slowosc>, <&fastosc>;
+> clock-names = "sxosc", "fxosc";
+> 
+> But how can we identify clock tree entries? There is no marker like
+> "clock-controller;" currently, is there?
 
-This was already discussed in v3 version of the series and our argument
-here is that we should be able to reuse the existing DT schemas as much
-as possible as long as ACPI does not have a native method to describe
-the thing (and it makes sense in general).
+Actually it seems the of_clk_init does have all the code it needs:
 
-However, nothing prevents us to extend the
-acpi_dev_get_property_reference() in future to support a more ACPI style
-way of doing things:
+        for_each_matching_node_and_match(np, matches, &match) {
+                struct clock_provider *parent =
+                        kzalloc(sizeof(struct clock_provider),  GFP_KERNEL);
 
-http://www.spinics.net/lists/linux-acpi/msg53367.html
+                parent->clk_init_cb = match->data;
+                parent->np = np;
+                list_add_tail(&parent->node, &clk_provider_list);
+        }
+
+        while (!list_empty(&clk_provider_list)) {
+                is_init_done = false;
+                list_for_each_entry_safe(clk_provider, next,
+                                        &clk_provider_list, node) {
+                        if (force || parent_ready(clk_provider->np)) {
+
+                                clk_provider->clk_init_cb(clk_provider->np);
+                                of_clk_set_defaults(clk_provider->np, true);
+
+                                list_del(&clk_provider->node);
+                                kfree(clk_provider);
+                                is_init_done = true;
+                        }
+                }
+
+                /*
+                 * We didn't manage to initialize any of the
+                 * remaining providers during the last loop, so now we
+                 * initialize all the remaining ones unconditionally
+                 * in case the clock parent was not mandatory
+                 */
+                if (!is_init_done)
+                        force = true;
+        }
+
+You are just missing the clock properties to describe the hierarchy
+in your dts.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
