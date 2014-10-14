@@ -1,220 +1,338 @@
-From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] DT: iio: vadc: document dt binding
-Date: Tue, 14 Oct 2014 12:27:27 +0300
-Message-ID: <543CEC7F.50208@mm-sol.com>
-References: <1411563415-11933-1-git-send-email-svarbanov@mm-sol.com> <1411563415-11933-3-git-send-email-svarbanov@mm-sol.com> <20141013150039.GB16598@leverpostej>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH v3 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Tue, 14 Oct 2014 12:36:48 +0300
+Message-ID: <543CEEB0.10601@mm-sol.com>
+References: <1411563415-11933-1-git-send-email-svarbanov@mm-sol.com> <1411563415-11933-2-git-send-email-svarbanov@mm-sol.com> <543AFBBC.50400@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141013150039.GB16598@leverpostej>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>Jo
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <543AFBBC.50400@gmx.de>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Hartmut Knaack <knaack.h@gmx.de>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collinsd@c>
 List-Id: devicetree@vger.kernel.org
 
-Mark,
-
-Thanks for the comments!
-
-On 10/13/2014 06:00 PM, Mark Rutland wrote:
-> On Wed, Sep 24, 2014 at 01:56:55PM +0100, Stanimir Varbanov wrote:
->> Document DT binding for Qualcomm SPMI PMIC voltage ADC
->> driver.
+On 10/13/2014 01:07 AM, Hartmut Knaack wrote:
+> Stanimir Varbanov schrieb am 24.09.2014 14:56:
+>> The voltage ADC is peripheral of Qualcomm SPMI PMIC chips. It has
+>> 15bits resolution and register space inside PMIC accessible across
+>> SPMI bus.
 >>
->> Signed-off-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+>> The vadc driver registers itself through IIO interface.
+> Quite a lot of changes. Please see my comments inline.
+>>
+>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+>> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
 >> ---
->>  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  130 ++++++++++++++++++++
->>  1 files changed, 130 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+>>  drivers/iio/adc/Kconfig                       |   10 +
+>>  drivers/iio/adc/Makefile                      |    1 +
+>>  drivers/iio/adc/qcom-spmi-vadc.c              | 1029 +++++++++++++++++++++++++
+>>  include/dt-bindings/iio/qcom,spmi-pmic-vadc.h |  119 +++
+>>  4 files changed, 1159 insertions(+), 0 deletions(-)
+>>  create mode 100644 drivers/iio/adc/qcom-spmi-vadc.c
+>>  create mode 100644 include/dt-bindings/iio/qcom,spmi-pmic-vadc.h
 >>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->> new file mode 100644
->> index 0000000..fa30300
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->> @@ -0,0 +1,130 @@
->> +Qualcomm's SPMI PMIC voltage ADC
->> +
->> +SPMI PMIC voltage ADC (VADC) provides interface to clients to read
->> +voltage. A 15 bit ADC is used for voltage measurements. There are multiple
->> +peripherals to the VADC and the scope of the driver is to provide interface
->> +for the USR peripheral of the VADC.
->> +
->> +VADC node:
->> +
->> +- compatible:
->> +    Usage: required
->> +    Value type: <string>
-> 
-> Technically this is a list of strings.
 
-true, will correct.
-
-> 
->> +    Definition: Should contain "qcom,spmi-vadc".
->> +
->> +- reg:
->> +    Usage: required
->> +    Value type: <u32>
-> 
-> This is an address + size pair, not a u32 (following your example).
-> 
->> +    Definition: Base address in the SPMI PMIC register map.
-> 
-> And the size, too.
-> 
-
-will rephrase.
+<snip>
 
 >> +
->> +- address-cells:
->> +    Usage: required
->> +    Value type: <u32>
->> +    Definition: Must be one.
-> 
-> #address-cells.
-> 
-> What would this cell represent within the ADC?
-
-"reg" property is used to describe ADC channel number in ADC child nodes.
-
-> 
+>> +static int vadc_reset(struct vadc_priv *vadc)
+>> +{
+>> +	u8 data;
+>> +	int ret;
 >> +
->> +- size-cells:
->> +    Usage: required
->> +    Value type: <u32>
->> +    Definition: Must be zero.
-> 
-> #size-cells.
-> 
+>> +	ret = vadc_write(vadc, VADC_ACCESS, VADC_ACCESS_DATA);
+>> +	if (ret)
+>> +		return ret;
 >> +
->> +- interrupts:
->> +    Usage: optional
->> +    Value type: <prop-encoded-array>
->> +    Definition: End of conversion interrupt number. If this property does
->> +            not exist polling will be used instead.
-> 
-> Just say "end of conversion interrupt". The interrupts property is
-> standard, and driver behaviour is not a property of the device.
-
-OK.
-
-> 
+>> +	ret = vadc_read(vadc, VADC_PERH_RESET_CTL3, &data);
+>> +	if (ret)
+>> +		return ret;
 >> +
->> +- interrupt-names:
->> +    Usage: optional
->> +    Value type: <string>
->> +    Definition: Should contain the interrupt name "eoc" (end of conversion).
-> 
-> If you wish to use interrupt-names, please define interrupts in terms of
-> interrupt-names so as to make the relationship clear and to avoid
-> redundancy.
-> 
+>> +	ret = vadc_write(vadc, VADC_ACCESS, VADC_ACCESS_DATA);
+>> +	if (ret)
+>> +		return ret;
 >> +
->> +Channel node properties:
+>> +	data |= VADC_FOLLOW_WARM_RB;
 >> +
->> +- reg:
->> +    Usage: required
->> +    Value type: <u32>
->> +    Definition: AMUX channel number.
->> +            See include/dt-bindings/iio/qcom,spmi-pmic-vadc.h
-> 
-> That header should be part of this patch (and this patch should come
-> before the driver).
-
-Sure will rebase the series.
-
-> 
+>> +	return vadc_write(vadc, VADC_PERH_RESET_CTL3, data);
+>> +}
 >> +
->> +- qcom,decimation:
->> +    Usage: optional
->> +    Value type: <u32>
->> +    Definition: Sampling rate to use for the individual channel measurement.
->> +            Quicker measurements can be made by reducing decimation ratio.
->> +            Valid values are 512, 1024, 2048, 4096.
->> +            If property is not found, default value of 512 will be used.
-> 
-> This description does not make sense. If reducing the value increases
-> the sampling rate, this property should not be described as the
-> "sampling rate".
-
-I blindly copped above description from codeaurora kernel. From the
-above I understand that reducing decimation ratio will decrease
-conversion time.
-
-Without go into signal processing theory, what about this:
-
-Definition: Decimation factor per channel. Valid values are 512, 1024,
-2048 and 4096.
-
-I'm expecting the reader will be familiar enough how the decimation will
-reflect on the data rate and conversion time.
-
-> 
-> This feels like something that should be runtime configurable rather
-> than a fixed device property.
-
-Currently the IIO hasn't generic way to configure such a properties.
-
-Jonathan, could you share your opinion on that.
-
-> 
+>> +static int vadc_enable(struct vadc_priv *vadc, bool state)
+>> +{
+>> +	return vadc_write(vadc, VADC_EN_CTL1, state ? VADC_EN_CTL1_SET : 0);
+>> +}
 >> +
->> +- qcom,pre-scaling:
->> +    Usage: optional
->> +    Value type: <u32 array>
->> +    Definition: Used for scaling the channel input signal before the signal is
->> +            fed to VADC. The configuration for this node is to know the
->> +            pre-determined ratio and use it for post scaling. Select one from
->> +            the following options.
->> +            <1 1>, <1 3>, <1 4>, <1 6>, <1 20>, <1 8>, <10 81>, <1 10>
->> +            If property is not found default value depending of chip will be used.
+>> +#ifdef DEBUG
+>> +static void vadc_show_status(struct vadc_priv *vadc)
+>> +{
+> You could also move the #ifdef in here...
+>> +	u8 mode, sta1, chan, dig, en, req;
+>> +	int ret;
 >> +
->> +- qcom,ratiometric:
->> +    Usage: optional
->> +    Value type: <empty>
->> +    Definition: Channel calibration type. If this property is specified
->> +            VADC will use the VDD reference(1.8V) and GND for channel
->> +            calibration. If property is not found, channel will be
->> +            calibrated with 625mV and 1.25V reference channels.
->> +            Otherwise the absolute calibration will be used.
-> 
-> Surely this should be part of the specifier?
-
-Do you mean last sentence, if so no I'm not.
-
-> 
+>> +	ret = vadc_read(vadc, VADC_MODE_CTL, &mode);
+>> +	if (ret)
+>> +		return;
 >> +
->> +- qcom,hw-settle-time:
->> +    Usage: optional
->> +    Value type: <u32>
->> +    Definition: Time between AMUX getting configured and the ADC starting
->> +            conversion. Delay = 100us * (value) for value < 11, and
->> +            2ms * (value - 10) otherwise.
->> +            Valid values are: 0, 100, 200, 300, 400, 500, 600, 700, 800,
->> +            900 us and 1, 2, 4, 6, 8, 10 ms
->> +            If property is not found, channel will use 0us.
+>> +	ret = vadc_read(vadc, VADC_ADC_DIG_PARAM, &dig);
+>> +	if (ret)
+>> +		return;
 >> +
->> +- qcom,avg-samples:
->> +    Usage: optional
->> +    Value type: <u32>
->> +    Definition: Number of samples to be used for measurement.
->> +            Fast averaging provides the option to obtain a single measurement
->> +            from the ADC that is an average of multiple samples. The value
->> +            selected is 2^(value).
->> +            Valid values are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
->> +            If property is not found, 1 sample will be used.
+>> +	ret = vadc_read(vadc, VADC_ADC_CH_SEL_CTL, &chan);
+>> +	if (ret)
+>> +		return;
+>> +
+>> +	ret = vadc_read(vadc, VADC_CONV_REQ, &req);
+>> +	if (ret)
+>> +		return;
+>> +
+>> +	ret = vadc_read(vadc, VADC_STATUS1, &sta1);
+>> +	if (ret)
+>> +		return;
+>> +
+>> +	ret = vadc_read(vadc, VADC_EN_CTL1, &en);
+>> +	if (ret)
+>> +		return;
+>> +
+>> +	dev_dbg(vadc->dev,
+>> +		"mode:%02x en:%02x chan:%02x dig:%02x req:%02x sta1:%02x\n",
+>> +		mode, en, chan, dig, req, sta1);
+> ...and the #endif here. Saves 2 lines of code ;-)
+
+I don't like #ifdefs in function body, it makes code unreadable at least
+for me :)
+
+>> +}
+>> +#else
+>> +static void vadc_show_status(struct vadc_priv *vadc) {}
+>> +#endif
+>> +
+
+<snip>
+
+>> +
+>> +static int vadc_get_dt_channel_data(struct device *dev,
+>> +				    struct vadc_channel_prop *prop,
+>> +				    struct device_node *node)
+>> +{
+>> +	const char *name = node->name;
+>> +	u32 chan, value, varr[2];
+>> +	int ret;
+>> +
+>> +	ret = of_property_read_u32(node, "reg", &chan);
+>> +	if (ret) {
+>> +		dev_dbg(dev, "invalid channel number %s\n", name);
+>> +		return ret;
+>> +	}
+>> +
+>> +	if (chan > VADC_CHAN_MAX || chan < VADC_CHAN_MIN) {
+>> +		dev_dbg(dev, "%s invalid channel number %d\n", name, chan);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	/* the channel has DT description */
+>> +	prop->channel = chan;
+>> +
+>> +	ret = of_property_read_u32(node, "qcom,decimation", &value);
+>> +	if (!ret) {
+>> +		ret = vadc_decimation_from_dt(value);
+>> +		if (ret < 0) {
+>> +			dev_dbg(dev, "%02x invalid decimation %d\n",
+>> +				chan, value);
+>> +			return ret;
+>> +		}
+>> +		prop->decimation = ret;
+>> +	} else {
+>> +		prop->decimation = VADC_DEF_DECIMATION;
+>> +	}
+>> +
+>> +	ret = of_property_read_u32_array(node, "qcom,pre-scaling", varr, 2);
+>> +	if (!ret) {
+>> +		ret = vadc_prescaling_from_dt(varr[0], varr[1]);
+>> +		if (ret < 0) {
+>> +			dev_dbg(dev, "%02x invalid pre-scaling <%d %d>\n",
+>> +				chan, varr[0], varr[1]);
+>> +			return ret;
+>> +		}
+>> +		prop->prescale = ret;
+>> +	} else {
+>> +		prop->prescale = vadc_chans[prop->channel].prescale_index;
+>> +	}
+>> +
+>> +	ret = of_property_read_u32(node, "qcom,hw-settle-time", &value);
+>> +	if (!ret) {
+>> +		ret = vadc_hw_settle_time_from_dt(value);
+>> +		if (ret < 0) {
+>> +			dev_dbg(dev, "%02x invalid hw-settle-time %d, us\n",
+> The colon inside the string is probably an unintended leftover?
+
+correct.
+
+>> +				chan, value);
+>> +			return ret;
+>> +		}
+>> +		prop->hw_settle_time = ret;
+>> +	} else {
+>> +		prop->hw_settle_time = VADC_DEF_HW_SETTLE_TIME;
+>> +	}
+>> +
+>> +	ret = of_property_read_u32(node, "qcom,avg-samples", &value);
+>> +	if (!ret) {
+>> +		ret = vadc_avg_samples_from_dt(value);
+>> +		if (ret < 0) {
+>> +			dev_dbg(dev, "%02x invalid avg-samples %d\n",
+>> +				chan, value);
+>> +			return ret;
+>> +		}
+>> +		prop->avg_samples = ret;
+>> +	} else {
+>> +		prop->avg_samples = VADC_DEF_AVG_SAMPLES;
+>> +	}
+>> +
+>> +	if (of_property_read_bool(node, "qcom,ratiometric"))
+>> +		prop->calibration = VADC_CALIB_RATIOMETRIC;
+>> +	else
+>> +		prop->calibration = VADC_CALIB_ABSOLUTE;
+>> +
+>> +	dev_dbg(dev, "%02x name %s\n", chan, name);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int vadc_get_dt_data(struct vadc_priv *vadc, struct device_node *node)
+>> +{
+>> +	struct iio_chan_spec *iio_chan = vadc->iio_chans;
+>> +	const struct vadc_channels *vadc_chan;
+>> +	struct vadc_channel_prop prop;
+>> +	struct device_node *child;
+>> +	int ret, index = 0;
+> index could be defined unsigned, as it should only carry unsigned values.
+
+makes sense.
+
+>> +
+>> +	for_each_available_child_of_node(node, child) {
+>> +		ret = vadc_get_dt_channel_data(vadc->dev, &prop, child);
+>> +		if (ret)
+>> +			return ret;
+>> +
+>> +		vadc->chan_props[index] = prop;
+>> +
+>> +		vadc_chan = &vadc_chans[prop.channel];
+>> +
+>> +		iio_chan->channel = prop.channel;
+>> +		iio_chan->datasheet_name = vadc_chan->datasheet_name;
+>> +		iio_chan->info_mask_separate = vadc_chan->info_mask;
+>> +		iio_chan->type = vadc_chan->type;
+>> +		iio_chan->indexed = 1;
+>> +		iio_chan->scan_type.sign = 's';
+>> +		iio_chan->scan_type.realbits = 15;
+>> +		iio_chan->scan_type.storagebits = 16;
+>> +		iio_chan->address = index++;
+>> +
+>> +		iio_chan++;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+
+<snip>
+
+>> +
+>> +static int vadc_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device_node *node = pdev->dev.of_node;
+>> +	struct device *dev = &pdev->dev;
+>> +	struct iio_dev *indio_dev;
+>> +	struct vadc_priv *vadc;
+>> +	struct resource *res;
+>> +	struct regmap *regmap;
+>> +	int ret, irq_eoc;
+>> +
+>> +	regmap = dev_get_regmap(dev->parent, NULL);
+>> +	if (!regmap)
+>> +		return -ENODEV;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
+>> +	if (!res)
+>> +		return -ENODEV;
+>> +
+>> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*vadc));
+>> +	if (!indio_dev)
+>> +		return -ENOMEM;
+>> +
+>> +	vadc = iio_priv(indio_dev);
+>> +	vadc->regmap = regmap;
+>> +	vadc->dev = dev;
+>> +	vadc->base = res->start;
+>> +	vadc->are_ref_measured = false;
+>> +	init_completion(&vadc->complete);
+>> +
+>> +	ret = vadc_check_revision(vadc);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	vadc->nchannels = of_get_available_child_count(node);
+>> +	if (!vadc->nchannels)
+>> +		return -EINVAL;
+>> +
+>> +	vadc->iio_chans = devm_kcalloc(dev, vadc->nchannels,
+>> +				       sizeof(*vadc->iio_chans), GFP_KERNEL);
+>> +	if (!vadc->iio_chans)
+>> +		return -ENOMEM;
+>> +
+>> +	vadc->chan_props = devm_kcalloc(dev, vadc->nchannels,
+>> +					sizeof(*vadc->chan_props), GFP_KERNEL);
+>> +	if (!vadc->chan_props)
+>> +		return -ENOMEM;
+>> +
+>> +	ret = vadc_get_dt_data(vadc, node);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	irq_eoc = platform_get_irq(pdev, 0);
+>> +	if (irq_eoc < 0) {
+>> +		if (irq_eoc == -EPROBE_DEFER || irq_eoc == -EINVAL)
+>> +			return irq_eoc;
+>> +		vadc->poll_eoc = true;
+>> +	}
+>> +
+> Isn't the part below actually the else section of the part above (and device_init_wakeup() belonging up there)?
+
+you are right, might be I wanted to avoid indentation issues. Will see
+how to make it better.
+
+>> +	if (!vadc->poll_eoc) {
+>> +		ret = devm_request_irq(dev, irq_eoc, vadc_isr,
+>> +				       IRQF_TRIGGER_RISING, "spmi-vadc", vadc);
+>> +		if (!ret)
+>> +			enable_irq_wake(irq_eoc);
+>> +		else
+>> +			return ret;
+> Usually this is done this way:
+
+yes, I know just oversight it.
+
+> 		if (ret)
+> 			return ret;
 > 
-> Likewise.
+> 		enable_irq_wake(irq_eoc);
+>> +	} else {
+>> +		device_init_wakeup(vadc->dev, true);
+>> +	}
+>> +
+>> +	ret = vadc_reset(vadc);
+>> +	if (ret) {
+>> +		dev_dbg(dev, "reset failed\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	platform_set_drvdata(pdev, vadc);
+> Why bother to call platform_set_drvdata()?
 
-ditto
-
-> 
-> thanks,
-> Mark.
-
+Seems leftover, will delete.
 
 -- 
 regards,
