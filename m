@@ -1,206 +1,46 @@
 From: Philipp Zabel <pza-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] ARM: meson: reset: Add reset controller for
- MesonX SoCs
-Date: Wed, 15 Oct 2014 00:36:51 +0200
-Message-ID: <20141014223651.GA15055@pengutronix.de>
+Subject: Re: [PATCH v2 2/3] ARM: meson: DTSI: Enable reset controller
+Date: Wed, 15 Oct 2014 00:38:00 +0200
+Message-ID: <20141014223800.GB15055@pengutronix.de>
 References: <1413311749-13948-1-git-send-email-carlo@caione.org>
- <1413311749-13948-2-git-send-email-carlo@caione.org>
+ <1413311749-13948-3-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1413311749-13948-2-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1413311749-13948-3-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 Cc: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Carlo,
-
-On Tue, Oct 14, 2014 at 08:35:47PM +0200, Carlo Caione wrote:
-> This patch adds support for the reset controller found on the Amlogic
-> MesonX SoCs. For several devices in the AO (Always-On) power domain, it
-> is possible to reset them by programming a specific bit in a register.
+On Tue, Oct 14, 2014 at 08:35:48PM +0200, Carlo Caione wrote:
+> Add the node for the reset controller in the DTSI.
 > 
 > Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 > ---
->  drivers/reset/Makefile      |   1 +
->  drivers/reset/reset-meson.c | 142 ++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 143 insertions(+)
->  create mode 100644 drivers/reset/reset-meson.c
+>  arch/arm/boot/dts/meson.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index 60fed3d..74f2372 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -1,4 +1,5 @@
->  obj-$(CONFIG_RESET_CONTROLLER) += core.o
->  obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
->  obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
-> +obj-$(CONFIG_ARCH_MESON) += reset-meson.o
->  obj-$(CONFIG_ARCH_STI) += sti/
-> diff --git a/drivers/reset/reset-meson.c b/drivers/reset/reset-meson.c
-> new file mode 100644
-> index 0000000..59b58e4
-> --- /dev/null
-> +++ b/drivers/reset/reset-meson.c
-> @@ -0,0 +1,142 @@
-> +/*
-> + * Copyright 2014 Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-> + *
-> + * based on
-> + * Steffen Trumtrar Reset Controller driver
+> diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
+> index e6539ea..1ca864e 100644
+> --- a/arch/arm/boot/dts/meson.dtsi
+> +++ b/arch/arm/boot/dts/meson.dtsi
+> @@ -75,6 +75,12 @@
+>  			reg = <0xc1109900 0x8>;
+>  		};
+>  
+> +		reset_AO: reset@c8100040 {
+> +			#reset-cells = <1>;
+> +			compatible = "amlogic,meson6-rst-mgr-ao";
+> +			reg = <0xc8100040 0x4>;
+> +		};
+> +
+>  		uart_AO: serial@c81004c0 {
+>  			compatible = "amlogic,meson-uart";
+>  			reg = <0xc81004c0 0x14>;
 
-That doesn't sound right. Do you mean socfpga-reset?
-
-> + * Copyright 2014 Steffen Trumtrar
-> + *
-> + * Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-Could be combined into a single line.
-
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/types.h>
-> +
-> +#define MESON_RST_OFFSET	0x00
-
-If there is only one register, I see no need for this.
-
-> +struct meson_reset_data {
-> +	spinlock_t			lock;
-> +	void __iomem			*membase;
-> +	struct reset_controller_dev	rcdev;
-> +};
-> +
-> +static int meson_reset_assert(struct reset_controller_dev *rcdev,
-> +			      unsigned long id)
-> +{
-> +	struct meson_reset_data *data = container_of(rcdev,
-> +						     struct meson_reset_data,
-> +						     rcdev);
-> +	unsigned long flags;
-> +	u32 reg;
-> +
-> +	spin_lock_irqsave(&data->lock, flags);
-> +
-> +	reg = readl(data->membase + MESON_RST_OFFSET);
-> +	writel(reg | BIT(id), data->membase + MESON_RST_OFFSET);
-> +
-> +	spin_unlock_irqrestore(&data->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int meson_reset_deassert(struct reset_controller_dev *rcdev,
-> +				unsigned long id)
-> +{
-> +	struct meson_reset_data *data = container_of(rcdev,
-> +						     struct meson_reset_data,
-> +						     rcdev);
-> +
-> +	unsigned long flags;
-> +	u32 reg;
-> +
-> +	spin_lock_irqsave(&data->lock, flags);
-> +
-> +	reg = readl(data->membase + MESON_RST_OFFSET);
-> +	writel(reg & ~BIT(id), data->membase + MESON_RST_OFFSET);
-> +
-> +	spin_unlock_irqrestore(&data->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int meson_reset_dev(struct reset_controller_dev *rcdev, unsigned long id)
-> +{
-> +	int err;
-> +
-> +	err = meson_reset_assert(rcdev, id);
-> +	if (err)
-> +		return err;
-> +
-> +	return meson_reset_deassert(rcdev, id);
-> +}
-> +
-> +static struct reset_control_ops meson_reset_ops = {
-> +	.assert		= meson_reset_assert,
-> +	.deassert	= meson_reset_deassert,
-> +	.reset		= meson_reset_dev,
-> +};
-> +
-> +static int meson_reset_probe(struct platform_device *pdev)
-> +{
-> +	struct meson_reset_data *data;
-> +	struct resource *res;
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	data->membase = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(data->membase))
-> +		return PTR_ERR(data->membase);
-> +
-> +	spin_lock_init(&data->lock);
-> +
-> +	platform_set_drvdata(pdev, data);
-> +
-> +	data->rcdev.owner = THIS_MODULE;
-> +	data->rcdev.nr_resets = BITS_PER_LONG;
-
-Are all bits in this registers reset controls (or rather, are you
-positive there is no bit in this register used by anything else)?
-
-> +	data->rcdev.ops = &meson_reset_ops;
-> +	data->rcdev.of_node = pdev->dev.of_node;
-> +
-> +	return reset_controller_register(&data->rcdev);
-> +}
-> +
-> +static int meson_reset_remove(struct platform_device *pdev)
-> +{
-> +	struct meson_reset_data *data = platform_get_drvdata(pdev);
-> +
-> +	reset_controller_unregister(&data->rcdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id meson_reset_dt_ids[] = {
-> +	{ .compatible = "amlogic,meson6-rst-mgr-ao", },
-> +	{ /* sentinel */ },
-> +};
-> +
-> +static struct platform_driver meson_reset_driver = {
-> +	.probe	= meson_reset_probe,
-> +	.remove	= meson_reset_remove,
-> +	.driver = {
-> +		.name		= "meson-reset",
-> +		.of_match_table	= meson_reset_dt_ids,
-> +	},
-> +};
-> +module_platform_driver(meson_reset_driver);
-> +
-> +MODULE_AUTHOR("Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>");
-> +MODULE_DESCRIPTION("Meson Reset Controller Driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 1.9.1
-
-Other than that, the driver looks good.
+This needs to go through the same tree as the one meson.dtsi got included in.
 
 regards
 Philipp
