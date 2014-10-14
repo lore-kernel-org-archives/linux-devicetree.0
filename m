@@ -1,94 +1,41 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v3 11/15] tpm/tpm_i2c_stm_st33: Replace
- wait_for_serirq_timeout by wait_for_tpm_stat
-Date: Tue, 14 Oct 2014 12:09:14 -0600
-Message-ID: <20141014180914.GE27232@obsidianresearch.com>
-References: <1413231817-5174-1-git-send-email-christophe-h.ricard@st.com>
- <1413231817-5174-12-git-send-email-christophe-h.ricard@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 0/3] ARM: meson: Add reset controller
+Date: Tue, 14 Oct 2014 20:35:46 +0200
+Message-ID: <1413311749-13948-1-git-send-email-carlo@caione.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1413231817-5174-12-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 13, 2014 at 10:23:33PM +0200, Christophe Ricard wrote:
-> The tpm layer already provides a function to wait for a TIS event
-> wait_for_tpm_stat. Exactly like wait_for_serirq_timeout, it can work in
-> polling or interrupt mode.
-> Instead of using a completion struct, we rely on the waitqueue read_queue
-> and int_queue from chip->vendor field.
+Apparently several IPs found in the MesonX SoCs can be reset by programming a
+specific bit in a register in the so called AO (Always-On) domain. From the
+documentation released by Amlogic under NDA it is not clear which devices can
+be reset acting on this register. So far from the sources release by Amlogic it
+seems that at least two IPs use this register for reset: RTC and UART. Since I
+need it to reset the RTC, I wrote this small driver.
 
+v2:
+* removed useless comment
+* added platform_get_drvdata
+* removed owner field
 
->  static int request_locality(struct tpm_chip *chip)
->  {
-[..]
+Carlo Caione (3):
+  ARM: meson: reset: Add reset controller for MesonX SoCs
+  ARM: meson: DTSI: Enable reset controller
+  ARM: meson: docs: Add docs for MesonX reset controller
 
->  	if (chip->vendor.irq) {
-> -		r = wait_for_serirq_timeout(chip, (check_locality
-> -						       (chip) >= 0),
-> -						      chip->vendor.timeout_a);
-> +again:
-> +		timeout = stop - jiffies;
-> +		if ((long) timeout <= 0)
-> +			return -1;
+ .../bindings/reset/amlogic,meson6-rst-mgr-ao.txt   |  14 ++
+ arch/arm/boot/dts/meson.dtsi                       |   6 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-meson.c                        | 142 +++++++++++++++++++++
+ 4 files changed, 163 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson6-rst-mgr-ao.txt
+ create mode 100644 drivers/reset/reset-meson.c
 
-I don't see an enable_irq before this sleep:
+-- 
+1.9.1
 
-> +		r = wait_event_interruptible_timeout(chip->vendor.read_queue,
-> +					check_locality(chip) >= 0,
-> +					timeout);
-
-Can it use wait_for_stat?
-
->  static int wait_for_stat(struct tpm_chip *chip, u8 mask, unsigned long timeout,
-> -			 wait_queue_head_t *queue)
-> +			 wait_queue_head_t *queue, bool check_cancel)
->  {
-
-So, I didn't audit the driver 100%, but this new version has the flow
-
-- enable_irq
-- wait for irq
-- clear irq
-
-Which is conceptually fine (and efficient), but it requires the rest
-of the driver to guarentee that the interrupt is consistent after
-every interation with the TPM. Which for this driver I think means one
-of two states:
- - No interrupt asserted
- - Interrupt asserted, and the TPM is ready to accept a command
-Other states will cause longer command execution times, but not
-malfunction.
-
-For instance, it looks to me like request_locality might not maintain
-that invariant.
-
-Clearing old pending bits before starting an interaction is certainly
-safer, but costs that extra I2C sequence.
-
-> +	tpm_dev = (struct tpm_stm_dev *)TPM_VPRIV(chip);
-> +
-> +	if (chip->vendor.irq)
-> +		enable_irq(chip->vendor.irq);
-> +
-> +	r = wait_for_tpm_stat(chip, mask, timeout, queue, check_cancel);
-
-This seqence is racy, the reason the nuvoton driver has the counter is
-because wake_up_interruptible only wakes sleeping threads, so the
-driver has to use the counter to close the race between the enable_irq
-and the actual sleep:
-
-		unsigned int cur_intrs = priv->intrs;
-		enable_irq(chip->vendor.irq);
-		rc = wait_event_interruptible_timeout(*queue,
-						      cur_intrs != priv->intrs,
-						      timeout);
-
-Jason
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
