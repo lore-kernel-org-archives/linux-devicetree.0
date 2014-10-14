@@ -1,52 +1,58 @@
-From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESUBMIT PATCH v4 7/8] regulator: sky81452: Add compatible
- string for device binding
-Date: Tue, 14 Oct 2014 10:11:12 +0900
-Message-ID: <20141014011112.GB2751@jack-ThinkPad-T520>
-References: <1412657745-7812-1-git-send-email-jack.yoo@skyworksinc.com>
- <1413179262-27636-1-git-send-email-jack.yoo@skyworksinc.com>
- <1413179262-27636-8-git-send-email-jack.yoo@skyworksinc.com>
- <20141013103512.GJ27755@sirena.org.uk>
+From: Anton Tikhomirov <av.tikhomirov@samsung.com>
+Subject: RE: [PATCH v2 1/4] dwc3: exynos: Add support for SCLK present on
+ Exynos7
+Date: Tue, 14 Oct 2014 10:26:35 +0900
+Message-ID: <001801cfe74d$e4cb23d0$ae616b70$%tikhomirov@samsung.com>
+References: <1412677176-3850-1-git-send-email-gautam.vivek@samsung.com>
+ <1412677176-3850-2-git-send-email-gautam.vivek@samsung.com>
+ <00f101cfe6a1$d772c5a0$865850e0$%tikhomirov@samsung.com>
+ <543C575A.1030105@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141013103512.GJ27755-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=ks_c_5601-1987
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <543C575A.1030105@gmail.com>
+Content-language: en-us
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Tomasz Figa' <tomasz.figa@gmail.com>, 'Vivek Gautam' <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org
+Cc: linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, balbi@ti.com, kgene.kim@samsung.com, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 13, 2014 at 12:35:12PM +0200, Mark Brown wrote:
-> On Mon, Oct 13, 2014 at 02:47:41PM +0900, Gyungoh Yoo wrote:
+Hello,
+
+> Hi Anton,
 > 
-> > -	np = of_get_child_by_name(dev->parent->of_node, "regulator");
-> > -	if (unlikely(!np)) {
-> > +	if (!np) {
-> >  		dev_err(dev, "regulator node not found");
-> > -		return NULL;
-> > +		return ERR_PTR(-ENODATA);
-> >  	}
+> On 13.10.2014 06:54, Anton Tikhomirov wrote:
+> > Hi Vivek,
+> >
+> >> Exynos7 also has a separate special gate clock going to the IP
+> >> apart from the usual AHB clock. So add support for the same.
+> >
+> > As we discussed before, Exynos7 SoCs have 7 clocks to be controlled
+> > by the driver. Adding only sclk is not enough.
+> >
 > 
-> If you're doing anything here you should convert the code to use the
-> simplified interface for parsing regulator data based on putting the
-> subnode name and regualtor name in the regulator descriptor.
+> I'm quite interested in this discussion. Has it happened on mailing
+> lists?
 
-Thank you for the review.
+No, we used company messenger for the discussion.
 
-The driver has of_device_id.
+> 
+> In general, previous SoCs also gave the possibility of controlling all
+> the bus clocks separately, in addition to bulk gates, but there was no
 
-static const struct of_device_id sky81452_reg_of_match[] = {
-        { .compatible = "skyworks,sky81452-regulator", },
-        { }
-};
+correct
 
-And the MFD adds the driver with of_compatible="skyworks,sky81452-regulator".
-MFD core maps the device node and the regulator driver does
-not need to parse the subnode name.
+> real advantage in using those, while burdening the clock tree with
+> numerous clocks. Isn't Exynos7 similar in this aspect?
 
-Thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Exynos7 doesn't have "Gating all clocks for USBDRD30" bit. The clocks
+should be controlled separately.
+
+> 
+> Best regards,
+> Tomasz
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
