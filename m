@@ -1,164 +1,40 @@
-From: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
-Subject: [PATCH v2] ARM: dts: rockchip: add I2S controllers for rk3066 and rk3188
-Date: Tue, 14 Oct 2014 10:16:37 +0200
-Message-ID: <1413274597-15788-1-git-send-email-julien.chauveau@neo-technologies.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Rockchip
-	SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
+From: Marcin Obara <marcin_obara-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Subject: Re: [tpmdd-devel] [PATCH v3 12/15] tpm/tpm_i2c_stm_st33: Remove
+ useless i2c read on interrupt registers
+Date: Tue, 14 Oct 2014 10:17:48 +0200
+Message-ID: <CAPxFvEPT8wEt4BfZ7112aFpsowXV2WUHvsN5W9=iKUvmRpcBFw@mail.gmail.com>
+References: <1413231817-5174-1-git-send-email-christophe-h.ricard@st.com>
+	<1413231817-5174-13-git-send-email-christophe-h.ricard@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413231817-5174-13-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, tpmdd-devel <tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, christophe-h.ricard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the I2S/PCM controller nodes and pin controls for rk3066 and rk3188.
+Wasn't last read required for flush write?
 
-Signed-off-by: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
----
- arch/arm/boot/dts/rk3066a.dtsi | 81 ++++++++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/rk3188.dtsi  | 26 ++++++++++++++
- 2 files changed, 107 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index ad9c2db..d75b01a 100644
---- a/arch/arm/boot/dts/rk3066a.dtsi
-+++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -53,6 +53,51 @@
- 		};
- 	};
- 
-+	i2s0: i2s@10118000 {
-+		compatible = "rockchip,rk3066-i2s";
-+		reg = <0x10118000 0x2000>;
-+		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2s0_bus>;
-+		dmas = <&dmac1_s 4>, <&dmac1_s 5>;
-+		dma-names = "tx", "rx";
-+		clock-names = "i2s_hclk", "i2s_clk";
-+		clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>;
-+		status = "disabled";
-+	};
-+
-+	i2s1: i2s@1011a000 {
-+		compatible = "rockchip,rk3066-i2s";
-+		reg = <0x1011a000 0x2000>;
-+		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2s1_bus>;
-+		dmas = <&dmac1_s 6>, <&dmac1_s 7>;
-+		dma-names = "tx", "rx";
-+		clock-names = "i2s_hclk", "i2s_clk";
-+		clocks = <&cru HCLK_I2S1>, <&cru SCLK_I2S1>;
-+		status = "disabled";
-+	};
-+
-+	i2s2: i2s@1011c000 {
-+		compatible = "rockchip,rk3066-i2s";
-+		reg = <0x1011c000 0x2000>;
-+		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2s2_bus>;
-+		dmas = <&dmac1_s 9>, <&dmac1_s 10>;
-+		dma-names = "tx", "rx";
-+		clock-names = "i2s_hclk", "i2s_clk";
-+		clocks = <&cru HCLK_I2S2>, <&cru SCLK_I2S2>;
-+		status = "disabled";
-+	};
-+
- 	cru: clock-controller@20000000 {
- 		compatible = "rockchip,rk3066a-cru";
- 		reg = <0x20000000 0x1000>;
-@@ -405,6 +450,42 @@
- 						<RK_GPIO3 20 RK_FUNC_1 &pcfg_pull_default>;
- 			};
- 		};
-+
-+		i2s0 {
-+			i2s0_bus: i2s0-bus {
-+				rockchip,pins = <RK_GPIO0 7 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 8 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 9 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 10 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 11 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 12 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 13 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 14 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 15 RK_FUNC_1 &pcfg_pull_default>;
-+			};
-+		};
-+
-+		i2s1 {
-+			i2s1_bus: i2s1-bus {
-+				rockchip,pins = <RK_GPIO0 16 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 17 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 18 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 19 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 20 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 21 RK_FUNC_1 &pcfg_pull_default>;
-+			};
-+		};
-+
-+		i2s2 {
-+			i2s2_bus: i2s2-bus {
-+				rockchip,pins = <RK_GPIO0 24 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 25 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 26 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 27 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 28 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO0 29 RK_FUNC_1 &pcfg_pull_default>;
-+			};
-+		};
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-index ddaada7..fa3665a 100644
---- a/arch/arm/boot/dts/rk3188.dtsi
-+++ b/arch/arm/boot/dts/rk3188.dtsi
-@@ -65,6 +65,21 @@
- 		};
- 	};
- 
-+	i2s0: i2s@1011a000 {
-+		compatible = "rockchip,rk3188-i2s", "rockchip,rk3066-i2s";
-+		reg = <0x1011a000 0x2000>;
-+		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2s0_bus>;
-+		dmas = <&dmac1_s 6>, <&dmac1_s 7>;
-+		dma-names = "tx", "rx";
-+		clock-names = "i2s_hclk", "i2s_clk";
-+		clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>;
-+		status = "disabled";
-+	};
-+
- 	cru: clock-controller@20000000 {
- 		compatible = "rockchip,rk3188-cru";
- 		reg = <0x20000000 0x1000>;
-@@ -395,6 +410,17 @@
- 						<RK_GPIO3 20 RK_FUNC_1 &pcfg_pull_none>;
- 			};
- 		};
-+
-+		i2s0 {
-+			i2s0_bus: i2s0-bus {
-+				rockchip,pins = <RK_GPIO1 16 RK_FUNC_1 &pcfg_pull_none>,
-+						<RK_GPIO1 17 RK_FUNC_1 &pcfg_pull_none>,
-+						<RK_GPIO1 18 RK_FUNC_1 &pcfg_pull_none>,
-+						<RK_GPIO1 19 RK_FUNC_1 &pcfg_pull_none>,
-+						<RK_GPIO1 20 RK_FUNC_1 &pcfg_pull_none>,
-+						<RK_GPIO1 21 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
- 	};
- };
- 
--- 
-1.9.1
+2014-10-13 22:23 GMT+02:00 Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> Remove useless i2c read on TPM_INT_ENABLE and TPM_INT_STATUS
+>
+> Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+> ---
+>  drivers/char/tpm/tpm_i2c_stm_st33.c | 9 ---------
+>  1 file changed, 9 deletions(-)
+>
+> diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
+> index 388bb64..ed4176e 100644
+> --- a/drivers/char/tpm/tpm_i2c_stm_st33.c
+> +++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
+> @@ -184,7 +184,6 @@ static void clear_interruption(struct tpm_stm_dev *tpm_dev)
+>
+>         I2C_READ_DATA(tpm_dev, TPM_INT_STATUS, &interrupt, 1);
+>         I2C_WRITE_DATA(tpm_dev, TPM_INT_STATUS, &interrupt, 1);
+> -       I2C_READ_DATA(tpm_dev, TPM_INT_STATUS, &interrupt, 1);
+>  } /* clear_interruption() */
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
