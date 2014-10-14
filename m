@@ -1,80 +1,51 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v3 11/15] tpm/tpm_i2c_stm_st33: Replace
- wait_for_serirq_timeout by wait_for_tpm_stat
-Date: Tue, 14 Oct 2014 15:15:53 -0600
-Message-ID: <20141014211553.GA30570@obsidianresearch.com>
-References: <1413231817-5174-1-git-send-email-christophe-h.ricard@st.com>
- <1413231817-5174-12-git-send-email-christophe-h.ricard@st.com>
- <20141014180914.GE27232@obsidianresearch.com>
- <20141014224425.45b5de03@toffy-MacBookPro>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141014224425.45b5de03@toffy-MacBookPro>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe RICARD <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: [PATCH v2 0/3] Pinctrl driver for Amlogic Meson SoCs
+Date: Tue, 14 Oct 2014 23:21:51 +0200
+Message-ID: <1413321714-25931-1-git-send-email-b.galvani@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Beniamino Galvani <b.galvani@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 14, 2014 at 10:44:25PM +0200, Christophe RICARD wrote:
+Hi,
 
-> > > +		r =
-> > > wait_event_interruptible_timeout(chip->vendor.read_queue,
-> > > +					check_locality(chip) >= 0,
-> > > +					timeout);
-> > 
-> > Can it use wait_for_stat?
-> It actually cannot use wait_for_stat because wait_for_stat is waiting
-> for a mask condition on the status register. Here we are addressing the
-> TPM_ACCESS register.
+this series introduces a driver for Amlogic Meson pinctrl and GPIOs,
+adding the basic infrastructure for all the SoCs of the Meson family
+and configuration data specific for Meson8.
 
-It would be cleaner if wait_for_stat handled all sleep-for-irq
-actions.
+I tested the pinmux and GPIO functionalities on a Tronsmart Vega S89e
+TV box and everything seems to work, however I'm not so familiar with
+the pinctrl subsystem and thus any feedback is very welcome.
 
-> > This seqence is racy, the reason the nuvoton driver has the counter is
-> > because wake_up_interruptible only wakes sleeping threads, so the
-> > driver has to use the counter to close the race between the enable_irq
-> > and the actual sleep:
-> > 
-> > 		unsigned int cur_intrs = priv->intrs;
-> > 		enable_irq(chip->vendor.irq);
-> > 		rc = wait_event_interruptible_timeout(*queue,
-> > 						      cur_intrs !=
-> > priv->intrs, timeout);
-> If my understanding is correct the counter prevent the case where the
-> irq is raised before entering into the wait_event_interruptible_timeout.
-> wait_for_tpm_stat will check before going into sleep the status
-> register in order to make sure the condition is not already satisfied
-> and should fulfill this requirement.
+Changes since v1 [https://lkml.org/lkml/2014/10/7/712]
+ - added missing checks of return values
+ - indentation fixes
+ - added missing definitions of groups and functions for Meson8
 
-Yes, your analysis is correct - removing the extra I2C polling would
-be the goal of using the counter rather than an I2C read.
+Beniamino Galvani (3):
+  pinctrl: add driver for Amlogic Meson SoCs
+  pinctrl: meson: add device tree bindings documentation
+  ARM: dts: meson8: add pinctrl and gpio nodes
 
-> As i could get different kind of interruption i think i cannot avoid an
-> i2c check here. The other solution would be to activate only the right
-> interruption in the INT_ENABLE tis register but still with an i2c
-> transaction.
+ .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |  79 ++
+ arch/arm/boot/dts/meson8-vega-s89e.dts             |  16 +-
+ arch/arm/boot/dts/meson8.dtsi                      |  35 +
+ arch/arm/mach-meson/Kconfig                        |   3 +
+ drivers/pinctrl/Kconfig                            |   8 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/meson/Makefile                     |   2 +
+ drivers/pinctrl/meson/pinctrl-meson.c              | 824 +++++++++++++++++++++
+ drivers/pinctrl/meson/pinctrl-meson.h              | 217 ++++++
+ drivers/pinctrl/meson/pinctrl-meson8.c             | 534 +++++++++++++
+ include/dt-bindings/gpio/meson8-gpio.h             | 155 ++++
+ 11 files changed, 1873 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+ create mode 100644 drivers/pinctrl/meson/Makefile
+ create mode 100644 drivers/pinctrl/meson/pinctrl-meson.c
+ create mode 100644 drivers/pinctrl/meson/pinctrl-meson.h
+ create mode 100644 drivers/pinctrl/meson/pinctrl-meson8.c
+ create mode 100644 include/dt-bindings/gpio/meson8-gpio.h
 
-But there is a problem with the wrong interruption no matter what, the
-wait_event_ loop does not ever re-enable_irq() - any generated IRQ
-must already be exactly the IRQ that is being waited for. Basically,
-the driver must remain synchronized with the chip and it must know
-what IRQs can be generated at any point.
-
-When I read the driver I assumed this was already happening, and the
-auditing was going to be done to make sure it is the case, hence my
-comments on the idle state.
-
-The advantage is clearly that many I2C transactions can be eliminated
-by relying on the IRQ line to signal progress.
-
-The alternative is to have the wait_event loops clear the pending bits
-and re-enable the IRQ every time they go around, but this is more
-transactions.
-
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.9.1
