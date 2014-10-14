@@ -1,50 +1,54 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] audio: sgtl5000: Add MicBias voltage support
-Date: Tue, 14 Oct 2014 10:03:21 +0200
-Message-ID: <20141014080321.GP27755@sirena.org.uk>
-References: <1413268992-15248-1-git-send-email-jean-michel.hautbois@vodalys.com>
- <1413268992-15248-3-git-send-email-jean-michel.hautbois@vodalys.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mLgg01LDEvurRz8s"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1413268992-15248-3-git-send-email-jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
-Cc: fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: [PATCH v5 2/3] dt-bindings: iommu: Add documentation for rockchip iommu
+Date: Tue, 14 Oct 2014 16:02:41 +0800
+Message-ID: <1413273762-32489-3-git-send-email-djkurtz@chromium.org>
+References: <1413273762-32489-1-git-send-email-djkurtz@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413273762-32489-1-git-send-email-djkurtz@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Grant Grundler <grundler@chromium.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>, Daniel Kurtz <djkurtz@chromium.org>, Simon Xue <xxm@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Add binding documentation for Rockchip IOMMU.
 
---mLgg01LDEvurRz8s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+Signed-off-by: Simon Xue <xxm@rock-chips.com>
+---
+ .../devicetree/bindings/iommu/rockchip,iommu.txt   | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
 
-On Tue, Oct 14, 2014 at 08:43:12AM +0200, Jean-Michel Hautbois wrote:
-> Some systems may require to specify a bias different than default (1.25V).
-> This adds a property in sgtl5000 codec.
-> The property is specified in milli-volts so that it is coherent with datasheet.
-
-Applied, thanks.
-
---mLgg01LDEvurRz8s
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUPNjIAAoJECTWi3JdVIfQwGEH/R5skLp6jnXyYFpx3yHTgPwT
-eE32hUC6/q0doJaYBEMk0p22iH6F9cavE5pKkfVz+GLhapWTpHRAgHI5TWgMLSkq
-pHsQcuYs3c/R3ul9K0AKWyuN/86L5F1CneGhYy3h4Gz9+dD/uJ0y27HslUWio21g
-WPAqnA+Zvv1I2VPr4ntRPDq6yQ2Fm8DYrh6oACr8o4xEmFKjGSWU5+rYpmPaALDz
-Zh/Sbs3HumNGWy65wWA5/loMrQrZRwx1RVeiJ7ZhINUeibbQf54ufrxYhdkjGHPj
-T742csnNBcBlKh4aDU7wmmaiGJkqlpum1vCpPS9GrRAsU57aLvvVKJYd+QfdUXA=
-=AMbR
------END PGP SIGNATURE-----
-
---mLgg01LDEvurRz8s--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+new file mode 100644
+index 0000000..9a55ac3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+@@ -0,0 +1,26 @@
++Rockchip IOMMU
++==============
++
++A Rockchip DRM iommu translates io virtual addresses to physical addresses for
++its master device.  Each slave device is bound to a single master device, and
++shares its clocks, power domain and irq.
++
++Required properties:
++- compatible      : Should be "rockchip,iommu"
++- reg             : Address space for the configuration registers
++- interrupts      : Interrupt specifier for the IOMMU instance
++- interrupt-names : Interrupt name for the IOMMU instance
++- #iommu-cells    : Should be <0>.  This indicates the iommu is a
++                    "single-master" device, and needs no additional information
++                    to associate with its master device.  See:
++                    Documentation/devicetree/bindings/iommu/iommu.txt
++
++Example:
++
++	vopl_mmu: iommu@ff940300 {
++		compatible = "rockchip,iommu";
++		reg = <0xff940300 0x100>;
++		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "vopl_mmu";
++		#iommu-cells = <0>;
++	};
+-- 
+2.1.0.rc2.206.gedb03e5
