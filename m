@@ -1,63 +1,118 @@
-From: Vivek Gautam <gautam.vivek@samsung.com>
-Subject: Re: [PATCH v2 1/4] dwc3: exynos: Add support for SCLK present on Exynos7
-Date: Tue, 14 Oct 2014 10:25:00 +0530
-Message-ID: <CAFp+6iEKkHxJNzkf+LOWJHtOhtZMe7HG_Vg97_NLfhJw11SQpA@mail.gmail.com>
-References: <1412677176-3850-1-git-send-email-gautam.vivek@samsung.com>
-	<1412677176-3850-2-git-send-email-gautam.vivek@samsung.com>
-	<00f101cfe6a1$d772c5a0$865850e0$%tikhomirov@samsung.com>
-	<20141013224409.GB1496@saruman>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH v3 2/2] DT: iio: vadc: document dt binding
+Date: Tue, 14 Oct 2014 08:28:15 +0300
+Message-ID: <543CB46F.2040803@mm-sol.com>
+References: <1411563415-11933-1-git-send-email-svarbanov@mm-sol.com> <1411563415-11933-3-git-send-email-svarbanov@mm-sol.com> <5439B7A8.9030306@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141013224409.GB1496@saruman>
+In-Reply-To: <5439B7A8.9030306@gmx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Anton Tikhomirov <av.tikhomirov@samsung.com>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Kukjin Kim <kgene.kim@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, robh+dt <robh+dt@kernel.org>, kishon <kishon@ti.com>
+To: Hartmut Knaack <knaack.h@gmx.de>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collinsd@c>
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
+Thanks for the comments!
 
-
-On Tue, Oct 14, 2014 at 4:14 AM, Felipe Balbi <balbi@ti.com> wrote:
+On 10/12/2014 02:05 AM, Hartmut Knaack wrote:
 > Hi,
->
-> On Mon, Oct 13, 2014 at 01:54:59PM +0900, Anton Tikhomirov wrote:
->> Hi Vivek,
+> two small issues inline.
+> Stanimir Varbanov schrieb am 24.09.2014 14:56:
+>> Document DT binding for Qualcomm SPMI PMIC voltage ADC
+>> driver.
 >>
->> > Exynos7 also has a separate special gate clock going to the IP
->> > apart from the usual AHB clock. So add support for the same.
+>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+>> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+>> ---
+>>  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  130 ++++++++++++++++++++
+>>  1 files changed, 130 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
 >>
->> As we discussed before, Exynos7 SoCs have 7 clocks to be controlled
->> by the driver. Adding only sclk is not enough.
->>
->> >
->> > Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->> > ---
->> >  drivers/usb/dwc3/dwc3-exynos.c |   16 ++++++++++++++++
->> >  1 file changed, 16 insertions(+)
->> >
->> > diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-
->> > exynos.c
->> > index 3951a65..7dc6a98 100644
->> > --- a/drivers/usb/dwc3/dwc3-exynos.c
->> > +++ b/drivers/usb/dwc3/dwc3-exynos.c
->> > @@ -35,6 +35,7 @@ struct dwc3_exynos {
->> >     struct device           *dev;
->> >
->> >     struct clk              *clk;
->>
->> The clock "clk" in Exynos5 just gated all that above 7 clocks, which
->> we should control separately now in Exynos7.
->>
->
-> should I drop this patch for now ?
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+>> new file mode 100644
+>> index 0000000..fa30300
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+>> @@ -0,0 +1,130 @@
+>> +Qualcomm's SPMI PMIC voltage ADC
+>> +
+>> +SPMI PMIC voltage ADC (VADC) provides interface to clients to read
+>> +voltage. A 15 bit ADC is used for voltage measurements. There are multiple
+>> +peripherals to the VADC and the scope of the driver is to provide interface
+>> +for the USR peripheral of the VADC.
+>> +
+>> +VADC node:
+>> +
+>> +- compatible:
+>> +    Usage: required
+>> +    Value type: <string>
+>> +    Definition: Should contain "qcom,spmi-vadc".
+>> +
+>> +- reg:
+>> +    Usage: required
+>> +    Value type: <u32>
+>> +    Definition: Base address in the SPMI PMIC register map.
+>> +
+>> +- address-cells:
+>> +    Usage: required
+>> +    Value type: <u32>
+>> +    Definition: Must be one.
+>> +
+>> +- size-cells:
+>> +    Usage: required
+>> +    Value type: <u32>
+>> +    Definition: Must be zero.
+>> +
+>> +- interrupts:
+>> +    Usage: optional
+>> +    Value type: <prop-encoded-array>
+>> +    Definition: End of conversion interrupt number. If this property does
+>> +            not exist polling will be used instead.
+>> +
+>> +- interrupt-names:
+>> +    Usage: optional
+>> +    Value type: <string>
+>> +    Definition: Should contain the interrupt name "eoc" (end of conversion).
+>> +
+>> +Channel node properties:
+>> +
+>> +- reg:
+>> +    Usage: required
+>> +    Value type: <u32>
+>> +    Definition: AMUX channel number.
+>> +            See include/dt-bindings/iio/qcom,spmi-pmic-vadc.h
+>> +
+>> +- qcom,decimation:
+>> +    Usage: optional
+>> +    Value type: <u32>
+>> +    Definition: Sampling rate to use for the individual channel measurement.
+>> +            Quicker measurements can be made by reducing decimation ratio.
+>> +            Valid values are 512, 1024, 2048, 4096.
+>> +            If property is not found, default value of 512 will be used.
+>> +
+>> +- qcom,pre-scaling:
+>> +    Usage: optional
+>> +    Value type: <u32 array>
+>> +    Definition: Used for scaling the channel input signal before the signal is
+>> +            fed to VADC. The configuration for this node is to know the
+>> +            pre-determined ratio and use it for post scaling. Select one from
+>> +            the following options.
+>> +            <1 1>, <1 3>, <1 4>, <1 6>, <1 20>, <1 8>, <10 81>, <1 10>
+>> +            If property is not found default value depending of chip will be used.
+>> +
+>> +- qcom,ratiometric:
+>> +    Usage: optional
+>> +    Value type: <empty>
+>> +    Definition: Channel calibration type. If this property is specified
+>> +            VADC will use the VDD reference(1.8V) and GND for channel
+> Missing whitespace before opening parenthesis.
+>> +            calibration. If property is not found, channel will be
+>> +            calibrated with 625mV and 1.25V reference channels.
+> There is a slight majority in using V instead of mv (2 : 1), so why not express everything in V?
 
-Yes, better to hold this for some time till we get more clarity
-from our h/w team.
-
+No worries, will correct.
 
 -- 
-Best Regards
-Vivek Gautam
-Samsung R&D Institute, Bangalore
-India
+regards,
+Stan
