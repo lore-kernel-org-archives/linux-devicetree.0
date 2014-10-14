@@ -1,65 +1,52 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: [PATCH 2/2] extcon: gpio: Add support for using cable names
-Date: Tue, 14 Oct 2014 20:09:05 +0530
-Message-ID: <1413297545-26521-3-git-send-email-george.cherian@ti.com>
-References: <1413297545-26521-1-git-send-email-george.cherian@ti.com>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: Re: [PATCH v2 3/3] ARM: dts: qcom: Add SDHC nodes for APQ8084 platform
+Date: Tue, 14 Oct 2014 19:17:11 +0300
+Message-ID: <543D4C87.9050703@mm-sol.com>
+References: <1409672443-4289-1-git-send-email-gdjakov@mm-sol.com>	<1409672443-4289-4-git-send-email-gdjakov@mm-sol.com> <CAJAp7OhV82HyDQSRW4F2z6UD6WZzuopBoUZMeT2pYBdGq-Dqcg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413297545-26521-1-git-send-email-george.cherian@ti.com>
+In-Reply-To: <CAJAp7OhV82HyDQSRW4F2z6UD6WZzuopBoUZMeT2pYBdGq-Dqcg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com, cw00.choi@samsung.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Baohua.Song@csr.com, rongjun.ying@csr.com, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, George Cherian <george.cherian@ti.com>
+To: Bjorn Andersson <bjorn@kryo.se>
+Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for using cable names. Enables other drivers to register interest
-and get notified using extcon provided notifier call backs.
+On 10/10/2014 08:14 PM, Bjorn Andersson wrote:
+> On Tue, Sep 2, 2014 at 8:40 AM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
+>> Enable support for the two SD host controllers on the APQ8084 platform
+>> by adding the required nodes to the DT files.
+>> On the IFC6540 board, the first controller is connected to the onboard
+>> eMMC and the second is connected to a micro-SD card slot.
+>>
+>> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+> 
+> Hi Georgi,
+> 
+> This looks sane, but...
+> 
+>> ---
+>>  arch/arm/boot/dts/qcom-apq8084-ifc6540.dts |   11 +++++++++++
+>>  arch/arm/boot/dts/qcom-apq8084.dtsi        |   23 +++++++++++++++++++++++
+>>  2 files changed, 34 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+>> index e41cb8a..c9ff108 100644
+>> --- a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+>> +++ b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+> [..]
+>> +               sdhci@f98a4900 {
+>> +                       cd-gpios = <&tlmm 122 GPIO_ACTIVE_LOW>;
+>> +                       bus-width = <4>;
+> 
+> ...why do you add this node and leave it disabled in the dts?
+> 
 
-Signed-off-by: George Cherian <george.cherian@ti.com>
----
- Documentation/devicetree/bindings/extcon/extcon-gpio.txt | 2 ++
- drivers/extcon/extcon-gpio.c                             | 4 ++++
- 2 files changed, 6 insertions(+)
+Hi Bjorn,
+Currently only the eMMC is functional on this board, so now we
+have just the board specific configuration under this node.
+More patches are forthcoming.
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-index 30aa2e1..2c9d29f 100644
---- a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-+++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-@@ -7,6 +7,7 @@ Required Properties:
-  - compatible: should be:
- 	* "linux,extcon-gpio"
-  - gpios: specifies the gpio pin used.
-+ - cable-name: Name of the cable used.
- 
- Optional Properties:
-  - debounce: Debounce time for GPIO IRQ in ms
-@@ -18,4 +19,5 @@ Eg:
- 		compatible = "linux,extcon-gpio";
- 		gpios = <&gpio3 12 GPIO_ACTIVE_HIGH>;
- 		debounce = <20>;
-+		cable-name = "USB-HOST";
- 		};
-diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
-index 85795de..0e1b3e8 100644
---- a/drivers/extcon/extcon-gpio.c
-+++ b/drivers/extcon/extcon-gpio.c
-@@ -38,6 +38,7 @@ struct gpio_extcon_data {
- 	int irq;
- 	struct delayed_work work;
- 	unsigned long debounce_jiffies;
-+	const char *cable_name[1];
- };
- 
- static void gpio_extcon_work(struct work_struct *work)
-@@ -100,6 +101,9 @@ static int gpio_extcon_probe(struct platform_device *pdev)
- 				msecs_to_jiffies(debounce);
- 	}
- 
-+	of_property_read_string_index(np, "cable-name", 0,
-+				      extcon_data->cable_name);
-+	extcon_data->edev->supported_cable = extcon_data->cable_name;
- 	ret = devm_extcon_dev_register(&pdev->dev, extcon_data->edev);
- 	if (ret < 0)
- 		return ret;
--- 
-1.8.3.1
+BR,
+Georgi
