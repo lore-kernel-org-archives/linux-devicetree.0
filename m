@@ -1,339 +1,182 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH v3 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
-Date: Tue, 14 Oct 2014 12:36:48 +0300
-Message-ID: <543CEEB0.10601@mm-sol.com>
-References: <1411563415-11933-1-git-send-email-svarbanov@mm-sol.com> <1411563415-11933-2-git-send-email-svarbanov@mm-sol.com> <543AFBBC.50400@gmx.de>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 04/13] ACPI: Document ACPI device specific properties
+Date: Tue, 14 Oct 2014 12:42:06 +0300
+Message-ID: <20141014094206.GD2255@lahna.fi.intel.com>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan>
+ <4876377.qMEam54Cox@vostro.rjw.lan>
+ <20141013124132.4E08BC408F6@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <543AFBBC.50400@gmx.de>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Hartmut Knaack <knaack.h@gmx.de>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collinsd@c>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141013124132.4E08BC408F6@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/13/2014 01:07 AM, Hartmut Knaack wrote:
-> Stanimir Varbanov schrieb am 24.09.2014 14:56:
->> The voltage ADC is peripheral of Qualcomm SPMI PMIC chips. It has
->> 15bits resolution and register space inside PMIC accessible across
->> SPMI bus.
->>
->> The vadc driver registers itself through IIO interface.
-> Quite a lot of changes. Please see my comments inline.
->>
->> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
->> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
->> ---
->>  drivers/iio/adc/Kconfig                       |   10 +
->>  drivers/iio/adc/Makefile                      |    1 +
->>  drivers/iio/adc/qcom-spmi-vadc.c              | 1029 +++++++++++++++++++++++++
->>  include/dt-bindings/iio/qcom,spmi-pmic-vadc.h |  119 +++
->>  4 files changed, 1159 insertions(+), 0 deletions(-)
->>  create mode 100644 drivers/iio/adc/qcom-spmi-vadc.c
->>  create mode 100644 include/dt-bindings/iio/qcom,spmi-pmic-vadc.h
->>
-
-<snip>
-
->> +
->> +static int vadc_reset(struct vadc_priv *vadc)
->> +{
->> +	u8 data;
->> +	int ret;
->> +
->> +	ret = vadc_write(vadc, VADC_ACCESS, VADC_ACCESS_DATA);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = vadc_read(vadc, VADC_PERH_RESET_CTL3, &data);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = vadc_write(vadc, VADC_ACCESS, VADC_ACCESS_DATA);
->> +	if (ret)
->> +		return ret;
->> +
->> +	data |= VADC_FOLLOW_WARM_RB;
->> +
->> +	return vadc_write(vadc, VADC_PERH_RESET_CTL3, data);
->> +}
->> +
->> +static int vadc_enable(struct vadc_priv *vadc, bool state)
->> +{
->> +	return vadc_write(vadc, VADC_EN_CTL1, state ? VADC_EN_CTL1_SET : 0);
->> +}
->> +
->> +#ifdef DEBUG
->> +static void vadc_show_status(struct vadc_priv *vadc)
->> +{
-> You could also move the #ifdef in here...
->> +	u8 mode, sta1, chan, dig, en, req;
->> +	int ret;
->> +
->> +	ret = vadc_read(vadc, VADC_MODE_CTL, &mode);
->> +	if (ret)
->> +		return;
->> +
->> +	ret = vadc_read(vadc, VADC_ADC_DIG_PARAM, &dig);
->> +	if (ret)
->> +		return;
->> +
->> +	ret = vadc_read(vadc, VADC_ADC_CH_SEL_CTL, &chan);
->> +	if (ret)
->> +		return;
->> +
->> +	ret = vadc_read(vadc, VADC_CONV_REQ, &req);
->> +	if (ret)
->> +		return;
->> +
->> +	ret = vadc_read(vadc, VADC_STATUS1, &sta1);
->> +	if (ret)
->> +		return;
->> +
->> +	ret = vadc_read(vadc, VADC_EN_CTL1, &en);
->> +	if (ret)
->> +		return;
->> +
->> +	dev_dbg(vadc->dev,
->> +		"mode:%02x en:%02x chan:%02x dig:%02x req:%02x sta1:%02x\n",
->> +		mode, en, chan, dig, req, sta1);
-> ...and the #endif here. Saves 2 lines of code ;-)
-
-I don't like #ifdefs in function body, it makes code unreadable at least
-for me :)
-
->> +}
->> +#else
->> +static void vadc_show_status(struct vadc_priv *vadc) {}
->> +#endif
->> +
-
-<snip>
-
->> +
->> +static int vadc_get_dt_channel_data(struct device *dev,
->> +				    struct vadc_channel_prop *prop,
->> +				    struct device_node *node)
->> +{
->> +	const char *name = node->name;
->> +	u32 chan, value, varr[2];
->> +	int ret;
->> +
->> +	ret = of_property_read_u32(node, "reg", &chan);
->> +	if (ret) {
->> +		dev_dbg(dev, "invalid channel number %s\n", name);
->> +		return ret;
->> +	}
->> +
->> +	if (chan > VADC_CHAN_MAX || chan < VADC_CHAN_MIN) {
->> +		dev_dbg(dev, "%s invalid channel number %d\n", name, chan);
->> +		return -EINVAL;
->> +	}
->> +
->> +	/* the channel has DT description */
->> +	prop->channel = chan;
->> +
->> +	ret = of_property_read_u32(node, "qcom,decimation", &value);
->> +	if (!ret) {
->> +		ret = vadc_decimation_from_dt(value);
->> +		if (ret < 0) {
->> +			dev_dbg(dev, "%02x invalid decimation %d\n",
->> +				chan, value);
->> +			return ret;
->> +		}
->> +		prop->decimation = ret;
->> +	} else {
->> +		prop->decimation = VADC_DEF_DECIMATION;
->> +	}
->> +
->> +	ret = of_property_read_u32_array(node, "qcom,pre-scaling", varr, 2);
->> +	if (!ret) {
->> +		ret = vadc_prescaling_from_dt(varr[0], varr[1]);
->> +		if (ret < 0) {
->> +			dev_dbg(dev, "%02x invalid pre-scaling <%d %d>\n",
->> +				chan, varr[0], varr[1]);
->> +			return ret;
->> +		}
->> +		prop->prescale = ret;
->> +	} else {
->> +		prop->prescale = vadc_chans[prop->channel].prescale_index;
->> +	}
->> +
->> +	ret = of_property_read_u32(node, "qcom,hw-settle-time", &value);
->> +	if (!ret) {
->> +		ret = vadc_hw_settle_time_from_dt(value);
->> +		if (ret < 0) {
->> +			dev_dbg(dev, "%02x invalid hw-settle-time %d, us\n",
-> The colon inside the string is probably an unintended leftover?
-
-correct.
-
->> +				chan, value);
->> +			return ret;
->> +		}
->> +		prop->hw_settle_time = ret;
->> +	} else {
->> +		prop->hw_settle_time = VADC_DEF_HW_SETTLE_TIME;
->> +	}
->> +
->> +	ret = of_property_read_u32(node, "qcom,avg-samples", &value);
->> +	if (!ret) {
->> +		ret = vadc_avg_samples_from_dt(value);
->> +		if (ret < 0) {
->> +			dev_dbg(dev, "%02x invalid avg-samples %d\n",
->> +				chan, value);
->> +			return ret;
->> +		}
->> +		prop->avg_samples = ret;
->> +	} else {
->> +		prop->avg_samples = VADC_DEF_AVG_SAMPLES;
->> +	}
->> +
->> +	if (of_property_read_bool(node, "qcom,ratiometric"))
->> +		prop->calibration = VADC_CALIB_RATIOMETRIC;
->> +	else
->> +		prop->calibration = VADC_CALIB_ABSOLUTE;
->> +
->> +	dev_dbg(dev, "%02x name %s\n", chan, name);
->> +
->> +	return 0;
->> +}
->> +
->> +static int vadc_get_dt_data(struct vadc_priv *vadc, struct device_node *node)
->> +{
->> +	struct iio_chan_spec *iio_chan = vadc->iio_chans;
->> +	const struct vadc_channels *vadc_chan;
->> +	struct vadc_channel_prop prop;
->> +	struct device_node *child;
->> +	int ret, index = 0;
-> index could be defined unsigned, as it should only carry unsigned values.
-
-makes sense.
-
->> +
->> +	for_each_available_child_of_node(node, child) {
->> +		ret = vadc_get_dt_channel_data(vadc->dev, &prop, child);
->> +		if (ret)
->> +			return ret;
->> +
->> +		vadc->chan_props[index] = prop;
->> +
->> +		vadc_chan = &vadc_chans[prop.channel];
->> +
->> +		iio_chan->channel = prop.channel;
->> +		iio_chan->datasheet_name = vadc_chan->datasheet_name;
->> +		iio_chan->info_mask_separate = vadc_chan->info_mask;
->> +		iio_chan->type = vadc_chan->type;
->> +		iio_chan->indexed = 1;
->> +		iio_chan->scan_type.sign = 's';
->> +		iio_chan->scan_type.realbits = 15;
->> +		iio_chan->scan_type.storagebits = 16;
->> +		iio_chan->address = index++;
->> +
->> +		iio_chan++;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
-
-<snip>
-
->> +
->> +static int vadc_probe(struct platform_device *pdev)
->> +{
->> +	struct device_node *node = pdev->dev.of_node;
->> +	struct device *dev = &pdev->dev;
->> +	struct iio_dev *indio_dev;
->> +	struct vadc_priv *vadc;
->> +	struct resource *res;
->> +	struct regmap *regmap;
->> +	int ret, irq_eoc;
->> +
->> +	regmap = dev_get_regmap(dev->parent, NULL);
->> +	if (!regmap)
->> +		return -ENODEV;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
->> +	if (!res)
->> +		return -ENODEV;
->> +
->> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*vadc));
->> +	if (!indio_dev)
->> +		return -ENOMEM;
->> +
->> +	vadc = iio_priv(indio_dev);
->> +	vadc->regmap = regmap;
->> +	vadc->dev = dev;
->> +	vadc->base = res->start;
->> +	vadc->are_ref_measured = false;
->> +	init_completion(&vadc->complete);
->> +
->> +	ret = vadc_check_revision(vadc);
->> +	if (ret)
->> +		return ret;
->> +
->> +	vadc->nchannels = of_get_available_child_count(node);
->> +	if (!vadc->nchannels)
->> +		return -EINVAL;
->> +
->> +	vadc->iio_chans = devm_kcalloc(dev, vadc->nchannels,
->> +				       sizeof(*vadc->iio_chans), GFP_KERNEL);
->> +	if (!vadc->iio_chans)
->> +		return -ENOMEM;
->> +
->> +	vadc->chan_props = devm_kcalloc(dev, vadc->nchannels,
->> +					sizeof(*vadc->chan_props), GFP_KERNEL);
->> +	if (!vadc->chan_props)
->> +		return -ENOMEM;
->> +
->> +	ret = vadc_get_dt_data(vadc, node);
->> +	if (ret)
->> +		return ret;
->> +
->> +	irq_eoc = platform_get_irq(pdev, 0);
->> +	if (irq_eoc < 0) {
->> +		if (irq_eoc == -EPROBE_DEFER || irq_eoc == -EINVAL)
->> +			return irq_eoc;
->> +		vadc->poll_eoc = true;
->> +	}
->> +
-> Isn't the part below actually the else section of the part above (and device_init_wakeup() belonging up there)?
-
-you are right, might be I wanted to avoid indentation issues. Will see
-how to make it better.
-
->> +	if (!vadc->poll_eoc) {
->> +		ret = devm_request_irq(dev, irq_eoc, vadc_isr,
->> +				       IRQF_TRIGGER_RISING, "spmi-vadc", vadc);
->> +		if (!ret)
->> +			enable_irq_wake(irq_eoc);
->> +		else
->> +			return ret;
-> Usually this is done this way:
-
-yes, I know just oversight it.
-
-> 		if (ret)
-> 			return ret;
+On Mon, Oct 13, 2014 at 02:41:32PM +0200, Grant Likely wrote:
+> On Tue, 07 Oct 2014 02:14:06 +0200
+> , "Rafael J. Wysocki" <rjw@rjwysocki.net>
+>  wrote:
+> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > 
+> > This document describes the data format and interfaces of ACPI device
+> > specific properties.
+> > 
+> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Signed-off-by: Darren Hart <dvhart@linux.intel.com>
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >  Documentation/acpi/properties.txt |  376 ++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 376 insertions(+)
+> >  create mode 100644 Documentation/acpi/properties.txt
+> > 
+> > Index: linux-pm/Documentation/acpi/properties.txt
+> > ===================================================================
+> > --- /dev/null
+> > +++ linux-pm/Documentation/acpi/properties.txt
+> > @@ -0,0 +1,376 @@
+> > +ACPI device properties
+> > +======================
+> > +This document describes the format and interfaces of ACPI device
+> > +properties as specified in "Device Properties UUID For _DSD" available
+> > +here:
+> > +
+> > +http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
+> > +
+> > +1. Introduction
+> > +---------------
+> > +In systems that use ACPI and want to take advantage of device specific
+> > +properties, there needs to be a standard way to return and extract
+> > +name-value pairs for a given ACPI device.
+> > +
+> > +An ACPI device that wants to export its properties must implement a
+> > +static name called _DSD that takes no arguments and returns a package of
+> > +packages:
+> > +
+> > +	Name (_DSD, Package () {
+> > +		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> > +		Package () {
+> > +			Package () {"name1", <VALUE1>},
+> > +			Package () {"name2", <VALUE2>}
+> > +		}
+> > +	})
+> > +
+> > +The UUID identifies contents of the following package. In case of ACPI
+> > +device properties it is daffd814-6eba-4d8c-8a91-bc9bbf4aa301.
+> > +
+> > +In each returned package, the first item is the name and must be a string.
+> > +The corresponding value can be a string, integer, reference, or package. If
+> > +a package it may only contain strings, integers, and references.
+> > +
+> > +An example device where we might need properties is a device that uses
+> > +GPIOs. In addition to the GpioIo/GpioInt resources the driver needs to
+> > +know which GPIO is used for which purpose.
+> > +
+> > +To solve this we add the following ACPI device properties to the device:
+> > +
+> > +	Device (DEV0)
+> > +	{
+> > +		Name (_CRS, ResourceTemplate () {
+> > +			GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
+> > +				"\\_SB.PCI0.LPC", 0, ResourceConsumer) {0}
+> > +			GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
+> > +				"\\_SB.PCI0.LPC", 0, ResourceConsumer) {1}
+> > +			...
+> > +		})
+> > +
+> > +		Name (_DSD, Package () {
+> > +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> > +			Package () {
+> > +				Package () {"reset-gpio", {^DEV0, 0, 0, 0}},
+> > +				Package () {"shutdown-gpio", {^DEV0, 1, 0, 0}},
+> > +			}
+> > +		})
+> > +	}
+> > +
+> > +Now the device driver can reference the GPIOs using names instead of
+> > +using indexes.
 > 
-> 		enable_irq_wake(irq_eoc);
->> +	} else {
->> +		device_init_wakeup(vadc->dev, true);
->> +	}
->> +
->> +	ret = vadc_reset(vadc);
->> +	if (ret) {
->> +		dev_dbg(dev, "reset failed\n");
->> +		return ret;
->> +	}
->> +
->> +	platform_set_drvdata(pdev, vadc);
-> Why bother to call platform_set_drvdata()?
+> Ummm... so this is kind of odd. Why would arguments be needed for the
+> gpio reference, or a device trying to reference itself (^DEV0) within
+> it's own device.
 
-Seems leftover, will delete.
+The reference doesn't need to be the device itself. It can be the parent
+device for example.
 
--- 
-regards,
-Stan
+Also arguments contain information that is not available in ACPI GpioIo
+resources:
+
+ - Name of the GPIO
+ - Is the GPIO active low
+
+Remember that we can write the above also like:
+
+		Name (_CRS, ResourceTemplate () {
+			GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
+				"\\_SB.PCI0.LPC", 0, ResourceConsumer) {0, 1}
+			...
+		})
+
+		Name (_DSD, Package () {
+			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+			Package () {
+				Package () {"reset-gpio", {^DEV0, 0, 0, 0}},
+				Package () {"shutdown-gpio", {^DEV0, 0, 1, 0}},
+			}
+		})
+
+So the first two integers are used as indexes in _CRS and in the
+pinlist.
+
+> It looks like it is trying to shoehorn DT design patterns into the ACPI
+> tables when ACPI already has a native method for doing the same thing.
+> That concerns me.
+
+There is no native method in ACPI to do what we are doing.
+
+> [...]
+> > +In addition to simple object references it is also possible to have object
+> > +references with arguments. These are represented in ASL as follows:
+> > +
+> > +	Device (\_SB.PCI0.PWM)
+> > +	{
+> > +		Name (_DSD, Package () {
+> > +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> > +			Package () {
+> > +				Package () {"#pwm-cells", 2}
+> > +			}
+> > +		})
+> > +	}
+> > +
+> > +	Device (\_SB.PCI0.BL)
+> > +	{
+> > +		Name (_DSD, Package () {
+> > +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> > +			Package () {
+> > +				Package () {
+> > +					"pwms",
+> > +					Package () {
+> > +						\_SB.PCI0.PWM, 0, 5000000,
+> > +						\_SB.PCI0.PWM, 1, 4500000,
+> > +					}
+> > +				}
+> > +			}
+> > +		})
+> > +	}
+> 
+> This worries me even more. #x-cells is a very devicetree oriented
+> pattern that looks wrong for ACPI data. I would expect PWM resources in
+> ACPI to look much like ACPI GPIO resources or Serial bus resources.
+
+This was already discussed in v3 version of the series and our argument
+here is that we should be able to reuse the existing DT schemas as much
+as possible as long as ACPI does not have a native method to describe
+the thing (and it makes sense in general).
+
+However, nothing prevents us to extend the
+acpi_dev_get_property_reference() in future to support a more ACPI style
+way of doing things:
+
+http://www.spinics.net/lists/linux-acpi/msg53367.html
