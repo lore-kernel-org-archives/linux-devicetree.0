@@ -1,94 +1,74 @@
-From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 2/2] audio: sgtl5000: Add MicBias voltage support
-Date: Tue, 14 Oct 2014 08:43:12 +0200
-Message-ID: <1413268992-15248-3-git-send-email-jean-michel.hautbois@vodalys.com>
-References: <1413268992-15248-1-git-send-email-jean-michel.hautbois@vodalys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413268992-15248-1-git-send-email-jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH v3 3/3] ARM: dts: rk3288: add VOP iommu nodes
+Date: Tue, 14 Oct 2014 15:23:54 +0800
+Message-ID: <CAGS+omB5tuDHFgUGvypaSfxBW-3fhVtTOyWuve-dopeEF3Em6A@mail.gmail.com>
+References: <1412965848-18663-1-git-send-email-djkurtz@chromium.org>
+ <1412965848-18663-4-git-send-email-djkurtz@chromium.org> <4094180.e6s5oT6HgP@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4094180.e6s5oT6HgP@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, Grant Grundler <grundler@chromium.org>, Simon Xue <xxm@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Some systems may require to specify a bias different than default (1.25V).
-This adds a property in sgtl5000 codec.
-The property is specified in milli-volts so that it is coherent with datasheet.
+On Tue, Oct 14, 2014 at 6:33 AM, Heiko St=C3=BCbner <heiko@sntech.de> w=
+rote:
+> Hi Daniel,
+>
+> Am Samstag, 11. Oktober 2014, 02:30:48 schrieb Daniel Kurtz:
+>> Add device nodes for the VOP iommus.
+>> Device nodes for other iommus will be added in later patches.
+>>
+>> The iommu nodes use the #iommu-cells property as described in:
+>>   Documentation/devicetree/bindings/iommu/iommu.txt
+>>
+>> Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+>> Signed-off-by: Simon Xue <xxm@rock-chips.com>
+>> ---
+>>  arch/arm/boot/dts/rk3288.dtsi | 18 ++++++++++++++++++
+>>  1 file changed, 18 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk328=
+8.dtsi
+>> index 5950b0a..cbc92fa 100644
+>> --- a/arch/arm/boot/dts/rk3288.dtsi
+>> +++ b/arch/arm/boot/dts/rk3288.dtsi
+>> @@ -271,6 +271,24 @@
+>>               status =3D "disabled";
+>>       };
+>>
+>> +     vopb_mmu: iommu@0xff930300 {
+>
+> please use the address without the 0x here ... iommu@ff930300
 
-Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/sound/sgtl5000.txt |  7 ++++++-
- sound/soc/codecs/sgtl5000.c                          | 13 +++++++++++++
- 2 files changed, 19 insertions(+), 1 deletion(-)
+I've been doing it wrong for a while and no one else noticed :-).  Than=
+ks!
+I will resend.
 
-diff --git a/Documentation/devicetree/bindings/sound/sgtl5000.txt b/Documentation/devicetree/bindings/sound/sgtl5000.txt
-index d6ec927..1aab403 100644
---- a/Documentation/devicetree/bindings/sound/sgtl5000.txt
-+++ b/Documentation/devicetree/bindings/sound/sgtl5000.txt
-@@ -13,6 +13,10 @@ Required properties:
- 	If this node is not mentioned or if the value is unknown, then
- 	micbias	resistor is set to 4K.
- 
-+- micbias-voltage-m-volts : the bias voltage to be used in mVolts
-+	The voltage can take values from 1.25V to 3V by 250mV steps
-+	If this node is not mentionned or the value is unknown, then
-+	the value is set to 1.25V.
- 
- Example:
- 
-@@ -20,5 +24,6 @@ codec: sgtl5000@0a {
- 	compatible = "fsl,sgtl5000";
- 	reg = <0x0a>;
- 	clocks = <&clks 150>;
--	sgtl5000-micbias-resistor = <1>;
-+	micbias-resistor-k-ohms = <2>;
-+	micbias-voltage-m-volts = <2250>;
- };
-diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index b2c2ed7..8611cfb 100644
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -140,6 +140,7 @@ struct sgtl5000_priv {
- 	struct clk *mclk;
- 	int revision;
- 	u8 micbias_resistor;
-+	u8 micbias_voltage;
- };
- 
- /*
-@@ -1341,6 +1342,9 @@ static int sgtl5000_probe(struct snd_soc_codec *codec)
- 			SGTL5000_BIAS_R_MASK,
- 			sgtl5000->micbias_resistor << SGTL5000_BIAS_R_SHIFT);
- 
-+	snd_soc_update_bits(codec, SGTL5000_CHIP_MIC_CTRL,
-+			SGTL5000_BIAS_R_MASK,
-+			sgtl5000->micbias_voltage << SGTL5000_BIAS_R_SHIFT);
- 	/*
- 	 * disable DAP
- 	 * TODO:
-@@ -1510,10 +1514,19 @@ static int sgtl5000_i2c_probe(struct i2c_client *client,
- 			/* default is 4Kohms */
- 			sgtl5000->micbias_resistor = 2;
- 		}
-+		if (!of_property_read_u32(np,
-+			"micbias-voltage-m-volts", &value)) {
-+			/* 1250mV => 0 */
-+			/* steps of 250mV */
-+			if ((value >= 1250) && (value <= 3000))
-+				sgtl5000->micbias_voltage = (value / 250) - 5;
-+			else {
-+				sgtl5000->micbias_voltage = 0;
- 				dev_err(&client->dev,
- 					"Unsuitable MicBias resistor\n");
- 			}
- 		} else {
-+			sgtl5000->micbias_voltage = 0;
- 		}
- 	}
- 
--- 
-2.1.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Thanks
+> Heiko
+>
+>> +             compatible =3D "rockchip,iommu";
+>> +             reg =3D <0xff930300 0x100>;
+>> +             interrupts =3D <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+>> +             interrupt-names =3D "vopb_mmu";
+>> +             #iommu-cells =3D <0>;
+>> +             status =3D "disabled";
+>> +     };
+>> +
+>> +     vopl_mmu: iommu@0xff940300 {
+>> +             compatible =3D "rockchip,iommu";
+>> +             reg =3D <0xff940300 0x100>;
+>> +             interrupts =3D <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+>> +             interrupt-names =3D "vopl_mmu";
+>> +             #iommu-cells =3D <0>;
+>> +             status =3D "disabled";
+>> +     };
+>> +
+>>       gic: interrupt-controller@ffc01000 {
+>>               compatible =3D "arm,gic-400";
+>>               interrupt-controller;
+>
