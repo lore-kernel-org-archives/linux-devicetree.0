@@ -1,130 +1,61 @@
-From: Joseph Lo <josephl@nvidia.com>
-Subject: Re: [PATCHv5] serial: of-serial: fix up PM ops on no_console_suspend
- and port type
-Date: Wed, 15 Oct 2014 17:02:44 +0800
-Message-ID: <543E3834.7070308@nvidia.com>
-References: <1413353967-27866-1-git-send-email-jingchang.lu@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413353967-27866-1-git-send-email-jingchang.lu@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jingchang Lu <jingchang.lu@freescale.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "peter@hurleysoftware.com" <peter@hurleysoftware.com>, "arnd@arndb.de" <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: introduce of_property_read_s32
+Date: Wed, 15 Oct 2014 11:37:56 +0200
+Message-ID: <20141015093756.A39E4C40A5C@trevor.secretlab.ca>
+References: <1396781531-3397-1-git-send-email-sre@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396781531-3397-1-git-send-email-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Eric Piel <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/15/2014 02:19 PM, Jingchang Lu wrote:
-> This patch fixes commit 2dea53bf57783f243c892e99c10c6921e956aa7e,
-> "serial: of-serial: add PM suspend/resume support", which disables
-> the uart clock on suspend, but also causes a hardware hang on register
-> access if no_console_suspend command line option is used.
->
-> Also, not every of_serial device is an 8250 port, so the serial8250
-> suspend/resume functions should only be applied to a real 8250 port.
->
-> Signed-off-by: Jingchang Lu <jingchang.lu@freescale.com>
+On Sun,  6 Apr 2014 12:52:11 +0200
+, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+ wrote:
+> Introduce signed 32bit integer of_property_read method.
+> 
+> Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Applied, thanks.
+
 > ---
-> changes in v5:
->   add missing <linux/console.h> include.
->
-> changes in v4:
->   separate 8250 port suspend/resume from of_serial_suspend/resume.
->
-> changes in v3:
->   fix up point reference and deference.
->
-> changes in v2:
->   add switch selection on uart type.
->
-Hi Jingchang,
+> Hi,
+> 
+> This is a dependency for the DT binding additions in lis302dl, which can be
+> found at [0]. Since I never got any reply from the DT maintainers I will try to
+> send this patch separate, so that the it hopefully catches their eyes :)
+> 
+> [0] http://www.spinics.net/lists/devicetree/msg15747.html
+> 
+> -- Sebastian
+> ---
+>  include/linux/of.h | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 919bf21..70530d1 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -691,6 +691,13 @@ static inline int of_property_read_u32(const struct device_node *np,
+>  	return of_property_read_u32_array(np, propname, out_value, 1);
+>  }
+>  
+> +static inline int of_property_read_s32(const struct device_node *np,
+> +				       const char *propname,
+> +				       s32 *out_value)
+> +{
+> +	return of_property_read_u32(np, propname, (u32*) out_value);
+> +}
+> +
+>  #define of_property_for_each_u32(np, propname, prop, p, u)	\
+>  	for (prop = of_find_property(np, propname, NULL),	\
+>  		p = of_prop_next_u32(prop, NULL, &u);		\
+> -- 
+> 1.9.1
+> 
 
-Thanks for the fix. This patch
-Tested-by: Joseph Lo <josephl@nvidia.com>
-
->   drivers/tty/serial/of_serial.c | 53 ++++++++++++++++++++++++++++++++++++------
->   1 file changed, 46 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
-> index 8bc2563..9c64ad2 100644
-> --- a/drivers/tty/serial/of_serial.c
-> +++ b/drivers/tty/serial/of_serial.c
-> @@ -9,6 +9,7 @@
->    *  2 of the License, or (at your option) any later version.
->    *
->    */
-> +#include <linux/console.h>
->   #include <linux/module.h>
->   #include <linux/slab.h>
->   #include <linux/delay.h>
-> @@ -241,13 +242,48 @@ static int of_platform_serial_remove(struct platform_device *ofdev)
->   }
->
->   #ifdef CONFIG_PM_SLEEP
-> -static int of_serial_suspend(struct device *dev)
-> +#ifdef CONFIG_SERIAL_8250
-> +static void of_serial_suspend_8250(struct of_serial_info *info)
->   {
-> -	struct of_serial_info *info = dev_get_drvdata(dev);
-> +	struct uart_8250_port *port8250 = serial8250_get_port(info->line);
-> +	struct uart_port *port = &port8250->port;
->
->   	serial8250_suspend_port(info->line);
-> -	if (info->clk)
-> +	if (info->clk && (!uart_console(port) || console_suspend_enabled))
->   		clk_disable_unprepare(info->clk);
-> +}
-> +
-> +static void of_serial_resume_8250(struct of_serial_info *info)
-> +{
-> +	struct uart_8250_port *port8250 = serial8250_get_port(info->line);
-> +	struct uart_port *port = &port8250->port;
-> +
-> +	if (info->clk && (!uart_console(port) || console_suspend_enabled))
-> +		clk_prepare_enable(info->clk);
-> +
-> +	serial8250_resume_port(info->line);
-> +}
-> +#else
-> +static inline void of_serial_suspend_8250(struct of_serial_info *info)
-> +{
-> +}
-> +
-> +static inline void of_serial_resume_8250(struct of_serial_info *info)
-> +{
-> +}
-> +#endif
-> +
-> +static int of_serial_suspend(struct device *dev)
-> +{
-> +	struct of_serial_info *info = dev_get_drvdata(dev);
-> +
-> +	switch(info->type) {
-> +	case PORT_8250 ... PORT_MAX_8250:
-> +		of_serial_suspend_8250(info);
-> +		break;
-> +	default:
-> +		break;
-> +	}
->
->   	return 0;
->   }
-> @@ -256,10 +292,13 @@ static int of_serial_resume(struct device *dev)
->   {
->   	struct of_serial_info *info = dev_get_drvdata(dev);
->
-> -	if (info->clk)
-> -		clk_prepare_enable(info->clk);
-> -
-> -	serial8250_resume_port(info->line);
-> +	switch(info->type) {
-> +	case PORT_8250 ... PORT_MAX_8250:
-> +		of_serial_resume_8250(info);
-> +		break;
-> +	default:
-> +		break;
-> +	}
->
->   	return 0;
->   }
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
