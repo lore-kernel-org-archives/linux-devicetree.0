@@ -1,78 +1,103 @@
 From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
- driver support
-Date: Wed, 15 Oct 2014 19:02:48 +0530
-Message-ID: <20141015133248.GQ1638@intel.com>
-References: <1413374436-14410-1-git-send-email-sthokal@xilinx.com>
- <20141015124527.GA20034@leverpostej>
+Subject: Re: [PATCH v6 2/3] ARM: dts: at_xdmac: add bindings documentation
+Date: Wed, 15 Oct 2014 19:11:34 +0530
+Message-ID: <20141015134134.GR1638@intel.com>
+References: <1412175565-810-1-git-send-email-ludovic.desroches@atmel.com>
+ <1412175565-810-3-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20141015124527.GA20034@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Srikanth Thokala <sthokal@xilinx.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "michals@xilinx.com" <michals@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "anirudh@xilinx.com" <anirudh@xilinx.com>, "svemula@xilinx.com" <svemula@xilinx.com>, "appanad@xilinx.com" <appanad@xilinx.com>
+In-Reply-To: <1412175565-810-3-git-send-email-ludovic.desroches@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ludovic Desroches <ludovic.desroches@atmel.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, arnd@arndb.de, nicolas.ferre@atmel.com, josh.wu@atmel.com, dmaengine@vger.kernel.org, maxime.ripard@free-electrons.com, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 15, 2014 at 01:45:28PM +0100, Mark Rutland wrote:
-> Hi,
-> 
-> On Wed, Oct 15, 2014 at 01:00:36PM +0100, Srikanth Thokala wrote:
-> > This is the driver for the AXI Direct Memory Access (AXI DMA)
-> > core, which is a soft Xilinx IP core that provides high-
-> > bandwidth direct memory access between memory and AXI4-Stream
-> > type target peripherals.
-> > 
-> > This module works on Zynq (ARM Based SoC) and Microblaze platforms.
-> > 
-> > Signed-off-by: Srikanth Thokala <sthokal@xilinx.com>
-> > ---
-> > Changes in v4:
-> > - Add direction field to VDMA descriptor structure and removed from
-> >   channel structure to avoid duplication.
-> > - Check for DMA idle condition before changing the configuration.
-> > - Residue is being calculated in complete_descriptor() and is reported
-> >   to slave driver.
-> > 
-> > Changes in v3:
-> > - Rebased on 3.16-rc7
-> > 
-> > Changes in v2:
-> > - Simplified the logic to set SOP and APP words in prep_slave_sg().
-> > - Corrected function description comments to match the return type.
-> > - Fixed some minor comments as suggested by Andy, Thanks.
-> 
-> This patch has come without the necessary device tree binding document,
-> and I was not able to find an existing binding document upstream (I
-> searched for "xlnx,axi-dma-1.00.a" and "axi-dma").
-which tree did you grep. 
-
-This is present in slave-dmaengine.git 
-
-commit ddc643630f5deb1995d191719086b64873c67a44
-Author: Srikanth Thokala <sthokal@xilinx.com>
-Date:   Mon Jul 28 17:47:48 2014 +0530
-
-    dma: Add Xilinx AXI DMA DT Binding Documentation
-
-    Device-tree binding documentation of Xilinx DMA Engine
-
-    Signed-off-by: Srikanth Thokala <sthokal@xilinx.com>
-    Acked-by: Arnd Bergmann <arnd@arndb.de>
-    Signed-off-by: Vinod Koul <vinod.koul@intel.com>
+On Wed, Oct 01, 2014 at 04:59:24PM +0200, Ludovic Desroches wrote:
+> Add bindings documentation for the new Atmel DMA controller (XDMAC)
+> introduced with SAMA5D4.
+Seeing the example below, it doesnt seem to me that we cant reuse existing
+atmel binding, can you explain why we cnat reuse
 
 -- 
 ~Vinod
 
 > 
-> The driver expects a non-trivial set of properties, so a binding
-> document is essential for users. Additionally, checkpatch.pl should
-> scream regarding the undocumented comaptible string.
+> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+> ---
+>  .../devicetree/bindings/dma/atmel-xdma.txt         | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/atmel-xdma.txt
 > 
-> Please put together a binding document.
+> diff --git a/Documentation/devicetree/bindings/dma/atmel-xdma.txt b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+> new file mode 100644
+> index 0000000..ae587ad
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+> @@ -0,0 +1,50 @@
+> +* Atmel Extensible Direct Memory Access Controller (XDMAC)
+> +
+> +* XDMA Controller
+> +Required properties:
+> +- compatible: Should be "atmel,<chip>-dma".
+> +  <chip> compatible description:
+> +  - sama5d4: first SoC adding the XDMAC
+> +- reg: Should contain DMA registers location and length.
+> +- interrupts: Should contain DMA interrupt.
+> +- #dma-cells: Must be <2>, used to represent the number of integer cells in
+> +the dmas property of client devices.
+> +  - The 1st cell specifies the memory interface (16 most significant bits) and
+> +  the peripheral interface (16 less significant bits) to use.
+> +  - The 2nd cell specifies the channel configuration register:
+> +    - bit 30-24: PERID, peripheral identifier.
+> +
+> +Example:
+> +
+> +dma1: dma-controller@f0004000 {
+> +	compatible = "atmel,sama5d4-dma";
+> +	reg = <0xf0004000 0x200>;
+> +	interrupts = <50 4 0>;
+> +	#dma-cells = <2>;
+> +};
+> +
+> +
+> +* DMA clients
+> +DMA clients connected to the Atmel XDMA controller must use the format
+> +described in the dma.txt file, using a two-cell specifier for each channel.
+> +The three cells in order are:
+> +1. A phandle pointing to the DMA controller.
+> +2. The memory interface (16 most significant bits), the peripheral interface
+> +(16 less significant bits).
+> +3. Channel configuration register. Configurable fields are:
+> +  - bit 30-24: PERID, peripheral identifier.
+> +
+> +Example:
+> +
+> +i2c2: i2c@f8024000 {
+> +	compatible = "atmel,at91sam9x5-i2c";
+> +	reg = <0xf8024000 0x4000>;
+> +	interrupts = <34 4 6>;
+> +	dmas = <&dma1
+> +		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
+> +		AT91_XDMAC_DT_PERID(6)>,
+> +	       <&dma1
+> +		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
+> +		AT91_XDMAC_DT_PERID(7)>;
+> +	dma-names = "tx", "rx";
+> +};
+> -- 
+> 2.0.3
 > 
-> Thanks,
-> Mark.
 
 -- 
