@@ -1,148 +1,88 @@
-From: <atull@opensource.altera.com>
-Subject: [PATCH v6 4/4] pmbus: ltc2978: add regulator support
-Date: Wed, 15 Oct 2014 13:55:10 -0500
-Message-ID: <1413399310-19277-5-git-send-email-atull@opensource.altera.com>
+From: <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCH v6 1/4] hwmon: ltc2978: device tree bindings documentation
+Date: Wed, 15 Oct 2014 13:55:07 -0500
+Message-ID: <1413399310-19277-2-git-send-email-atull@opensource.altera.com>
 References: <1413399310-19277-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413399310-19277-1-git-send-email-atull@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux@roeck-us.net, jdelvare@suse.de
-Cc: lm-sensors@lm-sensors.org, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com, Alan Tull <atull@opensource.altera.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413399310-19277-1-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org
+Cc: lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alan Tull <atull@opensource.altera.com>
+From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Add simple on/off regulator support for ltc2978 and
-other pmbus parts supported by ltc2978.c
+Add device tree bindings documentation for ltc2978.
 
-Signed-off-by: Alan Tull <atull@opensource.altera.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Mark Brown <broonie@kernel.org>
+Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
-v2: Remove '#include <linux/regulator/machine.h>'
-    Only one regulator per pmbus device
-    Get regulator_init_data from pdata or device tree
+v2: clean whitespace
 
-v3: Support multiple regulators for each chip
-    Move most code to pmbus_core.c
-    fixed values for on/off
-
-v4: fix a #endif comment
-    simplify probe code, remove added switch statement
-    remove BUG_ON(), add error message and fix num_regulators
-
-v5: Kconfig: update list of supported chips
-    use "regulator: of: Provide simplified DT parsing method"
-    remove #include <linux/regulator/of_regulator.h>
-    remove of_regulator_match
-
-v6: add compatible strings with vendor code
+v3: list compatible strings in single column
+    add vendor as lltc
+    mention regulators.txt instead of documenting regulator-name
     s/vout_en/vout/
+    remove size_cells, address-cells
+    use node name to identify regulators
 ---
- drivers/hwmon/pmbus/Kconfig   |   11 +++++++++--
- drivers/hwmon/pmbus/ltc2978.c |   39 ++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 47 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/hwmon/ltc2978.txt          |   39 ++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/ltc2978.txt
 
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index 6e1e493..a674cd8 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -47,15 +47,22 @@ config SENSORS_LM25066
- 	  be called lm25066.
- 
- config SENSORS_LTC2978
--	tristate "Linear Technologies LTC2974, LTC2978, LTC3880, and LTC3883"
-+	tristate "Linear Technologies LTC2978 and compatibles"
- 	default n
- 	help
- 	  If you say yes here you get hardware monitoring support for Linear
--	  Technology LTC2974, LTC2978, LTC3880, and LTC3883.
-+	  Technology LTC2974, LTC2977, LTC2978, LTC3880, LTC3883, and LTM4676.
- 
- 	  This driver can also be built as a module. If so, the module will
- 	  be called ltc2978.
- 
-+config SENSORS_LTC2978_REGULATOR
-+	boolean "Regulator support for LTC2978 and compatibles"
-+	depends on SENSORS_LTC2978 && REGULATOR
-+	help
-+	  If you say yes here you get regulator support for Linear
-+	  Technology LTC2974, LTC2977, LTC2978, LTC3880, LTC3883, and LTM4676.
+diff --git a/Documentation/devicetree/bindings/hwmon/ltc2978.txt b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+new file mode 100644
+index 0000000..16c1227
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+@@ -0,0 +1,39 @@
++ltc2978
 +
- config SENSORS_MAX16064
- 	tristate "Maxim MAX16064"
- 	default n
-diff --git a/drivers/hwmon/pmbus/ltc2978.c b/drivers/hwmon/pmbus/ltc2978.c
-index e24ed52..0835050 100644
---- a/drivers/hwmon/pmbus/ltc2978.c
-+++ b/drivers/hwmon/pmbus/ltc2978.c
-@@ -22,6 +22,7 @@
- #include <linux/err.h>
- #include <linux/slab.h>
- #include <linux/i2c.h>
-+#include <linux/regulator/driver.h>
- #include "pmbus.h"
- 
- enum chips { ltc2974, ltc2977, ltc2978, ltc3880, ltc3883, ltm4676 };
-@@ -374,6 +375,19 @@ static const struct i2c_device_id ltc2978_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, ltc2978_id);
- 
-+#if IS_ENABLED(CONFIG_SENSORS_LTC2978_REGULATOR)
-+static const struct regulator_desc ltc2978_reg_desc[] = {
-+	PMBUS_REGULATOR("vout", 0),
-+	PMBUS_REGULATOR("vout", 1),
-+	PMBUS_REGULATOR("vout", 2),
-+	PMBUS_REGULATOR("vout", 3),
-+	PMBUS_REGULATOR("vout", 4),
-+	PMBUS_REGULATOR("vout", 5),
-+	PMBUS_REGULATOR("vout", 6),
-+	PMBUS_REGULATOR("vout", 7),
++Required properties:
++- compatible: should contain one of:
++  * "lltc,ltc2974"
++  * "lltc,ltc2977"
++  * "lltc,ltc2978"
++  * "lltc,ltc3880"
++  * "lltc,ltc3883"
++  * "lltc,ltm4676"
++- reg: I2C slave address
++
++Optional properties:
++- regulators: A node that houses a sub-node for each regulator controlled by
++  the device. Each sub-node is identified using the node's name, with valid
++  values listed below. The content of each sub-node is defined by the
++  standard binding for regulators; see regulator.txt.
++
++Valid names of regulators depend on number of supplies supported per device:
++  * ltc2974 : vout0 - vout3
++  * ltc2977 : vout0 - vout7
++  * ltc2978 : vout0 - vout7
++  * ltc3880 : vout0 - vout1
++  * ltc3883 : vout0
++  * ltm4676 : vout0 - vout1
++
++Example:
++ltc2978@5e {
++	compatible = "ltc2978";
++	reg = <0x5e>;
++	regulators {
++		vout0 {
++			regulator-name = "FPGA-2.5V";
++		};
++		vout2 {
++			regulator-name = "FPGA-1.5V";
++		};
++	};
 +};
-+#endif /* CONFIG_SENSORS_LTC2978_REGULATOR */
-+
- static int ltc2978_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
-@@ -487,13 +501,36 @@ static int ltc2978_probe(struct i2c_client *client,
- 	default:
- 		return -ENODEV;
- 	}
-+
-+#if IS_ENABLED(CONFIG_SENSORS_LTC2978_REGULATOR)
-+	info->num_regulators = info->pages;
-+	info->reg_desc = ltc2978_reg_desc;
-+	if (info->num_regulators > ARRAY_SIZE(ltc2978_reg_desc)) {
-+		dev_err(&client->dev, "num_regulators too large!");
-+		info->num_regulators = ARRAY_SIZE(ltc2978_reg_desc);
-+	}
-+#endif
-+
- 	return pmbus_do_probe(client, id, info);
- }
- 
--/* This is the driver that will be inserted */
-+#ifdef CONFIG_OF
-+static const struct of_device_id ltc2978_of_match[] = {
-+	{ .compatible = "lltc,ltc2974" },
-+	{ .compatible = "lltc,ltc2977" },
-+	{ .compatible = "lltc,ltc2978" },
-+	{ .compatible = "lltc,ltc3880" },
-+	{ .compatible = "lltc,ltc3883" },
-+	{ .compatible = "lltc,ltm4676" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ltc2978_of_match);
-+#endif
-+
- static struct i2c_driver ltc2978_driver = {
- 	.driver = {
- 		   .name = "ltc2978",
-+		   .of_match_table = of_match_ptr(ltc2978_of_match),
- 		   },
- 	.probe = ltc2978_probe,
- 	.remove = pmbus_do_remove,
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
