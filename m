@@ -1,122 +1,82 @@
-From: Jingchang Lu <jingchang.lu@freescale.com>
-Subject: [PATCHv5] serial: of-serial: fix up PM ops on no_console_suspend and port type
-Date: Wed, 15 Oct 2014 14:19:27 +0800
-Message-ID: <1413353967-27866-1-git-send-email-jingchang.lu@freescale.com>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] ARM: meson: reset: Add reset controller for MesonX SoCs
+Date: Wed, 15 Oct 2014 09:28:36 +0200
+Message-ID: <CAOQ7t2amOv=Pk6h7fxVAqeQM9x88g6fyMtCnQSVWj7P455nYSQ@mail.gmail.com>
+References: <1413311749-13948-1-git-send-email-carlo@caione.org>
+	<1413311749-13948-2-git-send-email-carlo@caione.org>
+	<20141014223651.GA15055@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-serial-owner@vger.kernel.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org
-Cc: peter@hurleysoftware.com, arnd@arndb.de, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jingchang Lu <jingchang.lu@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141014223651.GA15055-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <pza-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes commit 2dea53bf57783f243c892e99c10c6921e956aa7e,
-"serial: of-serial: add PM suspend/resume support", which disables
-the uart clock on suspend, but also causes a hardware hang on register
-access if no_console_suspend command line option is used.
+On Wed, Oct 15, 2014 at 12:36 AM, Philipp Zabel <pza-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> Hi Carlo,
 
-Also, not every of_serial device is an 8250 port, so the serial8250
-suspend/resume functions should only be applied to a real 8250 port.
+Hi Philipp,
 
-Signed-off-by: Jingchang Lu <jingchang.lu@freescale.com>
----
-changes in v5: 
- add missing <linux/console.h> include.
+>> @@ -0,0 +1,142 @@
+>> +/*
+>> + * Copyright 2014 Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+>> + *
+>> + * based on
+>> + * Steffen Trumtrar Reset Controller driver
+>
+> That doesn't sound right. Do you mean socfpga-reset?
 
-changes in v4:
- separate 8250 port suspend/resume from of_serial_suspend/resume.
+Yes, I'll change it.
 
-changes in v3:
- fix up point reference and deference.
+>> + * Copyright 2014 Steffen Trumtrar
+>> + *
+>> + * Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>
+> Could be combined into a single line.
 
-changes in v2:
- add switch selection on uart type.
+Ok
 
- drivers/tty/serial/of_serial.c | 53 ++++++++++++++++++++++++++++++++++++------
- 1 file changed, 46 insertions(+), 7 deletions(-)
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + */
+>> +
+>> +#include <linux/err.h>
+>> +#include <linux/io.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/reset-controller.h>
+>> +#include <linux/spinlock.h>
+>> +#include <linux/types.h>
+>> +
+>> +#define MESON_RST_OFFSET     0x00
+>
+> If there is only one register, I see no need for this.
 
-diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
-index 8bc2563..9c64ad2 100644
---- a/drivers/tty/serial/of_serial.c
-+++ b/drivers/tty/serial/of_serial.c
-@@ -9,6 +9,7 @@
-  *  2 of the License, or (at your option) any later version.
-  *
-  */
-+#include <linux/console.h>
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
-@@ -241,13 +242,48 @@ static int of_platform_serial_remove(struct platform_device *ofdev)
- }
- 
- #ifdef CONFIG_PM_SLEEP
--static int of_serial_suspend(struct device *dev)
-+#ifdef CONFIG_SERIAL_8250
-+static void of_serial_suspend_8250(struct of_serial_info *info)
- {
--	struct of_serial_info *info = dev_get_drvdata(dev);
-+	struct uart_8250_port *port8250 = serial8250_get_port(info->line);
-+	struct uart_port *port = &port8250->port;
- 
- 	serial8250_suspend_port(info->line);
--	if (info->clk)
-+	if (info->clk && (!uart_console(port) || console_suspend_enabled))
- 		clk_disable_unprepare(info->clk);
-+}
-+
-+static void of_serial_resume_8250(struct of_serial_info *info)
-+{
-+	struct uart_8250_port *port8250 = serial8250_get_port(info->line);
-+	struct uart_port *port = &port8250->port;
-+
-+	if (info->clk && (!uart_console(port) || console_suspend_enabled))
-+		clk_prepare_enable(info->clk);
-+
-+	serial8250_resume_port(info->line);
-+}
-+#else
-+static inline void of_serial_suspend_8250(struct of_serial_info *info)
-+{
-+}
-+
-+static inline void of_serial_resume_8250(struct of_serial_info *info)
-+{
-+}
-+#endif
-+
-+static int of_serial_suspend(struct device *dev)
-+{
-+	struct of_serial_info *info = dev_get_drvdata(dev);
-+
-+	switch(info->type) {
-+	case PORT_8250 ... PORT_MAX_8250:
-+		of_serial_suspend_8250(info);
-+		break;
-+	default:
-+		break;
-+	}
- 
- 	return 0;
- }
-@@ -256,10 +292,13 @@ static int of_serial_resume(struct device *dev)
- {
- 	struct of_serial_info *info = dev_get_drvdata(dev);
- 
--	if (info->clk)
--		clk_prepare_enable(info->clk);
--
--	serial8250_resume_port(info->line);
-+	switch(info->type) {
-+	case PORT_8250 ... PORT_MAX_8250:
-+		of_serial_resume_8250(info);
-+		break;
-+	default:
-+		break;
-+	}
- 
- 	return 0;
- }
+Ok
+
+>> +
+>> +     data->rcdev.owner = THIS_MODULE;
+>> +     data->rcdev.nr_resets = BITS_PER_LONG;
+>
+> Are all bits in this registers reset controls (or rather, are you
+> positive there is no bit in this register used by anything else)?
+
+I'm not sure to be honest. Probably some other bits is used for power
+management (I don't have full documentation yet).
+I'll submit a v3 with a smaller mask for just the bits I'm going to use.
+
+> Other than that, the driver looks good.
+
+Thank you.
+
 -- 
-1.8.0
-
+Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
