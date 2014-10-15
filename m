@@ -1,74 +1,55 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 00/13] Add ACPI _DSD and unified device properties
- support
-Date: Wed, 15 Oct 2014 16:17:02 +0100
-Message-ID: <20141015151702.GG20034@leverpostej>
-References: <2660541.BycO7TFnA2@vostro.rjw.lan>
- <1413378271.2762.77.camel@infradead.org>
- <20141015131551.GC20034@leverpostej>
- <1413379736.2762.79.camel@infradead.org>
- <20141015134209.GD20034@leverpostej>
- <db4038336b5e165b8b61eda064b10eeb.squirrel@twosheds.infradead.org>
- <543E88CF.5060504@linux.intel.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
+Date: Wed, 15 Oct 2014 11:30:49 -0400
+Message-ID: <20141015153049.GE17447@titan.lakedaemon.net>
+References: <20141003141102.GJ3895@titan.lakedaemon.net>
+ <542EBB93.108@gmail.com>
+ <A9781A2E-F3CA-4E8A-833C-D167B456D9F7@perenite.com>
+ <542EC3A3.1060605@gmail.com>
+ <1ACB5318-863E-40D8-8B27-41F1C0D0A4B8@perenite.com>
+ <5432BFB1.2060300@gmail.com>
+ <CE7A9795-C2AF-451A-8018-3A0B8788BF60@perenite.com>
+ <20141015144259.GB17447@titan.lakedaemon.net>
+ <543E898D.10606@gmail.com>
+ <20141015145539.GB18413@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <543E88CF.5060504@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Darren Hart <dvhart@linux.intel.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "dvhart@infradead.org" <dvhart@infradead.org>
+In-Reply-To: <20141015145539.GB18413@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Benoit Masson <benoitm@perenite.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Benoit Masson <yahoo@perenite.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 15, 2014 at 03:46:39PM +0100, Darren Hart wrote:
-> 
-> 
-> On 10/15/14 16:08, David Woodhouse wrote:
+On Wed, Oct 15, 2014 at 04:55:39PM +0200, Andrew Lunn wrote:
+> > >Do you have a link to an email thread or the patch Subject line?  I can
+> > >confirm it's missing from mvebu/fixes...
 > > 
-> >> We have been checking for all DT platforms, and that's a bug for DT.
-> >> Copying that bug to ACPI is inexcusable given we know it's a bug to do
-> >> so.
+> > http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/275487.html
 > > 
-> > We'll, perhaps it should be named 'used-by-firmware' and actually it's
-> > just as valid under ACPI as it is on RTAS systems. All it does is stop the
-> > OS from using the port.
-> > 
-> >> I understand that. However, where a binding doesn't make sense (as in
-> >> this case), it shouldn't be enabled for ACPI as it provides a larger
-> >> surface area for misuse, for no benefit.
-> > 
-> > These are *optional* properties. They were optional precisely *because*
-> > they only make sense in some cases. I don't know that it makes sense to
-> > take them away. The benefit we get is *consistency*. For example if
-> > someone *does* use the property in question as 'used-by-firmware' and
-> > expects the OS not to touch it, we don't want that to change behaviour
-> > between ACPI and fdt boots.
+> > But you and Andrew should check what Arnd suggested. IIRC, there
+> > was also an appropriate follow-up patch discussion started by
+> > Andrew.
 > 
-> My comment was going to be along the same lines. It is an optional
-> parameter, which is what I would expect for a firmware-specific type of
-> property.
+> There was a lot of back and forth with Arnd. In the end, he gave up
+> arguing because too many voices did not like his solution. So my
+> original version stands.
+
+Yes, this appears to have been a mistake on my part.  In the
+conversation regarding patch #2 of V2, you said you were going to work
+on implementing something and would report back.  I applied that to the
+whole series instead of just to the second patch.  At any rate, applied
+to mvebu/fixes now.
+
+> However, the patch at the end of 
 > 
-> I also don't agree that this is "copying that bug to ACPI". This line of
-> code has no impact to ACPI. No ACPI implementation should add this,
-> certainly not if it was actually tested as it would not run if it was
-> present in the _DSD. So... what's the problem exactly? Or perhaps more
-> specifically:
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/275528.html
 > 
-> Mark, what would you propose we do differently to enable this driver to
-> be firmware-type agnostic?
+> is useful, and it would be nice if it could be merged as well.
 
-For this particular driver, all I'm asking for is that the
-"used-by-rtas" property is not moved over from of_find_property to
-device_get_property. It is irrelevant for all ACPI systems. Evidently my
-comment was unclear; I apologise for that.
+I'll take a look.
 
-We have status = "disabled" as a less specific mechanism for telling the
-OS to ignore a node in DT. I was under the impression that ACPI already
-had a mechanism for marking devices to be ignored, but perhaps I am
-mistaken.
+thx,
 
-The concerns I mentioned at the end of my original reply were of a more
-general nature than this particular device description.
-
-Thanks,
-Mark.
+Jason.
