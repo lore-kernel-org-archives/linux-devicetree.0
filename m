@@ -1,82 +1,61 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] ARM: meson: reset: Add reset controller for MesonX SoCs
-Date: Wed, 15 Oct 2014 09:28:36 +0200
-Message-ID: <CAOQ7t2amOv=Pk6h7fxVAqeQM9x88g6fyMtCnQSVWj7P455nYSQ@mail.gmail.com>
-References: <1413311749-13948-1-git-send-email-carlo@caione.org>
-	<1413311749-13948-2-git-send-email-carlo@caione.org>
-	<20141014223651.GA15055@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141014223651.GA15055-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <pza-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v2 3/3] ARM: dts: qcom: Add SDHC nodes for APQ8084 platform
+Date: Wed, 15 Oct 2014 09:56:02 +0200
+Message-ID: <E8A71F0C-3BD0-4F1D-A7C2-A4F643429E2F@codeaurora.org>
+References: <1409672443-4289-1-git-send-email-gdjakov@mm-sol.com>	<1409672443-4289-4-git-send-email-gdjakov@mm-sol.com> <CAJAp7OhV82HyDQSRW4F2z6UD6WZzuopBoUZMeT2pYBdGq-Dqcg@mail.gmail.com> <543D4C87.9050703@mm-sol.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <543D4C87.9050703@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Georgi Djakov <gdjakov@mm-sol.com>
+Cc: Bjorn Andersson <bjorn@kryo.se>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 15, 2014 at 12:36 AM, Philipp Zabel <pza-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> Hi Carlo,
 
-Hi Philipp,
+On Oct 14, 2014, at 6:17 PM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
 
->> @@ -0,0 +1,142 @@
->> +/*
->> + * Copyright 2014 Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
->> + *
->> + * based on
->> + * Steffen Trumtrar Reset Controller driver
->
-> That doesn't sound right. Do you mean socfpga-reset?
+> On 10/10/2014 08:14 PM, Bjorn Andersson wrote:
+>> On Tue, Sep 2, 2014 at 8:40 AM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
+>>> Enable support for the two SD host controllers on the APQ8084 platform
+>>> by adding the required nodes to the DT files.
+>>> On the IFC6540 board, the first controller is connected to the onboard
+>>> eMMC and the second is connected to a micro-SD card slot.
+>>> 
+>>> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+>> 
+>> Hi Georgi,
+>> 
+>> This looks sane, but...
+>> 
+>>> ---
+>>> arch/arm/boot/dts/qcom-apq8084-ifc6540.dts |   11 +++++++++++
+>>> arch/arm/boot/dts/qcom-apq8084.dtsi        |   23 +++++++++++++++++++++++
+>>> 2 files changed, 34 insertions(+)
+>>> 
+>>> diff --git a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+>>> index e41cb8a..c9ff108 100644
+>>> --- a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+>>> +++ b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+>> [..]
+>>> +               sdhci@f98a4900 {
+>>> +                       cd-gpios = <&tlmm 122 GPIO_ACTIVE_LOW>;
+>>> +                       bus-width = <4>;
+>> 
+>> ...why do you add this node and leave it disabled in the dts?
+>> 
+> 
+> Hi Bjorn,
+> Currently only the eMMC is functional on this board, so now we
+> have just the board specific configuration under this node.
+> More patches are forthcoming.
 
-Yes, I'll change it.
+Can we add something in the commit message to denote this.
 
->> + * Copyright 2014 Steffen Trumtrar
->> + *
->> + * Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->
-> Could be combined into a single line.
-
-Ok
-
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + */
->> +
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/reset-controller.h>
->> +#include <linux/spinlock.h>
->> +#include <linux/types.h>
->> +
->> +#define MESON_RST_OFFSET     0x00
->
-> If there is only one register, I see no need for this.
-
-Ok
-
->> +
->> +     data->rcdev.owner = THIS_MODULE;
->> +     data->rcdev.nr_resets = BITS_PER_LONG;
->
-> Are all bits in this registers reset controls (or rather, are you
-> positive there is no bit in this register used by anything else)?
-
-I'm not sure to be honest. Probably some other bits is used for power
-management (I don't have full documentation yet).
-I'll submit a v3 with a smaller mask for just the bits I'm going to use.
-
-> Other than that, the driver looks good.
-
-Thank you.
+- k
 
 -- 
-Carlo Caione
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
