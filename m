@@ -1,332 +1,90 @@
 From: Scott Branden <sbranden@broadcom.com>
-Subject: [PATCH v5 4/6] ARM: dts: Enable Broadcom Cygnus SoC
-Date: Tue, 14 Oct 2014 19:58:54 -0700
-Message-ID: <1413341936-17606-5-git-send-email-sbranden@broadcom.com>
+Subject: [PATCH v5 1/6] ARM: cygnus: Initial support for Broadcom Cygnus SoC
+Date: Tue, 14 Oct 2014 19:58:51 -0700
+Message-ID: <1413341936-17606-2-git-send-email-sbranden@broadcom.com>
 References: <Scott Branden <sbranden@broadcom.com>
  <1413341936-17606-1-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1413341936-17606-1-git-send-email-sbranden@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>
-Cc: JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar
+ Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho
+ Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>
+Cc: devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>, JD Zheng <jdzheng@broadcom.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DT files to enable cygnus consisting on reference designs
-and cygnus core configuration.
-
-Reviewed-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Arun Parameswaran <aparames@broadcom.com>
-Tested-by: Jonathan Richardson <jonathar@broadcom.com>
-Reviewed-by: JD (Jiandong) Zheng <jdzheng@broadcom.com>
-Signed-off-by: Scott Branden <sbranden@broadcom.com>
----
- arch/arm/boot/dts/Makefile              |    4 ++
- arch/arm/boot/dts/bcm-cygnus-clock.dtsi |   73 +++++++++++++++++++++
- arch/arm/boot/dts/bcm-cygnus.dtsi       |  109 +++++++++++++++++++++++++++++++
- arch/arm/boot/dts/bcm911360_entphn.dts  |   22 +++++++
- arch/arm/boot/dts/bcm911360k.dts        |   22 +++++++
- arch/arm/boot/dts/bcm958300k.dts        |   22 +++++++
- 6 files changed, 252 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm-cygnus-clock.dtsi
- create mode 100644 arch/arm/boot/dts/bcm-cygnus.dtsi
- create mode 100644 arch/arm/boot/dts/bcm911360_entphn.dts
- create mode 100644 arch/arm/boot/dts/bcm911360k.dts
- create mode 100644 arch/arm/boot/dts/bcm958300k.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 7c80af9..a6b734a 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -54,6 +54,10 @@ dtb-$(CONFIG_ARCH_AT91)	+= at91-sama5d4ek.dtb
- dtb-$(CONFIG_ARCH_ATLAS6) += atlas6-evb.dtb
- dtb-$(CONFIG_ARCH_AXXIA) += axm5516-amarillo.dtb
- dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
-+dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
-+	bcm911360_entphn.dtb \
-+	bcm911360k.dtb \
-+	bcm958300k.dtb
- dtb-$(CONFIG_ARCH_BCM_5301X) += bcm4708-netgear-r6250.dtb
- dtb-$(CONFIG_ARCH_BCM_63XX) += bcm963138dvt.dtb
- dtb-$(CONFIG_ARCH_BCM_MOBILE) += bcm28155-ap.dtb \
-diff --git a/arch/arm/boot/dts/bcm-cygnus-clock.dtsi b/arch/arm/boot/dts/bcm-cygnus-clock.dtsi
-new file mode 100644
-index 0000000..d06172b
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm-cygnus-clock.dtsi
-@@ -0,0 +1,73 @@
-+/*
-+ * Copyright 2014 Broadcom Corporation.  All rights reserved.
-+ *
-+ * Unless you and Broadcom execute a separate written software license
-+ * agreement governing use of this software, this software is licensed to you
-+ * under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+clocks {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges;
-+
-+	osc: oscillator {
-+		compatible = "fixed-clock";
-+		#clock-cells = <1>;
-+		clock-frequency = <25000000>;
-+	};
-+
-+	apb_clk: apb_clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <1000000000>;
-+	};
-+
-+	periph_clk: periph_clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <500000000>;
-+	};
-+
-+	sdio_clk: lcpll_ch2 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <200000000>;
-+	};
-+
-+	axi81_clk: axi81_clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <100000000>;
-+	};
-+
-+	keypad_clk: keypad_clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <31806>;
-+	};
-+
-+	adc_clk: adc_clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <1562500>;
-+	};
-+
-+	pwm_clk: pwm_clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <1000000>;
-+	};
-+
-+	lcd_clk: mipipll_ch1 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <100000000>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-new file mode 100644
-index 0000000..a377ab2
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -0,0 +1,109 @@
-+/*
-+ * Copyright 2014 Broadcom Corporation.  All rights reserved.
-+ *
-+ * Unless you and Broadcom execute a separate written software license
-+ * agreement governing use of this software, this software is licensed to you
-+ * under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+#include "skeleton.dtsi"
-+
-+/ {
-+	compatible = "brcm,cygnus";
-+	model = "Broadcom Cygnus SoC";
-+	interrupt-parent = <&gic>;
-+
-+	aliases {
-+		serial0 = &uart3;
-+		serial1 = &uart0;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlyprintk debug";
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			next-level-cache = <&L2>;
-+			reg = <0x0>;
-+		};
-+	};
-+
-+	/include/ "bcm-cygnus-clock.dtsi"
-+
-+	amba {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "arm,amba-bus", "simple-bus";
-+		interrupt-parent = <&gic>;
-+		ranges;
-+
-+		wdt@18009000 {
-+			 compatible = "arm,sp805" , "arm,primecell";
-+			 reg = <0x18009000 0x1000>;
-+			 interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
-+			 clocks = <&axi81_clk>;
-+			 clock-names = "apb_pclk";
-+		};
-+	};
-+
-+	uart3: serial@18023000 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x18023000 0x100>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-+		clock-frequency = <100000000>;
-+		clocks = <&axi81_clk>;
-+		status = "okay";
-+	};
-+
-+	uart0: serial@18020000 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x18020000 0x100>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&axi81_clk>;
-+		clock-frequency = <100000000>;
-+		status = "okay";
-+	};
-+
-+	gic: interrupt-controller@19021000 {
-+		compatible = "arm,cortex-a9-gic";
-+		#interrupt-cells = <3>;
-+		#address-cells = <0>;
-+		interrupt-controller;
-+		reg = <0x19021000 0x1000>,
-+		      <0x19020100 0x100>;
-+	};
-+
-+	L2: l2-cache {
-+		compatible = "arm,pl310-cache";
-+		reg = <0x19022000 0x1000>;
-+		cache-unified;
-+		cache-level = <2>;
-+	};
-+
-+	timer@19020200 {
-+		compatible = "arm,cortex-a9-global-timer";
-+		reg = <0x19020200 0x100>;
-+		interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&periph_clk>;
-+	};
-+
-+};
-diff --git a/arch/arm/boot/dts/bcm911360_entphn.dts b/arch/arm/boot/dts/bcm911360_entphn.dts
-new file mode 100644
-index 0000000..c5188d7
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm911360_entphn.dts
-@@ -0,0 +1,22 @@
-+/*
-+ * Copyright 2014 Broadcom Corporation.  All rights reserved.
-+ *
-+ * Unless you and Broadcom execute a separate written software license
-+ * agreement governing use of this software, this software is licensed to you
-+ * under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+
-+#include "bcm-cygnus.dtsi"
-+
-+/ {
-+	model = "Cygnus Enterprise Phone (BCM911360_ENTPHN)";
-+	compatible = "brcm,bcm11360", "brcm,cygnus";
-+};
-diff --git a/arch/arm/boot/dts/bcm911360k.dts b/arch/arm/boot/dts/bcm911360k.dts
-new file mode 100644
-index 0000000..866d1e1
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm911360k.dts
-@@ -0,0 +1,22 @@
-+/*
-+ * Copyright 2014 Broadcom Corporation.  All rights reserved.
-+ *
-+ * Unless you and Broadcom execute a separate written software license
-+ * agreement governing use of this software, this software is licensed to you
-+ * under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+
-+#include "bcm-cygnus.dtsi"
-+
-+/ {
-+	model = "Cygnus SVK (BCM911360K)";
-+	compatible = "brcm,bcm11360", "brcm,cygnus";
-+};
-diff --git a/arch/arm/boot/dts/bcm958300k.dts b/arch/arm/boot/dts/bcm958300k.dts
-new file mode 100644
-index 0000000..8739751
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm958300k.dts
-@@ -0,0 +1,22 @@
-+/*
-+ * Copyright 2014 Broadcom Corporation.  All rights reserved.
-+ *
-+ * Unless you and Broadcom execute a separate written software license
-+ * agreement governing use of this software, this software is licensed to you
-+ * under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+
-+#include "bcm-cygnus.dtsi"
-+
-+/ {
-+	model = "Cygnus SVK (BCM958300K)";
-+	compatible = "brcm,bcm58300", "brcm,cygnus";
-+};
--- 
-1.7.9.5
+RnJvbTogSm9uYXRoYW4gUmljaGFyZHNvbiA8am9uYXRoYXJAYnJvYWRjb20uY29tPgoKQWRkcyBp
+bml0aWFsIHN1cHBvcnQgZm9yIHRoZSBDeWdudXMgU29DIGJhc2VkIG9uIEJyb2FkY29t4oCZcyBp
+UHJvYyBzZXJpZXMuCk1vdmUgQVJDSF9CQ01fNTMwMXggdW5kZXIgdGhlIEFSQ0hfQkNNX0lQUk9D
+IGFyY2hpdGVjdHVyZS4KClJldmlld2VkLWJ5OiBSYXkgSnVpIDxyanVpQGJyb2FkY29tLmNvbT4K
+UmV2aWV3ZWQtYnk6IERlc21vbmQgTGl1IDxkZXNtb25kbEBicm9hZGNvbS5jb20+ClJldmlld2Vk
+LWJ5OiBKRCAoSmlhbmRvbmcpIFpoZW5nIDxqZHpoZW5nQGJyb2FkY29tLmNvbT4KVGVzdGVkLWJ5
+OiBKb25hdGhhbiBSaWNoYXJkc29uIDxqb25hdGhhckBicm9hZGNvbS5jb20+ClNpZ25lZC1vZmYt
+Ynk6IFNjb3R0IEJyYW5kZW4gPHNicmFuZGVuQGJyb2FkY29tLmNvbT4KLS0tCiBhcmNoL2FybS9t
+YWNoLWJjbS9LY29uZmlnICAgICAgfCAgIDMwICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KwogYXJjaC9hcm0vbWFjaC1iY20vTWFrZWZpbGUgICAgIHwgICAgMyArKysKIGFyY2gvYXJtL21h
+Y2gtYmNtL2JjbV9jeWdudXMuYyB8ICAgMjYgKysrKysrKysrKysrKysrKysrKysrKysrKysKIDMg
+ZmlsZXMgY2hhbmdlZCwgNTkgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gv
+YXJtL21hY2gtYmNtL2JjbV9jeWdudXMuYwoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtYmNt
+L0tjb25maWcgYi9hcmNoL2FybS9tYWNoLWJjbS9LY29uZmlnCmluZGV4IDJhYmFkNzQuLmVjYzU0
+NGEgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL21hY2gtYmNtL0tjb25maWcKKysrIGIvYXJjaC9hcm0v
+bWFjaC1iY20vS2NvbmZpZwpAQCAtNSw2ICs1LDM2IEBAIG1lbnVjb25maWcgQVJDSF9CQ00KIAog
+aWYgQVJDSF9CQ00KIAorbWVudSAiaVByb2MgU29DIGJhc2VkIE1hY2hpbmUgdHlwZXMiCisJY29u
+ZmlnIEFSQ0hfQkNNX0lQUk9DCisJCWJvb2wKKwkJc2VsZWN0IEFSTV9HSUMKKwkJc2VsZWN0IENB
+Q0hFX0wyWDAKKwkJc2VsZWN0IEhBVkVfQVJNX1NDVSBpZiBTTVAKKwkJc2VsZWN0IEhBVkVfQVJN
+X1RXRCBpZiBTTVAKKwkJc2VsZWN0IEFSTV9HTE9CQUxfVElNRVIKKworCQlzZWxlY3QgQ0xLU1JD
+X01NSU8KKwkJc2VsZWN0IEFSQ0hfUkVRVUlSRV9HUElPTElCCisJCXNlbGVjdCBBUk1fQU1CQQor
+CQlzZWxlY3QgUElOQ1RSTAorCQloZWxwCisJCSAgVGhpcyBlbmFibGVzIHN1cHBvcnQgZm9yIHN5
+c3RlbXMgYmFzZWQgb24gQnJvYWRjb20gSVBST0MgYXJjaGl0ZWN0ZWQgU29Dcy4KKwkJICBUaGUg
+SVBST0MgY29tcGxleCBjb250YWlucyBvbmUgb3IgbW9yZSBBUk0gQ1BVcyBhbG9uZyB3aXRoIGNv
+bW1vbgorCQkgIGNvcmUgcGVyaXBlcmFscy4gQXBwbGljYXRpb24gc3BlY2lmaWMgU29DcyBhcmUg
+Y3JlYXRlZCBieSBhZGRpbmcgYQorCQkgIHVBcmNoaXRlY3R1cmUgY29udGFpbmluZyBwZXJpcGhl
+cmFscyBvdXRzaWRlIG9mIHRoZSBJUFJPQyBjb21wbGV4LgorCQkgIEN1cnJlbnRseSBzdXBwb3J0
+ZWQgU29DcyBhcmUgQ3lnbnVzLgorCisJY29uZmlnIEFSQ0hfQkNNX0NZR05VUworCQlib29sICJC
+cm9hZGNvbSBDeWdudXMgU3VwcG9ydCIgaWYgQVJDSF9NVUxUSV9WNworCQlzZWxlY3QgQVJDSF9C
+Q01fSVBST0MKKwkJaGVscAorCQkgIEVuYWJsZSBzdXBwb3J0IGZvciB0aGUgQ3lnbnVzIGZhbWls
+eSwKKwkJICB3aGljaCBpbmNsdWRlcyB0aGUgZm9sbG93aW5nIHZhcmlhbnRzOgorCQkgIEJDTTEx
+MzAwLCBCQ00xMTMyMCwgQkNNMTEzNTAsIEJDTTExMzYwLAorCQkgIEJDTTU4MzAwLCBCQ001ODMw
+MiwgQkNNNTgzMDMsIEJDTTU4MzA1LgorZW5kbWVudQorCiBjb25maWcgQVJDSF9CQ01fTU9CSUxF
+CiAJYm9vbCAiQnJvYWRjb20gTW9iaWxlIFNvQyBTdXBwb3J0IiBpZiBBUkNIX01VTFRJX1Y3CiAJ
+c2VsZWN0IEFSQ0hfUkVRVUlSRV9HUElPTElCCmRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNoLWJj
+bS9NYWtlZmlsZSBiL2FyY2gvYXJtL21hY2gtYmNtL01ha2VmaWxlCmluZGV4IDMwMGFlNGIuLjM0
+ZDQ1YmEgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL21hY2gtYmNtL01ha2VmaWxlCisrKyBiL2FyY2gv
+YXJtL21hY2gtYmNtL01ha2VmaWxlCkBAIC0xMCw2ICsxMCw5IEBACiAjIG9mIE1FUkNIQU5UQUJJ
+TElUWSBvciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUKICMgR05V
+IEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KIAorIyBDeWdudXMKK29i
+ai0kKENPTkZJR19BUkNIX0JDTV9DWUdOVVMpICs9ICBiY21fY3lnbnVzLm8KKwogIyBCQ00yODFY
+WAogb2JqLSQoQ09ORklHX0FSQ0hfQkNNXzI4MVhYKQkrPSBib2FyZF9iY20yODF4eC5vCiAKZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtYmNtL2JjbV9jeWdudXMuYyBiL2FyY2gvYXJtL21hY2gt
+YmNtL2JjbV9jeWdudXMuYwpuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi40MWI0
+OTMzCi0tLSAvZGV2L251bGwKKysrIGIvYXJjaC9hcm0vbWFjaC1iY20vYmNtX2N5Z251cy5jCkBA
+IC0wLDAgKzEsMjYgQEAKKy8qCisgKiBDb3B5cmlnaHQgMjAxNCBCcm9hZGNvbSBDb3Jwb3JhdGlv
+bi4gIEFsbCByaWdodHMgcmVzZXJ2ZWQuCisgKgorICogVW5sZXNzIHlvdSBhbmQgQnJvYWRjb20g
+ZXhlY3V0ZSBhIHNlcGFyYXRlIHdyaXR0ZW4gc29mdHdhcmUgbGljZW5zZQorICogYWdyZWVtZW50
+IGdvdmVybmluZyB1c2Ugb2YgdGhpcyBzb2Z0d2FyZSwgdGhpcyBzb2Z0d2FyZSBpcyBsaWNlbnNl
+ZCB0byB5b3UKKyAqIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExp
+Y2Vuc2UgYXMKKyAqIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uIHZl
+cnNpb24gMi4KKyAqCisgKiBUaGlzIHByb2dyYW0gaXMgZGlzdHJpYnV0ZWQgImFzIGlzIiBXSVRI
+T1VUIEFOWSBXQVJSQU5UWSBvZiBhbnkKKyAqIGtpbmQsIHdoZXRoZXIgZXhwcmVzcyBvciBpbXBs
+aWVkOyB3aXRob3V0IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFudHkKKyAqIG9mIE1FUkNIQU5UQUJJ
+TElUWSBvciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUKKyAqIEdO
+VSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3JlIGRldGFpbHMuCisgKi8KKworI2luY2x1
+ZGUgPGFzbS9tYWNoL2FyY2guaD4KKworc3RhdGljIGNvbnN0IGNoYXIgY29uc3QgKmJjbV9jeWdu
+dXNfZHRfY29tcGF0W10gPSB7CisJImJyY20sY3lnbnVzIiwKKwlOVUxMLAorfTsKKworRFRfTUFD
+SElORV9TVEFSVChCQ01fQ1lHTlVTX0RULCAiQnJvYWRjb20gQ3lnbnVzIFNvQyIpCisJLmwyY19h
+dXhfdmFsCT0gMCwKKwkubDJjX2F1eF9tYXNrCT0gfjAsCisJLmR0X2NvbXBhdCA9IGJjbV9jeWdu
+dXNfZHRfY29tcGF0LAorTUFDSElORV9FTkQKLS0gCjEuNy45LjUKCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
