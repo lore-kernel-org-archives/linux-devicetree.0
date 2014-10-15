@@ -1,32 +1,40 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] mtd: docg3: add device-tree support
-Date: Wed, 15 Oct 2014 22:20:40 +0200
-Message-ID: <87vbnl6q5j.fsf@free.fr>
-References: <1411846470-30041-1-git-send-email-robert.jarzmik@free.fr>
-	<87oatma15s.fsf@free.fr>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87oatma15s.fsf-GANU6spQydw@public.gmane.org> (Robert Jarzmik's message of "Wed, 08
-	Oct 2014 20:04:15 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: zyw@rock-chips.com
+Subject: [PATCH 0/4] add suspend support for RK3288
+Date: Wed, 15 Oct 2014 13:46:27 -0700
+Message-ID: <1413405987-16196-1-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Mike Turquette <mturquette@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Chris Zhong <zyw@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> writes:
+From: Chris Zhong <zyw@rock-chips.com>
 
-> Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> writes:
->
->> Add device-tree support. This is straightforward as docg3 only uses the
->> standard IOMEM resources.
-> Brian, David, ping ?
+this is the 1st version of suspend. RK3288 can shut down the cpu, gpu and
+other device controllers in suspend, and it will pull the GLOBAL_PWROFF pin
+to high in the final stage of the process of suspend, pull the pin to low again
+when resume.
 
-Brian, David, reping ?
+
+Chris Zhong (4):
+  ARM: rockchip: add suspend and resume for RK3288
+  clk: rockchip: RK3288: add suspend and resume
+  ARM: dts: add RK3288 suspend support
+  ARM: rockchip: add pmu-sram sub
+
+ .../devicetree/bindings/arm/rockchip/pmu-sram.txt  |   15 +
+ arch/arm/boot/dts/rk3288.dtsi                      |   11 +
+ arch/arm/mach-rockchip/Makefile                    |    1 +
+ arch/arm/mach-rockchip/pm.c                        |  292 ++++++++++++++++++++
+ arch/arm/mach-rockchip/pm.h                        |  102 +++++++
+ arch/arm/mach-rockchip/rockchip.c                  |   11 +-
+ arch/arm/mach-rockchip/sleep.S                     |   87 ++++++
+ drivers/clk/rockchip/clk-rk3288.c                  |   61 ++++
+ 8 files changed, 578 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt
+ create mode 100644 arch/arm/mach-rockchip/pm.c
+ create mode 100644 arch/arm/mach-rockchip/pm.h
+ create mode 100644 arch/arm/mach-rockchip/sleep.S
 
 -- 
-Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
