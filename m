@@ -1,98 +1,48 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 1/4] dwc3: exynos: Add support for SCLK present on
- Exynos7
-Date: Wed, 15 Oct 2014 09:50:31 -0500
-Message-ID: <20141015145031.GA11511@saruman>
-References: <1412677176-3850-1-git-send-email-gautam.vivek@samsung.com>
- <1412677176-3850-2-git-send-email-gautam.vivek@samsung.com>
- <00f101cfe6a1$d772c5a0$865850e0$%tikhomirov@samsung.com>
- <20141013224409.GB1496@saruman>
- <CAFp+6iEKkHxJNzkf+LOWJHtOhtZMe7HG_Vg97_NLfhJw11SQpA@mail.gmail.com>
-Reply-To: <balbi@ti.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
+Date: Wed, 15 Oct 2014 16:55:39 +0200
+Message-ID: <20141015145539.GB18413@lunn.ch>
+References: <-7443282711873112734@unknownmsgid>
+ <20141003141102.GJ3895@titan.lakedaemon.net>
+ <542EBB93.108@gmail.com>
+ <A9781A2E-F3CA-4E8A-833C-D167B456D9F7@perenite.com>
+ <542EC3A3.1060605@gmail.com>
+ <1ACB5318-863E-40D8-8B27-41F1C0D0A4B8@perenite.com>
+ <5432BFB1.2060300@gmail.com>
+ <CE7A9795-C2AF-451A-8018-3A0B8788BF60@perenite.com>
+ <20141015144259.GB17447@titan.lakedaemon.net>
+ <543E898D.10606@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAFp+6iEKkHxJNzkf+LOWJHtOhtZMe7HG_Vg97_NLfhJw11SQpA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: Felipe Balbi <balbi@ti.com>, Anton Tikhomirov <av.tikhomirov@samsung.com>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Kukjin Kim <kgene.kim@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, robh+dt <robh+dt@kernel.org>, kishon <kishon@ti.com>
+In-Reply-To: <543E898D.10606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Benoit Masson <benoitm-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---ibTvN161/egqYuK8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> >Do you have a link to an email thread or the patch Subject line?  I can
+> >confirm it's missing from mvebu/fixes...
+> 
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/275487.html
+> 
+> But you and Andrew should check what Arnd suggested. IIRC, there
+> was also an appropriate follow-up patch discussion started by
+> Andrew.
 
-Hi,
+There was a lot of back and forth with Arnd. In the end, he gave up
+arguing because too many voices did not like his solution. So my
+original version stands.
 
-On Tue, Oct 14, 2014 at 10:25:00AM +0530, Vivek Gautam wrote:
-> Hi Felipe,
->=20
->=20
-> On Tue, Oct 14, 2014 at 4:14 AM, Felipe Balbi <balbi@ti.com> wrote:
-> > Hi,
-> >
-> > On Mon, Oct 13, 2014 at 01:54:59PM +0900, Anton Tikhomirov wrote:
-> >> Hi Vivek,
-> >>
-> >> > Exynos7 also has a separate special gate clock going to the IP
-> >> > apart from the usual AHB clock. So add support for the same.
-> >>
-> >> As we discussed before, Exynos7 SoCs have 7 clocks to be controlled
-> >> by the driver. Adding only sclk is not enough.
-> >>
-> >> >
-> >> > Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
-> >> > ---
-> >> >  drivers/usb/dwc3/dwc3-exynos.c |   16 ++++++++++++++++
-> >> >  1 file changed, 16 insertions(+)
-> >> >
-> >> > diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-
-> >> > exynos.c
-> >> > index 3951a65..7dc6a98 100644
-> >> > --- a/drivers/usb/dwc3/dwc3-exynos.c
-> >> > +++ b/drivers/usb/dwc3/dwc3-exynos.c
-> >> > @@ -35,6 +35,7 @@ struct dwc3_exynos {
-> >> >     struct device           *dev;
-> >> >
-> >> >     struct clk              *clk;
-> >>
-> >> The clock "clk" in Exynos5 just gated all that above 7 clocks, which
-> >> we should control separately now in Exynos7.
-> >>
-> >
-> > should I drop this patch for now ?
->=20
-> Yes, better to hold this for some time till we get more clarity
-> from our h/w team.
+However, the patch at the end of 
 
-now dropped. Please a new one if needed.
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/275528.html
 
---=20
-balbi
+is useful, and it would be nice if it could be merged as well.
 
---ibTvN161/egqYuK8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUPom3AAoJEIaOsuA1yqREa7wP/Albssa+SpegQ4V4/1z6k/sB
-klRtejJ8nTp0PVhF0R3JIdrMCqlzYgct29hzj1pShFhye9aD9OqZVixETNE2eEif
-FX5JFZ/9XojyqlH4ejliL43pVz8aabG2Bqw6MKv2xgW06tRMM2OeFAubVGFLK+H9
-Ibb+P640tXwpKxa1+Ys1BhJWciGsp9a40JOjMX/k8LD4tDWpErFsvUwlj6qqlNb+
-JOVtLGsku8Fi1ByVFogiqOX2sVzPpm0h5gGrYEK1qm97RKBgWTgZw12dMxWoUXoV
-wUhmutXn+7GPJr/FslTt8v8raKDU+p+g7usHoxh/lgdnhQ6+W4U47Ezth+rfZYwi
-fbbPJIqVRSUml/tmDN42lin5PvO+revYJ1KbycLCTWOUb/18VLGbXkusmy+a3hVl
-k+6SbGNa99NysEAGpGKx6mbzpXOdOqYWfnpP3+i82+NRQslIEWzTs9lGP7cnPG66
-dpPSxEPmT1+MJlGB1uaz3v5/LZkbOrzJAK88aLHg7jMefQAFhJlKq7XhFUhINfdr
-LcLtkwRWI3P6BkcvlKrGAvqU5kWeVS6AsbbqXp6OyQ6WF8Vw9k1aiut3iA0YhP2p
-VaH3mKrcSFHJmVl/sWtP/8eY1Cta0x1CsXWbXHC2K49EigicbPYd3f7o7LxUMoiN
-GL4Zo8Fs7tDtoqLfeQ7l
-=9djE
------END PGP SIGNATURE-----
-
---ibTvN161/egqYuK8--
+   Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
