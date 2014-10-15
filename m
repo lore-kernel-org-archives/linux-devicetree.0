@@ -1,115 +1,62 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 00/12] rtc: omap: fixes and power-off feature
-Date: Wed, 15 Oct 2014 12:08:32 -0500
-Message-ID: <20141015170832.GD15770@saruman>
-References: <1412881594-25678-1-git-send-email-johan@kernel.org>
- <20141015165452.GB15770@saruman>
- <20141015170628.GA13824@localhost>
-Reply-To: <balbi@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Oiv9uiLrevHtW1RS"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141015170628.GA13824@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Felipe Balbi <balbi@ti.com>, Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Andrew Morton <akpm@linux-foundation.org>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, Colin Foe-Parker <colin.foeparker@logicpd.com>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
+From: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v5 0/6] add basic rk3288 smp support
+Date: Wed, 15 Oct 2014 10:22:59 -0700
+Message-ID: <1413393785-26783-1-git-send-email-kever.yang@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---Oiv9uiLrevHtW1RS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 15, 2014 at 07:06:28PM +0200, Johan Hovold wrote:
-> On Wed, Oct 15, 2014 at 11:55:02AM -0500, Felipe Balbi wrote:
-> > Hi,
-> >=20
-> > On Thu, Oct 09, 2014 at 09:06:22PM +0200, Johan Hovold wrote:
-> > > This series fixes a few issues with the omap rtc-driver, cleans up a =
-bit
-> > > and finally adds support for the PMIC control feature found in some
-> > > revisions of this RTC IP block.
-> > >=20
-> > > Ultimately, this allows for powering off the Beaglebone and waking it=
- up
-> > > again on RTC alarms.
-> > >=20
-> > > I noticed yesterday that Lokesh Vutla recently posted some patches to
-> > > add regulator support to this driver. [1] While that series has some
-> > > issues that needs to be addressed, I still think it could be a good i=
-dea
-> > > to rebase my pmic_power_en patch on top of it as it adds some long
-> > > overdue device abstraction. That would be needed anyway in order to
-> > > support the new power-off infrastructure that's in the pipe in a clean
-> > > way. [2]
-> > >=20
-> > > So my suggestion is to merge the first seven patches, rebase Lokesh
-> > > series on top of that, and then I rebase my final five patches on top
-> > > of that in turn. Hopefully, the new power-off handler call chain will
-> > > have stabilised by then.
-> >=20
-> > BTW, how do you test this series ?
->=20
-> Set a 30 second wakealarm using the sysfs attribute of the rtc class
-> device and power off the BBB:
->=20
-> 	echo +30 >wakealarm; poweroff
+rk3288 is qual-core CPU Soc, we enable the smp in this patch.
 
-sweet!!!! It worked just fine :-)
+In version 3 we use regmap and pmu syscon for cpu power on/off.
+This should be work after Pankaj Dubey's patch applied:
+"syscon: Decouple syscon interface from platform devices"
+(https://lkml.org/lkml/2014/9/30/156)
 
-Too bad there's yet another DRM bug:
+Changes in v5:
+- use read_cpuid_part() but not read_cpuid_part_number()
 
-[  271.150158] Kernel panic - not syncing: Attempted to kill init! exitcode=
-=3D0x00000000
-[  271.150158]=20
-[  271.159725] CPU: 0 PID: 1 Comm: systemd-shutdow Not tainted 3.17.0-08392=
--g7fe2269-dirty #326
-[  271.168567] [<c00175a4>] (unwind_backtrace) from [<c00132f0>] (show_stac=
-k+0x20/0x24)
-[  271.176668] [<c00132f0>] (show_stack) from [<c06573a4>] (dump_stack+0x8c=
-/0xa4)
-[  271.184215] [<c06573a4>] (dump_stack) from [<c0654f10>] (panic+0xa0/0x22=
-0)
-[  271.191405] [<c0654f10>] (panic) from [<c0049e54>] (do_exit+0x974/0x9d0)
-[  271.198410] [<c0049e54>] (do_exit) from [<c0067694>] (SyS_reboot+0x14c/0=
-x1e8)
-[  271.205870] [<c0067694>] (SyS_reboot) from [<c000f080>] (ret_fast_syscal=
-l+0x0/0x48)
-[  271.214023] drm_kms_helper: panic occurred, switching back to text conso=
-le
-[  271.221312] ---[ end Kernel panic - not syncing: Attempted to kill init!=
- exitcode=3D0x00000000
+Changes in v4:
+- add rockchip,pmu property into cpus.txt
+- merge patch "fix up rk3288 smp cpu hotplug" into this patch
+- remove "rockchip,rk3288-pmu-sram" because we don't use it here
+- modify the author info for patches
 
-In any case, board still powered up after 30 seconds(-ish). So this gets
-a:
+Changes in v3:
+- add pmu regmap patches in version 3
+- use one ops and secondary_starup for all rockchip SOCs
+- pick back the power domain operation for cpu hotplug
+- remove 'enable-method' from this patch
+- add compitable name "rockchip,rk3288-pmu-sram" for pmu-intmem
 
-Tested-by: Felipe Balbi <balbi@ti.com>
+Changes in v2:
+- use rk3288_boot_secondary instead ofsmp_boot_secondary
+- discards the power domain operation
+- handle the per cpu starup when actived by 'sev'
+- adjust the alignment
 
---=20
-balbi
+Kever Yang (6):
+  ARM: rockchip: convert to regmap and use pmu syscon if available
+  ARM: rockchip: add option to access the pmu via a phandle in
+    smp_operations
+  ARM: dts: rockchip: add pmu references to cpus nodes
+  ARM: rockchip: add basic smp support for rk3288
+  ARM: dts: rockchip: add intmem node for rk3288 smp support
+  ARM: dts: rockchip: add reset for CPU nodes
 
---Oiv9uiLrevHtW1RS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+ Documentation/devicetree/bindings/arm/cpus.txt |   9 +
+ arch/arm/boot/dts/rk3288.dtsi                  |  18 ++
+ arch/arm/mach-rockchip/headsmp.S               |   5 +-
+ arch/arm/mach-rockchip/platsmp.c               | 223 ++++++++++++++++++++-----
+ 4 files changed, 211 insertions(+), 44 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+-- 
+1.9.1
 
-iQIcBAEBAgAGBQJUPqoQAAoJEIaOsuA1yqREMD0P/03vjisF9WL1IfFIpeehMHRg
-NCOVn17TYM2WTzdbIUmQ1H4uZFC7eu2mBc2yeKViNMid/x2KeDhWtoSbPPJU1xWc
-Pxqgl6cPMtsu30+veMTYKVqixm5dUlIyLo7o1aSZA1zzFMZmUd04DN+fyzZQ4OVr
-bDHa4us7IGQQHu313+77sRCGWlyvC9IYXbR0l/nFSuAi7DZfszq0i170fGrZcWmW
-99893KGsnZWGnMdqH4R5SceEpZjIBxV7rIhSLa+2BB1TehvTSJEJOJYPrzZGlA94
-5czhtsxdErmVsRJb2pjogE2YA+TfovVj8Bqi5F85wkoZFOFFcGTsVBaHCpYjek3m
-Dq3JXcVJwVIrTniaa35liIQdyPnLjfCP8x3URwk8iYXhEs7WzDrvI9qi+n/8CrRh
-Q0oxReRrtbZH3/vmtejm9e35z+28AfVwzvtEl/upG1ozl042Vv9JoOvtPiGTIoq0
-9oUIzYreH4tk4aQK8xnCFAVNe8tVogJMYoGpIqQ6+3khlZHcINvg32X6Nv16l+ed
-ATFfhBkp5dM5bX1E9SvgdAtHGICkf20hRUW4cKX9Ta9tH6vBebbvZEUVTjgQZm8g
-G6RXKrSmypcpixZuEz+OLEOqEeoLrBNRK9PEu+pf4A9/S3Qcl0R5FKC3BddglXSb
-a8ayWskm6tjGe8Uxqrom
-=O9U4
------END PGP SIGNATURE-----
-
---Oiv9uiLrevHtW1RS--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
