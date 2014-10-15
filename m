@@ -1,58 +1,40 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC v3 PATCH 1/5] of: Add standard property for poweroff
- capability
-Date: Wed, 15 Oct 2014 15:42:45 +0200
-Message-ID: <20141015134245.GH27755@sirena.org.uk>
-References: <1413268273-15151-1-git-send-email-romain.perier@gmail.com>
- <20141015124142.92D0EC40B00@trevor.secretlab.ca>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [RFC v3 PATCH 1/5] of: Add standard property for poweroff capability
+Date: Wed, 15 Oct 2014 15:56:03 +0200
+Message-ID: <40398493.mf2VbOGMuV@phil>
+References: <1413268273-15151-1-git-send-email-romain.perier@gmail.com> <20141015124142.92D0EC40B00@trevor.secretlab.ca> <20141015134245.GH27755@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="CsAk07yibld3GWUQ"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141015124142.92D0EC40B00@trevor.secretlab.ca>
+In-Reply-To: <20141015134245.GH27755@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Romain Perier <romain.perier@gmail.com>, devicetree@vger.kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, heiko@sntech.de, robh@kernel.org, mark.rutland@arm.com
+To: Mark Brown <broonie@kernel.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Romain Perier <romain.perier@gmail.com>, devicetree@vger.kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
+Am Mittwoch, 15. Oktober 2014, 15:42:45 schrieb Mark Brown:
+> On Wed, Oct 15, 2014 at 02:41:42PM +0200, Grant Likely wrote:
+> > , Romain Perier <romain.perier@gmail.com>
+> > 
+> >  wrote:
+> > > Several drivers create their own devicetree property when they register
+> > > poweroff capabilities. This is for example the case for mfd, regulator
+> > > or power drivers which define "vendor,system-power-controller" property.
+> > > This patch adds support for a standard property "poweroff-source"
+> > > which marks the device as able to shutdown the system.
+> > > 
+> > > Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> > 
+> > Acked-by: Grant Likely <grant.likely@linaro.org>
+> > 
+> > And same for the documentation patches.
+> 
+> I guess I should apply these (except the DTS update) since the first
+> user that's being added is a regulator driver?
 
---CsAk07yibld3GWUQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I'd think so.
+In any case, I'll take the "ARM: dts: ..." patch if you take the others.
 
-On Wed, Oct 15, 2014 at 02:41:42PM +0200, Grant Likely wrote:
-> , Romain Perier <romain.perier@gmail.com>
->  wrote:
-> > Several drivers create their own devicetree property when they register
-> > poweroff capabilities. This is for example the case for mfd, regulator
-> > or power drivers which define "vendor,system-power-controller" property.
-> > This patch adds support for a standard property "poweroff-source"
-> > which marks the device as able to shutdown the system.
 
-> > Signed-off-by: Romain Perier <romain.perier@gmail.com>
-
-> Acked-by: Grant Likely <grant.likely@linaro.org>
-
-> And same for the documentation patches.
-
-I guess I should apply these (except the DTS update) since the first
-user that's being added is a regulator driver?
-
---CsAk07yibld3GWUQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUPnnQAAoJECTWi3JdVIfQ+w0H/3A/sjye4JqIOxvenRIDnuQZ
-jlt/izB74roth3m9ga3wYqURXSqH+V9Tr/lMtffwBK3BLDnegA/+XKI+xQRuevyg
-629j1b5koylFOm5foFS+jGXyff7nPw5Ia7rDrr3uGpglsgAAW9ouwLjg42TxD9IH
-JWXUiyKdxcrd4tfYVIg58MPqtmugo7laNcfuFW2kWtLGox+VZD4vEQRmZcHLPML7
-woWBWONI9aQdEvZD86YsF14Dbdeb+fM8ZRg7ek9E9l0nyvQynJTjaQljL3OxAzh0
-5r3QGetlBsm66uM5qLRz0hRSa+5PWJjcAD9x9NAoIgh2U+Od+WFIJpU/ny/RozM=
-=JrLv
------END PGP SIGNATURE-----
-
---CsAk07yibld3GWUQ--
+Heiko
