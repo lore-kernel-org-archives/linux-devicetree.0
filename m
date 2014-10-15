@@ -1,90 +1,108 @@
 From: Scott Branden <sbranden@broadcom.com>
-Subject: [PATCH v5 1/6] ARM: cygnus: Initial support for Broadcom Cygnus SoC
-Date: Tue, 14 Oct 2014 19:58:51 -0700
-Message-ID: <1413341936-17606-2-git-send-email-sbranden@broadcom.com>
+Subject: [PATCH v5 2/6] dt-bindings: Document Broadcom Cygnus SoC and clocks
+Date: Tue, 14 Oct 2014 19:58:52 -0700
+Message-ID: <1413341936-17606-3-git-send-email-sbranden@broadcom.com>
 References: <Scott Branden <sbranden@broadcom.com>
  <1413341936-17606-1-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1413341936-17606-1-git-send-email-sbranden@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar
- Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho
- Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>
-Cc: devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>, JD Zheng <jdzheng@broadcom.com>, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>
+Cc: JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSm9uYXRoYW4gUmljaGFyZHNvbiA8am9uYXRoYXJAYnJvYWRjb20uY29tPgoKQWRkcyBp
-bml0aWFsIHN1cHBvcnQgZm9yIHRoZSBDeWdudXMgU29DIGJhc2VkIG9uIEJyb2FkY29t4oCZcyBp
-UHJvYyBzZXJpZXMuCk1vdmUgQVJDSF9CQ01fNTMwMXggdW5kZXIgdGhlIEFSQ0hfQkNNX0lQUk9D
-IGFyY2hpdGVjdHVyZS4KClJldmlld2VkLWJ5OiBSYXkgSnVpIDxyanVpQGJyb2FkY29tLmNvbT4K
-UmV2aWV3ZWQtYnk6IERlc21vbmQgTGl1IDxkZXNtb25kbEBicm9hZGNvbS5jb20+ClJldmlld2Vk
-LWJ5OiBKRCAoSmlhbmRvbmcpIFpoZW5nIDxqZHpoZW5nQGJyb2FkY29tLmNvbT4KVGVzdGVkLWJ5
-OiBKb25hdGhhbiBSaWNoYXJkc29uIDxqb25hdGhhckBicm9hZGNvbS5jb20+ClNpZ25lZC1vZmYt
-Ynk6IFNjb3R0IEJyYW5kZW4gPHNicmFuZGVuQGJyb2FkY29tLmNvbT4KLS0tCiBhcmNoL2FybS9t
-YWNoLWJjbS9LY29uZmlnICAgICAgfCAgIDMwICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KwogYXJjaC9hcm0vbWFjaC1iY20vTWFrZWZpbGUgICAgIHwgICAgMyArKysKIGFyY2gvYXJtL21h
-Y2gtYmNtL2JjbV9jeWdudXMuYyB8ICAgMjYgKysrKysrKysrKysrKysrKysrKysrKysrKysKIDMg
-ZmlsZXMgY2hhbmdlZCwgNTkgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gv
-YXJtL21hY2gtYmNtL2JjbV9jeWdudXMuYwoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtYmNt
-L0tjb25maWcgYi9hcmNoL2FybS9tYWNoLWJjbS9LY29uZmlnCmluZGV4IDJhYmFkNzQuLmVjYzU0
-NGEgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL21hY2gtYmNtL0tjb25maWcKKysrIGIvYXJjaC9hcm0v
-bWFjaC1iY20vS2NvbmZpZwpAQCAtNSw2ICs1LDM2IEBAIG1lbnVjb25maWcgQVJDSF9CQ00KIAog
-aWYgQVJDSF9CQ00KIAorbWVudSAiaVByb2MgU29DIGJhc2VkIE1hY2hpbmUgdHlwZXMiCisJY29u
-ZmlnIEFSQ0hfQkNNX0lQUk9DCisJCWJvb2wKKwkJc2VsZWN0IEFSTV9HSUMKKwkJc2VsZWN0IENB
-Q0hFX0wyWDAKKwkJc2VsZWN0IEhBVkVfQVJNX1NDVSBpZiBTTVAKKwkJc2VsZWN0IEhBVkVfQVJN
-X1RXRCBpZiBTTVAKKwkJc2VsZWN0IEFSTV9HTE9CQUxfVElNRVIKKworCQlzZWxlY3QgQ0xLU1JD
-X01NSU8KKwkJc2VsZWN0IEFSQ0hfUkVRVUlSRV9HUElPTElCCisJCXNlbGVjdCBBUk1fQU1CQQor
-CQlzZWxlY3QgUElOQ1RSTAorCQloZWxwCisJCSAgVGhpcyBlbmFibGVzIHN1cHBvcnQgZm9yIHN5
-c3RlbXMgYmFzZWQgb24gQnJvYWRjb20gSVBST0MgYXJjaGl0ZWN0ZWQgU29Dcy4KKwkJICBUaGUg
-SVBST0MgY29tcGxleCBjb250YWlucyBvbmUgb3IgbW9yZSBBUk0gQ1BVcyBhbG9uZyB3aXRoIGNv
-bW1vbgorCQkgIGNvcmUgcGVyaXBlcmFscy4gQXBwbGljYXRpb24gc3BlY2lmaWMgU29DcyBhcmUg
-Y3JlYXRlZCBieSBhZGRpbmcgYQorCQkgIHVBcmNoaXRlY3R1cmUgY29udGFpbmluZyBwZXJpcGhl
-cmFscyBvdXRzaWRlIG9mIHRoZSBJUFJPQyBjb21wbGV4LgorCQkgIEN1cnJlbnRseSBzdXBwb3J0
-ZWQgU29DcyBhcmUgQ3lnbnVzLgorCisJY29uZmlnIEFSQ0hfQkNNX0NZR05VUworCQlib29sICJC
-cm9hZGNvbSBDeWdudXMgU3VwcG9ydCIgaWYgQVJDSF9NVUxUSV9WNworCQlzZWxlY3QgQVJDSF9C
-Q01fSVBST0MKKwkJaGVscAorCQkgIEVuYWJsZSBzdXBwb3J0IGZvciB0aGUgQ3lnbnVzIGZhbWls
-eSwKKwkJICB3aGljaCBpbmNsdWRlcyB0aGUgZm9sbG93aW5nIHZhcmlhbnRzOgorCQkgIEJDTTEx
-MzAwLCBCQ00xMTMyMCwgQkNNMTEzNTAsIEJDTTExMzYwLAorCQkgIEJDTTU4MzAwLCBCQ001ODMw
-MiwgQkNNNTgzMDMsIEJDTTU4MzA1LgorZW5kbWVudQorCiBjb25maWcgQVJDSF9CQ01fTU9CSUxF
-CiAJYm9vbCAiQnJvYWRjb20gTW9iaWxlIFNvQyBTdXBwb3J0IiBpZiBBUkNIX01VTFRJX1Y3CiAJ
-c2VsZWN0IEFSQ0hfUkVRVUlSRV9HUElPTElCCmRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNoLWJj
-bS9NYWtlZmlsZSBiL2FyY2gvYXJtL21hY2gtYmNtL01ha2VmaWxlCmluZGV4IDMwMGFlNGIuLjM0
-ZDQ1YmEgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL21hY2gtYmNtL01ha2VmaWxlCisrKyBiL2FyY2gv
-YXJtL21hY2gtYmNtL01ha2VmaWxlCkBAIC0xMCw2ICsxMCw5IEBACiAjIG9mIE1FUkNIQU5UQUJJ
-TElUWSBvciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUKICMgR05V
-IEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KIAorIyBDeWdudXMKK29i
-ai0kKENPTkZJR19BUkNIX0JDTV9DWUdOVVMpICs9ICBiY21fY3lnbnVzLm8KKwogIyBCQ00yODFY
-WAogb2JqLSQoQ09ORklHX0FSQ0hfQkNNXzI4MVhYKQkrPSBib2FyZF9iY20yODF4eC5vCiAKZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtYmNtL2JjbV9jeWdudXMuYyBiL2FyY2gvYXJtL21hY2gt
-YmNtL2JjbV9jeWdudXMuYwpuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi40MWI0
-OTMzCi0tLSAvZGV2L251bGwKKysrIGIvYXJjaC9hcm0vbWFjaC1iY20vYmNtX2N5Z251cy5jCkBA
-IC0wLDAgKzEsMjYgQEAKKy8qCisgKiBDb3B5cmlnaHQgMjAxNCBCcm9hZGNvbSBDb3Jwb3JhdGlv
-bi4gIEFsbCByaWdodHMgcmVzZXJ2ZWQuCisgKgorICogVW5sZXNzIHlvdSBhbmQgQnJvYWRjb20g
-ZXhlY3V0ZSBhIHNlcGFyYXRlIHdyaXR0ZW4gc29mdHdhcmUgbGljZW5zZQorICogYWdyZWVtZW50
-IGdvdmVybmluZyB1c2Ugb2YgdGhpcyBzb2Z0d2FyZSwgdGhpcyBzb2Z0d2FyZSBpcyBsaWNlbnNl
-ZCB0byB5b3UKKyAqIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExp
-Y2Vuc2UgYXMKKyAqIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uIHZl
-cnNpb24gMi4KKyAqCisgKiBUaGlzIHByb2dyYW0gaXMgZGlzdHJpYnV0ZWQgImFzIGlzIiBXSVRI
-T1VUIEFOWSBXQVJSQU5UWSBvZiBhbnkKKyAqIGtpbmQsIHdoZXRoZXIgZXhwcmVzcyBvciBpbXBs
-aWVkOyB3aXRob3V0IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFudHkKKyAqIG9mIE1FUkNIQU5UQUJJ
-TElUWSBvciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUKKyAqIEdO
-VSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3JlIGRldGFpbHMuCisgKi8KKworI2luY2x1
-ZGUgPGFzbS9tYWNoL2FyY2guaD4KKworc3RhdGljIGNvbnN0IGNoYXIgY29uc3QgKmJjbV9jeWdu
-dXNfZHRfY29tcGF0W10gPSB7CisJImJyY20sY3lnbnVzIiwKKwlOVUxMLAorfTsKKworRFRfTUFD
-SElORV9TVEFSVChCQ01fQ1lHTlVTX0RULCAiQnJvYWRjb20gQ3lnbnVzIFNvQyIpCisJLmwyY19h
-dXhfdmFsCT0gMCwKKwkubDJjX2F1eF9tYXNrCT0gfjAsCisJLmR0X2NvbXBhdCA9IGJjbV9jeWdu
-dXNfZHRfY29tcGF0LAorTUFDSElORV9FTkQKLS0gCjEuNy45LjUKCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+From: Jonathan Richardson <jonathar@broadcom.com>
+
+Reviewed-by: Arun Parameswaran <aparames@broadcom.com>
+Tested-by: Jonathan Richardson <jonathar@broadcom.com>
+Reviewed-by: JD (Jiandong) Zheng <jdzheng@broadcom.com>
+Reviewed-by: Ray Jui <rjui@broadcom.com>
+Signed-off-by: Scott Branden <sbranden@broadcom.com>
+---
+ .../devicetree/bindings/arm/bcm/cygnus.txt         |   31 ++++++++++++++++++
+ .../devicetree/bindings/clock/bcm-cygnus-clock.txt |   34 ++++++++++++++++++++
+ 2 files changed, 65 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/cygnus.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/bcm/cygnus.txt b/Documentation/devicetree/bindings/arm/bcm/cygnus.txt
+new file mode 100644
+index 0000000..4c77169
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/bcm/cygnus.txt
+@@ -0,0 +1,31 @@
++Broadcom Cygnus device tree bindings
++------------------------------------
++
++
++Boards with Cygnus SoCs shall have the following properties:
++
++Required root node property:
++
++BCM11300
++compatible = "brcm,bcm11300", "brcm,cygnus";
++
++BCM11320
++compatible = "brcm,bcm11320", "brcm,cygnus";
++
++BCM11350
++compatible = "brcm,bcm11350", "brcm,cygnus";
++
++BCM11360
++compatible = "brcm,bcm11360", "brcm,cygnus";
++
++BCM58300
++compatible = "brcm,bcm58300", "brcm,cygnus";
++
++BCM58302
++compatible = "brcm,bcm58302", "brcm,cygnus";
++
++BCM58303
++compatible = "brcm,bcm58303", "brcm,cygnus";
++
++BCM58305
++compatible = "brcm,bcm58305", "brcm,cygnus";
+diff --git a/Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt b/Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt
+new file mode 100644
+index 0000000..00d26ed
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt
+@@ -0,0 +1,34 @@
++Broadcom Cygnus Clocks
++
++This binding uses the common clock binding:
++Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++Currently various "fixed" clocks are declared for peripheral drivers that use
++the common clock framework to reference their core clocks. Proper support of
++these clocks will be added later
++
++Device tree example:
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		osc: oscillator {
++			compatible = "fixed-clock";
++			#clock-cells = <1>;
++			clock-frequency = <25000000>;
++		};
++
++		apb_clk: apb_clk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <1000000000>;
++		};
++
++		periph_clk: periph_clk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <500000000>;
++		};
++	};
+-- 
+1.7.9.5
