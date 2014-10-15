@@ -1,61 +1,109 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: introduce of_property_read_s32
-Date: Wed, 15 Oct 2014 11:37:56 +0200
-Message-ID: <20141015093756.A39E4C40A5C@trevor.secretlab.ca>
-References: <1396781531-3397-1-git-send-email-sre@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396781531-3397-1-git-send-email-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Eric Piel <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH] reset: socfpga: use arch_initcall for early
+ initialization
+Date: Wed, 15 Oct 2014 12:02:47 +0200
+Message-ID: <20141015100247.GB6255@pengutronix.de>
+References: <1412822646-11257-1-git-send-email-dinguyen@opensource.altera.com>
+ <1412845410.6809.3.camel@pengutronix.de>
+ <54368AA2.9000104@opensource.altera.com>
+ <20141009132835.GI15799@pengutronix.de>
+ <alpine.DEB.2.02.1410090950540.17462@atx-linux-37>
+ <20141009151935.GK15799@pengutronix.de>
+ <alpine.DEB.2.02.1410101123590.11270@atx-linux-37>
+ <alpine.DEB.2.02.1410141322160.11888@atx-linux-37>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1410141322160.11888@atx-linux-37>
+Sender: linux-kernel-owner@vger.kernel.org
+To: atull <atull@opensource.altera.com>
+Cc: Dinh Nguyen <dinguyen@opensource.altera.com>, Philipp Zabel <p.zabel@pengutronix.de>, dinh.linux@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun,  6 Apr 2014 12:52:11 +0200
-, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
- wrote:
-> Introduce signed 32bit integer of_property_read method.
-> 
-> Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Hi!
 
-Applied, thanks.
+On Tue, Oct 14, 2014 at 01:45:29PM -0500, atull wrote:
+> The FPGA bridge driver that I submitted last year handled the following
+> things:
+>  * The bridges might have been brought out of reset in the bootloader. Some
+>    of the bridges have write-only registers (!) so this information had to
+>    be passed in DT
 
-> ---
-> Hi,
-> 
-> This is a dependency for the DT binding additions in lis302dl, which can be
-> found at [0]. Since I never got any reply from the DT maintainers I will try to
-> send this patch separate, so that the it hopefully catches their eyes :)
-> 
-> [0] http://www.spinics.net/lists/devicetree/msg15747.html
-> 
-> -- Sebastian
-> ---
->  include/linux/of.h | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 919bf21..70530d1 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -691,6 +691,13 @@ static inline int of_property_read_u32(const struct device_node *np,
->  	return of_property_read_u32_array(np, propname, out_value, 1);
->  }
->  
-> +static inline int of_property_read_s32(const struct device_node *np,
-> +				       const char *propname,
-> +				       s32 *out_value)
-> +{
-> +	return of_property_read_u32(np, propname, (u32*) out_value);
-> +}
-> +
->  #define of_property_for_each_u32(np, propname, prop, p, u)	\
->  	for (prop = of_find_property(np, propname, NULL),	\
->  		p = of_prop_next_u32(prop, NULL, &u);		\
-> -- 
-> 1.9.1
-> 
+Regmap has infrastructure to handle this.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  * fpga2sdram bridge widths configured in DT
+
+This should hold true for all bridges but the LWHPS.
+
+>  * Supports enabling the following Altera fpga bridges:
+>    * fpga2sdram
+>    * fpga2hps
+>    * hps2fpga
+>    * lwhps2fpga
+>  * interface in sysfs for each bridge to be put in reset/taken out of reset
+>    * Enable (take out of reset):
+>      $ echo 1 > /sys/class/fpga-bridge/fpga2hps/enable
+>    * Disable (hold in reset):
+>      $ echo 0 > /sys/class/fpga-bridge/fpga2hps/enable
+>    * Check enable/disable status (checks for all bits set):
+>      $ cat /sys/class/fpga-bridge/fpga2hps/enable
+>        (will print '0' or '1')
+>
+
+I don't like that. The proper solution should be unloading/loading the
+module for the bridge. On a reset the driver has to completely reset its state.
+
+> Now that I'm enabling programming the FPGA from DT overlays, I also want
+> to support DT control of the bridges at the proper time.  So that would
+> support the use case where adding a DT overlay would:
+>  1. program the FPGA
+>  2. bring the appropriate bridges out of reset
+>  3. modprobe the driver
+> 
+> Deleting the DT overlay would undo these steps in reverse order.
+> 
+> I submitted it on 10/8/2013 (I copied you on it), but I don't see it on
+> lkml.org.  Probably because I submitted it from a gmail email address and
+> that sometimes doesn't play well with lkml.  I'm planning on resubmitting
+> when we have it better integrated with the reset subsystem.  If you can
+> give me an early idea of how this fits in with your needs, that would be
+> great.
+>
+
+I actually remember seeing that driver. The problem with the approach is,
+that the bridges are not some IP that you just turn on/off.
+The bridges are the busses that connect the FPGA to the SoC. So the driver
+and the DT has to accommodate for that.
+So, for the (LW)HPS that means we have a bus master driver, that has to
+
+booting:
+	- check if FPGA manager is enabled in DT
+	  - EPROBE_DEFER if FPGA manager isn't loaded
+	- check if FPGA is programmed
+	  - EPROBE_DEFER otherwise
+	- probe subnodes of bridge DT node
+
+dynamic:
+	- remove all drivers/devices previously probed by the bridge
+	  - put bridge in reset (maybe the remove call should always do that ?)
+	- program FPGA with (different) bitstream
+	- (update the DT)
+
+I haven't had time to really look at the overlay stuff, but I guess it will then
+just
+	- probe bridge drivers with 'status = "okay"' which will probe subdevices
+
+Question is: who will remove the bridge driver? Do the DT overlays do that kind
+of stuff?
+
+With the FPGA2HPS(SDRAM) bridges it gets a little difficult I guess.
+Who is the master on the FPGA2HPS bridge? Depends on your FPGA config.
+
+Regards,
+Steffen
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
