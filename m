@@ -1,57 +1,52 @@
-From: Benoit Masson <benoitm@perenite.com>
-Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
-Date: Wed, 15 Oct 2014 17:35:13 +0200
-Message-ID: <B4E62BBB-856D-48E9-B694-C6149DB0E864@perenite.com>
-References: <1411157684-6991-1-git-send-email-sebastian.hesselbarth@gmail.com> <-7443282711873112734@unknownmsgid> <20141003141102.GJ3895@titan.lakedaemon.net> <542EBB93.108@gmail.com> <A9781A2E-F3CA-4E8A-833C-D167B456D9F7@perenite.com> <542EC3A3.1060605@gmail.com> <1ACB5318-863E-40D8-8B27-41F1C0D0A4B8@perenite.com> <5432BFB1.2060300@gmail.com> <CE7A9795-C2AF-451A-8018-3A0B8788BF60@perenite.com> <1CDF8F6B-42FF-4D6A-B52F-6DB270F2673C@perenite.com> <20141015144123.GA18413@lunn.ch>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141015144123.GA18413@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Benoit Masson <yahoo@perenite.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Darren Hart <dvhart@linux.intel.com>
+Subject: Re: [PATCH v4 00/13] Add ACPI _DSD and unified device properties
+ support
+Date: Wed, 15 Oct 2014 17:43:01 +0200
+Message-ID: <543E9605.6020502@linux.intel.com>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan> <1413378271.2762.77.camel@infradead.org> <20141015131551.GC20034@leverpostej> <1413379736.2762.79.camel@infradead.org> <20141015134209.GD20034@leverpostej> <db4038336b5e165b8b61eda064b10eeb.squirrel@twosheds.infradead.org> <543E88CF.5060504@linux.intel.com> <20141015151702.GG20034@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20141015151702.GG20034@leverpostej>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "dvhart@infradead.org" <dvhart@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
-Le 15 oct. 2014 =E0 16:41, Andrew Lunn <andrew@lunn.ch> a =E9crit :
 
->>> All the 3 branch works WHEN APPLYING A0 patch (below), with both my=
- custom kernel config and the arch/arm/configs/mvebu_v7_defconfig
->> Just one thing though, one of my cron behavior change with 3.17, whe=
-n I use the cmd  "/sbin/hwclock --adjust -f /dev/rtc1" I get this new e=
-rror I never had before:
->> "hwclock: select() to /dev/rtc1 to wait for clock tick timed out: Su=
-ccess"
->>=20
->> where rtc1 if the i2c rtc connected to the i2C bus, can this be rela=
-ted to the i2c patch that would slow down i2c operation or somthing ?=20
->=20
-> Hi Benoit
->=20
-> It won't fix your problem, but if the built in RTC is not usable, it
-> would be good to disable it in the .dts file. The i2c RTC will then
-> become RTC0.
->=20
->=20
-> The actual "error" message is odd:
-> "hwclock: select() to /dev/rtc1 to wait for clock tick timed out: Suc=
-cess"
->=20
-Yes this is the wired thing is that everything works, even getting the =
-date via "cat /sys/class/i2c-adapter/i2c-0/0-0051/rtc/rtc1/time" is ok
-reading the rtc driver code it seems this message is shown when multipl=
-e resources try to access shared rtc... but why now and not before ?
+On 10/15/14 17:17, Mark Rutland wrote:
+> On Wed, Oct 15, 2014 at 03:46:39PM +0100, Darren Hart wrote:
 
-So I was wondering if the i2c_quirk() applied by the batch has any effe=
-ct with this ?
+>> Mark, what would you propose we do differently to enable this driver to
+>> be firmware-type agnostic?
+> 
+> For this particular driver, all I'm asking for is that the
+> "used-by-rtas" property is not moved over from of_find_property to
+> device_get_property. It is irrelevant for all ACPI systems. Evidently my
+> comment was unclear; I apologise for that.
 
-Anyhow I'll handle the message for now and see if there are performance=
- impact on this...
+So my objection here is that by keeping the of_* terms in the driver we
+are required to include of, although it does safely convert to returning
+NULL if !CONFIG_OF I suppose.
 
-Benoit
+> We have status = "disabled" as a less specific mechanism for telling the
+> OS to ignore a node in DT. I was under the impression that ACPI already
+> had a mechanism for marking devices to be ignored, but perhaps I am
+> mistaken.
 
-> Success means it actually worked, not an error. Does the RTC contain
-> the correct time afterwards?
->=20
->    Andrew
+That is correct, in ACPI this would be properly implemented with the
+_STA reserved named method. In which case it wouldn't enumerate.
+
+> 
+> The concerns I mentioned at the end of my original reply were of a more
+> general nature than this particular device description.
+> 
+> Thanks,
+> Mark.
+> 
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
