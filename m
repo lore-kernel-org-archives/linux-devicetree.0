@@ -1,52 +1,59 @@
-From: Darren Hart <dvhart@linux.intel.com>
-Subject: Re: [PATCH v4 00/13] Add ACPI _DSD and unified device properties
- support
-Date: Wed, 15 Oct 2014 17:43:01 +0200
-Message-ID: <543E9605.6020502@linux.intel.com>
-References: <2660541.BycO7TFnA2@vostro.rjw.lan> <1413378271.2762.77.camel@infradead.org> <20141015131551.GC20034@leverpostej> <1413379736.2762.79.camel@infradead.org> <20141015134209.GD20034@leverpostej> <db4038336b5e165b8b61eda064b10eeb.squirrel@twosheds.infradead.org> <543E88CF.5060504@linux.intel.com> <20141015151702.GG20034@leverpostej>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
+Date: Wed, 15 Oct 2014 11:56:42 -0400
+Message-ID: <20141015155642.GG17447@titan.lakedaemon.net>
+References: <542EBB93.108@gmail.com>
+ <A9781A2E-F3CA-4E8A-833C-D167B456D9F7@perenite.com>
+ <542EC3A3.1060605@gmail.com>
+ <1ACB5318-863E-40D8-8B27-41F1C0D0A4B8@perenite.com>
+ <5432BFB1.2060300@gmail.com>
+ <CE7A9795-C2AF-451A-8018-3A0B8788BF60@perenite.com>
+ <20141015144259.GB17447@titan.lakedaemon.net>
+ <543E898D.10606@gmail.com>
+ <20141015145539.GB18413@lunn.ch>
+ <20141015153049.GE17447@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20141015151702.GG20034@leverpostej>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "dvhart@infradead.org" <dvhart@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141015153049.GE17447@titan.lakedaemon.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Benoit Masson <benoitm@perenite.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Benoit Masson <yahoo@perenite.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/15/14 17:17, Mark Rutland wrote:
-> On Wed, Oct 15, 2014 at 03:46:39PM +0100, Darren Hart wrote:
-
->> Mark, what would you propose we do differently to enable this driver to
->> be firmware-type agnostic?
+On Wed, Oct 15, 2014 at 11:30:49AM -0400, Jason Cooper wrote:
+> On Wed, Oct 15, 2014 at 04:55:39PM +0200, Andrew Lunn wrote:
+> > > >Do you have a link to an email thread or the patch Subject line?  I can
+> > > >confirm it's missing from mvebu/fixes...
+> > > 
+> > > http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/275487.html
+> > > 
+> > > But you and Andrew should check what Arnd suggested. IIRC, there
+> > > was also an appropriate follow-up patch discussion started by
+> > > Andrew.
+> > 
+> > There was a lot of back and forth with Arnd. In the end, he gave up
+> > arguing because too many voices did not like his solution. So my
+> > original version stands.
 > 
-> For this particular driver, all I'm asking for is that the
-> "used-by-rtas" property is not moved over from of_find_property to
-> device_get_property. It is irrelevant for all ACPI systems. Evidently my
-> comment was unclear; I apologise for that.
-
-So my objection here is that by keeping the of_* terms in the driver we
-are required to include of, although it does safely convert to returning
-NULL if !CONFIG_OF I suppose.
-
-> We have status = "disabled" as a less specific mechanism for telling the
-> OS to ignore a node in DT. I was under the impression that ACPI already
-> had a mechanism for marking devices to be ignored, but perhaps I am
-> mistaken.
-
-That is correct, in ACPI this would be properly implemented with the
-_STA reserved named method. In which case it wouldn't enumerate.
-
+> Yes, this appears to have been a mistake on my part.  In the
+> conversation regarding patch #2 of V2, you said you were going to work
+> on implementing something and would report back.  I applied that to the
+> whole series instead of just to the second patch.  At any rate, applied
+> to mvebu/fixes now.
 > 
-> The concerns I mentioned at the end of my original reply were of a more
-> general nature than this particular device description.
+> > However, the patch at the end of 
+> > 
+> > http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/275528.html
+> > 
+> > is useful, and it would be nice if it could be merged as well.
 > 
-> Thanks,
-> Mark.
-> 
+> I'll take a look.
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+I'd still like to see that note captured in the binding doc.  Did I miss
+another patch somewhere?
+
+thx,
+
+Jason.
