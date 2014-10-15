@@ -1,58 +1,62 @@
-From: Karl Beldan <karl.beldan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [v3] spi: orion: support armada extended baud rates
-Date: Wed, 15 Oct 2014 15:10:54 +0200
-Message-ID: <20141015131054.GA3243@gobelin>
-References: <20141011144857.GA17350@gobelin>
- <543C8460.1060508@uclinux.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 00/13] Add ACPI _DSD and unified device properties
+ support
+Date: Wed, 15 Oct 2014 14:15:51 +0100
+Message-ID: <20141015131551.GC20034@leverpostej>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan>
+ <1413378271.2762.77.camel@infradead.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <543C8460.1060508-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1413378271.2762.77.camel@infradead.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 14, 2014 at 12:03:12PM +1000, Greg Ungerer wrote:
-> Hi Karl,
-> 
-> On 12/10/14 00:52, Karl Beldan wrote:
-> > On 28/09/14 23:24:04, Greg Ungerer wrote:
-> >> @@ -378,6 +452,10 @@ static int orion_spi_probe(struct platform_device *pdev)
-> >>  	spi = spi_master_get_devdata(master);
-> >>  	spi->master = master;
-> >>  
-> >> +	of_id = of_match_device(orion_spi_of_match_table, &pdev->dev);
-> >> +	devdata = of_id->data;
-> >> +	spi->devdata = devdata;
-> >> +
-> > Won't of_match_device return NULL on non-DT systems, and further
-> > references oops ?
-> 
-> Yes, sure enough.
-> 
-> So I propose to fix with this change.
-> 
-> diff --git a/drivers/spi/spi-orion.c b/drivers/spi/spi-orion.c
-> index acf8e48..c069ccd 100644
-> --- a/drivers/spi/spi-orion.c
-> +++ b/drivers/spi/spi-orion.c
-> @@ -453,7 +453,7 @@ static int orion_spi_probe(struct platform_device *pdev)
->         spi->master = master;
->  
->         of_id = of_match_device(orion_spi_of_match_table, &pdev->dev);
-> -       devdata = of_id->data;
-> +       devdata = (of_id) ? of_id->data : &orion_spi_dev_data;
->         spi->devdata = devdata;
->  
-I am not aware of the policy in the DT subsystem, I see some drivers
-bailing out when not getting any match, some remove non-DT support and
-add a dependency on OF, yet a message would feel appropriate.
-Other than that ok, it should fix df59fa7f4bca.
- 
-Karl
+On Wed, Oct 15, 2014 at 02:04:31PM +0100, David Woodhouse wrote:
+> Here's a completely untested patch to convert of_serial to be usable =
+via
+> ACPI properties too. The properties themselves were fairly
+> straightforward; the interesting part is converting to
+> platform_get_irq() and platform_get_resource() =E2=80=94 in the latte=
+r case
+> first trying IORESOURCE_MEM then IORESOURCE_IO if that fails.
+>=20
+> Does this look sane? We'll probably want to think about renaming the
+> module and the config option too, but that can come after the basic
+> functionality.
+
+The majority of these properties look like they constrained to the
+device in question, so make sense for _DSD too.
+
+However...
+
+> @@ -155,7 +168,7 @@ static int of_platform_serial_probe(struct platfo=
+rm_device *ofdev)
+>  	if (!match)
+>  		return -EINVAL;
+> =20
+> -	if (of_find_property(ofdev->dev.of_node, "used-by-rtas", NULL))
+> +	if (!device_get_property(&ofdev->dev, "used-by-rtas", NULL))
+>  		return -EBUSY;
+
+This property should never be present on an ACPI system. RTAS is a
+completely different firmware interface on PowerPC.
+
+As a general note, I would hope that we're not going to blindly convert
+drivers and subsystems over to a common property interface without
+considering each property w.r.t. the particular FW interface.=20
+
+Each addition to _DSD, especially if through a common accessor needs
+_more_ scrutiny than is applied to DT bindings, and we hardly manage to
+review DT bindings.
+
+Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
