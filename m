@@ -1,63 +1,73 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: [PATCH 3/9] regulator: max77802: Split regulator operations for BUCKs
-Date: Wed, 15 Oct 2014 18:20:33 +0200
-Message-ID: <1413390039-19364-4-git-send-email-javier.martinez@collabora.co.uk>
-References: <1413390039-19364-1-git-send-email-javier.martinez@collabora.co.uk>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 00/12] rtc: omap: fixes and power-off feature
+Date: Wed, 15 Oct 2014 11:55:02 -0500
+Message-ID: <20141015165452.GB15770@saruman>
+References: <1412881594-25678-1-git-send-email-johan@kernel.org>
+Reply-To: <balbi@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/Uq4LBwYP4y1W6pO"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413390039-19364-1-git-send-email-javier.martinez@collabora.co.uk>
+Content-Disposition: inline
+In-Reply-To: <1412881594-25678-1-git-send-email-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Doug Anderson <dianders@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+To: Johan Hovold <johan@kernel.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Andrew Morton <akpm@linux-foundation.org>, Felipe Balbi <balbi@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, Colin Foe-Parker <colin.foeparker@logicpd.com>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Not all the max77802 BUCKs regulators have the same functionality, for
-example BUCKs 2-4 support the output to be configured as normal or Low
-Power Mode by the PWRREQ enable pin while the other BUCKs only support
-their output to be set ON or OFF by PWRREQ. As a preparation for adding
-a set_suspend_mode function handler for all the regulators that support
-Low Power Mode by PWRREQ, split the operations for BUCKs regulators.
+--/Uq4LBwYP4y1W6pO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
----
- drivers/regulator/max77802.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+Hi,
 
-diff --git a/drivers/regulator/max77802.c b/drivers/regulator/max77802.c
-index baf834d..a621700 100644
---- a/drivers/regulator/max77802.c
-+++ b/drivers/regulator/max77802.c
-@@ -330,7 +330,22 @@ static struct regulator_ops max77802_buck_16_dvs_ops = {
- 	.set_suspend_disable	= max77802_set_suspend_disable,
- };
- 
--/* BUCKs 2-4, 5, 7-10 */
-+/* BUCKs 2-4 */
-+static struct regulator_ops max77802_buck_234_ops = {
-+	.list_voltage		= regulator_list_voltage_linear,
-+	.map_voltage		= regulator_map_voltage_linear,
-+	.is_enabled		= regulator_is_enabled_regmap,
-+	.enable			= max77802_enable,
-+	.disable		= regulator_disable_regmap,
-+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+	.set_voltage_time_sel	= regulator_set_voltage_time_sel,
-+	.set_ramp_delay		= max77802_set_ramp_delay_2bit,
-+	.set_suspend_enable	= max77802_enable,
-+	.set_suspend_disable	= max77802_set_suspend_disable,
-+};
-+
-+/* BUCKs 5, 7-10 */
- static struct regulator_ops max77802_buck_dvs_ops = {
- 	.list_voltage		= regulator_list_voltage_linear,
- 	.map_voltage		= regulator_map_voltage_linear,
-@@ -404,7 +419,7 @@ static struct regulator_ops max77802_buck_dvs_ops = {
- 	.name		= "BUCK"#num,					\
- 	.id		= MAX77802_BUCK##num,				\
- 	.supply_name	= "inb"#num,					\
--	.ops		= &max77802_buck_dvs_ops,			\
-+	.ops		= &max77802_buck_234_ops,			\
- 	.type		= REGULATOR_VOLTAGE,				\
- 	.owner		= THIS_MODULE,					\
- 	.min_uV		= 600000,					\
--- 
-2.1.0
+On Thu, Oct 09, 2014 at 09:06:22PM +0200, Johan Hovold wrote:
+> This series fixes a few issues with the omap rtc-driver, cleans up a bit
+> and finally adds support for the PMIC control feature found in some
+> revisions of this RTC IP block.
+>=20
+> Ultimately, this allows for powering off the Beaglebone and waking it up
+> again on RTC alarms.
+>=20
+> I noticed yesterday that Lokesh Vutla recently posted some patches to
+> add regulator support to this driver. [1] While that series has some
+> issues that needs to be addressed, I still think it could be a good idea
+> to rebase my pmic_power_en patch on top of it as it adds some long
+> overdue device abstraction. That would be needed anyway in order to
+> support the new power-off infrastructure that's in the pipe in a clean
+> way. [2]
+>=20
+> So my suggestion is to merge the first seven patches, rebase Lokesh
+> series on top of that, and then I rebase my final five patches on top
+> of that in turn. Hopefully, the new power-off handler call chain will
+> have stabilised by then.
+
+BTW, how do you test this series ?
+
+--=20
+balbi
+
+--/Uq4LBwYP4y1W6pO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUPqbmAAoJEIaOsuA1yqREmVgQAKjVt1z/XvKk5bIVglQNVmtG
+CpBtbKrVwb5I72/ZDpXSgYb8GkW7vULXXZWZeSXz/EEQ9wSL07B8dr+6/mhXgVk8
+/nCgUJjMv6FLr82F1XKsVZ8ZfYO9pIk9zc2UQUCtXiqRu+rNueFHAPRAuZ+fYDnO
+HXE8D2IOSfQGF2QSAgeYD5LxdFQiLBsHauUl1usavlgyJDD5cPIhxug6IEJSCdfM
+BmanVWCS8gl2s3Q5PyTAb7nBlXc6ZXdgqJnpWvqmoMN9HYGLK8RcMspEZD04wcIe
+OINRDf825X40TrjkRuvbmqBlV9flHxbjd0LokSpE6Uy0MM3GCdSL8JbvoDbFstzD
+rybdJZqLqAmAWvjDtQe1RieIhK78Y698nDIsxIvMZkP/fI1G4oBLnttnZKxISC5G
+g3AfM3m0xLC8+xIlZ9/2MkkPKofEz+g+dUI9ik42AS6+H2QxfkKQ5HQn9k5EeuXH
+w6VbAs3xMIEq/q3MvnZ1bxk6cNDYfH1jyIzEhCyrH5l1nPco9CCMawUTTa5FqEGc
+bnqE8O/BB617AZwDOOkKPS2q5Drey8nzrGeaFkrKwJcnLyxJZJCyLWwqiv0I+Ktn
++1wMWA8MGLX2bHiC2xerUCBU2ON22h4uXdtMaXByiZ6hVp17kt5nh8UOp890b5Y8
+MXVuBtgOgDFBZeHVlEtR
+=Es/r
+-----END PGP SIGNATURE-----
+
+--/Uq4LBwYP4y1W6pO--
