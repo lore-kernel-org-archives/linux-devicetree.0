@@ -1,55 +1,53 @@
-From: Darren Hart <dvhart@linux.intel.com>
-Subject: Re: [PATCH v4 00/13] Add ACPI _DSD and unified device properties
- support
-Date: Wed, 15 Oct 2014 16:46:39 +0200
-Message-ID: <543E88CF.5060504@linux.intel.com>
-References: <2660541.BycO7TFnA2@vostro.rjw.lan>    <1413378271.2762.77.camel@infradead.org>    <20141015131551.GC20034@leverpostej>    <1413379736.2762.79.camel@infradead.org>    <20141015134209.GD20034@leverpostej> <db4038336b5e165b8b61eda064b10eeb.squirrel@twosheds.infradead.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
+Date: Wed, 15 Oct 2014 16:49:49 +0200
+Message-ID: <543E898D.10606@gmail.com>
+References: <1411157684-6991-1-git-send-email-sebastian.hesselbarth@gmail.com> <-7443282711873112734@unknownmsgid> <20141003141102.GJ3895@titan.lakedaemon.net> <542EBB93.108@gmail.com> <A9781A2E-F3CA-4E8A-833C-D167B456D9F7@perenite.com> <542EC3A3.1060605@gmail.com> <1ACB5318-863E-40D8-8B27-41F1C0D0A4B8@perenite.com> <5432BFB1.2060300@gmail.com> <CE7A9795-C2AF-451A-8018-3A0B8788BF60@perenite.com> <20141015144259.GB17447@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <db4038336b5e165b8b61eda064b10eeb.squirrel@twosheds.infradead.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, dvhart@infradead.org
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141015144259.GB17447@titan.lakedaemon.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Benoit Masson <benoitm@perenite.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Benoit Masson <yahoo@perenite.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 10/15/2014 04:42 PM, Jason Cooper wrote:
+> On Wed, Oct 15, 2014 at 02:53:02AM +0200, Benoit Masson wrote:
+>> Le 6 oct. 2014 =E0 18:13, Sebastian Hesselbarth <sebastian.hesselbar=
+th@gmail.com> a =E9crit :
+>>> I prepared more branches with the series
+>>> - on top of v3.17 release:
+>>> https://github.com/shesselba/linux-dove.git devel/mvebu-ix4_v3.17
+>>>
+>>> - on top of next-20141003 (i.e. what will become v3.18-rc1):
+>>> https://github.com/shesselba/linux-dove.git devel/mvebu-ix4_next-20=
+141003
+>>>
+>>> It would be great, if you can test in this order:
+>>> - vanilla v3.17
+>>> - mvebu-ix4_v3.17
+>>> - mvebu-ix4_next-20141003
+>>>
+>> All the 3 branch works WHEN APPLYING A0 patch (below), with both my =
+custom kernel config and the arch/arm/configs/mvebu_v7_defconfig
+>>
+>> The reason why it didn't worked last time was that apparently the A0=
+ patch (copied) below was not merged into 3.17 :(
+>>
+>> This means that ix4-300d support is broken on 3.17 because of the A0=
+ stepping patch not merged.
+>
+> Do you have a link to an email thread or the patch Subject line?  I c=
+an
+> confirm it's missing from mvebu/fixes...
 
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/275487.=
+html
 
-On 10/15/14 16:08, David Woodhouse wrote:
-> 
->> We have been checking for all DT platforms, and that's a bug for DT.
->> Copying that bug to ACPI is inexcusable given we know it's a bug to do
->> so.
-> 
-> We'll, perhaps it should be named 'used-by-firmware' and actually it's
-> just as valid under ACPI as it is on RTAS systems. All it does is stop the
-> OS from using the port.
-> 
->> I understand that. However, where a binding doesn't make sense (as in
->> this case), it shouldn't be enabled for ACPI as it provides a larger
->> surface area for misuse, for no benefit.
-> 
-> These are *optional* properties. They were optional precisely *because*
-> they only make sense in some cases. I don't know that it makes sense to
-> take them away. The benefit we get is *consistency*. For example if
-> someone *does* use the property in question as 'used-by-firmware' and
-> expects the OS not to touch it, we don't want that to change behaviour
-> between ACPI and fdt boots.
+But you and Andrew should check what Arnd suggested. IIRC, there
+was also an appropriate follow-up patch discussion started by
+Andrew.
 
-My comment was going to be along the same lines. It is an optional
-parameter, which is what I would expect for a firmware-specific type of
-property.
-
-I also don't agree that this is "copying that bug to ACPI". This line of
-code has no impact to ACPI. No ACPI implementation should add this,
-certainly not if it was actually tested as it would not run if it was
-present in the _DSD. So... what's the problem exactly? Or perhaps more
-specifically:
-
-Mark, what would you propose we do differently to enable this driver to
-be firmware-type agnostic?
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+Sebastian
