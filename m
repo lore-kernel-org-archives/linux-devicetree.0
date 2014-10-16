@@ -1,65 +1,51 @@
-From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH RFT 0/8] Marvell PXA168 libphy handling and Berlin
- Ethernet
-Date: Thu, 16 Oct 2014 11:53:23 +0200
-Message-ID: <20141016095323.GA1061@kwain>
-References: <1412858346-11334-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: addy ke <addy.ke@rock-chips.com>
+Subject: Re: [PATCH 1/2] spi/rockchip: fix bug that case spi can't go as fast
+ as slave request
+Date: Thu, 16 Oct 2014 17:58:51 +0800
+Message-ID: <543F96DB.40403@rock-chips.com>
+References: <1413372311-4203-1-git-send-email-addy.ke@rock-chips.com> <1413372349-4254-1-git-send-email-addy.ke@rock-chips.com> <20141015130452.GD27755@sirena.org.uk> <543F8CD2.1010302@rock-chips.com> <20141016093410.GB2200@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1412858346-11334-1-git-send-email-sebastian.hesselbarth@gmail.com>
+In-Reply-To: <20141016093410.GB2200@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, Florian Fainelli <f.fainelli@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: broonie@kernel.org
+Cc: heiko@sntech.de, dianders@chromium.org, grant.likely@linaro.org, robh+dt@kernel.org, amstan@google.com, sonnyrao@google.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, olof@lixom.net, hj@rock-chips.com, kever.yang@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, zhenfu.fang@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, wei.luo@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
 
-On Thu, Oct 09, 2014 at 02:38:58PM +0200, Sebastian Hesselbarth wrote:
-> This patch series deals with a removing a IP feature that can be foun=
-d
-> on all currently supported Marvell Ethernet IP (pxa168_eth, mv643xx_e=
-th,
-> mvneta). The MAC IP allows to automatically perform PHY auto-negotiat=
-ion
-> without software interaction.
->=20
-> However, this feature (a) fundamentally clashes with the way libphy w=
-orks
-> and (b) is unable to deal with quirky PHYs that require special treat=
-ment.
-> In this series, pxa168_eth driver is rewritten to completely disable =
-that
-> feature and properly deal with libphy provided PHYs. The other two dr=
-ivers
-> are suspect to future patch sets, also removing the code related with=
- it.
->=20
-> Currently, the patches are based on next-20141009 and will be resent =
-once
-> v3.18-rc1 drops. This is a Request-For-Test on both BG2Q and MMP/gplu=
-g as
 
-I tested the series on a BG2Q, it worked well.
+On 2014/10/16 17:34, Mark Brown wrote:
+> On Thu, Oct 16, 2014 at 05:16:02PM +0800, addy ke wrote:
+>> On 2014/10/15 21:04, Mark Brown wrote:
+>>> On Wed, Oct 15, 2014 at 07:25:49PM +0800, Addy Ke wrote:
+> 
+>>>> +	if (WARN_ON(rs->speed > MAX_SCLK_OUT))
+>>>> +		rs->speed = MAX_SCLK_OUT;
+> 
+>>>> +	/* the minimum divsor is 2 */
+>>>> +	if (rs->max_freq < 2 * rs->speed) {
+>>>> +		clk_set_rate(rs->spiclk, 2 * rs->speed);
+>>>> +		rs->max_freq = clk_get_rate(rs->spiclk);
+>>>> +	}
+> 
+>>> I'll apply this but you should be checking the return code from
+>>> clk_set_rate() here, please send a followup patch doing that.  It might
+> 
+>> If clk_set_rate return error, do I only put dev_warn here or return error value to spi core?
+> 
+> It'd be better to return an error if we need to set the rate and can't
+> do it.
+> 
+>>> also be worth consdering just setting the rate unconditionally here, it
+>>> seems like it should make things simpler.
+> 
+>> I think we need.
+>> If we set the rate unconditionally here, clk_set_rate() will be executed in each spi transfer.
+> 
+> Is that really such a high cost?
+> 
+Not high cost, but  I think if the default spi_clk is enough, we do not need to set spi_clk again.
 
-Antoine
-
-> these are the current users of pxa168_eth. A branch with this patches=
- on
-> top of next-20141009 can be found at
->=20
-> git://git.infradead.org/users/hesselba/linux-berlin.git devel/bg2-bg2=
-cd-eth-v1
->=20
-> It would be great to get a Tested-byfrom MMP guys on gplug - if they
-> have that board somewhere. Also, BG2Q (Antoine) needs a phy-connectio=
-n-type
-> property. My guess is that, if it is using internal PHY, it is "mii",=
- too.
-
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Maybe we can only set spi_clk as (2 * MAX_SCLK_OUT) in probe().
