@@ -1,51 +1,53 @@
-From: addy ke <addy.ke@rock-chips.com>
-Subject: Re: [PATCH 1/2] spi/rockchip: fix bug that case spi can't go as fast
- as slave request
-Date: Thu, 16 Oct 2014 17:58:51 +0800
-Message-ID: <543F96DB.40403@rock-chips.com>
-References: <1413372311-4203-1-git-send-email-addy.ke@rock-chips.com> <1413372349-4254-1-git-send-email-addy.ke@rock-chips.com> <20141015130452.GD27755@sirena.org.uk> <543F8CD2.1010302@rock-chips.com> <20141016093410.GB2200@sirena.org.uk>
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH 4/5] ARM: berlin: Add AHCI and SATA PHY nodes to BG2
+Date: Thu, 16 Oct 2014 11:59:46 +0200
+Message-ID: <20141016095946.GB1061@kwain>
+References: <1413042073-14253-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1413042073-14253-5-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141016093410.GB2200@sirena.org.uk>
+Content-Disposition: inline
+In-Reply-To: <1413042073-14253-5-git-send-email-sebastian.hesselbarth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org
-Cc: heiko@sntech.de, dianders@chromium.org, grant.likely@linaro.org, robh+dt@kernel.org, amstan@google.com, sonnyrao@google.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, olof@lixom.net, hj@rock-chips.com, kever.yang@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, zhenfu.fang@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, wei.luo@rock-chips.com
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sebastian,
 
+On Sat, Oct 11, 2014 at 05:41:12PM +0200, Sebastian Hesselbarth wrote:
+> =20
+> +		ahci: sata@e90000 {
+> +			compatible =3D "marvell,berlin2-ahci", "generic-ahci";
+> +			reg =3D <0xe90000 0x1000>;
+> +			interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks =3D <&chip CLKID_SATA>;
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +			status =3D "disabled";
 
-On 2014/10/16 17:34, Mark Brown wrote:
-> On Thu, Oct 16, 2014 at 05:16:02PM +0800, addy ke wrote:
->> On 2014/10/15 21:04, Mark Brown wrote:
->>> On Wed, Oct 15, 2014 at 07:25:49PM +0800, Addy Ke wrote:
-> 
->>>> +	if (WARN_ON(rs->speed > MAX_SCLK_OUT))
->>>> +		rs->speed = MAX_SCLK_OUT;
-> 
->>>> +	/* the minimum divsor is 2 */
->>>> +	if (rs->max_freq < 2 * rs->speed) {
->>>> +		clk_set_rate(rs->spiclk, 2 * rs->speed);
->>>> +		rs->max_freq = clk_get_rate(rs->spiclk);
->>>> +	}
-> 
->>> I'll apply this but you should be checking the return code from
->>> clk_set_rate() here, please send a followup patch doing that.  It might
-> 
->> If clk_set_rate return error, do I only put dev_warn here or return error value to spi core?
-> 
-> It'd be better to return an error if we need to set the rate and can't
-> do it.
-> 
->>> also be worth consdering just setting the rate unconditionally here, it
->>> seems like it should make things simpler.
-> 
->> I think we need.
->> If we set the rate unconditionally here, clk_set_rate() will be executed in each spi transfer.
-> 
-> Is that really such a high cost?
-> 
-Not high cost, but  I think if the default spi_clk is enough, we do not need to set spi_clk again.
+The ahci generic driver actually returns -ENODEV if no port is
+activated. There is no need to disable it from there.
 
-Maybe we can only set spi_clk as (2 * MAX_SCLK_OUT) in probe().
+> +
+> +			sata0: sata-port@0 {
+> +				reg =3D <0>;
+> +				phys =3D <&sata_phy 0>;
+> +				status =3D "disabled";
+> +			};
+> +
+> +			sata1: sata-port@1 {
+> +				reg =3D <1>;
+> +				phys =3D <&sata_phy 1>;
+> +				status =3D "disabled";
+> +			};
+> +		};
+
+Antoine
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
