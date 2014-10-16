@@ -1,117 +1,104 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 2/3] ARM: dts: at_xdmac: add bindings documentation
-Date: Thu, 16 Oct 2014 15:20:22 +0200
-Message-ID: <20141016132021.GB2367@ldesroches-Latitude-E6320>
-References: <1412175565-810-1-git-send-email-ludovic.desroches@atmel.com>
- <1412175565-810-3-git-send-email-ludovic.desroches@atmel.com>
- <20141015134134.GR1638@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141015134134.GR1638-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+From: Caesar Wang <caesar.wang@rock-chips.com>
+Subject: [PATCH v11 0/5] Rockchip soc thermal driver
+Date: Thu, 16 Oct 2014 21:31:36 +0800
+Message-ID: <1413466301-25952-1-git-send-email-caesar.wang@rock-chips.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com
+Cc: zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dmitry.torokhov@gmail.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com, vladimir_zapolskiy@mentor.com, Caesar Wang <caesar.wang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 15, 2014 at 07:11:34PM +0530, Vinod Koul wrote:
-> On Wed, Oct 01, 2014 at 04:59:24PM +0200, Ludovic Desroches wrote:
-> > Add bindings documentation for the new Atmel DMA controller (XDMAC)
-> > introduced with SAMA5D4.
-> Seeing the example below, it doesnt seem to me that we cant reuse existing
-> atmel binding, can you explain why we cnat reuse
+This series patchs tested on rk3288 SDK board and pinky-v1,v2 board.
+I believe the driver can be used on the rk3288-evb board.
 
-We have discussed this in v3 but I didn't get answer:
+Add this driver, The system can reset the entire chip when
+the thermal temperture over 120C, In case of rising over 125C
+when tha hardware shorting,The sodftware will shutdown via "critical".
 
-"
-Bindings have changed through the revisions, I didn't notice they were so
-close to the hdmac bindings. The only difference is the content of the
-second cell.
+Changes in v11:
+	* address comments from Vladimir Zapolskiy.
+	- fix cpufreq_cooling_unregister() to put in correct position. 
+	- fix "data->chn",at least can get valid Tsensor temp.
 
-I don't know if it's a sufficient reason to add a new binding.
-"
+Changes in v10:
+	* address comments from Doug Anderson.
+	- fix TSHUT polarity,ensure support TSHUT.
+	- add the decription for rk_tsadcv2_initialize().
 
-It makes me thinking that I should merge the two cells since the memory
-and peripheral interface have been moved to the configuration register
-in xdmac. So the number of cells won't be the same.
+Changes in v9:
+	* address comments from Dmitry Torokhov.
+	- fix some style be defined
+	- remove some unused code.
+	- clk_disable_unprepare->clk_disable in suspend()
 
-Ludovic
+Changes in v8:
+	* address comments from Dmitry Torokhov and Doug Anderson.
+	- add three Teperture Sensors.
+	- support CRU and GPIO reset chip.
+	- rename rk3xxx-cpu-thermal.dtsi as rk3288-thermal.dtsi
+	- alarm-temp via set_trips() callback
+	- remove "reset-gpios"
 
-> 
-> -- 
-> ~Vinod
-> 
-> > 
-> > Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> > Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/dma/atmel-xdma.txt         | 50 ++++++++++++++++++++++
-> >  1 file changed, 50 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/atmel-xdma.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/dma/atmel-xdma.txt b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
-> > new file mode 100644
-> > index 0000000..ae587ad
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
-> > @@ -0,0 +1,50 @@
-> > +* Atmel Extensible Direct Memory Access Controller (XDMAC)
-> > +
-> > +* XDMA Controller
-> > +Required properties:
-> > +- compatible: Should be "atmel,<chip>-dma".
-> > +  <chip> compatible description:
-> > +  - sama5d4: first SoC adding the XDMAC
-> > +- reg: Should contain DMA registers location and length.
-> > +- interrupts: Should contain DMA interrupt.
-> > +- #dma-cells: Must be <2>, used to represent the number of integer cells in
-> > +the dmas property of client devices.
-> > +  - The 1st cell specifies the memory interface (16 most significant bits) and
-> > +  the peripheral interface (16 less significant bits) to use.
-> > +  - The 2nd cell specifies the channel configuration register:
-> > +    - bit 30-24: PERID, peripheral identifier.
-> > +
-> > +Example:
-> > +
-> > +dma1: dma-controller@f0004000 {
-> > +	compatible = "atmel,sama5d4-dma";
-> > +	reg = <0xf0004000 0x200>;
-> > +	interrupts = <50 4 0>;
-> > +	#dma-cells = <2>;
-> > +};
-> > +
-> > +
-> > +* DMA clients
-> > +DMA clients connected to the Atmel XDMA controller must use the format
-> > +described in the dma.txt file, using a two-cell specifier for each channel.
-> > +The three cells in order are:
-> > +1. A phandle pointing to the DMA controller.
-> > +2. The memory interface (16 most significant bits), the peripheral interface
-> > +(16 less significant bits).
-> > +3. Channel configuration register. Configurable fields are:
-> > +  - bit 30-24: PERID, peripheral identifier.
-> > +
-> > +Example:
-> > +
-> > +i2c2: i2c@f8024000 {
-> > +	compatible = "atmel,at91sam9x5-i2c";
-> > +	reg = <0xf8024000 0x4000>;
-> > +	interrupts = <34 4 6>;
-> > +	dmas = <&dma1
-> > +		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
-> > +		AT91_XDMAC_DT_PERID(6)>,
-> > +	       <&dma1
-> > +		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
-> > +		AT91_XDMAC_DT_PERID(7)>;
-> > +	dma-names = "tx", "rx";
-> > +};
-> > -- 
-> > 2.0.3
-> > 
-> 
-> -- 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes in v7:
+	- fix get data->clk=0 when in probe() function.
+	- fix some style code.
+	- modify dts,main add rk3xxx-cpu-thermal.dtsi
+
+Changes in v6:
+	* address comments from Tomeu Vizoso.
+	- use thermal's generic framework.
+
+Changes in v5:
+	* address comments from Eduardo Valentin,rui.zhang and Heiko Stubner:
+	- with BIT() macro
+	- manage clocks in suspend/resume.
+	- license is fixed as GPLv2.
+	- #include "thermal_core.h"->#include <linux/thermal.h>
+	- use the generic trip-points.the hw-shut-temp isn't generic trip-points.
+	- The method of binding and unbinding be fixed.
+	- The pin-name tsadc->otp_out
+
+Changes in v4:
+	* address comments from Jonathan Cameron,huangtao and zhaoyifeng:
+	- this series thermal driver still be put in driver/thermal/
+	- modify the thermal driver description.
+
+Changes in v3:(add dts configure)
+	* address comments from Dmitry Torokhov and Arnd Bergmann:
+	- fix clock-names in rockchip-thermal.txt
+	- remove rockchip_thermal_control() in rockchip_set_mode()
+	- fix some code style.
+	- add dts configure.
+
+Changes in v2:
+	* address comments from Heiko Stubner:
+	- fix dt-bindings in rockchip-thermal.txt
+	- remove Author mark
+	- rename TSADC_XXX->TSADCV2_XXX,it eill ready to merge compatible other SoCs.
+	- fix a identation
+	- remove clk_set_rate(),it's no necessary.
+	- fix the SIMPLE_DEV_PM_OPS() function  style.
+
+Caesar Wang (5):
+  thermal: rockchip: add driver for thermal
+  dt-bindings: document Rockchip thermal
+  ARM: dts: add RK3288 Thermal data
+  ARM: dts: add main Thermal info to rk3288
+  ARM: dts: enable Thermal on rk3288-evb board
+
+ .../bindings/thermal/rockchip-thermal.txt          |  45 ++
+ arch/arm/boot/dts/rk3288-evb.dtsi                  |   5 +
+ arch/arm/boot/dts/rk3288-thermal.dtsi              |  58 ++
+ arch/arm/boot/dts/rk3288.dtsi                      |  23 +
+ drivers/thermal/Kconfig                            |   9 +
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/rockchip_thermal.c                 | 628 +++++++++++++++++++++
+ 7 files changed, 769 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+ create mode 100644 arch/arm/boot/dts/rk3288-thermal.dtsi
+ create mode 100644 drivers/thermal/rockchip_thermal.c
+
+-- 
+1.9.1
+
+
