@@ -1,224 +1,427 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: [PATCH v2 2/7] regulator: max77802: Add set suspend mode for BUCKs and simplify code
-Date: Thu, 16 Oct 2014 18:48:48 +0200
-Message-ID: <1413478133-2577-3-git-send-email-javier.martinez@collabora.co.uk>
-References: <1413478133-2577-1-git-send-email-javier.martinez@collabora.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413478133-2577-1-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Doug Anderson <dianders@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+From: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 08/20] mmc: host: pxamci: switch over to dmaengine use
+Date: Thu, 16 Oct 2014 20:57:02 +0300
+Message-ID: <CA+E=qVfC_GgFOT94oZ3hkG-6v-ENRKxQ=xnJTnxxKhiX+a0fFg@mail.gmail.com>
+References: <1375889649-14638-1-git-send-email-zonque@gmail.com>
+ <1375889649-14638-9-git-send-email-zonque@gmail.com> <CA+E=qVe5zRoR8qVa_gyJu+qpuGHFmqoGvEHowcu_hXR01GBzTA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary=001a113dc878f54af205058dfa9a
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+E=qVe5zRoR8qVa_gyJu+qpuGHFmqoGvEHowcu_hXR01GBzTA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, s.neumann-5g8ninUHluJWk0Htik3J/w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, cxie4-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, samuel-jcdQHdrhKHMdnm+yROfE0A@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, djbw-b10kYP2dOMg@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The max77802 PMIC has a special enable pin (PWRREQ) that can be used
-by the Application Processor (AP) to power down and up voltage rails.
+--001a113dc878f54af205058dfa9a
+Content-Type: text/plain; charset=UTF-8
 
-The max77802 PMIC regulators have 3 different enable control logics.
-Some regulators support to be configured on different operational mode
-during normal operation while others only support to be put in a Low
-Power Mode while the system has entered in sleep mode. Some regulators
-don't even support that configuration. The logics are the following:
+On Wed, Oct 15, 2014 at 9:32 PM, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Daniel,
+>
+> On Wed, Aug 7, 2013 at 6:33 PM, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Successfully testes on a PXA3xx board.
+>
+> I know it could be a bit late, but I tested your pxa-dma-3.15 branch
+> rebased against 3.17 on pxa270 device,
+> and unfortunatelly pxamci driver doesn't work well.
+>
+> It complains like this:
+>
+> [    4.586118] mmc0: DMA error on rx channel
+> [    4.586471] mmc0: status: 1
+> [    4.587340] mmcblk0: error -5 transferring data, sector 1586251, nr
+> 8, cmd response 0x900, card status 0xb00
+>
+> status == 1, it's DMA_IN_PROGRESS, so I guess it's mmp_pdma bug, it
+> calls callback without calling dma_cookie_complete on appropriate
+> cookie? Any ideas how to fix it?
 
-Enable Control Logic1 by PWRREQ (BUCK 2-4, LDO2, LDO4-19, LDO22, LDO35)
--------------------------------
-0: Output OFF
-1: Output ON/OFF (Controlled by PWRREQ)
-     PWRREQ = HIGH (1): Output ON in Normal Mode
-     PWRREQ = LOW (0): Output OFF
-2: Output On with Low Power Mode (Controlled by PWRREQ)
-     PWRREQ = HIGH (1) : Output ON in Normal Mode
-     PWRREQ = LOW (0): Output ON in Low Power Mode
-3: Output ON in Normal Mode
+Fixed it with attached patch. Original driver didn't set ENDMAEND flag
+for RX DMA, but after Daniel's
+conversion pxamci_dma_irq callback is called for both RX and TX.
 
-Enable Control Logic2 by PWRREQ (LDO1, LDO20, LDO21)
--------------------------------
-0: Output ON/OFF by ENx
-1: Output ON in Low Power Mode
-2: Output ON in Low Power Mode (Controlled by PWRREQ)
-   PWRREQ = HIGH (1): Output ON in Normal Mode
-   PWRREQ = LOW (0): Output ON in Low Power Mode
-3: Output ON in Normal Mode
+Now struggling with oops in pxa2xx_pcm driver.
 
-Enable Control Logic3 by PWRREQ (LDO3)
--------------------------------
-0 or 3: Output ON in Normal Mode
-1: Output ON in Low Power Mode
-2: Output ON in Low Power Mode (Controlled by PWRREQ)
-   PWRREQ = HIGH (1): Output ON in Normal Mode
-   PWRREQ = LOW (0): Output ON in Low Power Mode
+Regards
+Vasily
 
-The driver only implemented .set_suspend_mode for the LDOs regulators
-but some BUCKs also support to be put in Low Power Mode on system wide
-suspend so they should be supported as well. Two different functions
-were used for the logic 1 and 2 but this is not necessary.
+> Regards,
+> Vasily
+>
+>>
+>> Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  drivers/mmc/host/pxamci.c | 188 +++++++++++++++++++++++++---------------------
+>>  1 file changed, 102 insertions(+), 86 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
+>> index 2c5a91b..7aa97eb 100644
+>> --- a/drivers/mmc/host/pxamci.c
+>> +++ b/drivers/mmc/host/pxamci.c
+>> @@ -22,7 +22,9 @@
+>>  #include <linux/platform_device.h>
+>>  #include <linux/delay.h>
+>>  #include <linux/interrupt.h>
+>> +#include <linux/dmaengine.h>
+>>  #include <linux/dma-mapping.h>
+>> +#include <linux/dma/mmp-pdma.h>
+>>  #include <linux/clk.h>
+>>  #include <linux/err.h>
+>>  #include <linux/mmc/host.h>
+>> @@ -37,7 +39,6 @@
+>>  #include <asm/sizes.h>
+>>
+>>  #include <mach/hardware.h>
+>> -#include <mach/dma.h>
+>>  #include <linux/platform_data/mmc-pxamci.h>
+>>
+>>  #include "pxamci.h"
+>> @@ -58,7 +59,6 @@ struct pxamci_host {
+>>         struct clk              *clk;
+>>         unsigned long           clkrate;
+>>         int                     irq;
+>> -       int                     dma;
+>>         unsigned int            clkrt;
+>>         unsigned int            cmdat;
+>>         unsigned int            imask;
+>> @@ -69,8 +69,10 @@ struct pxamci_host {
+>>         struct mmc_command      *cmd;
+>>         struct mmc_data         *data;
+>>
+>> +       struct dma_chan         *dma_chan_rx;
+>> +       struct dma_chan         *dma_chan_tx;
+>> +       dma_cookie_t            dma_cookie;
+>>         dma_addr_t              sg_dma;
+>> -       struct pxa_dma_desc     *sg_cpu;
+>>         unsigned int            dma_len;
+>>
+>>         unsigned int            dma_dir;
+>> @@ -173,14 +175,18 @@ static void pxamci_disable_irq(struct pxamci_host *host, unsigned int mask)
+>>         spin_unlock_irqrestore(&host->lock, flags);
+>>  }
+>>
+>> +static void pxamci_dma_irq(void *param);
+>> +
+>>  static void pxamci_setup_data(struct pxamci_host *host, struct mmc_data *data)
+>>  {
+>> +       struct dma_async_tx_descriptor *tx;
+>> +       enum dma_data_direction direction;
+>> +       struct dma_slave_config config;
+>> +       struct dma_chan *chan;
+>>         unsigned int nob = data->blocks;
+>>         unsigned long long clks;
+>>         unsigned int timeout;
+>> -       bool dalgn = 0;
+>> -       u32 dcmd;
+>> -       int i;
+>> +       int ret;
+>>
+>>         host->data = data;
+>>
+>> @@ -195,54 +201,46 @@ static void pxamci_setup_data(struct pxamci_host *host, struct mmc_data *data)
+>>         timeout = (unsigned int)clks + (data->timeout_clks << host->clkrt);
+>>         writel((timeout + 255) / 256, host->base + MMC_RDTO);
+>>
+>> +       memset(&config, 0, sizeof(config));
+>> +       config.src_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
+>> +       config.dst_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
+>> +       config.src_addr = host->res->start + MMC_RXFIFO;
+>> +       config.dst_addr = host->res->start + MMC_TXFIFO;
+>> +       config.src_maxburst = 32;
+>> +       config.dst_maxburst = 32;
+>> +
+>>         if (data->flags & MMC_DATA_READ) {
+>>                 host->dma_dir = DMA_FROM_DEVICE;
+>> -               dcmd = DCMD_INCTRGADDR | DCMD_FLOWSRC;
+>> -               DRCMR(host->dma_drcmrtx) = 0;
+>> -               DRCMR(host->dma_drcmrrx) = host->dma | DRCMR_MAPVLD;
+>> +               direction = DMA_DEV_TO_MEM;
+>> +               chan = host->dma_chan_rx;
+>>         } else {
+>>                 host->dma_dir = DMA_TO_DEVICE;
+>> -               dcmd = DCMD_INCSRCADDR | DCMD_FLOWTRG;
+>> -               DRCMR(host->dma_drcmrrx) = 0;
+>> -               DRCMR(host->dma_drcmrtx) = host->dma | DRCMR_MAPVLD;
+>> +               direction = DMA_MEM_TO_DEV;
+>> +               chan = host->dma_chan_tx;
+>>         }
+>>
+>> -       dcmd |= DCMD_BURST32 | DCMD_WIDTH1;
+>> +       config.direction = direction;
+>> +
+>> +       ret = dmaengine_slave_config(chan, &config);
+>> +       if (ret < 0) {
+>> +               dev_err(mmc_dev(host->mmc), "dma slave config failed\n");
+>> +               return;
+>> +       }
+>>
+>> -       host->dma_len = dma_map_sg(mmc_dev(host->mmc), data->sg, data->sg_len,
+>> +       host->dma_len = dma_map_sg(chan->device->dev, data->sg, data->sg_len,
+>>                                    host->dma_dir);
+>>
+>> -       for (i = 0; i < host->dma_len; i++) {
+>> -               unsigned int length = sg_dma_len(&data->sg[i]);
+>> -               host->sg_cpu[i].dcmd = dcmd | length;
+>> -               if (length & 31 && !(data->flags & MMC_DATA_READ))
+>> -                       host->sg_cpu[i].dcmd |= DCMD_ENDIRQEN;
+>> -               /* Not aligned to 8-byte boundary? */
+>> -               if (sg_dma_address(&data->sg[i]) & 0x7)
+>> -                       dalgn = 1;
+>> -               if (data->flags & MMC_DATA_READ) {
+>> -                       host->sg_cpu[i].dsadr = host->res->start + MMC_RXFIFO;
+>> -                       host->sg_cpu[i].dtadr = sg_dma_address(&data->sg[i]);
+>> -               } else {
+>> -                       host->sg_cpu[i].dsadr = sg_dma_address(&data->sg[i]);
+>> -                       host->sg_cpu[i].dtadr = host->res->start + MMC_TXFIFO;
+>> -               }
+>> -               host->sg_cpu[i].ddadr = host->sg_dma + (i + 1) *
+>> -                                       sizeof(struct pxa_dma_desc);
+>> +       tx = dmaengine_prep_slave_sg(chan, data->sg, host->dma_len, direction,
+>> +                                    DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+>> +       if (!tx) {
+>> +               dev_err(mmc_dev(host->mmc), "prep_slave_sg() failed\n");
+>> +               return;
+>>         }
+>> -       host->sg_cpu[host->dma_len - 1].ddadr = DDADR_STOP;
+>> -       wmb();
+>>
+>> -       /*
+>> -        * The PXA27x DMA controller encounters overhead when working with
+>> -        * unaligned (to 8-byte boundaries) data, so switch on byte alignment
+>> -        * mode only if we have unaligned data.
+>> -        */
+>> -       if (dalgn)
+>> -               DALGN |= (1 << host->dma);
+>> -       else
+>> -               DALGN &= ~(1 << host->dma);
+>> -       DDADR(host->dma) = host->sg_dma;
+>> +       tx->callback = pxamci_dma_irq;
+>> +       tx->callback_param = host;
+>> +
+>> +       host->dma_cookie = dmaengine_submit(tx);
+>>
+>>         /*
+>>          * workaround for erratum #91:
+>> @@ -251,7 +249,7 @@ static void pxamci_setup_data(struct pxamci_host *host, struct mmc_data *data)
+>>          * before starting DMA.
+>>          */
+>>         if (!cpu_is_pxa27x() || data->flags & MMC_DATA_READ)
+>> -               DCSR(host->dma) = DCSR_RUN;
+>> +               dma_async_issue_pending(chan);
+>>  }
+>>
+>>  static void pxamci_start_cmd(struct pxamci_host *host, struct mmc_command *cmd, unsigned int cmdat)
+>> @@ -343,7 +341,7 @@ static int pxamci_cmd_done(struct pxamci_host *host, unsigned int stat)
+>>                  * enable DMA late
+>>                  */
+>>                 if (cpu_is_pxa27x() && host->data->flags & MMC_DATA_WRITE)
+>> -                       DCSR(host->dma) = DCSR_RUN;
+>> +                       dma_async_issue_pending(host->dma_chan_tx);
+>>         } else {
+>>                 pxamci_finish_request(host, host->mrq);
+>>         }
+>> @@ -358,9 +356,8 @@ static int pxamci_data_done(struct pxamci_host *host, unsigned int stat)
+>>         if (!data)
+>>                 return 0;
+>>
+>> -       DCSR(host->dma) = 0;
+>> -       dma_unmap_sg(mmc_dev(host->mmc), data->sg, data->sg_len,
+>> -                    host->dma_dir);
+>> +       dma_unmap_sg(host->dma_chan_rx->device->dev,
+>> +                    data->sg, data->sg_len, host->dma_dir);
+>>
+>>         if (stat & STAT_READ_TIME_OUT)
+>>                 data->error = -ETIMEDOUT;
+>> @@ -552,17 +549,25 @@ static const struct mmc_host_ops pxamci_ops = {
+>>         .enable_sdio_irq        = pxamci_enable_sdio_irq,
+>>  };
+>>
+>> -static void pxamci_dma_irq(int dma, void *devid)
+>> +static void pxamci_dma_irq(void *param)
+>>  {
+>> -       struct pxamci_host *host = devid;
+>> -       int dcsr = DCSR(dma);
+>> -       DCSR(dma) = dcsr & ~DCSR_STOPIRQEN;
+>> +       struct pxamci_host *host = param;
+>> +       struct dma_tx_state state;
+>> +       enum dma_status status;
+>> +       struct dma_chan *chan;
+>>
+>> -       if (dcsr & DCSR_ENDINTR) {
+>> +       if (host->data->flags & MMC_DATA_READ)
+>> +               chan = host->dma_chan_rx;
+>> +       else
+>> +               chan = host->dma_chan_tx;
+>> +
+>> +       status = dmaengine_tx_status(chan, host->dma_cookie, &state);
+>> +
+>> +       if (likely(status == DMA_SUCCESS)) {
+>>                 writel(BUF_PART_FULL, host->base + MMC_PRTBUF);
+>>         } else {
+>> -               pr_err("%s: DMA error on channel %d (DCSR=%#x)\n",
+>> -                      mmc_hostname(host->mmc), dma, dcsr);
+>> +               pr_err("%s: DMA error on %s channel\n", mmc_hostname(host->mmc),
+>> +                       host->data->flags & MMC_DATA_READ ? "rx" : "tx");
+>>                 host->data->error = -EIO;
+>>                 pxamci_data_done(host, 0);
+>>         }
+>> @@ -626,6 +631,7 @@ static int pxamci_probe(struct platform_device *pdev)
+>>         struct pxamci_host *host = NULL;
+>>         struct resource *r, *dmarx, *dmatx;
+>>         int ret, irq, gpio_cd = -1, gpio_ro = -1, gpio_power = -1;
+>> +       dma_cap_mask_t mask;
+>>
+>>         ret = pxamci_of_init(pdev);
+>>         if (ret)
+>> @@ -671,7 +677,6 @@ static int pxamci_probe(struct platform_device *pdev)
+>>
+>>         host = mmc_priv(mmc);
+>>         host->mmc = mmc;
+>> -       host->dma = -1;
+>>         host->pdata = pdev->dev.platform_data;
+>>         host->clkrt = CLKRT_OFF;
+>>
+>> @@ -702,12 +707,6 @@ static int pxamci_probe(struct platform_device *pdev)
+>>                                      MMC_CAP_SD_HIGHSPEED;
+>>         }
+>>
+>> -       host->sg_cpu = dma_alloc_coherent(&pdev->dev, PAGE_SIZE, &host->sg_dma, GFP_KERNEL);
+>> -       if (!host->sg_cpu) {
+>> -               ret = -ENOMEM;
+>> -               goto out;
+>> -       }
+>> -
+>>         spin_lock_init(&host->lock);
+>>         host->res = r;
+>>         host->irq = irq;
+>> @@ -728,32 +727,50 @@ static int pxamci_probe(struct platform_device *pdev)
+>>         writel(64, host->base + MMC_RESTO);
+>>         writel(host->imask, host->base + MMC_I_MASK);
+>>
+>> -       host->dma = pxa_request_dma(DRIVER_NAME, DMA_PRIO_LOW,
+>> -                                   pxamci_dma_irq, host);
+>> -       if (host->dma < 0) {
+>> -               ret = -EBUSY;
+>> -               goto out;
+>> -       }
+>> -
+>>         ret = request_irq(host->irq, pxamci_irq, 0, DRIVER_NAME, host);
+>>         if (ret)
+>>                 goto out;
+>>
+>>         platform_set_drvdata(pdev, mmc);
+>>
+>> -       dmarx = platform_get_resource(pdev, IORESOURCE_DMA, 0);
+>> -       if (!dmarx) {
+>> -               ret = -ENXIO;
+>> +       if (!pdev->dev.of_node) {
+>> +               dmarx = platform_get_resource(pdev, IORESOURCE_DMA, 0);
+>> +               if (!dmarx) {
+>> +                       ret = -ENXIO;
+>> +                       goto out;
+>> +               }
+>> +               host->dma_drcmrrx = dmarx->start;
+>> +
+>> +               dmatx = platform_get_resource(pdev, IORESOURCE_DMA, 1);
+>> +               if (!dmatx) {
+>> +                       ret = -ENXIO;
+>> +                       goto out;
+>> +               }
+>> +               host->dma_drcmrtx = dmatx->start;
+>> +       }
+>> +
+>> +       dma_cap_zero(mask);
+>> +       dma_cap_set(DMA_SLAVE, mask);
+>> +
+>> +       host->dma_chan_rx =
+>> +               dma_request_slave_channel_compat(mask, mmp_pdma_filter_fn,
+>> +                                                &host->dma_drcmrrx,
+>> +                                                &pdev->dev, "rx");
+>> +       if (host->dma_chan_rx == NULL) {
+>> +               dev_err(&pdev->dev, "unable to request rx dma channel\n");
+>> +               ret = -ENODEV;
+>>                 goto out;
+>>         }
+>> -       host->dma_drcmrrx = dmarx->start;
+>>
+>> -       dmatx = platform_get_resource(pdev, IORESOURCE_DMA, 1);
+>> -       if (!dmatx) {
+>> -               ret = -ENXIO;
+>> +       host->dma_chan_tx =
+>> +               dma_request_slave_channel_compat(mask, mmp_pdma_filter_fn,
+>> +                                                &host->dma_drcmrtx,
+>> +                                                &pdev->dev, "tx");
+>> +       if (host->dma_chan_tx == NULL) {
+>> +               dev_err(&pdev->dev, "unable to request tx dma channel\n");
+>> +               ret = -ENODEV;
+>>                 goto out;
+>>         }
+>> -       host->dma_drcmrtx = dmatx->start;
+>>
+>>         if (host->pdata) {
+>>                 gpio_cd = host->pdata->gpio_card_detect;
+>> @@ -814,12 +831,12 @@ err_gpio_ro:
+>>         gpio_free(gpio_power);
+>>   out:
+>>         if (host) {
+>> -               if (host->dma >= 0)
+>> -                       pxa_free_dma(host->dma);
+>> +               if (host->dma_chan_rx)
+>> +                       dma_release_channel(host->dma_chan_rx);
+>> +               if (host->dma_chan_tx)
+>> +                       dma_release_channel(host->dma_chan_tx);
+>>                 if (host->base)
+>>                         iounmap(host->base);
+>> -               if (host->sg_cpu)
+>> -                       dma_free_coherent(&pdev->dev, PAGE_SIZE, host->sg_cpu, host->sg_dma);
+>>                 if (host->clk)
+>>                         clk_put(host->clk);
+>>         }
+>> @@ -863,13 +880,12 @@ static int pxamci_remove(struct platform_device *pdev)
+>>                        END_CMD_RES|PRG_DONE|DATA_TRAN_DONE,
+>>                        host->base + MMC_I_MASK);
+>>
+>> -               DRCMR(host->dma_drcmrrx) = 0;
+>> -               DRCMR(host->dma_drcmrtx) = 0;
+>> -
+>>                 free_irq(host->irq, host);
+>> -               pxa_free_dma(host->dma);
+>> +               dmaengine_terminate_all(host->dma_chan_rx);
+>> +               dmaengine_terminate_all(host->dma_chan_tx);
+>> +               dma_release_channel(host->dma_chan_rx);
+>> +               dma_release_channel(host->dma_chan_tx);
+>>                 iounmap(host->base);
+>> -               dma_free_coherent(&pdev->dev, PAGE_SIZE, host->sg_cpu, host->sg_dma);
+>>
+>>                 clk_put(host->clk);
+>>
+>> --
+>> 1.8.3.1
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Only normal and Low Power Mode are valid operational modes, OFF is not
-an mode but is a regulator state that is handled by .set_suspend_enable
-ad .set_suspend_disable. So the same .set_suspend_mode function can be
-used by all the regulators that support Output On with Low Power Mode
-by PWRREQ, making much simpler the code to set the suspend mode.
+--001a113dc878f54af205058dfa9a
+Content-Type: text/x-patch; charset=US-ASCII; name="pxamci-mmp-pdma-fix.patch"
+Content-Disposition: attachment; filename="pxamci-mmp-pdma-fix.patch"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_i1ceqv7x0
 
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
----
-
-Changes since v1:
- - Don't map both IDLE and STANDBY modes to the hw Low Power Mode.
-   Suggested by Mark Brown.
-
- drivers/regulator/max77802.c | 93 ++++++++++++++++++++++----------------------
- 1 file changed, 46 insertions(+), 47 deletions(-)
-
-diff --git a/drivers/regulator/max77802.c b/drivers/regulator/max77802.c
-index 6eabb95..dae2c1a 100644
---- a/drivers/regulator/max77802.c
-+++ b/drivers/regulator/max77802.c
-@@ -50,6 +50,7 @@
- #define MAX77802_RAMP_RATE_SHIFT_4BIT	4
- 
- #define MAX77802_OFF_PWRREQ		0x1
-+#define MAX77802_LP_PWRREQ		0x2
- 
- /* MAX77802 has two register formats: 2-bit and 4-bit */
- static const unsigned int ramp_table_77802_2bit[] = {
-@@ -148,71 +149,68 @@ static unsigned max77802_get_mode(struct regulator_dev *rdev)
- 	return max77802_map_mode(max77802->opmode[id]);
- }
- 
--/*
-- * Some LDOs supports LPM-ON/OFF/Normal-ON mode during suspend state
-- * (Enable Control Logic1 by PWRREQ)
-+/**
-+ * max77802_set_suspend_mode - set regulator opmode when the system is suspended
-+ * @rdev: regulator to change mode
-+ * @mode: operating mode to be set
-+ *
-+ * Will set the operating mode for the regulators during system suspend.
-+ * This function is valid for the three different enable control logics:
-  *
-- * LDOs 2, 4-19, 22-35.
-+ * Enable Control Logic1 by PWRREQ (BUCK 2-4 and LDOs 2, 4-19, 22-35)
-+ * Enable Control Logic2 by PWRREQ (LDOs 1, 20, 21)
-+ * Enable Control Logic3 by PWRREQ (LDO 3)
-  *
-+ * If setting the regulator mode fails, the function only warns but does
-+ * not return an error code to avoid the regulator core to stop setting
-+ * the operating mode for the remaining regulators.
-  */
--static int max77802_ldo_set_suspend_mode_logic1(struct regulator_dev *rdev,
--						unsigned int mode)
-+static int max77802_set_suspend_mode(struct regulator_dev *rdev,
-+				     unsigned int mode)
- {
- 	struct max77802_regulator_prv *max77802 = rdev_get_drvdata(rdev);
- 	int id = rdev_get_id(rdev);
- 	unsigned int val;
- 	int shift = max77802_get_opmode_shift(id);
- 
--	switch (mode) {
--	case REGULATOR_MODE_IDLE:			/* ON in LP Mode */
--		val = MAX77802_OPMODE_LP;
--		break;
--	case REGULATOR_MODE_NORMAL:			/* ON in Normal Mode */
--		val = MAX77802_OPMODE_NORMAL;
--		break;
--	case REGULATOR_MODE_STANDBY:			/* ON/OFF by PWRREQ */
--		val = MAX77802_OPMODE_STANDBY;
--		break;
--	default:
--		dev_warn(&rdev->dev, "%s: regulator mode: 0x%x not supported\n",
-+	/*
-+	 * If the regulator has been disabled for suspend
-+	 * then is invalid to try setting a suspend mode.
-+	 */
-+	if (!max77802->opmode[id] == MAX77802_OFF_PWRREQ) {
-+		dev_warn(&rdev->dev, "%s: is disabled, mode: 0x%x not set\n",
- 			 rdev->desc->name, mode);
--		return -EINVAL;
-+		return 0;
- 	}
- 
--	max77802->opmode[id] = val;
--	return regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
--				  rdev->desc->enable_mask, val << shift);
--}
--
--/*
-- * Mode 1 (Output[ON/OFF] by PWRREQ) is not supported on some LDOs
-- * (Enable Control Logic2 by PWRREQ)
-- *
-- * LDOs 1, 20, 21, and 3,
-- *
-- */
--static int max77802_ldo_set_suspend_mode_logic2(struct regulator_dev *rdev,
--						unsigned int mode)
--{
--	struct max77802_regulator_prv *max77802 = rdev_get_drvdata(rdev);
--	int id = rdev_get_id(rdev);
--	unsigned int val;
--	int shift = max77802_get_opmode_shift(id);
--
- 	switch (mode) {
--	case REGULATOR_MODE_IDLE:			/* ON in LP Mode */
--		val = MAX77802_OPMODE_LP;
--		break;
--	case REGULATOR_MODE_NORMAL:			/* ON in Normal Mode */
--		val = MAX77802_OPMODE_NORMAL;
-+	case REGULATOR_MODE_STANDBY:
-+		/*
-+		 * If the regulator opmode is normal then enable
-+		 * ON in Low Power Mode by PWRREQ. If the mode is
-+		 * already Low Power then no action is required.
-+		 */
-+		if (max77802->opmode[id] == MAX77802_OPMODE_NORMAL)
-+			val = MAX77802_LP_PWRREQ;
-+		else
-+			return 0;
- 		break;
-+	case REGULATOR_MODE_NORMAL:
-+		/*
-+		 * If the regulator operating mode is Low Power then
-+		 * normal is not a valid opmode in suspend. If the
-+		 * mode is already normal then no action is required.
-+		 */
-+		if (max77802->opmode[id] == MAX77802_OPMODE_LP)
-+			dev_warn(&rdev->dev, "%s: in Low Power: 0x%x invalid\n",
-+				 rdev->desc->name, mode);
-+		return 0;
- 	default:
- 		dev_warn(&rdev->dev, "%s: regulator mode: 0x%x not supported\n",
- 			 rdev->desc->name, mode);
- 		return -EINVAL;
- 	}
- 
--	max77802->opmode[id] = val;
- 	return regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
- 				  rdev->desc->enable_mask, val << shift);
- }
-@@ -297,7 +295,7 @@ static struct regulator_ops max77802_ldo_ops_logic1 = {
- 	.set_voltage_time_sel	= regulator_set_voltage_time_sel,
- 	.set_suspend_enable	= max77802_enable,
- 	.set_suspend_disable	= max77802_set_suspend_disable,
--	.set_suspend_mode	= max77802_ldo_set_suspend_mode_logic1,
-+	.set_suspend_mode	= max77802_set_suspend_mode,
- };
- 
- /*
-@@ -314,7 +312,7 @@ static struct regulator_ops max77802_ldo_ops_logic2 = {
- 	.set_voltage_time_sel	= regulator_set_voltage_time_sel,
- 	.set_mode		= max77802_set_mode,
- 	.get_mode		= max77802_get_mode,
--	.set_suspend_mode	= max77802_ldo_set_suspend_mode_logic2,
-+	.set_suspend_mode	= max77802_set_suspend_mode,
- };
- 
- /* BUCKS 1, 6 */
-@@ -345,6 +343,7 @@ static struct regulator_ops max77802_buck_234_ops = {
- 	.set_ramp_delay		= max77802_set_ramp_delay_2bit,
- 	.set_suspend_enable	= max77802_enable,
- 	.set_suspend_disable	= max77802_set_suspend_disable,
-+	.set_suspend_mode	= max77802_set_suspend_mode,
- };
- 
- /* BUCKs 5, 7-10 */
--- 
-2.1.0
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbW1jL2hvc3QvcHhhbWNpLmMgYi9kcml2ZXJzL21tYy9ob3N0
+L3B4YW1jaS5jCmluZGV4IGViNzI1ZDMuLmI1MmUwNmUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbW1j
+L2hvc3QvcHhhbWNpLmMKKysrIGIvZHJpdmVycy9tbWMvaG9zdC9weGFtY2kuYwpAQCAtMjM3LDgg
+KzIzNywxMCBAQCBzdGF0aWMgdm9pZCBweGFtY2lfc2V0dXBfZGF0YShzdHJ1Y3QgcHhhbWNpX2hv
+c3QgKmhvc3QsIHN0cnVjdCBtbWNfZGF0YSAqZGF0YSkKIAkJcmV0dXJuOwogCX0KIAotCXR4LT5j
+YWxsYmFjayA9IHB4YW1jaV9kbWFfaXJxOwotCXR4LT5jYWxsYmFja19wYXJhbSA9IGhvc3Q7CisJ
+aWYgKCEoZGF0YS0+ZmxhZ3MgJiBNTUNfREFUQV9SRUFEKSkgeworCQl0eC0+Y2FsbGJhY2sgPSBw
+eGFtY2lfZG1hX2lycTsKKwkJdHgtPmNhbGxiYWNrX3BhcmFtID0gaG9zdDsKKwl9CiAKIAlob3N0
+LT5kbWFfY29va2llID0gZG1hZW5naW5lX3N1Ym1pdCh0eCk7CiAK
+--001a113dc878f54af205058dfa9a--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
