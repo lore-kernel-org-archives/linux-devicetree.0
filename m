@@ -1,71 +1,55 @@
-From: Caesar Wang <caesar.wang@rock-chips.com>
-Subject: [PATCH v11 4/5] ARM: dts: add main Thermal info to rk3288
-Date: Thu, 16 Oct 2014 21:31:40 +0800
-Message-ID: <1413466301-25952-5-git-send-email-caesar.wang@rock-chips.com>
-References: <1413466301-25952-1-git-send-email-caesar.wang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413466301-25952-1-git-send-email-caesar.wang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com
-Cc: zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dmitry.torokhov@gmail.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com, vladimir_zapolskiy@mentor.com, Caesar Wang <caesar.wang@rock-chips.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3] mtd: atmel_nand: make PMECC lookup table and offset
+ property optional
+Date: Thu, 16 Oct 2014 14:39:47 +0100
+Message-ID: <20141016133947.GB24714@leverpostej>
+References: <1413021710-32264-1-git-send-email-josh.wu@atmel.com>
+ <20141013111611.GC15326@leverpostej>
+ <543BB7FE.3030604@atmel.com>
+ <543CFC41.2060506@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <543CFC41.2060506-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch is depend on rk3288-thermal.dtsi,or
-it will compile error.
+[...]
 
-If the temperature over a period of time High,over 120C
-the resulting TSHUT gave CRU module,let it reset
-the entire chip,or via GPIO give PMIC.
+> >> That said, if we can build this dynamically, can't we always do so, and
+> >> never need this property?
+> >
+> > Since board like at91sam9x5, sama5d3xek has a rom lookup table. And 
+> > the sama5d4ek has no rom lookup table.
+> > To present this, I make this property as optional.
+> >
+> > But yes, the pmecc lookup table related properties can be removed as 
+> > driver can build it in runtime.
+> > The cost is we need to use more memory to store the table.
+> 
+> In precisely, the table need to 32k bytes memory for 512-sector, and 64k 
+> bytes for 1024-sector.
+> 
+> Also I spend time to testing the performance of this version.
+> Compare with the version which use the SRAM rom lookup table, this 
+> version (build table in runtim) cost about 5~10ms more.
+> 
+> So I prefer to keep this property as optional.
 
-Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
----
- arch/arm/boot/dts/rk3288.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Sure. It sounds like it's always possible to ignore it later if we
+choose to.
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index cb18bb4..bf34111 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -15,6 +15,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/rockchip.h>
- #include <dt-bindings/clock/rk3288-cru.h>
-+#include <dt-bindings/thermal/thermal.h>
- #include "skeleton.dtsi"
- 
- / {
-@@ -346,6 +347,19 @@
- 		status = "disabled";
- 	};
- 
-+	tsadc: tsadc@ff280000 {
-+		compatible = "rockchip,rk3288-tsadc";
-+		reg = <0xff280000 0x100>;
-+		interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
-+		clock-names = "tsadc", "apb_pclk";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&otp_out>;
-+		#thermal-sensor-cells = <1>;
-+		hw-shut-temp = <120000>;
-+		status = "disabled"
-+	};
-+
- 	usb_host0_ehci: usb@ff500000 {
- 		compatible = "generic-ehci";
- 		reg = <0xff500000 0x100>;
-@@ -965,6 +979,12 @@
- 			};
- 		};
- 
-+		tsadc {
-+			otp_out: otp-out {
-+				rockchip,pins = <0 10 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
- 		pwm0 {
- 			pwm0_pin: pwm0-pin {
- 				rockchip,pins = <7 0 RK_FUNC_1 &pcfg_pull_none>;
--- 
-1.9.1
+I just wouldn't mention what the driver should do in the binding --
+whether or not the property is optional, the behaviour of the driver is
+not a detail of the device.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
