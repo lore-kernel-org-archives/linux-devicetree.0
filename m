@@ -1,58 +1,65 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v4 00/13] Add ACPI _DSD and unified device properties support
-Date: Thu, 16 Oct 2014 12:05:16 +0200
-Message-ID: <2459115.UMgof0Byf6@vostro.rjw.lan>
-References: <2660541.BycO7TFnA2@vostro.rjw.lan> <20141015151702.GG20034@leverpostej> <543E9605.6020502@linux.intel.com>
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH RFT 0/8] Marvell PXA168 libphy handling and Berlin
+ Ethernet
+Date: Thu, 16 Oct 2014 11:53:23 +0200
+Message-ID: <20141016095323.GA1061@kwain>
+References: <1412858346-11334-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <543E9605.6020502@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "dvhart@infradead.org" <dvhart@infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1412858346-11334-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, Florian Fainelli <f.fainelli@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, October 15, 2014 05:43:01 PM Darren Hart wrote:
-> 
-> On 10/15/14 17:17, Mark Rutland wrote:
-> > On Wed, Oct 15, 2014 at 03:46:39PM +0100, Darren Hart wrote:
-> 
-> >> Mark, what would you propose we do differently to enable this driver to
-> >> be firmware-type agnostic?
-> > 
-> > For this particular driver, all I'm asking for is that the
-> > "used-by-rtas" property is not moved over from of_find_property to
-> > device_get_property. It is irrelevant for all ACPI systems. Evidently my
-> > comment was unclear; I apologise for that.
-> 
-> So my objection here is that by keeping the of_* terms in the driver we
-> are required to include of, although it does safely convert to returning
-> NULL if !CONFIG_OF I suppose.
+Hi Sebastian,
 
-Agreed.
+On Thu, Oct 09, 2014 at 02:38:58PM +0200, Sebastian Hesselbarth wrote:
+> This patch series deals with a removing a IP feature that can be foun=
+d
+> on all currently supported Marvell Ethernet IP (pxa168_eth, mv643xx_e=
+th,
+> mvneta). The MAC IP allows to automatically perform PHY auto-negotiat=
+ion
+> without software interaction.
+>=20
+> However, this feature (a) fundamentally clashes with the way libphy w=
+orks
+> and (b) is unable to deal with quirky PHYs that require special treat=
+ment.
+> In this series, pxa168_eth driver is rewritten to completely disable =
+that
+> feature and properly deal with libphy provided PHYs. The other two dr=
+ivers
+> are suspect to future patch sets, also removing the code related with=
+ it.
+>=20
+> Currently, the patches are based on next-20141009 and will be resent =
+once
+> v3.18-rc1 drops. This is a Request-For-Test on both BG2Q and MMP/gplu=
+g as
 
-> > We have status = "disabled" as a less specific mechanism for telling the
-> > OS to ignore a node in DT. I was under the impression that ACPI already
-> > had a mechanism for marking devices to be ignored, but perhaps I am
-> > mistaken.
-> 
-> That is correct, in ACPI this would be properly implemented with the
-> _STA reserved named method. In which case it wouldn't enumerate.
-> 
-> > 
-> > The concerns I mentioned at the end of my original reply were of a more
-> > general nature than this particular device description.
+I tested the series on a BG2Q, it worked well.
 
-Moreover, to me, the question really is "Does this driver need to be any
-different depending on whether DT or ACPI is used by the platform and if
-so, then why?".
+Antoine
 
-In my opinion, there is no technical reason for such differences to be present
-in this particular case.  The fact that the "used-by-rtas" property does not
-make sense for the ACPI case doesn't imply that the driver should not be allowed
-to check it then.
+> these are the current users of pxa168_eth. A branch with this patches=
+ on
+> top of next-20141009 can be found at
+>=20
+> git://git.infradead.org/users/hesselba/linux-berlin.git devel/bg2-bg2=
+cd-eth-v1
+>=20
+> It would be great to get a Tested-byfrom MMP guys on gplug - if they
+> have that board somewhere. Also, BG2Q (Antoine) needs a phy-connectio=
+n-type
+> property. My guess is that, if it is using internal PHY, it is "mii",=
+ too.
 
--- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
