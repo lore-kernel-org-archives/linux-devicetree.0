@@ -1,80 +1,48 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for ps8622 DT properties
-Date: Thu, 16 Oct 2014 12:04:42 +0300
-Message-ID: <15883554.FBq3UbZUdh@avalon>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com> <20141008070918.GA4999@ulmo> <CAEC9eQPn2GAn6nrSvgso2QTXQErtY+8dH5-LbZS9mGTYcYC5Gw@mail.gmail.com>
+From: addy ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 1/2] spi/rockchip: fix bug that case spi can't go as fast
+ as slave request
+Date: Thu, 16 Oct 2014 17:16:02 +0800
+Message-ID: <543F8CD2.1010302@rock-chips.com>
+References: <1413372311-4203-1-git-send-email-addy.ke@rock-chips.com> <1413372349-4254-1-git-send-email-addy.ke@rock-chips.com> <20141015130452.GD27755@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAEC9eQPn2GAn6nrSvgso2QTXQErtY+8dH5-LbZS9mGTYcYC5Gw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Ajay kumar <ajaynumb@gmail.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Ajay Kumar <ajaykumar.rs@samsung.com>, InKi Dae <inki.dae@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141015130452.GD27755-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, amstan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, sonnyrao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wei.luo-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ajay,
+hi, Mark
 
-On Friday 10 October 2014 18:33:05 Ajay kumar wrote:
-> On Wed, Oct 8, 2014 at 12:39 PM, Thierry Reding wrote:
-> > On Tue, Oct 07, 2014 at 05:49:24PM +0300, Laurent Pinchart wrote:
-> >> On Tuesday 07 October 2014 16:06:55 Ajay kumar wrote:
-> >> > On Tue, Oct 7, 2014 at 4:00 PM, Tomi Valkeinen wrote:
-> >> > > On 20/09/14 14:22, Ajay kumar wrote:
-> >> > >> Well, I am okay with using video ports to describe the relationship
-> >> > >> between the encoder, bridge and the panel.
-> >> > >> But, its just that I need to make use of 2 functions when phandle
-> >> > >> does it using just one function ;)
-> >> > >> -        panel_node = of_parse_phandle(dev->of_node, "panel", 0)
-> >> > >> +       endpoint = of_graph_get_next_endpoint(dev->of_node, NULL);
-> >> > >> +       if (!endpoint)
-> >> > >> +               return -EPROBE_DEFER;
-> >> > >> +
-> >> > >> +       panel_node = of_graph_get_remote_port_parent(endpoint);
-> >> > >> +       if (!panel_node)
-> >> > >> +               return -EPROBE_DEFER;
-> >> > >> 
-> >> > >> 
-> >> > >> If nobody else has objections over using of_graph functions instead
-> >> > >> of phandles, I can respin this patchset by making use of video
-> >> > >> ports.
-> >> > > 
-> >> > > The discussion did digress somewhat.
-> >> > > 
-> >> > > As a clarification, I'm in no way nack'ing this series because it
-> >> > > doesn't use the graphs for video connections. I don't see the simple
-> >> > > phandle bindings used here as broken as such.
-> >> > 
-> >> > Well, I am okay with any approach you guys decide on. I desperately
-> >> > want this to get this in since it has been floating around for quite
-> >> > sometime. The more we drag this, the more rework for me since the
-> >> > number of platforms using bridge support is increasing daily!
-> >> 
-> >> I won't nack this patch either. I'm however concerned that we'll run
-> >> straight into the wall if we don't come up with an agreement on a
-> >> standard way to describe connections in DT for display devices, which is
-> >> why I would prefer the ps8622 bindings to use OF graph to describe
-> >> connections.
-> > 
-> > I think there's not really an easy way out here. It's pretty bold trying
-> > to come up with a common way to describe bridges when we have only a
-> > single one (and a single use-case at that). The worst that can happen is
-> > that we need to change the binding at some point, in which case we may
-> > have to special-case early drivers, but I really don't think that's as
-> > much of an issue as everybody seems to think.
-> > 
-> > This series has been floating around for months because we're being
-> > overly prudent to accept a binding that /may/ turn out to not be generic
-> > enough.
+On 2014/10/15 21:04, Mark Brown wrote:
+> On Wed, Oct 15, 2014 at 07:25:49PM +0800, Addy Ke wrote:
 > 
-> Right. It would be great if you guys come to agreement ASAP!
+>> +	if (WARN_ON(rs->speed > MAX_SCLK_OUT))
+>> +		rs->speed = MAX_SCLK_OUT;
+>> +
+>> +	/* the minimum divsor is 2 */
+>> +	if (rs->max_freq < 2 * rs->speed) {
+>> +		clk_set_rate(rs->spiclk, 2 * rs->speed);
+>> +		rs->max_freq = clk_get_rate(rs->spiclk);
+>> +	}
+> 
+> I'll apply this but you should be checking the return code from
+> clk_set_rate() here, please send a followup patch doing that.  It might
 
-I don't think we'll agree any time soon, so I believe it's up to you to decide 
-which option is best based on all arguments that have been presented.
+If clk_set_rate return error, do I only put dev_warn here or return error value to spi core?
 
-If you ask me, of course, OF graph is best :-)
+> also be worth consdering just setting the rate unconditionally here, it
+> seems like it should make things simpler.
+> 
+I think we need.
+If we set the rate unconditionally here, clk_set_rate() will be executed in each spi transfer.
 
--- 
-Regards,
 
-Laurent Pinchart
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
