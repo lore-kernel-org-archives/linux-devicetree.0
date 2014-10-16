@@ -1,121 +1,117 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3 1/3] power-domain: add power domain drivers for
- Rockchip platform
-Date: Thu, 16 Oct 2014 15:06:16 +0200
-Message-ID: <CAPDyKFoHkr-Z3PY0tTw9BPF8gJY_bVLtJL2KK7_uoq_008ymnw@mail.gmail.com>
-References: <1413457353-4222-1-git-send-email-jinkun.hong@rock-chips.com>
-	<1413457353-4222-2-git-send-email-jinkun.hong@rock-chips.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 2/3] ARM: dts: at_xdmac: add bindings documentation
+Date: Thu, 16 Oct 2014 15:20:22 +0200
+Message-ID: <20141016132021.GB2367@ldesroches-Latitude-E6320>
+References: <1412175565-810-1-git-send-email-ludovic.desroches@atmel.com>
+ <1412175565-810-3-git-send-email-ludovic.desroches@atmel.com>
+ <20141015134134.GR1638@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413457353-4222-2-git-send-email-jinkun.hong@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "jinkun.hong" <jinkun.hong@rock-chips.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Jack Dai <jack.dai@rock-chips.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141015134134.GR1638-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jinkun,
+On Wed, Oct 15, 2014 at 07:11:34PM +0530, Vinod Koul wrote:
+> On Wed, Oct 01, 2014 at 04:59:24PM +0200, Ludovic Desroches wrote:
+> > Add bindings documentation for the new Atmel DMA controller (XDMAC)
+> > introduced with SAMA5D4.
+> Seeing the example below, it doesnt seem to me that we cant reuse existing
+> atmel binding, can you explain why we cnat reuse
 
-[...]
+We have discussed this in v3 but I didn't get answer:
 
-> +
-> +static int rockchip_pd_power_on(struct generic_pm_domain *domain)
-> +{
-> +       int ret = 0;
-> +       struct rockchip_domain *pd = to_rockchip_pd(domain);
-> +
-> +       if (pd->dev == NULL)
-> +               pr_err("pd->dev is NULL, power on failed!", __func__);
-> +
-> +       pm_clk_resume(pd->dev);
-> +       ret = rockchip_pmu_set_power_domain(pd, true);
-> +       pm_clk_suspend(pd->dev);
-> +
-> +       return ret;
-> +}
-> +
-> +static int rockchip_pd_power_off(struct generic_pm_domain *domain)
-> +{
-> +       int ret = 0;
-> +       struct rockchip_domain *pd = to_rockchip_pd(domain);
-> +
-> +       if (pd->dev == NULL)
-> +               pr_err("pd->dev is NULL, power off failed!", __func__);
-> +
-> +       pm_clk_resume(pd->dev);
-> +       ret = rockchip_pmu_set_power_domain(pd, false);
-> +       pm_clk_suspend(pd->dev);
-> +
-> +       return 0;
-> +}
-> +
-> +void rockchip_pm_domain_attach_dev(struct device *dev)
-> +{
-> +       struct clk *clk;
-> +       int ret;
-> +       int i = 0;
-> +       struct rockchip_domain *pd;
-> +
-> +       pd = (struct rockchip_domain *)dev->pm_domain;
-> +       pd->dev = dev;
+"
+Bindings have changed through the revisions, I didn't notice they were so
+close to the hdmac bindings. The only difference is the content of the
+second cell.
 
-This looks wrong.
+I don't know if it's a sufficient reason to add a new binding.
+"
 
-You will update "pd->dev" for each device that gets added to the PM
-domain. The last one will be set to "pd->dev".
-So, it would still work as long as you only have one device per
-domain. Is that the case?
+It makes me thinking that I should merge the two cells since the memory
+and peripheral interface have been moved to the configuration register
+in xdmac. So the number of cells won't be the same.
 
-Could you elaborate on why you have chosen to do it this way?
+Ludovic
 
-> +
-> +       ret = pm_clk_create(dev);
-> +       if (ret) {
-> +               dev_err(dev, "pm_clk_create failed %d\n", ret);
-> +               return;
-> +       };
-> +
-> +       while ((clk = of_clk_get(dev->of_node, i++)) && !IS_ERR(clk)) {
-> +               ret = pm_clk_add_clk(dev, clk);
-> +               if (ret) {
-> +                       dev_err(dev, "pm_clk_add_clk failed %d\n", ret);
-> +                       goto clk_err;
-> +               };
-> +       }
-> +
-> +       if (!IS_ENABLED(CONFIG_PM_RUNTIME)) {
-
-Could you elaborate on why you need to do this check here?
-
-When I see a check for IS_ENABLED(CONFIG_PM_RUNTIME), that indicates
-to me that we actually have an another issue, perhaps in the PM clk
-API.
-
-> +               ret = pm_clk_resume(dev);
-> +               if (ret) {
-> +                       dev_err(dev, "pm_clk_resume failed %d\n", ret);
-> +                       goto clk_err;
-> +               };
-> +       }
-> +       return;
-> +
-> +clk_err:
-> +       pm_clk_destroy(dev);
-> +
-> +}
-> +
-> +void rockchip_pm_domain_detach_dev(struct device *dev)
-> +{
-> +       struct rockchip_domain *pd;
-> +
-> +       pd = (struct rockchip_domain *)dev->pm_domain;
-> +       pd->dev = NULL;
-> +
-> +       pm_clk_destroy(dev);
-> +}
-> +
-
-[...]
-
-Kind regards
-Uffe
+> 
+> -- 
+> ~Vinod
+> 
+> > 
+> > Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/dma/atmel-xdma.txt         | 50 ++++++++++++++++++++++
+> >  1 file changed, 50 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/dma/atmel-xdma.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/dma/atmel-xdma.txt b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+> > new file mode 100644
+> > index 0000000..ae587ad
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+> > @@ -0,0 +1,50 @@
+> > +* Atmel Extensible Direct Memory Access Controller (XDMAC)
+> > +
+> > +* XDMA Controller
+> > +Required properties:
+> > +- compatible: Should be "atmel,<chip>-dma".
+> > +  <chip> compatible description:
+> > +  - sama5d4: first SoC adding the XDMAC
+> > +- reg: Should contain DMA registers location and length.
+> > +- interrupts: Should contain DMA interrupt.
+> > +- #dma-cells: Must be <2>, used to represent the number of integer cells in
+> > +the dmas property of client devices.
+> > +  - The 1st cell specifies the memory interface (16 most significant bits) and
+> > +  the peripheral interface (16 less significant bits) to use.
+> > +  - The 2nd cell specifies the channel configuration register:
+> > +    - bit 30-24: PERID, peripheral identifier.
+> > +
+> > +Example:
+> > +
+> > +dma1: dma-controller@f0004000 {
+> > +	compatible = "atmel,sama5d4-dma";
+> > +	reg = <0xf0004000 0x200>;
+> > +	interrupts = <50 4 0>;
+> > +	#dma-cells = <2>;
+> > +};
+> > +
+> > +
+> > +* DMA clients
+> > +DMA clients connected to the Atmel XDMA controller must use the format
+> > +described in the dma.txt file, using a two-cell specifier for each channel.
+> > +The three cells in order are:
+> > +1. A phandle pointing to the DMA controller.
+> > +2. The memory interface (16 most significant bits), the peripheral interface
+> > +(16 less significant bits).
+> > +3. Channel configuration register. Configurable fields are:
+> > +  - bit 30-24: PERID, peripheral identifier.
+> > +
+> > +Example:
+> > +
+> > +i2c2: i2c@f8024000 {
+> > +	compatible = "atmel,at91sam9x5-i2c";
+> > +	reg = <0xf8024000 0x4000>;
+> > +	interrupts = <34 4 6>;
+> > +	dmas = <&dma1
+> > +		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
+> > +		AT91_XDMAC_DT_PERID(6)>,
+> > +	       <&dma1
+> > +		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
+> > +		AT91_XDMAC_DT_PERID(7)>;
+> > +	dma-names = "tx", "rx";
+> > +};
+> > -- 
+> > 2.0.3
+> > 
+> 
+> -- 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
