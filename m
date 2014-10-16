@@ -1,52 +1,97 @@
-From: addy ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi/rockchip: fix bug that cause spi transfer timed
- out in DMA duplex mode
-Date: Thu, 16 Oct 2014 17:26:02 +0800
-Message-ID: <543F8F2A.9040904@rock-chips.com>
-References: <1413372311-4203-1-git-send-email-addy.ke@rock-chips.com> <1413372378-4309-1-git-send-email-addy.ke@rock-chips.com> <20141015130547.GE27755@sirena.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] spi/rockchip: fix bug that case spi can't go as fast
+ as slave request
+Date: Thu, 16 Oct 2014 11:34:10 +0200
+Message-ID: <20141016093410.GB2200@sirena.org.uk>
+References: <1413372311-4203-1-git-send-email-addy.ke@rock-chips.com>
+ <1413372349-4254-1-git-send-email-addy.ke@rock-chips.com>
+ <20141015130452.GD27755@sirena.org.uk>
+ <543F8CD2.1010302@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141015130547.GE27755-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, amstan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, sonnyrao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wei.luo-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============4636623562270950150=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <543F8CD2.1010302@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: addy ke <addy.ke@rock-chips.com>
+Cc: heiko@sntech.de, kever.yang@rock-chips.com, linux-kernel@vger.kernel.org, xjq@rock-chips.com, zyw@rock-chips.com, linux-rockchip@lists.infradead.org, grant.likely@linaro.org, hj@rock-chips.com, huangtao@rock-chips.com, devicetree@vger.kernel.org, amstan@google.com, yzq@rock-chips.com, zhangqing@rock-chips.com, cf@rock-chips.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, hl@rock-chips.com, dianders@chromium.org, linux-spi@vger.kernel.org, wei.luo@rock-chips.com, sonnyrao@google.com, olof@lixom.net, zhenfu.fang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi, Mark
 
-The following changes is nessarry:(if tx complete, spi must be disabled too)
-diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-index 153269b..87bc16f 100644
---- a/drivers/spi/spi-rockchip.c
-+++ b/drivers/spi/spi-rockchip.c
-@@ -418,8 +418,10 @@ static void rockchip_spi_dma_txcb(void *data)
-        spin_lock_irqsave(&rs->lock, flags);
+--===============4636623562270950150==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RASg3xLB4tUQ4RcS"
+Content-Disposition: inline
 
-        rs->state &= ~TXBUSY;
--       if (!(rs->state & RXBUSY))
-+       if (!(rs->state & RXBUSY)) {
-+               spi_enable_chip(rs, 0);
-                spi_finalize_current_transfer(rs->master);
-+       }
 
-        spin_unlock_irqrestore(&rs->lock, flags);
- }
+--RASg3xLB4tUQ4RcS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Sorry for my mistake, I have not put these changes to this patch.
+On Thu, Oct 16, 2014 at 05:16:02PM +0800, addy ke wrote:
+> On 2014/10/15 21:04, Mark Brown wrote:
+> > On Wed, Oct 15, 2014 at 07:25:49PM +0800, Addy Ke wrote:
 
-Do I need send patch v2 or a new patch to fix this issure?
+> >> +	if (WARN_ON(rs->speed > MAX_SCLK_OUT))
+> >> +		rs->speed = MAX_SCLK_OUT;
 
-On 2014/10/15 21:05, Mark Brown wrote:
-> On Wed, Oct 15, 2014 at 07:26:18PM +0800, Addy Ke wrote:
->> In rx mode, dma must be prepared before spi is enabled.
->> But in tx and tr mode, spi must be enabled first.
-> 
-> Applied, thanks.
-> 
+> >> +	/* the minimum divsor is 2 */
+> >> +	if (rs->max_freq < 2 * rs->speed) {
+> >> +		clk_set_rate(rs->spiclk, 2 * rs->speed);
+> >> +		rs->max_freq = clk_get_rate(rs->spiclk);
+> >> +	}
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > I'll apply this but you should be checking the return code from
+> > clk_set_rate() here, please send a followup patch doing that.  It might
+
+> If clk_set_rate return error, do I only put dev_warn here or return error value to spi core?
+
+It'd be better to return an error if we need to set the rate and can't
+do it.
+
+> > also be worth consdering just setting the rate unconditionally here, it
+> > seems like it should make things simpler.
+
+> I think we need.
+> If we set the rate unconditionally here, clk_set_rate() will be executed in each spi transfer.
+
+Is that really such a high cost?
+
+--RASg3xLB4tUQ4RcS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUP5ERAAoJECTWi3JdVIfQxfgH+QGfQFD/KQ+OmRJyUPfMHGXX
+6JdP9nSyawWv7+xoUgLK9rDuTnwOxJedbhsToh1wJDcjg3bOgrnoiWkbADNH1L/e
+IHsMq+HJTZmv9xq4oaFx/vVHeFFPSsh2AtldEOMgmM50bGlg3M2sTo0Pg5mVdmIg
+tEMCXUtXU1Ehs9OsZh0HT0sZK7H+sPD9VfFVwRE03EZRjIy6LtfEwCihCAB9/tMM
+bGpomAJq7Az1BP5y5SWLru4X1H4uad4kaywaAUB6jqF35MlR1qXdAkjzFGZoBm91
+vMd6ouDuDCfmg2NzKwIJ+mqXOWC7QijzlMmvkmUujef9aDyZAho5fXIwS66PKL8=
+=lzOL
+-----END PGP SIGNATURE-----
+
+--RASg3xLB4tUQ4RcS--
+
+
+--===============4636623562270950150==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============4636623562270950150==--
