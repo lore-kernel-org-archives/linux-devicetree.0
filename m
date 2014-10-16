@@ -1,116 +1,70 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
-Date: Thu, 16 Oct 2014 16:58:56 +0300
-Message-ID: <1413467936.6148.17.camel@mm-sol.com>
-References: <1411563415-11933-1-git-send-email-svarbanov@mm-sol.com>
-		 <1411563415-11933-2-git-send-email-svarbanov@mm-sol.com>
-		 <542D1B11.8070600@mm-sol.com> <1412251686.1027.15.camel@iivanov-dev>
-	 <542FDF41.2040106@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <542FDF41.2040106-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, lars <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH 1/3] drivers: cpuidle: add status property to ARM idle states
+Date: Thu, 16 Oct 2014 14:59:55 +0100
+Message-ID: <1413467997-32131-1-git-send-email-lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Kevin Hilman <khilman@linaro.org>, Chander Kashyap <k.chander@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+On some platforms the device tree bindings must provide the kernel
+with a status flag for idle states, that defines whether the idle
+state is operational or not in the current configuration.
 
-Hi, 
+This patch adds a status property to the ARM idle states compliant
+with ePAPR v1.1 and updates the DT parsing code accordingly.
 
-On Sat, 2014-10-04 at 12:51 +0100, Jonathan Cameron wrote:
-> On 02/10/14 13:08, Ivan T. Ivanov wrote:
-> >  +iio maintainers
-> > 
-> >  On Thu, 2014-10-02 at 12:29 +0300, Ivan T. Ivanov wrote:
-> > >  Hi Stan,
-> > > >
-> > >  On 09/24/2014 03:56 PM, Stanimir Varbanov wrote:
-> > > >
-> > >  <snip>
-> > > >
-> > > >  +static int vadc_get_dt_data(struct vadc_priv *vadc, struct 
-> > > > device_node *node)
-> > > >  +{
-> > > >  +      struct iio_chan_spec *iio_chan = vadc->iio_chans;
-> > > >  +      const struct vadc_channels *vadc_chan;
-> > > >  +      struct vadc_channel_prop prop;
-> > > >  +      struct device_node *child;
-> > > >  +      int ret, index = 0;
-> > > >  +
-> > > >  +      for_each_available_child_of_node(node, child) {
-> > > >  +      ret = vadc_get_dt_channel_data(vadc->dev, &prop, 
-> > > > child);
-> > > >  +      if (ret)
-> > > >  +      return ret;
-> > > >  +
-> > > >  +      vadc->chan_props[index] = prop;
-> > > >  +
-> > > >  +      vadc_chan = &vadc_chans[prop.channel];
-> > > >  +
-> > > >  +      iio_chan->channel = prop.channel;
-> > > >  +      iio_chan->datasheet_name = vadc_chan->datasheet_name;
-> > > >  +      iio_chan->info_mask_separate = vadc_chan->info_mask;
-> > > >  +      iio_chan->type = vadc_chan->type;
-> > > >  +      iio_chan->indexed = 1;
-> > > >  +      iio_chan->scan_type.sign = 's';
-> > > >  +      iio_chan->scan_type.realbits = 15;
-> > > >  +      iio_chan->scan_type.storagebits = 16;
-> > > >  +      iio_chan->address = index++;
-> > > >  +
-> > > >  +      iio_chan++;
-> > > >  +      }
-> > > >  +
-> > > >  +      return 0;
-> > > >  +}
-> > > >  +
-> > > >
-> > >  <snip>
-> > > >
-> > > >  +static int vadc_probe(struct platform_device *pdev)
-> > > >  +{
-> > > >
-> > >  <snip>
-> > > >
-> > > >  +
-> > > >  +      indio_dev->dev.parent = dev;
-> > > >  +      indio_dev->dev.of_node = node;
-> > > >  +      indio_dev->name = pdev->name;
-> > > >  +      indio_dev->modes = INDIO_DIRECT_MODE;
-> > > >  +      indio_dev->info = &vadc_info;
-> > > >  +      indio_dev->channels = vadc->iio_chans;
-> > > >  +      indio_dev->num_channels = vadc->nchannels;
-> > > >
-> > >  This will not work as we thought. Registration will be fine and 
-> > > entries
-> > >  in sysfs are created as expected, but this is breaking 
-> > > numbering scheme
-> > >  for client drivers. For us the problem is that iio framework 
-> > > expect channels
-> > >  numbering to be linear and channel number should not be greater 
-> > > than
-> > >  channel count. For example even if die temperature channel is 
-> > > always 8, if
-> > >  I describe only 5 channels in DTS files (4 for reference points 
-> > > measurement)
-> > >  and 1 for die temperature, clients could not get OF reference to
-> > >  temperature
-> > >  channel using io-channels = <&pm8941_vadc 8>;
-> > > >
-> > >  Jonathan, please, could you advise us.
-> I'd like to let the solution you proposed sit on the list a little 
-> longer.
-> It seems fairly sensible, but lets see what others suggest.
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+---
+ Documentation/devicetree/bindings/arm/idle-states.txt | 14 ++++++++++++++
+ drivers/cpuidle/dt_idle_states.c                      |  3 +++
+ 2 files changed, 17 insertions(+)
 
-It is quiet :-) Just for the record the same aproach is used in
-PWM, Reset, Gpio and PHY frameworks.
-
-Patch in question: https://lkml.org/lkml/2014/10/2/199
-
-Regards,
-Ivan
+diff --git a/Documentation/devicetree/bindings/arm/idle-states.txt b/Docume=
+ntation/devicetree/bindings/arm/idle-states.txt
+index 37375c7..d8ab4b9 100644
+--- a/Documentation/devicetree/bindings/arm/idle-states.txt
++++ b/Documentation/devicetree/bindings/arm/idle-states.txt
+@@ -317,6 +317,20 @@ follows:
+ =09=09=09    In such systems entry-latency-us + exit-latency-us
+ =09=09=09    will exceed wakeup-latency-us by this duration.
+=20
++=09- status:
++=09=09Usage: Optional
++=09=09Value type: <string>
++=09=09Definition: A standard device tree property [5] that indicates
++=09=09=09    the operational status of an idle-state.
++=09=09=09    If present, it shall be:
++=09=09=09    "okay": to indicate that the idle state is
++=09=09=09=09    operational.
++=09=09=09    "disabled": to indicate that the idle state has
++=09=09=09=09=09been disabled in firmware so it is not
++=09=09=09=09=09operational.
++=09=09=09    If property is not present the idle-state must be
++=09=09=09    considered operational.
++
+ =09In addition to the properties listed above, a state node may require
+ =09additional properties specifics to the entry-method defined in the
+ =09idle-states node, please refer to the entry-method bindings
+diff --git a/drivers/cpuidle/dt_idle_states.c b/drivers/cpuidle/dt_idle_sta=
+tes.c
+index 52f4d11..22840f4 100644
+--- a/drivers/cpuidle/dt_idle_states.c
++++ b/drivers/cpuidle/dt_idle_states.c
+@@ -169,6 +169,9 @@ int dt_init_idle_driver(struct cpuidle_driver *drv,
+ =09=09if (!state_node)
+ =09=09=09break;
+=20
++=09=09if (!of_device_is_available(state_node))
++=09=09=09continue;
++
+ =09=09if (!idle_state_valid(state_node, i, cpumask)) {
+ =09=09=09pr_warn("%s idle state not valid, bailing out\n",
+ =09=09=09=09state_node->full_name);
+--=20
+2.1.2
 
 
-> 
-> Jonathan
