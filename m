@@ -1,48 +1,61 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 2/9] regulator: max77802: Add .{get,set}_mode callbacks
-Date: Thu, 16 Oct 2014 12:24:35 +0200
-Message-ID: <543F9CE3.7040404@collabora.co.uk>
-References: <1413390039-19364-1-git-send-email-javier.martinez@collabora.co.uk> <1413390039-19364-3-git-send-email-javier.martinez@collabora.co.uk> <20141016083653.GE724@sirena.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] spi/rockchip: fix bug that case spi can't go as fast
+ as slave request
+Date: Thu, 16 Oct 2014 12:26:36 +0200
+Message-ID: <20141016102636.GE2200@sirena.org.uk>
+References: <1413372311-4203-1-git-send-email-addy.ke@rock-chips.com>
+ <1413372349-4254-1-git-send-email-addy.ke@rock-chips.com>
+ <20141015130452.GD27755@sirena.org.uk>
+ <543F8CD2.1010302@rock-chips.com>
+ <20141016093410.GB2200@sirena.org.uk>
+ <543F96DB.40403@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3O1VwFp74L81IIeR"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141016083653.GE724@sirena.org.uk>
+Content-Disposition: inline
+In-Reply-To: <543F96DB.40403@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Doug Anderson <dianders@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: addy ke <addy.ke@rock-chips.com>
+Cc: heiko@sntech.de, dianders@chromium.org, grant.likely@linaro.org, robh+dt@kernel.org, amstan@google.com, sonnyrao@google.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, olof@lixom.net, hj@rock-chips.com, kever.yang@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, zhenfu.fang@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, wei.luo@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
 
-Thanks a lot for your feedback.
+--3O1VwFp74L81IIeR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 10/16/2014 10:36 AM, Mark Brown wrote:
-> On Wed, Oct 15, 2014 at 06:20:32PM +0200, Javier Martinez Canillas wrote:
-> 
->> +#define MAX77802_MODE(pval) ((pval == MAX77802_OPMODE_NORMAL) ?	\
->> +			     REGULATOR_MODE_NORMAL : REGULATOR_MODE_STANDBY)
->> +
-> 
-> Make this a static inline function if there's any need for it, this is
-> both more legible and more helpful for the compiler.
-> 
+On Thu, Oct 16, 2014 at 05:58:51PM +0800, addy ke wrote:
 
-Ok, will change that.
+Please fix your mailer to word wrap within paragraphs.
 
->> +	switch (mode) {
->> +	case REGULATOR_MODE_IDLE:
->> +	case REGULATOR_MODE_STANDBY:
->> +		val = MAX77802_OPMODE_LP;	/* ON in Low Power Mode */
->> +		break;
-> 
-> You should never have multiple modes mapping onto a singel value - if
-> the user sets a mode they should find that the device has that mode.
-> 
+> On 2014/10/16 17:34, Mark Brown wrote:
 
-I see, thanks for the clarification. I think STANDBY better maps the device
-Low Power Mode according the description in include/linux/regulator/consumer.h
-so I'll just make IDLE invalid in v2.
+> >> If we set the rate unconditionally here, clk_set_rate() will be executed in each spi transfer.
 
-Best regards,
-Javier
+> > Is that really such a high cost?
+
+> Not high cost, but  I think if the default spi_clk is enough, we do not need to set spi_clk again.
+
+> Maybe we can only set spi_clk as (2 * MAX_SCLK_OUT) in probe().
+
+It's not too bad to do it where it is, it just seems better to be
+simpler.
+
+--3O1VwFp74L81IIeR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUP51bAAoJECTWi3JdVIfQsqUIAIBGJkL6Jkve/Hu047z7xaaz
+iNtIkYoYq8em30yzbYyH2YKXog+D4HRng6bR1rI/Pil0bfPliYMFiHJBz3l3XfrO
+TgNcyZE3Lm1CWOOuADLmmvtzz+z70tSXJRVPPplFPXU9OQrZBdzo3ZRSMMOyzXfl
+UFMIndIcr0A6hDkPNsldHLrpkVitI7ceZjG86nDu/uPtqQRj1Nzl0J67w5EzmNLN
+oByideJoYAv0oYWnUHe/EPpRQz7JYlilZ5DoCpNUP0HKWeYhtgU51r37vzB5glg0
+SyUHKqp94ysx3ZDsUMm9pSUvQz3y8KJxj8wiszqkbnw4Nohz2f+B3+6UpMoYQn0=
+=9p8j
+-----END PGP SIGNATURE-----
+
+--3O1VwFp74L81IIeR--
