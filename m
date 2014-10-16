@@ -1,98 +1,92 @@
 From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v6 3/4] pmbus: add regulator support
-Date: Thu, 16 Oct 2014 12:18:57 -0700
-Message-ID: <20141016191857.GA22237@roeck-us.net>
+Subject: Re: [PATCH v6 1/4] hwmon: ltc2978: device tree bindings documentation
+Date: Thu, 16 Oct 2014 12:46:07 -0700
+Message-ID: <20141016194607.GA23042@roeck-us.net>
 References: <1413399310-19277-1-git-send-email-atull@opensource.altera.com>
- <1413399310-19277-4-git-send-email-atull@opensource.altera.com>
- <20141016183501.GA21253@roeck-us.net>
- <alpine.DEB.2.02.1410161339450.28663@atx-linux-37>
+ <1413399310-19277-2-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1410161339450.28663@atx-linux-37>
+In-Reply-To: <1413399310-19277-2-git-send-email-atull@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: atull <atull@opensource.altera.com>
+To: atull@opensource.altera.com
 Cc: jdelvare@suse.de, lm-sensors@lm-sensors.org, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 16, 2014 at 01:40:23PM -0500, atull wrote:
-> On Thu, 16 Oct 2014, Guenter Roeck wrote:
+On Wed, Oct 15, 2014 at 01:55:07PM -0500, atull@opensource.altera.com wrote:
+> From: Alan Tull <atull@opensource.altera.com>
 > 
-> > On Wed, Oct 15, 2014 at 01:55:09PM -0500, atull@opensource.altera.com wrote:
-> > > From: Alan Tull <atull@opensource.altera.com>
-> > > 
-> > > Add support for simple on/off control of each channel.
-> > > 
-> > > To add regulator support, the pmbus part driver needs to add
-> > > regulator_desc information and number of regulators to its
-> > > pmbus_driver_info struct.
-> > > 
-> > > regulator_desc can be declared using default macro for a
-> > > regulator (PMBUS_REGULATOR) that is in pmbus.h
-> > > 
-> > > The regulator_init_data can be initialized from either
-> > > platform data or the device tree.
-> > > 
-> > > Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> > > Reviewed-by: Mark Brown <broonie@kernel.org>
-> > > Cc: Guenter Roeck <linux@roeck-us.net>
-> > 
-> > Hi Alan,
-> > 
-> > I am still seeing lots of the following:
-> > 
-> > vout0: Failed to create debugfs directory
-> > vout1: Failed to create debugfs directory
-> > vout2: Failed to create debugfs directory
-> > vout3: Failed to create debugfs directory
-> > vout4: Failed to create debugfs directory
-> > vout5: Failed to create debugfs directory
-> > vout6: Failed to create debugfs directory
-> > vout7: Failed to create debugfs directory
-> > 
-> > I thought there was a problem in the regulator core, but after looking
-> > into it concluded that the regulator core _should_ prepend the names
-> > with the device name when creating the debugfs entries, unless no device
-> > name is specified. So something must be missing. We'll need to sort
-> > this out before I can accept the code.
-> > 
-> > Thanks,
-> > Guenter
-> > 
+> Add device tree bindings documentation for ltc2978.
 > 
-> Hi Guenter,
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> ---
+> v2: clean whitespace
 > 
-> OK, I will look into it.
+> v3: list compatible strings in single column
+>     add vendor as lltc
+>     mention regulators.txt instead of documenting regulator-name
+>     s/vout_en/vout/
+>     remove size_cells, address-cells
+>     use node name to identify regulators
+> ---
+>  .../devicetree/bindings/hwmon/ltc2978.txt          |   39 ++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/ltc2978.txt
 > 
-Hi Alan,
+> diff --git a/Documentation/devicetree/bindings/hwmon/ltc2978.txt b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+> new file mode 100644
+> index 0000000..16c1227
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
+> @@ -0,0 +1,39 @@
+> +ltc2978
+> +
+> +Required properties:
+> +- compatible: should contain one of:
+> +  * "lltc,ltc2974"
+> +  * "lltc,ltc2977"
+> +  * "lltc,ltc2978"
+> +  * "lltc,ltc3880"
+> +  * "lltc,ltc3883"
+> +  * "lltc,ltm4676"
+> +- reg: I2C slave address
+> +
+> +Optional properties:
+> +- regulators: A node that houses a sub-node for each regulator controlled by
+> +  the device. Each sub-node is identified using the node's name, with valid
+> +  values listed below. The content of each sub-node is defined by the
+> +  standard binding for regulators; see regulator.txt.
+> +
+> +Valid names of regulators depend on number of supplies supported per device:
+> +  * ltc2974 : vout0 - vout3
+> +  * ltc2977 : vout0 - vout7
+> +  * ltc2978 : vout0 - vout7
+> +  * ltc3880 : vout0 - vout1
+> +  * ltc3883 : vout0
+> +  * ltm4676 : vout0 - vout1
+> +
+> +Example:
+> +ltc2978@5e {
+> +	compatible = "ltc2978";
 
-I tracked it down a bit further. It is a regulator core problem after all.
-Turns out the parent device name is not _always_ used when creating
-debugfs directories. The culprit is rdev_init_debugfs, which just takes
-rdev_get_name() to create the name. I am currently playing with it.
+Nitpick, but still:
 
-Problem is that if I just prepend the parent device name (if available)
-in rdev_init_debugfs, I get something like the following.
+		"lltc,ltc2978"
 
-2-005c-pmb-vout0     5-005d-vout6  5-005f-vout5  5-0061-vout4
-2-005c-pmb-vout1     5-005d-vout7  5-005f-vout6  5-0061-vout5
-2-005c-pmb-vout2     5-005e-vout0  5-005f-vout7  5-0061-vout6
-2-005c-vout3         5-005e-vout1  5-0060-vout0  5-0061-vout7
-2-005c-vout4         5-005e-vout2  5-0060-vout1  5-0062-vout0
-2-005c-vout5         5-005e-vout3  5-0060-vout2  5-0062-vout1
-2-005c-vout6         5-005e-vout4  5-0060-vout3  5-0062-vout2
-2-005c-vout7         5-005e-vout5  5-0060-vout4  5-0062-vout3
-3p3v.11-3P3V         5-005e-vout6  5-0060-vout5  5-0062-vout4
-5-005d-fpc-5d-vout0  5-005e-vout7  5-0060-vout6  5-0062-vout5
-5-005d-fpc-5d-vout1  5-005f-vout0  5-0060-vout7  5-0062-vout6
-5-005d-vout2         5-005f-vout1  5-0061-vout0  5-0062-vout7
-5-005d-vout3         5-005f-vout2  5-0061-vout1  reg-dummy-regulator-dummy
-5-005d-vout4         5-005f-vout3  5-0061-vout2  supply_map
-5-005d-vout5         5-005f-vout4  5-0061-vout3
-
-This is a bit better but creates names such as "3p3v.11-3P3V"
-and "reg-dummy-regulator-dummy" which doesn't make much sense
-either. So I think we'll need something better than that.
-
-Guenter
+> +	reg = <0x5e>;
+> +	regulators {
+> +		vout0 {
+> +			regulator-name = "FPGA-2.5V";
+> +		};
+> +		vout2 {
+> +			regulator-name = "FPGA-1.5V";
+> +		};
+> +	};
+> +};
+> -- 
+> 1.7.9.5
+> 
