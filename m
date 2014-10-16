@@ -1,71 +1,36 @@
-From: Marek Belisko <marek@goldelico.com>
-Subject: [PATCH 2/2] Documentation: devicetree: Add bindings for Wi2Wi w2sg0004 gps
-Date: Thu, 16 Oct 2014 22:26:23 +0200
-Message-ID: <1413491183-15018-2-git-send-email-marek@goldelico.com>
-References: <1413491183-15018-1-git-send-email-marek@goldelico.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413491183-15018-1-git-send-email-marek@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arnd@arndb.de, gregkh@linuxfoundation.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Belisko <marek@goldelico.com>, "H. Nikolaus Schaller" <hns@goldelico.com>
+From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCH 0/2] ARM: dts: socfpga: fix booting with SD/MMC
+Date: Thu, 16 Oct 2014 16:03:31 -0500
+Message-ID: <1413493413-8041-1-git-send-email-dinguyen@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Marek Belisko <marek@goldelico.com>
----
- .../devicetree/bindings/misc/wi2wi,w2sg0004.txt    | 44 ++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt b/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
-new file mode 100644
-index 0000000..e144441
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
-@@ -0,0 +1,44 @@
-+Wi2Wi GPS module connected through UART
-+
-+Required properties:
-+- compatible: wi2wi,w2sg0004 or wi2wi,w2sg0084
-+- pinctrl: specify two states (default and monitor). One is the default (UART) mode
-+  and the other is for monitoring the RX line by an interrupt
-+- on-off-gpio: the GPIO that controls the module's on-off toggle input
-+
-+Optional properties:
-+- lna-suppy: an (optional) LNA regulator that is enabled together with the GPS receiver
-+
-+example:
-+
-+        gps_receiver: w2sg0004 {
-+                compatible = "wi2wi,w2sg0004";
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+
-+                pinctrl-names = "default", "monitor";
-+                pinctrl-0 = <&uart2_pins>;
-+                pinctrl-1 = <&uart2_rx_irq_pins>;
-+
-+                interrupt-parent = <&gpio5>;
-+                interrupts = <19 IRQ_TYPE_EDGE_FALLING>;  /* GPIO_147: RX - trigger on arrival of start bit */
-+                lna-supply = <&vsim>;	/* LNA regulator */
-+                on-off-gpio = <&gpio5 17 0>;	/* GPIO_145: trigger for turning on/off w2sg0004 */
-+
-+&pinmux {
-+
-+	uart2_pins: pinmux_uart2_pins {
-+		pinctrl-single,pins = <
-+			0x14a (PIN_INPUT | MUX_MODE0)		/* uart2_tx.uart2_rx */
-+			0x148 (PIN_OUTPUT | MUX_MODE0)		/* uart2_tx.uart2_tx */
-+		>;
-+	};
-+
-+	uart2_rx_irq_pins: pinmux_uart2_rx_irq_pins {
-+		pinctrl-single,pins = <
-+			/* switch RX to GPIO so that we can get interrupts by the start bit */
-+			0x14a (PIN_INPUT | MUX_MODE4)		/* uart2_tx.uart2_rx */
-+		>;
-+	};
-+
-+}
+The SOCFPGA dev kit was hanging during bootup on the SD/MMC driver loading.
+The first patch fixes the booting and the 2nd patch adds a regulator node
+for the SD/MMC driver to use.
+
+Dinh Nguyen (2):
+  ARM: dts: socfpga: Fix SD card detect
+  ARM: dts: socfpga: Add a 3.3V fixed regulator node
+
+ arch/arm/boot/dts/socfpga_arria5.dtsi         | 11 ++++++++++-
+ arch/arm/boot/dts/socfpga_arria5_socdk.dts    |  5 +++++
+ arch/arm/boot/dts/socfpga_cyclone5.dtsi       |  9 +++++++++
+ arch/arm/boot/dts/socfpga_cyclone5_socdk.dts  |  4 +++-
+ arch/arm/boot/dts/socfpga_cyclone5_sockit.dts |  5 +++++
+ 5 files changed, 32 insertions(+), 2 deletions(-)
+
 -- 
-1.9.1
+2.0.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
