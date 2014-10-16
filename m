@@ -1,24 +1,76 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 1/4] ARM: rockchip: add suspend and resume for RK3288
-Date: Wed, 15 Oct 2014 20:44:40 -0700
-Message-ID: <CAD=FV=Ve4=BuqqrboJ5uyz6+RAxAEvAe+G2myf+BCk8q2+3LGA@mail.gmail.com>
-References: <1413405987-16196-1-git-send-email-zyw@rock-chips.com>
-	<1413406066-16257-1-git-send-email-zyw@rock-chips.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] ata: sata_rcar: Add r8a7793 device support
+Date: Thu, 16 Oct 2014 07:20:55 +0200
+Message-ID: <20141016052054.GF1265@verge.net.au>
+References: <1413363577-25969-1-git-send-email-ykaneko0929@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413406066-16257-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris <zyw@rock-chips.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Mike Turquette <mturquette@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tony Xie <xxx@rock-chips.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1413363577-25969-1-git-send-email-ykaneko0929@gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Cc: linux-ide@vger.kernel.org, Tejun Heo <tj@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Chris,
+On Wed, Oct 15, 2014 at 05:59:37PM +0900, Yoshihiro Kaneko wrote:
+> From: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
+> 
+> Signed-off-by: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
+> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
 
-On Wed, Oct 15, 2014 at 1:47 PM,  <zyw@rock-chips.com> wrote:
-> +static const struct platform_suspend_ops rk3288_suspend_ops = {
-> +       .enter = rk3288_suspend_enter,
-> +       .valid = suspend_valid_only_mem,
-> +};
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
 
-As per offline discussion, let's add the regulator calls in prepare / finish.
+Tejun, could you consider picking up this change?
+
+> ---
+> 
+> This patch is against for-next branch of Tejun's libata repo.
+> 
+> v2 [Yoshihiro Kaneko]
+> * Update the binding documentation
+> 
+>  Documentation/devicetree/bindings/ata/sata_rcar.txt | 3 ++-
+>  drivers/ata/sata_rcar.c                             | 5 +++++
+>  2 files changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> index 1e61113..74b1130 100644
+> --- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> @@ -4,7 +4,8 @@ Required properties:
+>  - compatible		: should contain one of the following:
+>  			  - "renesas,sata-r8a7779" for R-Car H1
+>  			  - "renesas,sata-r8a7790" for R-Car H2
+> -			  - "renesas,sata-r8a7791" for R-Car M2
+> +			  - "renesas,sata-r8a7791" for R-Car M2-W
+> +			  - "renesas,sata-r8a7793" for R-Car M2-N
+>  - reg			: address and length of the SATA registers;
+>  - interrupts		: must consist of one interrupt specifier.
+>  
+> diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
+> index 61eb6d7..6f8ed8e 100644
+> --- a/drivers/ata/sata_rcar.c
+> +++ b/drivers/ata/sata_rcar.c
+> @@ -841,6 +841,10 @@ static struct of_device_id sata_rcar_match[] = {
+>  		.compatible = "renesas,sata-r8a7791",
+>  		.data = (void *)RCAR_GEN2_SATA
+>  	},
+> +	{
+> +		.compatible = "renesas,sata-r8a7793",
+> +		.data = (void *)RCAR_GEN2_SATA
+> +	},
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, sata_rcar_match);
+> @@ -850,6 +854,7 @@ static const struct platform_device_id sata_rcar_id_table[] = {
+>  	{ "sata-r8a7779", RCAR_GEN1_SATA },
+>  	{ "sata-r8a7790", RCAR_GEN2_SATA },
+>  	{ "sata-r8a7791", RCAR_GEN2_SATA },
+> +	{ "sata-r8a7793", RCAR_GEN2_SATA },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(platform, sata_rcar_id_table);
+> -- 
+> 1.9.1
+> 
