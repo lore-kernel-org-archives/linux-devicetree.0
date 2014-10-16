@@ -1,54 +1,44 @@
-From: zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-Subject: [PATCH 4/4] ARM: rockchip: add pmu-sram sub
-Date: Wed, 15 Oct 2014 13:50:25 -0700
-Message-ID: <1413406225-16366-1-git-send-email-zyw@rock-chips.com>
-References: <1413405987-16196-1-git-send-email-zyw@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413405987-16196-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tony Xie <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Gaston Gonzalez <gascoar@gmail.com>
+Subject: [PATCH] drivers: staging: imx-drm Fix checkpatch warning
+Date: Wed, 15 Oct 2014 23:37:24 -0300
+Message-ID: <1413427044-9980-1-git-send-email-gascoar@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: gregkh@linuxfoundation.org, grant.likely@linaro.org, robh+dt@kernel.org
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Fix line over 80 characters in imx-tve.c
 
-The pmu-sram is used to store resume code, suspend/resume need get the
-address of it. Therefore add a node and documentation for it.
-
-Signed-off-by: Tony Xie <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
+Signed-off-by: Gaston Gonzalez <gascoar@gmail.com>
 ---
+ drivers/staging/imx-drm/imx-tve.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- .../devicetree/bindings/arm/rockchip/pmu-sram.txt  |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt b/Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt
-new file mode 100644
-index 0000000..7a134cc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt
-@@ -0,0 +1,15 @@
-+Rockchip SRAM for pmu:
-+------------------------------
-+
-+The sram of pmu is used to store the function of resume from maskrom(the 1st
-+level loader).
-+
-+Required node properties:
-+- compatible : should be "rockchip,rk3288-pmu-sram"
-+- reg : physical base address and the size of the registers window
-+
-+Example:
-+	pmu_intmem@ff720000 {
-+		compatible = "mmio-sram", "rockchip,rk3288-pmu-sram";
-+		reg = <0xff720000 0x4000>;
-+	};
+diff --git a/drivers/staging/imx-drm/imx-tve.c b/drivers/staging/imx-drm/imx-tve.c
+index 3e8b0a1..a46905f 100644
+--- a/drivers/staging/imx-drm/imx-tve.c
++++ b/drivers/staging/imx-drm/imx-tve.c
+@@ -665,7 +665,8 @@ static int imx_tve_bind(struct device *dev, struct device *master, void *data)
+ 
+ 	ret = regmap_read(tve->regmap, TVE_COM_CONF_REG, &val);
+ 	if (ret < 0) {
+-		dev_err(dev, "failed to read configuration register: %d\n", ret);
++		dev_err(dev, "failed to read configuration register: %d\n",
++			ret);
+ 		return ret;
+ 	}
+ 	if (val != 0x00100000) {
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.10.4
