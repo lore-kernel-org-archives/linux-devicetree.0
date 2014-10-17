@@ -1,26 +1,142 @@
-From: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v11 0/3] Add drm driver for Rockchip Socs
-Date: Fri, 17 Oct 2014 10:46:18 +1000
-Message-ID: <CAPM=9twVrmni_BRV_9-QLk+JUbcgXEjAM0g-tYH6su8=sDQ35g@mail.gmail.com>
-References: <1412763781-31533-1-git-send-email-mark.yao@rock-chips.com>
-	<5440658D.6020504@rock-chips.com>
+From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: socfpga: Add a 3.3V fixed regulator node
+Date: Fri, 17 Oct 2014 10:43:48 +0900
+Message-ID: <54407454.50903@samsung.com>
+References: <1413493413-8041-1-git-send-email-dinguyen@opensource.altera.com>
+ <1413493413-8041-3-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5440658D.6020504-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dbehr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Olof Johansson <olo>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1413493413-8041-3-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17 October 2014 10:40, Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> Hi
-> I think Rockchip drm driver is ready now, can it land?
+Hi, Dinh.
 
-I probably want to wait until -rc1 though I suppose since its a new
-driver and self contained we might be able to see if Linus is
-interested in squeezing it in.
+On 10/17/2014 06:03 AM, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> 
+> Without the 3.3V regulator node, the SDMMC driver will give these warnings:
+> 
+> dw_mmc ff704000.dwmmc0: No vmmc regulator found
+> dw_mmc ff704000.dwmmc0: No vqmmc regulator found
+> 
+> This patch adds the regulator node, and points the SD/MMC to the regulator.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/socfpga_arria5.dtsi         | 11 ++++++++++-
+>  arch/arm/boot/dts/socfpga_arria5_socdk.dts    |  5 +++++
+>  arch/arm/boot/dts/socfpga_cyclone5.dtsi       |  9 +++++++++
+>  arch/arm/boot/dts/socfpga_cyclone5_socdk.dts  |  2 ++
+>  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts |  5 +++++
+>  5 files changed, 31 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
+> index 03e8268..8093781 100644
+> --- a/arch/arm/boot/dts/socfpga_arria5.dtsi
+> +++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
+> @@ -29,7 +29,7 @@
+>  			};
+>  		};
+>  
+> -		dwmmc0@ff704000 {
+> +		mmc0: dwmmc0@ff704000 {
+>  			num-slots = <1>;
+>  			broken-cd;
+>  			bus-width = <4>;
+> @@ -41,4 +41,13 @@
+>  			cpu1-start-addr = <0xffd080c4>;
+>  		};
+>  	};
+> +
+> +	regulator_3_3v_hps: fixed_3_3v_hps_regulator@0 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "HPS 3.3V";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
 
-Can you send me a git pull request for it against drm-next or even 3.17.
+Always-on is right?
 
-Dave.
+> +	};
+>  };
+> diff --git a/arch/arm/boot/dts/socfpga_arria5_socdk.dts b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
+> index 27d551c..b7e4023 100644
+> --- a/arch/arm/boot/dts/socfpga_arria5_socdk.dts
+> +++ b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
+> @@ -68,6 +68,11 @@
+>  	};
+>  };
+>  
+> +&mmc0 {
+> +	vmmc-supply = <&regulator_3_3v_hps>;
+> +	vqmmc-supply = <&regulator_3_3v_hps>;
+> +};
+> +
+>  &usb1 {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+> index 28c05e7..743bc3b 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+> @@ -48,4 +48,13 @@
+>  			cpu1-start-addr = <0xffd080c4>;
+>  		};
+>  	};
+> +
+> +	regulator_3_3v_hps: fixed_3_3v_hps_regulator@0 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "HPS 3.3V";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+>  };
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+> index 739c3b7..e1f56ba 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+> @@ -70,6 +70,8 @@
+>  
+>  &mmc0 {
+>  	cd = <&gpio1 18 0>;
+> +	vmmc-supply = <&regulator_3_3v_hps>;
+> +	vqmmc-supply = <&regulator_3_3v_hps>;
+
+Is vmmc and vqmmc  used the common supply?
+
+Best Regards,
+Jaehoon Chung
+
+>  };
+>  
+>  &usb1 {
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+> index d26f155..ea0c454 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+> @@ -53,6 +53,11 @@
+>  	rxc-skew-ps = <2000>;
+>  };
+>  
+> +&mmc0 {
+> +	vmmc-supply = <&regulator_3_3v_hps>;
+> +	vqmmc-supply = <&regulator_3_3v_hps>;
+> +};
+> +
+>  &usb1 {
+>  	status = "okay";
+>  };
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
