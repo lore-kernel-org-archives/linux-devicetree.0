@@ -1,160 +1,127 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/5] Documentation: DT: Renamed of-serial.txt to
- 8250.txt
-Date: Fri, 17 Oct 2014 14:12:00 +0100
-Message-ID: <20141017131200.GD5587@leverpostej>
-References: <sprd-1017-v2>
- <1413539665-11484-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1413539665-11484-2-git-send-email-chunyan.zhang@spreadtrum.com>
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: socfpga: Add a 3.3V fixed regulator node
+Date: Fri, 17 Oct 2014 08:37:22 -0500
+Message-ID: <54411B92.1060705@opensource.altera.com>
+References: <1413493413-8041-1-git-send-email-dinguyen@opensource.altera.com> <1413493413-8041-3-git-send-email-dinguyen@opensource.altera.com> <54407454.50903@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1413539665-11484-2-git-send-email-chunyan.zhang@spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "jslaby@suse.cz" <jslaby@suse.cz>, "galak@codeaurora.org" <galak@codeaurora.org>, "broonie@linaro.org" <broonie@linaro.org>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, Pawel Moll <Pawel.Moll@arm.com>, "artagnon@gmail.com" <artagnon@gmail.com>, "rrichter@cavium.com" <rrichter@cavium.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Will Deacon <Will.Deacon@arm.com>, "orsonzhai@gmail.com" <orsonzhai@gmail.com>, "geng.ren@spreadtrum.com" <geng.ren@spreadtrum.com>, "zhizhou.zhang@spreadtrum.com" <zhizhou.zhang@spreadtrum.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kern>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54407454.50903-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[adding Arnd to Cc, as this was his suggestion]
 
-On Fri, Oct 17, 2014 at 10:54:21AM +0100, Chunyan Zhang wrote:
-> The file of-serial.txt was only for 8250 compatible UART implementations,
-> so renamed it to 8250.txt to avoid confusing other persons.
+
+On 10/16/14, 8:43 PM, Jaehoon Chung wrote:
+> Hi, Dinh.
 > 
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-
-This makes sense to me, so:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-In future please use git format-patch -C -M when moving things around.
-It should detect that this is a rename and generate a trivial diff,
-rather than featuring every line of the file twice.
-
-Thanks,
-Mark.
-
-> ---
->  Documentation/devicetree/bindings/serial/8250.txt  |   50 ++++++++++++++++++++
->  .../devicetree/bindings/serial/of-serial.txt       |   50 --------------------
->  2 files changed, 50 insertions(+), 50 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/serial/8250.txt
->  delete mode 100644 Documentation/devicetree/bindings/serial/of-serial.txt
+> On 10/17/2014 06:03 AM, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+>> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>
+>> Without the 3.3V regulator node, the SDMMC driver will give these warnings:
+>>
+>> dw_mmc ff704000.dwmmc0: No vmmc regulator found
+>> dw_mmc ff704000.dwmmc0: No vqmmc regulator found
+>>
+>> This patch adds the regulator node, and points the SD/MMC to the regulator.
+>>
+>> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/socfpga_arria5.dtsi         | 11 ++++++++++-
+>>  arch/arm/boot/dts/socfpga_arria5_socdk.dts    |  5 +++++
+>>  arch/arm/boot/dts/socfpga_cyclone5.dtsi       |  9 +++++++++
+>>  arch/arm/boot/dts/socfpga_cyclone5_socdk.dts  |  2 ++
+>>  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts |  5 +++++
+>>  5 files changed, 31 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
+>> index 03e8268..8093781 100644
+>> --- a/arch/arm/boot/dts/socfpga_arria5.dtsi
+>> +++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
+>> @@ -29,7 +29,7 @@
+>>  			};
+>>  		};
+>>  
+>> -		dwmmc0@ff704000 {
+>> +		mmc0: dwmmc0@ff704000 {
+>>  			num-slots = <1>;
+>>  			broken-cd;
+>>  			bus-width = <4>;
+>> @@ -41,4 +41,13 @@
+>>  			cpu1-start-addr = <0xffd080c4>;
+>>  		};
+>>  	};
+>> +
+>> +	regulator_3_3v_hps: fixed_3_3v_hps_regulator@0 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "HPS 3.3V";
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +		regulator-boot-on;
+>> +		regulator-always-on;
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
-> new file mode 100644
-> index 0000000..7705477
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/8250.txt
-> @@ -0,0 +1,50 @@
-> +* UART (Universal Asynchronous Receiver/Transmitter)
-> +
-> +Required properties:
-> +- compatible : one of:
-> +	- "ns8250"
-> +	- "ns16450"
-> +	- "ns16550a"
-> +	- "ns16550"
-> +	- "ns16750"
-> +	- "ns16850"
-> +	- "nvidia,tegra20-uart"
-> +	- "nxp,lpc3220-uart"
-> +	- "ibm,qpace-nwp-serial"
-> +	- "altr,16550-FIFO32"
-> +	- "altr,16550-FIFO64"
-> +	- "altr,16550-FIFO128"
-> +	- "serial" if the port type is unknown.
-> +- reg : offset and length of the register set for the device.
-> +- interrupts : should contain uart interrupt.
-> +- clock-frequency : the input clock frequency for the UART
-> +	 or
-> +  clocks phandle to refer to the clk used as per Documentation/devicetree
-> +  /bindings/clock/clock-bindings.txt
-> +
-> +Optional properties:
-> +- current-speed : the current active speed of the UART.
-> +- reg-offset : offset to apply to the mapbase from the start of the registers.
-> +- reg-shift : quantity to shift the register offsets by.
-> +- reg-io-width : the size (in bytes) of the IO accesses that should be
-> +  performed on the device.  There are some systems that require 32-bit
-> +  accesses to the UART (e.g. TI davinci).
-> +- used-by-rtas : set to indicate that the port is in use by the OpenFirmware
-> +  RTAS and should not be registered.
-> +- no-loopback-test: set to indicate that the port does not implements loopback
-> +  test mode
-> +- fifo-size: the fifo size of the UART.
-> +- auto-flow-control: one way to enable automatic flow control support. The
-> +  driver is allowed to detect support for the capability even without this
-> +  property.
-> +- has-hw-flow-control: the hardware has flow control capability.
-> +
-> +Example:
-> +
-> +	uart@80230000 {
-> +		compatible = "ns8250";
-> +		reg = <0x80230000 0x100>;
-> +		clock-frequency = <3686400>;
-> +		interrupts = <10>;
-> +		reg-shift = <2>;
-> +	};
-> diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/of-serial.txt
-> deleted file mode 100644
-> index 7705477..0000000
-> --- a/Documentation/devicetree/bindings/serial/of-serial.txt
-> +++ /dev/null
-> @@ -1,50 +0,0 @@
-> -* UART (Universal Asynchronous Receiver/Transmitter)
-> -
-> -Required properties:
-> -- compatible : one of:
-> -	- "ns8250"
-> -	- "ns16450"
-> -	- "ns16550a"
-> -	- "ns16550"
-> -	- "ns16750"
-> -	- "ns16850"
-> -	- "nvidia,tegra20-uart"
-> -	- "nxp,lpc3220-uart"
-> -	- "ibm,qpace-nwp-serial"
-> -	- "altr,16550-FIFO32"
-> -	- "altr,16550-FIFO64"
-> -	- "altr,16550-FIFO128"
-> -	- "serial" if the port type is unknown.
-> -- reg : offset and length of the register set for the device.
-> -- interrupts : should contain uart interrupt.
-> -- clock-frequency : the input clock frequency for the UART
-> -	 or
-> -  clocks phandle to refer to the clk used as per Documentation/devicetree
-> -  /bindings/clock/clock-bindings.txt
-> -
-> -Optional properties:
-> -- current-speed : the current active speed of the UART.
-> -- reg-offset : offset to apply to the mapbase from the start of the registers.
-> -- reg-shift : quantity to shift the register offsets by.
-> -- reg-io-width : the size (in bytes) of the IO accesses that should be
-> -  performed on the device.  There are some systems that require 32-bit
-> -  accesses to the UART (e.g. TI davinci).
-> -- used-by-rtas : set to indicate that the port is in use by the OpenFirmware
-> -  RTAS and should not be registered.
-> -- no-loopback-test: set to indicate that the port does not implements loopback
-> -  test mode
-> -- fifo-size: the fifo size of the UART.
-> -- auto-flow-control: one way to enable automatic flow control support. The
-> -  driver is allowed to detect support for the capability even without this
-> -  property.
-> -- has-hw-flow-control: the hardware has flow control capability.
-> -
-> -Example:
-> -
-> -	uart@80230000 {
-> -		compatible = "ns8250";
-> -		reg = <0x80230000 0x100>;
-> -		clock-frequency = <3686400>;
-> -		interrupts = <10>;
-> -		reg-shift = <2>;
-> -	};
-> -- 
-> 1.7.9.5
+> Always-on is right?
+
+yes, it's always on.
+
 > 
+>> +	};
+>>  };
+>> diff --git a/arch/arm/boot/dts/socfpga_arria5_socdk.dts b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
+>> index 27d551c..b7e4023 100644
+>> --- a/arch/arm/boot/dts/socfpga_arria5_socdk.dts
+>> +++ b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
+>> @@ -68,6 +68,11 @@
+>>  	};
+>>  };
+>>  
+>> +&mmc0 {
+>> +	vmmc-supply = <&regulator_3_3v_hps>;
+>> +	vqmmc-supply = <&regulator_3_3v_hps>;
+>> +};
+>> +
+>>  &usb1 {
+>>  	status = "okay";
+>>  };
+>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+>> index 28c05e7..743bc3b 100644
+>> --- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+>> +++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+>> @@ -48,4 +48,13 @@
+>>  			cpu1-start-addr = <0xffd080c4>;
+>>  		};
+>>  	};
+>> +
+>> +	regulator_3_3v_hps: fixed_3_3v_hps_regulator@0 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "HPS 3.3V";
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +		regulator-boot-on;
+>> +		regulator-always-on;
+>> +	};
+>>  };
+>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+>> index 739c3b7..e1f56ba 100644
+>> --- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+>> @@ -70,6 +70,8 @@
+>>  
+>>  &mmc0 {
+>>  	cd = <&gpio1 18 0>;
+>> +	vmmc-supply = <&regulator_3_3v_hps>;
+>> +	vqmmc-supply = <&regulator_3_3v_hps>;
 > 
+> Is vmmc and vqmmc  used the common supply?
+> 
+
+Yes..
+
+Dinh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
