@@ -1,32 +1,34 @@
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCHv3] arm: dts: socfpga: Add SPI nodes to SOCFPGA DT.
-Date: Fri, 17 Oct 2014 10:05:31 -0500
-Message-ID: <5441303B.4070905@opensource.altera.com>
-References: <1413497251-21954-1-git-send-email-tthayer@opensource.altera.com> <1413497251-21954-2-git-send-email-tthayer@opensource.altera.com> <20141017065233.GA10262@pengutronix.de> <54411FC9.3050109@opensource.altera.com> <20141017142713.GV1820@sirena.org.uk>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v5 00/12] Add ACPI _DSD and unified device properties
+ support
+Date: Fri, 17 Oct 2014 17:40:07 +0200
+Message-ID: <20141017154007.GB29643@kroah.com>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan>
+ <11223831.j9KAEfSQsY@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141017142713.GV1820-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <11223831.j9KAEfSQsY@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Oct 17, 2014 at 02:01:33PM +0200, Rafael J. Wysocki wrote:
+> Hi Everyone,
+> 
+> Hving had a couple of chats with Grant and Arnd during LinuxCon EU/LPC, we
+> now have version 5 taking all feedback into account (hopefully).
+> 
+> Changes have been made to patch [02/12] and to patches [09-12/12], although
+> in patches [10-12/12] they are fairly minor.  I have retained the Greg's
+> ACK on patch [02/12], because it is essentially the same that have been
+> posted aleady and ACKed by him (Greg, please let me know if I shouldn't
+> do that) and all the ACKs on the remaining patches except for patch [09/12]
+> which is substantially different.  Still, if reviewers think that their
+> ACKs don't apply any more, please let me know and I'll remove them.
 
-On 10/17/2014 09:27 AM, Mark Brown wrote:
-> On Fri, Oct 17, 2014 at 08:55:21AM -0500, Thor Thayer wrote:
->
->> I didn't see it documented in the dw-spi bindings but I did see a reference
->> to .bus_num in the static structure (spi_board_info) shown in
->> spi-summary.txt. If the bus-num isn't defined or used, the bus ends up as
->> 32766 (0x7FE). However, the main point is that this isn't used in the code
->> so I should remove it.
-> Defining the bus number is important for use in board files to allow
-> devices to be referenced but should never have any practical effect for
-> DT systems.
-Thank you for the explanation, Mark. I'll make the change and resubmit.
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+No objection from me to keep my ACK on those patches, thanks for asking.
+
+greg k-h
