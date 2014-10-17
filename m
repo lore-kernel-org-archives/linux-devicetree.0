@@ -1,75 +1,76 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: socfpga: Add a 3.3V fixed regulator node
-Date: Fri, 17 Oct 2014 09:57:55 -0700
-Message-ID: <CAD=FV=V3Ewv7Ns_JD0+gd4J6p3k-N-rmFjkdYQobMgB8m7z6SA@mail.gmail.com>
-References: <1413493413-8041-1-git-send-email-dinguyen@opensource.altera.com>
-	<1413493413-8041-3-git-send-email-dinguyen@opensource.altera.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 15/67] usb: gadget: pxa27x_udc: add devicetree support
+Date: Fri, 17 Oct 2014 12:16:22 -0500
+Message-ID: <1413566234-13537-16-git-send-email-balbi@ti.com>
+References: <1413566234-13537-1-git-send-email-balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413493413-8041-3-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413566234-13537-1-git-send-email-balbi-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Paul Zimmerman <paul.zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org, leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org, andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dinh,
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 
-On Thu, Oct 16, 2014 at 2:03 PM,  <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
-> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->
-> Without the 3.3V regulator node, the SDMMC driver will give these warnings:
->
-> dw_mmc ff704000.dwmmc0: No vmmc regulator found
-> dw_mmc ff704000.dwmmc0: No vqmmc regulator found
->
-> This patch adds the regulator node, and points the SD/MMC to the regulator.
->
-> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> ---
->  arch/arm/boot/dts/socfpga_arria5.dtsi         | 11 ++++++++++-
->  arch/arm/boot/dts/socfpga_arria5_socdk.dts    |  5 +++++
->  arch/arm/boot/dts/socfpga_cyclone5.dtsi       |  9 +++++++++
->  arch/arm/boot/dts/socfpga_cyclone5_socdk.dts  |  2 ++
->  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts |  5 +++++
->  5 files changed, 31 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
-> index 03e8268..8093781 100644
-> --- a/arch/arm/boot/dts/socfpga_arria5.dtsi
-> +++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
-> @@ -29,7 +29,7 @@
->                         };
->                 };
->
-> -               dwmmc0@ff704000 {
-> +               mmc0: dwmmc0@ff704000 {
->                         num-slots = <1>;
->                         broken-cd;
->                         bus-width = <4>;
-> @@ -41,4 +41,13 @@
->                         cpu1-start-addr = <0xffd080c4>;
->                 };
->         };
-> +
-> +       regulator_3_3v_hps: fixed_3_3v_hps_regulator@0 {
+Add support for device-tree device discovery. If devicetree is not
+provided, fallback to legacy platform data "discovery".
 
-nit: no @0 since there is no "reg" (register) under this node.
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+---
+ drivers/usb/gadget/udc/pxa27x_udc.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-nit: usually people don't like "_" in node names.  ...I would probably
-do this but I'm not an expert:
-  regulator_3_3v_hps: hps-regulator {
+diff --git a/drivers/usb/gadget/udc/pxa27x_udc.c b/drivers/usb/gadget/udc/pxa27x_udc.c
+index 5280f64..55598c0 100644
+--- a/drivers/usb/gadget/udc/pxa27x_udc.c
++++ b/drivers/usb/gadget/udc/pxa27x_udc.c
+@@ -27,6 +27,8 @@
+ #include <linux/prefetch.h>
+ #include <linux/byteorder/generic.h>
+ #include <linux/platform_data/pxa2xx_udc.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
+ 
+ #include <linux/usb.h>
+ #include <linux/usb/ch9.h>
+@@ -2400,6 +2402,12 @@ static struct pxa_udc memory = {
+ 	}
+ };
+ 
++static struct of_device_id udc_pxa_dt_ids[] = {
++	{ .compatible = "marvell,pxa270-udc" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, udc_pxa_dt_ids);
++
+ /**
+  * pxa_udc_probe - probes the udc device
+  * @_dev: platform device
+@@ -2427,6 +2435,8 @@ static int pxa_udc_probe(struct platform_device *pdev)
+ 			udc->gpiod = gpio_to_desc(mach->gpio_pullup);
+ 		}
+ 		udc->udc_command = mach->udc_command;
++	} else {
++		udc->gpiod = devm_gpiod_get(&pdev->dev, NULL);
+ 	}
+ 
+ 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -2618,6 +2628,7 @@ static struct platform_driver udc_driver = {
+ 	.driver		= {
+ 		.name	= "pxa27x-udc",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(udc_pxa_dt_ids),
+ 	},
+ 	.probe		= pxa_udc_probe,
+ 	.remove		= pxa_udc_remove,
+-- 
+2.1.0.GIT
 
-This regulator also looks pretty bogus to me.  Is this really a
-regulator that software has no control over?  It means you can't fully
-reset a card but I guess that's OK.
-
-I'd also expect this regulator to be defined in the same dts / dtsi
-file that it's used in.  Your current patch says "there's a generic
-3.3V regulator on all boards of the socfpga_arria5 class even if they
-don't use MMC, but the "socfpga_arria5_socdk" uses it for MMC.  Is
-that really true?
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
