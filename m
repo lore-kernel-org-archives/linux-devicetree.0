@@ -1,117 +1,87 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v11 0/3] Add drm driver for Rockchip Socs
-Date: Fri, 17 Oct 2014 08:24:42 +0200
-Message-ID: <282711393.zuCWIeu2Oz@phil>
-References: <1412763781-31533-1-git-send-email-mark.yao@rock-chips.com> <CAPM=9twVrmni_BRV_9-QLk+JUbcgXEjAM0g-tYH6su8=sDQ35g@mail.gmail.com> <5440999D.5010601@rock-chips.com>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCHv3] arm: dts: socfpga: Add SPI nodes to SOCFPGA DT.
+Date: Fri, 17 Oct 2014 08:52:33 +0200
+Message-ID: <20141017065233.GA10262@pengutronix.de>
+References: <1413497251-21954-1-git-send-email-tthayer@opensource.altera.com>
+ <1413497251-21954-2-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5440999D.5010601@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark yao <mark.yao@rock-chips.com>
-Cc: Dave Airlie <airlied@gmail.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-api@vger.kernel.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, =?ISO-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>, dbehr@chromium.orgO
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1413497251-21954-2-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Cc: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Hi!
 
-Am Freitag, 17. Oktober 2014, 12:22:53 schrieb Mark yao:
-> On 2014=E5=B9=B410=E6=9C=8817=E6=97=A5 08:46, Dave Airlie wrote:
-> > On 17 October 2014 10:40, Mark yao <mark.yao@rock-chips.com> wrote:
-> >> Hi
-> >> I think Rockchip drm driver is ready now, can it land?
-> >=20
-> > I probably want to wait until -rc1 though I suppose since its a new
-> > driver and self contained we might be able to see if Linus is
-> > interested in squeezing it in.
-> >=20
-> > Can you send me a git pull request for it against drm-next or even =
-3.17.
-> >=20
-> > Dave.
->=20
-> Hi, Dave
->      the git pull request:
->=20
-> The following changes since commit 4db36870b92cdf5a79615aeabc68efc97d=
-f13918:
+On Thu, Oct 16, 2014 at 05:07:31PM -0500, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> 
+> Add 2 SPI nodes to SOCFPGA device tree.
+> 
+> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> ---
+> v2: Remove extra files. Move SPIDEV into board specific file.
+> 
+> v3: Remove dts file since SPIDEV is not allowed.
+> ---
+>  arch/arm/boot/dts/socfpga.dtsi |   24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> index 4d77ad6..d81bc2d3 100644
+> --- a/arch/arm/boot/dts/socfpga.dtsi
+> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> @@ -628,6 +628,30 @@
+>  			clock-names = "biu", "ciu";
+>  		};
+>  
+> +		spi0: spi@fff00000 {
+> +			compatible = "snps,dw-apb-ssi";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0xfff00000 0x1000>;
+> +			interrupts = <0 154 4>;
+> +			num-cs = <4>;
+> +			bus-num = <0>;
+			^^^^^^^^^^^^^^
 
-I think this needs a fix. Your commit 4db36870b is the pending iommu dr=
-iver.=20
-Which isn't part of neither the mainline kernel nor the drm tree Dave m=
-eant.
+I think you can/should get rid of this property. It is only used/documented for
+fsl-dspi as far as I can see.
 
-What Dave meant was to base your patches on top of his "drm-next" branc=
-h or=20
-the raw 3.17 release.
+> +			clocks = <&spi_m_clk>;
+> +			status = "disabled";
+> +		};
+> +
+> +		spi1: spi@fff01000 {
+> +			compatible = "snps,dw-apb-ssi";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0xfff01000 0x1000>;
+> +			interrupts = <0 156 4>;
+> +			num-cs = <4>;
+> +			bus-num = <1>;
+> +			clocks = <&spi_m_clk>;
+> +			status = "disabled";
+> +		};
+> +
+>  		/* Local timer */
+>  		timer@fffec600 {
+>  			compatible = "arm,cortex-a9-twd-timer";
 
-So either base the branch on drm-next from
-	http://cgit.freedesktop.org/~airlied/linux/log/?h=3Ddrm-next
+The rest looks good IMO.
 
-or the 3.17 release tag from Linus Torvalds. Apply your patches on top =
-and=20
-create pull from there.
+Regards,
+Steffen
 
-I've just checked ... your drm patches apply cleanly against 3.17, so y=
-our=20
-branch to be pulled should probably look something like
-	https://github.com/mmind/linux-rockchip/commits/tmp/drmtest
-
-
-Heiko
-
->=20
->    FROMLIST: iommu/rockchip: rk3288 iommu driver (2014-10-17 10:26:18=
- +0800)
->=20
-> are available in the git repository at:
->=20
->    https://github.com/markyzq/kernel-drm-rockchip.git mydrm
->=20
-> for you to fetch changes up to 0db2be88bea08ab8afe5e3d13f8a2c9e637a95=
-14:
->=20
->    dt-bindings: video: Add documentation for rockchip vop (2014-10-17
-> 10:27:15 +0800)
->=20
-> ----------------------------------------------------------------
-> Mark yao (3):
->        drm: rockchip: Add basic drm driver
->        dt-bindings: video: Add for rockchip display subsytem
->        dt-bindings: video: Add documentation for rockchip vop
->=20
->   .../devicetree/bindings/video/rockchip-drm.txt     |   19 +
->   .../devicetree/bindings/video/rockchip-vop.txt     |   58 +
->   drivers/gpu/drm/Kconfig                            |    2 +
->   drivers/gpu/drm/Makefile                           |    1 +
->   drivers/gpu/drm/rockchip/Kconfig                   |   17 +
->   drivers/gpu/drm/rockchip/Makefile                  |    8 +
->   drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |  449 ++++++
->   drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   54 +
->   drivers/gpu/drm/rockchip/rockchip_drm_fb.c         |  200 +++
->   drivers/gpu/drm/rockchip/rockchip_drm_fb.h         |   28 +
->   drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c      |  210 +++
->   drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h      |   20 +
->   drivers/gpu/drm/rockchip/rockchip_drm_gem.c        |  293 ++++
->   drivers/gpu/drm/rockchip/rockchip_drm_gem.h        |   54 +
->   drivers/gpu/drm/rockchip/rockchip_drm_vop.c        | 1427
-> ++++++++++++++++++++
->   drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |  196 +++
->   16 files changed, 3036 insertions(+)
->   create mode 100644
-> Documentation/devicetree/bindings/video/rockchip-drm.txt
->   create mode 100644
-> Documentation/devicetree/bindings/video/rockchip-vop.txt
->   create mode 100644 drivers/gpu/drm/rockchip/Kconfig
->   create mode 100644 drivers/gpu/drm/rockchip/Makefile
->   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_drv.c
->   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_drv.h
->   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fb.c
->   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fb.h
->   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c
->   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h
->   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_gem.c
->   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_gem.h
->   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_vop.c
->   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
