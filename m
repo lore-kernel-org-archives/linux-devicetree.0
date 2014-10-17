@@ -1,90 +1,62 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv5 6/6] ARM: imx: Add Freescale LS1021A SMP support
-Date: Fri, 17 Oct 2014 10:10:38 +0000
-Message-ID: <1e98bf0f1f2347ed8f02138816061cdc@BL2PR03MB467.namprd03.prod.outlook.com>
-References: <1413192963-11153-1-git-send-email-jingchang.lu@freescale.com>
- <1413192963-11153-7-git-send-email-jingchang.lu@freescale.com>
- <993EF472-33A7-48BD-A4CD-15B361D53365@codeaurora.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RESUBMIT PATCH v4 7/8] regulator: sky81452: Add compatible
+ string for device binding
+Date: Fri, 17 Oct 2014 12:17:34 +0200
+Message-ID: <20141017101734.GB1820@sirena.org.uk>
+References: <1412657745-7812-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1413179262-27636-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1413179262-27636-8-git-send-email-jack.yoo@skyworksinc.com>
+ <20141013103512.GJ27755@sirena.org.uk>
+ <20141014011112.GB2751@jack-ThinkPad-T520>
+ <20141014075606.GN27755@sirena.org.uk>
+ <20141017091950.GA3233@jack-ThinkPad-T520>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <993EF472-33A7-48BD-A4CD-15B361D53365-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4SFOXa2GPu3tIq4H"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141017091950.GA3233@jack-ThinkPad-T520>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gyungoh Yoo <gyungoh@gmail.com>
+Cc: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEt1bWFyIEdhbGEgW21haWx0
-bzpnYWxha0Bjb2RlYXVyb3JhLm9yZ10NCj5TZW50OiBUaHVyc2RheSwgT2N0b2JlciAxNiwgMjAx
-NCAxMDozMSBQTQ0KPlRvOiBMdSBKaW5nY2hhbmctQjM1MDgzDQo+Q2M6IHNoYXduLmd1b0BsaW5h
-cm8ub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
-DQo+THUgSmluZ2NoYW5nLUIzNTA4MzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnOyBhcm5kQGFybmRiLmRlDQo+U3ViamVjdDogUmU6IFtQQVRDSHY1IDYvNl0gQVJNOiBpbXg6
-IEFkZCBGcmVlc2NhbGUgTFMxMDIxQSBTTVAgc3VwcG9ydA0KPg0KPg0KPk9uIE9jdCAxMywgMjAx
-NCwgYXQgMTE6MzYgQU0sIEppbmdjaGFuZyBMdSA8amluZ2NoYW5nLmx1QGZyZWVzY2FsZS5jb20+
-DQo+d3JvdGU6DQo+DQo+PiBGcm9tOiBKaW5nY2hhbmcgTHUgPGIzNTA4M0BmcmVlc2NhbGUuY29t
-Pg0KPj4NCj4+IEZyZWVzY2FsZSBMUzEwMjFBIFNvQ3MgZGVwbG95IHR3byBjb3J0ZXgtQTcgcHJv
-Y2Vzc29ycywgdGhpcyBhZGRzDQo+PiBicmluZy11cCBzdXBwb3J0IGZvciB0aGUgc2Vjb25kYXJ5
-IGNvcmUuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogSmluZ2NoYW5nIEx1IDxiMzUwODNAZnJlZXNj
-YWxlLmNvbT4NCj4+IC0tLQ0KPj4gYXJjaC9hcm0vbWFjaC1pbXgvTWFrZWZpbGUgICAgICAgfCAg
-MiArLQ0KPj4gYXJjaC9hcm0vbWFjaC1pbXgvY29tbW9uLmggICAgICAgfCAgMSArDQo+PiBhcmNo
-L2FybS9tYWNoLWlteC9tYWNoLWxzMTAyMWEuYyB8ICAxICsNCj4+IGFyY2gvYXJtL21hY2gtaW14
-L3BsYXRzbXAuYyAgICAgIHwgMzIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4+
-IDQgZmlsZXMgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPj4NCj4+
-IGRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNoLWlteC9NYWtlZmlsZSBiL2FyY2gvYXJtL21hY2gt
-aW14L01ha2VmaWxlDQo+PiBpbmRleCBjZTEzN2JjLi4zOGQ3NWUyIDEwMDY0NA0KPj4gLS0tIGEv
-YXJjaC9hcm0vbWFjaC1pbXgvTWFrZWZpbGUNCj4+ICsrKyBiL2FyY2gvYXJtL21hY2gtaW14L01h
-a2VmaWxlDQo+PiBAQCAtODksNyArODksNyBAQCBvYmotJChDT05GSUdfSEFWRV9JTVhfQU5BVE9Q
-KSArPSBhbmF0b3Aubw0KPj4gb2JqLSQoQ09ORklHX0hBVkVfSU1YX0dQQykgKz0gZ3BjLm8NCj4+
-IG9iai0kKENPTkZJR19IQVZFX0lNWF9NTURDKSArPSBtbWRjLm8NCj4+IG9iai0kKENPTkZJR19I
-QVZFX0lNWF9TUkMpICs9IHNyYy5vDQo+PiAtaWZkZWYgQ09ORklHX1NPQ19JTVg2DQo+PiAraWZu
-ZXEgKCQoQ09ORklHX1NPQ19JTVg2KSQoQ09ORklHX1NPQ19MUzEwMjFBKSwpDQo+PiBBRkxBR1Nf
-aGVhZHNtcC5vIDo9LVdhLC1tYXJjaD1hcm12Ny1hDQo+PiBvYmotJChDT05GSUdfU01QKSArPSBo
-ZWFkc21wLm8gcGxhdHNtcC5vDQo+PiBvYmotJChDT05GSUdfSE9UUExVR19DUFUpICs9IGhvdHBs
-dWcubyBkaWZmIC0tZ2l0DQo+PiBhL2FyY2gvYXJtL21hY2gtaW14L2NvbW1vbi5oIGIvYXJjaC9h
-cm0vbWFjaC1pbXgvY29tbW9uLmggaW5kZXgNCj4+IDFkYWJmNDMuLmM0NzNjYTUgMTAwNjQ0DQo+
-PiAtLS0gYS9hcmNoL2FybS9tYWNoLWlteC9jb21tb24uaA0KPj4gKysrIGIvYXJjaC9hcm0vbWFj
-aC1pbXgvY29tbW9uLmgNCj4+IEBAIC0xNTcsNSArMTU3LDYgQEAgc3RhdGljIGlubGluZSB2b2lk
-IGlteF9pbml0X2wyY2FjaGUodm9pZCkge30NCj4+ICNlbmRpZg0KPj4NCj4+IGV4dGVybiBzdHJ1
-Y3Qgc21wX29wZXJhdGlvbnMgaW14X3NtcF9vcHM7DQo+PiArZXh0ZXJuIHN0cnVjdCBzbXBfb3Bl
-cmF0aW9ucyBsczEwMjFhX3NtcF9vcHM7DQo+Pg0KPj4gI2VuZGlmDQo+PiBkaWZmIC0tZ2l0IGEv
-YXJjaC9hcm0vbWFjaC1pbXgvbWFjaC1sczEwMjFhLmMNCj4+IGIvYXJjaC9hcm0vbWFjaC1pbXgv
-bWFjaC1sczEwMjFhLmMNCj4+IGluZGV4IDlkMjAzNGIuLmI4OWM4NTggMTAwNjQ0DQo+PiAtLS0g
-YS9hcmNoL2FybS9tYWNoLWlteC9tYWNoLWxzMTAyMWEuYw0KPj4gKysrIGIvYXJjaC9hcm0vbWFj
-aC1pbXgvbWFjaC1sczEwMjFhLmMNCj4+IEBAIC0xNyw1ICsxNyw2IEBAIHN0YXRpYyBjb25zdCBj
-aGFyICogY29uc3QgbHMxMDIxYV9kdF9jb21wYXRbXQ0KPj4gX19pbml0Y29uc3QgPSB7IH07DQo+
-Pg0KPj4gRFRfTUFDSElORV9TVEFSVChMUzEwMjFBLCAiRnJlZXNjYWxlIExTMTAyMUEiKQ0KPj4g
-Kwkuc21wCQk9IHNtcF9vcHMobHMxMDIxYV9zbXBfb3BzKSwNCj4+IAkuZHRfY29tcGF0CT0gbHMx
-MDIxYV9kdF9jb21wYXQsDQo+PiBNQUNISU5FX0VORA0KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-L21hY2gtaW14L3BsYXRzbXAuYyBiL2FyY2gvYXJtL21hY2gtaW14L3BsYXRzbXAuYw0KPj4gaW5k
-ZXggNzcxYmQyNS4uNjliODdjYSAxMDA2NDQNCj4+IC0tLSBhL2FyY2gvYXJtL21hY2gtaW14L3Bs
-YXRzbXAuYw0KPj4gKysrIGIvYXJjaC9hcm0vbWFjaC1pbXgvcGxhdHNtcC5jDQo+PiBAQCAtMTYs
-NiArMTYsOCBAQA0KPj4gI2luY2x1ZGUgPGFzbS9wYWdlLmg+DQo+PiAjaW5jbHVkZSA8YXNtL3Nt
-cF9zY3UuaD4NCj4+ICNpbmNsdWRlIDxhc20vbWFjaC9tYXAuaD4NCj4+ICsjaW5jbHVkZSA8bGlu
-dXgvb2ZfYWRkcmVzcy5oPg0KPj4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPj4NCj4+ICNpbmNs
-dWRlICJjb21tb24uaCINCj4+ICNpbmNsdWRlICJoYXJkd2FyZS5oIg0KPj4gQEAgLTk0LDMgKzk2
-LDMzIEBAIHN0cnVjdCBzbXBfb3BlcmF0aW9ucyAgaW14X3NtcF9vcHMgX19pbml0ZGF0YSA9IHsN
-Cj4+IAkuY3B1X2tpbGwJCT0gaW14X2NwdV9raWxsLA0KPj4gI2VuZGlmDQo+PiB9Ow0KPj4gKw0K
-Pj4gKyNkZWZpbmUgRENGR19DQ1NSX1NDUkFUQ0hSVzEJMHgyMDANCj4+ICsNCj4+ICtzdGF0aWMg
-aW50IGxzMTAyMWFfYm9vdF9zZWNvbmRhcnkodW5zaWduZWQgaW50IGNwdSwgc3RydWN0DQo+PiAr
-dGFza19zdHJ1Y3QgKmlkbGUpIHsNCj4+ICsJYXJjaF9zZW5kX3dha2V1cF9pcGlfbWFzayhjcHVt
-YXNrX29mKGNwdSkpOw0KPj4gKw0KPj4gKwlyZXR1cm4gMDsNCj4+ICt9DQo+PiArDQo+PiArc3Rh
-dGljIHZvaWQgX19pbml0IGxzMTAyMWFfc21wX3ByZXBhcmVfY3B1cyh1bnNpZ25lZCBpbnQgbWF4
-X2NwdXMpIHsNCj4+ICsJc3RydWN0IGRldmljZV9ub2RlICpucDsNCj4+ICsJdm9pZCBfX2lvbWVt
-ICpkY2ZnX2Jhc2U7DQo+PiArCXVuc2lnbmVkIGxvbmcgcGFkZHI7DQo+PiArDQo+PiArCW5wID0g
-b2ZfZmluZF9jb21wYXRpYmxlX25vZGUoTlVMTCwgTlVMTCwgImZzbCxsczEwMjFhLWRjZmciKTsN
-Cj4+ICsJZGNmZ19iYXNlID0gb2ZfaW9tYXAobnAsIDApOw0KPj4gKwlCVUdfT04oIWRjZmdfYmFz
-ZSk7DQo+PiArDQo+PiArCXBhZGRyID0gdmlydF90b19waHlzKHNlY29uZGFyeV9zdGFydHVwKTsN
-Cj4+ICsJd3JpdGVsX3JlbGF4ZWQoY3B1X3RvX2JlMzIocGFkZHIpLCBkY2ZnX2Jhc2UgKw0KPj4g
-K0RDRkdfQ0NTUl9TQ1JBVENIUlcxKTsNCj4+ICsNCj4NCj5UaGlzIHNlZW1zIG9kZCwgd2h5IGFy
-ZSB3ZSB3cml0aW5nIHRoZSBzdGFydHVwIGFkZHJlc3MgdG8NCj5EQ0ZHX0NDU1JfU0NSQVRDSFJX
-MT8NCkl0IGlzIHRoZSBzZWNvbmRhcnkgY3B1J3MgZXhlY3V0aW5nIGFkZHJlc3MgZm9yIHNtcCBr
-ZXJuZWwgaW1hZ2UsIA0KdGhlIHNlY29uZGFyeSBjcHUgd2lsbCBqdW1wIHRvIHRoaXMgYWRkcmVz
-cyBhZnRlciB3YWtldXAgZHVyaW5nDQp0aGUgc21wIGluaXRpYWxpemF0aW9uLiBUaGFua3MuDQoN
-CkJlc3QgUmVnYXJkcywNCkppbmdjaGFuZw0KDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--4SFOXa2GPu3tIq4H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Oct 17, 2014 at 06:19:50PM +0900, Gyungoh Yoo wrote:
+
+> Wow. I understand.
+> I missed .supply_name. I think I need something like
+> below, before devm_regulator_register().
+
+> 	config->supply_name =3D init_data->constraints.name;
+
+> I will resubmit it.
+
+No, not supply_name (though you really should be initializing that
+anyway) and you definitely don't want to set supply_name to something
+=66rom constraints.  The supply_name should be the name of the input pin
+that supplies power to the regulator.  I was referring to of_match and
+regulators_node.
+
+--4SFOXa2GPu3tIq4H
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUQOy+AAoJECTWi3JdVIfQwDIH/0V5M79k7yEMjvBYqBmQitzK
+JdSGk5SMX1gnp9i2GwOTJrHBegdHF9asyfyskW9j7iNeNUL2pKdCm4YgFsxiilhq
+NlCdt8CJmB0oxznoHQZ4yKT7vOr1FRI/kFp/JEZAodY885Tqd0cvwcVAlL9L9wgF
+IBVnfrmNngxfAQtFn+1BKwB2zJKYivfR2fCwwbmH6qcpRRZPDRahNVQFUdm4tZrv
+ecaNLC+gDp86lbF+yEP57ZbOgQK/z+iv5iyLzgLTLUPF4nXCK3Uw0K3bpuZPsFZg
+6yMX7cu1lXgzyuf6A1Z3RjHk01XKqjI24RkhfzUyrxoTCTSge+bu+kqXSJe/dfs=
+=h7Eo
+-----END PGP SIGNATURE-----
+
+--4SFOXa2GPu3tIq4H--
