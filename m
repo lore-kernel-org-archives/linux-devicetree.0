@@ -1,103 +1,70 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] dma: at_xdmac: creation of the atmel eXtended DMA
- Controller driver
-Date: Fri, 17 Oct 2014 08:53:57 +0200
-Message-ID: <20141017065357.GE2367@ldesroches-Latitude-E6320>
-References: <1412175565-810-1-git-send-email-ludovic.desroches@atmel.com>
- <1412175565-810-2-git-send-email-ludovic.desroches@atmel.com>
- <20141015133004.GP1638@intel.com>
- <20141016141048.GC2367@ldesroches-Latitude-E6320>
- <20141016161233.GJ1638@intel.com>
+From: PERIER Romain <romain.perier@gmail.com>
+Subject: Re: [RFC v3 PATCH 1/5] of: Add standard property for poweroff capability
+Date: Fri, 17 Oct 2014 09:23:12 +0200
+Message-ID: <CABgxDo+9Dx7h+KXo+YYVLb3snimNV1PDxv+d1iQ2pY8P395pdQ@mail.gmail.com>
+References: <1413268273-15151-1-git-send-email-romain.perier@gmail.com>
+	<20141015140337.GI27755@sirena.org.uk>
+	<CABgxDoKen1Ub1ptG85-oMhUcRkX7tsZ6o51OJcOX2jZkZi0JGg@mail.gmail.com>
+	<8037374.M9KdRGnRWV@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141016161233.GJ1638-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8037374.M9KdRGnRWV@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, robh <robh@kernel.org>, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 16, 2014 at 09:42:33PM +0530, Vinod Koul wrote:
-> On Thu, Oct 16, 2014 at 04:10:48PM +0200, Ludovic Desroches wrote:
-> > > This is pretty odd, I dont see a reason why we can have proper case values
-> > > and converted ones. It would have made sense if we use this for conversion
-> > > but in case values in quite puzzling
-> > > 
-> > > > +	case 1:
-> > > > +		csize = AT_XDMAC_CC_CSIZE_CHK_2;
-> > > and looking at values this can be ffs(maxburst) - 1 for valid cases
-> > 
-> > Yes I can return ffs(maxburst) - 1 for valid cases.
-> > 
-> > > > +		break;
-> > > > +	case 2:
-> > > > +		csize = AT_XDMAC_CC_CSIZE_CHK_4;
-> > > > +		break;
-> > > > +	case 3:
-> > > > +		csize = AT_XDMAC_CC_CSIZE_CHK_8;
-> > > > +		break;
-> > > > +	case 4:
-> > > > +		csize = AT_XDMAC_CC_CSIZE_CHK_16;
-> > > > +		break;
-> > > > +	default:
-> > > > +		csize = AT_XDMAC_CC_CSIZE_CHK_1;
-> > > why?
-> > 
-> > Because some devices don't set maxburst, for example, our serial driver.
-> Then pls send a patch against that as well. returniung error here will
-> ensure that they fix that as well
+Hi Heiko,
 
-Ok, I'll return an error and have a look to fix our serial driver.
+Oh sure, no problem. It was just to understand better how things will h=
+appen ;)
+If my patches needs to be rebased, will do, of course.
 
-> 
-> > > > +
-> > > > +		prev = desc;
-> > > > +		if (!first)
-> > > > +			first = desc;
-> > > > +
-> > > > +		dev_dbg(chan2dev(chan), "%s: add desc 0x%p to descs_list 0x%p\n",
-> > > > +			 __func__, desc, first);
-> > > > +		list_add_tail(&desc->desc_node, &first->descs_list);
-> > > > +	}
-> > > > +
-> > > > +	spin_unlock_bh(&atchan->lock);
-> > > > +
-> > > > +	first->tx_dma_desc.cookie = -EBUSY;
-> > > why are you init cookie here
-> > 
-> > Inspired by other driver. What is the right place so?
-> You dont. Cookie will be set to correct value when the descriptor is
-> submitted
-> 
-> > > For memcpy why should we need slave_config. The system memory source and
-> > > destination width could be assumed to relastic values and then burst sizes
-> > > maxed for performance. These values make more sense for periphral where we
-> > > have to match up with the periphral
-> > 
-> > I don't tell I need slave_config. We have already talked about this. I don't
-> > see the problem. It is only a comment, a reminder. The only information
-> > I may need, one day, is the direction because we have to set src and dst
-> > interfaces. At the moment, all our products are done in a way nand flash
-> > and DDR are on the same interface so we don't have to care about
-> > direction.
-> > Since we don't have the direction, two solutions:
-> > - remember this limitation for next products, that's why there is this reminder,
-> > - change our nand driver in order to see nand as a peripheral instead of
-> >   a memory. 
-> I think treating NAND as memory may not be a right model. It should be
-> treated as periphral with incrementing and decrementing address value. That
-> way you should be able to set the right properties for it.
-> 
-> The system memory copy is right model for memcpy.
+Have a nice day,
+Romain
 
-Ok, I'll discuss of it with the atmel nand maintener. Even if there is
-something to improve here, I hope it is not considered as a blocking point
-to get the xdmac driver included into 3.19 because at the moment we have no
-DMA on the SAMA5D4 recently introduced.
-
-Ludovic
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2014-10-17 8:06 GMT+02:00 Heiko St=C3=BCbner <heiko@sntech.de>:
+> Hi Romain,
+>
+> Am Freitag, 17. Oktober 2014, 08:01:31 schrieb PERIER Romain:
+>> Hi all,
+>>
+>> I am just curious but where do you plan to merge this serie ? in
+>> git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git =
+?
+>
+> The single dts patch will be going into my dts branch and the rest wi=
+ll go
+> through Mark's regulator tree. As Mark said, he'll try to apply these=
+ again
+> once 3.18-rc1 is released and if it still doesn't apply then, he'll p=
+robably
+> ask you to rebase them onto the regulator tree [which will at the tim=
+e include
+> everything that is in -rc1].
+>
+>
+> Heiko
+>
+>
+>
+>> 2014-10-15 16:03 GMT+02:00 Mark Brown <broonie@kernel.org>:
+>> > On Wed, Oct 15, 2014 at 03:56:03PM +0200, Heiko St=C3=BCbner wrote=
+:
+>> >> Am Mittwoch, 15. Oktober 2014, 15:42:45 schrieb Mark Brown:
+>> >> > I guess I should apply these (except the DTS update) since the =
+first
+>> >> > user that's being added is a regulator driver?
+>> >>
+>> >> I'd think so.
+>> >> In any case, I'll take the "ARM: dts: ..." patch if you take the =
+others.
+>> >
+>> > Sounds like a plan.  I just tried applying and got some conflicts =
+but
+>> > I'm guessing that this is due to changes that are landing in the m=
+erge
+>> > window so I'll try again once -rc1 is out.
+>
