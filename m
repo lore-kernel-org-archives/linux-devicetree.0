@@ -1,56 +1,49 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 5/7] regulator: max77802: Document regulator opmode DT
- properties
-Date: Fri, 17 Oct 2014 13:57:01 +0200
-Message-ID: <20141017115701.GE1820@sirena.org.uk>
-References: <1413478133-2577-1-git-send-email-javier.martinez@collabora.co.uk>
- <1413478133-2577-6-git-send-email-javier.martinez@collabora.co.uk>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v5 00/12] Add ACPI _DSD and unified device properties support
+Date: Fri, 17 Oct 2014 14:22:48 +0200
+Message-ID: <61463835.95KdD3U9mE@vostro.rjw.lan>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan> <11223831.j9KAEfSQsY@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="//IivP0gvsAy3Can"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1413478133-2577-6-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Lee Jones <lee.jones@linaro.org>, Doug Anderson <dianders@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <11223831.j9KAEfSQsY@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Friday, October 17, 2014 02:01:33 PM Rafael J. Wysocki wrote:
+> Hi Everyone,
+> 
+> Hving had a couple of chats with Grant and Arnd during LinuxCon EU/LPC, we
+> now have version 5 taking all feedback into account (hopefully).
+> 
+> Changes have been made to patch [02/12] and to patches [09-12/12], although
+> in patches [10-12/12] they are fairly minor.  I have retained the Greg's
+> ACK on patch [02/12], because it is essentially the same that have been
+> posted aleady and ACKed by him (Greg, please let me know if I shouldn't
+> do that) and all the ACKs on the remaining patches except for patch [09/12]
+> which is substantially different.  Still, if reviewers think that their
+> ACKs don't apply any more, please let me know and I'll remove them.
+> 
+> Patch [02/12] now contains helper functions for all proprerty data types
+> that can be accessed which call the existing of_ functions, because Grant
+> preferred that.
+> 
+> Patch [09/12] introduces quite a new concept, which is the struct fwnode_handle
+> structure containing one field (type) and embedded in struct device_node
+> (type==FWNODE_OF) and struct acpi_device (type==FWNODE_ACPI).  In short, if
+> we are passed a struct fwnode_handle pointer, we can get from it to the
+> appropriate device node pointer (either struct acpi_device or struct device_node)
+> using container_of() after we've checked the type.  This is needed for the code
+> that needs to access child nodes of a device in case when they don't have
+> struct device representations (whatever the reason).  This has been suggested
+> by Grant and pretty much everyone involved agrees that it's better that the
+> alternatives presented so far.
 
---//IivP0gvsAy3Can
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+While at it, many thanks to Mika for testing the patches on MinnowBoard 1 and
+MinnowBoard Max and fixing build problems with them while we've been having
+fun at the conferences!  I wouldn't have been able to prepare the patchset
+for posting without that work.
 
-On Thu, Oct 16, 2014 at 06:48:51PM +0200, Javier Martinez Canillas wrote:
-
-> +- maxim,regulator-initial-mode: initial operating mode.
-> +  This property can only be used on regulators that support changing their mode
-> +  during normal operation. These regulators are LDO1, LDO3, LDO20 and LDO21.
-> +- maxim,regulator-disk-mode: operating mode for the regulator when the system
-> +  enters in the Suspend-to-Disk state.
-> +- maxim,regulator-mem-mode: operating mode for the regulator when the system
-> +  enters in the Suspend-to-RAM state.
-
-This seems pretty ugly since it's not integrated with the suspend state
-binding at all - adding new suspend modes is going to involve changing
-the binding which seems icky.  Adding a standard property to set modes
-doesn't seem so bad, I think a translation function to parse device
-specific mode bindings in properties might be the way forwards.
-
---//IivP0gvsAy3Can
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUQQQMAAoJECTWi3JdVIfQyy0H/0Abr/wX2dEV8wmMq5CiC7Vg
-nAUMqqmylSuKrATHRJ0+wXmvUYoitcgr23dkuP6w4j322tj/CaMcBy1rZAf2ZqrA
-DeeoyY58el6+4cX54Q6UbpJnzgjsQNVeaBNYQQora160r5rh6A+YvzXQnEP+LNAq
-vgpkFvrgG/mp5BRHo87fDBxL5C1m4zDM3p5BaGf3Myh6bq6x/fEhPFZEg7HHH+G/
-dOwuPNsRGgCV0t4k/+c4BBC3SWLWjP217Ns0fFfTDTygv+50dVQQNc9ssLYR49Xb
-ljLOTpP1g0q0acZBmccGtnPBJNYQshUMi3CvHx8xgMuC9IB50m8MQniHQlvK77A=
-=trBw
------END PGP SIGNATURE-----
-
---//IivP0gvsAy3Can--
