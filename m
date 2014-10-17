@@ -1,87 +1,103 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCHv3] arm: dts: socfpga: Add SPI nodes to SOCFPGA DT.
-Date: Fri, 17 Oct 2014 08:52:33 +0200
-Message-ID: <20141017065233.GA10262@pengutronix.de>
-References: <1413497251-21954-1-git-send-email-tthayer@opensource.altera.com>
- <1413497251-21954-2-git-send-email-tthayer@opensource.altera.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] dma: at_xdmac: creation of the atmel eXtended DMA
+ Controller driver
+Date: Fri, 17 Oct 2014 08:53:57 +0200
+Message-ID: <20141017065357.GE2367@ldesroches-Latitude-E6320>
+References: <1412175565-810-1-git-send-email-ludovic.desroches@atmel.com>
+ <1412175565-810-2-git-send-email-ludovic.desroches@atmel.com>
+ <20141015133004.GP1638@intel.com>
+ <20141016141048.GC2367@ldesroches-Latitude-E6320>
+ <20141016161233.GJ1638@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1413497251-21954-2-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+In-Reply-To: <20141016161233.GJ1638-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On Thu, Oct 16, 2014 at 09:42:33PM +0530, Vinod Koul wrote:
+> On Thu, Oct 16, 2014 at 04:10:48PM +0200, Ludovic Desroches wrote:
+> > > This is pretty odd, I dont see a reason why we can have proper case values
+> > > and converted ones. It would have made sense if we use this for conversion
+> > > but in case values in quite puzzling
+> > > 
+> > > > +	case 1:
+> > > > +		csize = AT_XDMAC_CC_CSIZE_CHK_2;
+> > > and looking at values this can be ffs(maxburst) - 1 for valid cases
+> > 
+> > Yes I can return ffs(maxburst) - 1 for valid cases.
+> > 
+> > > > +		break;
+> > > > +	case 2:
+> > > > +		csize = AT_XDMAC_CC_CSIZE_CHK_4;
+> > > > +		break;
+> > > > +	case 3:
+> > > > +		csize = AT_XDMAC_CC_CSIZE_CHK_8;
+> > > > +		break;
+> > > > +	case 4:
+> > > > +		csize = AT_XDMAC_CC_CSIZE_CHK_16;
+> > > > +		break;
+> > > > +	default:
+> > > > +		csize = AT_XDMAC_CC_CSIZE_CHK_1;
+> > > why?
+> > 
+> > Because some devices don't set maxburst, for example, our serial driver.
+> Then pls send a patch against that as well. returniung error here will
+> ensure that they fix that as well
 
-On Thu, Oct 16, 2014 at 05:07:31PM -0500, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Ok, I'll return an error and have a look to fix our serial driver.
+
 > 
-> Add 2 SPI nodes to SOCFPGA device tree.
+> > > > +
+> > > > +		prev = desc;
+> > > > +		if (!first)
+> > > > +			first = desc;
+> > > > +
+> > > > +		dev_dbg(chan2dev(chan), "%s: add desc 0x%p to descs_list 0x%p\n",
+> > > > +			 __func__, desc, first);
+> > > > +		list_add_tail(&desc->desc_node, &first->descs_list);
+> > > > +	}
+> > > > +
+> > > > +	spin_unlock_bh(&atchan->lock);
+> > > > +
+> > > > +	first->tx_dma_desc.cookie = -EBUSY;
+> > > why are you init cookie here
+> > 
+> > Inspired by other driver. What is the right place so?
+> You dont. Cookie will be set to correct value when the descriptor is
+> submitted
 > 
-> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> ---
-> v2: Remove extra files. Move SPIDEV into board specific file.
+> > > For memcpy why should we need slave_config. The system memory source and
+> > > destination width could be assumed to relastic values and then burst sizes
+> > > maxed for performance. These values make more sense for periphral where we
+> > > have to match up with the periphral
+> > 
+> > I don't tell I need slave_config. We have already talked about this. I don't
+> > see the problem. It is only a comment, a reminder. The only information
+> > I may need, one day, is the direction because we have to set src and dst
+> > interfaces. At the moment, all our products are done in a way nand flash
+> > and DDR are on the same interface so we don't have to care about
+> > direction.
+> > Since we don't have the direction, two solutions:
+> > - remember this limitation for next products, that's why there is this reminder,
+> > - change our nand driver in order to see nand as a peripheral instead of
+> >   a memory. 
+> I think treating NAND as memory may not be a right model. It should be
+> treated as periphral with incrementing and decrementing address value. That
+> way you should be able to set the right properties for it.
 > 
-> v3: Remove dts file since SPIDEV is not allowed.
-> ---
->  arch/arm/boot/dts/socfpga.dtsi |   24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index 4d77ad6..d81bc2d3 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -628,6 +628,30 @@
->  			clock-names = "biu", "ciu";
->  		};
->  
-> +		spi0: spi@fff00000 {
-> +			compatible = "snps,dw-apb-ssi";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0xfff00000 0x1000>;
-> +			interrupts = <0 154 4>;
-> +			num-cs = <4>;
-> +			bus-num = <0>;
-			^^^^^^^^^^^^^^
+> The system memory copy is right model for memcpy.
 
-I think you can/should get rid of this property. It is only used/documented for
-fsl-dspi as far as I can see.
+Ok, I'll discuss of it with the atmel nand maintener. Even if there is
+something to improve here, I hope it is not considered as a blocking point
+to get the xdmac driver included into 3.19 because at the moment we have no
+DMA on the SAMA5D4 recently introduced.
 
-> +			clocks = <&spi_m_clk>;
-> +			status = "disabled";
-> +		};
-> +
-> +		spi1: spi@fff01000 {
-> +			compatible = "snps,dw-apb-ssi";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0xfff01000 0x1000>;
-> +			interrupts = <0 156 4>;
-> +			num-cs = <4>;
-> +			bus-num = <1>;
-> +			clocks = <&spi_m_clk>;
-> +			status = "disabled";
-> +		};
-> +
->  		/* Local timer */
->  		timer@fffec600 {
->  			compatible = "arm,cortex-a9-twd-timer";
-
-The rest looks good IMO.
-
-Regards,
-Steffen
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Ludovic
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
