@@ -1,62 +1,67 @@
-From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH v2 5/7] regulator: max77802: Document regulator opmode
- DT properties
-Date: Fri, 17 Oct 2014 16:18:11 +0200
-Message-ID: <54412523.1030903@collabora.co.uk>
-References: <1413478133-2577-1-git-send-email-javier.martinez@collabora.co.uk> <1413478133-2577-6-git-send-email-javier.martinez@collabora.co.uk> <20141017115701.GE1820@sirena.org.uk> <54410DF3.5020005@collabora.co.uk> <20141017135441.GR1820@sirena.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RESUBMIT PATCH v4 7/8] regulator: sky81452: Add compatible
+ string for device binding
+Date: Fri, 17 Oct 2014 16:26:05 +0200
+Message-ID: <20141017142605.GU1820@sirena.org.uk>
+References: <1412657745-7812-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1413179262-27636-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1413179262-27636-8-git-send-email-jack.yoo@skyworksinc.com>
+ <20141013103512.GJ27755@sirena.org.uk>
+ <20141014011112.GB2751@jack-ThinkPad-T520>
+ <20141014075606.GN27755@sirena.org.uk>
+ <20141017091950.GA3233@jack-ThinkPad-T520>
+ <20141017101734.GB1820@sirena.org.uk>
+ <20141017104309.GA3136@jack-ThinkPad-T520>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141017135441.GR1820-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="8KmZJhJMEENkOiL3"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141017104309.GA3136@jack-ThinkPad-T520>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gyungoh Yoo <gyungoh@gmail.com>
+Cc: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
 
-On 10/17/2014 03:54 PM, Mark Brown wrote:
-> On Fri, Oct 17, 2014 at 02:39:15PM +0200, Javier Martinez Canillas wrote:
-> 
->> Just to be sure I understood correctly, are you suggesting something like this?
-> 
->> 	ldo1_reg: LDO1 {
->> 		regulator-name = "vdd_1v0";
->> 		regulator-min-microvolt = <1000000>;
->> 		regulator-max-microvolt = <1000000>;
->> 		regulator-state-mem {
->> 			regulator-on-in-suspend;
->> 			regulator-mode = <MAX77802_OPMODE_LP>;
->> 		};
->> 	};
-> 
->> In other words, extending Chanwoo Choi's original suspend state binding to add
->> the regulator-mode property that was present in his v3 [0] but instead trying
->> to use the standard REGULATOR_MODE_*, say that each regulator driver should
->> define it's own device-specific set of modes and a do the translation to fill
->> standard modes in the struct regulation_constraints {initial,disk,mem} mode?
-> 
->> That way adding new suspend states, will only require changing the generic
->> regulator binding but not the regulator driver specific bindings.
-> 
-> Something like that, yes.  Not sure if numbers or strings are the best
+--8KmZJhJMEENkOiL3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Perfect will re-spin then, many thanks again for your feedback and suggestions.
+On Fri, Oct 17, 2014 at 07:43:09PM +0900, Gyungoh Yoo wrote:
 
-> way of doing the mode but it probably doesn't matter too much now we
-> have preprocessor support for inclue files.
-> 
+> Are you talking about simplification using of_regulator_match()?
+> This driver has only one regulator.
+> Is the API also useful for this driver?
 
-I usually prefer to avoid strings when possible since a typo can't be
-detected when building the DTB and could be hard to debug at runtime while
-a typo on a macro will be detected by the preprocessor at build time.
+The thing I'm seeing is that the binding for your device with the
+subnode looks very much like the device trees of devices with multiple
+regulators.  The fact that you only have one regulator is a bit
+difference but not that much.  It seems like drivers should fit into one
+of two patterns: either the regulator is described in the root node for
+the device for single purpose devices or there should be a collection of
+regulators like is supported with this helper API.  Having a collection
+with only one node doesn't seem to be a problem in any way.
 
-But I don't have a strong opinion either.
+> Like reg-fixed-voltage, how about using of_get_fixed_voltage_config()?
 
-Best regards,
-Javier
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The driver doesn't seem to need any property parsing of its own so it
+shoudn't need anything beyond basic calls into the core.
+
+--8KmZJhJMEENkOiL3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUQSb9AAoJECTWi3JdVIfQxj4H/i7w/lgspWRke5mDs2egxwpB
+FSwKzUZSTLw9B/WAdWfEnQG4daYaSmbFI79EZX8Lv8/WlGu1glq1kf6TkI6Stugi
+cIV4wjA+Kv6wcOArzxMAbE+dT6FAwPFMWFyjrVSXZ9BUq27hXYDjdrjx6/Pn9KoD
+qTHb6BuhDZap3RX/AzVZ8OaI2zTk9m4tBLL7k3Cl7DWFXRHh9HU7JLzTZV6aFtx1
+ud2j5yCwiva+/cwMJ/I3evHYjhQKsZQ5p5arxrUWq/zKXqVp8th0HjAtx/L3VB2z
+39cI0oIiwJ9CNKzuzMFnNMuKczkbYZr7vKRyjOK0HOlP9b4Rj+8b/VVejG8gnkU=
+=OfiQ
+-----END PGP SIGNATURE-----
+
+--8KmZJhJMEENkOiL3--
