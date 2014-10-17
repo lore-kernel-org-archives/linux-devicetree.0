@@ -1,77 +1,101 @@
-From: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] i2c-qoriq: modified compatibility for correct prescaler
-Date: Fri, 17 Oct 2014 11:27:06 +0200
-Message-ID: <1413538026-15739-1-git-send-email-valentin.longchamp@keymile.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linux PowerPC Kernel <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Holger Brunck <holger.brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Rainer Boschung <rainer.boschung-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/2] Documentation: devicetree: Add bindings for Wi2Wi
+ w2sg0004 gps
+Date: Fri, 17 Oct 2014 10:37:14 +0100
+Message-ID: <20141017093714.GB4202@leverpostej>
+References: <1413491183-15018-1-git-send-email-marek@goldelico.com>
+ <1413491183-15018-2-git-send-email-marek@goldelico.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1413491183-15018-2-git-send-email-marek@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Belisko <marek@goldelico.com>
+Cc: "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-With "fsl-i2c" compatibility the i2c frequency is not set
-correctly, because it sets no prescaler. According to the AN2919 from
-Freescale and the QorIQ (P2041) documentation, the source clock is 1/2
-the platform clock. This implies that a prescaler of 2 must be used.
+On Thu, Oct 16, 2014 at 09:26:23PM +0100, Marek Belisko wrote:
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Marek Belisko <marek@goldelico.com>
+> ---
+>  .../devicetree/bindings/misc/wi2wi,w2sg0004.txt    | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt b/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
+> new file mode 100644
+> index 0000000..e144441
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
+> @@ -0,0 +1,44 @@
+> +Wi2Wi GPS module connected through UART
+> +
+> +Required properties:
+> +- compatible: wi2wi,w2sg0004 or wi2wi,w2sg0084
+> +- pinctrl: specify two states (default and monitor). One is the default (UART) mode
+> +  and the other is for monitoring the RX line by an interrupt
+> +- on-off-gpio: the GPIO that controls the module's on-off toggle input
+> +
+> +Optional properties:
+> +- lna-suppy: an (optional) LNA regulator that is enabled together with the GPS receiver
+> +
+> +example:
+> +
+> +        gps_receiver: w2sg0004 {
+> +                compatible = "wi2wi,w2sg0004";
 
-This changes the compatibility of the qoriq-i2c .dtsi files to pick the
-mpc8543, which uses the same driver but sets the correct prescaler.
+I couldn't spot "wi2wi" in
+Documentation/devicetree/bindings/vendor-prefixes.txt (in mainline).
 
-Signed-off-by: Rainer Boschung <rainer.boschung-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
----
+Could you please add it?
 
- arch/powerpc/boot/dts/fsl/qoriq-i2c-0.dtsi | 4 ++--
- arch/powerpc/boot/dts/fsl/qoriq-i2c-1.dtsi | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
 
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-i2c-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-i2c-0.dtsi
-index 5f9bf7d..aa6c366 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-i2c-0.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-i2c-0.dtsi
-@@ -36,7 +36,7 @@ i2c@118000 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 	cell-index = <0>;
--	compatible = "fsl-i2c";
-+	compatible = "fsl,mpc8543-i2c", "fsl-i2c";
- 	reg = <0x118000 0x100>;
- 	interrupts = <38 2 0 0>;
- 	dfsrr;
-@@ -46,7 +46,7 @@ i2c@118100 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 	cell-index = <1>;
--	compatible = "fsl-i2c";
-+	compatible = "fsl,mpc8543-i2c", "fsl-i2c";
- 	reg = <0x118100 0x100>;
- 	interrupts = <38 2 0 0>;
- 	dfsrr;
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-i2c-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-i2c-1.dtsi
-index 7989bf5..b697a3b 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-i2c-1.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-i2c-1.dtsi
-@@ -36,7 +36,7 @@ i2c@119000 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 	cell-index = <2>;
--	compatible = "fsl-i2c";
-+	compatible = "fsl,mpc8543-i2c", "fsl-i2c";
- 	reg = <0x119000 0x100>;
- 	interrupts = <39 2 0 0>;
- 	dfsrr;
-@@ -46,7 +46,7 @@ i2c@119100 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 	cell-index = <3>;
--	compatible = "fsl-i2c";
-+	compatible = "fsl,mpc8543-i2c", "fsl-i2c";
- 	reg = <0x119100 0x100>;
- 	interrupts = <39 2 0 0>;
- 	dfsrr;
--- 
-1.8.0.1
+As far as I can see, these properties aren't necessary. This only
+consumes a GPIO, it doesn't provide any.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +                pinctrl-names = "default", "monitor";
+> +                pinctrl-0 = <&uart2_pins>;
+> +                pinctrl-1 = <&uart2_rx_irq_pins>;
+> +
+> +                interrupt-parent = <&gpio5>;
+> +                interrupts = <19 IRQ_TYPE_EDGE_FALLING>;  /* GPIO_147: RX - trigger on arrival of start bit */
+
+While interrupts is a standard property, please describe above how many
+you expect and what their logical function is.
+
+The only part I'm confused about is how the link to the UART is
+described. I assume I'm just ignorant of some existing pattern.
+
+Otherwise this looks ok.
+
+Thanks,
+Mark.
+
+> +                lna-supply = <&vsim>;	/* LNA regulator */
+> +                on-off-gpio = <&gpio5 17 0>;	/* GPIO_145: trigger for turning on/off w2sg0004 */
+> +
+> +&pinmux {
+> +
+> +	uart2_pins: pinmux_uart2_pins {
+> +		pinctrl-single,pins = <
+> +			0x14a (PIN_INPUT | MUX_MODE0)		/* uart2_tx.uart2_rx */
+> +			0x148 (PIN_OUTPUT | MUX_MODE0)		/* uart2_tx.uart2_tx */
+> +		>;
+> +	};
+> +
+> +	uart2_rx_irq_pins: pinmux_uart2_rx_irq_pins {
+> +		pinctrl-single,pins = <
+> +			/* switch RX to GPIO so that we can get interrupts by the start bit */
+> +			0x14a (PIN_INPUT | MUX_MODE4)		/* uart2_tx.uart2_rx */
+> +		>;
+> +	};
+> +
+> +}
+> -- 
+> 1.9.1
+> 
+> 
