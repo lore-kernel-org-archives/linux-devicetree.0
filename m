@@ -1,70 +1,46 @@
-From: Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
-Subject: Re: [v3] spi: orion: support armada extended baud rates
-Date: Fri, 17 Oct 2014 14:53:53 +1000
-Message-ID: <5440A0E1.5080700@uclinux.org>
-References: <20141011144857.GA17350@gobelin> <543C8460.1060508@uclinux.org> <20141015131054.GA3243@gobelin>
+From: PERIER Romain <romain.perier@gmail.com>
+Subject: Re: [RFC v3 PATCH 1/5] of: Add standard property for poweroff capability
+Date: Fri, 17 Oct 2014 08:01:31 +0200
+Message-ID: <CABgxDoKen1Ub1ptG85-oMhUcRkX7tsZ6o51OJcOX2jZkZi0JGg@mail.gmail.com>
+References: <1413268273-15151-1-git-send-email-romain.perier@gmail.com>
+	<20141015124142.92D0EC40B00@trevor.secretlab.ca>
+	<20141015134245.GH27755@sirena.org.uk>
+	<40398493.mf2VbOGMuV@phil>
+	<20141015140337.GI27755@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141015131054.GA3243@gobelin>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karl Beldan <karl.beldan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141015140337.GI27755@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Grant Likely <grant.likely@linaro.org>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, robh <robh@kernel.org>, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Karl,
+Hi all,
 
-On 15/10/14 23:10, Karl Beldan wrote:
-> On Tue, Oct 14, 2014 at 12:03:12PM +1000, Greg Ungerer wrote:
->> Hi Karl,
->>
->> On 12/10/14 00:52, Karl Beldan wrote:
->>> On 28/09/14 23:24:04, Greg Ungerer wrote:
->>>> @@ -378,6 +452,10 @@ static int orion_spi_probe(struct platform_device *pdev)
->>>>  	spi = spi_master_get_devdata(master);
->>>>  	spi->master = master;
->>>>  
->>>> +	of_id = of_match_device(orion_spi_of_match_table, &pdev->dev);
->>>> +	devdata = of_id->data;
->>>> +	spi->devdata = devdata;
->>>> +
->>> Won't of_match_device return NULL on non-DT systems, and further
->>> references oops ?
->>
->> Yes, sure enough.
->>
->> So I propose to fix with this change.
->>
->> diff --git a/drivers/spi/spi-orion.c b/drivers/spi/spi-orion.c
->> index acf8e48..c069ccd 100644
->> --- a/drivers/spi/spi-orion.c
->> +++ b/drivers/spi/spi-orion.c
->> @@ -453,7 +453,7 @@ static int orion_spi_probe(struct platform_device *pdev)
->>         spi->master = master;
->>  
->>         of_id = of_match_device(orion_spi_of_match_table, &pdev->dev);
->> -       devdata = of_id->data;
->> +       devdata = (of_id) ? of_id->data : &orion_spi_dev_data;
->>         spi->devdata = devdata;
->>  
-> I am not aware of the policy in the DT subsystem, I see some drivers
-> bailing out when not getting any match, some remove non-DT support and
-> add a dependency on OF, yet a message would feel appropriate.
-> Other than that ok, it should fix df59fa7f4bca.
+I am just curious but where do you plan to merge this serie ? in
+git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git ?
 
-Before the recent changes this driver didn't call of_match_device().
-With the above fix in place if it does return NULL then it will behave
-the same as it used to - using the default orion parameters. I think
-that is the ideal behavior.
-
-Regards
-Greg
+You have conflicts because I use linux-next as base repository.
 
 
+Thanks for your feebacks (all of you).
+Romain
 
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2014-10-15 16:03 GMT+02:00 Mark Brown <broonie@kernel.org>:
+> On Wed, Oct 15, 2014 at 03:56:03PM +0200, Heiko St=C3=BCbner wrote:
+>> Am Mittwoch, 15. Oktober 2014, 15:42:45 schrieb Mark Brown:
+>
+>> > I guess I should apply these (except the DTS update) since the fir=
+st
+>> > user that's being added is a regulator driver?
+>
+>> I'd think so.
+>> In any case, I'll take the "ARM: dts: ..." patch if you take the oth=
+ers.
+>
+> Sounds like a plan.  I just tried applying and got some conflicts but
+> I'm guessing that this is due to changes that are landing in the merg=
+e
+> window so I'll try again once -rc1 is out.
