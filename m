@@ -1,105 +1,69 @@
-From: <tthayer@opensource.altera.com>
-Subject: [PATCHv2 4/4] arm: dts: Add Altera L2 Cache and OCRAM EDAC
-Date: Fri, 17 Oct 2014 15:33:48 -0500
-Message-ID: <1413578029-13205-5-git-send-email-tthayer@opensource.altera.com>
-References: <1413578029-13205-1-git-send-email-tthayer@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1413578029-13205-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@altera.com
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, tthayer@altera.com
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v7 1/3] usb: gadget: pxa27x_udc device-tree documentation
+Date: Fri, 17 Oct 2014 22:43:04 +0200
+Message-ID: <1413578586-16084-2-git-send-email-robert.jarzmik@free.fr>
+References: <1413578586-16084-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413578586-16084-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer@opensource.altera.com>
+Add documentation for device-tree binding of arm PXA 27x udc (usb
+device) driver.
 
-Adding the device tree entries and bindings needed to support
-the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
-an earlier patch to declare and setup On-chip RAM properly.
-http://www.spinics.net/lists/devicetree/msg51117.html
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
-v2: Remove OCRAM declaration and reference prior patch.
+Since V1: change OF id mrvl,pxa27x_udc -> marvell,pxa27x-udc
+          This is a consequence of other DT reviews on the marvell
+          namings.
+Since V2: Mark's review
+          - described standard properties
+          - use standard gpio bindings for pullup gpio
+Since V3: Arnd's review
+          - removed clock-names
 ---
- .../bindings/arm/altera/socfpga-l2-edac.txt        |   15 +++++++++++++++
- .../bindings/arm/altera/socfpga-ocram-edac.txt     |   16 ++++++++++++++++
- arch/arm/boot/dts/socfpga.dtsi                     |   15 ++++++++++++++-
- 3 files changed, 45 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
- create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
+ Documentation/devicetree/bindings/usb/pxa-usb.txt | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
-new file mode 100644
-index 0000000..35b19e3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
-@@ -0,0 +1,15 @@
-+Altera SoCFPGA L2 cache Error Detection and Correction [EDAC]
-+
-+Required Properties:
-+- compatible : Should be "altr,l2-edac"
-+- reg : Address and size for ECC error interrupt clear registers.
-+- interrupts : Should be single bit error interrupt, then double bit error
-+	interrupt. Note the rising edge type.
-+
-+Example:
-+
-+	l2edac@ffd08140 {
-+		compatible = "altr,l2-edac";
-+		reg = <0xffd08140 0x4>;
-+		interrupts = <0 36 1>, <0 37 1>;
-+	};
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
-new file mode 100644
-index 0000000..31ab205
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
-@@ -0,0 +1,16 @@
-+Altera SoCFPGA On-Chip RAM Error Detection and Correction [EDAC]
-+
-+OCRAM ECC Required Properties:
-+- compatible : Should be "altr,ocram-edac"
-+- reg : Address and size for ECC error interrupt clear registers.
-+- iram : phandle to On-Chip RAM definition.
-+- interrupts : Should be single bit error interrupt, then double bit error
-+	interrupt. Note the rising edge type.
-+
-+Example:
-+	ocramedac@ffd08144 {
-+		compatible = "altr,ocram-edac";
-+		reg = <0xffd08144 0x4>;
-+		iram = <&ocram>;
-+		interrupts = <0 178 1>, <0 179 1>;
-+	};
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 6af96ed..32c63a3 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -618,8 +618,21 @@
- 			interrupts = <0 39 4>;
- 		};
+diff --git a/Documentation/devicetree/bindings/usb/pxa-usb.txt b/Documentation/devicetree/bindings/usb/pxa-usb.txt
+index 79729a9..9c33179 100644
+--- a/Documentation/devicetree/bindings/usb/pxa-usb.txt
++++ b/Documentation/devicetree/bindings/usb/pxa-usb.txt
+@@ -29,3 +29,25 @@ Example:
+ 		marvell,port-mode = <2>; /* PMM_GLOBAL_MODE */
+ 	};
  
-+		l2edac@ffd08140 {
-+			compatible = "altr,l2-edac";
-+			reg = <0xffd08140 0x4>;
-+			interrupts = <0 36 1>, <0 37 1>;
-+		};
++UDC
 +
-+		ocramedac@ffd08144 {
-+			compatible = "altr,ocram-edac";
-+			reg = <0xffd08144 0x4>;
-+			iram = <&ocram>;
-+			interrupts = <0 178 1>, <0 179 1>;
-+		};
++Required properties:
++ - compatible: Should be "marvell,pxa270-udc" for USB controllers
++   used in device mode.
++ - reg: usb device MMIO address space
++ - interrupts: single interrupt generated by the UDC IP
++ - clocks: input clock of the UDC IP (see clock-bindings.txt)
 +
- 		L2: l2-cache@fffef000 {
--			compatible = "arm,pl310-cache";
-+			compatible = "arm,pl310-cache", "syscon";
- 			reg = <0xfffef000 0x1000>;
- 			interrupts = <0 38 0x04>;
- 			cache-unified;
++Optional properties:
++ - gpios:
++   - gpio activated to control the USB D+ pullup (see gpio.txt)
++
++Example:
++
++		pxa27x_udc: udc@40600000 {
++			compatible = "marvell,pxa270-udc";
++			reg = <0x40600000 0x10000>;
++			interrupts = <11>;
++			clocks = <&pxa2xx_clks 11>;
++			gpios = <&gpio 22 GPIO_ACTIVE_LOW>;
++		};
 -- 
-1.7.9.5
+2.1.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
