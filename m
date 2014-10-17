@@ -1,149 +1,90 @@
-From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH v2 1/5] Documentation: DT: Renamed of-serial.txt to 8250.txt
-Date: Fri, 17 Oct 2014 17:54:21 +0800
-Message-ID: <1413539665-11484-2-git-send-email-chunyan.zhang@spreadtrum.com>
-References: <sprd-1017-v2>
- <1413539665-11484-1-git-send-email-chunyan.zhang@spreadtrum.com>
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv5 6/6] ARM: imx: Add Freescale LS1021A SMP support
+Date: Fri, 17 Oct 2014 10:10:38 +0000
+Message-ID: <1e98bf0f1f2347ed8f02138816061cdc@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1413192963-11153-1-git-send-email-jingchang.lu@freescale.com>
+ <1413192963-11153-7-git-send-email-jingchang.lu@freescale.com>
+ <993EF472-33A7-48BD-A4CD-15B361D53365@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1413539665-11484-1-git-send-email-chunyan.zhang@spreadtrum.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, galak@codeaurora.org, broonie@linaro.org, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, artagnon@gmail.com, rrichter@cavium.com, robh+dt@kernel.org, will.deacon@arm.com, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sprdlinux@freelists.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <993EF472-33A7-48BD-A4CD-15B361D53365-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The file of-serial.txt was only for 8250 compatible UART implementations,
-so renamed it to 8250.txt to avoid confusing other persons.
-
-Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
----
- Documentation/devicetree/bindings/serial/8250.txt  |   50 ++++++++++++++++++++
- .../devicetree/bindings/serial/of-serial.txt       |   50 --------------------
- 2 files changed, 50 insertions(+), 50 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/serial/8250.txt
- delete mode 100644 Documentation/devicetree/bindings/serial/of-serial.txt
-
-diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
-new file mode 100644
-index 0000000..7705477
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/8250.txt
-@@ -0,0 +1,50 @@
-+* UART (Universal Asynchronous Receiver/Transmitter)
-+
-+Required properties:
-+- compatible : one of:
-+	- "ns8250"
-+	- "ns16450"
-+	- "ns16550a"
-+	- "ns16550"
-+	- "ns16750"
-+	- "ns16850"
-+	- "nvidia,tegra20-uart"
-+	- "nxp,lpc3220-uart"
-+	- "ibm,qpace-nwp-serial"
-+	- "altr,16550-FIFO32"
-+	- "altr,16550-FIFO64"
-+	- "altr,16550-FIFO128"
-+	- "serial" if the port type is unknown.
-+- reg : offset and length of the register set for the device.
-+- interrupts : should contain uart interrupt.
-+- clock-frequency : the input clock frequency for the UART
-+	 or
-+  clocks phandle to refer to the clk used as per Documentation/devicetree
-+  /bindings/clock/clock-bindings.txt
-+
-+Optional properties:
-+- current-speed : the current active speed of the UART.
-+- reg-offset : offset to apply to the mapbase from the start of the registers.
-+- reg-shift : quantity to shift the register offsets by.
-+- reg-io-width : the size (in bytes) of the IO accesses that should be
-+  performed on the device.  There are some systems that require 32-bit
-+  accesses to the UART (e.g. TI davinci).
-+- used-by-rtas : set to indicate that the port is in use by the OpenFirmware
-+  RTAS and should not be registered.
-+- no-loopback-test: set to indicate that the port does not implements loopback
-+  test mode
-+- fifo-size: the fifo size of the UART.
-+- auto-flow-control: one way to enable automatic flow control support. The
-+  driver is allowed to detect support for the capability even without this
-+  property.
-+- has-hw-flow-control: the hardware has flow control capability.
-+
-+Example:
-+
-+	uart@80230000 {
-+		compatible = "ns8250";
-+		reg = <0x80230000 0x100>;
-+		clock-frequency = <3686400>;
-+		interrupts = <10>;
-+		reg-shift = <2>;
-+	};
-diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/of-serial.txt
-deleted file mode 100644
-index 7705477..0000000
---- a/Documentation/devicetree/bindings/serial/of-serial.txt
-+++ /dev/null
-@@ -1,50 +0,0 @@
--* UART (Universal Asynchronous Receiver/Transmitter)
--
--Required properties:
--- compatible : one of:
--	- "ns8250"
--	- "ns16450"
--	- "ns16550a"
--	- "ns16550"
--	- "ns16750"
--	- "ns16850"
--	- "nvidia,tegra20-uart"
--	- "nxp,lpc3220-uart"
--	- "ibm,qpace-nwp-serial"
--	- "altr,16550-FIFO32"
--	- "altr,16550-FIFO64"
--	- "altr,16550-FIFO128"
--	- "serial" if the port type is unknown.
--- reg : offset and length of the register set for the device.
--- interrupts : should contain uart interrupt.
--- clock-frequency : the input clock frequency for the UART
--	 or
--  clocks phandle to refer to the clk used as per Documentation/devicetree
--  /bindings/clock/clock-bindings.txt
--
--Optional properties:
--- current-speed : the current active speed of the UART.
--- reg-offset : offset to apply to the mapbase from the start of the registers.
--- reg-shift : quantity to shift the register offsets by.
--- reg-io-width : the size (in bytes) of the IO accesses that should be
--  performed on the device.  There are some systems that require 32-bit
--  accesses to the UART (e.g. TI davinci).
--- used-by-rtas : set to indicate that the port is in use by the OpenFirmware
--  RTAS and should not be registered.
--- no-loopback-test: set to indicate that the port does not implements loopback
--  test mode
--- fifo-size: the fifo size of the UART.
--- auto-flow-control: one way to enable automatic flow control support. The
--  driver is allowed to detect support for the capability even without this
--  property.
--- has-hw-flow-control: the hardware has flow control capability.
--
--Example:
--
--	uart@80230000 {
--		compatible = "ns8250";
--		reg = <0x80230000 0x100>;
--		clock-frequency = <3686400>;
--		interrupts = <10>;
--		reg-shift = <2>;
--	};
--- 
-1.7.9.5
+DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEt1bWFyIEdhbGEgW21haWx0
+bzpnYWxha0Bjb2RlYXVyb3JhLm9yZ10NCj5TZW50OiBUaHVyc2RheSwgT2N0b2JlciAxNiwgMjAx
+NCAxMDozMSBQTQ0KPlRvOiBMdSBKaW5nY2hhbmctQjM1MDgzDQo+Q2M6IHNoYXduLmd1b0BsaW5h
+cm8ub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
+DQo+THUgSmluZ2NoYW5nLUIzNTA4MzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnOyBhcm5kQGFybmRiLmRlDQo+U3ViamVjdDogUmU6IFtQQVRDSHY1IDYvNl0gQVJNOiBpbXg6
+IEFkZCBGcmVlc2NhbGUgTFMxMDIxQSBTTVAgc3VwcG9ydA0KPg0KPg0KPk9uIE9jdCAxMywgMjAx
+NCwgYXQgMTE6MzYgQU0sIEppbmdjaGFuZyBMdSA8amluZ2NoYW5nLmx1QGZyZWVzY2FsZS5jb20+
+DQo+d3JvdGU6DQo+DQo+PiBGcm9tOiBKaW5nY2hhbmcgTHUgPGIzNTA4M0BmcmVlc2NhbGUuY29t
+Pg0KPj4NCj4+IEZyZWVzY2FsZSBMUzEwMjFBIFNvQ3MgZGVwbG95IHR3byBjb3J0ZXgtQTcgcHJv
+Y2Vzc29ycywgdGhpcyBhZGRzDQo+PiBicmluZy11cCBzdXBwb3J0IGZvciB0aGUgc2Vjb25kYXJ5
+IGNvcmUuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogSmluZ2NoYW5nIEx1IDxiMzUwODNAZnJlZXNj
+YWxlLmNvbT4NCj4+IC0tLQ0KPj4gYXJjaC9hcm0vbWFjaC1pbXgvTWFrZWZpbGUgICAgICAgfCAg
+MiArLQ0KPj4gYXJjaC9hcm0vbWFjaC1pbXgvY29tbW9uLmggICAgICAgfCAgMSArDQo+PiBhcmNo
+L2FybS9tYWNoLWlteC9tYWNoLWxzMTAyMWEuYyB8ICAxICsNCj4+IGFyY2gvYXJtL21hY2gtaW14
+L3BsYXRzbXAuYyAgICAgIHwgMzIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4+
+IDQgZmlsZXMgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPj4NCj4+
+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNoLWlteC9NYWtlZmlsZSBiL2FyY2gvYXJtL21hY2gt
+aW14L01ha2VmaWxlDQo+PiBpbmRleCBjZTEzN2JjLi4zOGQ3NWUyIDEwMDY0NA0KPj4gLS0tIGEv
+YXJjaC9hcm0vbWFjaC1pbXgvTWFrZWZpbGUNCj4+ICsrKyBiL2FyY2gvYXJtL21hY2gtaW14L01h
+a2VmaWxlDQo+PiBAQCAtODksNyArODksNyBAQCBvYmotJChDT05GSUdfSEFWRV9JTVhfQU5BVE9Q
+KSArPSBhbmF0b3Aubw0KPj4gb2JqLSQoQ09ORklHX0hBVkVfSU1YX0dQQykgKz0gZ3BjLm8NCj4+
+IG9iai0kKENPTkZJR19IQVZFX0lNWF9NTURDKSArPSBtbWRjLm8NCj4+IG9iai0kKENPTkZJR19I
+QVZFX0lNWF9TUkMpICs9IHNyYy5vDQo+PiAtaWZkZWYgQ09ORklHX1NPQ19JTVg2DQo+PiAraWZu
+ZXEgKCQoQ09ORklHX1NPQ19JTVg2KSQoQ09ORklHX1NPQ19MUzEwMjFBKSwpDQo+PiBBRkxBR1Nf
+aGVhZHNtcC5vIDo9LVdhLC1tYXJjaD1hcm12Ny1hDQo+PiBvYmotJChDT05GSUdfU01QKSArPSBo
+ZWFkc21wLm8gcGxhdHNtcC5vDQo+PiBvYmotJChDT05GSUdfSE9UUExVR19DUFUpICs9IGhvdHBs
+dWcubyBkaWZmIC0tZ2l0DQo+PiBhL2FyY2gvYXJtL21hY2gtaW14L2NvbW1vbi5oIGIvYXJjaC9h
+cm0vbWFjaC1pbXgvY29tbW9uLmggaW5kZXgNCj4+IDFkYWJmNDMuLmM0NzNjYTUgMTAwNjQ0DQo+
+PiAtLS0gYS9hcmNoL2FybS9tYWNoLWlteC9jb21tb24uaA0KPj4gKysrIGIvYXJjaC9hcm0vbWFj
+aC1pbXgvY29tbW9uLmgNCj4+IEBAIC0xNTcsNSArMTU3LDYgQEAgc3RhdGljIGlubGluZSB2b2lk
+IGlteF9pbml0X2wyY2FjaGUodm9pZCkge30NCj4+ICNlbmRpZg0KPj4NCj4+IGV4dGVybiBzdHJ1
+Y3Qgc21wX29wZXJhdGlvbnMgaW14X3NtcF9vcHM7DQo+PiArZXh0ZXJuIHN0cnVjdCBzbXBfb3Bl
+cmF0aW9ucyBsczEwMjFhX3NtcF9vcHM7DQo+Pg0KPj4gI2VuZGlmDQo+PiBkaWZmIC0tZ2l0IGEv
+YXJjaC9hcm0vbWFjaC1pbXgvbWFjaC1sczEwMjFhLmMNCj4+IGIvYXJjaC9hcm0vbWFjaC1pbXgv
+bWFjaC1sczEwMjFhLmMNCj4+IGluZGV4IDlkMjAzNGIuLmI4OWM4NTggMTAwNjQ0DQo+PiAtLS0g
+YS9hcmNoL2FybS9tYWNoLWlteC9tYWNoLWxzMTAyMWEuYw0KPj4gKysrIGIvYXJjaC9hcm0vbWFj
+aC1pbXgvbWFjaC1sczEwMjFhLmMNCj4+IEBAIC0xNyw1ICsxNyw2IEBAIHN0YXRpYyBjb25zdCBj
+aGFyICogY29uc3QgbHMxMDIxYV9kdF9jb21wYXRbXQ0KPj4gX19pbml0Y29uc3QgPSB7IH07DQo+
+Pg0KPj4gRFRfTUFDSElORV9TVEFSVChMUzEwMjFBLCAiRnJlZXNjYWxlIExTMTAyMUEiKQ0KPj4g
+Kwkuc21wCQk9IHNtcF9vcHMobHMxMDIxYV9zbXBfb3BzKSwNCj4+IAkuZHRfY29tcGF0CT0gbHMx
+MDIxYV9kdF9jb21wYXQsDQo+PiBNQUNISU5FX0VORA0KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
+L21hY2gtaW14L3BsYXRzbXAuYyBiL2FyY2gvYXJtL21hY2gtaW14L3BsYXRzbXAuYw0KPj4gaW5k
+ZXggNzcxYmQyNS4uNjliODdjYSAxMDA2NDQNCj4+IC0tLSBhL2FyY2gvYXJtL21hY2gtaW14L3Bs
+YXRzbXAuYw0KPj4gKysrIGIvYXJjaC9hcm0vbWFjaC1pbXgvcGxhdHNtcC5jDQo+PiBAQCAtMTYs
+NiArMTYsOCBAQA0KPj4gI2luY2x1ZGUgPGFzbS9wYWdlLmg+DQo+PiAjaW5jbHVkZSA8YXNtL3Nt
+cF9zY3UuaD4NCj4+ICNpbmNsdWRlIDxhc20vbWFjaC9tYXAuaD4NCj4+ICsjaW5jbHVkZSA8bGlu
+dXgvb2ZfYWRkcmVzcy5oPg0KPj4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPj4NCj4+ICNpbmNs
+dWRlICJjb21tb24uaCINCj4+ICNpbmNsdWRlICJoYXJkd2FyZS5oIg0KPj4gQEAgLTk0LDMgKzk2
+LDMzIEBAIHN0cnVjdCBzbXBfb3BlcmF0aW9ucyAgaW14X3NtcF9vcHMgX19pbml0ZGF0YSA9IHsN
+Cj4+IAkuY3B1X2tpbGwJCT0gaW14X2NwdV9raWxsLA0KPj4gI2VuZGlmDQo+PiB9Ow0KPj4gKw0K
+Pj4gKyNkZWZpbmUgRENGR19DQ1NSX1NDUkFUQ0hSVzEJMHgyMDANCj4+ICsNCj4+ICtzdGF0aWMg
+aW50IGxzMTAyMWFfYm9vdF9zZWNvbmRhcnkodW5zaWduZWQgaW50IGNwdSwgc3RydWN0DQo+PiAr
+dGFza19zdHJ1Y3QgKmlkbGUpIHsNCj4+ICsJYXJjaF9zZW5kX3dha2V1cF9pcGlfbWFzayhjcHVt
+YXNrX29mKGNwdSkpOw0KPj4gKw0KPj4gKwlyZXR1cm4gMDsNCj4+ICt9DQo+PiArDQo+PiArc3Rh
+dGljIHZvaWQgX19pbml0IGxzMTAyMWFfc21wX3ByZXBhcmVfY3B1cyh1bnNpZ25lZCBpbnQgbWF4
+X2NwdXMpIHsNCj4+ICsJc3RydWN0IGRldmljZV9ub2RlICpucDsNCj4+ICsJdm9pZCBfX2lvbWVt
+ICpkY2ZnX2Jhc2U7DQo+PiArCXVuc2lnbmVkIGxvbmcgcGFkZHI7DQo+PiArDQo+PiArCW5wID0g
+b2ZfZmluZF9jb21wYXRpYmxlX25vZGUoTlVMTCwgTlVMTCwgImZzbCxsczEwMjFhLWRjZmciKTsN
+Cj4+ICsJZGNmZ19iYXNlID0gb2ZfaW9tYXAobnAsIDApOw0KPj4gKwlCVUdfT04oIWRjZmdfYmFz
+ZSk7DQo+PiArDQo+PiArCXBhZGRyID0gdmlydF90b19waHlzKHNlY29uZGFyeV9zdGFydHVwKTsN
+Cj4+ICsJd3JpdGVsX3JlbGF4ZWQoY3B1X3RvX2JlMzIocGFkZHIpLCBkY2ZnX2Jhc2UgKw0KPj4g
+K0RDRkdfQ0NTUl9TQ1JBVENIUlcxKTsNCj4+ICsNCj4NCj5UaGlzIHNlZW1zIG9kZCwgd2h5IGFy
+ZSB3ZSB3cml0aW5nIHRoZSBzdGFydHVwIGFkZHJlc3MgdG8NCj5EQ0ZHX0NDU1JfU0NSQVRDSFJX
+MT8NCkl0IGlzIHRoZSBzZWNvbmRhcnkgY3B1J3MgZXhlY3V0aW5nIGFkZHJlc3MgZm9yIHNtcCBr
+ZXJuZWwgaW1hZ2UsIA0KdGhlIHNlY29uZGFyeSBjcHUgd2lsbCBqdW1wIHRvIHRoaXMgYWRkcmVz
+cyBhZnRlciB3YWtldXAgZHVyaW5nDQp0aGUgc21wIGluaXRpYWxpemF0aW9uLiBUaGFua3MuDQoN
+CkJlc3QgUmVnYXJkcywNCkppbmdjaGFuZw0KDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
