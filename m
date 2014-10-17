@@ -1,54 +1,60 @@
-From: Robin Gong <b38343@freescale.com>
-Subject: Re: [PATCH v4 0/3] add power off driver for i.mx6
-Date: Fri, 17 Oct 2014 16:12:02 +0800
-Message-ID: <20141017081200.GB6691@Robin-OptiPlex-780>
-References: <1411703947-31956-1-git-send-email-b38343@freescale.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] dma: at_xdmac: creation of the atmel eXtended
+ DMA Controller driver
+Date: Fri, 17 Oct 2014 13:02:26 +0530
+Message-ID: <20141017073226.GM1638@intel.com>
+References: <1412175565-810-1-git-send-email-ludovic.desroches@atmel.com>
+ <1412175565-810-2-git-send-email-ludovic.desroches@atmel.com>
+ <20141015133004.GP1638@intel.com>
+ <20141016141048.GC2367@ldesroches-Latitude-E6320>
+ <20141016161233.GJ1638@intel.com>
+ <20141017065357.GE2367@ldesroches-Latitude-E6320>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1411703947-31956-1-git-send-email-b38343@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.com, kernel@pengutronix.de, LW@KARO-electronics.de, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, grant.likely@linaro.org, linux@arm.linux.org.uk
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+In-Reply-To: <20141017065357.GE2367@ldesroches-Latitude-E6320>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Ping!
-On Fri, Sep 26, 2014 at 11:59:04AM +0800, Robin Gong wrote:
-> Add simple power off driver for i.mx6, including:
-> - add basic imx-snvs-poweroff driver in drivers/power/reset
-> - add device node in all dts files of i.mx6.
-> - enable in config file
+On Fri, Oct 17, 2014 at 08:53:57AM +0200, Ludovic Desroches wrote:
+
+> > 
+> > > > For memcpy why should we need slave_config. The system memory source and
+> > > > destination width could be assumed to relastic values and then burst sizes
+> > > > maxed for performance. These values make more sense for periphral where we
+> > > > have to match up with the periphral
+> > > 
+> > > I don't tell I need slave_config. We have already talked about this. I don't
+> > > see the problem. It is only a comment, a reminder. The only information
+> > > I may need, one day, is the direction because we have to set src and dst
+> > > interfaces. At the moment, all our products are done in a way nand flash
+> > > and DDR are on the same interface so we don't have to care about
+> > > direction.
+> > > Since we don't have the direction, two solutions:
+> > > - remember this limitation for next products, that's why there is this reminder,
+> > > - change our nand driver in order to see nand as a peripheral instead of
+> > >   a memory. 
+> > I think treating NAND as memory may not be a right model. It should be
+> > treated as periphral with incrementing and decrementing address value. That
+> > way you should be able to set the right properties for it.
+> > 
+> > The system memory copy is right model for memcpy.
 > 
-> Change from v3:
-> - disable poweroff driver in soc level dts and enable it in board level dts
-> - replace 'EIO' with 'ENODEV' while of_iomap fail.
-> Change from v2:
-> - remove useless included head files
-> - split device binding doc from dts patch
-> - add description for the case that PMIC_ON_REQ not used as external power
->   control
-> 
-> Robin Gong (3):
->   ARM: dts: imx6: add pm_power_off support for i.mx6 chips
->   power: reset: imx-snvs-poweroff: add power off driver for i.mx6
->   ARM: configs: imx_v6_v7_defconfig: add power off driver
-> 
->  arch/arm/boot/dts/imx6qdl.dtsi          |  5 +++
->  arch/arm/boot/dts/imx6sl.dtsi           |  5 +++
->  arch/arm/boot/dts/imx6sx.dtsi           |  5 +++
->  arch/arm/configs/imx_v6_v7_defconfig    |  3 ++
->  drivers/power/reset/Kconfig             |  5 +++
->  drivers/power/reset/Makefile            |  1 +
->  drivers/power/reset/imx-snvs-poweroff.c | 69 +++++++++++++++++++++++++++++++++
->  7 files changed, 93 insertions(+)
->  create mode 100644 drivers/power/reset/imx-snvs-poweroff.c
-> 
-> -- 
-> 1.9.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Ok, I'll discuss of it with the atmel nand maintener. Even if there is
+> something to improve here, I hope it is not considered as a blocking point
+> to get the xdmac driver included into 3.19 because at the moment we have no
+> DMA on the SAMA5D4 recently introduced.
+
+That sounds good to me, no this is non blocker here
+
+And yes keeping the comment here is fine to warn folks.
+
+-- 
+~Vinod
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
