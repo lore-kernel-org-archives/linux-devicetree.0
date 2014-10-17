@@ -1,112 +1,54 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/7] regulator: max77802: Add header for operating
- modes
-Date: Fri, 17 Oct 2014 10:04:38 +0200
-Message-ID: <20141017080438.GE22725@lee--X1>
-References: <1413478133-2577-1-git-send-email-javier.martinez@collabora.co.uk>
- <1413478133-2577-5-git-send-email-javier.martinez@collabora.co.uk>
+From: Robin Gong <b38343@freescale.com>
+Subject: Re: [PATCH v4 0/3] add power off driver for i.mx6
+Date: Fri, 17 Oct 2014 16:12:02 +0800
+Message-ID: <20141017081200.GB6691@Robin-OptiPlex-780>
+References: <1411703947-31956-1-git-send-email-b38343@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1413478133-2577-5-git-send-email-javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1411703947-31956-1-git-send-email-b38343@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.com, kernel@pengutronix.de, LW@KARO-electronics.de, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, grant.likely@linaro.org, linux@arm.linux.org.uk
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 16 Oct 2014, Javier Martinez Canillas wrote:
-
-> Add a header file for the max77802 constants that could be shared bet=
-ween
-> the regulator driver and Device Tree source files. Also, remove stand=
-by
-> and off opmodes since only normal and low power are valid operating m=
-odes.
->=20
-> Signed-off-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8rSCDK34cm6iQ@public.gmane.org=
-=2Euk>
-> ---
->=20
-> Changes since v1: None
->=20
->  drivers/regulator/max77802.c                   |  1 +
->  include/dt-bindings/regulator/maxim,max77802.h | 18 ++++++++++++++++=
-++
->  include/linux/mfd/max77686.h                   |  7 -------
-
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
->  3 files changed, 19 insertions(+), 7 deletions(-)
->  create mode 100644 include/dt-bindings/regulator/maxim,max77802.h
->=20
-> diff --git a/drivers/regulator/max77802.c b/drivers/regulator/max7780=
-2.c
-> index 3abf99d..5839c45 100644
-> --- a/drivers/regulator/max77802.c
-> +++ b/drivers/regulator/max77802.c
-> @@ -33,6 +33,7 @@
->  #include <linux/regulator/of_regulator.h>
->  #include <linux/mfd/max77686.h>
->  #include <linux/mfd/max77686-private.h>
-> +#include <dt-bindings/regulator/maxim,max77802.h>
-> =20
->  /* Default ramp delay in case it is not manually set */
->  #define MAX77802_RAMP_DELAY		100000		/* uV/us */
-> diff --git a/include/dt-bindings/regulator/maxim,max77802.h b/include=
-/dt-bindings/regulator/maxim,max77802.h
-> new file mode 100644
-> index 0000000..cf28631
-> --- /dev/null
-> +++ b/include/dt-bindings/regulator/maxim,max77802.h
-> @@ -0,0 +1,18 @@
-> +/*
-> + * Copyright (C) 2014 Google, Inc
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * Device Tree binding constants for the Maxim 77802 PMIC regulators
-> + */
-> +
-> +#ifndef _DT_BINDINGS_REGULATOR_MAXIM_MAX77802_H
-> +#define _DT_BINDINGS_REGULATOR_MAXIM_MAX77802_H
-> +
-> +/* Regulator operating modes */
-> +#define MAX77802_OPMODE_LP	1
-> +#define MAX77802_OPMODE_NORMAL	3
-> +
-> +#endif /* _DT_BINDINGS_REGULATOR_MAXIM_MAX77802_H */
-> diff --git a/include/linux/mfd/max77686.h b/include/linux/mfd/max7768=
-6.h
-> index 7e6dc4b..553f7d0 100644
-> --- a/include/linux/mfd/max77686.h
-> +++ b/include/linux/mfd/max77686.h
-> @@ -131,13 +131,6 @@ enum max77686_opmode {
->  	MAX77686_OPMODE_STANDBY,
->  };
-> =20
-> -enum max77802_opmode {
-> -	MAX77802_OPMODE_OFF,
-> -	MAX77802_OPMODE_STANDBY,
-> -	MAX77802_OPMODE_LP,
-> -	MAX77802_OPMODE_NORMAL,
-> -};
-> -
->  struct max77686_opmode_data {
->  	int id;
->  	int mode;
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ping!
+On Fri, Sep 26, 2014 at 11:59:04AM +0800, Robin Gong wrote:
+> Add simple power off driver for i.mx6, including:
+> - add basic imx-snvs-poweroff driver in drivers/power/reset
+> - add device node in all dts files of i.mx6.
+> - enable in config file
+> 
+> Change from v3:
+> - disable poweroff driver in soc level dts and enable it in board level dts
+> - replace 'EIO' with 'ENODEV' while of_iomap fail.
+> Change from v2:
+> - remove useless included head files
+> - split device binding doc from dts patch
+> - add description for the case that PMIC_ON_REQ not used as external power
+>   control
+> 
+> Robin Gong (3):
+>   ARM: dts: imx6: add pm_power_off support for i.mx6 chips
+>   power: reset: imx-snvs-poweroff: add power off driver for i.mx6
+>   ARM: configs: imx_v6_v7_defconfig: add power off driver
+> 
+>  arch/arm/boot/dts/imx6qdl.dtsi          |  5 +++
+>  arch/arm/boot/dts/imx6sl.dtsi           |  5 +++
+>  arch/arm/boot/dts/imx6sx.dtsi           |  5 +++
+>  arch/arm/configs/imx_v6_v7_defconfig    |  3 ++
+>  drivers/power/reset/Kconfig             |  5 +++
+>  drivers/power/reset/Makefile            |  1 +
+>  drivers/power/reset/imx-snvs-poweroff.c | 69 +++++++++++++++++++++++++++++++++
+>  7 files changed, 93 insertions(+)
+>  create mode 100644 drivers/power/reset/imx-snvs-poweroff.c
+> 
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
