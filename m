@@ -1,127 +1,95 @@
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: socfpga: Add a 3.3V fixed regulator node
-Date: Fri, 17 Oct 2014 08:37:22 -0500
-Message-ID: <54411B92.1060705@opensource.altera.com>
-References: <1413493413-8041-1-git-send-email-dinguyen@opensource.altera.com> <1413493413-8041-3-git-send-email-dinguyen@opensource.altera.com> <54407454.50903@samsung.com>
+From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCHv3] arm: dts: socfpga: Add SPI nodes to SOCFPGA DT.
+Date: Fri, 17 Oct 2014 08:55:21 -0500
+Message-ID: <54411FC9.3050109@opensource.altera.com>
+References: <1413497251-21954-1-git-send-email-tthayer@opensource.altera.com> <1413497251-21954-2-git-send-email-tthayer@opensource.altera.com> <20141017065233.GA10262@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54407454.50903-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141017065233.GA10262-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-
-On 10/16/14, 8:43 PM, Jaehoon Chung wrote:
-> Hi, Dinh.
-> 
-> On 10/17/2014 06:03 AM, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
->> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On 10/17/2014 01:52 AM, Steffen Trumtrar wrote:
+> Hi!
+>
+> On Thu, Oct 16, 2014 at 05:07:31PM -0500, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+>> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 >>
->> Without the 3.3V regulator node, the SDMMC driver will give these warnings:
+>> Add 2 SPI nodes to SOCFPGA device tree.
 >>
->> dw_mmc ff704000.dwmmc0: No vmmc regulator found
->> dw_mmc ff704000.dwmmc0: No vqmmc regulator found
->>
->> This patch adds the regulator node, and points the SD/MMC to the regulator.
->>
->> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 >> ---
->>  arch/arm/boot/dts/socfpga_arria5.dtsi         | 11 ++++++++++-
->>  arch/arm/boot/dts/socfpga_arria5_socdk.dts    |  5 +++++
->>  arch/arm/boot/dts/socfpga_cyclone5.dtsi       |  9 +++++++++
->>  arch/arm/boot/dts/socfpga_cyclone5_socdk.dts  |  2 ++
->>  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts |  5 +++++
->>  5 files changed, 31 insertions(+), 1 deletion(-)
+>> v2: Remove extra files. Move SPIDEV into board specific file.
 >>
->> diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
->> index 03e8268..8093781 100644
->> --- a/arch/arm/boot/dts/socfpga_arria5.dtsi
->> +++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
->> @@ -29,7 +29,7 @@
->>  			};
->>  		};
->>  
->> -		dwmmc0@ff704000 {
->> +		mmc0: dwmmc0@ff704000 {
->>  			num-slots = <1>;
->>  			broken-cd;
->>  			bus-width = <4>;
->> @@ -41,4 +41,13 @@
->>  			cpu1-start-addr = <0xffd080c4>;
->>  		};
->>  	};
+>> v3: Remove dts file since SPIDEV is not allowed.
+>> ---
+>>   arch/arm/boot/dts/socfpga.dtsi |   24 ++++++++++++++++++++++++
+>>   1 file changed, 24 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+>> index 4d77ad6..d81bc2d3 100644
+>> --- a/arch/arm/boot/dts/socfpga.dtsi
+>> +++ b/arch/arm/boot/dts/socfpga.dtsi
+>> @@ -628,6 +628,30 @@
+>>   			clock-names = "biu", "ciu";
+>>   		};
+>>   
+>> +		spi0: spi@fff00000 {
+>> +			compatible = "snps,dw-apb-ssi";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0xfff00000 0x1000>;
+>> +			interrupts = <0 154 4>;
+>> +			num-cs = <4>;
+>> +			bus-num = <0>;
+> 			^^^^^^^^^^^^^^
+>
+> I think you can/should get rid of this property. It is only used/documented for
+> fsl-dspi as far as I can see.
+Hi Steffen!
+
+You are right, I will remove this.
+
+I didn't see it documented in the dw-spi bindings but I did see a 
+reference to .bus_num in the static structure (spi_board_info) shown in 
+spi-summary.txt. If the bus-num isn't defined or used, the bus ends up 
+as 32766 (0x7FE). However, the main point is that this isn't used in the 
+code so I should remove it.
+
+Thanks for your input and for reviewing!
+
+Thor
+>> +			clocks = <&spi_m_clk>;
+>> +			status = "disabled";
+>> +		};
 >> +
->> +	regulator_3_3v_hps: fixed_3_3v_hps_regulator@0 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "HPS 3.3V";
->> +		regulator-min-microvolt = <3300000>;
->> +		regulator-max-microvolt = <3300000>;
->> +		regulator-boot-on;
->> +		regulator-always-on;
-> 
-> Always-on is right?
-
-yes, it's always on.
-
-> 
->> +	};
->>  };
->> diff --git a/arch/arm/boot/dts/socfpga_arria5_socdk.dts b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
->> index 27d551c..b7e4023 100644
->> --- a/arch/arm/boot/dts/socfpga_arria5_socdk.dts
->> +++ b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
->> @@ -68,6 +68,11 @@
->>  	};
->>  };
->>  
->> +&mmc0 {
->> +	vmmc-supply = <&regulator_3_3v_hps>;
->> +	vqmmc-supply = <&regulator_3_3v_hps>;
->> +};
+>> +		spi1: spi@fff01000 {
+>> +			compatible = "snps,dw-apb-ssi";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0xfff01000 0x1000>;
+>> +			interrupts = <0 156 4>;
+>> +			num-cs = <4>;
+>> +			bus-num = <1>;
+>> +			clocks = <&spi_m_clk>;
+>> +			status = "disabled";
+>> +		};
 >> +
->>  &usb1 {
->>  	status = "okay";
->>  };
->> diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
->> index 28c05e7..743bc3b 100644
->> --- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
->> +++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
->> @@ -48,4 +48,13 @@
->>  			cpu1-start-addr = <0xffd080c4>;
->>  		};
->>  	};
->> +
->> +	regulator_3_3v_hps: fixed_3_3v_hps_regulator@0 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "HPS 3.3V";
->> +		regulator-min-microvolt = <3300000>;
->> +		regulator-max-microvolt = <3300000>;
->> +		regulator-boot-on;
->> +		regulator-always-on;
->> +	};
->>  };
->> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
->> index 739c3b7..e1f56ba 100644
->> --- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
->> +++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
->> @@ -70,6 +70,8 @@
->>  
->>  &mmc0 {
->>  	cd = <&gpio1 18 0>;
->> +	vmmc-supply = <&regulator_3_3v_hps>;
->> +	vqmmc-supply = <&regulator_3_3v_hps>;
-> 
-> Is vmmc and vqmmc  used the common supply?
-> 
+>>   		/* Local timer */
+>>   		timer@fffec600 {
+>>   			compatible = "arm,cortex-a9-twd-timer";
+> The rest looks good IMO.
+>
+> Regards,
+> Steffen
+>
 
-Yes..
-
-Dinh
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
