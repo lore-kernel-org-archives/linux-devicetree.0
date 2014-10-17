@@ -1,101 +1,83 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/2] Documentation: devicetree: Add bindings for Wi2Wi
- w2sg0004 gps
-Date: Fri, 17 Oct 2014 10:37:14 +0100
-Message-ID: <20141017093714.GB4202@leverpostej>
-References: <1413491183-15018-1-git-send-email-marek@goldelico.com>
- <1413491183-15018-2-git-send-email-marek@goldelico.com>
+From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Subject: [PATCH v2 0/5] Add Spreadtrum Sharkl Platform support
+Date: Fri, 17 Oct 2014 17:54:20 +0800
+Message-ID: <1413539665-11484-1-git-send-email-chunyan.zhang@spreadtrum.com>
+References: <sprd-1017-v2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1413491183-15018-2-git-send-email-marek@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>
-Cc: "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "H. Nikolaus Schaller" <hns@goldelico.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <sprd-1017-v2>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, galak@codeaurora.org, broonie@linaro.org, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, artagnon@gmail.com, rrichter@cavium.com, robh+dt@kernel.org, will.deacon@arm.com, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sprdlinux@freelists.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 16, 2014 at 09:26:23PM +0100, Marek Belisko wrote:
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Signed-off-by: Marek Belisko <marek@goldelico.com>
-> ---
->  .../devicetree/bindings/misc/wi2wi,w2sg0004.txt    | 44 ++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt b/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
-> new file mode 100644
-> index 0000000..e144441
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
-> @@ -0,0 +1,44 @@
-> +Wi2Wi GPS module connected through UART
-> +
-> +Required properties:
-> +- compatible: wi2wi,w2sg0004 or wi2wi,w2sg0084
-> +- pinctrl: specify two states (default and monitor). One is the default (UART) mode
-> +  and the other is for monitoring the RX line by an interrupt
-> +- on-off-gpio: the GPIO that controls the module's on-off toggle input
-> +
-> +Optional properties:
-> +- lna-suppy: an (optional) LNA regulator that is enabled together with the GPS receiver
-> +
-> +example:
-> +
-> +        gps_receiver: w2sg0004 {
-> +                compatible = "wi2wi,w2sg0004";
+Spreadtrum is a rapid growing chip vendor providing smart phone total solutions.
 
-I couldn't spot "wi2wi" in
-Documentation/devicetree/bindings/vendor-prefixes.txt (in mainline).
+Sharkl Platform is nominated as a SoC infrastructure that supports 4G/3G/2G
+standards based on ARMv8 multiple core architecture.Now we have only one
+SoC(Sharkl3) based on this Platform in developing.
 
-Could you please add it?
+This patchset adds Sharkl support in arm64 device tree and implements the
+basic earlycon serial driver.
 
-> +                gpio-controller;
-> +                #gpio-cells = <2>;
+This patchset also has patches which address "sprd" prefix and DT compatible
+strings for nodes which appear un-documented.
 
-As far as I can see, these properties aren't necessary. This only
-consumes a GPIO, it doesn't provide any.
+This version code was tesed on Fast Mode successfully.
 
-> +
-> +                pinctrl-names = "default", "monitor";
-> +                pinctrl-0 = <&uart2_pins>;
-> +                pinctrl-1 = <&uart2_rx_irq_pins>;
-> +
-> +                interrupt-parent = <&gpio5>;
-> +                interrupts = <19 IRQ_TYPE_EDGE_FALLING>;  /* GPIO_147: RX - trigger on arrival of start bit */
+Changes from v1:
+* Addressed review comments:
+	- Added "sprd" prefix to vendor-prefixes.txt
+	- Created serial/sprd-serial.txt and remove the properties for serial-sprd
+	  from of-serial.txt to it.
+	- Renamed of-serial.txt to 8250.txt according to Arnd's review comments
+	- Splited and revised .dts for Sharkl Platform
+	- Changed to PSCI method for cpu power management
+	- Revised Kconfig Makefile to match the alphabetical ordering
+	- Renamed serial-sprd-earlycon.c to serial-sprd.c
 
-While interrupts is a standard property, please describe above how many
-you expect and what their logical function is.
+Chunyan Zhang (3):
+  Documentation: DT: Renamed of-serial.txt to 8250.txt
+  Documentation: DT: Add bindings for Spreadtrum Sharkl Platform
+  tty/serial: Add earlycon support for Spreadtrum serial driver
 
-The only part I'm confused about is how the link to the UART is
-described. I assume I'm just ignorant of some existing pattern.
+Zhizhou Zhang (2):
+  arm64: dts: Add support for Spreadtrum Sharkl3 SoC in dts and Makefile.
+  arm64: Add support for Spreadtrum's Sharkl Platform in Kconfig and defconfig
 
-Otherwise this looks ok.
+ Documentation/devicetree/bindings/arm/sprd.txt     |   11 ++++
+ Documentation/devicetree/bindings/serial/8250.txt  |   50 ++++++++++++++
+ .../devicetree/bindings/serial/of-serial.txt       |   50 --------------
+ .../devicetree/bindings/serial/sprd-serial.txt     |    6 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ arch/arm64/Kconfig                                 |    6 ++
+ arch/arm64/boot/dts/Makefile                       |    1 +
+ arch/arm64/boot/dts/sprd-sharkl.dtsi               |   33 ++++++++++
+ arch/arm64/boot/dts/sprd-sharkl3-fpga.dts          |   41 ++++++++++++
+ arch/arm64/boot/dts/sprd-sharkl3.dtsi              |   69 ++++++++++++++++++++
+ arch/arm64/configs/defconfig                       |    1 +
+ drivers/tty/serial/Kconfig                         |   24 +++++++
+ drivers/tty/serial/Makefile                        |    1 +
+ drivers/tty/serial/sprd-serial.c                   |   64 ++++++++++++++++++
+ 14 files changed, 308 insertions(+), 50 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/sprd.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/8250.txt
+ delete mode 100644 Documentation/devicetree/bindings/serial/of-serial.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/sprd-serial.txt
+ create mode 100644 arch/arm64/boot/dts/sprd-sharkl.dtsi
+ create mode 100644 arch/arm64/boot/dts/sprd-sharkl3-fpga.dts
+ create mode 100644 arch/arm64/boot/dts/sprd-sharkl3.dtsi
+ create mode 100644 drivers/tty/serial/sprd-serial.c
 
-Thanks,
-Mark.
-
-> +                lna-supply = <&vsim>;	/* LNA regulator */
-> +                on-off-gpio = <&gpio5 17 0>;	/* GPIO_145: trigger for turning on/off w2sg0004 */
-> +
-> +&pinmux {
-> +
-> +	uart2_pins: pinmux_uart2_pins {
-> +		pinctrl-single,pins = <
-> +			0x14a (PIN_INPUT | MUX_MODE0)		/* uart2_tx.uart2_rx */
-> +			0x148 (PIN_OUTPUT | MUX_MODE0)		/* uart2_tx.uart2_tx */
-> +		>;
-> +	};
-> +
-> +	uart2_rx_irq_pins: pinmux_uart2_rx_irq_pins {
-> +		pinctrl-single,pins = <
-> +			/* switch RX to GPIO so that we can get interrupts by the start bit */
-> +			0x14a (PIN_INPUT | MUX_MODE4)		/* uart2_tx.uart2_rx */
-> +		>;
-> +	};
-> +
-> +}
-> -- 
-> 1.9.1
-> 
-> 
+-- 
+1.7.9.5
