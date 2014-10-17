@@ -1,34 +1,64 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v5 00/12] Add ACPI _DSD and unified device properties
- support
-Date: Fri, 17 Oct 2014 17:40:07 +0200
-Message-ID: <20141017154007.GB29643@kroah.com>
-References: <2660541.BycO7TFnA2@vostro.rjw.lan>
- <11223831.j9KAEfSQsY@vostro.rjw.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <11223831.j9KAEfSQsY@vostro.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+From: Abhilash Kesavan <a.kesavan@samsung.com>
+Subject: [PATCH 0/7] Add clock and DT support for a few IPs on Exynos7
+Date: Fri, 17 Oct 2014 21:41:48 +0530
+Message-ID: <1413562315-12283-1-git-send-email-a.kesavan@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, robh@kernel.org, devicetree@vger.kernel.org, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 17, 2014 at 02:01:33PM +0200, Rafael J. Wysocki wrote:
-> Hi Everyone,
-> 
-> Hving had a couple of chats with Grant and Arnd during LinuxCon EU/LPC, we
-> now have version 5 taking all feedback into account (hopefully).
-> 
-> Changes have been made to patch [02/12] and to patches [09-12/12], although
-> in patches [10-12/12] they are fairly minor.  I have retained the Greg's
-> ACK on patch [02/12], because it is essentially the same that have been
-> posted aleady and ACKed by him (Greg, please let me know if I shouldn't
-> do that) and all the ACKs on the remaining patches except for patch [09/12]
-> which is substantially different.  Still, if reviewers think that their
-> ACKs don't apply any more, please let me know and I'll remove them.
+This series adds clock support for I2C, MMC, RTC, Watchdog, TMU and PWM.
+It also adds the device nodes for I2C, RTC, WDT, MMC and PMU.
+The patchset has been tested on linux-next (20141017) on an Exynos7
+Espresso board.
 
-No objection from me to keep my ACK on those patches, thanks for asking.
+Following are the dependencies:
+1) dts, kbuild: Implement support for dtb vendor subdirs" patchset 
+http://comments.gmane.org/gmane.linux.kbuild.devel/12131
+2) arch: arm64: Enable support for Samsung Exynos7 SoC
+http://www.spinics.net/lists/linux-samsung-soc/msg37047.html
+3) Serial clean-up patches for Exynos7
+http://www.spinics.net/lists/arm-kernel/msg367348.html
+http://www.spinics.net/lists/arm-kernel/msg367349.html
+4) Add initial support for pinctrl on Exynos7
+http://www.spinics.net/lists/linux-samsung-soc/msg37708.html
 
-greg k-h
+For testing I have applied the following:
+1) mmc: dw_mmc: Add IDMAC 64-bit address mode support
+http://www.spinics.net/lists/kernel/msg1842300.html
+2) mmc: dw_mmc: Reset DMA before enabling IDMAC
+http://www.gossamer-threads.com/lists/linux/kernel/2021576?page=last
+3) mmc: dw_mmc: exynos: Add support for exynos7
+http://www.spinics.net/lists/linux-mmc/msg28294.html
+4) mfd: sec: add S2MPS15 PMIC support
+https://lkml.org/lkml/2014/10/14/50
+5) drivers: rtc: fix s3c-rtc initialization failure without rtc source clock
+https://lkml.org/lkml/2014/10/15/210
+6) regulator: s2mps11: add support for S2MPS15 regulators
+https://lkml.org/lkml/2014/10/14/52
+7) Regulators dt nodes were added in the espresso dts file and I2C channel 4
+which has the PMIC on it was tested.
+
+Abhilash Kesavan (3):
+  arm64: dts: Add PMU DT node for exynos7 SoC
+  arm64: dts: Add nodes for mmc, i2c, rtc, watchdog on Exynos7
+  arm64: exynos: Enable rtc and watchdog support for Exynos7
+
+Naveen Krishna Ch (4):
+  clk: samsung: exynos7: add clocks for I2C block
+  clk: samsung: exynos7: add clocks for MMC block
+  clk: samsung: exynos7: add clocks for RTC block
+  clk: samsung: exynos7: add gate clocks for WDT, TMU and PWM blocks
+
+ .../devicetree/bindings/arm/samsung/pmu.txt        |    1 +
+ .../devicetree/bindings/clock/exynos7-clock.txt    |    4 +
+ arch/arm64/Kconfig                                 |    3 +
+ arch/arm64/boot/dts/exynos/exynos7-espresso.dts    |   41 +++
+ arch/arm64/boot/dts/exynos/exynos7.dtsi            |  261 ++++++++++++++++
+ drivers/clk/samsung/clk-exynos7.c                  |  316 ++++++++++++++++++++
+ include/dt-bindings/clock/exynos7-clk.h            |   60 +++-
+ 7 files changed, 677 insertions(+), 9 deletions(-)
+
+-- 
+1.7.9.5
