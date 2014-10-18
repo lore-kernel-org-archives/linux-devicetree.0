@@ -1,48 +1,37 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v2 00/11] ARM: dts: zynq: Prepare Parallella
-Date: Fri, 17 Oct 2014 21:28:02 -0700
-Message-ID: <CAOesGMjAb5oXjauhbqjDhJXWct7qoXxy3XpA1=DioK7vPTwetA@mail.gmail.com>
-References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] reset: socfpga: use arch_initcall for early initialization
+Date: Sat, 18 Oct 2014 11:22:20 +0200
+Message-ID: <2269547.Q1ItkFJzpa@wuerfel>
+References: <1412822646-11257-1-git-send-email-dinguyen@opensource.altera.com> <20141009151935.GK15799@pengutronix.de> <alpine.DEB.2.02.1410101123590.11270@atx-linux-37>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406242820-20140-1-git-send-email-afaerber@suse.de>
+In-Reply-To: <alpine.DEB.2.02.1410101123590.11270@atx-linux-37>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: Michal Simek <michal.simek@xilinx.com>, Andreas Olofsson <andreas@adapteva.com>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, Lars-Peter Clausen <lars@metafoo.de>
+To: atull <atull@opensource.altera.com>
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, Philipp Zabel <p.zabel@pengutronix.de>, dinh.linux@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
+On Friday 10 October 2014 11:32:35 atull wrote:
+> On Thu, 9 Oct 2014, Steffen Trumtrar wrote:
+> > Do you have an example where this is really needed?
+> 
+> My last version of the fpga manager framework 
+> (https://lkml.org/lkml/2014/8/1/518)
+> added fpga_mgr_firmware_write().  This can be called from a device driver's 
+> probe function to request a fpga image be loaded.  I want to support FPGA 
+> based functionality being seen pretty similar to really hard hardware.  So 
+> the FPGA could have a PCI bus or something else that would want to be 
+> early.
 
-On Thu, Jul 24, 2014 at 4:00 PM, Andreas F=C3=A4rber <afaerber@suse.de>=
- wrote:
-> Hello,
->
-> This patch series adds an initial device tree for the Parallella boar=
-d.
-> UART, SD card, Ethernet are enabled.
-> Not yet enabled are HDMI, QSPI flash and 2x USB.
+Please be more specific. I agree we need a good reason for not just
+using deferred probing, and PCI host bridges in general are no longer
+something that needs to be probed early.
 
-Andreas (Olofsson) kindly sent me a board, and I added it to the boot
-farm today, it'll be included in boot reports from here on.
+If you have a particular use case in mind that can't be solved in a
+better way, we can talk about making this an earlier initcall (probably
+not arch_initcall), but in general we try hard to avoid new ones
+like this.
 
-I did a test run with yesterday's -next It looks like networking isn't
-working there at the moment, clock related. Same happens with 3.17 and
-latest mainline, config multi_v7_defconfig:
-
-[WARN] [    7.943648] macb e000b000.ethernet eth0: unable to generate
-target frequency: 125000000 Hz
-[WARN] [   10.948681] macb e000b000.ethernet eth0: unable to generate
-target frequency: 125000000 Hz
-
-=46ull boot log at:
-
-http://arm-soc.lixom.net/bootlogs/misc/next-20141017/parallella-arm-mul=
-ti_v7_defconfig.html
-
-I'll be happy to try things, but I'm a bit short on cycles to debug
-myself. Should hopefully be easy to reproduce.
-
-
--Olof
+	Arnd
