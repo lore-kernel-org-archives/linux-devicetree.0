@@ -1,37 +1,57 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] reset: socfpga: use arch_initcall for early initialization
-Date: Sat, 18 Oct 2014 11:22:20 +0200
-Message-ID: <2269547.Q1ItkFJzpa@wuerfel>
-References: <1412822646-11257-1-git-send-email-dinguyen@opensource.altera.com> <20141009151935.GK15799@pengutronix.de> <alpine.DEB.2.02.1410101123590.11270@atx-linux-37>
+Subject: Re: [PATCH v5 09/12] Driver core: Unified interface for firmware node properties
+Date: Sat, 18 Oct 2014 11:35:21 +0200
+Message-ID: <1979177.qygBOVQh8h@wuerfel>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan> <11223831.j9KAEfSQsY@vostro.rjw.lan> <1628104.Ek1EGbdVha@vostro.rjw.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1410101123590.11270@atx-linux-37>
-Sender: linux-kernel-owner@vger.kernel.org
-To: atull <atull@opensource.altera.com>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, Philipp Zabel <p.zabel@pengutronix.de>, dinh.linux@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1628104.Ek1EGbdVha@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 10 October 2014 11:32:35 atull wrote:
-> On Thu, 9 Oct 2014, Steffen Trumtrar wrote:
-> > Do you have an example where this is really needed?
+On Friday 17 October 2014 14:14:53 Rafael J. Wysocki wrote:
+> +/**
+> + * fwnode_property_present - check if a property of a firmware node is present
+> + * @fwnode: Firmware node whose property to check
+> + * @propname: Name of the property
+> + */
+> +bool fwnode_property_present(struct fwnode_handle *fwnode, const char *propname)
+> +{
+> +       if (is_of_node(fwnode))
+> +               return of_property_read_bool(of_node(fwnode), propname);
+> +       else if (is_acpi_node(fwnode))
+> +               return !acpi_dev_prop_get(acpi_node(fwnode), propname, NULL);
+> +
+> +       return false;
+> +}
+> +EXPORT_SYMBOL_GPL(fwnode_property_present);
 > 
-> My last version of the fpga manager framework 
-> (https://lkml.org/lkml/2014/8/1/518)
-> added fpga_mgr_firmware_write().  This can be called from a device driver's 
-> probe function to request a fpga image be loaded.  I want to support FPGA 
-> based functionality being seen pretty similar to really hard hardware.  So 
-> the FPGA could have a PCI bus or something else that would want to be 
-> early.
 
-Please be more specific. I agree we need a good reason for not just
-using deferred probing, and PCI host bridges in general are no longer
-something that needs to be probed early.
+Should this be
 
-If you have a particular use case in mind that can't be solved in a
-better way, we can talk about making this an earlier initcall (probably
-not arch_initcall), but in general we try hard to avoid new ones
-like this.
+		return acpi_dev_prop_get(acpi_node(fwnode), propname, NULL);
+
+without the '!'?
+
+I'm also unsure about the '_present' vs '_read_bool' naming. IIRC we had
+a long debate about this before we decided on 'read_bool' for DT, and
+I don't really want to start a new debate, but being consistent would
+be nice.
+
+We could of course have
+
+static inline bool fwnode_property_read_bool(struct fwnode_handle *fwnode, const char *propname)
+{
+	return fwnode_property_present(fwnode, propname);
+}
+
+which is completely redundant, but would help for drivers using the
+interface to document whether we are checking for bool property that
+we expect to be either empty or absent (_get_bool), vs checking for
+the presence of a non-empty property (_present).
 
 	Arnd
