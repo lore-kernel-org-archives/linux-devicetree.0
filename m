@@ -1,402 +1,292 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH RFC V3 2/3] mxs: add driver for ocotp in i.MX23 and i.MX28
-Date: Sat, 18 Oct 2014 10:32:51 +0000
-Message-ID: <1413628372-2809-3-git-send-email-stefan.wahren@i2se.com>
-References: <1413628372-2809-1-git-send-email-stefan.wahren@i2se.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413628372-2809-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v4 00/13] Add ACPI _DSD and unified device
+ =?iso-8859-1?Q?properties=0D?= support
+Date: Sat, 18 Oct 2014 10:39:54 +0200
+Message-ID: <20141018083954.13F35C4099B@trevor.secretlab.ca>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan>
+	<1413378271.2762.77.camel@infradead.org>
+	<20141015131551.GC20034@leverpostej>
+	<1413379736.2762.79.camel@infradead.org>
+	<20141015134209.GD20034@leverpostej>
+	<db4038336b5e165b8b61eda064b10eeb.squirrel@twosheds.infradead.org>
+	<543E88CF.5060504@linux.intel.com> <20141015151702.GG20034@leverpostej>
+	<543E9605.6020502@linux.intel.com>
+	<1413471356.2762.81.camel@infradead.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1413471356.2762.81.camel@infradead.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: David Woodhouse <dwmw2@infradead.org>, Darren Hart <dvhart@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "dvhart@infradead.org" <dvhart@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch brings readonly support for the On Chip OTP cells in the i.MX23
-and i.MX28 processor. The driver uses files (one for each cell) in sysfs
-as interface.
+On Thu, 16 Oct 2014 16:55:56 +0200
+, David Woodhouse <dwmw2@infradead.org>
+ wrote:
+> On Wed, 2014-10-15 at 17:43 +0200, Darren Hart wrote:
+> > 
+> > So my objection here is that by keeping the of_* terms in the driver we
+> > are required to include of, although it does safely convert to returning
+> > NULL if !CONFIG_OF I suppose.
+> 
+> New version removes everything but the of_match_id bits which we need to
+> match ACPI devices too. Perhaps they ought to be renamed, but I'm not
+> sure it's worth it.
+> 
+> This also removes the call to platform_get_resource(IORESOURCE_MEM) and
+> fall back to platform_get_resource(IORESOURCE_IO) as discussed IRL with
+> Rafael. I'm not sure it's much of an improvement, mind you :)
+> 
+> Still untested. I think it's OK to switch to platform_get_irq() and then
+> drop the irq_dispose_mapping() call, right? The platform_device takes
+> care of all of that for us?
+> 
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 26cec64..be95a4c 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -1094,14 +1094,14 @@ config SERIAL_NETX_CONSOLE
+>  	  you can make it the console by answering Y to this option.
+>  
+>  config SERIAL_OF_PLATFORM
+> -	tristate "Serial port on Open Firmware platform bus"
+> -	depends on OF
+> +	tristate "Serial port on firmware platform bus"
+> +	depends on OF || ACPI
+>  	depends on SERIAL_8250 || SERIAL_OF_PLATFORM_NWPSERIAL
+>  	help
+> -	  If you have a PowerPC based system that has serial ports
+> -	  on a platform specific bus, you should enable this option.
+> -	  Currently, only 8250 compatible ports are supported, but
+> -	  others can easily be added.
+> +	  If you have a system which advertises its serial ports through
+> +	  devicetree or ACPI, you should enable this option. Currently
+> +	  only 8250 compatible and NWP ports and are supported, but others
+> +	  can easily be added.
+>  
+>  config SERIAL_OMAP
+>  	tristate "OMAP serial port support"
+> diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
+> index 68d4455..cc6c99b 100644
+> --- a/drivers/tty/serial/of_serial.c
+> +++ b/drivers/tty/serial/of_serial.c
+> @@ -14,8 +14,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/serial_core.h>
+>  #include <linux/serial_reg.h>
+> -#include <linux/of_address.h>
+> -#include <linux/of_irq.h>
+> +#include <linux/property.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/nwpserial.h>
+>  #include <linux/clk.h>
+> @@ -53,22 +52,22 @@ static inline void tegra_serial_handle_break(struct uart_port *port)
+>  /*
+>   * Fill a struct uart_port for a given device node
+>   */
+> -static int of_platform_serial_setup(struct platform_device *ofdev,
+> +static int of_platform_serial_setup(struct platform_device *pdev,
+>  			int type, struct uart_port *port,
+>  			struct of_serial_info *info)
+>  {
+> -	struct resource resource;
+> -	struct device_node *np = ofdev->dev.of_node;
+>  	u32 clk, spd, prop;
+> -	int ret;
+> +	int iotype = -1;
+> +	u32 res_start;
+> +	int ret, i;
+>  
+>  	memset(port, 0, sizeof *port);
+> -	if (of_property_read_u32(np, "clock-frequency", &clk)) {
+> +	if (device_property_read_u32(&pdev->dev, "clock-frequency", &clk)) {
+>  
+>  		/* Get clk rate through clk driver if present */
+> -		info->clk = clk_get(&ofdev->dev, NULL);
+> +		info->clk = clk_get(&pdev->dev, NULL);
+>  		if (IS_ERR(info->clk)) {
+> -			dev_warn(&ofdev->dev,
+> +			dev_warn(&pdev->dev,
+>  				"clk or clock-frequency not defined\n");
+>  			return PTR_ERR(info->clk);
+>  		}
+> @@ -77,57 +76,63 @@ static int of_platform_serial_setup(struct platform_device *ofdev,
+>  		clk = clk_get_rate(info->clk);
+>  	}
+>  	/* If current-speed was set, then try not to change it. */
+> -	if (of_property_read_u32(np, "current-speed", &spd) == 0)
+> +	if (device_property_read_u32(&pdev->dev, "current-speed", &spd) == 0)
+>  		port->custom_divisor = clk / (16 * spd);
+>  
+> -	ret = of_address_to_resource(np, 0, &resource);
+> -	if (ret) {
+> -		dev_warn(&ofdev->dev, "invalid address\n");
+> +	/* Check for shifted address mapping */
+> +	if (device_property_read_u32(&pdev->dev, "reg-offset", &prop) != 0)
+> +		prop = 0;
+> +
+> +	for (i = 0; iotype == -1 && i < pdev->num_resources; i++) {
+> +		struct resource *resource = &pdev->resource[i];
+> +		if (resource_type(resource) == IORESOURCE_MEM) {
+> +			iotype = UPIO_MEM;
+> +			port->mapbase = res_start + prop;
+> +		} else if (resource_type(resource) == IORESOURCE_IO) {
+> +			iotype = UPIO_PORT;
+> +			port->iobase = res_start + prop;
+> +		}
+> +
+> +		res_start = resource->start;
+> +	}
+> +	if (iotype == -1) {
+> +		dev_warn(&pdev->dev, "invalid address\n");
+>  		goto out;
+>  	}
+>  
+>  	spin_lock_init(&port->lock);
+> -	port->mapbase = resource.start;
+> -
+> -	/* Check for shifted address mapping */
+> -	if (of_property_read_u32(np, "reg-offset", &prop) == 0)
+> -		port->mapbase += prop;
+>  
+>  	/* Check for registers offset within the devices address range */
+> -	if (of_property_read_u32(np, "reg-shift", &prop) == 0)
+> +	if (device_property_read_u32(&pdev->dev, "reg-shift", &prop) == 0)
+>  		port->regshift = prop;
+>  
+>  	/* Check for fifo size */
+> -	if (of_property_read_u32(np, "fifo-size", &prop) == 0)
+> +	if (device_property_read_u32(&pdev->dev, "fifo-size", &prop) == 0)
+>  		port->fifosize = prop;
+>  
+> -	port->irq = irq_of_parse_and_map(np, 0);
+> -	port->iotype = UPIO_MEM;
+> -	if (of_property_read_u32(np, "reg-io-width", &prop) == 0) {
+> -		switch (prop) {
+> -		case 1:
+> -			port->iotype = UPIO_MEM;
+> -			break;
+> -		case 4:
+> -			port->iotype = UPIO_MEM32;
+> -			break;
+> -		default:
+> -			dev_warn(&ofdev->dev, "unsupported reg-io-width (%d)\n",
+> +	port->irq = platform_get_irq(pdev, 0);
+> +
+> +	if (device_property_read_u32(&pdev->dev, "reg-io-width", &prop) == 0) {
+> +		if (prop == 4 && iotype == UPIO_MEM) {
+> +			iotype = UPIO_MEM32;
+> +		} else {
+> +			dev_warn(&pdev->dev, "unsupported reg-io-width (%d)\n",
+>  				 prop);
+>  			ret = -EINVAL;
+>  			goto out;
+>  		}
+>  	}
+>  
+> +	port->iotype = iotype;
+>  	port->type = type;
+>  	port->uartclk = clk;
+>  	port->flags = UPF_SHARE_IRQ | UPF_BOOT_AUTOCONF | UPF_IOREMAP
+>  		| UPF_FIXED_PORT | UPF_FIXED_TYPE;
+>  
+> -	if (of_find_property(np, "no-loopback-test", NULL))
+> +	if (!device_get_property(&pdev->dev, "no-loopback-test", NULL))
+>  		port->flags |= UPF_SKIP_TEST;
+>  
+> -	port->dev = &ofdev->dev;
+> +	port->dev = &pdev->dev;
+>  
+>  	if (type == PORT_TEGRA)
+>  		port->handle_break = tegra_serial_handle_break;
+> @@ -143,7 +148,7 @@ out:
+>   * Try to register a serial port
+>   */
+>  static struct of_device_id of_platform_serial_table[];
+> -static int of_platform_serial_probe(struct platform_device *ofdev)
+> +static int of_platform_serial_probe(struct platform_device *pdev)
 
-Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
----
- drivers/misc/Kconfig     |   13 ++
- drivers/misc/Makefile    |    1 +
- drivers/misc/fsl_ocotp.c |  332 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 346 insertions(+)
- create mode 100644 drivers/misc/fsl_ocotp.c
+Nit: Separate patch please. The rename of ofdev to pdev is nothing more
+than cleanup. It has no functional impact and just makes the patch
+larger.
 
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index b841180..7455efa 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -515,6 +515,19 @@ config VEXPRESS_SYSCFG
- 	  bus. System Configuration interface is one of the possible means
- 	  of generating transactions on this bus.
- 
-+config FSL_OCOTP
-+        tristate "Freescale MXS On-Chip OTP Memory Support"
-+        depends on ARCH_MXS && SYSFS
-+        help
-+          If you say Y here, you will get support for a readonly
-+	  SysFS interface for the One Time Programmable memory pages that
-+	  are stored on the Freescale i.MX23/i.MX28 processor.
-+
-+          To compile this driver as a module, choose M here: the module
-+          will be called fsl_ocotp.
-+
-+          If unsure, it is safe to say N.
-+
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
- source "drivers/misc/cb710/Kconfig"
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index 5497d02..301cd15 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -55,3 +55,4 @@ obj-y				+= mic/
- obj-$(CONFIG_GENWQE)		+= genwqe/
- obj-$(CONFIG_ECHO)		+= echo/
- obj-$(CONFIG_VEXPRESS_SYSCFG)	+= vexpress-syscfg.o
-+obj-$(CONFIG_FSL_OCOTP)           += fsl_ocotp.o
-diff --git a/drivers/misc/fsl_ocotp.c b/drivers/misc/fsl_ocotp.c
-new file mode 100644
-index 0000000..ddb4e9b
---- /dev/null
-+++ b/drivers/misc/fsl_ocotp.c
-@@ -0,0 +1,332 @@
-+/*
-+ * Freescale On-Chip OTP driver
-+ *
-+ * Copyright (C) 2010 Freescale Semiconductor, Inc. All Rights Reserved.
-+ * Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-+ *
-+ * Christoph G. Baumann <cgb-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-+ * Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+#include <linux/kobject.h>
-+#include <linux/string.h>
-+#include <linux/sysfs.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/delay.h>
-+#include <linux/fcntl.h>
-+#include <linux/mutex.h>
-+#include <linux/clk.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/slab.h>
-+#include <linux/platform_device.h>
-+
-+/* OCOTP registers and bits */
-+#define HW_OCOTP_CTRL_SET	(0x00000004)
-+#define HW_OCOTP_CTRL_CLR	(0x00000008)
-+
-+#define BM_OCOTP_CTRL_RD_BANK_OPEN	0x00001000
-+#define BM_OCOTP_CTRL_ERROR		0x00000200
-+#define BM_OCOTP_CTRL_BUSY		0x00000100
-+
-+struct fsl_ocotp {
-+	struct attribute_group group;
-+	struct mutex lock;
-+	void __iomem *base_addr;
-+	u32 data_offset;
-+};
-+
-+static ssize_t fsl_ocotp_attr_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct fsl_ocotp *otp = platform_get_drvdata(pdev);
-+	int timeout = 0x400;
-+	int index = 0;
-+	u32 value = 0;
-+	u32 offset;
-+
-+	if (otp == NULL) {
-+		dev_err(dev, "%s: no drvdata\n", __func__);
-+		return 0;
-+	}
-+
-+	while (otp->group.attrs[index]) {
-+		if (strcmp(attr->attr.name, otp->group.attrs[index]->name) == 0)
-+			break;
-+
-+		index++;
-+	}
-+
-+	if (otp->group.attrs[index] == NULL) {
-+		dev_err(dev, "%s: attr not found\n", __func__);
-+		return 0;
-+	}
-+
-+	mutex_lock(&otp->lock);
-+
-+	/* try to clear ERROR bit */
-+	writel(BM_OCOTP_CTRL_ERROR, otp->base_addr + HW_OCOTP_CTRL_CLR);
-+
-+	/* check both BUSY and ERROR cleared */
-+	while ((readl(otp->base_addr) &
-+	       (BM_OCOTP_CTRL_BUSY | BM_OCOTP_CTRL_ERROR)) && --timeout)
-+		cpu_relax();
-+
-+	if (unlikely(!timeout)) {
-+		dev_err(dev, "%s: OCTOP busy or error\n", __func__);
-+		goto error_unlock;
-+	}
-+
-+	/* open OCOTP banks for read */
-+	writel(BM_OCOTP_CTRL_RD_BANK_OPEN, otp->base_addr + HW_OCOTP_CTRL_SET);
-+
-+	/* approximately wait 32 hclk cycles */
-+	udelay(1);
-+
-+	/* poll BUSY bit becoming cleared */
-+	timeout = 0x400;
-+	while ((readl(otp->base_addr) & BM_OCOTP_CTRL_BUSY) && --timeout)
-+		cpu_relax();
-+
-+	if (timeout) {
-+		offset = otp->data_offset + index * 0x10;
-+		value = readl(otp->base_addr + offset);
-+	}
-+
-+	/* close banks for power saving */
-+	writel(BM_OCOTP_CTRL_RD_BANK_OPEN, otp->base_addr + HW_OCOTP_CTRL_CLR);
-+
-+	if (unlikely(!timeout)) {
-+		dev_err(dev, "%s: OCTOP timeout\n", __func__);
-+		goto error_unlock;
-+	}
-+
-+	mutex_unlock(&otp->lock);
-+	return sprintf(buf, "0x%x\n", value);
-+
-+error_unlock:
-+	mutex_unlock(&otp->lock);
-+	return 0;
-+}
-+
-+static DEVICE_ATTR(HW_OCOTP_CUST0, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_CUST1, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_CUST2, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_CUST3, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_CRYPTO0, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_CRYPTO1, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_CRYPTO2, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_CRYPTO3, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+
-+static DEVICE_ATTR(HW_OCOTP_HWCAP0, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_HWCAP1, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_HWCAP2, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_HWCAP3, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_HWCAP4, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_HWCAP5, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_SWCAP, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_CUSTCAP, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+
-+static DEVICE_ATTR(HW_OCOTP_LOCK, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_OPS0, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_OPS1, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_OPS2, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_OPS3, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_UN0, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_UN1, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_UN2, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+
-+static DEVICE_ATTR(HW_OCOTP_ROM0, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_ROM1, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_ROM2, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_ROM3, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_ROM4, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_ROM5, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_ROM6, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_ROM7, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+
-+static DEVICE_ATTR(HW_OCOTP_SRK0, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_SRK1, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_SRK2, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_SRK3, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_SRK4, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_SRK5, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_SRK6, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+static DEVICE_ATTR(HW_OCOTP_SRK7, S_IRUSR, fsl_ocotp_attr_show, NULL);
-+
-+static struct attribute *imx23_ocotp_attributes[] = {
-+	&dev_attr_HW_OCOTP_CUST0.attr,
-+	&dev_attr_HW_OCOTP_CUST1.attr,
-+	&dev_attr_HW_OCOTP_CUST2.attr,
-+	&dev_attr_HW_OCOTP_CUST3.attr,
-+	&dev_attr_HW_OCOTP_CRYPTO0.attr,
-+	&dev_attr_HW_OCOTP_CRYPTO1.attr,
-+	&dev_attr_HW_OCOTP_CRYPTO2.attr,
-+	&dev_attr_HW_OCOTP_CRYPTO3.attr,
-+	&dev_attr_HW_OCOTP_HWCAP0.attr,
-+	&dev_attr_HW_OCOTP_HWCAP1.attr,
-+	&dev_attr_HW_OCOTP_HWCAP2.attr,
-+	&dev_attr_HW_OCOTP_HWCAP3.attr,
-+	&dev_attr_HW_OCOTP_HWCAP4.attr,
-+	&dev_attr_HW_OCOTP_HWCAP5.attr,
-+	&dev_attr_HW_OCOTP_SWCAP.attr,
-+	&dev_attr_HW_OCOTP_CUSTCAP.attr,
-+	&dev_attr_HW_OCOTP_LOCK.attr,
-+	&dev_attr_HW_OCOTP_OPS0.attr,
-+	&dev_attr_HW_OCOTP_OPS1.attr,
-+	&dev_attr_HW_OCOTP_OPS2.attr,
-+	&dev_attr_HW_OCOTP_OPS3.attr,
-+	&dev_attr_HW_OCOTP_UN0.attr,
-+	&dev_attr_HW_OCOTP_UN1.attr,
-+	&dev_attr_HW_OCOTP_UN2.attr,
-+	&dev_attr_HW_OCOTP_ROM0.attr,
-+	&dev_attr_HW_OCOTP_ROM1.attr,
-+	&dev_attr_HW_OCOTP_ROM2.attr,
-+	&dev_attr_HW_OCOTP_ROM3.attr,
-+	&dev_attr_HW_OCOTP_ROM4.attr,
-+	&dev_attr_HW_OCOTP_ROM5.attr,
-+	&dev_attr_HW_OCOTP_ROM6.attr,
-+	&dev_attr_HW_OCOTP_ROM7.attr,
-+	NULL
-+};
-+
-+static struct attribute *imx28_ocotp_attributes[] = {
-+	&dev_attr_HW_OCOTP_CUST0.attr,
-+	&dev_attr_HW_OCOTP_CUST1.attr,
-+	&dev_attr_HW_OCOTP_CUST2.attr,
-+	&dev_attr_HW_OCOTP_CUST3.attr,
-+	&dev_attr_HW_OCOTP_CRYPTO0.attr,
-+	&dev_attr_HW_OCOTP_CRYPTO1.attr,
-+	&dev_attr_HW_OCOTP_CRYPTO2.attr,
-+	&dev_attr_HW_OCOTP_CRYPTO3.attr,
-+	&dev_attr_HW_OCOTP_HWCAP0.attr,
-+	&dev_attr_HW_OCOTP_HWCAP1.attr,
-+	&dev_attr_HW_OCOTP_HWCAP2.attr,
-+	&dev_attr_HW_OCOTP_HWCAP3.attr,
-+	&dev_attr_HW_OCOTP_HWCAP4.attr,
-+	&dev_attr_HW_OCOTP_HWCAP5.attr,
-+	&dev_attr_HW_OCOTP_SWCAP.attr,
-+	&dev_attr_HW_OCOTP_CUSTCAP.attr,
-+	&dev_attr_HW_OCOTP_LOCK.attr,
-+	&dev_attr_HW_OCOTP_OPS0.attr,
-+	&dev_attr_HW_OCOTP_OPS1.attr,
-+	&dev_attr_HW_OCOTP_OPS2.attr,
-+	&dev_attr_HW_OCOTP_OPS3.attr,
-+	&dev_attr_HW_OCOTP_UN0.attr,
-+	&dev_attr_HW_OCOTP_UN1.attr,
-+	&dev_attr_HW_OCOTP_UN2.attr,
-+	&dev_attr_HW_OCOTP_ROM0.attr,
-+	&dev_attr_HW_OCOTP_ROM1.attr,
-+	&dev_attr_HW_OCOTP_ROM2.attr,
-+	&dev_attr_HW_OCOTP_ROM3.attr,
-+	&dev_attr_HW_OCOTP_ROM4.attr,
-+	&dev_attr_HW_OCOTP_ROM5.attr,
-+	&dev_attr_HW_OCOTP_ROM6.attr,
-+	&dev_attr_HW_OCOTP_ROM7.attr,
-+	&dev_attr_HW_OCOTP_SRK0.attr,
-+	&dev_attr_HW_OCOTP_SRK1.attr,
-+	&dev_attr_HW_OCOTP_SRK2.attr,
-+	&dev_attr_HW_OCOTP_SRK3.attr,
-+	&dev_attr_HW_OCOTP_SRK4.attr,
-+	&dev_attr_HW_OCOTP_SRK5.attr,
-+	&dev_attr_HW_OCOTP_SRK6.attr,
-+	&dev_attr_HW_OCOTP_SRK7.attr,
-+	NULL
-+};
-+
-+static const struct fsl_ocotp imx23_ocotp = {
-+	.group = { .name = "fuses", .attrs = imx23_ocotp_attributes },
-+	.data_offset	= 0x20,
-+};
-+
-+static const struct fsl_ocotp imx28_ocotp = {
-+	.group = { .name = "fuses", .attrs = imx28_ocotp_attributes },
-+	.data_offset	= 0x20,
-+};
-+
-+static const struct of_device_id fsl_ocotp_dt_ids[] = {
-+	{ .compatible = "fsl,imx23-ocotp", .data = &imx23_ocotp },
-+	{ .compatible = "fsl,imx28-ocotp", .data = &imx28_ocotp },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, fsl_ocotp_dt_ids);
-+
-+static int fsl_ocotp_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct fsl_ocotp *otp;
-+	const struct of_device_id *match;
-+	struct resource *res;
-+	int ret;
-+
-+	match = of_match_device(fsl_ocotp_dt_ids, dev);
-+	if (!match) {
-+		dev_err(dev, "%s: Unable to match device\n", __func__);
-+		return -ENODEV;
-+	}
-+
-+	if (!dev->of_node) {
-+		dev_err(dev, "missing device tree\n");
-+		return -EINVAL;
-+	}
-+
-+	otp = devm_kmemdup(dev, match->data, sizeof(*otp), GFP_KERNEL);
-+	if (!otp)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	otp->base_addr = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(otp->base_addr))
-+		return PTR_ERR(otp->base_addr);
-+
-+	mutex_init(&otp->lock);
-+
-+	ret = sysfs_create_group(&dev->kobj, &otp->group);
-+	if (ret)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, otp);
-+
-+	dev_info(dev, "initialized\n");
-+
-+	return 0;
-+}
-+
-+static int fsl_ocotp_remove(struct platform_device *pdev)
-+{
-+	struct fsl_ocotp *otp = platform_get_drvdata(pdev);
-+
-+	sysfs_remove_group(&pdev->dev.kobj, &otp->group);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver fsl_ocotp_driver = {
-+	.probe		= fsl_ocotp_probe,
-+	.remove		= fsl_ocotp_remove,
-+	.driver		= {
-+		.name   = "fsl_ocotp",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = fsl_ocotp_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(fsl_ocotp_driver);
-+MODULE_AUTHOR("Christoph G. Baumann <cgb-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>");
-+MODULE_AUTHOR("Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>");
-+MODULE_DESCRIPTION("driver for OCOTP in i.MX23/i.MX28");
-+MODULE_LICENSE("GPL");
--- 
-1.7.9.5
+>  {
+>  	const struct of_device_id *match;
+>  	struct of_serial_info *info;
+> @@ -151,11 +156,11 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
+>  	int port_type;
+>  	int ret;
+>  
+> -	match = of_match_device(of_platform_serial_table, &ofdev->dev);
+> +	match = of_match_device(of_platform_serial_table, &pdev->dev);
+>  	if (!match)
+>  		return -EINVAL;
+>  
+> -	if (of_find_property(ofdev->dev.of_node, "used-by-rtas", NULL))
+> +	if (!device_get_property(&pdev->dev, "used-by-rtas", NULL))
+>  		return -EBUSY;
+>  
+>  	info = kmalloc(sizeof(*info), GFP_KERNEL);
+> @@ -163,7 +168,7 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
+>  		return -ENOMEM;
+>  
+>  	port_type = (unsigned long)match->data;
+> -	ret = of_platform_serial_setup(ofdev, port_type, &port, info);
+> +	ret = of_platform_serial_setup(pdev, port_type, &port, info);
+>  	if (ret)
+>  		goto out;
+>  
+> @@ -179,12 +184,10 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
+>  		if (port.fifosize)
+>  			port8250.capabilities = UART_CAP_FIFO;
+>  
+> -		if (of_property_read_bool(ofdev->dev.of_node,
+> -					  "auto-flow-control"))
+> +		if (!device_get_property(&pdev->dev, "auto-flow-control", NULL))
+>  			port8250.capabilities |= UART_CAP_AFE;
+>  
+> -		if (of_property_read_bool(ofdev->dev.of_node,
+> -					  "has-hw-flow-control"))
+> +		if (!device_get_property(&pdev->dev, "has-hw-flow-control", NULL))
+>  			port8250.port.flags |= UPF_HARD_FLOW;
+>  
+>  		ret = serial8250_register_8250_port(&port8250);
+> @@ -199,7 +202,7 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
+>  	default:
+>  		/* need to add code for these */
+>  	case PORT_UNKNOWN:
+> -		dev_info(&ofdev->dev, "Unknown serial port found, ignored\n");
+> +		dev_info(&pdev->dev, "Unknown serial port found, ignored\n");
+>  		ret = -ENODEV;
+>  		break;
+>  	}
+> @@ -208,20 +211,19 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
+>  
+>  	info->type = port_type;
+>  	info->line = ret;
+> -	platform_set_drvdata(ofdev, info);
+> +	platform_set_drvdata(pdev, info);
+>  	return 0;
+>  out:
+>  	kfree(info);
+> -	irq_dispose_mapping(port.irq);
+>  	return ret;
+>  }
+>  
+>  /*
+>   * Release a line
+>   */
+> -static int of_platform_serial_remove(struct platform_device *ofdev)
+> +static int of_platform_serial_remove(struct platform_device *pdev)
+>  {
+> -	struct of_serial_info *info = platform_get_drvdata(ofdev);
+> +	struct of_serial_info *info = platform_get_drvdata(pdev);
+>  	switch (info->type) {
+>  #ifdef CONFIG_SERIAL_8250
+>  	case PORT_8250 ... PORT_MAX_8250:
+> 
+> 
+> -- 
+> David Woodhouse                            Open Source Technology Centre
+> David.Woodhouse@intel.com                              Intel Corporation
+Attachment: smime.p7s (application/x-pkcs7-signature)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
