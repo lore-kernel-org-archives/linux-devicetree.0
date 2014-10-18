@@ -1,75 +1,48 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 10/12] gpio: Support for unified device properties interface
-Date: Sat, 18 Oct 2014 11:47:41 +0200
-Message-ID: <2997291.LjjH2RgEUW@wuerfel>
-References: <2660541.BycO7TFnA2@vostro.rjw.lan> <1510578.dSiEYPPI9m@vostro.rjw.lan> <E99B44D9-C9E3-4C0B-8B18-450121793EB5@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <E99B44D9-C9E3-4C0B-8B18-450121793EB5@arndb.de>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH RFC V3 1/3] mxs: add binding for fsl ocotp
+Date: Sat, 18 Oct 2014 10:32:50 +0000
+Message-ID: <1413628372-2809-2-git-send-email-stefan.wahren@i2se.com>
+References: <1413628372-2809-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413628372-2809-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 17 October 2014 20:09:51 Arnd Bergmann wrote:
-> On October 17, 2014 2:16:00 PM CEST, "Rafael J. Wysocki" <rjw@rjwysocki.net> wrote:
-> >From: Mika Westerberg <mika.westerberg@linux.intel.com>
-> >
-> >Some drivers need to deal with only firmware representation of its
-> >GPIOs. An example would be a GPIO button array driver where each button
-> >is described as a separate firmware node in device tree. Typically
-> >these
-> >child nodes do not have physical representation in the Linux device
-> >model.
-> >
-> >In order to help device drivers to handle such firmware child nodes we
-> >add dev[m]_get_named_gpiod_from_child() that takes a child firmware
-> >node pointer as its second argument (the first one is the parent device
-> >itself), finds the GPIO using whatever is the underlying firmware
-> >method, and requests the GPIO properly.
-> 
-> Could we also have a wrapper around this function without a "name" argument,
-> using just the index?
+This patch adds the Device tree bindings for the Freescale MXS On Chip
+OTP driver.
 
-Expanding on this thought: I think we should mandate for new bindings
-that they use either a name and no index, or an index but not name,
-and I also think that for named gpios, we should try to converge on a
-common naming scheme. As discussed, we will probably want to support all
-the existing ways to do this even with ACPI and with the unified
-interface, but it doesn't have to be the obvious way.
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+---
+ .../devicetree/bindings/misc/fsl,octop.txt         |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/fsl,octop.txt
 
-We could do it like this:
+diff --git a/Documentation/devicetree/bindings/misc/fsl,octop.txt b/Documentation/devicetree/bindings/misc/fsl,octop.txt
+new file mode 100644
+index 0000000..db1c510
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/fsl,octop.txt
+@@ -0,0 +1,14 @@
++On-Chip OTP Memory for Freescale MX23/MX28
++
++Required properties:
++- compatible:
++  - "fsl,imx23-ocotp" for MX23
++  - "fsl,imx23-ocotp" for MX28
++- reg : Address and length of OTP controller registers
++
++Example:
++
++	ocotp: ocotp@8002c000 {
++		compatible = "fsl,imx28-ocotp", "fsl,ocotp";
++		reg = <0x8002c000 0x2000>;
++	};
+-- 
+1.7.9.5
 
-// internal implementation, may be called from drivers with legacy bindings 
-struct gpio_desc *__fwnode_get_gpiod_from_property(struct fwnode_handle *fwnode,
-                                           const char *propname, int index)
-{
-	... /* your current code */
-}
-
-// recommended interface
-static inline struct gpio_desc *fwnode_get_gpiod(struct fwnode_handle *fwnode,
-						  int index)
-{
-	return __fwnode_get_gpiod_from_property(fwnode, "gpios", index);
-}
-
-// alternative interface
-struct gpio_desc *fwnode_get_gpiod(struct fwnode_handle *fwnode, const char *name)
-{
-	char propname[64];
-	int ret;
-	
-	ret = snprintf(propname, sizeof(propname), "%s-gpios", name);
-	if (ret > sizeof(propname))
-		return -EINVAL;
-
-	return __fwnode_get_gpiod_from_property(fwnode, propname, 0);
-}
-
-The above is just a suggestion, I'm hoping for the GPIO maintainers to
-provide more guidance if they have other ideas.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
