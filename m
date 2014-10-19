@@ -1,98 +1,87 @@
-From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: RE: [PATCH v2 00/11] ARM: dts: zynq: Prepare Parallella
-Date: Sun, 19 Oct 2014 15:57:06 +0000
-Message-ID: <30e1a5024949427cb08f5c1c8b4ac87f@BY2FFO11FD031.protection.gbl>
-References: <1406242820-20140-1-git-send-email-afaerber@suse.de>,<CAOesGMjAb5oXjauhbqjDhJXWct7qoXxy3XpA1=DioK7vPTwetA@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCHv5 1/6] ARM: dts: Add SoC level device tree support for LS1021A
+Date: Sun, 19 Oct 2014 21:17:56 +0200
+Message-ID: <2556316.vcmG00PcyL@wuerfel>
+References: <1413192963-11153-1-git-send-email-jingchang.lu@freescale.com> <1413192963-11153-2-git-send-email-jingchang.lu@freescale.com> <20141019011744.GB7869@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMjAb5oXjauhbqjDhJXWct7qoXxy3XpA1=DioK7vPTwetA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>, =?iso-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Cc: Michal Simek <michals@xilinx.com>, Andreas Olofsson <andreas@adapteva.com>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, Lars-Peter Clausen <lars@metafoo.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141019011744.GB7869@tiger>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chenhui Zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Suresh Gupta <suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shaveta Leekha <shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ruchika Gupta <ruchika.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sorry, for top-posting, but I currently just have Outlook webmail.
-The cause for this issue is relatively easily identified. The ethernet =
-drivers sets the Ethernet clock according to the negotioated link speed=
-=2E For this adjustment a 6-bit divider in the clock path is used. In t=
-his case, it seems, the input to the 6-bit divider doesn't allow genera=
-ting the full range of required frequencies for all supported link spee=
-ds.
+On Sunday 19 October 2014 09:17:46 Shawn Guo wrote:
+> > diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+> > new file mode 100644
+> > index 0000000..5075c18
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> > @@ -0,0 +1,405 @@
+> > +/*
+> > + * Copyright 2013-2014 Freescale Semiconductor, Inc.
+> > + *
+> > + * This file is dual-licensed: you can use it either under the terms
+> > + * of the GPL or the X11 license, at your option. Note that this dual
+> > + * licensing only applies to this file, and not this project as a
+> > + * whole.
+> > + *
+> > + *  a) This library is free software; you can redistribute it and/or
+> > + *     modify it under the terms of the GNU General Public License as
+> > + *     published by the Free Software Foundation; either version 2 of
+> > + *     the License, or (at your option) any later version.
+> > + *
+> > + *     This library is distributed in the hope that it will be useful,
+> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + *     GNU General Public License for more details.
+> > + *
+> > + *     You should have received a copy of the GNU General Public
+> > + *     License along with this library; if not, write to the Free
+> > + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+> > + *     MA 02110-1301 USA
+> > + *
+> > + * Or, alternatively,
+> > + *
+> > + *  b) Permission is hereby granted, free of charge, to any person
+> > + *     obtaining a copy of this software and associated documentation
+> > + *     files (the "Software"), to deal in the Software without
+> > + *     restriction, including without limitation the rights to use,
+> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> > + *     sell copies of the Software, and to permit persons to whom the
+> > + *     Software is furnished to do so, subject to the following
+> > + *     conditions:
+> > + *
+> > + *     The above copyright notice and this permission notice shall be
+> > + *     included in all copies or substantial portions of the Software.
+> > + *
+> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> > + *     OTHER DEALINGS IN THE SOFTWARE.
+> > + */
+> 
+> DT maintainers,
+> 
+> I would like to confirm this is a appropriate copyright for device tree
+> sources, as it sets the example how we should migrate from the existing
+> GPL.  If we merge it, I assume that a lot of future files will likely
+> follow the example.
 
-I guess this could be solved in multiple ways.
-1. Disable 1G mode/auto negotiation, the other modes are probably fine =
-(yeah, not a solution, but might give you a working ethernet link)
-2. Ensure the divider input allows to generate all required frequencies=
-=2E This essentially means to go back into Xilinx tools and play around=
- with the clock/PLL setup and re-generating a bootloader that sets thin=
-gs up with the updated values.
-3. Support to run-time-adust the PLLs in Zynq. This is definitely the m=
-ost complex one. I never seriously pursued this, since it seemed close =
-to impossible to change the PLLs at run-time without crashing pretty mu=
-ch every downstream user except for the one that requested the frequenc=
-y change. And even if every driver would be able to handle such a chang=
-e, I could imagine that frequency constraints from  all the drivers tog=
-ether would still prevent any change.
+The license is fine as far as I can tell, but the first half mentions
+'library' three times, and that should probably be changed to 'file'.
 
-        Thanks,
-        S=F6ren
+The Allwinner dts files had the same text and are now changing it to
+say 'file'.
 
-________________________________________
-=46rom: devicetree-owner@vger.kernel.org [devicetree-owner@vger.kernel.=
-org] on behalf of Olof Johansson [olof@lixom.net]
-Sent: Friday, October 17, 2014 9:28 PM
-To: Andreas F=E4rber
-Cc: Michal Simek; Andreas Olofsson; Matteo Vit; Sean Rickerd; devicetre=
-e@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-kernel@v=
-ger.kernel.org; Punnaiah Choudary Kalluri; Lars-Peter Clausen
-Subject: Re: [PATCH v2 00/11] ARM: dts: zynq: Prepare Parallella
-
-Hi Andreas,
-
-On Thu, Jul 24, 2014 at 4:00 PM, Andreas F=E4rber <afaerber@suse.de> wr=
-ote:
-> Hello,
->
-> This patch series adds an initial device tree for the Parallella boar=
-d.
-> UART, SD card, Ethernet are enabled.
-> Not yet enabled are HDMI, QSPI flash and 2x USB.
-
-Andreas (Olofsson) kindly sent me a board, and I added it to the boot
-farm today, it'll be included in boot reports from here on.
-
-I did a test run with yesterday's -next It looks like networking isn't
-working there at the moment, clock related. Same happens with 3.17 and
-latest mainline, config multi_v7_defconfig:
-
-[WARN] [    7.943648] macb e000b000.ethernet eth0: unable to generate
-target frequency: 125000000 Hz
-[WARN] [   10.948681] macb e000b000.ethernet eth0: unable to generate
-target frequency: 125000000 Hz
-
-=46ull boot log at:
-
-http://arm-soc.lixom.net/bootlogs/misc/next-20141017/parallella-arm-mul=
-ti_v7_defconfig.html
-
-I'll be happy to try things, but I'm a bit short on cycles to debug
-myself. Should hopefully be easy to reproduce.
-
-
--Olof
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-This email and any attachments are intended for the sole use of the nam=
-ed recipient(s) and contain(s) confidential information that may be pro=
-prietary, privileged or copyrighted under applicable law. If you are no=
-t the intended recipient, do not read, copy, or forward this email mess=
-age or any attachments. Delete this email message and any attachments i=
-mmediately.
