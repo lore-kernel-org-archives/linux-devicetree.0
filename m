@@ -1,46 +1,42 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 13/15] tpm/tpm_i2c_stm_st33: Fix potential bug in tpm_stm_i2c_send
-Date: Sun, 19 Oct 2014 23:11:23 +0200
-Message-ID: <1413753085-9958-14-git-send-email-christophe-h.ricard@st.com>
-References: <1413753085-9958-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413753085-9958-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org
-Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v5 00/12] Add ACPI _DSD and unified device properties
+ support
+Date: Mon, 20 Oct 2014 06:14:12 +0800
+Message-ID: <20141019221412.GA7387@kroah.com>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan>
+ <11223831.j9KAEfSQsY@vostro.rjw.lan>
+ <20141017154007.GB29643@kroah.com>
+ <1787777.qrmnDZUWyu@vostro.rjw.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1787777.qrmnDZUWyu@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-When sending data in tpm_stm_i2c_send, each loop iteration send buf.
-Send buf + i instead as the goal of this for loop is to send a number
-of byte from buf that fit in burstcnt. Once those byte are sent, we are
-supposed to send the next ones.
+On Fri, Oct 17, 2014 at 11:49:45PM +0200, Rafael J. Wysocki wrote:
+> On Friday, October 17, 2014 05:40:07 PM Greg Kroah-Hartman wrote:
+> > On Fri, Oct 17, 2014 at 02:01:33PM +0200, Rafael J. Wysocki wrote:
+> > > Hi Everyone,
+> > > 
+> > > Hving had a couple of chats with Grant and Arnd during LinuxCon EU/LPC, we
+> > > now have version 5 taking all feedback into account (hopefully).
+> > > 
+> > > Changes have been made to patch [02/12] and to patches [09-12/12], although
+> > > in patches [10-12/12] they are fairly minor.  I have retained the Greg's
+> > > ACK on patch [02/12], because it is essentially the same that have been
+> > > posted aleady and ACKed by him (Greg, please let me know if I shouldn't
+> > > do that) and all the ACKs on the remaining patches except for patch [09/12]
+> > > which is substantially different.  Still, if reviewers think that their
+> > > ACKs don't apply any more, please let me know and I'll remove them.
+> > 
+> > No objection from me to keep my ACK on those patches, thanks for asking.
+> 
+> Well, that's just fair IMO. :-)
+> 
+> Does [09/12] look good too in particular?
 
-The driver was working because the burstcount value returns always the maximum size for a TPM
-command or response. (0x800 for a command and 0x400 for a response).
-
-Reviewed-By: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
----
- drivers/char/tpm/tpm_i2c_stm_st33.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
-index 4bbe3cd..231d38f 100644
---- a/drivers/char/tpm/tpm_i2c_stm_st33.c
-+++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
-@@ -532,7 +532,7 @@ static int tpm_stm_i2c_send(struct tpm_chip *chip, unsigned char *buf,
- 		if (burstcnt < 0)
- 			return burstcnt;
- 		size = min_t(int, len - i - 1, burstcnt);
--		r = I2C_WRITE_DATA(tpm_dev, TPM_DATA_FIFO, buf, size);
-+		r = I2C_WRITE_DATA(tpm_dev, TPM_DATA_FIFO, buf + i, size);
- 		if (r < 0)
- 			goto out_err;
- 
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, I have no objections to it.
