@@ -1,38 +1,51 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv5 6/6] ARM: imx: Add Freescale LS1021A SMP support
-Date: Sun, 19 Oct 2014 10:19:09 +0800
-Message-ID: <20141019021908.GF7869@tiger>
-References: <1413192963-11153-1-git-send-email-jingchang.lu@freescale.com>
- <1413192963-11153-7-git-send-email-jingchang.lu@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] of/fdt: Add extern prototype for early_init_dt_scan_chosen_serial()
+Date: Sun, 19 Oct 2014 01:11:34 -0700
+Message-ID: <1413706294-12578-1-git-send-email-cernekee@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1413192963-11153-7-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 13, 2014 at 05:36:03PM +0800, Jingchang Lu wrote:
-> diff --git a/arch/arm/mach-imx/platsmp.c b/arch/arm/mach-imx/platsmp.c
-> index 771bd25..69b87ca 100644
-> --- a/arch/arm/mach-imx/platsmp.c
-> +++ b/arch/arm/mach-imx/platsmp.c
-> @@ -16,6 +16,8 @@
->  #include <asm/page.h>
->  #include <asm/smp_scu.h>
->  #include <asm/mach/map.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of.h>
+The original commit that introduced this function (fb11ffe74c794a)
+indicated that calling it from the architecture code was one possible
+use case.  Let's declare it in of_fdt.h to make it a public API.
 
-Please group the headers into <linux/*> and sort them alphabetically.
+Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ include/linux/of_fdt.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Shawn
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 0ff360d..5d233df 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -12,6 +12,7 @@
+ #ifndef _LINUX_OF_FDT_H
+ #define _LINUX_OF_FDT_H
+ 
++#include <linux/errno.h>
+ #include <linux/types.h>
+ #include <linux/init.h>
+ 
+@@ -87,6 +88,13 @@ extern void early_init_devtree(void *);
+ extern void early_get_first_memblock_info(void *, phys_addr_t *);
+ extern u64 fdt_translate_address(const void *blob, int node_offset);
+ extern void of_fdt_limit_memory(int limit);
++
++#if defined(CONFIG_SERIAL_EARLYCON)
++extern int early_init_dt_scan_chosen_serial(void);
++#else
++static inline int early_init_dt_scan_chosen_serial(void) { return -ENOENT; }
++#endif
++
+ #else /* CONFIG_OF_FLATTREE */
+ static inline void early_init_fdt_scan_reserved_mem(void) {}
+ static inline const char *of_flat_dt_get_machine_name(void) { return NULL; }
+-- 
+2.1.1
 
->  
->  #include "common.h"
->  #include "hardware.h"
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
