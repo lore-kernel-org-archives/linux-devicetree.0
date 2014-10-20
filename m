@@ -1,44 +1,108 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 3/3] ARM: meson: docs: Add docs for MesonX reset controller
-Date: Mon, 20 Oct 2014 13:19:45 +0200
-Message-ID: <1413803985-8363-4-git-send-email-carlo@caione.org>
-References: <1413803985-8363-1-git-send-email-carlo@caione.org>
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv5 6/6] ARM: imx: Add Freescale LS1021A SMP support
+Date: Mon, 20 Oct 2014 11:34:22 +0000
+Message-ID: <394cd4da0e5942d48decbeda1b936657@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1413192963-11153-1-git-send-email-jingchang.lu@freescale.com>
+ <1413192963-11153-7-git-send-email-jingchang.lu@freescale.com>
+ <993EF472-33A7-48BD-A4CD-15B361D53365@codeaurora.org>
+ <1e98bf0f1f2347ed8f02138816061cdc@BL2PR03MB467.namprd03.prod.outlook.com>
+ <D5E3D48E-7425-4BA2-9AE9-59E46F410818@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413803985-8363-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <D5E3D48E-7425-4BA2-9AE9-59E46F410818-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
----
- .../bindings/reset/amlogic,meson6-rst-mgr-ao.txt           | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson6-rst-mgr-ao.txt
-
-diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson6-rst-mgr-ao.txt b/Documentation/devicetree/bindings/reset/amlogic,meson6-rst-mgr-ao.txt
-new file mode 100644
-index 0000000..4a8fd41
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/amlogic,meson6-rst-mgr-ao.txt
-@@ -0,0 +1,14 @@
-+Amlogic MesonX Reset Manager (AO domain)
-+
-+Required properties:
-+- compatible : "amlogic,meson6-rst-mgr-ao"
-+- reg : Should contain 1 register ranges(address and length)
-+- #reset-cells: 1
-+
-+Example:
-+
-+	reset: reset@c8100040 {
-+		#reset-cells = <1>;
-+		compatible = "amlogic,meson6-rst-mgr-ao";
-+		reg = <0xc8100040 0x4>;
-+	};
--- 
-1.9.1
-
+DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEt1bWFyIEdhbGEgW21haWx0
+bzpnYWxha0Bjb2RlYXVyb3JhLm9yZ10NCj5TZW50OiBGcmlkYXksIE9jdG9iZXIgMTcsIDIwMTQg
+ODoyNyBQTQ0KPlRvOiBMdSBKaW5nY2hhbmctQjM1MDgzDQo+Q2M6IHNoYXduLmd1b0BsaW5hcm8u
+b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+
+bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBhcm5kQGFybmRiLmRlDQo+U3Vi
+amVjdDogUmU6IFtQQVRDSHY1IDYvNl0gQVJNOiBpbXg6IEFkZCBGcmVlc2NhbGUgTFMxMDIxQSBT
+TVAgc3VwcG9ydA0KPg0KPg0KPk9uIE9jdCAxNywgMjAxNCwgYXQgMTI6MTAgUE0sIEppbmdjaGFu
+ZyBMdSA8amluZ2NoYW5nLmx1QGZyZWVzY2FsZS5jb20+DQo+d3JvdGU6DQo+DQo+Pg0KPj4NCj4+
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPj4+IEZyb206IEt1bWFyIEdhbGEgW21haWx0
+bzpnYWxha0Bjb2RlYXVyb3JhLm9yZ10NCj4+PiBTZW50OiBUaHVyc2RheSwgT2N0b2JlciAxNiwg
+MjAxNCAxMDozMSBQTQ0KPj4+IFRvOiBMdSBKaW5nY2hhbmctQjM1MDgzDQo+Pj4gQ2M6IHNoYXdu
+Lmd1b0BsaW5hcm8ub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4+PiBkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZzsgTHUgSmluZ2NoYW5nLUIzNTA4MzsNCj4+PiBsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmc7IGFybmRAYXJuZGIuZGUNCj4+PiBTdWJqZWN0OiBSZTogW1BB
+VENIdjUgNi82XSBBUk06IGlteDogQWRkIEZyZWVzY2FsZSBMUzEwMjFBIFNNUA0KPj4+IHN1cHBv
+cnQNCj4+Pg0KPj4+DQo+Pj4gT24gT2N0IDEzLCAyMDE0LCBhdCAxMTozNiBBTSwgSmluZ2NoYW5n
+IEx1DQo+Pj4gPGppbmdjaGFuZy5sdUBmcmVlc2NhbGUuY29tPg0KPj4+IHdyb3RlOg0KPj4+DQo+
+Pj4+IEZyb206IEppbmdjaGFuZyBMdSA8YjM1MDgzQGZyZWVzY2FsZS5jb20+DQo+Pj4+DQo+Pj4+
+IEZyZWVzY2FsZSBMUzEwMjFBIFNvQ3MgZGVwbG95IHR3byBjb3J0ZXgtQTcgcHJvY2Vzc29ycywg
+dGhpcyBhZGRzDQo+Pj4+IGJyaW5nLXVwIHN1cHBvcnQgZm9yIHRoZSBzZWNvbmRhcnkgY29yZS4N
+Cj4+Pj4NCj4+Pj4gU2lnbmVkLW9mZi1ieTogSmluZ2NoYW5nIEx1IDxiMzUwODNAZnJlZXNjYWxl
+LmNvbT4NCj4+Pj4gLS0tDQo+Pj4+IGFyY2gvYXJtL21hY2gtaW14L01ha2VmaWxlICAgICAgIHwg
+IDIgKy0NCj4+Pj4gYXJjaC9hcm0vbWFjaC1pbXgvY29tbW9uLmggICAgICAgfCAgMSArDQo+Pj4+
+IGFyY2gvYXJtL21hY2gtaW14L21hY2gtbHMxMDIxYS5jIHwgIDEgKw0KPj4+PiBhcmNoL2FybS9t
+YWNoLWlteC9wbGF0c21wLmMgICAgICB8IDMyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrDQo+Pj4+IDQgZmlsZXMgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
+KQ0KPj4+Pg0KPj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1pbXgvTWFrZWZpbGUgYi9h
+cmNoL2FybS9tYWNoLWlteC9NYWtlZmlsZQ0KPj4+PiBpbmRleCBjZTEzN2JjLi4zOGQ3NWUyIDEw
+MDY0NA0KPj4+PiAtLS0gYS9hcmNoL2FybS9tYWNoLWlteC9NYWtlZmlsZQ0KPj4+PiArKysgYi9h
+cmNoL2FybS9tYWNoLWlteC9NYWtlZmlsZQ0KPj4+PiBAQCAtODksNyArODksNyBAQCBvYmotJChD
+T05GSUdfSEFWRV9JTVhfQU5BVE9QKSArPSBhbmF0b3Aubw0KPj4+PiBvYmotJChDT05GSUdfSEFW
+RV9JTVhfR1BDKSArPSBncGMubw0KPj4+PiBvYmotJChDT05GSUdfSEFWRV9JTVhfTU1EQykgKz0g
+bW1kYy5vDQo+Pj4+IG9iai0kKENPTkZJR19IQVZFX0lNWF9TUkMpICs9IHNyYy5vDQo+Pj4+IC1p
+ZmRlZiBDT05GSUdfU09DX0lNWDYNCj4+Pj4gK2lmbmVxICgkKENPTkZJR19TT0NfSU1YNikkKENP
+TkZJR19TT0NfTFMxMDIxQSksKQ0KPj4+PiBBRkxBR1NfaGVhZHNtcC5vIDo9LVdhLC1tYXJjaD1h
+cm12Ny1hDQo+Pj4+IG9iai0kKENPTkZJR19TTVApICs9IGhlYWRzbXAubyBwbGF0c21wLm8NCj4+
+Pj4gb2JqLSQoQ09ORklHX0hPVFBMVUdfQ1BVKSArPSBob3RwbHVnLm8gZGlmZiAtLWdpdA0KPj4+
+PiBhL2FyY2gvYXJtL21hY2gtaW14L2NvbW1vbi5oIGIvYXJjaC9hcm0vbWFjaC1pbXgvY29tbW9u
+LmggaW5kZXgNCj4+Pj4gMWRhYmY0My4uYzQ3M2NhNSAxMDA2NDQNCj4+Pj4gLS0tIGEvYXJjaC9h
+cm0vbWFjaC1pbXgvY29tbW9uLmgNCj4+Pj4gKysrIGIvYXJjaC9hcm0vbWFjaC1pbXgvY29tbW9u
+LmgNCj4+Pj4gQEAgLTE1Nyw1ICsxNTcsNiBAQCBzdGF0aWMgaW5saW5lIHZvaWQgaW14X2luaXRf
+bDJjYWNoZSh2b2lkKSB7fQ0KPj4+PiAjZW5kaWYNCj4+Pj4NCj4+Pj4gZXh0ZXJuIHN0cnVjdCBz
+bXBfb3BlcmF0aW9ucyBpbXhfc21wX29wczsNCj4+Pj4gK2V4dGVybiBzdHJ1Y3Qgc21wX29wZXJh
+dGlvbnMgbHMxMDIxYV9zbXBfb3BzOw0KPj4+Pg0KPj4+PiAjZW5kaWYNCj4+Pj4gZGlmZiAtLWdp
+dCBhL2FyY2gvYXJtL21hY2gtaW14L21hY2gtbHMxMDIxYS5jDQo+Pj4+IGIvYXJjaC9hcm0vbWFj
+aC1pbXgvbWFjaC1sczEwMjFhLmMNCj4+Pj4gaW5kZXggOWQyMDM0Yi4uYjg5Yzg1OCAxMDA2NDQN
+Cj4+Pj4gLS0tIGEvYXJjaC9hcm0vbWFjaC1pbXgvbWFjaC1sczEwMjFhLmMNCj4+Pj4gKysrIGIv
+YXJjaC9hcm0vbWFjaC1pbXgvbWFjaC1sczEwMjFhLmMNCj4+Pj4gQEAgLTE3LDUgKzE3LDYgQEAg
+c3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCBsczEwMjFhX2R0X2NvbXBhdFtdDQo+Pj4+IF9faW5p
+dGNvbnN0ID0geyB9Ow0KPj4+Pg0KPj4+PiBEVF9NQUNISU5FX1NUQVJUKExTMTAyMUEsICJGcmVl
+c2NhbGUgTFMxMDIxQSIpDQo+Pj4+ICsJLnNtcAkJPSBzbXBfb3BzKGxzMTAyMWFfc21wX29wcyks
+DQo+Pj4+IAkuZHRfY29tcGF0CT0gbHMxMDIxYV9kdF9jb21wYXQsDQo+Pj4+IE1BQ0hJTkVfRU5E
+DQo+Pj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNoLWlteC9wbGF0c21wLmMNCj4+Pj4gYi9h
+cmNoL2FybS9tYWNoLWlteC9wbGF0c21wLmMgaW5kZXggNzcxYmQyNS4uNjliODdjYSAxMDA2NDQN
+Cj4+Pj4gLS0tIGEvYXJjaC9hcm0vbWFjaC1pbXgvcGxhdHNtcC5jDQo+Pj4+ICsrKyBiL2FyY2gv
+YXJtL21hY2gtaW14L3BsYXRzbXAuYw0KPj4+PiBAQCAtMTYsNiArMTYsOCBAQA0KPj4+PiAjaW5j
+bHVkZSA8YXNtL3BhZ2UuaD4NCj4+Pj4gI2luY2x1ZGUgPGFzbS9zbXBfc2N1Lmg+DQo+Pj4+ICNp
+bmNsdWRlIDxhc20vbWFjaC9tYXAuaD4NCj4+Pj4gKyNpbmNsdWRlIDxsaW51eC9vZl9hZGRyZXNz
+Lmg+DQo+Pj4+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4NCj4+Pj4NCj4+Pj4gI2luY2x1ZGUgImNv
+bW1vbi5oIg0KPj4+PiAjaW5jbHVkZSAiaGFyZHdhcmUuaCINCj4+Pj4gQEAgLTk0LDMgKzk2LDMz
+IEBAIHN0cnVjdCBzbXBfb3BlcmF0aW9ucyAgaW14X3NtcF9vcHMgX19pbml0ZGF0YSA9IHsNCj4+
+Pj4gCS5jcHVfa2lsbAkJPSBpbXhfY3B1X2tpbGwsDQo+Pj4+ICNlbmRpZg0KPj4+PiB9Ow0KPj4+
+PiArDQo+Pj4+ICsjZGVmaW5lIERDRkdfQ0NTUl9TQ1JBVENIUlcxCTB4MjAwDQo+Pj4+ICsNCj4+
+Pj4gK3N0YXRpYyBpbnQgbHMxMDIxYV9ib290X3NlY29uZGFyeSh1bnNpZ25lZCBpbnQgY3B1LCBz
+dHJ1Y3QNCj4+Pj4gK3Rhc2tfc3RydWN0ICppZGxlKSB7DQo+Pj4+ICsJYXJjaF9zZW5kX3dha2V1
+cF9pcGlfbWFzayhjcHVtYXNrX29mKGNwdSkpOw0KPj4+PiArDQo+Pj4+ICsJcmV0dXJuIDA7DQo+
+Pj4+ICt9DQo+Pj4+ICsNCj4+Pj4gK3N0YXRpYyB2b2lkIF9faW5pdCBsczEwMjFhX3NtcF9wcmVw
+YXJlX2NwdXModW5zaWduZWQgaW50IG1heF9jcHVzKSB7DQo+Pj4+ICsJc3RydWN0IGRldmljZV9u
+b2RlICpucDsNCj4+Pj4gKwl2b2lkIF9faW9tZW0gKmRjZmdfYmFzZTsNCj4+Pj4gKwl1bnNpZ25l
+ZCBsb25nIHBhZGRyOw0KPj4+PiArDQo+Pj4+ICsJbnAgPSBvZl9maW5kX2NvbXBhdGlibGVfbm9k
+ZShOVUxMLCBOVUxMLCAiZnNsLGxzMTAyMWEtZGNmZyIpOw0KPj4+PiArCWRjZmdfYmFzZSA9IG9m
+X2lvbWFwKG5wLCAwKTsNCj4+Pj4gKwlCVUdfT04oIWRjZmdfYmFzZSk7DQo+Pj4+ICsNCj4+Pj4g
+KwlwYWRkciA9IHZpcnRfdG9fcGh5cyhzZWNvbmRhcnlfc3RhcnR1cCk7DQo+Pj4+ICsJd3JpdGVs
+X3JlbGF4ZWQoY3B1X3RvX2JlMzIocGFkZHIpLCBkY2ZnX2Jhc2UgKw0KPj4+PiArRENGR19DQ1NS
+X1NDUkFUQ0hSVzEpOw0KPj4+PiArDQo+Pj4NCj4+PiBUaGlzIHNlZW1zIG9kZCwgd2h5IGFyZSB3
+ZSB3cml0aW5nIHRoZSBzdGFydHVwIGFkZHJlc3MgdG8NCj4+PiBEQ0ZHX0NDU1JfU0NSQVRDSFJX
+MT8NCj4+IEl0IGlzIHRoZSBzZWNvbmRhcnkgY3B1J3MgZXhlY3V0aW5nIGFkZHJlc3MgZm9yIHNt
+cCBrZXJuZWwgaW1hZ2UsIHRoZQ0KPj4gc2Vjb25kYXJ5IGNwdSB3aWxsIGp1bXAgdG8gdGhpcyBh
+ZGRyZXNzIGFmdGVyIHdha2V1cCBkdXJpbmcgdGhlIHNtcA0KPj4gaW5pdGlhbGl6YXRpb24uIFRo
+YW5rcy4NCj4NCj5JcyB0aGF0IGEgY29udmVudGlvbiBzcGVj4oCZZCBieSBIVyBvciBTVz8NCk9u
+ZSBpcyBib290cm9tJ3MgY29udmVudGlvbiwgdGhhbmtzLg0KDQpCZXN0IFJlZ2FyZHMNCkppbmdo
+Y2FuZw0KPg0KPi0gaw0KPi0tDQo+UXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4NCj5U
+aGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgdGhlIENv
+ZGUgQXVyb3JhIEZvcnVtLA0KPmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2pl
+Y3QNCg0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
