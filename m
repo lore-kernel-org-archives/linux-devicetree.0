@@ -1,67 +1,112 @@
-From: "jinkun.hong" <jinkun.hong@rock-chips.com>
-Subject: [PATCH v4 3/3] ARM: dts: add rk3288 power-domain node
-Date: Mon, 20 Oct 2014 02:03:43 -0700
-Message-ID: <1413795824-3453-4-git-send-email-jinkun.hong@rock-chips.com>
-References: <1413795824-3453-1-git-send-email-jinkun.hong@rock-chips.com>
+From: Varka Bhadram <varkabhadram@gmail.com>
+Subject: Re: [PATCH v4 1/3] power-domain: add power domain drivers for Rockchip
+ platform
+Date: Mon, 20 Oct 2014 14:39:48 +0530
+Message-ID: <5444D15C.4030308@gmail.com>
+References: <1413795824-3453-1-git-send-email-jinkun.hong@rock-chips.com> <1413795824-3453-2-git-send-email-jinkun.hong@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1413795824-3453-1-git-send-email-jinkun.hong@rock-chips.com>
+In-Reply-To: <1413795824-3453-2-git-send-email-jinkun.hong@rock-chips.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org
-Cc: Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, "jinkun.hong" <jinkun.hong@rock-chips.com>, Jack Dai <jack.dai@rock-chips.com>
+To: "jinkun.hong" <jinkun.hong@rock-chips.com>, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org
+Cc: Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, Jack Dai <jack.dai@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-From: "jinkun.hong" <jinkun.hong@rock-chips.com>
+On 10/20/2014 02:33 PM, jinkun.hong wrote:
+> From: "jinkun.hong" <jinkun.hong@rock-chips.com>
+>
+> Add power domain drivers based on generic power domain for Rockchip platform,
+> and support RK3288.
+>
+> Signed-off-by: Jack Dai <jack.dai@rock-chips.com>
+> Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
+>
+> ---
+>
+(...)
 
-Signed-off-by: Jack Dai <jack.dai@rock-chips.com>
-Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
+> +static int rockchip_pd_power(struct rockchip_domain *pd, bool power_on)
+> +{
+> +	int i = 0;
+> +	int ret = 0;
+> +	struct rockchip_dev_entry *de;
+> +
+> +	spin_lock_irq(&pd->dev_lock);
+> +
+> +	list_for_each_entry(de, &pd->dev_list, node) {
+> +		i += 1;
+> +		pm_clk_resume(pd->dev);
+> +	}
+> +
+> +	/* no clk, set power domain will fail */
+> +	if (i == 0) {
+> +		pr_err("%s: failed to on/off power domain!", __func__);
 
----
+Missed terminating new line  :-)
 
-Changes in v4: None
-Changes in v3:
-- Decomposition power-controller, changed to multiple controller
-   (gpu-power-controller, hevc-power-controller)
+> +		spin_unlock_irq(&pd->dev_lock);
+> +		return ret;
+> +	}
+> +
+> +	ret = rockchip_pmu_set_power_domain(pd, power_on);
+> +
+> +	list_for_each_entry(de, &pd->dev_list, node) {
+> +		pm_clk_suspend(pd->dev);
+> +	}
+> +
+> +	spin_unlock_irq(&pd->dev_lock);
+> +
+> +	return ret;
+> +}
+> +
 
-Changes in v2:
-- make pd_vio clocks all one entry per line and alphabetize.
-- power: power-controller move back to pinctrl: pinctrl.
+(...)
 
- arch/arm/boot/dts/rk3288.dtsi |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+> +static int rockchip_pm_domain_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *node;
+> +	struct regmap *regmap_pmu;
+> +	struct rockchip_domain *pd;
+> +	const struct of_device_id *match;
+> +
+> +	match = of_match_node(rockchip_pm_domain_dt_match, pdev->dev.of_node);
+> +	pd = (struct rockchip_domain *)match->data;
+> +
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 5950b0a..6a9b313 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -592,4 +592,28 @@
- 			};
- 		};
- 	};
-+
-+	gpu_power: gpu-power-controller {
-+		compatible = "rockchip,rk3288-power-gpu";
-+		rockchip,pmu = <&pmu>;
-+		#power-domain-cells = <0>;
-+	};
-+
-+	hevc_power: hevc-power-controller {
-+		compatible = "rockchip,rk3288-power-hevc";
-+		rockchip,pmu = <&pmu>;
-+		#power-domain-cells = <0>;
-+	};
-+
-+	video_power: video-power-controller {
-+		compatible = "rockchip,rk3288-power-video";
-+		rockchip,pmu = <&pmu>;
-+		#power-domain-cells = <0>;
-+	};
-+
-+	vio_power: vio-power-controller {
-+		compatible = "rockchip,rk3288-power-vio";
-+		rockchip,pmu = <&pmu>;
-+		#power-domain-cells = <0>;
-+	};
- };
+Unnecessary one line space..
+
+> +	if (!pd)
+> +		return -ENOMEM;
+> +
+> +	node = of_parse_phandle(pdev->dev.of_node, "rockchip,pmu", 0);
+> +	regmap_pmu = syscon_node_to_regmap(node);
+> +	of_node_put(node);
+> +	if (IS_ERR(regmap_pmu)) {
+> +		pr_err("%s: failed to get regmap_pmu", __func__);
+
+Terminating new line missed...  :-)
+
+> +		return PTR_ERR(regmap_pmu);
+> +	}
+> +
+> +	pd->regmap_pmu = regmap_pmu;
+> +	pd->dev = &pdev->dev;
+> +
+> +	INIT_LIST_HEAD(&pd->dev_list);
+> +
+> +	spin_lock_init(&pd->idle_lock);
+> +	spin_lock_init(&pd->pmu_lock);
+> +	spin_lock_init(&pd->dev_lock);
+> +
+> +	pm_genpd_init(&pd->base, NULL, false);
+> +
+> +	return of_genpd_add_provider_simple(pdev->dev.of_node, &pd->base);
+> +}
+> +
+>
 -- 
-1.7.9.5
+Thanks and Regards,
+Varka Bhadram.
 
