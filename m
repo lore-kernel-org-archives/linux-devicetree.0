@@ -1,92 +1,257 @@
-From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
-Subject: Re: [PATCH v5 0/6] Add initial support for pinctrl on Exynos7
-Date: Mon, 20 Oct 2014 19:31:48 +0530
-Message-ID: <CAM4voa=k=bq67mTMtaQiFp-m2byY=U-gMyWoeckvhW-HTaRhag@mail.gmail.com>
-References: <1412862874-9335-1-git-send-email-a.kesavan@samsung.com>
-	<54397DAA.4020607@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <54397DAA.4020607@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, Naveen Krishna <naveenkrishna.ch@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v5 03/12] ACPI: Allow drivers to match using Device Tree
+ compatible property
+Date: Mon, 20 Oct 2014 16:05:01 +0200
+Message-ID: <20141020140501.D10A5C40982@trevor.secretlab.ca>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan>
+	<11223831.j9KAEfSQsY@vostro.rjw.lan> <3167500.xrhugPHshV@vostro.rjw.lan>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <3167500.xrhugPHshV@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Fri, 17 Oct 2014 14:05:59 +0200
+, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+ wrote:
+> From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> 
+> We have lots of existing Device Tree enabled drivers and allocating
+> separate _HID for each is not feasible. Instead we allocate special _HID
+> "PRP0001" that means that the match should be done using Device Tree
+> compatible property using driver's .of_match_table instead if the driver
+> is missing .acpi_match_table.
 
-On Sun, Oct 12, 2014 at 12:27 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Abhilash, Linus,
->
-> On 09.10.2014 15:54, Abhilash Kesavan wrote:
->> Changes since v4:
->>       - Rebased over Tomasz Figa's pinctrl clean-up patches[1]
->>
->> Changes since v3:
->>       - Changed variable name from exynos_wkup_irq_chip to irq_chip
->>       - Added acked-by tag from Tomasz Figa
->>
->> Changes since v2:
->>       - Added a .irq_chip field to the samsung_pin_bank struct
->>       - Consolidated the wakeup and gpio irqd_ops
->>
->> Changes since v1:
->>       - Marked the newly created irq_chip instances as __initdata
->>       - Used kmemdup to keep a copy of the irq_chip
->>       - Change the pinctrl name from sd0_rdqs to sd0_ds as per UM
->>       - Moved the pinctrl enablement for exynos7 into a separate patch
->>       - Added tested-by and reviewed-by tags from Thomas Abraham
->>
->> This series has been tested on linux-next (20141008)
->> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/ with
->> the following dependencies and [1].
->>
->> a) Samsung Serial symbol clean-up for exynos7 serial driver enablement (v2)
->>    http://www.spinics.net/lists/arm-kernel/msg366947.html
->>    http://www.spinics.net/lists/arm-kernel/msg366948.html
->> b) "dts, kbuild: Implement support for dtb vendor subdirs" patchset - rebased
->>    http://comments.gmane.org/gmane.linux.kbuild.devel/12131
->> c) "arch: arm64: enable support for Samsung Exynos7 SoC" patchset (v5) - rebased
->>    http://www.spinics.net/lists/arm-kernel/msg364014.html
->>
->> [1] https://lkml.org/lkml/2014/10/2/476
->>
->> Abhilash Kesavan (3):
->>   pinctrl: exynos: Generalize the eint16_31 demux code
->>   pinctrl: exynos: Consolidate irq domain callbacks
->>   pinctrl: exynos: Add irq_chip instance for Exynos7 wakeup interrupts
->>
->> Naveen Krishna Ch (3):
->>   pinctrl: exynos: Add initial driver data for Exynos7
->>   arm64: dts: Add initial pinctrl support to EXYNOS7
->>   arm64: exynos: Enable pinctrl support for Exynos7
->>
->>  .../bindings/pinctrl/samsung-pinctrl.txt           |    3 +
->>  arch/arm64/Kconfig                                 |    2 +
->>  arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi    |  560 ++++++++++++++++++++
->>  arch/arm64/boot/dts/exynos/exynos7.dtsi            |   66 +++
->>  drivers/pinctrl/samsung/pinctrl-exynos.c           |  188 +++++--
->>  drivers/pinctrl/samsung/pinctrl-exynos.h           |    3 +
->>  drivers/pinctrl/samsung/pinctrl-samsung.c          |    2 +
->>  drivers/pinctrl/samsung/pinctrl-samsung.h          |    3 +
->>  8 files changed, 791 insertions(+), 36 deletions(-)
->>  create mode 100644 arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
->>
->
-> No further comments from me. Thanks Abhilash for addressing all of them.
->
-> Linus, feel free to apply this series with my ACK (which seems to be
-> already present in all patches).
+(Not a critique of this patch, but merely a helpful comment; my previous
+ack remains intact) :-)
 
-Can you please pick this series up.
+It would be useful for the code to point at some document that describes
+the semantics of the PRP0001 binding.
 
-Thanks,
-Abhilash
->
-> Best regards,
-> Tomasz
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+g.
+
+> 
+> If there is a need to distinguish from where the device is enumerated
+> (DT/ACPI) driver can check dev->of_node or ACPI_COMPATION(dev).
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reviewed-by: Grant Likely <grant.likely@linaro.org>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/acpi/property.c | 34 +++++++++++++++++
+>  drivers/acpi/scan.c     | 97 +++++++++++++++++++++++++++++++++++++++++++------
+>  include/acpi/acpi_bus.h |  1 +
+>  include/linux/acpi.h    |  8 +---
+>  4 files changed, 123 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+> index 680f7f1..ff53eb8 100644
+> --- a/drivers/acpi/property.c
+> +++ b/drivers/acpi/property.c
+> @@ -76,6 +76,37 @@ static bool acpi_properties_format_valid(const union acpi_object *properties)
+>  	return true;
+>  }
+>  
+> +static void acpi_init_of_compatible(struct acpi_device *adev)
+> +{
+> +	const union acpi_object *of_compatible;
+> +	struct acpi_hardware_id *hwid;
+> +	bool acpi_of = false;
+> +
+> +	/*
+> +	 * Check if the special PRP0001 ACPI ID is present and in that
+> +	 * case we fill in Device Tree compatible properties for this
+> +	 * device.
+> +	 */
+> +	list_for_each_entry(hwid, &adev->pnp.ids, list) {
+> +		if (!strcmp(hwid->id, "PRP0001")) {
+> +			acpi_of = true;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (!acpi_of)
+> +		return;
+> +
+> +	if (acpi_dev_get_property_array(adev, "compatible", ACPI_TYPE_STRING,
+> +					&of_compatible)) {
+> +		acpi_handle_warn(adev->handle,
+> +				 "PRP0001 requires compatible property\n");
+> +		return;
+> +	}
+> +
+> +	adev->data.of_compatible = of_compatible;
+> +}
+> +
+>  void acpi_init_properties(struct acpi_device *adev)
+>  {
+>  	struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER };
+> @@ -119,6 +150,8 @@ void acpi_init_properties(struct acpi_device *adev)
+>  
+>  		adev->data.pointer = buf.pointer;
+>  		adev->data.properties = properties;
+> +
+> +		acpi_init_of_compatible(adev);
+>  		return;
+>  	}
+>  
+> @@ -130,6 +163,7 @@ void acpi_init_properties(struct acpi_device *adev)
+>  void acpi_free_properties(struct acpi_device *adev)
+>  {
+>  	ACPI_FREE((void *)adev->data.pointer);
+> +	adev->data.of_compatible = NULL;
+>  	adev->data.pointer = NULL;
+>  	adev->data.properties = NULL;
+>  }
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 1979ab3..bc999f1 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -124,17 +124,51 @@ static int create_modalias(struct acpi_device *acpi_dev, char *modalias,
+>  	if (list_empty(&acpi_dev->pnp.ids))
+>  		return 0;
+>  
+> -	len = snprintf(modalias, size, "acpi:");
+> -	size -= len;
+> -
+> -	list_for_each_entry(id, &acpi_dev->pnp.ids, list) {
+> -		count = snprintf(&modalias[len], size, "%s:", id->id);
+> -		if (count < 0)
+> -			return -EINVAL;
+> -		if (count >= size)
+> -			return -ENOMEM;
+> -		len += count;
+> -		size -= count;
+> +	/*
+> +	 * If the device has PRP0001 we expose DT compatible modalias
+> +	 * instead in form of of:NnameTCcompatible.
+> +	 */
+> +	if (acpi_dev->data.of_compatible) {
+> +		struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER };
+> +		const union acpi_object *of_compatible, *obj;
+> +		char *c;
+> +		int i;
+> +
+> +		acpi_get_name(acpi_dev->handle, ACPI_SINGLE_NAME, &buf);
+> +		/* DT strings are all in lower case */
+> +		for (c = buf.pointer; *c != '\0'; c++)
+> +			*c = tolower(*c);
+> +
+> +		len = snprintf(modalias, size, "of:N%sT", (char *)buf.pointer);
+> +		ACPI_FREE(buf.pointer);
+> +
+> +		of_compatible = acpi_dev->data.of_compatible;
+> +		for (i = 0; i < of_compatible->package.count; i++) {
+> +			obj = &of_compatible->package.elements[i];
+> +
+> +			count = snprintf(&modalias[len], size, "C%s",
+> +					 obj->string.pointer);
+> +			if (count < 0)
+> +				return -EINVAL;
+> +			if (count >= size)
+> +				return -ENOMEM;
+> +
+> +			len += count;
+> +			size -= count;
+> +		}
+> +	} else {
+> +		len = snprintf(modalias, size, "acpi:");
+> +		size -= len;
+> +
+> +		list_for_each_entry(id, &acpi_dev->pnp.ids, list) {
+> +			count = snprintf(&modalias[len], size, "%s:", id->id);
+> +			if (count < 0)
+> +				return -EINVAL;
+> +			if (count >= size)
+> +				return -ENOMEM;
+> +			len += count;
+> +			size -= count;
+> +		}
+>  	}
+>  
+>  	modalias[len] = '\0';
+> @@ -864,6 +898,47 @@ int acpi_match_device_ids(struct acpi_device *device,
+>  }
+>  EXPORT_SYMBOL(acpi_match_device_ids);
+>  
+> +/* Performs match against special "PRP0001" shoehorn ACPI ID */
+> +static bool acpi_of_driver_match_device(struct device *dev,
+> +					const struct device_driver *drv)
+> +{
+> +	const union acpi_object *of_compatible;
+> +	struct acpi_device *adev;
+> +	int i;
+> +
+> +	adev = ACPI_COMPANION(dev);
+> +	if (!adev)
+> +		return false;
+> +
+> +	of_compatible = adev->data.of_compatible;
+> +	if (!drv->of_match_table || !of_compatible)
+> +		return false;
+> +
+> +	/* Now we can look for the driver DT compatible strings */
+> +	for (i = 0; i < of_compatible->package.count; i++) {
+> +		const struct of_device_id *id;
+> +		const union acpi_object *obj;
+> +
+> +		obj = &of_compatible->package.elements[i];
+> +
+> +		for (id = drv->of_match_table; id->compatible[0]; id++)
+> +			if (!strcasecmp(obj->string.pointer, id->compatible))
+> +				return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +bool acpi_driver_match_device(struct device *dev,
+> +			      const struct device_driver *drv)
+> +{
+> +	if (!drv->acpi_match_table)
+> +		return acpi_of_driver_match_device(dev, drv);
+> +
+> +	return !!acpi_match_device(drv->acpi_match_table, dev);
+> +}
+> +EXPORT_SYMBOL_GPL(acpi_driver_match_device);
+> +
+>  static void acpi_free_power_resources_lists(struct acpi_device *device)
+>  {
+>  	int i;
+> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+> index f9734fa..98cd723 100644
+> --- a/include/acpi/acpi_bus.h
+> +++ b/include/acpi/acpi_bus.h
+> @@ -341,6 +341,7 @@ struct acpi_device_physical_node {
+>  struct acpi_device_data {
+>  	const union acpi_object *pointer;
+>  	const union acpi_object *properties;
+> +	const union acpi_object *of_compatible;
+>  };
+>  
+>  /* Device */
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 18c1bc3..11aa6b8 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -424,12 +424,8 @@ extern int acpi_nvs_for_each_region(int (*func)(__u64, __u64, void *),
+>  const struct acpi_device_id *acpi_match_device(const struct acpi_device_id *ids,
+>  					       const struct device *dev);
+>  
+> -static inline bool acpi_driver_match_device(struct device *dev,
+> -					    const struct device_driver *drv)
+> -{
+> -	return !!acpi_match_device(drv->acpi_match_table, dev);
+> -}
+> -
+> +extern bool acpi_driver_match_device(struct device *dev,
+> +				     const struct device_driver *drv);
+>  int acpi_device_uevent_modalias(struct device *, struct kobj_uevent_env *);
+>  int acpi_device_modalias(struct device *, char *, int);
+>  
+> -- 
+> 1.9.3
+> 
+> 
+
