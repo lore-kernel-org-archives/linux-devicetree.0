@@ -1,31 +1,36 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH 1/3] drivers: cpuidle: add status property to ARM idle states
-Date: Mon, 20 Oct 2014 14:38:02 -0700
-Message-ID: <7hbnp6e81x.fsf@deeprootsystems.com>
-References: <1413467997-32131-1-git-send-email-lorenzo.pieralisi@arm.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v4 1/3] power-domain: add power domain drivers for
+ Rockchip platform
+Date: Mon, 20 Oct 2014 22:40:29 +0100
+Message-ID: <20141020214029.GY27405@n2100.arm.linux.org.uk>
+References: <1413795824-3453-1-git-send-email-jinkun.hong@rock-chips.com>
+ <1413795824-3453-2-git-send-email-jinkun.hong@rock-chips.com>
+ <7hppdme8d6.fsf@deeprootsystems.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1413467997-32131-1-git-send-email-lorenzo.pieralisi@arm.com>
-	(Lorenzo Pieralisi's message of "Thu, 16 Oct 2014 14:59:55 +0100")
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Chander Kashyap <k.chander@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7hppdme8d6.fsf@deeprootsystems.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>
+Cc: "jinkun.hong" <jinkun.hong@rock-chips.com>, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, Jack Dai <jack.dai@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
+On Mon, Oct 20, 2014 at 02:31:17PM -0700, Kevin Hilman wrote:
+> "jinkun.hong" <jinkun.hong@rock-chips.com> writes:
+> > +	spin_lock_irqsave(&pd->idle_lock, flags);
+> > +	val = (idle) ? mask : 0;
+> > +	regmap_update_bits(pd->regmap_pmu, REQ_OFFSET, mask, val);
+> > +	dsb();
+> 
+> A summary of the locking and barriers here (or in changelog) would be
+> helpful for reviewers to verify you're protecting what you need to
+> protect.
 
-> On some platforms the device tree bindings must provide the kernel
-> with a status flag for idle states, that defines whether the idle
-> state is operational or not in the current configuration.
->
-> This patch adds a status property to the ARM idle states compliant
-> with ePAPR v1.1 and updates the DT parsing code accordingly.
->
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+It's also worth saying that the Linux specific barrier names should be
+used unless there is a pressing reason to use the ARM specific barrier
+names.
 
-For the series:
-
-Acked-by: Kevin Hilman <khilman@linaro.org>
-
-Kevin
+-- 
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
