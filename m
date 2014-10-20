@@ -1,56 +1,82 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 2/5] mfd: max77693: Map charger device to its own
- of_node
-Date: Mon, 20 Oct 2014 16:06:30 +0100
-Message-ID: <20141020150630.GB26784@x1>
-References: <1413808489-3524-1-git-send-email-k.kozlowski@samsung.com>
- <1413808489-3524-3-git-send-email-k.kozlowski@samsung.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] dma: at_xdmac: creation of the atmel eXtended DMA
+ Controller driver
+Date: Mon, 20 Oct 2014 17:08:38 +0200
+Message-ID: <20141020150837.GH7443@ldesroches-Latitude-E6320>
+References: <1412175565-810-1-git-send-email-ludovic.desroches@atmel.com>
+ <1412175565-810-2-git-send-email-ludovic.desroches@atmel.com>
+ <20141015133004.GP1638@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1413808489-3524-3-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, linux-api@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+In-Reply-To: <20141015133004.GP1638-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 20 Oct 2014, Krzysztof Kozlowski wrote:
+Hi Vinod,
 
-> Add a "maxim,max77693-charger" of_compatible to the mfd_cell so the M=
-=46D
-> child device (the charger) will have its own of_node set. This will b=
-e
-> used by the max77693 charger driver in next patches to obtain battery
-> configuration from DTS.
->=20
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> ---
->  drivers/mfd/max77693.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/mfd/max77693.c b/drivers/mfd/max77693.c
-> index cf008f45968c..2277a11b6629 100644
-> --- a/drivers/mfd/max77693.c
-> +++ b/drivers/mfd/max77693.c
-> @@ -43,7 +43,10 @@
-> =20
->  static const struct mfd_cell max77693_devs[] =3D {
->  	{ .name =3D "max77693-pmic", },
-> -	{ .name =3D "max77693-charger", },
-> +	{
-> +		.name =3D "max77693-charger",
-> +		.of_compatible =3D "maxim,max77693-charger",
-> +	},
->  	{ .name =3D "max77693-muic", },
->  	{ .name =3D "max77693-haptic", },
->  	{
+On Wed, Oct 15, 2014 at 07:00:04PM +0530, Vinod Koul wrote:
+> On Wed, Oct 01, 2014 at 04:59:23PM +0200, Ludovic Desroches wrote:
+> > New atmel DMA controller known as XDMAC, introduced with SAMA5D4
+> > devices.
+> > 
+> > +static int at_xdmac_set_slave_config(struct dma_chan *chan,
+> > +				      struct dma_slave_config *sconfig)
+> > +{
+> > +	struct at_xdmac_chan 	*atchan = to_at_xdmac_chan(chan);
+> > +
+> > +	atchan->cfg = AT91_XDMAC_DT_PERID(atchan->perid)
+> > +		      |	AT_XDMAC_CC_SWREQ_HWR_CONNECTED
+> > +		      | AT_XDMAC_CC_MBSIZE_SIXTEEN
+> > +		      | AT_XDMAC_CC_TYPE_PER_TRAN;
+> > +
+> > +	if (sconfig->direction == DMA_DEV_TO_MEM) {
+> > +		atchan->cfg |= AT_XDMAC_CC_DAM_INCREMENTED_AM
+> > +			       | AT_XDMAC_CC_SAM_FIXED_AM
+> > +			       | AT_XDMAC_CC_DIF(atchan->memif)
+> > +			       | AT_XDMAC_CC_SIF(atchan->perif)
+> > +			       | AT_XDMAC_CC_DSYNC_PER2MEM;
+> > +		atchan->dwidth = ffs(sconfig->src_addr_width) - 1;
+> > +		atchan->cfg |= AT_XDMAC_CC_DWIDTH(atchan->dwidth);
+> > +		atchan->cfg |= at_xdmac_csize(sconfig->src_maxburst);
+> > +	} else if (sconfig->direction == DMA_MEM_TO_DEV) {
+> > +		atchan->cfg |= AT_XDMAC_CC_DAM_FIXED_AM
+> > +			       | AT_XDMAC_CC_SAM_INCREMENTED_AM
+> > +			       | AT_XDMAC_CC_DIF(atchan->perif)
+> > +			       | AT_XDMAC_CC_SIF(atchan->memif)
+> > +			       | AT_XDMAC_CC_DSYNC_MEM2PER;
+> > +		atchan->dwidth = ffs(sconfig->dst_addr_width) - 1;
+> > +		atchan->cfg |= AT_XDMAC_CC_DWIDTH(atchan->dwidth);
+> > +		atchan->cfg |= at_xdmac_csize(sconfig->dst_maxburst);
+> please store both direction configs and use them based on direction in
+> prep_xxx calls. We will remove the direction here.
+> 
 
-I'm guessing this can be applied separately?
+Ok so direction will disappear the dma_slave_config structure I assume
+but what is planned for src/dst_addr_width and src/dst_maxburst. If
+slave config looses the direction, there is no sense to have some src
+and dst fields. So where should I get them?
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> > +	} else {
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Src address and dest addr are needed to configure the link list
+> > +	 * descriptor so keep the slave configuration.
+> > +	 */
+> > +	memcpy(&atchan->dma_sconfig, sconfig, sizeof(struct dma_slave_config));
+> > +
+> > +	dev_dbg(chan2dev(chan), "%s: atchan->cfg=0x%08x\n", __func__, atchan->cfg);
+> > +
+> > +	return 0;
+> > +}
+
+Ludovic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
