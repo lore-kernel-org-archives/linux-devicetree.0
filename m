@@ -1,96 +1,80 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/fdt: Add extern prototype for early_init_dt_scan_chosen_serial()
-Date: Mon, 20 Oct 2014 08:59:40 -0700
-Message-ID: <CAJiQ=7BXsQnqigi96OeSxQd7is94xErJrbX0tZqwS8XuYDuExw@mail.gmail.com>
-References: <1413706294-12578-1-git-send-email-cernekee@gmail.com> <CAL_JsqKzWfwMRheB0qGhcHFkj9zku2uevX7GF+=U4Qhd9m3VYg@mail.gmail.com>
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCHv2 1/2] ARM: dts: socfpga: Fix SD card detect
+Date: Mon, 20 Oct 2014 11:31:59 -0500
+Message-ID: <544538FF.7090200@opensource.altera.com>
+References: <1413819079-17120-1-git-send-email-dinguyen@opensource.altera.com>	<1413819079-17120-2-git-send-email-dinguyen@opensource.altera.com> <CAD=FV=X=DOVLeW6YQzFcXBrVte9vCizMvDy9DJQFLYUnzEAeHQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKzWfwMRheB0qGhcHFkj9zku2uevX7GF+=U4Qhd9m3VYg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAD=FV=X=DOVLeW6YQzFcXBrVte9vCizMvDy9DJQFLYUnzEAeHQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 20, 2014 at 2:22 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Sun, Oct 19, 2014 at 4:11 PM, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> The original commit that introduced this function (fb11ffe74c794a)
->> indicated that calling it from the architecture code was one possible
->> use case.  Let's declare it in of_fdt.h to make it a public API.
->
-> Who is the user for this?
+On 10/20/2014 10:46 AM, Doug Anderson wrote:
+> Dinh,
+> 
+> On Mon, Oct 20, 2014 at 8:31 AM,  <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
+>> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>
+>> Without this patch, the booting the SOCFPGA platform would hang at the
+>> SDMMC driver loading. There were 2 patches that caused this to happen:
+>>
+>> - Patch 9795a846e10 "mmc: dw_mmc: remove dw_mci_of_cd_gpio/wp_gpio()" removed
+>>   looking for "cd-gpios", since mmc_of_parse was getting called.
+>> - Patch 3cf890fc42b "mmc: dw_mmc: Pass back errors from mmc_of_parse()" would
+>>   hang the system at the SDMMC driver loading.
+>>
+>> This patch will fix booting with SDMMC enabled on SOCFPGA dev kit.
+>>
+>> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/socfpga_cyclone5_socdk.dts | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+>> index d7296a5..739c3b7 100644
+>> --- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+>> @@ -69,7 +69,7 @@
+>>  };
+>>
+>>  &mmc0 {
+>> -       cd-gpios = <&gpio1 18 0>;
+>> +       cd = <&gpio1 18 0>;
+> 
+> This doesn't look right to me.  What was the error that was passed back?
+> 
+> I think your change has the same net effect as just deleting the
+> "cd-gpios" line.  ...or is there some code somewhere that is parsing
+> the "cd" property.
+> 
 
-bcm3384 on MIPS, a new target under development.
+It just hangs here:
 
-There are three objectives here:
+dw_mmc ff704000.dwmmc0: Using PIO mode.
+dw_mmc ff704000.dwmmc0: Version ID is 240a
+dw_mmc ff704000.dwmmc0: DW MMC controller at irq 171, 32 bit host data
+width, 1024 deep fifo
+platform ff704000.dwmmc0: Driver dw_mmc requests probe deferral
 
-1) Use the new DT-based earlycon code instead of the old MIPS
-EARLY_PRINTK code.  This lets us read the MMIO addresses straight out
-of DT instead of hardcoding them.
 
-2) Start earlycon as soon as possible, so if there are errors during
-the boot sequence, the user will see some output that helps diagnose
-problems.  The MIPS code was ideal as it started printing output
-before memory setup or command line parsing.
+Without this patch :
+mmc_of_parse ret=-517 (EPROBE_DEFER)
 
-3) Enable earlycon by default without forcing everyone to tweak their
-command lines.  On this system the command line is supplied by another
-OS on another CPU, and requiring "earlycon" to be added is
-problematic.  The original MIPS EARLY_PRINTK code could be enabled
-unconditionally.
+With this patch or deleting the "cd-gpios" line then
+mmc_of_parse ret=0
 
-> Despite what I said, there would be issues calling this from arch
-> code. Doing so would result in 2 calls to this function as the
-> early_param call is not disabled.
 
-Good point - it looks like this case will need to be covered in either
-scenario (called from early_param() or called from arch code).  If I
-add "earlycon earlycon" to the command line, it yields a scary
-warning:
+So does the driver go into polling for a card removal when neither cd or
+cd-gpios are specified? Because I can see that card removal and
+insertion working without any cd/cd-gpios entry in the DTS?
 
-bootconsole [uart0] enabled
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 0 at kernel/printk/printk.c:2391
-register_console+0x244/0x3fc()
-console 'uart0' already registered
-CPU: 0 PID: 0 Comm: swapper Not tainted 3.17.0+ #97
-Stack : 00000000 00000004 80bb0000 80bb0000 00000000 00000000 00000000 00000000
-      80b94e12 00000033 00000000 00000000 00010000 80511308 804cff8c 80510f67
-      00000000 00000000 80b938d8 80511308 804cebd4 43f42d13 99808621 80445bd4
-      80510000 80032574 00000000 00000000 804d4214 804ffc84 804ffc84 804cff8c
-      00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-      ...
-Call Trace:
-[<80019f8c>] show_stack+0x64/0x7c
-[<80447a5c>] dump_stack+0xc8/0xfc
-[<800327c8>] warn_slowpath_common+0x7c/0xac
-[<80032858>] warn_slowpath_fmt+0x2c/0x38
-[<80076244>] register_console+0x244/0x3fc
-[<8053a7e4>] of_setup_earlycon+0x74/0x98
-[<8053d07c>] early_init_dt_scan_chosen_serial+0x110/0x140
-[<805281a0>] do_early_param+0xc4/0x13c
-[<8004ecc0>] parse_args+0x284/0x444
-[<805286cc>] parse_early_options+0x34/0x40
-[<80528714>] parse_early_param+0x3c/0x58
-[<8052b7b0>] setup_arch+0xec/0x6ac
-[<805287d4>] start_kernel+0x94/0x458
+Thanks,
+Dinh
 
----[ end trace dc8fa200cb88537f ]---
-
-I'll send a patch to fix this.
-
-> This could be fixed, but really we
-> want an arch to implement one of the other options.
-
-We do have a functioning ioremap when early params are parsed.  But
-this doesn't solve objective #3, which is what I was trying to
-accomplish by calling early_init_dt_scan_chosen_serial() from the arch
-code.
-
-In lieu of my original solution, I can send a patch to add a
-CONFIG_EARLYCON_FORCE option to unconditionally call
-early_init_dt_scan_chosen_serial() from early_init_dt_scan(), if that
-makes sense.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
