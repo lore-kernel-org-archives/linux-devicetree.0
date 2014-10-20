@@ -1,68 +1,46 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/fdt: Add extern prototype for early_init_dt_scan_chosen_serial()
-Date: Mon, 20 Oct 2014 17:22:01 +0800
-Message-ID: <CAL_JsqKzWfwMRheB0qGhcHFkj9zku2uevX7GF+=U4Qhd9m3VYg@mail.gmail.com>
-References: <1413706294-12578-1-git-send-email-cernekee@gmail.com>
+From: Neil Zhang <zhangwm@marvell.com>
+Subject: RE: [PATCH v4] ARM: perf: save/restore pmu registers in pm notifier
+Date: Mon, 20 Oct 2014 02:26:19 -0700
+Message-ID: <9034CBD80F070943B59700D7F8149ED9024EB81CDD@SC-VEXCH4.marvell.com>
+References: <6106CAF835F351419ADA79E4836E6EC71B6A53C826@SC-VEXCH4.marvell.com>
+ <9034CBD80F070943B59700D7F8149ED9A0875730@SC-VEXCH4.marvell.com>
+ <20140513184503.GF16388@arm.com>
+ <9034CBD80F070943B59700D7F8149ED9A087573F@SC-VEXCH4.marvell.com>
+ <537337F3.4080300@arm.com>
+ <9034CBD80F070943B59700D7F8149ED9A0875776@SC-VEXCH4.marvell.com>
+ <9034CBD80F070943B59700D7F8149ED90182308172@SC-VEXCH4.marvell.com>
+ <20140703175706.GI17372@arm.com>
+ <9034CBD80F070943B59700D7F8149ED9024EB81CD8@SC-VEXCH4.marvell.com>
+ <5444D2E0.9070205@arm.com> <20141020092005.GD4370@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413706294-12578-1-git-send-email-cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141020092005.GD4370@arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>
+Cc: "'linux@arm.linux.org.uk'" <linux@arm.linux.org.uk>, "'linux-arm-kernel@lists.infradead.org'" <linux-arm-kernel@lists.infradead.org>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>, "'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>, "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 19, 2014 at 4:11 PM, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> The original commit that introduced this function (fb11ffe74c794a)
-> indicated that calling it from the architecture code was one possible
-> use case.  Let's declare it in of_fdt.h to make it a public API.
-
-Who is the user for this?
-
-Despite what I said, there would be issues calling this from arch
-code. Doing so would result in 2 calls to this function as the
-early_param call is not disabled. This could be fixed, but really we
-want an arch to implement one of the other options.
-
-Rob
-
-
->
-> Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  include/linux/of_fdt.h | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index 0ff360d..5d233df 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -12,6 +12,7 @@
->  #ifndef _LINUX_OF_FDT_H
->  #define _LINUX_OF_FDT_H
->
-> +#include <linux/errno.h>
->  #include <linux/types.h>
->  #include <linux/init.h>
->
-> @@ -87,6 +88,13 @@ extern void early_init_devtree(void *);
->  extern void early_get_first_memblock_info(void *, phys_addr_t *);
->  extern u64 fdt_translate_address(const void *blob, int node_offset);
->  extern void of_fdt_limit_memory(int limit);
-> +
-> +#if defined(CONFIG_SERIAL_EARLYCON)
-> +extern int early_init_dt_scan_chosen_serial(void);
-> +#else
-> +static inline int early_init_dt_scan_chosen_serial(void) { return -ENOENT; }
-> +#endif
-> +
->  #else /* CONFIG_OF_FLATTREE */
->  static inline void early_init_fdt_scan_reserved_mem(void) {}
->  static inline const char *of_flat_dt_get_machine_name(void) { return NULL; }
-> --
-> 2.1.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFdpbGwgRGVhY29uIFttYWls
+dG86d2lsbC5kZWFjb25AYXJtLmNvbV0NCj4gU2VudDogMjAxNMTqMTDUwjIwyNUgMTc6MjANCj4g
+VG86IFN1ZGVlcCBIb2xsYQ0KPiBDYzogTmVpbCBaaGFuZzsgJ2xpbnV4QGFybS5saW51eC5vcmcu
+dWsnOyAnbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZyc7ICdsaW51eC1r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnJzsNCj4gJ2RldmljZXRyZWVAdmdlci5rZXJuZWwub3JnJzsg
+bWF0aGlldS5wb2lyaWVyQGxpbmFyby5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NF0gQVJN
+OiBwZXJmOiBzYXZlL3Jlc3RvcmUgcG11IHJlZ2lzdGVycyBpbiBwbQ0KPiBub3RpZmllcg0KPiAN
+Cj4gT24gTW9uLCBPY3QgMjAsIDIwMTQgYXQgMTA6MTY6MTZBTSArMDEwMCwgU3VkZWVwIEhvbGxh
+IHdyb3RlOg0KPiA+IE9uIDIwLzEwLzE0IDA5OjQ2LCBOZWlsIFpoYW5nIHdyb3RlOg0KPiA+ID4g
+V2lsbCwgSSBwcmVmZXIgdG8gY2hlY2sgYWx3YXlzLW9uIGZpZWxkIHVuZGVyIFBNVSBub2RlIHRv
+IGNoZWNrDQo+ID4gPiB3aGV0aGVyIHdlIG5lZWQgU2F2ZS9yZXN0b3JlIHRoZW0uDQo+ID4gPg0K
+PiA+IEJ1dCBob3cgZG8geW91IGhhbmRsZSBpdCBmb3IgZGlmZmVyZW50IGlkbGUgc3RhdGVzLiBl
+LmcuIGlmIENQVSBpcyBpbg0KPiA+IHJldGVudGlvbiwgUE1VJ3MgKm1pZ2h0IGJlKiByZXRhaW5l
+ZC4gQWxzbyBJIGRvbid0IHRoaW5rIFBNVXMgd2lsbCBiZQ0KPiA+IHBsYWNlZCBpbiAiYWx3YXlz
+LW9uIiBwb3dlciBkb21haW4gbGlrZSB0aW1lcnMuIFNvIHVzaW5nICJhbHdheXMtb24iDQo+ID4g
+c291bmRzIGluY29ycmVjdCB0byBtZS4NCj4gDQo+IEFkZGluZyBNYXRoaWV1IHRvIENDLCBzaW5j
+ZSBJIHNwb2tlIHRvIGhpbSBhdCBMUEMgYWJvdXQgdGhpcyBhbmQgaGUgd2FzDQo+IHRhbGtpbmcg
+YWJvdXQgaW1wbGVtZW50aW5nIHByb3BlciBQTSBkb21haW4gZGVzY3JpcHRpb25zIGZvciBjb3Jl
+c2lnaHQNCj4gY29tcG9uZW50cy4NCj4gDQoNCkdvb2QgdG8ga25vdyB0aGF0IQ0KSG9wZSB3ZSBj
+YW4gZmlndXJlIG91dCBpdCB3aXRoIGEgcHJvcGVyIHdheS4NCg0KPiBXaWxsDQoNCkJlc3QgUmVn
+YXJkcywNCk5laWwgWmhhbmcNCg==
