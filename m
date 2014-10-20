@@ -1,95 +1,44 @@
-From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 1/2] mtd: nand: add sunxi NAND flash
- controller support
-Date: Mon, 20 Oct 2014 17:31:51 +0530
-Message-ID: <5444F9AF.5000104@gmail.com>
-References: <1413805520-14947-1-git-send-email-boris.brezillon@free-electrons.com> <1413805520-14947-2-git-send-email-boris.brezillon@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v9 00/10] rtc: at91sam9: add DT support
+Date: Mon, 20 Oct 2014 14:17:48 +0200
+Message-ID: <20141020141748.063d6835@bbrezillon>
+References: <1411483725-31532-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDSMVOGBSIFRB2PUSORAKGQEQRU7EKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1413805520-14947-2-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yassin Jaffer <yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411483725-31532-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/20/2014 05:15 PM, Boris Brezillon wrote:
-> Add support for the sunxi NAND Flash Controller (NFC).
->
-(...)
+Hi Alessandro,
 
-> +
-> +static int sunxi_nfc_dev_ready(struct mtd_info *mtd)
-> +{
-> +	struct nand_chip *nand = mtd->priv;
-> +	struct sunxi_nand_chip *sunxi_nand = to_sunxi_nand(nand);
-> +	struct sunxi_nfc *nfc = to_sunxi_nfc(sunxi_nand->nand.controller);
-> +	struct sunxi_nand_rb *rb;
-> +	unsigned long timeo = (sunxi_nand->nand.state == FL_ERASING ? 400 : 20);
-> +	int ret;
-> +
-> +	if (sunxi_nand->selected < 0)
-> +		return 0;
-> +
-> +	rb = &sunxi_nand->sels[sunxi_nand->selected].rb;
-> +
-> +	switch (rb->type) {
-> +	case RB_NATIVE:
-> +		ret = !!(readl(nfc->regs + NFC_REG_ST) &
-> +			 (NFC_RB_STATE0 << rb->info.nativeid));
-> +		if (ret)
-> +			break;
-> +
-> +		sunxi_nfc_wait_int(nfc, NFC_RB_B2R, timeo);
-> +		ret = !!(readl(nfc->regs + NFC_REG_ST) &
-> +			 (NFC_RB_STATE0 << rb->info.nativeid));
-> +		break;
-> +	case RB_GPIO:
-> +		ret = gpio_get_value(rb->info.gpio);
-> +		break;
-> +	case RB_NONE:
-> +	default:
-> +		ret = 0;
-> +		pr_err("cannot check R/B NAND status!");
+On Tue, 23 Sep 2014 16:48:35 +0200
+Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Missed terminating  new line...  :-)
+> Hello,
+> 
+> This patch series adds DT support to the atmel at91sam9 RTC driver.
+> 
+> It also removes any machine specific inclusions to prepare the migration
+> to multi platform kernel support, and retain the slow clock to prevent
+> the CCF from disabling it at the end of boot.
 
-> +		break;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +
+Nicolas was planning to take this series (except for patch 10 which was
+already applied by Lee) in his tree for 3.19, but if you prefer to take
+it into yours just let us know.
 
-(...)
+Best Regards,
 
-> +static struct platform_driver sunxi_nfc_driver = {
-> +	.driver = {
-> +		.name = "sunxi_nand",
-> +		.owner = THIS_MODULE,
-
-This field updated by module_platform_driver()..
-
-> +		.of_match_table = sunxi_nfc_ids,
-> +	},
-> +	.probe = sunxi_nfc_probe,
-> +	.remove = sunxi_nfc_remove,
-> +};
-> +module_platform_driver(sunxi_nfc_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Boris BREZILLON");
-> +MODULE_DESCRIPTION("Allwinner NAND Flash Controller driver");
-> +MODULE_ALIAS("platform:sunxi_nand");
+Boris
 
 -- 
-Regards,
-Varka Bhadram.
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
