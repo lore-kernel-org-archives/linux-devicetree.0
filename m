@@ -1,58 +1,82 @@
-From: Gyungoh Yoo <gyungoh@gmail.com>
-Subject: Re: [RESUBMIT PATCH v4 7/8] regulator: sky81452: Add compatible
- string for device binding
-Date: Mon, 20 Oct 2014 15:10:24 +0900
-Message-ID: <20141020061024.GA9406@jack-ThinkPad-T520>
-References: <1412657745-7812-1-git-send-email-jack.yoo@skyworksinc.com>
- <1413179262-27636-1-git-send-email-jack.yoo@skyworksinc.com>
- <1413179262-27636-8-git-send-email-jack.yoo@skyworksinc.com>
- <20141013103512.GJ27755@sirena.org.uk>
- <20141014011112.GB2751@jack-ThinkPad-T520>
- <20141014075606.GN27755@sirena.org.uk>
- <20141017091950.GA3233@jack-ThinkPad-T520>
- <20141017101734.GB1820@sirena.org.uk>
- <20141017104309.GA3136@jack-ThinkPad-T520>
- <20141017142605.GU1820@sirena.org.uk>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCH v5 10/12] gpio: Support for unified device properties interface
+Date: Mon, 20 Oct 2014 15:12:50 +0900
+Message-ID: <CAAVeFuKoGfkUXPZWt0Xy1jW-zGCUEzbzQ8W7_RVyetG9++uDHw@mail.gmail.com>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan> <1510578.dSiEYPPI9m@vostro.rjw.lan>
+ <E99B44D9-C9E3-4C0B-8B18-450121793EB5@arndb.de> <2997291.LjjH2RgEUW@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141017142605.GU1820@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <2997291.LjjH2RgEUW@wuerfel>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 17, 2014 at 04:26:05PM +0200, Mark Brown wrote:
-> On Fri, Oct 17, 2014 at 07:43:09PM +0900, Gyungoh Yoo wrote:
-> 
-> > Are you talking about simplification using of_regulator_match()?
-> > This driver has only one regulator.
-> > Is the API also useful for this driver?
-> 
-> The thing I'm seeing is that the binding for your device with the
-> subnode looks very much like the device trees of devices with multiple
-> regulators.  The fact that you only have one regulator is a bit
-> difference but not that much.  It seems like drivers should fit into one
-> of two patterns: either the regulator is described in the root node for
-> the device for single purpose devices or there should be a collection of
-> regulators like is supported with this helper API.  Having a collection
-> with only one node doesn't seem to be a problem in any way.
-> 
-> > Like reg-fixed-voltage, how about using of_get_fixed_voltage_config()?
-> 
-> The driver doesn't seem to need any property parsing of its own so it
-> shoudn't need anything beyond basic calls into the core.
+On Sat, Oct 18, 2014 at 6:47 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Friday 17 October 2014 20:09:51 Arnd Bergmann wrote:
+>> On October 17, 2014 2:16:00 PM CEST, "Rafael J. Wysocki" <rjw@rjwysocki.net> wrote:
+>> >From: Mika Westerberg <mika.westerberg@linux.intel.com>
+>> >
+>> >Some drivers need to deal with only firmware representation of its
+>> >GPIOs. An example would be a GPIO button array driver where each button
+>> >is described as a separate firmware node in device tree. Typically
+>> >these
+>> >child nodes do not have physical representation in the Linux device
+>> >model.
+>> >
+>> >In order to help device drivers to handle such firmware child nodes we
+>> >add dev[m]_get_named_gpiod_from_child() that takes a child firmware
+>> >node pointer as its second argument (the first one is the parent device
+>> >itself), finds the GPIO using whatever is the underlying firmware
+>> >method, and requests the GPIO properly.
+>>
+>> Could we also have a wrapper around this function without a "name" argument,
+>> using just the index?
+>
+> Expanding on this thought: I think we should mandate for new bindings
+> that they use either a name and no index, or an index but not name,
 
-Thank you for your kind comments.
-My understanding is getting better.
+I'm afraid this could forbid some useful use-cases, namely the ones
+where several GPIOs serve the same function (and are typically set
+together). We had a few patch proposals to handle such GPIO groups,
+and even though one was in pretty good shape the submitter did not
+push it until the end. :/
 
-For my clear understanding:
-I think the original designed which I wanted to design is similar
-with arizona-ldo1.c
-It seems that this is 1st pattern your explained above.
-Can I ask what is different between arizona-ldo1.c and
-this sky81452-regulator.c?
-I think both are designed under root node.
+But my concern is that instead of having this:
 
-Thank you.
+enable-gpio = <&gpio 0 GPIO_ACTIVE_HIGH>;
+value-gpios = <&gpio 1 GPIO_ACTIVE_HIGH ... &gpio 8 GPIO_ACTIVE_HIGH>;
+
+We would force this:
+
+enable-gpio = <&gpio 0 GPIO_ACTIVE_HIGH>;
+value0-gpio = <&gpio 1 GPIO_ACTIVE_HIGH>;
+...
+value7-gpio = <&gpio 8 GPIO_ACTIVE_HIGH>;
+
+Or this:
+
+// First GPIO is enable, other GPIOs are value
+gpios = <&gpio 0 GPIO_ACTIVE_HIGH &gpio 1 GPIO_ACTIVE_HIGH ... &gpio 8
+GPIO_ACTIVE_HIGH>;
+
+Most bindings don't need that much sophistication, and for these we
+should indeed make sure that they stick to using either the names or
+index (and in a consistent manner), but closing the possibility to use
+both together may bite us in the end.
+
+
+> and I also think that for named gpios, we should try to converge on a
+> common naming scheme. As discussed, we will probably want to support all
+> the existing ways to do this even with ACPI and with the unified
+> interface, but it doesn't have to be the obvious way.
+
+Personally, I like the idea that each GPIO has a function, so now that
+ACPI fully supports this I'd suggest the policy of using names for
+each GPIO (e.g. never use the fallback "gpios" or "gpio" property),
+and only ressort to indexes if several GPIOs happen to serve the same
+function. I know we haven't reached consensus about this so far, but
+it would be nice it we could discuss this point again in the light of
+the new ACPI capabilities and come with something to write as a
+guideline in the GPIO documentation.
