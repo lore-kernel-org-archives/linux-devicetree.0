@@ -1,67 +1,53 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCHv2 1/2] ARM: dts: socfpga: Fix SD card detect
-Date: Mon, 20 Oct 2014 12:30:30 -0700
-Message-ID: <CAD=FV=XwyMA1XByB5Mrd+=vSzMCeKzjzY=wEgm3x1t0PbqfLQw@mail.gmail.com>
-References: <1413819079-17120-1-git-send-email-dinguyen@opensource.altera.com>
-	<1413819079-17120-2-git-send-email-dinguyen@opensource.altera.com>
-	<CAD=FV=X=DOVLeW6YQzFcXBrVte9vCizMvDy9DJQFLYUnzEAeHQ@mail.gmail.com>
-	<544538FF.7090200@opensource.altera.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine driver support
+Date: Mon, 20 Oct 2014 21:37:14 +0200
+Message-ID: <4301925.4pMHXMXqA4@wuerfel>
+References: <1413374436-14410-1-git-send-email-sthokal@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <544538FF.7090200-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413374436-14410-1-git-send-email-sthokal@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Srikanth Thokala <sthokal@xilinx.com>, vinod.koul@intel.com, dan.j.williams@intel.com, michals@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, svemula@xilinx.com, linux-kernel@vger.kernel.org, anirudh@xilinx.com, dmaengine@vger.kernel.org, appanad@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-Dinh,
+On Wednesday 15 October 2014 17:30:36 Srikanth Thokala wrote:
+> @@ -15,6 +15,9 @@
+>  #include <linux/dma-mapping.h>
+>  #include <linux/dmaengine.h>
+>  
+> +/* Number of AXI DMA APP Words */
+> +#define XILINX_DMA_NUM_APP_WORDS       5
+> +
+>  /**
+>   * struct xilinx_vdma_config - VDMA Configuration structure
+>   * @frm_dly: Frame delay
+> @@ -41,7 +44,21 @@ struct xilinx_vdma_config {
+>         int ext_fsync;
+>  };
+>  
+> +/**
+> + * struct xilinx_dma_config - DMA Configuration structure
+> + * @coalesc: Interrupt coalescing threshold
+> + * @delay: Delay counter
+> + * @reset: Reset Channel
+> + */
+> +struct xilinx_dma_config {
+> +       int coalesc;
+> +       int delay;
+> +       int reset;
+> +};
+> +
+>  int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
+>                                         struct xilinx_vdma_config *cfg);
+> +int xilinx_dma_channel_set_config(struct dma_chan *dchan,
+> +                                       struct xilinx_dma_config *cfg);
+>  
 
-On Mon, Oct 20, 2014 at 9:31 AM, Dinh Nguyen
-<dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
->>>  &mmc0 {
->>> -       cd-gpios = <&gpio1 18 0>;
->>> +       cd = <&gpio1 18 0>;
->>
->> This doesn't look right to me.  What was the error that was passed back?
->>
->> I think your change has the same net effect as just deleting the
->> "cd-gpios" line.  ...or is there some code somewhere that is parsing
->> the "cd" property.
->>
->
-> It just hangs here:
->
-> dw_mmc ff704000.dwmmc0: Using PIO mode.
-> dw_mmc ff704000.dwmmc0: Version ID is 240a
-> dw_mmc ff704000.dwmmc0: DW MMC controller at irq 171, 32 bit host data
-> width, 1024 deep fifo
-> platform ff704000.dwmmc0: Driver dw_mmc requests probe deferral
->
->
-> Without this patch :
-> mmc_of_parse ret=-517 (EPROBE_DEFER)
+You add this to a global header file, but I don't see any uses outside
+of the driver itself. Please move all of this into the driver itself
+and remove the header file.
 
-I think you need to dig more into this error.  Why are you getting an
--EPROBE_DEFER when you asked for this GPIO?
-
-The -EPROBE_DEFER tells the system that a resource is not available
-yet and that it should try to re-run the dw_mmc init later once the
-resource becomes available.  I believe that some other bug is causing
-the resource to never become available.
-
-Guesses:
-
-* The GPIO specifier is wrong in the DTB and is pointing to a GPIO
-that would never exist.
-
-* Something is happening in the GPIO driver that is causing it to fail.
-
-
-...so we need to dig in further.
-
--Doug
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
