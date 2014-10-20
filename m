@@ -1,77 +1,90 @@
-From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv2 1/2] ARM: dts: socfpga: Fix SD card detect
-Date: Tue, 21 Oct 2014 07:49:11 +0900
-Message-ID: <54459167.1010405@samsung.com>
-References: <1413819079-17120-1-git-send-email-dinguyen@opensource.altera.com>
- <1413819079-17120-2-git-send-email-dinguyen@opensource.altera.com>
- <20141020184139.GA23062@leverpostej>
- <CAD=FV=Xw2zAL-7s2XJk6fawMGUuMapGfqYGC6ntwG-TCi8GgkA@mail.gmail.com>
- <20141020224147.GA13670@leverpostej>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH V2 4/9] Documentation: DT: Add entries for bcm63xx UART
+Date: Mon, 20 Oct 2014 15:53:53 -0700
+Message-ID: <54459281.7050004@gmail.com>
+References: <1413838448-29464-1-git-send-email-cernekee@gmail.com> <1413838448-29464-5-git-send-email-cernekee@gmail.com> <6216923.cK1phqtEXn@wuerfel> <2100909.UrHPDWWSai@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20141020224147.GA13670@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <2100909.UrHPDWWSai@wuerfel>
+Sender: linux-serial-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Kevin Cernekee <cernekee@gmail.com>
+Cc: gregkh@linuxfoundation.org, jslaby@suse.cz, robh@kernel.org, grant.likely@linaro.org, geert@linux-m68k.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/2014 07:41 AM, Mark Rutland wrote:
-> On Mon, Oct 20, 2014 at 08:26:55PM +0100, Doug Anderson wrote:
->> Mark,
+On 10/20/2014 02:25 PM, Arnd Bergmann wrote:
+> On Monday 20 October 2014 23:20:08 Arnd Bergmann wrote:
 >>
->> On Mon, Oct 20, 2014 at 11:41 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->>> On Mon, Oct 20, 2014 at 04:31:18PM +0100, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
->>>> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>>>
->>>> Without this patch, the booting the SOCFPGA platform would hang at the
->>>> SDMMC driver loading. There were 2 patches that caused this to happen:
->>>>
->>>> - Patch 9795a846e10 "mmc: dw_mmc: remove dw_mci_of_cd_gpio/wp_gpio()" removed
->>>>   looking for "cd-gpios", since mmc_of_parse was getting called.
->>>> - Patch 3cf890fc42b "mmc: dw_mmc: Pass back errors from mmc_of_parse()" would
->>>>   hang the system at the SDMMC driver loading.
->>>
->>> Regardless of which patches caused the issue, the existing DTB should
->>> continue to function. This is a kernel bug, not a DTB bug.
+>> In this example, the clock output name of the clock provider is
+>> the same as the clock input of the consumer, that is almost always
+>> a bug and would not be a good example at all.
 >>
->> Right.  The kernel bug is that there is no "dtb fixup" stage of the
->> kernel to fix up old dtbs with this dtb bug.
 >>
->> Said another way:
->>
->> 1. The old dtb was (possibly) not specifying the cd-gpio properly.
->>
->> 2. The kernel had a bug where it was ignoring that error.  Things may
->> have been working because of some other side effect (maybe polling was
->> working).
->>
->> 3. If we fix the kernel bug, what should we do?  The only sensible
->> thing (if we need to support old DTB with no changes) is to add a DTB
->> fixup stage.
->>
->> ...or did someone add that stage and I missed it?
 > 
-> Unfortunately, we have no generic DTB fixup stage currently.
+> Ah, found the bug: the MIPS code is written to ignore the device
+> and just look up a global clock name:
 > 
-> What exactly was wrong with this cd-gpios description that previously
-> allowed it to function? Can we not print a warning and fall back to the
-> old behaviour in this case?
+> struct clk *clk_get(struct device *dev, const char *id)
+> {
+>         if (!strcmp(id, "enet0"))
+>                 return &clk_enet0;
+>         if (!strcmp(id, "enet1"))
+>                 return &clk_enet1;
+>         if (!strcmp(id, "enetsw"))
+>                 return &clk_enetsw;
+>         if (!strcmp(id, "ephy"))
+>                 return &clk_ephy;
+>         if (!strcmp(id, "usbh"))
+>                 return &clk_usbh;
+>         if (!strcmp(id, "usbd"))
+>                 return &clk_usbd;
+>         if (!strcmp(id, "spi"))
+>                 return &clk_spi;
+>         if (!strcmp(id, "hsspi"))
+>                 return &clk_hsspi;
+>         if (!strcmp(id, "xtm"))
+>                 return &clk_xtm;
+>         if (!strcmp(id, "periph"))
+>                 return &clk_periph;
+>         if ((BCMCPU_IS_3368() || BCMCPU_IS_6358()) && !strcmp(id, "pcm"))
+>                 return &clk_pcm;
+>         if ((BCMCPU_IS_6362() || BCMCPU_IS_6368()) && !strcmp(id, "ipsec"))
+>                 return &clk_ipsec;
+>         if ((BCMCPU_IS_6328() || BCMCPU_IS_6362()) && !strcmp(id, "pcie"))
+>                 return &clk_pcie;
+>         return ERR_PTR(-ENOENT);
+> }
+> 
+> This should be changed to use the drivers/clk/clkdev.c lookup code if
+> you want to share drivers between architectures.
 
-I think this is Dinh's mistake.
-Doug found the reason of this problem, and it seems that Dinh has checked after fixing.
-He didn't enable the gpio controller.
+For now, I suppose that s simple fix could be to use an anonymous clock
+request when probed via DT. This code you quote dates from 2008 when
+there was no clkdev in the kernel at all. So something like this would
+probably do it for now:
 
-Best Regards,
-Jaehoon Chung
+diff --git a/drivers/tty/serial/bcm63xx_uart.c
+b/drivers/tty/serial/bcm63xx_uart.c
+index e0b87d507670..1b914b85dd31 100644
+--- a/drivers/tty/serial/bcm63xx_uart.c
++++ b/drivers/tty/serial/bcm63xx_uart.c
+@@ -819,7 +819,7 @@ static int bcm_uart_probe(struct platform_device *pdev)
+        if (!res_irq)
+                return -ENODEV;
+
+-       clk = clk_get(&pdev->dev, "periph");
++       clk = clk_get(&pdev->dev, pdev->dev.of_node ? NULL : "periph");
+        if (IS_ERR(clk))
+                return -ENODEV;
+
+
 
 > 
-> Thanks,
-> Mark
+> In particular, the "enet0"/"enet1" clock name makes no sense -- the
+> clock input name should be independent of the instance, aside from
+> the question of which output of the provider it is wired up to.
+> 
+> 	Arnd
 > 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
