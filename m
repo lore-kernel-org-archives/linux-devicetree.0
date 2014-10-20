@@ -1,54 +1,67 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] mfd: max77693: Map charger device to its own of_node
-Date: Mon, 20 Oct 2014 17:09:41 +0200
-Message-ID: <1413817781.11298.0.camel@AMDC1943>
-References: <1413808489-3524-1-git-send-email-k.kozlowski@samsung.com>
- <1413808489-3524-3-git-send-email-k.kozlowski@samsung.com>
- <20141020150630.GB26784@x1>
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH RFT 0/8] Marvell PXA168 libphy handling and Berlin
+ Ethernet
+Date: Mon, 20 Oct 2014 17:10:28 +0200
+Message-ID: <20141020151028.GA17117@kwain>
+References: <1412858346-11334-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <20141016095323.GA1061@kwain>
+ <54451E3F.1030700@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20141020150630.GB26784@x1>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54451E3F.1030700@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On pon, 2014-10-20 at 16:06 +0100, Lee Jones wrote:
-> On Mon, 20 Oct 2014, Krzysztof Kozlowski wrote:
-> 
-> > Add a "maxim,max77693-charger" of_compatible to the mfd_cell so the MFD
-> > child device (the charger) will have its own of_node set. This will be
-> > used by the max77693 charger driver in next patches to obtain battery
-> > configuration from DTS.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  drivers/mfd/max77693.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/mfd/max77693.c b/drivers/mfd/max77693.c
-> > index cf008f45968c..2277a11b6629 100644
-> > --- a/drivers/mfd/max77693.c
-> > +++ b/drivers/mfd/max77693.c
-> > @@ -43,7 +43,10 @@
-> >  
-> >  static const struct mfd_cell max77693_devs[] = {
-> >  	{ .name = "max77693-pmic", },
-> > -	{ .name = "max77693-charger", },
-> > +	{
-> > +		.name = "max77693-charger",
-> > +		.of_compatible = "maxim,max77693-charger",
-> > +	},
-> >  	{ .name = "max77693-muic", },
-> >  	{ .name = "max77693-haptic", },
-> >  	{
-> 
-> I'm guessing this can be applied separately?
+Sebastian,
 
-Yes. Patch 3/5 also (it adds necessary defines and symbols for
-chargers).
+On Mon, Oct 20, 2014 at 04:37:51PM +0200, Sebastian Hesselbarth wrote:
+> On 16.10.2014 11:53, Antoine Tenart wrote:
+> >On Thu, Oct 09, 2014 at 02:38:58PM +0200, Sebastian Hesselbarth wrot=
+e:
+> >>This patch series deals with a removing a IP feature that can be fo=
+und
+> >>on all currently supported Marvell Ethernet IP (pxa168_eth, mv643xx=
+_eth,
+> >>mvneta). The MAC IP allows to automatically perform PHY auto-negoti=
+ation
+> >>without software interaction.
+> >>
+> >>However, this feature (a) fundamentally clashes with the way libphy=
+ works
+> >>and (b) is unable to deal with quirky PHYs that require special tre=
+atment.
+> >>In this series, pxa168_eth driver is rewritten to completely disabl=
+e that
+> >>feature and properly deal with libphy provided PHYs. The other two =
+drivers
+> >>are suspect to future patch sets, also removing the code related wi=
+th it.
+> >>
+> >>Currently, the patches are based on next-20141009 and will be resen=
+t once
+> >>v3.18-rc1 drops. This is a Request-For-Test on both BG2Q and MMP/gp=
+lug as
+> >
+> >I tested the series on a BG2Q, it worked well.
+>=20
+> Thanks for testing! I assume you have added a phy-connection-type
+> property to BG2Q's ethernet node?
 
-Best regards,
-Krzysztof
+Yes, I added the following property to the ethernet-phy node:
+
+	phy-connection-type =3D "mii";
+
+=46eel free to add this to your series, or I can also send a patch.
+
+
+Antoine
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
