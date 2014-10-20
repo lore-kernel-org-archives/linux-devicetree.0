@@ -1,65 +1,65 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 4/9] Documentation: DT: Add entries for bcm63xx UART
-Date: Mon, 20 Oct 2014 23:25:10 +0200
-Message-ID: <2100909.UrHPDWWSai@wuerfel>
-References: <1413838448-29464-1-git-send-email-cernekee@gmail.com> <1413838448-29464-5-git-send-email-cernekee@gmail.com> <6216923.cK1phqtEXn@wuerfel>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v4 1/3] power-domain: add power domain drivers for Rockchip platform
+Date: Mon, 20 Oct 2014 14:31:17 -0700
+Message-ID: <7hppdme8d6.fsf@deeprootsystems.com>
+References: <1413795824-3453-1-git-send-email-jinkun.hong@rock-chips.com>
+	<1413795824-3453-2-git-send-email-jinkun.hong@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <6216923.cK1phqtEXn@wuerfel>
-Sender: linux-serial-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: gregkh@linuxfoundation.org, jslaby@suse.cz, robh@kernel.org, grant.likely@linaro.org, geert@linux-m68k.org, f.fainelli@gmail.com, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1413795824-3453-2-git-send-email-jinkun.hong@rock-chips.com>
+	(jinkun hong's message of "Mon, 20 Oct 2014 02:03:41 -0700")
+Sender: linux-doc-owner@vger.kernel.org
+To: "jinkun.hong" <jinkun.hong@rock-chips.com>
+Cc: linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, Jack Dai <jack.dai@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 20 October 2014 23:20:08 Arnd Bergmann wrote:
-> 
-> In this example, the clock output name of the clock provider is
-> the same as the clock input of the consumer, that is almost always
-> a bug and would not be a good example at all.
-> 
-> 
+"jinkun.hong" <jinkun.hong@rock-chips.com> writes:
 
-Ah, found the bug: the MIPS code is written to ignore the device
-and just look up a global clock name:
+> From: "jinkun.hong" <jinkun.hong@rock-chips.com>
+>
+> Add power domain drivers based on generic power domain for Rockchip platform,
+> and support RK3288.
+>
+> Signed-off-by: Jack Dai <jack.dai@rock-chips.com>
+> Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
 
-struct clk *clk_get(struct device *dev, const char *id)
-{
-        if (!strcmp(id, "enet0"))
-                return &clk_enet0;
-        if (!strcmp(id, "enet1"))
-                return &clk_enet1;
-        if (!strcmp(id, "enetsw"))
-                return &clk_enetsw;
-        if (!strcmp(id, "ephy"))
-                return &clk_ephy;
-        if (!strcmp(id, "usbh"))
-                return &clk_usbh;
-        if (!strcmp(id, "usbd"))
-                return &clk_usbd;
-        if (!strcmp(id, "spi"))
-                return &clk_spi;
-        if (!strcmp(id, "hsspi"))
-                return &clk_hsspi;
-        if (!strcmp(id, "xtm"))
-                return &clk_xtm;
-        if (!strcmp(id, "periph"))
-                return &clk_periph;
-        if ((BCMCPU_IS_3368() || BCMCPU_IS_6358()) && !strcmp(id, "pcm"))
-                return &clk_pcm;
-        if ((BCMCPU_IS_6362() || BCMCPU_IS_6368()) && !strcmp(id, "ipsec"))
-                return &clk_ipsec;
-        if ((BCMCPU_IS_6328() || BCMCPU_IS_6362()) && !strcmp(id, "pcie"))
-                return &clk_pcie;
-        return ERR_PTR(-ENOENT);
-}
+[...]
 
-This should be changed to use the drivers/clk/clkdev.c lookup code if
-you want to share drivers between architectures.
+> +static int rockchip_pmu_set_idle_request(struct rockchip_domain *pd,
+> +					 bool idle)
+> +{
+> +	u32 idle_mask = BIT(pd->idle_shift);
+> +	u32 idle_target = idle << (pd->idle_shift);
+> +	u32 ack_mask = BIT(pd->ack_shift);
+> +	u32 ack_target = idle << (pd->ack_shift);
+> +	unsigned int mask = BIT(pd->req_shift);
+> +	unsigned int val;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&pd->idle_lock, flags);
+> +	val = (idle) ? mask : 0;
+> +	regmap_update_bits(pd->regmap_pmu, REQ_OFFSET, mask, val);
+> +	dsb();
 
-In particular, the "enet0"/"enet1" clock name makes no sense -- the
-clock input name should be independent of the instance, aside from
-the question of which output of the provider it is wired up to.
+A summary of the locking and barriers here (or in changelog) would be
+helpful for reviewers to verify you're protecting what you need to
+protect.
 
-	Arnd
+> +	do {
+> +		regmap_read(pd->regmap_pmu, ACK_OFFSET, &val);
+> +	} while ((val & ack_mask) != ack_target);
+> +
+> +	do {
+> +		regmap_read(pd->regmap_pmu, IDLE_OFFSET, &val);
+> +	} while ((val & idle_mask) != idle_target);
+> +
+> +	spin_unlock_irqrestore(&pd->idle_lock, flags);
+
+These IRQ-disabled while loops look like opportunities to lockup the
+system.  Maybe add a timeout or a maximum number of tries?
+
+> +	return 0;
+> +}
+
+Kevin
