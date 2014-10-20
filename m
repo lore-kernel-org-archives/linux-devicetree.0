@@ -1,83 +1,101 @@
-From: Orson Zhai <orsonzhai@gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
 Subject: Re: [PATCH v2 5/5] tty/serial: Add earlycon support for Spreadtrum
  serial driver
-Date: Mon, 20 Oct 2014 18:23:38 +0800
-Message-ID: <CA+H2tpH2dKFHxHUaGtr-vEqxZDtQ_MVTmQTnu5kn-zzUFyXk4Q@mail.gmail.com>
+Date: Mon, 20 Oct 2014 11:32:13 +0100
+Message-ID: <20141020103213.GA26235@leverpostej>
 References: <1413539665-11484-1-git-send-email-chunyan.zhang@spreadtrum.com>
-	<1413539665-11484-6-git-send-email-chunyan.zhang@spreadtrum.com>
-	<20141018220615.33643542@alan.etchedpixels.co.uk>
+ <1413539665-11484-6-git-send-email-chunyan.zhang@spreadtrum.com>
+ <20141017130354.GC5587@leverpostej>
+ <CAAfSe-sJxVZ46aQfGyOh+eTepiXwPhQPQCX-3yZ0Ew30n+oP+w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141018220615.33643542@alan.etchedpixels.co.uk>
+Content-Disposition: inline
+In-Reply-To: <CAAfSe-sJxVZ46aQfGyOh+eTepiXwPhQPQCX-3yZ0Ew30n+oP+w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Catalin Marinas <catalin.marinas@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "jslaby@suse.cz" <jslaby@suse.cz>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, Pawel Moll <pawel.moll@arm.com>, Ramkumar Ramachandra <artagnon@gmail.com>, "rrichter@cavium.com" <rrichter@cavium.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, =?UTF-8?B?R2VuZyBSZW4gKOS7u+i1kyk=?= <geng.ren@spreadtrum.com>, =?UTF-8?B?WmhpemhvdSBaaGFuZyAo5byg5rK75rSyKQ==?= <zhizhou.zhang@spreadtrum.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.o>
+To: Lyra Zhang <zhang.lyra@gmail.com>
+Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "jslaby@suse.cz" <jslaby@suse.cz>, "galak@codeaurora.org" <galak@codeaurora.org>, "broonie@linaro.org" <broonie@linaro.org>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, Pawel Moll <Pawel.Moll@arm.com>, "artagnon@gmail.com" <artagnon@gmail.com>, "rrichter@cavium.com" <rrichter@cavium.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Will Deacon <Will.Deacon@arm.com>, "orsonzhai@gmail.com" <orsonzhai@gmail.com>, "geng.ren@spreadtrum.com" <geng.ren@spreadtrum.com>, "zhizhou.zhang@spreadtrum.com" <zhizhou.zhang@spreadtrum.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.or>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 19, 2014 at 5:06 AM, One Thousand Gnomes
-<gnomes@lxorguk.ukuu.org.uk> wrote:
-> On Fri, 17 Oct 2014 17:54:25 +0800
-> Chunyan Zhang <chunyan.zhang@spreadtrum.com> wrote:
->
->> Add serial driver for spreadtrum sharkl platform with earlycon
->> support at first.
->
->> +#define UART_TXD     0x0000
->> +#define UART_RXD     0x0004
->> +#define UART_STS0    0x0008
->> +#define UART_STS1    0x000C
->> +#define UART_IEN     0x0010
->> +#define UART_ICLR    0x0014
->> +#define UART_CTL0    0x0018
->> +#define UART_CTL1    0x001C
->> +#define UART_CTL2    0x0020
->> +#define UART_CLKD0   0x0024
->> +#define UART_CLKD1   0x0028
->> +#define UART_STS2    0x002C
->> +
->> +/*line status */
->> +#define UART_LSR_TX_OVER     (0x1<<15)
->
-> Given we use UART_ for all the 8250 defines it might be better to use
-> something else - SHARK_LSR_TX_OVER etc to avoid future confusion
->
+On Mon, Oct 20, 2014 at 08:27:24AM +0100, Lyra Zhang wrote:
+> 2014-10-17 21:03 GMT+08:00 Mark Rutland <mark.rutland@arm.com>:
+> > On Fri, Oct 17, 2014 at 10:54:25AM +0100, Chunyan Zhang wrote:
+> >> Add serial driver for spreadtrum sharkl platform with earlycon
+> >> support at first.
+> >>
+> >> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+> >> ---
+> >>  drivers/tty/serial/Kconfig       |   24 ++++++++++++++
+> >>  drivers/tty/serial/Makefile      |    1 +
+> >>  drivers/tty/serial/sprd-serial.c |   64 ++++++++++++++++++++++++++++++++++++++
+> >>  3 files changed, 89 insertions(+)
+> >>  create mode 100644 drivers/tty/serial/sprd-serial.c
+> >>
+> >> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> >> index 26cec64..33b8f90 100644
+> >> --- a/drivers/tty/serial/Kconfig
+> >> +++ b/drivers/tty/serial/Kconfig
+> >> @@ -113,6 +113,30 @@ config SERIAL_SB1250_DUART_CONSOLE
+> >>
+> >>         If unsure, say Y.
+> >>
+> >> +config SERIAL_SPRD
+> >> +     tristate "Support for SPRD serial"
+> >> +     depends on ARM || ARM64
+> >> +     select SERIAL_CORE
+> >> +     help
+> >> +          This enables the driver for the Spreadtrum's serial.
+> >> +
+> >> +config SERIAL_SPRD_NR
+> >> +        int "Maximum number of sprd serial ports"
+> >> +        depends on SERIAL_SPRD
+> >> +        default "4"
+> >
+> > This is not used below.
+> >
+> Ok, I'll remove it in v3.
+> 
+> >> +
+> >> +config SERIAL_SPRD_CONSOLE
+> >> +        bool "SPRD UART console support"
+> >> +        depends on SERIAL_SPRD=y
+> >> +        select SERIAL_CORE_CONSOLE
+> >> +     select SERIAL_EARLYCON
+> >> +        help
+> >> +       Support for early debug console using Spreadtrum's serial. This enables
+> >> +       the console before standard serial driver is probed. This is enabled
+> >> +       with "earlycon=serial_sprd" on the kernel command line. The console is
+> >> +       enabled when early_param is processed.
+> >
+> > There only appears to be an earlycon driver, and not "standard serial
+> > driver".
+> >
+> > What happens after earlycon?
+> >
+> > Surely there should be a real driver to take ownership of the UART?
+> >
+> > As far as I can see it won't be possible to boot your platform to a
+> > prompt, because earlycon will have gone before that.
+> >
+> > Thanks,
+> > Mark.
+> >
+> 
+> We are planed to add standard serial driver after this patch-set is approved.
+> In the first patch we contribute to the upstream, I'd like to add
+> architecture related code of
+> Spreadtrum's Sharkl, and then we will add more functions about Sharkl3
+> SoC step by step.
 
-Does it matter if those macro are only used in the specific c file?
->From my point of  view, private register macro could be treated as
-static definitions like static variable or functions in C file.
-I also noted that many people use a prefix for the other
-manufacturers' macro definition in source file .
-I have no intention to break the habit of kernel but just for discussion.
+The series is simple enough that the only issues I've noticed are minor.
+I'm happy with that.
 
+However, the absence of a real UART driver means that this series alone
+is not sufficient to boot your platform to a usable state. Given that
+the rest of the series is simply plumbing, I think it would make sense
+for that to accompany a full UART driver (or perhaps some other I/O like
+ethernet) such that it's possible to interact with the platform.
 
->> +static void serial_sprd_putc(struct uart_port *port, int c)
->> +{
->> +     while (!(readl(port->membase + UART_STS0) & UART_LSR_TX_OVER))
->> +             ;
->> +     writeb(c, port->membase + UART_TXD);
->> +}
->> +
->> +static void serial_sprd_early_write(struct console *con, const char *s,
->> +                                 unsigned n)
->> +{
->> +     struct earlycon_device *dev = con->data;
->> +
->> +     uart_console_write(&dev->port, s, n, serial_sprd_putc);
->> +}
->> +
->> +static int __init serial_sprd_early_console_setup(
->> +                             struct earlycon_device *device,
->> +                             const char *opt)
->> +{
->> +     if (!device->port.membase)
->> +             return -ENODEV;
->> +
->> +     device->con->write = serial_sprd_early_write;
->> +     return 0;
->> +}
->
-> This seems fine but it would be useful to see both the earlycon and the
-> main uart/console driver and how they fit together.
->
-> Alan
+Thanks,
+Mark.
