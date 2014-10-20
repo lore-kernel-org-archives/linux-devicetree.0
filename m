@@ -1,104 +1,46 @@
-From: Lyra Zhang <zhang.lyra@gmail.com>
-Subject: Re: [PATCH v2 5/5] tty/serial: Add earlycon support for Spreadtrum
- serial driver
-Date: Mon, 20 Oct 2014 19:15:15 +0800
-Message-ID: <CAAfSe-sU2jtWt5Neh5stfYzMUY6ZK5_hjRkhPxtyYG34vcse-w@mail.gmail.com>
-References: <1413539665-11484-1-git-send-email-chunyan.zhang@spreadtrum.com>
-	<1413539665-11484-6-git-send-email-chunyan.zhang@spreadtrum.com>
-	<20141017130354.GC5587@leverpostej>
-	<CAAfSe-sJxVZ46aQfGyOh+eTepiXwPhQPQCX-3yZ0Ew30n+oP+w@mail.gmail.com>
-	<20141020103213.GA26235@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141020103213.GA26235@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "jslaby@suse.cz" <jslaby@suse.cz>, "galak@codeaurora.org" <galak@codeaurora.org>, "broonie@linaro.org" <broonie@linaro.org>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, Pawel Moll <Pawel.Moll@arm.com>, "artagnon@gmail.com" <artagnon@gmail.com>, "rrichter@cavium.com" <rrichter@cavium.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Will Deacon <Will.Deacon@arm.com>, "orsonzhai@gmail.com" <orsonzhai@gmail.com>, "geng.ren@spreadtrum.com" <geng.ren@spreadtrum.com>, "zhizhou.zhang@spreadtrum.com" <zhizhou.zhang@spreadtrum.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.or>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 0/3] ARM: meson: Add reset controller
+Date: Mon, 20 Oct 2014 13:19:42 +0200
+Message-ID: <1413803985-8363-1-git-send-email-carlo@caione.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-10-20 18:32 GMT+08:00 Mark Rutland <mark.rutland@arm.com>:
-> On Mon, Oct 20, 2014 at 08:27:24AM +0100, Lyra Zhang wrote:
->> 2014-10-17 21:03 GMT+08:00 Mark Rutland <mark.rutland@arm.com>:
->> > On Fri, Oct 17, 2014 at 10:54:25AM +0100, Chunyan Zhang wrote:
->> >> Add serial driver for spreadtrum sharkl platform with earlycon
->> >> support at first.
->> >>
->> >> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
->> >> ---
->> >>  drivers/tty/serial/Kconfig       |   24 ++++++++++++++
->> >>  drivers/tty/serial/Makefile      |    1 +
->> >>  drivers/tty/serial/sprd-serial.c |   64 ++++++++++++++++++++++++++++++++++++++
->> >>  3 files changed, 89 insertions(+)
->> >>  create mode 100644 drivers/tty/serial/sprd-serial.c
->> >>
->> >> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
->> >> index 26cec64..33b8f90 100644
->> >> --- a/drivers/tty/serial/Kconfig
->> >> +++ b/drivers/tty/serial/Kconfig
->> >> @@ -113,6 +113,30 @@ config SERIAL_SB1250_DUART_CONSOLE
->> >>
->> >>         If unsure, say Y.
->> >>
->> >> +config SERIAL_SPRD
->> >> +     tristate "Support for SPRD serial"
->> >> +     depends on ARM || ARM64
->> >> +     select SERIAL_CORE
->> >> +     help
->> >> +          This enables the driver for the Spreadtrum's serial.
->> >> +
->> >> +config SERIAL_SPRD_NR
->> >> +        int "Maximum number of sprd serial ports"
->> >> +        depends on SERIAL_SPRD
->> >> +        default "4"
->> >
->> > This is not used below.
->> >
->> Ok, I'll remove it in v3.
->>
->> >> +
->> >> +config SERIAL_SPRD_CONSOLE
->> >> +        bool "SPRD UART console support"
->> >> +        depends on SERIAL_SPRD=y
->> >> +        select SERIAL_CORE_CONSOLE
->> >> +     select SERIAL_EARLYCON
->> >> +        help
->> >> +       Support for early debug console using Spreadtrum's serial. This enables
->> >> +       the console before standard serial driver is probed. This is enabled
->> >> +       with "earlycon=serial_sprd" on the kernel command line. The console is
->> >> +       enabled when early_param is processed.
->> >
->> > There only appears to be an earlycon driver, and not "standard serial
->> > driver".
->> >
->> > What happens after earlycon?
->> >
->> > Surely there should be a real driver to take ownership of the UART?
->> >
->> > As far as I can see it won't be possible to boot your platform to a
->> > prompt, because earlycon will have gone before that.
->> >
->> > Thanks,
->> > Mark.
->> >
->>
->> We are planed to add standard serial driver after this patch-set is approved.
->> In the first patch we contribute to the upstream, I'd like to add
->> architecture related code of
->> Spreadtrum's Sharkl, and then we will add more functions about Sharkl3
->> SoC step by step.
->
-> The series is simple enough that the only issues I've noticed are minor.
-> I'm happy with that.
->
-> However, the absence of a real UART driver means that this series alone
-> is not sufficient to boot your platform to a usable state. Given that
-> the rest of the series is simply plumbing, I think it would make sense
-> for that to accompany a full UART driver (or perhaps some other I/O like
-> ethernet) such that it's possible to interact with the platform.
->
-Ok, I see. I'll add a full UART driver in v3.
-Thanks for your suggestion.
+Apparently several IPs found in the MesonX SoCs can be reset by programming a
+specific bit in a register in the so called AO (Always-On) domain. From the
+documentation released by Amlogic under NDA it is not clear which devices can
+be reset acting on this register. So far from the sources release by Amlogic it
+seems that at least two IPs use this register for reset: RTC and UART. Since I
+need it to reset the RTC, I wrote this small driver.
 
-Best regards,
-Chunyan
+v3:
+* few changes at comments
+* removed register offset
+
+v2:
+* removed useless comment
+* added platform_get_drvdata
+* removed owner field
+
+Carlo Caione (3):
+  ARM: meson: reset: Add reset controller for MesonX SoCs
+  ARM: meson: DTSI: Enable reset controller
+  ARM: meson: docs: Add docs for MesonX reset controller
+
+ .../bindings/reset/amlogic,meson6-rst-mgr-ao.txt   |  14 +++
+ arch/arm/boot/dts/meson.dtsi                       |   6 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-meson.c                        | 138 +++++++++++++++++++++
+ 4 files changed, 159 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson6-rst-mgr-ao.txt
+ create mode 100644 drivers/reset/reset-meson.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
