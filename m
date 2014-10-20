@@ -1,35 +1,53 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] ARM: meson: Add reset controller
-Date: Mon, 20 Oct 2014 14:01:02 +0200
-Message-ID: <20141020120102.GC29697@carlo-MacBookPro>
-References: <1413803985-8363-1-git-send-email-carlo@caione.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1413803985-8363-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] ARM: sunxi: dt: Add DT bindings
+ documentation for SUNXI Security System
+Date: Mon, 20 Oct 2014 14:02:59 +0200
+Message-ID: <EC763015-19F7-4F25-8694-B1F6798E3B7B@dominion.thruhere.net>
+References: <1413728182-13569-1-git-send-email-clabbe.montjoie@gmail.com> <1413728182-13569-3-git-send-email-clabbe.montjoie@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCB73UESRQKBB57TSORAKGQE35ERXWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1413728182-13569-3-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org King" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, Miller Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 20, 2014 at 01:19:42PM +0200, Carlo Caione wrote:
-> Apparently several IPs found in the MesonX SoCs can be reset by programming a
-> specific bit in a register in the so called AO (Always-On) domain. From the
-> documentation released by Amlogic under NDA it is not clear which devices can
-> be reset acting on this register. So far from the sources release by Amlogic it
-> seems that at least two IPs use this register for reset: RTC and UART. Since I
-> need it to reset the RTC, I wrote this small driver.
 
-Hi Philipp,
-a couple of minutes ago I received new documentation about the
-controller. I'll submit a v4 soon.
+> Op 19 okt. 2014, om 16:16 heeft LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> het volgende geschreven:
+> 
+> This patch adds documentation for Device-Tree bindings for the Security System cryptographic accelerator driver.
+> 
+> Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> Documentation/devicetree/bindings/crypto/sunxi-ss.txt | 9 +++++++++
+> 1 file changed, 9 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/crypto/sunxi-ss.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/sunxi-ss.txt b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
+> new file mode 100644
+> index 0000000..a566803
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
+> @@ -0,0 +1,9 @@
+> +* Allwinner Security System found on A20 SoC
+> +
+> +Required properties:
+> +- compatible : Should be "allwinner,sun7i-a20-crypto".
+> +- reg: Should contain the Security System register location and length.
+> +- interrupts: Should contain the IRQ line for the Security System.
+> +- clocks : A phandle to the functional clock node of the Security System module
+> +- clock-names : Name of the functional clock, should be "ahb" and "mod".
 
-Thanks,
+It would be nice to have a copy/paste ready example node in here, like Boris did in "[PATCH v6 2/2] mtd: nand: add sunxi NFC dt bindings doc".
 
--- 
-Carlo Caione
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards,
+
+Koen
