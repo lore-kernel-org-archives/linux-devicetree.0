@@ -1,78 +1,65 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v5 09/12] Driver core: Unified interface for firmware node properties
-Date: Tue, 21 Oct 2014 00:22:09 +0200
-Message-ID: <5981363.HuOrK2kMZG@vostro.rjw.lan>
-References: <2660541.BycO7TFnA2@vostro.rjw.lan> <7821406.D7i8JfDpzX@vostro.rjw.lan> <3213594.3tCDm06Aee@wuerfel>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv2 1/2] ARM: dts: socfpga: Fix SD card detect
+Date: Mon, 20 Oct 2014 23:41:48 +0100
+Message-ID: <20141020224147.GA13670@leverpostej>
+References: <1413819079-17120-1-git-send-email-dinguyen@opensource.altera.com>
+ <1413819079-17120-2-git-send-email-dinguyen@opensource.altera.com>
+ <20141020184139.GA23062@leverpostej>
+ <CAD=FV=Xw2zAL-7s2XJk6fawMGUuMapGfqYGC6ntwG-TCi8GgkA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3213594.3tCDm06Aee@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=Xw2zAL-7s2XJk6fawMGUuMapGfqYGC6ntwG-TCi8GgkA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, October 20, 2014 04:19:57 PM Arnd Bergmann wrote:
-> On Monday 20 October 2014 01:46:00 Rafael J. Wysocki wrote:
-> > 
-> > > Something like:
-> > > 
-> > > #define define_fwnode_accessors(__type, __devprop_type) \
-> > > int device_property_read_##__type(struct device *dev, \
-> > >                               const char *propname, __type *val) \
-> > > { \
-> > >       if (IS_ENABLED(CONFIG_OF) && dev->of_node) \
-> > >               return of_property_read_##__type(dev->of_node, propname, val); \
-> > >       return acpi_dev_prop_read(ACPI_COMPANION(dev), propname, \
-> > >                                 __devprop_type, val); \
-> > > } \
-> > > int fwnode_property_read_##__type(struct fwnode_handle *fwnode, \
-> > >                               const char *propname, __type *val) \
-> > > { \
-> > >       if (IS_ENABLED(CONFIG_OF) && is_of_node(fwnode)) \
-> > >               return of_property_read_##__type(of_node(fwnode), propname, val); \
-> > >       else if (IS_ENABLED(CONFIG_ACPI) && is_acpi_node(fwnode)) \
-> > >               return acpi_dev_prop_read(acpi_node(fwnode), propname, \
-> > >                                         __devprop_type, val); \
-> > >       return -ENXIO; \
-> > > }
-> > > 
-> > > define_fwnode_accessors(u8, DEV_PROP_U8);
-> > > define_fwnode_accessors(u16, DEV_PROP_U16);
-> > > define_fwnode_accessors(u32, DEV_PROP_U32);
-> > > define_fwnode_accessors(u64, DEV_PROP_U64);
-> > > 
-> > > That significantly reduces the code size for these things.
-> > 
-> > So I was considering to do that, but eventually decided not to, because (1)
-> > adding kerneldoc comments to such things looks odd and (2) (which IMO is
-> > more important) this breaks LXR (for example, the thing at lxr.free-electrons.com
-> > that some people, including me in particular, occasionally use to check how things
-> > are defined).  And even if you used the old good grep to look for a definition of
-> > fwnode_property_read_u8, say, this wouldn't work exactly as expected I'm afraid. 
+On Mon, Oct 20, 2014 at 08:26:55PM +0100, Doug Anderson wrote:
+> Mark,
 > 
-> Agreed, I'd also prefer your proposed code over Grant's macros.
+> On Mon, Oct 20, 2014 at 11:41 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Mon, Oct 20, 2014 at 04:31:18PM +0100, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> >> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> >>
+> >> Without this patch, the booting the SOCFPGA platform would hang at the
+> >> SDMMC driver loading. There were 2 patches that caused this to happen:
+> >>
+> >> - Patch 9795a846e10 "mmc: dw_mmc: remove dw_mci_of_cd_gpio/wp_gpio()" removed
+> >>   looking for "cd-gpios", since mmc_of_parse was getting called.
+> >> - Patch 3cf890fc42b "mmc: dw_mmc: Pass back errors from mmc_of_parse()" would
+> >>   hang the system at the SDMMC driver loading.
+> >
+> > Regardless of which patches caused the issue, the existing DTB should
+> > continue to function. This is a kernel bug, not a DTB bug.
 > 
-> > I would very much like to retain the headers at least for this reason, if that's
-> > not a big deal.
-> > 
-> > What I can do, however, is to use macros for generating the bodies of those
-> > functions.
+> Right.  The kernel bug is that there is no "dtb fixup" stage of the
+> kernel to fix up old dtbs with this dtb bug.
 > 
-> Yes, just don't do any concatenation to generate the names of the called
-> functions, i.e.
+> Said another way:
 > 
-> 	return fwnode_call(of_property_read_u32, acpi_dev_prop_read, DEV_PROP_U32, node, propname, val);
+> 1. The old dtb was (possibly) not specifying the cd-gpio properly.
 > 
-> is better than
+> 2. The kernel had a bug where it was ignoring that error.  Things may
+> have been working because of some other side effect (maybe polling was
+> working).
 > 
-> 	return fwnode_call(u32, DEV_PROP_U32, node, propname, val);
+> 3. If we fix the kernel bug, what should we do?  The only sensible
+> thing (if we need to support old DTB with no changes) is to add a DTB
+> fixup stage.
 > 
-> because it's easier to understand the call chain.
+> ...or did someone add that stage and I missed it?
 
-There is one concatenation like that in the code I have today, but it was
-already present in the $subject series, in the of_dev_prop_read_array macro
-in patch #2 (and it actually makes sense to me).
+Unfortunately, we have no generic DTB fixup stage currently.
 
-Rafael
+What exactly was wrong with this cd-gpios description that previously
+allowed it to function? Can we not print a warning and fall back to the
+old behaviour in this case?
+
+Thanks,
+Mark
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
