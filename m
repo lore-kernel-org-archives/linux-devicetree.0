@@ -1,95 +1,70 @@
-From: Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] tty/serial: Add earlycon support for Spreadtrum
- serial driver
-Date: Mon, 20 Oct 2014 15:27:24 +0800
-Message-ID: <CAAfSe-sJxVZ46aQfGyOh+eTepiXwPhQPQCX-3yZ0Ew30n+oP+w@mail.gmail.com>
-References: <1413539665-11484-1-git-send-email-chunyan.zhang@spreadtrum.com>
-	<1413539665-11484-6-git-send-email-chunyan.zhang@spreadtrum.com>
-	<20141017130354.GC5587@leverpostej>
+From: Neil Zhang <zhangwm@marvell.com>
+Subject: RE: [PATCH v4] ARM: perf: save/restore pmu registers in pm notifier
+Date: Mon, 20 Oct 2014 01:46:17 -0700
+Message-ID: <9034CBD80F070943B59700D7F8149ED9024EB81CD8@SC-VEXCH4.marvell.com>
+References: <20140423170821.GJ5649@arm.com>
+ <175CCF5F49938B4D99B2E3EF7F558EBE5507A3C1F1@SC-VEXCH4.marvell.com>
+ <5360FB07.5030407@arm.com>
+ <6106CAF835F351419ADA79E4836E6EC71B6A53C826@SC-VEXCH4.marvell.com>
+ <9034CBD80F070943B59700D7F8149ED9A0875730@SC-VEXCH4.marvell.com>
+ <20140513184503.GF16388@arm.com>
+ <9034CBD80F070943B59700D7F8149ED9A087573F@SC-VEXCH4.marvell.com>
+ <537337F3.4080300@arm.com>
+ <9034CBD80F070943B59700D7F8149ED9A0875776@SC-VEXCH4.marvell.com>
+ <9034CBD80F070943B59700D7F8149ED90182308172@SC-VEXCH4.marvell.com>
+ <20140703175706.GI17372@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141017130354.GC5587@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "jslaby-AlSwsSmVLrQ@public.gmane.org" <jslaby-AlSwsSmVLrQ@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "m-karicheri2-l0cyMroinI0@public.gmane.org" <m-karicheri2-l0cyMroinI0@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <artagnon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XcXa4x6EXUF0@public.gmane.org>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140703175706.GI17372@arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Sudeep Holla <Sudeep.Holla@arm.com>, "'linux@arm.linux.org.uk'" <linux@arm.linux.org.uk>, "'linux-arm-kernel@lists.infradead.org'" <linux-arm-kernel@lists.infradead.org>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>, "'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-10-17 21:03 GMT+08:00 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
-> On Fri, Oct 17, 2014 at 10:54:25AM +0100, Chunyan Zhang wrote:
->> Add serial driver for spreadtrum sharkl platform with earlycon
->> support at first.
->>
->> Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
->> ---
->>  drivers/tty/serial/Kconfig       |   24 ++++++++++++++
->>  drivers/tty/serial/Makefile      |    1 +
->>  drivers/tty/serial/sprd-serial.c |   64 ++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 89 insertions(+)
->>  create mode 100644 drivers/tty/serial/sprd-serial.c
->>
->> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
->> index 26cec64..33b8f90 100644
->> --- a/drivers/tty/serial/Kconfig
->> +++ b/drivers/tty/serial/Kconfig
->> @@ -113,6 +113,30 @@ config SERIAL_SB1250_DUART_CONSOLE
->>
->>         If unsure, say Y.
->>
->> +config SERIAL_SPRD
->> +     tristate "Support for SPRD serial"
->> +     depends on ARM || ARM64
->> +     select SERIAL_CORE
->> +     help
->> +          This enables the driver for the Spreadtrum's serial.
->> +
->> +config SERIAL_SPRD_NR
->> +        int "Maximum number of sprd serial ports"
->> +        depends on SERIAL_SPRD
->> +        default "4"
->
-> This is not used below.
->
-Ok, I'll remove it in v3.
-
->> +
->> +config SERIAL_SPRD_CONSOLE
->> +        bool "SPRD UART console support"
->> +        depends on SERIAL_SPRD=y
->> +        select SERIAL_CORE_CONSOLE
->> +     select SERIAL_EARLYCON
->> +        help
->> +       Support for early debug console using Spreadtrum's serial. This enables
->> +       the console before standard serial driver is probed. This is enabled
->> +       with "earlycon=serial_sprd" on the kernel command line. The console is
->> +       enabled when early_param is processed.
->
-> There only appears to be an earlycon driver, and not "standard serial
-> driver".
->
-> What happens after earlycon?
->
-> Surely there should be a real driver to take ownership of the UART?
->
-> As far as I can see it won't be possible to boot your platform to a
-> prompt, because earlycon will have gone before that.
->
-> Thanks,
-> Mark.
->
-
-We are planed to add standard serial driver after this patch-set is approved.
-In the first patch we contribute to the upstream, I'd like to add
-architecture related code of
-Spreadtrum's Sharkl, and then we will add more functions about Sharkl3
-SoC step by step.
-
-I'm very glad to read your comments, if you have any suggestions, feel
-free to tell us.
-
-Thanks,
-Chunyan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogV2lsbCBEZWFjb24gW21h
+aWx0bzp3aWxsLmRlYWNvbkBhcm0uY29tXQ0KPiBTZW50OiAyMDE0xOo31MI0yNUgMTo1Nw0KPiBU
+bzogTmVpbCBaaGFuZw0KPiBDYzogU3VkZWVwIEhvbGxhOyAnbGludXhAYXJtLmxpbnV4Lm9yZy51
+ayc7ICdsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnJzsgJ2xpbnV4LWtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmcnOw0KPiAnZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcnDQo+
+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjRdIEFSTTogcGVyZjogc2F2ZS9yZXN0b3JlIHBtdSByZWdp
+c3RlcnMgaW4gcG0NCj4gbm90aWZpZXINCj4gDQo+IE9uIE1vbiwgSnVuIDMwLCAyMDE0IGF0IDEx
+OjM5OjE1QU0gKzAxMDAsIE5laWwgWmhhbmcgd3JvdGU6DQo+ID4gPiA+ID4gSSB3aWxsIHByZXBh
+cmUgYW5vdGhlciBwYXRjaCB0byBhZGQgRFQgZGVzY3JpcHRpb24gdW5kZXIgUE1VDQo+ID4gPiA+
+ID4gc2luY2UgdGhlcmUgaXMgbm8gZ2VuZXJpYyBwb3dlciBkb21haW4gc3VwcG9ydCBmb3IgcG0g
+bm90aWZpZXINCj4gPiA+ID4gPiBpZiBubyBvdGhlcg0KPiA+ID4gPiBjb25jZXJucy4NCj4gPiA+
+ID4gPiBXZSBjYW4gY2hhbmdlIHRoZSBtYW5uZXIgaWYgdGhlcmUgaXMgZ2VuZXJpYyBwb3dlciBk
+b21haW4NCj4gPiA+ID4gPiBzdXBwb3J0IGZvcg0KPiA+ID4gPiBwbSBub3RpZmllciBsYXRlci4N
+Cj4gPiA+ID4gPiBUaGFua3MuDQo+ID4gPiA+DQo+ID4gPiA+IE5vLCBwbGVhc2UgZG9uJ3QgYWRk
+IGFueSBEVCBiaW5kaW5ncyBmb3IgcG93ZXIgZG9tYWlucyBzcGVjaWZpYw0KPiB0bw0KPiA+ID4g
+PiBQTVUgbm9kZS4NCj4gPiA+ID4gV2UgY2FuJ3QgY2hhbmdlIHRoZSBEVCBiaW5kaW5ncyBvbmNl
+IGFkZGVkLg0KPiA+ID4gPg0KPiA+ID4gPiBBcyBJIHBvaW50ZWQgb3V0IHRoZSBEVCBiaW5kaW5n
+cyBmb3IgZ2VuZXJpYyBwb3dlciBkb21haW5zIGFyZQ0KPiA+ID4gPiB1bmRlciBkaXNjdXNzaW9u
+Lg0KPiA+ID4gPiBTZWUgaWYgeW91IGNhbiByZXVzZSBpdCwgaWYgbm90IGhlbHAgaW4gZXh0ZW5k
+aW5nIGl0IHNvIHRoYXQgaXQNCj4gY2FuIGJlIHVzZWQuDQo+ID4gPiA+DQo+ID4gPg0KPiA+ID4g
+U29ycnkgZm9yIHJlcGx5IGxhdGVyLg0KPiA+ID4gQXMgSSBzYWlkIGJlZm9yZSB0aGUgdW5kZXIg
+ZGlzY3Vzc2VkIGdlbmVyaWMgcG93ZXIgZG9tYWluIGlzIG5vdA0KPiA+ID4gc3VpdGFibGUgZm9y
+IENQVSBwZXJpcGhlcmFscyBzaW5jZSB0aGV5IGFyZSBhbGwga25vd24gYmVsb25nIHRvIENQVQ0K
+PiA+ID4gb3IgY2x1c3RlciBwb3dlciBkb21haW4uDQo+ID4gPiBJZiB3ZSB3YW50IHRvIGZvbGxv
+dyB0aGUgd2F5IHRoZXkgYXJlIGRpc2N1c3Npb24sIHdlIG5lZWQgdG8NCj4gPiA+IHJlZ2lzdGVy
+IGNvcmUgYW5kIGNsdXN0ZXIgcG93ZXIgcHJvdmlkZXIsIGFuZCBuZWVkIHZmcC9naWMvcG11IGV0
+Yw0KPiB0byByZXF1aXJlIHRoZW0uDQo+ID4gPiBJcyBpdCByZWFsbHkgc3VpdGFibGU/DQo+ID4g
+Pg0KPiA+IERvIHlvdSBoYXZlIGFueSBjb21tZW50cz8NCj4gPiBJZiBubywgSSB3b3VsZCBsaWtl
+IHRvIHB1dCBpdCB1bmRlciBQTVUgbm9kZS4NCj4gDQo+IFN1ZGVlcCBpcyBhIGJldHRlciBwZXJz
+b24gdG8gY29tbWVudCB0aGFuIG1lLCBidXQgSSdkIHN0aWxsIHJhdGhlciB0aGlzDQo+IHdhcyBo
+YW5kbGVkIG1vcmUgZ2VuZXJpY2FsbHkgYXMgb3Bwb3NlZCB0byBhIFBNVS1zcGVjaWZpYyBoYWNr
+LiBJIGRvbid0DQo+IHNlZSBhIHByb2JsZW0gaW5jbHVkaW5nIEdJQyBhbmQgVkZQIGhlcmUsIGJ1
+dCBvbmx5IHdoZW4gd2UgYWN0dWFsbHkNCj4gbmVlZCB0byBzYXZlL3Jlc3RvcmUgdGhlbSAoaS5l
+LiB3aGF0IHRoZSBoYXJkd2FyZSBndXlzIHdlbnQgY3Jhenkgd2l0aA0KPiB0aGUgcG93ZXIgZG9t
+YWlucykuDQo+IA0KDQpMb25nIHRpbWUgbm8gZm9sbG93IHVwIGZvciB0aGlzIGxvb3AuDQpTb3Jy
+eSB0aGF0IEkgd2lsbCBwaWNrIGl0IGFnYWluLg0KDQpXaWxsLA0KSSBwcmVmZXIgdG8gY2hlY2sg
+YWx3YXlzLW9uIGZpZWxkIHVuZGVyIFBNVSBub2RlIHRvIGNoZWNrIHdoZXRoZXIgd2UgbmVlZA0K
+U2F2ZS9yZXN0b3JlIHRoZW0uDQoNCkhlcmUgaXMgYSBzYW1wbGUgZm9yIGFyY2ggdGltZXIgd2hp
+Y2ggYWxzbyBhZGQgdW5kZXIgaXRzZWxmLg0KV2hhdCBkbyB5b3UgdGhpbms/DQoNCmNvbW1pdCA4
+MmE1NjE5NDEwZDRjNGRmNjVjMDQyNzJkYjE5OGVjYTVhODY3YzE4DQpBdXRob3I6IExvcmVuem8g
+UGllcmFsaXNpIDxsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tPg0KRGF0ZTogICBUdWUgQXByIDgg
+MTA6MDQ6MzIgMjAxNCArMDEwMA0KDQogICAgY2xvY2tzb3VyY2U6IGFyY2hfYXJtX3RpbWVyOiBG
+aXggYWdlLW9sZCBhcmNoIHRpbWVyIEMzU1RPUCBkZXRlY3Rpb24gaXNzdWUNCg0KDQo+IFdpbGwN
+Cg0KQmVzdCBSZWdhcmRzLA0KTmVpbCBaaGFuZw0K
