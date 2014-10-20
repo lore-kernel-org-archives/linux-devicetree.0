@@ -1,61 +1,76 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH] ARM: dts: berlin: Add GPIO leds to Google Chromecast
-Date: Mon, 20 Oct 2014 16:55:21 +0200
-Message-ID: <54452259.4000402@gmail.com>
-References: <1412351697-4079-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v5 09/12] Driver core: Unified interface for firmware node properties
+Date: Mon, 20 Oct 2014 16:55:08 +0200
+Message-ID: <CACxGe6vhtFrpcnmw5LtzwVTjqkTS1v4f=TsqJ7x-LBdSu9j-tw@mail.gmail.com>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan> <20141018145520.6039FC40591@trevor.secretlab.ca>
+ <7821406.D7i8JfDpzX@vostro.rjw.lan> <3213594.3tCDm06Aee@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1412351697-4079-1-git-send-email-sebastian.hesselbarth@gmail.com>
+In-Reply-To: <3213594.3tCDm06Aee@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/2014 05:54 PM, Sebastian Hesselbarth wrote:
-> With GPIO support for Marvell Berlin, now add the two gpio-connected
-> LEDs on Google Chromecast.
+On Mon, Oct 20, 2014 at 4:19 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Monday 20 October 2014 01:46:00 Rafael J. Wysocki wrote:
+>>
+>> > Something like:
+>> >
+>> > #define define_fwnode_accessors(__type, __devprop_type) \
+>> > int device_property_read_##__type(struct device *dev, \
+>> >                               const char *propname, __type *val) \
+>> > { \
+>> >       if (IS_ENABLED(CONFIG_OF) && dev->of_node) \
+>> >               return of_property_read_##__type(dev->of_node, propname, val); \
+>> >       return acpi_dev_prop_read(ACPI_COMPANION(dev), propname, \
+>> >                                 __devprop_type, val); \
+>> > } \
+>> > int fwnode_property_read_##__type(struct fwnode_handle *fwnode, \
+>> >                               const char *propname, __type *val) \
+>> > { \
+>> >       if (IS_ENABLED(CONFIG_OF) && is_of_node(fwnode)) \
+>> >               return of_property_read_##__type(of_node(fwnode), propname, val); \
+>> >       else if (IS_ENABLED(CONFIG_ACPI) && is_acpi_node(fwnode)) \
+>> >               return acpi_dev_prop_read(acpi_node(fwnode), propname, \
+>> >                                         __devprop_type, val); \
+>> >       return -ENXIO; \
+>> > }
+>> >
+>> > define_fwnode_accessors(u8, DEV_PROP_U8);
+>> > define_fwnode_accessors(u16, DEV_PROP_U16);
+>> > define_fwnode_accessors(u32, DEV_PROP_U32);
+>> > define_fwnode_accessors(u64, DEV_PROP_U64);
+>> >
+>> > That significantly reduces the code size for these things.
+>>
+>> So I was considering to do that, but eventually decided not to, because (1)
+>> adding kerneldoc comments to such things looks odd and (2) (which IMO is
+>> more important) this breaks LXR (for example, the thing at lxr.free-electrons.com
+>> that some people, including me in particular, occasionally use to check how things
+>> are defined).  And even if you used the old good grep to look for a definition of
+>> fwnode_property_read_u8, say, this wouldn't work exactly as expected I'm afraid.
 >
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Agreed, I'd also prefer your proposed code over Grant's macros.
+>
+>> I would very much like to retain the headers at least for this reason, if that's
+>> not a big deal.
+>>
+>> What I can do, however, is to use macros for generating the bodies of those
+>> functions.
+>
+> Yes, just don't do any concatenation to generate the names of the called
+> functions, i.e.
+>
+>         return fwnode_call(of_property_read_u32, acpi_dev_prop_read, DEV_PROP_U32, node, propname, val);
+>
+> is better than
+>
+>         return fwnode_call(u32, DEV_PROP_U32, node, propname, val);
+>
+> because it's easier to understand the call chain.
 
-Applied to berlin/dt.
+Sounds reasonable. I've got no problem with that.
 
-> ---
->   arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 17 +++++++++++++++++
->   1 file changed, 17 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-> index bcd81ffc495d..0816890a5c0d 100644
-> --- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-> +++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-> @@ -11,6 +11,7 @@
->   /dts-v1/;
->
->   #include "berlin2cd.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
->
->   / {
->   	model = "Google Chromecast";
-> @@ -24,6 +25,22 @@
->   		device_type = "memory";
->   		reg = <0x00000000 0x20000000>; /* 512 MB */
->   	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +
-> +		white {
-> +			label = "white";
-> +			gpios = <&portc 1 GPIO_ACTIVE_HIGH>;
-> +			default-state = "keep";
-> +		};
-> +
-> +		red {
-> +			label = "red";
-> +			gpios = <&portc 2 GPIO_ACTIVE_HIGH>;
-> +			default-state = "keep";
-> +		};
-> +	};
->   };
->
->   &uart0 { status = "okay"; };
->
+g.
