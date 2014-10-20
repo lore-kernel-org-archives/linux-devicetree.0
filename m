@@ -1,14 +1,14 @@
-From: Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] ARM: sunxi: dt: Add DT bindings
- documentation for SUNXI Security System
-Date: Mon, 20 Oct 2014 14:02:59 +0200
-Message-ID: <EC763015-19F7-4F25-8694-B1F6798E3B7B@dominion.thruhere.net>
-References: <1413728182-13569-1-git-send-email-clabbe.montjoie@gmail.com> <1413728182-13569-3-git-send-email-clabbe.montjoie@gmail.com>
+From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] mtd: nand: add sunxi NAND flash
+ controller support
+Date: Mon, 20 Oct 2014 17:31:51 +0530
+Message-ID: <5444F9AF.5000104@gmail.com>
+References: <1413805520-14947-1-git-send-email-boris.brezillon@free-electrons.com> <1413805520-14947-2-git-send-email-boris.brezillon@free-electrons.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCB73UESRQKBB57TSORAKGQE35ERXWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1413728182-13569-3-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDSMVOGBSIFRB2PUSORAKGQEQRU7EKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1413805520-14947-2-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -16,38 +16,80 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org King" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, Miller Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yassin Jaffer <yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 10/20/2014 05:15 PM, Boris Brezillon wrote:
+> Add support for the sunxi NAND Flash Controller (NFC).
+>
+(...)
 
-> Op 19 okt. 2014, om 16:16 heeft LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> het volgende geschreven:
-> 
-> This patch adds documentation for Device-Tree bindings for the Security System cryptographic accelerator driver.
-> 
-> Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> Documentation/devicetree/bindings/crypto/sunxi-ss.txt | 9 +++++++++
-> 1 file changed, 9 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/crypto/sunxi-ss.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/crypto/sunxi-ss.txt b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
-> new file mode 100644
-> index 0000000..a566803
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
-> @@ -0,0 +1,9 @@
-> +* Allwinner Security System found on A20 SoC
 > +
-> +Required properties:
-> +- compatible : Should be "allwinner,sun7i-a20-crypto".
-> +- reg: Should contain the Security System register location and length.
-> +- interrupts: Should contain the IRQ line for the Security System.
-> +- clocks : A phandle to the functional clock node of the Security System module
-> +- clock-names : Name of the functional clock, should be "ahb" and "mod".
+> +static int sunxi_nfc_dev_ready(struct mtd_info *mtd)
+> +{
+> +	struct nand_chip *nand = mtd->priv;
+> +	struct sunxi_nand_chip *sunxi_nand = to_sunxi_nand(nand);
+> +	struct sunxi_nfc *nfc = to_sunxi_nfc(sunxi_nand->nand.controller);
+> +	struct sunxi_nand_rb *rb;
+> +	unsigned long timeo = (sunxi_nand->nand.state == FL_ERASING ? 400 : 20);
+> +	int ret;
+> +
+> +	if (sunxi_nand->selected < 0)
+> +		return 0;
+> +
+> +	rb = &sunxi_nand->sels[sunxi_nand->selected].rb;
+> +
+> +	switch (rb->type) {
+> +	case RB_NATIVE:
+> +		ret = !!(readl(nfc->regs + NFC_REG_ST) &
+> +			 (NFC_RB_STATE0 << rb->info.nativeid));
+> +		if (ret)
+> +			break;
+> +
+> +		sunxi_nfc_wait_int(nfc, NFC_RB_B2R, timeo);
+> +		ret = !!(readl(nfc->regs + NFC_REG_ST) &
+> +			 (NFC_RB_STATE0 << rb->info.nativeid));
+> +		break;
+> +	case RB_GPIO:
+> +		ret = gpio_get_value(rb->info.gpio);
+> +		break;
+> +	case RB_NONE:
+> +	default:
+> +		ret = 0;
+> +		pr_err("cannot check R/B NAND status!");
 
-It would be nice to have a copy/paste ready example node in here, like Boris did in "[PATCH v6 2/2] mtd: nand: add sunxi NFC dt bindings doc".
+Missed terminating  new line...  :-)
 
-regards,
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +
 
-Koen
+(...)
+
+> +static struct platform_driver sunxi_nfc_driver = {
+> +	.driver = {
+> +		.name = "sunxi_nand",
+> +		.owner = THIS_MODULE,
+
+This field updated by module_platform_driver()..
+
+> +		.of_match_table = sunxi_nfc_ids,
+> +	},
+> +	.probe = sunxi_nfc_probe,
+> +	.remove = sunxi_nfc_remove,
+> +};
+> +module_platform_driver(sunxi_nfc_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Boris BREZILLON");
+> +MODULE_DESCRIPTION("Allwinner NAND Flash Controller driver");
+> +MODULE_ALIAS("platform:sunxi_nand");
+
+-- 
+Regards,
+Varka Bhadram.
