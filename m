@@ -1,90 +1,72 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH V2 4/9] Documentation: DT: Add entries for bcm63xx UART
-Date: Mon, 20 Oct 2014 15:53:53 -0700
-Message-ID: <54459281.7050004@gmail.com>
-References: <1413838448-29464-1-git-send-email-cernekee@gmail.com> <1413838448-29464-5-git-send-email-cernekee@gmail.com> <6216923.cK1phqtEXn@wuerfel> <2100909.UrHPDWWSai@wuerfel>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 1/6] ARM: cygnus: Initial support for Broadcom Cygnus
+ SoC
+Date: Mon, 20 Oct 2014 15:59:45 -0700
+Message-ID: <544593E1.90608@broadcom.com>
+References: <1413341936-17606-2-git-send-email-sbranden@broadcom.com> <4779079.vI0gT0iWvg@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <2100909.UrHPDWWSai@wuerfel>
-Sender: linux-serial-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Kevin Cernekee <cernekee@gmail.com>
-Cc: gregkh@linuxfoundation.org, jslaby@suse.cz, robh@kernel.org, grant.likely@linaro.org, geert@linux-m68k.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4779079.vI0gT0iWvg@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/20/2014 02:25 PM, Arnd Bergmann wrote:
-> On Monday 20 October 2014 23:20:08 Arnd Bergmann wrote:
+On 14-10-20 12:55 PM, Arnd Bergmann wrote:
+> On Tuesday 14 October 2014 19:58:51 Scott Branden wrote:
+>>   if ARCH_BCM
 >>
->> In this example, the clock output name of the clock provider is
->> the same as the clock input of the consumer, that is almost always
->> a bug and would not be a good example at all.
+>> +menu "iProc SoC based Machine types"
+>> +       config ARCH_BCM_IPROC
+>> +               bool
+>> +               select ARM_GIC
+>> +               select CACHE_L2X0
+>> +               select HAVE_ARM_SCU if SMP
+>> +               select HAVE_ARM_TWD if SMP
+>> +               select ARM_GLOBAL_TIMER
+>> +
+>> +               select CLKSRC_MMIO
+>> +               select ARCH_REQUIRE_GPIOLIB
+>> +               select ARM_AMBA
+>> +               select PINCTRL
+>> +               help
+>> +                 This enables support for systems based on Broadcom IPROC architected SoCs.
+>> +                 The IPROC complex contains one or more ARM CPUs along with common
+>> +                 core periperals. Application specific SoCs are created by adding a
+>> +                 uArchitecture containing peripherals outside of the IPROC complex.
+>> +                 Currently supported SoCs are Cygnus.
+>> +
+>> +       config ARCH_BCM_CYGNUS
+>> +               bool "Broadcom Cygnus Support" if ARCH_MULTI_V7
+>
+> You still have a three-level menu structure. Please fix.
+
+Hi Arnd, we have ARCH_BCM->ARCH_BCM_CYGNUS.
+
+ARCH_BCM_IPROC is silent and selected by ARCH_BCM_CYGNUS.  This was the 
+change made between v3 and v5.
+
+Is there something else to be done here?
+>
+>> +static const char const *bcm_cygnus_dt_compat[] = {
+>> +       "brcm,cygnus",
+>> +       NULL,
+>> +};
+>> +
+>> +DT_MACHINE_START(BCM_CYGNUS_DT, "Broadcom Cygnus SoC")
+>> +       .l2c_aux_val    = 0,
+>> +       .l2c_aux_mask   = ~0,
+>> +       .dt_compat = bcm_cygnus_dt_compat,
+>> +MACHINE_END
 >>
->>
-> 
-> Ah, found the bug: the MIPS code is written to ignore the device
-> and just look up a global clock name:
-> 
-> struct clk *clk_get(struct device *dev, const char *id)
-> {
->         if (!strcmp(id, "enet0"))
->                 return &clk_enet0;
->         if (!strcmp(id, "enet1"))
->                 return &clk_enet1;
->         if (!strcmp(id, "enetsw"))
->                 return &clk_enetsw;
->         if (!strcmp(id, "ephy"))
->                 return &clk_ephy;
->         if (!strcmp(id, "usbh"))
->                 return &clk_usbh;
->         if (!strcmp(id, "usbd"))
->                 return &clk_usbd;
->         if (!strcmp(id, "spi"))
->                 return &clk_spi;
->         if (!strcmp(id, "hsspi"))
->                 return &clk_hsspi;
->         if (!strcmp(id, "xtm"))
->                 return &clk_xtm;
->         if (!strcmp(id, "periph"))
->                 return &clk_periph;
->         if ((BCMCPU_IS_3368() || BCMCPU_IS_6358()) && !strcmp(id, "pcm"))
->                 return &clk_pcm;
->         if ((BCMCPU_IS_6362() || BCMCPU_IS_6368()) && !strcmp(id, "ipsec"))
->                 return &clk_ipsec;
->         if ((BCMCPU_IS_6328() || BCMCPU_IS_6362()) && !strcmp(id, "pcie"))
->                 return &clk_pcie;
->         return ERR_PTR(-ENOENT);
-> }
-> 
-> This should be changed to use the drivers/clk/clkdev.c lookup code if
-> you want to share drivers between architectures.
-
-For now, I suppose that s simple fix could be to use an anonymous clock
-request when probed via DT. This code you quote dates from 2008 when
-there was no clkdev in the kernel at all. So something like this would
-probably do it for now:
-
-diff --git a/drivers/tty/serial/bcm63xx_uart.c
-b/drivers/tty/serial/bcm63xx_uart.c
-index e0b87d507670..1b914b85dd31 100644
---- a/drivers/tty/serial/bcm63xx_uart.c
-+++ b/drivers/tty/serial/bcm63xx_uart.c
-@@ -819,7 +819,7 @@ static int bcm_uart_probe(struct platform_device *pdev)
-        if (!res_irq)
-                return -ENODEV;
-
--       clk = clk_get(&pdev->dev, "periph");
-+       clk = clk_get(&pdev->dev, pdev->dev.of_node ? NULL : "periph");
-        if (IS_ERR(clk))
-                return -ENODEV;
-
-
-
-> 
-> In particular, the "enet0"/"enet1" clock name makes no sense -- the
-> clock input name should be independent of the instance, aside from
-> the question of which output of the provider it is wired up to.
-> 
+> This looks good.
+>
 > 	Arnd
-> 
+>
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
