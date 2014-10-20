@@ -1,30 +1,34 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 1/5] Documentation: DT: Renamed of-serial.txt to 8250.txt
-Date: Mon, 20 Oct 2014 15:47:42 +0200
-Message-ID: <1938561.uq5BpWofVY@wuerfel>
-References: <1413539665-11484-2-git-send-email-chunyan.zhang@spreadtrum.com>
+Subject: Re: [PATCH v2 2/5] Documentation: DT: Add bindings for Spreadtrum
+ Sharkl Platform
+Date: Mon, 20 Oct 2014 15:48:46 +0200
+Message-ID: <9863286.bSvbeP9S6p@wuerfel>
+References: <1413539665-11484-3-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413539665-11484-2-git-send-email-chunyan.zhang@spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1413539665-11484-3-git-send-email-chunyan.zhang@spreadtrum.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, galak@codeaurora.org, broonie@linaro.org, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, artagnon@gmail.com, rrichter@cavium.com, robh+dt@kernel.org, will.deacon@arm.com, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sprdlinux@freelists.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, zhizhou.zhang@spreadtrum.com, pawel.moll@arm.com, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, ijc+devicetree@hellion.org.uk, catalin.marinas@arm.com, broonie@linaro.org, will.deacon@arm.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, geng.ren@spreadtrum.com, rrichter@cavium.com, m-karicheri2@ti.com, galak@codeaurora.org, orsonzhai@gmail.com, jslaby@suse.cz, sprdlinux@freelists.org, linux-kernel@vger.kernel.org, artagnon@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Friday 17 October 2014 17:54:21 Chunyan Zhang wrote:
-> The file of-serial.txt was only for 8250 compatible UART implementations,
-> so renamed it to 8250.txt to avoid confusing other persons.
+On Friday 17 October 2014 17:54:22 Chunyan Zhang wrote:
+> Adds Spreadtrum's prefix "sprd" to vendor-prefixes file.
+> Adds the devicetree binding documentation for Spreadtrum's serial
+> and Sharkl3 SoC based on the Sharkl Platform which is the 64-bit
+> SoC Platform of Spreadtrum.
 > 
 > Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-> ---
->  Documentation/devicetree/bindings/serial/8250.txt  |   50 ++++++++++++++++++++
->  .../devicetree/bindings/serial/of-serial.txt       |   50 --------------------
->  2 files changed, 50 insertions(+), 50 deletions(-)
 > 
 
-Patch looks good, but please use 'git format-patch -M' when generating it,
-to avoid having the whole add/remove in the patch, for easier review.
-
-	Arnd
+Acked-by: Arnd Bergmann <arnd@arndb.de>
