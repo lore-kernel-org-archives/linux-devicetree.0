@@ -1,72 +1,41 @@
-From: Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 4/4] arm64:numa: adding numa support for arm64
- platforms.
-Date: Mon, 20 Oct 2014 15:30:46 +0100
-Message-ID: <20141020143045.GA10233@linaro.org>
-References: <1411635840-24038-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
- <1411635840-24038-5-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
- <20141003121343.GG26643@leverpostej>
- <CAFpQJXVJtn=PTYTd5icHhfYxsQnEzUP+w9kXXDJSs-M=eGNWVw@mail.gmail.com>
- <20141006112640.GF24686@leverpostej>
- <CAFpQJXU4AW_WycWUWWaONvCiFgJU5KC_coCH8EU9kO=a0Rf9hQ@mail.gmail.com>
- <CAFpQJXXkgtr6E0owHxAu0MG8+7s5LBt_mVB9gQM1VfkX2rY5FQ@mail.gmail.com>
- <20141020142555.GA9968@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141020142555.GA9968-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH RFT 0/8] Marvell PXA168 libphy handling and Berlin Ethernet
+Date: Mon, 20 Oct 2014 16:37:51 +0200
+Message-ID: <54451E3F.1030700@gmail.com>
+References: <1412858346-11334-1-git-send-email-sebastian.hesselbarth@gmail.com> <20141016095323.GA1061@kwain>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141016095323.GA1061@kwain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Antoine Tenart <antoine.tenart@free-electrons.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 20, 2014 at 03:25:56PM +0100, Steve Capper wrote:
-> On Fri, Oct 17, 2014 at 10:49:56PM +0530, Ganapatrao Kulkarni wrote:
+On 16.10.2014 11:53, Antoine Tenart wrote:
+> On Thu, Oct 09, 2014 at 02:38:58PM +0200, Sebastian Hesselbarth wrote:
+>> This patch series deals with a removing a IP feature that can be found
+>> on all currently supported Marvell Ethernet IP (pxa168_eth, mv643xx_eth,
+>> mvneta). The MAC IP allows to automatically perform PHY auto-negotiation
+>> without software interaction.
+>>
+>> However, this feature (a) fundamentally clashes with the way libphy works
+>> and (b) is unable to deal with quirky PHYs that require special treatment.
+>> In this series, pxa168_eth driver is rewritten to completely disable that
+>> feature and properly deal with libphy provided PHYs. The other two drivers
+>> are suspect to future patch sets, also removing the code related with it.
+>>
+>> Currently, the patches are based on next-20141009 and will be resent once
+>> v3.18-rc1 drops. This is a Request-For-Test on both BG2Q and MMP/gplug as
+>
+> I tested the series on a BG2Q, it worked well.
 
-[...]
+Antoine,
 
->          /*Proximity Distance matrix for 4Node system
-> >                        <from-node to-node distance>
-> >         */
-> >          node-matrix=    <0 0 10>,
-> >                                <0 1 20>,
-> >                                <0 2 30>,
-> >                                <0 3 10>,
-> >                                <1 0 20>,
-> >                                 <1 1 10>,
-> >                                <1 2 30>,
-> >                               <1 3 10>,
-> >                               <2 0 30>,
-> >                               <2 1 20>,
-> >                               <2 2 10>,
-> >                              <2 3 10>,
-> >                             <3 0 10>,
-> >                             <3 1 20>,
-> >                             <3 2 30>,
-> >                             <3 3 10>,
-> >  }
-> 
-> Hi Ganapat,
-> The above caught my attention.
-> 
-> For a 4-node system do we not need 16 distances; the implication of that
-> would be that the distance between node A-B could be different from the
-> distance between B-A? Also the distance from a node to itself could be
-> safely assumed to be zero?
-> 
-> I think we should have a symmetric matrix with zero-diagonals so strictly
-> only seven values would need specifying for a 4-node system.
+Thanks for testing! I assume you have added a phy-connection-type
+property to BG2Q's ethernet node?
 
-s/seven/six/
+I doubt there will be any Tested-by from MMP guys anytime soon, so
+I'll resend this with the minor remarks to be merged for 3.19.
 
-I really need to learn how to count.... :-/
-
-> 
-> Cheers,
-> -- 
-> Steve
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sebastian
