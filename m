@@ -1,82 +1,91 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH v5 10/12] gpio: Support for unified device properties interface
-Date: Mon, 20 Oct 2014 15:12:50 +0900
-Message-ID: <CAAVeFuKoGfkUXPZWt0Xy1jW-zGCUEzbzQ8W7_RVyetG9++uDHw@mail.gmail.com>
-References: <2660541.BycO7TFnA2@vostro.rjw.lan> <1510578.dSiEYPPI9m@vostro.rjw.lan>
- <E99B44D9-C9E3-4C0B-8B18-450121793EB5@arndb.de> <2997291.LjjH2RgEUW@wuerfel>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RFC 6/7] mfd: qcom-smd-rpm: Driver for the Qualcomm RPM over SMD
+Date: Mon, 20 Oct 2014 08:22:11 +0100
+Message-ID: <20141020072211.GC25349@x1>
+References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1412037291-16880-7-git-send-email-bjorn.andersson@sonymobile.com>
+ <20141008084017.GD20647@lee--X1>
+ <20141017135553.GA28882@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <2997291.LjjH2RgEUW@wuerfel>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141017135553.GA28882@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 18, 2014 at 6:47 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Friday 17 October 2014 20:09:51 Arnd Bergmann wrote:
->> On October 17, 2014 2:16:00 PM CEST, "Rafael J. Wysocki" <rjw@rjwysocki.net> wrote:
->> >From: Mika Westerberg <mika.westerberg@linux.intel.com>
->> >
->> >Some drivers need to deal with only firmware representation of its
->> >GPIOs. An example would be a GPIO button array driver where each button
->> >is described as a separate firmware node in device tree. Typically
->> >these
->> >child nodes do not have physical representation in the Linux device
->> >model.
->> >
->> >In order to help device drivers to handle such firmware child nodes we
->> >add dev[m]_get_named_gpiod_from_child() that takes a child firmware
->> >node pointer as its second argument (the first one is the parent device
->> >itself), finds the GPIO using whatever is the underlying firmware
->> >method, and requests the GPIO properly.
->>
->> Could we also have a wrapper around this function without a "name" argument,
->> using just the index?
->
-> Expanding on this thought: I think we should mandate for new bindings
-> that they use either a name and no index, or an index but not name,
+On Fri, 17 Oct 2014, Bjorn Andersson wrote:
+> On Wed 08 Oct 01:40 PDT 2014, Lee Jones wrote:
 
-I'm afraid this could forbid some useful use-cases, namely the ones
-where several GPIOs serve the same function (and are typically set
-together). We had a few patch proposals to handle such GPIO groups,
-and even though one was in pretty good shape the submitter did not
-push it until the end. :/
+[...]
 
-But my concern is that instead of having this:
+> > > +static struct qcom_smd_driver qcom_smd_rpm_driver =3D {
+> > > +	.probe =3D qcom_smd_rpm_probe,
+> > > +	.remove =3D qcom_smd_rpm_remove,
+> > > +	.callback =3D qcom_smd_rpm_callback,
+> > > +	.driver  =3D {
+> > > +		.name  =3D "qcom_smd_rpm",
+> > > +		.owner =3D THIS_MODULE,
+> > > +		.of_match_table =3D qcom_smd_rpm_of_match,
+> > > +	},
+> > > +};
+> > > +
+> > > +module_qcom_smd_driver(qcom_smd_rpm_driver);
+> >=20
+> > I don't like this.  What's wrong with the existing platform driver
+> > code?
+> >=20
+>=20
+> I started off with having smd child devices as platform drivers and h=
+ad some
+> accessor functions to find the open handles that triggered the probe(=
+) and
+> register the callback with those. But this didn't feel very sane, so =
+I did
+> implemented a custom driver struct and probe prototype to simplify wr=
+iting
+> drivers.
+>=20
+> May I ask why you dislike this? This is how it's done in so many othe=
+r places
+> in the kernel...
 
-enable-gpio = <&gpio 0 GPIO_ACTIVE_HIGH>;
-value-gpios = <&gpio 1 GPIO_ACTIVE_HIGH ... &gpio 8 GPIO_ACTIVE_HIGH>;
+I don't believe that's the case.  All owners of their own
+module_*_driver() registration calls are busses (see below), whereas
+'qcom_smd' is just a driver.  Things would soon get out of control if
+we allowed every driver in the kernel to supply their own driver
+registration information variants.
 
-We would force this:
+$ git grep "^module_.*_driver(" | \
+  cut -d: -f2 | cut -d'(' -f1 | sort | uniq
 
-enable-gpio = <&gpio 0 GPIO_ACTIVE_HIGH>;
-value0-gpio = <&gpio 1 GPIO_ACTIVE_HIGH>;
-...
-value7-gpio = <&gpio 8 GPIO_ACTIVE_HIGH>;
+module_acpi_driver
+module_amba_driver
+module_comedi_driver
+module_comedi_pci_driver
+module_comedi_pcmcia_driver
+module_comedi_usb_driver
+module_gameport_driver
+module_hid_driver
+module_i2c_driver
+module_mcb_driver
+module_mipi_dsi_driver
+module_pci_driver
+module_pcmcia_driver
+module_platform_driver
+module_serio_driver
+module_spi_driver
+module_spmi_driver
+module_usb_composite_driver
+module_usb_driver
+module_usb_serial_driver
+module_virtio_driver
 
-Or this:
-
-// First GPIO is enable, other GPIOs are value
-gpios = <&gpio 0 GPIO_ACTIVE_HIGH &gpio 1 GPIO_ACTIVE_HIGH ... &gpio 8
-GPIO_ACTIVE_HIGH>;
-
-Most bindings don't need that much sophistication, and for these we
-should indeed make sure that they stick to using either the names or
-index (and in a consistent manner), but closing the possibility to use
-both together may bite us in the end.
-
-
-> and I also think that for named gpios, we should try to converge on a
-> common naming scheme. As discussed, we will probably want to support all
-> the existing ways to do this even with ACPI and with the unified
-> interface, but it doesn't have to be the obvious way.
-
-Personally, I like the idea that each GPIO has a function, so now that
-ACPI fully supports this I'd suggest the policy of using names for
-each GPIO (e.g. never use the fallback "gpios" or "gpio" property),
-and only ressort to indexes if several GPIOs happen to serve the same
-function. I know we haven't reached consensus about this so far, but
-it would be nice it we could discuss this point again in the light of
-the new ACPI capabilities and come with something to write as a
-guideline in the GPIO documentation.
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
