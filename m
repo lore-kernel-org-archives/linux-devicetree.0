@@ -1,91 +1,179 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v5 10/12] gpio: Support for unified device properties interface
-Date: Mon, 20 Oct 2014 01:58:57 +0200
-Message-ID: <25715349.xM7UOyLcLb@vostro.rjw.lan>
-References: <2660541.BycO7TFnA2@vostro.rjw.lan> <E99B44D9-C9E3-4C0B-8B18-450121793EB5@arndb.de> <2997291.LjjH2RgEUW@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <2997291.LjjH2RgEUW@wuerfel>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+From: Howard Chen <ibanezchen@gmail.com>
+Subject: [PATCH v4 1/3] ARM: mediatek: Add basic support for mt6592
+Date: Mon, 20 Oct 2014 11:23:17 +0800
+Message-ID: <1413775401-4501-1-git-send-email-ibanezchen@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: matthias.bgg@gmail.com
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Mediatek
+	SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday, October 18, 2014 11:47:41 AM Arnd Bergmann wrote:
-> On Friday 17 October 2014 20:09:51 Arnd Bergmann wrote:
-> > On October 17, 2014 2:16:00 PM CEST, "Rafael J. Wysocki" <rjw@rjwysocki.net> wrote:
-> > >From: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > >
-> > >Some drivers need to deal with only firmware representation of its
-> > >GPIOs. An example would be a GPIO button array driver where each button
-> > >is described as a separate firmware node in device tree. Typically
-> > >these
-> > >child nodes do not have physical representation in the Linux device
-> > >model.
-> > >
-> > >In order to help device drivers to handle such firmware child nodes we
-> > >add dev[m]_get_named_gpiod_from_child() that takes a child firmware
-> > >node pointer as its second argument (the first one is the parent device
-> > >itself), finds the GPIO using whatever is the underlying firmware
-> > >method, and requests the GPIO properly.
-> > 
-> > Could we also have a wrapper around this function without a "name" argument,
-> > using just the index?
-> 
-> Expanding on this thought: I think we should mandate for new bindings
-> that they use either a name and no index, or an index but not name,
-> and I also think that for named gpios, we should try to converge on a
-> common naming scheme. As discussed, we will probably want to support all
-> the existing ways to do this even with ACPI and with the unified
-> interface, but it doesn't have to be the obvious way.
-> 
-> We could do it like this:
-> 
-> // internal implementation, may be called from drivers with legacy bindings 
-> struct gpio_desc *__fwnode_get_gpiod_from_property(struct fwnode_handle *fwnode,
->                                            const char *propname, int index)
-> {
-> 	... /* your current code */
-> }
-> 
-> // recommended interface
-> static inline struct gpio_desc *fwnode_get_gpiod(struct fwnode_handle *fwnode,
-> 						  int index)
-> {
-> 	return __fwnode_get_gpiod_from_property(fwnode, "gpios", index);
-> }
-> 
-> // alternative interface
-> struct gpio_desc *fwnode_get_gpiod(struct fwnode_handle *fwnode, const char *name)
-> {
-> 	char propname[64];
-> 	int ret;
-> 	
-> 	ret = snprintf(propname, sizeof(propname), "%s-gpios", name);
-> 	if (ret > sizeof(propname))
-> 		return -EINVAL;
-> 
-> 	return __fwnode_get_gpiod_from_property(fwnode, propname, 0);
-> }
-> 
-> The above is just a suggestion, I'm hoping for the GPIO maintainers to
-> provide more guidance if they have other ideas.
+* A dtsi for boards based on Mediatek MT6592 SoCs
+* Compatible string in arch/arm/mach-mediatek/mediatek.c
 
-Actually, since the two last patches in the series, which currently are
-the only users of these new functions, both pass "gpios" as the property
-name and 0 as the index, I can simplify the functions so that (a)
-fwnode_get_gpiod() takes fwnode and name and then simply passes 0 as the
-index to either of_get_named_gpiod_flags() or acpi_get_gpiod_by_index()
-and (b) devm_get_named_gpiod_from_child() takes only dev and fwnode (child)
-and passes "gpios" as the property name to fwnode_get_gpiod().  The name
-of devm_get_named_gpiod_from_child() could then be changed to something
-like devm_get_gpiod_from_child() even.
+Signed-off-by: Howard Chen <ibanezchen@gmail.com>
+---
+ arch/arm/boot/dts/mt6592.dtsi     | 138 ++++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-mediatek/mediatek.c |   1 +
+ 2 files changed, 139 insertions(+)
+ create mode 100644 arch/arm/boot/dts/mt6592.dtsi
 
-If anyone in the future needs anything more general, they can simply
-add more complexity to that code, but for now we can go for a simplified
-interface just fine.
-
-Rafael
-
+diff --git a/arch/arm/boot/dts/mt6592.dtsi b/arch/arm/boot/dts/mt6592.dtsi
+new file mode 100644
+index 0000000..367ba8f
+--- /dev/null
++++ b/arch/arm/boot/dts/mt6592.dtsi
+@@ -0,0 +1,138 @@
++/*
++ * Copyright (c) 2014 MediaTek Inc.
++ * Author: Howard Chen <ibanezchen@gmail.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include "skeleton.dtsi"
++
++/ {
++	compatible = "mediatek,mt6592";
++	interrupt-parent = <&gic>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x0>;
++		};
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x1>;
++		};
++		cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x2>;
++		};
++		cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x3>;
++		};
++		cpu@4 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x4>;
++		};
++		cpu@5 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x5>;
++		};
++		cpu@6 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x6>;
++		};
++		cpu@7 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x7>;
++		};
++	};
++
++	system_clk: dummy13m {
++		compatible = "fixed-clock";
++		clock-frequency = <13000000>;
++		#clock-cells = <0>;
++	};
++
++	rtc_clk: dummy32k {
++		compatible = "fixed-clock";
++		clock-frequency = <32000>;
++		#clock-cells = <0>;
++	};
++
++	uart_clk: uart_clk {
++		compatible = "fixed-clock";
++		clock-frequency = <26000000>;
++		#clock-cells = <0>;
++	};
++
++	timer: timer@10008000 {
++		compatible = "mediatek,mt6577-timer";
++		reg = <0x10008000 0x80>;
++		interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&system_clk>, <&rtc_clk>;
++		clock-names = "system-clk", "rtc-clk";
++	};
++
++	gic: interrupt-controller@10211000 {
++		compatible = "arm,cortex-a9-gic";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		reg = <0x10211000 0x1000>,
++			  <0x10212000 0x1000>;
++	};
++
++	uart0: serial@11002000 {
++		compatible = "mediatek,mt6592-uart", "mediatek,mt6577-uart";
++		reg = <0x11002000 0x400>;
++		reg-shift = <2>;
++		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&uart_clk>;
++		status = "disabled";
++	};
++
++	uart1: serial@11003000 {
++		compatible = "mediatek,mt6592-uart", "mediatek,mt6577-uart";
++		reg = <0x11003000 0x400>;
++		reg-shift = <2>;
++		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&uart_clk>;
++		status = "disabled";
++	};
++
++	uart2: serial@11004000 {
++		compatible = "mediatek,mt6592-uart", "mediatek,mt6577-uart";
++		reg = <0x11004000 0x400>;
++		reg-shift = <2>;
++		interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&uart_clk>;
++		status = "disabled";
++	};
++
++	uart3: serial@11005000 {
++		compatible = "mediatek,mt6592-uart", "mediatek,mt6577-uart";
++		reg = <0x11005000 0x400>;
++		reg-shift = <2>;
++		interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&uart_clk>;
++		status = "disabled";
++	};
++};
+diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
+index f2acf07..88e4626 100644
+--- a/arch/arm/mach-mediatek/mediatek.c
++++ b/arch/arm/mach-mediatek/mediatek.c
+@@ -19,6 +19,7 @@
+ 
+ static const char * const mediatek_board_dt_compat[] = {
+ 	"mediatek,mt6589",
++	"mediatek,mt6592",
+ 	NULL,
+ };
+ 
+-- 
+1.9.1
