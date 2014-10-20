@@ -1,15 +1,11 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH RFC V3 2/3] mxs: add driver for ocotp in i.MX23 and i.MX28
-Date: Mon, 20 Oct 2014 17:32:37 +0200
-Message-ID: <54452B15.50502@i2se.com>
-References: <1413628372-2809-1-git-send-email-stefan.wahren@i2se.com>
- <1413628372-2809-3-git-send-email-stefan.wahren@i2se.com>
- <3434817.dk7dLDFrcN@wuerfel>
+From: <dinguyen@opensource.altera.com>
+Subject: [PATCHv2 0/2] ARM: dts: socfpga: fix booting with SD/MMC
+Date: Mon, 20 Oct 2014 10:31:17 -0500
+Message-ID: <1413819079-17120-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3434817.dk7dLDFrcN@wuerfel>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,30 +15,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, shawn.guo@linaro.org, festevam@gmail.com, mhei@heimpold.de
+To: robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, jh80.chung@samsung.com, dianders@chromium.org
+Cc: devicetree@vger.kernel.org, dinh.linux@gmail.com, atull@opensource.altera.com, Dinh Nguyen <dinguyen@opensource.altera.com>, s.trumtrar@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
 
-Am 20.10.2014 um 16:44 schrieb Arnd Bergmann:
-> On Saturday 18 October 2014 10:32:51 Stefan Wahren wrote:
->> This patch brings readonly support for the On Chip OTP cells in the i.MX23
->> and i.MX28 processor. The driver uses files (one for each cell) in sysfs
->> as interface.
->>
->> ...
-> I think this needs to be an MTD driver, not a "misc" driver, and it
-> should use the proper MTD interfaces instead of introducing an
-> incompatible set of interfaces.
->
-> 	Arnd
+The SOCFPGA dev kit was hanging during bootup on the SD/MMC driver loading.
+The first patch fixes the booting and the 2nd patch adds a regulator node
+for the SD/MMC driver to use.
 
-phew that sounds like a lot of work and much complexity.
+v2 diff(s): Patch 2/2 ARM: dts: socfpga: Add a 3.3V fixed regulator node
+	- Move the regulator nodes to their respective board dts file and
+	  correctly rename the regulator to match the schematic
 
-Am i right, that i should drop the sysfs interface?
+Dinh Nguyen (2):
+  ARM: dts: socfpga: Fix SD card detect
+  ARM: dts: socfpga: Add a 3.3V fixed regulator node
 
-Does MTD drivers have a readonly text (non binary) user interface?
+ arch/arm/boot/dts/socfpga_arria5.dtsi         |  2 +-
+ arch/arm/boot/dts/socfpga_arria5_socdk.dts    | 14 ++++++++++++++
+ arch/arm/boot/dts/socfpga_cyclone5_socdk.dts  | 13 ++++++++++++-
+ arch/arm/boot/dts/socfpga_cyclone5_sockit.dts | 14 ++++++++++++++
+ 4 files changed, 41 insertions(+), 2 deletions(-)
 
-Best regards
-Stefan
+-- 
+2.0.3
