@@ -1,70 +1,105 @@
-From: Pramod Gurav <pramod.gurav-edOiRQu9Xnj5XLMNweQjbQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: DT: apq8064: Add Support for SD Card Detect for
- ifc6410 board
-Date: Mon, 20 Oct 2014 17:16:53 +0530
-Message-ID: <5444F62D.1090801@smartplayin.com>
-References: <1413805194-4360-1-git-send-email-pramod.gurav@smartplayin.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 0/2] mtd: nand: add sunxi NAND flash
+ controller support
+Date: Mon, 20 Oct 2014 13:45:18 +0200
+Message-ID: <1413805520-14947-1-git-send-email-boris.brezillon@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413805194-4360-1-git-send-email-pramod.gurav-edOiRQu9Xnj5XLMNweQjbQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pramod Gurav <pramod.gurav-edOiRQu9Xnj5XLMNweQjbQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBVHLSORAKGQEAZVTTSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yassin Jaffer <yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+linux-arm-msm
+Hi Brian,
 
-On Monday 20 October 2014 05:09 PM, Pramod Gurav wrote:
-> This changes muxes in gpio26 pin to function as gpio and adds support
-> for sd card detect for apq8064 based IFC6410 board.
-> 
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Signed-off-by: Pramod Gurav <pramod.gurav-edOiRQu9Xnj5XLMNweQjbQ@public.gmane.org>
-> 
-> ---
->  arch/arm/boot/dts/qcom-apq8064-ifc6410.dts |   11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> index b396c83..bf6262f 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> @@ -12,6 +12,14 @@
->  					function = "gsbi1";
->  				};
->  			};
-> +
-> +			card_detect: card_detect {
-> +				mux {
-> +					pins = "gpio26";
-> +					function = "gpio";
-> +					bias-disable;
-> +				};
-> +			};
->  		};
->  
->  		gsbi@12440000 {
-> @@ -49,6 +57,9 @@
->  			/* External micro SD card */
->  			sdcc3: sdcc@12180000 {
->  				status = "okay";
-> +				pinctrl-names	= "default";
-> +				pinctrl-0	= <&card_detect>;
-> +				cd-gpios	= <&tlmm_pinmux 26 1>;
->  			};
->  			/* WLAN */
->  			sdcc4: sdcc@121c0000 {
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The sunxi NAND controller driver is being submitted for almost 9 month now
+and I've only had one review (from Ezequiel) during this period.
+
+I'd really like to get this first implementation mainlined, so that I can
+follow up with other MLC specific stuff (like randomizer/scrambler support)
+which are required on most HW designs embedding an Allwinner SoC.
+
+I'm aware that you have a lot of things to review, and that you do most of
+it (if not all of it) on your spare time, so let know if I can help you in
+any way (by reviewing other submissions for example).
+Hopefully this will speed up the review of my driver :-).
+
+This being said, here comes the usal cover letter:
+
+This series adds support for the sunxi NAND Flash Controller (NFC)
+block.
+
+These two patches only add support for the basic NAND stuff:
+ - NAND controller operations
+ - SW and HW ECC handling (with both syndrome and normal ECC scheme)
+
+If you want support for advanced features you can find it on my github
+repo [1]:
+ - HW randomization support
+ - per partition ECC/Randomizer to handle bootloader partitions
+
+DMA transfers are not supported yet, but I reworked the OOB layout
+when using the HW ECC scheme to match the one used when accessing the NAND
+through DMA (the available OOB bytes are placed at the end of the OOB area).
+
+Best Regards,
+
+Boris
+
+[1]https://github.com/bbrezillon/linux-sunxi/tree/sunxi-nand-v6
+
+Changes since v5:
+ - make use of of_get_nand_ecc_step_size and of_get_nand_ecc_strength
+ - add error messages
+
+Changes since v4:
+ - adapt to v2 of "mtd: nand: support ONFI timing mode retrieval for non-ONFI
+   NANDs" series
+
+Changes since v3:
+ - removed nand core code modifications from the patch series (submitted
+   separately)
+ - added documentation to the code
+ - forced timeout (a default timeout is used when none is provided by the
+   caller) on controller operations
+ - fixed coding style issues
+ - removed unneeded irq field from the sunxi_nfc struct
+ - fixed several memory leaks
+ - reworked the NFC reset code (to avoid potential garbage config from the
+   bootloader)
+ - made use of ECC_EXCEPTION flag to prevent erased page from generating
+   ECC errors
+ - changed the OOB layout for HW ECC scheme
+
+Changes since v2:
+ - merge HW ECC implementation in base implementation patch
+ - fix timing config when interfacing with an ONFI compatible chip
+
+Changes since v1:
+ - add HW ECC support
+ - rework NAND timings retrieval (use ONFI timing mode instead of raw timings)
+ - add nand-ecc-level property to specify NAND ECC requirements from DT
+
+
+Boris Brezillon (2):
+  mtd: nand: add sunxi NAND flash controller support
+  mtd: nand: add sunxi NFC dt bindings doc
+
+ .../devicetree/bindings/mtd/sunxi-nand.txt         |   45 +
+ drivers/mtd/nand/Kconfig                           |    6 +
+ drivers/mtd/nand/Makefile                          |    1 +
+ drivers/mtd/nand/sunxi_nand.c                      | 1400 ++++++++++++++++++++
+ 4 files changed, 1452 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+ create mode 100644 drivers/mtd/nand/sunxi_nand.c
+
+-- 
+1.9.1
