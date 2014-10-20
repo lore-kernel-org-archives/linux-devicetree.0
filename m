@@ -1,60 +1,100 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv2 1/2] ARM: dts: socfpga: Fix SD card detect
-Date: Mon, 20 Oct 2014 19:41:39 +0100
-Message-ID: <20141020184139.GA23062@leverpostej>
-References: <1413819079-17120-1-git-send-email-dinguyen@opensource.altera.com>
- <1413819079-17120-2-git-send-email-dinguyen@opensource.altera.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/6] arm64: Add DTS support for Spreadtrum's Shark64 SoC
+Date: Mon, 20 Oct 2014 21:00:19 +0200
+Message-ID: <1799842.6CvQjvbUTo@wuerfel>
+References: <1411992293-7729-1-git-send-email-zhang.lyra@gmail.com> <4004425.NZAxCnE0qr@wuerfel> <CAAfSe-tPynLarYRzsTw3vncp8CB0EnoaR_Z6tPQNA7DEV7+w9Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1413819079-17120-2-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, marc.zyngier-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAfSe-tPynLarYRzsTw3vncp8CB0EnoaR_Z6tPQNA7DEV7+w9Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lyra Zhang <zhang.lyra@gmail.com>
+Cc: catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@linaro.org>, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, Ramkumar Ramachandra <artagnon@gmail.com>, rrichter@cavium.com, robh+dt@kernel.org, will.deacon@arm.com, Orson Zhai <orsonzhai@gmail.com>, geng.ren@spreadtrum.com, "zhizhou.zhang" <zhizhou.zhang@spreadtrum.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "chunyan.zhang" <chunyan.zhang@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 20, 2014 at 04:31:18PM +0100, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On Wednesday 15 October 2014 11:17:07 Lyra Zhang wrote:
+> Hi, Arnd
+
+Hi Lyra,
+
+Sorry for the late reply, I've been away travelling and am just
+now catching up on email. Have you found a solution or do
+you still need help with this?
+
+	Arnd
+
+> 2014-09-29 21:47 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+> > On Monday 29 September 2014 20:04:49 zhang.lyra@gmail.com wrote:
+> >> +
+> >> +/memreserve/ 0x80000000 0x00010000;
+> >
+> > Maybe add a comment explaining why it is reserved?
+> >
+> >> +     chosen {
+> >> +             bootargs = "earlycon=serial_sprd,0x70000000";
+> >> +      };
+> >
+> > Just remove this for now, the command line should really be set by the
+> > boot loader, not hardcoded in the dts file.
+> >
+> > IIRC, the earlycon=... syntax is not recommended on DT based systems,
+> > better use the "stdout-path" syntax instead.
+> >
 > 
-> Without this patch, the booting the SOCFPGA platform would hang at the
-> SDMMC driver loading. There were 2 patches that caused this to happen:
+> I have tried to use  "stdout-path" instead of "bootargs= "earlycon=
+> ..." like below :
 > 
-> - Patch 9795a846e10 "mmc: dw_mmc: remove dw_mci_of_cd_gpio/wp_gpio()" removed
->   looking for "cd-gpios", since mmc_of_parse was getting called.
-> - Patch 3cf890fc42b "mmc: dw_mmc: Pass back errors from mmc_of_parse()" would
->   hang the system at the SDMMC driver loading.
-
-Regardless of which patches caused the issue, the existing DTB should
-continue to function. This is a kernel bug, not a DTB bug.
-
-How did you track down those two patches as being the cause(s)?
-
-I've heard a report of a similar issue on a sunxi platform (cubietruck),
-but I have not had the time to investigate.
-
-> This patch will fix booting with SDMMC enabled on SOCFPGA dev kit.
+> / {
+>      ...
 > 
-> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> ---
->  arch/arm/boot/dts/socfpga_cyclone5_socdk.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>      chosen {
+>              stdout-path = "/serial@70000000";
+>       };
 > 
-> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
-> index d7296a5..739c3b7 100644
-> --- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
-> +++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
-> @@ -69,7 +69,7 @@
->  };
->  
->  &mmc0 {
-> -	cd-gpios = <&gpio1 18 0>;
-> +	cd = <&gpio1 18 0>;
-
-This change should not be necessary.
-
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>      uart0: serial@70000000 {
+>              status="okay";
+>      };
+>       ...
+> };
+> 
+> But then there is nothing output information on serial console.(I have
+> been testing in Fast Model)
+> 
+> 
+> I saw the below code in init/main.c
+> 
+> /* Check for early params. */
+> static int __init do_early_param(char *param, char *val, const char *unused)
+> {
+> const struct obs_kernel_param *p;
+> 
+> for (p = __setup_start; p < __setup_end; p++) {
+> if ((p->early && parameq(param, p->str)) ||
+>    (strcmp(param, "console") == 0 &&
+>     strcmp(p->str, "earlycon") == 0)
+> ) {
+> if (p->setup_func(val) != 0)
+> pr_warn("Malformed early option '%s'\n", param);
+> }
+> }
+> /* We accept everything at this stage. */
+> return 0;
+> }
+> 
+> And I saw a patch from Grant Likely, he had a comment in it :
+> "If the devicetree specifies a serial port as a stdout device, then the
+> kernel can use it as the default console if nothing else was selected on
+> the command line. For any serial port that uses the uart_add_one_port()
+> feature, the uart_add_one_port() has all the information needed to
+> automatically enable the console device, which is what this patch does."
+> 
+> So, I guess that the reason why I can't see any output information on
+> console after using "stdout-path" instead of "earlycon" is that I
+> haven't a driver of Spreadtrum's serial, and dose not use  the
+> uart_add_one_port() feature.
+> 
+> I don't know is correct what I guess.
+> 
+> Could you give me some suggestions to solve this problem?
+> 
