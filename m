@@ -1,44 +1,105 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH v2 07/47] qnap-poweroff: Drop reference to pm_power_off from devicetree bindings
-Date: Mon, 20 Oct 2014 21:12:23 -0700
-Message-ID: <1413864783-3271-8-git-send-email-linux@roeck-us.net>
-References: <1413864783-3271-1-git-send-email-linux@roeck-us.net>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1413864783-3271-1-git-send-email-linux@roeck-us.net>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH/RFC 00/17] MIPS: BMIPS updates and BCM3384 platform support
+Date: Mon, 20 Oct 2014 21:27:50 -0700
+Message-ID: <1413865687-15255-1-git-send-email-cernekee@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Replace reference to pm_power_off (which is an implementation detail)
-and replace it with a more generic description of the driver's functionality.
+This patch series adds support for the Linux BMIPS5000 application
+processor on BCM3384, a cable modem chipset.  It incorporates the
+latest bugfixes and workarounds available for the BMIPS SMP and cache
+maintenance code.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
-v2: Drop implementation details
+The bootloader code[1] passes a device tree blob describing the
+memory setup, bootargs, peripheral configuration, clocks, etc.  For
+this reason, very little needs to be hardcoded in the kernel.
 
- Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Dependencies:
 
-diff --git a/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt b/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
-index af25e77..c363d71 100644
---- a/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
-+++ b/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
-@@ -3,8 +3,7 @@
- QNAP NAS devices have a microcontroller controlling the main power
- supply. This microcontroller is connected to UART1 of the Kirkwood and
- Orion5x SoCs. Sending the character 'A', at 19200 baud, tells the
--microcontroller to turn the power off. This driver adds a handler to
--pm_power_off which is called to turn the power off.
-+microcontroller to turn the power off.
- 
- Synology NAS devices use a similar scheme, but a different baud rate,
- 9600, and a different character, '1'.
+ - bcm63xx_uart and of-serial changes, under review on the linux-serial
+   list
+
+ - OHCI changes, pending inclusion on usb.git -next
+
+[1] https://github.com/broadcom/aeolus
+
+
+Jon Fraser (2):
+  MIPS: BMIPS: Allow BMIPS3300 to utilize SMP ebase relocation code
+  MIPS: BMIPS: Mask off timer IRQs when hot-unplugging a CPU
+
+Kevin Cernekee (15):
+  MIPS: BMIPS: Fix ".previous without corresponding .section" warnings
+  MIPS: BMIPS: Align secondary boot sequence with latest firmware
+    releases
+  MIPS: BMIPS: Introduce helper function to change the reset vector
+  MIPS: BMIPS: Explicitly configure reset vectors prior to secondary
+    boot
+  MIPS: Allow MIPS_CPU_SCACHE to be used with different line sizes
+  MIPS: BMIPS: Select the appropriate L1_CACHE_SHIFT for 438x and 5000
+    CPUs
+  MIPS: BMIPS: Let each platform customize the CPU1 IRQ mask
+  MIPS: BMIPS: Add special cache handling in c-r4k.c
+  MIPS: BMIPS: Add PRId for BMIPS5200 (Whirlwind)
+  MIPS: Create a helper function for DT setup
+  Documentation: DT: Add entries for BCM3384 and its peripherals
+  Documentation: DT: Add "mti" vendor prefix
+  MIPS: bcm3384: Initial commit of bcm3384 platform support
+  MAINTAINERS: Add entry for BCM33xx cable chips
+  MAINTAINERS: Add entry for bcm63xx/bcm33xx UDC gadget driver
+
+ .../devicetree/bindings/mips/brcm/bcm3384-intc.txt |  37 ++++
+ .../devicetree/bindings/mips/brcm/bmips.txt        |   8 +
+ .../devicetree/bindings/mips/brcm/cm-dsl.txt       |  11 ++
+ .../devicetree/bindings/mips/brcm/usb.txt          |  11 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ MAINTAINERS                                        |  14 ++
+ arch/mips/Kbuild.platforms                         |   1 +
+ arch/mips/Kconfig                                  |  30 +++-
+ arch/mips/bcm3384/Makefile                         |   1 +
+ arch/mips/bcm3384/Platform                         |   7 +
+ arch/mips/bcm3384/dma.c                            |  81 +++++++++
+ arch/mips/bcm3384/irq.c                            | 193 +++++++++++++++++++++
+ arch/mips/bcm3384/setup.c                          |  97 +++++++++++
+ arch/mips/boot/dts/Makefile                        |   1 +
+ arch/mips/boot/dts/bcm3384.dtsi                    | 109 ++++++++++++
+ arch/mips/boot/dts/bcm93384wvg.dts                 |  32 ++++
+ arch/mips/configs/bcm3384_defconfig                |  78 +++++++++
+ arch/mips/include/asm/bmips.h                      |   1 +
+ arch/mips/include/asm/cpu.h                        |   1 +
+ arch/mips/include/asm/mach-bcm3384/dma-coherence.h |  48 +++++
+ arch/mips/include/asm/mach-bcm3384/war.h           |  24 +++
+ arch/mips/include/asm/prom.h                       |   1 +
+ arch/mips/kernel/bmips_vec.S                       |   3 -
+ arch/mips/kernel/cpu-probe.c                       |   1 +
+ arch/mips/kernel/prom.c                            |  18 ++
+ arch/mips/kernel/smp-bmips.c                       | 114 +++++++-----
+ arch/mips/lantiq/prom.c                            |  11 +-
+ arch/mips/mm/c-r4k.c                               |  43 +++++
+ arch/mips/ralink/of.c                              |  14 +-
+ 29 files changed, 924 insertions(+), 67 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mips/brcm/bcm3384-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/mips/brcm/bmips.txt
+ create mode 100644 Documentation/devicetree/bindings/mips/brcm/cm-dsl.txt
+ create mode 100644 Documentation/devicetree/bindings/mips/brcm/usb.txt
+ create mode 100644 arch/mips/bcm3384/Makefile
+ create mode 100644 arch/mips/bcm3384/Platform
+ create mode 100644 arch/mips/bcm3384/dma.c
+ create mode 100644 arch/mips/bcm3384/irq.c
+ create mode 100644 arch/mips/bcm3384/setup.c
+ create mode 100644 arch/mips/boot/dts/bcm3384.dtsi
+ create mode 100644 arch/mips/boot/dts/bcm93384wvg.dts
+ create mode 100644 arch/mips/configs/bcm3384_defconfig
+ create mode 100644 arch/mips/include/asm/mach-bcm3384/dma-coherence.h
+ create mode 100644 arch/mips/include/asm/mach-bcm3384/war.h
+
 -- 
-1.9.1
+2.1.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
