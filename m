@@ -1,40 +1,43 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 5/6] Documentation: dt-bindings: Add binding info for X-Gene QMTM UIO driver
-Date: Tue, 21 Oct 2014 12:05:42 +0200
-Message-ID: <3725049.9xPbukhCva@wuerfel>
-References: <1413871011-4101-1-git-send-email-ankit.jindal@linaro.org> <1413871011-4101-6-git-send-email-ankit.jindal@linaro.org> <20141021091412.GB15293@leverpostej>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: Re: [PATCH v3 0/2] Add DRA7xx CPSW Ethernet support in Device Tree
+Date: Tue, 21 Oct 2014 15:37:31 +0530
+Message-ID: <54463063.80207@ti.com>
+References: <1413885661-4850-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141021091412.GB15293@leverpostej>
+In-Reply-To: <1413885661-4850-1-git-send-email-mugunthanvnm@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Ankit Jindal <ankit.jindal@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Varka Bhadram <varkabhadram@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, "Hans J. Koch" <hjk@hansjkoch.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "patches@apm.com" <patches@apm.com>, Rob Herring <robh+dt@kernel.org>, Tushar Jagad <tushar.jagad@linaro.org>
+To: Nishanth Menon <nm@ti.com>
+Cc: bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 21 October 2014 10:14:12 Mark Rutland wrote:
+Nishanth
+
+On Tuesday 21 October 2014 03:30 PM, Mugunthan V N wrote:
+> Adding device tree entry for CPSW to make it work in Dual EMAC mode.
+> These patches were tested with DRA7 hwmod patches on top of linux-next.
+> Patches are tested on top of Nishanth's PM tree for v3.17 [1] and pushed
+> my tree to [2].
 > 
-> > +The Applied Micro X-Gene SOC has on-chip QMTM (Queue manager
-> > +and Traffic manager). It is a device for managing hardware queues.
-> > +It also implements QoS among hardware queues hence term "traffic"
-> > +manager is present in its name. QMTM UIO nodes are defined for user
-> > +space access to this device using UIO framework.
+> Did a boot test with CPSW and ping test with suspend/resume, the boot logs
+> on DRA7xx EVM are posted at [3]
 > 
-> The binding should describe the hardware, not the software. Please drop
-> mention of UIO, userspace, etc.
+> [1] git://github.com/nmenon/linux-2.6-playground.git testing/v3.17/cpu-idle-suspend-dra7-omap5-framework
+> [2] git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git v3.17/dra7-evm-cpsw-v3
+> [3] http://pastebin.ubuntu.com/8613072/
+> 
+> Changes from v2:
+> * Changed pinctrl comments to hold mode0-name.mode-selected-name
+> * Changes slave numbers in the pinctrl comments
+> * Added cpsw and cpts clocks
+> 
 
-I have a bad feeling about the entire idea of doing the UIO driver first,
-there are too many unknowns here and we should not break the binding
-when the proper driver gets added.
+I have not added support for dra72x-evm as it has only slave no 2 pinned
+out and having issues with bringing up the interface, need some more
+time to submit the patch, in the mean time I have submitted dra7-evm
+support only so that people can use dra7-evm on linux-next.
 
-The X-Gene is meant for server workloads, so the UIO approach is not
-a good longterm solution anyway. My impression is that it would be
-better to first get the kernel driver for this hardware merged and
-the binding fixed, and then a UIO stub could get added to that driver,
-taking over the hardware by user space. This would also solve the
-arbitration between the two driver implementations. It's also possible
-that by that time, we will have a functional VFIO framework for
-platform devices.
-
-	Arnd
+Regards
+Mugunthan V N
