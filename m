@@ -1,43 +1,68 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [PATCH v3 0/2] Add DRA7xx CPSW Ethernet support in Device Tree
-Date: Tue, 21 Oct 2014 15:37:31 +0530
-Message-ID: <54463063.80207@ti.com>
-References: <1413885661-4850-1-git-send-email-mugunthanvnm@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 2/5] mfd: max77693: Map charger device to its own
+ of_node
+Date: Tue, 21 Oct 2014 11:17:05 +0100
+Message-ID: <20141021101705.GF26842@x1>
+References: <1413808489-3524-1-git-send-email-k.kozlowski@samsung.com>
+ <1413808489-3524-3-git-send-email-k.kozlowski@samsung.com>
+ <20141020150630.GB26784@x1>
+ <1413817781.11298.0.camel@AMDC1943>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413885661-4850-1-git-send-email-mugunthanvnm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1413817781.11298.0.camel@AMDC1943>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, linux-api@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Nishanth
+On Mon, 20 Oct 2014, Krzysztof Kozlowski wrote:
 
-On Tuesday 21 October 2014 03:30 PM, Mugunthan V N wrote:
-> Adding device tree entry for CPSW to make it work in Dual EMAC mode.
-> These patches were tested with DRA7 hwmod patches on top of linux-next.
-> Patches are tested on top of Nishanth's PM tree for v3.17 [1] and pushed
-> my tree to [2].
-> 
-> Did a boot test with CPSW and ping test with suspend/resume, the boot logs
-> on DRA7xx EVM are posted at [3]
-> 
-> [1] git://github.com/nmenon/linux-2.6-playground.git testing/v3.17/cpu-idle-suspend-dra7-omap5-framework
-> [2] git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git v3.17/dra7-evm-cpsw-v3
-> [3] http://pastebin.ubuntu.com/8613072/
-> 
-> Changes from v2:
-> * Changed pinctrl comments to hold mode0-name.mode-selected-name
-> * Changes slave numbers in the pinctrl comments
-> * Added cpsw and cpts clocks
-> 
+> On pon, 2014-10-20 at 16:06 +0100, Lee Jones wrote:
+> > On Mon, 20 Oct 2014, Krzysztof Kozlowski wrote:
+> >=20
+> > > Add a "maxim,max77693-charger" of_compatible to the mfd_cell so t=
+he MFD
+> > > child device (the charger) will have its own of_node set. This wi=
+ll be
+> > > used by the max77693 charger driver in next patches to obtain bat=
+tery
+> > > configuration from DTS.
+> > >=20
+> > > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> > > ---
+> > >  drivers/mfd/max77693.c | 5 ++++-
+> > >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/drivers/mfd/max77693.c b/drivers/mfd/max77693.c
+> > > index cf008f45968c..2277a11b6629 100644
+> > > --- a/drivers/mfd/max77693.c
+> > > +++ b/drivers/mfd/max77693.c
+> > > @@ -43,7 +43,10 @@
+> > > =20
+> > >  static const struct mfd_cell max77693_devs[] =3D {
+> > >  	{ .name =3D "max77693-pmic", },
+> > > -	{ .name =3D "max77693-charger", },
+> > > +	{
+> > > +		.name =3D "max77693-charger",
+> > > +		.of_compatible =3D "maxim,max77693-charger",
+> > > +	},
+> > >  	{ .name =3D "max77693-muic", },
+> > >  	{ .name =3D "max77693-haptic", },
+> > >  	{
+> >=20
+> > I'm guessing this can be applied separately?
+>=20
+> Yes. Patch 3/5 also (it adds necessary defines and symbols for
+> chargers).
 
-I have not added support for dra72x-evm as it has only slave no 2 pinned
-out and having issues with bringing up the interface, need some more
-time to submit the patch, in the mean time I have submitted dra7-evm
-support only so that people can use dra7-evm on linux-next.
+I'll take this patch, but I think 3/5 is required by some of the other
+patches in the set, no?
 
-Regards
-Mugunthan V N
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
