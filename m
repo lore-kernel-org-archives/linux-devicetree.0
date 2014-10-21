@@ -1,7 +1,7 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V3 01/10] tty: serial: bcm63xx: Allow bcm63xx_uart to be built on other platforms
-Date: Tue, 21 Oct 2014 15:22:57 -0700
-Message-ID: <1413930186-23168-2-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V3 02/10] tty: serial: bcm63xx: Add support for unnamed clock outputs from DT
+Date: Tue, 21 Oct 2014 15:22:58 -0700
+Message-ID: <1413930186-23168-3-git-send-email-cernekee@gmail.com>
 References: <1413930186-23168-1-git-send-email-cernekee@gmail.com>
 Return-path: <linux-serial-owner@vger.kernel.org>
 In-Reply-To: <1413930186-23168-1-git-send-email-cernekee@gmail.com>
@@ -10,33 +10,30 @@ To: gregkh@linuxfoundation.org, jslaby@suse.cz
 Cc: robh@kernel.org, grant.likely@linaro.org, arnd@arndb.de, geert@linux-m68k.org, f.fainelli@gmail.com, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This device was originally supported on bcm63xx only, but it shows up on
-a wide variety of MIPS and ARM chipsets spanning multiple product lines.
-Now that the driver has eliminated dependencies on bcm63xx-specific
-header files, we can build it on any non-bcm63xx kernel.
-
-Compile-tested on x86, both statically and as a module.  Tested for
-functionality on bcm3384 (a new MIPS platform under active development).
+The original non-DT bcm63xx clk code ignores the struct device argument
+and looks up a global clock name.  DT platforms, by contrast, often just
+use a phandle to reference a clock node with no "clock-output-names"
+property.  Modify the UART driver to support both schemes.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/tty/serial/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/bcm63xx_uart.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 649b784..4a5c0c8 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1283,7 +1283,7 @@ config SERIAL_TIMBERDALE
- config SERIAL_BCM63XX
- 	tristate "bcm63xx serial port support"
- 	select SERIAL_CORE
--	depends on BCM63XX
-+	depends on MIPS || ARM || COMPILE_TEST
- 	help
- 	  If you have a bcm63xx CPU, you can enable its onboard
- 	  serial port by enabling this options.
+diff --git a/drivers/tty/serial/bcm63xx_uart.c b/drivers/tty/serial/bcm63xx_uart.c
+index 2315190..de95573 100644
+--- a/drivers/tty/serial/bcm63xx_uart.c
++++ b/drivers/tty/serial/bcm63xx_uart.c
+@@ -824,7 +824,8 @@ static int bcm_uart_probe(struct platform_device *pdev)
+ 	if (!res_irq)
+ 		return -ENODEV;
+ 
+-	clk = clk_get(&pdev->dev, "periph");
++	clk = pdev->dev.of_node ? of_clk_get(pdev->dev.of_node, 0) :
++				  clk_get(&pdev->dev, "periph");
+ 	if (IS_ERR(clk))
+ 		return -ENODEV;
+ 
 -- 
 2.1.1
 
