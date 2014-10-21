@@ -1,37 +1,90 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 0/5] Add Spreadtrum Sharkl Platform support
-Date: Tue, 21 Oct 2014 13:15:44 +0200
-Message-ID: <20141021111544.GA25909@amd>
-References: <sprd-1017-v2>
- <1413539665-11484-1-git-send-email-chunyan.zhang@spreadtrum.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1413539665-11484-1-git-send-email-chunyan.zhang@spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Cc: catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, galak@codeaurora.org, broonie@linaro.org, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, artagnon@gmail.com, rrichter@cavium.com, robh+dt@kernel.org, will.deacon@arm.com, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sprdlinux@freelists.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v2 1/4] regulator: max77686: Replace hard-coded opmode values
+ with defines
+Date: Tue, 21 Oct 2014 13:23:14 +0200
+Message-ID: <1413890597-31037-2-git-send-email-k.kozlowski@samsung.com>
+References: <1413890597-31037-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1413890597-31037-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Add defines for regulator operating modes which should be more readable,
+especially if one does not have Maxim 77686 datasheet.
 
-> Sharkl Platform is nominated as a SoC infrastructure that supports 4G/3G/2G
-> standards based on ARMv8 multiple core architecture.Now we have only one
-> SoC(Sharkl3) based on this Platform in developing.
+The patch does not introduce any functional change.
 
-Does this mean that UMTS/GSM is going to be handled on main CPU on
-your platform? Or do you still rely on DSP with specialized OS to
-provide UMTS/GSM?
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Suggested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+---
+ drivers/regulator/max77686.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-Thanks,
-									Pavel
-
->   Documentation: DT: Renamed of-serial.txt to 8250.txt
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
-
+diff --git a/drivers/regulator/max77686.c b/drivers/regulator/max77686.c
+index ef1af2debbd2..cffe0c69d57d 100644
+--- a/drivers/regulator/max77686.c
++++ b/drivers/regulator/max77686.c
+@@ -45,6 +45,16 @@
+ #define MAX77686_DVS_MINUV	600000
+ #define MAX77686_DVS_UVSTEP	12500
+ 
++/* On/off controlled by PWRREQ */
++#define MAX77686_OPMODE_OFF_PWRREQ	0x1
++/*
++ * For some regulators this means:
++ *  - forcing low power mode.
++ *  - low power mode controlled by PWRREQ.
++ */
++#define MAX77686_OPMODE_LOWPOWER	0x2
++#define MAX77686_OPMODE_NORMAL		0x3
++
+ #define MAX77686_OPMODE_SHIFT	6
+ #define MAX77686_OPMODE_BUCK234_SHIFT	4
+ #define MAX77686_OPMODE_MASK	0x3
+@@ -76,9 +86,10 @@ static int max77686_buck_set_suspend_disable(struct regulator_dev *rdev)
+ 	int ret, id = rdev_get_id(rdev);
+ 
+ 	if (id == MAX77686_BUCK1)
+-		val = 0x1;
++		val = MAX77686_OPMODE_OFF_PWRREQ;
+ 	else
+-		val = 0x1 << MAX77686_OPMODE_BUCK234_SHIFT;
++		val = MAX77686_OPMODE_OFF_PWRREQ
++			<< MAX77686_OPMODE_BUCK234_SHIFT;
+ 
+ 	ret = regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
+ 				 rdev->desc->enable_mask, val);
+@@ -103,10 +114,10 @@ static int max77686_set_suspend_mode(struct regulator_dev *rdev,
+ 
+ 	switch (mode) {
+ 	case REGULATOR_MODE_IDLE:			/* ON in LP Mode */
+-		val = 0x2 << MAX77686_OPMODE_SHIFT;
++		val = MAX77686_OPMODE_LOWPOWER << MAX77686_OPMODE_SHIFT;
+ 		break;
+ 	case REGULATOR_MODE_NORMAL:			/* ON in Normal Mode */
+-		val = 0x3 << MAX77686_OPMODE_SHIFT;
++		val = MAX77686_OPMODE_NORMAL << MAX77686_OPMODE_SHIFT;
+ 		break;
+ 	default:
+ 		pr_warn("%s: regulator_suspend_mode : 0x%x not supported\n",
+@@ -133,13 +144,13 @@ static int max77686_ldo_set_suspend_mode(struct regulator_dev *rdev,
+ 
+ 	switch (mode) {
+ 	case REGULATOR_MODE_STANDBY:			/* switch off */
+-		val = 0x1 << MAX77686_OPMODE_SHIFT;
++		val = MAX77686_OPMODE_OFF_PWRREQ << MAX77686_OPMODE_SHIFT;
+ 		break;
+ 	case REGULATOR_MODE_IDLE:			/* ON in LP Mode */
+-		val = 0x2 << MAX77686_OPMODE_SHIFT;
++		val = MAX77686_OPMODE_LOWPOWER << MAX77686_OPMODE_SHIFT;
+ 		break;
+ 	case REGULATOR_MODE_NORMAL:			/* ON in Normal Mode */
+-		val = 0x3 << MAX77686_OPMODE_SHIFT;
++		val = MAX77686_OPMODE_NORMAL << MAX77686_OPMODE_SHIFT;
+ 		break;
+ 	default:
+ 		pr_warn("%s: regulator_suspend_mode : 0x%x not supported\n",
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+1.9.1
