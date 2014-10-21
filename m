@@ -1,41 +1,54 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V3 10/10] MAINTAINERS: Add entry for rp2 (Rocketport Express/Infinity) driver
-Date: Tue, 21 Oct 2014 15:23:06 -0700
-Message-ID: <1413930186-23168-11-git-send-email-cernekee@gmail.com>
-References: <1413930186-23168-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1413930186-23168-1-git-send-email-cernekee@gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, jslaby@suse.cz
-Cc: robh@kernel.org, grant.likely@linaro.org, arnd@arndb.de, geert@linux-m68k.org, f.fainelli@gmail.com, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v4 0/6] this is the 1st version of suspend. RK3288 can shut down the cpu, gpu and
+Date: Tue, 21 Oct 2014 16:17:41 -0700
+Message-ID: <1413933461-25602-1-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Mike Turquette <mturquette@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Chris Zhong <zyw@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-I wrote this driver and use it daily on several machines for work, so
-why not.
+other device controllers in suspend, and it will pull the GLOBAL_PWROFF pin
+to high in the final stage of the process of suspend, pull the pin to low again
+when resume.
 
-Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+Changes in v4:
+- use SIMPLE_DE_PM_OPS for suspend/resume struct
+- remove grf regmap
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a20df9b..d483627 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7787,6 +7787,12 @@ S:	Maintained
- F:	Documentation/serial/rocket.txt
- F:	drivers/tty/rocket*
- 
-+ROCKETPORT EXPRESS/INFINITY DRIVER
-+M:	Kevin Cernekee <cernekee@gmail.com>
-+L:	linux-serial@vger.kernel.org
-+S:	Odd Fixes
-+F:	drivers/tty/serial/rp2.*
-+
- ROSE NETWORK LAYER
- M:	Ralf Baechle <ralf@linux-mips.org>
- L:	linux-hams@vger.kernel.org
+Changes in v3:
+- move the pinmux of gpio6_c6 save and restore to pinctrl-rockchip
+
+Changes in v2:
+- __raw_readl/__raw_writel replaced by readl_relaxed/writel_relaxed
+- add the regulator calls in prepare and finish.
+- add the pinmux of gpio6_c6 save and restore
+- put "rockchip,rk3288-pmu-sram" to first
+
+Chris (1):
+  pinctrl: rockchip: add suspend/resume functions
+
+Chris Zhong (5):
+  pinctrl: rockchip: save and restore gpio6_c6 pinmux in suspend/resume
+  clk: rockchip: RK3288: add suspend and resume
+  ARM: rockchip: add suspend and resume for RK3288
+  ARM: rockchip: Add pmu-sram binding
+  ARM: dts: add RK3288 suspend support
+
+ .../devicetree/bindings/arm/rockchip/pmu-sram.txt  |   15 +
+ arch/arm/boot/dts/rk3288.dtsi                      |   11 +
+ arch/arm/mach-rockchip/Makefile                    |    1 +
+ arch/arm/mach-rockchip/pm.c                        |  307 ++++++++++++++++++++
+ arch/arm/mach-rockchip/pm.h                        |  102 +++++++
+ arch/arm/mach-rockchip/rockchip.c                  |   11 +-
+ arch/arm/mach-rockchip/sleep.S                     |   87 ++++++
+ drivers/clk/rockchip/clk-rk3288.c                  |   63 ++++
+ drivers/pinctrl/pinctrl-rockchip.c                 |   47 +++
+ 9 files changed, 642 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt
+ create mode 100644 arch/arm/mach-rockchip/pm.c
+ create mode 100644 arch/arm/mach-rockchip/pm.h
+ create mode 100644 arch/arm/mach-rockchip/sleep.S
+
 -- 
-2.1.1
-
+1.7.9.5
