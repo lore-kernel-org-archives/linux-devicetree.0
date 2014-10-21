@@ -1,67 +1,42 @@
-From: Pramod Gurav <pramod.gurav@smartplayin.com>
-Subject: [PATCH v2] ARM: DT: apq8064: Add Support for SD Card Detect for ifc6410 board
-Date: Tue, 21 Oct 2014 11:23:19 +0530
-Message-ID: <1413870799-8608-1-git-send-email-pramod.gurav@smartplayin.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc: Pramod Gurav <pramod.gurav@smartplayin.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V2 4/9] Documentation: DT: Add entries for bcm63xx UART
+Date: Tue, 21 Oct 2014 07:49:51 +0200
+Message-ID: <3370097.yeNWMGbi8v@wuerfel>
+References: <1413838448-29464-1-git-send-email-cernekee@gmail.com> <2100909.UrHPDWWSai@wuerfel> <54459281.7050004@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <54459281.7050004@gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Kevin Cernekee <cernekee@gmail.com>, gregkh@linuxfoundation.org, jslaby@suse.cz, robh@kernel.org, grant.likely@linaro.org, geert@linux-m68k.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This changes muxes in gpio26 pin to function as gpio and adds support
-for sd card detect for apq8064 based IFC6410 board.
+On Monday 20 October 2014 15:53:53 Florian Fainelli wrote:
+> 
+> For now, I suppose that s simple fix could be to use an anonymous clock
+> request when probed via DT. This code you quote dates from 2008 when
+> there was no clkdev in the kernel at all. So something like this would
+> probably do it for now:
+> 
+> diff --git a/drivers/tty/serial/bcm63xx_uart.c
+> b/drivers/tty/serial/bcm63xx_uart.c
+> index e0b87d507670..1b914b85dd31 100644
+> --- a/drivers/tty/serial/bcm63xx_uart.c
+> +++ b/drivers/tty/serial/bcm63xx_uart.c
+> @@ -819,7 +819,7 @@ static int bcm_uart_probe(struct platform_device *pdev)
+>         if (!res_irq)
+>                 return -ENODEV;
+> 
+> -       clk = clk_get(&pdev->dev, "periph");
+> +       clk = clk_get(&pdev->dev, pdev->dev.of_node ? NULL : "periph");
+>         if (IS_ERR(clk))
+>                 return -ENODEV;
+> 
+> 
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Yes, that would work. Just make sure the same bug doesn't creep in
+for other drivers you are converting.
 
-Signed-off-by: Pramod Gurav <pramod.gurav@smartplayin.com>
----
-
-Changes since v2:
- - Replaced hardcode value with GPIO_ACTIVE_LOW
-
- arch/arm/boot/dts/qcom-apq8064-ifc6410.dts |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-index b396c83..e641001 100644
---- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-@@ -1,4 +1,5 @@
- #include "qcom-apq8064-v2.0.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "Qualcomm APQ8064/IFC6410";
-@@ -12,6 +13,14 @@
- 					function = "gsbi1";
- 				};
- 			};
-+
-+			card_detect: card_detect {
-+				mux {
-+					pins = "gpio26";
-+					function = "gpio";
-+					bias-disable;
-+				};
-+			};
- 		};
- 
- 		gsbi@12440000 {
-@@ -49,6 +58,9 @@
- 			/* External micro SD card */
- 			sdcc3: sdcc@12180000 {
- 				status = "okay";
-+				pinctrl-names	= "default";
-+				pinctrl-0	= <&card_detect>;
-+				cd-gpios	= <&tlmm_pinmux 26 GPIO_ACTIVE_LOW>;
- 			};
- 			/* WLAN */
- 			sdcc4: sdcc@121c0000 {
--- 
-1.7.9.5
+	Arnd
