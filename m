@@ -1,59 +1,61 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 3/4] mfd/regulator: dt-bindings: max77686: Document
- regulators off in suspend
-Date: Tue, 21 Oct 2014 14:40:58 +0100
-Message-ID: <20141021134058.GE4939@x1>
-References: <1413897595-28752-1-git-send-email-k.kozlowski@samsung.com>
- <1413897595-28752-4-git-send-email-k.kozlowski@samsung.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v6 2/2] mtd: nand: add sunxi NFC dt bindings doc
+Date: Tue, 21 Oct 2014 15:48:15 +0200
+Message-ID: <20141021154815.1ae4c879@bbrezillon>
+References: <1413805520-14947-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1413805520-14947-3-git-send-email-boris.brezillon@free-electrons.com>
+	<20141021024134.GC1193@ld-irv-0074>
+	<20141021145344.575b19e6@bbrezillon>
+	<62d54110-9c7f-4342-9201-a1ae23194620@googlegroups.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1413897595-28752-4-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <62d54110-9c7f-4342-9201-a1ae23194620@googlegroups.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ezaul Zillmer <ezaulzillmer@gmail.com>
+Cc: linux-sunxi@googlegroups.com, computersforpeace@gmail.com, dwmw2@infradead.org, linux-mtd@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, yassinjaffer@gmail.com, maxime.ripard@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Oct 2014, Krzysztof Kozlowski wrote:
+On Tue, 21 Oct 2014 06:13:16 -0700 (PDT)
+Ezaul Zillmer <ezaulzillmer@gmail.com> wrote:
 
-> Add information which regulators can be disabled during system suspen=
-d.
->=20
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Suggested-by: Javier Martinez Canillas <javier.martinez@collabora.co.=
-uk>
-> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.u=
-k>
-> ---
->  Documentation/devicetree/bindings/mfd/max77686.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+> Hello everyone 
+> 
+> Boris Brezillon 
+> 
+> downloaded sunxi-nand-v6 now compiled for Cubieboard2 
+> https://github.com/bbrezillon/linux-sunxi.git sunxi b-nand-v6 
+> 
+> u-boot 
+> git clone https://github.com/jwrdegoede/u-boot-b sunxi.git sunxi-wip 
+> 
+> 
+> [1.143903] nand: Could not find valid JEDEC parameter page; aborting 
+> [1.150369] nand: device found, Manufacturer ID: 0xec, Chip ID: 0xd7 
+> [1.156766] nand: Samsung NAND 4GiB 3.3V 8-bit 
+> [1.161214] nand: 4096MiB, MLC, page size: 8192, OOB size: 640 
+> [1.167167] sunxi_nand 1c03000.nand: ECC init failed: -22 
+> [1.172588] sunxi_nand 1c03000.nand: failed to init nand chips 
+> [1.178502] sunxi_nand: probe of 1c03000.nand failed with error -22 
+> 
+> need some more data?
 
-This has been applied already.
+No, this is still the same problem you had last time you asked:
 
-> diff --git a/Documentation/devicetree/bindings/mfd/max77686.txt b/Doc=
-umentation/devicetree/bindings/mfd/max77686.txt
-> index 678f3cf0b8f0..75fdfaf41831 100644
-> --- a/Documentation/devicetree/bindings/mfd/max77686.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max77686.txt
-> @@ -34,6 +34,11 @@ to get matched with their hardware counterparts as=
- follow:
->  	-BUCKn 	:	for BUCKs, where n can lie in range 1 to 9.
->  			example: BUCK1, BUCK5, BUCK9.
-> =20
-> +  Regulators which can be turned off during system suspend:
-> +	-LDOn	:	2, 6-8, 10-12, 14-16,
-> +	-BUCKn	:	1-4.
-> +  Use standard regulator bindings for it ('regulator-off-in-suspend'=
-).
-> +
->  Example:
-> =20
->  	max77686@09 {
+You haven't defined your NAND chip in the nand_ids table, and thus
+strength and size fields of the nand_ecc_ctrl struct are undefined...
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+You'll have to retrieve the whole READ_ID sequence and add a proper
+entry in the nand_ids table (see [1] for an example).
+
+Regards,
+
+Boris
+
+[1]https://github.com/bbrezillon/linux-sunxi/commit/da96d64e6ece81e717bbdcad28caf0e5a9c40995
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
