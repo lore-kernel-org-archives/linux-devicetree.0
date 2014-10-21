@@ -1,72 +1,58 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v5 3/4] pinctrl: Qualcomm SPMI PMIC GPIO pin controller
- driver
-Date: Tue, 21 Oct 2014 19:15:52 +0100
-Message-ID: <5446A2D8.3070204@linaro.org>
-References: <1412181058-29179-1-git-send-email-iivanov@mm-sol.com> <1412181058-29179-4-git-send-email-iivanov@mm-sol.com>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: k2e-mvm: add 1g ethernet phys nodes
+Date: Tue, 21 Oct 2014 14:22:27 -0400
+Message-ID: <5446A463.8020601@ti.com>
+References: <1413811244-4041-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1412181058-29179-4-git-send-email-iivanov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413811244-4041-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ivan,
-
-Just realized that this patch can generate compiler errors due to 3.18 
-changes in pinmux_ops struct and gpiochip_remove returns void now.
-
-Same with drivers/pinctrl/qcom/pinctrl-spmi-pmic-mpp.c
-
-
-
-On 01/10/14 17:30, Ivan T. Ivanov wrote:
-> +	.enable			= pmic_gpio_pinmux_enable,
+On 10/20/2014 09:20 AM, Grygorii Strashko wrote:
+> Keystone K2E-EVM has two 1G Marvell 88E1514 Ethernet PHYs
+> installed, which are compatible with 88E1510.
+> Hence, add corresponding child nodes for 1G MDIO bus.
+>
+> For more information see:
+>    https://www.einfochips.com/index.php/partnerships/texas-instruments/k2e-evm.html
+>
+> Signed-off-by: Grygorii Strashko<grygorii.strashko-l0cyMroinI0@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/k2e-evm.dts | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/k2e-evm.dts b/arch/arm/boot/dts/k2e-evm.dts
+> index c568f06..560d621 100644
+> --- a/arch/arm/boot/dts/k2e-evm.dts
+> +++ b/arch/arm/boot/dts/k2e-evm.dts
+> @@ -139,3 +139,15 @@
+>   		};
+>   	};
+>   };
+> +
+> +&mdio {
+> +	ethphy0: ethernet-phy@0 {
+> +		compatible = "marvell,88E1514", "marvell,88E1510", "ethernet-phy-ieee802.3-c22";
+> +		reg =<0>;
+> +	};
+> +
+> +	ethphy1: ethernet-phy@1 {
+> +		compatible = "marvell,88E1514", "marvell,88E1510", "ethernet-phy-ieee802.3-c22";
+> +		reg =<1>;
+> +	};
 > +};
 
->
-> +static int pmic_gpio_remove(struct platform_device *pdev)
-> +{
-> +	struct pmic_gpio_state *state = platform_get_drvdata(pdev);
-> +	int ret;
-> +
-> +	ret = gpiochip_remove(&state->chip);
-> +	if (ret < 0)
-> +		return ret;
+In the subject do s/k2e-mvm/k2e-evm/
 
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-pmic-gpio.c 
-b/drivers/pinctrl/qcom/pinctrl-spmi-pmic-gpio.c
-index 493f0d3..0d69758 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-pmic-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-pmic-gpio.c
-@@ -378,7 +378,7 @@ static const struct pinmux_ops pmic_gpio_pinmux_ops = {
-  	.get_functions_count	= pmic_gpio_get_functions_count,
-  	.get_function_name	= pmic_gpio_get_function_name,
-  	.get_function_groups	= pmic_gpio_get_function_groups,
--	.enable			= pmic_gpio_pinmux_enable,
-+	.set_mux		= pmic_gpio_pinmux_enable,
-  };
-
-  static int pmic_gpio_config_get(struct pinctrl_dev *pctldev,
-@@ -907,12 +907,8 @@ err_chip:
-  static int pmic_gpio_remove(struct platform_device *pdev)
-  {
-  	struct pmic_gpio_state *state = platform_get_drvdata(pdev);
--	int ret;
--
--	ret = gpiochip_remove(&state->chip);
--	if (ret < 0)
--		return ret;
-
-+	gpiochip_remove(&state->chip);
-  	pinctrl_unregister(state->ctrl);
-  	return 0;
-
-
-
-Thanks,
-srini
+-- 
+Murali Karicheri
+Linux Kernel, Texas Instruments
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
