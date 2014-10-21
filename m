@@ -1,64 +1,119 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v4 00/13] Add ACPI _DSD and unified device properties?
- support
-Date: Tue, 21 Oct 2014 14:50:19 -0700
-Message-ID: <20141021215019.GG20951@vmdeb7>
-References: <2660541.BycO7TFnA2@vostro.rjw.lan>
- <1413378271.2762.77.camel@infradead.org>
- <20141015131551.GC20034@leverpostej>
- <1413379736.2762.79.camel@infradead.org>
- <20141015134209.GD20034@leverpostej>
- <db4038336b5e165b8b61eda064b10eeb.squirrel@twosheds.infradead.org>
- <543E88CF.5060504@linux.intel.com>
- <20141015151702.GG20034@leverpostej>
- <543E9605.6020502@linux.intel.com>
- <20141018083549.99F1AC408A6@trevor.secretlab.ca>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 0/9] Marvell PXA168 libphy handling and Berlin Ethernet
+Date: Tue, 21 Oct 2014 15:03:31 -0700
+Message-ID: <5446D833.1030702@gmail.com>
+References: <1413881627-21639-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141018083549.99F1AC408A6@trevor.secretlab.ca>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413881627-21639-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, =?UTF-8?B?QW50b2luZSBUw6luYXI=?= =?UTF-8?B?dA==?= <antoine.tenart@free-electrons.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 18, 2014 at 10:35:49AM +0200, Grant Likely wrote:
-> On Wed, 15 Oct 2014 17:43:01 +0200
-> , Darren Hart <dvhart@linux.intel.com>
->  wrote:
-> > 
-> > 
-> > On 10/15/14 17:17, Mark Rutland wrote:
-> > > On Wed, Oct 15, 2014 at 03:46:39PM +0100, Darren Hart wrote:
-> > 
-> > >> Mark, what would you propose we do differently to enable this driver to
-> > >> be firmware-type agnostic?
-> > > 
-> > > For this particular driver, all I'm asking for is that the
-> > > "used-by-rtas" property is not moved over from of_find_property to
-> > > device_get_property. It is irrelevant for all ACPI systems. Evidently my
-> > > comment was unclear; I apologise for that.
-> > 
-> > So my objection here is that by keeping the of_* terms in the driver we
-> > are required to include of, although it does safely convert to returning
-> > NULL if !CONFIG_OF I suppose.
-> 
-> This shouldn't be that controversial. There will be things that only make
-> sense for DT or only ACPI. Allowing the property to be processed when
-> the other interface is being used may tempt firmware authors to use the
-> property because it just happens to have a side effect that looks right
-> to them.
-> 
-> I don't see any problem with factoring out those bits into a function
-> that is only called (or built) when the associated firmware interface is
-> used. In these situations, the driver isn't 100% generic, so having
-> small per-firmware hooks is absolutely okay and not a burden to
-> maintain.
+Hi Sebastian,
 
-Hrm... well, I suppose this isn't a hill I want to die on. I can disagree and
-commit here :-)
+On 10/21/2014 01:53 AM, Sebastian Hesselbarth wrote:
+> This patch series deals with a removing a IP feature that can be foun=
+d
+> on all currently supported Marvell Ethernet IP (pxa168_eth, mv643xx_e=
+th,
+> mvneta). The MAC IP allows to automatically perform PHY auto-negotiat=
+ion
+> without software interaction.
+>=20
+> However, this feature (a) fundamentally clashes with the way libphy w=
+orks
+> and (b) is unable to deal with quirky PHYs that require special treat=
+ment.
+> In this series, pxa168_eth driver is rewritten to completely disable =
+that
+> feature and properly deal with libphy provided PHYs.
+>=20
+> This is the real patch set after an RFT sent earlier. Unfortunately, =
+there
+> was no testing from MMP/gplug but there was for BG2Q. However, it sti=
+ll
+> would be great to get a Tested-by on gplug. Also, this patch set is n=
+ow
+> rebased on v3.18-rc1. As usual, a branch on top of v3.18-rc1 can be f=
+ound at
+>=20
+> git://git.infradead.org/users/hesselba/linux-berlin.git devel/bg2-bg2=
+cd-eth-v1
+>=20
+> Patches 1-5 should go through David's net tree, I'll pick up the DT p=
+atches
+> 6-9.
+>=20
+> Compared to the RFT, there have been some changes:
+> - added phy-connection-type property to BG2Q PHY DT node
+> - bail out from pxa168_eth_adjust_link when there is no change in
+>   PHY parameters. Also, add a call to phy_print_status.
+>=20
+> Patch 1 adds support for Marvell 88E3016 FastEthernet PHY that is als=
+o
+> integrated in Marvell Berlin BG2/BG2CD SoCs.
+>=20
+> Patch 2 allows to pass phy_interface_t on pxa168_eth platform_data th=
+at
+> is only used by mach-mmp/gplug. From the board setup, I guessed gplug=
+'s
+> PHY is connected via RMII. The patch still isn't even compile tested.
+>=20
+> Patches 3-5 prepare proper libphy handling and finally remove all in-=
+driver
+> PHY mangling related to the feature explained above.
+>=20
+> Patches 6-9 add corresponding ethernet DT nodes to BG2, BG2CD, add a
+> phy-connection-type property to BG2Q and enable ethernet on BG2-based=
+ Sony
+> NSZ-GS7. I have tested all this on GS7 successfully with ip=3Ddhcp on=
+ 100M FD.
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+Besides the misplacement of the 'phy-connection-type' as reported by
+Sergei, this looks good to me:
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+
+Thanks!
+
+>=20
+> Antoine T=C3=A9nart (1):
+>   ARM: berlin: Add phy-connection-type to BG2Q PHY
+>=20
+> Sebastian Hesselbarth (8):
+>   phy: marvell: Add support for 88E3016 FastEthernet PHY
+>   net: pxa168_eth: Provide phy_interface mode on platform_data
+>   net: pxa168_eth: Prepare proper libphy handling
+>   net: pxa168_eth: Remove HW auto-negotiaion
+>   net: pxa168_eth: Remove in-driver PHY mangling
+>   ARM: berlin: Add BG2 ethernet DT nodes
+>   ARM: berlin: Add BG2CD ethernet DT nodes
+>   ARM: berlin: Enable ethernet on Sony NSZ-GS7
+>=20
+>  arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts |   2 +
+>  arch/arm/boot/dts/berlin2.dtsi             |  36 +++++
+>  arch/arm/boot/dts/berlin2cd.dtsi           |  36 +++++
+>  arch/arm/boot/dts/berlin2q.dtsi            |   1 +
+>  arch/arm/mach-mmp/gplugd.c                 |   2 +
+>  drivers/net/ethernet/marvell/pxa168_eth.c  | 248 ++++++++++++-------=
+----------
+>  drivers/net/phy/marvell.c                  |  46 ++++++
+>  include/linux/marvell_phy.h                |   1 +
+>  include/linux/pxa168_eth.h                 |   1 +
+>  9 files changed, 225 insertions(+), 148 deletions(-)
+>=20
+> ---
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: "Antoine T=C3=A9nart" <antoine.tenart@free-electrons.com>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Eric Miao <eric.y.miao@gmail.com>
+> Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: netdev@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+>=20
