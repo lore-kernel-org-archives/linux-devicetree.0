@@ -1,58 +1,92 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: Re: [PATCH v2 00/11] ARM: dts: zynq: Prepare Parallella
-Date: Tue, 21 Oct 2014 23:07:58 +0200
-Message-ID: <5446CB2E.4080503@suse.de>
-References: <1406242820-20140-1-git-send-email-afaerber@suse.de>	<CAOesGMjAb5oXjauhbqjDhJXWct7qoXxy3XpA1=DioK7vPTwetA@mail.gmail.com>	<5446C775.3030707@suse.de> <CAOesGMhSuvbWpM5CC_5Hy6BskM6sbrw0SCR90aKHvfk1Qm1_Ng@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v3 1/6] pinctrl: rockchip: add suspend/resume functions
+Date: Tue, 21 Oct 2014 23:20:11 +0200
+Message-ID: <3477070.K1aFAOaaEU@diego>
+References: <1413862894-2623-1-git-send-email-zyw@rock-chips.com> <1413862968-2691-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMhSuvbWpM5CC_5Hy6BskM6sbrw0SCR90aKHvfk1Qm1_Ng@mail.gmail.com>
+In-Reply-To: <1413862968-2691-1-git-send-email-zyw@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, Andreas Olofsson <andreas@adapteva.com>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, Lars-Peter Clausen <lars@metafoo.de>
+To: zyw@rock-chips.com
+Cc: Mike Turquette <mturquette@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 21.10.2014 um 23:01 schrieb Olof Johansson:
-> On Tue, Oct 21, 2014 at 1:52 PM, Andreas F=C3=A4rber <afaerber@suse.d=
-e> wrote:
->> Am 18.10.2014 um 06:28 schrieb Olof Johansson:
->>> I did a test run with yesterday's -next It looks like networking is=
-n't
->>> working there at the moment, clock related. Same happens with 3.17 =
-and
->>> latest mainline, config multi_v7_defconfig:
->>>
->>> [WARN] [    7.943648] macb e000b000.ethernet eth0: unable to genera=
-te
->>> target frequency: 125000000 Hz
->>> [WARN] [   10.948681] macb e000b000.ethernet eth0: unable to genera=
-te
->>> target frequency: 125000000 Hz
->>
->> I am unable to reproduce this in my setup - at Linus' tip
->> c2661b806092d8ea2dccb7b02b65776555e0ee47 (v3.18-rc1-68-gc2661b8), ma=
-ke
->> oldconfig'ing my /proc/config.gz.
->>
->> S=C3=B6ren, in light of your explanations, should I be expecting pro=
-blems
->> with 1GbE or with 100MbE? My board is connected to a 1GbE switch.
->=20
-> My board might have old firmware/bitstream on it? It reports as:
->=20
-> U-Boot 2012.10-00003-g792c31c (Jan 03 2014 - 12:24:08)
+Hi Chris,
 
-Mine reports the same version.
+Am Montag, 20. Oktober 2014, 20:42:48 schrieb zyw@rock-chips.com:
+> From: Chris <zyw@rock-chips.com>
 
-sha512sum of non-headless bitstream:
-decb37222a7da0de39b1c1eb95714500cc006506cc86d85ed9c6c7b30c7cd7b91ef3592=
-b886311f4285b5ce0079b4ffcd83f91ae275435ac15cefefe7db00b08
- /mnt/parallella.bit.bin
+Please use your full name like "Chris Zhong"
 
-Andreas
+> 
+> support suspend/resume of pinctrl, it allows handling sleep mode
+> for hogged pins in pinctrl
+> 
+> Signed-off-by: Chris <zyw@rock-chips.com>
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
 
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
-=BCrnberg
+also, please use only one Signed-off-by line for yourself :-)
+
+
+> ---
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  drivers/pinctrl/pinctrl-rockchip.c |   29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-rockchip.c
+> b/drivers/pinctrl/pinctrl-rockchip.c index d0f3c18..d384d99 100644
+> --- a/drivers/pinctrl/pinctrl-rockchip.c
+> +++ b/drivers/pinctrl/pinctrl-rockchip.c
+> @@ -1795,6 +1795,31 @@ static struct rockchip_pin_ctrl
+> *rockchip_pinctrl_get_soc_data( return ctrl;
+>  }
+> 
+> +#ifdef CONFIG_PM
+> +static int rockchip_pinctrl_suspend(struct platform_device *pdev,
+> +				    pm_message_t state)
+> +{
+> +	struct rockchip_pinctrl *info;
+> +
+> +	info = platform_get_drvdata(pdev);
+> +	if (!info)
+> +		return -EINVAL;
+> +
+> +	return pinctrl_force_sleep(info->pctl_dev);
+> +}
+> +
+> +static int rockchip_pinctrl_resume(struct platform_device *pdev)
+> +{
+> +	struct rockchip_pinctrl *info;
+> +
+> +	info = platform_get_drvdata(pdev);
+> +	if (!info)
+> +		return -EINVAL;
+> +
+> +	return pinctrl_force_default(info->pctl_dev);
+> +}
+> +#endif
+> +
+>  static int rockchip_pinctrl_probe(struct platform_device *pdev)
+>  {
+>  	struct rockchip_pinctrl *info;
+> @@ -2010,6 +2035,10 @@ static struct platform_driver rockchip_pinctrl_driver
+> = { .owner	= THIS_MODULE,
+>  		.of_match_table = rockchip_pinctrl_dt_match,
+>  	},
+> +	#ifdef CONFIG_PM
+> +	.suspend = rockchip_pinctrl_suspend,
+> +	.resume = rockchip_pinctrl_resume,
+> +	#endif
+
+as Dmitry already pointed out, this is the legacy suspend interface and should 
+not be used anymore.
+
+
+>  };
+> 
+>  static int __init rockchip_pinctrl_drv_register(void)
