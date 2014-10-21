@@ -1,85 +1,83 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH 7/9] ARM: berlin: Add BG2CD ethernet DT nodes
-Date: Tue, 21 Oct 2014 10:53:45 +0200
-Message-ID: <1413881627-21639-8-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1413881627-21639-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Subject: [PATCH 0/9] Marvell PXA168 libphy handling and Berlin Ethernet
+Date: Tue, 21 Oct 2014 10:53:38 +0200
+Message-ID: <1413881627-21639-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413881627-21639-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, Florian Fainelli <f.fainelli@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, netdev@vger.kernel.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Marvell BG2CD has two fast ethernet controllers with internal PHY,
-add the corresponding nodes to SoC dtsi.
-
-Tested-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
----
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: "Antoine T=C3=A9nart" <antoine.tenart@free-electrons.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Eric Miao <eric.y.miao@gmail.com>
-Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/arm/boot/dts/berlin2cd.dtsi | 36 ++++++++++++++++++++++++++++++++=
-++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berli=
-n2cd.dtsi
-index cc1df65da504..8ce73a0a23a3 100644
---- a/arch/arm/boot/dts/berlin2cd.dtsi
-+++ b/arch/arm/boot/dts/berlin2cd.dtsi
-@@ -66,6 +66,42 @@
- 			clocks =3D <&chip CLKID_TWD>;
- 		};
-=20
-+		eth1: ethernet@b90000 {
-+			compatible =3D "marvell,pxa168-eth";
-+			reg =3D <0xb90000 0x10000>;
-+			clocks =3D <&chip CLKID_GETH1>;
-+			interrupts =3D <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-+			/* set by bootloader */
-+			local-mac-address =3D [00 00 00 00 00 00];
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+			phy-handle =3D <&ethphy1>;
-+			status =3D "disabled";
-+
-+			ethphy1: ethernet-phy@0 {
-+				phy-connection-type =3D "mii";
-+				reg =3D <0>;
-+			};
-+		};
-+
-+		eth0: ethernet@e50000 {
-+			compatible =3D "marvell,pxa168-eth";
-+			reg =3D <0xe50000 0x10000>;
-+			clocks =3D <&chip CLKID_GETH0>;
-+			interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+			/* set by bootloader */
-+			local-mac-address =3D [00 00 00 00 00 00];
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+			phy-handle =3D <&ethphy0>;
-+			status =3D "disabled";
-+
-+			ethphy0: ethernet-phy@0 {
-+				phy-connection-type =3D "mii";
-+				reg =3D <0>;
-+			};
-+		};
-+
- 		apb@e80000 {
- 			compatible =3D "simple-bus";
- 			#address-cells =3D <1>;
---=20
-2.1.1
+VGhpcyBwYXRjaCBzZXJpZXMgZGVhbHMgd2l0aCBhIHJlbW92aW5nIGEgSVAgZmVhdHVyZSB0aGF0
+IGNhbiBiZSBmb3VuZApvbiBhbGwgY3VycmVudGx5IHN1cHBvcnRlZCBNYXJ2ZWxsIEV0aGVybmV0
+IElQIChweGExNjhfZXRoLCBtdjY0M3h4X2V0aCwKbXZuZXRhKS4gVGhlIE1BQyBJUCBhbGxvd3Mg
+dG8gYXV0b21hdGljYWxseSBwZXJmb3JtIFBIWSBhdXRvLW5lZ290aWF0aW9uCndpdGhvdXQgc29m
+dHdhcmUgaW50ZXJhY3Rpb24uCgpIb3dldmVyLCB0aGlzIGZlYXR1cmUgKGEpIGZ1bmRhbWVudGFs
+bHkgY2xhc2hlcyB3aXRoIHRoZSB3YXkgbGlicGh5IHdvcmtzCmFuZCAoYikgaXMgdW5hYmxlIHRv
+IGRlYWwgd2l0aCBxdWlya3kgUEhZcyB0aGF0IHJlcXVpcmUgc3BlY2lhbCB0cmVhdG1lbnQuCklu
+IHRoaXMgc2VyaWVzLCBweGExNjhfZXRoIGRyaXZlciBpcyByZXdyaXR0ZW4gdG8gY29tcGxldGVs
+eSBkaXNhYmxlIHRoYXQKZmVhdHVyZSBhbmQgcHJvcGVybHkgZGVhbCB3aXRoIGxpYnBoeSBwcm92
+aWRlZCBQSFlzLgoKVGhpcyBpcyB0aGUgcmVhbCBwYXRjaCBzZXQgYWZ0ZXIgYW4gUkZUIHNlbnQg
+ZWFybGllci4gVW5mb3J0dW5hdGVseSwgdGhlcmUKd2FzIG5vIHRlc3RpbmcgZnJvbSBNTVAvZ3Bs
+dWcgYnV0IHRoZXJlIHdhcyBmb3IgQkcyUS4gSG93ZXZlciwgaXQgc3RpbGwKd291bGQgYmUgZ3Jl
+YXQgdG8gZ2V0IGEgVGVzdGVkLWJ5IG9uIGdwbHVnLiBBbHNvLCB0aGlzIHBhdGNoIHNldCBpcyBu
+b3cKcmViYXNlZCBvbiB2My4xOC1yYzEuIEFzIHVzdWFsLCBhIGJyYW5jaCBvbiB0b3Agb2YgdjMu
+MTgtcmMxIGNhbiBiZSBmb3VuZCBhdAoKZ2l0Oi8vZ2l0LmluZnJhZGVhZC5vcmcvdXNlcnMvaGVz
+c2VsYmEvbGludXgtYmVybGluLmdpdCBkZXZlbC9iZzItYmcyY2QtZXRoLXYxCgpQYXRjaGVzIDEt
+NSBzaG91bGQgZ28gdGhyb3VnaCBEYXZpZCdzIG5ldCB0cmVlLCBJJ2xsIHBpY2sgdXAgdGhlIERU
+IHBhdGNoZXMKNi05LgoKQ29tcGFyZWQgdG8gdGhlIFJGVCwgdGhlcmUgaGF2ZSBiZWVuIHNvbWUg
+Y2hhbmdlczoKLSBhZGRlZCBwaHktY29ubmVjdGlvbi10eXBlIHByb3BlcnR5IHRvIEJHMlEgUEhZ
+IERUIG5vZGUKLSBiYWlsIG91dCBmcm9tIHB4YTE2OF9ldGhfYWRqdXN0X2xpbmsgd2hlbiB0aGVy
+ZSBpcyBubyBjaGFuZ2UgaW4KICBQSFkgcGFyYW1ldGVycy4gQWxzbywgYWRkIGEgY2FsbCB0byBw
+aHlfcHJpbnRfc3RhdHVzLgoKUGF0Y2ggMSBhZGRzIHN1cHBvcnQgZm9yIE1hcnZlbGwgODhFMzAx
+NiBGYXN0RXRoZXJuZXQgUEhZIHRoYXQgaXMgYWxzbwppbnRlZ3JhdGVkIGluIE1hcnZlbGwgQmVy
+bGluIEJHMi9CRzJDRCBTb0NzLgoKUGF0Y2ggMiBhbGxvd3MgdG8gcGFzcyBwaHlfaW50ZXJmYWNl
+X3Qgb24gcHhhMTY4X2V0aCBwbGF0Zm9ybV9kYXRhIHRoYXQKaXMgb25seSB1c2VkIGJ5IG1hY2gt
+bW1wL2dwbHVnLiBGcm9tIHRoZSBib2FyZCBzZXR1cCwgSSBndWVzc2VkIGdwbHVnJ3MKUEhZIGlz
+IGNvbm5lY3RlZCB2aWEgUk1JSS4gVGhlIHBhdGNoIHN0aWxsIGlzbid0IGV2ZW4gY29tcGlsZSB0
+ZXN0ZWQuCgpQYXRjaGVzIDMtNSBwcmVwYXJlIHByb3BlciBsaWJwaHkgaGFuZGxpbmcgYW5kIGZp
+bmFsbHkgcmVtb3ZlIGFsbCBpbi1kcml2ZXIKUEhZIG1hbmdsaW5nIHJlbGF0ZWQgdG8gdGhlIGZl
+YXR1cmUgZXhwbGFpbmVkIGFib3ZlLgoKUGF0Y2hlcyA2LTkgYWRkIGNvcnJlc3BvbmRpbmcgZXRo
+ZXJuZXQgRFQgbm9kZXMgdG8gQkcyLCBCRzJDRCwgYWRkIGEKcGh5LWNvbm5lY3Rpb24tdHlwZSBw
+cm9wZXJ0eSB0byBCRzJRIGFuZCBlbmFibGUgZXRoZXJuZXQgb24gQkcyLWJhc2VkIFNvbnkKTlNa
+LUdTNy4gSSBoYXZlIHRlc3RlZCBhbGwgdGhpcyBvbiBHUzcgc3VjY2Vzc2Z1bGx5IHdpdGggaXA9
+ZGhjcCBvbiAxMDBNIEZELgoKQW50b2luZSBUw6luYXJ0ICgxKToKICBBUk06IGJlcmxpbjogQWRk
+IHBoeS1jb25uZWN0aW9uLXR5cGUgdG8gQkcyUSBQSFkKClNlYmFzdGlhbiBIZXNzZWxiYXJ0aCAo
+OCk6CiAgcGh5OiBtYXJ2ZWxsOiBBZGQgc3VwcG9ydCBmb3IgODhFMzAxNiBGYXN0RXRoZXJuZXQg
+UEhZCiAgbmV0OiBweGExNjhfZXRoOiBQcm92aWRlIHBoeV9pbnRlcmZhY2UgbW9kZSBvbiBwbGF0
+Zm9ybV9kYXRhCiAgbmV0OiBweGExNjhfZXRoOiBQcmVwYXJlIHByb3BlciBsaWJwaHkgaGFuZGxp
+bmcKICBuZXQ6IHB4YTE2OF9ldGg6IFJlbW92ZSBIVyBhdXRvLW5lZ290aWFpb24KICBuZXQ6IHB4
+YTE2OF9ldGg6IFJlbW92ZSBpbi1kcml2ZXIgUEhZIG1hbmdsaW5nCiAgQVJNOiBiZXJsaW46IEFk
+ZCBCRzIgZXRoZXJuZXQgRFQgbm9kZXMKICBBUk06IGJlcmxpbjogQWRkIEJHMkNEIGV0aGVybmV0
+IERUIG5vZGVzCiAgQVJNOiBiZXJsaW46IEVuYWJsZSBldGhlcm5ldCBvbiBTb255IE5TWi1HUzcK
+CiBhcmNoL2FybS9ib290L2R0cy9iZXJsaW4yLXNvbnktbnN6LWdzNy5kdHMgfCAgIDIgKwogYXJj
+aC9hcm0vYm9vdC9kdHMvYmVybGluMi5kdHNpICAgICAgICAgICAgIHwgIDM2ICsrKysrCiBhcmNo
+L2FybS9ib290L2R0cy9iZXJsaW4yY2QuZHRzaSAgICAgICAgICAgfCAgMzYgKysrKysKIGFyY2gv
+YXJtL2Jvb3QvZHRzL2JlcmxpbjJxLmR0c2kgICAgICAgICAgICB8ICAgMSArCiBhcmNoL2FybS9t
+YWNoLW1tcC9ncGx1Z2QuYyAgICAgICAgICAgICAgICAgfCAgIDIgKwogZHJpdmVycy9uZXQvZXRo
+ZXJuZXQvbWFydmVsbC9weGExNjhfZXRoLmMgIHwgMjQ4ICsrKysrKysrKysrKy0tLS0tLS0tLS0t
+LS0tLS0tCiBkcml2ZXJzL25ldC9waHkvbWFydmVsbC5jICAgICAgICAgICAgICAgICAgfCAgNDYg
+KysrKysrCiBpbmNsdWRlL2xpbnV4L21hcnZlbGxfcGh5LmggICAgICAgICAgICAgICAgfCAgIDEg
+KwogaW5jbHVkZS9saW51eC9weGExNjhfZXRoLmggICAgICAgICAgICAgICAgIHwgICAxICsKIDkg
+ZmlsZXMgY2hhbmdlZCwgMjI1IGluc2VydGlvbnMoKyksIDE0OCBkZWxldGlvbnMoLSkKCi0tLQpD
+YzogIkRhdmlkIFMuIE1pbGxlciIgPGRhdmVtQGRhdmVtbG9mdC5uZXQ+CkNjOiAiQW50b2luZSBU
+w6luYXJ0IiA8YW50b2luZS50ZW5hcnRAZnJlZS1lbGVjdHJvbnMuY29tPgpDYzogRmxvcmlhbiBG
+YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+CkNjOiBFcmljIE1pYW8gPGVyaWMueS5taWFv
+QGdtYWlsLmNvbT4KQ2M6IEhhb2ppYW4gWmh1YW5nIDxoYW9qaWFuLnpodWFuZ0BnbWFpbC5jb20+
+CkNjOiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKQ2M6IG5ldGRldkB2Z2Vy
+Lmtlcm5lbC5vcmcKQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCkNjOiBsaW51eC1rZXJu
+ZWxAdmdlci5rZXJuZWwub3JnCi0tIAoyLjEuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
