@@ -1,24 +1,41 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/2] GPIO: 74xx-mmio: Add DT bindings documentation
-Date: Tue, 21 Oct 2014 10:49:06 +0200
-Message-ID: <CACRpkdbNtbL1CbjytqTCT3cSa3hFw8N9VQd5zG7m22FUdbBfOA@mail.gmail.com>
-References: <1412321535-28441-1-git-send-email-shc_work@mail.ru>
+From: bpqw <bpqw@micron.com>
+Subject: [PATCH 1/1] devicetree: bindings: Add vendor prefix for Micron
+ Technology Co., Ltd.
+Date: Tue, 21 Oct 2014 08:50:24 +0000
+Message-ID: <A765B125120D1346A63912DDE6D8B6315E745D@NTXXIAMBX02.xacn.micron.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1412321535-28441-1-git-send-email-shc_work@mail.ru>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Jason Cooper <jason@lakedaemon.net>, Mark Brown <broonie@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Andrew Lunn <andrew@lunn.ch>, Silvio F <silvio.fricke@gmail.com>, Hayato Suzuki <hytszk@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 3, 2014 at 9:32 AM, Alexander Shiyan <shc_work@mail.ru> wrote:
+This patch is used to add vendor prefix for Micron Technology Inc in the vendor-prefixes.txt file.
 
-> This patch adds DT binding documentation for the 74xx-mmio GPIO driver.
->
-> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+Micron Technology, Inc. is an American multinational corporation
+based in Boise, Idaho, best known for producing many forms of
+semiconductor devices. This includes DRAM, SDRAM, flash memory,
+eMMC and SSDs.
 
-Patch applied.
+Signed-off-by: bean huo <beanhuo@micron.com>
+---
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 1 file changed, 1 insertion(+)
 
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 723999d..a7bbf6e 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -92,6 +92,7 @@ maxim	Maxim Integrated Products
+ mediatek	MediaTek Inc.
+ micrel	Micrel Inc.
+ microchip	Microchip Technology Inc.
++micron	Micron Technology Inc.
+ mitsubishi	Mitsubishi Electric Corporation
+ mosaixtech	Mosaix Technologies, Inc.
+ moxa	Moxa
+-- 
+1.7.9.5
