@@ -1,60 +1,43 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v2 1/5] phy: berlin-sata: Move PHY_BASE into private data
- struct
-Date: Tue, 21 Oct 2014 11:40:00 +0200
-Message-ID: <544629F0.3090505@gmail.com>
-References: <1413882477-27922-1-git-send-email-sebastian.hesselbarth@gmail.com> <1413882477-27922-2-git-send-email-sebastian.hesselbarth@gmail.com> <54462865.6000205@ti.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: [PATCH v3 0/2] Add DRA7xx CPSW Ethernet support in Device Tree
+Date: Tue, 21 Oct 2014 15:30:59 +0530
+Message-ID: <1413885661-4850-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54462865.6000205@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: bcousson@baylibre.com, tony@atomide.com
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/2014 11:33 AM, Kishon Vijay Abraham I wrote:
-> On Tuesday 21 October 2014 02:37 PM, Sebastian Hesselbarth wrote:
->> Currently, Berlin SATA PHY driver assumes PHY_BASE address being
->> constant. While this PHY_BASE is correct for BG2Q, older BG2 PHY_BAS=
-E
->> is different. Prepare the driver for BG2 support by moving the phy_b=
-ase
->> into private driver data.
->>
->> Acked-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
->> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.co=
-m>
-=2E..
->> ---
->>   drivers/phy/phy-berlin-sata.c | 42 ++++++++++++++++++++++++++++---=
------------
->>   1 file changed, 28 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/phy/phy-berlin-sata.c b/drivers/phy/phy-berlin-=
-sata.c
->> index 69ced52d72aa..9682b0f66177 100644
->> --- a/drivers/phy/phy-berlin-sata.c
->> +++ b/drivers/phy/phy-berlin-sata.c
->> @@ -30,7 +30,7 @@
->>   #define MBUS_WRITE_REQUEST_SIZE_128	(BIT(2) << 16)
->>   #define MBUS_READ_REQUEST_SIZE_128	(BIT(2) << 19)
->>
->> -#define PHY_BASE		0x200
->> +#define BG2Q_PHY_BASE		0x200
-[...]
->> +static u32 bg2q_sata_phy_base =3D BG2Q_PHY_BASE;
->> +
->> +static const struct of_device_id phy_berlin_sata_of_match[] =3D {
->> +	{
->> +		.compatible =3D "marvell,berlin2q-sata-phy",
->> +		.data =3D &bg2q_sata_phy_base,
->
-> Can't the base directly come from dt?
+Adding device tree entry for CPSW to make it work in Dual EMAC mode.
+These patches were tested with DRA7 hwmod patches on top of linux-next.
+Patches are tested on top of Nishanth's PM tree for v3.17 [1] and pushed
+my tree to [2].
 
-You are suggesting a "marvell,phy-base-address" property, right?
-I have no strong opinion about it, I accept your call (or DT maintainer
-ones).
+Did a boot test with CPSW and ping test with suspend/resume, the boot logs
+on DRA7xx EVM are posted at [3]
 
-Sebastian
+[1] git://github.com/nmenon/linux-2.6-playground.git testing/v3.17/cpu-idle-suspend-dra7-omap5-framework
+[2] git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git v3.17/dra7-evm-cpsw-v3
+[3] http://pastebin.ubuntu.com/8613072/
+
+Changes from v2:
+* Changed pinctrl comments to hold mode0-name.mode-selected-name
+* Changes slave numbers in the pinctrl comments
+* Added cpsw and cpts clocks
+
+Changes from initial version:
+* Dropped patch for pinoff states
+* Changed pinoff state to mode15
+
+Mugunthan V N (2):
+  ARM: dts: dra7: Add CPSW and MDIO module nodes for dra7
+  ARM: dts: dra7-evm: Enable CPSW and MDIO for dra7xx EVM
+
+ arch/arm/boot/dts/dra7-evm.dts | 106 +++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/dra7.dtsi    |  61 ++++++++++++++++++++++++
+ 2 files changed, 167 insertions(+)
+
+-- 
+2.1.2.484.g13da0fc
