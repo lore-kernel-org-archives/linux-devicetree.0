@@ -1,92 +1,171 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v3 1/6] pinctrl: rockchip: add suspend/resume functions
-Date: Tue, 21 Oct 2014 23:20:11 +0200
-Message-ID: <3477070.K1aFAOaaEU@diego>
-References: <1413862894-2623-1-git-send-email-zyw@rock-chips.com> <1413862968-2691-1-git-send-email-zyw@rock-chips.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: [PATCH v6 12/12] input: gpio_keys_polled: Make use of device property API
+Date: Tue, 21 Oct 2014 23:37:13 +0200
+Message-ID: <2117779.M1IjfP3CW4@vostro.rjw.lan>
+References: <13750506.S2yVlRRDa2@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413862968-2691-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: zyw@rock-chips.com
-Cc: Mike Turquette <mturquette@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <13750506.S2yVlRRDa2@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <darren.hart@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+From: Aaron Lu <aaron.lu@intel.com>
 
-Am Montag, 20. Oktober 2014, 20:42:48 schrieb zyw@rock-chips.com:
-> From: Chris <zyw@rock-chips.com>
+Make use of device property API in this driver so that both OF based
+system and ACPI based system can use this driver.
 
-Please use your full name like "Chris Zhong"
+Signed-off-by: Aaron Lu <aaron.lu@intel.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
 
-> 
-> support suspend/resume of pinctrl, it allows handling sleep mode
-> for hogged pins in pinctrl
-> 
-> Signed-off-by: Chris <zyw@rock-chips.com>
-> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+Changes from v5:
+- Use devm_get_gpiod_from_child() with 2 arguments (dev, child).
 
-also, please use only one Signed-off-by line for yourself :-)
+---
+ drivers/input/keyboard/gpio_keys_polled.c |   73 +++++++++---------------------
+ 1 file changed, 24 insertions(+), 49 deletions(-)
 
+Index: linux-pm/drivers/input/keyboard/gpio_keys_polled.c
+===================================================================
+--- linux-pm.orig/drivers/input/keyboard/gpio_keys_polled.c
++++ linux-pm/drivers/input/keyboard/gpio_keys_polled.c
+@@ -25,9 +25,7 @@
+ #include <linux/gpio.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/gpio_keys.h>
+-#include <linux/of.h>
+-#include <linux/of_platform.h>
+-#include <linux/of_gpio.h>
++#include <linux/property.h>
+ 
+ #define DRV_NAME	"gpio-keys-polled"
+ 
+@@ -102,21 +100,15 @@ static void gpio_keys_polled_close(struc
+ 		pdata->disable(bdev->dev);
+ }
+ 
+-#ifdef CONFIG_OF
+ static struct gpio_keys_platform_data *gpio_keys_polled_get_devtree_pdata(struct device *dev)
+ {
+-	struct device_node *node, *pp;
+ 	struct gpio_keys_platform_data *pdata;
+ 	struct gpio_keys_button *button;
++	struct fwnode_handle *child;
+ 	int error;
+ 	int nbuttons;
+-	int i;
+-
+-	node = dev->of_node;
+-	if (!node)
+-		return NULL;
+ 
+-	nbuttons = of_get_child_count(node);
++	nbuttons = device_get_child_node_count(dev);
+ 	if (nbuttons == 0)
+ 		return NULL;
+ 
+@@ -126,52 +118,44 @@ static struct gpio_keys_platform_data *g
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	pdata->buttons = (struct gpio_keys_button *)(pdata + 1);
+-	pdata->nbuttons = nbuttons;
+ 
+-	pdata->rep = !!of_get_property(node, "autorepeat", NULL);
+-	of_property_read_u32(node, "poll-interval", &pdata->poll_interval);
++	pdata->rep = device_property_present(dev, "autorepeat");
++	device_property_read_u32(dev, "poll-interval", &pdata->poll_interval);
+ 
+-	i = 0;
+-	for_each_child_of_node(node, pp) {
+-		int gpio;
+-		enum of_gpio_flags flags;
+-
+-		if (!of_find_property(pp, "gpios", NULL)) {
+-			pdata->nbuttons--;
+-			dev_warn(dev, "Found button without gpios\n");
+-			continue;
+-		}
++	device_for_each_child_node(dev, child) {
++		struct gpio_desc *desc;
+ 
+-		gpio = of_get_gpio_flags(pp, 0, &flags);
+-		if (gpio < 0) {
+-			error = gpio;
++		desc = devm_get_gpiod_from_child(dev, child);
++		if (IS_ERR(desc)) {
++			error = PTR_ERR(desc);
+ 			if (error != -EPROBE_DEFER)
+ 				dev_err(dev,
+ 					"Failed to get gpio flags, error: %d\n",
+ 					error);
++			fwnode_handle_put(child);
+ 			return ERR_PTR(error);
+ 		}
+ 
+-		button = &pdata->buttons[i++];
+-
+-		button->gpio = gpio;
+-		button->active_low = flags & OF_GPIO_ACTIVE_LOW;
++		button = &pdata->buttons[pdata->nbuttons++];
++		button->gpiod = desc;
+ 
+-		if (of_property_read_u32(pp, "linux,code", &button->code)) {
+-			dev_err(dev, "Button without keycode: 0x%x\n",
+-				button->gpio);
++		if (fwnode_property_read_u32(child, "linux,code", &button->code)) {
++			dev_err(dev, "Button without keycode: %d\n",
++				pdata->nbuttons - 1);
++			fwnode_handle_put(child);
+ 			return ERR_PTR(-EINVAL);
+ 		}
+ 
+-		button->desc = of_get_property(pp, "label", NULL);
++		fwnode_property_read_string(child, "label", &button->desc);
+ 
+-		if (of_property_read_u32(pp, "linux,input-type", &button->type))
++		if (fwnode_property_read_u32(child, "linux,input-type",
++					     &button->type))
+ 			button->type = EV_KEY;
+ 
+-		button->wakeup = !!of_get_property(pp, "gpio-key,wakeup", NULL);
++		button->wakeup = fwnode_property_present(child, "gpio-key,wakeup");
+ 
+-		if (of_property_read_u32(pp, "debounce-interval",
+-					 &button->debounce_interval))
++		if (fwnode_property_read_u32(child, "debounce-interval",
++					     &button->debounce_interval))
+ 			button->debounce_interval = 5;
+ 	}
+ 
+@@ -187,15 +171,6 @@ static const struct of_device_id gpio_ke
+ };
+ MODULE_DEVICE_TABLE(of, gpio_keys_polled_of_match);
+ 
+-#else
+-
+-static inline struct gpio_keys_platform_data *
+-gpio_keys_polled_get_devtree_pdata(struct device *dev)
+-{
+-	return NULL;
+-}
+-#endif
+-
+ static int gpio_keys_polled_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -323,7 +298,7 @@ static struct platform_driver gpio_keys_
+ 	.driver	= {
+ 		.name	= DRV_NAME,
+ 		.owner	= THIS_MODULE,
+-		.of_match_table = of_match_ptr(gpio_keys_polled_of_match),
++		.of_match_table = gpio_keys_polled_of_match,
+ 	},
+ };
+ module_platform_driver(gpio_keys_polled_driver);
 
-> ---
-> 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  drivers/pinctrl/pinctrl-rockchip.c |   29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-rockchip.c
-> b/drivers/pinctrl/pinctrl-rockchip.c index d0f3c18..d384d99 100644
-> --- a/drivers/pinctrl/pinctrl-rockchip.c
-> +++ b/drivers/pinctrl/pinctrl-rockchip.c
-> @@ -1795,6 +1795,31 @@ static struct rockchip_pin_ctrl
-> *rockchip_pinctrl_get_soc_data( return ctrl;
->  }
-> 
-> +#ifdef CONFIG_PM
-> +static int rockchip_pinctrl_suspend(struct platform_device *pdev,
-> +				    pm_message_t state)
-> +{
-> +	struct rockchip_pinctrl *info;
-> +
-> +	info = platform_get_drvdata(pdev);
-> +	if (!info)
-> +		return -EINVAL;
-> +
-> +	return pinctrl_force_sleep(info->pctl_dev);
-> +}
-> +
-> +static int rockchip_pinctrl_resume(struct platform_device *pdev)
-> +{
-> +	struct rockchip_pinctrl *info;
-> +
-> +	info = platform_get_drvdata(pdev);
-> +	if (!info)
-> +		return -EINVAL;
-> +
-> +	return pinctrl_force_default(info->pctl_dev);
-> +}
-> +#endif
-> +
->  static int rockchip_pinctrl_probe(struct platform_device *pdev)
->  {
->  	struct rockchip_pinctrl *info;
-> @@ -2010,6 +2035,10 @@ static struct platform_driver rockchip_pinctrl_driver
-> = { .owner	= THIS_MODULE,
->  		.of_match_table = rockchip_pinctrl_dt_match,
->  	},
-> +	#ifdef CONFIG_PM
-> +	.suspend = rockchip_pinctrl_suspend,
-> +	.resume = rockchip_pinctrl_resume,
-> +	#endif
-
-as Dmitry already pointed out, this is the legacy suspend interface and should 
-not be used anymore.
-
-
->  };
-> 
->  static int __init rockchip_pinctrl_drv_register(void)
