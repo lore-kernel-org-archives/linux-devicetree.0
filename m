@@ -1,34 +1,40 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH v2 18/20] rtc: omap: add copyright entry
-Date: Tue, 21 Oct 2014 19:38:04 +0200
-Message-ID: <1413913086-12730-19-git-send-email-johan@kernel.org>
-References: <1412881594-25678-1-git-send-email-johan@kernel.org>
- <1413913086-12730-1-git-send-email-johan@kernel.org>
+From: Santosh Shilimkar <santosh.shilimkar@gmail.com>
+Subject: Re: [PATCH v2 1/3] PM / clock_ops: Add pm_clk_add_clk()
+Date: Tue, 21 Oct 2014 11:00:36 -0700
+Message-ID: <54469F44.4060701@gmail.com>
+References: <1413809764-21995-1-git-send-email-grygorii.strashko@ti.com> <1413809764-21995-2-git-send-email-grygorii.strashko@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413913086-12730-1-git-send-email-johan@kernel.org>
+In-Reply-To: <1413809764-21995-2-git-send-email-grygorii.strashko@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Felipe Balbi <balbi@ti.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+To: Grygorii Strashko <grygorii.strashko@ti.com>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, khilman@linaro.org
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, ulf.hansson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add myself to the list of copyright holders.
+Kevin, Rafael,
 
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/rtc/rtc-omap.c | 1 +
- 1 file changed, 1 insertion(+)
+On 10/20/2014 05:56 AM, Grygorii Strashko wrote:
+> From: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> The existing pm_clk_add() allows to pass a clock by con_id. However,
+> when referring to a specific clock from DT, no con_id is available.
+>
+> Add pm_clk_add_clk(), which allows to specify the struct clk * directly.
+>
+> Reviewed-by: Kevin Hilman <khilman@linaro.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+>
+>   Pay attantion pls, that there is another series of patches
+>   which have been posted already and which depends from this patch
+>     "[PATCH v4 0/3] ARM: rk3288 : Add PM Domain support"
+>     https://lkml.org/lkml/2014/10/20/105
+>
+How do you go about merging the $subject patch ?
+I see there are at least 2 series which depends on this one.
 
-diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
-index 4278421183e5..e74750f00b18 100644
---- a/drivers/rtc/rtc-omap.c
-+++ b/drivers/rtc/rtc-omap.c
-@@ -5,6 +5,7 @@
-  * Author: George G. Davis <gdavis@mvista.com> or <source@mvista.com>
-  *
-  * Copyright (C) 2006 David Brownell (new RTC framework)
-+ * Copyright (C) 2014 Johan Hovold <johan@kernel.org>
-  *
-  * This program is free software; you can redistribute it and/or
-  * modify it under the terms of the GNU General Public License
--- 
-2.0.4
+Regards,
+Santosh
