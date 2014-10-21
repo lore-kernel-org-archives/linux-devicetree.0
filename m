@@ -1,7 +1,7 @@
 From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH/RFC 05/17] MIPS: BMIPS: Mask off timer IRQs when hot-unplugging a CPU
-Date: Mon, 20 Oct 2014 21:27:55 -0700
-Message-ID: <1413865687-15255-6-git-send-email-cernekee@gmail.com>
+Subject: [PATCH/RFC 06/17] MIPS: BMIPS: Explicitly configure reset vectors prior to secondary boot
+Date: Mon, 20 Oct 2014 21:27:56 -0700
+Message-ID: <1413865687-15255-7-git-send-email-cernekee@gmail.com>
 References: <1413865687-15255-1-git-send-email-cernekee@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1413865687-15255-1-git-send-email-cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,84 +10,83 @@ To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+The secondary CPU's reset vector needs to be set to KSEG1 for a cold
+boot (release from reset), or KSEG0 for a warm restart.  On a cold boot
+KSEG0 may be unavailable (BMIPS4380), and on a warm restart KSEG1 may
+be unavailable (XKS01 mode on 4380 or 5000).
 
-CPU interrupts need to be disabled on a cpu being taken down.
-When a cpu is hot-plugged out of the system the following sequence occurs.
-
-On the CPU where the hotplug sequence was initiated:
-    cpu_down
-        _cpu_down {
-            __cpu_notify(CPU_DOWN_PREPARE
-            __stop_machine(take_cpu_down
-                wait for cpu to run disable code.
-            __cpu_die
-        }
-
-On the CPU  being disabled:
-    take_cpu_down
-        __cpu_disable {
-            mp_ops->cpu_disable
-                bmips_cpu_disable
-                    clear_c0_status(IE_IRQ5) (added)
-            cpu_notify(CPU_DYING...
-        }
-
-Before the cpu_notifier is called with CPU_DYING, all interrupts on the
-dying cpu must be disabled.  This guarantees that before tick_notify is
-called with the CPU_DYING event and sets the clock device pointer to
-NULL, there can not be any more clock interrupts.
-
-When this wasn't done, an unfortunately-timed timer interrupt sometimes
-caused hangs immediately prior to system suspend:
-
-    Debug PM is not enabled. To enable partial suspend, rebuild kernel with CONFIG_PM_DEBUG
-    Pass 1 out of 1,PM: Syncing filesystems ... mode=none, tp1=done.
-    1, flags=5, cycle_tp=, sleep=
-    Freezing user space processes ... (elapsed 0.01 seconds) done.
-    Freezing remaining freezable tasks ... (elapsed 0.01 seconds) done.
-    PM: suspend of devices complete after 54.199 msecs
-    PM: late suspend of devices complete after 0.172 msecs
-    Disabling non-boot CPUs ...
-    SMP: CPU1 is offline
-    INFO: rcu_sched detected stalls on CPUs/tasks: { 3} (detected by 0, t=62537 jiffies)
-    Call Trace:
-    [<804baa78>] dump_stack+0x8/0x34
-    [<8008a2d8>] __rcu_pending+0x4b8/0x55c
-    [<8008adf4>] rcu_check_callbacks+0x78/0x180
-    [<80037830>] update_process_times+0x40/0x6c
-    [<80072fe4>] tick_sched_timer+0x74/0xe4
-    [<80050180>] __run_hrtimer.clone.30+0x64/0x140
-    [<80051150>] hrtimer_interrupt+0x19c/0x4bc
-    [<8000cdb8>] c0_compare_interrupt+0x50/0x88
-    [<80081b18>] handle_irq_event_percpu+0x5c/0x2f4
-    [<80086490>] handle_percpu_irq+0x8c/0xc0
-    [<800811b4>] generic_handle_irq+0x34/0x54
-    [<800067dc>] do_IRQ+0x18/0x2c
-    [<8000375c>] plat_irq_dispatch+0xd0/0x128
-    [<80004a04>] ret_from_irq+0x0/0x4
-    [<80004c40>] r4k_wait+0x20/0x40
-    [<80006b6c>] cpu_idle+0x98/0xf0
-    [<805d3988>] start_kernel+0x424/0x440
-
-Signed-off-by: Jon Fraser <jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/mips/kernel/smp-bmips.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/mips/kernel/smp-bmips.c | 29 ++++++++---------------------
+ 1 file changed, 8 insertions(+), 21 deletions(-)
 
 diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
-index 887c3ea..f7b1bee 100644
+index f7b1bee..162391d 100644
 --- a/arch/mips/kernel/smp-bmips.c
 +++ b/arch/mips/kernel/smp-bmips.c
-@@ -375,6 +375,7 @@ static int bmips_cpu_disable(void)
+@@ -47,6 +47,8 @@ cpumask_t bmips_booted_mask;
+ #define RESET_FROM_KSEG0		0x80080800
+ #define RESET_FROM_KSEG1		0xa0080800
  
- 	set_cpu_online(cpu, false);
- 	cpu_clear(cpu, cpu_callin_map);
-+	clear_c0_status(IE_IRQ5);
++static void bmips_set_reset_vec(int cpu, u32 val);
++
+ #ifdef CONFIG_SMP
  
- 	local_flush_tlb_all();
- 	local_flush_icache_range(0, ~0);
+ /* initial $sp, $gp - used by arch/mips/kernel/bmips_vec.S */
+@@ -198,6 +200,9 @@ static void bmips_boot_secondary(int cpu, struct task_struct *idle)
+ 	pr_info("SMP: Booting CPU%d...\n", cpu);
+ 
+ 	if (cpumask_test_cpu(cpu, &bmips_booted_mask)) {
++		/* kseg1 might not exist if this CPU enabled XKS01 */
++		bmips_set_reset_vec(cpu, RESET_FROM_KSEG0);
++
+ 		switch (current_cpu_type()) {
+ 		case CPU_BMIPS4350:
+ 		case CPU_BMIPS4380:
+@@ -207,8 +212,9 @@ static void bmips_boot_secondary(int cpu, struct task_struct *idle)
+ 			bmips5000_send_ipi_single(cpu, 0);
+ 			break;
+ 		}
+-	}
+-	else {
++	} else {
++		bmips_set_reset_vec(cpu, RESET_FROM_KSEG1);
++
+ 		switch (current_cpu_type()) {
+ 		case CPU_BMIPS4350:
+ 		case CPU_BMIPS4380:
+@@ -229,31 +235,12 @@ static void bmips_boot_secondary(int cpu, struct task_struct *idle)
+  */
+ static void bmips_init_secondary(void)
+ {
+-	/* move NMI vector to kseg0, in case XKS01 is enabled */
+-
+-	void __iomem *cbr;
+-	unsigned long old_vec;
+-	unsigned long relo_vector;
+-	int boot_cpu;
+-
+ 	switch (current_cpu_type()) {
+ 	case CPU_BMIPS4350:
+ 	case CPU_BMIPS4380:
+-		cbr = BMIPS_GET_CBR();
+-
+-		boot_cpu = !!(read_c0_brcm_cmt_local() & (1 << 31));
+-		relo_vector = boot_cpu ? BMIPS_RELO_VECTOR_CONTROL_0 :
+-				  BMIPS_RELO_VECTOR_CONTROL_1;
+-
+-		old_vec = __raw_readl(cbr + relo_vector);
+-		__raw_writel(old_vec & ~0x20000000, cbr + relo_vector);
+-
+ 		clear_c0_cause(smp_processor_id() ? C_SW1 : C_SW0);
+ 		break;
+ 	case CPU_BMIPS5000:
+-		write_c0_brcm_bootvec(read_c0_brcm_bootvec() &
+-			(smp_processor_id() & 0x01 ? ~0x20000000 : ~0x2000));
+-
+ 		write_c0_brcm_action(ACTION_CLR_IPI(smp_processor_id(), 0));
+ 		break;
+ 	}
 -- 
 2.1.1
 
