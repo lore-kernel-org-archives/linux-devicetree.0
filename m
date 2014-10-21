@@ -1,7 +1,7 @@
 From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH/RFC 12/17] MIPS: Create a helper function for DT setup
-Date: Mon, 20 Oct 2014 21:28:02 -0700
-Message-ID: <1413865687-15255-13-git-send-email-cernekee@gmail.com>
+Subject: [PATCH/RFC 09/17] MIPS: BMIPS: Let each platform customize the CPU1 IRQ mask
+Date: Mon, 20 Oct 2014 21:27:59 -0700
+Message-ID: <1413865687-15255-10-git-send-email-cernekee@gmail.com>
 References: <1413865687-15255-1-git-send-email-cernekee@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1413865687-15255-1-git-send-email-cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,111 +10,59 @@ To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-A couple of platforms register two buses and call of_platform_populate().
-Move this into a common function to reduce duplication.
+On some chips like bcm3384, "other stuff" gets wired up to CPU1's IE_IRQ1
+input, generating spurious IRQs.  In this case we want the platform code
+to be able to mask it off.
 
 Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/mips/include/asm/prom.h |  1 +
- arch/mips/kernel/prom.c      | 18 ++++++++++++++++++
- arch/mips/lantiq/prom.c      | 11 +----------
- arch/mips/ralink/of.c        | 14 ++------------
- 4 files changed, 22 insertions(+), 22 deletions(-)
+ arch/mips/include/asm/bmips.h | 1 +
+ arch/mips/kernel/smp-bmips.c  | 6 ++++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/include/asm/prom.h b/arch/mips/include/asm/prom.h
-index a9494c0..eaa2627 100644
---- a/arch/mips/include/asm/prom.h
-+++ b/arch/mips/include/asm/prom.h
-@@ -22,6 +22,7 @@ extern void device_tree_init(void);
- struct boot_param_header;
+diff --git a/arch/mips/include/asm/bmips.h b/arch/mips/include/asm/bmips.h
+index cbacceb..30939b0 100644
+--- a/arch/mips/include/asm/bmips.h
++++ b/arch/mips/include/asm/bmips.h
+@@ -84,6 +84,7 @@ extern char bmips_smp_int_vec_end;
+ extern int bmips_smp_enabled;
+ extern int bmips_cpu_offset;
+ extern cpumask_t bmips_booted_mask;
++extern unsigned long bmips_tp1_irqs;
  
- extern void __dt_setup_arch(void *bph);
-+extern int __dt_register_buses(const char *bus0, const char *bus1);
+ extern void bmips_ebase_setup(void);
+ extern asmlinkage void plat_wired_tlb_setup(void);
+diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
+index 162391d..b8bd934 100644
+--- a/arch/mips/kernel/smp-bmips.c
++++ b/arch/mips/kernel/smp-bmips.c
+@@ -43,6 +43,7 @@ static int __maybe_unused max_cpus = 1;
+ int bmips_smp_enabled = 1;
+ int bmips_cpu_offset;
+ cpumask_t bmips_booted_mask;
++unsigned long bmips_tp1_irqs = IE_IRQ1;
  
- #define dt_setup_arch(sym)						\
- ({									\
-diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
-index 5d39bb8..452d435 100644
---- a/arch/mips/kernel/prom.c
-+++ b/arch/mips/kernel/prom.c
-@@ -16,6 +16,7 @@
- #include <linux/debugfs.h>
- #include <linux/of.h>
- #include <linux/of_fdt.h>
-+#include <linux/of_platform.h>
+ #define RESET_FROM_KSEG0		0x80080800
+ #define RESET_FROM_KSEG1		0xa0080800
+@@ -257,7 +258,7 @@ static void bmips_smp_finish(void)
+ 	write_c0_compare(read_c0_count() + mips_hpt_frequency / HZ);
  
- #include <asm/page.h>
- #include <asm/prom.h>
-@@ -54,4 +55,21 @@ void __init __dt_setup_arch(void *bph)
- 
- 	mips_set_machine_name(of_flat_dt_get_machine_name());
- }
-+
-+int __init __dt_register_buses(const char *bus0, const char *bus1)
-+{
-+	static struct of_device_id of_ids[3];
-+
-+	if (!of_have_populated_dt())
-+		panic("device tree not present");
-+
-+	strlcpy(of_ids[0].compatible, bus0, sizeof(of_ids[0].compatible));
-+	strlcpy(of_ids[1].compatible, bus1, sizeof(of_ids[1].compatible));
-+
-+	if (of_platform_populate(NULL, of_ids, NULL, NULL))
-+		panic("failed to populate DT");
-+
-+	return 0;
-+}
-+
- #endif
-diff --git a/arch/mips/lantiq/prom.c b/arch/mips/lantiq/prom.c
-index 7447d32..758970e 100644
---- a/arch/mips/lantiq/prom.c
-+++ b/arch/mips/lantiq/prom.c
-@@ -97,16 +97,7 @@ void __init prom_init(void)
- 
- int __init plat_of_setup(void)
- {
--	static struct of_device_id of_ids[3];
--
--	if (!of_have_populated_dt())
--		panic("device tree not present");
--
--	strlcpy(of_ids[0].compatible, soc_info.compatible,
--		sizeof(of_ids[0].compatible));
--	strncpy(of_ids[1].compatible, "simple-bus",
--		sizeof(of_ids[1].compatible));
--	return of_platform_populate(NULL, of_ids, NULL, NULL);
-+	return __dt_register_buses(soc_info.compatible, "simple-bus");
+ 	irq_enable_hazard();
+-	set_c0_status(IE_SW0 | IE_SW1 | IE_IRQ1 | IE_IRQ5 | ST0_IE);
++	set_c0_status(IE_SW0 | IE_SW1 | bmips_tp1_irqs | IE_IRQ5 | ST0_IE);
+ 	irq_enable_hazard();
  }
  
- arch_initcall(plat_of_setup);
-diff --git a/arch/mips/ralink/of.c b/arch/mips/ralink/of.c
-index 7c4598c..f68115f 100644
---- a/arch/mips/ralink/of.c
-+++ b/arch/mips/ralink/of.c
-@@ -74,19 +74,9 @@ void __init plat_mem_setup(void)
+@@ -387,7 +388,8 @@ void __ref play_dead(void)
+ 	 * IRQ handlers; this clears ST0_IE and returns immediately.
+ 	 */
+ 	clear_c0_cause(CAUSEF_IV | C_SW0 | C_SW1);
+-	change_c0_status(IE_IRQ5 | IE_IRQ1 | IE_SW0 | IE_SW1 | ST0_IE | ST0_BEV,
++	change_c0_status(
++		IE_IRQ5 | bmips_tp1_irqs | IE_SW0 | IE_SW1 | ST0_IE | ST0_BEV,
+ 		IE_SW0 | IE_SW1 | ST0_IE | ST0_BEV);
+ 	irq_disable_hazard();
  
- static int __init plat_of_setup(void)
- {
--	static struct of_device_id of_ids[3];
--	int len = sizeof(of_ids[0].compatible);
-+	__dt_register_buses(soc_info.compatible, "palmbus");
- 
--	if (!of_have_populated_dt())
--		panic("device tree not present");
--
--	strlcpy(of_ids[0].compatible, soc_info.compatible, len);
--	strlcpy(of_ids[1].compatible, "palmbus", len);
--
--	if (of_platform_populate(NULL, of_ids, NULL, NULL))
--		panic("failed to populate DT");
--
--	/* make sure ithat the reset controller is setup early */
-+	/* make sure that the reset controller is setup early */
- 	ralink_rst_init();
- 
- 	return 0;
 -- 
 2.1.1
 
