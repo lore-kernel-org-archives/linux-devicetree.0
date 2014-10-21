@@ -1,101 +1,81 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESUBMIT PATCH v4 1/8] mfd: Add support for Skyworks SKY81452
- driver
-Date: Tue, 21 Oct 2014 13:30:01 +0100
-Message-ID: <20141021123001.GA4939@x1>
-References: <1412657745-7812-1-git-send-email-jack.yoo@skyworksinc.com>
- <1413179262-27636-1-git-send-email-jack.yoo@skyworksinc.com>
- <1413179262-27636-2-git-send-email-jack.yoo@skyworksinc.com>
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH v2 5/5] tty/serial: Add earlycon support for Spreadtrum
+ serial driver
+Date: Tue, 21 Oct 2014 13:26:30 +0100
+Message-ID: <20141021132630.79ce15ba@alan.etchedpixels.co.uk>
+References: <1413539665-11484-1-git-send-email-chunyan.zhang@spreadtrum.com>
+ <1413539665-11484-6-git-send-email-chunyan.zhang@spreadtrum.com>
+ <20141018220615.33643542@alan.etchedpixels.co.uk>
+ <CA+H2tpH2dKFHxHUaGtr-vEqxZDtQ_MVTmQTnu5kn-zzUFyXk4Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1413179262-27636-2-git-send-email-jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CA+H2tpH2dKFHxHUaGtr-vEqxZDtQ_MVTmQTnu5kn-zzUFyXk4Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Orson Zhai <orsonzhai@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Zhizhou Zhang (
+ =?UTF-8?B?5byg5rK75rSy?=)" <zhizhou.zhang@spreadtrum.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@linaro.org>, Will Deacon <will.deacon@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Geng Ren (
+ =?UTF-8?B?5Lu76LWT?=)" <geng.ren@spreadtrum.com>, "rrichter@cavium.com" <rrichter@cavium.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, Kumar Gala <galak@codeaurora.org>, "jslaby@suse.cz" <jslaby@suse.cz>, sprdlinux <sprdlinux@freelists.org>, linux-arm-kernel@lists.inf
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 13 Oct 2014, Gyungoh Yoo wrote:
+On Mon, 20 Oct 2014 18:23:38 +0800
+Orson Zhai <orsonzhai@gmail.com> wrote:
 
-> Signed-off-by: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-> ---
-> Changes v4:
-> Removed MODULE_VERSION()
-> Modified license to GPLv2
->=20
-> Changes v3:
-> Fixed the backlight name from 'sky81452-bl' to 'sky81452-backlight'
-> Assigned mfd_cell.of_compatible for binding device node
-> Modified error messages
->=20
-> Changes v2:
-> Renamed CONFIG_SKY81452 to CONFIG_MFD_SKY81452
-> Changed the dependency from I2C=3Dy to I2C, for CONFIG_MFD_SKY81452
-> Added message for exception or errors
->=20
->  drivers/mfd/Kconfig          |  12 +++++
->  drivers/mfd/Makefile         |   1 +
->  drivers/mfd/sky81452.c       | 110 +++++++++++++++++++++++++++++++++=
-++++++++++
->  include/linux/mfd/sky81452.h |  32 +++++++++++++
->  4 files changed, 155 insertions(+)
->  create mode 100644 drivers/mfd/sky81452.c
->  create mode 100644 include/linux/mfd/sky81452.h
+> On Sun, Oct 19, 2014 at 5:06 AM, One Thousand Gnomes
+> <gnomes@lxorguk.ukuu.org.uk> wrote:
+> > On Fri, 17 Oct 2014 17:54:25 +0800
+> > Chunyan Zhang <chunyan.zhang@spreadtrum.com> wrote:
+> >
+> >> Add serial driver for spreadtrum sharkl platform with earlycon
+> >> support at first.
+> >
+> >> +#define UART_TXD     0x0000
+> >> +#define UART_RXD     0x0004
+> >> +#define UART_STS0    0x0008
+> >> +#define UART_STS1    0x000C
+> >> +#define UART_IEN     0x0010
+> >> +#define UART_ICLR    0x0014
+> >> +#define UART_CTL0    0x0018
+> >> +#define UART_CTL1    0x001C
+> >> +#define UART_CTL2    0x0020
+> >> +#define UART_CLKD0   0x0024
+> >> +#define UART_CLKD1   0x0028
+> >> +#define UART_STS2    0x002C
+> >> +
+> >> +/*line status */
+> >> +#define UART_LSR_TX_OVER     (0x1<<15)
+> >
+> > Given we use UART_ for all the 8250 defines it might be better to use
+> > something else - SHARK_LSR_TX_OVER etc to avoid future confusion
+> >
+> 
+> Does it matter if those macro are only used in the specific c file?
+> >From my point of  view, private register macro could be treated as
+> static definitions like static variable or functions in C file.
+> I also noted that many people use a prefix for the other
+> manufacturers' macro definition in source file .
+> I have no intention to break the habit of kernel but just for discussion.
 
-[...]
+Your problem is this. In the kernel headers are definitions like
 
-> +++ b/include/linux/mfd/sky81452.h
-> @@ -0,0 +1,32 @@
-> +/*
-> + * sky81452.h	SKY81452 MFD driver
-> + *
-> + * Copyright 2014 Skyworks Solutions Inc.
-> + * Author : Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify it
-> + * under the terms of the GNU General Public License as published by=
- the
-> + * Free Software Foundation; either version 2, or (at your option) a=
-ny
-> + * later version.
-> + *
-> + * This program is distributed in the hope that it will be useful, b=
-ut
-> + * WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> + * General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License=
- along
-> + * with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef _SKY81452_H
-> +#define _SKY81452_H
-> +
-> +#include <linux/sky81452-backlight.h>
+include/uapi/linux/serial_reg.h:#define UART_TX 0	/* Out: Transmit
+buffer */
 
-Shouldn't this live in linux/platform_data?
+you are adding identical (but conflicting in places) defines. If some
+random change in the include files causes serial_reg.h to be included by
+a header you include then it will break.
 
-> +#include <linux/regulator/machine.h>
-> +
-> +struct sky81452_platform_data {
-> +	struct sky81452_bl_platform_data *bl_pdata;
-> +	struct regulator_init_data *regulator_init_data;
-> +};
-> +
-> +#endif
+In addition people habitually use tools like LXR to figure out where
+defines and functions are. Having these conflicting definitions will
+cause confusion. Better they have prefixes.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alan
