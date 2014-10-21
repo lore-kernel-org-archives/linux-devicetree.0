@@ -1,69 +1,113 @@
-From: Mark yao <mark.yao@rock-chips.com>
-Subject: [GIT PULL] core drm support for Rockchip SoCs
-Date: Tue, 21 Oct 2014 08:43:09 +0800
-Message-ID: <5445AC1D.8010007@rock-chips.com>
-References: <1412763781-31533-1-git-send-email-mark.yao@rock-chips.com>
+From: Lyra Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH 2/6] arm64: Add DTS support for Spreadtrum's Shark64 SoC
+Date: Tue, 21 Oct 2014 09:28:45 +0800
+Message-ID: <CAAfSe-vKoAdZVtAaokzCy6jkubsDQhV14jwA=QpucMtcaUbu5g@mail.gmail.com>
+References: <1411992293-7729-1-git-send-email-zhang.lyra@gmail.com>
+	<4004425.NZAxCnE0qr@wuerfel>
+	<CAAfSe-tPynLarYRzsTw3vncp8CB0EnoaR_Z6tPQNA7DEV7+w9Q@mail.gmail.com>
+	<1799842.6CvQjvbUTo@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1412763781-31533-1-git-send-email-mark.yao@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: heiko@sntech.de, Boris BREZILLON <boris.brezillon@free-electrons.com>, David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-api@vger.kernel.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, marcheu@chromium.org, dbehr@chromium.org, olof@lixom.net, djkurtz@chromium.org, xjq@rock-chips.com, kfx@rock-chips.com, cym@rock-chips.com, cf@rock-chips.com, zyw@rock-chips.com, xxm@rock-chips.com, huangtao@rock-chips.com, kever.yang@rock-chips.com, yxj@rock-chips.com, wxt@rock-chips.com, xw@rock-chips.com, Mark Yao <mark.yao@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1799842.6CvQjvbUTo@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "jslaby@suse.cz" <jslaby@suse.cz>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, Pawel Moll <pawel.moll@arm.com>, Ramkumar Ramachandra <artagnon@gmail.com>, "rrichter@cavium.com" <rrichter@cavium.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Orson Zhai <orsonzhai@gmail.com>, "geng.ren@spreadtrum.com" <geng.ren@spreadtrum.com>, "zhizhou.zhang" <zhizhou.zhang@spreadtrum.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.ke>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Dave
+Hi, Arnd
 
-The following changes since commit bfe01a5ba2490f299e1d2d5508cbbbadd897bbe9:
+This problem have been solved, and was submitted in v2.
+Thanks for your answer to the question(which Orson asked for me) about
+this on Freenode.
 
-    Linux 3.17 (2014-10-05 12:23:04 -0700)
+Best regards,
+Lyra
 
-are available in the git repository at:
-
-    https://github.com/markyzq/kernel-drm-rockchip.git  drmrockchip
-
-for you to fetch changes up to 45bb5f4e7e82b30e9e7069c73441413680c9a59f:
-
-    dt-bindings: video: Add documentation for rockchip vop (2014-10-17
-16:39:31 +0800)
-
-----------------------------------------------------------------
-Mark yao (3):
-        drm: rockchip: Add basic drm driver
-        dt-bindings: video: Add for rockchip display subsytem
-        dt-bindings: video: Add documentation for rockchip vop
-
-   .../devicetree/bindings/video/rockchip-drm.txt     |   19 +
-   .../devicetree/bindings/video/rockchip-vop.txt     |   58 +
-   drivers/gpu/drm/Kconfig                            |    2 +
-   drivers/gpu/drm/Makefile                           |    1 +
-   drivers/gpu/drm/rockchip/Kconfig                   |   17 +
-   drivers/gpu/drm/rockchip/Makefile                  |    8 +
-   drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |  449 ++++++
-   drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   54 +
-   drivers/gpu/drm/rockchip/rockchip_drm_fb.c         |  200 +++
-   drivers/gpu/drm/rockchip/rockchip_drm_fb.h         |   28 +
-   drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c      |  210 +++
-   drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h      |   20 +
-   drivers/gpu/drm/rockchip/rockchip_drm_gem.c        |  293 ++++
-   drivers/gpu/drm/rockchip/rockchip_drm_gem.h        |   54 +
-   drivers/gpu/drm/rockchip/rockchip_drm_vop.c        | 1427 ++++++++++++++++++++
-   drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |  196 +++
-   16 files changed, 3036 insertions(+)
-   create mode 100644 Documentation/devicetree/bindings/video/rockchip-drm.txt
-   create mode 100644 Documentation/devicetree/bindings/video/rockchip-vop.txt
-   create mode 100644 drivers/gpu/drm/rockchip/Kconfig
-   create mode 100644 drivers/gpu/drm/rockchip/Makefile
-   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_drv.h
-   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fb.h
-   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c
-   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h
-   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_gem.h
-   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-
-
+2014-10-21 3:00 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+> On Wednesday 15 October 2014 11:17:07 Lyra Zhang wrote:
+>> Hi, Arnd
+>
+> Hi Lyra,
+>
+> Sorry for the late reply, I've been away travelling and am just
+> now catching up on email. Have you found a solution or do
+> you still need help with this?
+>
+>         Arnd
+>
+>> 2014-09-29 21:47 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+>> > On Monday 29 September 2014 20:04:49 zhang.lyra@gmail.com wrote:
+>> >> +
+>> >> +/memreserve/ 0x80000000 0x00010000;
+>> >
+>> > Maybe add a comment explaining why it is reserved?
+>> >
+>> >> +     chosen {
+>> >> +             bootargs = "earlycon=serial_sprd,0x70000000";
+>> >> +      };
+>> >
+>> > Just remove this for now, the command line should really be set by the
+>> > boot loader, not hardcoded in the dts file.
+>> >
+>> > IIRC, the earlycon=... syntax is not recommended on DT based systems,
+>> > better use the "stdout-path" syntax instead.
+>> >
+>>
+>> I have tried to use  "stdout-path" instead of "bootargs= "earlycon=
+>> ..." like below :
+>>
+>> / {
+>>      ...
+>>
+>>      chosen {
+>>              stdout-path = "/serial@70000000";
+>>       };
+>>
+>>      uart0: serial@70000000 {
+>>              status="okay";
+>>      };
+>>       ...
+>> };
+>>
+>> But then there is nothing output information on serial console.(I have
+>> been testing in Fast Model)
+>>
+>>
+>> I saw the below code in init/main.c
+>>
+>> /* Check for early params. */
+>> static int __init do_early_param(char *param, char *val, const char *unused)
+>> {
+>> const struct obs_kernel_param *p;
+>>
+>> for (p = __setup_start; p < __setup_end; p++) {
+>> if ((p->early && parameq(param, p->str)) ||
+>>    (strcmp(param, "console") == 0 &&
+>>     strcmp(p->str, "earlycon") == 0)
+>> ) {
+>> if (p->setup_func(val) != 0)
+>> pr_warn("Malformed early option '%s'\n", param);
+>> }
+>> }
+>> /* We accept everything at this stage. */
+>> return 0;
+>> }
+>>
+>> And I saw a patch from Grant Likely, he had a comment in it :
+>> "If the devicetree specifies a serial port as a stdout device, then the
+>> kernel can use it as the default console if nothing else was selected on
+>> the command line. For any serial port that uses the uart_add_one_port()
+>> feature, the uart_add_one_port() has all the information needed to
+>> automatically enable the console device, which is what this patch does."
+>>
+>> So, I guess that the reason why I can't see any output information on
+>> console after using "stdout-path" instead of "earlycon" is that I
+>> haven't a driver of Spreadtrum's serial, and dose not use  the
+>> uart_add_one_port() feature.
+>>
+>> I don't know is correct what I guess.
+>>
+>> Could you give me some suggestions to solve this problem?
+>>
+>
