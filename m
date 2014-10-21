@@ -1,78 +1,87 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH] ARM: dts: dra7-evm: Keep all VDD rails always-on
-Date: Tue, 21 Oct 2014 09:38:10 -0500
-Message-ID: <1413902290-304-1-git-send-email-nm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Nishanth Menon <nm@ti.com>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v2 04/12] of: document new emc-timings subnode in nvidia,tegra124-car
+Date: Tue, 21 Oct 2014 16:45:36 +0200
+Message-ID: <1413902788-7727-5-git-send-email-tomeu.vizoso@collabora.com>
+References: <1413902788-7727-1-git-send-email-tomeu.vizoso@collabora.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413902788-7727-1-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DRA7 Data Manual (SPRS857L - August 2014) section 4.1.1 states: "All
-unused power supply balls must be supplied with the voltages specified
-in the Section 5.2, Recommended Operating Conditions".
+The EMC clock needs some extra information for changing its rate.
 
-This implies that all unused voltage rails for Vayu can never be
-switched off even if the hardware blocks inside that voltage domain is
-unused. Switching off these unused rails may result in stability issues
-on other domains and increased leakage and power-on-hour impacts.
-
-J6eco-evm dts file already considers this, however j6evm-dts file needs
-to be fixed to consider this constraint of the SoC.
-
-Signed-off-by: Nishanth Menon <nm@ti.com>
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 ---
+ .../bindings/clock/nvidia,tegra124-car.txt         | 46 +++++++++++++++++++++-
+ 1 file changed, 44 insertions(+), 2 deletions(-)
 
-Patch is based on v3.18-rc1 tag.
-
- arch/arm/boot/dts/dra7-evm.dts |    5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index c6ce625..4f4c469 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -201,6 +201,7 @@
- 					regulator-name = "smps45";
- 					regulator-min-microvolt = < 850000>;
- 					regulator-max-microvolt = <1150000>;
-+					regulator-always-on;
- 					regulator-boot-on;
- 				};
+diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+index ded5d62..42e0588 100644
+--- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
++++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+@@ -19,12 +19,35 @@ Required properties :
+   In clock consumers, this cell represents the bit number in the CAR's
+   array of CLK_RST_CONTROLLER_RST_DEVICES_* registers.
  
-@@ -209,6 +210,7 @@
- 					regulator-name = "smps6";
- 					regulator-min-microvolt = <850000>;
- 					regulator-max-microvolt = <12500000>;
-+					regulator-always-on;
- 					regulator-boot-on;
- 				};
++The node should contain a "emc-timings" subnode for each supported RAM type (see
++field RAM_CODE in register PMC_STRAPPING_OPT_A), with its unit address being its
++RAM_CODE.
++
++Required properties for "emc-timings" nodes :
++- nvidia,ram-code : Should contain the value of RAM_CODE this timing set
++  is used for.
++
++Each "emc-timings" node should contain a "timing" subnode for every supported
++EMC clock rate. The "timing" subnodes should have the clock rate in Hz as their
++unit address.
++
++Required properties for "timing" nodes :
++- clock-frequency : Should contain the memory clock rate to which this timing
++relates.
++- nvidia,parent-clock-frequency : Should contain the rate at which the current
++parent of the EMC clock should be running at this timing.
++- clocks : Must contain an entry for each entry in clock-names.
++  See ../clocks/clock-bindings.txt for details.
++- clock-names : Must include the following entries:
++  - emc-parent : the clock that should be the parent of the EMC clock at this
++timing.
++
+ Example SoC include file:
  
-@@ -226,6 +228,7 @@
- 					regulator-name = "smps8";
- 					regulator-min-microvolt = < 850000>;
- 					regulator-max-microvolt = <1250000>;
-+					regulator-always-on;
- 					regulator-boot-on;
- 				};
- 
-@@ -252,6 +255,7 @@
- 					regulator-name = "ldo2";
- 					regulator-min-microvolt = <3300000>;
- 					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
- 					regulator-boot-on;
- 				};
- 
-@@ -269,6 +273,7 @@
- 					regulator-name = "ldo9";
- 					regulator-min-microvolt = <1050000>;
- 					regulator-max-microvolt = <1050000>;
-+					regulator-always-on;
- 					regulator-boot-on;
- 				};
- 
+ / {
+-	tegra_car: clock {
++	tegra_car: clock@0,60006000 {
+ 		compatible = "nvidia,tegra124-car";
+-		reg = <0x60006000 0x1000>;
++		reg = <0x0 0x60006000 0x0 0x1000>;
+ 		#clock-cells = <1>;
+ 		#reset-cells = <1>;
+ 	};
+@@ -60,4 +83,23 @@ Example board file:
+ 	&tegra_car {
+ 		clocks = <&clk_32k> <&osc>;
+ 	};
++
++	clock@0,60006000 {
++		emc-timings@3 {
++			nvidia,ram-code = <3>;
++
++			timing@12750000 {
++				clock-frequency = <12750000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing@20400000 {
++				clock-frequency = <20400000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++		};
++	};
+ };
 -- 
-1.7.9.5
+1.9.3
