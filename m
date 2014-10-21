@@ -1,113 +1,245 @@
-From: Lyra Zhang <zhang.lyra@gmail.com>
-Subject: Re: [PATCH 2/6] arm64: Add DTS support for Spreadtrum's Shark64 SoC
-Date: Tue, 21 Oct 2014 09:28:45 +0800
-Message-ID: <CAAfSe-vKoAdZVtAaokzCy6jkubsDQhV14jwA=QpucMtcaUbu5g@mail.gmail.com>
-References: <1411992293-7729-1-git-send-email-zhang.lyra@gmail.com>
-	<4004425.NZAxCnE0qr@wuerfel>
-	<CAAfSe-tPynLarYRzsTw3vncp8CB0EnoaR_Z6tPQNA7DEV7+w9Q@mail.gmail.com>
-	<1799842.6CvQjvbUTo@wuerfel>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v8] coresight: bindings for coresight drivers
+Date: Tue, 21 Oct 2014 09:36:37 +0800
+Message-ID: <CAL_Jsq+KBDscRO0BFhuYRUHsK_dtDjUO015owwJCFKyQ0E9zBA@mail.gmail.com>
+References: <1413839635-20519-1-git-send-email-mathieu.poirier@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1799842.6CvQjvbUTo@wuerfel>
+In-Reply-To: <1413839635-20519-1-git-send-email-mathieu.poirier@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "jslaby@suse.cz" <jslaby@suse.cz>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, Pawel Moll <pawel.moll@arm.com>, Ramkumar Ramachandra <artagnon@gmail.com>, "rrichter@cavium.com" <rrichter@cavium.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Orson Zhai <orsonzhai@gmail.com>, "geng.ren@spreadtrum.com" <geng.ren@spreadtrum.com>, "zhizhou.zhang" <zhizhou.zhang@spreadtrum.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.ke>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Arnd
+On Tue, Oct 21, 2014 at 5:13 AM,  <mathieu.poirier@linaro.org> wrote:
+> From: Mathieu Poirier <mathieu.poirier@linaro.org>
+>
+> Coresight IP blocks allow for the support of HW assisted tracing
+> on ARM SoCs.  Bindings for the currently available blocks are
+> presented herein.
+>
+> Signed-off-by: Pratik Patel <pratikp@codeaurora.org>
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-This problem have been solved, and was submitted in v2.
-Thanks for your answer to the question(which Orson asked for me) about
-this on Freenode.
+Didn't I give you a reviewed-by on this already?
 
-Best regards,
-Lyra
+Rob
 
-2014-10-21 3:00 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
-> On Wednesday 15 October 2014 11:17:07 Lyra Zhang wrote:
->> Hi, Arnd
+> ---
+>  .../devicetree/bindings/arm/coresight.txt          | 203 +++++++++++++++++++++
+>  1 file changed, 203 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/coresight.txt
 >
-> Hi Lyra,
->
-> Sorry for the late reply, I've been away travelling and am just
-> now catching up on email. Have you found a solution or do
-> you still need help with this?
->
->         Arnd
->
->> 2014-09-29 21:47 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
->> > On Monday 29 September 2014 20:04:49 zhang.lyra@gmail.com wrote:
->> >> +
->> >> +/memreserve/ 0x80000000 0x00010000;
->> >
->> > Maybe add a comment explaining why it is reserved?
->> >
->> >> +     chosen {
->> >> +             bootargs = "earlycon=serial_sprd,0x70000000";
->> >> +      };
->> >
->> > Just remove this for now, the command line should really be set by the
->> > boot loader, not hardcoded in the dts file.
->> >
->> > IIRC, the earlycon=... syntax is not recommended on DT based systems,
->> > better use the "stdout-path" syntax instead.
->> >
->>
->> I have tried to use  "stdout-path" instead of "bootargs= "earlycon=
->> ..." like below :
->>
->> / {
->>      ...
->>
->>      chosen {
->>              stdout-path = "/serial@70000000";
->>       };
->>
->>      uart0: serial@70000000 {
->>              status="okay";
->>      };
->>       ...
->> };
->>
->> But then there is nothing output information on serial console.(I have
->> been testing in Fast Model)
->>
->>
->> I saw the below code in init/main.c
->>
->> /* Check for early params. */
->> static int __init do_early_param(char *param, char *val, const char *unused)
->> {
->> const struct obs_kernel_param *p;
->>
->> for (p = __setup_start; p < __setup_end; p++) {
->> if ((p->early && parameq(param, p->str)) ||
->>    (strcmp(param, "console") == 0 &&
->>     strcmp(p->str, "earlycon") == 0)
->> ) {
->> if (p->setup_func(val) != 0)
->> pr_warn("Malformed early option '%s'\n", param);
->> }
->> }
->> /* We accept everything at this stage. */
->> return 0;
->> }
->>
->> And I saw a patch from Grant Likely, he had a comment in it :
->> "If the devicetree specifies a serial port as a stdout device, then the
->> kernel can use it as the default console if nothing else was selected on
->> the command line. For any serial port that uses the uart_add_one_port()
->> feature, the uart_add_one_port() has all the information needed to
->> automatically enable the console device, which is what this patch does."
->>
->> So, I guess that the reason why I can't see any output information on
->> console after using "stdout-path" instead of "earlycon" is that I
->> haven't a driver of Spreadtrum's serial, and dose not use  the
->> uart_add_one_port() feature.
->>
->> I don't know is correct what I guess.
->>
->> Could you give me some suggestions to solve this problem?
->>
+> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> new file mode 100644
+> index 0000000..96dd947
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> @@ -0,0 +1,203 @@
+> +* CoreSight Components:
+> +
+> +CoreSight components are compliant with the ARM CoreSight architecture
+> +specification and can be connected in various topologies to suit a particular
+> +SoCs tracing needs. These trace components can generally be classified as sinks,
+> +links and sources. Trace data produced by one or more sources flows through the
+> +intermediate links connecting the source to the currently selected sink. Each
+> +CoreSight component device should use these properties to describe its hardware
+> +characteristcs.
+> +
+> +* Required properties for all components *except* non-configurable replicators:
+> +
+> +       * compatible: These have to be supplemented with "arm,primecell" as
+> +         drivers are using the AMBA bus interface.  Possible values include:
+> +               - "arm,coresight-etb10", "arm,primecell";
+> +               - "arm,coresight-tpiu", "arm,primecell";
+> +               - "arm,coresight-tmc", "arm,primecell";
+> +               - "arm,coresight-funnel", "arm,primecell";
+> +               - "arm,coresight-etm3x", "arm,primecell";
+> +
+> +       * reg: physical base address and length of the register
+> +         set(s) of the component.
+> +
+> +       * clocks: the clock associated to this component.
+> +
+> +       * clock-names: the name of the clock as referenced by the code.
+> +         Since we are using the AMBA framework, the name should be
+> +         "apb_pclk".
+> +
+> +       * port or ports: The representation of the component's port
+> +         layout using the generic DT graph presentation found in
+> +         "bindings/graph.txt".
+> +
+> +* Required properties for devices that don't show up on the AMBA bus, such as
+> +  non-configurable replicators:
+> +
+> +       * compatible: Currently supported value is (note the absence of the
+> +         AMBA markee):
+> +               - "arm,coresight-replicator"
+> +
+> +       * id: a unique number that will identify this replicator.
+> +
+> +       * port or ports: same as above.
+> +
+> +* Optional properties for ETM/PTMs:
+> +
+> +       * arm,cp14: must be present if the system accesses ETM/PTM management registers
+> +         via co-processor 14.
+> +
+> +       * cpu: the cpu phandle this ETM/PTM is affined to. When omitted the source is
+> +         considered to belong to CPU0.
+> +
+> +* Optional property for TMC:
+> +
+> +       * arm,buffer-size: size of contiguous buffer space for TMC ETR
+> +        (embedded trace router)
+> +
+> +
+> +Example:
+> +
+> +1. Sinks
+> +       etb@0,20010000 {
+> +               compatible = "arm,coresight-etb10", "arm,primecell";
+> +               reg = <0 0x20010000 0 0x1000>;
+> +
+> +               coresight-default-sink;
+> +               clocks = <&oscclk6a>;
+> +               clock-names = "apb_pclk";
+> +               port {
+> +                       etb_in_port: endpoint@0 {
+> +                               slave-mode;
+> +                               remote-endpoint = <&replicator_out_port0>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       tpiu@0,20030000 {
+> +               compatible = "arm,coresight-tpiu", "arm,primecell";
+> +               reg = <0 0x20030000 0 0x1000>;
+> +
+> +               clocks = <&oscclk6a>;
+> +               clock-names = "apb_pclk";
+> +               port {
+> +                       tpiu_in_port: endpoint@0 {
+> +                               slave-mode;
+> +                               remote-endpoint = <&replicator_out_port1>;
+> +                       };
+> +               };
+> +       };
+> +
+> +2. Links
+> +       replicator {
+> +               /* non-configurable replicators don't show up on the
+> +                * AMBA bus.  As such no need to add "arm,primecell".
+> +                */
+> +               compatible = "arm,coresight-replicator";
+> +               /* this will show up in debugfs as "0.replicator" */
+> +               id = <0>;
+> +
+> +               ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       /* replicator output ports */
+> +                       port@0 {
+> +                               reg = <0>;
+> +                               replicator_out_port0: endpoint {
+> +                                       remote-endpoint = <&etb_in_port>;
+> +                               };
+> +                       };
+> +
+> +                       port@1 {
+> +                               reg = <1>;
+> +                               replicator_out_port1: endpoint {
+> +                                       remote-endpoint = <&tpiu_in_port>;
+> +                               };
+> +                       };
+> +
+> +                       /* replicator input port */
+> +                       port@2 {
+> +                               reg = <0>;
+> +                               replicator_in_port0: endpoint {
+> +                                       slave-mode;
+> +                                       remote-endpoint = <&funnel_out_port0>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+> +       funnel@0,20040000 {
+> +               compatible = "arm,coresight-funnel", "arm,primecell";
+> +               reg = <0 0x20040000 0 0x1000>;
+> +
+> +               clocks = <&oscclk6a>;
+> +               clock-names = "apb_pclk";
+> +               ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       /* funnel output port */
+> +                       port@0 {
+> +                               reg = <0>;
+> +                               funnel_out_port0: endpoint {
+> +                                       remote-endpoint = <&replicator_in_port0>;
+> +                               };
+> +                       };
+> +
+> +                       /* funnel input ports */
+> +                       port@1 {
+> +                               reg = <0>;
+> +                               funnel_in_port0: endpoint {
+> +                                       slave-mode;
+> +                                       remote-endpoint = <&ptm0_out_port>;
+> +                               };
+> +                       };
+> +
+> +                       port@2 {
+> +                               reg = <1>;
+> +                               funnel_in_port1: endpoint {
+> +                                       slave-mode;
+> +                                       remote-endpoint = <&ptm1_out_port>;
+> +                               };
+> +                       };
+> +
+> +                       port@3 {
+> +                               reg = <2>;
+> +                               funnel_in_port2: endpoint {
+> +                                       slave-mode;
+> +                                       remote-endpoint = <&etm0_out_port>;
+> +                               };
+> +                       };
+> +
+> +               };
+> +       };
+> +
+> +3. Sources
+> +       ptm@0,2201c000 {
+> +               compatible = "arm,coresight-etm3x", "arm,primecell";
+> +               reg = <0 0x2201c000 0 0x1000>;
+> +
+> +               cpu = <&cpu0>;
+> +               clocks = <&oscclk6a>;
+> +               clock-names = "apb_pclk";
+> +               port {
+> +                       ptm0_out_port: endpoint {
+> +                               remote-endpoint = <&funnel_in_port0>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       ptm@0,2201d000 {
+> +               compatible = "arm,coresight-etm3x", "arm,primecell";
+> +               reg = <0 0x2201d000 0 0x1000>;
+> +
+> +               cpu = <&cpu1>;
+> +               clocks = <&oscclk6a>;
+> +               clock-names = "apb_pclk";
+> +               port {
+> +                       ptm1_out_port: endpoint {
+> +                               remote-endpoint = <&funnel_in_port1>;
+> +                       };
+> +               };
+> +       };
+> --
+> 1.9.1
 >
