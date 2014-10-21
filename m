@@ -1,56 +1,61 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: GPIO bindings guidelines (Was: Re: [PATCH v5 10/12] gpio: Support for unified device properties interface)
-Date: Tue, 21 Oct 2014 09:54:45 +0200
-Message-ID: <4582579.9WMrIMALsy@wuerfel>
-References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 05/47] mfd: as3722: Drop reference to pm_power_off
+ from devicetree bindings
+Date: Tue, 21 Oct 2014 09:15:15 +0100
+Message-ID: <20141021081515.GD26842@x1>
+References: <1413864783-3271-1-git-send-email-linux@roeck-us.net>
+ <1413864783-3271-6-git-send-email-linux@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1413864783-3271-6-git-send-email-linux@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 21 October 2014 14:14:02 Alexandre Courbot wrote:
-> >
-> > We have enforced naming things for the dmaengine binding, which has
-> > just led to everyone calling things "rx" and "tx". My fear is that
-> > if we start to enforce giving a name, we'd end up with lots of
-> > drivers that use a "gpio-gpios" property or something silly.
-> 
-> Checking the bindings is also part of the review process.  Things
-> like "gpio-gpios" should simply not be accepted to begin with.
-> 
-> This sounds like a good chance to finally land some guidelines
-> regarding GPIO bindings. Let's summarize the situation:
-> - GPIO bindings can be defined using both DT and ACPI (both interfaces
-> nicely abstracted by the interface introduced by this series)
-> - Both firmware interfaces support indexed GPIOs
-> - Both firmware interfaces support named GPIO properties, with an
-> optional index (can we absolutely take this for granted on ACPI now?)
+On Mon, 20 Oct 2014, Guenter Roeck wrote:
 
-The developers working on it have said that they definitely want to
-be compatible with the existing bindings, so the answer to your question
-is yes.
+> Devicetree bindings are supposed to be operating system independent
+> and should thus not describe how a specific functionality is implemen=
+ted
+> in Linux.
+>=20
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+> v2: No change
+>=20
+>  Documentation/devicetree/bindings/mfd/as3722.txt | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 
-> - For DT bindings, both foo-gpio and foo-gpios are valid properties
-> for the GPIO "foo".
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-I would like to see the documentation recommend one over the other for
-new bindings. Most other subsystems use the plural form even for
-properties that only have one entry, so I'd like to see "foo-gpios"
-become the canonical form for named gpio lines. Drivers that use
-existing bindings with the "foo-gpio" form (or worse, "foo-somethingelse"
-can use the same internal interface as the drivers that use name plus
-index. Do you see a problem using what I suggested for the combined
-API:
+> diff --git a/Documentation/devicetree/bindings/mfd/as3722.txt b/Docum=
+entation/devicetree/bindings/mfd/as3722.txt
+> index 4f64b2a..0b2a609 100644
+> --- a/Documentation/devicetree/bindings/mfd/as3722.txt
+> +++ b/Documentation/devicetree/bindings/mfd/as3722.txt
+> @@ -122,8 +122,7 @@ Following are properties of regulator subnode.
+> =20
+>  Power-off:
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D
+> -AS3722 supports the system power off by turning off all its rail. Th=
+is
+> -is provided through pm_power_off.
+> +AS3722 supports the system power off by turning off all its rails.
+>  The device node should have the following properties to enable this
+>  functionality
+>  ams,system-power-controller: Boolean, to enable the power off functi=
+onality
 
-__gpiod_get(dev, propname, index); // use property name plus index
-gpiod_get(dev, index); // use "gpios" plus index
-gpiod_get_named(dev, "name"); use "name-gpios" with index 0
-
-plus all fwprop/devm/flags/of/... variations of that
-
-	Arnd
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
