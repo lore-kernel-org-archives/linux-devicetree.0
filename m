@@ -1,53 +1,50 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v2 6/7] arm64: dts: Add nodes for mmc, i2c, rtc, watchdog
- on Exynos7
-Date: Tue, 21 Oct 2014 16:00:15 +0200
-Message-ID: <544666EF.9000606@gmail.com>
-References: <1413870237-1821-1-git-send-email-a.kesavan@samsung.com> <1413870237-1821-7-git-send-email-a.kesavan@samsung.com> <CAGOxZ50=1ebU=8r6S_4rbL=82zb3asFTGEjkzNrJPjTkjEGfXg@mail.gmail.com>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] MAINTAINERS: Update entry for omap related .dts files to cover new SoCs
+Date: Tue, 21 Oct 2014 09:24:22 -0500
+Message-ID: <1413901462-32181-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAGOxZ50=1ebU=8r6S_4rbL=82zb3asFTGEjkzNrJPjTkjEGfXg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "catalin.marinas" <catalin.marinas@arm.com>, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, robh <robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 21.10.2014 15:52, Alim Akhtar wrote:
->> +&mmc_0 {
->> +       status = "okay";
->> +       num-slots = <1>;
->> +       broken-cd;
->> +       caps2-mmc-hs200-1_8v;
-> Please use mmc_hs200-1_8v instead.
+DRA7(including AM5x) and AM47x series are handled under OMAP umbrella.
+These SoC support and dts have been added since 3.14 kernel and Pull
+requests for these have come in from OMAP till date.
 
-I guess you mean "mmc-hs200-1_8v" (with a hyphen between mmc and hs200).
+So just ensure that get_maintainers can pick up this list as well.
 
->> +       supports-highspeed;
-> As per synopsys-dw-mshc DT binding documentation, supports-highspeed
-> property is deprecated, so please use common DT binding for this,
-> which is "cap-mmc-highspeed".
->> +       non-removable;
->> +       card-detect-delay = <200>;
->> +       clock-frequency = <800000000>;
->> +       samsung,dw-mshc-ciu-div = <3>;
->> +       samsung,dw-mshc-sdr-timing = <0 4>;
->> +       samsung,dw-mshc-ddr-timing = <0 2>;
->> +       pinctrl-names = "default";
->> +       pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_qrdy &sd0_bus1 &sd0_bus4 &sd0_bus8>;
->> +       bus-width = <8>;
->> +};
->> +
->> +&mmc_2 {
->> +       status = "okay";
->> +       num-slots = <1>;
->> +       supports-highspeed;
-> Here also common DT binding please "cap-sd-highspeed"
+Cc: Beno=C3=AEt Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+---
+ MAINTAINERS |    3 +++
+ 1 file changed, 3 insertions(+)
 
-Above you suggest "cap-mmc-highspeed" to replace the same deprecated
-property, but here "cap-sd-highspeed". What is the rationale behind
-using only one particular new property and not both for both controllers?
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a20df9b..e205bd2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6585,6 +6585,9 @@ L:	devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ S:	Maintained
+ F:	arch/arm/boot/dts/*omap*
+ F:	arch/arm/boot/dts/*am3*
++F:	arch/arm/boot/dts/*am4*
++F:	arch/arm/boot/dts/*am5*
++F:	arch/arm/boot/dts/*dra7*
+=20
+ OMAP CLOCK FRAMEWORK SUPPORT
+ M:	Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+--=20
+1.7.9.5
 
-Best regards,
-Tomasz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
