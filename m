@@ -1,92 +1,36 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] mtd: nand: add sunxi NFC dt bindings doc
-Date: Tue, 21 Oct 2014 18:01:03 +0200
-Message-ID: <20141021180103.37ca7357@bbrezillon>
-References: <1413805520-14947-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1413805520-14947-3-git-send-email-boris.brezillon@free-electrons.com>
-	<20141021024134.GC1193@ld-irv-0074>
-	<20141021145344.575b19e6@bbrezillon>
-	<62d54110-9c7f-4342-9201-a1ae23194620@googlegroups.com>
-	<20141021155841.180861d0@bbrezillon>
-	<89bb5f8e-2fb0-4012-a8b2-fdd618da8f11@googlegroups.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH] ARM: dts: DRA7: Add aliases for all serial ports
+Date: Tue, 21 Oct 2014 11:18:15 -0500
+Message-ID: <1413908295-699-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBSMGTKRAKGQENGIJ44Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <89bb5f8e-2fb0-4012-a8b2-fdd618da8f11-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Ezaul Zillmer <ezaulzillmer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, "Franklin Cooper Jr." <fcooper@ti.com>, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Oct 2014 08:03:57 -0700 (PDT)
-Ezaul Zillmer <ezaulzillmer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Add serial port aliases for consoles > 6.
 
-> results 
-> {"K9GBG08U0A 32G 3.3V 8-bit",
-> { .id = {0xec, 0xd7, 0x94, 0x7a, 0x54, 0x43} },
->   SZ_8K, SZ_4K, SZ_1M, 0, 6, 640, NAND_ECC_INFO(24, SZ_1K) },
-> 
-> 
-> Start this in the attached image
-> ..................................................................
-> 
-> [   20.127045] Bad eraseblock 2900 at 0x0000b54fe000
-> [   20.134025] Bad eraseblock 2901 at 0x0000b55fe000
-> [   20.140993] Bad eraseblock 2902 at 0x0000b56fe000
-> [   20.147973] Bad eraseblock 2903 at 0x0000b57fe000
-> [   20.154952] Bad eraseblock 2904 at 0x0000b58fe000
-> [   20.161932] Bad eraseblock 2905 at 0x0000b59fe000
-> [   20.168900] Bad eraseblock 2906 at 0x0000b5afe000
-> [   20.175878] Bad eraseblock 2907 at 0x0000b5bfe000
-> [   20.182861] Bad eraseblock 2908 at 0x0000b5cfe000
-> [   20.189828] Bad eraseblock 2909 at 0x0000b5dfe000
-> [   20.196810] Bad eraseblock 2910 at 0x0000b5efe000
-> [   20.203790] Bad eraseblock 2911 at 0x0000b5ffe000
-> [   20.210758] Bad eraseblock 2912 at 0x0000b60fe000
-> [   20.217742] Bad eraseblock 2913 at 0x0000b61fe000
-> [   20.224723] Bad eraseblock 2914 at 0x0000b62fe000
-> [   20.231702] Bad eraseblock 2915 at 0x0000b63fe000
-> [   20.238669] Bad eraseblock 2916 at 0x0000b64fe000
-> [   20.245649] Bad eraseblock 2917 at 0x0000b65fe000
-> [   20.252618] Bad eraseblock 2918 at 0x0000b66fe000
-> [   20.259585] Bad eraseblock 2919 at 0x0000b67fe000
-> [   20.266565] Bad eraseblock 2920 at 0x0000b68fe000
-> [   20.273546] Bad eraseblock 2921 at 0x0000b69fe000
-> [   20.280512] Bad eraseblock 2922 at 0x0000b6afe000
-> [   20.287490] Bad eraseblock 2923 at 0x0000b6bfe000
-> [   20.294468] Bad eraseblock 2924 at 0x0000b6cfe000
-> [   20.301437] Bad eraseblock 2925 at 0x0000b6dfe000
-> [   20.312741] Bad eraseblock 2928 at 0x000. ok
-> 
-> 
-> I thought this docs of this samsung nand "K9GBG08U0A" that talves be useful 
-> since you have more knowledge about it! so I can help you make the tests of 
-> your support in nand cubieboard2.
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+ arch/arm/boot/dts/dra7.dtsi |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-
-You have to force bad block erasure to get rid of AW's libnand layout
-(which is overriding bad block markers).
-
-Please follow these steps:
-1) apply this patch [1]
-2) boot on your new kernel and launch
-$ flash_erase /dev/mtd0 0 0
-3) revert the patch
-4) Boot on your new kernel
-
-Most of your bad blocks should be gone after that...
-
-[1]http://code.bulix.org/k2v1hx-87237
-
-
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 9cc9843..208dd83 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -34,6 +34,10 @@
+ 		serial3 = &uart4;
+ 		serial4 = &uart5;
+ 		serial5 = &uart6;
++		serial6 = &uart7;
++		serial7 = &uart8;
++		serial8 = &uart9;
++		serial9 = &uart10;
+ 	};
+ 
+ 	timer {
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+1.7.9.5
