@@ -1,113 +1,66 @@
-From: Ezaul Zillmer <ezaulzillmer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] mtd: nand: add sunxi NFC dt bindings doc
-Date: Tue, 21 Oct 2014 06:15:32 -0700 (PDT)
-Message-ID: <771ab722-2130-46cd-bd75-5b44410db837@googlegroups.com>
-References: <1413805520-14947-1-git-send-email-boris.brezillon@free-electrons.com>
- <1413805520-14947-3-git-send-email-boris.brezillon@free-electrons.com>
- <20141021024134.GC1193@ld-irv-0074>
- <20141021145344.575b19e6@bbrezillon>
- <62d54110-9c7f-4342-9201-a1ae23194620@googlegroups.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_Part_404_1781230839.1413897332403"
-Return-path: <linux-sunxi+bncBD2ILSOUX4CBB5NYTGRAKGQER7SJMIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <62d54110-9c7f-4342-9201-a1ae23194620-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v3 0/4] regulator: max77686/trats2: Disable some regulators in
+ suspend
+Date: Tue, 21 Oct 2014 15:19:51 +0200
+Message-ID: <1413897595-28752-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_404_1781230839.1413897332403
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-OK vi agora V7 vou testar
 
-Em ter=C3=A7a-feira, 21 de outubro de 2014 11h13min16s UTC-2, Ezaul Zillmer=
-=20
-escreveu:
->
-> Hello everyone=20
->
-> Boris Brezillon=20
->
-> downloaded sunxi-nand-v6 now compiled for Cubieboard2=20
-> https://github.com/bbrezillon/linux-sunxi.git sunxi b-nand-v6=20
->
-> u-boot=20
-> git clone https://github.com/jwrdegoede/u-boot-b sunxi.git sunxi-wip=20
->
->
-> [1.143903] nand: Could not find valid JEDEC parameter page; aborting=20
-> [1.150369] nand: device found, Manufacturer ID: 0xec, Chip ID: 0xd7=20
-> [1.156766] nand: Samsung NAND 4GiB 3.3V 8-bit=20
-> [1.161214] nand: 4096MiB, MLC, page size: 8192, OOB size: 640=20
-> [1.167167] sunxi_nand 1c03000.nand: ECC init failed: -22=20
-> [1.172588] sunxi_nand 1c03000.nand: failed to init nand chips=20
-> [1.178502] sunxi_nand: probe of 1c03000.nand failed with error -22=20
->
-> need some more data?
->
->
+Changes since v2
+================
+1. Patch 1/4: Fully describe different values used for controlling
+   the regulators (low power modes, enable, disable). Remove "opmode"
+   from new defines. Suggested by Javier.
+2. Patch 2/4: minor nits after changing patch 1.
+3. Add Javier's reviewed-by to 2, 3 and 4 patch.
+4. Patch 3/4 (changes in documentation) should be picked up by Lee
+   Jones but I'm resending it anyway.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Changes since v1
+================
+1. Add patch 1/4 and 3/4.
+2. Patch 2/4: Extend existing set_suspend_disable (for bucks) with
+   LDO support. Implement set_suspend_enable. Suggested by Javier.
+3. Patch 4/4: Add regulator suspend properties only to regulators
+   actually supporting this. Other regulators, not implementing
+   suspend enable/disable, will warn ("VCC_1.8V_IO: No configuration").
+4. Patch 4/4: In suspend enable VHSIC_1.0V and VHSIC_1.8V regulators.
+   Suggested by Chanwoo Choi.
 
-------=_Part_404_1781230839.1413897332403
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">OK vi agora V7 vou testar<br><br>Em ter=C3=A7a-feira, 21 d=
-e outubro de 2014 11h13min16s UTC-2, Ezaul Zillmer  escreveu:<blockquote cl=
-ass=3D"gmail_quote" style=3D"margin: 0;margin-left: 0.8ex;border-left: 1px =
-#ccc solid;padding-left: 1ex;"><div dir=3D"ltr"><div><div>Hello everyone&nb=
-sp;</div><div><br></div><div>Boris Brezillon&nbsp;</div><div><br></div><div=
->downloaded sunxi-nand-v6 now compiled for Cubieboard2&nbsp;</div><div><a h=
-ref=3D"https://github.com/bbrezillon/linux-sunxi.git" target=3D"_blank" onm=
-ousedown=3D"this.href=3D'https://www.google.com/url?q\75https%3A%2F%2Fgithu=
-b.com%2Fbbrezillon%2Flinux-sunxi.git\46sa\75D\46sntz\0751\46usg\75AFQjCNE7U=
-8Oe687VzAFQxW1NRxjRyZbzsA';return true;" onclick=3D"this.href=3D'https://ww=
-w.google.com/url?q\75https%3A%2F%2Fgithub.com%2Fbbrezillon%2Flinux-sunxi.gi=
-t\46sa\75D\46sntz\0751\46usg\75AFQjCNE7U8Oe687VzAFQxW1NRxjRyZbzsA';return t=
-rue;">https://github.com/bbrezillon/<wbr>linux-sunxi.git</a> sunxi b-nand-v=
-6&nbsp;</div><div><br></div><div>u-boot&nbsp;</div><div>git clone <a href=
-=3D"https://github.com/jwrdegoede/u-boot-b" target=3D"_blank" onmousedown=
-=3D"this.href=3D'https://www.google.com/url?q\75https%3A%2F%2Fgithub.com%2F=
-jwrdegoede%2Fu-boot-b\46sa\75D\46sntz\0751\46usg\75AFQjCNGTN15JwUwNT2KMb7yH=
-qW26k238qw';return true;" onclick=3D"this.href=3D'https://www.google.com/ur=
-l?q\75https%3A%2F%2Fgithub.com%2Fjwrdegoede%2Fu-boot-b\46sa\75D\46sntz\0751=
-\46usg\75AFQjCNGTN15JwUwNT2KMb7yHqW26k238qw';return true;">https://github.c=
-om/jwrdegoede/<wbr>u-boot-b</a> sunxi.git sunxi-wip&nbsp;</div><div><br></d=
-iv><div><br></div><div>[1.143903] nand: Could not find valid JEDEC paramete=
-r page; aborting&nbsp;</div><div>[1.150369] nand: device found, Manufacture=
-r ID: 0xec, Chip ID: 0xd7&nbsp;</div><div>[1.156766] nand: Samsung NAND 4Gi=
-B 3.3V 8-bit&nbsp;</div><div>[1.161214] nand: 4096MiB, MLC, page size: 8192=
-, OOB size: 640&nbsp;</div><div>[1.167167] sunxi_nand 1c03000.nand: ECC ini=
-t failed: -22&nbsp;</div><div>[1.172588] sunxi_nand 1c03000.nand: failed to=
- init nand chips&nbsp;</div><div>[1.178502] sunxi_nand: probe of 1c03000.na=
-nd failed with error -22&nbsp;</div><div><br></div><div>need some more data=
-?</div></div><div><br></div></div></blockquote></div>
+Description
+===========
+This patchset makes use of Javier Martinez Cainllas changes [1].
+It allows disabling some of the regulators during suspend to RAM.
 
-<p></p>
+Javier's patchset is necessary only to test it.
 
--- <br />
-You received this message because you are subscribed to the Google Groups &=
-quot;linux-sunxi&quot; group.<br />
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
-unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
-For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
-s://groups.google.com/d/optout</a>.<br />
+[1] [PATCH v3 0/2] ARM: EXYNOS: Call regulator suspend prepare/finish
+    https://lkml.org/lkml/2014/10/20/545
 
-------=_Part_404_1781230839.1413897332403--
+
+Best regards,
+Krzysztof
+
+
+Krzysztof Kozlowski (4):
+  regulator: max77686: Replace hard-coded opmode values with defines
+  regulator: max77686: Implement suspend disable for some LDOs
+  mfd/regulator: dt-bindings: max77686: Document regulators off in
+    suspend
+  ARM: dts: exynos4412-trats: Add suspend configuration for max77686
+    regulators
+
+ Documentation/devicetree/bindings/mfd/max77686.txt |  6 ++
+ arch/arm/boot/dts/exynos4412-trats2.dts            | 72 ++++++++++++---------
+ drivers/regulator/max77686.c                       | 73 ++++++++++++++++++----
+ 3 files changed, 108 insertions(+), 43 deletions(-)
+
+-- 
+1.9.1
