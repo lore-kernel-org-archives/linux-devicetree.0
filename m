@@ -1,104 +1,97 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv2 1/2] ARM: dts: socfpga: Fix SD card detect
-Date: Tue, 21 Oct 2014 10:07:20 +0100
-Message-ID: <20141021090720.GA15293@leverpostej>
-References: <1413819079-17120-1-git-send-email-dinguyen@opensource.altera.com>
- <1413819079-17120-2-git-send-email-dinguyen@opensource.altera.com>
- <20141020184139.GA23062@leverpostej>
- <CAD=FV=Xw2zAL-7s2XJk6fawMGUuMapGfqYGC6ntwG-TCi8GgkA@mail.gmail.com>
- <20141020224147.GA13670@leverpostej>
- <CAD=FV=WoGQU+toQ8LM6K1B=tGe_sdLF6OVZ5uVCOtah7P8wvmw@mail.gmail.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH v2 1/5] phy: berlin-sata: Move PHY_BASE into private data
+ struct
+Date: Tue, 21 Oct 2014 11:07:53 +0200
+Message-ID: <1413882477-27922-2-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1413882477-27922-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=WoGQU+toQ8LM6K1B=tGe_sdLF6OVZ5uVCOtah7P8wvmw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1413882477-27922-1-git-send-email-sebastian.hesselbarth@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: devicetree@vger.kernel.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 21, 2014 at 01:02:28AM +0100, Doug Anderson wrote:
-> Mark,
-> 
-> On Mon, Oct 20, 2014 at 3:41 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Mon, Oct 20, 2014 at 08:26:55PM +0100, Doug Anderson wrote:
-> >> Mark,
-> >>
-> >> On Mon, Oct 20, 2014 at 11:41 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> >> > On Mon, Oct 20, 2014 at 04:31:18PM +0100, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> >> >> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> >> >>
-> >> >> Without this patch, the booting the SOCFPGA platform would hang at the
-> >> >> SDMMC driver loading. There were 2 patches that caused this to happen:
-> >> >>
-> >> >> - Patch 9795a846e10 "mmc: dw_mmc: remove dw_mci_of_cd_gpio/wp_gpio()" removed
-> >> >>   looking for "cd-gpios", since mmc_of_parse was getting called.
-> >> >> - Patch 3cf890fc42b "mmc: dw_mmc: Pass back errors from mmc_of_parse()" would
-> >> >>   hang the system at the SDMMC driver loading.
-> >> >
-> >> > Regardless of which patches caused the issue, the existing DTB should
-> >> > continue to function. This is a kernel bug, not a DTB bug.
-> >>
-> >> Right.  The kernel bug is that there is no "dtb fixup" stage of the
-> >> kernel to fix up old dtbs with this dtb bug.
-> >>
-> >> Said another way:
-> >>
-> >> 1. The old dtb was (possibly) not specifying the cd-gpio properly.
-> >>
-> >> 2. The kernel had a bug where it was ignoring that error.  Things may
-> >> have been working because of some other side effect (maybe polling was
-> >> working).
-> >>
-> >> 3. If we fix the kernel bug, what should we do?  The only sensible
-> >> thing (if we need to support old DTB with no changes) is to add a DTB
-> >> fixup stage.
-> >>
-> >> ...or did someone add that stage and I missed it?
-> >
-> > Unfortunately, we have no generic DTB fixup stage currently.
-> 
-> Right.  ...and that's the bug.
-> 
-> I think we may need to modify the general inclination to respond to
-> dts change requests with "the DTS can't have a bug in it".  DTS files
-> can indeed have bugs in it.  In this case the dts file was claiming
-> that the card detect GPIO was a GPIO on a controller that the same dts
-> claimed was "disabled".  If that's not a bug in the DTS I'm not sure
-> what it is.
-
-While it's unusual, it's not necessarily a bug in general-- the link
-might be true (i.e. that particular GPIO might be attached to the CD
-line), but for some reason the GPIO controller is unusable on a
-particular board. Perhaps we need to distinguish not ready yet from will
-never be ready -- at least for provider nodes with status = "disabled"
-that should be obvious.
-
-That said, this was not an intentional property of this DTB.
-
-> There are all sorts of broken ways that we could work around this in
-> the driver.  We could pretend that EPROBE_DEFER really meant "I'm all
-> good".  We could add a special case for this particular board in
-> dw_mmc (do we check the overall device tree compatible string?).  We
-> could do all sorts of hacks.  None of them are right.  The "right"
-> behavior if we really care about maintaining compatbility with old DTB
-> files is to add a fixup stage for this particular broken board.
-
-While a DTB fixup stage is something which we are likely to need at some
-point, it comes with its own (rather large) cost. I disagree that DTB
-fixup is the one and only way of handling this kind of issue.
-
-> Given that no such fixup stage exists, if someone really wants old DTB
-> files to work then we should add one.
-
-Perhaps. In this case I guess this comes down to whether socfpga users
-are happy to update their DTBs.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Q3VycmVudGx5LCBCZXJsaW4gU0FUQSBQSFkgZHJpdmVyIGFzc3VtZXMgUEhZX0JBU0UgYWRkcmVz
+cyBiZWluZwpjb25zdGFudC4gV2hpbGUgdGhpcyBQSFlfQkFTRSBpcyBjb3JyZWN0IGZvciBCRzJR
+LCBvbGRlciBCRzIgUEhZX0JBU0UKaXMgZGlmZmVyZW50LiBQcmVwYXJlIHRoZSBkcml2ZXIgZm9y
+IEJHMiBzdXBwb3J0IGJ5IG1vdmluZyB0aGUgcGh5X2Jhc2UKaW50byBwcml2YXRlIGRyaXZlciBk
+YXRhLgoKQWNrZWQtYnk6IEFudG9pbmUgVMOpbmFydCA8YW50b2luZS50ZW5hcnRAZnJlZS1lbGVj
+dHJvbnMuY29tPgpTaWduZWQtb2ZmLWJ5OiBTZWJhc3RpYW4gSGVzc2VsYmFydGggPHNlYmFzdGlh
+bi5oZXNzZWxiYXJ0aEBnbWFpbC5jb20+Ci0tLQpDYzogS2lzaG9uIFZpamF5IEFicmFoYW0gSSA8
+a2lzaG9uQHRpLmNvbT4gCkNjOiAiQW50b2luZSBUw6luYXJ0IiA8YW50b2luZS50ZW5hcnRAZnJl
+ZS1lbGVjdHJvbnMuY29tPgpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKQ2M6IGxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpDYzogbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZyAKLS0tCiBkcml2ZXJzL3BoeS9waHktYmVybGluLXNhdGEuYyB8IDQyICsrKysrKysr
+KysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDI4IGlu
+c2VydGlvbnMoKyksIDE0IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGh5L3Bo
+eS1iZXJsaW4tc2F0YS5jIGIvZHJpdmVycy9waHkvcGh5LWJlcmxpbi1zYXRhLmMKaW5kZXggNjlj
+ZWQ1MmQ3MmFhLi45NjgyYjBmNjYxNzcgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvcGh5L3BoeS1iZXJs
+aW4tc2F0YS5jCisrKyBiL2RyaXZlcnMvcGh5L3BoeS1iZXJsaW4tc2F0YS5jCkBAIC0zMCw3ICsz
+MCw3IEBACiAjZGVmaW5lIE1CVVNfV1JJVEVfUkVRVUVTVF9TSVpFXzEyOAkoQklUKDIpIDw8IDE2
+KQogI2RlZmluZSBNQlVTX1JFQURfUkVRVUVTVF9TSVpFXzEyOAkoQklUKDIpIDw8IDE5KQogCi0j
+ZGVmaW5lIFBIWV9CQVNFCQkweDIwMAorI2RlZmluZSBCRzJRX1BIWV9CQVNFCQkweDIwMAogCiAv
+KiByZWdpc3RlciAweDAxICovCiAjZGVmaW5lIFJFRl9GUkVGX1NFTF8yNQkJQklUKDApCkBAIC02
+MSwxNSArNjEsMTYgQEAgc3RydWN0IHBoeV9iZXJsaW5fcHJpdiB7CiAJc3RydWN0IGNsawkJKmNs
+azsKIAlzdHJ1Y3QgcGh5X2Jlcmxpbl9kZXNjCSoqcGh5czsKIAl1bnNpZ25lZAkJbnBoeXM7CisJ
+dTMyCQkJcGh5X2Jhc2U7CiB9OwogCi1zdGF0aWMgaW5saW5lIHZvaWQgcGh5X2Jlcmxpbl9zYXRh
+X3JlZ19zZXRiaXRzKHZvaWQgX19pb21lbSAqY3RybF9yZWcsIHUzMiByZWcsCi0JCQkJCSAgICAg
+ICB1MzIgbWFzaywgdTMyIHZhbCkKK3N0YXRpYyBpbmxpbmUgdm9pZCBwaHlfYmVybGluX3NhdGFf
+cmVnX3NldGJpdHModm9pZCBfX2lvbWVtICpjdHJsX3JlZywKKwkJCSAgICAgICB1MzIgcGh5X2Jh
+c2UsIHUzMiByZWcsIHUzMiBtYXNrLCB1MzIgdmFsKQogewogCXUzMiByZWd2YWw7CiAKIAkvKiBz
+ZWxlY3QgcmVnaXN0ZXIgKi8KLQl3cml0ZWwoUEhZX0JBU0UgKyByZWcsIGN0cmxfcmVnICsgUE9S
+VF9WU1JfQUREUik7CisJd3JpdGVsKHBoeV9iYXNlICsgcmVnLCBjdHJsX3JlZyArIFBPUlRfVlNS
+X0FERFIpOwogCiAJLyogc2V0IGJpdHMgKi8KIAlyZWd2YWwgPSByZWFkbChjdHJsX3JlZyArIFBP
+UlRfVlNSX0RBVEEpOwpAQCAtMTAzLDE3ICsxMDQsMjAgQEAgc3RhdGljIGludCBwaHlfYmVybGlu
+X3NhdGFfcG93ZXJfb24oc3RydWN0IHBoeSAqcGh5KQogCXdyaXRlbChyZWd2YWwsIHByaXYtPmJh
+c2UgKyBIT1NUX1ZTQV9EQVRBKTsKIAogCS8qIHNldCBQSFkgbW9kZSBhbmQgcmVmIGZyZXEgdG8g
+MjUgTUh6ICovCi0JcGh5X2Jlcmxpbl9zYXRhX3JlZ19zZXRiaXRzKGN0cmxfcmVnLCAweDEsIDB4
+ZmYsCi0JCQkJICAgIFJFRl9GUkVGX1NFTF8yNSB8IFBIWV9NT0RFX1NBVEEpOworCXBoeV9iZXJs
+aW5fc2F0YV9yZWdfc2V0Yml0cyhjdHJsX3JlZywgcHJpdi0+cGh5X2Jhc2UsIDB4MDEsCisJCQkJ
+ICAgIDB4MDBmZiwgUkVGX0ZSRUZfU0VMXzI1IHwgUEhZX01PREVfU0FUQSk7CiAKIAkvKiBzZXQg
+UEhZIHVwIHRvIDYgR2JwcyAqLwotCXBoeV9iZXJsaW5fc2F0YV9yZWdfc2V0Yml0cyhjdHJsX3Jl
+ZywgMHgyNSwgMHhjMDAsIFBIWV9HRU5fTUFYXzZfMCk7CisJcGh5X2Jlcmxpbl9zYXRhX3JlZ19z
+ZXRiaXRzKGN0cmxfcmVnLCBwcml2LT5waHlfYmFzZSwgMHgyNSwKKwkJCQkgICAgMHgwYzAwLCBQ
+SFlfR0VOX01BWF82XzApOwogCiAJLyogc2V0IDQwIGJpdHMgd2lkdGggKi8KLQlwaHlfYmVybGlu
+X3NhdGFfcmVnX3NldGJpdHMoY3RybF9yZWcsIDB4MjMsICAweGMwMCwgREFUQV9CSVRfV0lEVEhf
+NDApOworCXBoeV9iZXJsaW5fc2F0YV9yZWdfc2V0Yml0cyhjdHJsX3JlZywgcHJpdi0+cGh5X2Jh
+c2UsIDB4MjMsCisJCQkJICAgIDB4MGMwMCwgREFUQV9CSVRfV0lEVEhfNDApOwogCiAJLyogdXNl
+IG1heCBwbGwgcmF0ZSAqLwotCXBoeV9iZXJsaW5fc2F0YV9yZWdfc2V0Yml0cyhjdHJsX3JlZywg
+MHgyLCAweDAsIFVTRV9NQVhfUExMX1JBVEUpOworCXBoeV9iZXJsaW5fc2F0YV9yZWdfc2V0Yml0
+cyhjdHJsX3JlZywgcHJpdi0+cGh5X2Jhc2UsIDB4MDIsCisJCQkJICAgIDB4MDAwMCwgVVNFX01B
+WF9QTExfUkFURSk7CiAKIAkvKiBzZXQgR2VuMyBjb250cm9sbGVyIHNwZWVkICovCiAJcmVndmFs
+ID0gcmVhZGwoY3RybF9yZWcgKyBQT1JUX1NDUl9DVEwpOwpAQCAtMTgyLDkgKzE4NiwyMiBAQCBz
+dGF0aWMgdTMyIHBoeV9iZXJsaW5fcG93ZXJfZG93bl9iaXRzW10gPSB7CiAJUE9XRVJfRE9XTl9Q
+SFkxLAogfTsKIAorc3RhdGljIHUzMiBiZzJxX3NhdGFfcGh5X2Jhc2UgPSBCRzJRX1BIWV9CQVNF
+OworCitzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBwaHlfYmVybGluX3NhdGFfb2Zf
+bWF0Y2hbXSA9IHsKKwl7CisJCS5jb21wYXRpYmxlID0gIm1hcnZlbGwsYmVybGluMnEtc2F0YS1w
+aHkiLAorCQkuZGF0YSA9ICZiZzJxX3NhdGFfcGh5X2Jhc2UsCisJfSwKKwl7IH0sCit9OworCiBz
+dGF0aWMgaW50IHBoeV9iZXJsaW5fc2F0YV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpw
+ZGV2KQogewogCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7CisJY29uc3Qgc3RydWN0
+IG9mX2RldmljZV9pZCAqbWF0Y2ggPQorCQlvZl9tYXRjaF9ub2RlKHBoeV9iZXJsaW5fc2F0YV9v
+Zl9tYXRjaCwgZGV2LT5vZl9ub2RlKTsKKwljb25zdCB1MzIgKnBoeV9iYXNlID0gbWF0Y2gtPmRh
+dGE7CiAJc3RydWN0IGRldmljZV9ub2RlICpjaGlsZDsKIAlzdHJ1Y3QgcGh5ICpwaHk7CiAJc3Ry
+dWN0IHBoeV9wcm92aWRlciAqcGh5X3Byb3ZpZGVyOwpAQCAtMjE4LDYgKzIzNSw4IEBAIHN0YXRp
+YyBpbnQgcGh5X2Jlcmxpbl9zYXRhX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYp
+CiAJaWYgKCFwcml2LT5waHlzKQogCQlyZXR1cm4gLUVOT01FTTsKIAorCXByaXYtPnBoeV9iYXNl
+ID0gKnBoeV9iYXNlOworCiAJZGV2X3NldF9kcnZkYXRhKGRldiwgcHJpdik7CiAJc3Bpbl9sb2Nr
+X2luaXQoJnByaXYtPmxvY2spOwogCkBAIC0yNjQsMTEgKzI4Myw2IEBAIHN0YXRpYyBpbnQgcGh5
+X2Jlcmxpbl9zYXRhX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCiAJcmV0dXJu
+IDA7CiB9CiAKLXN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBoeV9iZXJsaW5fc2F0
+YV9vZl9tYXRjaFtdID0gewotCXsgLmNvbXBhdGlibGUgPSAibWFydmVsbCxiZXJsaW4ycS1zYXRh
+LXBoeSIgfSwKLQl7IH0sCi19OwotCiBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBwaHlf
+YmVybGluX3NhdGFfZHJpdmVyID0gewogCS5wcm9iZQk9IHBoeV9iZXJsaW5fc2F0YV9wcm9iZSwK
+IAkuZHJpdmVyCT0gewotLSAKMi4xLjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
