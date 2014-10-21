@@ -1,242 +1,90 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 4/4] crypto: Add Allwinner Security
- System crypto accelerator
-Date: Tue, 21 Oct 2014 20:27:52 +0300
-Message-ID: <54469798.90001@mleia.com>
-References: <1413728182-13569-1-git-send-email-clabbe.montjoie@gmail.com> <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com> <54459AA5.2030705@mleia.com> <54468902.1040802@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 1/4] ARM: dts: dra72-evm: Add NAND support
+Date: Tue, 21 Oct 2014 12:32:11 -0500
+Message-ID: <20141021173211.GA13160@kahuna>
+References: <1413888080-2669-1-git-send-email-rogerq@ti.com>
+ <1413888080-2669-2-git-send-email-rogerq@ti.com>
+ <54468D29.4070706@ti.com>
+ <CAGo_u6q5SO74FYK61Zyx-oweiui=zatJzWjomVm7y6VES+a7Kg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCAMRWGQV4CRBHVPTKRAKGQEMYXB2MA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <54468902.1040802-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGo_u6q5SO74FYK61Zyx-oweiui=zatJzWjomVm7y6VES+a7Kg@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: dt list <devicetree@vger.kernel.org>, george.cherian@ti.com, Sekhar Nori <nsekhar@ti.com>, "Balbi, Felipe" <balbi@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Corentin,
+On 12:16-20141021, Nishanth Menon wrote:
+> On Tue, Oct 21, 2014 at 11:43 AM, Nishanth Menon <nm@ti.com> wrote:
+> > Roger,
+> >
+> > On 10/21/2014 05:41 AM, Roger Quadros wrote:
+> >> DRA72-evm has a 256MB 16-bit wide NAND chip. Add
+> >> pinmux and NAND node.
+> >>
+> >> The NAND chips 'Chip select' and 'Write protect' can be
+> >> controlled using DIP Switch SW5. To use NAND,
+> >> the switch must be configured like so:
+> >>
+> >> SW5.1 (NAND_SELn) = ON (LOW)
+> >> SW5.9 (GPMC_WPN) = OFF (HIGH)
+> >
+> > Could we move this description to the dts as a comment? it would be
+> > little more easier to refer to than figuring it out from git log. I
+> > recollect trying to figure this out while attempting to test out NAND
+> > previously, never actually thought to check in git log. just a
+> > suggestion..
+> 
+> [...]
+> 
+> >> +&gpmc {
+> >> +     status = "okay";
+> >> +     pinctrl-names = "default";
+> >> +     pinctrl-0 = <&nand_default>;
+> >> +     ranges = <0 0 0 0x01000000>;    /* minimum GPMC partition = 16MB */
+> >> +     nand@0,0 {
+> >> +             /* To use NAND, DIP switch SW5 must be set like so:
+		      ^^ minor:
+		      /*
+		       * To use NAND,.... 
+> >> +              * SW5.1 (NAND_SELn) = ON (LOW)
+> >> +              * SW5.9 (GPMC_WPN) = OFF (HIGH)
+> >> +              */
+> 
+> [...]
+> 
+> Uggh.. ignore my comment - I see you already did that.. my bad.. i missed it :(
+> 
+> Quickly trying to test this, I got the following:
+> "
+> 
+> [    1.840728] omap-gpmc 50000000.gpmc: GPMC revision 6.0
+> [    1.847290] nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xca
+> [    1.854003] nand: Micron MT29F2G16ABAEAWP
+> [    1.858245] nand: 256MiB, SLC, page size: 2048, OOB size: 64
+> [    1.864227] omap2-nand omap2-nand.0: CONFIG_MTD_NAND_OMAP_BCH not enabled
+> [    1.871459] omap2-nand: probe of omap2-nand.0 failed with error -22
+> "
+> 
+> Full log: http://hastebin.com/ozugepemin.md
+> 
+> Does this depend on
+> http://marc.info/?l=linux-omap&m=141389532511600&w=2 to function? I
+> assume yes.
 
-On 21.10.2014 19:25, Corentin LABBE wrote:
-> On 10/21/14 01:28, Vladimir Zapolskiy wrote:
->> Hello LABBE,
->>
->> On 19.10.2014 17:16, LABBE Corentin wrote:
->>> Add support for the Security System included in Allwinner SoC A20.
->>> The Security System is a hardware cryptographic accelerator that support AES/MD5/SHA1/DES/3DES/PRNG algorithms.
->>>
-> []
->>> +
->>> +	/* If we have only one SG, we can use kmap_atomic */
->>> +	if (sg_next(in_sg) == NULL && sg_next(out_sg) == NULL)
->>> +		return sunxi_ss_aes_poll_atomic(areq);
->>
->> for clarity it might be better to move all "mutex_unlock(&ss->lock)"
->> calls from sunxi_ss_aes_poll_atomic() body right to here.
->>
-> 
-> Ok
-> I have moved all mutex_unlock/writel(0, SS_CTL) at the end of function, it is cleaner now.
+looks like we'd want Tony to enable CONFIG_MTD_NAND_OMAP_BCH in
+omap2plus_defconfig?
 
-please check that sunxi_ss_aes_poll_atomic() has no more mutex_unlock()
-calls inside it.
+With that, it works like a charm..
+http://slexy.org/raw/s29rfTTWB4
 
-With best wishes,
-Vladimir
 
->>> +
->>> +};
->>> +
->>> +static int sunxi_ss_probe(struct platform_device *pdev)
->>> +{
->>> +	struct resource *res;
->>> +	u32 v;
->>> +	int err;
->>> +	unsigned long cr;
->>> +	const unsigned long cr_ahb = 24 * 1000 * 1000;
->>> +	const unsigned long cr_mod = 150 * 1000 * 1000;
->>> +
->>> +	if (!pdev->dev.of_node)
->>> +		return -ENODEV;
->>> +
->>> +	ss = devm_kzalloc(&pdev->dev, sizeof(*ss), GFP_KERNEL);
->>> +	if (ss == NULL)
->>> +		return -ENOMEM;
->>
->> Why do you dynamically allocate memory for "struct sunxi_ss_ctx *ss"?
->> Since you have a single global pointer, it makes sense to declare
->> "struct sunxi_ss_ctx ss" statically instead.
->>
->> And even a better solution is to remove a single global pointer.
-> 
-> All other crypto driver I have read use a global structure and it made things easy.
-> Thanks to M. Ripard that pointed to me the talitos driver that solve the global device pointer by using alg template and container_of().
-> 
-> But since I think there will never 2 Security System at the same time on the same SoC, I do not know if it is worth the cost to add more complexity just to remove a pointer.
-> 
->>
->>> +
->>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +	ss->base = devm_ioremap_resource(&pdev->dev, res);
->>> +	if (IS_ERR(ss->base)) {
->>> +		dev_err(&pdev->dev, "Cannot request MMIO\n");
->>> +		return PTR_ERR(ss->base);
->>> +	}
->>> +
->>> +	ss->ssclk = devm_clk_get(&pdev->dev, "mod");
->>> +	if (IS_ERR(ss->ssclk)) {
->>> +		err = PTR_ERR(ss->ssclk);
->>> +		dev_err(&pdev->dev, "Cannot get SS clock err=%d\n", err);
->>> +		return err;
->>> +	}
->>> +	dev_dbg(&pdev->dev, "clock ss acquired\n");
->>> +
->>> +	ss->busclk = devm_clk_get(&pdev->dev, "ahb");
->>> +	if (IS_ERR(ss->busclk)) {
->>> +		err = PTR_ERR(ss->busclk);
->>> +		dev_err(&pdev->dev, "Cannot get AHB SS clock err=%d\n", err);
->>> +		return err;
->>> +	}
->>> +	dev_dbg(&pdev->dev, "clock ahb_ss acquired\n");
->>> +
->>> +	/* Enable both clocks */
->>> +	err = clk_prepare_enable(ss->busclk);
->>> +	if (err != 0) {
->>> +		dev_err(&pdev->dev, "Cannot prepare_enable busclk\n");
->>> +		return err;
->>> +	}
->>> +	err = clk_prepare_enable(ss->ssclk);
->>> +	if (err != 0) {
->>> +		dev_err(&pdev->dev, "Cannot prepare_enable ssclk\n");
->>> +		clk_disable_unprepare(ss->busclk);
->>
->> goto somewhere to the end of the function?
-> 
-> OK
-> 
->>
->>> +		return err;
->>> +	}
->>> +
->>> +	/*
->>> +	 * Check that clock have the correct rates gived in the datasheet
->>> +	 * Try to set the clock to the maximum allowed
->>> +	 */
->>> +	err = clk_set_rate(ss->ssclk, cr_mod);
->>> +	if (err != 0) {
->>> +		dev_err(&pdev->dev, "Cannot set clock rate to ssclk\n");
->>> +		clk_disable_unprepare(ss->ssclk);
->>> +		clk_disable_unprepare(ss->busclk);
->>
->> goto "error_md5"?
-> 
-> Ok
-> 
->>
->>> +		return err;
->>> +	}
->>> +
->>> +	cr = clk_get_rate(ss->busclk);
->>> +	if (cr >= cr_ahb)
->>> +		dev_dbg(&pdev->dev, "Clock bus %lu (%lu MHz) (must be >= %lu)\n",
->>> +				cr, cr / 1000000, cr_ahb);
->>> +	else
->>> +		dev_warn(&pdev->dev, "Clock bus %lu (%lu MHz) (must be >= %lu)\n",
->>> +				cr, cr / 1000000, cr_ahb);
->>
->> See next comment.
->>
->>> +	cr = clk_get_rate(ss->ssclk);
->>> +	if (cr <= cr_mod)
->>> +		if (cr < cr_mod)
->>> +			dev_info(&pdev->dev, "Clock ss %lu (%lu MHz) (must be <= %lu)\n",
->>> +					cr, cr / 1000000, cr_mod);
->>> +		else
->>> +			dev_dbg(&pdev->dev, "Clock ss %lu (%lu MHz) (must be <= %lu)\n",
->>> +					cr, cr / 1000000, cr_mod);
->>> +	else
->>> +		dev_warn(&pdev->dev, "Clock ss is at %lu (%lu MHz) (must be <= %lu)\n",
->>> +				cr, cr / 1000000, cr_mod);
->>
->> The management of kernel log levels looks pretty strange. As far as I
->> understand there is no error on any clock rate, I'd recommend to keep
->> only one information message.
->>
-> 
-> If clock rate are below the recommended value, the only impact I found was bad performance.
-> So it explain the warn and no error. (yes the info must be warn, ...fixed)
-> 
-> But I will put comment for explain that.
-> 
->>> +	/*
->>> +	 * Datasheet named it "Die Bonding ID"
->>> +	 * I expect to be a sort of Security System Revision number.
->>> +	 * Since the A80 seems to have an other version of SS
->>> +	 * this info could be useful
->>> +	 */
->>> +	writel(SS_ENABLED, ss->base + SS_CTL);
->>> +	v = readl(ss->base + SS_CTL);
->>> +	v >>= 16;
->>> +	v &= 0x07;
->>> +	dev_info(&pdev->dev, "Die ID %d\n", v);
->>> +	writel(0, ss->base + SS_CTL);
->>> +
->>> +	ss->dev = &pdev->dev;
->>> +
->>> +	mutex_init(&ss->lock);
->>> +	mutex_init(&ss->bufin_lock);
->>> +	mutex_init(&ss->bufout_lock);
->>> +
->>> +	err = crypto_register_ahash(&sunxi_md5_alg);
->>> +	if (err)
->>> +		goto error_md5;
->>> +	err = crypto_register_ahash(&sunxi_sha1_alg);
->>> +	if (err)
->>> +		goto error_sha1;
->>> +	err = crypto_register_algs(sunxi_cipher_algs,
->>> +			ARRAY_SIZE(sunxi_cipher_algs));
->>> +	if (err)
->>> +		goto error_ciphers;
->>> +
->>> +	return 0;
->>> +error_ciphers:
->>> +	crypto_unregister_ahash(&sunxi_sha1_alg);
->>> +error_sha1:
->>> +	crypto_unregister_ahash(&sunxi_md5_alg);
->>> +error_md5:
->>> +	clk_disable_unprepare(ss->ssclk);
->>> +	clk_disable_unprepare(ss->busclk);
->>> +	return err;
->>> +}
->>> +
->>> +static int __exit sunxi_ss_remove(struct platform_device *pdev)
->>> +{
->>> +	if (!pdev->dev.of_node)
->>> +		return 0;
->>
->> Redundant check.
->>
-> 
-> Ok
-> 
->>
->>
->> --
->> With best wishes,
->> Vladimir
->>
-> 
-> Thanks for the review
-> 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+Feel free to add my:
+Tested-by: Nishanth Menon <nm@ti.com>
+Acked-by: Nishanth Menon <nm@ti.com>
+
+-- 
+Regards,
+Nishanth Menon
