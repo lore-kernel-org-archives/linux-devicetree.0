@@ -1,117 +1,40 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 2/4] regulator: max77686: Implement suspend disable for some
- LDOs
-Date: Tue, 21 Oct 2014 13:23:15 +0200
-Message-ID: <1413890597-31037-3-git-send-email-k.kozlowski@samsung.com>
-References: <1413890597-31037-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1413890597-31037-1-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH] ARM: dts: am335x-evm: Fix 5th NAND partition's name
+Date: Tue, 21 Oct 2014 14:25:45 +0300
+Message-ID: <1413890745-3855-1-git-send-email-rogerq@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: javier.martinez@collabora.co.uk, pekon@pek-sem.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, Sekhar Nori <nsekhar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Some LDOs of Maxim 77686 PMIC support disabling during system suspend
-(LDO{2,6,7,8,10,11,12,14,15,16}). This was already implemented as part
-of set_suspend_mode function. In that case the mode was one of:
- - disable,
- - normal mode,
- - low power mode.
-However there are no bindings for setting the mode during suspend.
+The 5th NAND partition should be named "NAND.u-boot-spl-os"
+instead of "NAND.u-boot-spl". This is to be consistent with other
+TI boards as well as u-boot.
 
-Add suspend disable for LDO regulators supporting this to the existing
-max77686_buck_set_suspend_disable() function. This helps reducing
-energy consumption during system sleep.
+Fixes: 91994facdd2d ("ARM: dts: am335x-evm: NAND: update MTD partition table")
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 ---
- drivers/regulator/max77686.c | 33 ++++++++++++++++++++++++++++-----
- 1 file changed, 28 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/am335x-evm.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/max77686.c b/drivers/regulator/max77686.c
-index cffe0c69d57d..05df72d584bf 100644
---- a/drivers/regulator/max77686.c
-+++ b/drivers/regulator/max77686.c
-@@ -79,17 +79,33 @@ struct max77686_data {
- };
- 
- /* Some BUCKS supports Normal[ON/OFF] mode during suspend */
--static int max77686_buck_set_suspend_disable(struct regulator_dev *rdev)
-+static int max77686_set_suspend_disable(struct regulator_dev *rdev)
- {
- 	unsigned int val;
- 	struct max77686_data *max77686 = rdev_get_drvdata(rdev);
- 	int ret, id = rdev_get_id(rdev);
- 
--	if (id == MAX77686_BUCK1)
-+	switch (id) {
-+	case MAX77686_BUCK1:
- 		val = MAX77686_OPMODE_OFF_PWRREQ;
--	else
-+		break;
-+	case MAX77686_BUCK2:
-+	case MAX77686_BUCK3:
-+	case MAX77686_BUCK4:
- 		val = MAX77686_OPMODE_OFF_PWRREQ
- 			<< MAX77686_OPMODE_BUCK234_SHIFT;
-+		break;
-+	case MAX77686_LDO2:
-+	case MAX77686_LDO6 ... MAX77686_LDO8:
-+	case MAX77686_LDO10 ... MAX77686_LDO12:
-+	case MAX77686_LDO14 ... MAX77686_LDO16:
-+		val = MAX77686_OPMODE_OFF_PWRREQ << MAX77686_OPMODE_SHIFT;
-+		break;
-+	default:
-+		pr_warn("%s: regulator_suspend_disable not supported\n",
-+			rdev->desc->name);
-+		return -EINVAL;
-+	}
- 
- 	ret = regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
- 				 rdev->desc->enable_mask, val);
-@@ -171,6 +187,9 @@ static int max77686_enable(struct regulator_dev *rdev)
- {
- 	struct max77686_data *max77686 = rdev_get_drvdata(rdev);
- 
-+	if (max77686->opmode[rdev_get_id(rdev)] == MAX77686_OPMODE_OFF_PWRREQ)
-+		max77686->opmode[rdev_get_id(rdev)] = MAX77686_OPMODE_NORMAL;
-+
- 	return regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
- 				  rdev->desc->enable_mask,
- 				  max77686->opmode[rdev_get_id(rdev)]);
-@@ -223,6 +242,8 @@ static struct regulator_ops max77686_ldo_ops = {
- 	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
- 	.set_voltage_time_sel	= regulator_set_voltage_time_sel,
- 	.set_suspend_mode	= max77686_ldo_set_suspend_mode,
-+	.set_suspend_disable	= max77686_set_suspend_disable,
-+	.set_suspend_enable	= max77686_enable,
- };
- 
- static struct regulator_ops max77686_buck1_ops = {
-@@ -234,7 +255,8 @@ static struct regulator_ops max77686_buck1_ops = {
- 	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
- 	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
- 	.set_voltage_time_sel	= regulator_set_voltage_time_sel,
--	.set_suspend_disable	= max77686_buck_set_suspend_disable,
-+	.set_suspend_disable	= max77686_set_suspend_disable,
-+	.set_suspend_enable	= max77686_enable,
- };
- 
- static struct regulator_ops max77686_buck_dvs_ops = {
-@@ -247,7 +269,8 @@ static struct regulator_ops max77686_buck_dvs_ops = {
- 	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
- 	.set_voltage_time_sel	= regulator_set_voltage_time_sel,
- 	.set_ramp_delay		= max77686_set_ramp_delay,
--	.set_suspend_disable	= max77686_buck_set_suspend_disable,
-+	.set_suspend_disable	= max77686_set_suspend_disable,
-+	.set_suspend_enable	= max77686_enable,
- };
- 
- #define regulator_desc_ldo(num)		{				\
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index e2156a5..c4b968f 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -489,7 +489,7 @@
+ 			reg = <0x00060000 0x00020000>;
+ 		};
+ 		partition@4 {
+-			label = "NAND.u-boot-spl";
++			label = "NAND.u-boot-spl-os";
+ 			reg = <0x00080000 0x00040000>;
+ 		};
+ 		partition@5 {
 -- 
-1.9.1
+1.8.3.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
