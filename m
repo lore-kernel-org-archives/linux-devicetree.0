@@ -1,82 +1,62 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
- driver support
-Date: Tue, 21 Oct 2014 09:06:13 +0000
-Message-ID: <ff137744d6474640aab09e5d6f62921a@BN1AFFO11FD019.protection.gbl>
-References: <1413374436-14410-1-git-send-email-sthokal@xilinx.com>
- <4301925.4pMHXMXqA4@wuerfel>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH v2 2/5] phy: berlin-sata: Add support for BG2 SATA PHY
+Date: Tue, 21 Oct 2014 11:07:54 +0200
+Message-ID: <1413882477-27922-3-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1413882477-27922-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4301925.4pMHXMXqA4@wuerfel>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, Srikanth Vemula <svemula@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srikanth Thokala <sthokal@xilinx.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413882477-27922-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Berlin BG2 also has a SATA PHY compatible with the current driver
+except different PHY_BASE. Add a new compatible to the driver
+reflecting the different PHY_BASE.
 
------Original Message-----
-From: Arnd Bergmann [mailto:arnd@arndb.de]
-Sent: Tuesday, October 21, 2014 1:07 AM
-To: linux-arm-kernel@lists.infradead.org
-Cc: Srikanth Thokala; vinod.koul@intel.com; dan.j.williams@intel.com; Michal Simek; grant.likely@linaro.org; robh+dt@kernel.org; devicetree@vger.kernel.org; Srikanth Vemula; linux-kernel@vger.kernel.org; Anirudha Sarangi; dmaengine@vger.kernel.org; Appana Durga Kedareswara Rao
-Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine driver support
+Acked-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+---
+Cc: Kishon Vijay Abraham I <kishon@ti.com>=20
+Cc: "Antoine T=C3=A9nart" <antoine.tenart@free-electrons.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org=20
+---
+ drivers/phy/phy-berlin-sata.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-On Wednesday 15 October 2014 17:30:36 Srikanth Thokala wrote:
-> @@ -15,6 +15,9 @@
->  #include <linux/dma-mapping.h>
->  #include <linux/dmaengine.h>
->
-> +/* Number of AXI DMA APP Words */
-> +#define XILINX_DMA_NUM_APP_WORDS       5
-> +
->  /**
->   * struct xilinx_vdma_config - VDMA Configuration structure
->   * @frm_dly: Frame delay
-> @@ -41,7 +44,21 @@ struct xilinx_vdma_config {
->         int ext_fsync;
->  };
->
-> +/**
-> + * struct xilinx_dma_config - DMA Configuration structure
-> + * @coalesc: Interrupt coalescing threshold
-> + * @delay: Delay counter
-> + * @reset: Reset Channel
-> + */
-> +struct xilinx_dma_config {
-> +       int coalesc;
-> +       int delay;
-> +       int reset;
-> +};
-> +
->  int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
->                                         struct xilinx_vdma_config
-> *cfg);
-> +int xilinx_dma_channel_set_config(struct dma_chan *dchan,
-> +                                       struct xilinx_dma_config
-> +*cfg);
->
-
-You add this to a global header file, but I don't see any uses outside of the driver itself. Please move all of this into the driver itself and remove the header file.
-
-        Arnd
-
-The above mentioned API's  and structures will be used by the dma test client driver's to set hardware configuration information. The dma client drivers are not mainlined  yet and it is
-Internally used by  our git-tree  to test the DMA functionality in loopback .
-
-Regards,
-Kedar.
-
-
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+diff --git a/drivers/phy/phy-berlin-sata.c b/drivers/phy/phy-berlin-sat=
+a.c
+index 9682b0f66177..71568f5444ac 100644
+--- a/drivers/phy/phy-berlin-sata.c
++++ b/drivers/phy/phy-berlin-sata.c
+@@ -30,6 +30,7 @@
+ #define MBUS_WRITE_REQUEST_SIZE_128	(BIT(2) << 16)
+ #define MBUS_READ_REQUEST_SIZE_128	(BIT(2) << 19)
+=20
++#define BG2_PHY_BASE		0x080
+ #define BG2Q_PHY_BASE		0x200
+=20
+ /* register 0x01 */
+@@ -186,10 +187,15 @@ static u32 phy_berlin_power_down_bits[] =3D {
+ 	POWER_DOWN_PHY1,
+ };
+=20
++static u32 bg2_sata_phy_base =3D BG2_PHY_BASE;
+ static u32 bg2q_sata_phy_base =3D BG2Q_PHY_BASE;
+=20
+ static const struct of_device_id phy_berlin_sata_of_match[] =3D {
+ 	{
++		.compatible =3D "marvell,berlin2-sata-phy",
++		.data =3D &bg2_sata_phy_base,
++	},
++	{
+ 		.compatible =3D "marvell,berlin2q-sata-phy",
+ 		.data =3D &bg2q_sata_phy_base,
+ 	},
+--=20
+2.1.1
