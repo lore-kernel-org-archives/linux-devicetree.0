@@ -1,52 +1,45 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 2/8] phy: miphy28lp: Add MiPHY28lp header file for
- DT x Driver defines
-Date: Tue, 21 Oct 2014 16:08:27 +0530
-Message-ID: <544637A3.8010002@ti.com>
-References: <1411721657-9924-1-git-send-email-gabriel.fernandez@linaro.org> <1411721657-9924-3-git-send-email-gabriel.fernandez@linaro.org>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/4] ARM: dts: dra72-evm: NAND and USB support
+Date: Tue, 21 Oct 2014 13:41:16 +0300
+Message-ID: <1413888080-2669-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411721657-9924-3-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, alexandre torgue <alexandre.torgue@st.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: balbi-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gabriel,
+Hi Tony,
 
-On Friday 26 September 2014 02:24 PM, Gabriel FERNANDEZ wrote:
-> This provides the shared header file which will be reference from both
-> the MiPHY28lp driver and its associated Device Tree node(s).
-> 
-> Signed-off-by: alexandre torgue <alexandre.torgue@st.com>
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-> ---
->  include/dt-bindings/phy/phy-miphy.h | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->  create mode 100644 include/dt-bindings/phy/phy-miphy.h
-> 
-> diff --git a/include/dt-bindings/phy/phy-miphy.h b/include/dt-bindings/phy/phy-miphy.h
-> new file mode 100644
-> index 0000000..9bc49b9
-> --- /dev/null
-> +++ b/include/dt-bindings/phy/phy-miphy.h
-> @@ -0,0 +1,12 @@
-> +/*
-> + * This header provides constants for the phy framework
-> + * based on the STMicroelectronics miphxxxx.
-> + */
-> +#ifndef _DT_BINDINGS_PHY_MIPHY
-> +#define _DT_BINDINGS_PHY_MIPHY
-> +
-> +#define MIPHY_TYPE_SATA		1
-> +#define MIPHY_TYPE_PCIE		2
-> +#define MIPHY_TYPE_USB		3
+These patches add NAND and USB support for DRA72-evm.
+Patches are for v3.19 and based on v3.18-rc1.
 
-Since these PHY types are common across SoCs, we can have something like
-PHY_TYPE_SATA, PHY_TYPE_PCIE so that each SoCs don't have to create a separate
-header file.
+I've tested that NAND and USB host works fine on DRA72-evm.
 
-Cheers
-Kishon
+I couldn't get USB gadget mode to work. It doesn't work on DRA7-evm either.
+There seems to be some issue at the driver level. The dts entries are correct though.
+
+cheers,
+-roger
+
+George Cherian (1):
+  ARM: dts: dra72-evm: Enable USB support for dra72-evm.
+
+Roger Quadros (3):
+  ARM: dts: dra72-evm: Add NAND support
+  ARM: dts: DRA7: Move USB_OTG 4 to dra74x.dtsi
+  ARM: dts: dra72-evm: Add regulator information to USB2 PHYs
+
+ arch/arm/boot/dts/dra7.dtsi     |  20 ------
+ arch/arm/boot/dts/dra72-evm.dts | 147 ++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/dra74x.dtsi   |  22 ++++++
+ 3 files changed, 169 insertions(+), 20 deletions(-)
+
+-- 
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
