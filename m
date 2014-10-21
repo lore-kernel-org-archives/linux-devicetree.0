@@ -1,7 +1,7 @@
 From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH/RFC 08/17] MIPS: BMIPS: Select the appropriate L1_CACHE_SHIFT for 438x and 5000 CPUs
-Date: Mon, 20 Oct 2014 21:27:58 -0700
-Message-ID: <1413865687-15255-9-git-send-email-cernekee@gmail.com>
+Subject: [PATCH/RFC 10/17] MIPS: BMIPS: Add special cache handling in c-r4k.c
+Date: Mon, 20 Oct 2014 21:28:00 -0700
+Message-ID: <1413865687-15255-11-git-send-email-cernekee@gmail.com>
 References: <1413865687-15255-1-git-send-email-cernekee@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1413865687-15255-1-git-send-email-cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,34 +10,79 @@ To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, jfraser-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-BMIPS438x has a 64-byte D$ line size and BMIPS5000 has a 128-byte L2
-line size.  If L1_CACHE_SHIFT is undersized, DMA buffers will not be
-cacheline-aligned and terrible things will happen.
+BMIPS435x and BMIPS438x have a single shared L1 D$ and load/store unit,
+so it isn't necessary to raise IPIs to keep both CPUs coherent.
+
+BMIPS5000 has VIPT L1 caches that handle aliases in hardware, and its I$
+fills from D$.  But a special sequence with 2 SYNCs and 32 NOPs is needed
+to ensure coherency.
 
 Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/mips/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/mm/c-r4k.c | 43 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 37b085c..38e02e1 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -1587,12 +1587,14 @@ config CPU_BMIPS4350
+diff --git a/arch/mips/mm/c-r4k.c b/arch/mips/mm/c-r4k.c
+index fbcd867..dd261df 100644
+--- a/arch/mips/mm/c-r4k.c
++++ b/arch/mips/mm/c-r4k.c
+@@ -917,6 +917,18 @@ static inline void alias_74k_erratum(struct cpuinfo_mips *c)
+ 	}
+ }
  
- config CPU_BMIPS4380
- 	bool
-+	select MIPS_L1_CACHE_SHIFT_6
- 	select SYS_SUPPORTS_SMP
- 	select SYS_SUPPORTS_HOTPLUG_CPU
++static void b5k_instruction_hazard(void)
++{
++	__sync();
++	__sync();
++	__asm__ __volatile__(
++	"       nop; nop; nop; nop; nop; nop; nop; nop\n"
++	"       nop; nop; nop; nop; nop; nop; nop; nop\n"
++	"       nop; nop; nop; nop; nop; nop; nop; nop\n"
++	"       nop; nop; nop; nop; nop; nop; nop; nop\n"
++	: : : "memory");
++}
++
+ static char *way_string[] = { NULL, "direct mapped", "2-way",
+ 	"3-way", "4-way", "5-way", "6-way", "7-way", "8-way"
+ };
+@@ -1683,6 +1695,37 @@ void r4k_cache_init(void)
  
- config CPU_BMIPS5000
- 	bool
- 	select MIPS_CPU_SCACHE
-+	select MIPS_L1_CACHE_SHIFT_7
- 	select SYS_SUPPORTS_SMP
- 	select SYS_SUPPORTS_HOTPLUG_CPU
+ 	coherency_setup();
+ 	board_cache_error_setup = r4k_cache_error_setup;
++
++	/*
++	 * Per-CPU overrides
++	 */
++	switch (current_cpu_type()) {
++	case CPU_BMIPS4350:
++	case CPU_BMIPS4380:
++		/* No IPI is needed because all CPUs share the same D$ */
++		flush_data_cache_page = r4k_blast_dcache_page;
++		break;
++	case CPU_BMIPS5000:
++		/* We lose our superpowers if L2 is disabled */
++		if (c->scache.flags & MIPS_CACHE_NOT_PRESENT)
++			break;
++
++		/* I$ fills from D$ just by emptying the write buffers */
++		flush_cache_page = (void *)b5k_instruction_hazard;
++		flush_cache_range = (void *)b5k_instruction_hazard;
++		flush_cache_sigtramp = (void *)b5k_instruction_hazard;
++		local_flush_data_cache_page = (void *)b5k_instruction_hazard;
++		flush_data_cache_page = (void *)b5k_instruction_hazard;
++		flush_icache_range = (void *)b5k_instruction_hazard;
++		local_flush_icache_range = (void *)b5k_instruction_hazard;
++
++		/* Cache aliases are handled in hardware; allow HIGHMEM */
++		current_cpu_data.dcache.flags &= ~MIPS_CACHE_ALIASES;
++
++		/* Optimization: an L2 flush implicitly flushes the L1 */
++		current_cpu_data.options |= MIPS_CPU_INCLUSIVE_CACHES;
++		break;
++	}
+ }
  
+ static int r4k_cache_pm_notifier(struct notifier_block *self, unsigned long cmd,
 -- 
 2.1.1
 
