@@ -1,217 +1,38 @@
 From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] fdtdump: Add live tree dump capability
-Date: Tue, 21 Oct 2014 22:39:42 +0300
-Message-ID: <1413920382-32669-1-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH 0/3] dtc: Dynamic DT support (v3)
+Date: Tue, 21 Oct 2014 22:39:56 +0300
+Message-ID: <1413920399-429-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
 Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adds the capability to dump any point of the kernel's live tree
-which resides usually in /proc/device-tree.
+Enable the generation of symbol & fixup information for
+use with dynamic DT loading.
 
-For example you can do this:
+Changes since v2:
+* Split single patch to a patchset.
+* Updated to dtc mainline.
+* Changed __local_fixups__ format
+* Clean up for better legibility.
 
-	# fdtdump /proc/device-tree/ocp/ethernet\@4a100000/
-	/* dump of live tree at /proc/device-tree/ocp/ethernet@4a100000 */
-	/ {
-		name = "ethernet";
-		pinctrl-1 = <0x0000000b>;
-		pinctrl-0 = <0x0000000a>;
-		pinctrl-names = "default", "sleep";
-		ranges;
-		interrupts = <0x00000028 0x00000000 0x00000000 0x00000000>;
-		interrupt-parent = <0x00000001>;
-		#size-cells = <0x00000001>;
-		#address-cells = <0x00000001>;
-		reg = <0x4a100000 0x00000000 0x00000000 0x00000000>;
-		cpts_clock_shift = <0x0000001d>;
-		cpts_clock_mult = <0x80000000>;
-		active_slave = <0x00000000>;
-		slaves = <0x00000002>;
-		mac_control = <0x00000020>;
-		rx_descs = <0x00000040>;
-		no_bd_ram = <0x00000000>;
-		bd_ram_size = <0x00002000>;
-		ale_entries = <0x00000400>;
-		cpdma_channels = <0x00000008>;
-		ti,hwmods = "cpgmac0";
-		compatible = "ti,cpsw";
-		slave@4a100300 {
-			name = "slave";
-			phy-mode = "mii";
-			phy_id = <0x0000000e 0x00000000>;
-			mac-address = [00 00 00 00 00 00];
-		};
-		slave@4a100200 {
-			name = "slave";
-			phy-mode = "mii";
-			phy_id = <0x0000000e 0x00000000>;
-			mac-address = [00 00 00 00 00 00];
-		};
-		mdio@4a101000 {
-			name = "mdio";
-			phandle = <0x0000000e>;
-			linux,phandle = <0x0000000e>;
-			pinctrl-1 = <0x0000000d>;
-			pinctrl-0 = <0x0000000c>;
-			pinctrl-names = "default", "sleep";
-			reg = <0x4a101000 0x00000000>;
-			bus_freq = <0x000f4240>;
-			ti,hwmods = "davinci_mdio";
-			#size-cells = <0x00000000>;
-			#address-cells = <0x00000001>;
-			compatible = "ti,davinci_mdio";
-		};
-	};
+Pantelis Antoniou (3):
+  dtc: Symbol and local fixup generation support
+  dtc: Plugin (object) device tree support.
+  dtc: Document the dynamic plugin internals
 
-This makes it much easier to see the state of the kernel's live tree.
+ Documentation/dt-object-internal.txt | 301 +++++++++++++++++++++++++++++++++++
+ Documentation/manual.txt             |  10 ++
+ checks.c                             | 106 +++++++++++-
+ dtc-lexer.l                          |   5 +
+ dtc-parser.y                         |  22 ++-
+ dtc.c                                |   9 +-
+ dtc.h                                |  40 +++++
+ flattree.c                           | 202 +++++++++++++++++++++++
+ 8 files changed, 688 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/dt-object-internal.txt
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
----
- fdtdump.c | 107 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 107 insertions(+)
-
-diff --git a/fdtdump.c b/fdtdump.c
-index a29aa5e..d4480df 100644
---- a/fdtdump.c
-+++ b/fdtdump.c
-@@ -8,6 +8,14 @@
- #include <stdlib.h>
- #include <string.h>
- #include <ctype.h>
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <alloca.h>
-+#include <dirent.h>
-+#include <limits.h>
-+#include <unistd.h>
-+#include <fcntl.h>
-+#include <errno.h>
- 
- #include <libfdt.h>
- #include <libfdt_env.h>
-@@ -143,6 +151,95 @@ static void dump_blob(void *blob, bool debug)
- 	}
- }
- 
-+static void dump_live_internal(const char *path, bool debug, int depth)
-+{
-+	int maxsz = strlen(path) + 1 + PATH_MAX;
-+	char *new_path = alloca(maxsz + 1);
-+	struct stat sb;
-+	struct dirent *de;
-+	char *buf, *p;
-+	int buf_alloc, shift, chunk, left, fd, ret;
-+	DIR *d;
-+
-+	shift = 4;
-+	buf_alloc = 4 * 1024;	/* 4K (maximum chunk) */
-+	buf = alloca(buf_alloc + sizeof(uint32_t));
-+	buf[buf_alloc] = '\0';	/* always terminate (just in case) */
-+
-+	d = opendir(path);
-+	if (d == NULL)
-+		die("Could not open %s directory\n", path);
-+
-+	/* first dump the properties (files) */
-+	while ((de = readdir(d)) != NULL) {
-+		/* properties are files */
-+		if (de->d_type != DT_REG)
-+			continue;
-+		snprintf(new_path, maxsz, "%s/%s", path, de->d_name);
-+		new_path[maxsz] = '\0';
-+		printf("%*s%s", depth * shift, "", de->d_name);
-+
-+		if (stat(new_path, &sb) != 0)
-+			die("could not open: %s\n", new_path);
-+
-+		fd = open(new_path, O_RDONLY);
-+		if (fd == -1)
-+			die("Could not open: %s\n", new_path);
-+
-+		chunk = sb.st_size > buf_alloc ? buf_alloc : sb.st_size;
-+		p = buf;
-+		left = chunk;
-+		while (left > 0) {
-+			do {
-+				ret = read(fd, p, left);
-+			} while (ret == -1 && (errno == EAGAIN || errno == EINTR));
-+			if (ret == -1)
-+				die("Read failed on: %s\n", new_path);
-+			left -= ret;
-+			p += ret;
-+		}
-+		close(fd);
-+
-+		if (chunk < sb.st_size)
-+			printf(" (trunc)");
-+		utilfdt_print_data(buf, chunk);
-+		printf(";\n");
-+	}
-+
-+	/* now recurse to the directories */
-+	rewinddir(d);
-+	while ((de = readdir(d)) != NULL) {
-+		/* properties are files */
-+		if (de->d_type != DT_DIR)
-+			continue;
-+		/* skip current and parent directories */
-+		if (strcmp(de->d_name, ".") == 0 ||
-+				strcmp(de->d_name, "..") == 0)
-+			continue;
-+		snprintf(new_path, maxsz, "%s/%s", path, de->d_name);
-+		new_path[maxsz] = '\0';
-+		printf("%*s%s {\n", depth * shift, "", de->d_name);
-+		dump_live_internal(new_path, debug, depth + 1);
-+		printf("%*s};\n", depth * shift, "");
-+	}
-+}
-+
-+static void dump_live(const char *path, bool debug)
-+{
-+	char *fixed_path = alloca(strlen(path) + 1);
-+	char *p;
-+
-+	/* strip trailing / */
-+	strcpy(fixed_path, path);
-+	p = fixed_path + strlen(fixed_path) - 1;
-+	while (*p == '/' && p > fixed_path)
-+		*p-- = '\0';
-+	printf("/* dump of live tree at %s */\n", fixed_path);
-+	printf("/ {\n");
-+	dump_live_internal(fixed_path, debug, 1);
-+	printf("};\n");
-+}
-+
- /* Usage related data. */
- static const char usage_synopsis[] = "fdtdump [options] <file>";
- static const char usage_short_opts[] = "ds" USAGE_COMMON_SHORT_OPTS;
-@@ -165,6 +262,7 @@ int main(int argc, char *argv[])
- 	bool debug = false;
- 	bool scan = false;
- 	off_t len;
-+	struct stat sb;
- 
- 	while ((opt = util_getopt_long()) != EOF) {
- 		switch (opt) {
-@@ -182,6 +280,15 @@ int main(int argc, char *argv[])
- 		usage("missing input filename");
- 	file = argv[optind];
- 
-+	if (stat(file, &sb) != 0)
-+		die("could not open: %s\n", file);
-+
-+	/* dump live tree if it's a directory */
-+	if (S_ISDIR(sb.st_mode)) {
-+		dump_live(file, debug);
-+		return 0;
-+	}
-+
- 	buf = utilfdt_read_len(file, &len);
- 	if (!buf)
- 		die("could not read: %s\n", file);
 -- 
 1.7.12
 
