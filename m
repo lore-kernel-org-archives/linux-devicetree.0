@@ -1,55 +1,82 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] ARM: dts: mt8135: Add pinctrl node for mt8135.
-Date: Tue, 21 Oct 2014 11:02:10 +0200
-Message-ID: <CACRpkdbEmo1GePLnE4YvtaeBLKqhn_WsmdQKnArFthKCVPNKvg@mail.gmail.com>
-References: <1411443545-24951-1-git-send-email-srv_hongzhou.yang@mediatek.com>
-	<1411443545-24951-5-git-send-email-srv_hongzhou.yang@mediatek.com>
-	<CACRpkda-K7w-bY0uSdnZvzEKEeQg38oExoHPSW61kEv9Wv20mA@mail.gmail.com>
-	<20140924124044.GC4992@pengutronix.de>
-	<CACRpkdbtN-BDEwpJO2swnOjCe3UJhD5WOXXKBV0hPOe2M2=k7Q@mail.gmail.com>
-	<20141006071841.GN4992@pengutronix.de>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
+ driver support
+Date: Tue, 21 Oct 2014 09:06:13 +0000
+Message-ID: <ff137744d6474640aab09e5d6f62921a@BN1AFFO11FD019.protection.gbl>
+References: <1413374436-14410-1-git-send-email-sthokal@xilinx.com>
+ <4301925.4pMHXMXqA4@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141006071841.GN4992-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "Hongzhou.Yang" <srv_hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dandan.he-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4301925.4pMHXMXqA4@wuerfel>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, Srikanth Vemula <svemula@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srikanth Thokala <sthokal@xilinx.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 6, 2014 at 9:18 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> On Thu, Oct 02, 2014 at 04:02:58PM +0200, Linus Walleij wrote:
+Hi Arnd,
 
->> What is the alternative? Device Tree is very much about strings,
->> as is shown by the pin config bindings.
+-----Original Message-----
+From: Arnd Bergmann [mailto:arnd@arndb.de]
+Sent: Tuesday, October 21, 2014 1:07 AM
+To: linux-arm-kernel@lists.infradead.org
+Cc: Srikanth Thokala; vinod.koul@intel.com; dan.j.williams@intel.com; Michal Simek; grant.likely@linaro.org; robh+dt@kernel.org; devicetree@vger.kernel.org; Srikanth Vemula; linux-kernel@vger.kernel.org; Anirudha Sarangi; dmaengine@vger.kernel.org; Appana Durga Kedareswara Rao
+Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine driver support
+
+On Wednesday 15 October 2014 17:30:36 Srikanth Thokala wrote:
+> @@ -15,6 +15,9 @@
+>  #include <linux/dma-mapping.h>
+>  #include <linux/dmaengine.h>
 >
-> The alternative is to use numbers. The majority of SoCs have a bit field
-> per pad which is used for muxing the pad to different functions. The
-> natural way to describe this is a pair of numbers: <pad-number>
-> <function-number>.  The pad number can normally be directly translated
-> into a register offset and the function number to a value written to
-> that register. This is true for most SoCs I know of and makes it very
-> easy to generate code for and to prove for correctness of both the code
-> and the device tree.
+> +/* Number of AXI DMA APP Words */
+> +#define XILINX_DMA_NUM_APP_WORDS       5
+> +
+>  /**
+>   * struct xilinx_vdma_config - VDMA Configuration structure
+>   * @frm_dly: Frame delay
+> @@ -41,7 +44,21 @@ struct xilinx_vdma_config {
+>         int ext_fsync;
+>  };
+>
+> +/**
+> + * struct xilinx_dma_config - DMA Configuration structure
+> + * @coalesc: Interrupt coalescing threshold
+> + * @delay: Delay counter
+> + * @reset: Reset Channel
+> + */
+> +struct xilinx_dma_config {
+> +       int coalesc;
+> +       int delay;
+> +       int reset;
+> +};
+> +
+>  int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
+>                                         struct xilinx_vdma_config
+> *cfg);
+> +int xilinx_dma_channel_set_config(struct dma_chan *dchan,
+> +                                       struct xilinx_dma_config
+> +*cfg);
+>
 
-To me this sounds more like a discussion on how to set up a good
-firmware (BIOS) that the kernel can call into.
+You add this to a global header file, but I don't see any uses outside of the driver itself. Please move all of this into the driver itself and remove the header file.
 
-We have had many times the discussion whether DT should contain
-"jam tables" and such things, i.e. stuff that basically translate
-DT directly to register writes.
+        Arnd
 
-The one exception we have for this is pinctrl-single.c which uses a
-single word to configure a pin. I'm even not sure that was a good
-idea but it was a compromise.
+The above mentioned API's  and structures will be used by the dma test client driver's to set hardware configuration information. The dma client drivers are not mainlined  yet and it is
+Internally used by  our git-tree  to test the DMA functionality in loopback .
 
-If someone wants the above, they should use pinctrl-single.c
-(OMAP and HiSilicon uses it already), if they need another necessarily
-different driver I'm very reluctant.
+Regards,
+Kedar.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
