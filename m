@@ -1,61 +1,39 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 05/47] mfd: as3722: Drop reference to pm_power_off
- from devicetree bindings
-Date: Tue, 21 Oct 2014 09:15:15 +0100
-Message-ID: <20141021081515.GD26842@x1>
-References: <1413864783-3271-1-git-send-email-linux@roeck-us.net>
- <1413864783-3271-6-git-send-email-linux@roeck-us.net>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 0/4] input: Add new sun4i-lradc-keys driver
+Date: Tue, 21 Oct 2014 10:24:46 +0200
+Message-ID: <1413879890-7254-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1413864783-3271-6-git-send-email-linux@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBW5QTCRAKGQEUXOPGGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 20 Oct 2014, Guenter Roeck wrote:
+Hi All,
 
-> Devicetree bindings are supposed to be operating system independent
-> and should thus not describe how a specific functionality is implemen=
-ted
-> in Linux.
->=20
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
-> v2: No change
->=20
->  Documentation/devicetree/bindings/mfd/as3722.txt | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+After a bit of a pause due to -ENOTIME, here is my 2nd attempt at getting
+support for the lradc attached tablet keys found one some Allwinner boards
+upstream.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+I've dubbed this v2 even though there has been more then one version before
+because I've lost count, and as said this represents the 2nd attempt at getting
+this upstream.
 
-> diff --git a/Documentation/devicetree/bindings/mfd/as3722.txt b/Docum=
-entation/devicetree/bindings/mfd/as3722.txt
-> index 4f64b2a..0b2a609 100644
-> --- a/Documentation/devicetree/bindings/mfd/as3722.txt
-> +++ b/Documentation/devicetree/bindings/mfd/as3722.txt
-> @@ -122,8 +122,7 @@ Following are properties of regulator subnode.
-> =20
->  Power-off:
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D
-> -AS3722 supports the system power off by turning off all its rail. Th=
-is
-> -is provided through pm_power_off.
-> +AS3722 supports the system power off by turning off all its rails.
->  The device node should have the following properties to enable this
->  functionality
->  ams,system-power-controller: Boolean, to enable the power off functi=
-onality
+The major change from the previous attempt is that now the devicetree
+description has one subnode per key just like gpio-keys has.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+I hope this version is to everyones liking and can be merged soon :) The intend
+is for the actual driver to go upstream through Dmitry's tree, where as the
+3 dts patches should go upstream through Maxime's tree.
+
+Thanks & Regards,
+
+Hans
