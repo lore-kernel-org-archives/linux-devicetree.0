@@ -1,45 +1,37 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 0/4] Qualcomm SPMI PMIC pin controller drivers
-Date: Tue, 21 Oct 2014 12:59:38 +0200
-Message-ID: <CACRpkdaZ8o=Kmbez3iA_-0euuWQKwKyNNYPjnx1fBZOns0yN6A@mail.gmail.com>
-References: <1412181058-29179-1-git-send-email-iivanov@mm-sol.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 0/5] Add Spreadtrum Sharkl Platform support
+Date: Tue, 21 Oct 2014 13:15:44 +0200
+Message-ID: <20141021111544.GA25909@amd>
+References: <sprd-1017-v2>
+ <1413539665-11484-1-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1412181058-29179-1-git-send-email-iivanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1413539665-11484-1-git-send-email-chunyan.zhang@spreadtrum.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Cc: catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, galak@codeaurora.org, broonie@linaro.org, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, artagnon@gmail.com, rrichter@cavium.com, robh+dt@kernel.org, will.deacon@arm.com, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sprdlinux@freelists.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 1, 2014 at 6:30 PM, Ivan T. Ivanov <iivanov@mm-sol.com> wro=
-te:
+Hi!
 
-> Changes since v4:
->
-> - Use PMIC name in compatible string.
-> - PINCTRL_QCOM_SPMI_PMIC from Kconfig symbol.
-> - Remove pmic string from drivers file names.
-> - Fixed coding style issues.
-> - Use qcom-spmi-gpio and qcom-spmi-mpp from dirver names,
->   to be similar to qcom-spmi-iadc, qcom-spmi-vadc and
->   qcom-spmi-temp-alarm drivers.
->
-> Short description:
->
-> Patches adds pin control drivers for Multi-Purpose Pin (MPP) and
-> General-purpose pin (GPIO) controllers found in Qualcomm SPMI based
-> PMIC chips.
->
-> MPP's are enhanced GPIO's with analog circuits, which support
-> analog and digital input/output.
+> Sharkl Platform is nominated as a SoC infrastructure that supports 4G/3G/2G
+> standards based on ARMv8 multiple core architecture.Now we have only one
+> SoC(Sharkl3) based on this Platform in developing.
 
-I think I'm happy to apply this for v3.19 now that I have Bj=C3=B6rn's
-ACK on it too (or is it even Reviewed-by..?)
+Does this mean that UMTS/GSM is going to be handled on main CPU on
+your platform? Or do you still rely on DSP with specialized OS to
+provide UMTS/GSM?
 
-But I can't find these patches in my mailbox, do you have
-a branch based off v3.18-rc1 I can pull from?
+Thanks,
+									Pavel
 
-Yours,
-Linus Walleij
+>   Documentation: DT: Renamed of-serial.txt to 8250.txt
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
