@@ -1,64 +1,59 @@
-From: zyw@rock-chips.com
-Subject: [PATCH v3 6/6] ARM: dts: add RK3288 suspend support
-Date: Mon, 20 Oct 2014 20:45:05 -0700
-Message-ID: <1413863105-2887-1-git-send-email-zyw@rock-chips.com>
-References: <1413862894-2623-1-git-send-email-zyw@rock-chips.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH v2 06/47] gpio-poweroff: Drop reference to pm_power_off from devicetree bindings
+Date: Mon, 20 Oct 2014 21:12:22 -0700
+Message-ID: <1413864783-3271-7-git-send-email-linux@roeck-us.net>
+References: <1413864783-3271-1-git-send-email-linux@roeck-us.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413862894-2623-1-git-send-email-zyw@rock-chips.com>
+In-Reply-To: <1413864783-3271-1-git-send-email-linux@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Mike Turquette <mturquette@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Chris Zhong <zyw@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Tony Xie <xxx@rock-chips.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Chris Zhong <zyw@rock-chips.com>
+pm_power_off is an implementation detail. Replace it with a more generic
+description of the driver's functionality.
 
-add pmu_intmem node for suspend, add global_pwroff pinctrl.
-The pmu_intmem is used to store the resume code.
-global_pwroff is held low level at work, it would be pull to high
-when entering suspend. PMICs can get this singal, then shut down
-some power rails. So please reference the global_pwroff pinctrl
-as part of the PMIC config.
-
-Signed-off-by: Tony Xie <xxx@rock-chips.com>
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
-
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
+v2: No change
 
-Changes in v3: None
-Changes in v2:
-- put "rockchip,rk3288-pmu-sram" to first
+ Documentation/devicetree/bindings/gpio/gpio-poweroff.txt | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
- arch/arm/boot/dts/rk3288.dtsi |   11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 5950b0a..fcbe929 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -241,6 +241,11 @@
- 		status = "disabled";
- 	};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt b/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
+index d4eab92..c95a1a6 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
+@@ -2,12 +2,12 @@ Driver a GPIO line that can be used to turn the power off.
  
-+	pmu_intmem@ff720000 {
-+		compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
-+		reg = <0xff720000 0x4000>;
-+	};
-+
- 	pmu: power-management@ff730000 {
- 		compatible = "rockchip,rk3288-pmu", "syscon";
- 		reg = <0xff730000 0x100>;
-@@ -421,6 +426,12 @@
- 			bias-disable;
- 		};
+ The driver supports both level triggered and edge triggered power off.
+ At driver load time, the driver will request the given gpio line and
+-install a pm_power_off handler. If the optional properties 'input' is
+-not found, the GPIO line will be driven in the inactive
++install a handler to power off the system. If the optional properties
++'input' is not found, the GPIO line will be driven in the inactive
+ state. Otherwise its configured as an input.
  
-+		sleep {
-+			global_pwroff: global-pwroff {
-+				rockchip,pins = <0 0 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
- 		i2c0 {
- 			i2c0_xfer: i2c0-xfer {
- 				rockchip,pins = <0 15 RK_FUNC_1 &pcfg_pull_none>,
+-When the pm_power_off is called, the gpio is configured as an output,
+-and drive active, so triggering a level triggered power off
++When the the poweroff handler is called, the gpio is configured as an
++output, and drive active, so triggering a level triggered power off
+ condition. This will also cause an inactive->active edge condition, so
+ triggering positive edge triggered power off. After a delay of 100ms,
+ the GPIO is set to inactive, thus causing an active->inactive edge,
+@@ -24,7 +24,7 @@ Required properties:
+ 
+ Optional properties:
+ - input : Initially configure the GPIO line as an input. Only reconfigure
+-  it to an output when the pm_power_off function is called. If this optional
++  it to an output when the poweroff handler is called. If this optional
+   property is not specified, the GPIO is initialized as an output in its
+   inactive state.
+ 
 -- 
-1.7.9.5
+1.9.1
