@@ -1,69 +1,64 @@
-From: Alim Akhtar <alim.akhtar@gmail.com>
-Subject: Re: [PATCH v2 6/7] arm64: dts: Add nodes for mmc, i2c, rtc, watchdog
- on Exynos7
-Date: Wed, 22 Oct 2014 03:05:44 +0530
-Message-ID: <CAGOxZ51UG3XrJ_-TPr+O9BWj0Q_xj+M2VSPOragM8Y5zf0zCVg@mail.gmail.com>
-References: <1413870237-1821-1-git-send-email-a.kesavan@samsung.com>
- <1413870237-1821-7-git-send-email-a.kesavan@samsung.com> <CAGOxZ50=1ebU=8r6S_4rbL=82zb3asFTGEjkzNrJPjTkjEGfXg@mail.gmail.com>
- <544666EF.9000606@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v4 00/13] Add ACPI _DSD and unified device properties?
+ support
+Date: Tue, 21 Oct 2014 14:50:19 -0700
+Message-ID: <20141021215019.GG20951@vmdeb7>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan>
+ <1413378271.2762.77.camel@infradead.org>
+ <20141015131551.GC20034@leverpostej>
+ <1413379736.2762.79.camel@infradead.org>
+ <20141015134209.GD20034@leverpostej>
+ <db4038336b5e165b8b61eda064b10eeb.squirrel@twosheds.infradead.org>
+ <543E88CF.5060504@linux.intel.com>
+ <20141015151702.GG20034@leverpostej>
+ <543E9605.6020502@linux.intel.com>
+ <20141018083549.99F1AC408A6@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <544666EF.9000606@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Abhilash Kesavan <a.kesavan@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "catalin.marinas" <catalin.marinas@arm.com>, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, robh <robh@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141018083549.99F1AC408A6@trevor.secretlab.ca>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+On Sat, Oct 18, 2014 at 10:35:49AM +0200, Grant Likely wrote:
+> On Wed, 15 Oct 2014 17:43:01 +0200
+> , Darren Hart <dvhart@linux.intel.com>
+>  wrote:
+> > 
+> > 
+> > On 10/15/14 17:17, Mark Rutland wrote:
+> > > On Wed, Oct 15, 2014 at 03:46:39PM +0100, Darren Hart wrote:
+> > 
+> > >> Mark, what would you propose we do differently to enable this driver to
+> > >> be firmware-type agnostic?
+> > > 
+> > > For this particular driver, all I'm asking for is that the
+> > > "used-by-rtas" property is not moved over from of_find_property to
+> > > device_get_property. It is irrelevant for all ACPI systems. Evidently my
+> > > comment was unclear; I apologise for that.
+> > 
+> > So my objection here is that by keeping the of_* terms in the driver we
+> > are required to include of, although it does safely convert to returning
+> > NULL if !CONFIG_OF I suppose.
+> 
+> This shouldn't be that controversial. There will be things that only make
+> sense for DT or only ACPI. Allowing the property to be processed when
+> the other interface is being used may tempt firmware authors to use the
+> property because it just happens to have a side effect that looks right
+> to them.
+> 
+> I don't see any problem with factoring out those bits into a function
+> that is only called (or built) when the associated firmware interface is
+> used. In these situations, the driver isn't 100% generic, so having
+> small per-firmware hooks is absolutely okay and not a burden to
+> maintain.
 
-On Tue, Oct 21, 2014 at 7:30 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> On 21.10.2014 15:52, Alim Akhtar wrote:
->>> +&mmc_0 {
->>> +       status = "okay";
->>> +       num-slots = <1>;
->>> +       broken-cd;
->>> +       caps2-mmc-hs200-1_8v;
->> Please use mmc_hs200-1_8v instead.
->
-> I guess you mean "mmc-hs200-1_8v" (with a hyphen between mmc and hs200).
->
-Yes, right, that was a typo. Thanks.
->>> +       supports-highspeed;
->> As per synopsys-dw-mshc DT binding documentation, supports-highspeed
->> property is deprecated, so please use common DT binding for this,
->> which is "cap-mmc-highspeed".
->>> +       non-removable;
->>> +       card-detect-delay = <200>;
->>> +       clock-frequency = <800000000>;
->>> +       samsung,dw-mshc-ciu-div = <3>;
->>> +       samsung,dw-mshc-sdr-timing = <0 4>;
->>> +       samsung,dw-mshc-ddr-timing = <0 2>;
->>> +       pinctrl-names = "default";
->>> +       pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_qrdy &sd0_bus1 &sd0_bus4 &sd0_bus8>;
->>> +       bus-width = <8>;
->>> +};
->>> +
->>> +&mmc_2 {
->>> +       status = "okay";
->>> +       num-slots = <1>;
->>> +       supports-highspeed;
->> Here also common DT binding please "cap-sd-highspeed"
->
-> Above you suggest "cap-mmc-highspeed" to replace the same deprecated
-> property, but here "cap-sd-highspeed". What is the rationale behind
-> using only one particular new property and not both for both controllers?
->
-Well, on this particular board dw_mmc channels are dedicated to use
-only one kind of card. e.g. mmc_0 is for eMMC and which is
-non-removable and mmc_2 is for SD cards. Although controller supports
-both the properties on all channel on this SoC.
-
-> Best regards,
-> Tomasz
-
-
+Hrm... well, I suppose this isn't a hill I want to die on. I can disagree and
+commit here :-)
 
 -- 
-Regards,
-Alim
+Darren Hart
+Intel Open Source Technology Center
