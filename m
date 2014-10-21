@@ -1,64 +1,58 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
 Subject: Re: [PATCH v2 00/11] ARM: dts: zynq: Prepare Parallella
-Date: Tue, 21 Oct 2014 14:00:28 -0700
-Message-ID: <10cbd78315a84262bc3f7474dc970bd4@BN1BFFO11FD015.protection.gbl>
-References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
- <CAOesGMjAb5oXjauhbqjDhJXWct7qoXxy3XpA1=DioK7vPTwetA@mail.gmail.com>
- <5446C775.3030707@suse.de>
+Date: Tue, 21 Oct 2014 23:07:58 +0200
+Message-ID: <5446CB2E.4080503@suse.de>
+References: <1406242820-20140-1-git-send-email-afaerber@suse.de>	<CAOesGMjAb5oXjauhbqjDhJXWct7qoXxy3XpA1=DioK7vPTwetA@mail.gmail.com>	<5446C775.3030707@suse.de> <CAOesGMhSuvbWpM5CC_5Hy6BskM6sbrw0SCR90aKHvfk1Qm1_Ng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <5446C775.3030707@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Andreas Olofsson <andreas@adapteva.com>, Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, Olof Johansson <olof@lixom.net>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMhSuvbWpM5CC_5Hy6BskM6sbrw0SCR90aKHvfk1Qm1_Ng@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, Andreas Olofsson <andreas@adapteva.com>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, Lars-Peter Clausen <lars@metafoo.de>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE0LTEwLTIxIGF0IDEwOjUyUE0gKzAyMDAsIEFuZHJlYXMgRsOkcmJlciB3cm90
-ZToKPiBIaSBPbG9mIGFuZCBTw7ZyZW4sCj4gCj4gQW0gMTguMTAuMjAxNCB1bSAwNjoyOCBzY2hy
-aWViIE9sb2YgSm9oYW5zc29uOgo+ID4gT24gVGh1LCBKdWwgMjQsIDIwMTQgYXQgNDowMCBQTSwg
-QW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPiB3cm90ZToKPiA+PiBIZWxsbywKPiA+
-Pgo+ID4+IFRoaXMgcGF0Y2ggc2VyaWVzIGFkZHMgYW4gaW5pdGlhbCBkZXZpY2UgdHJlZSBmb3Ig
-dGhlIFBhcmFsbGVsbGEgYm9hcmQuCj4gPj4gVUFSVCwgU0QgY2FyZCwgRXRoZXJuZXQgYXJlIGVu
-YWJsZWQuCj4gPj4gTm90IHlldCBlbmFibGVkIGFyZSBIRE1JLCBRU1BJIGZsYXNoIGFuZCAyeCBV
-U0IuCj4gPiAKPiA+IEFuZHJlYXMgKE9sb2Zzc29uKSBraW5kbHkgc2VudCBtZSBhIGJvYXJkLCBh
-bmQgSSBhZGRlZCBpdCB0byB0aGUgYm9vdAo+ID4gZmFybSB0b2RheSwgaXQnbGwgYmUgaW5jbHVk
-ZWQgaW4gYm9vdCByZXBvcnRzIGZyb20gaGVyZSBvbi4KPiAKPiBHb29kIHRvIGhlYXIuCj4gCj4g
-PiBJIGRpZCBhIHRlc3QgcnVuIHdpdGggeWVzdGVyZGF5J3MgLW5leHQgSXQgbG9va3MgbGlrZSBu
-ZXR3b3JraW5nIGlzbid0Cj4gPiB3b3JraW5nIHRoZXJlIGF0IHRoZSBtb21lbnQsIGNsb2NrIHJl
-bGF0ZWQuIFNhbWUgaGFwcGVucyB3aXRoIDMuMTcgYW5kCj4gPiBsYXRlc3QgbWFpbmxpbmUsIGNv
-bmZpZyBtdWx0aV92N19kZWZjb25maWc6Cj4gPiAKPiA+IFtXQVJOXSBbICAgIDcuOTQzNjQ4XSBt
-YWNiIGUwMDBiMDAwLmV0aGVybmV0IGV0aDA6IHVuYWJsZSB0byBnZW5lcmF0ZQo+ID4gdGFyZ2V0
-IGZyZXF1ZW5jeTogMTI1MDAwMDAwIEh6Cj4gPiBbV0FSTl0gWyAgIDEwLjk0ODY4MV0gbWFjYiBl
-MDAwYjAwMC5ldGhlcm5ldCBldGgwOiB1bmFibGUgdG8gZ2VuZXJhdGUKPiA+IHRhcmdldCBmcmVx
-dWVuY3k6IDEyNTAwMDAwMCBIego+IAo+IEkgYW0gdW5hYmxlIHRvIHJlcHJvZHVjZSB0aGlzIGlu
-IG15IHNldHVwIC0gYXQgTGludXMnIHRpcAo+IGMyNjYxYjgwNjA5MmQ4ZWEyZGNjYjdiMDJiNjU3
-NzY1NTVlMGVlNDcgKHYzLjE4LXJjMS02OC1nYzI2NjFiOCksIG1ha2UKPiBvbGRjb25maWcnaW5n
-IG15IC9wcm9jL2NvbmZpZy5nei4KPiAKPiBTw7ZyZW4sIGluIGxpZ2h0IG9mIHlvdXIgZXhwbGFu
-YXRpb25zLCBzaG91bGQgSSBiZSBleHBlY3RpbmcgcHJvYmxlbXMKPiB3aXRoIDFHYkUgb3Igd2l0
-aCAxMDBNYkU/IE15IGJvYXJkIGlzIGNvbm5lY3RlZCB0byBhIDFHYkUgc3dpdGNoLgoKTm90IGlu
-IGdlbmVyYWwuIEFzIEkgc2FpZCwgSSBoYXZlbid0IHNlZW4gdGhhdCBvbiBvdXIgYm9hcmRzIHll
-dCBhbmQgSQpkaWQgYSBsaXR0bGUgYml0IG9mIHRlc3RpbmcgbWFraW5nIHN1cmUgdGhhdCB0aGUg
-ZnVuZGFtZW50YWwgY29kZSB0bwpzd2l0Y2ggYmV0d2VlbiBmcmVxdWVuY2llcyB3b3Jrcy4gSS5l
-LiBvbiBvdXIgemM3MDYgYW5kIHpjNzAyIGJvYXJkcyBJCnVzdWFsbHkgY2FuIHVzZSBldGh0b29s
-IHRvIGZvcmNlIGEgY2VydGFpbiBzcGVlZCBvbiB0aGUgaW50ZXJmYWNlIGFuZApaeW5xIGFkanVz
-dHMgdG8gaXQganVzdCBmaW5lLgoKQnV0IGFzIEkgc2FpZCwgaXQgZG9lcyByZWx5IG9uIHRoZSBk
-aXZpZGVyIGJlaW5nIHNvdXJjZWQgd2l0aCBhCmZyZXF1ZW5jeSB0aGF0IGFsbG93cyBnZW5lcmF0
-aW5nIHRoZSByZXF1aXJlZCBFdGhlcm5ldCBjbG9jayBieQphZGp1c3RpbmcgdGhlIDYtYml0IGRp
-dmlkZXIgb25seS4gSWYgdGhpcyByZXF1aXJlbWVudCBpcyBub3QgbWV0LApJIGV4cGVjdCB5b3Ug
-bWF5IHNlZSBpc3N1ZXMgbGlrZSBPbG9mIHBvc3RlZC4KCkFyZSB5b3UgKEFuZHJlYXMvT2xvZikg
-dXNpbmcgdGhlIHNhbWUgYm9vdGxvYWRlcnM/CgpJIGhvcGUgdGhhdCBoZWxwcy4KCglTw7ZyZW4K
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
-bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
-ZXJuZWwK
+Am 21.10.2014 um 23:01 schrieb Olof Johansson:
+> On Tue, Oct 21, 2014 at 1:52 PM, Andreas F=C3=A4rber <afaerber@suse.d=
+e> wrote:
+>> Am 18.10.2014 um 06:28 schrieb Olof Johansson:
+>>> I did a test run with yesterday's -next It looks like networking is=
+n't
+>>> working there at the moment, clock related. Same happens with 3.17 =
+and
+>>> latest mainline, config multi_v7_defconfig:
+>>>
+>>> [WARN] [    7.943648] macb e000b000.ethernet eth0: unable to genera=
+te
+>>> target frequency: 125000000 Hz
+>>> [WARN] [   10.948681] macb e000b000.ethernet eth0: unable to genera=
+te
+>>> target frequency: 125000000 Hz
+>>
+>> I am unable to reproduce this in my setup - at Linus' tip
+>> c2661b806092d8ea2dccb7b02b65776555e0ee47 (v3.18-rc1-68-gc2661b8), ma=
+ke
+>> oldconfig'ing my /proc/config.gz.
+>>
+>> S=C3=B6ren, in light of your explanations, should I be expecting pro=
+blems
+>> with 1GbE or with 100MbE? My board is connected to a 1GbE switch.
+>=20
+> My board might have old firmware/bitstream on it? It reports as:
+>=20
+> U-Boot 2012.10-00003-g792c31c (Jan 03 2014 - 12:24:08)
+
+Mine reports the same version.
+
+sha512sum of non-headless bitstream:
+decb37222a7da0de39b1c1eb95714500cc006506cc86d85ed9c6c7b30c7cd7b91ef3592=
+b886311f4285b5ce0079b4ffcd83f91ae275435ac15cefefe7db00b08
+ /mnt/parallella.bit.bin
+
+Andreas
+
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
+=BCrnberg
