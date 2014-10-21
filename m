@@ -1,175 +1,141 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 3/4] ARM: dts: sun5i: Add lradc node
-Date: Tue, 21 Oct 2014 10:24:49 +0200
-Message-ID: <1413879890-7254-4-git-send-email-hdegoede@redhat.com>
-References: <1413879890-7254-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 3/4] dt-bindings: Add pinctrl bindings for mt65xx/mt81xx.
+Date: Tue, 21 Oct 2014 10:45:35 +0200
+Message-ID: <CACRpkdZiafTKeOr66AJi9sVSaHV5HOmWS-iWxQ6YvnQiTF5+UQ@mail.gmail.com>
+References: <1411443545-24951-1-git-send-email-srv_hongzhou.yang@mediatek.com>
+	<1411443545-24951-4-git-send-email-srv_hongzhou.yang@mediatek.com>
+	<CACRpkdbiKSvX2dipnq3oyc6YSGWFgCk69onzF=-B9UWLjAYNWQ@mail.gmail.com>
+	<1412260889.4875.11.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBYFQTCRAKGQEVNLIQZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1413879890-7254-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412260889.4875.11.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: "Hongzhou.Yang" <srv_hongzhou.yang@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>, dandan.he@mediatek.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts | 36 ++++++++++++++++++++++++
- arch/arm/boot/dts/sun5i-a10s.dtsi                |  7 +++++
- arch/arm/boot/dts/sun5i-a13-olinuxino.dts        | 36 ++++++++++++++++++++++++
- arch/arm/boot/dts/sun5i-a13.dtsi                 |  7 +++++
- 4 files changed, 86 insertions(+)
+On Thu, Oct 2, 2014 at 4:41 PM, Lucas Stach <l.stach@pengutronix.de> wrote:
+> Am Donnerstag, den 02.10.2014, 16:00 +0200 schrieb Linus Walleij:
 
-diff --git a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-index ea9519d..84df85e 100644
---- a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-+++ b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-@@ -14,6 +14,7 @@
- /dts-v1/;
- /include/ "sun5i-a10s.dtsi"
- /include/ "sunxi-common-regulators.dtsi"
-+#include <dt-bindings/input/input.h>
- 
- / {
- 	model = "Olimex A10s-Olinuxino Micro";
-@@ -98,6 +99,41 @@
- 			};
- 		};
- 
-+		lradc: lradc@01c22800 {
-+			vref-supply = <&reg_vcc3v0>;
-+			status = "okay";
-+			button@19 {
-+				label = "Volume Up";
-+				linux,code = <KEY_VOLUMEUP>;
-+				channel = <0>;
-+				voltage = <191274>;
-+			};
-+			button@39 {
-+				label = "Volume Down";
-+				linux,code = <KEY_VOLUMEDOWN>;
-+				channel = <0>;
-+				voltage = <392644>;
-+			};
-+			button@60 {
-+				label = "Menu";
-+				linux,code = <KEY_MENU>;
-+				channel = <0>;
-+				voltage = <601151>;
-+			};
-+			button@80 {
-+				label = "Enter";
-+				linux,code = <KEY_ENTER>;
-+				channel = <0>;
-+				voltage = <795090>;
-+			};
-+			button@98 {
-+				label = "Home";
-+				linux,code = <KEY_HOME>;
-+				channel = <0>;
-+				voltage = <987387>;
-+			};
-+		};
-+
- 		uart0: serial@01c28000 {
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/sun5i-a10s.dtsi
-index 531272c..a73cec4 100644
---- a/arch/arm/boot/dts/sun5i-a10s.dtsi
-+++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
-@@ -520,6 +520,13 @@
- 			reg = <0x01c20c90 0x10>;
- 		};
- 
-+		lradc: lradc@01c22800 {
-+			compatible = "allwinner,sun4i-lradc-keys";
-+			reg = <0x01c22800 0x100>;
-+			interrupts = <31>;
-+			status = "disabled";
-+		};
-+
- 		sid: eeprom@01c23800 {
- 			compatible = "allwinner,sun4i-a10-sid";
- 			reg = <0x01c23800 0x10>;
-diff --git a/arch/arm/boot/dts/sun5i-a13-olinuxino.dts b/arch/arm/boot/dts/sun5i-a13-olinuxino.dts
-index 429994e..11ecb36 100644
---- a/arch/arm/boot/dts/sun5i-a13-olinuxino.dts
-+++ b/arch/arm/boot/dts/sun5i-a13-olinuxino.dts
-@@ -14,6 +14,7 @@
- /dts-v1/;
- /include/ "sun5i-a13.dtsi"
- /include/ "sunxi-common-regulators.dtsi"
-+#include <dt-bindings/input/input.h>
- 
- / {
- 	model = "Olimex A13-Olinuxino";
-@@ -66,6 +67,41 @@
- 			};
- 		};
- 
-+		lradc: lradc@01c22800 {
-+			vref-supply = <&reg_vcc3v0>;
-+			status = "okay";
-+			button@19 {
-+				label = "Volume Up";
-+				linux,code = <KEY_VOLUMEUP>;
-+				channel = <0>;
-+				voltage = <191274>;
-+			};
-+			button@39 {
-+				label = "Volume Down";
-+				linux,code = <KEY_VOLUMEDOWN>;
-+				channel = <0>;
-+				voltage = <392644>;
-+			};
-+			button@60 {
-+				label = "Menu";
-+				linux,code = <KEY_MENU>;
-+				channel = <0>;
-+				voltage = <601151>;
-+			};
-+			button@80 {
-+				label = "Enter";
-+				linux,code = <KEY_ENTER>;
-+				channel = <0>;
-+				voltage = <795090>;
-+			};
-+			button@98 {
-+				label = "Home";
-+				linux,code = <KEY_HOME>;
-+				channel = <0>;
-+				voltage = <987387>;
-+			};
-+		};
-+
- 		uart1: serial@01c28400 {
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&uart1_pins_b>;
-diff --git a/arch/arm/boot/dts/sun5i-a13.dtsi b/arch/arm/boot/dts/sun5i-a13.dtsi
-index b131068..528d0d6 100644
---- a/arch/arm/boot/dts/sun5i-a13.dtsi
-+++ b/arch/arm/boot/dts/sun5i-a13.dtsi
-@@ -468,6 +468,13 @@
- 			reg = <0x01c20c90 0x10>;
- 		};
- 
-+		lradc: lradc@01c22800 {
-+			compatible = "allwinner,sun4i-lradc-keys";
-+			reg = <0x01c22800 0x100>;
-+			interrupts = <31>;
-+			status = "disabled";
-+		};
-+
- 		sid: eeprom@01c23800 {
- 			compatible = "allwinner,sun4i-a10-sid";
- 			reg = <0x01c23800 0x10>;
--- 
-2.1.0
+>> > +The mediatek,pinfunc can use defines directly,
+>> > +which are already defind in boot/dts/mt8135-pinfunc.h.
+>> > +
+>> > +Optional subnode-properties:
+>> > +- generic pin configuration option to use, bias-disable, bias-pull-down,
+>> > +  bias-pull,up, output-low and output-high are valid.
+>> > +  Example :
+>> > +       i2c0_pins_a {
+>> > +               mediatek,pinfunc = <MT8135_PIN_195_SDA1__FUNC_SDA1>;
+>> > +               bias-disable;
+>> > +       };
+>>
+>> I don't like this approach at all.
+>>
+>> I prefer that pins are put into groups named by strings, like "i2c0-pos0"
+>> inside the driver and then connected to function with a certain
+>> device-related name, such as "i2c0".
+>>
+>
+> So we should create artificial software groups where there are none in
+> hardware? This sounds really backward to me. Almost every new SoC out
+> there has the ability to mux every pin on it's own.
+
+This discussion has been had again and again and again in the past,
+please consult the mail archives before repeating history.
+
+Usually the number of function to group mappings look like
+they are arbitrary but in electronic practice they are not.
+
+In practice there is one or two places where e.g. the MMC
+card will be connected, you will not use every second pin
+of the MMC connector for half an SPI port, even if it is possible
+in theory.
+
+> By defining artificial software groups in the driver we are pushing
+> constraints in the binding that don't really exist in hardware.
+
+The binding is supposed to be helpful when configuring the
+system, so for a person setting up a new device tree that may
+be helpful.
+
+It gives them some info on what is electronically reasonable.
+
+> So if
+> someone comes up with a pin usage that isn't covered by the existing
+> groups we need to change the binding.
+
+In my experience people don't change bindings very much, because
+the life cycle of an SoC is so short. They get it right the first time or
+not at all.
+
+> If the hardware allows this much freedom we should also allow it in the
+> pinctrl binding.
+
+I have to push back on this, because the pin control bindings are
+exploding, and it is irresponsible of me as subsystem maintainer to
+just allow anything.
+
+Can you think of something that is both generic and helpful when
+working with other systems than this?
+
+What we need to do is get away from all "necessarily different"
+bindings.
+
+>> Then put the pin configuration (bias etc) in a separate node in the same
+>> state definition like that:
+>>
+>> i2c0_pins_a {
+>>          function = "i2c0";
+>>          groups = "i2c0-pos0";
+>> };
+>> i2c0_pins_b {
+>>          bias-disable;
+>> };
+>
+> The problem with that is that different pins might need different
+> configuration for the same muxed function. To properly reflect this we
+> would need to duplicate the pin definitions. One popular example is the
+> MMC interface where part of the pins need to have a pull-up, while
+> others don't. How would you reflect this with the DT description above?
+
+That's no problem. Muxing is group+function and configuration is
+per-pin.
+
+See this example:
+
+                        uart2 {
+                                uart2_default_mode: uart2_default {
+                                        default_mux {
+                                                function = "u2";
+                                                groups = "u2rxtx_c_1";
+                                        };
+                                        default_cfg1 {
+                                                pins = "GPIO29_W2"; /* RXD */
+                                                bias-pull-up;
+                                                low-power-disable;
+                                        };
+
+                                        default_cfg2 {
+                                                pins = "GPIO30_W3"; /* TXD */
+                                                output-high;
+                                                low-power-disable;
+                                        };
+                                };
+
+                                uart2_sleep_mode: uart2_sleep {
+                                        sleep_cfg1 {
+                                                pins = "GPIO29_W2"; /* RXD */
+                                                low-power-enable;
+                                        };
+
+                                        sleep_cfg2 {
+                                                pins = "GPIO30_W3"; /* TXD */
+                                                low-power-enable;
+                                        };
+                                };
+                        };
+
+
+Yours,
+Linus Walleij
