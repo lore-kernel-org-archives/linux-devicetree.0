@@ -1,60 +1,53 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] mtd: nand: add sunxi NFC dt bindings doc
-Date: Tue, 21 Oct 2014 15:58:41 +0200
-Message-ID: <20141021155841.180861d0@bbrezillon>
-References: <1413805520-14947-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1413805520-14947-3-git-send-email-boris.brezillon@free-electrons.com>
-	<20141021024134.GC1193@ld-irv-0074>
-	<20141021145344.575b19e6@bbrezillon>
-	<62d54110-9c7f-4342-9201-a1ae23194620@googlegroups.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v2 6/7] arm64: dts: Add nodes for mmc, i2c, rtc, watchdog
+ on Exynos7
+Date: Tue, 21 Oct 2014 16:00:15 +0200
+Message-ID: <544666EF.9000606@gmail.com>
+References: <1413870237-1821-1-git-send-email-a.kesavan@samsung.com> <1413870237-1821-7-git-send-email-a.kesavan@samsung.com> <CAGOxZ50=1ebU=8r6S_4rbL=82zb3asFTGEjkzNrJPjTkjEGfXg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBF6NTGRAKGQEVGCLC3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <62d54110-9c7f-4342-9201-a1ae23194620-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Ezaul Zillmer <ezaulzillmer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAGOxZ50=1ebU=8r6S_4rbL=82zb3asFTGEjkzNrJPjTkjEGfXg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "catalin.marinas" <catalin.marinas@arm.com>, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, robh <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Oct 2014 06:13:16 -0700 (PDT)
-Ezaul Zillmer <ezaulzillmer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On 21.10.2014 15:52, Alim Akhtar wrote:
+>> +&mmc_0 {
+>> +       status = "okay";
+>> +       num-slots = <1>;
+>> +       broken-cd;
+>> +       caps2-mmc-hs200-1_8v;
+> Please use mmc_hs200-1_8v instead.
 
-> Hello everyone 
-> 
-> Boris Brezillon 
-> 
-> downloaded sunxi-nand-v6 now compiled for Cubieboard2 
-> https://github.com/bbrezillon/linux-sunxi.git sunxi b-nand-v6 
-> 
-> u-boot 
-> git clone https://github.com/jwrdegoede/u-boot-b sunxi.git sunxi-wip 
-> 
-> 
-> [1.143903] nand: Could not find valid JEDEC parameter page; aborting 
-> [1.150369] nand: device found, Manufacturer ID: 0xec, Chip ID: 0xd7 
-> [1.156766] nand: Samsung NAND 4GiB 3.3V 8-bit 
-> [1.161214] nand: 4096MiB, MLC, page size: 8192, OOB size: 640 
-> [1.167167] sunxi_nand 1c03000.nand: ECC init failed: -22 
-> [1.172588] sunxi_nand 1c03000.nand: failed to init nand chips 
-> [1.178502] sunxi_nand: probe of 1c03000.nand failed with error -22 
-> 
-> need some more data?
-> 
+I guess you mean "mmc-hs200-1_8v" (with a hyphen between mmc and hs200).
 
-Can you try to apply this patch [1] ?
+>> +       supports-highspeed;
+> As per synopsys-dw-mshc DT binding documentation, supports-highspeed
+> property is deprecated, so please use common DT binding for this,
+> which is "cap-mmc-highspeed".
+>> +       non-removable;
+>> +       card-detect-delay = <200>;
+>> +       clock-frequency = <800000000>;
+>> +       samsung,dw-mshc-ciu-div = <3>;
+>> +       samsung,dw-mshc-sdr-timing = <0 4>;
+>> +       samsung,dw-mshc-ddr-timing = <0 2>;
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_qrdy &sd0_bus1 &sd0_bus4 &sd0_bus8>;
+>> +       bus-width = <8>;
+>> +};
+>> +
+>> +&mmc_2 {
+>> +       status = "okay";
+>> +       num-slots = <1>;
+>> +       supports-highspeed;
+> Here also common DT binding please "cap-sd-highspeed"
 
-[1]http://code.bulix.org/26bi35-87234
+Above you suggest "cap-mmc-highspeed" to replace the same deprecated
+property, but here "cap-sd-highspeed". What is the rationale behind
+using only one particular new property and not both for both controllers?
 
-
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Best regards,
+Tomasz
