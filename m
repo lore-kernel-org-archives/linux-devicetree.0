@@ -1,123 +1,72 @@
-From: Robert Richter <rric@kernel.org>
-Subject: [GIT PULL] dts, kbuild: Implement support for dtb vendor subdirs
-Date: Tue, 21 Oct 2014 20:15:04 +0200
-Message-ID: <20141021181504.GV20170@rric.localhost>
-References: <1409899692-1455-1-git-send-email-rric@kernel.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v5 3/4] pinctrl: Qualcomm SPMI PMIC GPIO pin controller
+ driver
+Date: Tue, 21 Oct 2014 19:15:52 +0100
+Message-ID: <5446A2D8.3070204@linaro.org>
+References: <1412181058-29179-1-git-send-email-iivanov@mm-sol.com> <1412181058-29179-4-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1409899692-1455-1-git-send-email-rric@kernel.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Michal Marek <mmarek@suse.cz>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, Robert Richter <rrichter@cavium.com>, Andrew Bresticker <abrestic@google.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412181058-29179-4-git-send-email-iivanov@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Arnd,
+Hi Ivan,
 
-On 05.09.14 08:48:06, Robert Richter wrote:
-> From: Robert Richter <rrichter@cavium.com>
-> 
-> For arm64 we want to put dts files into vendor's subdirectories from
-> the beginning. This patch set implements this. As this is a generic
-> kbuild implementation, vendor subdirs will be also available for
-> arch/arm and other architectures. The subdirectory tree is also
-> reflected in the install path.
-> 
-> A new makefile variable dts-dirs is introduced to point to dts
-> subdirs. This variable is used by kbuild for building and installation
-> of dtb files.
-> 
-> A dts Makefile looks now as follows:
-> 
-> ----
-> dtb-$(CONFIG_...) += some_file_1.dtb
-> dtb-$(CONFIG_...) += some_file_2.dtb
-> 
-> dts-dirs          += dir_vendor_a
-> dts-dirs          += dir_vendor_b
-> 
-> # come always afterwards:
-> always         := $(dtb-y)
-> subdir-y       := $(dts-dirs)
-> clean-files    := *.dtb
-> ----
-> 
-> This patches also introduces the dtbs_install make target for
-> arm64. Install rules are moved to Makefile.dtbinst using the same
-> style and calling convention like for modinst and fwinst.
-> 
-> Robert Richter (6):
->   dts, arm64: Add dtbs_install make target
->   dts, kbuild: Factor out dtbs install rules to Makefile.dtbinst
->   dts, arm/arm64: Remove dtbs build rules in sub-makes
->   dts, kbuild: Implement support for dtb vendor subdirs
->   dts, arm64: Move dts files to vendor subdirs
->   dts, arm: Remove $(MACHINE) variable from dtbs make recipes
+Just realized that this patch can generate compiler errors due to 3.18 
+changes in pinmux_ops struct and gpiochip_remove returns void now.
 
-please pull this series for inclusion into v3.19 from:
+Same with drivers/pinctrl/qcom/pinctrl-spmi-pmic-mpp.c
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rric/linux.git dts-subdirs-for-arm-soc-v3.19
 
-I have updated and rebased the patches to v3.18-rc1. No changes except
-conflict resolution of patch 5/6.
+
+On 01/10/14 17:30, Ivan T. Ivanov wrote:
+> +	.enable			= pmic_gpio_pinmux_enable,
+> +};
+
+>
+> +static int pmic_gpio_remove(struct platform_device *pdev)
+> +{
+> +	struct pmic_gpio_state *state = platform_get_drvdata(pdev);
+> +	int ret;
+> +
+> +	ret = gpiochip_remove(&state->chip);
+> +	if (ret < 0)
+> +		return ret;
+
+
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-pmic-gpio.c 
+b/drivers/pinctrl/qcom/pinctrl-spmi-pmic-gpio.c
+index 493f0d3..0d69758 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-pmic-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-pmic-gpio.c
+@@ -378,7 +378,7 @@ static const struct pinmux_ops pmic_gpio_pinmux_ops = {
+  	.get_functions_count	= pmic_gpio_get_functions_count,
+  	.get_function_name	= pmic_gpio_get_function_name,
+  	.get_function_groups	= pmic_gpio_get_function_groups,
+-	.enable			= pmic_gpio_pinmux_enable,
++	.set_mux		= pmic_gpio_pinmux_enable,
+  };
+
+  static int pmic_gpio_config_get(struct pinctrl_dev *pctldev,
+@@ -907,12 +907,8 @@ err_chip:
+  static int pmic_gpio_remove(struct platform_device *pdev)
+  {
+  	struct pmic_gpio_state *state = platform_get_drvdata(pdev);
+-	int ret;
+-
+-	ret = gpiochip_remove(&state->chip);
+-	if (ret < 0)
+-		return ret;
+
++	gpiochip_remove(&state->chip);
+  	pinctrl_unregister(state->ctrl);
+  	return 0;
+
+
 
 Thanks,
-
--Robert
-
-
-
-The following changes since commit f114040e3ea6e07372334ade75d1ee0775c355e1:
-
-  Linux 3.18-rc1 (2014-10-19 18:08:38 -0700)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rric/linux.git dts-subdirs-for-arm-soc-v3.19
-
-for you to fetch changes up to 6f889d8ba125693778e05f0166b963cf08fed930:
-
-  dts, arm: Remove $(MACHINE) variable from dtbs make recipes (2014-10-21 18:07:00 +0200)
-
-----------------------------------------------------------------
-dts, kbuild: Implement support for dtb vendor subdirs
-
-----------------------------------------------------------------
-Robert Richter (6):
-      dts, arm64: Add dtbs_install make target
-      dts, kbuild: Factor out dtbs install rules to Makefile.dtbinst
-      dts, arm/arm64: Remove dtbs build rules in sub-makes
-      dts, kbuild: Implement support for dtb vendor subdirs
-      dts, arm64: Move dts files to vendor subdirs
-      dts, arm: Remove $(MACHINE) variable from dtbs make recipes
-
- arch/arm/Makefile                                  |  8 +++-
- arch/arm/boot/dts/Makefile                         | 12 +----
- arch/arm64/Makefile                                | 10 ++++-
- arch/arm64/boot/dts/Makefile                       | 15 +++----
- arch/arm64/boot/dts/apm/Makefile                   |  5 +++
- arch/arm64/boot/dts/{ => apm}/apm-mustang.dts      |  0
- arch/arm64/boot/dts/{ => apm}/apm-storm.dtsi       |  0
- arch/arm64/boot/dts/arm/Makefile                   |  6 +++
- arch/arm64/boot/dts/{ => arm}/foundation-v8.dts    |  0
- arch/arm64/boot/dts/{ => arm}/rtsm_ve-aemv8a.dts   |  0
- .../boot/dts/{ => arm}/rtsm_ve-motherboard.dtsi    |  0
- arch/arm64/boot/dts/cavium/Makefile                |  5 +++
- arch/arm64/boot/dts/{ => cavium}/thunder-88xx.dts  |  0
- arch/arm64/boot/dts/{ => cavium}/thunder-88xx.dtsi |  0
- scripts/Kbuild.include                             |  6 +++
- scripts/Makefile.dtbinst                           | 51 ++++++++++++++++++++++
- scripts/Makefile.lib                               | 12 -----
- 17 files changed, 95 insertions(+), 35 deletions(-)
- create mode 100644 arch/arm64/boot/dts/apm/Makefile
- rename arch/arm64/boot/dts/{ => apm}/apm-mustang.dts (100%)
- rename arch/arm64/boot/dts/{ => apm}/apm-storm.dtsi (100%)
- create mode 100644 arch/arm64/boot/dts/arm/Makefile
- rename arch/arm64/boot/dts/{ => arm}/foundation-v8.dts (100%)
- rename arch/arm64/boot/dts/{ => arm}/rtsm_ve-aemv8a.dts (100%)
- rename arch/arm64/boot/dts/{ => arm}/rtsm_ve-motherboard.dtsi (100%)
- create mode 100644 arch/arm64/boot/dts/cavium/Makefile
- rename arch/arm64/boot/dts/{ => cavium}/thunder-88xx.dts (100%)
- rename arch/arm64/boot/dts/{ => cavium}/thunder-88xx.dtsi (100%)
- create mode 100644 scripts/Makefile.dtbinst
+srini
