@@ -1,76 +1,60 @@
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCHv3 1/2] ARM: dts: socfpga: Fix SD card detect
-Date: Wed, 22 Oct 2014 10:47:10 -0500
-Message-ID: <5447D17E.7040802@opensource.altera.com>
-References: <1413908111-28165-1-git-send-email-dinguyen@opensource.altera.com>	<1413908111-28165-2-git-send-email-dinguyen@opensource.altera.com>	<20141021171033.GK10262@pengutronix.de>	<5446AA87.8070307@opensource.altera.com> <CAD=FV=VP=8XPwWjGnVhS1SibMhsuuqbZOBdRT_GE5JKAL_xbuA@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v1 1/5] mfd: tps65910: Convert ti,system-power-controller
+ DT property to poweroff-source
+Date: Wed, 22 Oct 2014 16:50:58 +0100
+Message-ID: <20141022155058.GN4939@x1>
+References: <1413991587-11110-1-git-send-email-romain.perier@gmail.com>
+ <CABgxDoKus_D=ooCz3TqyXP9CTJUgbZVxQSsw4ZgBx1oYaTefbw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=VP=8XPwWjGnVhS1SibMhsuuqbZOBdRT_GE5JKAL_xbuA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CABgxDoKus_D=ooCz3TqyXP9CTJUgbZVxQSsw4ZgBx1oYaTefbw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: PERIER Romain <romain.perier@gmail.com>
+Cc: "sameo@linux.intel.com" <sameo@linux.intel.com>, robh+dt@kernel.org, "pawel.moll" <pawel.moll@arm.com>, mark.rutland@arm.com, ijc+devicetree <ijc+devicetree@hellion.org.uk>, galak <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, swarren <swarren@wwwdotorg.org>, "thierry.reding" <thierry.reding@gmail.com>, gnurou <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 22 Oct 2014, PERIER Romain wrote:
 
+> This is related to the following subject "[RFC v3 PATCH 1/5] of: Add
+> standard property for poweroff capability" and depends on the
+> corresponding patch.
 
-On 10/22/14, 10:45 AM, Doug Anderson wrote:
-> Dinh,
-> 
-> (without the HTML mail this time, sorry)
-> 
-> On Tue, Oct 21, 2014 at 11:48 AM, Dinh Nguyen
-> <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
->> On 10/21/2014 12:10 PM, Steffen Trumtrar wrote:
->>> Hi!
->>>
->>> On Tue, Oct 21, 2014 at 11:15:10AM -0500, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
->>>> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>>>
->>>> Without this patch, the booting the SOCFPGA platform would hang at the
->>>> SDMMC driver loading. The issue, debugged by Doug Anderson, turned out
->>>> to be that the GPIO bank used by the SD card-detect was not set to
->>>> status="okay".
->>>>
->>>> Suggested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>>> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>>> ---
->>>> v3: Correctly degugged the issue to be a gpio node not having status="okay"
->>>> ---
->>>>  arch/arm/boot/dts/socfpga_cyclone5_socdk.dts | 6 ++++++
->>>>  1 file changed, 6 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
->>>> index d7296a5..03a3745 100644
->>>> --- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
->>>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
->>>> @@ -37,6 +37,12 @@
->>>>               */
->>>>              ethernet0 = &gmac1;
->>>>      };
->>>> +
->>>> +    soc {
->>>> +            gpio@ff709000 {
->>>> +                    status = "okay";
->>>> +            };
->>>> +    };
-> 
-> I haven't dug into the details you provided about the GPIO
-> infrastructure of socfpga, but it does seem like it might be nice to
-> some easier way to reference things in
-> "arch/arm/boot/dts/socfpga.dtsi".
-> 
-> Looking at other examples they call the "gpio@ff708000" "gpio0" and
-> the sub node something like "porta".  Given that this is the only
-> reference to the GPIO, it seems like now would be the time to change
-> it.
+Then it should be sent in the same patch-set.
 
-Yeah...I like your idea. Let met get a new patch for that...
+There's nothing I can do with this patch as is.
 
-Thanks,
-Dinh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 2014-10-22 17:26 GMT+02:00 Romain Perier <romain.perier@gmail.com>:
+> > No longer use custom property to define poweroff capability, use th=
+e standard
+> > DT property instead.
+> >
+> > Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> > ---
+> >  drivers/mfd/tps65910.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
+> > index 7612d89..b8dca8a 100644
+> > --- a/drivers/mfd/tps65910.c
+> > +++ b/drivers/mfd/tps65910.c
+> > @@ -423,8 +423,7 @@ static struct tps65910_board *tps65910_parse_dt=
+(struct i2c_client *client,
+> >
+> >         board_info->irq =3D client->irq;
+> >         board_info->irq_base =3D -1;
+> > -       board_info->pm_off =3D of_property_read_bool(np,
+> > -                       "ti,system-power-controller");
+> > +       board_info->pm_off =3D of_system_has_poweroff_source(np);
+> >
+> >         return board_info;
+> >  }
+> >
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
