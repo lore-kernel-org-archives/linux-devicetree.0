@@ -1,82 +1,83 @@
-From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 4/4] arm64:numa: adding numa support for arm64 platforms.
-Date: Wed, 22 Oct 2014 16:57:43 +0530
-Message-ID: <CAFpQJXUQsxGRxQroZ1X0pbHp5n=TymaP0r662NU0WetM_oZUKw@mail.gmail.com>
-References: <1411635840-24038-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
-	<1411635840-24038-5-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
-	<20141003121343.GG26643@leverpostej>
-	<CAFpQJXVJtn=PTYTd5icHhfYxsQnEzUP+w9kXXDJSs-M=eGNWVw@mail.gmail.com>
-	<20141006112640.GF24686@leverpostej>
-	<CAFpQJXU4AW_WycWUWWaONvCiFgJU5KC_coCH8EU9kO=a0Rf9hQ@mail.gmail.com>
-	<CAFpQJXXkgtr6E0owHxAu0MG8+7s5LBt_mVB9gQM1VfkX2rY5FQ@mail.gmail.com>
-	<20141020142555.GA9968@linaro.org>
-	<20141020143045.GA10233@linaro.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 2/4] phy: exynos5-usbdrd: Add pipe-clk and utmi-clk
+ support
+Date: Wed, 22 Oct 2014 17:23:28 +0530
+Message-ID: <54479AB8.2010106@ti.com>
+References: <1412677176-3850-1-git-send-email-gautam.vivek@samsung.com> <1412677176-3850-3-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141020143045.GA10233-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412677176-3850-3-git-send-email-gautam.vivek@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org
+Cc: linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, balbi@ti.com, kgene.kim@samsung.com, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 20, 2014 at 8:00 PM, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Oct 20, 2014 at 03:25:56PM +0100, Steve Capper wrote:
->> On Fri, Oct 17, 2014 at 10:49:56PM +0530, Ganapatrao Kulkarni wrote:
->
-> [...]
->
->>          /*Proximity Distance matrix for 4Node system
->> >                        <from-node to-node distance>
->> >         */
->> >          node-matrix=    <0 0 10>,
->> >                                <0 1 20>,
->> >                                <0 2 30>,
->> >                                <0 3 10>,
->> >                                <1 0 20>,
->> >                                 <1 1 10>,
->> >                                <1 2 30>,
->> >                               <1 3 10>,
->> >                               <2 0 30>,
->> >                               <2 1 20>,
->> >                               <2 2 10>,
->> >                              <2 3 10>,
->> >                             <3 0 10>,
->> >                             <3 1 20>,
->> >                             <3 2 30>,
->> >                             <3 3 10>,
->> >  }
->>
->> Hi Ganapat,
->> The above caught my attention.
->>
->> For a 4-node system do we not need 16 distances; the implication of that
->> would be that the distance between node A-B could be different from the
->> distance between B-A? Also the distance from a node to itself could be
->> safely assumed to be zero?
->>
->> I think we should have a symmetric matrix with zero-diagonals so strictly
->> only seven values would need specifying for a 4-node system.
-Thanks Stave for the comments.
-I too thought initially to take the assumption like
-distance B-A is same as A-B and A-A is always defined to LOCAL.
-However this example is an ideal case which will define all 16
-distances for 4 node system.
-In actual DT, we can skip to provide A-A and B-A, In kernel
-implementation we will use these common/generic assumptions
-to derive missing distances.
->
-> s/seven/six/
->
-> I really need to learn how to count.... :-/
->
->>
->> Cheers,
->> --
->> Steve
-thanks
-Ganapat
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+
+On Tuesday 07 October 2014 03:49 PM, Vivek Gautam wrote:
+> Exynos7 SoC has now separate gate control for 125MHz pipe3 phy
+> clock, as well as 60MHz utmi phy clock.
+> So get the same and control in the phy-exynos5-usbdrd driver.
+> 
+> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> ---
+>  .../devicetree/bindings/phy/samsung-phy.txt        |    4 ++++
+>  drivers/phy/phy-exynos5-usbdrd.c                   |   22 ++++++++++++++++++++
+>  2 files changed, 26 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> index 15e0f2c..c2bc9dc 100644
+> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> @@ -138,6 +138,10 @@ Required properties:
+>  	       PHY operations, associated by phy name. It is used to
+>  	       determine bit values for clock settings register.
+>  	       For Exynos5420 this is given as 'sclk_usbphy30' in CMU.
+> +	- optional clocks: Exynos7 SoC has now following additional
+> +			   gate clocks available:
+> +			   - phy_pipe: for PIPE3 phy
+> +			   - phy_utmi: for UTMI+ phy
+>  - samsung,pmu-syscon: phandle for PMU system controller interface, used to
+>  		      control pmu registers for power isolation.
+>  - #phy-cells : from the generic PHY bindings, must be 1;
+> diff --git a/drivers/phy/phy-exynos5-usbdrd.c b/drivers/phy/phy-exynos5-usbdrd.c
+> index f756aca..013ee84 100644
+> --- a/drivers/phy/phy-exynos5-usbdrd.c
+> +++ b/drivers/phy/phy-exynos5-usbdrd.c
+> @@ -148,6 +148,8 @@ struct exynos5_usbdrd_phy_drvdata {
+>   * @dev: pointer to device instance of this platform device
+>   * @reg_phy: usb phy controller register memory base
+>   * @clk: phy clock for register access
+> + * @pipeclk: clock for pipe3 phy
+> + * @utmiclk: clock for utmi+ phy
+>   * @drv_data: pointer to SoC level driver data structure
+>   * @phys[]: array for 'EXYNOS5_DRDPHYS_NUM' number of PHY
+>   *	    instances each with its 'phy' and 'phy_cfg'.
+> @@ -161,6 +163,8 @@ struct exynos5_usbdrd_phy {
+>  	struct device *dev;
+>  	void __iomem *reg_phy;
+>  	struct clk *clk;
+> +	struct clk *pipeclk;
+> +	struct clk *utmiclk;
+>  	const struct exynos5_usbdrd_phy_drvdata *drv_data;
+>  	struct phy_usb_instance {
+>  		struct phy *phy;
+> @@ -446,6 +450,8 @@ static int exynos5_usbdrd_phy_power_on(struct phy *phy)
+>  
+>  	dev_dbg(phy_drd->dev, "Request to power_on usbdrd_phy phy\n");
+>  
+> +	clk_prepare_enable(phy_drd->utmiclk);
+> +	clk_prepare_enable(phy_drd->pipeclk);
+
+We can have a separate function for powering on/off usb3 phy and usb2 phy
+independently. That way if the USB controller is operating only on high speed
+mode, the pipe clock need not be enabled at all.
+
+I think we should create separate PHYs (phy_create) for usb2 phy and usb3 phy
+here. Please refer how Lee Jones did that for miphy365x modelling each PHY as a
+child node to the PHY provider and doing phy_create for each child node.
+
+Thanks
+Kishon
