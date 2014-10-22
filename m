@@ -1,92 +1,141 @@
-From: Scott Branden <sbranden@broadcom.com>
-Subject: [PATCH v7 1/7] ARM: cygnus: Initial support for Broadcom Cygnus SoC
-Date: Wed, 22 Oct 2014 13:57:48 -0700
-Message-ID: <1414011474-11821-2-git-send-email-sbranden@broadcom.com>
-References: <Scott Branden <sbranden@broadcom.com>
- <1414011474-11821-1-git-send-email-sbranden@broadcom.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 1/3] PM / clock_ops: Add pm_clk_add_clk()
+Date: Wed, 22 Oct 2014 14:16:31 -0700
+Message-ID: <20141022211631.GC4250@dtor-ws>
+References: <1413809764-21995-1-git-send-email-grygorii.strashko@ti.com>
+ <1413809764-21995-2-git-send-email-grygorii.strashko@ti.com>
+ <20141022173856.GB28104@dtor-ws>
+ <5447FF51.5000401@ti.com>
+ <20141022201409.GB4250@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1414011474-11821-1-git-send-email-sbranden@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar
- Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho
- Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>
-Cc: devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>, JD Zheng <jdzheng@broadcom.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141022201409.GB4250@dtor-ws>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, khilman@linaro.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, ulf.hansson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSm9uYXRoYW4gUmljaGFyZHNvbiA8am9uYXRoYXJAYnJvYWRjb20uY29tPgoKQWRkcyBp
-bml0aWFsIHN1cHBvcnQgZm9yIHRoZSBDeWdudXMgU29DIGJhc2VkIG9uIEJyb2FkY29t4oCZcyBp
-UHJvYyBzZXJpZXMuCgpSZXZpZXdlZC1ieTogUmF5IEp1aSA8cmp1aUBicm9hZGNvbS5jb20+ClJl
-dmlld2VkLWJ5OiBEZXNtb25kIExpdSA8ZGVzbW9uZGxAYnJvYWRjb20uY29tPgpSZXZpZXdlZC1i
-eTogSkQgKEppYW5kb25nKSBaaGVuZyA8amR6aGVuZ0Bicm9hZGNvbS5jb20+ClRlc3RlZC1ieTog
-Sm9uYXRoYW4gUmljaGFyZHNvbiA8am9uYXRoYXJAYnJvYWRjb20uY29tPgpTaWduZWQtb2ZmLWJ5
-OiBTY290dCBCcmFuZGVuIDxzYnJhbmRlbkBicm9hZGNvbS5jb20+Ci0tLQogYXJjaC9hcm0vbWFj
-aC1iY20vS2NvbmZpZyAgICAgIHwgICAzMiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KwogYXJjaC9hcm0vbWFjaC1iY20vTWFrZWZpbGUgICAgIHwgICAgMyArKysKIGFyY2gvYXJtL21h
-Y2gtYmNtL2JjbV9jeWdudXMuYyB8ICAgMjYgKysrKysrKysrKysrKysrKysrKysrKysrKysKIDMg
-ZmlsZXMgY2hhbmdlZCwgNjEgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gv
-YXJtL21hY2gtYmNtL2JjbV9jeWdudXMuYwoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtYmNt
-L0tjb25maWcgYi9hcmNoL2FybS9tYWNoLWJjbS9LY29uZmlnCmluZGV4IDJhYmFkNzQuLjczZDk1
-YzIgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL21hY2gtYmNtL0tjb25maWcKKysrIGIvYXJjaC9hcm0v
-bWFjaC1iY20vS2NvbmZpZwpAQCAtNSw2ICs1LDM2IEBAIG1lbnVjb25maWcgQVJDSF9CQ00KIAog
-aWYgQVJDSF9CQ00KIAorY29tbWVudCAiSVBST0MgYXJjaGl0ZWN0ZWQgU29DcyIKKworY29uZmln
-IEFSQ0hfQkNNX0lQUk9DCisJYm9vbAorCXNlbGVjdCBBUk1fR0lDCisJc2VsZWN0IENBQ0hFX0wy
-WDAKKwlzZWxlY3QgSEFWRV9BUk1fU0NVIGlmIFNNUAorCXNlbGVjdCBIQVZFX0FSTV9UV0QgaWYg
-U01QCisJc2VsZWN0IEFSTV9HTE9CQUxfVElNRVIKKworCXNlbGVjdCBDTEtTUkNfTU1JTworCXNl
-bGVjdCBBUkNIX1JFUVVJUkVfR1BJT0xJQgorCXNlbGVjdCBBUk1fQU1CQQorCXNlbGVjdCBQSU5D
-VFJMCisJaGVscAorCSAgVGhpcyBlbmFibGVzIHN1cHBvcnQgZm9yIHN5c3RlbXMgYmFzZWQgb24g
-QnJvYWRjb20gSVBST0MgYXJjaGl0ZWN0ZWQgU29Dcy4KKwkgIFRoZSBJUFJPQyBjb21wbGV4IGNv
-bnRhaW5zIG9uZSBvciBtb3JlIEFSTSBDUFVzIGFsb25nIHdpdGggY29tbW9uCisJICBjb3JlIHBl
-cmlwZXJhbHMuIEFwcGxpY2F0aW9uIHNwZWNpZmljIFNvQ3MgYXJlIGNyZWF0ZWQgYnkgYWRkaW5n
-IGEKKwkgIHVBcmNoaXRlY3R1cmUgY29udGFpbmluZyBwZXJpcGhlcmFscyBvdXRzaWRlIG9mIHRo
-ZSBJUFJPQyBjb21wbGV4LgorCSAgQ3VycmVudGx5IHN1cHBvcnRlZCBTb0NzIGFyZSBDeWdudXMu
-CisKK2NvbmZpZyBBUkNIX0JDTV9DWUdOVVMKKwlib29sICJCcm9hZGNvbSBDeWdudXMgU3VwcG9y
-dCIgaWYgQVJDSF9NVUxUSV9WNworCXNlbGVjdCBBUkNIX0JDTV9JUFJPQworCWhlbHAKKwkgIEVu
-YWJsZSBzdXBwb3J0IGZvciB0aGUgQ3lnbnVzIGZhbWlseSwKKwkgIHdoaWNoIGluY2x1ZGVzIHRo
-ZSBmb2xsb3dpbmcgdmFyaWFudHM6CisJICBCQ00xMTMwMCwgQkNNMTEzMjAsIEJDTTExMzUwLCBC
-Q00xMTM2MCwKKwkgIEJDTTU4MzAwLCBCQ001ODMwMiwgQkNNNTgzMDMsIEJDTTU4MzA1LgorCiBj
-b25maWcgQVJDSF9CQ01fTU9CSUxFCiAJYm9vbCAiQnJvYWRjb20gTW9iaWxlIFNvQyBTdXBwb3J0
-IiBpZiBBUkNIX01VTFRJX1Y3CiAJc2VsZWN0IEFSQ0hfUkVRVUlSRV9HUElPTElCCkBAIC02NSw2
-ICs5NSw4IEBAIGVuZG1lbnUKIAogZW5kaWYKIAorY29tbWVudCAiT3RoZXIgQXJjaGl0ZWN0dXJl
-cyIKKwogY29uZmlnIEFSQ0hfQkNNMjgzNQogCWJvb2wgIkJyb2FkY29tIEJDTTI4MzUgZmFtaWx5
-IiBpZiBBUkNIX01VTFRJX1Y2CiAJc2VsZWN0IEFSQ0hfUkVRVUlSRV9HUElPTElCCmRpZmYgLS1n
-aXQgYS9hcmNoL2FybS9tYWNoLWJjbS9NYWtlZmlsZSBiL2FyY2gvYXJtL21hY2gtYmNtL01ha2Vm
-aWxlCmluZGV4IDMwMGFlNGIuLjM0ZDQ1YmEgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL21hY2gtYmNt
-L01ha2VmaWxlCisrKyBiL2FyY2gvYXJtL21hY2gtYmNtL01ha2VmaWxlCkBAIC0xMCw2ICsxMCw5
-IEBACiAjIG9mIE1FUkNIQU5UQUJJTElUWSBvciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVS
-UE9TRS4gIFNlZSB0aGUKICMgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0
-YWlscy4KIAorIyBDeWdudXMKK29iai0kKENPTkZJR19BUkNIX0JDTV9DWUdOVVMpICs9ICBiY21f
-Y3lnbnVzLm8KKwogIyBCQ00yODFYWAogb2JqLSQoQ09ORklHX0FSQ0hfQkNNXzI4MVhYKQkrPSBi
-b2FyZF9iY20yODF4eC5vCiAKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtYmNtL2JjbV9jeWdu
-dXMuYyBiL2FyY2gvYXJtL21hY2gtYmNtL2JjbV9jeWdudXMuYwpuZXcgZmlsZSBtb2RlIDEwMDY0
-NAppbmRleCAwMDAwMDAwLi40MWI0OTMzCi0tLSAvZGV2L251bGwKKysrIGIvYXJjaC9hcm0vbWFj
-aC1iY20vYmNtX2N5Z251cy5jCkBAIC0wLDAgKzEsMjYgQEAKKy8qCisgKiBDb3B5cmlnaHQgMjAx
-NCBCcm9hZGNvbSBDb3Jwb3JhdGlvbi4gIEFsbCByaWdodHMgcmVzZXJ2ZWQuCisgKgorICogVW5s
-ZXNzIHlvdSBhbmQgQnJvYWRjb20gZXhlY3V0ZSBhIHNlcGFyYXRlIHdyaXR0ZW4gc29mdHdhcmUg
-bGljZW5zZQorICogYWdyZWVtZW50IGdvdmVybmluZyB1c2Ugb2YgdGhpcyBzb2Z0d2FyZSwgdGhp
-cyBzb2Z0d2FyZSBpcyBsaWNlbnNlZCB0byB5b3UKKyAqIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUg
-R05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgYXMKKyAqIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBT
-b2Z0d2FyZSBGb3VuZGF0aW9uIHZlcnNpb24gMi4KKyAqCisgKiBUaGlzIHByb2dyYW0gaXMgZGlz
-dHJpYnV0ZWQgImFzIGlzIiBXSVRIT1VUIEFOWSBXQVJSQU5UWSBvZiBhbnkKKyAqIGtpbmQsIHdo
-ZXRoZXIgZXhwcmVzcyBvciBpbXBsaWVkOyB3aXRob3V0IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFu
-dHkKKyAqIG9mIE1FUkNIQU5UQUJJTElUWSBvciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVS
-UE9TRS4gIFNlZSB0aGUKKyAqIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3JlIGRl
-dGFpbHMuCisgKi8KKworI2luY2x1ZGUgPGFzbS9tYWNoL2FyY2guaD4KKworc3RhdGljIGNvbnN0
-IGNoYXIgY29uc3QgKmJjbV9jeWdudXNfZHRfY29tcGF0W10gPSB7CisJImJyY20sY3lnbnVzIiwK
-KwlOVUxMLAorfTsKKworRFRfTUFDSElORV9TVEFSVChCQ01fQ1lHTlVTX0RULCAiQnJvYWRjb20g
-Q3lnbnVzIFNvQyIpCisJLmwyY19hdXhfdmFsCT0gMCwKKwkubDJjX2F1eF9tYXNrCT0gfjAsCisJ
-LmR0X2NvbXBhdCA9IGJjbV9jeWdudXNfZHRfY29tcGF0LAorTUFDSElORV9FTkQKLS0gCjEuNy45
-LjUKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
-eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsCg==
+On Wed, Oct 22, 2014 at 01:14:09PM -0700, Dmitry Torokhov wrote:
+> On Wed, Oct 22, 2014 at 10:02:41PM +0300, Grygorii Strashko wrote:
+> > On 10/22/2014 08:38 PM, Dmitry Torokhov wrote:
+> > >On Mon, Oct 20, 2014 at 03:56:02PM +0300, Grygorii Strashko wrote:
+> > >>From: Geert Uytterhoeven <geert+renesas@glider.be>
+> > >>
+> > >>The existing pm_clk_add() allows to pass a clock by con_id. However,
+> > >>when referring to a specific clock from DT, no con_id is available.
+> > >>
+> > >>Add pm_clk_add_clk(), which allows to specify the struct clk * directly.
+> > >>
+> > >>Reviewed-by: Kevin Hilman <khilman@linaro.org>
+> > >>Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > >>Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> > >>---
+> > >>
+> > >>  Pay attantion pls, that there is another series of patches
+> > >>  which have been posted already and which depends from this patch
+> > >>    "[PATCH v4 0/3] ARM: rk3288 : Add PM Domain support"
+> > >>    https://lkml.org/lkml/2014/10/20/105
+> > >>
+> > >>  drivers/base/power/clock_ops.c | 41 +++++++++++++++++++++++++++++++----------
+> > >>  include/linux/pm_clock.h       |  8 ++++++++
+> > >>  2 files changed, 39 insertions(+), 10 deletions(-)
+> > >>
+> > >>diff --git a/drivers/base/power/clock_ops.c b/drivers/base/power/clock_ops.c
+> > >>index 7836930..f14b767 100644
+> > >>--- a/drivers/base/power/clock_ops.c
+> > >>+++ b/drivers/base/power/clock_ops.c
+> > >>@@ -53,7 +53,8 @@ static inline int __pm_clk_enable(struct device *dev, struct clk *clk)
+> > >>   */
+> > >>  static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
+> > >>  {
+> > >>-	ce->clk = clk_get(dev, ce->con_id);
+> > >>+	if (!ce->clk)
+> > >>+		ce->clk = clk_get(dev, ce->con_id);
+> > >>  	if (IS_ERR(ce->clk)) {
+> > >>  		ce->status = PCE_STATUS_ERROR;
+> > >>  	} else {
+> > >>@@ -63,15 +64,8 @@ static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
+> > >>  	}
+> > >>  }
+> > >>
+> > >>-/**
+> > >>- * pm_clk_add - Start using a device clock for power management.
+> > >>- * @dev: Device whose clock is going to be used for power management.
+> > >>- * @con_id: Connection ID of the clock.
+> > >>- *
+> > >>- * Add the clock represented by @con_id to the list of clocks used for
+> > >>- * the power management of @dev.
+> > >>- */
+> > >>-int pm_clk_add(struct device *dev, const char *con_id)
+> > >>+static int __pm_clk_add(struct device *dev, const char *con_id,
+> > >>+			struct clk *clk)
+> > >>  {
+> > >>  	struct pm_subsys_data *psd = dev_to_psd(dev);
+> > >>  	struct pm_clock_entry *ce;
+> > >>@@ -93,6 +87,8 @@ int pm_clk_add(struct device *dev, const char *con_id)
+> > >>  			kfree(ce);
+> > >>  			return -ENOMEM;
+> > >>  		}
+> > >>+	} else {
+> > >>+		ce->clk = clk;
+
+Shouldn't this be
+
+		ce->clk = __clk_get(clk);
+
+to account for clk_put() in __pm_clk_remove()?
+
+> > >>  	}
+> > >>
+> > >>  	pm_clk_acquire(dev, ce);
+> > >>@@ -104,6 +100,31 @@ int pm_clk_add(struct device *dev, const char *con_id)
+> > >>  }
+> > >>
+> > >>  /**
+> > >>+ * pm_clk_add - Start using a device clock for power management.
+> > >>+ * @dev: Device whose clock is going to be used for power management.
+> > >>+ * @con_id: Connection ID of the clock.
+> > >>+ *
+> > >>+ * Add the clock represented by @con_id to the list of clocks used for
+> > >>+ * the power management of @dev.
+> > >>+ */
+> > >>+int pm_clk_add(struct device *dev, const char *con_id)
+> > >>+{
+> > >>+	return __pm_clk_add(dev, con_id, NULL);
+> > >
+> > >Bikeshedding: why do we need __pm_clk_add() and not simply have
+> > >"canonical" pm_clk_add_clk() and then do:
+> > >
+> > >int pm_clk_add(struct device *dev, const char *con_id)
+> > >{
+> > >	struct clk *clk;
+> > >
+> > >	clk = clk_get(dev, con_id);
+> > >	...
+> > >	return pm_clk_add_clk(dev, clk);
+> > >}
+> > 
+> > Hm. I did fast look at code and:
+> > 1) agree - there is a lot of thing which can be optimized ;)
+> > 2) in my strong opinion, this patch is the fastest and simplest
+> > way to introduce new API (take a look on pm_clock_entry->con_id
+> > management code) and It is exactly what we need as of now.
+> 
+> Yeah, I guess. We are lucky we do not crash when we are tryign to print
+> NULL strings (see pm_clk_acquire).
+> 
+> BTW, what is the point of doing pm_clk_add(dev, NULL)? We add clock
+> entry with status PCE_STATUS_ERROR and then have to handle it
+> everywhere? Can we just return -EINVAL if someone triies to pass NULL
+> ass con_id?
+
+Umm, no, ignore me here, I misread clk_get(dev, NULL) - it won't return
+error. Still, do why do we need to keep clock entry if clk_get() fails
+for some reason?
+
+Thanks.
+
+-- 
+Dmitry
