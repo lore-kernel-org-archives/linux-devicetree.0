@@ -1,86 +1,36 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 3/6] clk: rockchip: RK3288: add suspend and resume
-Date: Tue, 21 Oct 2014 21:58:48 -0700
-Message-ID: <CAD=FV=XFjL5ah854oaxpEpyGjJB-zRNw2nN73C0X9JaTs-Hjyw@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v4 4/6] ARM: rockchip: add suspend and resume for RK3288
+Date: Tue, 21 Oct 2014 22:01:46 -0700
+Message-ID: <CAD=FV=VBOqkMn+wSoYdFgdTu=0Hq38xk7_fo8Vr_ACupLVBkVw@mail.gmail.com>
 References: <1413933461-25602-1-git-send-email-zyw@rock-chips.com>
-	<1413933902-25767-1-git-send-email-zyw@rock-chips.com>
+	<1413933928-25803-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413933902-25767-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Xie <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413933928-25803-1-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Mike Turquette <mturquette@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.org>, Tony Xie <xxx@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
 Chris,
 
-On Tue, Oct 21, 2014 at 4:25 PM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> +#ifdef CONFIG_PM_SLEEP
-> +static void __iomem *rk3288_cru_base;
-> +static const int rk3288_saved_cru_reg_ids[] = {
-> +       RK3288_MODE_CON,
-> +       RK3288_CLKSEL_CON(0),
-> +       RK3288_CLKSEL_CON(1),
-> +       RK3288_CLKSEL_CON(10),
-> +       RK3288_CLKSEL_CON(33),
-> +       RK3288_CLKSEL_CON(37),
+On Tue, Oct 21, 2014 at 4:25 PM, Chris Zhong <zyw@rock-chips.com> wrote:
+> @@ -34,7 +40,8 @@ static const char * const rockchip_board_dt_compat[] = {
+>  };
+>
+>  DT_MACHINE_START(ROCKCHIP_DT, "Rockchip Cortex-A9 (Device Tree)")
+> -       .l2c_aux_val    = 0,
+> -       .l2c_aux_mask   = ~0,
+> +       .l2c_aux_val    = 0,
+> +       .l2c_aux_mask   = ~0,
 
-I'm still not 100% certain why these registers were picked.  Are they
-all needed?  Are we sure that no extras are needed?
-
-I'll try to find some time to research, but if you happen to know the
-answer that'd be nice.
+Please avoid unrelated spacing changes.
 
 
-> +};
-> +
-> +static u32 rk3288_saved_cru_regs[ARRAY_SIZE(rk3288_saved_cru_reg_ids)];
-> +
-> +/*
-> + * cru will be set in maskrom when system wake up from fastboot
-> + * mode in suspend,
-> + * so the operation is saving the changed regs.
-> + * The apll/cpll/gpll will be set into slow mode in maskrom.
-> + * It is mean that resume code run in 24m quit slowly!
+Other than that this is looking like a good starting point.  I'm sure
+we'll find other things to do, but I'd be in favor of landing this and
+spinning.  I can see a device suspend/resume with this patch, so:
 
-s/quit/quite
-
-> + * so we must resume these plls as soon as possible.
-
-This function doesn't actually resume PLLs, it just restores dividers / etc.
-
-
-I will say that with this patch the "clk_summary" doesn't change
-before and after suspend/resume.  Without this patch I see this diff
-before/after:
-
-<                 l2ram                     0            0   600000000
-         0 0
-<                 aclk_core_m0              0            0   600000000
-         0 0
-<                 aclk_core_mp              0            0   360000000
-         0 0
-<                 atclk                     0            0   360000000
-         0 0
-<                 pclk_dbg_pre              0            0   360000000
-         0 0
-<                    pclk_core_niu           0            0
-360000000          0 0
-<                    cs_dbg                 0            0   360000000
-         0 0
-<                    pclk_dbg               0            0   360000000
-         0 0
----
->                 l2ram                     0            0  1800000000          0 0
->                 aclk_core_m0              0            0  1800000000          0 0
->                 aclk_core_mp              0            0  1800000000          0 0
->                 atclk                     0            0  1800000000          0 0
->                 pclk_dbg_pre              0            0  1800000000          0 0
->                    pclk_core_niu           0            0  1800000000          0 0
->                    cs_dbg                 0            0  1800000000          0 0
->                    pclk_dbg               0            0  1800000000          0 0
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tested-by: Doug Anderson <dianders@chromium.org>
+Reviewed-by: Doug Anderson <dianders@chromium.org>
