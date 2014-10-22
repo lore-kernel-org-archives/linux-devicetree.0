@@ -1,77 +1,73 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RESUBMIT PATCH v4 7/8] regulator: sky81452: Add compatible
- string for device binding
-Date: Wed, 22 Oct 2014 11:27:23 +0100
-Message-ID: <20141022102723.GL2344@sirena.org.uk>
-References: <1413179262-27636-1-git-send-email-jack.yoo@skyworksinc.com>
- <1413179262-27636-8-git-send-email-jack.yoo@skyworksinc.com>
- <20141013103512.GJ27755@sirena.org.uk>
- <20141014011112.GB2751@jack-ThinkPad-T520>
- <20141014075606.GN27755@sirena.org.uk>
- <20141017091950.GA3233@jack-ThinkPad-T520>
- <20141017101734.GB1820@sirena.org.uk>
- <20141017104309.GA3136@jack-ThinkPad-T520>
- <20141017142605.GU1820@sirena.org.uk>
- <20141020061024.GA9406@jack-ThinkPad-T520>
+From: Joe.C <yingjoe.chen@mediatek.com>
+Subject: [PATCH v4 0/8] arm: Add basic support for MediaTek MT8127 & MT8135
+ SoCs
+Date: Wed, 22 Oct 2014 18:29:49 +0800
+Message-ID: <1413973797-17619-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="m+jEI8cDoTn6Mu9E"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141020061024.GA9406@jack-ThinkPad-T520>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gyungoh Yoo <gyungoh@gmail.com>
-Cc: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, hc.yen@mediatek.com, yh.chen@mediatek.com, linux-kernel@vger.kernel.org, nathan.chung@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, eddie.huang@mediatek.com, yingjoe.chen@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+This is v4 of adding basic device tree support for MT8127 & MT8135.
+Since the last series didn't make it into v3.18-rc1, I updated the
+series and send it again. This series is based on v3.18-rc1
 
---m+jEI8cDoTn6Mu9E
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Besides changing patch subjects to make them look more consistence,
+I include config option patch original posted with mt8135 pinctrl
+support[1]. It seems more natural in this series and our works on
+clk & pmic will also need it.
 
-On Mon, Oct 20, 2014 at 03:10:24PM +0900, Gyungoh Yoo wrote:
-> On Fri, Oct 17, 2014 at 04:26:05PM +0200, Mark Brown wrote:
+We are planning to upstream drivers for MT8127 & MT8135 SoCs.
+MT8135 is a tablet soc featuring 2 CA7 + 2 CA15. MT8127 is a
+tablet soc with 4 CA7. They share many similar IP components
+with MT65xx series.
 
-> > The thing I'm seeing is that the binding for your device with the
-> > subnode looks very much like the device trees of devices with multiple
-> > regulators.  The fact that you only have one regulator is a bit
-> > difference but not that much.  It seems like drivers should fit into one
-> > of two patterns: either the regulator is described in the root node for
-> > the device for single purpose devices or there should be a collection of
-> > regulators like is supported with this helper API.  Having a collection
-> > with only one node doesn't seem to be a problem in any way.
+Changes in v4:
+ - Include config options for different mediatek SoCs.
 
-> Thank you for your kind comments.
-> My understanding is getting better.
+Changes in v3:
+ - Changing earlyprintk order and dt-binding based on Matthias' suggestion.
 
-> For my clear understanding:
-> I think the original designed which I wanted to design is similar
-> with arizona-ldo1.c
-> It seems that this is 1st pattern your explained above.
-> Can I ask what is different between arizona-ldo1.c and
-> this sky81452-regulator.c?
-> I think both are designed under root node.
+v2:
+ - Change timer compatible string.
+ - Build dtb for mt8127 & mt8135
+ - Adding earlyprintk support for mt8127 & mt8135
 
-Were that code being written today I'd probably be asking for it to use
-a regulators subnode to be consistent with everything else, it's a
-slightly older driver and sometimes we've not spotted the patterns when
-they're added, once we get to the point of adding the helpers as we have
-now things are definitely getting baked in.
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/289285.html
 
---m+jEI8cDoTn6Mu9E
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Joe.C (8):
+  ARM: mediatek: Add basic support for mt8127
+  ARM: mediatek: add dts for 8127 Moose board
+  ARM: mediatek: Add basic support for mt8135
+  ARM: mediatek: add dts for MT8135 evaluation board.
+  dt-bindings: add more chips in documentation for Mediatek SoC
+  ARM: dts: Build dtb for mt8127 & mt8135
+  ARM: mediatek: Add earlyprintk support for mt8127 & mt8135
+  ARM: mediatek: Add config option for mediatek SoCs.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUR4aKAAoJECTWi3JdVIfQ/uIH/0glztVbV+RiouufNTimD9v9
-WOcU2UXLdunyf7zETEyaJJn+btGIYTR3JFNOeyjO1DgfMsweQsUyKPQgpXNypGFE
-5+8jGVf82rXuGcl93EsA83cXRfCL+JESjlhCUWavzKTfQ9iG5se1ASTy9JSf8i06
-TUfUjYLhRaGCAicnnPsAyOT89tpdN0eF8OiHtiev6ZEmZUtePhu3xywIYPCXjsWM
-CrWp8BxM6/49iyAI4yq6FwW49/q/yR10kmLgrEqLA+xz786KIshuvxfRgxLsHDfp
-aEwshr+kCpSzpCgandR8hXFovjD89cw0bqyvNdh7hzU08yEgj7zK25UWfLs5e4w=
-=ShJw
------END PGP SIGNATURE-----
-
---m+jEI8cDoTn6Mu9E--
+ Documentation/devicetree/bindings/arm/mediatek.txt |  15 ++-
+ arch/arm/Kconfig.debug                             |  20 ++++
+ arch/arm/boot/dts/Makefile                         |   4 +-
+ arch/arm/boot/dts/mt8127-moose.dts                 |  24 +++++
+ arch/arm/boot/dts/mt8127.dtsi                      |  93 +++++++++++++++++
+ arch/arm/boot/dts/mt8135-evbp1.dts                 |  24 +++++
+ arch/arm/boot/dts/mt8135.dtsi                      | 115 +++++++++++++++++++++
+ arch/arm/mach-mediatek/Kconfig                     |  22 +++-
+ arch/arm/mach-mediatek/mediatek.c                  |   2 +
+ 9 files changed, 312 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm/boot/dts/mt8127-moose.dts
+ create mode 100644 arch/arm/boot/dts/mt8127.dtsi
+ create mode 100644 arch/arm/boot/dts/mt8135-evbp1.dts
+ create mode 100644 arch/arm/boot/dts/mt8135.dtsi
