@@ -1,79 +1,119 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH v4 8/8] ARM: mediatek: Add config option for mediatek
- SoCs.
-Date: Wed, 22 Oct 2014 22:19:33 +0800
-Message-ID: <1413987573.19686.138.camel@mtksdaap41>
-References: <1413973797-17619-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <1413973797-17619-9-git-send-email-yingjoe.chen@mediatek.com>
-	 <CABuKBe+Ew6R2Kb90-gDHBQ4HuydfFxJdYmr+v9-KNC-b0K4Tkw@mail.gmail.com>
-	 <1413984696.19686.72.camel@mtksdaap41>
-	 <CABuKBeLJuaDnCYuvvS6csNzvbTeEdgEUdZ4tBQeVPuw37JK11Q@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
+ portal(s)
+Date: Wed, 22 Oct 2014 15:29:31 +0100
+Message-ID: <20141022142931.GA4010@leverpostej>
+References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
+ <1413986972-621-2-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABuKBeLJuaDnCYuvvS6csNzvbTeEdgEUdZ4tBQeVPuw37JK11Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Yingjoe Chen <yingjoe.chen@gmail.com>, Hsien-Chun Yen <hc.yen@mediatek.com>, huang eddie <eddie.huang@mediatek.com>, Nathan Chung <nathan.chung@mediatek.com>, Yuhau Chen <yh.chen@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1413986972-621-2-git-send-email-Emilian.Medve@Freescale.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Emil Medve <Emilian.Medve@freescale.com>
+Cc: "scottwood@freescale.com" <scottwood@freescale.com>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Pawel Moll <Pawel.Moll@arm.com>, "Geoff.Thorpe@freescale.com" <Geoff.Thorpe@freescale.com>, "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-10-22 at 15:53 +0200, Matthias Brugger wrote:
-> Hi Joe,
-> 
-> 2014-10-22 15:31 GMT+02:00 Yingjoe Chen <yingjoe.chen@mediatek.com>:
-> >
-> > Hi Matthias,
-> >
-> > On Wed, 2014-10-22 at 15:18 +0200, Matthias Brugger wrote:
-> >> 2014-10-22 12:29 GMT+02:00 Joe.C <yingjoe.chen@mediatek.com>:
-> >> > +
-> >> > +if ARCH_MEDIATEK
-> >> > +
-> >> > +config MACH_MT6589
-> >> > +       bool "MediaTek MT6589 SoCs support"
-> >> > +       default ARCH_MEDIATEK
-> >> > +
-> >> > +config MACH_MT8127
-> >> > +       bool "MediaTek MT8127 SoCs support"
-> >> > +       default ARCH_MEDIATEK
-> >> > +
-> >> > +config MACH_MT8135
-> >> > +       bool "MediaTek MT8135 SoCs support"
-> >> > +       default ARCH_MEDIATEK
-> >> > +
-> >> > +endif
-> >>
-> >> MACH_MTxxxx are not used nowhere, please remove them.
-> >
-> > Yes, they are not used in this series yet.
-> >
-> > MACH_MT8135 was used in mt8135 pinctrl driver [1] and will be used in
-> > mt8135 clk driver we are about to send. I don't want to create false
-> > dependency between these 2 series so I put it here.
-> > Do you prefer add them when they are first used?
-> 
-> Yes please add them, when they are first used.
-> Today I had a look on the pinctrl patches you mentioned. It looks to
-> me as if the config is not needed in the series.
+On Wed, Oct 22, 2014 at 03:09:30PM +0100, Emil Medve wrote:
+> Portals are used by software running on processor cores, accelerators and
+> network interfaces to communicate with the BMan
 
-OK, I'll remove these in next version.
+What exactly is a portal?
 
-Joe.C
+Is it a region of shared memory? A device?
+
+I only received emails 2 and 3 of this series, so I'm lacking the
+context necessary to understand the bindings.
 
 > 
-> Thanks,
-> Matthias
+> Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
+> Change-Id: I6d245ffc14ba3d0e91d403ac7c3b91b75a9e6a95
+> ---
+>  .../bindings/powerpc/fsl/bman-portals.txt          | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
 > 
-> [0] http://thread.gmane.org/gmane.linux.ports.arm.kernel/358505
-> 
-> >
-> > Joe.C
-> >
-> > [1]
-> > http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/289288.html
-> >
-> >
-> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt b/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
+> new file mode 100644
+> index 0000000..40e607e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
+> @@ -0,0 +1,50 @@
+> +QorIQ DPAA Buffer Manager Portals Device Tree Binding
+> +
+> +Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
+> +
+> +CONTENTS
+> +
+> +	- BMan Portal
+> +	- Example
+> +
+> +NOTE:	The bindings described in this document are preliminary and subject to
+> +	change
+
+While we've tried that elsewhere, unstable DT bindings have been shown
+to be a major source of pain. I'd feel rather uncomfortable accepting a
+binding that we already believe to be insufficient to describe the
+hardware.
+
+What do you expect to change?
+
+> +
+> +BMan Portal Node
+> +
+> +PROPERTIES
+> +
+> +- compatible
+> +	Usage:		Required
+> +	Value type:	<stringlist>
+> +	Definition:	Must include "fsl,bman-portal-<hardware revision>"
+> +			May include "fsl,<SoC>-bman-portal" or "fsl,bman-portal"
+> +
+> +- reg
+> +	Usage:		Required
+> +	Value type:	<prop-encoded-array>
+> +	Definition:	Two regions. The first is the cache-enabled region of
+> +			the portal. The second is the cache-inhibited region of
+> +			the portal
+> +
+> +EXAMPLE
+> +
+> +The example below shows a (P4080) BMan portals container/bus node with two portals
+
+Is there any particular reason to place these under a simple-bus?
+
+> +
+> +	bman-portals@ff4000000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+> +		ranges = <0 0xf 0xf4000000 0x200000>;
+> +
+> +		bman-portal@0 {
+> +			compatible = "fsl,bman-portal-1.0.0", "fsl,bman-portal";
+> +			reg = <0x0 0x4000 0x100000 0x1000>;
+
+It would be easier to read is each entry had its own set of brackets.
+Initially this looked to me like a single 64-bit address/size pair.
+
+> +			interrupts = <105 2 0 0>;
+> +		};
+
+Given the description above, surely you need to know what the portal is
+used for? Or is that queried from the portal?
+
+Thanks,
+Mark.
+
+> +		bman-portal@4000 {
+> +			compatible = "fsl,bman-portal-1.0.0", "fsl,bman-portal";
+> +			reg = <0x4000 0x4000 0x101000 0x1000>;
+> +			interrupts = <107 2 0 0>;
+> +		};
+> +	};
+> -- 
+> 2.1.2
 > 
 > 
