@@ -1,30 +1,50 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
-Date: Wed, 22 Oct 2014 10:49:14 -0600
-Message-ID: <CAErSpo4DPU6_TO9atpzDbu-X9iddrnBk3QQV4_BcpUCFL4JUdw@mail.gmail.com>
-References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com>
- <2430078.s4snyh5OoF@wuerfel> <20141001084626.GZ841@e106497-lin.cambridge.arm.com>
- <3256560.C0cZnIlnAv@wuerfel> <20141022155914.GB25939@e102568-lin.cambridge.arm.com>
+From: Scott Branden <sbranden@broadcom.com>
+Subject: Re: [PATCH v5 1/6] ARM: cygnus: Initial support for Broadcom Cygnus
+ SoC
+Date: Wed, 22 Oct 2014 10:12:13 -0700
+Message-ID: <5447E56D.6000006@broadcom.com>
+References: <1413341936-17606-2-git-send-email-sbranden@broadcom.com> <38587325.kaAxCWAsmL@wuerfel> <5446F61C.8060400@broadcom.com> <12157660.uOkg5nk8Dq@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20141022155914.GB25939@e102568-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <Liviu.Dudau@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <12157660.uOkg5nk8Dq@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>, JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 22, 2014 at 9:59 AM, Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
-
-> ... I wonder what's the
-> best course of action. Putting together all the bits and pieces required
-> to remove PCI bios dependency from this patch can take a while, I wonder
-> whether we should aim for merging this driver (rebased on top of my port to the
-> new parse ranges API) with the ARM/ARM64 ifdeffery and clean it up later
-> or aim for the whole thing at once, I am just worried it can take us a while.
-
-I haven't looked at your patches, but "the whole thing at once" is
-never *my* goal.  A gradual cleanup is just fine with me.
-
-Bjorn
+On 14-10-22 01:22 AM, Arnd Bergmann wrote:
+> On Tuesday 21 October 2014 17:11:08 Scott Branden wrote:
+>> OK, I will remove the "iProc SoC based Machine types".  This was
+>> grouping all iProc based SoCs under one menu and parallels what the
+>> existing "Broadcom Mobile Soc Support" menu does.
+>>
+>> I can create another patch removing the "Broadcom Mobile SoC Support"
+>> menu if the ARM Maintainer now want all Broadcom devices are supposed to
+>> be contained in a single level?
+>
+> Sounds good, I missed that other menu going in.
+I will add another patch to my set to correct this.
+>
+> It can make sense to add 'comment' statements if you want to separate the
+> families.
+Thanks - I will add this to my patchset.
+>
+> I also noticed that there are a few configuration options that at first
+> seem pointless: ARCH_BCM_MOBILE_L2_CACHE and ARCH_BCM_MOBILE_SMP. I wonder
+> if it ever makes sense to disable these when the common options (CACHE_L2X0
+> and SMP) are enabled for another SoC. I'd normally like to see these as
+> hidden options that are always on whenever the core support for those
+> features is enabled, to avoid confusing users as well as bugs from the
+> combinatorial explosion.
+I can clean up all but ARCH_BCM_MOBILE_L2_CACHE.  This one is 
+intertwined with SMC support and it looks like they want the option to 
+turn on and off this feature.  This L2/Trustzone support will need to be 
+cleaned up at a later time.  I heard Russell King says the PL310 cache 
+code will be changing again soon.  When I add PL310 Trustzone support 
+for the Cygnus SoC I can have a look at cleaning it up for the 
+Mobile/Kona base SoCs at the same time.
+>
+> 	Arnd
+>
