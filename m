@@ -1,41 +1,44 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v5 1/3] power-domain: add power domain drivers for
- Rockchip platform
-Date: Wed, 22 Oct 2014 10:29:51 +0200
-Message-ID: <CAPDyKFrfigDH143NnSCtfeNAuH+SK86Lm60Lo8kTT5Sp3cTksg@mail.gmail.com>
-References: <1413882808-4669-1-git-send-email-jinkun.hong@rock-chips.com>
-	<1413882808-4669-2-git-send-email-jinkun.hong@rock-chips.com>
-	<20141021195854.GE8609@dtor-ws>
-	<544725C4.4040703@rock-chips.com>
-	<CAPDyKFp+aNJd_FEY6=-ubK0zvVDWh+x5ZsVG+AVpuBzpSqynOQ@mail.gmail.com>
-	<CAMuHMdXwp3oBMFRQQVK1XusytxB_sNxJtJzMhAwdXecGxRJ=Ug@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: GPIO bindings guidelines (Was: Re: [PATCH v5 10/12] gpio: Support for unified device properties interface)
+Date: Wed, 22 Oct 2014 10:33:32 +0200
+Message-ID: <4711930.7fsc2oSxcp@wuerfel>
+References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com> <4582579.9WMrIMALsy@wuerfel> <20141022081044.GB1484@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXwp3oBMFRQQVK1XusytxB_sNxJtJzMhAwdXecGxRJ=Ug@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Hong jinkun <jinkun.hong@rock-chips.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Jack Dai <jack.dai@rock-chips.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Dmitry Torokhov <dmitry.torokhov@gmail.c>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20141022081044.GB1484@lahna.fi.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 22 October 2014 10:07, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Wed, Oct 22, 2014 at 9:58 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> Now, I just realized that while Geert added attach|detach_dev()
->> callbacks for the generic PM domain, those are both "void" callbacks.
->> It means the deferred probe error handling is broken for these
->> callbacks. We should convert the attach_dev() callback into an int, I
->> will cook a patch immediately.
->
-> That was changed in v3:
->   - Move calling of the callbacks to a point where dev->pm_domain is
->     valid, so the domain parameter is no longer needed,
+On Wednesday 22 October 2014 11:10:44 Mika Westerberg wrote:
+> 
+> It expects that GPIOs returned from _CRS are in specific order. Since we
+> can't change these existing ACPI tables, we must support them somehow.
+> 
+> This patch series handles it so that:
+> 
+>   1) If we can't find given property (e.g "reset-gpios" or
+>      "shutdown-gpios") the index above will refer directly to the GPIO
+>      resource returned from _CRS.
+> 
+>   2) If the property is found we ignore index and take it from the
+>      property instead.
+> 
+> This has the drawback that we cannot support this:
+> 
+>         Package () { "reset-gpios", Package () { ^GPIO, 0, 0, 0, ^GPIO, 1, 0, 0}}
+>                                                                  ^^^^^^^^^^^^^^
+> So the second entry in the above is not accessible using
+> gpiod_get_index() and the reason is that we want to support the existing
+> and new ACPI tables where _DSD is not being used.
 
-That's good.
+So this is not using the DT binding but does thing slightly differently then.
+In this case (supporting two incompatible bindings for DT and ACPI), I think
+the only sensible driver implementation would be to know what we are asking
+for and use different devm_gpiod_get_index statements based on the firmware
+interface.
 
->   - Make callbacks return void.
->
-
-But not this. :-) Sorry, for being too quick in reviewing that time.
-
-Kind regards
-Uffe
+	Arnd
