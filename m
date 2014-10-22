@@ -1,95 +1,39 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v4 6/8] phy: miphy28lp: Add SSC support for PCIE
-Date: Wed, 22 Oct 2014 09:14:25 +0200
-Message-ID: <1413962067-25557-7-git-send-email-gabriel.fernandez@linaro.org>
-References: <1413962067-25557-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413962067-25557-1-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Harsh Gupta <harsh.gupta@st.com>
+From: Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>
+Subject: Re: [PATCH v2 02/12] of: Document long-ram-code property in nvidia,tegra20-apbmisc
+Date: Wed, 22 Oct 2014 10:39:15 +0300
+Message-ID: <54475F23.7050900@kapsi.fi>
+References: <1413902788-7727-1-git-send-email-tomeu.vizoso@collabora.com> <1413902788-7727-3-git-send-email-tomeu.vizoso@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413902788-7727-3-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SSC is the technique of modulating the operating frequency of a signal
-slightly to spread its radiated emissions over a range of frequencies.
-This reduction in the maximum emission for a given frequency helps meet
-radiated emission requirements.
-These settings are applicable for PCIE with Internal clock.
+On 10/21/2014 05:45 PM, Tomeu Vizoso wrote:
+> Needed to properly decode the ram code register.
+>
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> ---
+>   Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt | 3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt b/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
+> index b97b8be..e2562ed 100644
+> --- a/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
+> +++ b/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
+> @@ -11,3 +11,6 @@ Required properties:
+>          The second entry gives the physical address and length of the
+>          registers indicating the strapping options.
+>
+> +Optional properties:
+> +- nvidia,long-ram-code: boolean that tells whether the ram code is long (4 bit)
+> +			or short (2 bit). If not present, false.
+>
 
-Signed-off-by: Harsh Gupta <harsh.gupta@st.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
----
- drivers/phy/phy-miphy28lp.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
-
-diff --git a/drivers/phy/phy-miphy28lp.c b/drivers/phy/phy-miphy28lp.c
-index d4569af..ca0d9b4 100644
---- a/drivers/phy/phy-miphy28lp.c
-+++ b/drivers/phy/phy-miphy28lp.c
-@@ -192,6 +192,7 @@
- #define SATA_SPDMODE		1
- 
- #define MIPHY_SATA_BANK_NB	3
-+#define MIPHY_PCIE_BANK_NB	2
- 
- struct miphy28lp_phy {
- 	struct phy *phy;
-@@ -591,6 +592,46 @@ static void miphy_sata_tune_ssc(struct miphy28lp_phy *miphy_phy)
- 	}
- }
- 
-+static void miphy_pcie_tune_ssc(struct miphy28lp_phy *miphy_phy)
-+{
-+	void __iomem *base = miphy_phy->base;
-+	u8 val;
-+
-+	/* Compensate Tx impedance to avoid out of range values */
-+	/*
-+	 * Enable the SSC on PLL for all banks
-+	 * SSC Modulation @ 31 KHz and 4000 ppm modulation amp
-+	 */
-+	val = readb_relaxed(base + MIPHY_BOUNDARY_2);
-+	val |= SSC_EN_SW;
-+	writeb_relaxed(val, base + MIPHY_BOUNDARY_2);
-+
-+	val = readb_relaxed(base + MIPHY_BOUNDARY_SEL);
-+	val |= SSC_SEL;
-+	writeb_relaxed(val, base + MIPHY_BOUNDARY_SEL);
-+
-+	for (val = 0; val < MIPHY_PCIE_BANK_NB; val++) {
-+		writeb_relaxed(val, base + MIPHY_CONF);
-+
-+		/* Validate Step component */
-+		writeb_relaxed(0x69, base + MIPHY_PLL_SBR_3);
-+		writeb_relaxed(0x21, base + MIPHY_PLL_SBR_4);
-+
-+		/* Validate Period component */
-+		writeb_relaxed(0x3c, base + MIPHY_PLL_SBR_2);
-+		writeb_relaxed(0x21, base + MIPHY_PLL_SBR_4);
-+
-+		/* Clear any previous request */
-+		writeb_relaxed(0x00, base + MIPHY_PLL_SBR_1);
-+
-+		/* requests the PLL to take in account new parameters */
-+		writeb_relaxed(SET_NEW_CHANGE, base + MIPHY_PLL_SBR_1);
-+
-+		/* To be sure there is no other pending requests */
-+		writeb_relaxed(0x00, base + MIPHY_PLL_SBR_1);
-+	}
-+}
-+
- static inline int miphy28lp_configure_sata(struct miphy28lp_phy *miphy_phy)
- {
- 	void __iomem *base = miphy_phy->base;
-@@ -659,6 +700,9 @@ static inline int miphy28lp_configure_pcie(struct miphy28lp_phy *miphy_phy)
- 	if (err)
- 		return err;
- 
-+	if (miphy_phy->ssc)
-+		miphy_pcie_tune_ssc(miphy_phy);
-+
- 	return 0;
- }
- 
--- 
-1.9.1
+I think just "If present, the RAM code is long (4 bit). If not, short (2 
+bit)" would be clearer, as the booleanness of this property is not 
+really present in the device tree file.
