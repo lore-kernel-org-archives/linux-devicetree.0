@@ -1,99 +1,77 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 2/3] ARM: keystone: pm: switch to use generic pm domains
-Date: Wed, 22 Oct 2014 17:44:30 +0200
-Message-ID: <CAMuHMdVO4nMoeYdzLf6wdKW876gYVyML3C2+QKoteGPtisD4sA@mail.gmail.com>
-References: <1413809764-21995-1-git-send-email-grygorii.strashko@ti.com>
-	<1413809764-21995-3-git-send-email-grygorii.strashko@ti.com>
-	<5446A065.9050308@gmail.com>
-	<544793B5.6080601@ti.com>
-	<CAPDyKFo97D3XbwDQrDzHw+qr4b24Fsq9EwDbdOMhy_L-RoYsLw@mail.gmail.com>
-	<CAMuHMdVsqsSHxirzoWspGz7y+2qBk42p-VUBNkys3_rr6Th_9Q@mail.gmail.com>
-	<CAPDyKFp6T1a1XXHdxiubP2RaS26uSqkUS3rbBgsNV_y+dSFfvw@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCHv3 1/2] ARM: dts: socfpga: Fix SD card detect
+Date: Wed, 22 Oct 2014 08:45:08 -0700
+Message-ID: <CAD=FV=VP=8XPwWjGnVhS1SibMhsuuqbZOBdRT_GE5JKAL_xbuA@mail.gmail.com>
+References: <1413908111-28165-1-git-send-email-dinguyen@opensource.altera.com>
+ <1413908111-28165-2-git-send-email-dinguyen@opensource.altera.com>
+ <20141021171033.GK10262@pengutronix.de>
+ <5446AA87.8070307@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFp6T1a1XXHdxiubP2RaS26uSqkUS3rbBgsNV_y+dSFfvw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Santosh Shilimkar <santosh.shilimkar@gmail.com>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5446AA87.8070307@opensource.altera.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dinh Nguyen <dinguyen@opensource.altera.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "atull@opensource.altera.com" <atull@opensource.altera.com>, Jaehoon Chung <jh80.chung@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 22, 2014 at 5:28 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> On 22 October 2014 17:09, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->> On Wed, Oct 22, 2014 at 5:01 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->>>>>> +void keystone_pm_domain_attach_dev(struct device *dev)
->>>>>>   {
->>>>>> +    struct clk *clk;
->>>>>>       int ret;
->>>>>> +    int i = 0;
->>>>>>
->>>>>>       dev_dbg(dev, "%s\n", __func__);
->>>>>>
->>>>>> -    ret = pm_generic_runtime_suspend(dev);
->>>>>> -    if (ret)
->>>>>> -        return ret;
->>>>>> -
->>>>>> -    ret = pm_clk_suspend(dev);
->>>>>> +    ret = pm_clk_create(dev);
->>>>>>       if (ret) {
->>>>>> -        pm_generic_runtime_resume(dev);
->>>>>> -        return ret;
->>>>>> +        dev_err(dev, "pm_clk_create failed %d\n", ret);
->>>>>> +        return;
->>>>>> +    };
->>>>>> +
->>>>>> +    while ((clk = of_clk_get(dev->of_node, i++)) && !IS_ERR(clk)) {
->>>>>> +        ret = pm_clk_add_clk(dev, clk);
->>>>>> +        if (ret) {
->>>>>> +            dev_err(dev, "pm_clk_add_clk failed %d\n", ret);
->>>>>> +            goto clk_err;
->>>>>> +        };
->>>>>>       }
->>>>>>
->>>>>> -    return 0;
->>>>>> +    if (!IS_ENABLED(CONFIG_PM_RUNTIME)) {
->>>>> Can we not okkup two seperate callbacks instead of above check ?
->>>>> I don't like this CONFIG check here. Its slightly better version of
->>>>> ifdef in middle of the code.
->>>>
->>>> I've found more-less similar comment on patch
->>>> "Re: [PATCH v3 1/3] power-domain: add power domain drivers for Rockchip platform"
->>>> https://lkml.org/lkml/2014/10/17/257
->>>>
->>>> So, Would you like me to create patch which will enable clocks in pm_clk_add/_clk()
->>>> in case !IS_ENABLED(CONFIG_PM_RUNTIME)
->>>
->>> I am wondering whether we actually should/could do this, no matter of
->>> CONFIG_PM_RUNTIME.
->>>
->>> Typically, for configurations that uses CONFIG_PM_RUNTIME, the PM
->>> clocks through pm_clk_suspend(), will be gated once the device becomes
->>> runtime PM suspended. Right?
+Dinh,
+
+(without the HTML mail this time, sorry)
+
+On Tue, Oct 21, 2014 at 11:48 AM, Dinh Nguyen
+<dinguyen@opensource.altera.com> wrote:
+> On 10/21/2014 12:10 PM, Steffen Trumtrar wrote:
+>> Hi!
 >>
->> Doing it unconditionally means we'll have lots of unneeded clocks running
->> for a short while.
+>> On Tue, Oct 21, 2014 at 11:15:10AM -0500, dinguyen@opensource.altera.com wrote:
+>>> From: Dinh Nguyen <dinguyen@opensource.altera.com>
+>>>
+>>> Without this patch, the booting the SOCFPGA platform would hang at the
+>>> SDMMC driver loading. The issue, debugged by Doug Anderson, turned out
+>>> to be that the GPIO bank used by the SD card-detect was not set to
+>>> status="okay".
+>>>
+>>> Suggested-by: Doug Anderson <dianders@chromium.org>
+>>> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+>>> ---
+>>> v3: Correctly degugged the issue to be a gpio node not having status="okay"
+>>> ---
+>>>  arch/arm/boot/dts/socfpga_cyclone5_socdk.dts | 6 ++++++
+>>>  1 file changed, 6 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+>>> index d7296a5..03a3745 100644
+>>> --- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+>>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+>>> @@ -37,6 +37,12 @@
+>>>               */
+>>>              ethernet0 = &gmac1;
+>>>      };
+>>> +
+>>> +    soc {
+>>> +            gpio@ff709000 {
+>>> +                    status = "okay";
+>>> +            };
+>>> +    };
 
-> As long as the pm_clk_add() is being invoked from the ->attach_dev()
-> callback, we are in the probe path. Certainly we would like to have
-> clocks enabled while probing, don't you think?
->
-> If we wouldn't enable the clocks for CONFIG_PM_RUNTIME, when will
-> those be enabled?
+I haven't dug into the details you provided about the GPIO
+infrastructure of socfpga, but it does seem like it might be nice to
+some easier way to reference things in
+"arch/arm/boot/dts/socfpga.dtsi".
 
-They will be enabled when the driver does
+Looking at other examples they call the "gpio@ff708000" "gpio0" and
+the sub node something like "porta".  Given that this is the only
+reference to the GPIO, it seems like now would be the time to change
+it.
 
-        pm_runtime_enable(dev);
-        pm_runtime_get_sync(dev);
-
-in its .probe() method.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-Doug
