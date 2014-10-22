@@ -1,43 +1,41 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 00/12] rtc: omap: fixes and power-off feature
-Date: Wed, 22 Oct 2014 13:07:58 +0200
-Message-ID: <20141022110758.GO2113@localhost>
-References: <1412881594-25678-1-git-send-email-johan@kernel.org>
- <20141010175409.GL31348@saruman>
- <20141011093819.GA18988@localhost>
- <20141011190817.GA20644@atomide.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 0/4] input: Add new sun4i-lradc-keys driver
+Date: Wed, 22 Oct 2014 13:11:01 +0200
+Message-ID: <1413976265-12805-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141011190817.GA20644@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Johan Hovold <johan@kernel.org>, Felipe Balbi <balbi@ti.com>, Alessandro Zummo <a.zummo@towertech.it>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Andrew Morton <akpm@linux-foundation.org>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBUVBT2RAKGQEG2EYQLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 11, 2014 at 12:08:18PM -0700, Tony Lindgren wrote:
-> * Johan Hovold <johan@kernel.org> [141011 02:42]:
-> > On Fri, Oct 10, 2014 at 12:54:22PM -0500, Felipe Balbi wrote:
-> > > 
-> > > is this power-off feature "RTC-only mode" ?
-> > 
-> > Yes, I believe so, at least as long as RTC power is maintained. The
-> > pmic_power_en pin can otherwise still be used to power off. 
-> > 
-> > On the BeagleBone the PMIC can be configured to enter OFF or SLEEP mode
-> > on power off, where the latter (and default) mode keeps the RTC power
-> > supply enabled.
-> > 
-> > Thanks for the fast review, Felipe.
-> 
-> Great :) I assume adding the regulator support to this driver should
-> also help in the 35xx case?
+Hi All,
 
-If I remember correctly both OMAP and Sitara 35xx have no on-chip RTC so
-they won't be using this driver.
+Here is v3 of my patchset for the lradc attached tablet keys found one some
+Allwinner boards.
 
-> That is assuming that RTC power can be configured as a Linux
-> regulator on 35xx.
+Changes since v2:
+-s/KEY_HOME/KEY_HOMEPAGE/
+-s/sun4i-lradc-keys/sun4i-a10-lradc-keys/
+-Use mV as address for the key subnodes in devicetree
+-dts formatting fixes according to Maxime's review
+-Do not set .owner field, as module_platform_driver already does that
 
-Johan
+Changes since previous postings a long time ago:
+-device tree description now has one subnode per key just like gpio-keys
+
+I hope this version is to everyones liking and can be merged soon :) The intend
+is for the actual driver to go upstream through Dmitry's tree, where as the
+3 dts patches should go upstream through Maxime's tree.
+
+Thanks & Regards,
+
+Hans
