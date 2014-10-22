@@ -1,81 +1,89 @@
 From: Scott Branden <sbranden@broadcom.com>
-Subject: [PATCH v6 6/6] ARM: mach-bcm: Consolidate currently supported IPROC SoCs
-Date: Tue, 21 Oct 2014 19:09:52 -0700
-Message-ID: <1413943792-7379-7-git-send-email-sbranden@broadcom.com>
+Subject: [PATCH v6 1/6] ARM: cygnus: Initial support for Broadcom Cygnus SoC
+Date: Tue, 21 Oct 2014 19:09:47 -0700
+Message-ID: <1413943792-7379-2-git-send-email-sbranden@broadcom.com>
 References: <Scott Branden <sbranden@broadcom.com>
  <1413943792-7379-1-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1413943792-7379-1-git-send-email-sbranden@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>
-Cc: JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar
+ Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho
+ Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>
+Cc: devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>, JD Zheng <jdzheng@broadcom.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Move ARCH_BCM_5301X subarch under ARCH_IPROC architecture.
-Additional IPROC chipsets that share a lot of commonality should be
-added under ARCH_IPROC as well.
-
-Signed-off-by: Scott Branden <sbranden@broadcom.com>
----
- arch/arm/mach-bcm/Kconfig |   37 ++++++++++++++++---------------------
- 1 file changed, 16 insertions(+), 21 deletions(-)
-
-diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-index f5e638e..a51f191 100644
---- a/arch/arm/mach-bcm/Kconfig
-+++ b/arch/arm/mach-bcm/Kconfig
-@@ -33,6 +33,22 @@ config ARCH_BCM_CYGNUS
- 	  BCM11300, BCM11320, BCM11350, BCM11360,
- 	  BCM58300, BCM58302, BCM58303, BCM58305.
- 
-+config ARCH_BCM_5301X
-+	bool "Broadcom BCM470X / BCM5301X ARM SoC" if ARCH_MULTI_V7
-+	select ARCH_BCM_IPROC
-+	help
-+	  Support for Broadcom BCM470X and BCM5301X SoCs with ARM CPU cores.
-+
-+	  This is a network SoC line mostly used in home routers and
-+	  wifi access points, it's internal name is Northstar.
-+	  This inclused the following SoC: BCM53010, BCM53011, BCM53012,
-+	  BCM53014, BCM53015, BCM53016, BCM53017, BCM53018, BCM4707,
-+	  BCM4708 and BCM4709.
-+
-+	  Do not confuse this with the BCM4760 which is a totally
-+	  different SoC or with the older BCM47XX and BCM53XX based
-+	  network SoC using a MIPS CPU, they are supported by arch/mips/bcm47xx
-+
- config ARCH_BCM_MOBILE
- 	bool "Broadcom Mobile SoC Support" if ARCH_MULTI_V7
- 	select ARCH_REQUIRE_GPIOLIB
-@@ -106,27 +122,6 @@ config ARCH_BCM2835
- 	  This enables support for the Broadcom BCM2835 SoC. This SoC is
- 	  used in the Raspberry Pi and Roku 2 devices.
- 
--config ARCH_BCM_5301X
--	bool "Broadcom BCM470X / BCM5301X ARM SoC" if ARCH_MULTI_V7
--	select ARM_GIC
--	select CACHE_L2X0
--	select HAVE_ARM_SCU if SMP
--	select HAVE_ARM_TWD if SMP
--	select ARM_GLOBAL_TIMER
--	select CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
--	help
--	  Support for Broadcom BCM470X and BCM5301X SoCs with ARM CPU cores.
--
--	  This is a network SoC line mostly used in home routers and
--	  wifi access points, it's internal name is Northstar.
--	  This inclused the following SoC: BCM53010, BCM53011, BCM53012,
--	  BCM53014, BCM53015, BCM53016, BCM53017, BCM53018, BCM4707,
--	  BCM4708 and BCM4709.
--
--	  Do not confuse this with the BCM4760 which is a totally
--	  different SoC or with the older BCM47XX and BCM53XX based
--	  network SoC using a MIPS CPU, they are supported by arch/mips/bcm47xx
--
- config ARCH_BCM_63XX
- 	bool "Broadcom BCM63xx DSL SoC" if ARCH_MULTI_V7
- 	depends on MMU
--- 
-1.7.9.5
+RnJvbTogSm9uYXRoYW4gUmljaGFyZHNvbiA8am9uYXRoYXJAYnJvYWRjb20uY29tPgoKQWRkcyBp
+bml0aWFsIHN1cHBvcnQgZm9yIHRoZSBDeWdudXMgU29DIGJhc2VkIG9uIEJyb2FkY29t4oCZcyBp
+UHJvYyBzZXJpZXMuCk1vdmUgQVJDSF9CQ01fNTMwMXggdW5kZXIgdGhlIEFSQ0hfQkNNX0lQUk9D
+IGFyY2hpdGVjdHVyZS4KClJldmlld2VkLWJ5OiBSYXkgSnVpIDxyanVpQGJyb2FkY29tLmNvbT4K
+UmV2aWV3ZWQtYnk6IERlc21vbmQgTGl1IDxkZXNtb25kbEBicm9hZGNvbS5jb20+ClJldmlld2Vk
+LWJ5OiBKRCAoSmlhbmRvbmcpIFpoZW5nIDxqZHpoZW5nQGJyb2FkY29tLmNvbT4KVGVzdGVkLWJ5
+OiBKb25hdGhhbiBSaWNoYXJkc29uIDxqb25hdGhhckBicm9hZGNvbS5jb20+ClNpZ25lZC1vZmYt
+Ynk6IFNjb3R0IEJyYW5kZW4gPHNicmFuZGVuQGJyb2FkY29tLmNvbT4KLS0tCiBhcmNoL2FybS9t
+YWNoLWJjbS9LY29uZmlnICAgICAgfCAgIDI4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysK
+IGFyY2gvYXJtL21hY2gtYmNtL01ha2VmaWxlICAgICB8ICAgIDMgKysrCiBhcmNoL2FybS9tYWNo
+LWJjbS9iY21fY3lnbnVzLmMgfCAgIDI2ICsrKysrKysrKysrKysrKysrKysrKysrKysrCiAzIGZp
+bGVzIGNoYW5nZWQsIDU3IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2Fy
+bS9tYWNoLWJjbS9iY21fY3lnbnVzLmMKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNoLWJjbS9L
+Y29uZmlnIGIvYXJjaC9hcm0vbWFjaC1iY20vS2NvbmZpZwppbmRleCAyYWJhZDc0Li5mNWU2Mzhl
+IDEwMDY0NAotLS0gYS9hcmNoL2FybS9tYWNoLWJjbS9LY29uZmlnCisrKyBiL2FyY2gvYXJtL21h
+Y2gtYmNtL0tjb25maWcKQEAgLTUsNiArNSwzNCBAQCBtZW51Y29uZmlnIEFSQ0hfQkNNCiAKIGlm
+IEFSQ0hfQkNNCiAKK2NvbmZpZyBBUkNIX0JDTV9JUFJPQworCWJvb2wKKwlzZWxlY3QgQVJNX0dJ
+QworCXNlbGVjdCBDQUNIRV9MMlgwCisJc2VsZWN0IEhBVkVfQVJNX1NDVSBpZiBTTVAKKwlzZWxl
+Y3QgSEFWRV9BUk1fVFdEIGlmIFNNUAorCXNlbGVjdCBBUk1fR0xPQkFMX1RJTUVSCisKKwlzZWxl
+Y3QgQ0xLU1JDX01NSU8KKwlzZWxlY3QgQVJDSF9SRVFVSVJFX0dQSU9MSUIKKwlzZWxlY3QgQVJN
+X0FNQkEKKwlzZWxlY3QgUElOQ1RSTAorCWhlbHAKKwkgIFRoaXMgZW5hYmxlcyBzdXBwb3J0IGZv
+ciBzeXN0ZW1zIGJhc2VkIG9uIEJyb2FkY29tIElQUk9DIGFyY2hpdGVjdGVkIFNvQ3MuCisJICBU
+aGUgSVBST0MgY29tcGxleCBjb250YWlucyBvbmUgb3IgbW9yZSBBUk0gQ1BVcyBhbG9uZyB3aXRo
+IGNvbW1vbgorCSAgY29yZSBwZXJpcGVyYWxzLiBBcHBsaWNhdGlvbiBzcGVjaWZpYyBTb0NzIGFy
+ZSBjcmVhdGVkIGJ5IGFkZGluZyBhCisJICB1QXJjaGl0ZWN0dXJlIGNvbnRhaW5pbmcgcGVyaXBo
+ZXJhbHMgb3V0c2lkZSBvZiB0aGUgSVBST0MgY29tcGxleC4KKwkgIEN1cnJlbnRseSBzdXBwb3J0
+ZWQgU29DcyBhcmUgQ3lnbnVzLgorCitjb25maWcgQVJDSF9CQ01fQ1lHTlVTCisJYm9vbCAiQnJv
+YWRjb20gQ3lnbnVzIFN1cHBvcnQiIGlmIEFSQ0hfTVVMVElfVjcKKwlzZWxlY3QgQVJDSF9CQ01f
+SVBST0MKKwloZWxwCisJICBFbmFibGUgc3VwcG9ydCBmb3IgdGhlIEN5Z251cyBmYW1pbHksCisJ
+ICB3aGljaCBpbmNsdWRlcyB0aGUgZm9sbG93aW5nIHZhcmlhbnRzOgorCSAgQkNNMTEzMDAsIEJD
+TTExMzIwLCBCQ00xMTM1MCwgQkNNMTEzNjAsCisJICBCQ001ODMwMCwgQkNNNTgzMDIsIEJDTTU4
+MzAzLCBCQ001ODMwNS4KKwogY29uZmlnIEFSQ0hfQkNNX01PQklMRQogCWJvb2wgIkJyb2FkY29t
+IE1vYmlsZSBTb0MgU3VwcG9ydCIgaWYgQVJDSF9NVUxUSV9WNwogCXNlbGVjdCBBUkNIX1JFUVVJ
+UkVfR1BJT0xJQgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1iY20vTWFrZWZpbGUgYi9hcmNo
+L2FybS9tYWNoLWJjbS9NYWtlZmlsZQppbmRleCAzMDBhZTRiLi4zNGQ0NWJhIDEwMDY0NAotLS0g
+YS9hcmNoL2FybS9tYWNoLWJjbS9NYWtlZmlsZQorKysgYi9hcmNoL2FybS9tYWNoLWJjbS9NYWtl
+ZmlsZQpAQCAtMTAsNiArMTAsOSBAQAogIyBvZiBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBG
+T1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UuICBTZWUgdGhlCiAjIEdOVSBHZW5lcmFsIFB1YmxpYyBM
+aWNlbnNlIGZvciBtb3JlIGRldGFpbHMuCiAKKyMgQ3lnbnVzCitvYmotJChDT05GSUdfQVJDSF9C
+Q01fQ1lHTlVTKSArPSAgYmNtX2N5Z251cy5vCisKICMgQkNNMjgxWFgKIG9iai0kKENPTkZJR19B
+UkNIX0JDTV8yODFYWCkJKz0gYm9hcmRfYmNtMjgxeHgubwogCmRpZmYgLS1naXQgYS9hcmNoL2Fy
+bS9tYWNoLWJjbS9iY21fY3lnbnVzLmMgYi9hcmNoL2FybS9tYWNoLWJjbS9iY21fY3lnbnVzLmMK
+bmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uNDFiNDkzMwotLS0gL2Rldi9udWxs
+CisrKyBiL2FyY2gvYXJtL21hY2gtYmNtL2JjbV9jeWdudXMuYwpAQCAtMCwwICsxLDI2IEBACisv
+KgorICogQ29weXJpZ2h0IDIwMTQgQnJvYWRjb20gQ29ycG9yYXRpb24uICBBbGwgcmlnaHRzIHJl
+c2VydmVkLgorICoKKyAqIFVubGVzcyB5b3UgYW5kIEJyb2FkY29tIGV4ZWN1dGUgYSBzZXBhcmF0
+ZSB3cml0dGVuIHNvZnR3YXJlIGxpY2Vuc2UKKyAqIGFncmVlbWVudCBnb3Zlcm5pbmcgdXNlIG9m
+IHRoaXMgc29mdHdhcmUsIHRoaXMgc29mdHdhcmUgaXMgbGljZW5zZWQgdG8geW91CisgKiB1bmRl
+ciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFzCisgKiBwdWJs
+aXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbiB2ZXJzaW9uIDIuCisgKgorICog
+VGhpcyBwcm9ncmFtIGlzIGRpc3RyaWJ1dGVkICJhcyBpcyIgV0lUSE9VVCBBTlkgV0FSUkFOVFkg
+b2YgYW55CisgKiBraW5kLCB3aGV0aGVyIGV4cHJlc3Mgb3IgaW1wbGllZDsgd2l0aG91dCBldmVu
+IHRoZSBpbXBsaWVkIHdhcnJhbnR5CisgKiBvZiBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBG
+T1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UuICBTZWUgdGhlCisgKiBHTlUgR2VuZXJhbCBQdWJsaWMg
+TGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLgorICovCisKKyNpbmNsdWRlIDxhc20vbWFjaC9hcmNo
+Lmg+CisKK3N0YXRpYyBjb25zdCBjaGFyIGNvbnN0ICpiY21fY3lnbnVzX2R0X2NvbXBhdFtdID0g
+eworCSJicmNtLGN5Z251cyIsCisJTlVMTCwKK307CisKK0RUX01BQ0hJTkVfU1RBUlQoQkNNX0NZ
+R05VU19EVCwgIkJyb2FkY29tIEN5Z251cyBTb0MiKQorCS5sMmNfYXV4X3ZhbAk9IDAsCisJLmwy
+Y19hdXhfbWFzawk9IH4wLAorCS5kdF9jb21wYXQgPSBiY21fY3lnbnVzX2R0X2NvbXBhdCwKK01B
+Q0hJTkVfRU5ECi0tIAoxLjcuOS41CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
