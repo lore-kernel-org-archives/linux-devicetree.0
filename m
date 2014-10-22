@@ -1,199 +1,95 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 3/4] dt/bindings: Introduce the FSL QorIQ DPAA QMan
-Date: Wed, 22 Oct 2014 15:37:32 +0100
-Message-ID: <20141022143732.GB4010@leverpostej>
-References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
- <1413986972-621-3-git-send-email-Emilian.Medve@Freescale.com>
+From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 2/3] dt/bindings: qoriq-clock: Add binding for the platform PLL
+Date: Wed, 22 Oct 2014 09:42:16 -0500
+Message-ID: <1413988937-27885-2-git-send-email-Emilian.Medve@Freescale.com>
+References: <1413988937-27885-1-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1413986972-621-3-git-send-email-Emilian.Medve@Freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Emil Medve <Emilian.Medve@freescale.com>
-Cc: "scottwood@freescale.com" <scottwood@freescale.com>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Pawel Moll <Pawel.Moll@arm.com>, "Geoff.Thorpe@freescale.com" <Geoff.Thorpe@freescale.com>, "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413988937-27885-1-git-send-email-Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, yuantian.tang-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 22, 2014 at 03:09:31PM +0100, Emil Medve wrote:
-> The Queue Manager is part of the Data-Path Acceleration Architecture (DPAA).
-> QMan supports queuing and QoS scheduling of frames to CPUs, network interfaces
-> and DPAA logic modules, maintains packet ordering within flows. Besides
-> providing flow-level queuing, is also responsible for congestion management
-> functions such as RED/WRED, congestion notifications and tail discards. This
-> binding covers the CCSR space programming model
-> 
-> Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
-> Change-Id: I3acb223893e42003d6c9dc061db568ec0b10d29b
-> ---
->  .../devicetree/bindings/powerpc/fsl/qman.txt       | 134 +++++++++++++++++++++
->  1 file changed, 134 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/qman.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/qman.txt b/Documentation/devicetree/bindings/powerpc/fsl/qman.txt
-> new file mode 100644
-> index 0000000..b9f288f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/qman.txt
-> @@ -0,0 +1,134 @@
-> +QorIQ DPAA Queue Manager Device Tree Binding
-> +
-> +Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
-> +
-> +CONTENTS
-> +
-> +	- QMan Node
-> +	- QMan Private Memory Nodes
-> +	- Example
-> +
-> +NOTE:	The bindings described in this document are preliminary and subject to
-> +	change
+Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Change-Id: I7950afa9650d15ec7ce2cca89bb2a1e38586d4a5
+---
+ Documentation/devicetree/bindings/clock/qoriq-clock.txt | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-As with the BMan portal binding, I'm rather uncomfortable with a
-preliminary binding.
+diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+index 5666812..407fb01 100644
+--- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
++++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+@@ -62,6 +62,8 @@ Required properties:
+ 		It takes parent's clock-frequency as its clock.
+ 	* "fsl,qoriq-sysclk-2.0": for input system clock (v2.0).
+ 		It takes parent's clock-frequency as its clock.
++	* "fsl,qoriq-platform-pll-1.0" for the platform PLL clock (v1.0)
++	* "fsl,qoriq-platform-pll-2.0" for the platform PLL clock (v2.0)
+ - #clock-cells: From common clock binding. The number of cells in a
+ 	clock-specifier. Should be <0> for "fsl,qoriq-sysclk-[1,2].0"
+ 	clocks, or <1> for "fsl,qoriq-core-pll-[1,2].0" clocks.
+@@ -94,7 +96,6 @@ Example for clock block and clock provider:
+ 			compatible = "fsl,qoriq-sysclk-1.0";
+ 			clock-output-names = "sysclk";
+ 		};
+-
+ 		pll0: pll0@800 {
+ 			#clock-cells = <1>;
+ 			reg = <0x800 0x4>;
+@@ -102,7 +103,6 @@ Example for clock block and clock provider:
+ 			clocks = <&sysclk>;
+ 			clock-output-names = "pll0", "pll0-div2";
+ 		};
+-
+ 		pll1: pll1@820 {
+ 			#clock-cells = <1>;
+ 			reg = <0x820 0x4>;
+@@ -110,7 +110,6 @@ Example for clock block and clock provider:
+ 			clocks = <&sysclk>;
+ 			clock-output-names = "pll1", "pll1-div2";
+ 		};
+-
+ 		mux0: mux0@0 {
+ 			#clock-cells = <0>;
+ 			reg = <0x0 0x4>;
+@@ -119,7 +118,6 @@ Example for clock block and clock provider:
+ 			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
+ 			clock-output-names = "cmux0";
+ 		};
+-
+ 		mux1: mux1@20 {
+ 			#clock-cells = <0>;
+ 			reg = <0x20 0x4>;
+@@ -128,8 +126,15 @@ Example for clock block and clock provider:
+ 			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
+ 			clock-output-names = "cmux1";
+ 		};
++		platform-pll: platform-pll@c00 {
++			#clock-cells = <1>;
++			reg = <0xc00 0x4>;
++			compatible = "fsl,qoriq-platform-pll-1.0";
++			clocks = <&sysclk>;
++			clock-output-names = "platform-pll", "platform-pll-div2";
++		};
+ 	};
+-  }
++};
+ 
+ Example for clock consumer:
+ 
+@@ -139,4 +144,4 @@ Example for clock consumer:
+ 		clocks = <&mux0>;
+ 		...
+ 	};
+-  }
++};
+-- 
+2.1.2
 
-> +
-> +QMan Node
-> +
-> +PROPERTIES
-> +
-> +- compatible
-> +	Usage:		Required
-> +	Value type:	<stringlist>
-> +	Definition:	Must include "fsl,qman"
-> +			May include "fsl,<SoC>-qman"
-> +
-> +- reg
-> +	Usage:		Required
-> +	Value type:	<prop-encoded-array>
-> +	Definition:	Registers region within the CCSR address space
-> +
-> +- fsl,liodn
-> +	Usage:		See pamu.txt
-> +	Value type:	<prop-encoded-array>
-> +	Definition:	PAMU property used for static LIODN assignment
-> +
-> +- fsl,iommu-parent
-> +	Usage:		See pamu.txt
-> +	Value type:	<phandle>
-> +	Definition:	PAMU property used for dynamic LIODN assignment
-> +
-> +	For additional details about the PAMU/LIODN binding(s) see pamu.txt
-
-This is not present in the example. Is this always required?
-
-> +
-> +- clocks
-> +	Usage:		See clock-bindings.txt and qoriq-clock.txt
-> +	Value type:	<prop-encoded-array>
-> +	Definition:	Half of the platform clock
-> +
-
-I don't understand the description here. What is the clock from the PoV
-of the QMan? Which input line on the QMan is this clock attached to?
-
-Is there only one clock input? Or jsut one that you need to manage at
-the moment?
-
-You also seem to have an interrupt in the example. How many do you
-expect, and what are their their logical functions?
-
-> +QMan Private Memory Nodes
-> +
-> +QMan requires two contiguous range of physical memory used for the backing store
-> +for QMan Frame Queue Descriptor and Packed Frame Descriptor Record. This memory
-> +is reserved/allocated as a nodes under the /reserved-memory node
-> +
-> +The QMan FQD memory node must be named "qman-fqd"
-> +
-> +PROPERTIES
-> +
-> +- compatible
-> +	Usage:		required
-> +	Value type:	<stringlist>
-> +	Definition:	Must inclide "fsl,qman-fqd"
-> +
-> +The QMan PFDR memory node must be named "qman-pfdr"
-> +
-> +PROPERTIES
-> +
-> +- compatible
-> +	Usage:		required
-> +	Value type:	<stringlist>
-> +	Definition:	Must inclide "fsl,qman-pfdr"
-> +
-> +The following constraints are relevant to the FQD and PFDR private memory:
-> +	- The size must be 2^(size + 1), with size = 11..29. That is 4 KiB to
-> +	  1 GiB
-> +	- The alignment must be a muliptle of the memory size
-> +
-> +The size of the FQD and PFDP must be chosen by observing the hardware features
-> +configured via the RCW and that are relevant to a specific board (e.g. number of
-> +MAC(s) pinned-out, number of offline/host command FMan ports, etc.). The size
-> +configured in the DT must reflect the hardware capabilities and not the specific
-> +needs of an application
-> +
-> +If the memory reserved in the device tree proves to be larger then the needs of
-> +the application a QMan driver may provide a method to release the extra memory
-> +back to the OS
-
-Driver details should be unimportant to the binding. This sentence can
-disappear.
-
-Thanks,
-Mark.
-
-> +
-> +For additional details about reserved memory regions see reserved-memory.txt
-> +
-> +EXAMPLE
-> +
-> +The example below shows a QMan FQD and a PFDR dynamic allocation memory nodes
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		qman-fqd {
-> +			compatible = "fsl,qman-fqd";
-> +			alloc-ranges = <0 0 0xf 0xffffffff>;
-> +			size = <0 0x400000>;
-> +			alignment = <0 0x400000>;
-> +		};
-> +		qman-pfdr {
-> +			compatible = "fsl,qman-pfdr";
-> +			alloc-ranges = <0 0 0xf 0xffffffff>;
-> +			size = <0 0x2000000>;
-> +			alignment = <0 0x2000000>;
-> +		};
-> +	};
-> +
-> +The example below shows a (P4080) QMan CCSR-space node
-> +
-> +	clockgen: global-utilities@e1000 {
-> +		...
-> +		sysclk: sysclk {
-> +			...
-> +		};
-> +		...
-> +		platform-pll: platform-pll@c00 {
-> +			#clock-cells = <1>;
-> +			reg = <0xc00 0x4>;
-> +			compatible = "fsl,qoriq-platform-pll-1.0";
-> +			clocks = <&sysclk>;
-> +			clock-output-names = "platform-pll", "platform-pll-div2";
-> +		};
-> +		...
-> +	};
-> +
-> +	qman@318000 {
-> +		compatible = "fsl,qman";
-> +		reg = <0x318000 0x1000>;
-> +		interrupts = <16 2 1 3>
-> +		fsl,liodn = <0x16>;
-> +		clocks = <&platform-pll 1>;
-> +	};
-> -- 
-> 2.1.2
-> 
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
