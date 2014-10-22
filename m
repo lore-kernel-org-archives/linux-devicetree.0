@@ -1,76 +1,83 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/3] ARM: shmobile: r8a7740 dtsi: Add TMU0 and TMU1 device nodes
-Date: Wed, 22 Oct 2014 17:57:12 +0300
-Message-ID: <1778362.3usrUlJmIK@avalon>
-References: <1413970709-26607-1-git-send-email-geert+renesas@glider.be> <1413970709-26607-3-git-send-email-geert+renesas@glider.be>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: GPIO bindings guidelines (Was: Re: [PATCH v5 10/12] gpio:
+ Support for unified device properties interface)
+Date: Wed, 22 Oct 2014 17:56:51 +0300
+Message-ID: <20141022145651.GH1484@lahna.fi.intel.com>
+References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com>
+ <20141022085140.GF1484@lahna.fi.intel.com>
+ <2466280.tMTA38OpXD@wuerfel>
+ <1971792.8pKYWlGxB9@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1413970709-26607-3-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, linux-sh@vger.kernel.org
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1971792.8pKYWlGxB9@vostro.rjw.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-Thank you for the patch.
-
-On Wednesday 22 October 2014 11:38:28 Geert Uytterhoeven wrote:
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Simon has posted a very similar patch as "[PATCH v2 19/30] ARM: shmobile: 
-r8a7740: Add TMU nodes", you might want to credit him.
-
-Acked-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-
-> ---
->  arch/arm/boot/dts/r8a7740.dtsi | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
+On Wed, Oct 22, 2014 at 04:07:08PM +0200, Rafael J. Wysocki wrote:
+> Moreover, we need to clarify what situation we're really talking about.
 > 
-> diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
-> index 559bd39e778bddaf..aec8da89ef9ac766 100644
-> --- a/arch/arm/boot/dts/r8a7740.dtsi
-> +++ b/arch/arm/boot/dts/r8a7740.dtsi
-> @@ -335,6 +335,34 @@
->  		status = "disabled";
->  	};
+> For one, drivers using the unified interface only will always use names for
+> GPIOs, because they have to assume that either a DT or ACPI w/ _DSD is present.
+> This is the cost of keeping those drivers firmware interface agnostic.
 > 
-> +	tmu0: timer@fff80000 {
-> +		compatible = "renesas,tmu-r8a7740", "renesas,tmu";
-> +		reg = <0xfff80000 0x2c>;
-> +		interrupts = <0 198 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 199 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 200 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&mstp1_clks R8A7740_CLK_TMU0>;
-> +		clock-names = "fck";
-> +
-> +		#renesas,channels = <3>;
-> +
-> +		status = "disabled";
-> +	};
-> +
-> +	tmu1: timer@fff90000 {
-> +		compatible = "renesas,tmu-r8a7740", "renesas,tmu";
-> +		reg = <0xfff90000 0x2c>;
-> +		interrupts = <0 170 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 171 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 172 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&mstp1_clks R8A7740_CLK_TMU1>;
-> +		clock-names = "fck";
-> +
-> +		#renesas,channels = <3>;
-> +
-> +		status = "disabled";
-> +	};
-> +
->  	clocks {
->  		#address-cells = <1>;
->  		#size-cells = <1>;
+> So it looks like we're not talking about this case here.
 
--- 
-Regards,
+We are talking about the case of rfkill-gpio.c where it definitely wants
+to use properties for the GPIOs but it cannot be sure if the underlying
+firmware provides _DSD or not.
 
-Laurent Pinchart
+> Now, if there's no DT or no _DSD in the ACPI tables for the given device
+> *and* the driver wants to use its GPIOs anyway, it has to be ACPI-aware to
+> some extent, because in that case the device ID it has been matched against
+> tells it what the meaning of the GpioIo resources in the _CRS is.
+> 
+> Then, the driver needs to do something like:
+> 
+> 	if (!device_property_present(dev, "known_property_that_should_be_present")
+> 	    && ACPI_COMPANION(dev))
+> 		acpi_probe_gpios(dev);
 
+Indeed we can use similar pattern to detect if we have _DSD present or
+not.
+
+> and in the acpi_probe_gpios() routine there may be checks like:
+> 
+> 	if (device_has_id(dev, "MARY0001")) {
+> 		The first pin in the first GpioIo resource in _CRS is "fred" and
+> 		it is active-low.
+> 		The third pin in the second GpioIo resource in _CRS is "steve"
+> 		and it is not active-low.
+> 	} else if (device_has_id(dev, "JANE0002")) {
+> 		The first pin in the second GpioIo resource in _CRS is "fred" and
+> 		it is not active-low.
+> 		The second pin in the first GpioIo resource in _CRS is "steve"
+> 		and it is active-low.
+> 	}
+> 
+> and so on.  Of course, there may be drivers knowing that the meaning of the
+> GpioIo resources in _CRS is the same for all devices handled by them, in which
+> case they will not need to check device IDs, but the core has now way of
+> knowing that.  Only the drivers have that information and the core has now
+> way to figure out what to do for a given specific device.
+> 
+> So here's a radical idea: Why don't we introduce something like
+> 
+> 	acpi_enumerate_gpio(dev, name, GpioIo_index, pin_index, active_low)
+> 
+> such that after calling, say, acpi_enumerate_gpio(dev, "fred", 0, 0, true) the
+> driver can do something like:
+> 
+> 	desc = get_gpiod_by_name(dev, "fred");
+> 
+> and it'll all work.  Then, the only part of the driver that really needs to be
+> ACPI-specific will be the acpi_probe_gpios() function calling acpi_enumerate_gpio()
+> in accordance with what the device ID is.
+> 
+> Thoughts?
+
+I think this is good idea. It solves the rfkill-gpio.c problem with just
+small amount of ACPI specific code.
