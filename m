@@ -1,128 +1,137 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 1/3] PM / clock_ops: Add pm_clk_add_clk()
-Date: Wed, 22 Oct 2014 13:14:09 -0700
-Message-ID: <20141022201409.GB4250@dtor-ws>
-References: <1413809764-21995-1-git-send-email-grygorii.strashko@ti.com>
- <1413809764-21995-2-git-send-email-grygorii.strashko@ti.com>
- <20141022173856.GB28104@dtor-ws>
- <5447FF51.5000401@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
+Date: Wed, 22 Oct 2014 22:52:19 +0200
+Message-ID: <2148776.X8NPqiYA6S@wuerfel>
+References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com> <3256560.C0cZnIlnAv@wuerfel> <20141022155914.GB25939@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5447FF51.5000401@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, khilman@linaro.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, ulf.hansson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141022155914.GB25939@e102568-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 22, 2014 at 10:02:41PM +0300, Grygorii Strashko wrote:
-> On 10/22/2014 08:38 PM, Dmitry Torokhov wrote:
-> >On Mon, Oct 20, 2014 at 03:56:02PM +0300, Grygorii Strashko wrote:
-> >>From: Geert Uytterhoeven <geert+renesas@glider.be>
-> >>
-> >>The existing pm_clk_add() allows to pass a clock by con_id. However,
-> >>when referring to a specific clock from DT, no con_id is available.
-> >>
-> >>Add pm_clk_add_clk(), which allows to specify the struct clk * directly.
-> >>
-> >>Reviewed-by: Kevin Hilman <khilman@linaro.org>
-> >>Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >>Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> >>---
-> >>
-> >>  Pay attantion pls, that there is another series of patches
-> >>  which have been posted already and which depends from this patch
-> >>    "[PATCH v4 0/3] ARM: rk3288 : Add PM Domain support"
-> >>    https://lkml.org/lkml/2014/10/20/105
-> >>
-> >>  drivers/base/power/clock_ops.c | 41 +++++++++++++++++++++++++++++++----------
-> >>  include/linux/pm_clock.h       |  8 ++++++++
-> >>  2 files changed, 39 insertions(+), 10 deletions(-)
-> >>
-> >>diff --git a/drivers/base/power/clock_ops.c b/drivers/base/power/clock_ops.c
-> >>index 7836930..f14b767 100644
-> >>--- a/drivers/base/power/clock_ops.c
-> >>+++ b/drivers/base/power/clock_ops.c
-> >>@@ -53,7 +53,8 @@ static inline int __pm_clk_enable(struct device *dev, struct clk *clk)
-> >>   */
-> >>  static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
-> >>  {
-> >>-	ce->clk = clk_get(dev, ce->con_id);
-> >>+	if (!ce->clk)
-> >>+		ce->clk = clk_get(dev, ce->con_id);
-> >>  	if (IS_ERR(ce->clk)) {
-> >>  		ce->status = PCE_STATUS_ERROR;
-> >>  	} else {
-> >>@@ -63,15 +64,8 @@ static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
-> >>  	}
-> >>  }
-> >>
-> >>-/**
-> >>- * pm_clk_add - Start using a device clock for power management.
-> >>- * @dev: Device whose clock is going to be used for power management.
-> >>- * @con_id: Connection ID of the clock.
-> >>- *
-> >>- * Add the clock represented by @con_id to the list of clocks used for
-> >>- * the power management of @dev.
-> >>- */
-> >>-int pm_clk_add(struct device *dev, const char *con_id)
-> >>+static int __pm_clk_add(struct device *dev, const char *con_id,
-> >>+			struct clk *clk)
-> >>  {
-> >>  	struct pm_subsys_data *psd = dev_to_psd(dev);
-> >>  	struct pm_clock_entry *ce;
-> >>@@ -93,6 +87,8 @@ int pm_clk_add(struct device *dev, const char *con_id)
-> >>  			kfree(ce);
-> >>  			return -ENOMEM;
-> >>  		}
-> >>+	} else {
-> >>+		ce->clk = clk;
-> >>  	}
-> >>
-> >>  	pm_clk_acquire(dev, ce);
-> >>@@ -104,6 +100,31 @@ int pm_clk_add(struct device *dev, const char *con_id)
-> >>  }
-> >>
-> >>  /**
-> >>+ * pm_clk_add - Start using a device clock for power management.
-> >>+ * @dev: Device whose clock is going to be used for power management.
-> >>+ * @con_id: Connection ID of the clock.
-> >>+ *
-> >>+ * Add the clock represented by @con_id to the list of clocks used for
-> >>+ * the power management of @dev.
-> >>+ */
-> >>+int pm_clk_add(struct device *dev, const char *con_id)
-> >>+{
-> >>+	return __pm_clk_add(dev, con_id, NULL);
-> >
-> >Bikeshedding: why do we need __pm_clk_add() and not simply have
-> >"canonical" pm_clk_add_clk() and then do:
-> >
-> >int pm_clk_add(struct device *dev, const char *con_id)
-> >{
-> >	struct clk *clk;
-> >
-> >	clk = clk_get(dev, con_id);
-> >	...
-> >	return pm_clk_add_clk(dev, clk);
-> >}
+On Wednesday 22 October 2014 16:59:14 Lorenzo Pieralisi wrote:
+> On Wed, Oct 01, 2014 at 10:38:45AM +0100, Arnd Bergmann wrote:
 > 
-> Hm. I did fast look at code and:
-> 1) agree - there is a lot of thing which can be optimized ;)
-> 2) in my strong opinion, this patch is the fastest and simplest
-> way to introduce new API (take a look on pm_clock_entry->con_id
-> management code) and It is exactly what we need as of now.
+> [...]
+> 
+> > The arm32 implementations of pci_domain_nr/pci_proc_domain can probably be
+> > removed if we change the arm32 pcibios_init_hw function to call the new
+> > interfaces that set the domain number.
+> 
+> I wished, but it is a bit more complicated than I thought unfortunately,
+> mostly because some drivers, eg cns3xxx set the domain numbers
+> statically in pci_sys_data and this sets a chain of dependency that is
+> not easy to untangle. I think cns3xxx is the only legacy driver that "uses"
+> the domain number (in pci_sys_data) in a way that clashes with the
+> generic domain_nr implementation, I need to give it more thought.
 
-Yeah, I guess. We are lucky we do not crash when we are tryign to print
-NULL strings (see pm_clk_acquire).
+Just had a look at that driver, shouldn't be too hard to change, see below.
 
-BTW, what is the point of doing pm_clk_add(dev, NULL)? We add clock
-entry with status PCE_STATUS_ERROR and then have to handle it
-everywhere? Can we just return -EINVAL if someone triies to pass NULL
-ass con_id?
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Thanks.
+diff --git a/arch/arm/mach-cns3xxx/pcie.c b/arch/arm/mach-cns3xxx/pcie.c
+index 45d6bd09e6ef..aa4b9d7c52fd 100644
+--- a/arch/arm/mach-cns3xxx/pcie.c
++++ b/arch/arm/mach-cns3xxx/pcie.c
+@@ -30,18 +30,15 @@ struct cns3xxx_pcie {
+ 	unsigned int irqs[2];
+ 	struct resource res_io;
+ 	struct resource res_mem;
+-	struct hw_pci hw_pci;
+-
++	int port;
+ 	bool linked;
+ };
+ 
+-static struct cns3xxx_pcie cns3xxx_pcie[]; /* forward decl. */
+-
+ static struct cns3xxx_pcie *sysdata_to_cnspci(void *sysdata)
+ {
+ 	struct pci_sys_data *root = sysdata;
+ 
+-	return &cns3xxx_pcie[root->domain];
++	return root->private_data;
+ }
+ 
+ static struct cns3xxx_pcie *pdev_to_cnspci(const struct pci_dev *dev)
+@@ -192,13 +189,7 @@ static struct cns3xxx_pcie cns3xxx_pcie[] = {
+ 			.flags = IORESOURCE_MEM,
+ 		},
+ 		.irqs = { IRQ_CNS3XXX_PCIE0_RC, IRQ_CNS3XXX_PCIE0_DEVICE, },
+-		.hw_pci = {
+-			.domain = 0,
+-			.nr_controllers = 1,
+-			.ops = &cns3xxx_pcie_ops,
+-			.setup = cns3xxx_pci_setup,
+-			.map_irq = cns3xxx_pcie_map_irq,
+-		},
++		.port = 0,
+ 	},
+ 	[1] = {
+ 		.host_regs = (void __iomem *)CNS3XXX_PCIE1_HOST_BASE_VIRT,
+@@ -217,19 +208,13 @@ static struct cns3xxx_pcie cns3xxx_pcie[] = {
+ 			.flags = IORESOURCE_MEM,
+ 		},
+ 		.irqs = { IRQ_CNS3XXX_PCIE1_RC, IRQ_CNS3XXX_PCIE1_DEVICE, },
+-		.hw_pci = {
+-			.domain = 1,
+-			.nr_controllers = 1,
+-			.ops = &cns3xxx_pcie_ops,
+-			.setup = cns3xxx_pci_setup,
+-			.map_irq = cns3xxx_pcie_map_irq,
+-		},
++		.port = 1,
+ 	},
+ };
+ 
+ static void __init cns3xxx_pcie_check_link(struct cns3xxx_pcie *cnspci)
+ {
+-	int port = cnspci->hw_pci.domain;
++	int port = cnspci->port;
+ 	u32 reg;
+ 	unsigned long time;
+ 
+@@ -260,9 +245,10 @@ static void __init cns3xxx_pcie_check_link(struct cns3xxx_pcie *cnspci)
+ 
+ static void __init cns3xxx_pcie_hw_init(struct cns3xxx_pcie *cnspci)
+ {
+-	int port = cnspci->hw_pci.domain;
++	int port = cnspci->port;
+ 	struct pci_sys_data sd = {
+ 		.domain = port,
++		.private_data = cnspci,
+ 	};
+ 	struct pci_bus bus = {
+ 		.number = 0,
+@@ -323,6 +309,14 @@ static int cns3xxx_pcie_abort_handler(unsigned long addr, unsigned int fsr,
+ void __init cns3xxx_pcie_init_late(void)
+ {
+ 	int i;
++	void *private_data;
++	struct hw_pci hw_pci = {
++		.nr_controllers = 1,
++		.ops = &cns3xxx_pcie_ops,
++		.setup = cns3xxx_pci_setup,
++		.map_irq = cns3xxx_pcie_map_irq,
++		.private_data = &private_data,
++	};
+ 
+ 	pcibios_min_io = 0;
+ 	pcibios_min_mem = 0;
+@@ -335,7 +329,9 @@ void __init cns3xxx_pcie_init_late(void)
+ 		cns3xxx_pwr_soft_rst(0x1 << PM_SOFT_RST_REG_OFFST_PCIE(i));
+ 		cns3xxx_pcie_check_link(&cns3xxx_pcie[i]);
+ 		cns3xxx_pcie_hw_init(&cns3xxx_pcie[i]);
+-		pci_common_init(&cns3xxx_pcie[i].hw_pci);
++		hw_pci->domain = i;
++		private_data = &cns3xxx_pcie[i];
++		pci_common_init(&hw_pci);
+ 	}
+ 
+ 	pci_assign_unassigned_resources();
 
--- 
-Dmitry
+
