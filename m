@@ -1,165 +1,86 @@
-From: Frans Klaver <frans.klaver@xsens.com>
-Subject: [PATCH 12/13] power: reset: ltc2952: make trigger input optional
-Date: Wed, 22 Oct 2014 16:31:09 +0200
-Message-ID: <1413988270-28092-13-git-send-email-frans.klaver@xsens.com>
-References: <1413988270-28092-1-git-send-email-frans.klaver@xsens.com>
+From: Emil Medve <Emilian.Medve@Freescale.com>
+Subject: [PATCH 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
+Date: Wed, 22 Oct 2014 09:09:29 -0500
+Message-ID: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413988270-28092-1-git-send-email-frans.klaver@xsens.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Frans Klaver <frans.klaver@xsens.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Ren=C3=A9=20Moll?= <linux@r-moll.nl>, Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: scottwood@Freescale.com, galak@kernel.crashing.org, corbet@lwn.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, Geoff.Thorpe@Freescale.com, linuxppc-dev@ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Emil Medve <Emilian.Medve@Freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Currently the ltc2952 supports only one button sequence to initiate
-powerdown. This is not always desirable, as even prolonged button
-presses can happen in use.
-
-Allow ltc2952 users to pick their own power down sequence, by making the
-trigger input optional. Since this still means that the ltc2952 may
-power down the platform if the power button is pressed for about 5
-seconds, we still need to make sure to start the watchdog toggle to
-prolong the system power for as long as we need it.
-
-This will still allow the system to control power using the kill signal.
-
-Signed-off-by: Frans Klaver <frans.klaver@xsens.com>
----
- drivers/power/reset/ltc2952-poweroff.c | 87 +++++++++++++++++++++-------------
- 1 file changed, 55 insertions(+), 32 deletions(-)
-
-diff --git a/drivers/power/reset/ltc2952-poweroff.c b/drivers/power/reset/ltc2952-poweroff.c
-index fda2735..72e3d7f 100644
---- a/drivers/power/reset/ltc2952-poweroff.c
-+++ b/drivers/power/reset/ltc2952-poweroff.c
-@@ -32,7 +32,9 @@
-  * - trigger (input)
-  *     A level change indicates the shut-down trigger. If it's state reverts
-  *     within the time-out defined by trigger_delay, the shut down is not
-- *     executed.
-+ *     executed. If no pin is assigned to this input, the driver will start the
-+ *     watchdog toggle immediately. The chip will only power off the system if
-+ *     it is requested to do so through the kill line.
-  *
-  * - watchdog (output)
-  *     Once a shut down is triggered, the driver will toggle this signal,
-@@ -116,15 +118,10 @@ static enum hrtimer_restart ltc2952_poweroff_timer_wde(struct hrtimer *timer)
- 	return HRTIMER_RESTART;
- }
- 
--static enum hrtimer_restart
--ltc2952_poweroff_timer_trigger(struct hrtimer *timer)
-+static void ltc2952_poweroff_start_wde(struct ltc2952_poweroff *data)
- {
--	struct ltc2952_poweroff *data = to_ltc2952(timer, timer_trigger);
--	int ret = hrtimer_start(&data->timer_wde,
--				data->wde_interval, HRTIMER_MODE_REL);
--
--	if (ret) {
--		dev_err(data->dev, "unable to start the timer\n");
-+	if (hrtimer_start(&data->timer_wde, data->wde_interval,
-+			  HRTIMER_MODE_REL)) {
- 		/*
- 		 * The device will not toggle the watchdog reset,
- 		 * thus shut down is only safe if the PowerPath controller
-@@ -133,10 +130,17 @@ ltc2952_poweroff_timer_trigger(struct hrtimer *timer)
- 		 *
- 		 * Only sending a warning as the system will power-off anyway
- 		 */
-+		dev_err(data->dev, "unable to start the timer\n");
- 	}
-+}
- 
--	dev_info(data->dev, "executing shutdown\n");
-+static enum hrtimer_restart
-+ltc2952_poweroff_timer_trigger(struct hrtimer *timer)
-+{
-+	struct ltc2952_poweroff *data = to_ltc2952(timer, timer_trigger);
- 
-+	ltc2952_poweroff_start_wde(data);
-+	dev_info(data->dev, "executing shutdown\n");
- 	orderly_poweroff(true);
- 
- 	return HRTIMER_NORESTART;
-@@ -190,7 +194,7 @@ static void ltc2952_poweroff_default(struct ltc2952_poweroff *data)
- 
- static int ltc2952_poweroff_init(struct platform_device *pdev)
- {
--	int ret, virq;
-+	int ret;
- 	struct ltc2952_poweroff *data = platform_get_drvdata(pdev);
- 
- 	ltc2952_poweroff_default(data);
-@@ -210,29 +214,48 @@ static int ltc2952_poweroff_init(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	data->gpio_trigger = devm_gpiod_get(&pdev->dev, "trigger",
--					    GPIOD_IN);
--	if (IS_ERR(ltc2952_data->gpio_trigger)) {
--		ret = PTR_ERR(ltc2952_data->gpio_trigger);
--		dev_err(&pdev->dev, "unable to claim gpio \"trigger\"\n");
--		return ret;
--	}
--
--	virq = gpiod_to_irq(data->gpio_trigger);
--	if (virq < 0) {
--		dev_err(&pdev->dev, "cannot map GPIO as interrupt");
--		return ret;
-+	data->gpio_trigger = devm_gpiod_get(&pdev->dev, "trigger", GPIOD_IN);
-+	if (IS_ERR(data->gpio_trigger)) {
-+		/*
-+		 * It's not a problem if the trigger gpio isn't available, but
-+		 * it is worth a warning if its use was defined in the device
-+		 * tree.
-+		 */
-+		if (PTR_ERR(data->gpio_trigger) != -ENOENT)
-+			dev_err(&pdev->dev,
-+				"unable to claim gpio \"trigger\"\n");
-+		data->gpio_trigger = NULL;
- 	}
- 
--	ret = devm_request_irq(&pdev->dev, virq,
--			       ltc2952_poweroff_handler,
--			       (IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING),
--			       "ltc2952-poweroff",
--			       data);
--
--	if (ret) {
--		dev_err(&pdev->dev, "cannot configure an interrupt handler\n");
--		return ret;
-+	if (devm_request_irq(&pdev->dev, gpiod_to_irq(data->gpio_trigger),
-+			     ltc2952_poweroff_handler,
-+			     (IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING),
-+			     "ltc2952-poweroff",
-+			     data)) {
-+		/*
-+		 * Some things may have happened:
-+		 * - No trigger input was defined
-+		 * - Claiming the GPIO failed
-+		 * - We could not map to an IRQ
-+		 * - We couldn't register an interrupt handler
-+		 *
-+		 * None of these really are problems, but all of them
-+		 * disqualify the push button from controlling the power.
-+		 *
-+		 * It is therefore important to note that if the ltc2952
-+		 * detects a button press for long enough, it will still start
-+		 * its own powerdown window and cut the power on us if we don't
-+		 * start the watchdog trigger.
-+		 */
-+		if (data->gpio_trigger) {
-+			dev_warn(&pdev->dev,
-+				 "unable to configure the trigger interrupt\n");
-+			devm_gpiod_put(&pdev->dev, data->gpio_trigger);
-+			data->gpio_trigger = NULL;
-+		}
-+		dev_info(&pdev->dev,
-+			 "power down trigger input will not be used\n");
-+		ltc2952_poweroff_start_wde(data);
- 	}
- 
- 	return 0;
--- 
-2.1.0
+VGhlIEJ1ZmZlciBNYW5hZ2VyIGlzIHBhcnQgb2YgdGhlIERhdGEtUGF0aCBBY2NlbGVyYXRpb24g
+QXJjaGl0ZWN0dXJlIChEUEFBKS4KQk1hbiBzdXBwb3J0cyBoYXJkd2FyZSBhbGxvY2F0aW9uIGFu
+ZCBkZWFsbG9jYXRpb24gb2YgYnVmZmVycyBiZWxvbmdpbmcgdG8KcG9vbHMgb3JpZ2luYWxseSBj
+cmVhdGVkIGJ5IHNvZnR3YXJlIHdpdGggY29uZmlndXJhYmxlIGRlcGxldGlvbiB0aHJlc2hvbGRz
+LgpUaGlzIGJpbmRpbmcgY292ZXJzIHRoZSBDQ1NSIHNwYWNlIHByb2dyYW1taW5nIG1vZGVsCgpT
+aWduZWQtb2ZmLWJ5OiBFbWlsIE1lZHZlIDxFbWlsaWFuLk1lZHZlQEZyZWVzY2FsZS5jb20+CkNo
+YW5nZS1JZDogSTNlYzQ3OWJmYjNjOTE5NTFlOTY5MDJmMDkxZjVkN2QyYWRiZWYzYjIKLS0tCiAu
+Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9ibWFuLnR4dCAgICAgICB8IDk4ICsr
+KysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA5OCBpbnNlcnRpb25zKCspCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2Vy
+cGMvZnNsL2JtYW4udHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3Bvd2VycGMvZnNsL2JtYW4udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3Bvd2VycGMvZnNsL2JtYW4udHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAw
+MDAwMDAuLmMzMGJkZGUKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvYm1hbi50eHQKQEAgLTAsMCArMSw5OCBAQAorUW9ySVEg
+RFBBQSBCdWZmZXIgTWFuYWdlciBEZXZpY2UgVHJlZSBCaW5kaW5ncworCitDb3B5cmlnaHQgKEMp
+IDIwMDggLSAyMDE0IEZyZWVzY2FsZSBTZW1pY29uZHVjdG9yIEluYy4KKworQ09OVEVOVFMKKwor
+CS0gQk1hbiBOb2RlCisJLSBCTWFuIFByaXZhdGUgTWVtb3J5IE5vZGUKKwktIEV4YW1wbGUKKwor
+Tk9URToJVGhlIGJpbmRpbmdzIGRlc2NyaWJlZCBpbiB0aGlzIGRvY3VtZW50IGFyZSBwcmVsaW1p
+bmFyeSBhbmQgc3ViamVjdCB0bworCWNoYW5nZQorCitCTWFuIE5vZGUKKworUFJPUEVSVElFUwor
+CistIGNvbXBhdGlibGUKKwlVc2FnZToJCVJlcXVpcmVkCisJVmFsdWUgdHlwZToJPHN0cmluZ2xp
+c3Q+CisJRGVmaW5pdGlvbjoJTXVzdCBpbmNsdWRlICJmc2wsYm1hbiIKKwkJCU1heSBpbmNsdWRl
+ICJmc2wsPFNvQz4tYm1hbiIKKworLSByZWcKKwlVc2FnZToJCVJlcXVpcmVkCisJVmFsdWUgdHlw
+ZToJPHByb3AtZW5jb2RlZC1hcnJheT4KKwlEZWZpbml0aW9uOglSZWdpc3RlcnMgcmVnaW9uIHdp
+dGhpbiB0aGUgQ0NTUiBhZGRyZXNzIHNwYWNlCisKKy0gZnNsLGxpb2RuCisJVXNhZ2U6CQlTZWUg
+cGFtdS50eHQKKwlWYWx1ZSB0eXBlOgk8cHJvcC1lbmNvZGVkLWFycmF5PgorCURlZmluaXRpb246
+CVBBTVUgcHJvcGVydHkgdXNlZCBmb3Igc3RhdGljIExJT0ROIGFzc2lnbm1lbnQKKworLSBmc2ws
+aW9tbXUtcGFyZW50CisJVXNhZ2U6CQlTZWUgcGFtdS50eHQKKwlWYWx1ZSB0eXBlOgk8cGhhbmRs
+ZT4KKwlEZWZpbml0aW9uOglQQU1VIHByb3BlcnR5IHVzZWQgZm9yIGR5bmFtaWMgTElPRE4gYXNz
+aWdubWVudAorCisJRm9yIGFkZGl0aW9uYWwgZGV0YWlscyBhYm91dCB0aGUgUEFNVS9MSU9ETiBi
+aW5kaW5nKHMpIHNlZSBwYW11LnR4dAorCitCTWFuIFByaXZhdGUgTWVtb3J5IE5vZGUKKworQk1h
+biByZXF1aXJlcyBhIGNvbnRpZ3VvdXMgcmFuZ2Ugb2YgcGh5c2ljYWwgbWVtb3J5IHVzZWQgZm9y
+IHRoZSBiYWNraW5nIHN0b3JlCitmb3IgQk1hbiBGcmVlIEJ1ZmZlciBQcm94eSBSZWNvcmRzLiBU
+aGlzIG1lbW9yeSBpcyByZXNlcnZlZC9hbGxvY2F0ZWQgYXMgYSBub2RlCit1bmRlciB0aGUgL3Jl
+c2VydmVkLW1lbW9yeSBub2RlCisKK1RoZSBCTWFuIEZCUFIgbWVtb3J5IG5vZGUgbXVzdCBiZSBu
+YW1lZCAiYm1hbi1mYnByIgorCitQUk9QRVJUSUVTCisKKy0gY29tcGF0aWJsZQorCVVzYWdlOgkJ
+cmVxdWlyZWQKKwlWYWx1ZSB0eXBlOgk8c3RyaW5nbGlzdD4KKwlEZWZpbml0aW9uOglNdXN0IGlu
+Y2xpZGUgImZzbCxibWFuLWZicHIiCisKK1RoZSBmb2xsb3dpbmcgY29uc3RyYWludHMgYXJlIHJl
+bGV2YW50IHRvIHRoZSBGQlBSIHByaXZhdGUgbWVtb3J5OgorCS0gVGhlIHNpemUgbXVzdCBiZSAy
+XihzaXplICsgMSksIHdpdGggc2l6ZSA9IDExLi4zMy4gVGhhdCBpcyA0IEtpQiB0bworCSAgMTYg
+R2lCCisJLSBUaGUgYWxpZ25tZW50IG11c3QgYmUgYSBtdWxpcHRsZSBvZiB0aGUgbWVtb3J5IHNp
+emUKKworVGhlIHNpemUgb2YgdGhlIEZCUFIgbXVzdCBiZSBjaG9zZW4gYnkgb2JzZXJ2aW5nIHRo
+ZSBoYXJkd2FyZSBmZWF0dXJlcyBjb25maWd1cmVkCit2aWEgdGhlIFJDVyBhbmQgdGhhdCBhcmUg
+cmVsZXZhbnQgdG8gYSBzcGVjaWZpYyBib2FyZCAoZS5nLiBudW1iZXIgb2YgTUFDKHMpCitwaW5u
+ZWQtb3V0LCBudW1iZXIgb2Ygb2ZmbGluZS9ob3N0IGNvbW1hbmQgRk1hbiBwb3J0cywgZXRjLiku
+IFRoZSBzaXplIGNvbmZpZ3VyZWQKK2luIHRoZSBEVCBtdXN0IHJlZmxlY3QgdGhlIGhhcmR3YXJl
+IGNhcGFiaWxpdGllcyBhbmQgbm90IHRoZSBzcGVjaWZpYyBuZWVkcyBvZiBhbgorYXBwbGljYXRp
+b24KKworSWYgdGhlIG1lbW9yeSByZXNlcnZlZCBpbiB0aGUgZGV2aWNlIHRyZWUgcHJvdmVzIHRv
+IGJlIGxhcmdlciB0aGVuIHRoZSBuZWVkcyBvZgordGhlIGFwcGxpY2F0aW9uIGEgQk1hbiBkcml2
+ZXIgbWF5IHByb3ZpZGUgYSBtZXRob2QgdG8gcmVsZWFzZSB0aGUgZXh0cmEgbWVtb3J5CitiYWNr
+IHRvIHRoZSBPUworCitGb3IgYWRkaXRpb25hbCBkZXRhaWxzIGFib3V0IHJlc2VydmVkIG1lbW9y
+eSByZWdpb25zIHNlZSByZXNlcnZlZC1tZW1vcnkudHh0CisKK0VYQU1QTEUKKworVGhlIGV4YW1w
+bGUgYmVsb3cgc2hvd3MgYSBCTWFuIEZCUFIgZHluYW1pYyBhbGxvY2F0aW9uIG1lbW9yeSBub2Rl
+CisKKwlyZXNlcnZlZC1tZW1vcnkgeworCQkjYWRkcmVzcy1jZWxscyA9IDwyPjsKKwkJI3NpemUt
+Y2VsbHMgPSA8Mj47CisJCXJhbmdlczsKKworCQlibWFuLWZicHIgeworCQkJY29tcGF0aWJsZSA9
+ICJmc2wsYm1hbi1mYnByIjsKKwkJCWFsbG9jLXJhbmdlcyA9IDwwIDAgMHhmIDB4ZmZmZmZmZmY+
+OworCQkJc2l6ZSA9IDwwIDB4MTAwMDAwMD47CisJCQlhbGlnbm1lbnQgPSA8MCAweDEwMDAwMDA+
+OworCQl9OworCisJfTsKKworVGhlIGV4YW1wbGUgYmVsb3cgc2hvd3MgYSAoUDQwODApIEJNYW4g
+Q0NTUi1zcGFjZSBub2RlCisKKwlibWFuQDMxYTAwMCB7CisJCWNvbXBhdGlibGUgPSAiZnNsLGJt
+YW4iOworCQlyZWcgPSA8MHgzMWEwMDAgMHgxMDAwPjsKKwkJaW50ZXJydXB0cyA9IDwxNiAyIDEg
+Mj47CisJCWZzbCxsaW9kbiA9IDwweDE3PjsKKwl9OwotLSAKMi4xLjIKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxp
+c3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3Jn
+L2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
