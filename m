@@ -1,151 +1,482 @@
-From: Emil Medve <Emilian.Medve@Freescale.com>
-Subject: Re: [PATCH 3/4] dt/bindings: Introduce the FSL QorIQ DPAA QMan
-Date: Wed, 22 Oct 2014 15:05:12 -0500
-Message-ID: <54480DF8.3070604@Freescale.com>
-References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
- <1413986972-621-3-git-send-email-Emilian.Medve@Freescale.com>
- <20141022143732.GB4010@leverpostej>
+From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] pinctrl: add driver for Amlogic Meson SoCs
+Date: Wed, 22 Oct 2014 22:06:33 +0200
+Message-ID: <20141022200633.GA31080@gmail.com>
+References: <1412717576-19737-1-git-send-email-b.galvani@gmail.com>
+ <1412717576-19737-2-git-send-email-b.galvani@gmail.com>
+ <CACRpkdZV9Gmx7Oy4QRh4y2MNN=FXbSF2W0cnjbtxkrB4vT2UOg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20141022143732.GB4010@leverpostej>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "Geoff.Thorpe@freescale.com" <Geoff.Thorpe@Freescale.com>, "corbet@lwn.net" <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "scottwood@freescale.com" <scottwood@Freescale.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZV9Gmx7Oy4QRh4y2MNN=FXbSF2W0cnjbtxkrB4vT2UOg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gTWFyaywKCgpPbiAxMC8yMi8yMDE0IDA5OjM3IEFNLCBNYXJrIFJ1dGxhbmQgd3JvdGU6
-Cj4gT24gV2VkLCBPY3QgMjIsIDIwMTQgYXQgMDM6MDk6MzFQTSArMDEwMCwgRW1pbCBNZWR2ZSB3
-cm90ZToKPj4gVGhlIFF1ZXVlIE1hbmFnZXIgaXMgcGFydCBvZiB0aGUgRGF0YS1QYXRoIEFjY2Vs
-ZXJhdGlvbiBBcmNoaXRlY3R1cmUgKERQQUEpLgo+PiBRTWFuIHN1cHBvcnRzIHF1ZXVpbmcgYW5k
-IFFvUyBzY2hlZHVsaW5nIG9mIGZyYW1lcyB0byBDUFVzLCBuZXR3b3JrIGludGVyZmFjZXMKPj4g
-YW5kIERQQUEgbG9naWMgbW9kdWxlcywgbWFpbnRhaW5zIHBhY2tldCBvcmRlcmluZyB3aXRoaW4g
-Zmxvd3MuIEJlc2lkZXMKPj4gcHJvdmlkaW5nIGZsb3ctbGV2ZWwgcXVldWluZywgaXMgYWxzbyBy
-ZXNwb25zaWJsZSBmb3IgY29uZ2VzdGlvbiBtYW5hZ2VtZW50Cj4+IGZ1bmN0aW9ucyBzdWNoIGFz
-IFJFRC9XUkVELCBjb25nZXN0aW9uIG5vdGlmaWNhdGlvbnMgYW5kIHRhaWwgZGlzY2FyZHMuIFRo
-aXMKPj4gYmluZGluZyBjb3ZlcnMgdGhlIENDU1Igc3BhY2UgcHJvZ3JhbW1pbmcgbW9kZWwKPj4K
-Pj4gU2lnbmVkLW9mZi1ieTogRW1pbCBNZWR2ZSA8RW1pbGlhbi5NZWR2ZUBGcmVlc2NhbGUuY29t
-Pgo+PiBDaGFuZ2UtSWQ6IEkzYWNiMjIzODkzZTQyMDAzZDZjOWRjMDYxZGI1NjhlYzBiMTBkMjli
-Cj4+IC0tLQo+PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvcW1hbi50eHQg
-ICAgICAgfCAxMzQgKysrKysrKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMTM0
-IGluc2VydGlvbnMoKykKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvcW1hbi50eHQKPj4KPj4gZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9xbWFuLnR4dCBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9xbWFuLnR4dAo+PiBu
-ZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi5iOWYyODhmCj4+IC0tLSAvZGV2
-L251bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMv
-ZnNsL3FtYW4udHh0Cj4+IEBAIC0wLDAgKzEsMTM0IEBACj4+ICtRb3JJUSBEUEFBIFF1ZXVlIE1h
-bmFnZXIgRGV2aWNlIFRyZWUgQmluZGluZwo+PiArCj4+ICtDb3B5cmlnaHQgKEMpIDIwMDggLSAy
-MDE0IEZyZWVzY2FsZSBTZW1pY29uZHVjdG9yIEluYy4KPj4gKwo+PiArQ09OVEVOVFMKPj4gKwo+
-PiArCS0gUU1hbiBOb2RlCj4+ICsJLSBRTWFuIFByaXZhdGUgTWVtb3J5IE5vZGVzCj4+ICsJLSBF
-eGFtcGxlCj4+ICsKPj4gK05PVEU6CVRoZSBiaW5kaW5ncyBkZXNjcmliZWQgaW4gdGhpcyBkb2N1
-bWVudCBhcmUgcHJlbGltaW5hcnkgYW5kIHN1YmplY3QgdG8KPj4gKwljaGFuZ2UKPiAKPiBBcyB3
-aXRoIHRoZSBCTWFuIHBvcnRhbCBiaW5kaW5nLCBJJ20gcmF0aGVyIHVuY29tZm9ydGFibGUgd2l0
-aCBhCj4gcHJlbGltaW5hcnkgYmluZGluZy4KCkRpdHRvCgo+PiArCj4+ICtRTWFuIE5vZGUKPj4g
-Kwo+PiArUFJPUEVSVElFUwo+PiArCj4+ICstIGNvbXBhdGlibGUKPj4gKwlVc2FnZToJCVJlcXVp
-cmVkCj4+ICsJVmFsdWUgdHlwZToJPHN0cmluZ2xpc3Q+Cj4+ICsJRGVmaW5pdGlvbjoJTXVzdCBp
-bmNsdWRlICJmc2wscW1hbiIKPj4gKwkJCU1heSBpbmNsdWRlICJmc2wsPFNvQz4tcW1hbiIKPj4g
-Kwo+PiArLSByZWcKPj4gKwlVc2FnZToJCVJlcXVpcmVkCj4+ICsJVmFsdWUgdHlwZToJPHByb3At
-ZW5jb2RlZC1hcnJheT4KPj4gKwlEZWZpbml0aW9uOglSZWdpc3RlcnMgcmVnaW9uIHdpdGhpbiB0
-aGUgQ0NTUiBhZGRyZXNzIHNwYWNlCj4+ICsKPj4gKy0gZnNsLGxpb2RuCj4+ICsJVXNhZ2U6CQlT
-ZWUgcGFtdS50eHQKPj4gKwlWYWx1ZSB0eXBlOgk8cHJvcC1lbmNvZGVkLWFycmF5Pgo+PiArCURl
-ZmluaXRpb246CVBBTVUgcHJvcGVydHkgdXNlZCBmb3Igc3RhdGljIExJT0ROIGFzc2lnbm1lbnQK
-Pj4gKwo+PiArLSBmc2wsaW9tbXUtcGFyZW50Cj4+ICsJVXNhZ2U6CQlTZWUgcGFtdS50eHQKPj4g
-KwlWYWx1ZSB0eXBlOgk8cGhhbmRsZT4KPj4gKwlEZWZpbml0aW9uOglQQU1VIHByb3BlcnR5IHVz
-ZWQgZm9yIGR5bmFtaWMgTElPRE4gYXNzaWdubWVudAo+PiArCj4+ICsJRm9yIGFkZGl0aW9uYWwg
-ZGV0YWlscyBhYm91dCB0aGUgUEFNVS9MSU9ETiBiaW5kaW5nKHMpIHNlZSBwYW11LnR4dAo+IAo+
-IFRoaXMgaXMgbm90IHByZXNlbnQgaW4gdGhlIGV4YW1wbGUuIElzIHRoaXMgYWx3YXlzIHJlcXVp
-cmVkPwoKU29ydCBvZi4gSW5pdGlhbCBoYXJkd2FyZSAoYW5kIGN1cnJlbnQgZG9jdW1lbnRhdGlv
-bikgcHJvZ3JhbW1pbmcKc3VnZ2VzdGlvbiB3YXMgdG8gY29uZmlndXJlIGFsbCB0aGUgUEFNVSBp
-bnN0YW5jZXMgdGhlIHNhbWUgd2F5CnJlZ2FyZGxlc3Mgb2Ygd2hhdCBkZXZpY2VzIHdlcmUgYmVo
-aW5kIHRoZW0uIEdpdmVuIHRoZSBQQU1VIGludGVybmFsCmNhY2hlcyBzaXplcywgdGhpcyBwcm92
-ZWQgc3Vib3B0aW1hbCBmcm9tIGEgcGVyZm9ybWFuY2UgcGVyc3BlY3RpdmUgc28Kd2UncmUgdHJ5
-aW5nIHRvIGRpc2NvdmVyL2Rlc2NyaWJlL3VzZSB0aGUgUEFNVSB0b3BvbG9neQoKZnNsLGxpb2Ru
-IGlzIHBhcnQgb2YgdGhlIHVuZG9jdW1lbnRlZCBzdGF0aWMgTElPRE4gYXNzaWdubWVudCBiaW5k
-aW5nCnRoYXQgdGhlIGN1cnJlbnQgUEFNVSBkcml2ZXIgdXNlcy4gSWYgZnNsLGlvbW11LXBhcmVu
-dCBpcyBwcmVzZW50LApmc2wsbGlvZG4gY2FuIGJlIGlnbm9yZWQgYW5kIHRoZSBMSU9ETiBjYW4g
-YmUgYXNzaWduZWQgZHluYW1pY2FsbHkKYW5kL29yIHByb2dyYW1tZWQgb25seSBpbiB0aGUgcmVs
-ZXZhbnQgUEFNVSBpbnN0YW5jZQoKPj4gKwo+PiArLSBjbG9ja3MKPj4gKwlVc2FnZToJCVNlZSBj
-bG9jay1iaW5kaW5ncy50eHQgYW5kIHFvcmlxLWNsb2NrLnR4dAo+PiArCVZhbHVlIHR5cGU6CTxw
-cm9wLWVuY29kZWQtYXJyYXk+Cj4+ICsJRGVmaW5pdGlvbjoJSGFsZiBvZiB0aGUgcGxhdGZvcm0g
-Y2xvY2sKPj4gKwo+IAo+IEkgZG9uJ3QgdW5kZXJzdGFuZCB0aGUgZGVzY3JpcHRpb24gaGVyZS4g
-V2hhdCBpcyB0aGUgY2xvY2sgZnJvbSB0aGUgUG9WCj4gb2YgdGhlIFFNYW4/IFdoaWNoIGlucHV0
-IGxpbmUgb24gdGhlIFFNYW4gaXMgdGhpcyBjbG9jayBhdHRhY2hlZCB0bz8KPiAKPiBJcyB0aGVy
-ZSBvbmx5IG9uZSBjbG9jayBpbnB1dD8gT3IganN1dCBvbmUgdGhhdCB5b3UgbmVlZCB0byBtYW5h
-Z2UgYXQKPiB0aGUgbW9tZW50PwoKQXMgcGFydCBvZiB0aGUgcHJvZ3JhbW1pbmcgbW9kZWwgKFFv
-UyBmZWF0dXJlcyBzcGVjaWZpY2FsbHkpIFFNYW4gbmVlZHMKdG8ga25vdyBpdHMgY2xvY2sgc3Bl
-ZWQuIFByaW9yIHRvIHRoZSBleGlzdGVuY2Ugb2YgdGhlCmNsb2NrLWJpbmRpbmdzLnR4dCwgYSAi
-c3RhdGljIiBjbG9jay1mcmVxdWVuY3kgcHJvcGVydHkgd2FzL2lzIHVzZWQKY29udmV5IHN1Y2gg
-aW5mb3JtYXRpb24uIFVzaW5nIGNsb2NrLWJpbmRpbmcudHh0IHRvIGRlc2NyaWJlIHRoZQpjbG9j
-a2luZyBoaWVyYXJjaHkgaW4gdGhlIFNvQyBtYWtlcyBpdCBlYXNpZXIgd2l0aCBERlMsIHBvd2Vy
-Cm1hbmFnZW1lbnQsIGV0Yy4KClRoZSBwbGF0Zm9ybSBjbG9jay9QTEwgYmluZGluZyBpcyBwYXJ0
-IG9mIHFvcmlxLWNsb2NrLnR4dAoKPiBZb3UgYWxzbyBzZWVtIHRvIGhhdmUgYW4gaW50ZXJydXB0
-IGluIHRoZSBleGFtcGxlLiBIb3cgbWFueSBkbyB5b3UKPiBleHBlY3QsIGFuZCB3aGF0IGFyZSB0
-aGVpciB0aGVpciBsb2dpY2FsIGZ1bmN0aW9ucz8KClRoYXQncyB0aGUgZXJyb3IgaW50ZXJydXB0
-IGFuZCBob3BlZnVsbHkgaXQgbmV2ZXIgdHJpZ2dlcnMuIEkgZGlkbid0IGFkZApbbWFueV0gd29y
-ZHMgYWJvdXQgaXQgYXMgaXQncyBhIHN0YW5kYXJkIHByb3BlcnR5Cgo+PiArUU1hbiBQcml2YXRl
-IE1lbW9yeSBOb2Rlcwo+PiArCj4+ICtRTWFuIHJlcXVpcmVzIHR3byBjb250aWd1b3VzIHJhbmdl
-IG9mIHBoeXNpY2FsIG1lbW9yeSB1c2VkIGZvciB0aGUgYmFja2luZyBzdG9yZQo+PiArZm9yIFFN
-YW4gRnJhbWUgUXVldWUgRGVzY3JpcHRvciBhbmQgUGFja2VkIEZyYW1lIERlc2NyaXB0b3IgUmVj
-b3JkLiBUaGlzIG1lbW9yeQo+PiAraXMgcmVzZXJ2ZWQvYWxsb2NhdGVkIGFzIGEgbm9kZXMgdW5k
-ZXIgdGhlIC9yZXNlcnZlZC1tZW1vcnkgbm9kZQo+PiArCj4+ICtUaGUgUU1hbiBGUUQgbWVtb3J5
-IG5vZGUgbXVzdCBiZSBuYW1lZCAicW1hbi1mcWQiCj4+ICsKPj4gK1BST1BFUlRJRVMKPj4gKwo+
-PiArLSBjb21wYXRpYmxlCj4+ICsJVXNhZ2U6CQlyZXF1aXJlZAo+PiArCVZhbHVlIHR5cGU6CTxz
-dHJpbmdsaXN0Pgo+PiArCURlZmluaXRpb246CU11c3QgaW5jbGlkZSAiZnNsLHFtYW4tZnFkIgo+
-PiArCj4+ICtUaGUgUU1hbiBQRkRSIG1lbW9yeSBub2RlIG11c3QgYmUgbmFtZWQgInFtYW4tcGZk
-ciIKPj4gKwo+PiArUFJPUEVSVElFUwo+PiArCj4+ICstIGNvbXBhdGlibGUKPj4gKwlVc2FnZToJ
-CXJlcXVpcmVkCj4+ICsJVmFsdWUgdHlwZToJPHN0cmluZ2xpc3Q+Cj4+ICsJRGVmaW5pdGlvbjoJ
-TXVzdCBpbmNsaWRlICJmc2wscW1hbi1wZmRyIgo+PiArCj4+ICtUaGUgZm9sbG93aW5nIGNvbnN0
-cmFpbnRzIGFyZSByZWxldmFudCB0byB0aGUgRlFEIGFuZCBQRkRSIHByaXZhdGUgbWVtb3J5Ogo+
-PiArCS0gVGhlIHNpemUgbXVzdCBiZSAyXihzaXplICsgMSksIHdpdGggc2l6ZSA9IDExLi4yOS4g
-VGhhdCBpcyA0IEtpQiB0bwo+PiArCSAgMSBHaUIKPj4gKwktIFRoZSBhbGlnbm1lbnQgbXVzdCBi
-ZSBhIG11bGlwdGxlIG9mIHRoZSBtZW1vcnkgc2l6ZQo+PiArCj4+ICtUaGUgc2l6ZSBvZiB0aGUg
-RlFEIGFuZCBQRkRQIG11c3QgYmUgY2hvc2VuIGJ5IG9ic2VydmluZyB0aGUgaGFyZHdhcmUgZmVh
-dHVyZXMKPj4gK2NvbmZpZ3VyZWQgdmlhIHRoZSBSQ1cgYW5kIHRoYXQgYXJlIHJlbGV2YW50IHRv
-IGEgc3BlY2lmaWMgYm9hcmQgKGUuZy4gbnVtYmVyIG9mCj4+ICtNQUMocykgcGlubmVkLW91dCwg
-bnVtYmVyIG9mIG9mZmxpbmUvaG9zdCBjb21tYW5kIEZNYW4gcG9ydHMsIGV0Yy4pLiBUaGUgc2l6
-ZQo+PiArY29uZmlndXJlZCBpbiB0aGUgRFQgbXVzdCByZWZsZWN0IHRoZSBoYXJkd2FyZSBjYXBh
-YmlsaXRpZXMgYW5kIG5vdCB0aGUgc3BlY2lmaWMKPj4gK25lZWRzIG9mIGFuIGFwcGxpY2F0aW9u
-Cj4+ICsKPj4gK0lmIHRoZSBtZW1vcnkgcmVzZXJ2ZWQgaW4gdGhlIGRldmljZSB0cmVlIHByb3Zl
-cyB0byBiZSBsYXJnZXIgdGhlbiB0aGUgbmVlZHMgb2YKPj4gK3RoZSBhcHBsaWNhdGlvbiBhIFFN
-YW4gZHJpdmVyIG1heSBwcm92aWRlIGEgbWV0aG9kIHRvIHJlbGVhc2UgdGhlIGV4dHJhIG1lbW9y
-eQo+PiArYmFjayB0byB0aGUgT1MKPiAKPiBEcml2ZXIgZGV0YWlscyBzaG91bGQgYmUgdW5pbXBv
-cnRhbnQgdG8gdGhlIGJpbmRpbmcuIFRoaXMgc2VudGVuY2UgY2FuCj4gZGlzYXBwZWFyLgoKSSdt
-IHRyeWluZyB0byBkaXNjb3VyYWdlIHJlc2VydmVkLW1lbW9yeSBub2RlcyB0byBiZSB1c2VkIHRv
-ICJvcHRpbWl6ZSIKdGhlIG1lbW9yeSBhbGxvY2F0aW9uL3VzYWdlLiBJZiBpdCBjb21lcyB0byBp
-dCwgSSBjYW4gZHJvcCB0aGlzIHNlbnRlbmNlCgoKQ2hlZXJzLAoKCj4gVGhhbmtzLAo+IE1hcmsu
-Cj4gCj4+ICsKPj4gK0ZvciBhZGRpdGlvbmFsIGRldGFpbHMgYWJvdXQgcmVzZXJ2ZWQgbWVtb3J5
-IHJlZ2lvbnMgc2VlIHJlc2VydmVkLW1lbW9yeS50eHQKPj4gKwo+PiArRVhBTVBMRQo+PiArCj4+
-ICtUaGUgZXhhbXBsZSBiZWxvdyBzaG93cyBhIFFNYW4gRlFEIGFuZCBhIFBGRFIgZHluYW1pYyBh
-bGxvY2F0aW9uIG1lbW9yeSBub2Rlcwo+PiArCj4+ICsJcmVzZXJ2ZWQtbWVtb3J5IHsKPj4gKwkJ
-I2FkZHJlc3MtY2VsbHMgPSA8Mj47Cj4+ICsJCSNzaXplLWNlbGxzID0gPDI+Owo+PiArCQlyYW5n
-ZXM7Cj4+ICsKPj4gKwkJcW1hbi1mcWQgewo+PiArCQkJY29tcGF0aWJsZSA9ICJmc2wscW1hbi1m
-cWQiOwo+PiArCQkJYWxsb2MtcmFuZ2VzID0gPDAgMCAweGYgMHhmZmZmZmZmZj47Cj4+ICsJCQlz
-aXplID0gPDAgMHg0MDAwMDA+Owo+PiArCQkJYWxpZ25tZW50ID0gPDAgMHg0MDAwMDA+Owo+PiAr
-CQl9Owo+PiArCQlxbWFuLXBmZHIgewo+PiArCQkJY29tcGF0aWJsZSA9ICJmc2wscW1hbi1wZmRy
-IjsKPj4gKwkJCWFsbG9jLXJhbmdlcyA9IDwwIDAgMHhmIDB4ZmZmZmZmZmY+Owo+PiArCQkJc2l6
-ZSA9IDwwIDB4MjAwMDAwMD47Cj4+ICsJCQlhbGlnbm1lbnQgPSA8MCAweDIwMDAwMDA+Owo+PiAr
-CQl9Owo+PiArCX07Cj4+ICsKPj4gK1RoZSBleGFtcGxlIGJlbG93IHNob3dzIGEgKFA0MDgwKSBR
-TWFuIENDU1Itc3BhY2Ugbm9kZQo+PiArCj4+ICsJY2xvY2tnZW46IGdsb2JhbC11dGlsaXRpZXNA
-ZTEwMDAgewo+PiArCQkuLi4KPj4gKwkJc3lzY2xrOiBzeXNjbGsgewo+PiArCQkJLi4uCj4+ICsJ
-CX07Cj4+ICsJCS4uLgo+PiArCQlwbGF0Zm9ybS1wbGw6IHBsYXRmb3JtLXBsbEBjMDAgewo+PiAr
-CQkJI2Nsb2NrLWNlbGxzID0gPDE+Owo+PiArCQkJcmVnID0gPDB4YzAwIDB4ND47Cj4+ICsJCQlj
-b21wYXRpYmxlID0gImZzbCxxb3JpcS1wbGF0Zm9ybS1wbGwtMS4wIjsKPj4gKwkJCWNsb2NrcyA9
-IDwmc3lzY2xrPjsKPj4gKwkJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJwbGF0Zm9ybS1wbGwiLCAi
-cGxhdGZvcm0tcGxsLWRpdjIiOwo+PiArCQl9Owo+PiArCQkuLi4KPj4gKwl9Owo+PiArCj4+ICsJ
-cW1hbkAzMTgwMDAgewo+PiArCQljb21wYXRpYmxlID0gImZzbCxxbWFuIjsKPj4gKwkJcmVnID0g
-PDB4MzE4MDAwIDB4MTAwMD47Cj4+ICsJCWludGVycnVwdHMgPSA8MTYgMiAxIDM+Cj4+ICsJCWZz
-bCxsaW9kbiA9IDwweDE2PjsKPj4gKwkJY2xvY2tzID0gPCZwbGF0Zm9ybS1wbGwgMT47Cj4+ICsJ
-fTsKPj4gLS0gCj4+IDIuMS4yCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96
-bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+On Tue, Oct 21, 2014 at 03:39:25PM +0200, Linus Walleij wrote:
+> On Tue, Oct 7, 2014 at 11:32 PM, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+> Sorry for a quick and brief review, but should be enough for you to proceed
+> to iterate the patch.
+> 
+> > This is a driver for the pinmux and GPIO controller available in
+> > Amlogic Meson SoCs. At the moment it only supports Meson8 devices,
+> > however other SoC families like Meson6 and Meson8b (the Cortex-A5
+> > variant) appears to be similar, with just different sets of banks and
+> > registers.
+> >
+> > GPIO interrupts are not supported at the moment due to lack of
+> > documentation.
+> >
+> > Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> >  arch/arm/mach-meson/Kconfig            |   3 +
+> 
+> Please don't mix up driver submission with platform enablement.
+> Put this Kconfig fragment in a separate patch.
+
+Ok, will do.
+
+> 
+> > +++ b/drivers/pinctrl/meson/pinctrl-meson.c
+> (...)
+> 
+> > +static void meson_domain_set_bit(struct meson_domain *domain,
+> > +                                void __iomem *addr, unsigned int bit,
+> > +                                unsigned int value)
+> > +{
+> > +       unsigned long flags;
+> > +       unsigned int data;
+> > +
+> > +       spin_lock_irqsave(&domain->lock, flags);
+> > +       data = readl(addr);
+> > +
+> > +       if (value)
+> > +               data |= BIT(bit);
+> > +       else
+> > +               data &= ~BIT(bit);
+> > +
+> > +       writel(data, addr);
+> > +       spin_unlock_irqrestore(&domain->lock, flags);
+> > +}
+> 
+> Looks like you are re-implementing mmio regmap. Take a look at
+> devm_regmap_init_mmio() from <linux/regmap.h>
+
+I missed that, thanks.
+
+> > +static int meson_get_pin_reg_and_bit(struct meson_domain *domain,
+> > +                                    unsigned pin, int reg_type,
+> > +                                    unsigned int *reg_num, unsigned int *bit)
+> > +{
+> > +       struct meson_bank *bank;
+> > +       int i, found = 0;
+> 
+> bool found;
+> 
+> > +
+> > +       for (i = 0; i < domain->data->num_banks; i++) {
+> > +               bank = &domain->data->banks[i];
+> > +               if (pin >= bank->first && pin <= bank->last) {
+> > +                       found = 1;
+> > +                       break;
+> > +               }
+> > +       }
+> > +
+> > +       if (!found)
+> > +               return 1;
+> 
+> Can't you return a negative errorcode like everyone else?
+
+Sure.
+
+> 
+> > +
+> > +       *reg_num = bank->regs[reg_type].reg;
+> > +       *bit = bank->regs[reg_type].bit + pin - bank->first;
+> > +
+> > +       return 0;
+> > +}
+> 
+> This function is weird and could use some kerneldoc explanation
+> to what it does I think.
+
+Ok.
+
+> 
+> > +static int meson_pmx_request_gpio(struct pinctrl_dev *pcdev,
+> > +                                 struct pinctrl_gpio_range *range,
+> > +                                 unsigned offset)
+> > +{
+> > +       struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
+> > +
+> > +       meson_pmx_disable_other_groups(pc, offset, -1);
+> 
+> Passing the argument -1 is usually a bit ambiguous.
+> 
+> > +
+> > +       return 0;
+> > +}
+> 
+> > +static inline struct meson_domain *to_meson_domain(struct gpio_chip *chip)
+> > +{
+> > +       return container_of(chip, struct meson_domain, chip);
+> > +}
+> 
+> I have a very vague idea what a "meson domain" is, can this be explained
+> in some good place? Like in the struct meson_domain with
+> kerneldoc...
+
+Yes, below there is an explanation.
+
+> 
+> > +static int meson_gpio_get(struct gpio_chip *chip, unsigned gpio)
+> > +{
+> > +       struct meson_domain *domain = to_meson_domain(chip);
+> > +       void __iomem *addr;
+> > +       unsigned int bit;
+> > +
+> > +       if (meson_gpio_calc_reg_and_bit(domain, chip->base + gpio, REG_IN,
+> > +                                       &addr, &bit))
+> > +               return 0;
+> > +
+> > +       return (readl(addr) >> bit) & 1;
+> 
+> Do it like this:
+> 
+> return !!(readl(addr) & BIT(bit));
+> 
+> > +static int meson_gpio_of_xlate(struct gpio_chip *chip,
+> > +                              const struct of_phandle_args *gpiospec,
+> > +                              u32 *flags)
+> > +{
+> > +       unsigned gpio = gpiospec->args[0];
+> > +
+> > +       if (gpio < chip->base || gpio >= chip->base + chip->ngpio)
+> > +               return -EINVAL;
+> > +
+> > +       if (flags)
+> > +               *flags = gpiospec->args[1];
+> > +
+> > +       return gpio - chip->base;
+> > +}
+> 
+> Why is this necessary? We want to get rid of all use of
+> chip->base so introducing new users is not nice.
+
+The driver instantiates one pinctrl device with 136 pins and two
+gpio_chips, one with 120 gpios and the other with 16 (for more
+details, see below). The macros for pins in the header file use a
+single range from 0 to 135 that matches the order of pins in the
+pinctrl device:
+
+	/* First gpio-chip */
+	#define GPIOX_0         0
+	[...]
+	#define BOOT_18         119
+
+	/* Second gpio-chip */
+	#define GPIOAO_0        120
+	[...]
+	#define GPIO_TEST_N     135
+
+Since the macros are also used in DT as GPIO numbers, this function
+translates that value to the relative offset for the gpio chip.
+
+> The default of_gpio_simple_xlate() should be enough,
+> don't you agree?
+
+Probably yes, but for it to work then I have either to:
+ - change the pin macros to use a relative value
+
+	/* First gpio-chip */
+	#define GPIOX_0         0
+	[...]
+	#define BOOT_18         119
+
+	/* Second gpio-chip */
+	#define GPIOAO_0        0
+	[...]
+	#define GPIO_TEST_N     15
+
+ - or use a single gpio chip
+
+> 
+> I guess this is a twocell binding? Else I suggest you alter your
+> bindings to use two cells and be happy with that, as you can
+> have your driver behave like all others.
+
+It's a two-cell binding.
+
+> 
+> > +static int meson_pinctrl_init_data(struct meson_pinctrl *pc)
+> > +{
+> > +       struct meson_domain_data *data;
+> > +       int i, j, pin = 0, func = 0, group = 0;
+> > +
+> > +       /* Copy pin definitions from domains to pinctrl */
+> > +       pc->pins = devm_kzalloc(pc->dev, pc->num_pins *
+> > +                               sizeof(struct pinctrl_pin_desc), GFP_KERNEL);
+> > +       if (!pc->pins)
+> > +               return -ENOMEM;
+> > +
+> > +       for (i = 0, j = 0; i < pc->num_domains; i++) {
+> > +               data = pc->domains[i].data;
+> > +               for (j = 0; j < data->num_pins; j++) {
+> > +                       pc->pins[pin].number = pin;
+> > +                       pc->pins[pin++].name = data->pin_names[j];
+> > +               }
+> > +       }
+> 
+> This seems a little kludgy. Why can't these domains also simply
+> use struct pinctrl_pin_desc?
+
+I will fix this.
+
+> 
+> > +       /* Copy group and function definitions from domains to pinctrl */
+> > +       pc->groups = devm_kzalloc(pc->dev, pc->num_groups *
+> > +                                 sizeof(struct meson_pmx_group), GFP_KERNEL);
+> > +       pc->funcs = devm_kzalloc(pc->dev, pc->num_funcs *
+> > +                                 sizeof(struct meson_pmx_func), GFP_KERNEL);
+> > +       if (!pc->groups || !pc->funcs)
+> > +               return -ENOMEM;
+> 
+> Again more copying. Why can't we just have one set of this data
+> and only pass pointers?
+
+This code copies information on groups and functions from the
+different domains and merge it in a single array so that the driver
+can look it up easily.
+
+Probably the initial information should not be splitted so that it can
+be reused without additional copies.
+
+> 
+> > +       for (i = 0; i < pc->num_domains; i++) {
+> > +               data = pc->domains[i].data;
+> > +
+> > +               for (j = 0; j < data->num_groups; j++) {
+> > +                       memcpy(&pc->groups[group], &data->groups[j],
+> > +                              sizeof(struct meson_pmx_group));
+> > +                       pc->groups[group++].domain = &pc->domains[i];
+> > +               }
+> > +
+> > +               for (j = 0; j < data->num_funcs; j++) {
+> > +                       memcpy(&pc->funcs[func++], &data->funcs[j],
+> > +                              sizeof(struct meson_pmx_func));
+> > +               }
+> > +       }
+> > +
+> > +       /* Count pins in groups */
+> > +       for (i = 0; i < pc->num_groups; i++) {
+> > +               for (j = 0; ; j++) {
+> > +                       if (pc->groups[i].pins[j] == PINS_END) {
+> > +                               pc->groups[i].num_pins = j;
+> > +                               break;
+> > +                       }
+> > +               }
+> > +       }
+> > +
+> > +       /* Count groups in functions */
+> > +       for (i = 0; i < pc->num_funcs; i++) {
+> > +               for (j = 0; ; j++) {
+> > +                       if (!pc->funcs[i].groups[j]) {
+> > +                               pc->funcs[i].num_groups = j;
+> > +                               break;
+> > +                       }
+> > +               }
+> > +       }
+> 
+> All this dynamic code also looks cumbersome to maintain.
+> 
+> Why can't static arrays and ARRAY_SIZE() be used throughout
+> instead, just pass around pointers?
+
+The goal of the dynamic code is to simplify the declaration of groups,
+which can be done with a single statement in the form:
+
+	GROUP(_name, _reg, _bit, _pins...)
+
+for example:
+
+        GROUP(sdxc_d0_c,        4,      30,     BOOT_0),
+        GROUP(sdxc_d13_c,       4,      29,     BOOT_1, BOOT_2, BOOT_3),
+        GROUP(sdxc_d47_c,       4,      28,     BOOT_4, BOOT_5, BOOT_6, BOOT_7),
+        GROUP(sdxc_cmd_c,       4,      27,     BOOT_16),
+        GROUP(sdxc_clk_c,       4,      26,     BOOT_17),
+        GROUP(nand_io,          2,      26,     BOOT_0, BOOT_1, BOOT_2, BOOT_3,
+                                                BOOT_4, BOOT_5, BOOT_6, BOOT_7),
+
+instead of having to define an array of pins and reference it in the
+group declaration. The same goes for functions. I admit that this is a
+bit hackish, I will stick to the classical way in the next respin.
+
+> 
+> > +static int meson_gpiolib_register(struct meson_pinctrl *pc)
+> > +{
+> > +       struct meson_domain *domain;
+> > +       unsigned int base = 0;
+> > +       int i, ret;
+> > +
+> > +       for (i = 0; i < pc->num_domains; i++) {
+> > +               domain = &pc->domains[i];
+> > +
+> > +               domain->chip.label = domain->data->name;
+> > +               domain->chip.dev = pc->dev;
+> > +               domain->chip.request = meson_gpio_request;
+> > +               domain->chip.free = meson_gpio_free;
+> > +               domain->chip.direction_input = meson_gpio_direction_input;
+> > +               domain->chip.direction_output = meson_gpio_direction_output;
+> > +               domain->chip.get = meson_gpio_get;
+> > +               domain->chip.set = meson_gpio_set;
+> > +               domain->chip.base = base;
+> > +               domain->chip.ngpio = domain->data->num_pins;
+> > +               domain->chip.names = domain->data->pin_names;
+> > +               domain->chip.can_sleep = false;
+> > +               domain->chip.of_node = domain->of_node;
+> > +               domain->chip.of_gpio_n_cells = 2;
+> > +               domain->chip.of_xlate = meson_gpio_of_xlate;
+> > +
+> > +               ret = gpiochip_add(&domain->chip);
+> > +               if (ret < 0) {
+> > +                       dev_err(pc->dev, "can't add gpio chip %s\n",
+> > +                               domain->data->name);
+> > +                       goto fail;
+> > +               }
+> > +
+> > +               domain->gpio_range.name = domain->data->name;
+> > +               domain->gpio_range.id = i;
+> > +               domain->gpio_range.base = base;
+> > +               domain->gpio_range.pin_base = base;
+> > +               domain->gpio_range.npins = domain->data->num_pins;
+> > +               domain->gpio_range.gc = &domain->chip;
+> > +               pinctrl_add_gpio_range(pc->pcdev, &domain->gpio_range);
+> 
+> No thanks, use gpiochip_add_pin_range() instead. That is much
+> better as it's completely relative.
+
+Ok.
+
+> 
+> (...)
+> > +++ b/drivers/pinctrl/meson/pinctrl-meson.h
+> > +/**
+> > + * struct meson bank
+> > + *
+> > + * @name:      bank name
+> > + * @first:     first pin of the bank
+> > + * @last:      last pin of the bank
+> > + * @regs:      couples of <reg offset, bit index> controlling the
+> > + *             functionalities of the bank pins (pull, direction, value)
+> > + *
+> > + * A bank represents a set of pins controlled by a contiguous set of
+> > + * bits in the domain registers.
+> > + */
+> > +struct meson_bank {
+> > +       const char *name;
+> > +       unsigned int first;
+> > +       unsigned int last;
+> > +       struct meson_reg_offset regs[NUM_REG];
+> > +};
+> 
+> That struct is actually documented!
+> 
+> > +/**
+> > + * struct meson_domain
+> > + *
+> > + * @reg_mux:   registers for mux settings
+> > + * @reg_pullen:        registers for pull-enable settings
+> > + * @reg_pull:  registers for pull settings
+> > + * @reg_gpio:  registers for gpio settings
+> > + * @mux_size:  size of mux register range (in words)
+> > + * @pullen_size:size of pull-enable register range
+> > + * @pull_size: size of pull register range
+> > + * @gpio_size: size of gpio register range
+> > + * @chip:      gpio chip associated with the domain
+> > + * @data;      platform data for the domain
+> > + * @node:      device tree node for the domain
+> > + * @gpio_range:        gpio range that maps domain gpios to the pin controller
+> > + * @lock:      spinlock for accessing domain registers
+> > + *
+> > + * A domain represents a set of banks controlled by the same set of
+> > + * registers. Typically there is a domain for the normal banks and
+> > + * another one for the Always-On bus.
+> > + */
+> 
+> Can I get a long-ish explanation of the domains vs banks etc
+> because that's really key to understanding this driver!
+
+Yes, I hope that the following explanation is clear enough. If anyone
+wants to know the details, the relevant information can be found in
+the Amlogic sources available at:
+
+http://openlinux.amlogic.com:8000/download/ARM/kernel/
+
+The GPIOs are organized in banks (X,Y,DV,H,Z,BOOT,CARD,AO) and each
+bank has a number of GPIOs variable from 7 to 30.
+
+There are different register sets for changing pins properties:
+ - for all banks except AO:
+	<0xc11080b0 0x28> for mux configuration
+	<0xc11080e4 0x18> for pull-enable configuration
+	<0xc1108120 0x18> for pull configuration
+	<0xc1108030 0x30> for gpio (in/out/dir) configuration
+
+ - for AO bank
+	<0xc8100014 0x4> for mux configuration
+	<0xc810002c 0x4> for pull and pull-enable configuration
+	<0xc8100024 0x8> for gpio (in/out/dir) configuration
+
+The regular banks belong to the "standard" power domain, while AO
+belongs to the Always-On power domain, which, like the name says,
+can't be powered off.
+
+Each bank uses contiguous ranges of bits in the register sets
+described above and the same register can be used by different banks
+(for example, for the pull-enable configuration the BOOT bank uses
+bits [0:18] of 0xc11080f0 and the CARD bank uses bits [20:25]).
+
+In addition to this, there seem to be some other registers, shared
+between all the banks, for the interrupt functionality.
+
+My initial submission refers to these two group of banks as "domains"
+(for lack of a better name) and uses a separate node in the DT for
+each of them:
+
+	pinctrl@ {
+		compatible = "amlogic,meson8-pinctrl";
+		[...]
+
+		gpio: banks@c11080b0 {
+			reg = <0xc11080b0 0x28>,
+			      <0xc11080e4 0x18>,
+			      <0xc1108120 0x18>,
+			      <0xc1108030 0x30>;
+			reg-names = "mux", "pull-enable", "pull", "gpio";
+			gpio-controller;
+			#gpio-cells = <2>;
+		};
+
+		gpio_ao: ao-bank@c1108030 {
+			reg = <0xc8100014 0x4>,
+			      <0xc810002c 0x4>,
+			      <0xc8100024 0x8>;
+			reg-names = "mux", "pull", "gpio";
+			gpio-controller;
+			#gpio-cells = <2>;
+		};
+
+The driver then instantiates a gpio_chip for each subnode and a single
+pinctrl device. Anyway, I'll document better the driver in the next
+submission.
+
+Thanks for the review!
+
+Beniamino
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
