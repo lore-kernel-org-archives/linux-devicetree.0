@@ -1,71 +1,108 @@
 From: Scott Branden <sbranden@broadcom.com>
-Subject: Re: [PATCH v5 1/6] ARM: cygnus: Initial support for Broadcom Cygnus
- SoC
-Date: Tue, 21 Oct 2014 17:11:08 -0700
-Message-ID: <5446F61C.8060400@broadcom.com>
-References: <1413341936-17606-2-git-send-email-sbranden@broadcom.com> <4779079.vI0gT0iWvg@wuerfel> <544593E1.90608@broadcom.com> <38587325.kaAxCWAsmL@wuerfel>
+Subject: [PATCH v6 2/6] dt-bindings: Document Broadcom Cygnus SoC and clocks
+Date: Tue, 21 Oct 2014 19:09:48 -0700
+Message-ID: <1413943792-7379-3-git-send-email-sbranden@broadcom.com>
+References: <Scott Branden <sbranden@broadcom.com>
+ <1413943792-7379-1-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <38587325.kaAxCWAsmL@wuerfel>
+In-Reply-To: <1413943792-7379-1-git-send-email-sbranden@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>, JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>
+To: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>
+Cc: JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On 14-10-20 10:48 PM, Arnd Bergmann wrote:
-> On Monday 20 October 2014 15:59:45 Scott Branden wrote:
->> On 14-10-20 12:55 PM, Arnd Bergmann wrote:
->>> On Tuesday 14 October 2014 19:58:51 Scott Branden wrote:
->>>>    if ARCH_BCM
->>>>
->>>> +menu "iProc SoC based Machine types"
->>>> +       config ARCH_BCM_IPROC
->>>> +               bool
->>>> +               select ARM_GIC
->>>> +               select CACHE_L2X0
->>>> +               select HAVE_ARM_SCU if SMP
->>>> +               select HAVE_ARM_TWD if SMP
->>>> +               select ARM_GLOBAL_TIMER
->>>> +
->>>> +               select CLKSRC_MMIO
->>>> +               select ARCH_REQUIRE_GPIOLIB
->>>> +               select ARM_AMBA
->>>> +               select PINCTRL
->>>> +               help
->>>> +                 This enables support for systems based on Broadcom IPROC architected SoCs.
->>>> +                 The IPROC complex contains one or more ARM CPUs along with common
->>>> +                 core periperals. Application specific SoCs are created by adding a
->>>> +                 uArchitecture containing peripherals outside of the IPROC complex.
->>>> +                 Currently supported SoCs are Cygnus.
->>>> +
->>>> +       config ARCH_BCM_CYGNUS
->>>> +               bool "Broadcom Cygnus Support" if ARCH_MULTI_V7
->>>
->>> You still have a three-level menu structure. Please fix.
->>
->> Hi Arnd, we have ARCH_BCM->ARCH_BCM_CYGNUS.
->>
->> ARCH_BCM_IPROC is silent and selected by ARCH_BCM_CYGNUS.  This was the
->> change made between v3 and v5.
->>
->> Is there something else to be done here?
->>
->
-> You have
->
-> 	"Broadcom SoC Support"
-> 		"iProc SoC based Machine types"
-> 			 "Broadcom Cygnus Support"
-OK, I will remove the "iProc SoC based Machine types".  This was 
-grouping all iProc based SoCs under one menu and parallels what the 
-existing "Broadcom Mobile Soc Support" menu does.
-I can create another patch removing the "Broadcom Mobile SoC Support" 
-menu if the ARM Maintainer now want all Broadcom devices are supposed to 
-be contained in a single level?
->
-> Get rid of one of them.
->
-> 	Arnd
->
+From: Jonathan Richardson <jonathar@broadcom.com>
+
+Reviewed-by: Arun Parameswaran <aparames@broadcom.com>
+Tested-by: Jonathan Richardson <jonathar@broadcom.com>
+Reviewed-by: JD (Jiandong) Zheng <jdzheng@broadcom.com>
+Reviewed-by: Ray Jui <rjui@broadcom.com>
+Signed-off-by: Scott Branden <sbranden@broadcom.com>
+---
+ .../devicetree/bindings/arm/bcm/cygnus.txt         |   31 ++++++++++++++++++
+ .../devicetree/bindings/clock/bcm-cygnus-clock.txt |   34 ++++++++++++++++++++
+ 2 files changed, 65 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/cygnus.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/bcm/cygnus.txt b/Documentation/devicetree/bindings/arm/bcm/cygnus.txt
+new file mode 100644
+index 0000000..4c77169
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/bcm/cygnus.txt
+@@ -0,0 +1,31 @@
++Broadcom Cygnus device tree bindings
++------------------------------------
++
++
++Boards with Cygnus SoCs shall have the following properties:
++
++Required root node property:
++
++BCM11300
++compatible = "brcm,bcm11300", "brcm,cygnus";
++
++BCM11320
++compatible = "brcm,bcm11320", "brcm,cygnus";
++
++BCM11350
++compatible = "brcm,bcm11350", "brcm,cygnus";
++
++BCM11360
++compatible = "brcm,bcm11360", "brcm,cygnus";
++
++BCM58300
++compatible = "brcm,bcm58300", "brcm,cygnus";
++
++BCM58302
++compatible = "brcm,bcm58302", "brcm,cygnus";
++
++BCM58303
++compatible = "brcm,bcm58303", "brcm,cygnus";
++
++BCM58305
++compatible = "brcm,bcm58305", "brcm,cygnus";
+diff --git a/Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt b/Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt
+new file mode 100644
+index 0000000..00d26ed
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt
+@@ -0,0 +1,34 @@
++Broadcom Cygnus Clocks
++
++This binding uses the common clock binding:
++Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++Currently various "fixed" clocks are declared for peripheral drivers that use
++the common clock framework to reference their core clocks. Proper support of
++these clocks will be added later
++
++Device tree example:
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		osc: oscillator {
++			compatible = "fixed-clock";
++			#clock-cells = <1>;
++			clock-frequency = <25000000>;
++		};
++
++		apb_clk: apb_clk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <1000000000>;
++		};
++
++		periph_clk: periph_clk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <500000000>;
++		};
++	};
+-- 
+1.7.9.5
