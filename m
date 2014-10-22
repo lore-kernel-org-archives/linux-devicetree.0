@@ -1,89 +1,332 @@
-From: Scott Branden <sbranden@broadcom.com>
-Subject: [PATCH v6 1/6] ARM: cygnus: Initial support for Broadcom Cygnus SoC
-Date: Tue, 21 Oct 2014 19:09:47 -0700
-Message-ID: <1413943792-7379-2-git-send-email-sbranden@broadcom.com>
-References: <Scott Branden <sbranden@broadcom.com>
- <1413943792-7379-1-git-send-email-sbranden@broadcom.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v3 4/4] ARM: dts: exynos4412-trats: Add suspend
+ configuration for max77686 regulators
+Date: Wed, 22 Oct 2014 11:57:55 +0900
+Message-ID: <54471D33.8000906@samsung.com>
+References: <1413897595-28752-1-git-send-email-k.kozlowski@samsung.com>
+ <1413897595-28752-5-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1413943792-7379-1-git-send-email-sbranden@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar
- Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho
- Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>
-Cc: devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>, JD Zheng <jdzheng@broadcom.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1413897595-28752-5-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSm9uYXRoYW4gUmljaGFyZHNvbiA8am9uYXRoYXJAYnJvYWRjb20uY29tPgoKQWRkcyBp
-bml0aWFsIHN1cHBvcnQgZm9yIHRoZSBDeWdudXMgU29DIGJhc2VkIG9uIEJyb2FkY29t4oCZcyBp
-UHJvYyBzZXJpZXMuCk1vdmUgQVJDSF9CQ01fNTMwMXggdW5kZXIgdGhlIEFSQ0hfQkNNX0lQUk9D
-IGFyY2hpdGVjdHVyZS4KClJldmlld2VkLWJ5OiBSYXkgSnVpIDxyanVpQGJyb2FkY29tLmNvbT4K
-UmV2aWV3ZWQtYnk6IERlc21vbmQgTGl1IDxkZXNtb25kbEBicm9hZGNvbS5jb20+ClJldmlld2Vk
-LWJ5OiBKRCAoSmlhbmRvbmcpIFpoZW5nIDxqZHpoZW5nQGJyb2FkY29tLmNvbT4KVGVzdGVkLWJ5
-OiBKb25hdGhhbiBSaWNoYXJkc29uIDxqb25hdGhhckBicm9hZGNvbS5jb20+ClNpZ25lZC1vZmYt
-Ynk6IFNjb3R0IEJyYW5kZW4gPHNicmFuZGVuQGJyb2FkY29tLmNvbT4KLS0tCiBhcmNoL2FybS9t
-YWNoLWJjbS9LY29uZmlnICAgICAgfCAgIDI4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysK
-IGFyY2gvYXJtL21hY2gtYmNtL01ha2VmaWxlICAgICB8ICAgIDMgKysrCiBhcmNoL2FybS9tYWNo
-LWJjbS9iY21fY3lnbnVzLmMgfCAgIDI2ICsrKysrKysrKysrKysrKysrKysrKysrKysrCiAzIGZp
-bGVzIGNoYW5nZWQsIDU3IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2Fy
-bS9tYWNoLWJjbS9iY21fY3lnbnVzLmMKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNoLWJjbS9L
-Y29uZmlnIGIvYXJjaC9hcm0vbWFjaC1iY20vS2NvbmZpZwppbmRleCAyYWJhZDc0Li5mNWU2Mzhl
-IDEwMDY0NAotLS0gYS9hcmNoL2FybS9tYWNoLWJjbS9LY29uZmlnCisrKyBiL2FyY2gvYXJtL21h
-Y2gtYmNtL0tjb25maWcKQEAgLTUsNiArNSwzNCBAQCBtZW51Y29uZmlnIEFSQ0hfQkNNCiAKIGlm
-IEFSQ0hfQkNNCiAKK2NvbmZpZyBBUkNIX0JDTV9JUFJPQworCWJvb2wKKwlzZWxlY3QgQVJNX0dJ
-QworCXNlbGVjdCBDQUNIRV9MMlgwCisJc2VsZWN0IEhBVkVfQVJNX1NDVSBpZiBTTVAKKwlzZWxl
-Y3QgSEFWRV9BUk1fVFdEIGlmIFNNUAorCXNlbGVjdCBBUk1fR0xPQkFMX1RJTUVSCisKKwlzZWxl
-Y3QgQ0xLU1JDX01NSU8KKwlzZWxlY3QgQVJDSF9SRVFVSVJFX0dQSU9MSUIKKwlzZWxlY3QgQVJN
-X0FNQkEKKwlzZWxlY3QgUElOQ1RSTAorCWhlbHAKKwkgIFRoaXMgZW5hYmxlcyBzdXBwb3J0IGZv
-ciBzeXN0ZW1zIGJhc2VkIG9uIEJyb2FkY29tIElQUk9DIGFyY2hpdGVjdGVkIFNvQ3MuCisJICBU
-aGUgSVBST0MgY29tcGxleCBjb250YWlucyBvbmUgb3IgbW9yZSBBUk0gQ1BVcyBhbG9uZyB3aXRo
-IGNvbW1vbgorCSAgY29yZSBwZXJpcGVyYWxzLiBBcHBsaWNhdGlvbiBzcGVjaWZpYyBTb0NzIGFy
-ZSBjcmVhdGVkIGJ5IGFkZGluZyBhCisJICB1QXJjaGl0ZWN0dXJlIGNvbnRhaW5pbmcgcGVyaXBo
-ZXJhbHMgb3V0c2lkZSBvZiB0aGUgSVBST0MgY29tcGxleC4KKwkgIEN1cnJlbnRseSBzdXBwb3J0
-ZWQgU29DcyBhcmUgQ3lnbnVzLgorCitjb25maWcgQVJDSF9CQ01fQ1lHTlVTCisJYm9vbCAiQnJv
-YWRjb20gQ3lnbnVzIFN1cHBvcnQiIGlmIEFSQ0hfTVVMVElfVjcKKwlzZWxlY3QgQVJDSF9CQ01f
-SVBST0MKKwloZWxwCisJICBFbmFibGUgc3VwcG9ydCBmb3IgdGhlIEN5Z251cyBmYW1pbHksCisJ
-ICB3aGljaCBpbmNsdWRlcyB0aGUgZm9sbG93aW5nIHZhcmlhbnRzOgorCSAgQkNNMTEzMDAsIEJD
-TTExMzIwLCBCQ00xMTM1MCwgQkNNMTEzNjAsCisJICBCQ001ODMwMCwgQkNNNTgzMDIsIEJDTTU4
-MzAzLCBCQ001ODMwNS4KKwogY29uZmlnIEFSQ0hfQkNNX01PQklMRQogCWJvb2wgIkJyb2FkY29t
-IE1vYmlsZSBTb0MgU3VwcG9ydCIgaWYgQVJDSF9NVUxUSV9WNwogCXNlbGVjdCBBUkNIX1JFUVVJ
-UkVfR1BJT0xJQgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1iY20vTWFrZWZpbGUgYi9hcmNo
-L2FybS9tYWNoLWJjbS9NYWtlZmlsZQppbmRleCAzMDBhZTRiLi4zNGQ0NWJhIDEwMDY0NAotLS0g
-YS9hcmNoL2FybS9tYWNoLWJjbS9NYWtlZmlsZQorKysgYi9hcmNoL2FybS9tYWNoLWJjbS9NYWtl
-ZmlsZQpAQCAtMTAsNiArMTAsOSBAQAogIyBvZiBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBG
-T1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UuICBTZWUgdGhlCiAjIEdOVSBHZW5lcmFsIFB1YmxpYyBM
-aWNlbnNlIGZvciBtb3JlIGRldGFpbHMuCiAKKyMgQ3lnbnVzCitvYmotJChDT05GSUdfQVJDSF9C
-Q01fQ1lHTlVTKSArPSAgYmNtX2N5Z251cy5vCisKICMgQkNNMjgxWFgKIG9iai0kKENPTkZJR19B
-UkNIX0JDTV8yODFYWCkJKz0gYm9hcmRfYmNtMjgxeHgubwogCmRpZmYgLS1naXQgYS9hcmNoL2Fy
-bS9tYWNoLWJjbS9iY21fY3lnbnVzLmMgYi9hcmNoL2FybS9tYWNoLWJjbS9iY21fY3lnbnVzLmMK
-bmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uNDFiNDkzMwotLS0gL2Rldi9udWxs
-CisrKyBiL2FyY2gvYXJtL21hY2gtYmNtL2JjbV9jeWdudXMuYwpAQCAtMCwwICsxLDI2IEBACisv
-KgorICogQ29weXJpZ2h0IDIwMTQgQnJvYWRjb20gQ29ycG9yYXRpb24uICBBbGwgcmlnaHRzIHJl
-c2VydmVkLgorICoKKyAqIFVubGVzcyB5b3UgYW5kIEJyb2FkY29tIGV4ZWN1dGUgYSBzZXBhcmF0
-ZSB3cml0dGVuIHNvZnR3YXJlIGxpY2Vuc2UKKyAqIGFncmVlbWVudCBnb3Zlcm5pbmcgdXNlIG9m
-IHRoaXMgc29mdHdhcmUsIHRoaXMgc29mdHdhcmUgaXMgbGljZW5zZWQgdG8geW91CisgKiB1bmRl
-ciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFzCisgKiBwdWJs
-aXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbiB2ZXJzaW9uIDIuCisgKgorICog
-VGhpcyBwcm9ncmFtIGlzIGRpc3RyaWJ1dGVkICJhcyBpcyIgV0lUSE9VVCBBTlkgV0FSUkFOVFkg
-b2YgYW55CisgKiBraW5kLCB3aGV0aGVyIGV4cHJlc3Mgb3IgaW1wbGllZDsgd2l0aG91dCBldmVu
-IHRoZSBpbXBsaWVkIHdhcnJhbnR5CisgKiBvZiBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBG
-T1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UuICBTZWUgdGhlCisgKiBHTlUgR2VuZXJhbCBQdWJsaWMg
-TGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLgorICovCisKKyNpbmNsdWRlIDxhc20vbWFjaC9hcmNo
-Lmg+CisKK3N0YXRpYyBjb25zdCBjaGFyIGNvbnN0ICpiY21fY3lnbnVzX2R0X2NvbXBhdFtdID0g
-eworCSJicmNtLGN5Z251cyIsCisJTlVMTCwKK307CisKK0RUX01BQ0hJTkVfU1RBUlQoQkNNX0NZ
-R05VU19EVCwgIkJyb2FkY29tIEN5Z251cyBTb0MiKQorCS5sMmNfYXV4X3ZhbAk9IDAsCisJLmwy
-Y19hdXhfbWFzawk9IH4wLAorCS5kdF9jb21wYXQgPSBiY21fY3lnbnVzX2R0X2NvbXBhdCwKK01B
-Q0hJTkVfRU5ECi0tIAoxLjcuOS41CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi Krzysztof,
+
+On 10/21/2014 10:19 PM, Krzysztof Kozlowski wrote:
+> Add suspend to RAM configuration for max77686 regulators. Some LDOs and
+> bucks are disabled. This reduces energy consumption during S2R,
+> approximately from 17 mA to 9 mA.
+> 
+> Additionally remove old and not supported bindings:
+>  - regulator-mem-off
+>  - regulator-mem-idle
+>  - regulator-mem-on
+> The max77686 driver does not parse them and they are not documented
+> anywere.
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> ---
+>  arch/arm/boot/dts/exynos4412-trats2.dts | 72 +++++++++++++++++++--------------
+>  1 file changed, 42 insertions(+), 30 deletions(-)
+
+Looks good to me.
+
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+
+Thanks,
+Chanwoo Choi
+
+> 
+> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+> index dd9ac66770f7..8067eb447829 100644
+> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
+> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+> @@ -225,7 +225,6 @@
+>  					regulator-min-microvolt = <1000000>;
+>  					regulator-max-microvolt = <1000000>;
+>  					regulator-always-on;
+> -					regulator-mem-on;
+>  				};
+>  
+>  				ldo2_reg: ldo2 {
+> @@ -234,7 +233,9 @@
+>  					regulator-min-microvolt = <1200000>;
+>  					regulator-max-microvolt = <1200000>;
+>  					regulator-always-on;
+> -					regulator-mem-on;
+> +					regulator-state-mem {
+> +						regulator-on-in-suspend;
+> +					};
+>  				};
+>  
+>  				ldo3_reg: ldo3 {
+> @@ -243,7 +244,6 @@
+>  					regulator-min-microvolt = <1800000>;
+>  					regulator-max-microvolt = <1800000>;
+>  					regulator-always-on;
+> -					regulator-mem-on;
+>  				};
+>  
+>  				ldo4_reg: ldo4 {
+> @@ -252,7 +252,6 @@
+>  					regulator-min-microvolt = <2800000>;
+>  					regulator-max-microvolt = <2800000>;
+>  					regulator-always-on;
+> -					regulator-mem-on;
+>  				};
+>  
+>  				ldo5_reg: ldo5 {
+> @@ -261,7 +260,6 @@
+>  					regulator-min-microvolt = <1800000>;
+>  					regulator-max-microvolt = <1800000>;
+>  					regulator-always-on;
+> -					regulator-mem-on;
+>  				};
+>  
+>  				ldo6_reg: ldo6 {
+> @@ -270,7 +268,9 @@
+>  					regulator-min-microvolt = <1000000>;
+>  					regulator-max-microvolt = <1000000>;
+>  					regulator-always-on;
+> -					regulator-mem-on;
+> +					regulator-state-mem {
+> +						regulator-on-in-suspend;
+> +					};
+>  				};
+>  
+>  				ldo7_reg: ldo7 {
+> @@ -279,7 +279,9 @@
+>  					regulator-min-microvolt = <1000000>;
+>  					regulator-max-microvolt = <1000000>;
+>  					regulator-always-on;
+> -					regulator-mem-on;
+> +					regulator-state-mem {
+> +						regulator-on-in-suspend;
+> +					};
+>  				};
+>  
+>  				ldo8_reg: ldo8 {
+> @@ -287,7 +289,9 @@
+>  					regulator-name = "VMIPI_1.0V";
+>  					regulator-min-microvolt = <1000000>;
+>  					regulator-max-microvolt = <1000000>;
+> -					regulator-mem-off;
+> +					regulator-state-mem {
+> +						regulator-off-in-suspend;
+> +					};
+>  				};
+>  
+>  				ldo9_reg: ldo9 {
+> @@ -295,7 +299,6 @@
+>  					regulator-name = "CAM_ISP_MIPI_1.2V";
+>  					regulator-min-microvolt = <1200000>;
+>  					regulator-max-microvolt = <1200000>;
+> -					regulator-mem-idle;
+>  				};
+>  
+>  				ldo10_reg: ldo10 {
+> @@ -303,7 +306,9 @@
+>  					regulator-name = "VMIPI_1.8V";
+>  					regulator-min-microvolt = <1800000>;
+>  					regulator-max-microvolt = <1800000>;
+> -					regulator-mem-off;
+> +					regulator-state-mem {
+> +						regulator-off-in-suspend;
+> +					};
+>  				};
+>  
+>  				ldo11_reg: ldo11 {
+> @@ -312,7 +317,9 @@
+>  					regulator-min-microvolt = <1950000>;
+>  					regulator-max-microvolt = <1950000>;
+>  					regulator-always-on;
+> -					regulator-mem-off;
+> +					regulator-state-mem {
+> +						regulator-off-in-suspend;
+> +					};
+>  				};
+>  
+>  				ldo12_reg: ldo12 {
+> @@ -320,7 +327,9 @@
+>  					regulator-name = "VUOTG_3.0V";
+>  					regulator-min-microvolt = <3000000>;
+>  					regulator-max-microvolt = <3000000>;
+> -					regulator-mem-off;
+> +					regulator-state-mem {
+> +						regulator-off-in-suspend;
+> +					};
+>  				};
+>  
+>  				ldo13_reg: ldo13 {
+> @@ -328,7 +337,6 @@
+>  					regulator-name = "NFC_AVDD_1.8V";
+>  					regulator-min-microvolt = <1800000>;
+>  					regulator-max-microvolt = <1800000>;
+> -					regulator-mem-idle;
+>  				};
+>  
+>  				ldo14_reg: ldo14 {
+> @@ -337,7 +345,9 @@
+>  					regulator-min-microvolt = <1950000>;
+>  					regulator-max-microvolt = <1950000>;
+>  					regulator-always-on;
+> -					regulator-mem-off;
+> +					regulator-state-mem {
+> +						regulator-off-in-suspend;
+> +					};
+>  				};
+>  
+>  				ldo15_reg: ldo15 {
+> @@ -345,7 +355,9 @@
+>  					regulator-name = "VHSIC_1.0V";
+>  					regulator-min-microvolt = <1000000>;
+>  					regulator-max-microvolt = <1000000>;
+> -					regulator-mem-off;
+> +					regulator-state-mem {
+> +						regulator-on-in-suspend;
+> +					};
+>  				};
+>  
+>  				ldo16_reg: ldo16 {
+> @@ -353,7 +365,9 @@
+>  					regulator-name = "VHSIC_1.8V";
+>  					regulator-min-microvolt = <1800000>;
+>  					regulator-max-microvolt = <1800000>;
+> -					regulator-mem-off;
+> +					regulator-state-mem {
+> +						regulator-on-in-suspend;
+> +					};
+>  				};
+>  
+>  				ldo17_reg: ldo17 {
+> @@ -361,7 +375,6 @@
+>  					regulator-name = "CAM_SENSOR_CORE_1.2V";
+>  					regulator-min-microvolt = <1200000>;
+>  					regulator-max-microvolt = <1200000>;
+> -					regulator-mem-idle;
+>  				};
+>  
+>  				ldo18_reg: ldo18 {
+> @@ -369,7 +382,6 @@
+>  					regulator-name = "CAM_ISP_SEN_IO_1.8V";
+>  					regulator-min-microvolt = <1800000>;
+>  					regulator-max-microvolt = <1800000>;
+> -					regulator-mem-idle;
+>  				};
+>  
+>  				ldo19_reg: ldo19 {
+> @@ -377,7 +389,6 @@
+>  					regulator-name = "VT_CAM_1.8V";
+>  					regulator-min-microvolt = <1800000>;
+>  					regulator-max-microvolt = <1800000>;
+> -					regulator-mem-idle;
+>  				};
+>  
+>  				ldo20_reg: ldo20 {
+> @@ -385,7 +396,6 @@
+>  					regulator-name = "VDDQ_PRE_1.8V";
+>  					regulator-min-microvolt = <1800000>;
+>  					regulator-max-microvolt = <1800000>;
+> -					regulator-mem-idle;
+>  				};
+>  
+>  				ldo21_reg: ldo21 {
+> @@ -393,7 +403,6 @@
+>  					regulator-name = "VTF_2.8V";
+>  					regulator-min-microvolt = <2800000>;
+>  					regulator-max-microvolt = <2800000>;
+> -					regulator-mem-idle;
+>  				};
+>  
+>  				ldo22_reg: ldo22 {
+> @@ -408,7 +417,6 @@
+>  					regulator-name = "TSP_AVDD_3.3V";
+>  					regulator-min-microvolt = <3300000>;
+>  					regulator-max-microvolt = <3300000>;
+> -					regulator-mem-idle;
+>  				};
+>  
+>  				ldo24_reg: ldo24 {
+> @@ -416,7 +424,6 @@
+>  					regulator-name = "TSP_VDD_1.8V";
+>  					regulator-min-microvolt = <1800000>;
+>  					regulator-max-microvolt = <1800000>;
+> -					regulator-mem-idle;
+>  				};
+>  
+>  				ldo25_reg: ldo25 {
+> @@ -424,7 +431,6 @@
+>  					regulator-name = "LCD_VCC_3.3V";
+>  					regulator-min-microvolt = <2800000>;
+>  					regulator-max-microvolt = <2800000>;
+> -					regulator-mem-idle;
+>  				};
+>  
+>  				ldo26_reg: ldo26 {
+> @@ -432,7 +438,6 @@
+>  					regulator-name = "MOTOR_VCC_3.0V";
+>  					regulator-min-microvolt = <3000000>;
+>  					regulator-max-microvolt = <3000000>;
+> -					regulator-mem-idle;
+>  				};
+>  
+>  				buck1_reg: buck1 {
+> @@ -442,7 +447,9 @@
+>  					regulator-max-microvolt = <1100000>;
+>  					regulator-always-on;
+>  					regulator-boot-on;
+> -					regulator-mem-off;
+> +					regulator-state-mem {
+> +						regulator-off-in-suspend;
+> +					};
+>  				};
+>  
+>  				buck2_reg: buck2 {
+> @@ -452,7 +459,9 @@
+>  					regulator-max-microvolt = <1500000>;
+>  					regulator-always-on;
+>  					regulator-boot-on;
+> -					regulator-mem-off;
+> +					regulator-state-mem {
+> +						regulator-on-in-suspend;
+> +					};
+>  				};
+>  
+>  				buck3_reg: buck3 {
+> @@ -462,7 +471,9 @@
+>  					regulator-max-microvolt = <1150000>;
+>  					regulator-always-on;
+>  					regulator-boot-on;
+> -					regulator-mem-off;
+> +					regulator-state-mem {
+> +						regulator-off-in-suspend;
+> +					};
+>  				};
+>  
+>  				buck4_reg: buck4 {
+> @@ -471,7 +482,9 @@
+>  					regulator-min-microvolt = <850000>;
+>  					regulator-max-microvolt = <1150000>;
+>  					regulator-boot-on;
+> -					regulator-mem-off;
+> +					regulator-state-mem {
+> +						regulator-off-in-suspend;
+> +					};
+>  				};
+>  
+>  				buck5_reg: buck5 {
+> @@ -510,7 +523,6 @@
+>  					regulator-name = "CAM_ISP_CORE_1.2V";
+>  					regulator-min-microvolt = <1000000>;
+>  					regulator-max-microvolt = <1200000>;
+> -					regulator-mem-off;
+>  				};
+>  			};
+>  		};
+> 
