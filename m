@@ -1,48 +1,87 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/3] Rockchip IOMMU driver and devicetree bindings
-Date: Wed, 22 Oct 2014 17:20:19 +0200
-Message-ID: <20141022152019.GK10074@8bytes.org>
-References: <1412158843-8115-1-git-send-email-djkurtz@chromium.org>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v7 0/3] new Atmel DMA controller
+Date: Wed, 22 Oct 2014 17:22:17 +0200
+Message-ID: <1413991340-11617-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1412158843-8115-1-git-send-email-djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?iso-8859-1?Q?St=E9phane?= Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 01, 2014 at 06:20:40PM +0800, Daniel Kurtz wrote:
-> Add a driver and devicetree bindings for the IOMMU found in Rockchip RK3288
-> SoCs.
-> 
-> Daniel Kurtz (3):
->   iommu/rockchip: rk3288 iommu driver
->   dt-bindings: iommu: Add documentation for rockchip iommu
->   ARM: dts: rk3288: add VOP iommu nodes
-> 
->  .../devicetree/bindings/iommu/rockchip,iommu.txt   |  26 +
->  arch/arm/boot/dts/rk3288.dtsi                      |  18 +
->  drivers/iommu/Kconfig                              |  11 +
->  drivers/iommu/Makefile                             |   1 +
->  drivers/iommu/rockchip-iommu.c                     | 924 +++++++++++++++++++++
->  5 files changed, 980 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
->  create mode 100644 drivers/iommu/rockchip-iommu.c
+Hi,
 
-Please make sure you also get Acks for the DT bindings. With that and
-the issue I mentioned in the other email fixed, I will apply these
-patches?
+This set of patches introduces support for the new Atmel DMA controller know as
+XDMAC and available on SAMA5D4.
+
+Changes from:
+- v6
+  - change binding: merge the two dma-cells
+  - no more use direction in slave config
+  - remove cookie init
+  - return an error on a bad maxburst value
+- v5
+  - fix a bug when doing memcpy, condition to set the NDE was inverted
+  - replace irqsave locks by bh variant
+  - unmask channel errors
+- v4
+  - compile the driver if COMPILE_TEST is selected
+  - merge header file into at_xdmac.c
+  - use write memory barriers before starting the channel
+  - init active_xfer to false when taking a descriptor from the free
+  descriptors list
+  - remove dma capabilities mask
+  - use CONFIG_PM instead of CONFIG_PM_SLEEP for prepare function
+  - style fixes
+  - update documentation to add the <chip> compatible description
+- v3
+  - use dma_get_any_slave_channel instead of dma_request_channel
+  - fix tx_status behavior for non active transfers
+  - rename at_xdmac_terminate_xfer
+  - replace suspend/resume no irq variants by late/early variants
+  - no more use dev res to request the irq, use the legacy way
+  - add slave capabilities
+- v2
+  - documentation updated
+  - fix locking issues
+- v1
+  - add power management stuff
+  - check maxburst value
+  - revert subsys_initcall remove, EPROBE_DEFER not yet available on the kernel
+  version I use to do the tests, moreover other devices are not ready to use it
+- RFC:
+  - DMA_SUCCESS replaced by DMA_COMPLETE
+  - fix memcpy issue caused by a mistake in interfaces used
+  - add filter function
+  - remove some parameters from device tree since we can get them through the
+  dma slave configuration
+  - use readl/writel relaxed
+  - remove subsys_initcall
+  - synchronize irq before killing tasklets
+  - use BIT macro
+  - misc cleanup
 
 
-	Joerg
+Ludovic Desroches (3):
+  dma: at_xdmac: creation of the atmel eXtended DMA Controller driver
+  ARM: dts: at_xdmac: add bindings documentation
+  MAINTAINERS: add entry for Atmel XDMA driver
+
+ .../devicetree/bindings/dma/atmel-xdma.txt         |   54 +
+ MAINTAINERS                                        |    7 +
+ drivers/dma/Kconfig                                |    7 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/at_xdmac.c                             | 1510 ++++++++++++++++++++
+ include/dt-bindings/dma/at91.h                     |   25 +
+ 6 files changed, 1604 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/atmel-xdma.txt
+ create mode 100644 drivers/dma/at_xdmac.c
+
+-- 
+2.0.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
