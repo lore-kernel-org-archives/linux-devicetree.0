@@ -1,30 +1,42 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v5 3/4] pinctrl: Qualcomm SPMI PMIC GPIO pin controller
- driver
-Date: Wed, 22 Oct 2014 12:35:14 +0300
-Message-ID: <1413970514.30282.8.camel@mm-sol.com>
-References: <1412181058-29179-1-git-send-email-iivanov@mm-sol.com>
-	 <1412181058-29179-4-git-send-email-iivanov@mm-sol.com>
-	 <5446A2D8.3070204@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <5446A2D8.3070204@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/3] clocksource: sh_tmu: Document R-Mobile r8a7740 binding
+Date: Wed, 22 Oct 2014 11:38:27 +0200
+Message-ID: <1413970709-26607-2-git-send-email-geert+renesas@glider.be>
+References: <1413970709-26607-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1413970709-26607-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
+Compared to the r8a7779, the r8a7740 lacks the input capture register,
+which is not used by the driver (the current driver already handles the
+r8a7740 in the non-DT case).
 
-On Tue, 2014-10-21 at 19:15 +0100, Srinivas Kandagatla wrote:
-> Hi Ivan,
-> 
-> Just realized that this patch can generate compiler errors due to 
-> 3.18
-> changes in pinmux_ops struct and gpiochip_remove returns void now.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/devicetree/bindings/timer/renesas,tmu.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Yes. I am just preparing new version of this for Linus.
+diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.txt b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+index 7db89fb2544411b5..4ae7910af09ffcb4 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
++++ b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+@@ -1,4 +1,4 @@
+-* Renesas R-Car Timer Unit (TMU)
++* Renesas R-Mobile/R-Car Timer Unit (TMU)
+ 
+ The TMU is a 32-bit timer/counter with configurable clock inputs and
+ programmable compare match.
+@@ -9,6 +9,7 @@ are independent. The TMU hardware supports up to three channels.
+ Required Properties:
+ 
+   - compatible: must contain one or more of the following:
++    - "renesas,tmu-r8a7740" for the r8a7740 TMU
+     - "renesas,tmu-r8a7779" for the r8a7779 TMU
+     - "renesas,tmu" for any TMU.
+       This is a fallback for the above renesas,tmu-* entries
+-- 
+1.9.1
 
-Regards,
-Ivan
