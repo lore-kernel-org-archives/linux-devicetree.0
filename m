@@ -1,83 +1,54 @@
-From: Emil Medve <Emilian.Medve@Freescale.com>
-Subject: [PATCH 2/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan portal(s)
-Date: Wed, 22 Oct 2014 09:09:30 -0500
-Message-ID: <1413986972-621-2-git-send-email-Emilian.Medve@Freescale.com>
-References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
+From: Frans Klaver <frans.klaver@xsens.com>
+Subject: [PATCH 09/13] power: reset: ltc2952: fix C++ style function pointers
+Date: Wed, 22 Oct 2014 16:31:06 +0200
+Message-ID: <1413988270-28092-10-git-send-email-frans.klaver@xsens.com>
+References: <1413988270-28092-1-git-send-email-frans.klaver@xsens.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: scottwood@Freescale.com, galak@kernel.crashing.org, corbet@lwn.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, Geoff.Thorpe@Freescale.com, linuxppc-dev@ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Emil Medve <Emilian.Medve@Freescale.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413988270-28092-1-git-send-email-frans.klaver@xsens.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Frans Klaver <frans.klaver@xsens.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Ren=C3=A9=20Moll?= <linux@r-moll.nl>, Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Portals are used by software running on processor cores, accelerators and
-network interfaces to communicate with the BMan
+The function pointers for the timers and pm_power_off are assigned with
+C++ style
+	foo = &func;
 
-Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
-Change-Id: I6d245ffc14ba3d0e91d403ac7c3b91b75a9e6a95
+Let's change it instead to the more C style
+	foo = func;
+
+Signed-off-by: Frans Klaver <frans.klaver@xsens.com>
 ---
- .../bindings/powerpc/fsl/bman-portals.txt          | 50 ++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
+ drivers/power/reset/ltc2952-poweroff.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt b/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
-new file mode 100644
-index 0000000..40e607e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
-@@ -0,0 +1,50 @@
-+QorIQ DPAA Buffer Manager Portals Device Tree Binding
-+
-+Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
-+
-+CONTENTS
-+
-+	- BMan Portal
-+	- Example
-+
-+NOTE:	The bindings described in this document are preliminary and subject to
-+	change
-+
-+BMan Portal Node
-+
-+PROPERTIES
-+
-+- compatible
-+	Usage:		Required
-+	Value type:	<stringlist>
-+	Definition:	Must include "fsl,bman-portal-<hardware revision>"
-+			May include "fsl,<SoC>-bman-portal" or "fsl,bman-portal"
-+
-+- reg
-+	Usage:		Required
-+	Value type:	<prop-encoded-array>
-+	Definition:	Two regions. The first is the cache-enabled region of
-+			the portal. The second is the cache-inhibited region of
-+			the portal
-+
-+EXAMPLE
-+
-+The example below shows a (P4080) BMan portals container/bus node with two portals
-+
-+	bman-portals@ff4000000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges = <0 0xf 0xf4000000 0x200000>;
-+
-+		bman-portal@0 {
-+			compatible = "fsl,bman-portal-1.0.0", "fsl,bman-portal";
-+			reg = <0x0 0x4000 0x100000 0x1000>;
-+			interrupts = <105 2 0 0>;
-+		};
-+		bman-portal@4000 {
-+			compatible = "fsl,bman-portal-1.0.0", "fsl,bman-portal";
-+			reg = <0x4000 0x4000 0x101000 0x1000>;
-+			interrupts = <107 2 0 0>;
-+		};
-+	};
+diff --git a/drivers/power/reset/ltc2952-poweroff.c b/drivers/power/reset/ltc2952-poweroff.c
+index 70d8e3a..8ab1da6 100644
+--- a/drivers/power/reset/ltc2952-poweroff.c
++++ b/drivers/power/reset/ltc2952-poweroff.c
+@@ -182,10 +182,10 @@ static void ltc2952_poweroff_default(struct ltc2952_poweroff *data)
+ 	data->trigger_delay = ktime_set(2, 500L*1E6L);
+ 
+ 	hrtimer_init(&data->timer_trigger, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	data->timer_trigger.function = &ltc2952_poweroff_timer_trigger;
++	data->timer_trigger.function = ltc2952_poweroff_timer_trigger;
+ 
+ 	hrtimer_init(&data->timer_wde, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-	data->timer_wde.function = &ltc2952_poweroff_timer_wde;
++	data->timer_wde.function = ltc2952_poweroff_timer_wde;
+ }
+ 
+ static int ltc2952_poweroff_init(struct platform_device *pdev)
+@@ -270,7 +270,7 @@ static int ltc2952_poweroff_probe(struct platform_device *pdev)
+ 
+ 	/* TODO: remove ltc2952_data */
+ 	ltc2952_data = data;
+-	pm_power_off = &ltc2952_poweroff_kill;
++	pm_power_off = ltc2952_poweroff_kill;
+ 
+ 	data->panic_notifier.notifier_call = ltc2952_poweroff_notify_panic;
+ 	atomic_notifier_chain_register(&panic_notifier_list,
 -- 
-2.1.2
-
+2.1.0
