@@ -1,71 +1,53 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v2 00/11] ARM: dts: zynq: Prepare Parallella
-Date: Wed, 22 Oct 2014 15:22:16 +0200
-Message-ID: <184e81f64c364675bac53dfb10c52552@BN1AFFO11FD022.protection.gbl>
-References: <1406242820-20140-1-git-send-email-afaerber@suse.de>
- <CAOesGMjAb5oXjauhbqjDhJXWct7qoXxy3XpA1=DioK7vPTwetA@mail.gmail.com>
- <5446C775.3030707@suse.de>
- <CAOesGMhSuvbWpM5CC_5Hy6BskM6sbrw0SCR90aKHvfk1Qm1_Ng@mail.gmail.com>
- <5446CB2E.4080503@suse.de>
- <CAOesGMjQvkPyNQJ1cgxhBrw6ASwWK9jVAYkaraC1cwce9WEO=g@mail.gmail.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v4 8/8] ARM: mediatek: Add config option for mediatek
+ SoCs.
+Date: Wed, 22 Oct 2014 21:31:36 +0800
+Message-ID: <1413984696.19686.72.camel@mtksdaap41>
+References: <1413973797-17619-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <1413973797-17619-9-git-send-email-yingjoe.chen@mediatek.com>
+	 <CABuKBe+Ew6R2Kb90-gDHBQ4HuydfFxJdYmr+v9-KNC-b0K4Tkw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOesGMjQvkPyNQJ1cgxhBrw6ASwWK9jVAYkaraC1cwce9WEO=g@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Andreas Olofsson <andreas@adapteva.com>, Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Matteo Vit <matteo.vit@starwaredesign.com>, Sean Rickerd <srickerd@suse.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABuKBe+Ew6R2Kb90-gDHBQ4HuydfFxJdYmr+v9-KNC-b0K4Tkw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Yingjoe Chen <yingjoe.chen@gmail.com>, Hsien-Chun Yen <hc.yen@mediatek.com>, huang eddie <eddie.huang@mediatek.com>, Nathan Chung <nathan.chung@mediatek.com>, Yuhau Chen <yh.chen@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvMjEvMjAxNCAxMToxOCBQTSwgT2xvZiBKb2hhbnNzb24gd3JvdGU6Cj4gT24gVHVlLCBP
-Y3QgMjEsIDIwMTQgYXQgMjowNyBQTSwgQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRl
-PiB3cm90ZToKPj4gQW0gMjEuMTAuMjAxNCB1bSAyMzowMSBzY2hyaWViIE9sb2YgSm9oYW5zc29u
-Ogo+Pj4gT24gVHVlLCBPY3QgMjEsIDIwMTQgYXQgMTo1MiBQTSwgQW5kcmVhcyBGw6RyYmVyIDxh
-ZmFlcmJlckBzdXNlLmRlPiB3cm90ZToKPj4+PiBBbSAxOC4xMC4yMDE0IHVtIDA2OjI4IHNjaHJp
-ZWIgT2xvZiBKb2hhbnNzb246Cj4+Pj4+IEkgZGlkIGEgdGVzdCBydW4gd2l0aCB5ZXN0ZXJkYXkn
-cyAtbmV4dCBJdCBsb29rcyBsaWtlIG5ldHdvcmtpbmcgaXNuJ3QKPj4+Pj4gd29ya2luZyB0aGVy
-ZSBhdCB0aGUgbW9tZW50LCBjbG9jayByZWxhdGVkLiBTYW1lIGhhcHBlbnMgd2l0aCAzLjE3IGFu
-ZAo+Pj4+PiBsYXRlc3QgbWFpbmxpbmUsIGNvbmZpZyBtdWx0aV92N19kZWZjb25maWc6Cj4+Pj4+
-Cj4+Pj4+IFtXQVJOXSBbICAgIDcuOTQzNjQ4XSBtYWNiIGUwMDBiMDAwLmV0aGVybmV0IGV0aDA6
-IHVuYWJsZSB0byBnZW5lcmF0ZQo+Pj4+PiB0YXJnZXQgZnJlcXVlbmN5OiAxMjUwMDAwMDAgSHoK
-Pj4+Pj4gW1dBUk5dIFsgICAxMC45NDg2ODFdIG1hY2IgZTAwMGIwMDAuZXRoZXJuZXQgZXRoMDog
-dW5hYmxlIHRvIGdlbmVyYXRlCj4+Pj4+IHRhcmdldCBmcmVxdWVuY3k6IDEyNTAwMDAwMCBIego+
-Pj4+Cj4+Pj4gSSBhbSB1bmFibGUgdG8gcmVwcm9kdWNlIHRoaXMgaW4gbXkgc2V0dXAgLSBhdCBM
-aW51cycgdGlwCj4+Pj4gYzI2NjFiODA2MDkyZDhlYTJkY2NiN2IwMmI2NTc3NjU1NWUwZWU0NyAo
-djMuMTgtcmMxLTY4LWdjMjY2MWI4KSwgbWFrZQo+Pj4+IG9sZGNvbmZpZydpbmcgbXkgL3Byb2Mv
-Y29uZmlnLmd6Lgo+Pj4+Cj4+Pj4gU8O2cmVuLCBpbiBsaWdodCBvZiB5b3VyIGV4cGxhbmF0aW9u
-cywgc2hvdWxkIEkgYmUgZXhwZWN0aW5nIHByb2JsZW1zCj4+Pj4gd2l0aCAxR2JFIG9yIHdpdGgg
-MTAwTWJFPyBNeSBib2FyZCBpcyBjb25uZWN0ZWQgdG8gYSAxR2JFIHN3aXRjaC4KPj4+Cj4+PiBN
-eSBib2FyZCBtaWdodCBoYXZlIG9sZCBmaXJtd2FyZS9iaXRzdHJlYW0gb24gaXQ/IEl0IHJlcG9y
-dHMgYXM6Cj4+Pgo+Pj4gVS1Cb290IDIwMTIuMTAtMDAwMDMtZzc5MmMzMWMgKEphbiAwMyAyMDE0
-IC0gMTI6MjQ6MDgpCj4+Cj4+IE1pbmUgcmVwb3J0cyB0aGUgc2FtZSB2ZXJzaW9uLgo+Pgo+PiBz
-aGE1MTJzdW0gb2Ygbm9uLWhlYWRsZXNzIGJpdHN0cmVhbToKPj4gZGVjYjM3MjIyYTdkYTBkZTM5
-YjFjMWViOTU3MTQ1MDBjYzAwNjUwNmNjODZkODVlZDljNmM3YjMwYzdjZDdiOTFlZjM1OTJiODg2
-MzExZjQyODViNWNlMDA3OWI0ZmZjZDgzZjkxYWUyNzU0MzVhYzE1Y2VmZWZlN2RiMDBiMDgKPj4g
-IC9tbnQvcGFyYWxsZWxsYS5iaXQuYmluCj4gCj4gTWluZSBpcyBib290aW5nIHdpdGggd2hhdGV2
-ZXIgYml0c3RyZWFtIGlzIGZsYXNoZWQsIGFuZCBpJ20gbm90IHN1cmUKPiBob3cgdG8gYWN0dWFs
-bHkgbG9vayBhdCB3aGF0IHRoYXQgaXMuCj4gCj4gJ2ZwZ2EgZHVtcCAwIDB4MTAwMDAwMDAgMHgx
-MDAwMDAwJyBkb2Vzbid0IGRvIHdoYXQgSSBleHBlY3QgaXQgdG8KPiAodGFyZ2V0IG1lbW9yeSBp
-c24ndCBtb2RpZmllZCkuCgpEdW1waW5nIGJpdHN0cmVhbSBpcyBub3Qgc3VwcG9ydGVkIGluIHUt
-Ym9vdCB0aGF0J3Mgd2h5IGl0IHdvbid0IHdvcmsuCgpJIGhhdmUgdGVzdGVkIHRoZSBib2FyZCBJ
-IGhhdmUgaGVyZSBhbmQgbm8gcHJvYmxlbSB0byBydW4gYXQgMTAwIG9yIDEwMDBNYml0L3MuCgpb
-ICAxODguODk4NTYzXSBtYWNiIGUwMDBiMDAwLmV0aGVybmV0IGV0aDA6IGxpbmsgZG93bgpbICAx
-OTIuODk4NjAwXSBtYWNiIGUwMDBiMDAwLmV0aGVybmV0IGV0aDA6IGxpbmsgdXAgKDEwMDAvRnVs
-bCkKWyAgNzA4Ljg5ODU1Nl0gbWFjYiBlMDAwYjAwMC5ldGhlcm5ldCBldGgwOiBsaW5rIGRvd24K
-WyAgNzE1Ljg5ODY5Nl0gbWFjYiBlMDAwYjAwMC5ldGhlcm5ldCBldGgwOiBsaW5rIHVwICgxMDAv
-RnVsbCkKWyAgNzQ5LjkwOTc2NF0gbWFjYiBlMDAwYjAwMC5ldGhlcm5ldCBldGgwOiBsaW5rIGRv
-d24KWyAgNzYxLjkxNTc2OV0gbWFjYiBlMDAwYjAwMC5ldGhlcm5ldCBldGgwOiBsaW5rIHVwICgx
-MDAwL0Z1bGwpCgpJIHdpbGwgc2VuZCB5b3UgbXkgYm9vdC5iaW4gaW4gcHJpdmF0ZSBlbWFpbCB3
-aGljaCB5b3UgY2FuIHRyeS4KClRoYW5rcywKTWljaGFsCgoKCgoKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
-aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+Hi Matthias,
+
+On Wed, 2014-10-22 at 15:18 +0200, Matthias Brugger wrote:
+> 2014-10-22 12:29 GMT+02:00 Joe.C <yingjoe.chen@mediatek.com>:
+> > +
+> > +if ARCH_MEDIATEK
+> > +
+> > +config MACH_MT6589
+> > +       bool "MediaTek MT6589 SoCs support"
+> > +       default ARCH_MEDIATEK
+> > +
+> > +config MACH_MT8127
+> > +       bool "MediaTek MT8127 SoCs support"
+> > +       default ARCH_MEDIATEK
+> > +
+> > +config MACH_MT8135
+> > +       bool "MediaTek MT8135 SoCs support"
+> > +       default ARCH_MEDIATEK
+> > +
+> > +endif
+> 
+> MACH_MTxxxx are not used nowhere, please remove them.
+
+Yes, they are not used in this series yet.
+
+MACH_MT8135 was used in mt8135 pinctrl driver [1] and will be used in
+mt8135 clk driver we are about to send. I don't want to create false
+dependency between these 2 series so I put it here.
+Do you prefer add them when they are first used?
+
+Joe.C
+
+[1]
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/289288.html
