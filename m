@@ -1,54 +1,113 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] power-domain: add power domain drivers for
- Rockchip platform
-Date: Wed, 22 Oct 2014 10:17:57 -0700
-Message-ID: <CAD=FV=Urn8_F+g0G08MLG3TeJsycpoa5K8+rwGDeG=Pk7dFCqA@mail.gmail.com>
-References: <1413964424-7599-1-git-send-email-jinkun.hong@rock-chips.com>
-	<1413964424-7599-2-git-send-email-jinkun.hong@rock-chips.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] PM / clock_ops: Add pm_clk_add_clk()
+Date: Wed, 22 Oct 2014 10:38:56 -0700
+Message-ID: <20141022173856.GB28104@dtor-ws>
+References: <1413809764-21995-1-git-send-email-grygorii.strashko@ti.com>
+ <1413809764-21995-2-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413964424-7599-2-git-send-email-jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1413809764-21995-2-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "jinkun.hong" <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jack Dai <jack.dai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Jinkun,
-
-On Wed, Oct 22, 2014 at 12:53 AM, jinkun.hong
-<jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> +#define to_rockchip_pd(_gpd) container_of(_gpd, struct rockchip_domain, base)
-> +
-> +static int rockchip_pmu_set_idle_request(struct rockchip_domain *pd,
-> +                                        bool idle)
+On Mon, Oct 20, 2014 at 03:56:02PM +0300, Grygorii Strashko wrote:
+> From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> 
+> The existing pm_clk_add() allows to pass a clock by con_id. However,
+> when referring to a specific clock from DT, no con_id is available.
+> 
+> Add pm_clk_add_clk(), which allows to specify the struct clk * directly.
+> 
+> Reviewed-by: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+> ---
+> 
+>  Pay attantion pls, that there is another series of patches
+>  which have been posted already and which depends from this patch
+>    "[PATCH v4 0/3] ARM: rk3288 : Add PM Domain support"
+>    https://lkml.org/lkml/2014/10/20/105
+> 
+>  drivers/base/power/clock_ops.c | 41 +++++++++++++++++++++++++++++++----------
+>  include/linux/pm_clock.h       |  8 ++++++++
+>  2 files changed, 39 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/base/power/clock_ops.c b/drivers/base/power/clock_ops.c
+> index 7836930..f14b767 100644
+> --- a/drivers/base/power/clock_ops.c
+> +++ b/drivers/base/power/clock_ops.c
+> @@ -53,7 +53,8 @@ static inline int __pm_clk_enable(struct device *dev, struct clk *clk)
+>   */
+>  static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
+>  {
+> -	ce->clk = clk_get(dev, ce->con_id);
+> +	if (!ce->clk)
+> +		ce->clk = clk_get(dev, ce->con_id);
+>  	if (IS_ERR(ce->clk)) {
+>  		ce->status = PCE_STATUS_ERROR;
+>  	} else {
+> @@ -63,15 +64,8 @@ static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
+>  	}
+>  }
+>  
+> -/**
+> - * pm_clk_add - Start using a device clock for power management.
+> - * @dev: Device whose clock is going to be used for power management.
+> - * @con_id: Connection ID of the clock.
+> - *
+> - * Add the clock represented by @con_id to the list of clocks used for
+> - * the power management of @dev.
+> - */
+> -int pm_clk_add(struct device *dev, const char *con_id)
+> +static int __pm_clk_add(struct device *dev, const char *con_id,
+> +			struct clk *clk)
+>  {
+>  	struct pm_subsys_data *psd = dev_to_psd(dev);
+>  	struct pm_clock_entry *ce;
+> @@ -93,6 +87,8 @@ int pm_clk_add(struct device *dev, const char *con_id)
+>  			kfree(ce);
+>  			return -ENOMEM;
+>  		}
+> +	} else {
+> +		ce->clk = clk;
+>  	}
+>  
+>  	pm_clk_acquire(dev, ce);
+> @@ -104,6 +100,31 @@ int pm_clk_add(struct device *dev, const char *con_id)
+>  }
+>  
+>  /**
+> + * pm_clk_add - Start using a device clock for power management.
+> + * @dev: Device whose clock is going to be used for power management.
+> + * @con_id: Connection ID of the clock.
+> + *
+> + * Add the clock represented by @con_id to the list of clocks used for
+> + * the power management of @dev.
+> + */
+> +int pm_clk_add(struct device *dev, const char *con_id)
 > +{
-> +       u32 idle_mask = BIT(pd->idle_shift);
-> +       u32 idle_target = idle << (pd->idle_shift);
-> +       u32 ack_mask = BIT(pd->ack_shift);
-> +       u32 ack_target = idle << (pd->ack_shift);
-> +       unsigned int mask = BIT(pd->req_shift);
-> +       unsigned int val;
-> +       unsigned long flags;
+> +	return __pm_clk_add(dev, con_id, NULL);
 
-warning: unused variable 'flags'
+Bikeshedding: why do we need __pm_clk_add() and not simply have
+"canonical" pm_clk_add_clk() and then do:
 
+int pm_clk_add(struct device *dev, const char *con_id)
+{
+	struct clk *clk;
 
-> +static int rockchip_pmu_set_power_domain(struct rockchip_domain *pd,
-> +                                        bool on)
-> +{
-> +       unsigned long flags;
+	clk = clk_get(dev, con_id);
+	...
+	return pm_clk_add_clk(dev, clk);
+}
 
-warning: unused variable 'flags'
+Thanks.
 
-
-I haven't done any review of these patches, but I'll say that I did
-pick your patches (along with "PM / clock_ops: Add pm_clk_add_clk()"
-from https://patchwork.kernel.org/patch/5105401/) and I was able to
-boot up my system.  Also, your series plus a patch to set the GPU
-power domain on rk3288 made suspend/resume work better.
-
--Doug
+-- 
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
