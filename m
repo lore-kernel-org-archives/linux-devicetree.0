@@ -1,48 +1,65 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/5] regulator: of: Decrement refcount for suspend
- state nodes
-Date: Wed, 22 Oct 2014 17:38:57 +0100
-Message-ID: <20141022163857.GC2344@sirena.org.uk>
-References: <1413816472-1895-1-git-send-email-javier.martinez@collabora.co.uk>
- <1413816472-1895-2-git-send-email-javier.martinez@collabora.co.uk>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 00/12] rtc: omap: fixes and power-off feature
+Date: Wed, 22 Oct 2014 09:43:26 -0700
+Message-ID: <20141022164326.GJ2542@atomide.com>
+References: <1412881594-25678-1-git-send-email-johan@kernel.org>
+ <20141010175409.GL31348@saruman>
+ <20141011093819.GA18988@localhost>
+ <20141011190817.GA20644@atomide.com>
+ <20141022110758.GO2113@localhost>
+ <20141022152956.GI2542@atomide.com>
+ <20141022162104.GB2381@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3WLtXmtPTeS+BWmV"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1413816472-1895-2-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20141022162104.GB2381@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+* Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [141022 09:25]:
+> On Wed, Oct 22, 2014 at 08:29:56AM -0700, Tony Lindgren wrote:
+> > * Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [141022 04:12]:
+> > > On Sat, Oct 11, 2014 at 12:08:18PM -0700, Tony Lindgren wrote:
+> > > > * Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [141011 02:42]:
+> > > > > On Fri, Oct 10, 2014 at 12:54:22PM -0500, Felipe Balbi wrote:
+> > > > > > 
+> > > > > > is this power-off feature "RTC-only mode" ?
+> > > > > 
+> > > > > Yes, I believe so, at least as long as RTC power is maintained. The
+> > > > > pmic_power_en pin can otherwise still be used to power off. 
+> > > > > 
+> > > > > On the BeagleBone the PMIC can be configured to enter OFF or SLEEP mode
+> > > > > on power off, where the latter (and default) mode keeps the RTC power
+> > > > > supply enabled.
+> > > > > 
+> > > > > Thanks for the fast review, Felipe.
+> > > > 
+> > > > Great :) I assume adding the regulator support to this driver should
+> > > > also help in the 35xx case?
+> > > 
+> > > If I remember correctly both OMAP and Sitara 35xx have no on-chip RTC so
+> > > they won't be using this driver.
+> > 
+> > Sorry I made a typo.. I meanto to ask if adding the regulator
+> > helps in your 335x case (not 35xx case)?
+> 
+> Ah, sorry, that's what I first read before I noticed you wrote "35xx"
+> twice. :)
 
---3WLtXmtPTeS+BWmV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes sorry my nerves are doing things on their own for some stuff
+it seems like :)
+ 
+> Yes, RTC power can be configured as a regulator on am33xx (e.g. provided
+> by LDO1 of the PMIC on BBB). I guess you would still need to configure
+> it as always-on to be able to use the RTC-only mode, though.
 
-On Mon, Oct 20, 2014 at 04:47:48PM +0200, Javier Martinez Canillas wrote:
-> of_get_regulation_constraints() calls of_get_child_by_name() to find the
-> regulator-state-{mem,disk} child nodes for each regulator. This function
-> increments the device node reference counter but this is not decremented
-> once the function is done using the node.
+OK great.
 
-Applied, thanks.
-
---3WLtXmtPTeS+BWmV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUR92gAAoJECTWi3JdVIfQpiAH/RamknwBmjvA4bzUyt0ejX2l
-YvkOm/2ZvmC0WNGAFwfnRqWXAwnZ8xe6B8Ayff14KaF4WNZpcOuhizlQ6EYJgjan
-NLKTpDY6UXvY8gruWnLXbCZbAfzx4ymgzMMsz271UfI0Qjk5EJYMjMn6j6Ndhq2b
-sPWItMqUiekTOwO+2wYuGs10yjkdc2Zxx+o+m7HddE9soUdLVE27cZ8xkBz6CMyY
-Gp+4381j++1vf3oxdmMwIFcgXibyjFPwXbdR3tz9ooK0uS0e/1jp55JKFDqYSqU/
-1huLo0+93IRpoRLee13T/VM6YaQNb4SiISvhhwYvaN/H8viZOA4ySagOfcFELkY=
-=ohGC
------END PGP SIGNATURE-----
-
---3WLtXmtPTeS+BWmV--
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
