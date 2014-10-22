@@ -1,7 +1,7 @@
 From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCHv4 1/3] ARM: dts: socfpga: rename gpio nodes
-Date: Wed, 22 Oct 2014 14:07:38 -0500
-Message-ID: <1414004860-17645-2-git-send-email-dinguyen@opensource.altera.com>
+Subject: [PATCHv4 2/3] ARM: dts: socfpga: Fix SD card detect
+Date: Wed, 22 Oct 2014 14:07:39 -0500
+Message-ID: <1414004860-17645-3-git-send-email-dinguyen@opensource.altera.com>
 References: <1414004860-17645-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,80 +14,46 @@ List-Id: devicetree@vger.kernel.org
 
 From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Since the Synopsys GPIO IP can support multiple ports of varying widths, it
-would make more sense to have the GPIO node DTS entry as this:
+Without this patch, the booting the SOCFPGA platform would hang at the
+SDMMC driver loading. The issue, debugged by Doug Anderson, turned out
+to be that the GPIO bank used by the SD card-detect was not set to
+status="okay".
 
-gpio0: gpio@ff708000{
-	porta{
-	};
-};
-
-Also, this is documented in the snps-dwapb-gpio.txt.
+Also update the cd-gpios to point to portb of the &gpio1 GPIO IP.
 
 Suggested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 ---
- arch/arm/boot/dts/socfpga.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+v4: Use &gpio1 to set status="okay" and update cd-gpio=&portb
+v3: Correctly degugged the issue to be a gpio node not having status="okay"
+---
+ arch/arm/boot/dts/socfpga_cyclone5_socdk.dts | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 45fce2c..4472fd9 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -547,7 +547,7 @@
- 			status = "disabled";
- 		};
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+index d7296a5..d91c943 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+@@ -53,6 +53,10 @@
+ 	rxc-skew-ps = <2000>;
+ };
  
--		gpio@ff708000 {
-+		gpio0: gpio@ff708000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			compatible = "snps,dw-apb-gpio";
-@@ -555,7 +555,7 @@
- 			clocks = <&per_base_clk>;
- 			status = "disabled";
++&gpio1 {
++	status = "okay";
++};
++
+ &i2c0 {
+ 	status = "okay";
  
--			gpio0: gpio-controller@0 {
-+			porta: gpio-controller@0 {
- 				compatible = "snps,dw-apb-gpio-port";
- 				gpio-controller;
- 				#gpio-cells = <2>;
-@@ -567,7 +567,7 @@
- 			};
- 		};
+@@ -69,7 +73,7 @@
+ };
  
--		gpio@ff709000 {
-+		gpio1: gpio@ff709000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			compatible = "snps,dw-apb-gpio";
-@@ -575,7 +575,7 @@
- 			clocks = <&per_base_clk>;
- 			status = "disabled";
+ &mmc0 {
+-	cd-gpios = <&gpio1 18 0>;
++	cd-gpios = <&portb 18 0>;
+ };
  
--			gpio1: gpio-controller@0 {
-+			portb: gpio-controller@0 {
- 				compatible = "snps,dw-apb-gpio-port";
- 				gpio-controller;
- 				#gpio-cells = <2>;
-@@ -587,7 +587,7 @@
- 			};
- 		};
- 
--		gpio@ff70a000 {
-+		gpio2: gpio@ff70a000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			compatible = "snps,dw-apb-gpio";
-@@ -595,7 +595,7 @@
- 			clocks = <&per_base_clk>;
- 			status = "disabled";
- 
--			gpio2: gpio-controller@0 {
-+			portc: gpio-controller@0 {
- 				compatible = "snps,dw-apb-gpio-port";
- 				gpio-controller;
- 				#gpio-cells = <2>;
+ &usb1 {
 -- 
 2.0.3
 
