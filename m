@@ -1,166 +1,82 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v2 2/3] ARM: keystone: pm: switch to use generic pm domains
-Date: Wed, 22 Oct 2014 14:23:33 +0300
-Message-ID: <544793B5.6080601@ti.com>
-References: <1413809764-21995-1-git-send-email-grygorii.strashko@ti.com> <1413809764-21995-3-git-send-email-grygorii.strashko@ti.com> <5446A065.9050308@gmail.com>
+From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 4/4] arm64:numa: adding numa support for arm64 platforms.
+Date: Wed, 22 Oct 2014 16:57:43 +0530
+Message-ID: <CAFpQJXUQsxGRxQroZ1X0pbHp5n=TymaP0r662NU0WetM_oZUKw@mail.gmail.com>
+References: <1411635840-24038-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+	<1411635840-24038-5-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+	<20141003121343.GG26643@leverpostej>
+	<CAFpQJXVJtn=PTYTd5icHhfYxsQnEzUP+w9kXXDJSs-M=eGNWVw@mail.gmail.com>
+	<20141006112640.GF24686@leverpostej>
+	<CAFpQJXU4AW_WycWUWWaONvCiFgJU5KC_coCH8EU9kO=a0Rf9hQ@mail.gmail.com>
+	<CAFpQJXXkgtr6E0owHxAu0MG8+7s5LBt_mVB9gQM1VfkX2rY5FQ@mail.gmail.com>
+	<20141020142555.GA9968@linaro.org>
+	<20141020143045.GA10233@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <5446A065.9050308@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@gmail.com>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, khilman@linaro.org, ulf.hansson@linaro.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141020143045.GA10233-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Santosh,
-
-On 10/21/2014 09:05 PM, Santosh Shilimkar wrote:
-> On 10/20/2014 05:56 AM, Grygorii Strashko wrote:
->> This patch switches Keystone 2 PM code to use Generic PM domains
->> instead of PM clock domains because of the lack of DT support
->> for the last.
+On Mon, Oct 20, 2014 at 8:00 PM, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Oct 20, 2014 at 03:25:56PM +0100, Steve Capper wrote:
+>> On Fri, Oct 17, 2014 at 10:49:56PM +0530, Ganapatrao Kulkarni wrote:
+>
+> [...]
+>
+>>          /*Proximity Distance matrix for 4Node system
+>> >                        <from-node to-node distance>
+>> >         */
+>> >          node-matrix=    <0 0 10>,
+>> >                                <0 1 20>,
+>> >                                <0 2 30>,
+>> >                                <0 3 10>,
+>> >                                <1 0 20>,
+>> >                                 <1 1 10>,
+>> >                                <1 2 30>,
+>> >                               <1 3 10>,
+>> >                               <2 0 30>,
+>> >                               <2 1 20>,
+>> >                               <2 2 10>,
+>> >                              <2 3 10>,
+>> >                             <3 0 10>,
+>> >                             <3 1 20>,
+>> >                             <3 2 30>,
+>> >                             <3 3 10>,
+>> >  }
 >>
->> Reviewed-by: Kevin Hilman <khilman@linaro.org>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
->>   .../bindings/power/ti,keystone-powerdomain.txt     |  31 ++++++
->>   arch/arm/mach-keystone/Kconfig                     |   1 +
->>   arch/arm/mach-keystone/pm_domain.c                 | 112 
->> ++++++++++++++-------
->>   3 files changed, 107 insertions(+), 37 deletions(-)
->>   create mode 100644 
->> Documentation/devicetree/bindings/power/ti,keystone-powerdomain.txt
+>> Hi Ganapat,
+>> The above caught my attention.
 >>
->> diff --git 
->> a/Documentation/devicetree/bindings/power/ti,keystone-powerdomain.txt 
->> b/Documentation/devicetree/bindings/power/ti,keystone-powerdomain.txt
->> new file mode 100644
->> index 0000000..4bbf2aa
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/ti,keystone-powerdomain.txt
->> @@ -0,0 +1,31 @@
->> +* TI Keystone 2 Generic PM Controller
->> +
->> +The TI Keystone 2 Generic PM Controller is responsible for Clock gating
->> +for each controlled IP module.
->> +
->> +Required properties:
->> +- compatible: Should be "ti,keystone-powerdomain"
->> +- #power-domain-cells: Should be 0, see below:
->> +
->> +The gpc node is a power-controller as documented by the generic power 
->> domain
-> You renamed gpc but missed to fix the comment ? Pls update it.
-
-ok.
-
-> 
->> +bindings in Documentation/devicetree/bindings/power/power_domain.txt.
->> +
->> +Example:
->> +
->> +    pm_controller: pm-controller {
->> +        compatible = "ti,keystone-powerdomain";
->> +        #power-domain-cells = <0>;
->> +    };
->> +
->> +    netcp: netcp@2090000 {
->> +        reg = <0x2620110 0x8>;
->> +        reg-names = "efuse";
->> +        ...
->> +        #address-cells = <1>;
->> +        #size-cells = <1>;
->> +        ranges;
->> +        power-domains = <&pm_controller>;
->> +
->> +        clocks = <&clkpa>, <&clkcpgmac>, <&chipclk12>;
->> +        dma-coherent;
->> +    }
->> diff --git a/arch/arm/mach-keystone/Kconfig 
->> b/arch/arm/mach-keystone/Kconfig
->> index 98a156a..de43107 100644
->> --- a/arch/arm/mach-keystone/Kconfig
->> +++ b/arch/arm/mach-keystone/Kconfig
->> @@ -9,6 +9,7 @@ config ARCH_KEYSTONE
->>       select COMMON_CLK_KEYSTONE
->>       select ARCH_SUPPORTS_BIG_ENDIAN
->>       select ZONE_DMA if ARM_LPAE
->> +    select PM_GENERIC_DOMAINS if PM
->>       help
->>         Support for boards based on the Texas Instruments Keystone 
->> family of
->>         SoCs.
->> diff --git a/arch/arm/mach-keystone/pm_domain.c 
->> b/arch/arm/mach-keystone/pm_domain.c
->> index ca79dda..d58759d 100644
->> --- a/arch/arm/mach-keystone/pm_domain.c
->> +++ b/arch/arm/mach-keystone/pm_domain.c
->> @@ -12,69 +12,107 @@
->>    * version 2, as published by the Free Software Foundation.
->>    */
+>> For a 4-node system do we not need 16 distances; the implication of that
+>> would be that the distance between node A-B could be different from the
+>> distance between B-A? Also the distance from a node to itself could be
+>> safely assumed to be zero?
 >>
->> +#include <linux/clk.h>
->>   #include <linux/init.h>
->> -#include <linux/pm_runtime.h>
->>   #include <linux/pm_clock.h>
->> +#include <linux/pm_domain.h>
->>   #include <linux/platform_device.h>
->> -#include <linux/clk-provider.h>
->>   #include <linux/of.h>
+>> I think we should have a symmetric matrix with zero-diagonals so strictly
+>> only seven values would need specifying for a 4-node system.
+Thanks Stave for the comments.
+I too thought initially to take the assumption like
+distance B-A is same as A-B and A-A is always defined to LOCAL.
+However this example is an ideal case which will define all 16
+distances for 4 node system.
+In actual DT, we can skip to provide A-A and B-A, In kernel
+implementation we will use these common/generic assumptions
+to derive missing distances.
+>
+> s/seven/six/
+>
+> I really need to learn how to count.... :-/
+>
 >>
->> -#ifdef CONFIG_PM_RUNTIME
->> -static int keystone_pm_runtime_suspend(struct device *dev)
->> +#ifdef CONFIG_PM_GENERIC_DOMAINS
->> +
->> +struct keystone_domain {
->> +    struct generic_pm_domain genpd;
->> +    struct device    *dev;
->> +};
->> +
->> +void keystone_pm_domain_attach_dev(struct device *dev)
->>   {
->> +    struct clk *clk;
->>       int ret;
->> +    int i = 0;
->>
->>       dev_dbg(dev, "%s\n", __func__);
->>
->> -    ret = pm_generic_runtime_suspend(dev);
->> -    if (ret)
->> -        return ret;
->> -
->> -    ret = pm_clk_suspend(dev);
->> +    ret = pm_clk_create(dev);
->>       if (ret) {
->> -        pm_generic_runtime_resume(dev);
->> -        return ret;
->> +        dev_err(dev, "pm_clk_create failed %d\n", ret);
->> +        return;
->> +    };
->> +
->> +    while ((clk = of_clk_get(dev->of_node, i++)) && !IS_ERR(clk)) {
->> +        ret = pm_clk_add_clk(dev, clk);
->> +        if (ret) {
->> +            dev_err(dev, "pm_clk_add_clk failed %d\n", ret);
->> +            goto clk_err;
->> +        };
->>       }
->>
->> -    return 0;
->> +    if (!IS_ENABLED(CONFIG_PM_RUNTIME)) {
-> Can we not okkup two seperate callbacks instead of above check ?
-> I don't like this CONFIG check here. Its slightly better version of
-> ifdef in middle of the code.
-
-I've found more-less similar comment on patch
-"Re: [PATCH v3 1/3] power-domain: add power domain drivers for Rockchip platform"
-https://lkml.org/lkml/2014/10/17/257
-
-So, Would you like me to create patch which will enable clocks in pm_clk_add/_clk()
-in case !IS_ENABLED(CONFIG_PM_RUNTIME)
-
-regards,
--grygorii
- 
-
+>> Cheers,
+>> --
+>> Steve
+thanks
+Ganapat
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
