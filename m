@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 4/4] of: Remove spaces before tabs
-Date: Wed, 22 Oct 2014 11:44:55 +0200
-Message-ID: <1413971095-27192-4-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 2/4] of: Improve grammar for of_alias_scan() documentation
+Date: Wed, 22 Oct 2014 11:44:53 +0200
+Message-ID: <1413971095-27192-2-git-send-email-geert+renesas@glider.be>
 References: <1413971095-27192-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1413971095-27192-1-git-send-email-geert+renesas@glider.be>
@@ -12,53 +12,32 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/of/base.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/of/base.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/of/base.c b/drivers/of/base.c
-index cff3afcff1951faf..19075e770d8b6306 100644
+index e3f9043860c81b5d..48d6673fa9a28bf0 100644
 --- a/drivers/of/base.c
 +++ b/drivers/of/base.c
-@@ -577,9 +577,9 @@ EXPORT_SYMBOL(of_get_parent);
-  *	of_get_next_parent - Iterate to a node's parent
-  *	@node:	Node to get parent of
+@@ -1849,14 +1849,14 @@ static void of_alias_add(struct alias_prop *ap, struct device_node *np,
+ }
+ 
+ /**
+- * of_alias_scan - Scan all properties of 'aliases' node
++ * of_alias_scan - Scan all properties of the 'aliases' node
   *
-- * 	This is like of_get_parent() except that it drops the
-- * 	refcount on the passed node, making it suitable for iterating
-- * 	through a node's parents.
-+ *	This is like of_get_parent() except that it drops the
-+ *	refcount on the passed node, making it suitable for iterating
-+ *	through a node's parents.
+- * The function scans all the properties of 'aliases' node and populate
+- * the the global lookup table with the properties.  It returns the
+- * number of alias_prop found, or error code in error case.
++ * The function scans all the properties of the 'aliases' node and populates
++ * the global lookup table with the properties.  It returns the
++ * number of alias properties found, or an error code in case of failure.
   *
-  *	Returns a node pointer with refcount incremented, use
-  *	of_node_put() on it when done.
-@@ -1566,15 +1566,15 @@ EXPORT_SYMBOL(of_parse_phandle);
-  * Example:
-  *
-  * phandle1: node1 {
-- * 	#list-cells = <2>;
-+ *	#list-cells = <2>;
-  * }
-  *
-  * phandle2: node2 {
-- * 	#list-cells = <1>;
-+ *	#list-cells = <1>;
-  * }
-  *
-  * node3 {
-- * 	list = <&phandle1 1 2 &phandle2 3>;
-+ *	list = <&phandle1 1 2 &phandle2 3>;
-  * }
-  *
-  * To get a device_node of the `node2' node you may call this:
-@@ -1615,7 +1615,7 @@ EXPORT_SYMBOL(of_parse_phandle_with_args);
-  * }
-  *
-  * node3 {
-- * 	list = <&phandle1 0 2 &phandle2 2 3>;
-+ *	list = <&phandle1 0 2 &phandle2 2 3>;
-  * }
-  *
-  * To get a device_node of the `node2' node you may call this:
+  * @dt_alloc:	An allocator that provides a virtual address to memory
+- *		for the resulting tree
++ *		for storing the resulting tree
+  */
+ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+ {
 -- 
 1.9.1
