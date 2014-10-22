@@ -1,141 +1,316 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 1/3] PM / clock_ops: Add pm_clk_add_clk()
-Date: Wed, 22 Oct 2014 14:16:31 -0700
-Message-ID: <20141022211631.GC4250@dtor-ws>
-References: <1413809764-21995-1-git-send-email-grygorii.strashko@ti.com>
- <1413809764-21995-2-git-send-email-grygorii.strashko@ti.com>
- <20141022173856.GB28104@dtor-ws>
- <5447FF51.5000401@ti.com>
- <20141022201409.GB4250@dtor-ws>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v2 3/3] fpga manager: bus driver
+Date: Wed, 22 Oct 2014 17:22:18 -0500
+Message-ID: <alpine.DEB.2.02.1410221716270.9996@atx-linux-37>
+References: <1414007405-32186-1-git-send-email-atull@opensource.altera.com> <1414007405-32186-4-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="US-ASCII"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141022201409.GB4250@dtor-ws>
+In-Reply-To: <1414007405-32186-4-git-send-email-atull@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, khilman@linaro.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, ulf.hansson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 22, 2014 at 01:14:09PM -0700, Dmitry Torokhov wrote:
-> On Wed, Oct 22, 2014 at 10:02:41PM +0300, Grygorii Strashko wrote:
-> > On 10/22/2014 08:38 PM, Dmitry Torokhov wrote:
-> > >On Mon, Oct 20, 2014 at 03:56:02PM +0300, Grygorii Strashko wrote:
-> > >>From: Geert Uytterhoeven <geert+renesas@glider.be>
-> > >>
-> > >>The existing pm_clk_add() allows to pass a clock by con_id. However,
-> > >>when referring to a specific clock from DT, no con_id is available.
-> > >>
-> > >>Add pm_clk_add_clk(), which allows to specify the struct clk * directly.
-> > >>
-> > >>Reviewed-by: Kevin Hilman <khilman@linaro.org>
-> > >>Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > >>Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> > >>---
-> > >>
-> > >>  Pay attantion pls, that there is another series of patches
-> > >>  which have been posted already and which depends from this patch
-> > >>    "[PATCH v4 0/3] ARM: rk3288 : Add PM Domain support"
-> > >>    https://lkml.org/lkml/2014/10/20/105
-> > >>
-> > >>  drivers/base/power/clock_ops.c | 41 +++++++++++++++++++++++++++++++----------
-> > >>  include/linux/pm_clock.h       |  8 ++++++++
-> > >>  2 files changed, 39 insertions(+), 10 deletions(-)
-> > >>
-> > >>diff --git a/drivers/base/power/clock_ops.c b/drivers/base/power/clock_ops.c
-> > >>index 7836930..f14b767 100644
-> > >>--- a/drivers/base/power/clock_ops.c
-> > >>+++ b/drivers/base/power/clock_ops.c
-> > >>@@ -53,7 +53,8 @@ static inline int __pm_clk_enable(struct device *dev, struct clk *clk)
-> > >>   */
-> > >>  static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
-> > >>  {
-> > >>-	ce->clk = clk_get(dev, ce->con_id);
-> > >>+	if (!ce->clk)
-> > >>+		ce->clk = clk_get(dev, ce->con_id);
-> > >>  	if (IS_ERR(ce->clk)) {
-> > >>  		ce->status = PCE_STATUS_ERROR;
-> > >>  	} else {
-> > >>@@ -63,15 +64,8 @@ static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
-> > >>  	}
-> > >>  }
-> > >>
-> > >>-/**
-> > >>- * pm_clk_add - Start using a device clock for power management.
-> > >>- * @dev: Device whose clock is going to be used for power management.
-> > >>- * @con_id: Connection ID of the clock.
-> > >>- *
-> > >>- * Add the clock represented by @con_id to the list of clocks used for
-> > >>- * the power management of @dev.
-> > >>- */
-> > >>-int pm_clk_add(struct device *dev, const char *con_id)
-> > >>+static int __pm_clk_add(struct device *dev, const char *con_id,
-> > >>+			struct clk *clk)
-> > >>  {
-> > >>  	struct pm_subsys_data *psd = dev_to_psd(dev);
-> > >>  	struct pm_clock_entry *ce;
-> > >>@@ -93,6 +87,8 @@ int pm_clk_add(struct device *dev, const char *con_id)
-> > >>  			kfree(ce);
-> > >>  			return -ENOMEM;
-> > >>  		}
-> > >>+	} else {
-> > >>+		ce->clk = clk;
+On Wed, 22 Oct 2014, atull@opensource.altera.com wrote:
 
-Shouldn't this be
-
-		ce->clk = __clk_get(clk);
-
-to account for clk_put() in __pm_clk_remove()?
-
-> > >>  	}
-> > >>
-> > >>  	pm_clk_acquire(dev, ce);
-> > >>@@ -104,6 +100,31 @@ int pm_clk_add(struct device *dev, const char *con_id)
-> > >>  }
-> > >>
-> > >>  /**
-> > >>+ * pm_clk_add - Start using a device clock for power management.
-> > >>+ * @dev: Device whose clock is going to be used for power management.
-> > >>+ * @con_id: Connection ID of the clock.
-> > >>+ *
-> > >>+ * Add the clock represented by @con_id to the list of clocks used for
-> > >>+ * the power management of @dev.
-> > >>+ */
-> > >>+int pm_clk_add(struct device *dev, const char *con_id)
-> > >>+{
-> > >>+	return __pm_clk_add(dev, con_id, NULL);
-> > >
-> > >Bikeshedding: why do we need __pm_clk_add() and not simply have
-> > >"canonical" pm_clk_add_clk() and then do:
-> > >
-> > >int pm_clk_add(struct device *dev, const char *con_id)
-> > >{
-> > >	struct clk *clk;
-> > >
-> > >	clk = clk_get(dev, con_id);
-> > >	...
-> > >	return pm_clk_add_clk(dev, clk);
-> > >}
-> > 
-> > Hm. I did fast look at code and:
-> > 1) agree - there is a lot of thing which can be optimized ;)
-> > 2) in my strong opinion, this patch is the fastest and simplest
-> > way to introduce new API (take a look on pm_clock_entry->con_id
-> > management code) and It is exactly what we need as of now.
+> From: Alan Tull <atull@opensource.altera.com>
 > 
-> Yeah, I guess. We are lucky we do not crash when we are tryign to print
-> NULL strings (see pm_clk_acquire).
+> Support programming the fpga from device tree overlays.
 > 
-> BTW, what is the point of doing pm_clk_add(dev, NULL)? We add clock
-> entry with status PCE_STATUS_ERROR and then have to handle it
-> everywhere? Can we just return -EINVAL if someone triies to pass NULL
-> ass con_id?
+> This patch adds one exported function to the core
+> (fpga-mgr.c): of_fpga_mgr_dev_lookup
+>   Get pointer to fpga manager struct given a phandle.
+> 
+> This code is dependent on Pantelis Antoniou's current work
+> on Device Tree overlays, a method of dynamically altering
+> the kernel's live Device Tree.  The rest of the patchset was
+> tested with recent for-next, but this 'bus driver' patch was
+> tested with Pantelis's and Grant Likely's stuff that is in git
+> (his git repo https://github.com/pantoniou/linux-beagle-track-mainline
+>  v3.17-rc2-115-gbc778b8 == dt-ng/bbb) plus some dtc fixups
+> for compiling overlays.
+> 
 
-Umm, no, ignore me here, I misread clk_get(dev, NULL) - it won't return
-error. Still, do why do we need to keep clock entry if clk_get() fails
-for some reason?
+Since this patch is dependent on a branch that would be hard
+to put together, I have pushed a branch.  If you happen to
+have a cyclone5 board sitting around, you should be able to
+load a FPGA from DT overlays using the steps below.
 
-Thanks.
+The branch name is 'dt-ng-overlays-v2.2'.  The repo is at:
+git://git.rocketboards.org/linux-socfpga-next.git
 
--- 
-Dmitry
+Alan
+
+> Here's a simple example. Start with:
+>   * the altera-gpio driver built in to the kernel but not in the
+>     device tree.
+>   * raw fpga image at /lib/firmware/soc_system.rbf
+>   * Load appropriate device tree overlay in configfs by doing
+>     $ mkdir /config/device-tree/overlays/1
+>     $ echo socfpga_overlay.dtbo > /config/device-tree/overlays/1/path
+>   * This results in the FPGA getting programmed and the altera
+>     gpio driver getting probed.
+>   * To remove/clear FPGA image by putting the FPGA in reset,
+>     remove device tree overlay by doing:
+>     $ rmdir /config/device-tree/overlays/1
+> 
+> Device tree overlay looks like this:
+> /dts-v1/;
+> /plugin/;
+> / {
+> 	fragment@0 {
+> 		target-path="/soc";
+> 		__overlay__ {
+> 			#address-cells = <1>;
+> 	                #size-cells = <1>;
+> 
+> 			bridge@0xff200000 {
+> 				compatible = "fpga-mgr-bus", "simple-bus";
+> 				reg = <0xff200000 0x200000>;
+> 				clocks = <0x2 0x2>;
+> 				clock-names = "h2f_lw_axi_clock", "f2h_sdram0_clock";
+> 				#address-cells = <0x2>;
+> 				#size-cells = <0x1>;
+> 				ranges = <0x1 0x10040 0xff210040 0x20>;
+> 
+> 				fpgamgr = <&hps_0_fpgamgr>;
+> 				fpga-firmware = "soc_system.rbf";
+> 
+> 				gpio@0x100010040 {
+> 					compatible = "altr,pio-14.0", "altr,pio-1.0";
+> 					reg = <0x1 0x10040 0x20>;
+> 					clocks = <0x2>;
+> 					altr,gpio-bank-width = <0x4>;
+> 					resetvalue = <0x0>;
+> 					#gpio-cells = <0x2>;
+> 					gpio-controller;
+> 					linux,phandle = <0x2d>;
+> 				};
+> 			};
+> 		};
+> 	};
+> };
+> 
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> 
+> v2: simplify of_fpga_mgr_dev_lookup to return NULL on failure
+>     move suspend/resume to fpga-mgr.c core
+>     support 'rmdir' to remove overlay
+> ---
+>  drivers/fpga/Kconfig     |    7 +++
+>  drivers/fpga/Makefile    |    1 +
+>  drivers/fpga/bus.c       |  124 ++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/fpga/fpga-mgr.c  |   23 +++++++++
+>  include/linux/fpga-mgr.h |    2 +
+>  5 files changed, 157 insertions(+)
+>  create mode 100644 drivers/fpga/bus.c
+> 
+> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+> index e775b17..2bd6c83 100644
+> --- a/drivers/fpga/Kconfig
+> +++ b/drivers/fpga/Kconfig
+> @@ -18,4 +18,11 @@ config FPGA_MGR_SYSFS
+>  	help
+>  	  FPGA Manager SysFS interface.
+>  
+> +config FPGA_MGR_BUS
+> +	bool "FPGA Manager Bus"
+> +	depends on FPGA
+> +	help
+> +	  FPGA Manager Bus interface.  Allows loading FPGA images
+> +	  from Device Tree or from other drivers.
+> +
+>  endmenu
+> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+> index c8a676f..e39911f 100644
+> --- a/drivers/fpga/Makefile
+> +++ b/drivers/fpga/Makefile
+> @@ -6,5 +6,6 @@ fpga-mgr-core-y += fpga-mgr.o
+>  
+>  # Core FPGA Manager Framework
+>  obj-$(CONFIG_FPGA)			+= fpga-mgr-core.o
+> +obj-$(CONFIG_FPGA_MGR_BUS)		+= bus.o
+>  
+>  # FPGA Manager Drivers
+> diff --git a/drivers/fpga/bus.c b/drivers/fpga/bus.c
+> new file mode 100644
+> index 0000000..999346e
+> --- /dev/null
+> +++ b/drivers/fpga/bus.c
+> @@ -0,0 +1,124 @@
+> +/*
+> + * FPGA Manager Bus Driver
+> + *
+> + *  Copyright (C) 2013-2014 Altera Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +#include <linux/completion.h>
+> +#include <linux/fs.h>
+> +#include <linux/fpga-mgr.h>
+> +#include <linux/io.h>
+> +#include <linux/irq.h>
+> +#include <linux/kernel.h>
+> +#include <linux/list.h>
+> +#include <linux/mm.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/pm.h>
+> +#include <linux/slab.h>
+> +#include <linux/string.h>
+> +#include <linux/types.h>
+> +
+> +struct fpga_mgr_bus_priv {
+> +	struct device *dev;
+> +	struct device_node *np;
+> +	struct fpga_manager *mgr;
+> +	const char *path;
+> +};
+> +
+> +static int fpga_mgr_bus_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct device *dev = &pdev->dev;
+> +	struct fpga_mgr_bus_priv *priv;
+> +	const char *path;
+> +	struct fpga_manager *mgr;
+> +	int ret = 0;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	/* Find the FPGA Manager to associate with */
+> +	mgr = of_fpga_mgr_dev_lookup(np, "fpgamgr");
+> +	if (!mgr) {
+> +		dev_err(mgr->dev, "%s could not find fpga mgr\n", __func__);
+> +		return -ENODEV;
+> +	}
+> +
+> +	/* Find the FPGA image on the firmware path */
+> +	of_property_read_string(np, "fpga-firmware", &path);
+> +
+> +	ret = fpga_mgr_firmware_write(mgr, path);
+> +	if (ret != 0) {
+> +		dev_err(mgr->dev, "%s fpga mgr write failure\n", __func__);
+> +		return -EIO;
+> +	}
+> +
+> +	priv->dev = dev;
+> +	priv->np = np;
+> +	priv->mgr = mgr;
+> +	priv->path = path;
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	return 0;
+> +}
+> +
+> +/* Called when the Device Tree overlay is removed */
+> +static int fpga_mgr_bus_remove(struct platform_device *pdev)
+> +{
+> +	struct fpga_mgr_bus_priv *priv = platform_get_drvdata(pdev);
+> +	struct fpga_manager *mgr = priv->mgr;
+> +
+> +	return fpga_mgr_reset(mgr);
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id fpga_mgr_bus_of_match[] = {
+> +	{ .compatible = "fpga-mgr-bus", },
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, fpga_mgr_bus_of_match);
+> +#endif
+> +
+> +static struct platform_driver fpga_mgr_bus_driver = {
+> +	.probe = fpga_mgr_bus_probe,
+> +	.remove = fpga_mgr_bus_remove,
+> +	.driver = {
+> +		.name	= "fpga_manager_bus",
+> +		.owner	= THIS_MODULE,
+> +		.of_match_table = of_match_ptr(fpga_mgr_bus_of_match),
+> +	},
+> +};
+> +
+> +static int __init fpga_mgr_bus_init(void)
+> +{
+> +	return platform_driver_register(&fpga_mgr_bus_driver);
+> +}
+> +
+> +static void __exit fpga_mgr_bus_exit(void)
+> +{
+> +	platform_driver_unregister(&fpga_mgr_bus_driver);
+> +}
+> +
+> +module_init(fpga_mgr_bus_init);
+> +module_exit(fpga_mgr_bus_exit);
+> +
+> +MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
+> +MODULE_DESCRIPTION("Altera FPGA Manager Bus");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/fpga/fpga-mgr.c b/drivers/fpga/fpga-mgr.c
+> index 0c7236a..fed13a6 100644
+> --- a/drivers/fpga/fpga-mgr.c
+> +++ b/drivers/fpga/fpga-mgr.c
+> @@ -350,6 +350,29 @@ const struct attribute_group *fpga_mgr_groups[] = {
+>  #define fpga_mgr_groups NULL
+>  #endif /* CONFIG_FPGA_MGR_SYSFS */
+>  
+> +/* Find the fpga manager that is pointed to by a phandle */
+> +struct fpga_manager *of_fpga_mgr_dev_lookup(struct device_node *node,
+> +					    const char *mgr_property)
+> +{
+> +	struct fpga_manager *mgr;
+> +	struct device_node *mgr_node;
+> +
+> +	mgr_node = of_parse_phandle(node, mgr_property, 0);
+> +	if (!mgr_node)
+> +		return NULL;
+> +
+> +	list_for_each_entry(mgr, &fpga_manager_list, list)
+> +		if (mgr_node == mgr->np) {
+> +			of_node_put(mgr_node);
+> +			return mgr;
+> +		}
+> +
+> +	of_node_put(mgr_node);
+> +
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(of_fpga_mgr_dev_lookup);
+> +
+>  static int fpga_mgr_suspend(struct device *dev)
+>  {
+>  	struct fpga_manager *mgr = dev_get_drvdata(dev);
+> diff --git a/include/linux/fpga-mgr.h b/include/linux/fpga-mgr.h
+> index 97c7e0b..abf2699 100644
+> --- a/include/linux/fpga-mgr.h
+> +++ b/include/linux/fpga-mgr.h
+> @@ -110,6 +110,8 @@ int fpga_mgr_register(struct platform_device *pdev,
+>  		      struct fpga_manager_ops *mops,
+>  		      const char *name, void *priv);
+>  void fpga_mgr_remove(struct platform_device *pdev);
+> +struct fpga_manager *of_fpga_mgr_dev_lookup(struct device_node *node,
+> +					    const char *mgr_property);
+>  
+>  #endif /* CONFIG_FPGA */
+>  #endif /*_LINUX_FPGA_MGR_H */
+> -- 
+> 1.7.9.5
+> 
+> 
