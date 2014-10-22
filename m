@@ -1,441 +1,258 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 1/3] PM / clock_ops: Add pm_clk_add_clk()
-Date: Wed, 22 Oct 2014 15:46:14 -0700
-Message-ID: <20141022224614.GD4250@dtor-ws>
-References: <1413809764-21995-1-git-send-email-grygorii.strashko@ti.com>
- <1413809764-21995-2-git-send-email-grygorii.strashko@ti.com>
- <20141022173856.GB28104@dtor-ws>
- <5447FF51.5000401@ti.com>
- <20141022201409.GB4250@dtor-ws>
- <20141022211631.GC4250@dtor-ws>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: GPIO bindings guidelines (Was: Re: [PATCH v5 10/12] gpio: Support for unified device properties interface)
+Date: Thu, 23 Oct 2014 01:21:06 +0200
+Message-ID: <13758254.acHP1NJN1b@vostro.rjw.lan>
+References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com> <1971792.8pKYWlGxB9@vostro.rjw.lan> <20141022145651.GH1484@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141022211631.GC4250@dtor-ws>
-Sender: linux-pm-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, khilman@linaro.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, ulf.hansson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20141022145651.GH1484@lahna.fi.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 22, 2014 at 02:16:31PM -0700, Dmitry Torokhov wrote:
-> On Wed, Oct 22, 2014 at 01:14:09PM -0700, Dmitry Torokhov wrote:
-> > On Wed, Oct 22, 2014 at 10:02:41PM +0300, Grygorii Strashko wrote:
-> > > On 10/22/2014 08:38 PM, Dmitry Torokhov wrote:
-> > > >On Mon, Oct 20, 2014 at 03:56:02PM +0300, Grygorii Strashko wrote:
-> > > >>From: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > >>
-> > > >>The existing pm_clk_add() allows to pass a clock by con_id. However,
-> > > >>when referring to a specific clock from DT, no con_id is available.
-> > > >>
-> > > >>Add pm_clk_add_clk(), which allows to specify the struct clk * directly.
-> > > >>
-> > > >>Reviewed-by: Kevin Hilman <khilman@linaro.org>
-> > > >>Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > >>Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> > > >>---
-> > > >>
-> > > >>  Pay attantion pls, that there is another series of patches
-> > > >>  which have been posted already and which depends from this patch
-> > > >>    "[PATCH v4 0/3] ARM: rk3288 : Add PM Domain support"
-> > > >>    https://lkml.org/lkml/2014/10/20/105
-> > > >>
-> > > >>  drivers/base/power/clock_ops.c | 41 +++++++++++++++++++++++++++++++----------
-> > > >>  include/linux/pm_clock.h       |  8 ++++++++
-> > > >>  2 files changed, 39 insertions(+), 10 deletions(-)
-> > > >>
-> > > >>diff --git a/drivers/base/power/clock_ops.c b/drivers/base/power/clock_ops.c
-> > > >>index 7836930..f14b767 100644
-> > > >>--- a/drivers/base/power/clock_ops.c
-> > > >>+++ b/drivers/base/power/clock_ops.c
-> > > >>@@ -53,7 +53,8 @@ static inline int __pm_clk_enable(struct device *dev, struct clk *clk)
-> > > >>   */
-> > > >>  static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
-> > > >>  {
-> > > >>-	ce->clk = clk_get(dev, ce->con_id);
-> > > >>+	if (!ce->clk)
-> > > >>+		ce->clk = clk_get(dev, ce->con_id);
-> > > >>  	if (IS_ERR(ce->clk)) {
-> > > >>  		ce->status = PCE_STATUS_ERROR;
-> > > >>  	} else {
-> > > >>@@ -63,15 +64,8 @@ static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
-> > > >>  	}
-> > > >>  }
-> > > >>
-> > > >>-/**
-> > > >>- * pm_clk_add - Start using a device clock for power management.
-> > > >>- * @dev: Device whose clock is going to be used for power management.
-> > > >>- * @con_id: Connection ID of the clock.
-> > > >>- *
-> > > >>- * Add the clock represented by @con_id to the list of clocks used for
-> > > >>- * the power management of @dev.
-> > > >>- */
-> > > >>-int pm_clk_add(struct device *dev, const char *con_id)
-> > > >>+static int __pm_clk_add(struct device *dev, const char *con_id,
-> > > >>+			struct clk *clk)
-> > > >>  {
-> > > >>  	struct pm_subsys_data *psd = dev_to_psd(dev);
-> > > >>  	struct pm_clock_entry *ce;
-> > > >>@@ -93,6 +87,8 @@ int pm_clk_add(struct device *dev, const char *con_id)
-> > > >>  			kfree(ce);
-> > > >>  			return -ENOMEM;
-> > > >>  		}
-> > > >>+	} else {
-> > > >>+		ce->clk = clk;
-> 
-> Shouldn't this be
-> 
-> 		ce->clk = __clk_get(clk);
-> 
-> to account for clk_put() in __pm_clk_remove()?
-> 
-> > > >>  	}
-> > > >>
-> > > >>  	pm_clk_acquire(dev, ce);
-> > > >>@@ -104,6 +100,31 @@ int pm_clk_add(struct device *dev, const char *con_id)
-> > > >>  }
-> > > >>
-> > > >>  /**
-> > > >>+ * pm_clk_add - Start using a device clock for power management.
-> > > >>+ * @dev: Device whose clock is going to be used for power management.
-> > > >>+ * @con_id: Connection ID of the clock.
-> > > >>+ *
-> > > >>+ * Add the clock represented by @con_id to the list of clocks used for
-> > > >>+ * the power management of @dev.
-> > > >>+ */
-> > > >>+int pm_clk_add(struct device *dev, const char *con_id)
-> > > >>+{
-> > > >>+	return __pm_clk_add(dev, con_id, NULL);
-> > > >
-> > > >Bikeshedding: why do we need __pm_clk_add() and not simply have
-> > > >"canonical" pm_clk_add_clk() and then do:
-> > > >
-> > > >int pm_clk_add(struct device *dev, const char *con_id)
-> > > >{
-> > > >	struct clk *clk;
-> > > >
-> > > >	clk = clk_get(dev, con_id);
-> > > >	...
-> > > >	return pm_clk_add_clk(dev, clk);
-> > > >}
-> > > 
-> > > Hm. I did fast look at code and:
-> > > 1) agree - there is a lot of thing which can be optimized ;)
-> > > 2) in my strong opinion, this patch is the fastest and simplest
-> > > way to introduce new API (take a look on pm_clock_entry->con_id
-> > > management code) and It is exactly what we need as of now.
+On Wednesday, October 22, 2014 05:56:51 PM Mika Westerberg wrote:
+> On Wed, Oct 22, 2014 at 04:07:08PM +0200, Rafael J. Wysocki wrote:
+> > Moreover, we need to clarify what situation we're really talking about.
 > > 
-> > Yeah, I guess. We are lucky we do not crash when we are tryign to print
-> > NULL strings (see pm_clk_acquire).
+> > For one, drivers using the unified interface only will always use names for
+> > GPIOs, because they have to assume that either a DT or ACPI w/ _DSD is present.
+> > This is the cost of keeping those drivers firmware interface agnostic.
 > > 
-> > BTW, what is the point of doing pm_clk_add(dev, NULL)? We add clock
-> > entry with status PCE_STATUS_ERROR and then have to handle it
-> > everywhere? Can we just return -EINVAL if someone triies to pass NULL
-> > ass con_id?
+> > So it looks like we're not talking about this case here.
 > 
-> Umm, no, ignore me here, I misread clk_get(dev, NULL) - it won't return
-> error. Still, do why do we need to keep clock entry if clk_get() fails
-> for some reason?
+> We are talking about the case of rfkill-gpio.c where it definitely wants
+> to use properties for the GPIOs but it cannot be sure if the underlying
+> firmware provides _DSD or not.
+> 
+> > Now, if there's no DT or no _DSD in the ACPI tables for the given device
+> > *and* the driver wants to use its GPIOs anyway, it has to be ACPI-aware to
+> > some extent, because in that case the device ID it has been matched against
+> > tells it what the meaning of the GpioIo resources in the _CRS is.
+> > 
+> > Then, the driver needs to do something like:
+> > 
+> > 	if (!device_property_present(dev, "known_property_that_should_be_present")
+> > 	    && ACPI_COMPANION(dev))
+> > 		acpi_probe_gpios(dev);
+> 
+> Indeed we can use similar pattern to detect if we have _DSD present or
+> not.
+> 
+> > and in the acpi_probe_gpios() routine there may be checks like:
+> > 
+> > 	if (device_has_id(dev, "MARY0001")) {
+> > 		The first pin in the first GpioIo resource in _CRS is "fred" and
+> > 		it is active-low.
+> > 		The third pin in the second GpioIo resource in _CRS is "steve"
+> > 		and it is not active-low.
+> > 	} else if (device_has_id(dev, "JANE0002")) {
+> > 		The first pin in the second GpioIo resource in _CRS is "fred" and
+> > 		it is not active-low.
+> > 		The second pin in the first GpioIo resource in _CRS is "steve"
+> > 		and it is active-low.
+> > 	}
+> > 
+> > and so on.  Of course, there may be drivers knowing that the meaning of the
+> > GpioIo resources in _CRS is the same for all devices handled by them, in which
+> > case they will not need to check device IDs, but the core has now way of
+> > knowing that.  Only the drivers have that information and the core has now
+> > way to figure out what to do for a given specific device.
+> > 
+> > So here's a radical idea: Why don't we introduce something like
+> > 
+> > 	acpi_enumerate_gpio(dev, name, GpioIo_index, pin_index, active_low)
+> > 
+> > such that after calling, say, acpi_enumerate_gpio(dev, "fred", 0, 0, true) the
+> > driver can do something like:
+> > 
+> > 	desc = get_gpiod_by_name(dev, "fred");
+> > 
+> > and it'll all work.  Then, the only part of the driver that really needs to be
+> > ACPI-specific will be the acpi_probe_gpios() function calling acpi_enumerate_gpio()
+> > in accordance with what the device ID is.
+> > 
+> > Thoughts?
+> 
+> I think this is good idea. It solves the rfkill-gpio.c problem with just
+> small amount of ACPI specific code.
 
-OK, so what if we do something like the patch below?
+OK, would the below make sense, then (completely untested, on top of the v6
+of the device properties patchset)?
 
-Thanks.
-
--- 
-Dmitry
+Rafael
 
 
-PM / clock_ops: Add pm_clk_remove_clk()
-
-Implement pm_clk_remove_clk() that complements the new pm_clk_add_clk().
-Fix reference counting, rework the code to avoid storing invalid clocks,
-clean up the code.
-
-Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
 ---
- drivers/base/power/clock_ops.c | 169 ++++++++++++++++++++---------------------
- 1 file changed, 81 insertions(+), 88 deletions(-)
+ drivers/acpi/scan.c         |    2 +
+ drivers/gpio/gpiolib-acpi.c |   80 ++++++++++++++++++++++++++++++++++++++++++--
+ include/acpi/acpi_bus.h     |    1 
+ include/linux/acpi.h        |   15 ++++++++
+ 4 files changed, 96 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/base/power/clock_ops.c b/drivers/base/power/clock_ops.c
-index f14b767..840e133 100644
---- a/drivers/base/power/clock_ops.c
-+++ b/drivers/base/power/clock_ops.c
-@@ -12,21 +12,21 @@
- #include <linux/pm.h>
- #include <linux/pm_clock.h>
- #include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
- #include <linux/slab.h>
- #include <linux/err.h>
- 
- #ifdef CONFIG_PM
- 
- enum pce_status {
--	PCE_STATUS_NONE = 0,
--	PCE_STATUS_ACQUIRED,
-+	PCE_STATUS_ACQUIRED = 0,
-+	PCE_STATUS_PREPARED,
- 	PCE_STATUS_ENABLED,
--	PCE_STATUS_ERROR,
- };
- 
- struct pm_clock_entry {
+Index: linux-pm/include/acpi/acpi_bus.h
+===================================================================
+--- linux-pm.orig/include/acpi/acpi_bus.h
++++ linux-pm/include/acpi/acpi_bus.h
+@@ -355,6 +355,7 @@ struct acpi_device {
  	struct list_head node;
--	char *con_id;
- 	struct clk *clk;
- 	enum pce_status status;
+ 	struct list_head wakeup_list;
+ 	struct list_head del_list;
++	struct list_head driver_gpios;
+ 	struct acpi_device_status status;
+ 	struct acpi_device_flags flags;
+ 	struct acpi_device_pnp pnp;
+Index: linux-pm/include/linux/acpi.h
+===================================================================
+--- linux-pm.orig/include/linux/acpi.h
++++ linux-pm/include/linux/acpi.h
+@@ -672,6 +672,21 @@ do {									\
+ #endif
+ #endif
+ 
++#if defined(CONFIG_ACPI) && defined(CONFIG_GPIOLIB)
++int acpi_dev_add_driver_gpio(struct acpi_device *adev, const char *propname,
++			     int entry_index, int pin_index, bool active_low);
++void acpi_dev_remove_driver_gpios(struct acpi_device *adev);
++#else
++static inline int acpi_dev_add_driver_gpio(struct acpi_device *adev,
++					   const char *propname,
++					   int entry_index, int pin_index,
++					   bool active_low)
++{
++	return -ENXIO;
++}
++static inline void acpi_dev_remove_driver_gpios(struct acpi_device *adev) {}
++#endif
++
+ /* Device properties */
+ 
+ #define MAX_ACPI_REFERENCE_ARGS	8
+Index: linux-pm/drivers/gpio/gpiolib-acpi.c
+===================================================================
+--- linux-pm.orig/drivers/gpio/gpiolib-acpi.c
++++ linux-pm/drivers/gpio/gpiolib-acpi.c
+@@ -47,6 +47,16 @@ struct acpi_gpio_chip {
+ 	struct list_head events;
  };
-@@ -47,25 +47,13 @@ static inline int __pm_clk_enable(struct device *dev, struct clk *clk)
- }
  
- /**
-- * pm_clk_acquire - Acquire a device clock.
-- * @dev: Device whose clock is to be acquired.
-- * @ce: PM clock entry corresponding to the clock.
-+ * pm_clk_add_clk - Start using a device clock for power management.
-+ * @dev: Device whose clock is going to be used for power management.
-+ * @clk: Clock pointer
-+ *
-+ * Add the clock to the list of clocks used for the power management of @dev.
-  */
--static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
--{
--	if (!ce->clk)
--		ce->clk = clk_get(dev, ce->con_id);
--	if (IS_ERR(ce->clk)) {
--		ce->status = PCE_STATUS_ERROR;
--	} else {
--		clk_prepare(ce->clk);
--		ce->status = PCE_STATUS_ACQUIRED;
--		dev_dbg(dev, "Clock %s managed by runtime PM.\n", ce->con_id);
--	}
--}
--
--static int __pm_clk_add(struct device *dev, const char *con_id,
--			struct clk *clk)
-+int pm_clk_add_clk(struct device *dev, struct clk *clk)
++struct acpi_gpio_data {
++	struct list_head item;
++	char *name;
++	int entry_index;
++	int pin_index;
++	bool active_low;
++};
++
++static DEFINE_MUTEX(driver_gpio_data_lock);
++
+ static int acpi_gpiochip_find(struct gpio_chip *gc, void *data)
  {
- 	struct pm_subsys_data *psd = dev_to_psd(dev);
- 	struct pm_clock_entry *ce;
-@@ -79,23 +67,19 @@ static int __pm_clk_add(struct device *dev, const char *con_id,
- 		return -ENOMEM;
+ 	if (!gc->dev)
+@@ -287,6 +297,70 @@ void acpi_gpiochip_free_interrupts(struc
  	}
- 
--	if (con_id) {
--		ce->con_id = kstrdup(con_id, GFP_KERNEL);
--		if (!ce->con_id) {
--			dev_err(dev,
--				"Not enough memory for clock connection ID.\n");
--			kfree(ce);
--			return -ENOMEM;
--		}
--	} else {
--		ce->clk = clk;
--	}
-+	__clk_get(clk);
- 
--	pm_clk_acquire(dev, ce);
-+	clk_prepare(clk);
-+
-+	ce->status = PCE_STATUS_PREPARED;
-+	ce->clk = clk;
- 
- 	spin_lock_irq(&psd->lock);
- 	list_add_tail(&ce->node, &psd->clock_list);
- 	spin_unlock_irq(&psd->lock);
-+
-+	dev_dbg(dev, "Clock %s managed by runtime PM.\n", __clk_get_name(clk));
-+
- 	return 0;
  }
  
-@@ -109,19 +93,23 @@ static int __pm_clk_add(struct device *dev, const char *con_id,
-  */
- int pm_clk_add(struct device *dev, const char *con_id)
- {
--	return __pm_clk_add(dev, con_id, NULL);
--}
-+	struct clk *clk;
-+	int retval;
- 
--/**
-- * pm_clk_add_clk - Start using a device clock for power management.
-- * @dev: Device whose clock is going to be used for power management.
-- * @clk: Clock pointer
-- *
-- * Add the clock to the list of clocks used for the power management of @dev.
-- */
--int pm_clk_add_clk(struct device *dev, struct clk *clk)
--{
--	return __pm_clk_add(dev, NULL, clk);
-+	clk = clk_get(dev, con_id);
-+	if (IS_ERR(clk)) {
-+		retval = PTR_ERR(clk);
-+		dev_err(dev, "Failed to locate lock (con_id %s): %d\n",
-+			con_id, retval);
-+		return retval;
++int acpi_dev_add_driver_gpio(struct acpi_device *adev, const char *propname,
++			     int entry_index, int pin_index, bool active_low)
++{
++	struct acpi_gpio_data *gd;
++
++	if (!propname)
++		return -EINVAL;
++
++	gd = kzalloc(sizeof(*gd), GFP_KERNEL);
++	if (!gd)
++		return -ENOMEM;
++
++	gd->name = kstrdup(propname, GFP_KERNEL);
++	if (!gd->name) {
++		kfree(gd);
++		return -ENOMEM;
 +	}
++	gd->entry_index = entry_index;
++	gd->pin_index = pin_index;
++	gd->active_low = active_low;
 +
-+	retval = pm_clk_add_clk(dev, clk);
++	mutex_lock(&driver_gpio_data_lock);
++	list_add_tail(&gd->item, &adev->driver_gpios);
++	mutex_unlock(&driver_gpio_data_lock);
 +
-+	/* pm_clk_add_clk takes its own reference to clk */
-+	clk_put(clk);
-+
-+	return retval;
- }
- 
- /**
-@@ -133,32 +121,30 @@ static void __pm_clk_remove(struct pm_clock_entry *ce)
- 	if (!ce)
- 		return;
- 
--	if (ce->status < PCE_STATUS_ERROR) {
--		if (ce->status == PCE_STATUS_ENABLED)
--			clk_disable(ce->clk);
-+	if (ce->status == PCE_STATUS_ENABLED)
-+		clk_disable(ce->clk);
- 
--		if (ce->status >= PCE_STATUS_ACQUIRED) {
--			clk_unprepare(ce->clk);
--			clk_put(ce->clk);
--		}
-+	if (ce->status >= PCE_STATUS_ACQUIRED) {
-+		clk_unprepare(ce->clk);
-+		clk_put(ce->clk);
- 	}
- 
--	kfree(ce->con_id);
- 	kfree(ce);
- }
- 
- /**
-  * pm_clk_remove - Stop using a device clock for power management.
-  * @dev: Device whose clock should not be used for PM any more.
-- * @con_id: Connection ID of the clock.
-+ * @clk: Clock pointer
-  *
-- * Remove the clock represented by @con_id from the list of clocks used for
-- * the power management of @dev.
-+ * Remove the clock from the list of clocks used for the power
-+ * management of @dev.
-  */
--void pm_clk_remove(struct device *dev, const char *con_id)
-+
-+void pm_clk_remove_clk(struct device *dev, struct clk *clk)
- {
- 	struct pm_subsys_data *psd = dev_to_psd(dev);
--	struct pm_clock_entry *ce;
-+	struct pm_clock_entry *ce, *matching_ce = NULL;
- 
- 	if (!psd)
- 		return;
-@@ -166,22 +152,35 @@ void pm_clk_remove(struct device *dev, const char *con_id)
- 	spin_lock_irq(&psd->lock);
- 
- 	list_for_each_entry(ce, &psd->clock_list, node) {
--		if (!con_id && !ce->con_id)
--			goto remove;
--		else if (!con_id || !ce->con_id)
--			continue;
--		else if (!strcmp(con_id, ce->con_id))
--			goto remove;
-+		if (ce->clk == clk) {
-+			matching_ce = ce;
-+			list_del(&ce->node);
-+			break;
-+		}
- 	}
- 
- 	spin_unlock_irq(&psd->lock);
--	return;
- 
-- remove:
--	list_del(&ce->node);
--	spin_unlock_irq(&psd->lock);
-+	__pm_clk_remove(matching_ce);
++	return 0;
 +}
 +
-+/**
-+ * pm_clk_remove - Stop using a device clock for power management.
-+ * @dev: Device whose clock should not be used for PM any more.
-+ * @con_id: Connection ID of the clock.
-+ *
-+ * Remove the clock represented by @con_id from the list of clocks used for
-+ * the power management of @dev.
-+ */
-+void pm_clk_remove(struct device *dev, const char *con_id)
++void acpi_dev_remove_driver_gpios(struct acpi_device *adev)
 +{
-+	struct clk *clk;
- 
--	__pm_clk_remove(ce);
-+	clk = clk_get(dev, con_id);
-+	if (!IS_ERR(clk)) {
-+		pm_clk_remove_clk(dev, clk);
-+		clk_put(clk);
++	struct acpi_gpio_data *gd, *next;
++
++	mutex_lock(&driver_gpio_data_lock);
++	list_for_each_entry_safe(gd, next, &adev->driver_gpios, item) {
++		list_del(&gd->item);
++		kfree(gd->name);
++		kfree(gd);
 +	}
- }
++	mutex_unlock(&driver_gpio_data_lock);
++}
++
++static bool acpi_get_driver_gpio_data(struct acpi_device *adev,
++				      const char *name,
++				      struct acpi_reference_args *args)
++{
++	struct acpi_gpio_data *gd;
++
++	mutex_lock(&driver_gpio_data_lock);
++
++	list_for_each_entry(gd, &adev->driver_gpios, item)
++		if (!strcmp(name, gd->name)) {
++			args->adev = adev;
++			args->args[0] = gd->entry_index;
++			args->args[1] = gd->pin_index;
++			args->args[2] = gd->active_low;
++			args->nargs = 3;
++			return true;
++		}
++
++	mutex_unlock(&driver_gpio_data_lock);
++
++	return false;
++}
++
+ struct acpi_gpio_lookup {
+ 	struct acpi_gpio_info info;
+ 	int index;
+@@ -372,8 +446,10 @@ struct gpio_desc *acpi_get_gpiod_by_inde
+ 		memset(&args, 0, sizeof(args));
+ 		ret = acpi_dev_get_property_reference(adev, propname, NULL,
+ 						      index, &args);
+-		if (ret)
+-			return ERR_PTR(ret);
++		if (ret) {
++			if (!acpi_get_driver_gpio_data(adev, propname, &args))
++				return ERR_PTR(ret);
++		}
  
- /**
-@@ -266,10 +265,9 @@ int pm_clk_suspend(struct device *dev)
- 	spin_lock_irqsave(&psd->lock, flags);
+ 		/*
+ 		 * The property was found and resolved so need to
+Index: linux-pm/drivers/acpi/scan.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/scan.c
++++ linux-pm/drivers/acpi/scan.c
+@@ -1284,6 +1284,7 @@ int acpi_device_add(struct acpi_device *
+ 	INIT_LIST_HEAD(&device->wakeup_list);
+ 	INIT_LIST_HEAD(&device->physical_node_list);
+ 	INIT_LIST_HEAD(&device->del_list);
++	INIT_LIST_HEAD(&device->driver_gpios);
+ 	mutex_init(&device->physical_node_lock);
  
- 	list_for_each_entry_reverse(ce, &psd->clock_list, node) {
--		if (ce->status < PCE_STATUS_ERROR) {
--			if (ce->status == PCE_STATUS_ENABLED)
--				clk_disable(ce->clk);
--			ce->status = PCE_STATUS_ACQUIRED;
-+		if (ce->status == PCE_STATUS_ENABLED) {
-+			clk_disable(ce->clk);
-+			ce->status = PCE_STATUS_PREPARED;
- 		}
+ 	new_bus_id = kzalloc(sizeof(struct acpi_device_bus_id), GFP_KERNEL);
+@@ -2354,6 +2355,7 @@ void acpi_bus_trim(struct acpi_device *a
+ 	} else {
+ 		device_release_driver(&adev->dev);
  	}
- 
-@@ -297,11 +295,9 @@ int pm_clk_resume(struct device *dev)
- 	spin_lock_irqsave(&psd->lock, flags);
- 
- 	list_for_each_entry(ce, &psd->clock_list, node) {
--		if (ce->status < PCE_STATUS_ERROR) {
--			ret = __pm_clk_enable(dev, ce->clk);
--			if (!ret)
--				ce->status = PCE_STATUS_ENABLED;
--		}
-+		ret = __pm_clk_enable(dev, ce->clk);
-+		if (!ret)
-+			ce->status = PCE_STATUS_ENABLED;
- 	}
- 
- 	spin_unlock_irqrestore(&psd->lock, flags);
-@@ -390,10 +386,9 @@ int pm_clk_suspend(struct device *dev)
- 	spin_lock_irqsave(&psd->lock, flags);
- 
- 	list_for_each_entry_reverse(ce, &psd->clock_list, node) {
--		if (ce->status < PCE_STATUS_ERROR) {
--			if (ce->status == PCE_STATUS_ENABLED)
--				clk_disable(ce->clk);
--			ce->status = PCE_STATUS_ACQUIRED;
-+		if (ce->status == PCE_STATUS_ENABLED) {
-+			clk_disable(ce->clk);
-+			ce->status = PCE_STATUS_PREPARED;
- 		}
- 	}
- 
-@@ -422,11 +417,9 @@ int pm_clk_resume(struct device *dev)
- 	spin_lock_irqsave(&psd->lock, flags);
- 
- 	list_for_each_entry(ce, &psd->clock_list, node) {
--		if (ce->status < PCE_STATUS_ERROR) {
--			ret = __pm_clk_enable(dev, ce->clk);
--			if (!ret)
--				ce->status = PCE_STATUS_ENABLED;
--		}
-+		ret = __pm_clk_enable(dev, ce->clk);
-+		if (!ret)
-+			ce->status = PCE_STATUS_ENABLED;
- 	}
- 
- 	spin_unlock_irqrestore(&psd->lock, flags);
--- 
-2.1.0.rc2.206.gedb03e5
++	acpi_dev_remove_driver_gpios(adev);
+ 	/*
+ 	 * Most likely, the device is going away, so put it into D3cold before
+ 	 * that.
 
-:
