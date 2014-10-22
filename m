@@ -1,58 +1,47 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/3] ARM: shmobile: r8a7740 dtsi: Add TMU0 and TMU1 device nodes
-Date: Wed, 22 Oct 2014 11:38:28 +0200
-Message-ID: <1413970709-26607-3-git-send-email-geert+renesas@glider.be>
-References: <1413970709-26607-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413970709-26607-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 1/4] of: Correct of_phandle_args node reference in comments
+Date: Wed, 22 Oct 2014 11:44:52 +0200
+Message-ID: <1413971095-27192-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm/boot/dts/r8a7740.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+The device_node pointer in struct of_phandle_args is called "np", not
+"node".
 
-diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
-index 559bd39e778bddaf..aec8da89ef9ac766 100644
---- a/arch/arm/boot/dts/r8a7740.dtsi
-+++ b/arch/arm/boot/dts/r8a7740.dtsi
-@@ -335,6 +335,34 @@
- 		status = "disabled";
- 	};
- 
-+	tmu0: timer@fff80000 {
-+		compatible = "renesas,tmu-r8a7740", "renesas,tmu";
-+		reg = <0xfff80000 0x2c>;
-+		interrupts = <0 198 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 199 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 200 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp1_clks R8A7740_CLK_TMU0>;
-+		clock-names = "fck";
-+
-+		#renesas,channels = <3>;
-+
-+		status = "disabled";
-+	};
-+
-+	tmu1: timer@fff90000 {
-+		compatible = "renesas,tmu-r8a7740", "renesas,tmu";
-+		reg = <0xfff90000 0x2c>;
-+		interrupts = <0 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 171 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 172 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp1_clks R8A7740_CLK_TMU1>;
-+		clock-names = "fck";
-+
-+		#renesas,channels = <3>;
-+
-+		status = "disabled";
-+	};
-+
- 	clocks {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
+ drivers/of/base.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 2305dc0382bca0a5..e3f9043860c81b5d 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1560,7 +1560,7 @@ EXPORT_SYMBOL(of_parse_phandle);
+  * Returns 0 on success and fills out_args, on error returns appropriate
+  * errno value.
+  *
+- * Caller is responsible to call of_node_put() on the returned out_args->node
++ * Caller is responsible to call of_node_put() on the returned out_args->np
+  * pointer.
+  *
+  * Example:
+@@ -1603,7 +1603,7 @@ EXPORT_SYMBOL(of_parse_phandle_with_args);
+  * Returns 0 on success and fills out_args, on error returns appropriate
+  * errno value.
+  *
+- * Caller is responsible to call of_node_put() on the returned out_args->node
++ * Caller is responsible to call of_node_put() on the returned out_args->np
+  * pointer.
+  *
+  * Example:
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
