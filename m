@@ -1,115 +1,53 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v2 1/3] PM / clock_ops: Add pm_clk_add_clk()
-Date: Wed, 22 Oct 2014 22:02:41 +0300
-Message-ID: <5447FF51.5000401@ti.com>
-References: <1413809764-21995-1-git-send-email-grygorii.strashko@ti.com> <1413809764-21995-2-git-send-email-grygorii.strashko@ti.com> <20141022173856.GB28104@dtor-ws>
+From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCHv4 0/3] ARM: dts: socfpga: fix booting with SD/MMC
+Date: Wed, 22 Oct 2014 14:07:37 -0500
+Message-ID: <1414004860-17645-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20141022173856.GB28104@dtor-ws>
-Sender: linux-pm-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, khilman@linaro.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, ulf.hansson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jh80-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/22/2014 08:38 PM, Dmitry Torokhov wrote:
-> On Mon, Oct 20, 2014 at 03:56:02PM +0300, Grygorii Strashko wrote:
->> From: Geert Uytterhoeven <geert+renesas@glider.be>
->>
->> The existing pm_clk_add() allows to pass a clock by con_id. However,
->> when referring to a specific clock from DT, no con_id is available.
->>
->> Add pm_clk_add_clk(), which allows to specify the struct clk * directly.
->>
->> Reviewed-by: Kevin Hilman <khilman@linaro.org>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
->>
->>   Pay attantion pls, that there is another series of patches
->>   which have been posted already and which depends from this patch
->>     "[PATCH v4 0/3] ARM: rk3288 : Add PM Domain support"
->>     https://lkml.org/lkml/2014/10/20/105
->>
->>   drivers/base/power/clock_ops.c | 41 +++++++++++++++++++++++++++++++----------
->>   include/linux/pm_clock.h       |  8 ++++++++
->>   2 files changed, 39 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/base/power/clock_ops.c b/drivers/base/power/clock_ops.c
->> index 7836930..f14b767 100644
->> --- a/drivers/base/power/clock_ops.c
->> +++ b/drivers/base/power/clock_ops.c
->> @@ -53,7 +53,8 @@ static inline int __pm_clk_enable(struct device *dev, struct clk *clk)
->>    */
->>   static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
->>   {
->> -	ce->clk = clk_get(dev, ce->con_id);
->> +	if (!ce->clk)
->> +		ce->clk = clk_get(dev, ce->con_id);
->>   	if (IS_ERR(ce->clk)) {
->>   		ce->status = PCE_STATUS_ERROR;
->>   	} else {
->> @@ -63,15 +64,8 @@ static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
->>   	}
->>   }
->>
->> -/**
->> - * pm_clk_add - Start using a device clock for power management.
->> - * @dev: Device whose clock is going to be used for power management.
->> - * @con_id: Connection ID of the clock.
->> - *
->> - * Add the clock represented by @con_id to the list of clocks used for
->> - * the power management of @dev.
->> - */
->> -int pm_clk_add(struct device *dev, const char *con_id)
->> +static int __pm_clk_add(struct device *dev, const char *con_id,
->> +			struct clk *clk)
->>   {
->>   	struct pm_subsys_data *psd = dev_to_psd(dev);
->>   	struct pm_clock_entry *ce;
->> @@ -93,6 +87,8 @@ int pm_clk_add(struct device *dev, const char *con_id)
->>   			kfree(ce);
->>   			return -ENOMEM;
->>   		}
->> +	} else {
->> +		ce->clk = clk;
->>   	}
->>
->>   	pm_clk_acquire(dev, ce);
->> @@ -104,6 +100,31 @@ int pm_clk_add(struct device *dev, const char *con_id)
->>   }
->>
->>   /**
->> + * pm_clk_add - Start using a device clock for power management.
->> + * @dev: Device whose clock is going to be used for power management.
->> + * @con_id: Connection ID of the clock.
->> + *
->> + * Add the clock represented by @con_id to the list of clocks used for
->> + * the power management of @dev.
->> + */
->> +int pm_clk_add(struct device *dev, const char *con_id)
->> +{
->> +	return __pm_clk_add(dev, con_id, NULL);
->
-> Bikeshedding: why do we need __pm_clk_add() and not simply have
-> "canonical" pm_clk_add_clk() and then do:
->
-> int pm_clk_add(struct device *dev, const char *con_id)
-> {
-> 	struct clk *clk;
->
-> 	clk = clk_get(dev, con_id);
-> 	...
-> 	return pm_clk_add_clk(dev, clk);
-> }
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Hm. I did fast look at code and:
-1) agree - there is a lot of thing which can be optimized ;)
-2) in my strong opinion, this patch is the fastest and simplest
-way to introduce new API (take a look on pm_clock_entry->con_id
-management code) and It is exactly what we need as of now.
+The SOCFPGA dev kit was hanging during bootup on the SD/MMC driver loading.
+The first patch fixes the booting and the 2nd patch adds a regulator node
+for the SD/MMC driver to use.
 
-regards,
--grygorii
+v4 diff(s):
+- Add a new patch to rename the GPIO IP DTS node
+- Use &gpio1 to set status="okay"
+- Update the cd-gpios to use &portb
 
+v3 diff(s): Thanks to Doug Anderson, the real issue was that the GPIO bank used
+by cd-gpios did not have status="okay" in the node. This cause the GPIO to not
+get probed correctly.
+
+In fact, prior to patch 3cf890fc42b "mmc: dw_mmc: Pass back errors from
+mmc_of_parse()", the error was being masked, so it was not being detected.
+
+v2 diff(s): Patch 2/2 ARM: dts: socfpga: Add a 3.3V fixed regulator node
+        - Move the regulator nodes to their respective board dts file and
+          correctly rename the regulator to match the schematic
+
+Dinh Nguyen (3):
+  ARM: dts: socfpga: rename gpio nodes
+  ARM: dts: socfpga: Fix SD card detect
+  ARM: dts: socfpga: Add a 3.3V fixed regulator node
+
+ arch/arm/boot/dts/socfpga.dtsi                | 12 ++++++------
+ arch/arm/boot/dts/socfpga_arria5.dtsi         |  2 +-
+ arch/arm/boot/dts/socfpga_arria5_socdk.dts    | 12 ++++++++++++
+ arch/arm/boot/dts/socfpga_cyclone5_socdk.dts  | 15 ++++++++++++++-
+ arch/arm/boot/dts/socfpga_cyclone5_sockit.dts | 12 ++++++++++++
+ 5 files changed, 45 insertions(+), 8 deletions(-)
+
+-- 
+2.0.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
