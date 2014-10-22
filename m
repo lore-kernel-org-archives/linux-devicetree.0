@@ -1,64 +1,38 @@
-From: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
-Subject: Re: ath10k: calibration data through Device Tree?
-Date: Wed, 22 Oct 2014 15:02:30 +0300
-Message-ID: <87tx2ws46h.fsf@kamboji.qca.qualcomm.com>
-References: <87tx3mmx4s.fsf@kamboji.qca.qualcomm.com>
-	<20141002132914.GN5788@leverpostej>
-	<87ppeamvr9.fsf@kamboji.qca.qualcomm.com>
-	<542DA1F7.9090904@amacapital.net>
-	<CAJ-VmomR+AzsUVqSik=ejntHHhQf_wj9kU==uCqWyk27M7Gp9w@mail.gmail.com>
-	<CALCETrV_LoCJ_DHcyQ2ztyXfdH2vAF0r7OX29_nPj6gMcodBig@mail.gmail.com>
-	<87vbnvhls4.fsf@kamboji.qca.qualcomm.com>
-	<F0D1326B-4716-4897-8259-1591B64EB55C@codeaurora.org>
+From: Eddie Huang <eddie.huang@mediatek.com>
+Subject: [PATCH 0/3] tty: serial: Add mediatek MT8127 and MT8135 UART support
+Date: Wed, 22 Oct 2014 21:12:06 +0800
+Message-ID: <1413983529-21887-1-git-send-email-eddie.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <F0D1326B-4716-4897-8259-1591B64EB55C-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> (Kumar
-	Gala's message of "Fri, 17 Oct 2014 14:25:01 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Andy Lutomirski <luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org>, Adrian Chadd <adrian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, hc.yen@mediatek.com, yh.chen@mediatek.com, linux-kernel@vger.kernel.org, nathan.chung@mediatek.com, linux-serial@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Eddie Huang <eddie.huang@mediatek.com>, Jiri Slaby <jslaby@suse.cz>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Alan Cox <alan@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kumar,
+This patch base on 3.18-rc1, which include mediatek MT65XX SOC
+UART driver developed by Matthias Brugger, and
+Joe.C's Mediatek MT8127 & MT8135 basic SOC support patch[1].
 
-Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+This patch fix one 8250_mtk.c bug that divisor maybe zero, and add device tree support.
+Test ok on MT8127 and MT8135 tablet platform.
 
-> As Arnd mentioned you would have something like:
->
-> pci {  =20
->         pcie@0 {
->                 reg =3D <0 0 0 0 0>;=20
->                 #interrupt-cells =3D <1>;
->                 #size-cells =3D <2>;
->                 #address-cells =3D <3>;
->                 device_type =3D "pci";
->
->                 ath10k@0,0 {
->                         reg =3D <0x0000 0x0 0x0 0x0 0x0>;
->                         device_type =3D "pci";
->                         qcom,ath10k-calibration-data =3D [ 01 03 04 0=
-5 06 =E2=80=A6 ];
->                 };     =20
->         };
-> };
->
-> On the driver side you can do something like:
->
-> 	struct device_node *np;
->
-> 	np =3D pci_device_to_OF_node(dev);
->
-> than you can do normal OF calls on =E2=80=98np=E2=80=99.
+Eddie Huang (3):
+  tty: serial: Fix mediatek UART driver setting baudrate issue
+  ARM: mediatek: add UART dts for mt8127 and mt8135
+  DTS: serial: Add bindings document for the Mediatek UARTs
 
-Ah, now I understand how this is supposed to work. Thank you very much
-for providing an example.
-
---=20
-Kalle Valo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/serial/mtk-uart.txt        |  2 ++
+ arch/arm/boot/dts/mt8127.dtsi                      | 34 ++++++++++++++++++++
+ arch/arm/boot/dts/mt8135.dtsi                      | 36 ++++++++++++++++++++++
+ drivers/tty/serial/8250/8250_mtk.c                 |  4 +--
+ 4 files changed, 74 insertions(+), 2 deletions(-)
