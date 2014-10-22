@@ -1,29 +1,87 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] clocksource: sh_mtu2: Correct SoC family name
-Date: Wed, 22 Oct 2014 11:26:18 +0200
-Message-ID: <1413969978-15946-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.au>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V3 09/10] tty: serial: of-serial: Allow OF earlycon to
+ default to "on"
+Date: Wed, 22 Oct 2014 17:27:49 +0800
+Message-ID: <CAL_Jsq+AuqTOU7UFdYi28YGjL1QorY=3zOSccN43Vb1a=q6SHw@mail.gmail.com>
+References: <1413930186-23168-1-git-send-email-cernekee@gmail.com> <1413930186-23168-10-git-send-email-cernekee@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1413930186-23168-10-git-send-email-cernekee@gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Kevin Cernekee <cernekee@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Florian Fainelli <f.fainelli@gmail.com>, mbizon@freebox.fr, Jonas Gorski <jogo@openwrt.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-r7s72100 is a member of the RZ family, not of the R-Car family
+On Wed, Oct 22, 2014 at 6:23 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
+> On many development systems it is very common to see failures during the
+> early stages of the boot process, e.g. SMP boot or PCIe initialization.
+> This is one likely reason why some existing earlyprintk implementations,
+> such as arch/mips/kernel/early_printk.c, are enabled unconditionally
+> at compile time.
+>
+> Now that earlycon's operating parameters can be passed into the kernel
+> via DT, it is helpful to be able to configure the kernel to turn it on
+> automatically.  Introduce a new CONFIG_SERIAL_EARLYCON_FORCE option for
+> this purpose.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/timer/renesas,mtu2.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+You can already force this using the CMDLINE_EXTEND option. I'm not
+sure we need more options.
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
-index d9a8d5af1a21270f..55484a77a6ae54d0 100644
---- a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
-@@ -1,4 +1,4 @@
--* Renesas R-Car Multi-Function Timer Pulse Unit 2 (MTU2)
-+* Renesas RZ Multi-Function Timer Pulse Unit 2 (MTU2)
- 
- The MTU2 is a multi-purpose, multi-channel timer/counter with configurable
- clock inputs and programmable compare match.
--- 
-1.9.1
+>
+> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+> ---
+>  drivers/of/fdt.c           |  5 +++++
+>  drivers/tty/serial/Kconfig | 11 +++++++++++
+>  2 files changed, 16 insertions(+)
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 20193cc..3e2ea1e 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -1013,6 +1013,11 @@ bool __init early_init_dt_verify(void *params)
+>
+>  void __init early_init_dt_scan_nodes(void)
+>  {
+> +#ifdef CONFIG_SERIAL_EARLYCON_FORCE
+> +       if (early_init_dt_scan_chosen_serial() < 0)
+> +               pr_warn("Unable to set up earlycon from stdout-path\n");
+> +#endif
+
+Doesn't this make the earlycon get scanned and setup twice? Hopefully
+that is safe...
+
+This also introduces the scanning at another point in time during boot
+which may not work depending on the arch.
+
+Rob
+
+> +
+>         /* Retrieve various information from the /chosen node */
+>         of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
+>
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index fdd851e..bc4ebcc 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -14,6 +14,17 @@ config SERIAL_EARLYCON
+>           the console before standard serial driver is probed. The console is
+>           enabled when early_param is processed.
+>
+> +config SERIAL_EARLYCON_FORCE
+> +       bool "Always enable early console"
+> +       depends on SERIAL_EARLYCON
+> +       help
+> +         Traditionally, enabling the early console has required passing in
+> +         the "earlycon" parameter on the kernel command line.  On systems
+> +         under development it may be desirable to enable earlycon
+> +         unconditionally rather than to force the user to manually add it
+> +         to the boot argument string, as boot failures often occur before
+> +         the standard serial driver is probed.
+> +
+>  source "drivers/tty/serial/8250/Kconfig"
+>
+>  comment "Non-8250 serial port support"
+> --
+> 2.1.1
+>
