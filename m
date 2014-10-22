@@ -1,38 +1,41 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 1/6] ARM: cygnus: Initial support for Broadcom Cygnus SoC
-Date: Wed, 22 Oct 2014 10:22:22 +0200
-Message-ID: <12157660.uOkg5nk8Dq@wuerfel>
-References: <1413341936-17606-2-git-send-email-sbranden@broadcom.com> <38587325.kaAxCWAsmL@wuerfel> <5446F61C.8060400@broadcom.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v5 1/3] power-domain: add power domain drivers for
+ Rockchip platform
+Date: Wed, 22 Oct 2014 10:29:51 +0200
+Message-ID: <CAPDyKFrfigDH143NnSCtfeNAuH+SK86Lm60Lo8kTT5Sp3cTksg@mail.gmail.com>
+References: <1413882808-4669-1-git-send-email-jinkun.hong@rock-chips.com>
+	<1413882808-4669-2-git-send-email-jinkun.hong@rock-chips.com>
+	<20141021195854.GE8609@dtor-ws>
+	<544725C4.4040703@rock-chips.com>
+	<CAPDyKFp+aNJd_FEY6=-ubK0zvVDWh+x5ZsVG+AVpuBzpSqynOQ@mail.gmail.com>
+	<CAMuHMdXwp3oBMFRQQVK1XusytxB_sNxJtJzMhAwdXecGxRJ=Ug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5446F61C.8060400@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Branden <sbranden@broadcom.com>
-Cc: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>, JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXwp3oBMFRQQVK1XusytxB_sNxJtJzMhAwdXecGxRJ=Ug@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Hong jinkun <jinkun.hong@rock-chips.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Jack Dai <jack.dai@rock-chips.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Dmitry Torokhov <dmitry.torokhov@gmail.c>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 21 October 2014 17:11:08 Scott Branden wrote:
-> OK, I will remove the "iProc SoC based Machine types".  This was 
-> grouping all iProc based SoCs under one menu and parallels what the 
-> existing "Broadcom Mobile Soc Support" menu does.
+On 22 October 2014 10:07, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Wed, Oct 22, 2014 at 9:58 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>> Now, I just realized that while Geert added attach|detach_dev()
+>> callbacks for the generic PM domain, those are both "void" callbacks.
+>> It means the deferred probe error handling is broken for these
+>> callbacks. We should convert the attach_dev() callback into an int, I
+>> will cook a patch immediately.
 >
-> I can create another patch removing the "Broadcom Mobile SoC Support" 
-> menu if the ARM Maintainer now want all Broadcom devices are supposed to 
-> be contained in a single level?
+> That was changed in v3:
+>   - Move calling of the callbacks to a point where dev->pm_domain is
+>     valid, so the domain parameter is no longer needed,
 
-Sounds good, I missed that other menu going in.
+That's good.
 
-It can make sense to add 'comment' statements if you want to separate the
-families.
+>   - Make callbacks return void.
+>
 
-I also noticed that there are a few configuration options that at first
-seem pointless: ARCH_BCM_MOBILE_L2_CACHE and ARCH_BCM_MOBILE_SMP. I wonder
-if it ever makes sense to disable these when the common options (CACHE_L2X0
-and SMP) are enabled for another SoC. I'd normally like to see these as
-hidden options that are always on whenever the core support for those
-features is enabled, to avoid confusing users as well as bugs from the
-combinatorial explosion.
+But not this. :-) Sorry, for being too quick in reviewing that time.
 
-	Arnd
+Kind regards
+Uffe
