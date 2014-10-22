@@ -1,89 +1,115 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 2/3] ARM: keystone: pm: switch to use generic pm domains
-Date: Wed, 22 Oct 2014 17:28:36 +0200
-Message-ID: <CAPDyKFp6T1a1XXHdxiubP2RaS26uSqkUS3rbBgsNV_y+dSFfvw@mail.gmail.com>
-References: <1413809764-21995-1-git-send-email-grygorii.strashko@ti.com>
-	<1413809764-21995-3-git-send-email-grygorii.strashko@ti.com>
-	<5446A065.9050308@gmail.com>
-	<544793B5.6080601@ti.com>
-	<CAPDyKFo97D3XbwDQrDzHw+qr4b24Fsq9EwDbdOMhy_L-RoYsLw@mail.gmail.com>
-	<CAMuHMdVsqsSHxirzoWspGz7y+2qBk42p-VUBNkys3_rr6Th_9Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVsqsSHxirzoWspGz7y+2qBk42p-VUBNkys3_rr6Th_9Q@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Santosh Shilimkar <santosh.shilimkar@gmail.com>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 1/2] i2c: Add generic support passing secondary devices addresses
+Date: Wed, 22 Oct 2014 17:30:47 +0200
+Message-ID: <1413991848-28495-1-git-send-email-jean-michel.hautbois@vodalys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22 October 2014 17:09, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> Hi Ulf,
->
-> On Wed, Oct 22, 2014 at 5:01 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->>>>> +void keystone_pm_domain_attach_dev(struct device *dev)
->>>>>   {
->>>>> +    struct clk *clk;
->>>>>       int ret;
->>>>> +    int i = 0;
->>>>>
->>>>>       dev_dbg(dev, "%s\n", __func__);
->>>>>
->>>>> -    ret = pm_generic_runtime_suspend(dev);
->>>>> -    if (ret)
->>>>> -        return ret;
->>>>> -
->>>>> -    ret = pm_clk_suspend(dev);
->>>>> +    ret = pm_clk_create(dev);
->>>>>       if (ret) {
->>>>> -        pm_generic_runtime_resume(dev);
->>>>> -        return ret;
->>>>> +        dev_err(dev, "pm_clk_create failed %d\n", ret);
->>>>> +        return;
->>>>> +    };
->>>>> +
->>>>> +    while ((clk = of_clk_get(dev->of_node, i++)) && !IS_ERR(clk)) {
->>>>> +        ret = pm_clk_add_clk(dev, clk);
->>>>> +        if (ret) {
->>>>> +            dev_err(dev, "pm_clk_add_clk failed %d\n", ret);
->>>>> +            goto clk_err;
->>>>> +        };
->>>>>       }
->>>>>
->>>>> -    return 0;
->>>>> +    if (!IS_ENABLED(CONFIG_PM_RUNTIME)) {
->>>> Can we not okkup two seperate callbacks instead of above check ?
->>>> I don't like this CONFIG check here. Its slightly better version of
->>>> ifdef in middle of the code.
->>>
->>> I've found more-less similar comment on patch
->>> "Re: [PATCH v3 1/3] power-domain: add power domain drivers for Rockchip platform"
->>> https://lkml.org/lkml/2014/10/17/257
->>>
->>> So, Would you like me to create patch which will enable clocks in pm_clk_add/_clk()
->>> in case !IS_ENABLED(CONFIG_PM_RUNTIME)
->>
->> I am wondering whether we actually should/could do this, no matter of
->> CONFIG_PM_RUNTIME.
->>
->> Typically, for configurations that uses CONFIG_PM_RUNTIME, the PM
->> clocks through pm_clk_suspend(), will be gated once the device becomes
->> runtime PM suspended. Right?
->
-> Doing it unconditionally means we'll have lots of unneeded clocks running
-> for a short while.
->
-> Are you trying to repeat power-up-all-PM-domains-during-boot for
-> clocks, too? ;-)
+Some I2C devices have multiple addresses assigned, for example each address
+corresponding to a different internal register map page of the device.
+So far drivers which need support for this have handled this with a driver
+specific and non-generic implementation, e.g. passing the additional address
+via platform data.
 
-This is related, but there are a difference. :-)
+This patch provides a new helper function called i2c_new_secondary_device()
+which is intended to provide a generic way to get the secondary address
+as well as instantiate a struct i2c_client for the secondary address.
 
-As long as the pm_clk_add() is being invoked from the ->attach_dev()
-callback, we are in the probe path. Certainly we would like to have
-clocks enabled while probing, don't you think?
+The function expects a pointer to the primary i2c_client, a name
+for the secondary address and an optional default address. The name is used
+as a handle to specify which secondary address to get.
 
-If we wouldn't enable the clocks for CONFIG_PM_RUNTIME, when will
-those be enabled?
+The default address is used as a fallback in case no secondary address
+was explicitly specified. In case no secondary address and no default
+address were specified the function returns NULL.
 
-Kind regards
-Uffe
+For now the function only supports look-up of the secondary address
+from devicetree, but it can be extended in the future
+to for example support board files and/or ACPI.
+
+Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/i2c/i2c-core.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/i2c.h    |  8 ++++++++
+ 2 files changed, 48 insertions(+)
+
+diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+index 2f90ac6..fd3b07c 100644
+--- a/drivers/i2c/i2c-core.c
++++ b/drivers/i2c/i2c-core.c
+@@ -1166,6 +1166,46 @@ struct i2c_client *i2c_new_dummy(struct i2c_adapter *adapter, u16 address)
+ }
+ EXPORT_SYMBOL_GPL(i2c_new_dummy);
+ 
++/**
++ * i2c_new_secondary_device - Helper to get the instantiated secondary address
++ * @client: Handle to the primary client
++ * @name: Handle to specify which secondary address to get
++ * @default_addr: Used as a fallback if no secondary address was specified
++ * Context: can sleep
++ *
++ * This returns an I2C client bound to the "dummy" driver based on DT parsing.
++ *
++ * This returns the new i2c client, which should be saved for later use with
++ * i2c_unregister_device(); or NULL to indicate an error.
++ */
++struct i2c_client *i2c_new_secondary_device(struct i2c_client *client,
++						const char *name,
++						u16 default_addr)
++{
++	int i;
++	u32 addr;
++	struct device_node *np;
++
++	np = client->dev.of_node;
++
++	if (np) {
++		i = of_property_match_string(np, "reg-names", name);
++		if (i >= 0)
++			of_property_read_u32_index(np, "reg", i, &addr);
++		else if (default_addr != 0)
++			addr = default_addr;
++		else
++			addr = NULL;
++	} else {
++		addr = default_addr;
++	}
++
++	dev_dbg(&client->adapter->dev, "Address for %s : 0x%x\n", name, addr);
++	return i2c_new_dummy(client->adapter, addr);
++}
++EXPORT_SYMBOL_GPL(i2c_new_secondary_device);
++
++
+ /* ------------------------------------------------------------------------- */
+ 
+ /* I2C bus adapters -- one roots each I2C or SMBUS segment */
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index b556e0a..8629287 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -322,6 +322,14 @@ extern int i2c_probe_func_quick_read(struct i2c_adapter *, unsigned short addr);
+ extern struct i2c_client *
+ i2c_new_dummy(struct i2c_adapter *adap, u16 address);
+ 
++/* Helper function providing a generic way to get the secondary address
++ * as well as a client handle to this extra address.
++ */
++extern struct i2c_client *
++i2c_new_secondary_device(struct i2c_client *client,
++				const char *name,
++				u16 default_addr);
++
+ extern void i2c_unregister_device(struct i2c_client *);
+ #endif /* I2C */
+ 
+-- 
+2.1.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
