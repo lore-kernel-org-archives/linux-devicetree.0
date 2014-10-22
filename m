@@ -1,60 +1,172 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v1 1/5] mfd: tps65910: Convert ti,system-power-controller
- DT property to poweroff-source
-Date: Wed, 22 Oct 2014 16:50:58 +0100
-Message-ID: <20141022155058.GN4939@x1>
-References: <1413991587-11110-1-git-send-email-romain.perier@gmail.com>
- <CABgxDoKus_D=ooCz3TqyXP9CTJUgbZVxQSsw4ZgBx1oYaTefbw@mail.gmail.com>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v2 2/3] ARM: keystone: pm: switch to use generic pm domains
+Date: Wed, 22 Oct 2014 08:58:08 -0700
+Message-ID: <7h61fccd0v.fsf@deeprootsystems.com>
+References: <1413809764-21995-1-git-send-email-grygorii.strashko@ti.com>
+	<1413809764-21995-3-git-send-email-grygorii.strashko@ti.com>
+	<5446A065.9050308@gmail.com> <544793B5.6080601@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABgxDoKus_D=ooCz3TqyXP9CTJUgbZVxQSsw4ZgBx1oYaTefbw@mail.gmail.com>
+In-Reply-To: <544793B5.6080601@ti.com> (Grygorii Strashko's message of "Wed,
+	22 Oct 2014 14:23:33 +0300")
 Sender: linux-kernel-owner@vger.kernel.org
-To: PERIER Romain <romain.perier@gmail.com>
-Cc: "sameo@linux.intel.com" <sameo@linux.intel.com>, robh+dt@kernel.org, "pawel.moll" <pawel.moll@arm.com>, mark.rutland@arm.com, ijc+devicetree <ijc+devicetree@hellion.org.uk>, galak <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, swarren <swarren@wwwdotorg.org>, "thierry.reding" <thierry.reding@gmail.com>, gnurou <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Santosh Shilimkar <santosh.shilimkar@gmail.com>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 22 Oct 2014, PERIER Romain wrote:
+Grygorii Strashko <grygorii.strashko@ti.com> writes:
 
-> This is related to the following subject "[RFC v3 PATCH 1/5] of: Add
-> standard property for poweroff capability" and depends on the
-> corresponding patch.
+> Hi Santosh,
+>
+> On 10/21/2014 09:05 PM, Santosh Shilimkar wrote:
+>> On 10/20/2014 05:56 AM, Grygorii Strashko wrote:
+>>> This patch switches Keystone 2 PM code to use Generic PM domains
+>>> instead of PM clock domains because of the lack of DT support
+>>> for the last.
+>>>
+>>> Reviewed-by: Kevin Hilman <khilman@linaro.org>
+>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>>> ---
+>>>   .../bindings/power/ti,keystone-powerdomain.txt     |  31 ++++++
+>>>   arch/arm/mach-keystone/Kconfig                     |   1 +
+>>>   arch/arm/mach-keystone/pm_domain.c                 | 112 
+>>> ++++++++++++++-------
+>>>   3 files changed, 107 insertions(+), 37 deletions(-)
+>>>   create mode 100644 
+>>> Documentation/devicetree/bindings/power/ti,keystone-powerdomain.txt
+>>>
+>>> diff --git 
+>>> a/Documentation/devicetree/bindings/power/ti,keystone-powerdomain.txt 
+>>> b/Documentation/devicetree/bindings/power/ti,keystone-powerdomain.txt
+>>> new file mode 100644
+>>> index 0000000..4bbf2aa
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/power/ti,keystone-powerdomain.txt
+>>> @@ -0,0 +1,31 @@
+>>> +* TI Keystone 2 Generic PM Controller
+>>> +
+>>> +The TI Keystone 2 Generic PM Controller is responsible for Clock gating
+>>> +for each controlled IP module.
+>>> +
+>>> +Required properties:
+>>> +- compatible: Should be "ti,keystone-powerdomain"
+>>> +- #power-domain-cells: Should be 0, see below:
+>>> +
+>>> +The gpc node is a power-controller as documented by the generic power 
+>>> domain
+>> You renamed gpc but missed to fix the comment ? Pls update it.
+>
+> ok.
+>
+>> 
+>>> +bindings in Documentation/devicetree/bindings/power/power_domain.txt.
+>>> +
+>>> +Example:
+>>> +
+>>> +    pm_controller: pm-controller {
+>>> +        compatible = "ti,keystone-powerdomain";
+>>> +        #power-domain-cells = <0>;
+>>> +    };
+>>> +
+>>> +    netcp: netcp@2090000 {
+>>> +        reg = <0x2620110 0x8>;
+>>> +        reg-names = "efuse";
+>>> +        ...
+>>> +        #address-cells = <1>;
+>>> +        #size-cells = <1>;
+>>> +        ranges;
+>>> +        power-domains = <&pm_controller>;
+>>> +
+>>> +        clocks = <&clkpa>, <&clkcpgmac>, <&chipclk12>;
+>>> +        dma-coherent;
+>>> +    }
+>>> diff --git a/arch/arm/mach-keystone/Kconfig 
+>>> b/arch/arm/mach-keystone/Kconfig
+>>> index 98a156a..de43107 100644
+>>> --- a/arch/arm/mach-keystone/Kconfig
+>>> +++ b/arch/arm/mach-keystone/Kconfig
+>>> @@ -9,6 +9,7 @@ config ARCH_KEYSTONE
+>>>       select COMMON_CLK_KEYSTONE
+>>>       select ARCH_SUPPORTS_BIG_ENDIAN
+>>>       select ZONE_DMA if ARM_LPAE
+>>> +    select PM_GENERIC_DOMAINS if PM
+>>>       help
+>>>         Support for boards based on the Texas Instruments Keystone 
+>>> family of
+>>>         SoCs.
+>>> diff --git a/arch/arm/mach-keystone/pm_domain.c 
+>>> b/arch/arm/mach-keystone/pm_domain.c
+>>> index ca79dda..d58759d 100644
+>>> --- a/arch/arm/mach-keystone/pm_domain.c
+>>> +++ b/arch/arm/mach-keystone/pm_domain.c
+>>> @@ -12,69 +12,107 @@
+>>>    * version 2, as published by the Free Software Foundation.
+>>>    */
+>>>
+>>> +#include <linux/clk.h>
+>>>   #include <linux/init.h>
+>>> -#include <linux/pm_runtime.h>
+>>>   #include <linux/pm_clock.h>
+>>> +#include <linux/pm_domain.h>
+>>>   #include <linux/platform_device.h>
+>>> -#include <linux/clk-provider.h>
+>>>   #include <linux/of.h>
+>>>
+>>> -#ifdef CONFIG_PM_RUNTIME
+>>> -static int keystone_pm_runtime_suspend(struct device *dev)
+>>> +#ifdef CONFIG_PM_GENERIC_DOMAINS
+>>> +
+>>> +struct keystone_domain {
+>>> +    struct generic_pm_domain genpd;
+>>> +    struct device    *dev;
+>>> +};
+>>> +
+>>> +void keystone_pm_domain_attach_dev(struct device *dev)
+>>>   {
+>>> +    struct clk *clk;
+>>>       int ret;
+>>> +    int i = 0;
+>>>
+>>>       dev_dbg(dev, "%s\n", __func__);
+>>>
+>>> -    ret = pm_generic_runtime_suspend(dev);
+>>> -    if (ret)
+>>> -        return ret;
+>>> -
+>>> -    ret = pm_clk_suspend(dev);
+>>> +    ret = pm_clk_create(dev);
+>>>       if (ret) {
+>>> -        pm_generic_runtime_resume(dev);
+>>> -        return ret;
+>>> +        dev_err(dev, "pm_clk_create failed %d\n", ret);
+>>> +        return;
+>>> +    };
+>>> +
+>>> +    while ((clk = of_clk_get(dev->of_node, i++)) && !IS_ERR(clk)) {
+>>> +        ret = pm_clk_add_clk(dev, clk);
+>>> +        if (ret) {
+>>> +            dev_err(dev, "pm_clk_add_clk failed %d\n", ret);
+>>> +            goto clk_err;
+>>> +        };
+>>>       }
+>>>
+>>> -    return 0;
+>>> +    if (!IS_ENABLED(CONFIG_PM_RUNTIME)) {
+>> Can we not okkup two seperate callbacks instead of above check ?
+>> I don't like this CONFIG check here. Its slightly better version of
+>> ifdef in middle of the code.
+>
+> I've found more-less similar comment on patch
+> "Re: [PATCH v3 1/3] power-domain: add power domain drivers for Rockchip platform"
+> https://lkml.org/lkml/2014/10/17/257
+>
+> So, Would you like me to create patch which will enable clocks in pm_clk_add/_clk()
+> in case !IS_ENABLED(CONFIG_PM_RUNTIME)
 
-Then it should be sent in the same patch-set.
+Yes, I think it's a good idea to propose that change and propose to
+Rafael on linux-pm.  Be sure that myself, Ulf and Geert are Cc'd.
 
-There's nothing I can do with this patch as is.
+Thanks,
 
-> 2014-10-22 17:26 GMT+02:00 Romain Perier <romain.perier@gmail.com>:
-> > No longer use custom property to define poweroff capability, use th=
-e standard
-> > DT property instead.
-> >
-> > Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> > ---
-> >  drivers/mfd/tps65910.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
-> > index 7612d89..b8dca8a 100644
-> > --- a/drivers/mfd/tps65910.c
-> > +++ b/drivers/mfd/tps65910.c
-> > @@ -423,8 +423,7 @@ static struct tps65910_board *tps65910_parse_dt=
-(struct i2c_client *client,
-> >
-> >         board_info->irq =3D client->irq;
-> >         board_info->irq_base =3D -1;
-> > -       board_info->pm_off =3D of_property_read_bool(np,
-> > -                       "ti,system-power-controller");
-> > +       board_info->pm_off =3D of_system_has_poweroff_source(np);
-> >
-> >         return board_info;
-> >  }
-> >
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Kevin
