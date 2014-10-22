@@ -1,69 +1,41 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] adv7604: Add DT parsing support
-Date: Thu, 23 Oct 2014 02:53:50 +0300
-Message-ID: <1645583.LAOF2HV7Iq@avalon>
-References: <1413992061-28678-1-git-send-email-jean-michel.hautbois@vodalys.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCHv4 2/3] ARM: dts: socfpga: Fix SD card detect
+Date: Wed, 22 Oct 2014 16:53:56 -0700
+Message-ID: <CAD=FV=VaYzyqYf2Rm7=3Lp6zsYRjgurw+w3Y=D0zP2F6K_zmKQ@mail.gmail.com>
+References: <1414004860-17645-1-git-send-email-dinguyen@opensource.altera.com>
+	<1414004860-17645-3-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413992061-28678-1-git-send-email-jean-michel.hautbois@vodalys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, lars@metafoo.de
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414004860-17645-3-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, jh80-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean-Michel,
+Dinh,
 
-Thank you for the patch.
-
-On Wednesday 22 October 2014 17:34:21 Jean-Michel Hautbois wrote:
-> This patch adds support for DT parsing of ADV7604 as well as ADV7611.
-> It needs to be improved in order to get ports parsing too.
-
-Let's improve it then :-) The DT bindings as proposed by this patch are 
-incomplete, that's just asking for trouble.
-
-How would you model the adv7604 ports ?
-
-> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
+On Wed, Oct 22, 2014 at 12:07 PM,  <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
+> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>
+> Without this patch, the booting the SOCFPGA platform would hang at the
+> SDMMC driver loading. The issue, debugged by Doug Anderson, turned out
+> to be that the GPIO bank used by the SD card-detect was not set to
+> status="okay".
+>
+> Also update the cd-gpios to point to portb of the &gpio1 GPIO IP.
+>
+> Suggested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/media/i2c/adv7604.txt | 1 +
->  drivers/media/i2c/adv7604.c                             | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> b/Documentation/devicetree/bindings/media/i2c/adv7604.txt index
-> c27cede..5c8b3e6 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> @@ -10,6 +10,7 @@ Required Properties:
-> 
->    - compatible: Must contain one of the following
->      - "adi,adv7611" for the ADV7611
-> +    - "adi,adv7604" for the ADV7604
+> v4: Use &gpio1 to set status="okay" and update cd-gpio=&portb
+> v3: Correctly degugged the issue to be a gpio node not having status="okay"
+> ---
+>  arch/arm/boot/dts/socfpga_cyclone5_socdk.dts | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 
-Please switch the two lines to keep them alphabetically sorted.
-> 
->    - reg: I2C slave address
-> 
-> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
-> index 47795ff..421035f 100644
-> --- a/drivers/media/i2c/adv7604.c
-> +++ b/drivers/media/i2c/adv7604.c
-> @@ -2677,6 +2677,7 @@ MODULE_DEVICE_TABLE(i2c, adv7604_i2c_id);
-> 
->  static struct of_device_id adv7604_of_id[] __maybe_unused = {
->  	{ .compatible = "adi,adv7611", .data = &adv7604_chip_info[ADV7611] },
-> +	{ .compatible = "adi,adv7604", .data = &adv7604_chip_info[ADV7604] },
-
-Same comment here.
-
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, adv7604_of_id);
-
--- 
-Regards,
-
-Laurent Pinchart
+Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
