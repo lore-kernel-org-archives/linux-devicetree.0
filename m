@@ -1,57 +1,77 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 00/12] rtc: omap: fixes and power-off feature
-Date: Wed, 22 Oct 2014 12:23:05 +0200
-Message-ID: <20141022102305.GM2113@localhost>
-References: <1412881594-25678-1-git-send-email-johan@kernel.org>
- <20141015165452.GB15770@saruman>
- <20141015170628.GA13824@localhost>
- <20141015170832.GD15770@saruman>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RESUBMIT PATCH v4 7/8] regulator: sky81452: Add compatible
+ string for device binding
+Date: Wed, 22 Oct 2014 11:27:23 +0100
+Message-ID: <20141022102723.GL2344@sirena.org.uk>
+References: <1413179262-27636-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1413179262-27636-8-git-send-email-jack.yoo@skyworksinc.com>
+ <20141013103512.GJ27755@sirena.org.uk>
+ <20141014011112.GB2751@jack-ThinkPad-T520>
+ <20141014075606.GN27755@sirena.org.uk>
+ <20141017091950.GA3233@jack-ThinkPad-T520>
+ <20141017101734.GB1820@sirena.org.uk>
+ <20141017104309.GA3136@jack-ThinkPad-T520>
+ <20141017142605.GU1820@sirena.org.uk>
+ <20141020061024.GA9406@jack-ThinkPad-T520>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="m+jEI8cDoTn6Mu9E"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20141015170832.GD15770@saruman>
+In-Reply-To: <20141020061024.GA9406@jack-ThinkPad-T520>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Johan Hovold <johan@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Andrew Morton <akpm@linux-foundation.org>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, Colin Foe-Parker <colin.foeparker@logicpd.com>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
+To: Gyungoh Yoo <gyungoh@gmail.com>
+Cc: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 15, 2014 at 12:08:32PM -0500, Felipe Balbi wrote:
-> On Wed, Oct 15, 2014 at 07:06:28PM +0200, Johan Hovold wrote:
-> > On Wed, Oct 15, 2014 at 11:55:02AM -0500, Felipe Balbi wrote:
 
-> > > BTW, how do you test this series ?
-> > 
-> > Set a 30 second wakealarm using the sysfs attribute of the rtc class
-> > device and power off the BBB:
-> > 
-> > 	echo +30 >wakealarm; poweroff
-> 
-> sweet!!!! It worked just fine :-)
+--m+jEI8cDoTn6Mu9E
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-:)
+On Mon, Oct 20, 2014 at 03:10:24PM +0900, Gyungoh Yoo wrote:
+> On Fri, Oct 17, 2014 at 04:26:05PM +0200, Mark Brown wrote:
 
-> Too bad there's yet another DRM bug:
-> 
-> [  271.150158] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
-> [  271.150158] 
-> [  271.159725] CPU: 0 PID: 1 Comm: systemd-shutdow Not tainted 3.17.0-08392-g7fe2269-dirty #326
-> [  271.168567] [<c00175a4>] (unwind_backtrace) from [<c00132f0>] (show_stack+0x20/0x24)
-> [  271.176668] [<c00132f0>] (show_stack) from [<c06573a4>] (dump_stack+0x8c/0xa4)
-> [  271.184215] [<c06573a4>] (dump_stack) from [<c0654f10>] (panic+0xa0/0x220)
-> [  271.191405] [<c0654f10>] (panic) from [<c0049e54>] (do_exit+0x974/0x9d0)
-> [  271.198410] [<c0049e54>] (do_exit) from [<c0067694>] (SyS_reboot+0x14c/0x1e8)
-> [  271.205870] [<c0067694>] (SyS_reboot) from [<c000f080>] (ret_fast_syscall+0x0/0x48)
-> [  271.214023] drm_kms_helper: panic occurred, switching back to text console
-> [  271.221312] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000000
-> 
-> In any case, board still powered up after 30 seconds(-ish). So this gets
-> a:
-> 
-> Tested-by: Felipe Balbi <balbi@ti.com>
+> > The thing I'm seeing is that the binding for your device with the
+> > subnode looks very much like the device trees of devices with multiple
+> > regulators.  The fact that you only have one regulator is a bit
+> > difference but not that much.  It seems like drivers should fit into one
+> > of two patterns: either the regulator is described in the root node for
+> > the device for single purpose devices or there should be a collection of
+> > regulators like is supported with this helper API.  Having a collection
+> > with only one node doesn't seem to be a problem in any way.
 
-Thanks for testing. I didn't include your Tested-by in v2 due to the
-invasiveness of the new device-abstraction patch. Still works fine on BBB
-here though.
+> Thank you for your kind comments.
+> My understanding is getting better.
 
-Johan
+> For my clear understanding:
+> I think the original designed which I wanted to design is similar
+> with arizona-ldo1.c
+> It seems that this is 1st pattern your explained above.
+> Can I ask what is different between arizona-ldo1.c and
+> this sky81452-regulator.c?
+> I think both are designed under root node.
+
+Were that code being written today I'd probably be asking for it to use
+a regulators subnode to be consistent with everything else, it's a
+slightly older driver and sometimes we've not spotted the patterns when
+they're added, once we get to the point of adding the helpers as we have
+now things are definitely getting baked in.
+
+--m+jEI8cDoTn6Mu9E
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUR4aKAAoJECTWi3JdVIfQ/uIH/0glztVbV+RiouufNTimD9v9
+WOcU2UXLdunyf7zETEyaJJn+btGIYTR3JFNOeyjO1DgfMsweQsUyKPQgpXNypGFE
+5+8jGVf82rXuGcl93EsA83cXRfCL+JESjlhCUWavzKTfQ9iG5se1ASTy9JSf8i06
+TUfUjYLhRaGCAicnnPsAyOT89tpdN0eF8OiHtiev6ZEmZUtePhu3xywIYPCXjsWM
+CrWp8BxM6/49iyAI4yq6FwW49/q/yR10kmLgrEqLA+xz786KIshuvxfRgxLsHDfp
+aEwshr+kCpSzpCgandR8hXFovjD89cw0bqyvNdh7hzU08yEgj7zK25UWfLs5e4w=
+=ShJw
+-----END PGP SIGNATURE-----
+
+--m+jEI8cDoTn6Mu9E--
