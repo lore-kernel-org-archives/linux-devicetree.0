@@ -1,44 +1,33 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: GPIO bindings guidelines (Was: Re: [PATCH v5 10/12] gpio: Support for unified device properties interface)
-Date: Wed, 22 Oct 2014 10:33:32 +0200
-Message-ID: <4711930.7fsc2oSxcp@wuerfel>
-References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com> <4582579.9WMrIMALsy@wuerfel> <20141022081044.GB1484@lahna.fi.intel.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] mtd: docg3: add device-tree support
+Date: Wed, 22 Oct 2014 01:37:54 -0700
+Message-ID: <20141022083754.GG16128@brian-ubuntu>
+References: <1411846470-30041-1-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20141022081044.GB1484@lahna.fi.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1411846470-30041-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 22 October 2014 11:10:44 Mika Westerberg wrote:
+On Sat, Sep 27, 2014 at 09:34:29PM +0200, Robert Jarzmik wrote:
+> Add device-tree support. This is straightforward as docg3 only uses the
+> standard IOMEM resources.
 > 
-> It expects that GPIOs returned from _CRS are in specific order. Since we
-> can't change these existing ACPI tables, we must support them somehow.
+> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 > 
-> This patch series handles it so that:
-> 
->   1) If we can't find given property (e.g "reset-gpios" or
->      "shutdown-gpios") the index above will refer directly to the GPIO
->      resource returned from _CRS.
-> 
->   2) If the property is found we ignore index and take it from the
->      property instead.
-> 
-> This has the drawback that we cannot support this:
-> 
->         Package () { "reset-gpios", Package () { ^GPIO, 0, 0, 0, ^GPIO, 1, 0, 0}}
->                                                                  ^^^^^^^^^^^^^^
-> So the second entry in the above is not accessible using
-> gpiod_get_index() and the reason is that we want to support the existing
-> and new ACPI tables where _DSD is not being used.
+> ---
+> Since v1: Mark's review: changed compatible string
 
-So this is not using the DT binding but does thing slightly differently then.
-In this case (supporting two incompatible bindings for DT and ACPI), I think
-the only sensible driver implementation would be to know what we are asking
-for and use different devm_gpiod_get_index statements based on the firmware
-interface.
+Pushed both to l2-mtd.git. Thanks!
 
-	Arnd
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
