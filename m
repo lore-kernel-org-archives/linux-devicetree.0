@@ -1,156 +1,151 @@
 From: Emil Medve <Emilian.Medve@Freescale.com>
-Subject: Re: [PATCH 2/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan portal(s)
-Date: Wed, 22 Oct 2014 15:04:54 -0500
-Message-ID: <54480DE6.4090604@Freescale.com>
+Subject: Re: [PATCH 3/4] dt/bindings: Introduce the FSL QorIQ DPAA QMan
+Date: Wed, 22 Oct 2014 15:05:12 -0500
+Message-ID: <54480DF8.3070604@Freescale.com>
 References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
- <1413986972-621-2-git-send-email-Emilian.Medve@Freescale.com>
- <20141022142931.GA4010@leverpostej>
+ <1413986972-621-3-git-send-email-Emilian.Medve@Freescale.com>
+ <20141022143732.GB4010@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20141022142931.GA4010@leverpostej>
-Sender: linux-doc-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20141022143732.GB4010@leverpostej>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 To: Mark Rutland <mark.rutland@arm.com>
-Cc: "scottwood@freescale.com" <scottwood@Freescale.com>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Pawel Moll <Pawel.Moll@arm.com>, "Geoff.Thorpe@freescale.com" <Geoff.Thorpe@Freescale.com>, "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "Geoff.Thorpe@freescale.com" <Geoff.Thorpe@Freescale.com>, "corbet@lwn.net" <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "scottwood@freescale.com" <scottwood@Freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
-
-
-Thanks for having a look at this
-
-On 10/22/2014 09:29 AM, Mark Rutland wrote:
-> On Wed, Oct 22, 2014 at 03:09:30PM +0100, Emil Medve wrote:
->> Portals are used by software running on processor cores, accelerators and
->> network interfaces to communicate with the BMan
-> 
-> What exactly is a portal?
-> 
-> Is it a region of shared memory? A device?
-
-In a nutshell a (software, i.e. processor core accessible) portal is a
-memory mapped interface to the B/QMan that allows low latency, lock-less
-interaction by logically separated units of software. The original
-intent was to have one affine portal per core. As of now we're
-sprinkling portals to use from various (core affine) contexts:
-hypervisor, guests, user-space, containers, etc.
-
-I'll make the definition more palatable in the next round
-
-> I only received emails 2 and 3 of this series, so I'm lacking the
-> context necessary to understand the bindings.
-
-Some bubble in the pipe... As of now they all seem to have hit the
-e-mail list(s), patchwork and hopefully your Inbox
-
->> Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
->> Change-Id: I6d245ffc14ba3d0e91d403ac7c3b91b75a9e6a95
->> ---
->>  .../bindings/powerpc/fsl/bman-portals.txt          | 50 ++++++++++++++++++++++
->>  1 file changed, 50 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
->>
->> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt b/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
->> new file mode 100644
->> index 0000000..40e607e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
->> @@ -0,0 +1,50 @@
->> +QorIQ DPAA Buffer Manager Portals Device Tree Binding
->> +
->> +Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
->> +
->> +CONTENTS
->> +
->> +	- BMan Portal
->> +	- Example
->> +
->> +NOTE:	The bindings described in this document are preliminary and subject to
->> +	change
-> 
-> While we've tried that elsewhere, unstable DT bindings have been shown
-> to be a major source of pain.
-
-Agreed
-
-> I'd feel rather uncomfortable accepting a
-> binding that we already believe to be insufficient to describe the
-> hardware.
-> 
-> What do you expect to change?
-
-Related bindings seem incomplete. As such, the PAMU binding (pamu.txt)
-covers incompletely a dynamic LIODN assignment/programming model. The
-current driver uses a static assignment scheme that the binding needs to
-include. I also suspect that once the driver starts supporting the
-dynamic LIODN assignment/programming we might find some wrinkles
-
->> +
->> +BMan Portal Node
->> +
->> +PROPERTIES
->> +
->> +- compatible
->> +	Usage:		Required
->> +	Value type:	<stringlist>
->> +	Definition:	Must include "fsl,bman-portal-<hardware revision>"
->> +			May include "fsl,<SoC>-bman-portal" or "fsl,bman-portal"
->> +
->> +- reg
->> +	Usage:		Required
->> +	Value type:	<prop-encoded-array>
->> +	Definition:	Two regions. The first is the cache-enabled region of
->> +			the portal. The second is the cache-inhibited region of
->> +			the portal
->> +
->> +EXAMPLE
->> +
->> +The example below shows a (P4080) BMan portals container/bus node with two portals
-> 
-> Is there any particular reason to place these under a simple-bus?
-
-I think they fit the ePAPR definition for simple-bus container. They can
-be accessed directly and can be used independently. What are you suggesting?
-
->> +
->> +	bman-portals@ff4000000 {
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		compatible = "simple-bus";
->> +		ranges = <0 0xf 0xf4000000 0x200000>;
->> +
->> +		bman-portal@0 {
->> +			compatible = "fsl,bman-portal-1.0.0", "fsl,bman-portal";
->> +			reg = <0x0 0x4000 0x100000 0x1000>;
-> 
-> It would be easier to read is each entry had its own set of brackets.
-> Initially this looked to me like a single 64-bit address/size pair.
-
-Something like <>, <>? It doesn't seem widely used but I agree is more
-readable. I can include it in the the next spin
-
->> +			interrupts = <105 2 0 0>;
->> +		};
-> 
-> Given the description above, surely you need to know what the portal is
-> used for? Or is that queried from the portal?
-
-We don't need/want to include such information in the DT. Portals are
-"allocated" dynamically and used by the respective context
-
-
-Cheers,
-
-
-> Thanks,
-> Mark.
-> 
->> +		bman-portal@4000 {
->> +			compatible = "fsl,bman-portal-1.0.0", "fsl,bman-portal";
->> +			reg = <0x4000 0x4000 0x101000 0x1000>;
->> +			interrupts = <107 2 0 0>;
->> +		};
->> +	};
->> -- 
->> 2.1.2
+SGVsbG8gTWFyaywKCgpPbiAxMC8yMi8yMDE0IDA5OjM3IEFNLCBNYXJrIFJ1dGxhbmQgd3JvdGU6
+Cj4gT24gV2VkLCBPY3QgMjIsIDIwMTQgYXQgMDM6MDk6MzFQTSArMDEwMCwgRW1pbCBNZWR2ZSB3
+cm90ZToKPj4gVGhlIFF1ZXVlIE1hbmFnZXIgaXMgcGFydCBvZiB0aGUgRGF0YS1QYXRoIEFjY2Vs
+ZXJhdGlvbiBBcmNoaXRlY3R1cmUgKERQQUEpLgo+PiBRTWFuIHN1cHBvcnRzIHF1ZXVpbmcgYW5k
+IFFvUyBzY2hlZHVsaW5nIG9mIGZyYW1lcyB0byBDUFVzLCBuZXR3b3JrIGludGVyZmFjZXMKPj4g
+YW5kIERQQUEgbG9naWMgbW9kdWxlcywgbWFpbnRhaW5zIHBhY2tldCBvcmRlcmluZyB3aXRoaW4g
+Zmxvd3MuIEJlc2lkZXMKPj4gcHJvdmlkaW5nIGZsb3ctbGV2ZWwgcXVldWluZywgaXMgYWxzbyBy
+ZXNwb25zaWJsZSBmb3IgY29uZ2VzdGlvbiBtYW5hZ2VtZW50Cj4+IGZ1bmN0aW9ucyBzdWNoIGFz
+IFJFRC9XUkVELCBjb25nZXN0aW9uIG5vdGlmaWNhdGlvbnMgYW5kIHRhaWwgZGlzY2FyZHMuIFRo
+aXMKPj4gYmluZGluZyBjb3ZlcnMgdGhlIENDU1Igc3BhY2UgcHJvZ3JhbW1pbmcgbW9kZWwKPj4K
+Pj4gU2lnbmVkLW9mZi1ieTogRW1pbCBNZWR2ZSA8RW1pbGlhbi5NZWR2ZUBGcmVlc2NhbGUuY29t
+Pgo+PiBDaGFuZ2UtSWQ6IEkzYWNiMjIzODkzZTQyMDAzZDZjOWRjMDYxZGI1NjhlYzBiMTBkMjli
+Cj4+IC0tLQo+PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvcW1hbi50eHQg
+ICAgICAgfCAxMzQgKysrKysrKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMTM0
+IGluc2VydGlvbnMoKykKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvcW1hbi50eHQKPj4KPj4gZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9xbWFuLnR4dCBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9xbWFuLnR4dAo+PiBu
+ZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi5iOWYyODhmCj4+IC0tLSAvZGV2
+L251bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMv
+ZnNsL3FtYW4udHh0Cj4+IEBAIC0wLDAgKzEsMTM0IEBACj4+ICtRb3JJUSBEUEFBIFF1ZXVlIE1h
+bmFnZXIgRGV2aWNlIFRyZWUgQmluZGluZwo+PiArCj4+ICtDb3B5cmlnaHQgKEMpIDIwMDggLSAy
+MDE0IEZyZWVzY2FsZSBTZW1pY29uZHVjdG9yIEluYy4KPj4gKwo+PiArQ09OVEVOVFMKPj4gKwo+
+PiArCS0gUU1hbiBOb2RlCj4+ICsJLSBRTWFuIFByaXZhdGUgTWVtb3J5IE5vZGVzCj4+ICsJLSBF
+eGFtcGxlCj4+ICsKPj4gK05PVEU6CVRoZSBiaW5kaW5ncyBkZXNjcmliZWQgaW4gdGhpcyBkb2N1
+bWVudCBhcmUgcHJlbGltaW5hcnkgYW5kIHN1YmplY3QgdG8KPj4gKwljaGFuZ2UKPiAKPiBBcyB3
+aXRoIHRoZSBCTWFuIHBvcnRhbCBiaW5kaW5nLCBJJ20gcmF0aGVyIHVuY29tZm9ydGFibGUgd2l0
+aCBhCj4gcHJlbGltaW5hcnkgYmluZGluZy4KCkRpdHRvCgo+PiArCj4+ICtRTWFuIE5vZGUKPj4g
+Kwo+PiArUFJPUEVSVElFUwo+PiArCj4+ICstIGNvbXBhdGlibGUKPj4gKwlVc2FnZToJCVJlcXVp
+cmVkCj4+ICsJVmFsdWUgdHlwZToJPHN0cmluZ2xpc3Q+Cj4+ICsJRGVmaW5pdGlvbjoJTXVzdCBp
+bmNsdWRlICJmc2wscW1hbiIKPj4gKwkJCU1heSBpbmNsdWRlICJmc2wsPFNvQz4tcW1hbiIKPj4g
+Kwo+PiArLSByZWcKPj4gKwlVc2FnZToJCVJlcXVpcmVkCj4+ICsJVmFsdWUgdHlwZToJPHByb3At
+ZW5jb2RlZC1hcnJheT4KPj4gKwlEZWZpbml0aW9uOglSZWdpc3RlcnMgcmVnaW9uIHdpdGhpbiB0
+aGUgQ0NTUiBhZGRyZXNzIHNwYWNlCj4+ICsKPj4gKy0gZnNsLGxpb2RuCj4+ICsJVXNhZ2U6CQlT
+ZWUgcGFtdS50eHQKPj4gKwlWYWx1ZSB0eXBlOgk8cHJvcC1lbmNvZGVkLWFycmF5Pgo+PiArCURl
+ZmluaXRpb246CVBBTVUgcHJvcGVydHkgdXNlZCBmb3Igc3RhdGljIExJT0ROIGFzc2lnbm1lbnQK
+Pj4gKwo+PiArLSBmc2wsaW9tbXUtcGFyZW50Cj4+ICsJVXNhZ2U6CQlTZWUgcGFtdS50eHQKPj4g
+KwlWYWx1ZSB0eXBlOgk8cGhhbmRsZT4KPj4gKwlEZWZpbml0aW9uOglQQU1VIHByb3BlcnR5IHVz
+ZWQgZm9yIGR5bmFtaWMgTElPRE4gYXNzaWdubWVudAo+PiArCj4+ICsJRm9yIGFkZGl0aW9uYWwg
+ZGV0YWlscyBhYm91dCB0aGUgUEFNVS9MSU9ETiBiaW5kaW5nKHMpIHNlZSBwYW11LnR4dAo+IAo+
+IFRoaXMgaXMgbm90IHByZXNlbnQgaW4gdGhlIGV4YW1wbGUuIElzIHRoaXMgYWx3YXlzIHJlcXVp
+cmVkPwoKU29ydCBvZi4gSW5pdGlhbCBoYXJkd2FyZSAoYW5kIGN1cnJlbnQgZG9jdW1lbnRhdGlv
+bikgcHJvZ3JhbW1pbmcKc3VnZ2VzdGlvbiB3YXMgdG8gY29uZmlndXJlIGFsbCB0aGUgUEFNVSBp
+bnN0YW5jZXMgdGhlIHNhbWUgd2F5CnJlZ2FyZGxlc3Mgb2Ygd2hhdCBkZXZpY2VzIHdlcmUgYmVo
+aW5kIHRoZW0uIEdpdmVuIHRoZSBQQU1VIGludGVybmFsCmNhY2hlcyBzaXplcywgdGhpcyBwcm92
+ZWQgc3Vib3B0aW1hbCBmcm9tIGEgcGVyZm9ybWFuY2UgcGVyc3BlY3RpdmUgc28Kd2UncmUgdHJ5
+aW5nIHRvIGRpc2NvdmVyL2Rlc2NyaWJlL3VzZSB0aGUgUEFNVSB0b3BvbG9neQoKZnNsLGxpb2Ru
+IGlzIHBhcnQgb2YgdGhlIHVuZG9jdW1lbnRlZCBzdGF0aWMgTElPRE4gYXNzaWdubWVudCBiaW5k
+aW5nCnRoYXQgdGhlIGN1cnJlbnQgUEFNVSBkcml2ZXIgdXNlcy4gSWYgZnNsLGlvbW11LXBhcmVu
+dCBpcyBwcmVzZW50LApmc2wsbGlvZG4gY2FuIGJlIGlnbm9yZWQgYW5kIHRoZSBMSU9ETiBjYW4g
+YmUgYXNzaWduZWQgZHluYW1pY2FsbHkKYW5kL29yIHByb2dyYW1tZWQgb25seSBpbiB0aGUgcmVs
+ZXZhbnQgUEFNVSBpbnN0YW5jZQoKPj4gKwo+PiArLSBjbG9ja3MKPj4gKwlVc2FnZToJCVNlZSBj
+bG9jay1iaW5kaW5ncy50eHQgYW5kIHFvcmlxLWNsb2NrLnR4dAo+PiArCVZhbHVlIHR5cGU6CTxw
+cm9wLWVuY29kZWQtYXJyYXk+Cj4+ICsJRGVmaW5pdGlvbjoJSGFsZiBvZiB0aGUgcGxhdGZvcm0g
+Y2xvY2sKPj4gKwo+IAo+IEkgZG9uJ3QgdW5kZXJzdGFuZCB0aGUgZGVzY3JpcHRpb24gaGVyZS4g
+V2hhdCBpcyB0aGUgY2xvY2sgZnJvbSB0aGUgUG9WCj4gb2YgdGhlIFFNYW4/IFdoaWNoIGlucHV0
+IGxpbmUgb24gdGhlIFFNYW4gaXMgdGhpcyBjbG9jayBhdHRhY2hlZCB0bz8KPiAKPiBJcyB0aGVy
+ZSBvbmx5IG9uZSBjbG9jayBpbnB1dD8gT3IganN1dCBvbmUgdGhhdCB5b3UgbmVlZCB0byBtYW5h
+Z2UgYXQKPiB0aGUgbW9tZW50PwoKQXMgcGFydCBvZiB0aGUgcHJvZ3JhbW1pbmcgbW9kZWwgKFFv
+UyBmZWF0dXJlcyBzcGVjaWZpY2FsbHkpIFFNYW4gbmVlZHMKdG8ga25vdyBpdHMgY2xvY2sgc3Bl
+ZWQuIFByaW9yIHRvIHRoZSBleGlzdGVuY2Ugb2YgdGhlCmNsb2NrLWJpbmRpbmdzLnR4dCwgYSAi
+c3RhdGljIiBjbG9jay1mcmVxdWVuY3kgcHJvcGVydHkgd2FzL2lzIHVzZWQKY29udmV5IHN1Y2gg
+aW5mb3JtYXRpb24uIFVzaW5nIGNsb2NrLWJpbmRpbmcudHh0IHRvIGRlc2NyaWJlIHRoZQpjbG9j
+a2luZyBoaWVyYXJjaHkgaW4gdGhlIFNvQyBtYWtlcyBpdCBlYXNpZXIgd2l0aCBERlMsIHBvd2Vy
+Cm1hbmFnZW1lbnQsIGV0Yy4KClRoZSBwbGF0Zm9ybSBjbG9jay9QTEwgYmluZGluZyBpcyBwYXJ0
+IG9mIHFvcmlxLWNsb2NrLnR4dAoKPiBZb3UgYWxzbyBzZWVtIHRvIGhhdmUgYW4gaW50ZXJydXB0
+IGluIHRoZSBleGFtcGxlLiBIb3cgbWFueSBkbyB5b3UKPiBleHBlY3QsIGFuZCB3aGF0IGFyZSB0
+aGVpciB0aGVpciBsb2dpY2FsIGZ1bmN0aW9ucz8KClRoYXQncyB0aGUgZXJyb3IgaW50ZXJydXB0
+IGFuZCBob3BlZnVsbHkgaXQgbmV2ZXIgdHJpZ2dlcnMuIEkgZGlkbid0IGFkZApbbWFueV0gd29y
+ZHMgYWJvdXQgaXQgYXMgaXQncyBhIHN0YW5kYXJkIHByb3BlcnR5Cgo+PiArUU1hbiBQcml2YXRl
+IE1lbW9yeSBOb2Rlcwo+PiArCj4+ICtRTWFuIHJlcXVpcmVzIHR3byBjb250aWd1b3VzIHJhbmdl
+IG9mIHBoeXNpY2FsIG1lbW9yeSB1c2VkIGZvciB0aGUgYmFja2luZyBzdG9yZQo+PiArZm9yIFFN
+YW4gRnJhbWUgUXVldWUgRGVzY3JpcHRvciBhbmQgUGFja2VkIEZyYW1lIERlc2NyaXB0b3IgUmVj
+b3JkLiBUaGlzIG1lbW9yeQo+PiAraXMgcmVzZXJ2ZWQvYWxsb2NhdGVkIGFzIGEgbm9kZXMgdW5k
+ZXIgdGhlIC9yZXNlcnZlZC1tZW1vcnkgbm9kZQo+PiArCj4+ICtUaGUgUU1hbiBGUUQgbWVtb3J5
+IG5vZGUgbXVzdCBiZSBuYW1lZCAicW1hbi1mcWQiCj4+ICsKPj4gK1BST1BFUlRJRVMKPj4gKwo+
+PiArLSBjb21wYXRpYmxlCj4+ICsJVXNhZ2U6CQlyZXF1aXJlZAo+PiArCVZhbHVlIHR5cGU6CTxz
+dHJpbmdsaXN0Pgo+PiArCURlZmluaXRpb246CU11c3QgaW5jbGlkZSAiZnNsLHFtYW4tZnFkIgo+
+PiArCj4+ICtUaGUgUU1hbiBQRkRSIG1lbW9yeSBub2RlIG11c3QgYmUgbmFtZWQgInFtYW4tcGZk
+ciIKPj4gKwo+PiArUFJPUEVSVElFUwo+PiArCj4+ICstIGNvbXBhdGlibGUKPj4gKwlVc2FnZToJ
+CXJlcXVpcmVkCj4+ICsJVmFsdWUgdHlwZToJPHN0cmluZ2xpc3Q+Cj4+ICsJRGVmaW5pdGlvbjoJ
+TXVzdCBpbmNsaWRlICJmc2wscW1hbi1wZmRyIgo+PiArCj4+ICtUaGUgZm9sbG93aW5nIGNvbnN0
+cmFpbnRzIGFyZSByZWxldmFudCB0byB0aGUgRlFEIGFuZCBQRkRSIHByaXZhdGUgbWVtb3J5Ogo+
+PiArCS0gVGhlIHNpemUgbXVzdCBiZSAyXihzaXplICsgMSksIHdpdGggc2l6ZSA9IDExLi4yOS4g
+VGhhdCBpcyA0IEtpQiB0bwo+PiArCSAgMSBHaUIKPj4gKwktIFRoZSBhbGlnbm1lbnQgbXVzdCBi
+ZSBhIG11bGlwdGxlIG9mIHRoZSBtZW1vcnkgc2l6ZQo+PiArCj4+ICtUaGUgc2l6ZSBvZiB0aGUg
+RlFEIGFuZCBQRkRQIG11c3QgYmUgY2hvc2VuIGJ5IG9ic2VydmluZyB0aGUgaGFyZHdhcmUgZmVh
+dHVyZXMKPj4gK2NvbmZpZ3VyZWQgdmlhIHRoZSBSQ1cgYW5kIHRoYXQgYXJlIHJlbGV2YW50IHRv
+IGEgc3BlY2lmaWMgYm9hcmQgKGUuZy4gbnVtYmVyIG9mCj4+ICtNQUMocykgcGlubmVkLW91dCwg
+bnVtYmVyIG9mIG9mZmxpbmUvaG9zdCBjb21tYW5kIEZNYW4gcG9ydHMsIGV0Yy4pLiBUaGUgc2l6
+ZQo+PiArY29uZmlndXJlZCBpbiB0aGUgRFQgbXVzdCByZWZsZWN0IHRoZSBoYXJkd2FyZSBjYXBh
+YmlsaXRpZXMgYW5kIG5vdCB0aGUgc3BlY2lmaWMKPj4gK25lZWRzIG9mIGFuIGFwcGxpY2F0aW9u
+Cj4+ICsKPj4gK0lmIHRoZSBtZW1vcnkgcmVzZXJ2ZWQgaW4gdGhlIGRldmljZSB0cmVlIHByb3Zl
+cyB0byBiZSBsYXJnZXIgdGhlbiB0aGUgbmVlZHMgb2YKPj4gK3RoZSBhcHBsaWNhdGlvbiBhIFFN
+YW4gZHJpdmVyIG1heSBwcm92aWRlIGEgbWV0aG9kIHRvIHJlbGVhc2UgdGhlIGV4dHJhIG1lbW9y
+eQo+PiArYmFjayB0byB0aGUgT1MKPiAKPiBEcml2ZXIgZGV0YWlscyBzaG91bGQgYmUgdW5pbXBv
+cnRhbnQgdG8gdGhlIGJpbmRpbmcuIFRoaXMgc2VudGVuY2UgY2FuCj4gZGlzYXBwZWFyLgoKSSdt
+IHRyeWluZyB0byBkaXNjb3VyYWdlIHJlc2VydmVkLW1lbW9yeSBub2RlcyB0byBiZSB1c2VkIHRv
+ICJvcHRpbWl6ZSIKdGhlIG1lbW9yeSBhbGxvY2F0aW9uL3VzYWdlLiBJZiBpdCBjb21lcyB0byBp
+dCwgSSBjYW4gZHJvcCB0aGlzIHNlbnRlbmNlCgoKQ2hlZXJzLAoKCj4gVGhhbmtzLAo+IE1hcmsu
+Cj4gCj4+ICsKPj4gK0ZvciBhZGRpdGlvbmFsIGRldGFpbHMgYWJvdXQgcmVzZXJ2ZWQgbWVtb3J5
+IHJlZ2lvbnMgc2VlIHJlc2VydmVkLW1lbW9yeS50eHQKPj4gKwo+PiArRVhBTVBMRQo+PiArCj4+
+ICtUaGUgZXhhbXBsZSBiZWxvdyBzaG93cyBhIFFNYW4gRlFEIGFuZCBhIFBGRFIgZHluYW1pYyBh
+bGxvY2F0aW9uIG1lbW9yeSBub2Rlcwo+PiArCj4+ICsJcmVzZXJ2ZWQtbWVtb3J5IHsKPj4gKwkJ
+I2FkZHJlc3MtY2VsbHMgPSA8Mj47Cj4+ICsJCSNzaXplLWNlbGxzID0gPDI+Owo+PiArCQlyYW5n
+ZXM7Cj4+ICsKPj4gKwkJcW1hbi1mcWQgewo+PiArCQkJY29tcGF0aWJsZSA9ICJmc2wscW1hbi1m
+cWQiOwo+PiArCQkJYWxsb2MtcmFuZ2VzID0gPDAgMCAweGYgMHhmZmZmZmZmZj47Cj4+ICsJCQlz
+aXplID0gPDAgMHg0MDAwMDA+Owo+PiArCQkJYWxpZ25tZW50ID0gPDAgMHg0MDAwMDA+Owo+PiAr
+CQl9Owo+PiArCQlxbWFuLXBmZHIgewo+PiArCQkJY29tcGF0aWJsZSA9ICJmc2wscW1hbi1wZmRy
+IjsKPj4gKwkJCWFsbG9jLXJhbmdlcyA9IDwwIDAgMHhmIDB4ZmZmZmZmZmY+Owo+PiArCQkJc2l6
+ZSA9IDwwIDB4MjAwMDAwMD47Cj4+ICsJCQlhbGlnbm1lbnQgPSA8MCAweDIwMDAwMDA+Owo+PiAr
+CQl9Owo+PiArCX07Cj4+ICsKPj4gK1RoZSBleGFtcGxlIGJlbG93IHNob3dzIGEgKFA0MDgwKSBR
+TWFuIENDU1Itc3BhY2Ugbm9kZQo+PiArCj4+ICsJY2xvY2tnZW46IGdsb2JhbC11dGlsaXRpZXNA
+ZTEwMDAgewo+PiArCQkuLi4KPj4gKwkJc3lzY2xrOiBzeXNjbGsgewo+PiArCQkJLi4uCj4+ICsJ
+CX07Cj4+ICsJCS4uLgo+PiArCQlwbGF0Zm9ybS1wbGw6IHBsYXRmb3JtLXBsbEBjMDAgewo+PiAr
+CQkJI2Nsb2NrLWNlbGxzID0gPDE+Owo+PiArCQkJcmVnID0gPDB4YzAwIDB4ND47Cj4+ICsJCQlj
+b21wYXRpYmxlID0gImZzbCxxb3JpcS1wbGF0Zm9ybS1wbGwtMS4wIjsKPj4gKwkJCWNsb2NrcyA9
+IDwmc3lzY2xrPjsKPj4gKwkJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJwbGF0Zm9ybS1wbGwiLCAi
+cGxhdGZvcm0tcGxsLWRpdjIiOwo+PiArCQl9Owo+PiArCQkuLi4KPj4gKwl9Owo+PiArCj4+ICsJ
+cW1hbkAzMTgwMDAgewo+PiArCQljb21wYXRpYmxlID0gImZzbCxxbWFuIjsKPj4gKwkJcmVnID0g
+PDB4MzE4MDAwIDB4MTAwMD47Cj4+ICsJCWludGVycnVwdHMgPSA8MTYgMiAxIDM+Cj4+ICsJCWZz
+bCxsaW9kbiA9IDwweDE2PjsKPj4gKwkJY2xvY2tzID0gPCZwbGF0Zm9ybS1wbGwgMT47Cj4+ICsJ
+fTsKPj4gLS0gCj4+IDIuMS4yCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96
+bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
