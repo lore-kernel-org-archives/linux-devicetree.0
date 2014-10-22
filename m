@@ -1,65 +1,69 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 0/1] Compact interface for Device-Tree
-Date: Fri, 31 Oct 2014 23:53:28 +0100
-Message-ID: <7637604.7PK9W8ePf3@vostro.rjw.lan>
-References: <1414709964-27284-1-git-send-email-gavidov@codeaurora.org> <CAL_JsqLtkiiyisxSG_qBknmz6n2qDKUdpwM-ZY3tH3wgYSrO1w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLtkiiyisxSG_qBknmz6n2qDKUdpwM-ZY3tH3wgYSrO1w@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Gilad Avidov <gavidov@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>
-List-Id: devicetree@vger.kernel.org
+Return-Path: <arnd@arndb.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 4/4] crypto: Add Allwinner Security System crypto accelerator
+Date: Wed, 22 Oct 2014 11:00:45 +0200
+Message-ID: <2751026.4HEPlZfN7W@wuerfel>
+In-Reply-To: <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com>
+References: <1413728182-13569-1-git-send-email-clabbe.montjoie@gmail.com> <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+To: linux-arm-kernel@lists.infradead.org
+Cc: LABBE Corentin <clabbe.montjoie@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, herbert@gondor.apana.org.au, davem@davemloft.net, grant.likely@linaro.org, akpm@linux-foundation.org, gregkh@linuxfoundation.org, joe@perches.com, mchehab@osg.samsung.com, crope@iki.fi, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-crypto@vger.kernel.org
+List-ID: <devicetree@vger.kernel.org>
 
-On Saturday, November 01, 2014 05:13:45 AM Rob Herring wrote:
-> On Fri, Oct 31, 2014 at 6:59 AM, Gilad Avidov <gavidov@codeaurora.org=
-> wrote:
-> >
-> > Device-Tree compact API
-> > ------------------------
-> >
-> > Common code seen in driver=E2=80=99s probe reads device tree values=
- and handling
-> > erroneous return codes from all those of_property_read_xxx()  APIs.=
- This
-> > common code is factored out by the of_property_map module which all=
-ows
-> > driver=E2=80=99s probe to replace that (often lengthy) code with a =
-concise table:
-> >
-> > struct of_prop_map map[] =3D {
-> >     {"i2c",            &dev->id,        OF_REQ,  OF_ID,  -1},
-> >     {"qcom,clk-freq-out",    &dev->clk_freq_out,    OF_REQ,  OF_U32=
-,  0},
-> >     {"qcom,clk-freq-in",    &dev->clk_freq_in,    OF_REQ,  OF_U32, =
- 0},
-> >     {"qcom,disable-dma",    &dev->disable_dma,    OF_OPT,  OF_BOOL,=
- 0},
-> >     {"qcom,master-id",    &dev->mstr_id,        OF_SGST, OF_U32,  0=
-},
-> >     {NULL,            NULL,            0,       0,       0},
-> > };
-> >
-> > Then call populate to read the values into the device=E2=80=99s var=
-iables:
-> >
-> > ret =3D of_prop_populate(dev, dev->of_node, map);
->=20
-> Interesting idea. The main concern I have with this is there has been
-> on-going discussions about how to generalize property handling across
-> DT and ACPI to make drivers more agnostic, so I'm copying a few folks
-> involved in that. That may be a bit orthogonal to what this is doing,
-> but we may want some coordination here.
+On Sunday 19 October 2014 16:16:22 LABBE Corentin wrote:
+> Add support for the Security System included in Allwinner SoC A20.
+> The Security System is a hardware cryptographic accelerator that support AES/MD5/SHA1/DES/3DES/PRNG algorithms.
+> 
+> Signed-off-by: LABBE Corentin <clabbe.montjoie@gmail.com>
 
-Agreed.
+Please wrap lines in the changelog after about 70 characters.
 
-We actually have a patchset adding a unified device property API in lin=
-ux-next (http://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.gi=
-t/log/?h=3Ddevice-properties)
-and I'd prefer to see the "compactization" to happen at that level, if =
-possible,
-rather that for of_ only.
+> --- /dev/null
+> +++ b/drivers/crypto/sunxi-ss/sunxi-ss-cipher.c
+> @@ -0,0 +1,489 @@
 
-Rafael
+> +#include "sunxi-ss.h"
+> +
+> +extern struct sunxi_ss_ctx *ss;
+
+'extern' declarations belong into header files, not .c files. It would
+be even better to avoid this completely and carry the pointer to the
+context in an object that gets passed around. In general we want drivers
+to be written in a way that allows having multiple instances of the
+device, which the global pointer prevents.
+
+> +
+> +	src32 = (u32 *)src_addr;
+> +	dst32 = (u32 *)dst_addr;
+
+
+You appear to be missing '__iomem' annotations for the mmio pointers.
+Please always run your code through the 'sparse' checker using 'make C=1'
+to catch and fix this and other erros.
+
+> +	ileft = areq->nbytes / 4;
+> +	oleft = areq->nbytes / 4;
+> +	i = 0;
+> +	do {
+> +		if (ileft > 0 && rx_cnt > 0) {
+> +			todo = min(rx_cnt, ileft);
+> +			ileft -= todo;
+> +			do {
+> +				writel_relaxed(*src32++,
+> +						ss->base +
+> +						SS_RXFIFO);
+> +				todo--;
+> +			} while (todo > 0);
+> +		}
+
+This looks like it should be using writesl() instead of the 
+writel_relaxed() loop. That should not only be faster but it will
+also change the byte ordering if you are running a big-endian
+kernel.
+
+Since this is a FIFO register, the ordering that writesl uses
+is likely the correct one.
+
+	Arnd
