@@ -1,39 +1,90 @@
-From: Mikko Perttunen <mikko.perttunen-/1wQRMveznE@public.gmane.org>
-Subject: Re: [PATCH v2 02/12] of: Document long-ram-code property in nvidia,tegra20-apbmisc
-Date: Wed, 22 Oct 2014 10:39:15 +0300
-Message-ID: <54475F23.7050900@kapsi.fi>
-References: <1413902788-7727-1-git-send-email-tomeu.vizoso@collabora.com> <1413902788-7727-3-git-send-email-tomeu.vizoso@collabora.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413902788-7727-3-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "jinkun.hong" <jinkun.hong@rock-chips.com>
+Subject: [PATCH v6 0/3] ARM: rk3288 : Add PM Domain support
+Date: Wed, 22 Oct 2014 00:53:41 -0700
+Message-ID: <1413964424-7599-1-git-send-email-jinkun.hong@rock-chips.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org
+Cc: Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, "jinkun.hong" <jinkun.hong@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/2014 05:45 PM, Tomeu Vizoso wrote:
-> Needed to properly decode the ram code register.
->
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt | 3 +++
->   1 file changed, 3 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt b/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
-> index b97b8be..e2562ed 100644
-> --- a/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
-> +++ b/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
-> @@ -11,3 +11,6 @@ Required properties:
->          The second entry gives the physical address and length of the
->          registers indicating the strapping options.
->
-> +Optional properties:
-> +- nvidia,long-ram-code: boolean that tells whether the ram code is long (4 bit)
-> +			or short (2 bit). If not present, false.
->
+From: "jinkun.hong" <jinkun.hong@rock-chips.com>
 
-I think just "If present, the RAM code is long (4 bit). If not, short (2 
-bit)" would be clearer, as the booleanness of this property is not 
-really present in the device tree file.
+Add power domain drivers based on generic power domain for Rockchip platform,
+and support RK3288.
+
+https://chromium-review.googlesource.com/#/c/220253/9
+This is the GPU driver, add the following information in DT,
+and it can support the PMDOMAIN.
+
+gpu: gpu@ffa30000 {
+	compatible = "arm,malit764",
+		     "arm,malit76x",
+		     "arm,malit7xx",
+		     "arm,mali-midgard";
+	reg = <0xffa30000 0x10000>;
+	interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+	interrupt-names = "JOB", "MMU", "GPU";
+	clocks = <&cru ACLK_GPU>;
+	clock-names = "aclk_gpu";
+	operating-points = <
+		/* KHz uV */
+		100000 800000
+		200000 850000
+		300000 950000
+		400000 1000000
+		600000 1150000
+	>;
+	power-domains = <&gpu_power>;
+	status = "disabled";
+};
+
+Based on:
+- [PATCH v1 1/4] PM / clock_ops: Add pm_clk_add_clk()
+  http://www.mail-archive.com/linux-kernel@vger.kernel.org/msg735599.html
+
+Changes in v6:
+- delete pmu_lock
+- modify dev_lock using mutex
+- pm_clk_resume(pd->dev) change to pm_clk_resume(ed->dev)
+- pm_clk_suspend(pd->dev) change to pm_clk_suspend(ed->dev)
+- add devm_kfree(pd->dev, de) in rockchip_pm_domain_detach_dev
+
+Changes in v5:
+- delete idle_lock
+- add timeout in rockchip_pmu_set_idle_request()
+
+Changes in v4:
+- use list storage dev
+
+Changes in v3:
+- change use pm_clk_resume() and pm_clk_suspend()
+- DT structure has changed
+- Decomposition power-controller, changed to multiple controller
+   (gpu-power-controller, hevc-power-controller)
+
+Changes in v2:
+- remove the "pd->pd.of_node = np"
+- move clocks to "optional"
+- make pd_vio clocks all one entry per line and alphabetize.
+- power: power-controller move back to pinctrl: pinctrl.
+
+jinkun.hong (3):
+  power-domain: add power domain drivers for Rockchip platform
+  dt-bindings: add document of Rockchip power domain
+  ARM: dts: add rk3288 power-domain node
+
+ .../bindings/arm/rockchip/power_domain.txt         |   46 +++
+ arch/arm/boot/dts/rk3288.dtsi                      |   24 ++
+ arch/arm/mach-rockchip/Kconfig                     |    1 +
+ arch/arm/mach-rockchip/Makefile                    |    1 +
+ arch/arm/mach-rockchip/pm_domains.c                |  358 ++++++++++++++++++++
+ 5 files changed, 430 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/rockchip/power_domain.txt
+ create mode 100644 arch/arm/mach-rockchip/pm_domains.c
+
+-- 
+1.7.9.5
+
