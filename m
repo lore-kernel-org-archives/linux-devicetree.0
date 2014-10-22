@@ -1,52 +1,93 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH v2 4/4] ARM: dts: sun7i: Add lradc node
-Date: Wed, 22 Oct 2014 10:46:27 +0200
-Message-ID: <54476EE3.6060401@redhat.com>
-References: <1413879890-7254-1-git-send-email-hdegoede@redhat.com> <1413879890-7254-5-git-send-email-hdegoede@redhat.com> <20141022083802.GE7893@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3] rtc/tpo: Driver to support rtc and wakeup on PowerNV
+ platform
+Date: Wed, 22 Oct 2014 14:18:11 +0530
+Message-ID: <54476F4B.8050108@linux.vnet.ibm.com>
+References: <20141014083447.7505.89771.stgit@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB265TWRAKGQEJUJWVZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20141022083802.GE7893@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141014083447.7505.89771.stgit-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
+Cc: benh-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 10/22/2014 10:38 AM, Maxime Ripard wrote:
-> Hi Hans,
-> 
-> On Tue, Oct 21, 2014 at 10:24:50AM +0200, Hans de Goede wrote:
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts | 48 +++++++++++++++++++++++++
->>  arch/arm/boot/dts/sun7i-a20.dtsi                |  7 ++++
->>  2 files changed, 55 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
->> index 9d669cdf..85e7194 100644
->> --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
->> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
->> @@ -14,6 +14,7 @@
->>  /dts-v1/;
->>  /include/ "sun7i-a20.dtsi"
->>  /include/ "sunxi-common-regulators.dtsi"
->> +#include <dt-bindings/input/input.h>
-> 
-> I'm just wondering... Weren't we supposed to switch all includes to
-> the preprocessor syntax in such a case?
+On 10/14/2014 02:08 PM, Neelesh Gupta wrote:
+> The patch implements the OPAL rtc driver that binds with the rtc
+> driver subsystem. The driver uses the platform device infrastructure
+> to probe the rtc device and register it to rtc class framework. The
+> 'wakeup' is supported depending upon the property 'has-tpo' present
+> in the OF node. It provides a way to load the generic rtc driver in
+> in the absence of an OPAL driver.
+>
+> The patch also moves the existing OPAL rtc get/set time interfaces to the
+> new driver and exposes the necessary OPAL calls using EXPORT_SYMBOL_GPL.
 
-I've just checked other in tree users of dt-bindings/input/input.h and you
-seem to be right, I will fix this for the next version.
+Hi Alessandro,
+
+Awaiting Ack from your side, so that we can take this through the 
+powerpc tree.
 
 Regards,
+Neelesh
 
-Hans
+>
+> Test results:
+> -------------
+> Host:
+> [root@tul169p1 ~]# ls -l /sys/class/rtc/
+> total 0
+> lrwxrwxrwx 1 root root 0 Oct 14 03:07 rtc0 -> ../../devices/opal-rtc/rtc/rtc0
+> [root@tul169p1 ~]# cat /sys/devices/opal-rtc/rtc/rtc0/time
+> 08:10:07
+> [root@tul169p1 ~]# echo `date '+%s' -d '+ 2 minutes'` > /sys/class/rtc/rtc0/wakealarm
+> [root@tul169p1 ~]# cat /sys/class/rtc/rtc0/wakealarm
+> 1413274345
+> [root@tul169p1 ~]#
+>
+> FSP:
+> $ smgr mfgState
+> standby
+> $ rtim timeofday
+>
+> System time is valid: 2014/10/14 08:12:04.225115
+>
+> $ smgr mfgState
+> ipling
+> $
+>
+> Signed-off-by: Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> ---
+>
+> Changes in v3
+> =============
+> - Rebased to the latest tree.
+>
+> Changes in v2
+> =============
+> - Added Documentation/devicetree/bindings/rtc/rtc-opal.txt
+> - Explicitly turn off RTC_UIE mode by setting 'rtc->uie_unsupported'
+>
+>   Documentation/devicetree/bindings/rtc/rtc-opal.txt |   16 +
+>   arch/powerpc/include/asm/opal.h                    |    7 -
+>   arch/powerpc/kernel/time.c                         |    1
+>   arch/powerpc/platforms/powernv/opal-async.c        |    3
+>   arch/powerpc/platforms/powernv/opal-rtc.c          |   65 +----
+>   arch/powerpc/platforms/powernv/opal-wrappers.S     |    2
+>   arch/powerpc/platforms/powernv/opal.c              |    6
+>   arch/powerpc/platforms/powernv/setup.c             |    2
+>   drivers/rtc/Kconfig                                |   11 +
+>   drivers/rtc/Makefile                               |    1
+>   drivers/rtc/rtc-opal.c                             |  261 ++++++++++++++++++++
+>   11 files changed, 325 insertions(+), 50 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/rtc/rtc-opal.txt
+>   create mode 100644 drivers/rtc/rtc-opal.c
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
