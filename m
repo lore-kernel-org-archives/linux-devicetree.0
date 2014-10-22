@@ -1,86 +1,83 @@
 From: Emil Medve <Emilian.Medve@Freescale.com>
-Subject: [PATCH 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
-Date: Wed, 22 Oct 2014 09:09:29 -0500
-Message-ID: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
+Subject: [PATCH 2/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan portal(s)
+Date: Wed, 22 Oct 2014 09:09:30 -0500
+Message-ID: <1413986972-621-2-git-send-email-Emilian.Medve@Freescale.com>
+References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
 To: scottwood@Freescale.com, galak@kernel.crashing.org, corbet@lwn.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, Geoff.Thorpe@Freescale.com, linuxppc-dev@ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 Cc: Emil Medve <Emilian.Medve@Freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEJ1ZmZlciBNYW5hZ2VyIGlzIHBhcnQgb2YgdGhlIERhdGEtUGF0aCBBY2NlbGVyYXRpb24g
-QXJjaGl0ZWN0dXJlIChEUEFBKS4KQk1hbiBzdXBwb3J0cyBoYXJkd2FyZSBhbGxvY2F0aW9uIGFu
-ZCBkZWFsbG9jYXRpb24gb2YgYnVmZmVycyBiZWxvbmdpbmcgdG8KcG9vbHMgb3JpZ2luYWxseSBj
-cmVhdGVkIGJ5IHNvZnR3YXJlIHdpdGggY29uZmlndXJhYmxlIGRlcGxldGlvbiB0aHJlc2hvbGRz
-LgpUaGlzIGJpbmRpbmcgY292ZXJzIHRoZSBDQ1NSIHNwYWNlIHByb2dyYW1taW5nIG1vZGVsCgpT
-aWduZWQtb2ZmLWJ5OiBFbWlsIE1lZHZlIDxFbWlsaWFuLk1lZHZlQEZyZWVzY2FsZS5jb20+CkNo
-YW5nZS1JZDogSTNlYzQ3OWJmYjNjOTE5NTFlOTY5MDJmMDkxZjVkN2QyYWRiZWYzYjIKLS0tCiAu
-Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9ibWFuLnR4dCAgICAgICB8IDk4ICsr
-KysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA5OCBpbnNlcnRpb25zKCspCiBj
-cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2Vy
-cGMvZnNsL2JtYW4udHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3Bvd2VycGMvZnNsL2JtYW4udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3Bvd2VycGMvZnNsL2JtYW4udHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAw
-MDAwMDAuLmMzMGJkZGUKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvYm1hbi50eHQKQEAgLTAsMCArMSw5OCBAQAorUW9ySVEg
-RFBBQSBCdWZmZXIgTWFuYWdlciBEZXZpY2UgVHJlZSBCaW5kaW5ncworCitDb3B5cmlnaHQgKEMp
-IDIwMDggLSAyMDE0IEZyZWVzY2FsZSBTZW1pY29uZHVjdG9yIEluYy4KKworQ09OVEVOVFMKKwor
-CS0gQk1hbiBOb2RlCisJLSBCTWFuIFByaXZhdGUgTWVtb3J5IE5vZGUKKwktIEV4YW1wbGUKKwor
-Tk9URToJVGhlIGJpbmRpbmdzIGRlc2NyaWJlZCBpbiB0aGlzIGRvY3VtZW50IGFyZSBwcmVsaW1p
-bmFyeSBhbmQgc3ViamVjdCB0bworCWNoYW5nZQorCitCTWFuIE5vZGUKKworUFJPUEVSVElFUwor
-CistIGNvbXBhdGlibGUKKwlVc2FnZToJCVJlcXVpcmVkCisJVmFsdWUgdHlwZToJPHN0cmluZ2xp
-c3Q+CisJRGVmaW5pdGlvbjoJTXVzdCBpbmNsdWRlICJmc2wsYm1hbiIKKwkJCU1heSBpbmNsdWRl
-ICJmc2wsPFNvQz4tYm1hbiIKKworLSByZWcKKwlVc2FnZToJCVJlcXVpcmVkCisJVmFsdWUgdHlw
-ZToJPHByb3AtZW5jb2RlZC1hcnJheT4KKwlEZWZpbml0aW9uOglSZWdpc3RlcnMgcmVnaW9uIHdp
-dGhpbiB0aGUgQ0NTUiBhZGRyZXNzIHNwYWNlCisKKy0gZnNsLGxpb2RuCisJVXNhZ2U6CQlTZWUg
-cGFtdS50eHQKKwlWYWx1ZSB0eXBlOgk8cHJvcC1lbmNvZGVkLWFycmF5PgorCURlZmluaXRpb246
-CVBBTVUgcHJvcGVydHkgdXNlZCBmb3Igc3RhdGljIExJT0ROIGFzc2lnbm1lbnQKKworLSBmc2ws
-aW9tbXUtcGFyZW50CisJVXNhZ2U6CQlTZWUgcGFtdS50eHQKKwlWYWx1ZSB0eXBlOgk8cGhhbmRs
-ZT4KKwlEZWZpbml0aW9uOglQQU1VIHByb3BlcnR5IHVzZWQgZm9yIGR5bmFtaWMgTElPRE4gYXNz
-aWdubWVudAorCisJRm9yIGFkZGl0aW9uYWwgZGV0YWlscyBhYm91dCB0aGUgUEFNVS9MSU9ETiBi
-aW5kaW5nKHMpIHNlZSBwYW11LnR4dAorCitCTWFuIFByaXZhdGUgTWVtb3J5IE5vZGUKKworQk1h
-biByZXF1aXJlcyBhIGNvbnRpZ3VvdXMgcmFuZ2Ugb2YgcGh5c2ljYWwgbWVtb3J5IHVzZWQgZm9y
-IHRoZSBiYWNraW5nIHN0b3JlCitmb3IgQk1hbiBGcmVlIEJ1ZmZlciBQcm94eSBSZWNvcmRzLiBU
-aGlzIG1lbW9yeSBpcyByZXNlcnZlZC9hbGxvY2F0ZWQgYXMgYSBub2RlCit1bmRlciB0aGUgL3Jl
-c2VydmVkLW1lbW9yeSBub2RlCisKK1RoZSBCTWFuIEZCUFIgbWVtb3J5IG5vZGUgbXVzdCBiZSBu
-YW1lZCAiYm1hbi1mYnByIgorCitQUk9QRVJUSUVTCisKKy0gY29tcGF0aWJsZQorCVVzYWdlOgkJ
-cmVxdWlyZWQKKwlWYWx1ZSB0eXBlOgk8c3RyaW5nbGlzdD4KKwlEZWZpbml0aW9uOglNdXN0IGlu
-Y2xpZGUgImZzbCxibWFuLWZicHIiCisKK1RoZSBmb2xsb3dpbmcgY29uc3RyYWludHMgYXJlIHJl
-bGV2YW50IHRvIHRoZSBGQlBSIHByaXZhdGUgbWVtb3J5OgorCS0gVGhlIHNpemUgbXVzdCBiZSAy
-XihzaXplICsgMSksIHdpdGggc2l6ZSA9IDExLi4zMy4gVGhhdCBpcyA0IEtpQiB0bworCSAgMTYg
-R2lCCisJLSBUaGUgYWxpZ25tZW50IG11c3QgYmUgYSBtdWxpcHRsZSBvZiB0aGUgbWVtb3J5IHNp
-emUKKworVGhlIHNpemUgb2YgdGhlIEZCUFIgbXVzdCBiZSBjaG9zZW4gYnkgb2JzZXJ2aW5nIHRo
-ZSBoYXJkd2FyZSBmZWF0dXJlcyBjb25maWd1cmVkCit2aWEgdGhlIFJDVyBhbmQgdGhhdCBhcmUg
-cmVsZXZhbnQgdG8gYSBzcGVjaWZpYyBib2FyZCAoZS5nLiBudW1iZXIgb2YgTUFDKHMpCitwaW5u
-ZWQtb3V0LCBudW1iZXIgb2Ygb2ZmbGluZS9ob3N0IGNvbW1hbmQgRk1hbiBwb3J0cywgZXRjLiku
-IFRoZSBzaXplIGNvbmZpZ3VyZWQKK2luIHRoZSBEVCBtdXN0IHJlZmxlY3QgdGhlIGhhcmR3YXJl
-IGNhcGFiaWxpdGllcyBhbmQgbm90IHRoZSBzcGVjaWZpYyBuZWVkcyBvZiBhbgorYXBwbGljYXRp
-b24KKworSWYgdGhlIG1lbW9yeSByZXNlcnZlZCBpbiB0aGUgZGV2aWNlIHRyZWUgcHJvdmVzIHRv
-IGJlIGxhcmdlciB0aGVuIHRoZSBuZWVkcyBvZgordGhlIGFwcGxpY2F0aW9uIGEgQk1hbiBkcml2
-ZXIgbWF5IHByb3ZpZGUgYSBtZXRob2QgdG8gcmVsZWFzZSB0aGUgZXh0cmEgbWVtb3J5CitiYWNr
-IHRvIHRoZSBPUworCitGb3IgYWRkaXRpb25hbCBkZXRhaWxzIGFib3V0IHJlc2VydmVkIG1lbW9y
-eSByZWdpb25zIHNlZSByZXNlcnZlZC1tZW1vcnkudHh0CisKK0VYQU1QTEUKKworVGhlIGV4YW1w
-bGUgYmVsb3cgc2hvd3MgYSBCTWFuIEZCUFIgZHluYW1pYyBhbGxvY2F0aW9uIG1lbW9yeSBub2Rl
-CisKKwlyZXNlcnZlZC1tZW1vcnkgeworCQkjYWRkcmVzcy1jZWxscyA9IDwyPjsKKwkJI3NpemUt
-Y2VsbHMgPSA8Mj47CisJCXJhbmdlczsKKworCQlibWFuLWZicHIgeworCQkJY29tcGF0aWJsZSA9
-ICJmc2wsYm1hbi1mYnByIjsKKwkJCWFsbG9jLXJhbmdlcyA9IDwwIDAgMHhmIDB4ZmZmZmZmZmY+
-OworCQkJc2l6ZSA9IDwwIDB4MTAwMDAwMD47CisJCQlhbGlnbm1lbnQgPSA8MCAweDEwMDAwMDA+
-OworCQl9OworCisJfTsKKworVGhlIGV4YW1wbGUgYmVsb3cgc2hvd3MgYSAoUDQwODApIEJNYW4g
-Q0NTUi1zcGFjZSBub2RlCisKKwlibWFuQDMxYTAwMCB7CisJCWNvbXBhdGlibGUgPSAiZnNsLGJt
-YW4iOworCQlyZWcgPSA8MHgzMWEwMDAgMHgxMDAwPjsKKwkJaW50ZXJydXB0cyA9IDwxNiAyIDEg
-Mj47CisJCWZzbCxsaW9kbiA9IDwweDE3PjsKKwl9OwotLSAKMi4xLjIKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxp
-c3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3Jn
-L2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+Portals are used by software running on processor cores, accelerators and
+network interfaces to communicate with the BMan
+
+Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
+Change-Id: I6d245ffc14ba3d0e91d403ac7c3b91b75a9e6a95
+---
+ .../bindings/powerpc/fsl/bman-portals.txt          | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
+
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt b/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
+new file mode 100644
+index 0000000..40e607e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
+@@ -0,0 +1,50 @@
++QorIQ DPAA Buffer Manager Portals Device Tree Binding
++
++Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
++
++CONTENTS
++
++	- BMan Portal
++	- Example
++
++NOTE:	The bindings described in this document are preliminary and subject to
++	change
++
++BMan Portal Node
++
++PROPERTIES
++
++- compatible
++	Usage:		Required
++	Value type:	<stringlist>
++	Definition:	Must include "fsl,bman-portal-<hardware revision>"
++			May include "fsl,<SoC>-bman-portal" or "fsl,bman-portal"
++
++- reg
++	Usage:		Required
++	Value type:	<prop-encoded-array>
++	Definition:	Two regions. The first is the cache-enabled region of
++			the portal. The second is the cache-inhibited region of
++			the portal
++
++EXAMPLE
++
++The example below shows a (P4080) BMan portals container/bus node with two portals
++
++	bman-portals@ff4000000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		ranges = <0 0xf 0xf4000000 0x200000>;
++
++		bman-portal@0 {
++			compatible = "fsl,bman-portal-1.0.0", "fsl,bman-portal";
++			reg = <0x0 0x4000 0x100000 0x1000>;
++			interrupts = <105 2 0 0>;
++		};
++		bman-portal@4000 {
++			compatible = "fsl,bman-portal-1.0.0", "fsl,bman-portal";
++			reg = <0x4000 0x4000 0x101000 0x1000>;
++			interrupts = <107 2 0 0>;
++		};
++	};
+-- 
+2.1.2
+
