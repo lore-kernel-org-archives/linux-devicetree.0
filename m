@@ -1,71 +1,41 @@
-From: Hong jinkun <jinkun.hong@rock-chips.com>
-Subject: Re: [PATCH v4 1/3] power-domain: add power domain drivers for Rockchip
- platform
-Date: Wed, 22 Oct 2014 11:40:48 +0800
-Message-ID: <54472740.2000006@rock-chips.com>
-References: <1413795824-3453-1-git-send-email-jinkun.hong@rock-chips.com>	<1413795824-3453-2-git-send-email-jinkun.hong@rock-chips.com> <7hppdme8d6.fsf@deeprootsystems.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v4 1/6] pinctrl: rockchip: add suspend/resume functions
+Date: Tue, 21 Oct 2014 21:19:33 -0700
+Message-ID: <CAD=FV=WZtcOcAQDyMDNPFdMz6P9ZSqkUPZ52UgecZbSXU92mzg@mail.gmail.com>
+References: <1413933461-25602-1-git-send-email-zyw@rock-chips.com>
+	<1413933557-25684-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <7hppdme8d6.fsf@deeprootsystems.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, Jack Dai <jack.dai@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413933557-25684-1-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Mike Turquette <mturquette@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Chris,
 
-=D4=DA 2014/10/21 5:31, Kevin Hilman =D0=B4=B5=C0:
-> "jinkun.hong" <jinkun.hong@rock-chips.com> writes:
->
->> From: "jinkun.hong" <jinkun.hong@rock-chips.com>
->>
->> Add power domain drivers based on generic power domain for Rockchip =
-platform,
->> and support RK3288.
->>
->> Signed-off-by: Jack Dai <jack.dai@rock-chips.com>
->> Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
-> [...]
->
->> +static int rockchip_pmu_set_idle_request(struct rockchip_domain *pd=
-,
->> +					 bool idle)
->> +{
->> +	u32 idle_mask =3D BIT(pd->idle_shift);
->> +	u32 idle_target =3D idle << (pd->idle_shift);
->> +	u32 ack_mask =3D BIT(pd->ack_shift);
->> +	u32 ack_target =3D idle << (pd->ack_shift);
->> +	unsigned int mask =3D BIT(pd->req_shift);
->> +	unsigned int val;
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&pd->idle_lock, flags);
->> +	val =3D (idle) ? mask : 0;
->> +	regmap_update_bits(pd->regmap_pmu, REQ_OFFSET, mask, val);
->> +	dsb();
-> A summary of the locking and barriers here (or in changelog) would be
-> helpful for reviewers to verify you're protecting what you need to
-> protect.
->
->> +	do {
->> +		regmap_read(pd->regmap_pmu, ACK_OFFSET, &val);
->> +	} while ((val & ack_mask) !=3D ack_target);
->> +
->> +	do {
->> +		regmap_read(pd->regmap_pmu, IDLE_OFFSET, &val);
->> +	} while ((val & idle_mask) !=3D idle_target);
->> +
->> +	spin_unlock_irqrestore(&pd->idle_lock, flags);
-> These IRQ-disabled while loops look like opportunities to lockup the
-> system.  Maybe add a timeout or a maximum number of tries?
-Ok,I will add a timeout in new version.
->> +	return 0;
->> +}
-> Kevin
->
->
->
-Thank you for your review.
+On Tue, Oct 21, 2014 at 4:19 PM, Chris Zhong <zyw@rock-chips.com> wrote:
+> From: Chris <zyw@rock-chips.com>
 
+I think your git is misconfigured.  The above "From" line will make
+the author end up without your last name.  Heiko mentioned this in v4.
+
+> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+> index 016f457..c4a988d 100644
+> --- a/drivers/pinctrl/pinctrl-rockchip.c
+> +++ b/drivers/pinctrl/pinctrl-rockchip.c
+> @@ -1770,6 +1770,25 @@ static struct rockchip_pin_ctrl *rockchip_pinctrl_get_soc_data(
+>         return ctrl;
+>  }
+>
+> +#ifdef CONFIG_PM_SLEEP
+> +static int rockchip_pinctrl_suspend(struct device *dev)
+
+Why didn't you take Dmitry's suggestion from v3?  I think you can get
+rid of the #ifdef and add the "__maybe_unused" annotation to avoid
+errors when PM_SLEEP isn't defined.
+
+This does work, though, so:
+
+Tested-by: Doug Anderson <dianders@chromium.org>
