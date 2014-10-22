@@ -1,73 +1,38 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: GPIO bindings guidelines (Was: Re: [PATCH v5 10/12] gpio:
- Support for unified device properties interface)
-Date: Wed, 22 Oct 2014 11:10:44 +0300
-Message-ID: <20141022081044.GB1484@lahna.fi.intel.com>
-References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com>
- <4582579.9WMrIMALsy@wuerfel>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 1/6] ARM: cygnus: Initial support for Broadcom Cygnus SoC
+Date: Wed, 22 Oct 2014 10:22:22 +0200
+Message-ID: <12157660.uOkg5nk8Dq@wuerfel>
+References: <1413341936-17606-2-git-send-email-sbranden@broadcom.com> <38587325.kaAxCWAsmL@wuerfel> <5446F61C.8060400@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4582579.9WMrIMALsy@wuerfel>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5446F61C.8060400@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Scott Branden <sbranden@broadcom.com>
+Cc: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>, JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 21, 2014 at 09:54:45AM +0200, Arnd Bergmann wrote:
-> On Tuesday 21 October 2014 14:14:02 Alexandre Courbot wrote:
-> > >
-> > > We have enforced naming things for the dmaengine binding, which has
-> > > just led to everyone calling things "rx" and "tx". My fear is that
-> > > if we start to enforce giving a name, we'd end up with lots of
-> > > drivers that use a "gpio-gpios" property or something silly.
-> > 
-> > Checking the bindings is also part of the review process.  Things
-> > like "gpio-gpios" should simply not be accepted to begin with.
-> > 
-> > This sounds like a good chance to finally land some guidelines
-> > regarding GPIO bindings. Let's summarize the situation:
-> > - GPIO bindings can be defined using both DT and ACPI (both interfaces
-> > nicely abstracted by the interface introduced by this series)
-> > - Both firmware interfaces support indexed GPIOs
-> > - Both firmware interfaces support named GPIO properties, with an
-> > optional index (can we absolutely take this for granted on ACPI now?)
-> 
-> The developers working on it have said that they definitely want to
-> be compatible with the existing bindings, so the answer to your question
-> is yes.
+On Tuesday 21 October 2014 17:11:08 Scott Branden wrote:
+> OK, I will remove the "iProc SoC based Machine types".  This was 
+> grouping all iProc based SoCs under one menu and parallels what the 
+> existing "Broadcom Mobile Soc Support" menu does.
+>
+> I can create another patch removing the "Broadcom Mobile SoC Support" 
+> menu if the ARM Maintainer now want all Broadcom devices are supposed to 
+> be contained in a single level?
 
-One thing to consider still is that we have plenty of existing ACPI code
-out there where _DSD is not used but instead we rely on the index. An
-example would be rfkill-gpio.c driver:
+Sounds good, I missed that other menu going in.
 
-        gpio = devm_gpiod_get_index(&pdev->dev, "reset", 0);
-        if (!IS_ERR(gpio)) {
-		...
-        }
+It can make sense to add 'comment' statements if you want to separate the
+families.
 
-        gpio = devm_gpiod_get_index(&pdev->dev, "shutdown", 1);
-        if (!IS_ERR(gpio)) {
-		...
-        }
+I also noticed that there are a few configuration options that at first
+seem pointless: ARCH_BCM_MOBILE_L2_CACHE and ARCH_BCM_MOBILE_SMP. I wonder
+if it ever makes sense to disable these when the common options (CACHE_L2X0
+and SMP) are enabled for another SoC. I'd normally like to see these as
+hidden options that are always on whenever the core support for those
+features is enabled, to avoid confusing users as well as bugs from the
+combinatorial explosion.
 
-It expects that GPIOs returned from _CRS are in specific order. Since we
-can't change these existing ACPI tables, we must support them somehow.
-
-This patch series handles it so that:
-
-  1) If we can't find given property (e.g "reset-gpios" or
-     "shutdown-gpios") the index above will refer directly to the GPIO
-     resource returned from _CRS.
-
-  2) If the property is found we ignore index and take it from the
-     property instead.
-
-This has the drawback that we cannot support this:
-
-	Package () { "reset-gpios", Package () { ^GPIO, 0, 0, 0, ^GPIO, 1, 0, 0}}
-                                                                 ^^^^^^^^^^^^^^
-So the second entry in the above is not accessible using
-gpiod_get_index() and the reason is that we want to support the existing
-and new ACPI tables where _DSD is not being used.
+	Arnd
