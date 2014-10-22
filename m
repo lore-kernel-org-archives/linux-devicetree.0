@@ -1,65 +1,59 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 00/12] rtc: omap: fixes and power-off feature
-Date: Wed, 22 Oct 2014 09:43:26 -0700
-Message-ID: <20141022164326.GJ2542@atomide.com>
-References: <1412881594-25678-1-git-send-email-johan@kernel.org>
- <20141010175409.GL31348@saruman>
- <20141011093819.GA18988@localhost>
- <20141011190817.GA20644@atomide.com>
- <20141022110758.GO2113@localhost>
- <20141022152956.GI2542@atomide.com>
- <20141022162104.GB2381@localhost>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v4 1/5] simplefb: Add simplefb MAINTAINERS entry
+Date: Wed, 22 Oct 2014 18:45:07 +0200
+Message-ID: <1413996311-4287-2-git-send-email-hdegoede@redhat.com>
+References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141022162104.GB2381@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBJ56T6RAKGQESJMTBXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1413996311-4287-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [141022 09:25]:
-> On Wed, Oct 22, 2014 at 08:29:56AM -0700, Tony Lindgren wrote:
-> > * Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [141022 04:12]:
-> > > On Sat, Oct 11, 2014 at 12:08:18PM -0700, Tony Lindgren wrote:
-> > > > * Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [141011 02:42]:
-> > > > > On Fri, Oct 10, 2014 at 12:54:22PM -0500, Felipe Balbi wrote:
-> > > > > > 
-> > > > > > is this power-off feature "RTC-only mode" ?
-> > > > > 
-> > > > > Yes, I believe so, at least as long as RTC power is maintained. The
-> > > > > pmic_power_en pin can otherwise still be used to power off. 
-> > > > > 
-> > > > > On the BeagleBone the PMIC can be configured to enter OFF or SLEEP mode
-> > > > > on power off, where the latter (and default) mode keeps the RTC power
-> > > > > supply enabled.
-> > > > > 
-> > > > > Thanks for the fast review, Felipe.
-> > > > 
-> > > > Great :) I assume adding the regulator support to this driver should
-> > > > also help in the 35xx case?
-> > > 
-> > > If I remember correctly both OMAP and Sitara 35xx have no on-chip RTC so
-> > > they won't be using this driver.
-> > 
-> > Sorry I made a typo.. I meanto to ask if adding the regulator
-> > helps in your 335x case (not 35xx case)?
-> 
-> Ah, sorry, that's what I first read before I noticed you wrote "35xx"
-> twice. :)
+During the discussion about adding clock handling code to simplefb, it became
+clear that simplefb currently does not have an active maintainer.
 
-Yes sorry my nerves are doing things on their own for some stuff
-it seems like :)
+I've discussed this with Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, the original
+author of simplefb, and with his permisson I'm picking up maintainership of
+simplefb.
+
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Reviewed-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Reviewed-by: David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 73d1aef..6e92e73 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8416,6 +8416,14 @@ F:	drivers/media/usb/siano/
+ F:	drivers/media/usb/siano/
+ F:	drivers/media/mmc/siano/
  
-> Yes, RTC power can be configured as a regulator on am33xx (e.g. provided
-> by LDO1 of the PMIC on BBB). I guess you would still need to configure
-> it as always-on to be able to use the RTC-only mode, though.
-
-OK great.
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++SIMPLEFB FB DRIVER
++M:	Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
++L:	linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/video/simple-framebuffer.txt
++F:	drivers/video/fbdev/simplefb.c
++F:	include/linux/platform_data/simplefb.h
++
+ SH_VEU V4L2 MEM2MEM DRIVER
+ L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ S:	Orphan
+-- 
+2.1.0
