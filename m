@@ -1,50 +1,55 @@
-From: Scott Branden <sbranden@broadcom.com>
-Subject: Re: [PATCH v5 1/6] ARM: cygnus: Initial support for Broadcom Cygnus
- SoC
-Date: Wed, 22 Oct 2014 10:12:13 -0700
-Message-ID: <5447E56D.6000006@broadcom.com>
-References: <1413341936-17606-2-git-send-email-sbranden@broadcom.com> <38587325.kaAxCWAsmL@wuerfel> <5446F61C.8060400@broadcom.com> <12157660.uOkg5nk8Dq@wuerfel>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] power-domain: add power domain drivers for
+ Rockchip platform
+Date: Wed, 22 Oct 2014 10:17:57 -0700
+Message-ID: <CAD=FV=Urn8_F+g0G08MLG3TeJsycpoa5K8+rwGDeG=Pk7dFCqA@mail.gmail.com>
+References: <1413964424-7599-1-git-send-email-jinkun.hong@rock-chips.com>
+	<1413964424-7599-2-git-send-email-jinkun.hong@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <12157660.uOkg5nk8Dq@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>, JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413964424-7599-2-git-send-email-jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "jinkun.hong" <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jack Dai <jack.dai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14-10-22 01:22 AM, Arnd Bergmann wrote:
-> On Tuesday 21 October 2014 17:11:08 Scott Branden wrote:
->> OK, I will remove the "iProc SoC based Machine types".  This was
->> grouping all iProc based SoCs under one menu and parallels what the
->> existing "Broadcom Mobile Soc Support" menu does.
->>
->> I can create another patch removing the "Broadcom Mobile SoC Support"
->> menu if the ARM Maintainer now want all Broadcom devices are supposed to
->> be contained in a single level?
->
-> Sounds good, I missed that other menu going in.
-I will add another patch to my set to correct this.
->
-> It can make sense to add 'comment' statements if you want to separate the
-> families.
-Thanks - I will add this to my patchset.
->
-> I also noticed that there are a few configuration options that at first
-> seem pointless: ARCH_BCM_MOBILE_L2_CACHE and ARCH_BCM_MOBILE_SMP. I wonder
-> if it ever makes sense to disable these when the common options (CACHE_L2X0
-> and SMP) are enabled for another SoC. I'd normally like to see these as
-> hidden options that are always on whenever the core support for those
-> features is enabled, to avoid confusing users as well as bugs from the
-> combinatorial explosion.
-I can clean up all but ARCH_BCM_MOBILE_L2_CACHE.  This one is 
-intertwined with SMC support and it looks like they want the option to 
-turn on and off this feature.  This L2/Trustzone support will need to be 
-cleaned up at a later time.  I heard Russell King says the PL310 cache 
-code will be changing again soon.  When I add PL310 Trustzone support 
-for the Cygnus SoC I can have a look at cleaning it up for the 
-Mobile/Kona base SoCs at the same time.
->
-> 	Arnd
->
+Jinkun,
+
+On Wed, Oct 22, 2014 at 12:53 AM, jinkun.hong
+<jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> +#define to_rockchip_pd(_gpd) container_of(_gpd, struct rockchip_domain, base)
+> +
+> +static int rockchip_pmu_set_idle_request(struct rockchip_domain *pd,
+> +                                        bool idle)
+> +{
+> +       u32 idle_mask = BIT(pd->idle_shift);
+> +       u32 idle_target = idle << (pd->idle_shift);
+> +       u32 ack_mask = BIT(pd->ack_shift);
+> +       u32 ack_target = idle << (pd->ack_shift);
+> +       unsigned int mask = BIT(pd->req_shift);
+> +       unsigned int val;
+> +       unsigned long flags;
+
+warning: unused variable 'flags'
+
+
+> +static int rockchip_pmu_set_power_domain(struct rockchip_domain *pd,
+> +                                        bool on)
+> +{
+> +       unsigned long flags;
+
+warning: unused variable 'flags'
+
+
+I haven't done any review of these patches, but I'll say that I did
+pick your patches (along with "PM / clock_ops: Add pm_clk_add_clk()"
+from https://patchwork.kernel.org/patch/5105401/) and I was able to
+boot up my system.  Also, your series plus a patch to set the GPU
+power domain on rk3288 made suspend/resume work better.
+
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
