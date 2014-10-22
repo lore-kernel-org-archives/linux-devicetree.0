@@ -1,68 +1,71 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v4 6/6] ARM: dts: add RK3288 suspend support
-Date: Tue, 21 Oct 2014 16:26:21 -0700
-Message-ID: <1413933981-25875-1-git-send-email-zyw@rock-chips.com>
-References: <1413933461-25602-1-git-send-email-zyw@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413933461-25602-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Xie <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Scott Branden <sbranden@broadcom.com>
+Subject: Re: [PATCH v5 1/6] ARM: cygnus: Initial support for Broadcom Cygnus
+ SoC
+Date: Tue, 21 Oct 2014 17:11:08 -0700
+Message-ID: <5446F61C.8060400@broadcom.com>
+References: <1413341936-17606-2-git-send-email-sbranden@broadcom.com> <4779079.vI0gT0iWvg@wuerfel> <544593E1.90608@broadcom.com> <38587325.kaAxCWAsmL@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <38587325.kaAxCWAsmL@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>, JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-add pmu_intmem node for suspend, add global_pwroff pinctrl.
-The pmu_intmem is used to store the resume code.
-global_pwroff is held low level at work, it would be pull to high
-when entering suspend. PMICs can get this signal, then shut down
-some power rails. So please reference the global_pwroff pinctrl
-as part of the PMIC config.
-
-Signed-off-by: Tony Xie <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
----
-
-Changes in v4: None
-Changes in v3: None
-Changes in v2:
-- put "rockchip,rk3288-pmu-sram" to first
-
- arch/arm/boot/dts/rk3288.dtsi |   11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 874e66d..c52fe09 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -439,6 +439,11 @@
- 		status = "disabled";
- 	};
- 
-+	pmu_intmem@ff720000 {
-+		compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
-+		reg = <0xff720000 0x4000>;
-+	};
-+
- 	pmu: power-management@ff730000 {
- 		compatible = "rockchip,rk3288-pmu", "syscon";
- 		reg = <0xff730000 0x100>;
-@@ -634,6 +639,12 @@
- 			bias-disable;
- 		};
- 
-+		sleep {
-+			global_pwroff: global-pwroff {
-+				rockchip,pins = <0 0 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
- 		i2c0 {
- 			i2c0_xfer: i2c0-xfer {
- 				rockchip,pins = <0 15 RK_FUNC_1 &pcfg_pull_none>,
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 14-10-20 10:48 PM, Arnd Bergmann wrote:
+> On Monday 20 October 2014 15:59:45 Scott Branden wrote:
+>> On 14-10-20 12:55 PM, Arnd Bergmann wrote:
+>>> On Tuesday 14 October 2014 19:58:51 Scott Branden wrote:
+>>>>    if ARCH_BCM
+>>>>
+>>>> +menu "iProc SoC based Machine types"
+>>>> +       config ARCH_BCM_IPROC
+>>>> +               bool
+>>>> +               select ARM_GIC
+>>>> +               select CACHE_L2X0
+>>>> +               select HAVE_ARM_SCU if SMP
+>>>> +               select HAVE_ARM_TWD if SMP
+>>>> +               select ARM_GLOBAL_TIMER
+>>>> +
+>>>> +               select CLKSRC_MMIO
+>>>> +               select ARCH_REQUIRE_GPIOLIB
+>>>> +               select ARM_AMBA
+>>>> +               select PINCTRL
+>>>> +               help
+>>>> +                 This enables support for systems based on Broadcom IPROC architected SoCs.
+>>>> +                 The IPROC complex contains one or more ARM CPUs along with common
+>>>> +                 core periperals. Application specific SoCs are created by adding a
+>>>> +                 uArchitecture containing peripherals outside of the IPROC complex.
+>>>> +                 Currently supported SoCs are Cygnus.
+>>>> +
+>>>> +       config ARCH_BCM_CYGNUS
+>>>> +               bool "Broadcom Cygnus Support" if ARCH_MULTI_V7
+>>>
+>>> You still have a three-level menu structure. Please fix.
+>>
+>> Hi Arnd, we have ARCH_BCM->ARCH_BCM_CYGNUS.
+>>
+>> ARCH_BCM_IPROC is silent and selected by ARCH_BCM_CYGNUS.  This was the
+>> change made between v3 and v5.
+>>
+>> Is there something else to be done here?
+>>
+>
+> You have
+>
+> 	"Broadcom SoC Support"
+> 		"iProc SoC based Machine types"
+> 			 "Broadcom Cygnus Support"
+OK, I will remove the "iProc SoC based Machine types".  This was 
+grouping all iProc based SoCs under one menu and parallels what the 
+existing "Broadcom Mobile Soc Support" menu does.
+I can create another patch removing the "Broadcom Mobile SoC Support" 
+menu if the ARM Maintainer now want all Broadcom devices are supposed to 
+be contained in a single level?
+>
+> Get rid of one of them.
+>
+> 	Arnd
+>
