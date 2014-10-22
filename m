@@ -1,71 +1,70 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: GPIO bindings guidelines (Was: Re: [PATCH v5 10/12] gpio:
- Support for unified device properties interface)
-Date: Wed, 22 Oct 2014 11:51:40 +0300
-Message-ID: <20141022085140.GF1484@lahna.fi.intel.com>
-References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com>
- <4582579.9WMrIMALsy@wuerfel>
- <20141022081044.GB1484@lahna.fi.intel.com>
- <4711930.7fsc2oSxcp@wuerfel>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 4/4] crypto: Add Allwinner Security System crypto accelerator
+Date: Wed, 22 Oct 2014 11:00:45 +0200
+Message-ID: <2751026.4HEPlZfN7W__5440.46102227202$1413968532$gmane$org@wuerfel>
+References: <1413728182-13569-1-git-send-email-clabbe.montjoie@gmail.com> <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4711930.7fsc2oSxcp@wuerfel>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: LABBE Corentin <clabbe.montjoie@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, herbert@gondor.apana.org.au, davem@davemloft.net, grant.likely@linaro.org, akpm@linux-foundation.org, gregkh@linuxfoundation.org, joe@perches.com, mchehab@osg.samsung.com, crope@iki.fi, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 22, 2014 at 10:33:32AM +0200, Arnd Bergmann wrote:
-> On Wednesday 22 October 2014 11:10:44 Mika Westerberg wrote:
-> > 
-> > It expects that GPIOs returned from _CRS are in specific order. Since we
-> > can't change these existing ACPI tables, we must support them somehow.
-> > 
-> > This patch series handles it so that:
-> > 
-> >   1) If we can't find given property (e.g "reset-gpios" or
-> >      "shutdown-gpios") the index above will refer directly to the GPIO
-> >      resource returned from _CRS.
-> > 
-> >   2) If the property is found we ignore index and take it from the
-> >      property instead.
-> > 
-> > This has the drawback that we cannot support this:
-> > 
-> >         Package () { "reset-gpios", Package () { ^GPIO, 0, 0, 0, ^GPIO, 1, 0, 0}}
-> >                                                                  ^^^^^^^^^^^^^^
-> > So the second entry in the above is not accessible using
-> > gpiod_get_index() and the reason is that we want to support the existing
-> > and new ACPI tables where _DSD is not being used.
+On Sunday 19 October 2014 16:16:22 LABBE Corentin wrote:
+> Add support for the Security System included in Allwinner SoC A20.
+> The Security System is a hardware cryptographic accelerator that support AES/MD5/SHA1/DES/3DES/PRNG algorithms.
 > 
-> So this is not using the DT binding but does thing slightly differently then.
-> In this case (supporting two incompatible bindings for DT and ACPI), I think
-> the only sensible driver implementation would be to know what we are asking
-> for and use different devm_gpiod_get_index statements based on the firmware
-> interface.
+> Signed-off-by: LABBE Corentin <clabbe.montjoie@gmail.com>
 
-Yes something like that is probably needed.
+Please wrap lines in the changelog after about 70 characters.
 
-Alternatively (I didn't try if this works) we could do it so that
-when we see:
+> --- /dev/null
+> +++ b/drivers/crypto/sunxi-ss/sunxi-ss-cipher.c
+> @@ -0,0 +1,489 @@
 
-	gpio = devm_gpiod_get_index(&pdev->dev, "shutdown", 1);
+> +#include "sunxi-ss.h"
+> +
+> +extern struct sunxi_ss_ctx *ss;
 
-we check first for the property ("shutdown-gpios"), and check if it has
-more than one entry in the value, like:
+'extern' declarations belong into header files, not .c files. It would
+be even better to avoid this completely and carry the pointer to the
+context in an object that gets passed around. In general we want drivers
+to be written in a way that allows having multiple instances of the
+device, which the global pointer prevents.
 
-	Package () { "reset-gpios", Package () { ^GPIO, 0, 0, 0, ^GPIO, 1, 0, 0}}
+> +
+> +	src32 = (u32 *)src_addr;
+> +	dst32 = (u32 *)dst_addr;
 
-and in that case return the second entry. If we find this instead:
 
-	Package () { "reset-gpios", Package () { ^GPIO, 0, 0, 0 }}
+You appear to be missing '__iomem' annotations for the mmio pointers.
+Please always run your code through the 'sparse' checker using 'make C=1'
+to catch and fix this and other erros.
 
-we just ignore the index.
+> +	ileft = areq->nbytes / 4;
+> +	oleft = areq->nbytes / 4;
+> +	i = 0;
+> +	do {
+> +		if (ileft > 0 && rx_cnt > 0) {
+> +			todo = min(rx_cnt, ileft);
+> +			ileft -= todo;
+> +			do {
+> +				writel_relaxed(*src32++,
+> +						ss->base +
+> +						SS_RXFIFO);
+> +				todo--;
+> +			} while (todo > 0);
+> +		}
 
-Last if there is no _DSD the index refers directly to the GPIO resource
-in _CRS.
+This looks like it should be using writesl() instead of the 
+writel_relaxed() loop. That should not only be faster but it will
+also change the byte ordering if you are running a big-endian
+kernel.
 
-This would support both _DSD and non-_DSD at the same time but it makes
-the implementation more complex.
+Since this is a FIFO register, the ordering that writesl uses
+is likely the correct one.
+
+	Arnd
