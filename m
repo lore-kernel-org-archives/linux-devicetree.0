@@ -1,86 +1,53 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 4/5] simplefb: add goto error path to probe
-Date: Wed, 22 Oct 2014 18:45:10 +0200
-Message-ID: <1413996311-4287-5-git-send-email-hdegoede@redhat.com>
-References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 4/5] regulator: max77802: Parse regulator operating
+ mode properties
+Date: Wed, 22 Oct 2014 17:48:13 +0100
+Message-ID: <20141022164813.GD2344@sirena.org.uk>
+References: <1413816472-1895-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1413816472-1895-5-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBN56T6RAKGQEPLYVXFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1413996311-4287-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4AmJdx/+JAF2YHMk"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1413816472-1895-5-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
 
-While at it update ioremap_wc error return from ENODEV to ENOMEM.
+--4AmJdx/+JAF2YHMk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
-Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Reviewed-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Reviewed-by: David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/video/fbdev/simplefb.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+On Mon, Oct 20, 2014 at 04:47:51PM +0200, Javier Martinez Canillas wrote:
 
-diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
-index ec112c1..cdcf1fe 100644
---- a/drivers/video/fbdev/simplefb.c
-+++ b/drivers/video/fbdev/simplefb.c
-@@ -220,8 +220,8 @@ static int simplefb_probe(struct platform_device *pdev)
- 
- 	info->apertures = alloc_apertures(1);
- 	if (!info->apertures) {
--		framebuffer_release(info);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto error_fb_release;
- 	}
- 	info->apertures->ranges[0].base = info->fix.smem_start;
- 	info->apertures->ranges[0].size = info->fix.smem_len;
-@@ -231,8 +231,8 @@ static int simplefb_probe(struct platform_device *pdev)
- 	info->screen_base = ioremap_wc(info->fix.smem_start,
- 				       info->fix.smem_len);
- 	if (!info->screen_base) {
--		framebuffer_release(info);
--		return -ENODEV;
-+		ret = -ENOMEM;
-+		goto error_fb_release;
- 	}
- 	info->pseudo_palette = par->palette;
- 
-@@ -247,14 +247,18 @@ static int simplefb_probe(struct platform_device *pdev)
- 	ret = register_framebuffer(info);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Unable to register simplefb: %d\n", ret);
--		iounmap(info->screen_base);
--		framebuffer_release(info);
--		return ret;
-+		goto error_unmap;
- 	}
- 
- 	dev_info(&pdev->dev, "fb%d: simplefb registered!\n", info->node);
- 
- 	return 0;
-+
-+error_unmap:
-+	iounmap(info->screen_base);
-+error_fb_release:
-+	framebuffer_release(info);
-+	return ret;
- }
- 
- static int simplefb_remove(struct platform_device *pdev)
--- 
-2.1.0
+> +	char *states[PM_SUSPEND_MAX + 1] = {
+> +		[PM_SUSPEND_MEM] = "regulator-state-mem",
+> +		[PM_SUSPEND_MAX] = "regulator-state-disk",
+> +	};
+
+This still has the same problem as your previous patch with things not
+being as joined up with the core as they should be.  What I'd like to
+see is that the code to extract the number for each state is in the core
+and then the drivers just provide a translation function to map from
+this to the internal modes.
+
+--4AmJdx/+JAF2YHMk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUR9/MAAoJECTWi3JdVIfQ03YH/3062yTpAZtvA+PXjtXdoIx+
+q25+NGfS3pT5MXU9PU5nUSQeJivWIP8oBYtP0LZiGnV6Zog59EHBOnO2u3luk+r4
+AW1boZSsPBos6rmKoG4PDDM4a7uWfk7jOxE9WlIk+G4LNJAgScx4s/8c0cMATBAk
+XhgwAjfQe4BP+tsxQHvCKnCIemU7I4TXvBOnujEB2YxLA5c5O0I2WCOl8YR5AUxg
+THNdRJQbrI3CusFI5+QpqS6dAf9I1DqM2ut4CyBWCEfzjFtu3uwlK0UeLAKnCxKn
+hIq7vR2m59bT/W5YkDwY+IkESg25UXzDcV65DbRVn4XHL95Du2Ebjuxx4xBud3w=
+=SGAV
+-----END PGP SIGNATURE-----
+
+--4AmJdx/+JAF2YHMk--
