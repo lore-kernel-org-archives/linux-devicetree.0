@@ -1,332 +1,353 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v3 4/4] ARM: dts: exynos4412-trats: Add suspend
- configuration for max77686 regulators
-Date: Wed, 22 Oct 2014 11:57:55 +0900
-Message-ID: <54471D33.8000906@samsung.com>
-References: <1413897595-28752-1-git-send-email-k.kozlowski@samsung.com>
- <1413897595-28752-5-git-send-email-k.kozlowski@samsung.com>
+From: Hong jinkun <jinkun.hong@rock-chips.com>
+Subject: Re: [PATCH v5 1/3] power-domain: add power domain drivers for Rockchip
+ platform
+Date: Wed, 22 Oct 2014 11:34:28 +0800
+Message-ID: <544725C4.4040703@rock-chips.com>
+References: <1413882808-4669-1-git-send-email-jinkun.hong@rock-chips.com> <1413882808-4669-2-git-send-email-jinkun.hong@rock-chips.com> <20141021195854.GE8609@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1413897595-28752-5-git-send-email-k.kozlowski@samsung.com>
+In-Reply-To: <20141021195854.GE8609@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, Jack Dai <jack.dai@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
 
-On 10/21/2014 10:19 PM, Krzysztof Kozlowski wrote:
-> Add suspend to RAM configuration for max77686 regulators. Some LDOs and
-> bucks are disabled. This reduces energy consumption during S2R,
-> approximately from 17 mA to 9 mA.
-> 
-> Additionally remove old and not supported bindings:
->  - regulator-mem-off
->  - regulator-mem-idle
->  - regulator-mem-on
-> The max77686 driver does not parse them and they are not documented
-> anywere.
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> ---
->  arch/arm/boot/dts/exynos4412-trats2.dts | 72 +++++++++++++++++++--------------
->  1 file changed, 42 insertions(+), 30 deletions(-)
+On 2014/10/22 3:58, Dmitry Torokhov wrote:
+> Hi Jinkun,
+>
+> On Tue, Oct 21, 2014 at 02:13:26AM -0700, jinkun.hong wrote:
+>> From: "jinkun.hong" <jinkun.hong@rock-chips.com>
+>>
+>> Add power domain drivers based on generic power domain for Rockchip platform,
+>> and support RK3288.
+>>
+>> Signed-off-by: Jack Dai <jack.dai@rock-chips.com>
+>> Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
+>>
+>> ---
+>>
+>> Changes in v5:
+>> - delete idle_lock
+>> - add timeout in rockchip_pmu_set_idle_request()
+>>
+>> Changes in v4:
+>> - use list storage dev
+>>
+>> Changes in v3:
+>> - change use pm_clk_resume() and pm_clk_suspend()
+>>
+>> Changes in v2:
+>> - remove the "pd->pd.of_node = np"
+>>
+>>   arch/arm/mach-rockchip/Kconfig      |    1 +
+>>   arch/arm/mach-rockchip/Makefile     |    1 +
+>>   arch/arm/mach-rockchip/pm_domains.c |  368 +++++++++++++++++++++++++++++++++++
+>>   3 files changed, 370 insertions(+)
+>>   create mode 100644 arch/arm/mach-rockchip/pm_domains.c
+>>
+>> diff --git a/arch/arm/mach-rockchip/Kconfig b/arch/arm/mach-rockchip/Kconfig
+>> index d168669..4920a88 100644
+>> --- a/arch/arm/mach-rockchip/Kconfig
+>> +++ b/arch/arm/mach-rockchip/Kconfig
+>> @@ -12,6 +12,7 @@ config ARCH_ROCKCHIP
+>>   	select DW_APB_TIMER_OF
+>>   	select ARM_GLOBAL_TIMER
+>>   	select CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
+>> +	select PM_GENERIC_DOMAINS if PM
+>>   	help
+>>   	  Support for Rockchip's Cortex-A9 Single-to-Quad-Core-SoCs
+>>   	  containing the RK2928, RK30xx and RK31xx series.
+>> diff --git a/arch/arm/mach-rockchip/Makefile b/arch/arm/mach-rockchip/Makefile
+>> index b29d8ea..805268d 100644
+>> --- a/arch/arm/mach-rockchip/Makefile
+>> +++ b/arch/arm/mach-rockchip/Makefile
+>> @@ -2,3 +2,4 @@ CFLAGS_platsmp.o := -march=armv7-a
+>>   
+>>   obj-$(CONFIG_ARCH_ROCKCHIP) += rockchip.o
+>>   obj-$(CONFIG_SMP) += headsmp.o platsmp.o
+>> +obj-$(CONFIG_PM_GENERIC_DOMAINS) += pm_domains.o
+>> diff --git a/arch/arm/mach-rockchip/pm_domains.c b/arch/arm/mach-rockchip/pm_domains.c
+>> new file mode 100644
+>> index 0000000..8f13445
+>> --- /dev/null
+>> +++ b/arch/arm/mach-rockchip/pm_domains.c
+>> @@ -0,0 +1,368 @@
+>> +/*
+>> + * Rockchip Generic power domain support.
+>> + *
+>> + * Copyright (c) 2014 ROCKCHIP, Co. Ltd.
+>> + * Author: Hong Jinkun <jinkun.hong@rock-chips.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +#include <linux/module.h>
+>> +#include <linux/io.h>
+>> +#include <linux/err.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/pm_domain.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/sched.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/spinlock.h>
+>> +#include <linux/pm_clock.h>
+>> +#include <linux/delay.h>
+>> +
+>> +#define PWR_OFFSET		0x08
+>> +#define STATUS_OFFSET	0x0c
+>> +#define REQ_OFFSET		0x10
+>> +#define IDLE_OFFSET		0x14
+>> +#define ACK_OFFSET		0x14
+>> +
+>> +struct rockchip_dev_entry {
+>> +	struct list_head node;
+>> +	struct device *dev;
+>> +};
+>> +
+>> +struct rockchip_domain {
+>> +	struct generic_pm_domain base;
+>> +	struct device *dev;
+>> +	struct regmap *regmap_pmu;
+>> +	struct list_head dev_list;
+>> +	/* spin lock for read/write pmu reg */
+>> +	spinlock_t pmu_lock;
+>> +	/* spin lock for dev_list */
+>> +	spinlock_t dev_lock;
+>> +	u32 pwr_shift;
+>> +	u32 status_shift;
+>> +	u32 req_shift;
+>> +	u32 idle_shift;
+>> +	u32 ack_shift;
+>> +};
+>> +
+>> +#define to_rockchip_pd(_gpd) container_of(_gpd, struct rockchip_domain, base)
+>> +
+>> +static int rockchip_pmu_set_idle_request(struct rockchip_domain *pd,
+>> +					 bool idle)
+>> +{
+>> +	u32 idle_mask = BIT(pd->idle_shift);
+>> +	u32 idle_target = idle << (pd->idle_shift);
+>> +	u32 ack_mask = BIT(pd->ack_shift);
+>> +	u32 ack_target = idle << (pd->ack_shift);
+>> +	unsigned int mask = BIT(pd->req_shift);
+>> +	unsigned int val;
+>> +	unsigned long flags;
+>> +	int timeout = 0;
+>> +
+>> +	val = (idle) ? mask : 0;
+>> +	regmap_update_bits(pd->regmap_pmu, REQ_OFFSET, mask, val);
+>> +	dsb();
+>> +
+>> +	do {
+>> +		regmap_read(pd->regmap_pmu, ACK_OFFSET, &val);
+>> +		udelay(1);
+>> +		if (timeout > 10) {
+>> +			pr_err("%s wait pmu ack timeout!\n", __func__);
+>> +			break;
+>> +		}
+>> +		timeout += 1;
+>> +	} while ((val & ack_mask) != ack_target);
+>> +
+>> +	timeout = 0;
+>> +	do {
+>> +		regmap_read(pd->regmap_pmu, IDLE_OFFSET, &val);
+>> +		udelay(1);
+>> +		if (timeout > 10) {
+>> +			pr_err("%s wait pmu idle timeout!\n", __func__);
+>> +			break;
+>> +		}
+>> +		timeout += 1;
+>> +	} while ((val & idle_mask) != idle_target);
+>> +	return 0;
+>> +}
+>> +
+>> +static bool rockchip_pmu_power_domain_is_on(struct rockchip_domain *pd)
+>> +{
+>> +	unsigned int val;
+>> +
+>> +	regmap_read(pd->regmap_pmu, STATUS_OFFSET, &val);
+>> +
+>> +	/* 1'b0: power on, 1'b1: power off */
+>> +	return !(val & BIT(pd->status_shift));
+>> +}
+>> +
+>> +static void rockchip_do_pmu_set_power_domain(
+>> +		struct rockchip_domain *pd, bool on)
+>> +{
+>> +	unsigned int mask = BIT(pd->pwr_shift);
+>> +	unsigned int val;
+>> +
+>> +	val = (on) ? 0 : mask;
+>> +	regmap_update_bits(pd->regmap_pmu, PWR_OFFSET, mask, val);
+>> +	dsb();
+>> +
+>> +	do {
+>> +		regmap_read(pd->regmap_pmu, STATUS_OFFSET, &val);
+>> +	} while ((val & BIT(pd->status_shift)) == on);
+>> +}
+>> +
+>> +static int rockchip_pmu_set_power_domain(struct rockchip_domain *pd,
+>> +					 bool on)
+>> +{
+>> +	unsigned long flags;
+>> +
+>> +	spin_lock_irqsave(&pd->pmu_lock, flags);
+> You only call rockchip_pmu_set_power_domain() with pd->dev_lock held,
+> why do you need this spinlock?
+I will remove the pmu_lock.
+>> +	if (rockchip_pmu_power_domain_is_on(pd) == on)
+>> +		goto out;
+>> +
+>> +	if (!on) {
+>> +		/* FIXME: add code to save AXI_QOS */
+>> +		/* if power down, idle request to NIU first */
+>> +		rockchip_pmu_set_idle_request(pd, true);
+>> +	}
+>> +
+>> +	rockchip_do_pmu_set_power_domain(pd, on);
+>> +
+>> +	if (on) {
+>> +		/* if power up, idle request release to NIU */
+>> +		rockchip_pmu_set_idle_request(pd, false);
+>> +		/* FIXME: add code to restore AXI_QOS */
+>> +	}
+>> +out:
+>> +	spin_unlock_irqrestore(&pd->pmu_lock, flags);
+>> +	return 0;
+>> +}
+>> +
+>> +static int rockchip_pd_power(struct rockchip_domain *pd, bool power_on)
+>> +{
+>> +	int i = 0;
+>> +	int ret = 0;
+>> +	struct rockchip_dev_entry *de;
+>> +
+>> +	spin_lock_irq(&pd->dev_lock);
+> Do you really need to run here with interrupts off? Maybe a mutex would
+> be better here?
+Ok,I use mutex.
+>> +
+>> +	list_for_each_entry(de, &pd->dev_list, node) {
+>> +		i += 1;
+>> +		pm_clk_resume(pd->dev);
+> Do you really need to call pm_clk_resume() number of times that there
+> are devices in power domain? Did you want it to be
+>
+> 		pm_clk_resume(de->dev);
+>
+> by any chance?
+You are right.I will modify in the next version.
+>> +	}
+>> +
+>> +	/* no clk, set power domain will fail */
+>> +	if (i == 0) {
+>> +		pr_err("%s: failed to on/off power domain!", __func__);
+>> +		spin_unlock_irq(&pd->dev_lock);
+>> +		return ret;
+>> +	}
+> Instead of counting I'd do
+>
+> 	if (list_empty(&pd->dev_list)) {
+> 		pr_waen("%s: no devices in power domain\n", __func__);
+> 		goto out;
+> 	}
+>
+> in the beginning of the function.
+This is a good idea.
+>> +
+>> +	ret = rockchip_pmu_set_power_domain(pd, power_on);
+>> +
+>> +	list_for_each_entry(de, &pd->dev_list, node) {
+>> +		pm_clk_suspend(pd->dev);
+> Same here?
+>
+>> +	}
+>> +
+>> +	spin_unlock_irq(&pd->dev_lock);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int rockchip_pd_power_on(struct generic_pm_domain *domain)
+>> +{
+>> +	struct rockchip_domain *pd = to_rockchip_pd(domain);
+>> +
+>> +	return rockchip_pd_power(pd, true);
+>> +}
+>> +
+>> +static int rockchip_pd_power_off(struct generic_pm_domain *domain)
+>> +{
+>> +	struct rockchip_domain *pd = to_rockchip_pd(domain);
+>> +
+>> +	return rockchip_pd_power(pd, false);
+>> +}
+>> +
+>> +void rockchip_pm_domain_attach_dev(struct device *dev)
+>> +{
+>> +	int ret;
+>> +	int i = 0;
+>> +	struct clk *clk;
+>> +	struct rockchip_domain *pd;
+>> +	struct rockchip_dev_entry *de;
+>> +
+>> +	pd = (struct rockchip_domain *)dev->pm_domain;
+>> +	ret = pm_clk_create(dev);
+>> +	if (ret) {
+>> +		dev_err(dev, "pm_clk_create failed %d\n", ret);
+>> +		return;
+>> +	};
+> Stray semicolon.
+>> +
+>> +	while ((clk = of_clk_get(dev->of_node, i++)) && !IS_ERR(clk)) {
+>> +		ret = pm_clk_add_clk(dev, clk);
+>> +		if (ret) {
+>> +			dev_err(dev, "pm_clk_add_clk failed %d\n", ret);
+>> +			goto clk_err;
+>> +		};
+>> +	}
+>> +
+>> +	de = devm_kcalloc(pd->dev, 1,
+>> +			sizeof(struct rockchip_dev_entry *), GFP_KERNEL);
+> Why devm_calloc for a single element and not devm_kzalloc? Also, I am a
+> bit concerned about using devm_* API here. They are better reserved fir
+> driver's ->probe() paths whereas we are called from
+> dev_pm_domain_attach() which is more general API (yes, currently it is
+> used by buses probing code, but that might change in the future).
+>
+> Also, where is OOM error handling?
+Ok,I will change the use  devm_kzalloc.
+Register to pm domain devices, the number is not a lot.
+>> +	spin_lock_irq(&pd->dev_lock);
+>> +	list_add_tail(&de->node, &pd->dev_list);
+>> +	spin_unlock_irq(&pd->dev_lock);
+>> +
+>> +	return;
+>> +clk_err:
+>> +	pm_clk_destroy(dev);
+>> +}
+>> +
+>> +void rockchip_pm_domain_detach_dev(struct device *dev)
+>> +{
+>> +	struct rockchip_domain *pd;
+>> +	struct rockchip_dev_entry *de;
+>> +
+>> +	pd = (struct rockchip_domain *)dev->pm_domain;
+>> +	spin_lock_irq(&pd->dev_lock);
+>> +
+>> +	list_for_each_entry(de, &pd->dev_list, node) {
+>> +		if (de->dev == dev)
+>> +			goto remove;
+> If you use mutex instead of spinlock I think you'll be able to do
+> list_del/pm_clk_destroy() right here. I'd free memory here as well.
+OK
+> Thanks.
+>
 
-Looks good to me.
-
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-
-Thanks,
-Chanwoo Choi
-
-> 
-> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-> index dd9ac66770f7..8067eb447829 100644
-> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
-> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-> @@ -225,7 +225,6 @@
->  					regulator-min-microvolt = <1000000>;
->  					regulator-max-microvolt = <1000000>;
->  					regulator-always-on;
-> -					regulator-mem-on;
->  				};
->  
->  				ldo2_reg: ldo2 {
-> @@ -234,7 +233,9 @@
->  					regulator-min-microvolt = <1200000>;
->  					regulator-max-microvolt = <1200000>;
->  					regulator-always-on;
-> -					regulator-mem-on;
-> +					regulator-state-mem {
-> +						regulator-on-in-suspend;
-> +					};
->  				};
->  
->  				ldo3_reg: ldo3 {
-> @@ -243,7 +244,6 @@
->  					regulator-min-microvolt = <1800000>;
->  					regulator-max-microvolt = <1800000>;
->  					regulator-always-on;
-> -					regulator-mem-on;
->  				};
->  
->  				ldo4_reg: ldo4 {
-> @@ -252,7 +252,6 @@
->  					regulator-min-microvolt = <2800000>;
->  					regulator-max-microvolt = <2800000>;
->  					regulator-always-on;
-> -					regulator-mem-on;
->  				};
->  
->  				ldo5_reg: ldo5 {
-> @@ -261,7 +260,6 @@
->  					regulator-min-microvolt = <1800000>;
->  					regulator-max-microvolt = <1800000>;
->  					regulator-always-on;
-> -					regulator-mem-on;
->  				};
->  
->  				ldo6_reg: ldo6 {
-> @@ -270,7 +268,9 @@
->  					regulator-min-microvolt = <1000000>;
->  					regulator-max-microvolt = <1000000>;
->  					regulator-always-on;
-> -					regulator-mem-on;
-> +					regulator-state-mem {
-> +						regulator-on-in-suspend;
-> +					};
->  				};
->  
->  				ldo7_reg: ldo7 {
-> @@ -279,7 +279,9 @@
->  					regulator-min-microvolt = <1000000>;
->  					regulator-max-microvolt = <1000000>;
->  					regulator-always-on;
-> -					regulator-mem-on;
-> +					regulator-state-mem {
-> +						regulator-on-in-suspend;
-> +					};
->  				};
->  
->  				ldo8_reg: ldo8 {
-> @@ -287,7 +289,9 @@
->  					regulator-name = "VMIPI_1.0V";
->  					regulator-min-microvolt = <1000000>;
->  					regulator-max-microvolt = <1000000>;
-> -					regulator-mem-off;
-> +					regulator-state-mem {
-> +						regulator-off-in-suspend;
-> +					};
->  				};
->  
->  				ldo9_reg: ldo9 {
-> @@ -295,7 +299,6 @@
->  					regulator-name = "CAM_ISP_MIPI_1.2V";
->  					regulator-min-microvolt = <1200000>;
->  					regulator-max-microvolt = <1200000>;
-> -					regulator-mem-idle;
->  				};
->  
->  				ldo10_reg: ldo10 {
-> @@ -303,7 +306,9 @@
->  					regulator-name = "VMIPI_1.8V";
->  					regulator-min-microvolt = <1800000>;
->  					regulator-max-microvolt = <1800000>;
-> -					regulator-mem-off;
-> +					regulator-state-mem {
-> +						regulator-off-in-suspend;
-> +					};
->  				};
->  
->  				ldo11_reg: ldo11 {
-> @@ -312,7 +317,9 @@
->  					regulator-min-microvolt = <1950000>;
->  					regulator-max-microvolt = <1950000>;
->  					regulator-always-on;
-> -					regulator-mem-off;
-> +					regulator-state-mem {
-> +						regulator-off-in-suspend;
-> +					};
->  				};
->  
->  				ldo12_reg: ldo12 {
-> @@ -320,7 +327,9 @@
->  					regulator-name = "VUOTG_3.0V";
->  					regulator-min-microvolt = <3000000>;
->  					regulator-max-microvolt = <3000000>;
-> -					regulator-mem-off;
-> +					regulator-state-mem {
-> +						regulator-off-in-suspend;
-> +					};
->  				};
->  
->  				ldo13_reg: ldo13 {
-> @@ -328,7 +337,6 @@
->  					regulator-name = "NFC_AVDD_1.8V";
->  					regulator-min-microvolt = <1800000>;
->  					regulator-max-microvolt = <1800000>;
-> -					regulator-mem-idle;
->  				};
->  
->  				ldo14_reg: ldo14 {
-> @@ -337,7 +345,9 @@
->  					regulator-min-microvolt = <1950000>;
->  					regulator-max-microvolt = <1950000>;
->  					regulator-always-on;
-> -					regulator-mem-off;
-> +					regulator-state-mem {
-> +						regulator-off-in-suspend;
-> +					};
->  				};
->  
->  				ldo15_reg: ldo15 {
-> @@ -345,7 +355,9 @@
->  					regulator-name = "VHSIC_1.0V";
->  					regulator-min-microvolt = <1000000>;
->  					regulator-max-microvolt = <1000000>;
-> -					regulator-mem-off;
-> +					regulator-state-mem {
-> +						regulator-on-in-suspend;
-> +					};
->  				};
->  
->  				ldo16_reg: ldo16 {
-> @@ -353,7 +365,9 @@
->  					regulator-name = "VHSIC_1.8V";
->  					regulator-min-microvolt = <1800000>;
->  					regulator-max-microvolt = <1800000>;
-> -					regulator-mem-off;
-> +					regulator-state-mem {
-> +						regulator-on-in-suspend;
-> +					};
->  				};
->  
->  				ldo17_reg: ldo17 {
-> @@ -361,7 +375,6 @@
->  					regulator-name = "CAM_SENSOR_CORE_1.2V";
->  					regulator-min-microvolt = <1200000>;
->  					regulator-max-microvolt = <1200000>;
-> -					regulator-mem-idle;
->  				};
->  
->  				ldo18_reg: ldo18 {
-> @@ -369,7 +382,6 @@
->  					regulator-name = "CAM_ISP_SEN_IO_1.8V";
->  					regulator-min-microvolt = <1800000>;
->  					regulator-max-microvolt = <1800000>;
-> -					regulator-mem-idle;
->  				};
->  
->  				ldo19_reg: ldo19 {
-> @@ -377,7 +389,6 @@
->  					regulator-name = "VT_CAM_1.8V";
->  					regulator-min-microvolt = <1800000>;
->  					regulator-max-microvolt = <1800000>;
-> -					regulator-mem-idle;
->  				};
->  
->  				ldo20_reg: ldo20 {
-> @@ -385,7 +396,6 @@
->  					regulator-name = "VDDQ_PRE_1.8V";
->  					regulator-min-microvolt = <1800000>;
->  					regulator-max-microvolt = <1800000>;
-> -					regulator-mem-idle;
->  				};
->  
->  				ldo21_reg: ldo21 {
-> @@ -393,7 +403,6 @@
->  					regulator-name = "VTF_2.8V";
->  					regulator-min-microvolt = <2800000>;
->  					regulator-max-microvolt = <2800000>;
-> -					regulator-mem-idle;
->  				};
->  
->  				ldo22_reg: ldo22 {
-> @@ -408,7 +417,6 @@
->  					regulator-name = "TSP_AVDD_3.3V";
->  					regulator-min-microvolt = <3300000>;
->  					regulator-max-microvolt = <3300000>;
-> -					regulator-mem-idle;
->  				};
->  
->  				ldo24_reg: ldo24 {
-> @@ -416,7 +424,6 @@
->  					regulator-name = "TSP_VDD_1.8V";
->  					regulator-min-microvolt = <1800000>;
->  					regulator-max-microvolt = <1800000>;
-> -					regulator-mem-idle;
->  				};
->  
->  				ldo25_reg: ldo25 {
-> @@ -424,7 +431,6 @@
->  					regulator-name = "LCD_VCC_3.3V";
->  					regulator-min-microvolt = <2800000>;
->  					regulator-max-microvolt = <2800000>;
-> -					regulator-mem-idle;
->  				};
->  
->  				ldo26_reg: ldo26 {
-> @@ -432,7 +438,6 @@
->  					regulator-name = "MOTOR_VCC_3.0V";
->  					regulator-min-microvolt = <3000000>;
->  					regulator-max-microvolt = <3000000>;
-> -					regulator-mem-idle;
->  				};
->  
->  				buck1_reg: buck1 {
-> @@ -442,7 +447,9 @@
->  					regulator-max-microvolt = <1100000>;
->  					regulator-always-on;
->  					regulator-boot-on;
-> -					regulator-mem-off;
-> +					regulator-state-mem {
-> +						regulator-off-in-suspend;
-> +					};
->  				};
->  
->  				buck2_reg: buck2 {
-> @@ -452,7 +459,9 @@
->  					regulator-max-microvolt = <1500000>;
->  					regulator-always-on;
->  					regulator-boot-on;
-> -					regulator-mem-off;
-> +					regulator-state-mem {
-> +						regulator-on-in-suspend;
-> +					};
->  				};
->  
->  				buck3_reg: buck3 {
-> @@ -462,7 +471,9 @@
->  					regulator-max-microvolt = <1150000>;
->  					regulator-always-on;
->  					regulator-boot-on;
-> -					regulator-mem-off;
-> +					regulator-state-mem {
-> +						regulator-off-in-suspend;
-> +					};
->  				};
->  
->  				buck4_reg: buck4 {
-> @@ -471,7 +482,9 @@
->  					regulator-min-microvolt = <850000>;
->  					regulator-max-microvolt = <1150000>;
->  					regulator-boot-on;
-> -					regulator-mem-off;
-> +					regulator-state-mem {
-> +						regulator-off-in-suspend;
-> +					};
->  				};
->  
->  				buck5_reg: buck5 {
-> @@ -510,7 +523,6 @@
->  					regulator-name = "CAM_ISP_CORE_1.2V";
->  					regulator-min-microvolt = <1000000>;
->  					regulator-max-microvolt = <1200000>;
-> -					regulator-mem-off;
->  				};
->  			};
->  		};
-> 
+Thank you for your review.
