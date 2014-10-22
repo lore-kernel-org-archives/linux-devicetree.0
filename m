@@ -1,80 +1,20 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 4/4] crypto: Add Allwinner Security System crypto
- accelerator
-Date: Wed, 22 Oct 2014 11:00:45 +0200
-Message-ID: <2751026.4HEPlZfN7W__2940.28764260492$1413968562$gmane$org@wuerfel>
-References: <1413728182-13569-1-git-send-email-clabbe.montjoie@gmail.com>
- <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com>
+From: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>
+Subject: [PATCH v4 0/3 RESEND] Add Phytec pbab01 audio support
+Date: Wed, 22 Oct 2014 12:08:31 +0300
+Message-ID: <1413968914-13689-1-git-send-email-d.lavnikevich@sam-solutions.com>
+References: <1412342336-25700-1-git-send-email-d.lavnikevich@sam-solutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, crope@iki.fi, linux@arm.linux.org.uk, herbert@gondor.apana.org.au, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, gregkh@linuxfoundation.org, linux-sunxi@googlegroups.com, mchehab@osg.samsung.com, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, joe@perches.com, devicetree@vger.kernel.org, robh+dt@kernel.org, LABBE Corentin <clabbe.montjoie@gmail.com>, linux-crypto@vger.kernel.org, galak@codeaurora.org, grant.likely@linaro.org, maxime.ripard@free-electrons.com, davem@davemloft.net
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412342336-25700-1-git-send-email-d.lavnikevich@sam-solutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawn.guo@freescale.com, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.de
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 19 October 2014 16:16:22 LABBE Corentin wrote:
-> Add support for the Security System included in Allwinner SoC A20.
-> The Security System is a hardware cryptographic accelerator that support AES/MD5/SHA1/DES/3DES/PRNG algorithms.
-> 
-> Signed-off-by: LABBE Corentin <clabbe.montjoie@gmail.com>
+Patch fixing PLL D configuration (number 4 in previous patchset) was
+already accepted by Mark Brown. No notes or comments on other patches
+was made so resending them in case they were lost.
 
-Please wrap lines in the changelog after about 70 characters.
-
-> --- /dev/null
-> +++ b/drivers/crypto/sunxi-ss/sunxi-ss-cipher.c
-> @@ -0,0 +1,489 @@
-
-> +#include "sunxi-ss.h"
-> +
-> +extern struct sunxi_ss_ctx *ss;
-
-'extern' declarations belong into header files, not .c files. It would
-be even better to avoid this completely and carry the pointer to the
-context in an object that gets passed around. In general we want drivers
-to be written in a way that allows having multiple instances of the
-device, which the global pointer prevents.
-
-> +
-> +	src32 = (u32 *)src_addr;
-> +	dst32 = (u32 *)dst_addr;
-
-
-You appear to be missing '__iomem' annotations for the mmio pointers.
-Please always run your code through the 'sparse' checker using 'make C=1'
-to catch and fix this and other erros.
-
-> +	ileft = areq->nbytes / 4;
-> +	oleft = areq->nbytes / 4;
-> +	i = 0;
-> +	do {
-> +		if (ileft > 0 && rx_cnt > 0) {
-> +			todo = min(rx_cnt, ileft);
-> +			ileft -= todo;
-> +			do {
-> +				writel_relaxed(*src32++,
-> +						ss->base +
-> +						SS_RXFIFO);
-> +				todo--;
-> +			} while (todo > 0);
-> +		}
-
-This looks like it should be using writesl() instead of the 
-writel_relaxed() loop. That should not only be faster but it will
-also change the byte ordering if you are running a big-endian
-kernel.
-
-Since this is a FIFO register, the ordering that writesl uses
-is likely the correct one.
-
-	Arnd
+Based on branch for-next branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
