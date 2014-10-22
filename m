@@ -1,52 +1,69 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH] RFC: add function for localbus address
-Date: Wed, 22 Oct 2014 16:53:15 -0700
-Message-ID: <5448436B.3020705@codeaurora.org>
-References: <20140729234522.E9FF1C40738@trevor.secretlab.ca> <1409672700-21697-1-git-send-email-svarbanov@mm-sol.com> <20140908145204.8ADC2C40AE5@trevor.secretlab.ca> <540E1014.8090102@codeaurora.org> <20140914044610.913E9C4102A@trevor.secretlab.ca> <54483746.9060104@codeaurora.org> <20141022232021.GF27405@n2100.arm.linux.org.uk>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] adv7604: Add DT parsing support
+Date: Thu, 23 Oct 2014 02:53:50 +0300
+Message-ID: <1645583.LAOF2HV7Iq@avalon>
+References: <1413992061-28678-1-git-send-email-jean-michel.hautbois@vodalys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20141022232021.GF27405@n2100.arm.linux.org.uk>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Grant Likely <grant.likely@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413992061-28678-1-git-send-email-jean-michel.hautbois@vodalys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, lars@metafoo.de
 List-Id: devicetree@vger.kernel.org
 
-On 10/22/2014 04:20 PM, Russell King - ARM Linux wrote:
-> On Wed, Oct 22, 2014 at 04:01:26PM -0700, Stephen Boyd wrote:
->> Where did this end up? When we talked at Connect I think we settled on
->> exploring a driver core specific API like dev_get_localbus_address()
->> that calls of_get_localbus_address() for devices with an of_node and in
->> the future it could call something like acpi_get_localbus_address() when
->> there's an acpi_node. I believe the biggest concern is that we're making
->> an API that is OF or platform bus specific when it doesn't need to be.
->> Making a driver core specific API avoids this problem by making it bus
->> agnostic.
-> Given how little information there is in the original patch as to exactly
-> what problem this is addressing, I could be getting the wrong end of the
-> stick here.
->
-> Is this about trying to have a way to obtain the bus local addresses
-> associated with CPU-view resources?
->
-> If so, how about looking towards PCI, which has had this problem for the
-> last 15+ years, where PCI bus addresses are not necessarily the same as
-> CPU physical addresses?
->
-> There, we don't end up with multiple addresses specified in resources.
-> We instead have a way to translate between resources and bus-local
-> addresses, which IMHO is far nicer and less error-prone than having to
-> specify the same information twice, once with an offset and once without.
->
+Hi Jean-Michel,
 
-Not really. This is about giving the address of a sub device on a pmic
-to a platform driver for that sub device. There is no CPU view. The
-addresses are offsets in a register space for a PMIC or other MFD that
-lives on i2c/spi or some similar sort of bus. So perhaps 0x20
-corresponds to the start of the register space for an RTC and 0x38
-corresponds to the start of the register space for a regulator.
+Thank you for the patch.
+
+On Wednesday 22 October 2014 17:34:21 Jean-Michel Hautbois wrote:
+> This patch adds support for DT parsing of ADV7604 as well as ADV7611.
+> It needs to be improved in order to get ports parsing too.
+
+Let's improve it then :-) The DT bindings as proposed by this patch are 
+incomplete, that's just asking for trouble.
+
+How would you model the adv7604 ports ?
+
+> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/adv7604.txt | 1 +
+>  drivers/media/i2c/adv7604.c                             | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> b/Documentation/devicetree/bindings/media/i2c/adv7604.txt index
+> c27cede..5c8b3e6 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> @@ -10,6 +10,7 @@ Required Properties:
+> 
+>    - compatible: Must contain one of the following
+>      - "adi,adv7611" for the ADV7611
+> +    - "adi,adv7604" for the ADV7604
+
+Please switch the two lines to keep them alphabetically sorted.
+> 
+>    - reg: I2C slave address
+> 
+> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
+> index 47795ff..421035f 100644
+> --- a/drivers/media/i2c/adv7604.c
+> +++ b/drivers/media/i2c/adv7604.c
+> @@ -2677,6 +2677,7 @@ MODULE_DEVICE_TABLE(i2c, adv7604_i2c_id);
+> 
+>  static struct of_device_id adv7604_of_id[] __maybe_unused = {
+>  	{ .compatible = "adi,adv7611", .data = &adv7604_chip_info[ADV7611] },
+> +	{ .compatible = "adi,adv7604", .data = &adv7604_chip_info[ADV7604] },
+
+Same comment here.
+
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, adv7604_of_id);
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards,
+
+Laurent Pinchart
