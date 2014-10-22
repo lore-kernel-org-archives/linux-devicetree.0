@@ -1,43 +1,74 @@
-From: Zhao Qiang <B45475@freescale.com>
-Subject: [PATCH 2/3] ls1021aqds: add qe node to ls1021aqds dts
-Date: Wed, 22 Oct 2014 13:07:02 +0800
-Message-ID: <1413954422-13044-1-git-send-email-B45475@freescale.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 2/8] phy: miphy28lp: Add MiPHY28lp header file for
+ DT x Driver defines
+Date: Wed, 22 Oct 2014 10:50:12 +0530
+Message-ID: <54473E8C.20303@ti.com>
+References: <1411721657-9924-1-git-send-email-gabriel.fernandez@linaro.org>	<1411721657-9924-3-git-send-email-gabriel.fernandez@linaro.org>	<544637A3.8010002@ti.com> <CAG374jCq1b14N_k3_j4WY-yGcXm7ChFQat5mUqgs6ZQ=UP397g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, B07421@freescale.com
-Cc: Zhao Qiang <B45475@freescale.com>, R63061@freescale.com
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAG374jCq1b14N_k3_j4WY-yGcXm7ChFQat5mUqgs6ZQ=UP397g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>, Lee Jones <lee.jones@linaro.org>, alexandre torgue <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-YWRkIHFlIG5vZGUocWUtdGRtIGFuZCBxZS11YXJ0KSBpbnRvIGxzMTAyMWEtcWRzLmR0cwoKU2ln
-bmVkLW9mZi1ieTogWmhhbyBRaWFuZyA8QjQ1NDc1QGZyZWVzY2FsZS5jb20+Ci0tLQogYXJjaC9h
-cm0vYm9vdC9kdHMvbHMxMDIxYS1xZHMuZHRzIHwgMjQgKysrKysrKysrKysrKysrKysrKysrKysr
-CiAxIGZpbGUgY2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL2xzMTAyMWEtcWRzLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEtcWRz
-LmR0cwppbmRleCBlMjRhNWJjLi40MjMxZGFhIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0
-cy9sczEwMjFhLXFkcy5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIxYS1xZHMuZHRz
-CkBAIC0zMDgsNiArMzA4LDMwIEBACiAJfTsKIH07CiAKKyZ1cWUgeworCXRkbWE6IHVjY0AyMDAw
-IHsKKwkJY29tcGF0aWJsZSA9ICJmc2wsdWNjLXRkbSI7CisJCXJ4LWNsb2NrLW5hbWUgPSAiYnJn
-MSI7CisJCXR4LWNsb2NrLW5hbWUgPSAiYnJnMSI7CisJCWZzbCxyeC1zeW5jLWNsb2NrID0gIm5v
-bmUiOworCQlmc2wsdHgtc3luYy1jbG9jayA9ICJub25lIjsKKwkJZnNsLHR4LXRpbWVzbG90ID0g
-PDB4ZmZmZmZmZmU+OworCQlmc2wscngtdGltZXNsb3QgPSA8MHhmZmZmZmZmZT47CisJCWZzbCx0
-ZG0tZnJhbWVyLXR5cGUgPSAiZTEiOworCQlmc2wsdGRtLW1vZGUgPSAiaW50ZXJuYWwtbG9vcGJh
-Y2siOworCQlmc2wsdGRtLWlkID0gPDA+OworCQlmc2wsc2lyYW0tZW50cnktaWQgPSA8MD47CisJ
-fTsKKworCXNlcmlhbDogdWNjQDIyMDAgeworCQlkZXZpY2VfdHlwZSA9ICJzZXJpYWwiOworCQlj
-b21wYXRpYmxlID0gInVjY191YXJ0IjsKKwkJcG9ydC1udW1iZXIgPSA8MT47CisJCXJ4LWNsb2Nr
-LW5hbWUgPSAiYnJnMiI7CisJCXR4LWNsb2NrLW5hbWUgPSAiYnJnMiI7CisJfTsKK307CisKICZw
-d20zIHsKIAlzdGF0dXMgPSAib2theSI7CiB9OwotLSAKMi4xLjAuMjcuZzk2ZGIzMjQKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBt
-YWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5v
-emxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+
+
+On Tuesday 21 October 2014 09:19 PM, Gabriel Fernandez wrote:
+> Hi Kishon,
+> 
+> To be sure, if i rename MIPHY_TYPE_SATA into PHY_TYPE_SATA, i have to
+> rename the filename also ?
+> 
+> include/dt-bindings/phy/phy-miphy.h into include/dt-bindings/phy/phy.h
+> 
+> am I right?
+
+That's right..
+
+Cheers
+Kishon
+> 
+> Best Regards
+> 
+> Gabriel
+> 
+> On 21 October 2014 12:38, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>> Hi Gabriel,
+>>
+>> On Friday 26 September 2014 02:24 PM, Gabriel FERNANDEZ wrote:
+>>> This provides the shared header file which will be reference from both
+>>> the MiPHY28lp driver and its associated Device Tree node(s).
+>>>
+>>> Signed-off-by: alexandre torgue <alexandre.torgue@st.com>
+>>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+>>> ---
+>>>  include/dt-bindings/phy/phy-miphy.h | 12 ++++++++++++
+>>>  1 file changed, 12 insertions(+)
+>>>  create mode 100644 include/dt-bindings/phy/phy-miphy.h
+>>>
+>>> diff --git a/include/dt-bindings/phy/phy-miphy.h b/include/dt-bindings/phy/phy-miphy.h
+>>> new file mode 100644
+>>> index 0000000..9bc49b9
+>>> --- /dev/null
+>>> +++ b/include/dt-bindings/phy/phy-miphy.h
+>>> @@ -0,0 +1,12 @@
+>>> +/*
+>>> + * This header provides constants for the phy framework
+>>> + * based on the STMicroelectronics miphxxxx.
+>>> + */
+>>> +#ifndef _DT_BINDINGS_PHY_MIPHY
+>>> +#define _DT_BINDINGS_PHY_MIPHY
+>>> +
+>>> +#define MIPHY_TYPE_SATA              1
+>>> +#define MIPHY_TYPE_PCIE              2
+>>> +#define MIPHY_TYPE_USB               3
+>>
+>> Since these PHY types are common across SoCs, we can have something like
+>> PHY_TYPE_SATA, PHY_TYPE_PCIE so that each SoCs don't have to create a separate
+>> header file.
+>>
+>> Cheers
+>> Kishon
