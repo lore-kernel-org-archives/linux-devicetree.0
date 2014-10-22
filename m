@@ -1,102 +1,116 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 6/9] ARM: berlin: Add BG2 ethernet DT nodes
-Date: Wed, 22 Oct 2014 20:26:49 +0200
-Message-ID: <1414002412-13615-7-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1414002412-13615-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Santosh Shilimkar <santosh.shilimkar@gmail.com>
+Subject: Re: [PATCH v2 2/3] ARM: keystone: pm: switch to use generic pm domains
+Date: Wed, 22 Oct 2014 11:49:43 -0700
+Message-ID: <5447FC47.2060003@gmail.com>
+References: <1413809764-21995-1-git-send-email-grygorii.strashko@ti.com>	<1413809764-21995-3-git-send-email-grygorii.strashko@ti.com>	<5446A065.9050308@gmail.com> <544793B5.6080601@ti.com> <7h61fccd0v.fsf@deeprootsystems.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414002412-13615-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7h61fccd0v.fsf@deeprootsystems.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Marvell BG2 has two fast ethernet controllers with internal PHY,
-add the corresponding nodes to SoC dtsi.
+On 10/22/2014 08:58 AM, Kevin Hilman wrote:
+> Grygorii Strashko <grygorii.strashko@ti.com> writes:
+>
+>> Hi Santosh,
+>>
+>> On 10/21/2014 09:05 PM, Santosh Shilimkar wrote:
+>>> On 10/20/2014 05:56 AM, Grygorii Strashko wrote:
+>>>> This patch switches Keystone 2 PM code to use Generic PM domains
+>>>> instead of PM clock domains because of the lack of DT support
+>>>> for the last.
+>>>>
+>>>> Reviewed-by: Kevin Hilman <khilman@linaro.org>
+>>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>>>> ---
+>>>>    .../bindings/power/ti,keystone-powerdomain.txt     |  31 ++++++
+>>>>    arch/arm/mach-keystone/Kconfig                     |   1 +
+>>>>    arch/arm/mach-keystone/pm_domain.c                 | 112
+>>>> ++++++++++++++-------
+>>>>    3 files changed, 107 insertions(+), 37 deletions(-)
+>>>>    create mode 100644
+>>>> Documentation/devicetree/bindings/power/ti,keystone-powerdomain.txt
+>>>>
 
-Tested-by: Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Changelog:
-v1->v2:
-- move phy-connection-type to controller node instead of PHY node
-  (Reported by Sergei Shtylyov)
+[..]
 
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: "Antoine T=C3=A9nart" <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- arch/arm/boot/dts/berlin2.dtsi | 36 ++++++++++++++++++++++++++++++++++=
-++
- 1 file changed, 36 insertions(+)
+>>>> diff --git a/arch/arm/mach-keystone/pm_domain.c
+>>>> b/arch/arm/mach-keystone/pm_domain.c
+>>>> index ca79dda..d58759d 100644
+>>>> --- a/arch/arm/mach-keystone/pm_domain.c
+>>>> +++ b/arch/arm/mach-keystone/pm_domain.c
+>>>> @@ -12,69 +12,107 @@
+>>>>     * version 2, as published by the Free Software Foundation.
+>>>>     */
+>>>>
+>>>> +#include <linux/clk.h>
+>>>>    #include <linux/init.h>
+>>>> -#include <linux/pm_runtime.h>
+>>>>    #include <linux/pm_clock.h>
+>>>> +#include <linux/pm_domain.h>
+>>>>    #include <linux/platform_device.h>
+>>>> -#include <linux/clk-provider.h>
+>>>>    #include <linux/of.h>
+>>>>
+>>>> -#ifdef CONFIG_PM_RUNTIME
+>>>> -static int keystone_pm_runtime_suspend(struct device *dev)
+>>>> +#ifdef CONFIG_PM_GENERIC_DOMAINS
+>>>> +
+>>>> +struct keystone_domain {
+>>>> +    struct generic_pm_domain genpd;
+>>>> +    struct device    *dev;
+>>>> +};
+>>>> +
+>>>> +void keystone_pm_domain_attach_dev(struct device *dev)
+>>>>    {
+>>>> +    struct clk *clk;
+>>>>        int ret;
+>>>> +    int i = 0;
+>>>>
+>>>>        dev_dbg(dev, "%s\n", __func__);
+>>>>
+>>>> -    ret = pm_generic_runtime_suspend(dev);
+>>>> -    if (ret)
+>>>> -        return ret;
+>>>> -
+>>>> -    ret = pm_clk_suspend(dev);
+>>>> +    ret = pm_clk_create(dev);
+>>>>        if (ret) {
+>>>> -        pm_generic_runtime_resume(dev);
+>>>> -        return ret;
+>>>> +        dev_err(dev, "pm_clk_create failed %d\n", ret);
+>>>> +        return;
+>>>> +    };
+>>>> +
+>>>> +    while ((clk = of_clk_get(dev->of_node, i++)) && !IS_ERR(clk)) {
+>>>> +        ret = pm_clk_add_clk(dev, clk);
+>>>> +        if (ret) {
+>>>> +            dev_err(dev, "pm_clk_add_clk failed %d\n", ret);
+>>>> +            goto clk_err;
+>>>> +        };
+>>>>        }
+>>>>
+>>>> -    return 0;
+>>>> +    if (!IS_ENABLED(CONFIG_PM_RUNTIME)) {
+>>> Can we not okkup two seperate callbacks instead of above check ?
+>>> I don't like this CONFIG check here. Its slightly better version of
+>>> ifdef in middle of the code.
+>>
+>> I've found more-less similar comment on patch
+>> "Re: [PATCH v3 1/3] power-domain: add power domain drivers for Rockchip platform"
+>> https://lkml.org/lkml/2014/10/17/257
+>>
+>> So, Would you like me to create patch which will enable clocks in pm_clk_add/_clk()
+>> in case !IS_ENABLED(CONFIG_PM_RUNTIME)
+>
+> Yes, I think it's a good idea to propose that change and propose to
+> Rafael on linux-pm.  Be sure that myself, Ulf and Geert are Cc'd.
+>
+Lets do that.
 
-diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2=
-=2Edtsi
-index 9d7c810ebd0b..dc0227dfc691 100644
---- a/arch/arm/boot/dts/berlin2.dtsi
-+++ b/arch/arm/boot/dts/berlin2.dtsi
-@@ -79,11 +79,47 @@
- 			clocks =3D <&chip CLKID_TWD>;
- 		};
-=20
-+		eth1: ethernet@b90000 {
-+			compatible =3D "marvell,pxa168-eth";
-+			reg =3D <0xb90000 0x10000>;
-+			clocks =3D <&chip CLKID_GETH1>;
-+			interrupts =3D <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-+			/* set by bootloader */
-+			local-mac-address =3D [00 00 00 00 00 00];
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+			phy-connection-type =3D "mii";
-+			phy-handle =3D <&ethphy1>;
-+			status =3D "disabled";
-+
-+			ethphy1: ethernet-phy@0 {
-+				reg =3D <0>;
-+			};
-+		};
-+
- 		cpu-ctrl@dd0000 {
- 			compatible =3D "marvell,berlin-cpu-ctrl";
- 			reg =3D <0xdd0000 0x10000>;
- 		};
-=20
-+		eth0: ethernet@e50000 {
-+			compatible =3D "marvell,pxa168-eth";
-+			reg =3D <0xe50000 0x10000>;
-+			clocks =3D <&chip CLKID_GETH0>;
-+			interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+			/* set by bootloader */
-+			local-mac-address =3D [00 00 00 00 00 00];
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+			phy-connection-type =3D "mii";
-+			phy-handle =3D <&ethphy0>;
-+			status =3D "disabled";
-+
-+			ethphy0: ethernet-phy@0 {
-+				reg =3D <0>;
-+			};
-+		};
-+
- 		apb@e80000 {
- 			compatible =3D "simple-bus";
- 			#address-cells =3D <1>;
---=20
-2.1.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards,
+Santosh
