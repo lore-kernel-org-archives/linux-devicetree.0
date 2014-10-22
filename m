@@ -1,74 +1,30 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: GPIO bindings guidelines (Was: Re: [PATCH v5 10/12] gpio: Support for unified device properties interface)
-Date: Wed, 22 Oct 2014 11:28:40 +0200
-Message-ID: <2466280.tMTA38OpXD@wuerfel>
-References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com> <4711930.7fsc2oSxcp@wuerfel> <20141022085140.GF1484@lahna.fi.intel.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v5 3/4] pinctrl: Qualcomm SPMI PMIC GPIO pin controller
+ driver
+Date: Wed, 22 Oct 2014 12:35:14 +0300
+Message-ID: <1413970514.30282.8.camel@mm-sol.com>
+References: <1412181058-29179-1-git-send-email-iivanov@mm-sol.com>
+	 <1412181058-29179-4-git-send-email-iivanov@mm-sol.com>
+	 <5446A2D8.3070204@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20141022085140.GF1484@lahna.fi.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <5446A2D8.3070204@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 22 October 2014 11:51:40 Mika Westerberg wrote:
-> On Wed, Oct 22, 2014 at 10:33:32AM +0200, Arnd Bergmann wrote:
-> > On Wednesday 22 October 2014 11:10:44 Mika Westerberg wrote:
-> > > 
-> > > It expects that GPIOs returned from _CRS are in specific order. Since we
-> > > can't change these existing ACPI tables, we must support them somehow.
-> > > 
-> > > This patch series handles it so that:
-> > > 
-> > >   1) If we can't find given property (e.g "reset-gpios" or
-> > >      "shutdown-gpios") the index above will refer directly to the GPIO
-> > >      resource returned from _CRS.
-> > > 
-> > >   2) If the property is found we ignore index and take it from the
-> > >      property instead.
-> > > 
-> > > This has the drawback that we cannot support this:
-> > > 
-> > >         Package () { "reset-gpios", Package () { ^GPIO, 0, 0, 0, ^GPIO, 1, 0, 0}}
-> > >                                                                  ^^^^^^^^^^^^^^
-> > > So the second entry in the above is not accessible using
-> > > gpiod_get_index() and the reason is that we want to support the existing
-> > > and new ACPI tables where _DSD is not being used.
-> > 
-> > So this is not using the DT binding but does thing slightly differently then.
-> > In this case (supporting two incompatible bindings for DT and ACPI), I think
-> > the only sensible driver implementation would be to know what we are asking
-> > for and use different devm_gpiod_get_index statements based on the firmware
-> > interface.
-> 
-> Yes something like that is probably needed.
-> 
-> Alternatively (I didn't try if this works) we could do it so that
-> when we see:
-> 
->         gpio = devm_gpiod_get_index(&pdev->dev, "shutdown", 1);
-> 
-> we check first for the property ("shutdown-gpios"), and check if it has
-> more than one entry in the value, like:
-> 
->         Package () { "reset-gpios", Package () { ^GPIO, 0, 0, 0, ^GPIO, 1, 0, 0}}
-> 
-> and in that case return the second entry. If we find this instead:
-> 
->         Package () { "reset-gpios", Package () { ^GPIO, 0, 0, 0 }}
-> 
-> we just ignore the index.
-> 
-> Last if there is no _DSD the index refers directly to the GPIO resource
-> in _CRS.
-> 
-> This would support both _DSD and non-_DSD at the same time but it makes
-> the implementation more complex.
 
-I think the main problem with that approach is that it makes the common
-code more error-prone in case of unintentionally broken device descriptions,
-because it less often returns an error.
+On Tue, 2014-10-21 at 19:15 +0100, Srinivas Kandagatla wrote:
+> Hi Ivan,
+> 
+> Just realized that this patch can generate compiler errors due to 
+> 3.18
+> changes in pinmux_ops struct and gpiochip_remove returns void now.
 
-	Arnd
+Yes. I am just preparing new version of this for Linus.
+
+Regards,
+Ivan
