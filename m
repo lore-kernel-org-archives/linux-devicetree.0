@@ -1,89 +1,722 @@
-From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
-Subject: Re: [PATCH v2 6/7] arm64: dts: Add nodes for mmc, i2c, rtc, watchdog
- on Exynos7
-Date: Wed, 22 Oct 2014 19:28:31 +0530
-Message-ID: <CAM4voan-tvmJkmHt+F06_HUVKxK1G68Nw=v8sOEf7z10EPdjzw@mail.gmail.com>
-References: <1413870237-1821-1-git-send-email-a.kesavan@samsung.com>
-	<1413870237-1821-7-git-send-email-a.kesavan@samsung.com>
-	<CAGOxZ50=1ebU=8r6S_4rbL=82zb3asFTGEjkzNrJPjTkjEGfXg@mail.gmail.com>
-	<544666EF.9000606@gmail.com>
-	<CAGOxZ51UG3XrJ_-TPr+O9BWj0Q_xj+M2VSPOragM8Y5zf0zCVg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAGOxZ51UG3XrJ_-TPr+O9BWj0Q_xj+M2VSPOragM8Y5zf0zCVg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@gmail.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, robh <robh@kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "catalin.marinas" <catalin.marinas@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v4] iio: iadc: Qualcomm SPMI PMIC current ADC driver
+Date: Wed, 22 Oct 2014 17:13:33 +0300
+Message-ID: <1413987213-22218-1-git-send-email-iivanov@mm-sol.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alim and Tomasz,
+The current ADC is peripheral of Qualcomm SPMI PMIC chips. It has
+16 bits resolution and register space inside PMIC accessible across
+SPMI bus.
 
-Thanks for the review.
+The driver registers itself through IIO interface.
 
-On Wed, Oct 22, 2014 at 3:05 AM, Alim Akhtar <alim.akhtar@gmail.com> wrote:
-> Hi Tomasz,
->
-> On Tue, Oct 21, 2014 at 7:30 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
->> On 21.10.2014 15:52, Alim Akhtar wrote:
->>>> +&mmc_0 {
->>>> +       status = "okay";
->>>> +       num-slots = <1>;
->>>> +       broken-cd;
->>>> +       caps2-mmc-hs200-1_8v;
->>> Please use mmc_hs200-1_8v instead.
->>
->> I guess you mean "mmc-hs200-1_8v" (with a hyphen between mmc and hs200).
->>
-> Yes, right, that was a typo. Thanks.
+Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+---
 
-Will modify it to "mmc-hs200-1_8v".
+Changes:
+ - Address review comments from Hartmut Knaack
 
->>>> +       supports-highspeed;
->>> As per synopsys-dw-mshc DT binding documentation, supports-highspeed
->>> property is deprecated, so please use common DT binding for this,
->>> which is "cap-mmc-highspeed".
->>>> +       non-removable;
->>>> +       card-detect-delay = <200>;
->>>> +       clock-frequency = <800000000>;
->>>> +       samsung,dw-mshc-ciu-div = <3>;
->>>> +       samsung,dw-mshc-sdr-timing = <0 4>;
->>>> +       samsung,dw-mshc-ddr-timing = <0 2>;
->>>> +       pinctrl-names = "default";
->>>> +       pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_qrdy &sd0_bus1 &sd0_bus4 &sd0_bus8>;
->>>> +       bus-width = <8>;
->>>> +};
->>>> +
->>>> +&mmc_2 {
->>>> +       status = "okay";
->>>> +       num-slots = <1>;
->>>> +       supports-highspeed;
->>> Here also common DT binding please "cap-sd-highspeed"
->>
->> Above you suggest "cap-mmc-highspeed" to replace the same deprecated
->> property, but here "cap-sd-highspeed". What is the rationale behind
->> using only one particular new property and not both for both controllers?
->>
-> Well, on this particular board dw_mmc channels are dedicated to use
-> only one kind of card. e.g. mmc_0 is for eMMC and which is
-> non-removable and mmc_2 is for SD cards. Although controller supports
-> both the properties on all channel on this SoC.
+ .../devicetree/bindings/iio/adc/qcom,spmi-iadc.txt |  46 ++
+ drivers/iio/adc/Kconfig                            |  14 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/qcom-spmi-iadc.c                   | 595 +++++++++++++++++++++
+ 4 files changed, 656 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-iadc.txt
+ create mode 100644 drivers/iio/adc/qcom-spmi-iadc.c
 
-Will use "cap-sd/mmc-highspeed" instead of "supports-highspeed".
-
-Regards,
-Abhilash
->
->> Best regards,
->> Tomasz
->
->
->
-> --
-> Regards,
-> Alim
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-iadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-iadc.txt
+new file mode 100644
+index 0000000..4e36d6e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-iadc.txt
+@@ -0,0 +1,46 @@
++Qualcomm's SPMI PMIC current ADC
++
++QPNP PMIC current ADC (IADC) provides interface to clients to read current.
++A 16 bit ADC is used for current measurements. IADC can measure the current
++through an external resistor (channel 1) or internal (built-in) resistor
++(channel 0). When using an external resistor it is to be described by
++qcom,external-resistor-micro-ohms property.
++
++IADC node:
++
++- compatible:
++    Usage: required
++    Value type: <string>
++    Definition: Should contain "qcom,spmi-iadc".
++
++- reg:
++    Usage: required
++    Value type: <prop-encoded-array>
++    Definition: IADC base address and length in the SPMI PMIC register map
++
++- interrupts:
++    Usage: optional
++    Value type: <prop-encoded-array>
++    Definition: End of ADC conversion.
++
++- qcom,external-resistor-micro-ohms:
++    Usage: optional
++    Value type: <u32>
++    Definition: Sense resister value in micro Ohm.
++                If not defined value of 10000 micro Ohms will be used.
++
++Example:
++	/* IADC node */
++	pmic_iadc: iadc@3600 {
++		compatible = "qcom,spmi-iadc";
++		reg = <0x3600 0x100>;
++		interrupts = <0x0 0x36 0x0 IRQ_TYPE_EDGE_RISING>;
++		qcom,external-resistor-micro-ohms = <10000>;
++		#io-channel-cells  = <1>;
++	};
++
++	/* IIO client node */
++	bat {
++		io-channels = <&pmic_iadc  0>;
++		io-channel-names = "iadc";
++	};
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 88bdc8f..d0924f3 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -206,6 +206,20 @@ config NAU7802
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called nau7802.
+ 
++config QCOM_SPMI_IADC
++	tristate "Qualcomm SPMI PMIC current ADC"
++	depends on SPMI
++	select REGMAP_SPMI
++	help
++	  This is the IIO Current ADC driver for Qualcomm QPNP IADC Chip.
++
++	  The driver supports single mode operation to read from one of two
++	  channels (external or internal). Hardware have additional
++	  channels internally used for gain and offset calibration.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called qcom-spmi-iadc.
++
+ config ROCKCHIP_SARADC
+ 	tristate "Rockchip SARADC driver"
+ 	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
+diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+index cb88a6a..c06718b 100644
+--- a/drivers/iio/adc/Makefile
++++ b/drivers/iio/adc/Makefile
+@@ -22,6 +22,7 @@ obj-$(CONFIG_MCP320X) += mcp320x.o
+ obj-$(CONFIG_MCP3422) += mcp3422.o
+ obj-$(CONFIG_MEN_Z188_ADC) += men_z188_adc.o
+ obj-$(CONFIG_NAU7802) += nau7802.o
++obj-$(CONFIG_QCOM_SPMI_IADC) += qcom-spmi-iadc.o
+ obj-$(CONFIG_ROCKCHIP_SARADC) += rockchip_saradc.o
+ obj-$(CONFIG_TI_ADC081C) += ti-adc081c.o
+ obj-$(CONFIG_TI_ADC128S052) += ti-adc128s052.o
+diff --git a/drivers/iio/adc/qcom-spmi-iadc.c b/drivers/iio/adc/qcom-spmi-iadc.c
+new file mode 100644
+index 0000000..b9666f2
+--- /dev/null
++++ b/drivers/iio/adc/qcom-spmi-iadc.c
+@@ -0,0 +1,595 @@
++/*
++ * Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/bitops.h>
++#include <linux/completion.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/iio/iio.h>
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/mutex.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++
++/* IADC register and bit definition */
++#define IADC_REVISION2				0x1
++#define IADC_REVISION2_SUPPORTED_IADC		1
++
++#define IADC_PERPH_TYPE				0x4
++#define IADC_PERPH_TYPE_ADC			8
++
++#define IADC_PERPH_SUBTYPE			0x5
++#define IADC_PERPH_SUBTYPE_IADC			3
++
++#define IADC_STATUS1				0x8
++#define IADC_STATUS1_OP_MODE			4
++#define IADC_STATUS1_REQ_STS			BIT(1)
++#define IADC_STATUS1_EOC			BIT(0)
++#define IADC_STATUS1_REQ_STS_EOC_MASK		0x3
++
++#define IADC_MODE_CTL				0x40
++#define IADC_OP_MODE_SHIFT			3
++#define IADC_OP_MODE_NORMAL			0
++#define IADC_TRIM_EN				BIT(0)
++
++#define IADC_EN_CTL1				0x46
++#define IADC_EN_CTL1_SET			BIT(7)
++
++#define IADC_CH_SEL_CTL				0x48
++
++#define IADC_DIG_PARAM				0x50
++#define IADC_DIG_DEC_RATIO_SEL_SHIFT		2
++
++#define IADC_HW_SETTLE_DELAY			0x51
++
++#define IADC_CONV_REQ				0x52
++#define IADC_CONV_REQ_SET			BIT(7)
++
++#define IADC_FAST_AVG_CTL			0x5a
++#define IADC_FAST_AVG_EN			0x5b
++#define IADC_FAST_AVG_EN_SET			BIT(7)
++
++#define IADC_PERH_RESET_CTL3			0xda
++#define IADC_FOLLOW_WARM_RB			BIT(2)
++
++#define IADC_DATA				0x60	/* 16 bits */
++
++#define IADC_SEC_ACCESS				0xd0
++#define IADC_SEC_ACCESS_DATA			0xa5
++
++#define IADC_NOMINAL_RSENSE			0xf4
++#define IADC_NOMINAL_RSENSE_SIGN_MASK		BIT(7)
++
++#define IADC_REF_GAIN_MICRO_VOLTS		17857
++
++#define IADC_INT_RSENSE_DEVIATION		15625	/* nano Ohms per bit */
++
++#define IADC_INT_RSENSE_IDEAL_VALUE		10000	/* micro Ohms */
++#define IADC_INT_RSENSE_DEFAULT_VALUE		7800	/* micro Ohms */
++#define IADC_INT_RSENSE_DEFAULT_GF		9000	/* micro Ohms */
++#define IADC_INT_RSENSE_DEFAULT_SMIC		9700	/* micro Ohms */
++
++#define IADC_CONV_TIME_MIN_US			2000
++#define IADC_CONV_TIME_MAX_US			2100
++
++#define IADC_DEF_PRESCALING			0 /* 1:1 */
++#define IADC_DEF_DECIMATION			0 /* 512 */
++#define IADC_DEF_HW_SETTLE_TIME			0 /* 0 us */
++#define IADC_DEF_AVG_SAMPLES			0 /* 1 sample */
++
++/* IADC channel list */
++#define IADC_INT_RSENSE				0
++#define IADC_EXT_RSENSE				1
++#define IADC_GAIN_17P857MV			3
++#define IADC_EXT_OFFSET_CSP_CSN			5
++#define IADC_INT_OFFSET_CSP2_CSN2		6
++
++/**
++ * struct iadc_chip - IADC Current ADC device structure.
++ * @regmap: regmap for register read/write.
++ * @dev: This device pointer.
++ * @base: base offset for the ADC peripheral.
++ * @rsense: Values of the internal and external sense resister in micro Ohms.
++ * @poll_eoc: Poll for end of conversion instead of waiting for IRQ.
++ * @offset: Raw offset values for the internal and external channels.
++ * @gain: Raw gain of the channels.
++ * @lock: ADC lock for access to the peripheral.
++ * @complete: ADC notification after end of conversion interrupt is received.
++ */
++struct iadc_chip {
++	struct regmap	*regmap;
++	struct device	*dev;
++	u16		base;
++	bool		poll_eoc;
++	u32		rsense[2];
++	u16		offset[2];
++	u16		gain;
++	struct mutex	lock;
++	struct completion complete;
++};
++
++static int iadc_read(struct iadc_chip *iadc, u16 offset, u8 *data)
++{
++	unsigned int val;
++	int ret;
++
++	ret = regmap_read(iadc->regmap, iadc->base + offset, &val);
++	if (ret < 0)
++		return ret;
++
++	*data = val;
++	return 0;
++}
++
++static int iadc_write(struct iadc_chip *iadc, u16 offset, u8 data)
++{
++	return regmap_write(iadc->regmap, iadc->base + offset, data);
++}
++
++static int iadc_reset(struct iadc_chip *iadc)
++{
++	u8 data;
++	int ret;
++
++	ret = iadc_write(iadc, IADC_SEC_ACCESS, IADC_SEC_ACCESS_DATA);
++	if (ret < 0)
++		return ret;
++
++	ret = iadc_read(iadc, IADC_PERH_RESET_CTL3, &data);
++	if (ret < 0)
++		return ret;
++
++	ret = iadc_write(iadc, IADC_SEC_ACCESS, IADC_SEC_ACCESS_DATA);
++	if (ret < 0)
++		return ret;
++
++	data |= IADC_FOLLOW_WARM_RB;
++
++	return iadc_write(iadc, IADC_PERH_RESET_CTL3, data);
++}
++
++static int iadc_set_state(struct iadc_chip *iadc, bool state)
++{
++	return iadc_write(iadc, IADC_EN_CTL1, state ? IADC_EN_CTL1_SET : 0);
++}
++
++static void iadc_status_show(struct iadc_chip *iadc)
++{
++	u8 mode, sta1, chan, dig, en, req;
++	int ret;
++
++	ret = iadc_read(iadc, IADC_MODE_CTL, &mode);
++	if (ret < 0)
++		return;
++
++	ret = iadc_read(iadc, IADC_DIG_PARAM, &dig);
++	if (ret < 0)
++		return;
++
++	ret = iadc_read(iadc, IADC_CH_SEL_CTL, &chan);
++	if (ret < 0)
++		return;
++
++	ret = iadc_read(iadc, IADC_CONV_REQ, &req);
++	if (ret < 0)
++		return;
++
++	ret = iadc_read(iadc, IADC_STATUS1, &sta1);
++	if (ret < 0)
++		return;
++
++	ret = iadc_read(iadc, IADC_EN_CTL1, &en);
++	if (ret < 0)
++		return;
++
++	dev_err(iadc->dev,
++		"mode:%02x en:%02x chan:%02x dig:%02x req:%02x sta1:%02x\n",
++		mode, en, chan, dig, req, sta1);
++}
++
++static int iadc_configure(struct iadc_chip *iadc, int channel)
++{
++	u8 decim, mode;
++	int ret;
++
++	/* Mode selection */
++	mode = (IADC_OP_MODE_NORMAL << IADC_OP_MODE_SHIFT) | IADC_TRIM_EN;
++	ret = iadc_write(iadc, IADC_MODE_CTL, mode);
++	if (ret < 0)
++		return ret;
++
++	/* Channel selection */
++	ret = iadc_write(iadc, IADC_CH_SEL_CTL, channel);
++	if (ret < 0)
++		return ret;
++
++	/* Digital parameter setup */
++	decim = IADC_DEF_DECIMATION << IADC_DIG_DEC_RATIO_SEL_SHIFT;
++	ret = iadc_write(iadc, IADC_DIG_PARAM, decim);
++	if (ret < 0)
++		return ret;
++
++	/* HW settle time delay */
++	ret = iadc_write(iadc, IADC_HW_SETTLE_DELAY, IADC_DEF_HW_SETTLE_TIME);
++	if (ret < 0)
++		return ret;
++
++	ret = iadc_write(iadc, IADC_FAST_AVG_CTL, IADC_DEF_AVG_SAMPLES);
++	if (ret < 0)
++		return ret;
++
++	if (IADC_DEF_AVG_SAMPLES)
++		ret = iadc_write(iadc, IADC_FAST_AVG_EN, IADC_FAST_AVG_EN_SET);
++	else
++		ret = iadc_write(iadc, IADC_FAST_AVG_EN, 0);
++
++	if (ret < 0)
++		return ret;
++
++	if (!iadc->poll_eoc)
++		reinit_completion(&iadc->complete);
++
++	ret = iadc_set_state(iadc, true);
++	if (ret < 0)
++		return ret;
++
++	/* Request conversion */
++	return iadc_write(iadc, IADC_CONV_REQ, IADC_CONV_REQ_SET);
++}
++
++static int iadc_poll_wait_eoc(struct iadc_chip *iadc, unsigned int interval_us)
++{
++	unsigned int count, retry;
++	int ret;
++	u8 sta1;
++
++	retry = interval_us / IADC_CONV_TIME_MIN_US;
++
++	for (count = 0; count < retry; count++) {
++		ret = iadc_read(iadc, IADC_STATUS1, &sta1);
++		if (ret < 0)
++			return ret;
++
++		sta1 &= IADC_STATUS1_REQ_STS_EOC_MASK;
++		if (sta1 == IADC_STATUS1_EOC)
++			return 0;
++
++		usleep_range(IADC_CONV_TIME_MIN_US, IADC_CONV_TIME_MAX_US);
++	}
++
++	iadc_status_show(iadc);
++
++	return -ETIMEDOUT;
++}
++
++static int iadc_read_result(struct iadc_chip *iadc, u16 *data)
++{
++	return regmap_bulk_read(iadc->regmap, iadc->base + IADC_DATA, data, 2);
++}
++
++static int iadc_do_conversion(struct iadc_chip *iadc, int chan, u16 *data)
++{
++	unsigned int wait;
++	int ret;
++
++	ret = iadc_configure(iadc, chan);
++	if (ret < 0)
++		goto exit;
++
++	wait = BIT(IADC_DEF_AVG_SAMPLES) * IADC_CONV_TIME_MIN_US * 2;
++
++	if (iadc->poll_eoc) {
++		ret = iadc_poll_wait_eoc(iadc, wait);
++	} else {
++		ret = wait_for_completion_timeout(&iadc->complete, wait);
++		if (!ret)
++			ret = -ETIMEDOUT;
++		else
++			/* double check conversion status */
++			ret = iadc_poll_wait_eoc(iadc, IADC_CONV_TIME_MIN_US);
++	}
++
++	if (!ret)
++		ret = iadc_read_result(iadc, data);
++exit:
++	iadc_set_state(iadc, false);
++	if (ret < 0)
++		dev_err(iadc->dev, "conversion failed\n");
++
++	return ret;
++}
++
++static int iadc_read_raw(struct iio_dev *indio_dev,
++			 struct iio_chan_spec const *chan,
++			 int *val, int *val2, long mask)
++{
++	struct iadc_chip *iadc = iio_priv(indio_dev);
++	s32 isense_ua, vsense_uv;
++	u16 adc_raw, vsense_raw;
++	int ret;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		mutex_lock(&iadc->lock);
++		ret = iadc_do_conversion(iadc, chan->channel, &adc_raw);
++		mutex_unlock(&iadc->lock);
++		if (ret < 0)
++			return ret;
++
++		vsense_raw = adc_raw - iadc->offset[chan->channel];
++
++		vsense_uv = vsense_raw * IADC_REF_GAIN_MICRO_VOLTS;
++		vsense_uv /= (s32)iadc->gain - iadc->offset[chan->channel];
++
++		isense_ua = vsense_uv / iadc->rsense[chan->channel];
++
++		dev_dbg(iadc->dev, "off %d gain %d adc %d %duV I %duA\n",
++			iadc->offset[chan->channel], iadc->gain,
++			adc_raw, vsense_uv, isense_ua);
++
++		*val = isense_ua;
++		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_SCALE:
++		*val = 0;
++		*val2 = 1000;
++		return IIO_VAL_INT_PLUS_MICRO;
++	}
++
++	return -EINVAL;
++}
++
++static const struct iio_info iadc_info = {
++	.read_raw = iadc_read_raw,
++	.driver_module = THIS_MODULE,
++};
++
++static irqreturn_t iadc_isr(int irq, void *dev_id)
++{
++	struct iadc_chip *iadc = dev_id;
++
++	complete(&iadc->complete);
++
++	return IRQ_HANDLED;
++}
++
++static int iadc_update_offset(struct iadc_chip *iadc)
++{
++	int ret;
++
++	ret = iadc_do_conversion(iadc, IADC_GAIN_17P857MV, &iadc->gain);
++	if (ret < 0)
++		return ret;
++
++	ret = iadc_do_conversion(iadc, IADC_INT_OFFSET_CSP2_CSN2,
++				 &iadc->offset[IADC_INT_RSENSE]);
++	if (ret < 0)
++		return ret;
++
++	if (iadc->gain == iadc->offset[IADC_INT_RSENSE]) {
++		dev_err(iadc->dev, "error: internal offset == gain %d\n",
++			iadc->gain);
++		return -EINVAL;
++	}
++
++	ret = iadc_do_conversion(iadc, IADC_EXT_OFFSET_CSP_CSN,
++				 &iadc->offset[IADC_EXT_RSENSE]);
++	if (ret < 0)
++		return ret;
++
++	if (iadc->gain == iadc->offset[IADC_EXT_RSENSE]) {
++		dev_err(iadc->dev, "error: external offset == gain %d\n",
++			iadc->gain);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int iadc_version_check(struct iadc_chip *iadc)
++{
++	u8 val;
++	int ret;
++
++	ret = iadc_read(iadc, IADC_PERPH_TYPE, &val);
++	if (ret < 0)
++		return ret;
++
++	if (val < IADC_PERPH_TYPE_ADC) {
++		dev_err(iadc->dev, "%d is not ADC\n", val);
++		return -EINVAL;
++	}
++
++	ret = iadc_read(iadc, IADC_PERPH_SUBTYPE, &val);
++	if (ret < 0)
++		return ret;
++
++	if (val < IADC_PERPH_SUBTYPE_IADC) {
++		dev_err(iadc->dev, "%d is not IADC\n", val);
++		return -EINVAL;
++	}
++
++	ret = iadc_read(iadc, IADC_REVISION2, &val);
++	if (ret < 0)
++		return ret;
++
++	if (val < IADC_REVISION2_SUPPORTED_IADC) {
++		dev_err(iadc->dev, "revision %d not supported\n", val);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int iadc_rsense_read(struct iadc_chip *iadc, struct device_node *node)
++{
++	int ret, sign, int_sense;
++	u8 deviation;
++
++	ret = of_property_read_u32(node, "qcom,external-resistor-micro-ohms",
++				   &iadc->rsense[IADC_EXT_RSENSE]);
++	if (ret < 0)
++		iadc->rsense[IADC_EXT_RSENSE] = IADC_INT_RSENSE_IDEAL_VALUE;
++
++	if (!iadc->rsense[IADC_EXT_RSENSE]) {
++		dev_err(iadc->dev, "external resistor can't be zero Ohms");
++		return -EINVAL;
++	}
++
++	ret = iadc_read(iadc, IADC_NOMINAL_RSENSE, &deviation);
++	if (ret < 0)
++		return ret;
++
++	/*
++	 * Deviation value stored is an offset from 10 mili Ohms, bit 7 is
++	 * the sign, the remaining bits have an LSB of 15625 nano Ohms.
++	 */
++	sign = (deviation & IADC_NOMINAL_RSENSE_SIGN_MASK) ? -1 : 1;
++
++	deviation &= ~IADC_NOMINAL_RSENSE_SIGN_MASK;
++
++	/* Scale it to nono Ohms */
++	int_sense = IADC_INT_RSENSE_IDEAL_VALUE * 1000;
++	int_sense += sign * deviation * IADC_INT_RSENSE_DEVIATION;
++	int_sense /= 1000; /* micro Ohms */
++
++	iadc->rsense[IADC_INT_RSENSE] = int_sense;
++	return 0;
++}
++
++static const struct iio_chan_spec iadc_channels[] = {
++	{
++		.type = IIO_CURRENT,
++		.datasheet_name	= "INTERNAL_RSENSE",
++		.channel = 0,
++		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
++				      BIT(IIO_CHAN_INFO_SCALE),
++		.indexed = 1,
++	},
++	{
++		.type = IIO_CURRENT,
++		.datasheet_name	= "EXTERNAL_RSENSE",
++		.channel = 1,
++		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
++				      BIT(IIO_CHAN_INFO_SCALE),
++		.indexed = 1,
++	},
++};
++
++static int iadc_probe(struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	struct device *dev = &pdev->dev;
++	struct iio_dev *indio_dev;
++	struct iadc_chip *iadc;
++	int ret, irq_eoc;
++	u32 res;
++
++	indio_dev = devm_iio_device_alloc(dev, sizeof(*iadc));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	iadc = iio_priv(indio_dev);
++	iadc->dev = dev;
++
++	iadc->regmap = dev_get_regmap(dev->parent, NULL);
++	if (!iadc->regmap)
++		return -ENODEV;
++
++	init_completion(&iadc->complete);
++	mutex_init(&iadc->lock);
++
++	ret = of_property_read_u32(node, "reg", &res);
++	if (ret < 0)
++		return -ENODEV;
++
++	iadc->base = res;
++
++	ret = iadc_version_check(iadc);
++	if (ret < 0)
++		return -ENODEV;
++
++	ret = iadc_rsense_read(iadc, node);
++	if (ret < 0)
++		return -ENODEV;
++
++	dev_dbg(iadc->dev, "sense resistors %d and %d micro Ohm\n",
++		iadc->rsense[IADC_INT_RSENSE],
++		iadc->rsense[IADC_EXT_RSENSE]);
++
++	irq_eoc = platform_get_irq(pdev, 0);
++	if (irq_eoc == -EPROBE_DEFER)
++		return irq_eoc;
++
++	if (irq_eoc < 0)
++		iadc->poll_eoc = true;
++
++	ret = iadc_reset(iadc);
++	if (ret < 0) {
++		dev_err(dev, "reset failed\n");
++		return ret;
++	}
++
++	if (!iadc->poll_eoc) {
++		ret = devm_request_irq(dev, irq_eoc, iadc_isr, 0,
++					"spmi-iadc", iadc);
++		if (!ret)
++			enable_irq_wake(irq_eoc);
++		else
++			return ret;
++	} else {
++		device_init_wakeup(iadc->dev, 1);
++	}
++
++	ret = iadc_update_offset(iadc);
++	if (ret < 0) {
++		dev_err(dev, "failed offset calibration\n");
++		return ret;
++	}
++
++	indio_dev->dev.parent = dev;
++	indio_dev->dev.of_node = node;
++	indio_dev->name = pdev->name;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++	indio_dev->info = &iadc_info;
++	indio_dev->channels = iadc_channels;
++	indio_dev->num_channels = ARRAY_SIZE(iadc_channels);
++
++	return devm_iio_device_register(dev, indio_dev);
++}
++
++static const struct of_device_id iadc_match_table[] = {
++	{ .compatible = "qcom,spmi-iadc" },
++	{ }
++};
++
++MODULE_DEVICE_TABLE(of, iadc_match_table);
++
++static struct platform_driver iadc_driver = {
++	.driver = {
++		   .name = "qcom-spmi-iadc",
++		   .of_match_table = iadc_match_table,
++	},
++	.probe = iadc_probe,
++};
++
++module_platform_driver(iadc_driver);
++
++MODULE_ALIAS("platform:qcom-spmi-iadc");
++MODULE_DESCRIPTION("Qualcomm SPMI PMIC current ADC driver");
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>");
+-- 
+1.9.1
