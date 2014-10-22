@@ -1,184 +1,165 @@
-From: Emil Medve <Emilian.Medve@Freescale.com>
-Subject: [PATCH 4/4] dt/bindings: Introduce the FSL QorIQ DPAA QMan portal(s)
-Date: Wed, 22 Oct 2014 09:09:32 -0500
-Message-ID: <1413986972-621-4-git-send-email-Emilian.Medve@Freescale.com>
-References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
+From: Frans Klaver <frans.klaver@xsens.com>
+Subject: [PATCH 12/13] power: reset: ltc2952: make trigger input optional
+Date: Wed, 22 Oct 2014 16:31:09 +0200
+Message-ID: <1413988270-28092-13-git-send-email-frans.klaver@xsens.com>
+References: <1413988270-28092-1-git-send-email-frans.klaver@xsens.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: scottwood@Freescale.com, galak@kernel.crashing.org, corbet@lwn.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, Geoff.Thorpe@Freescale.com, linuxppc-dev@ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Emil Medve <Emilian.Medve@Freescale.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413988270-28092-1-git-send-email-frans.klaver@xsens.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Frans Klaver <frans.klaver@xsens.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Ren=C3=A9=20Moll?= <linux@r-moll.nl>, Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Portals are used by software running on processor cores, accelerators and
-network interfaces to communicate with the QMan
+Currently the ltc2952 supports only one button sequence to initiate
+powerdown. This is not always desirable, as even prolonged button
+presses can happen in use.
 
-Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
-Change-Id: I29764fa8093b5ce65460abc879446795c50d7185
+Allow ltc2952 users to pick their own power down sequence, by making the
+trigger input optional. Since this still means that the ltc2952 may
+power down the platform if the power button is pressed for about 5
+seconds, we still need to make sure to start the watchdog toggle to
+prolong the system power for as long as we need it.
+
+This will still allow the system to control power using the kill signal.
+
+Signed-off-by: Frans Klaver <frans.klaver@xsens.com>
 ---
- .../bindings/powerpc/fsl/qman-portals.txt          | 151 +++++++++++++++++++++
- 1 file changed, 151 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/qman-portals.txt
+ drivers/power/reset/ltc2952-poweroff.c | 87 +++++++++++++++++++++-------------
+ 1 file changed, 55 insertions(+), 32 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/qman-portals.txt b/Documentation/devicetree/bindings/powerpc/fsl/qman-portals.txt
-new file mode 100644
-index 0000000..c4e1e98
---- /dev/null
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/qman-portals.txt
-@@ -0,0 +1,151 @@
-+QorIQ DPAA Queue Manager Portals Device Tree Binding
-+
-+Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
-+
-+CONTENTS
-+
-+	- QMan Portal
-+	- QMan Pool Channel
-+	- Example
-+
-+NOTE:	The bindings described in this document are preliminary and subject to
-+	change
-+
-+QMan Portal Node
-+
-+PROPERTIES
-+
-+- compatible
-+	Usage:		Required
-+	Value type:	<stringlist>
-+	Definition:	Must include "fsl,qman-portal-<hardware revision>"
-+			May include "fsl,<SoC>-qman-portal" or "fsl,qman-portal"
-+
-+- reg
-+	Usage:		Required
-+	Value type:	<prop-encoded-array>
-+	Definition:	Two regions. The first is the cache-enabled region of
-+			the portal. The second is the cache-inhibited region of
-+			the portal
-+
-+- fsl,liodn
-+	Usage:		See pamu.txt
-+	Value type:	<prop-encoded-array>
-+	Definition:	PAMU property used for static LIODN assignment
-+
-+- fsl,iommu-parent
-+	Usage:		See pamu.txt
-+	Value type:	<phandle>
-+	Definition:	PAMU property used for dynamic LIODN assignment. This is
-+			an optional property. It is a valid configuration for
-+			this phandle to be dangling
-+
-+	For additional details about the PAMU/LIODN binding(s) see pamu.txt
-+
-+- fsl,qman-channel-id
-+	Usage:		Required
-+	Value type:	<u32>
-+	Definition:	The hardware index of the channel. This can also be
-+			determined by dividing any of the channel's 8 work queue
-+			IDs by 8
-+
-+In addition to these properties the qman-portals should have sub-nodes to
-+represent the HW devices/portals that are connected to the software portal
-+described here
-+
-+The currently support sub-nodes are:
-+	* fman@0
-+	* fman@1
-+	* pme@0
-+	* crypto@0
-+
-+These subnodes should have the following properties:
-+
-+- fsl,liodn
-+	Usage:		See pamu.txt
-+	Value type:	<prop-encoded-array>
-+	Definition:	PAMU property used for static LIODN assignment
-+
-+- fsl,iommu-parent
-+	Usage:		See pamu.txt
-+	Value type:	<phandle>
-+	Definition:	PAMU property used for dynamic LIODN assignment
-+
-+- dev-handle
-+	Usage:		Required
-+	Value type:	<phandle>
-+	Definition:	The phandle to the particular hardware device that this
-+			portal is connected to.
-+
-+DPAA QMan Pool Channel Nodes
-+
-+Pool Channels are defined with the following properties.
-+
-+PROPERTIES
-+
-+- compatible
-+	Usage:		Required
-+	Value type:	<stringlist>
-+	Definition:	Must include "fsl,qman-pool-channel"
-+			May include "fsl,<SoC>-qman-pool-channel"
-+
-+- fsl,qman-channel-id
-+	Usage:		Required
-+	Value type:	<u32>
-+	Definition:	The hardware index of the channel. This can also be
-+			determined by dividing any of the channel's 8 work queue
-+			IDs by 8
-+
-+EXAMPLE
-+
-+The example below shows a (P4080) BMan portals container/bus node with two portals
-+
-+	qman-portals@ff4200000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges = <0 0xf 0xf4200000 0x200000>;
-+
-+		qman-portal@0 {
-+			cell-index = <0>;
-+			compatible = "fsl,qman-portal-1.2.0", "fsl,qman-portal";
-+			reg = <0 0x4000 0x100000 0x1000>;
-+			interrupts = <104 2 0 0>;
-+			fsl,liodn = <1 2>;
-+			fsl,qman-channel-id = <0>;
-+
-+			fman@0 {
-+				fsl,liodn = <0x21>;
-+				dev-handle = <&fman0>;
-+			};
-+			fman@1 {
-+				fsl,liodn = <0xa1>;
-+				dev-handle = <&fman1>;
-+			};
-+			crypto@0 {
-+				fsl,liodn = <0x41 0x66>;
-+				dev-handle = <&crypto>;
-+			};
-+		};
-+		qman-portal@4000 {
-+			cell-index = <1>;
-+			compatible = "fsl,qman-portal-1.2.0", "fsl,qman-portal";
-+			reg = <0x4000 0x4000 0x101000 0x1000>;
-+			interrupts = <106 2 0 0>;
-+			fsl,liodn = <3 4>;
-+			fsl,qman-channel-id = <1>;
-+
-+			fman@1 {
-+				fsl,liodn = <0xa2>;
-+				dev-handle = <&fman0>;
-+			};
-+			fman@0 {
-+				fsl,liodn = <0x22>;
-+				dev-handle = <&fman1>;
-+			};
-+			crypto@0 {
-+				fsl,liodn = <0x42 0x67>;
-+				dev-handle = <&crypto>;
-+			};
-+		};
-+	};
+diff --git a/drivers/power/reset/ltc2952-poweroff.c b/drivers/power/reset/ltc2952-poweroff.c
+index fda2735..72e3d7f 100644
+--- a/drivers/power/reset/ltc2952-poweroff.c
++++ b/drivers/power/reset/ltc2952-poweroff.c
+@@ -32,7 +32,9 @@
+  * - trigger (input)
+  *     A level change indicates the shut-down trigger. If it's state reverts
+  *     within the time-out defined by trigger_delay, the shut down is not
+- *     executed.
++ *     executed. If no pin is assigned to this input, the driver will start the
++ *     watchdog toggle immediately. The chip will only power off the system if
++ *     it is requested to do so through the kill line.
+  *
+  * - watchdog (output)
+  *     Once a shut down is triggered, the driver will toggle this signal,
+@@ -116,15 +118,10 @@ static enum hrtimer_restart ltc2952_poweroff_timer_wde(struct hrtimer *timer)
+ 	return HRTIMER_RESTART;
+ }
+ 
+-static enum hrtimer_restart
+-ltc2952_poweroff_timer_trigger(struct hrtimer *timer)
++static void ltc2952_poweroff_start_wde(struct ltc2952_poweroff *data)
+ {
+-	struct ltc2952_poweroff *data = to_ltc2952(timer, timer_trigger);
+-	int ret = hrtimer_start(&data->timer_wde,
+-				data->wde_interval, HRTIMER_MODE_REL);
+-
+-	if (ret) {
+-		dev_err(data->dev, "unable to start the timer\n");
++	if (hrtimer_start(&data->timer_wde, data->wde_interval,
++			  HRTIMER_MODE_REL)) {
+ 		/*
+ 		 * The device will not toggle the watchdog reset,
+ 		 * thus shut down is only safe if the PowerPath controller
+@@ -133,10 +130,17 @@ ltc2952_poweroff_timer_trigger(struct hrtimer *timer)
+ 		 *
+ 		 * Only sending a warning as the system will power-off anyway
+ 		 */
++		dev_err(data->dev, "unable to start the timer\n");
+ 	}
++}
+ 
+-	dev_info(data->dev, "executing shutdown\n");
++static enum hrtimer_restart
++ltc2952_poweroff_timer_trigger(struct hrtimer *timer)
++{
++	struct ltc2952_poweroff *data = to_ltc2952(timer, timer_trigger);
+ 
++	ltc2952_poweroff_start_wde(data);
++	dev_info(data->dev, "executing shutdown\n");
+ 	orderly_poweroff(true);
+ 
+ 	return HRTIMER_NORESTART;
+@@ -190,7 +194,7 @@ static void ltc2952_poweroff_default(struct ltc2952_poweroff *data)
+ 
+ static int ltc2952_poweroff_init(struct platform_device *pdev)
+ {
+-	int ret, virq;
++	int ret;
+ 	struct ltc2952_poweroff *data = platform_get_drvdata(pdev);
+ 
+ 	ltc2952_poweroff_default(data);
+@@ -210,29 +214,48 @@ static int ltc2952_poweroff_init(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	data->gpio_trigger = devm_gpiod_get(&pdev->dev, "trigger",
+-					    GPIOD_IN);
+-	if (IS_ERR(ltc2952_data->gpio_trigger)) {
+-		ret = PTR_ERR(ltc2952_data->gpio_trigger);
+-		dev_err(&pdev->dev, "unable to claim gpio \"trigger\"\n");
+-		return ret;
+-	}
+-
+-	virq = gpiod_to_irq(data->gpio_trigger);
+-	if (virq < 0) {
+-		dev_err(&pdev->dev, "cannot map GPIO as interrupt");
+-		return ret;
++	data->gpio_trigger = devm_gpiod_get(&pdev->dev, "trigger", GPIOD_IN);
++	if (IS_ERR(data->gpio_trigger)) {
++		/*
++		 * It's not a problem if the trigger gpio isn't available, but
++		 * it is worth a warning if its use was defined in the device
++		 * tree.
++		 */
++		if (PTR_ERR(data->gpio_trigger) != -ENOENT)
++			dev_err(&pdev->dev,
++				"unable to claim gpio \"trigger\"\n");
++		data->gpio_trigger = NULL;
+ 	}
+ 
+-	ret = devm_request_irq(&pdev->dev, virq,
+-			       ltc2952_poweroff_handler,
+-			       (IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING),
+-			       "ltc2952-poweroff",
+-			       data);
+-
+-	if (ret) {
+-		dev_err(&pdev->dev, "cannot configure an interrupt handler\n");
+-		return ret;
++	if (devm_request_irq(&pdev->dev, gpiod_to_irq(data->gpio_trigger),
++			     ltc2952_poweroff_handler,
++			     (IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING),
++			     "ltc2952-poweroff",
++			     data)) {
++		/*
++		 * Some things may have happened:
++		 * - No trigger input was defined
++		 * - Claiming the GPIO failed
++		 * - We could not map to an IRQ
++		 * - We couldn't register an interrupt handler
++		 *
++		 * None of these really are problems, but all of them
++		 * disqualify the push button from controlling the power.
++		 *
++		 * It is therefore important to note that if the ltc2952
++		 * detects a button press for long enough, it will still start
++		 * its own powerdown window and cut the power on us if we don't
++		 * start the watchdog trigger.
++		 */
++		if (data->gpio_trigger) {
++			dev_warn(&pdev->dev,
++				 "unable to configure the trigger interrupt\n");
++			devm_gpiod_put(&pdev->dev, data->gpio_trigger);
++			data->gpio_trigger = NULL;
++		}
++		dev_info(&pdev->dev,
++			 "power down trigger input will not be used\n");
++		ltc2952_poweroff_start_wde(data);
+ 	}
+ 
+ 	return 0;
 -- 
-2.1.2
-
+2.1.0
