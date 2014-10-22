@@ -1,32 +1,37 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v3] iio: iadc: Qualcomm SPMI PMIC current ADC driver
-Date: Wed, 22 Oct 2014 13:00:56 +0300
-Message-ID: <1413972056.4214.0.camel@mm-sol.com>
-References: <1412180088-24683-1-git-send-email-iivanov@mm-sol.com>
-	 <544416EF.8080603@gmx.de>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 09/12] rtc: omap: add support for pmic_power_en
+Date: Wed, 22 Oct 2014 12:18:49 +0200
+Message-ID: <20141022101849.GL2113@localhost>
+References: <1412881594-25678-1-git-send-email-johan@kernel.org>
+ <1412881594-25678-10-git-send-email-johan@kernel.org>
+ <20141010180721.GV31348@saruman>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <544416EF.8080603@gmx.de>
+Content-Disposition: inline
+In-Reply-To: <20141010180721.GV31348@saruman>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hartmut Knaack <knaack.h@gmx.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Cameron <jic23@kernel.org>, Grant Likely <grant.likely@linaro.org>, Lars-Peter Clausen <lars@metafoo.de>, Fugang Duan <B38611@freescale.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Johan Hovold <johan@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Andrew Morton <akpm@linux-foundation.org>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, Colin Foe-Parker <colin.foeparker@logicpd.com>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Oct 10, 2014 at 01:07:27PM -0500, Felipe Balbi wrote:
+> On Thu, Oct 09, 2014 at 09:06:31PM +0200, Johan Hovold wrote:
 
-On Sun, 2014-10-19 at 21:54 +0200, Hartmut Knaack wrote:
-> Ivan T. Ivanov schrieb am 01.10.2014 18:14:
-> >  The current ADC is peripheral of Qualcomm SPMI PMIC chips. It has
-> >  16 bits resolution and register space inside PMIC accessible 
-> > across
-> >  SPMI bus.
-> > 
-> >  The driver registers itself through IIO interface.
-> > 
-> Hi, I spotted some issues, see inline.
+> > -	/* clear pending irqs, and set 1/second periodic,
+> > -	 * which we'll use instead of update irqs
+> > +	/*
+> > +	 * disable interrupts
+> > +	 *
+> > +	 * NOTE: ALARM2 is not cleared on AM3352 if rtc_write (writeb) is used
+> >  	 */
+> > -	rtc_write(0, OMAP_RTC_INTERRUPTS_REG);
+> > +	rtc_writel(0, OMAP_RTC_INTERRUPTS_REG);
+> 
+> bug fix, should be part of a separate patch and Cc stable :-)
 
-Thank you. All of them look reasonable. Will fix them and resend.
+I made this a separate fix in v2 but did not mark it for stable for now
+as no one has been bitten by it (ALARM2 is never enabled by the current
+driver).
 
-Regards,
-Ivan
+Johan
