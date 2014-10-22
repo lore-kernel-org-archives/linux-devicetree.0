@@ -1,119 +1,66 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
- portal(s)
-Date: Wed, 22 Oct 2014 15:29:31 +0100
-Message-ID: <20141022142931.GA4010@leverpostej>
-References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
- <1413986972-621-2-git-send-email-Emilian.Medve@Freescale.com>
+From: Frans Klaver <frans.klaver@xsens.com>
+Subject: [PATCH 01/13] power: reset: ltc2952: prefer devm_kzalloc over kzalloc
+Date: Wed, 22 Oct 2014 16:30:58 +0200
+Message-ID: <1413988270-28092-2-git-send-email-frans.klaver@xsens.com>
+References: <1413988270-28092-1-git-send-email-frans.klaver@xsens.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1413986972-621-2-git-send-email-Emilian.Medve@Freescale.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Emil Medve <Emilian.Medve@freescale.com>
-Cc: "scottwood@freescale.com" <scottwood@freescale.com>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Pawel Moll <Pawel.Moll@arm.com>, "Geoff.Thorpe@freescale.com" <Geoff.Thorpe@freescale.com>, "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413988270-28092-1-git-send-email-frans.klaver@xsens.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Frans Klaver <frans.klaver@xsens.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Ren=C3=A9=20Moll?= <linux@r-moll.nl>, Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 22, 2014 at 03:09:30PM +0100, Emil Medve wrote:
-> Portals are used by software running on processor cores, accelerators and
-> network interfaces to communicate with the BMan
+Make use of the fact that the allocated resources can be automatically
+deallocated. This reduces cleanup code and chance of leaks.
 
-What exactly is a portal?
+Signed-off-by: Frans Klaver <frans.klaver@xsens.com>
+---
+ drivers/power/reset/ltc2952-poweroff.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-Is it a region of shared memory? A device?
-
-I only received emails 2 and 3 of this series, so I'm lacking the
-context necessary to understand the bindings.
-
-> 
-> Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
-> Change-Id: I6d245ffc14ba3d0e91d403ac7c3b91b75a9e6a95
-> ---
->  .../bindings/powerpc/fsl/bman-portals.txt          | 50 ++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt b/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
-> new file mode 100644
-> index 0000000..40e607e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
-> @@ -0,0 +1,50 @@
-> +QorIQ DPAA Buffer Manager Portals Device Tree Binding
-> +
-> +Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
-> +
-> +CONTENTS
-> +
-> +	- BMan Portal
-> +	- Example
-> +
-> +NOTE:	The bindings described in this document are preliminary and subject to
-> +	change
-
-While we've tried that elsewhere, unstable DT bindings have been shown
-to be a major source of pain. I'd feel rather uncomfortable accepting a
-binding that we already believe to be insufficient to describe the
-hardware.
-
-What do you expect to change?
-
-> +
-> +BMan Portal Node
-> +
-> +PROPERTIES
-> +
-> +- compatible
-> +	Usage:		Required
-> +	Value type:	<stringlist>
-> +	Definition:	Must include "fsl,bman-portal-<hardware revision>"
-> +			May include "fsl,<SoC>-bman-portal" or "fsl,bman-portal"
-> +
-> +- reg
-> +	Usage:		Required
-> +	Value type:	<prop-encoded-array>
-> +	Definition:	Two regions. The first is the cache-enabled region of
-> +			the portal. The second is the cache-inhibited region of
-> +			the portal
-> +
-> +EXAMPLE
-> +
-> +The example below shows a (P4080) BMan portals container/bus node with two portals
-
-Is there any particular reason to place these under a simple-bus?
-
-> +
-> +	bman-portals@ff4000000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "simple-bus";
-> +		ranges = <0 0xf 0xf4000000 0x200000>;
-> +
-> +		bman-portal@0 {
-> +			compatible = "fsl,bman-portal-1.0.0", "fsl,bman-portal";
-> +			reg = <0x0 0x4000 0x100000 0x1000>;
-
-It would be easier to read is each entry had its own set of brackets.
-Initially this looked to me like a single 64-bit address/size pair.
-
-> +			interrupts = <105 2 0 0>;
-> +		};
-
-Given the description above, surely you need to know what the portal is
-used for? Or is that queried from the portal?
-
-Thanks,
-Mark.
-
-> +		bman-portal@4000 {
-> +			compatible = "fsl,bman-portal-1.0.0", "fsl,bman-portal";
-> +			reg = <0x4000 0x4000 0x101000 0x1000>;
-> +			interrupts = <107 2 0 0>;
-> +		};
-> +	};
-> -- 
-> 2.1.2
-> 
-> 
+diff --git a/drivers/power/reset/ltc2952-poweroff.c b/drivers/power/reset/ltc2952-poweroff.c
+index 116a1ce..951a90d 100644
+--- a/drivers/power/reset/ltc2952-poweroff.c
++++ b/drivers/power/reset/ltc2952-poweroff.c
+@@ -292,7 +292,8 @@ static int ltc2952_poweroff_probe(struct platform_device *pdev)
+ 		return -EBUSY;
+ 	}
+ 
+-	ltc2952_data = kzalloc(sizeof(*ltc2952_data), GFP_KERNEL);
++	ltc2952_data = devm_kzalloc(&pdev->dev, sizeof(*ltc2952_data),
++				    GFP_KERNEL);
+ 	if (!ltc2952_data)
+ 		return -ENOMEM;
+ 
+@@ -300,17 +301,13 @@ static int ltc2952_poweroff_probe(struct platform_device *pdev)
+ 
+ 	ret = ltc2952_poweroff_init(pdev);
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	pm_power_off = &ltc2952_poweroff_kill;
+ 
+ 	dev_info(&pdev->dev, "probe successful\n");
+ 
+ 	return 0;
+-
+-err:
+-	kfree(ltc2952_data);
+-	return ret;
+ }
+ 
+ static int ltc2952_poweroff_remove(struct platform_device *pdev)
+@@ -324,8 +321,6 @@ static int ltc2952_poweroff_remove(struct platform_device *pdev)
+ 
+ 		for (i = 0; i < ARRAY_SIZE(ltc2952_data->gpio); i++)
+ 			gpiod_put(ltc2952_data->gpio[i]);
+-
+-		kfree(ltc2952_data);
+ 	}
+ 
+ 	return 0;
+-- 
+2.1.0
