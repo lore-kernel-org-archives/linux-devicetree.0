@@ -1,49 +1,161 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH] RFC: add function for localbus address
-Date: Thu, 23 Oct 2014 00:20:21 +0100
-Message-ID: <20141022232021.GF27405@n2100.arm.linux.org.uk>
-References: <20140729234522.E9FF1C40738@trevor.secretlab.ca>
- <1409672700-21697-1-git-send-email-svarbanov@mm-sol.com>
- <20140908145204.8ADC2C40AE5@trevor.secretlab.ca>
- <540E1014.8090102@codeaurora.org>
- <20140914044610.913E9C4102A@trevor.secretlab.ca>
- <54483746.9060104@codeaurora.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/2] i2c: Add generic support passing secondary devices addresses
+Date: Thu, 23 Oct 2014 02:37:41 +0300
+Message-ID: <1923603.aWjhqbNgon@avalon>
+References: <1413991848-28495-1-git-send-email-jean-michel.hautbois@vodalys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54483746.9060104@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Grant Likely <grant.likely@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1413991848-28495-1-git-send-email-jean-michel.hautbois@vodalys.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
+Cc: linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, lars@metafoo.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 22, 2014 at 04:01:26PM -0700, Stephen Boyd wrote:
-> Where did this end up? When we talked at Connect I think we settled on
-> exploring a driver core specific API like dev_get_localbus_address()
-> that calls of_get_localbus_address() for devices with an of_node and in
-> the future it could call something like acpi_get_localbus_address() when
-> there's an acpi_node. I believe the biggest concern is that we're making
-> an API that is OF or platform bus specific when it doesn't need to be.
-> Making a driver core specific API avoids this problem by making it bus
-> agnostic.
+Hi Jean-Michel,
 
-Given how little information there is in the original patch as to exactly
-what problem this is addressing, I could be getting the wrong end of the
-stick here.
+Thank you for the patch.
 
-Is this about trying to have a way to obtain the bus local addresses
-associated with CPU-view resources?
+On Wednesday 22 October 2014 17:30:47 Jean-Michel Hautbois wrote:
+> Some I2C devices have multiple addresses assigned, for example each address
+> corresponding to a different internal register map page of the device.
+> So far drivers which need support for this have handled this with a driver
+> specific and non-generic implementation, e.g. passing the additional address
+> via platform data.
+> 
+> This patch provides a new helper function called i2c_new_secondary_device()
+> which is intended to provide a generic way to get the secondary address
+> as well as instantiate a struct i2c_client for the secondary address.
+> 
+> The function expects a pointer to the primary i2c_client, a name
+> for the secondary address and an optional default address. The name is used
+> as a handle to specify which secondary address to get.
+> 
+> The default address is used as a fallback in case no secondary address
+> was explicitly specified. In case no secondary address and no default
+> address were specified the function returns NULL.
+> 
+> For now the function only supports look-up of the secondary address
+> from devicetree, but it can be extended in the future
+> to for example support board files and/or ACPI.
 
-If so, how about looking towards PCI, which has had this problem for the
-last 15+ years, where PCI bus addresses are not necessarily the same as
-CPU physical addresses?
+As this is core code I believe the DT bindings should be documented somewhere 
+in Documentation/devicetree/bindings/i2c/.
 
-There, we don't end up with multiple addresses specified in resources.
-We instead have a way to translate between resources and bus-local
-addresses, which IMHO is far nicer and less error-prone than having to
-specify the same information twice, once with an offset and once without.
+> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
+> ---
+>  drivers/i2c/i2c-core.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/i2c.h    |  8 ++++++++
+>  2 files changed, 48 insertions(+)
+> 
+> diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+> index 2f90ac6..fd3b07c 100644
+> --- a/drivers/i2c/i2c-core.c
+> +++ b/drivers/i2c/i2c-core.c
+> @@ -1166,6 +1166,46 @@ struct i2c_client *i2c_new_dummy(struct i2c_adapter
+> *adapter, u16 address) }
+>  EXPORT_SYMBOL_GPL(i2c_new_dummy);
+> 
+> +/**
+> + * i2c_new_secondary_device - Helper to get the instantiated secondary
+> address
+
+It does more than that, it also creates the device.
+
+> + * @client: Handle to the primary client
+> + * @name: Handle to specify which secondary address to get
+> + * @default_addr: Used as a fallback if no secondary address was specified
+> + * Context: can sleep
+> + *
+> + * This returns an I2C client bound to the "dummy" driver based on DT
+> parsing.
+
+Could you elaborate on that ? I would explain that the address is retrieved 
+from the firmware based on the name, and that default_addr is used in case the 
+firmware doesn't provide any information.
+
+> + *
+> + * This returns the new i2c client, which should be saved for later use
+> with
+> + * i2c_unregister_device(); or NULL to indicate an error.
+> + */
+> +struct i2c_client *i2c_new_secondary_device(struct i2c_client *client,
+> +						const char *name,
+> +						u16 default_addr)
+> +{
+> +	int i;
+> +	u32 addr;
+> +	struct device_node *np;
+> +
+> +	np = client->dev.of_node;
+> +
+> +	if (np) {
+> +		i = of_property_match_string(np, "reg-names", name);
+> +		if (i >= 0)
+> +			of_property_read_u32_index(np, "reg", i, &addr);
+
+This call could fail in which case addr will be uninitialized.
+
+> +		else if (default_addr != 0)
+> +			addr = default_addr;
+> +		else
+> +			addr = NULL;
+
+addr isn't a pointer. I'm surprised the compiler hasn't warned you.
+
+> +	} else {
+> +		addr = default_addr;
+> +	}
+
+The whole logic can be simplified to
+
+	struct device_node *np = client->dev.of_node;
+	u32 addr = default_addr;
+	int i;
+
+	if (np) {
+		i = of_property_match_string(np, "reg-names", name);
+		if (i >= 0)
+			of_property_read_u32_index(np, "reg", i, &addr);
+	}
+
+
+> +
+> +	dev_dbg(&client->adapter->dev, "Address for %s : 0x%x\n", name, addr);
+> +	return i2c_new_dummy(client->adapter, addr);
+> +}
+> +EXPORT_SYMBOL_GPL(i2c_new_secondary_device);
+> +
+> +
+>  /*
+> -------------------------------------------------------------------------
+> */
+> 
+>  /* I2C bus adapters -- one roots each I2C or SMBUS segment */
+> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> index b556e0a..8629287 100644
+> --- a/include/linux/i2c.h
+> +++ b/include/linux/i2c.h
+> @@ -322,6 +322,14 @@ extern int i2c_probe_func_quick_read(struct i2c_adapter
+> *, unsigned short addr); extern struct i2c_client *
+>  i2c_new_dummy(struct i2c_adapter *adap, u16 address);
+> 
+> +/* Helper function providing a generic way to get the secondary address
+> + * as well as a client handle to this extra address.
+> + */
+
+The function is already documented in i2c-core.c, I would ditch this comment.
+
+> +extern struct i2c_client *
+> +i2c_new_secondary_device(struct i2c_client *client,
+> +				const char *name,
+> +				u16 default_addr);
+> +
+>  extern void i2c_unregister_device(struct i2c_client *);
+>  #endif /* I2C */
 
 -- 
-FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
+Regards,
+
+Laurent Pinchart
