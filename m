@@ -1,56 +1,68 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: [PATCH 1/3] tty: serial: Fix mediatek UART driver setting baudrate
- issue
-Date: Wed, 22 Oct 2014 21:12:07 +0800
-Message-ID: <1413983529-21887-2-git-send-email-eddie.huang@mediatek.com>
-References: <1413983529-21887-1-git-send-email-eddie.huang@mediatek.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v4 8/8] ARM: mediatek: Add config option for mediatek SoCs.
+Date: Wed, 22 Oct 2014 15:18:33 +0200
+Message-ID: <CABuKBe+Ew6R2Kb90-gDHBQ4HuydfFxJdYmr+v9-KNC-b0K4Tkw@mail.gmail.com>
+References: <1413973797-17619-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1413973797-17619-9-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1413983529-21887-1-git-send-email-eddie.huang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, hc.yen@mediatek.com, yh.chen@mediatek.com, linux-kernel@vger.kernel.org, nathan.chung@mediatek.com, linux-serial@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Eddie Huang <eddie.huang@mediatek.com>, Jiri Slaby <jslaby@suse.cz>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Alan Cox <alan@linux.intel.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413973797-17619-9-git-send-email-yingjoe.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Joe.C" <yingjoe.chen@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Yingjoe Chen <yingjoe.chen@gmail.com>, Hsien-Chun Yen <hc.yen@mediatek.com>, huang eddie <eddie.huang@mediatek.com>, Nathan Chung <nathan.chung@mediatek.com>, Yuhau Chen <yh.chen@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-In mtk8250_set_termios function, calculating quot value can not be zero,
-otherwise, using DIV_ROUND_CLOSEST(port->uartclk, quot * baud) will fail due to
-divisor is zero.
+2014-10-22 12:29 GMT+02:00 Joe.C <yingjoe.chen@mediatek.com>:
+> From: "Joe.C" <yingjoe.chen@mediatek.com>
+>
+> Add config options for ARCH_MT6589, ARCH_MT8127, ARCH_MT8135. The
+> upcoming pinctrl, clk drivers need to isolate SoCs support base on
+> these options.
+>
+> Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
+> ---
+>  arch/arm/mach-mediatek/Kconfig | 22 +++++++++++++++++++---
+>  1 file changed, 19 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
+> index 2c043a2..25fe6cf 100644
+> --- a/arch/arm/mach-mediatek/Kconfig
+> +++ b/arch/arm/mach-mediatek/Kconfig
+> @@ -1,6 +1,22 @@
+> -config ARCH_MEDIATEK
+> -       bool "Mediatek MT6589 SoC" if ARCH_MULTI_V7
+> +menuconfig ARCH_MEDIATEK
+> +       bool "Mediatek MT65xx & MT81xx SoC" if ARCH_MULTI_V7
+>         select ARM_GIC
+>         select MTK_TIMER
+>         help
+> -         Support for Mediatek Cortex-A7 Quad-Core-SoC MT6589.
+> +         Support for Mediatek MT65xx & MT81xx SoCs
+> +
+> +if ARCH_MEDIATEK
+> +
+> +config MACH_MT6589
+> +       bool "MediaTek MT6589 SoCs support"
+> +       default ARCH_MEDIATEK
+> +
+> +config MACH_MT8127
+> +       bool "MediaTek MT8127 SoCs support"
+> +       default ARCH_MEDIATEK
+> +
+> +config MACH_MT8135
+> +       bool "MediaTek MT8135 SoCs support"
+> +       default ARCH_MEDIATEK
+> +
+> +endif
 
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
----
- drivers/tty/serial/8250/8250_mtk.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+MACH_MTxxxx are not used nowhere, please remove them.
 
-diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-index 8f37d57..6f93123 100644
---- a/drivers/tty/serial/8250/8250_mtk.c
-+++ b/drivers/tty/serial/8250/8250_mtk.c
-@@ -74,14 +74,14 @@ mtk8250_set_termios(struct uart_port *port, struct ktermios *termios,
- 		/* Set to next lower baudrate supported */
- 		if ((baud == 500000) || (baud == 576000))
- 			baud = 460800;
--		quot = DIV_ROUND_CLOSEST(port->uartclk, 4 * baud);
-+		quot = DIV_ROUND_UP(port->uartclk, 4 * baud);
- 	} else {
- 		serial_port_out(port, UART_MTK_HIGHS, 0x3);
- 
- 		/* Set to highest baudrate supported */
- 		if (baud >= 1152000)
- 			baud = 921600;
--		quot = DIV_ROUND_CLOSEST(port->uartclk, 256 * baud);
-+		quot = DIV_ROUND_UP(port->uartclk, 256 * baud);
- 	}
- 
- 	/*
+> --
+> 1.8.1.1.dirty
+>
+
+
+
 -- 
-1.8.1.1.dirty
+motzblog.wordpress.com
