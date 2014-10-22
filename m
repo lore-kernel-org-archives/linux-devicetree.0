@@ -1,61 +1,184 @@
-From: Frans Klaver <frans.klaver@xsens.com>
-Subject: [PATCH 13/13] power: reset: ltc2952: document optional trigger behavior
-Date: Wed, 22 Oct 2014 16:31:10 +0200
-Message-ID: <1413988270-28092-14-git-send-email-frans.klaver@xsens.com>
-References: <1413988270-28092-1-git-send-email-frans.klaver@xsens.com>
+From: Emil Medve <Emilian.Medve@Freescale.com>
+Subject: [PATCH 4/4] dt/bindings: Introduce the FSL QorIQ DPAA QMan portal(s)
+Date: Wed, 22 Oct 2014 09:09:32 -0500
+Message-ID: <1413986972-621-4-git-send-email-Emilian.Medve@Freescale.com>
+References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1413988270-28092-1-git-send-email-frans.klaver@xsens.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Frans Klaver <frans.klaver@xsens.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Ren=C3=A9=20Moll?= <linux@r-moll.nl>, Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: scottwood@Freescale.com, galak@kernel.crashing.org, corbet@lwn.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, Geoff.Thorpe@Freescale.com, linuxppc-dev@ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Emil Medve <Emilian.Medve@Freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Document the fact that the trigger signal is now optional, and describe
-the behavior when this is used.
+Portals are used by software running on processor cores, accelerators and
+network interfaces to communicate with the QMan
 
-While at it, fix a typo, and paraphrase a sentence to be less platform
-specific.
-
-Signed-off-by: Frans Klaver <frans.klaver@xsens.com>
+Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
+Change-Id: I29764fa8093b5ce65460abc879446795c50d7185
 ---
- .../devicetree/bindings/power/reset/ltc2952-poweroff.txt    | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ .../bindings/powerpc/fsl/qman-portals.txt          | 151 +++++++++++++++++++++
+ 1 file changed, 151 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/qman-portals.txt
 
-diff --git a/Documentation/devicetree/bindings/power/reset/ltc2952-poweroff.txt b/Documentation/devicetree/bindings/power/reset/ltc2952-poweroff.txt
-index 0c94c63..cd2d7f5 100644
---- a/Documentation/devicetree/bindings/power/reset/ltc2952-poweroff.txt
-+++ b/Documentation/devicetree/bindings/power/reset/ltc2952-poweroff.txt
-@@ -1,20 +1,23 @@
- Binding for the LTC2952 PowerPath controller
- 
- This chip is used to externally trigger a system shut down. Once the trigger has
--been sent, the chips' watchdog has to be reset to gracefully shut down.
--If the Linux systems decides to shut down it powers off the platform via the
--kill signal.
-+been sent, the chip's watchdog has to be reset to gracefully shut down.
-+A full powerdown can be triggered via the kill signal.
- 
- Required properties:
- 
- - compatible:		Must contain: "lltc,ltc2952"
--- trigger-gpios:	phandle + gpio-specifier for the GPIO connected to the
--			chip's trigger line
- - watchdog-gpios:	phandle + gpio-specifier for the GPIO connected to the
- 			chip's watchdog line
- - kill-gpios:		phandle + gpio-specifier for the GPIO connected to the
- 			chip's kill line
- 
-+Optional properties:
-+- trigger-gpios:	phandle + gpio-specifier for the GPIO connected to the
-+			chip's trigger line. If this property is not set, the
-+			trigger function is ignored and the chip is kept alive
-+			until an explicit kill signal is received
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/qman-portals.txt b/Documentation/devicetree/bindings/powerpc/fsl/qman-portals.txt
+new file mode 100644
+index 0000000..c4e1e98
+--- /dev/null
++++ b/Documentation/devicetree/bindings/powerpc/fsl/qman-portals.txt
+@@ -0,0 +1,151 @@
++QorIQ DPAA Queue Manager Portals Device Tree Binding
 +
- Example:
- 
- ltc2952 {
++Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
++
++CONTENTS
++
++	- QMan Portal
++	- QMan Pool Channel
++	- Example
++
++NOTE:	The bindings described in this document are preliminary and subject to
++	change
++
++QMan Portal Node
++
++PROPERTIES
++
++- compatible
++	Usage:		Required
++	Value type:	<stringlist>
++	Definition:	Must include "fsl,qman-portal-<hardware revision>"
++			May include "fsl,<SoC>-qman-portal" or "fsl,qman-portal"
++
++- reg
++	Usage:		Required
++	Value type:	<prop-encoded-array>
++	Definition:	Two regions. The first is the cache-enabled region of
++			the portal. The second is the cache-inhibited region of
++			the portal
++
++- fsl,liodn
++	Usage:		See pamu.txt
++	Value type:	<prop-encoded-array>
++	Definition:	PAMU property used for static LIODN assignment
++
++- fsl,iommu-parent
++	Usage:		See pamu.txt
++	Value type:	<phandle>
++	Definition:	PAMU property used for dynamic LIODN assignment. This is
++			an optional property. It is a valid configuration for
++			this phandle to be dangling
++
++	For additional details about the PAMU/LIODN binding(s) see pamu.txt
++
++- fsl,qman-channel-id
++	Usage:		Required
++	Value type:	<u32>
++	Definition:	The hardware index of the channel. This can also be
++			determined by dividing any of the channel's 8 work queue
++			IDs by 8
++
++In addition to these properties the qman-portals should have sub-nodes to
++represent the HW devices/portals that are connected to the software portal
++described here
++
++The currently support sub-nodes are:
++	* fman@0
++	* fman@1
++	* pme@0
++	* crypto@0
++
++These subnodes should have the following properties:
++
++- fsl,liodn
++	Usage:		See pamu.txt
++	Value type:	<prop-encoded-array>
++	Definition:	PAMU property used for static LIODN assignment
++
++- fsl,iommu-parent
++	Usage:		See pamu.txt
++	Value type:	<phandle>
++	Definition:	PAMU property used for dynamic LIODN assignment
++
++- dev-handle
++	Usage:		Required
++	Value type:	<phandle>
++	Definition:	The phandle to the particular hardware device that this
++			portal is connected to.
++
++DPAA QMan Pool Channel Nodes
++
++Pool Channels are defined with the following properties.
++
++PROPERTIES
++
++- compatible
++	Usage:		Required
++	Value type:	<stringlist>
++	Definition:	Must include "fsl,qman-pool-channel"
++			May include "fsl,<SoC>-qman-pool-channel"
++
++- fsl,qman-channel-id
++	Usage:		Required
++	Value type:	<u32>
++	Definition:	The hardware index of the channel. This can also be
++			determined by dividing any of the channel's 8 work queue
++			IDs by 8
++
++EXAMPLE
++
++The example below shows a (P4080) BMan portals container/bus node with two portals
++
++	qman-portals@ff4200000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		ranges = <0 0xf 0xf4200000 0x200000>;
++
++		qman-portal@0 {
++			cell-index = <0>;
++			compatible = "fsl,qman-portal-1.2.0", "fsl,qman-portal";
++			reg = <0 0x4000 0x100000 0x1000>;
++			interrupts = <104 2 0 0>;
++			fsl,liodn = <1 2>;
++			fsl,qman-channel-id = <0>;
++
++			fman@0 {
++				fsl,liodn = <0x21>;
++				dev-handle = <&fman0>;
++			};
++			fman@1 {
++				fsl,liodn = <0xa1>;
++				dev-handle = <&fman1>;
++			};
++			crypto@0 {
++				fsl,liodn = <0x41 0x66>;
++				dev-handle = <&crypto>;
++			};
++		};
++		qman-portal@4000 {
++			cell-index = <1>;
++			compatible = "fsl,qman-portal-1.2.0", "fsl,qman-portal";
++			reg = <0x4000 0x4000 0x101000 0x1000>;
++			interrupts = <106 2 0 0>;
++			fsl,liodn = <3 4>;
++			fsl,qman-channel-id = <1>;
++
++			fman@1 {
++				fsl,liodn = <0xa2>;
++				dev-handle = <&fman0>;
++			};
++			fman@0 {
++				fsl,liodn = <0x22>;
++				dev-handle = <&fman1>;
++			};
++			crypto@0 {
++				fsl,liodn = <0x42 0x67>;
++				dev-handle = <&crypto>;
++			};
++		};
++	};
 -- 
-2.1.0
+2.1.2
 
