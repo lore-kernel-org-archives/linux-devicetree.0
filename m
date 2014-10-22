@@ -1,95 +1,53 @@
-From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 2/3] dt/bindings: qoriq-clock: Add binding for the platform PLL
-Date: Wed, 22 Oct 2014 09:42:16 -0500
-Message-ID: <1413988937-27885-2-git-send-email-Emilian.Medve@Freescale.com>
+From: Emil Medve <Emilian.Medve@Freescale.com>
+Subject: [PATCH 3/3] powerpc/dts: Add node(s) for the platform PLL
+Date: Wed, 22 Oct 2014 09:42:17 -0500
+Message-ID: <1413988937-27885-3-git-send-email-Emilian.Medve@Freescale.com>
 References: <1413988937-27885-1-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413988937-27885-1-git-send-email-Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, yuantian.tang-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1413988937-27885-1-git-send-email-Emilian.Medve@Freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: scottwood@Freescale.com, yuantian.tang@Freescale.com, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org
+Cc: Emil Medve <Emilian.Medve@Freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Change-Id: I7950afa9650d15ec7ce2cca89bb2a1e38586d4a5
----
- Documentation/devicetree/bindings/clock/qoriq-clock.txt | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-index 5666812..407fb01 100644
---- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-@@ -62,6 +62,8 @@ Required properties:
- 		It takes parent's clock-frequency as its clock.
- 	* "fsl,qoriq-sysclk-2.0": for input system clock (v2.0).
- 		It takes parent's clock-frequency as its clock.
-+	* "fsl,qoriq-platform-pll-1.0" for the platform PLL clock (v1.0)
-+	* "fsl,qoriq-platform-pll-2.0" for the platform PLL clock (v2.0)
- - #clock-cells: From common clock binding. The number of cells in a
- 	clock-specifier. Should be <0> for "fsl,qoriq-sysclk-[1,2].0"
- 	clocks, or <1> for "fsl,qoriq-core-pll-[1,2].0" clocks.
-@@ -94,7 +96,6 @@ Example for clock block and clock provider:
- 			compatible = "fsl,qoriq-sysclk-1.0";
- 			clock-output-names = "sysclk";
- 		};
--
- 		pll0: pll0@800 {
- 			#clock-cells = <1>;
- 			reg = <0x800 0x4>;
-@@ -102,7 +103,6 @@ Example for clock block and clock provider:
- 			clocks = <&sysclk>;
- 			clock-output-names = "pll0", "pll0-div2";
- 		};
--
- 		pll1: pll1@820 {
- 			#clock-cells = <1>;
- 			reg = <0x820 0x4>;
-@@ -110,7 +110,6 @@ Example for clock block and clock provider:
- 			clocks = <&sysclk>;
- 			clock-output-names = "pll1", "pll1-div2";
- 		};
--
- 		mux0: mux0@0 {
- 			#clock-cells = <0>;
- 			reg = <0x0 0x4>;
-@@ -119,7 +118,6 @@ Example for clock block and clock provider:
- 			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
- 			clock-output-names = "cmux0";
- 		};
--
- 		mux1: mux1@20 {
- 			#clock-cells = <0>;
- 			reg = <0x20 0x4>;
-@@ -128,8 +126,15 @@ Example for clock block and clock provider:
- 			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
- 			clock-output-names = "cmux1";
- 		};
-+		platform-pll: platform-pll@c00 {
-+			#clock-cells = <1>;
-+			reg = <0xc00 0x4>;
-+			compatible = "fsl,qoriq-platform-pll-1.0";
-+			clocks = <&sysclk>;
-+			clock-output-names = "platform-pll", "platform-pll-div2";
-+		};
- 	};
--  }
-+};
- 
- Example for clock consumer:
- 
-@@ -139,4 +144,4 @@ Example for clock consumer:
- 		clocks = <&mux0>;
- 		...
- 	};
--  }
-+};
--- 
-2.1.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+U2lnbmVkLW9mZi1ieTogRW1pbCBNZWR2ZSA8RW1pbGlhbi5NZWR2ZUBGcmVlc2NhbGUuY29tPgpD
+aGFuZ2UtSWQ6IElmNzZjZDcwNWEwMTgxM2FiZTUzMzk2YzE0ODZiYzEzYzQyODllZTkyCi0tLQog
+YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9xb3JpcS1jbG9ja2dlbjEuZHRzaSB8IDcgKysrKysr
+KwogYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9xb3JpcS1jbG9ja2dlbjIuZHRzaSB8IDcgKysr
+KysrKwogMiBmaWxlcyBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJj
+aC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9xb3JpcS1jbG9ja2dlbjEuZHRzaSBiL2FyY2gvcG93ZXJw
+Yy9ib290L2R0cy9mc2wvcW9yaXEtY2xvY2tnZW4xLmR0c2kKaW5kZXggNDg3MTA0OC4uNGVjZTFl
+ZCAxMDA2NDQKLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9xb3JpcS1jbG9ja2dlbjEu
+ZHRzaQorKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3FvcmlxLWNsb2NrZ2VuMS5kdHNp
+CkBAIC03NSw0ICs3NSwxMSBAQCBnbG9iYWwtdXRpbGl0aWVzQGUxMDAwIHsKIAkJY2xvY2stbmFt
+ZXMgPSAicGxsMCIsICJwbGwwLWRpdjIiLCAicGxsMSIsICJwbGwxLWRpdjIiOwogCQljbG9jay1v
+dXRwdXQtbmFtZXMgPSAiY211eDEiOwogCX07CisJcGxhdGZvcm1fcGxsOiBwbGF0Zm9ybS1wbGxA
+YzAwIHsKKwkJI2Nsb2NrLWNlbGxzID0gPDE+OworCQlyZWcgPSA8MHhjMDAgMHg0PjsKKwkJY29t
+cGF0aWJsZSA9ICJmc2wscW9yaXEtcGxhdGZvcm0tcGxsLTEuMCI7CisJCWNsb2NrcyA9IDwmc3lz
+Y2xrPjsKKwkJY2xvY2stb3V0cHV0LW5hbWVzID0gInBsYXRmb3JtLXBsbCIsICJwbGF0Zm9ybS1w
+bGwtZGl2MiI7CisJfTsKIH07CmRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNs
+L3FvcmlxLWNsb2NrZ2VuMi5kdHNpIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9xb3JpcS1j
+bG9ja2dlbjIuZHRzaQppbmRleCA1ZDE4ZDJhLi40OGUwYjZlIDEwMDY0NAotLS0gYS9hcmNoL3Bv
+d2VycGMvYm9vdC9kdHMvZnNsL3FvcmlxLWNsb2NrZ2VuMi5kdHNpCisrKyBiL2FyY2gvcG93ZXJw
+Yy9ib290L2R0cy9mc2wvcW9yaXEtY2xvY2tnZW4yLmR0c2kKQEAgLTU4LDQgKzU4LDExIEBAIGds
+b2JhbC11dGlsaXRpZXNAZTEwMDAgewogCQljbG9ja3MgPSA8JnN5c2Nsaz47CiAJCWNsb2NrLW91
+dHB1dC1uYW1lcyA9ICJwbGwxIiwgInBsbDEtZGl2MiIsICJwbGwxLWRpdjQiOwogCX07CisJcGxh
+dGZvcm1fcGxsOiBwbGF0Zm9ybS1wbGxAYzAwIHsKKwkJI2Nsb2NrLWNlbGxzID0gPDE+OworCQly
+ZWcgPSA8MHhjMDAgMHg0PjsKKwkJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEtcGxhdGZvcm0tcGxs
+LTIuMCI7CisJCWNsb2NrcyA9IDwmc3lzY2xrPjsKKwkJY2xvY2stb3V0cHV0LW5hbWVzID0gInBs
+YXRmb3JtLXBsbCIsICJwbGF0Zm9ybS1wbGwtZGl2MiI7CisJfTsKIH07Ci0tIAoyLjEuMgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2
+IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3Rz
+Lm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
