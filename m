@@ -1,80 +1,102 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH v2 0/9] Marvell PXA168 libphy handling and Berlin Ethernet
-Date: Wed, 22 Oct 2014 20:26:43 +0200
-Message-ID: <1414002412-13615-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 6/9] ARM: berlin: Add BG2 ethernet DT nodes
+Date: Wed, 22 Oct 2014 20:26:49 +0200
+Message-ID: <1414002412-13615-7-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1414002412-13615-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, netdev@vger.kernel.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414002412-13615-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBzZXJpZXMgZGVhbHMgd2l0aCBhIHJlbW92aW5nIGEgSVAgZmVhdHVyZSB0aGF0
-IGNhbiBiZSBmb3VuZApvbiBhbGwgY3VycmVudGx5IHN1cHBvcnRlZCBNYXJ2ZWxsIEV0aGVybmV0
-IElQIChweGExNjhfZXRoLCBtdjY0M3h4X2V0aCwKbXZuZXRhKS4gVGhlIE1BQyBJUCBhbGxvd3Mg
-dG8gYXV0b21hdGljYWxseSBwZXJmb3JtIFBIWSBhdXRvLW5lZ290aWF0aW9uCndpdGhvdXQgc29m
-dHdhcmUgaW50ZXJhY3Rpb24uCgpIb3dldmVyLCB0aGlzIGZlYXR1cmUgKGEpIGZ1bmRhbWVudGFs
-bHkgY2xhc2hlcyB3aXRoIHRoZSB3YXkgbGlicGh5IHdvcmtzCmFuZCAoYikgaXMgdW5hYmxlIHRv
-IGRlYWwgd2l0aCBxdWlya3kgUEhZcyB0aGF0IHJlcXVpcmUgc3BlY2lhbCB0cmVhdG1lbnQuCklu
-IHRoaXMgc2VyaWVzLCBweGExNjhfZXRoIGRyaXZlciBpcyByZXdyaXR0ZW4gdG8gY29tcGxldGVs
-eSBkaXNhYmxlIHRoYXQKZmVhdHVyZSBhbmQgcHJvcGVybHkgZGVhbCB3aXRoIGxpYnBoeSBwcm92
-aWRlZCBQSFlzLgoKQXMgdXN1YWwsIGEgYnJhbmNoIG9uIHRvcCBvZiB2My4xOC1yYzEgY2FuIGJl
-IGZvdW5kIGF0CgpnaXQ6Ly9naXQuaW5mcmFkZWFkLm9yZy91c2Vycy9oZXNzZWxiYS9saW51eC1i
-ZXJsaW4uZ2l0IGRldmVsL2JnMi1iZzJjZC1ldGgtdjIKClBhdGNoZXMgMS01IHNob3VsZCBnbyB0
-aHJvdWdoIERhdmlkJ3MgbmV0IHRyZWUsIEknbGwgcGljayB1cCB0aGUgRFQgcGF0Y2hlcwo2LTku
-CgpUaGVyZSBoYXZlIGJlZW4gc29tZSBjaGFuZ2VzLApjb21wYXJlZCB0byB0aGUgUkZUCi0gYWRk
-ZWQgcGh5LWNvbm5lY3Rpb24tdHlwZSBwcm9wZXJ0eSB0byBCRzJRIFBIWSBEVCBub2RlCi0gYmFp
-bCBvdXQgZnJvbSBweGExNjhfZXRoX2FkanVzdF9saW5rIHdoZW4gdGhlcmUgaXMgbm8gY2hhbmdl
-IGluCiAgUEhZIHBhcmFtZXRlcnMuIEFsc28sIGFkZCBhIGNhbGwgdG8gcGh5X3ByaW50X3N0YXR1
-cy4KY29tcGFyZWQgdG8gdjEKLSBtb3ZlIHBoeS1jb25uZWN0aW9uLXR5cGUgdG8gZXRoZXJuZXQg
-bm9kZSBpbnN0ZWFkIG9mIFBIWSBub2RlCgpQYXRjaCAxIGFkZHMgc3VwcG9ydCBmb3IgTWFydmVs
-bCA4OEUzMDE2IEZhc3RFdGhlcm5ldCBQSFkgdGhhdCBpcyBhbHNvCmludGVncmF0ZWQgaW4gTWFy
-dmVsbCBCZXJsaW4gQkcyL0JHMkNEIFNvQ3MuCgpQYXRjaCAyIGFsbG93cyB0byBwYXNzIHBoeV9p
-bnRlcmZhY2VfdCBvbiBweGExNjhfZXRoIHBsYXRmb3JtX2RhdGEgdGhhdAppcyBvbmx5IHVzZWQg
-YnkgbWFjaC1tbXAvZ3BsdWcuIEZyb20gdGhlIGJvYXJkIHNldHVwLCBJIGd1ZXNzZWQgZ3BsdWcn
-cwpQSFkgaXMgY29ubmVjdGVkIHZpYSBSTUlJLiBUaGUgcGF0Y2ggc3RpbGwgaXNuJ3QgZXZlbiBj
-b21waWxlIHRlc3RlZC4KClBhdGNoZXMgMy01IHByZXBhcmUgcHJvcGVyIGxpYnBoeSBoYW5kbGlu
-ZyBhbmQgZmluYWxseSByZW1vdmUgYWxsIGluLWRyaXZlcgpQSFkgbWFuZ2xpbmcgcmVsYXRlZCB0
-byB0aGUgZmVhdHVyZSBleHBsYWluZWQgYWJvdmUuCgpQYXRjaGVzIDYtOSBhZGQgY29ycmVzcG9u
-ZGluZyBldGhlcm5ldCBEVCBub2RlcyB0byBCRzIsIEJHMkNELCBhZGQgYQpwaHktY29ubmVjdGlv
-bi10eXBlIHByb3BlcnR5IHRvIEJHMlEgYW5kIGVuYWJsZSBldGhlcm5ldCBvbiBCRzItYmFzZWQg
-U29ueQpOU1otR1M3LiBJIGhhdmUgdGVzdGVkIGFsbCB0aGlzIG9uIEdTNyBzdWNjZXNzZnVsbHkg
-d2l0aCBpcD1kaGNwIG9uIDEwME0gRkQuCgpBbnRvaW5lIFTDqW5hcnQgKDEpOgogIEFSTTogYmVy
-bGluOiBBZGQgcGh5LWNvbm5lY3Rpb24tdHlwZSB0byBCRzJRIEV0aGVybmV0CgpTZWJhc3RpYW4g
-SGVzc2VsYmFydGggKDgpOgogIHBoeTogbWFydmVsbDogQWRkIHN1cHBvcnQgZm9yIDg4RTMwMTYg
-RmFzdEV0aGVybmV0IFBIWQogIG5ldDogcHhhMTY4X2V0aDogUHJvdmlkZSBwaHlfaW50ZXJmYWNl
-IG1vZGUgb24gcGxhdGZvcm1fZGF0YQogIG5ldDogcHhhMTY4X2V0aDogUHJlcGFyZSBwcm9wZXIg
-bGlicGh5IGhhbmRsaW5nCiAgbmV0OiBweGExNjhfZXRoOiBSZW1vdmUgSFcgYXV0by1uZWdvdGlh
-aW9uCiAgbmV0OiBweGExNjhfZXRoOiBSZW1vdmUgaW4tZHJpdmVyIFBIWSBtYW5nbGluZwogIEFS
-TTogYmVybGluOiBBZGQgQkcyIGV0aGVybmV0IERUIG5vZGVzCiAgQVJNOiBiZXJsaW46IEFkZCBC
-RzJDRCBldGhlcm5ldCBEVCBub2RlcwogIEFSTTogYmVybGluOiBFbmFibGUgZXRoZXJuZXQgb24g
-U29ueSBOU1otR1M3CgogYXJjaC9hcm0vYm9vdC9kdHMvYmVybGluMi1zb255LW5zei1nczcuZHRz
-IHwgICAyICsKIGFyY2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjIuZHRzaSAgICAgICAgICAgICB8ICAz
-NiArKysrKwogYXJjaC9hcm0vYm9vdC9kdHMvYmVybGluMmNkLmR0c2kgICAgICAgICAgIHwgIDM2
-ICsrKysrCiBhcmNoL2FybS9ib290L2R0cy9iZXJsaW4ycS5kdHNpICAgICAgICAgICAgfCAgIDEg
-KwogYXJjaC9hcm0vbWFjaC1tbXAvZ3BsdWdkLmMgICAgICAgICAgICAgICAgIHwgICAyICsKIGRy
-aXZlcnMvbmV0L2V0aGVybmV0L21hcnZlbGwvcHhhMTY4X2V0aC5jICB8IDI0OCArKysrKysrKysr
-KystLS0tLS0tLS0tLS0tLS0tLQogZHJpdmVycy9uZXQvcGh5L21hcnZlbGwuYyAgICAgICAgICAg
-ICAgICAgIHwgIDQ2ICsrKysrKwogaW5jbHVkZS9saW51eC9tYXJ2ZWxsX3BoeS5oICAgICAgICAg
-ICAgICAgIHwgICAxICsKIGluY2x1ZGUvbGludXgvcHhhMTY4X2V0aC5oICAgICAgICAgICAgICAg
-ICB8ICAgMSArCiA5IGZpbGVzIGNoYW5nZWQsIDIyNSBpbnNlcnRpb25zKCspLCAxNDggZGVsZXRp
-b25zKC0pCgotLS0KQ2M6ICJEYXZpZCBTLiBNaWxsZXIiIDxkYXZlbUBkYXZlbWxvZnQubmV0PgpD
-YzogIkFudG9pbmUgVMOpbmFydCIgPGFudG9pbmUudGVuYXJ0QGZyZWUtZWxlY3Ryb25zLmNvbT4K
-Q2M6IEZsb3JpYW4gRmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPgpDYzogRXJpYyBNaWFv
-IDxlcmljLnkubWlhb0BnbWFpbC5jb20+CkNjOiBIYW9qaWFuIFpodWFuZyA8aGFvamlhbi56aHVh
-bmdAZ21haWwuY29tPgpDYzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCkNj
-OiBuZXRkZXZAdmdlci5rZXJuZWwub3JnCkNjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwpD
-YzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZwotLSAKMi4xLjEKCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Marvell BG2 has two fast ethernet controllers with internal PHY,
+add the corresponding nodes to SoC dtsi.
+
+Tested-by: Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Changelog:
+v1->v2:
+- move phy-connection-type to controller node instead of PHY node
+  (Reported by Sergei Shtylyov)
+
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: "Antoine T=C3=A9nart" <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ arch/arm/boot/dts/berlin2.dtsi | 36 ++++++++++++++++++++++++++++++++++=
+++
+ 1 file changed, 36 insertions(+)
+
+diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2=
+=2Edtsi
+index 9d7c810ebd0b..dc0227dfc691 100644
+--- a/arch/arm/boot/dts/berlin2.dtsi
++++ b/arch/arm/boot/dts/berlin2.dtsi
+@@ -79,11 +79,47 @@
+ 			clocks =3D <&chip CLKID_TWD>;
+ 		};
+=20
++		eth1: ethernet@b90000 {
++			compatible =3D "marvell,pxa168-eth";
++			reg =3D <0xb90000 0x10000>;
++			clocks =3D <&chip CLKID_GETH1>;
++			interrupts =3D <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
++			/* set by bootloader */
++			local-mac-address =3D [00 00 00 00 00 00];
++			#address-cells =3D <1>;
++			#size-cells =3D <0>;
++			phy-connection-type =3D "mii";
++			phy-handle =3D <&ethphy1>;
++			status =3D "disabled";
++
++			ethphy1: ethernet-phy@0 {
++				reg =3D <0>;
++			};
++		};
++
+ 		cpu-ctrl@dd0000 {
+ 			compatible =3D "marvell,berlin-cpu-ctrl";
+ 			reg =3D <0xdd0000 0x10000>;
+ 		};
+=20
++		eth0: ethernet@e50000 {
++			compatible =3D "marvell,pxa168-eth";
++			reg =3D <0xe50000 0x10000>;
++			clocks =3D <&chip CLKID_GETH0>;
++			interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
++			/* set by bootloader */
++			local-mac-address =3D [00 00 00 00 00 00];
++			#address-cells =3D <1>;
++			#size-cells =3D <0>;
++			phy-connection-type =3D "mii";
++			phy-handle =3D <&ethphy0>;
++			status =3D "disabled";
++
++			ethphy0: ethernet-phy@0 {
++				reg =3D <0>;
++			};
++		};
++
+ 		apb@e80000 {
+ 			compatible =3D "simple-bus";
+ 			#address-cells =3D <1>;
+--=20
+2.1.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
