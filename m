@@ -1,75 +1,85 @@
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCHv4] arm: dts: socfpga: Add SPI nodes to SOCFPGA DT.
-Date: Thu, 23 Oct 2014 10:33:56 -0500
-Message-ID: <alpine.DEB.2.02.1410231032100.31473@linux-builds1>
-References: <1413917741-19240-1-git-send-email-tthayer@opensource.altera.com> <1413917741-19240-2-git-send-email-tthayer@opensource.altera.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v3 1/5] PM / clock_ops: Add pm_clk_add_clk()
+Date: Thu, 23 Oct 2014 08:49:28 -0700
+Message-ID: <20141023154928.GC18714@dtor-ws>
+References: <1414074182-25980-1-git-send-email-grygorii.strashko@ti.com>
+ <1414074182-25980-2-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413917741-19240-2-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414074182-25980-2-git-send-email-grygorii.strashko@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, khilman@linaro.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Oct 2014, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-
-> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On Thu, Oct 23, 2014 at 05:22:58PM +0300, Grygorii Strashko wrote:
+> From: Geert Uytterhoeven <geert+renesas@glider.be>
 > 
-> Add 2 SPI nodes to SOCFPGA device tree.
+> The existing pm_clk_add() allows to pass a clock by con_id. However,
+> when referring to a specific clock from DT, no con_id is available.
 > 
-> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Add pm_clk_add_clk(), which allows to specify the struct clk * directly.
+> 
+> CC: Ulf Hansson <ulf.hansson@linaro.org>
+> CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Reviewed-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> Reviewed-by: Kevin Hilman <khilman@linaro.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 > ---
-> v2: Remove extra files. Move SPIDEV into board specific file.
+>  drivers/base/power/clock_ops.c | 41 +++++++++++++++++++++++++++++++----------
+>  include/linux/pm_clock.h       |  8 ++++++++
+>  2 files changed, 39 insertions(+), 10 deletions(-)
 > 
-> v3: Remove dts file since SPIDEV is not allowed.
-> 
-> v4: Remove bus-num since it is unused and not defined in bindings.
-> ---
->  arch/arm/boot/dts/socfpga.dtsi |   22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index 4d77ad6..2792e6c 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -628,6 +628,28 @@
->  			clock-names = "biu", "ciu";
->  		};
+> diff --git a/drivers/base/power/clock_ops.c b/drivers/base/power/clock_ops.c
+> index 7836930..f14b767 100644
+> --- a/drivers/base/power/clock_ops.c
+> +++ b/drivers/base/power/clock_ops.c
+> @@ -53,7 +53,8 @@ static inline int __pm_clk_enable(struct device *dev, struct clk *clk)
+>   */
+>  static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
+>  {
+> -	ce->clk = clk_get(dev, ce->con_id);
+> +	if (!ce->clk)
+> +		ce->clk = clk_get(dev, ce->con_id);
+>  	if (IS_ERR(ce->clk)) {
+>  		ce->status = PCE_STATUS_ERROR;
+>  	} else {
+> @@ -63,15 +64,8 @@ static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
+>  	}
+>  }
 >  
-> +		spi0: spi@fff00000 {
-> +			compatible = "snps,dw-apb-ssi";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0xfff00000 0x1000>;
-> +			interrupts = <0 154 4>;
-> +			num-cs = <4>;
-> +			clocks = <&spi_m_clk>;
-> +			status = "disabled";
-> +		};
-> +
-> +		spi1: spi@fff01000 {
-> +			compatible = "snps,dw-apb-ssi";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0xfff01000 0x1000>;
-> +			interrupts = <0 156 4>;
-> +			num-cs = <4>;
-> +			clocks = <&spi_m_clk>;
-> +			status = "disabled";
-> +		};
-> +
->  		/* Local timer */
->  		timer@fffec600 {
->  			compatible = "arm,cortex-a9-twd-timer";
-> -- 
-> 1.7.9.5
+> -/**
+> - * pm_clk_add - Start using a device clock for power management.
+> - * @dev: Device whose clock is going to be used for power management.
+> - * @con_id: Connection ID of the clock.
+> - *
+> - * Add the clock represented by @con_id to the list of clocks used for
+> - * the power management of @dev.
+> - */
+> -int pm_clk_add(struct device *dev, const char *con_id)
+> +static int __pm_clk_add(struct device *dev, const char *con_id,
+> +			struct clk *clk)
+>  {
+>  	struct pm_subsys_data *psd = dev_to_psd(dev);
+>  	struct pm_clock_entry *ce;
+> @@ -93,6 +87,8 @@ int pm_clk_add(struct device *dev, const char *con_id)
+>  			kfree(ce);
+>  			return -ENOMEM;
+>  		}
+> +	} else {
 
-Applied to git.rocketboards.org/linux-socfpga-next.git next-dt.
+You need __clk_get(clk) here, otherwise when you will be removing clocks
+you'll be dropping a reference that does not belong to you (as yiou have
+not taken it).
 
-BR,
-Dinh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		ce->clk = clk;
+>  	}
+>  
+
+Thanks.
+
+-- 
+Dmitry
