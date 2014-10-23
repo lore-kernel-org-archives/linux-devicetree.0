@@ -1,26 +1,40 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH v1 1/5] mfd: tps65910: Convert ti,system-power-controller
- DT property to poweroff-source
-Date: Thu, 23 Oct 2014 11:12:30 +0300
-Message-ID: <20141023081230.GK32045@tbergstrom-lnx.Nvidia.com>
-References: <1413991587-11110-1-git-send-email-romain.perier@gmail.com>
+From: bpqw <bpqw@micron.com>
+Subject: [PATCH 1/1] devicetree: bindings: Add vendor prefix for Micron
+ Technology Co., Ltd.
+Date: Thu, 23 Oct 2014 08:20:15 +0000
+Message-ID: <A765B125120D1346A63912DDE6D8B6315E78EB@NTXXIAMBX02.xacn.micron.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1413991587-11110-1-git-send-email-romain.perier@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Romain Perier <romain.perier@gmail.com>
-Cc: sameo@linux.intel.com, lee.jones@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, swarren@wwwdotorg.org, thierry.reding@gmail.com, gnurou@gmail.com, grant.likely@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, broonie@kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Jason Cooper <jason@lakedaemon.net>, Mark Brown <broonie@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Andrew Lunn <andrew@lunn.ch>, Silvio F <silvio.fricke@gmail.com>, Hayato Suzuki <hytszk@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 22, 2014 at 03:26:23PM +0000, Romain Perier wrote:
-> No longer use custom property to define poweroff capability, use the standard
-> DT property instead.
-> 
+This patch is used to add vendor prefix for Micron Technology Inc in the vendor-prefixes.txt file.
 
-This breaks DT ABI stability right? An existing device tree using ti,system-power-controller won't work anymore after this patch right? I don't think that's acceptable.
+Micron Technology, Inc. is an American multinational corporation based in Boise, Idaho, 
+best known for producing many forms of semiconductor devices. This includes DRAM, SDRAM, 
+flash memory, eMMC and SSDs.
 
-CHeers,
+Signed-off-by: bean huo <beanhuo@micron.com>
+---
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 1 file changed, 1 insertion(+)
 
-Peter.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 723999d..a7bbf6e 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -92,6 +92,7 @@ maxim	Maxim Integrated Products
+ mediatek	MediaTek Inc.
+ micrel	Micrel Inc.
+ microchip	Microchip Technology Inc.
++micron	Micron Technology Inc.
+ mitsubishi	Mitsubishi Electric Corporation
+ mosaixtech	Mosaix Technologies, Inc.
+ moxa	Moxa
+--
+1.7.9.5
