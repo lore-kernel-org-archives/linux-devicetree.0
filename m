@@ -1,95 +1,141 @@
-From: Geoff Thorpe <Geoff.Thorpe@freescale.com>
-Subject: RE: [PATCH 2/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
- portal(s)
-Date: Thu, 23 Oct 2014 13:28:49 +0000
-Message-ID: <bb882c85ecf447589d2ff62121541889@BL2PR03MB483.namprd03.prod.outlook.com>
-References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
- <1413986972-621-2-git-send-email-Emilian.Medve@Freescale.com>
- <20141022142931.GA4010@leverpostej> <54480DE6.4090604@Freescale.com>
- <20141023111622.GB13690@leverpostej>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH v3 1/5] PM / clock_ops: Add pm_clk_add_clk()
+Date: Thu, 23 Oct 2014 17:22:58 +0300
+Message-ID: <1414074182-25980-2-git-send-email-grygorii.strashko@ti.com>
+References: <1414074182-25980-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20141023111622.GB13690@leverpostej>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Mark Rutland <mark.rutland@arm.com>, Emilian Medve <Emilian.Medve@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "corbet@lwn.net" <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, Scott Wood <scottwood@freescale.com>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1414074182-25980-1-git-send-email-grygorii.strashko@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, khilman@linaro.org
+Cc: linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCkxlYXBpbmcgaW4gaGVyZSBhIGxpdHRsZSBhZnRlciB0aGUgZmFjdCwgdG8gYWRkIGEg
-Yml0IG9mIGJhY2tncm91bmQgaW5mbyBvbiB0aGUgaGFyZHdhcmUgaW4gY2FzZSBpdCBoZWxwcy4N
-Cg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNYXJrIFJ1dGxhbmQgW21h
-aWx0bzptYXJrLnJ1dGxhbmRAYXJtLmNvbV0NCj4gU2VudDogT2N0b2Jlci0yMy0xNCA3OjE2IEFN
-DQo+IFRvOiBNZWR2ZSBFbWlsaWFuLUVNTUVEVkUxDQo+IA0KPiBPbiBXZWQsIE9jdCAyMiwgMjAx
-NCBhdCAwOTowNDo1NFBNICswMTAwLCBFbWlsIE1lZHZlIHdyb3RlOg0KPiA+IEhlbGxvIE1hcmss
-DQo+ID4NCj4gPg0KPiA+IFRoYW5rcyBmb3IgaGF2aW5nIGEgbG9vayBhdCB0aGlzDQo+ID4NCj4g
-PiBPbiAxMC8yMi8yMDE0IDA5OjI5IEFNLCBNYXJrIFJ1dGxhbmQgd3JvdGU6DQo+ID4gPiBPbiBX
-ZWQsIE9jdCAyMiwgMjAxNCBhdCAwMzowOTozMFBNICswMTAwLCBFbWlsIE1lZHZlIHdyb3RlOg0K
-PiA+ID4+IFBvcnRhbHMgYXJlIHVzZWQgYnkgc29mdHdhcmUgcnVubmluZyBvbiBwcm9jZXNzb3Ig
-Y29yZXMsDQo+IGFjY2VsZXJhdG9ycyBhbmQNCj4gPiA+PiBuZXR3b3JrIGludGVyZmFjZXMgdG8g
-Y29tbXVuaWNhdGUgd2l0aCB0aGUgQk1hbg0KPiA+ID4NCj4gPiA+IFdoYXQgZXhhY3RseSBpcyBh
-IHBvcnRhbD8NCj4gPiA+DQo+ID4gPiBJcyBpdCBhIHJlZ2lvbiBvZiBzaGFyZWQgbWVtb3J5PyBB
-IGRldmljZT8NCg0KSnVzdCB0byBzdXBwbGVtZW50IHdoYXQgRW1pbCBhbHJlYWR5IG1lbnRpb25l
-ZCwgdGhlIHBvcnRhbHMgZWFjaCBjb250YWluIHR3byBtZW1vcnktbWFwcGVkIHJlZ2lvbnMgYW5k
-IGEgc2luZ2xlIGludGVycnVwdC4gT25lIG9mIHRoZSByZWdpb25zIGlzIGEgY29udmVudGlvbmFs
-IDRLIHBhZ2Ugb2YgMzItYml0IGNhY2hlLWluaGliaXRlZCByZWdpc3RlcnMgKGFuZCB0aGlzIGlu
-Y2x1ZGVzIGFsbCB0aGUgY29udHJvbHMgYW5kIHN0YXR1cyBmb3IgdGhlIHBvcnRhbCdzIGludGVy
-cnVwdCBsaW5lLCB3aGljaCBjb252ZXlzIGEgdmFyaWV0eSBvZiBpbmRpdmlkdWFsbHktY29uZmln
-dXJhYmxlIGludGVycnVwdCBzb3VyY2UgY29uZGl0aW9ucykuIFRoZSBvdGhlciByZWdpb24gaXMg
-YSAxNksgY2FjaGUtZW5hYmxlZCBzcGFjZSwgc28gdGhlICJyZWdpc3RlcnMiIGFyZSBjYWNoZWxp
-bmUgd2lkdGggLSBpbnRlcmFjdGlvbiB3aXRoIHRoaXMgcmVsaWVzIG9uIGNhY2hlbGluZSBtYW5p
-cHVsYXRpb24gaW5zdHJ1Y3Rpb25zIChmbHVzaGluZywgcHJlZmV0Y2hpbmcsIGV0YyksIGFuZCBp
-biBzb21lIGNvbmZpZ3VyYXRpb25zIGhhcmR3YXJlIHdpbGwgaW5pdGlhdGUgc3Rhc2hpbmcgKGNh
-Y2hlLXdhcm1pbmcpIGZvciBzb21lIG9mIHRob3NlIGNhY2hlbGluZXMsIHdoaWNoIGlzIG9uZSBv
-ZiB0aGUgcmVhc29ucyB0aGF0IHRoZXNlIHBvcnRhbHMgaGF2ZSAiTElPRE4iIGluZm9ybWF0aW9u
-IGNvbmZpZ3VyZWQgaW50byB0aGVtIChzdGFzaGluZyB0cmFuc2FjdGlvbnMgZ28gdGhyb3VnaCB0
-aGUgSU9NTVUpLiBUaGUgb3RoZXIgcmVhc29uIGZvciBMSU9ETi9JT01NVSBjb250ZXh0IGlzIHRo
-YXQgYWxsIHRoZSBhY2NlbGVyYXRvciBhbmQgbmV0d29ya2luZyBmdW5jdGlvbnMgYWNjZXNzZWQg
-dmlhIGEgcG9ydGFsIHdpbGwgYmUgc3ViamVjdGVkIHRvIHRoZSBJT01NVSBjb250ZXh0IGluZm8g
-b2YgdGhhdCBwb3J0YWwuIEluIHRoaXMgd2F5LCBhIHBvcnRhbCB0aGF0IGlzIG1hcHBlZC91c2Vk
-IGJ5IGEgZ2l2ZW4gc29mdHdhcmUgY29udGV4dCBjYW4gYmUgc2V0dXAgc3VjaCB0aGF0IERNQSBn
-ZW5lcmF0ZWQgYnkgaXRzIGhhcmR3YXJlIGludGVyYWN0aW9ucyB3aWxsIHJlc3BlY3QgdGhlIHNh
-bWUgZ3Vlc3QtcGh5c2ljYWwgdHJhbnNsYXRpb25zIGFuZCByZXN0cmljdGlvbnMgYXMgYXBwbHkg
-dG8gdGhlIHNvZnR3YXJlIGNvbnRleHQgaXRzZWxmLg0KDQpCVFcsIGEgc3Vic2V0IG9mIHRoZSBD
-Q1NSIHJlZ2lzdGVycyBmb3IgdGhlIFFNYW4gYW5kIEJNYW4gYmxvY2tzIGFyZSB1c2VkIHRvIGNv
-bmZpZ3VyZSB0aGVzZSBMSU9ETi9JT01NVSBhdHRyaWJ1dGVzIG9mIHRoZSBwb3J0YWxzLCBhcyBv
-cHBvc2VkIHRvIHRob3NlIGF0dHJpYnV0ZXMgYmVpbmcgZXhwb3NlZCBpbiB0aGUgcmVnaXN0ZXIg
-c3BhY2Ugb2YgdGhlIHBvcnRhbHMgdGhlbXNlbHZlcy4gSW4gdGhpcyB3YXksIHRoZSB1c2VyIG9m
-IGEgbWVtb3J5LW1hcHBlZCBwb3J0YWwgY2Fubm90IHNldCB0aGVpciBvd24gTElPRE4vSU9NTVUg
-YXR0cmlidXRlcywgdGhhdCBkZWNpc2lvbiBiZWxvbmdzIHRvIHdob2V2ZXIgdHdpZGRsZXMgd2l0
-aCBDQ1NSLg0KDQo+ID4gR2l2ZW4gdGhlIGRlc2NyaXB0aW9uIGFib3ZlLCBzdXJlbHkgeW91IG5l
-ZWQgdG8ga25vdyB3aGF0IHRoZQ0KPiBwb3J0YWwgaXMNCj4gPiA+IHVzZWQgZm9yPyBPciBpcyB0
-aGF0IHF1ZXJpZWQgZnJvbSB0aGUgcG9ydGFsPw0KPiA+DQo+ID4gV2UgZG9uJ3QgbmVlZC93YW50
-IHRvIGluY2x1ZGUgc3VjaCBpbmZvcm1hdGlvbiBpbiB0aGUgRFQuIFBvcnRhbHMNCj4gYXJlDQo+
-ID4gImFsbG9jYXRlZCIgZHluYW1pY2FsbHkgYW5kIHVzZWQgYnkgdGhlIHJlc3BlY3RpdmUgY29u
-dGV4dA0KPiANCj4gT2suIFNvIHRoZXkgaGF2ZSBubyBmaXhlZCBwdXJwb3NlIGFuZCBzb2Z0d2Fy
-ZSBhbGxvY2F0ZXMgYXMgbmVjZXNzYXJ5Pw0KPiBUaGVyZSBhcmUgbm8gY29uc3RyYWludHMgb24g
-aG93IGVhY2ggcG9ydGFsIG1heSBiZSB1c2VkLCBvciB3aGljaA0KPiBwb3J0YWwNCj4gYW5vdGhl
-ciBhZ2V0biBtaWdodCB1c2U/DQoNClllcywgcHJlY2lzZWx5LiBUaGV5J3JlIGludGVyY2hhbmdl
-YWJsZSB3aW5kb3dzL2NvbnRleHRzIGludG8gdGhlIGhhcmR3YXJlLCBmb3IgaXNzdWluZyB2YXJp
-b3VzIGtpbmRzIG9mIGNvbW1hbmRzIGFuZCBvYnRhaW5pbmcgdmFyaW91cyBraW5kcyBvZiByZXN1
-bHRzL3N0YXR1cy4gVGhlIFNvQyBwcm92aWRlcyBhIGNlcnRhaW4gbnVtYmVyIG9mIHRoZXNlIHBv
-cnRhbHMsIGFuZCBzb2Z0d2FyZSBjYW4gYWxsb2NhdGUgdGhlbSBvdXQgYW5kIGNvbmZpZ3VyZSB0
-aGVtIGluIHdoYXRldmVyIG1hbm5lciAoc3RhdGljLCBkeW5hbWljLCAuLi4pLiBCZWNhdXNlIG9m
-IHRoZSBDQ1NSLWNvbnRyb2xsZWQgTElPRE4vSU9NTVUgcG9ydGFsIGF0dHJpYnV0ZXMsIHR3byBw
-b3J0YWxzIGNhbiBiZSBzZXQgdXAgdG8gaGF2ZSBkaWZmZXJlbnQgImFjY2VzcyIgYW5kIG9wZXJh
-dGUgaW4gZGlmZmVyZW50IGNvbnRleHRzIChlZy4gYXBwcywgdmlydHVhbCBtYWNoaW5lcyksIGJ1
-dCB0aGF0IGlzIGRldGVybWluZWQgYnkgY29udHJvbCBzb2Z0d2FyZSAoa2VybmVsIGRyaXZlcikg
-Y29uZmlndXJhdGlvbiBvZiB0aG9zZSBwb3J0YWxzIGJlZm9yZSB0aGVpciB1c2UuIEluIHNob3J0
-LCB0aGVyZSdzIG5vdGhpbmcgaW50cmluc2ljIHRvIHRoZSBwb3J0YWxzIChpZS4gZnJvbSBhIGhh
-cmR3YXJlIHBlcnNwZWN0aXZlKSB0aGF0IGRpc3Rpbmd1aXNoZXMgdGhlbSBvciBwcmVkZXRlcm1p
-bmVzIHRoZWlyIHVzZS4NCg0KQ2hlZXJzLA0KR2VvZmYNCg0KDQpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0Ckxp
-bnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0
-aW5mby9saW51eHBwYy1kZXY=
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+
+The existing pm_clk_add() allows to pass a clock by con_id. However,
+when referring to a specific clock from DT, no con_id is available.
+
+Add pm_clk_add_clk(), which allows to specify the struct clk * directly.
+
+CC: Ulf Hansson <ulf.hansson@linaro.org>
+CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Reviewed-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Reviewed-by: Kevin Hilman <khilman@linaro.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ drivers/base/power/clock_ops.c | 41 +++++++++++++++++++++++++++++++----------
+ include/linux/pm_clock.h       |  8 ++++++++
+ 2 files changed, 39 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/base/power/clock_ops.c b/drivers/base/power/clock_ops.c
+index 7836930..f14b767 100644
+--- a/drivers/base/power/clock_ops.c
++++ b/drivers/base/power/clock_ops.c
+@@ -53,7 +53,8 @@ static inline int __pm_clk_enable(struct device *dev, struct clk *clk)
+  */
+ static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
+ {
+-	ce->clk = clk_get(dev, ce->con_id);
++	if (!ce->clk)
++		ce->clk = clk_get(dev, ce->con_id);
+ 	if (IS_ERR(ce->clk)) {
+ 		ce->status = PCE_STATUS_ERROR;
+ 	} else {
+@@ -63,15 +64,8 @@ static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
+ 	}
+ }
+ 
+-/**
+- * pm_clk_add - Start using a device clock for power management.
+- * @dev: Device whose clock is going to be used for power management.
+- * @con_id: Connection ID of the clock.
+- *
+- * Add the clock represented by @con_id to the list of clocks used for
+- * the power management of @dev.
+- */
+-int pm_clk_add(struct device *dev, const char *con_id)
++static int __pm_clk_add(struct device *dev, const char *con_id,
++			struct clk *clk)
+ {
+ 	struct pm_subsys_data *psd = dev_to_psd(dev);
+ 	struct pm_clock_entry *ce;
+@@ -93,6 +87,8 @@ int pm_clk_add(struct device *dev, const char *con_id)
+ 			kfree(ce);
+ 			return -ENOMEM;
+ 		}
++	} else {
++		ce->clk = clk;
+ 	}
+ 
+ 	pm_clk_acquire(dev, ce);
+@@ -104,6 +100,31 @@ int pm_clk_add(struct device *dev, const char *con_id)
+ }
+ 
+ /**
++ * pm_clk_add - Start using a device clock for power management.
++ * @dev: Device whose clock is going to be used for power management.
++ * @con_id: Connection ID of the clock.
++ *
++ * Add the clock represented by @con_id to the list of clocks used for
++ * the power management of @dev.
++ */
++int pm_clk_add(struct device *dev, const char *con_id)
++{
++	return __pm_clk_add(dev, con_id, NULL);
++}
++
++/**
++ * pm_clk_add_clk - Start using a device clock for power management.
++ * @dev: Device whose clock is going to be used for power management.
++ * @clk: Clock pointer
++ *
++ * Add the clock to the list of clocks used for the power management of @dev.
++ */
++int pm_clk_add_clk(struct device *dev, struct clk *clk)
++{
++	return __pm_clk_add(dev, NULL, clk);
++}
++
++/**
+  * __pm_clk_remove - Destroy PM clock entry.
+  * @ce: PM clock entry to destroy.
+  */
+diff --git a/include/linux/pm_clock.h b/include/linux/pm_clock.h
+index 8348866..0b00396 100644
+--- a/include/linux/pm_clock.h
++++ b/include/linux/pm_clock.h
+@@ -18,6 +18,8 @@ struct pm_clk_notifier_block {
+ 	char *con_ids[];
+ };
+ 
++struct clk;
++
+ #ifdef CONFIG_PM_CLK
+ static inline bool pm_clk_no_clocks(struct device *dev)
+ {
+@@ -29,6 +31,7 @@ extern void pm_clk_init(struct device *dev);
+ extern int pm_clk_create(struct device *dev);
+ extern void pm_clk_destroy(struct device *dev);
+ extern int pm_clk_add(struct device *dev, const char *con_id);
++extern int pm_clk_add_clk(struct device *dev, struct clk *clk);
+ extern void pm_clk_remove(struct device *dev, const char *con_id);
+ extern int pm_clk_suspend(struct device *dev);
+ extern int pm_clk_resume(struct device *dev);
+@@ -51,6 +54,11 @@ static inline int pm_clk_add(struct device *dev, const char *con_id)
+ {
+ 	return -EINVAL;
+ }
++
++static inline int pm_clk_add_clk(struct device *dev, struct clk *clk)
++{
++	return -EINVAL;
++}
+ static inline void pm_clk_remove(struct device *dev, const char *con_id)
+ {
+ }
+-- 
+1.9.1
+
