@@ -1,161 +1,91 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 3/4] dt/bindings: Introduce the FSL QorIQ DPAA QMan
-Date: Thu, 23 Oct 2014 12:26:29 +0100
-Message-ID: <20141023112628.GC13690@leverpostej>
-References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
- <1413986972-621-3-git-send-email-Emilian.Medve@Freescale.com>
- <20141022143732.GB4010@leverpostej>
- <54480DF8.3070604@Freescale.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
+Date: Thu, 23 Oct 2014 12:27:31 +0100
+Message-ID: <20141023112731.GA5823@e102568-lin.cambridge.arm.com>
+References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <3256560.C0cZnIlnAv@wuerfel>
+ <20141022155914.GB25939@e102568-lin.cambridge.arm.com>
+ <2148776.X8NPqiYA6S@wuerfel>
+ <20141023091309.GF25302@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141023091309.GF25302@e106497-lin.cambridge.arm.com>
 Content-Disposition: inline
-In-Reply-To: <54480DF8.3070604@Freescale.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Emil Medve <Emilian.Medve@freescale.com>
-Cc: "scottwood@freescale.com" <scottwood@freescale.com>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Pawel Moll <Pawel.Moll@arm.com>, "Geoff.Thorpe@freescale.com" <Geoff.Thorpe@freescale.com>, "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>, jgunthorpe@obsidianresearch.com
 List-Id: devicetree@vger.kernel.org
+
+On Thu, Oct 23, 2014 at 10:13:09AM +0100, Liviu Dudau wrote:
+> On Wed, Oct 22, 2014 at 09:52:19PM +0100, Arnd Bergmann wrote:
+> > On Wednesday 22 October 2014 16:59:14 Lorenzo Pieralisi wrote:
+> > > On Wed, Oct 01, 2014 at 10:38:45AM +0100, Arnd Bergmann wrote:
+> > > 
+> > > [...]
+> > > 
+> > > > The arm32 implementations of pci_domain_nr/pci_proc_domain can probably be
+> > > > removed if we change the arm32 pcibios_init_hw function to call the new
+> > > > interfaces that set the domain number.
+> > > 
+> > > I wished, but it is a bit more complicated than I thought unfortunately,
+> > > mostly because some drivers, eg cns3xxx set the domain numbers
+> > > statically in pci_sys_data and this sets a chain of dependency that is
+> > > not easy to untangle. I think cns3xxx is the only legacy driver that "uses"
+> > > the domain number (in pci_sys_data) in a way that clashes with the
+> > > generic domain_nr implementation, I need to give it more thought.
+> > 
+> > Just had a look at that driver, shouldn't be too hard to change, see below.
+> 
+> I like this!
+> 
+> One thing though ...
+
+I like it too, it is one way of removing the artificial domain dependency
+from this driver.
+
+I think that by removing that, we could switch to CONFIG_PCI_DOMAINS_GENERIC
+on ARM32. I will remove the dependency in drivers/pci/host/pci-mvebu.c
+introduced by commit 2613ba48. pci_sys_data.domain is always 0 in that
+driver so its usefulness is doubtful, comments welcome, copied Jason in
+if he has comments.
 
 [...]
 
-> >> +QMan Node
-> >> +
-> >> +PROPERTIES
-> >> +
-> >> +- compatible
-> >> +	Usage:		Required
-> >> +	Value type:	<stringlist>
-> >> +	Definition:	Must include "fsl,qman"
-> >> +			May include "fsl,<SoC>-qman"
-> >> +
-> >> +- reg
-> >> +	Usage:		Required
-> >> +	Value type:	<prop-encoded-array>
-> >> +	Definition:	Registers region within the CCSR address space
-> >> +
-> >> +- fsl,liodn
-> >> +	Usage:		See pamu.txt
-> >> +	Value type:	<prop-encoded-array>
-> >> +	Definition:	PAMU property used for static LIODN assignment
-> >> +
-> >> +- fsl,iommu-parent
-> >> +	Usage:		See pamu.txt
-> >> +	Value type:	<phandle>
-> >> +	Definition:	PAMU property used for dynamic LIODN assignment
-> >> +
-> >> +	For additional details about the PAMU/LIODN binding(s) see pamu.txt
-> > 
-> > This is not present in the example. Is this always required?
+> > @@ -323,6 +309,14 @@ static int cns3xxx_pcie_abort_handler(unsigned long addr, unsigned int fsr,
+> >  void __init cns3xxx_pcie_init_late(void)
+> >  {
+> >  	int i;
+> > +	void *private_data;
+> > +	struct hw_pci hw_pci = {
+> > +		.nr_controllers = 1,
+> > +		.ops = &cns3xxx_pcie_ops,
+> > +		.setup = cns3xxx_pci_setup,
+> > +		.map_irq = cns3xxx_pcie_map_irq,
+> > +		.private_data = &private_data,
+> > +	};
+> >  
+> >  	pcibios_min_io = 0;
+> >  	pcibios_min_mem = 0;
+> > @@ -335,7 +329,9 @@ void __init cns3xxx_pcie_init_late(void)
+> >  		cns3xxx_pwr_soft_rst(0x1 << PM_SOFT_RST_REG_OFFST_PCIE(i));
+> >  		cns3xxx_pcie_check_link(&cns3xxx_pcie[i]);
+> >  		cns3xxx_pcie_hw_init(&cns3xxx_pcie[i]);
+> > -		pci_common_init(&cns3xxx_pcie[i].hw_pci);
+> > +		hw_pci->domain = i;
+
++		hw_pci.domain = i;
+
+I will remove this since if we move to generic domains it is useless to
+pass the value through hw_pci.
+
+> > +		private_data = &cns3xxx_pcie[i];
 > 
-> Sort of. Initial hardware (and current documentation) programming
-> suggestion was to configure all the PAMU instances the same way
-> regardless of what devices were behind them. Given the PAMU internal
-> caches sizes, this proved suboptimal from a performance perspective so
-> we're trying to discover/describe/use the PAMU topology
-> 
-> fsl,liodn is part of the undocumented static LIODN assignment binding
-> that the current PAMU driver uses. If fsl,iommu-parent is present,
-> fsl,liodn can be ignored and the LIODN can be assigned dynamically
-> and/or programmed only in the relevant PAMU instance
+> Is this dance with pointers absolutely necessary? Does gcc though dishes at you
+> for doing hw_pci->private_data = &cns3xxx_pcie[i] directly?
 
-Ok.
+You can't, hw_pci.private_data is void **.
 
-> >> +
-> >> +- clocks
-> >> +	Usage:		See clock-bindings.txt and qoriq-clock.txt
-> >> +	Value type:	<prop-encoded-array>
-> >> +	Definition:	Half of the platform clock
-> >> +
-> > 
-> > I don't understand the description here. What is the clock from the PoV
-> > of the QMan? Which input line on the QMan is this clock attached to?
-> > 
-> > Is there only one clock input? Or jsut one that you need to manage at
-> > the moment?
-> 
-> As part of the programming model (QoS features specifically) QMan needs
-> to know its clock speed. Prior to the existence of the
-> clock-bindings.txt, a "static" clock-frequency property was/is used
-> convey such information. Using clock-binding.txt to describe the
-> clocking hierarchy in the SoC makes it easier with DFS, power
-> management, etc.
+Lorenzo
 
-Ok. My concern is the phrase "Half of the platform clock" is meaingless.
-The property contains a phandle + clock-specifier pair that describe a
-single input clock by reference (some bindings just say "clock
-reference" for that, which is fine). This is not "half" of any
-particular clock.
-
-The description of the clock should describe what it logically is from
-the PoV of the consumer (i.e. _this_ device) rather than the provider.
-To me "platform clock" sounds like a description of the provider. Is
-there a name for the clock input line on this device?
-
-Is there only a single clock input? Or just one that you care about at
-the moment?
-
-> The platform clock/PLL binding is part of qoriq-clock.txt
-> 
-> > You also seem to have an interrupt in the example. How many do you
-> > expect, and what are their their logical functions?
-> 
-> That's the error interrupt and hopefully it never triggers. I didn't add
-> [many] words about it as it's a standard property
-
-While the interrupts property is standard, it is only standard in the
-sense that the name and format are standard. Not every bidning has an
-interrupts property, and the set of interrupts described are specific to
-the binding. Please describe the set of interrupts you expect.
-
-Does the device only have the error interrupt, or is that the only
-interrupt you care about?
-
-> >> +QMan Private Memory Nodes
-> >> +
-> >> +QMan requires two contiguous range of physical memory used for the backing store
-> >> +for QMan Frame Queue Descriptor and Packed Frame Descriptor Record. This memory
-> >> +is reserved/allocated as a nodes under the /reserved-memory node
-> >> +
-> >> +The QMan FQD memory node must be named "qman-fqd"
-> >> +
-> >> +PROPERTIES
-> >> +
-> >> +- compatible
-> >> +	Usage:		required
-> >> +	Value type:	<stringlist>
-> >> +	Definition:	Must inclide "fsl,qman-fqd"
-> >> +
-> >> +The QMan PFDR memory node must be named "qman-pfdr"
-> >> +
-> >> +PROPERTIES
-> >> +
-> >> +- compatible
-> >> +	Usage:		required
-> >> +	Value type:	<stringlist>
-> >> +	Definition:	Must inclide "fsl,qman-pfdr"
-> >> +
-> >> +The following constraints are relevant to the FQD and PFDR private memory:
-> >> +	- The size must be 2^(size + 1), with size = 11..29. That is 4 KiB to
-> >> +	  1 GiB
-> >> +	- The alignment must be a muliptle of the memory size
-> >> +
-> >> +The size of the FQD and PFDP must be chosen by observing the hardware features
-> >> +configured via the RCW and that are relevant to a specific board (e.g. number of
-> >> +MAC(s) pinned-out, number of offline/host command FMan ports, etc.). The size
-> >> +configured in the DT must reflect the hardware capabilities and not the specific
-> >> +needs of an application
-> >> +
-> >> +If the memory reserved in the device tree proves to be larger then the needs of
-> >> +the application a QMan driver may provide a method to release the extra memory
-> >> +back to the OS
-> > 
-> > Driver details should be unimportant to the binding. This sentence can
-> > disappear.
-> 
-> I'm trying to discourage reserved-memory nodes to be used to "optimize"
-> the memory allocation/usage. If it comes to it, I can drop this sentence
-
-I think it would be preferable to do so.
-
-Thanks,
-Mark.
