@@ -1,42 +1,146 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v8 0/7] QCOM 8974 and 8084 cpuidle driver
-Date: Thu, 23 Oct 2014 09:54:35 -0600
-Message-ID: <20141023155435.GA30210@ilina-mac.qualcomm.com>
-References: <1412718106-17049-1-git-send-email-lina.iyer@linaro.org>
- <1414078317.4214.4.camel@mm-sol.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: [PATCH v4 6/7] ARM: mediatek: Add sysirq in mt6589/mt8135/mt8127 dtsi
+Date: Thu, 23 Oct 2014 23:53:14 +0800
+Message-ID: <1414079595-26129-7-git-send-email-yingjoe.chen@mediatek.com>
+References: <1414079595-26129-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1414078317.4214.4.camel@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414079595-26129-1-git-send-email-yingjoe.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Jiang Liu <jiang.liu@linux.intel.com>, Marc Zyngier <marc.zyngier@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, arm@kernel.org
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Grant Likely <grant.likely@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, srv_heupstream@mediatek.com, yingjoe.chen@gmail.com, hc.yen@mediatek.com, eddie.huang@mediatek.com, nathan.chung@mediatek.com, yh.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 23 2014 at 09:31 -0600, Ivan T. Ivanov wrote:
->
->Hi,
->
->On Tue, 2014-10-07 at 15:41 -0600, Lina Iyer wrote:
->> Hi,
->>
->> This v8 revision of the cpuidle driver is available at
->> git.linaro.org:/people/lina.iyer/linux-next cpuidle-v8
->>
->
->Probably I missing something, but should I expect that
->once these patches are applied driver could be successfully
-> compiled?
-Yes they should.
->
->Patches definitely break bisectability. For example [PATCH v8 1/7]
->is using <soc/qcom/pm.h> which is introduced [PATCH v8 4/7].
->
-You are right. I missed checking compilation against each patch.
-Based on some discussion, I need to see if pm.h is even needed.
+Add sysirq settings for mt6589/mt8135/mt8127
+This also correct timer interrupt flag. The old flag setting
+works because boot loader already set polarity for timer
+interrupt. Without intpol support, the setting was not changed
+so gic can get the irq correctly.
 
->Regards,
->Ivan
->
->
+Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+---
+ arch/arm/boot/dts/mt6589.dtsi | 13 +++++++++++--
+ arch/arm/boot/dts/mt8127.dtsi | 13 +++++++++++--
+ arch/arm/boot/dts/mt8135.dtsi | 13 +++++++++++--
+ 3 files changed, 33 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/boot/dts/mt6589.dtsi b/arch/arm/boot/dts/mt6589.dtsi
+index e3c7600..e7e7ddf 100644
+--- a/arch/arm/boot/dts/mt6589.dtsi
++++ b/arch/arm/boot/dts/mt6589.dtsi
+@@ -19,7 +19,7 @@
+ 
+ / {
+ 	compatible = "mediatek,mt6589";
+-	interrupt-parent = <&gic>;
++	interrupt-parent = <&sysirq>;
+ 
+ 	cpus {
+ 		#address-cells = <1>;
+@@ -76,15 +76,24 @@
+ 		timer: timer@10008000 {
+ 			compatible = "mediatek,mt6577-timer";
+ 			reg = <0x10008000 0x80>;
+-			interrupts = <GIC_SPI 113 IRQ_TYPE_EDGE_RISING>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
+ 			clocks = <&system_clk>, <&rtc_clk>;
+ 			clock-names = "system-clk", "rtc-clk";
+ 		};
+ 
++		sysirq: interrupt-controller@10200100 {
++			compatible = "mediatek,mt6589-sysirq", "mediatek,mt6577-sysirq";
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			interrupt-parent = <&gic>;
++			reg = <0 0x10200100 0 0x1c>;
++		};
++
+ 		gic: interrupt-controller@10211000 {
+ 			compatible = "arm,cortex-a7-gic";
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
++			interrupt-parent = <&gic>;
+ 			reg = <0x10211000 0x1000>,
+ 			      <0x10212000 0x1000>,
+ 			      <0x10214000 0x2000>,
+diff --git a/arch/arm/boot/dts/mt8127.dtsi b/arch/arm/boot/dts/mt8127.dtsi
+index 65d279d..adc6f2d 100644
+--- a/arch/arm/boot/dts/mt8127.dtsi
++++ b/arch/arm/boot/dts/mt8127.dtsi
+@@ -18,7 +18,7 @@
+ 
+ / {
+ 	compatible = "mediatek,mt8127";
+-	interrupt-parent = <&gic>;
++	interrupt-parent = <&sysirq>;
+ 
+ 	cpus {
+ 		#address-cells = <1>;
+@@ -81,15 +81,24 @@
+ 		timer: timer@10008000 {
+ 			compatible = "mediatek,mt8127-timer", "mediatek,mt6577-timer";
+ 			reg = <0 0x10008000 0 0x80>;
+-			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_LOW>;
+ 			clocks = <&system_clk>, <&rtc_clk>;
+ 			clock-names = "system-clk", "rtc-clk";
+ 		};
+ 
++		sysirq: interrupt-controller@10200100 {
++			compatible = "mediatek,mt8127-sysirq", "mediatek,mt6577-sysirq";
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			interrupt-parent = <&gic>;
++			reg = <0 0x10200100 0 0x1c>;
++		};
++
+ 		gic: interrupt-controller@10211000 {
+ 			compatible = "arm,cortex-a7-gic";
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
++			interrupt-parent = <&gic>;
+ 			reg = <0 0x10211000 0 0x1000>,
+ 			      <0 0x10212000 0 0x1000>,
+ 			      <0 0x10214000 0 0x2000>,
+diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
+index f89a4f5..9627320 100644
+--- a/arch/arm/boot/dts/mt8135.dtsi
++++ b/arch/arm/boot/dts/mt8135.dtsi
+@@ -18,7 +18,7 @@
+ 
+ / {
+ 	compatible = "mediatek,mt8135";
+-	interrupt-parent = <&gic>;
++	interrupt-parent = <&sysirq>;
+ 
+ 	cpu-map {
+ 		cluster0 {
+@@ -103,15 +103,24 @@
+ 		timer: timer@10008000 {
+ 			compatible = "mediatek,mt8135-timer", "mediatek,mt6577-timer";
+ 			reg = <0 0x10008000 0 0x80>;
+-			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
+ 			clocks = <&system_clk>, <&rtc_clk>;
+ 			clock-names = "system-clk", "rtc-clk";
+ 		};
+ 
++		sysirq: interrupt-controller@10200030 {
++			compatible = "mediatek,mt8135-sysirq", "mediatek,mt6577-sysirq";
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			interrupt-parent = <&gic>;
++			reg = <0 0x10200030 0 0x1c>;
++		};
++
+ 		gic: interrupt-controller@10211000 {
+ 			compatible = "arm,cortex-a15-gic";
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
++			interrupt-parent = <&gic>;
+ 			reg = <0 0x10211000 0 0x1000>,
+ 			      <0 0x10212000 0 0x1000>,
+ 			      <0 0x10214000 0 0x2000>,
+-- 
+1.8.1.1.dirty
