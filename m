@@ -1,134 +1,203 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: GPIO bindings guidelines (Was: Re: [PATCH v5 10/12] gpio: Support
- for unified device properties interface)
-Date: Thu, 23 Oct 2014 15:10:55 +0900
-Message-ID: <CAAVeFuJBu-2_z-wCyHF=oVqZUkbNscHk_YGuRLyMkKhhccaPUw@mail.gmail.com>
-References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com>
- <20141022085140.GF1484@lahna.fi.intel.com> <2466280.tMTA38OpXD@wuerfel> <1971792.8pKYWlGxB9@vostro.rjw.lan>
+From: =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
+Subject: Re: [PATCH] gpio: add gpio_of_helper
+Date: Thu, 23 Oct 2014 08:32:40 +0200
+Message-ID: <5448A108.4070108@aksignal.cz>
+References: <4b0bcf4679163c0da53e412a47eecd4bb03849b8.1413966148.git.jiri.prchal@aksignal.cz> <CAAVeFuJrmea6yZn2J28ihs3+=FYkZ2QxDv6F7qiq+TPpv_odpw@mail.gmail.com> <E5E0C172-C51D-46DC-AE15-71308BDC9829@antoniou-consulting.com> <CAAVeFuLh99MJXNNuh=L37pNzgun-Qi=3J4uK4eUSC5Qy107Gzw@mail.gmail.com> <E44127F1-1B6B-4BB0-866A-7B142F295FAE@antoniou-consulting.com> <CAAVeFuKj66r4UNZ33z3BT5m=7iB3tMC-u_eUDcJmvaNFj-0y5Q@mail.gmail.com>
+Reply-To: =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1971792.8pKYWlGxB9@vostro.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAVeFuKj66r4UNZ33z3BT5m=7iB3tMC-u_eUDcJmvaNFj-0y5Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 22, 2014 at 11:07 PM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> On Wednesday, October 22, 2014 11:28:40 AM Arnd Bergmann wrote:
->> On Wednesday 22 October 2014 11:51:40 Mika Westerberg wrote:
->> > On Wed, Oct 22, 2014 at 10:33:32AM +0200, Arnd Bergmann wrote:
->> > > On Wednesday 22 October 2014 11:10:44 Mika Westerberg wrote:
->> > > >
->> > > > It expects that GPIOs returned from _CRS are in specific order. Since we
->> > > > can't change these existing ACPI tables, we must support them somehow.
->> > > >
->> > > > This patch series handles it so that:
->> > > >
->> > > >   1) If we can't find given property (e.g "reset-gpios" or
->> > > >      "shutdown-gpios") the index above will refer directly to the GPIO
->> > > >      resource returned from _CRS.
->> > > >
->> > > >   2) If the property is found we ignore index and take it from the
->> > > >      property instead.
->> > > >
->> > > > This has the drawback that we cannot support this:
->> > > >
->> > > >         Package () { "reset-gpios", Package () { ^GPIO, 0, 0, 0, ^GPIO, 1, 0, 0}}
->> > > >                                                                  ^^^^^^^^^^^^^^
->> > > > So the second entry in the above is not accessible using
->> > > > gpiod_get_index() and the reason is that we want to support the existing
->> > > > and new ACPI tables where _DSD is not being used.
->> > >
->> > > So this is not using the DT binding but does thing slightly differently then.
->> > > In this case (supporting two incompatible bindings for DT and ACPI), I think
->> > > the only sensible driver implementation would be to know what we are asking
->> > > for and use different devm_gpiod_get_index statements based on the firmware
->> > > interface.
->> >
->> > Yes something like that is probably needed.
->> >
->> > Alternatively (I didn't try if this works) we could do it so that
->> > when we see:
->> >
->> >         gpio = devm_gpiod_get_index(&pdev->dev, "shutdown", 1);
->> >
->> > we check first for the property ("shutdown-gpios"), and check if it has
->> > more than one entry in the value, like:
->> >
->> >         Package () { "reset-gpios", Package () { ^GPIO, 0, 0, 0, ^GPIO, 1, 0, 0}}
->> >
->> > and in that case return the second entry. If we find this instead:
->> >
->> >         Package () { "reset-gpios", Package () { ^GPIO, 0, 0, 0 }}
->> >
->> > we just ignore the index.
->> >
->> > Last if there is no _DSD the index refers directly to the GPIO resource
->> > in _CRS.
->> >
->> > This would support both _DSD and non-_DSD at the same time but it makes
->> > the implementation more complex.
+
+
+Dne 23.10.2014 v 07:08 Alexandre Courbot napsal(a):
+> On Wed, Oct 22, 2014 at 6:58 PM, Pantelis Antoniou
+> <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+>> Hi Alexandre,
 >>
->> I think the main problem with that approach is that it makes the common
->> code more error-prone in case of unintentionally broken device descriptions,
->> because it less often returns an error.
+>>> On Oct 22, 2014, at 12:41 PM, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
+wrote:
+>>>
+>>> On Wed, Oct 22, 2014 at 6:24 PM, Pantelis Antoniou
+>>> <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+>>>> Hi Alexandre,
+>>>>
+>>>>> On Oct 22, 2014, at 12:18 PM, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org=
+> wrote:
+>>>>>
+>>>>> On Wed, Oct 22, 2014 at 5:26 PM, Jiri Prchal <jiri.prchal@aksigna=
+l.cz> wrote:
+>>>>>> This patch adds new driver "gpio-of-helper", witch has possibili=
+ty to export
+>>>>>> gpios defined in dt. It exports them in defined name under
+>>>>>> /sysfs/class/gpio/name.
+>>>>>> It's rebased from Pantelis Antoniou patch to new kernel.
+>>>>>> Usage example:
+>>>>>>        gpio {
+>>>>>>                compatible =3D "gpio-of-helper";
+>>>>>>                status =3D "okay";
+>>>>>>                pinctrl-names =3D "default";
+>>>>>>                pinctrl-0 =3D <&pinctrl_gpio>;
+>>>>>>
+>>>>>>                gsm_on {
+>>>>>>                        gpio-name =3D "gsm_on";
+>>>>>>                        gpio =3D <&pioB 13 GPIO_ACTIVE_HIGH>;
+>>>>>>                        output;
+>>>>>>                        init-low;
+>>>>>>                };
+>>>>>>        };
+>>>>>>
+>>>>>> This patch needs Alexey Ignatov [PATCH] gpiolib: allow exporting=
+ gpios with
+>>>>>> custom names.
+>>>>>
+>>>>> We will need to see whether the pre-requisite patch can get merge=
+d
+>>>>> first, but there are a couple of things that are wrong with your =
+patch
+>>>>> anyway:
+>>>>>
+>>>>> - it is missing a bindings documentation
+>>>>> - it is using the legacy integer GPIOs instead of the descriptor
+>>>>> interface (see include/linux/gpio/consumer.h). Since this is DT-b=
+ased,
+>>>>> there is absolutely no reason to not use the descriptors interfac=
+e.
+>>>>> - it seems quite long for what it needs to do
+>>>>> - the MODULE_AUTHOR has not signed-off this patch (?)
+>>>>>
+>>>>> But what makes me nervous is that this encourages more usage of t=
+he
+>>>>> sysfs interface, an in a way that is potentially harmful.
+>>>>>
+>>>>> Also, I don't know if the DT people will be happy with this idea.
+>>>>> Since this concerns DT, please also add the devicetree list and g=
+et a
+>>>>> Acked-by for the bindings you want to push by a DT maintainer.
+>>>>
+>>>> Since I=E2=80=99m the original perpetrator, let me put a few words=
+ here for posterity.
+>>>>
+>>>> This patch was meant as a quick and dirty method for doing the aut=
+omatic export
+>>>> and pinmux configuration from DT on a 3.8 kernel. The kernel APIs =
+have moved on
+>>>> since. It wasn=E2=80=99t meant to be submitted for mainline right =
+as it is.
+>>>>
+>>>> Unfortunately (or fortunately for many people) it does what a lot =
+of people need
+>>>> i.e. configures a board with heavily pinmuxed GPIO right at boot t=
+ime.
+>>>>
+>>>> I=E2=80=99m open at having a small discussion about how to do what=
+ the users of this patch
+>>>> do =E2=80=98right=E2=80=99.
+>>>
+>>> Sure, although the discussion might turn out to not be that "small"=
+=2E :)
+>>>
+>>
+>> Heh ;)
+>>
+>>> Pinmux configuration sounds like a job for pinmux more than GPIO, a=
+nd
+>>> exporting potentially many GPIOs to user-space sounds like a work f=
+or
+>>> a proper driver.
+>>>
+>>
+>> I=E2=80=99m afraid that=E2=80=99s not the case. A great many users d=
+o not require anything
+>> more than setting a pinmux and the GPIO configuration (input/output)=
+=2E
+>> They can then do low speed I/O using the sysfs interface, without ha=
+ving to
+>> use any complex APIs (shell works just fine).
+>>
+>> Think of stuff like controlling a sprinkler valve, or something like=
+ a mechanical
+>> door detection open state.
 >
-> Moreover, we need to clarify what situation we're really talking about.
->
-> For one, drivers using the unified interface only will always use names for
-> GPIOs, because they have to assume that either a DT or ACPI w/ _DSD is present.
-> This is the cost of keeping those drivers firmware interface agnostic.
->
-> So it looks like we're not talking about this case here.
->
-> Now, if there's no DT or no _DSD in the ACPI tables for the given device
-> *and* the driver wants to use its GPIOs anyway, it has to be ACPI-aware to
-> some extent, because in that case the device ID it has been matched against
-> tells it what the meaning of the GpioIo resources in the _CRS is.
->
-> Then, the driver needs to do something like:
->
->         if (!device_property_present(dev, "known_property_that_should_be_present")
->             && ACPI_COMPANION(dev))
->                 acpi_probe_gpios(dev);
->
-> and in the acpi_probe_gpios() routine there may be checks like:
->
->         if (device_has_id(dev, "MARY0001")) {
->                 The first pin in the first GpioIo resource in _CRS is "fred" and
->                 it is active-low.
->                 The third pin in the second GpioIo resource in _CRS is "steve"
->                 and it is not active-low.
->         } else if (device_has_id(dev, "JANE0002")) {
->                 The first pin in the second GpioIo resource in _CRS is "fred" and
->                 it is not active-low.
->                 The second pin in the first GpioIo resource in _CRS is "steve"
->                 and it is active-low.
->         }
->
-> and so on.  Of course, there may be drivers knowing that the meaning of the
-> GpioIo resources in _CRS is the same for all devices handled by them, in which
-> case they will not need to check device IDs, but the core has now way of
-> knowing that.  Only the drivers have that information and the core has now
-> way to figure out what to do for a given specific device.
->
-> So here's a radical idea: Why don't we introduce something like
->
->         acpi_enumerate_gpio(dev, name, GpioIo_index, pin_index, active_low)
->
-> such that after calling, say, acpi_enumerate_gpio(dev, "fred", 0, 0, true) the
-> driver can do something like:
->
->         desc = get_gpiod_by_name(dev, "fred");
->
-> and it'll all work.  Then, the only part of the driver that really needs to be
-> ACPI-specific will be the acpi_probe_gpios() function calling acpi_enumerate_gpio()
-> in accordance with what the device ID is.
+> That sounds like any kind of arbitrary device that can be temporarily
+> connected to a set of GPIOs that will be bit-banged. Is my
+> interpretation correct?
 
-I like this idea. It doesn't complicate the GPIO interface (i.e. no
-"if you are on ACPI and no _DSD is present then gpiod_get() will
-behave that way...") and does the plumbing behind the scenes.
-
-I will also allow us to finally push the use of names instead of
-indexes in the GPIO API. I'm all for it.
+Not only temporarily. For example on/off switch of some hw on board lik=
+e gsm modem.
+Or some optocoupler isoleted in/outs for general use from userspace.
+>
+> In that case, I seriously doubt that this should be part of the DT.
+> Right now the DT is part of the firmware, and an immutable descriptio=
+n
+> of the hardware layout of a board - definitely such devices do not fi=
+t
+This is our case of gpio. It's like LEDs, they are hw layout of board,
+but they are in/out instead of LEDs are only output.
+> into that definition. This might change once the Device Tree Overlays
+> are merged, but we are not there yet. If the DT maintainers say this
+> is a valid use-case for overlays, then I will reconsider my position,
+> but in any case it really looks like this could/should be done from
+> user-space.
+I don't think so as I explained - HW layout of boerd.
+In other way I'm looking forward for DT overlays.
+>
+> You have almost all the necessary pieces: you can export, configure
+> and manipulate any GPIO from the sysfs interface. The only thing you
+> would be missing is a way to give a name to a GPIO, something that ca=
+n
+> easily be fixed.
+But isn't it nice to have already exported gpios which are layouted out
+from board. All other unexported gpios aren't connected to anywhere on
+board. So user don't have to export or unexport anything.
+>
+> Since the devices you want to configure that way are typically
+> removable or usage-specific, why would you want to store that
+> information all the way up into the firmware? A commonly accepted
+> wisdom is that what can be done in user-space should be done in
+> user-space, and it really looks like this applies here.
+They are NOT removable.
+>
+> Say you buy a Jetson TK1 to control that sprinkler valve (a good use
+> for all these GPU cores!). The mainline DT has no knowledge about the
+> valve, so using your proposed way you will have to re-build and flash
+> a custom device tree just to be able to use your sprinkler. If you
+> decide to assign your board to something else, you will need another
+> DT.
+But if you buy more "real world ready" board with for example 8 power
+outputs for sprinkler valves, why has user think about what gpio to
+export, if there could be valve0 - 7 ready. If he will use only valve0
+does not mater, all unused gpio can't be used for anything else since
+they has layout for valves.
+>
+> Instead, have a shell script or a systemd unit tmpfile that will
+> perform the correct setup at boot time. Then you can easily switch
+> usages from user-space (systemctl stop sprinkler && systemctl start
+> doordetect). This is much, much more flexible. At least until the
+> Device Tree Overlays are merged, but even then this seems overkill.
+I seriously think about it, but I think if LEDs are in DT, GPIOs should
+be there too. In other way, I don't like exporting without given name.
+>
+> So I don't see any good reason to accept this patch for now. I'm read=
+y
+> to discuss and work on the required improvements to the sysfs
+> interface though - actually this might be a good opportunity to write
+> a better alternative sysfs interface that does not depend on the
+> integer GPIO space, something I have in mind since some time already.
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-gpio"=
+ in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
