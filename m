@@ -1,71 +1,61 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [RFC v3 PATCH 1/5] of: Add standard property for poweroff
- capability
-Date: Thu, 23 Oct 2014 11:53:39 +0200
-Message-ID: <20141023095339.GC6641@localhost>
-References: <1413268273-15151-1-git-send-email-romain.perier@gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 1/5] mfd: tps65910: Convert ti,system-power-controller
+ DT property to poweroff-source
+Date: Thu, 23 Oct 2014 11:02:21 +0100
+Message-ID: <20141023100221.GA10395@x1>
+References: <1413991587-11110-1-git-send-email-romain.perier@gmail.com>
+ <CABgxDoKus_D=ooCz3TqyXP9CTJUgbZVxQSsw4ZgBx1oYaTefbw@mail.gmail.com>
+ <20141022155058.GN4939@x1>
+ <CABgxDoJSLrAOMMA7=ZGd4F6z7_FkojCdjUNi52wbocZk7yJowQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1413268273-15151-1-git-send-email-romain.perier@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Romain Perier <romain.perier@gmail.com>
-Cc: devicetree@vger.kernel.org, broonie@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, heiko@sntech.de, grant.likely@linaro.org, robh@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee.jones@linaro.org>
+In-Reply-To: <CABgxDoJSLrAOMMA7=ZGd4F6z7_FkojCdjUNi52wbocZk7yJowQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: PERIER Romain <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "pawel.moll" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, galak <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, swarren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "thierry.reding" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, gnurou <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[ +CC: Guenter, Lee, linux-pm ]
+On Thu, 23 Oct 2014, PERIER Romain wrote:
 
-On Tue, Oct 14, 2014 at 06:31:09AM +0000, Romain Perier wrote:
-> Several drivers create their own devicetree property when they register
-> poweroff capabilities. This is for example the case for mfd, regulator
-> or power drivers which define "vendor,system-power-controller" property.
-> This patch adds support for a standard property "poweroff-source"
+> 2014-10-22 17:50 GMT+02:00 Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> > On Wed, 22 Oct 2014, PERIER Romain wrote:
+> >
+> >> This is related to the following subject "[RFC v3 PATCH 1/5] of: A=
+dd
+> >> standard property for poweroff capability" and depends on the
+> >> corresponding patch.
+> >
+> > Then it should be sent in the same patch-set.
+> >
+> > There's nothing I can do with this patch as is.
+> >
+>=20
+> Even if this patch is already commited and present in "linux-next" ?
+> (or in Mark Brown's regulator tree)
 
-Shouldn't this property really be called "power-off-source" or even
-"power-off-controller"?
+Usually it wouldn't be possible to take this, as it would be
+difficult to ensure bisectability.  The way we usually deal with this
+is to have a shared immutable branch between the effected subsystems,
+but we can only do this if the patches are sent as a set.  However, it
+appears as though Mark has "of: Add standard property for poweroff
+capability" on a tagged branch on its own.  This means, after checking
+with Mark that this branch in indeed stable, I can merge it in and
+base this commit on top of it.  Not many people setup their repos like
+Mark does, so I guess you are lucky this time.
 
-The power-off handler call-chain infrastructure is about to be merged
-and will be using power[-_ ]off (i.e. not "poweroff") consistently (at
-least in its interface).
+Once I've heard back from Mark, I'll let you know when I apply the
+patch.
 
-Furthermore, isn't "controller" as in "power-off-controller" more
-appropriate than "source" in this case? We have wake-up sources, which
-might appear analogous, but that really isn't the same thing.
-
-I now this has already been merged to the regulator tree, but there's
-still still time to fix this.
-
-> which marks the device as able to shutdown the system.
-> 
-> Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> ---
->  include/linux/of.h | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 6545e7a..27b3ba1 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -866,4 +866,15 @@ static inline int of_changeset_update_property(struct of_changeset *ocs,
->  /* CONFIG_OF_RESOLVE api */
->  extern int of_resolve_phandles(struct device_node *tree);
->  
-> +/**
-> + * of_system_has_poweroff_source - Tells if poweroff-source is found for device_node
-> + * @np: Pointer to the given device_node
-> + *
-> + * return true if present false otherwise
-> + */
-> +static inline bool of_system_has_poweroff_source(const struct device_node *np)
-
-Why "system_has"? Shouldn't this be of_is_power_off_source (controller)?
-
-> +{
-> +	return of_property_read_bool(np, "poweroff-source");
-> +}
-> +
->  #endif /* _LINUX_OF_H */
-
-Thanks,
-Johan
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
