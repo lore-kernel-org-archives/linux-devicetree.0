@@ -1,119 +1,113 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v8 5/7] qcom: cpuidle: Add cpuidle driver for QCOM cpus
-Date: Thu, 23 Oct 2014 13:43:03 +0100
-Message-ID: <20141023124303.GA16417@red-moon>
-References: <1412718106-17049-1-git-send-email-lina.iyer@linaro.org>
- <1412718106-17049-6-git-send-email-lina.iyer@linaro.org>
- <5448E103.9070505@linaro.org>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: GPIO bindings guidelines (Was: Re: [PATCH v5 10/12] gpio:
+ Support for unified device properties interface)
+Date: Thu, 23 Oct 2014 15:56:55 +0300
+Message-ID: <20141023125655.GJ1484@lahna.fi.intel.com>
+References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com>
+ <1971792.8pKYWlGxB9@vostro.rjw.lan>
+ <20141022145651.GH1484@lahna.fi.intel.com>
+ <13758254.acHP1NJN1b@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <5448E103.9070505@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Lina Iyer <lina.iyer@linaro.org>, "khilman@linaro.org" <khilman@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "msivasub@codeaurora.org" <msivasub@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <13758254.acHP1NJN1b@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 23, 2014 at 12:05:39PM +0100, Daniel Lezcano wrote:
+On Thu, Oct 23, 2014 at 01:21:06AM +0200, Rafael J. Wysocki wrote:
+> OK, would the below make sense, then (completely untested, on top of the v6
+> of the device properties patchset)?
 
-[...]
+Yes it does :-)
 
-> > diff --git a/drivers/cpuidle/cpuidle-qcom.c b/drivers/cpuidle/cpuidle-qcom.c
-> > new file mode 100644
-> > index 0000000..0a65065
-> > --- /dev/null
-> > +++ b/drivers/cpuidle/cpuidle-qcom.c
-> > @@ -0,0 +1,79 @@
-> > +/*
-> > + * Copyright (c) 2014, Linaro Limited.
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 and
-> > + * only version 2 as published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + *
-> > + */
-> > +
-> > +#include <linux/cpu_pm.h>
-> > +#include <linux/cpuidle.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#include <soc/qcom/pm.h>
-> > +#include "dt_idle_states.h"
-> > +
-> > +static void (*qcom_idle_enter)(enum pm_sleep_mode);
-> > +
-> > +static int qcom_lpm_enter_stby(struct cpuidle_device *dev,
-> > +                             struct cpuidle_driver *drv, int index)
-> > +{
-> > +     qcom_idle_enter(PM_SLEEP_MODE_STBY);
-> 
-> Could you replace this function by a generic one ?
-> 
-> It would be nice to have qcom_cpu_standby(void) and
-> qcom_cpu_powerdown(void) and let behind the mysterious words 'Single
-> Power Collapse' in the low level code which is qcom specific :)
-> 
-> I guess you had to create a single "qcom_idle_enter" because of a single
-> pointer in the platform data. I am working on a common structure to be
-> shared across the drivers as a common way to pass the different
-> callbacks without including a soc specific header.
-> 
-> struct cpuidle_ops {
->         int (*standby)(void *data);
->         int (*retention)(void *data);
->         int (*poweroff)(void *data);
-> };
-> 
-> So maybe you can either:
-> 
-> 1. wait I post this structure and provide the driver with this one
-> 2. create a similar structure and I will take care to upgrade when I
-> post the patchset with the common structure.
-> 
-> The issue I see with this common structure is the initialization of the
-> qcom_idle_state_match array.
+With the the below fix it works nicely with the modified rfkill-gpio.c
+driver.
 
-Because you do not know which function to call when right ? That's why
-I think it is up to the CPUidle back-end to make that decision and why
-I think that the contract between the CPUidle driver and the back-end
-should be the idle index. Even if you have pointers to functions,
-the CPUidle driver do not know what parameter it has to chuck into
-the void data, which is likely to be platform specific too. Granted,
-you can make those cpuidle_ops a set of pairs, {function, parameter}
-associated with an idle index, but then you will end up implementing
-what I suggest below.
+> +static bool acpi_get_driver_gpio_data(struct acpi_device *adev,
+> +				      const char *name,
+> +				      struct acpi_reference_args *args)
+> +{
+> +	struct acpi_gpio_data *gd;
+> +
+> +	mutex_lock(&driver_gpio_data_lock);
+> +
+> +	list_for_each_entry(gd, &adev->driver_gpios, item)
+> +		if (!strcmp(name, gd->name)) {
+> +			args->adev = adev;
+> +			args->args[0] = gd->entry_index;
+> +			args->args[1] = gd->pin_index;
+> +			args->args[2] = gd->active_low;
+> +			args->nargs = 3;
 
-If you have a look at how the MCPM wrapper works on bL driver, that's
-exactly the same problem. At the moment we are supporting only cluster
-shutdown. If we were to add a core gating idle state, how could the
-MCPM back-end differentiate between core and cluster states ? At the
-moment the only way would consist in passing the residency through
-mcpm_suspend() parameter. We could pass the idle state index, it is the
-same story.
+			mutex_unlock(&driver_gpio_data_lock);
 
-That's the reasoning behind cpu_suspend on ARM64, the index determines
-what should be done, it is up to the platform back end to execute the
-required actions (and it is not because we have PSCI on ARM64, that
-concept is generic and should be made similar on ARM32 IMHO).
+> +			return true;
+> +		}
+> +
+> +	mutex_unlock(&driver_gpio_data_lock);
+> +
+> +	return false;
+> +}
 
-DT idle states are sorted by definition, and they can be parsed by
-the arch back-end too to determine the actions required by an idle
-state index (eg most likely information coming from power domains).
+Also I think the two functions should be exported to modules as well.
 
-The glue code on arm64 is cpu_init_idle(), which takes charge of
-initializing the idle state platform specific actions/parameters/etc.
+Here are the modifications needed for rfkill-gpio.c driver. I think it
+is not that bad considering that now the driver supports both ACPI _DSD
+and non-_DSD at the same time.
 
-Everything is open to debate, as long as we nail down an interface on
-arm32 and we stick to that from now onwards, I do not think you are far
-from achieving that at all.
-
-Cheers,
-Lorenzo
+diff --git a/net/rfkill/rfkill-gpio.c b/net/rfkill/rfkill-gpio.c
+index 0f62326c0f5e..f8754e7d81ea 100644
+--- a/net/rfkill/rfkill-gpio.c
++++ b/net/rfkill/rfkill-gpio.c
+@@ -67,6 +67,8 @@ static int rfkill_gpio_acpi_probe(struct device *dev,
+ 				  struct rfkill_gpio_data *rfkill)
+ {
+ 	const struct acpi_device_id *id;
++	struct acpi_device *adev = ACPI_COMPANION(dev);
++	int ret;
+ 
+ 	id = acpi_match_device(dev->driver->acpi_match_table, dev);
+ 	if (!id)
+@@ -75,6 +77,20 @@ static int rfkill_gpio_acpi_probe(struct device *dev,
+ 	rfkill->name = dev_name(dev);
+ 	rfkill->type = (unsigned)id->driver_data;
+ 
++	/*
++	 * Add default mapping for ACPI _DSD properties now just in case
++	 * there is no _DSD for this device.
++	 */
++	ret = acpi_dev_add_driver_gpio(adev, "reset-gpios", 0, 0, false);
++	if (ret)
++		return ret;
++
++	ret = acpi_dev_add_driver_gpio(adev, "shutdown-gpios", 1, 0, false);
++	if (ret) {
++		acpi_dev_remove_driver_gpios(adev);
++		return ret;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -110,7 +126,7 @@ static int rfkill_gpio_probe(struct platform_device *pdev)
+ 		rfkill->reset_gpio = gpio;
+ 	}
+ 
+-	gpio = devm_gpiod_get_index(&pdev->dev, "shutdown", 1);
++	gpio = devm_gpiod_get_index(&pdev->dev, "shutdown", 0);
+ 	if (!IS_ERR(gpio)) {
+ 		ret = gpiod_direction_output(gpio, 0);
+ 		if (ret)
+@@ -150,6 +166,9 @@ static int rfkill_gpio_remove(struct platform_device *pdev)
+ 	rfkill_unregister(rfkill->rfkill_dev);
+ 	rfkill_destroy(rfkill->rfkill_dev);
+ 
++	if (ACPI_COMPANION(&pdev->dev))
++		acpi_dev_remove_driver_gpios(ACPI_COMPANION(&pdev->dev));
++
+ 	return 0;
+ }
+ 
