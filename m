@@ -1,80 +1,146 @@
 From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] adv7604: Add DT parsing support
-Date: Thu, 23 Oct 2014 07:51:50 +0200
-Message-ID: <CAL8zT=gUaBDiq=KC5YqCD5dqx2WO1PSXGckvchX_9XxDbJJEpw@mail.gmail.com>
-References: <1413992061-28678-1-git-send-email-jean-michel.hautbois@vodalys.com>
- <1645583.LAOF2HV7Iq@avalon>
+Subject: Re: [PATCH 1/2] i2c: Add generic support passing secondary devices addresses
+Date: Thu, 23 Oct 2014 07:59:53 +0200
+Message-ID: <CAL8zT=hM+ua3hdzVXAvQF9EcKbjou3HpHivfntJWYD1E+Ts8Xg@mail.gmail.com>
+References: <1413991848-28495-1-git-send-email-jean-michel.hautbois@vodalys.com>
+ <1923603.aWjhqbNgon@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1645583.LAOF2HV7Iq@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1923603.aWjhqbNgon@avalon>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Laurent,
 
-Thank you for reviewing,
+Thank you for your review,
 
-2014-10-23 1:53 GMT+02:00 Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>:
+2014-10-23 1:37 GMT+02:00 Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>:
 > Hi Jean-Michel,
 >
 > Thank you for the patch.
 >
-> On Wednesday 22 October 2014 17:34:21 Jean-Michel Hautbois wrote:
->> This patch adds support for DT parsing of ADV7604 as well as ADV7611.
->> It needs to be improved in order to get ports parsing too.
+> On Wednesday 22 October 2014 17:30:47 Jean-Michel Hautbois wrote:
+>> Some I2C devices have multiple addresses assigned, for example each address
+>> corresponding to a different internal register map page of the device.
+>> So far drivers which need support for this have handled this with a driver
+>> specific and non-generic implementation, e.g. passing the additional address
+>> via platform data.
+>>
+>> This patch provides a new helper function called i2c_new_secondary_device()
+>> which is intended to provide a generic way to get the secondary address
+>> as well as instantiate a struct i2c_client for the secondary address.
+>>
+>> The function expects a pointer to the primary i2c_client, a name
+>> for the secondary address and an optional default address. The name is used
+>> as a handle to specify which secondary address to get.
+>>
+>> The default address is used as a fallback in case no secondary address
+>> was explicitly specified. In case no secondary address and no default
+>> address were specified the function returns NULL.
+>>
+>> For now the function only supports look-up of the secondary address
+>> from devicetree, but it can be extended in the future
+>> to for example support board files and/or ACPI.
 >
-> Let's improve it then :-) The DT bindings as proposed by this patch are
-> incomplete, that's just asking for trouble.
->
-> How would you model the adv7604 ports ?
+> As this is core code I believe the DT bindings should be documented somewhere
+> in Documentation/devicetree/bindings/i2c/.
 
-I am opened to suggestions :).
-But it has to remain as simple as possible, ideally allowing for
-giving names to the ports.
-As done today, it works, ports are parsed but are all the same...
+Mmh, probably yes, but I don't know where precisely, as all the
+bindings are devices specific here...
 
 >> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
 >> ---
->>  Documentation/devicetree/bindings/media/i2c/adv7604.txt | 1 +
->>  drivers/media/i2c/adv7604.c                             | 1 +
->>  2 files changed, 2 insertions(+)
+>>  drivers/i2c/i2c-core.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/i2c.h    |  8 ++++++++
+>>  2 files changed, 48 insertions(+)
 >>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
->> b/Documentation/devicetree/bindings/media/i2c/adv7604.txt index
->> c27cede..5c8b3e6 100644
->> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
->> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
->> @@ -10,6 +10,7 @@ Required Properties:
+>> diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+>> index 2f90ac6..fd3b07c 100644
+>> --- a/drivers/i2c/i2c-core.c
+>> +++ b/drivers/i2c/i2c-core.c
+>> @@ -1166,6 +1166,46 @@ struct i2c_client *i2c_new_dummy(struct i2c_adapter
+>> *adapter, u16 address) }
+>>  EXPORT_SYMBOL_GPL(i2c_new_dummy);
 >>
->>    - compatible: Must contain one of the following
->>      - "adi,adv7611" for the ADV7611
->> +    - "adi,adv7604" for the ADV7604
+>> +/**
+>> + * i2c_new_secondary_device - Helper to get the instantiated secondary
+>> address
 >
-> Please switch the two lines to keep them alphabetically sorted.
->>
->>    - reg: I2C slave address
->>
->> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
->> index 47795ff..421035f 100644
->> --- a/drivers/media/i2c/adv7604.c
->> +++ b/drivers/media/i2c/adv7604.c
->> @@ -2677,6 +2677,7 @@ MODULE_DEVICE_TABLE(i2c, adv7604_i2c_id);
->>
->>  static struct of_device_id adv7604_of_id[] __maybe_unused = {
->>       { .compatible = "adi,adv7611", .data = &adv7604_chip_info[ADV7611] },
->> +     { .compatible = "adi,adv7604", .data = &adv7604_chip_info[ADV7604] },
->
-> Same comment here.
+> It does more than that, it also creates the device.
 
-Done on my side, but will wait for your suggestions, in order to add
-ports parsing ;-).
+Right, how about :
++ * i2c_new_secondary_device - Helper to get the instantiated secondary address
++ * and create the associated device
+
+>> + * @client: Handle to the primary client
+>> + * @name: Handle to specify which secondary address to get
+>> + * @default_addr: Used as a fallback if no secondary address was specified
+>> + * Context: can sleep
+>> + *
+>> + * This returns an I2C client bound to the "dummy" driver based on DT
+>> parsing.
+>
+> Could you elaborate on that ? I would explain that the address is retrieved
+> from the firmware based on the name, and that default_addr is used in case the
+> firmware doesn't provide any information.
+
+Something like that ?
++ * This returns an I2C client bound to the "dummy" driver based on DT parsing.
++ * It retrieves the address based on the name.
++ * It uses default_addr if no information is provided by firmware.
+
+
+>> + *
+>> + * This returns the new i2c client, which should be saved for later use
+>> with
+>> + * i2c_unregister_device(); or NULL to indicate an error.
+>> + */
+>> +struct i2c_client *i2c_new_secondary_device(struct i2c_client *client,
+>> +                                             const char *name,
+>> +                                             u16 default_addr)
+>> +{
+>> +     int i;
+>> +     u32 addr;
+>> +     struct device_node *np;
+>> +
+>> +     np = client->dev.of_node;
+>> +
+>> +     if (np) {
+>> +             i = of_property_match_string(np, "reg-names", name);
+>> +             if (i >= 0)
+>> +                     of_property_read_u32_index(np, "reg", i, &addr);
+>
+> This call could fail in which case addr will be uninitialized.
+>
+>> +             else if (default_addr != 0)
+>> +                     addr = default_addr;
+>> +             else
+>> +                     addr = NULL;
+>
+> addr isn't a pointer. I'm surprised the compiler hasn't warned you.
+It has, just didn't notice it, sorry fir the noise.
+
+>> +     } else {
+>> +             addr = default_addr;
+>> +     }
+>
+> The whole logic can be simplified to
+>
+>         struct device_node *np = client->dev.of_node;
+>         u32 addr = default_addr;
+>         int i;
+>
+>         if (np) {
+>                 i = of_property_match_string(np, "reg-names", name);
+>                 if (i >= 0)
+>                         of_property_read_u32_index(np, "reg", i, &addr);
+>         }
+>
+
+OK, applied on my side.
 
 Thanks,
 JM
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
