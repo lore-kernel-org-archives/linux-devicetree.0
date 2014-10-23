@@ -1,61 +1,176 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: Re: [PATCH V3 09/10] tty: serial: of-serial: Allow OF earlycon to
- default to "on"
-Date: Thu, 23 Oct 2014 07:31:26 -0700
-Message-ID: <CAJiQ=7DVSavXNYBd4yntRS-LKJMHQyxJx8Uim8Oz24rNfADcXg@mail.gmail.com>
-References: <1413930186-23168-1-git-send-email-cernekee@gmail.com>
- <1413930186-23168-10-git-send-email-cernekee@gmail.com> <CAL_Jsq+AuqTOU7UFdYi28YGjL1QorY=3zOSccN43Vb1a=q6SHw@mail.gmail.com>
- <CAJiQ=7BrfnyOQYptBCTR8GP8hLq4+q1NQ2H988wHK=8PnkqLkg@mail.gmail.com> <CAL_JsqJbva6i5BwDMf9f0TcuToxzP2u9_oe1t92zQXJyS077oA@mail.gmail.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v2 2/3] ARM: keystone: pm: switch to use generic pm domains
+Date: Thu, 23 Oct 2014 17:37:31 +0300
+Message-ID: <544912AB.3050801@ti.com>
+References: <1413809764-21995-1-git-send-email-grygorii.strashko@ti.com>	<1413809764-21995-3-git-send-email-grygorii.strashko@ti.com>	<5446A065.9050308@gmail.com>	<544793B5.6080601@ti.com>	<CAPDyKFo97D3XbwDQrDzHw+qr4b24Fsq9EwDbdOMhy_L-RoYsLw@mail.gmail.com>	<CAMuHMdVsqsSHxirzoWspGz7y+2qBk42p-VUBNkys3_rr6Th_9Q@mail.gmail.com>	<CAPDyKFp6T1a1XXHdxiubP2RaS26uSqkUS3rbBgsNV_y+dSFfvw@mail.gmail.com>	<CAMuHMdVO4nMoeYdzLf6wdKW876gYVyML3C2+QKoteGPtisD4sA@mail.gmail.com> <CAPDyKFrVCczc+fSy1ax4XinhB4SMfZZWP=d4QdY5Lv4zjOrHPA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJbva6i5BwDMf9f0TcuToxzP2u9_oe1t92zQXJyS077oA@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFrVCczc+fSy1ax4XinhB4SMfZZWP=d4QdY5Lv4zjOrHPA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Santosh Shilimkar <santosh.shilimkar@gmail.com>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 22, 2014 at 9:47 PM, Rob Herring <robh@kernel.org> wrote:
->> Now that earlycon can get all of its parameters from DT, do you think
->> it might make sense to drop the command line option entirely from
->> fdt.c and enable it all of the time if stdout-path is set correctly?
+Hi Ulf,
+
+On 10/23/2014 11:11 AM, Ulf Hansson wrote:
+> On 22 October 2014 17:44, Geert Uytterhoeven <geert@linux-m68k.org> w=
+rote:
+>> On Wed, Oct 22, 2014 at 5:28 PM, Ulf Hansson <ulf.hansson@linaro.org=
+> wrote:
+>>> On 22 October 2014 17:09, Geert Uytterhoeven <geert@linux-m68k.org>=
+ wrote:
+>>>> On Wed, Oct 22, 2014 at 5:01 PM, Ulf Hansson <ulf.hansson@linaro.o=
+rg> wrote:
+>>>>>>>> +void keystone_pm_domain_attach_dev(struct device *dev)
+>>>>>>>>    {
+>>>>>>>> +    struct clk *clk;
+>>>>>>>>        int ret;
+>>>>>>>> +    int i =3D 0;
+>>>>>>>>
+>>>>>>>>        dev_dbg(dev, "%s\n", __func__);
+>>>>>>>>
+>>>>>>>> -    ret =3D pm_generic_runtime_suspend(dev);
+>>>>>>>> -    if (ret)
+>>>>>>>> -        return ret;
+>>>>>>>> -
+>>>>>>>> -    ret =3D pm_clk_suspend(dev);
+>>>>>>>> +    ret =3D pm_clk_create(dev);
+>>>>>>>>        if (ret) {
+>>>>>>>> -        pm_generic_runtime_resume(dev);
+>>>>>>>> -        return ret;
+>>>>>>>> +        dev_err(dev, "pm_clk_create failed %d\n", ret);
+>>>>>>>> +        return;
+>>>>>>>> +    };
+>>>>>>>> +
+>>>>>>>> +    while ((clk =3D of_clk_get(dev->of_node, i++)) && !IS_ERR=
+(clk)) {
+>>>>>>>> +        ret =3D pm_clk_add_clk(dev, clk);
+>>>>>>>> +        if (ret) {
+>>>>>>>> +            dev_err(dev, "pm_clk_add_clk failed %d\n", ret);
+>>>>>>>> +            goto clk_err;
+>>>>>>>> +        };
+>>>>>>>>        }
+>>>>>>>>
+>>>>>>>> -    return 0;
+>>>>>>>> +    if (!IS_ENABLED(CONFIG_PM_RUNTIME)) {
+>>>>>>> Can we not okkup two seperate callbacks instead of above check =
+?
+>>>>>>> I don't like this CONFIG check here. Its slightly better versio=
+n of
+>>>>>>> ifdef in middle of the code.
+>>>>>>
+>>>>>> I've found more-less similar comment on patch
+>>>>>> "Re: [PATCH v3 1/3] power-domain: add power domain drivers for R=
+ockchip platform"
+>>>>>> https://lkml.org/lkml/2014/10/17/257
+>>>>>>
+>>>>>> So, Would you like me to create patch which will enable clocks i=
+n pm_clk_add/_clk()
+>>>>>> in case !IS_ENABLED(CONFIG_PM_RUNTIME)
+>>>>>
+>>>>> I am wondering whether we actually should/could do this, no matte=
+r of
+>>>>> CONFIG_PM_RUNTIME.
+>>>>>
+>>>>> Typically, for configurations that uses CONFIG_PM_RUNTIME, the PM
+>>>>> clocks through pm_clk_suspend(), will be gated once the device be=
+comes
+>>>>> runtime PM suspended. Right?
+>>>>
+>>>> Doing it unconditionally means we'll have lots of unneeded clocks =
+running
+>>>> for a short while.
 >>
->> From the user's standpoint, how important is it to be able to run
->> without earlycon?
->
-> It may affect boot time for one although if you care you probably
-> disable console altogether.
->
-> I think we'd just have to add a noearlycon option instead if we made
-> it the default. It's never been the default before, so I don't think
-> we should change now. There's also an implicit requirement that the
-> bootloader has configured the uart already. You could easily hang if
-> the uart has not been setup.
+>>> As long as the pm_clk_add() is being invoked from the ->attach_dev(=
+)
+>>> callback, we are in the probe path. Certainly we would like to have
+>>> clocks enabled while probing, don't you think?
+>>>
+>>> If we wouldn't enable the clocks for CONFIG_PM_RUNTIME, when will
+>>> those be enabled?
+>>
+>> They will be enabled when the driver does
+>>
+>>          pm_runtime_enable(dev);
+>>          pm_runtime_get_sync(dev);
+>>
+>> in its .probe() method.
+>=20
+> No! This doesn't work for drivers which have used
+> pm_runtime_set_active() prior pm_runtime_enable().
 
-EARLY_PRINTK is enabled by default on MIPS platforms that support it.
-I have been using this for years and found it very helpful in
-debugging failures in the kernel boot process (especially intermittent
-ones).
+Sorry, but some misunderstanding is here:
+1) If some code call pm_runtime_set_active() it has to ensure
+that all PM resources switched to ON state. All! So, it will=20
+be ok to call enable & get after that - these functions will only=20
+adjust counters.
 
-But for a new platform it is better to use earlycon as earlycon
-provides a clean way of reading the UART information out of DT.  My
-original bcm3384 (MIPS) port used EARLY_PRINTK but I recently
-converted it to earlycon.  The last remaining goal is to get it
-enabled by default again.
+2) if CONFIG_PM_RUNTIME=3Dn the pm_runtime_set_active() will
+be empty (see pm_runtime.h) and you can't relay on it.
 
->> Would it be more straightforward to have the arch code explicitly call
->> early_init_dt_scan_chosen_serial() to indicate that it is ready for
->> the early UART driver to run?
->
-> Yes, but then when do you handle earlycon command line option for
-> non-DT case? Having these at different points in time is asking for
-> problems.
+3) if CONFIG_PM_RUNTIME=3Dn the pm_runtime_enable/disable() will
+be empty - and disable_depth =3D=3D 1 all the time.
 
-Is it important for the non-DT "earlycon" option to be handled from
-parse_early_param() just because parse_early_param() runs at the right
-point in the boot sequence (not because we actually wanted it to be a
-command line option)?
+In my case, the combination of generic PD and PM clock framework
+will do everything I need for both cases CONFIG_PM_RUNTIME=3Dy/n.
 
-One other option might be to invoke early_init_dt_scan_chosen_serial()
-from parse_early_param().  But it is somewhat clunky to put a special
-case in there...
+PM domain attach_dev/detach_dev callbacks - will fill PM resources
+and enable them if CONFIG_PM_RUNTIME=3Dn.
+
+if CONFIG_PM_RUNTIME - PM resources will be enabled/disabled
+by Runtime PM through .start()/.stop() callbacks.
+
+And seems suspend/resume will work too - can't try it now, but it
+should work, because .start()/.stop() callbacks have to be called
+from pm_genpd_suspend_noirq.
+
+
+>=20
+> That should also be a common good practice for most drivers, otherwis=
+e
+> they wouldn=E2=80=99t work unless CONFIG_PM_RUNTIME is enabled.
+>=20
+> Please have a look at the following patchset, which is fixing up one
+> driver to behave better.
+> http://marc.info/?l=3Dlinux-pm&m=3D141327095713390&w=3D2
+
+It always was (and seems will) a big challenge to support both
+CONFIG_PM_RUNTIME=3Dy and system suspend in drivers ;), especially if d=
+river was
+initially created using Runtime PM centric approach.
+
+But, for the case CONFIG_PM_RUNTIME + !CONFIG_PM_RUNTIME + suspend...
+It will be painful :..((
+
+
+=46or example your patches (may be I'm not fully understand your proble=
+m,=20
+so here are just comments to code):
+patch 3:
+  - I think you can do smth like this in probe=20
+        ret =3D pm_runtime_get_sync(&pdev->dev);
+        if (ret < 0)
+                goto err_m2m;
++      =20
++       if (!pm_runtime_enabled(dev)) {
++               gsc_runtime_resume(dev);
++       }=20
+
+ - and similar thing in remove, before pm_runtime_disable
+=20
+patch 5 - pm_runtime_force_suspend/resume() will not take into
+account or change Runtime PM state of the device if !CONFIG_PM_RUNTIME.
+runtime_status =3D=3D RPM_SUSPENDED always in this case!
+So, there may be some side-effects.
+
+patch 7 - you can't call clk_prepare/unprepare from Runtime PM
+callbacks, because they aren't atomic
+
+Oh, You definitely will be enjoyed ;)
+
+regards,
+-grygorii
+
