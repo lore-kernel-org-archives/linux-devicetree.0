@@ -1,78 +1,102 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [BISECTED] arm: mvebu: Kernel hang after ae9304c9d311 if OF_SELFTEST=y
-Date: Thu, 23 Oct 2014 13:49:50 +0200
-Message-ID: <5448EB5E.3010405@free-electrons.com>
-References: <87mw8nt5io.fsf@natisbad.org>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH] ARM: at91/dt: Fix sama5d3x typos.
+Date: Thu, 23 Oct 2014 11:56:25 +0000
+Message-ID: <ec77270840f94da6a6d7548e7a3bf5a8@EMAIL.axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87mw8nt5io.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: sv-SE
+Sender: linux-kernel-owner@vger.kernel.org
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnaud,
+>From c23d712fe924b929c2eb39eba644fe74bcccfd37 Mon Sep 17 00:00:00 2001
+From: Peter Rosin <peda@axentia.se>
+Date: Thu, 23 Oct 2014 13:52:03 +0200
+Subject: [PATCH] ARM: at91/dt: Fix sama5d3x typos.
 
-On 23/10/2014 13:00, Arnaud Ebalard wrote:
-> Hi,
-> 
-> Trying to boot a 3.17.1 (same thing w/ current tip of Linus tree or
-> 3.17.1) on two Marvell Armada 370 based platforms (NETGEAR ReadyNAS
-> 102 and Synology DS213j) ends up w/ the following:
-> 
->    Starting kernel ...
->    
->    Uncompressing Linux... done, booting the kernel.
->    
->    Error: unrecognized/unsupported machine ID (r1 = 0x00000bde).
->    
->    Available machine support:
->    
->    ID (hex)        NAME
->    ffffffff        Generic DT based system
->    ffffffff        Marvell Armada 380/385 (Device Tree)
->    ffffffff        Marvell Armada 375 (Device Tree)
->    ffffffff        Marvell Armada 370/XP (Device Tree)
->    
->    Please check your kernel config and/or bootloader.
-> 
-> I bisected it up to ae9304c9d31117 ("Adding selftest testdata
-> dynamically into live tree"). For a while, my kernels are compiled w/
-> OF_SELFTEST and it works w/o issue. After that commit, boot hangs as
+The DT compatible strings also need binding documentation, but that is for
+someone else to write.
 
-It would be interesting to have a feedback of a kernel with an appended dtb
-and OF_SELFTEST enabled to a different platform (ie non mvebu). Then we
-will know if it something related to mvebu or to the device tree support.
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ arch/arm/boot/dts/sama5d31.dtsi   |    2 +-
+ arch/arm/boot/dts/sama5d33.dtsi   |    2 +-
+ arch/arm/boot/dts/sama5d34.dtsi   |    2 +-
+ arch/arm/boot/dts/sama5d35.dtsi   |    2 +-
+ arch/arm/boot/dts/sama5d36.dtsi   |    2 +-
+ arch/arm/boot/dts/sama5d3xcm.dtsi |    2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-I will try to see if I can do this.
-
-> presented above. Disabling the option solves the issue on 3.17 and
-> also for current tip of Linus tree. Reverting the commit on those
-> kernel is not straightforward.
-> 
-> A config is attached.
-> 
-> Cheers,
-> 
-> a+
-> 
-> ps: my platforms all boot a kernel w/ an appended dtb.
-> 
-
-
-Thanks for you report,
-
-Gregory
-
-
+diff --git a/arch/arm/boot/dts/sama5d31.dtsi b/arch/arm/boot/dts/sama5d31.dtsi
+index 7997dc9..883878b 100644
+--- a/arch/arm/boot/dts/sama5d31.dtsi
++++ b/arch/arm/boot/dts/sama5d31.dtsi
+@@ -12,5 +12,5 @@
+ #include "sama5d3_uart.dtsi"
+ 
+ / {
+-	compatible = "atmel,samad31", "atmel,sama5d3", "atmel,sama5";
++	compatible = "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
+ };
+diff --git a/arch/arm/boot/dts/sama5d33.dtsi b/arch/arm/boot/dts/sama5d33.dtsi
+index 39f8322..4b4434a 100644
+--- a/arch/arm/boot/dts/sama5d33.dtsi
++++ b/arch/arm/boot/dts/sama5d33.dtsi
+@@ -10,5 +10,5 @@
+ #include "sama5d3_gmac.dtsi"
+ 
+ / {
+-	compatible = "atmel,samad33", "atmel,sama5d3", "atmel,sama5";
++	compatible = "atmel,sama5d33", "atmel,sama5d3", "atmel,sama5";
+ };
+diff --git a/arch/arm/boot/dts/sama5d34.dtsi b/arch/arm/boot/dts/sama5d34.dtsi
+index 89cda2c..aa01573 100644
+--- a/arch/arm/boot/dts/sama5d34.dtsi
++++ b/arch/arm/boot/dts/sama5d34.dtsi
+@@ -12,5 +12,5 @@
+ #include "sama5d3_mci2.dtsi"
+ 
+ / {
+-	compatible = "atmel,samad34", "atmel,sama5d3", "atmel,sama5";
++	compatible = "atmel,sama5d34", "atmel,sama5d3", "atmel,sama5";
+ };
+diff --git a/arch/arm/boot/dts/sama5d35.dtsi b/arch/arm/boot/dts/sama5d35.dtsi
+index d20cd71..16c39f4 100644
+--- a/arch/arm/boot/dts/sama5d35.dtsi
++++ b/arch/arm/boot/dts/sama5d35.dtsi
+@@ -14,5 +14,5 @@
+ #include "sama5d3_tcb1.dtsi"
+ 
+ / {
+-	compatible = "atmel,samad35", "atmel,sama5d3", "atmel,sama5";
++	compatible = "atmel,sama5d35", "atmel,sama5d3", "atmel,sama5";
+ };
+diff --git a/arch/arm/boot/dts/sama5d36.dtsi b/arch/arm/boot/dts/sama5d36.dtsi
+index db58cad..e85139e 100644
+--- a/arch/arm/boot/dts/sama5d36.dtsi
++++ b/arch/arm/boot/dts/sama5d36.dtsi
+@@ -16,5 +16,5 @@
+ #include "sama5d3_uart.dtsi"
+ 
+ / {
+-	compatible = "atmel,samad36", "atmel,sama5d3", "atmel,sama5";
++	compatible = "atmel,sama5d36", "atmel,sama5d3", "atmel,sama5";
+ };
+diff --git a/arch/arm/boot/dts/sama5d3xcm.dtsi b/arch/arm/boot/dts/sama5d3xcm.dtsi
+index f7d8583..56574c8 100644
+--- a/arch/arm/boot/dts/sama5d3xcm.dtsi
++++ b/arch/arm/boot/dts/sama5d3xcm.dtsi
+@@ -8,7 +8,7 @@
+  */
+ 
+ / {
+-	compatible = "atmel,samad3xcm", "atmel,sama5d3", "atmel,sama5";
++	compatible = "atmel,sama5d3xcm", "atmel,sama5d3", "atmel,sama5";
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 rootfstype=ubifs ubi.mtd=5 root=ubi0:rootfs";
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.10.4
