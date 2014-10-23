@@ -1,367 +1,171 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v8 5/7] qcom: cpuidle: Add cpuidle driver for QCOM cpus
-Date: Thu, 23 Oct 2014 13:05:39 +0200
-Message-ID: <5448E103.9070505@linaro.org>
-References: <1412718106-17049-1-git-send-email-lina.iyer@linaro.org> <1412718106-17049-6-git-send-email-lina.iyer@linaro.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
+ portal(s)
+Date: Thu, 23 Oct 2014 12:16:22 +0100
+Message-ID: <20141023111622.GB13690@leverpostej>
+References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
+ <1413986972-621-2-git-send-email-Emilian.Medve@Freescale.com>
+ <20141022142931.GA4010@leverpostej>
+ <54480DE6.4090604@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1412718106-17049-6-git-send-email-lina.iyer@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54480DE6.4090604@Freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Emil Medve <Emilian.Medve@freescale.com>
+Cc: "scottwood@freescale.com" <scottwood@freescale.com>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Pawel Moll <Pawel.Moll@arm.com>, "Geoff.Thorpe@freescale.com" <Geoff.Thorpe@freescale.com>, "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/2014 11:41 PM, Lina Iyer wrote:
-> Add cpuidle driver interface to allow cpus to go into C-States. Use t=
-he
-> cpuidle DT interface, common across ARM architectures, to provide the
-> C-State information to the cpuidle framework.
->
-> Supported modes at this time are Standby and Standalone Power Collaps=
-e.
+On Wed, Oct 22, 2014 at 09:04:54PM +0100, Emil Medve wrote:
+> Hello Mark,
+> 
+> 
+> Thanks for having a look at this
+> 
+> On 10/22/2014 09:29 AM, Mark Rutland wrote:
+> > On Wed, Oct 22, 2014 at 03:09:30PM +0100, Emil Medve wrote:
+> >> Portals are used by software running on processor cores, accelerators and
+> >> network interfaces to communicate with the BMan
+> > 
+> > What exactly is a portal?
+> > 
+> > Is it a region of shared memory? A device?
+> 
+> In a nutshell a (software, i.e. processor core accessible) portal is a
+> memory mapped interface to the B/QMan that allows low latency, lock-less
+> interaction by logically separated units of software. The original
+> intent was to have one affine portal per core. As of now we're
+> sprinkling portals to use from various (core affine) contexts:
+> hypervisor, guests, user-space, containers, etc.
+> 
+> I'll make the definition more palatable in the next round
 
-Why not the retention mode which is in between the standby and the=20
-retention ?
+Thanks,
 
-> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-> ---
->   .../bindings/arm/msm/qcom,idle-state.txt           | 81 +++++++++++=
-+++++++++++
->   drivers/cpuidle/Kconfig.arm                        |  7 ++
->   drivers/cpuidle/Makefile                           |  1 +
->   drivers/cpuidle/cpuidle-qcom.c                     | 79 +++++++++++=
-++++++++++
->   4 files changed, 168 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,i=
-dle-state.txt
->   create mode 100644 drivers/cpuidle/cpuidle-qcom.c
->
-> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,idle-stat=
-e.txt b/Documentation/devicetree/bindings/arm/msm/qcom,idle-state.txt
-> new file mode 100644
-> index 0000000..87f1742
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,idle-state.txt
-> @@ -0,0 +1,81 @@
-> +QCOM Idle States for cpuidle driver
-> +
-> +ARM provides idle-state node to define the cpuidle states, as define=
-d in [1].
-> +cpuidle-qcom is the cpuidle driver for Qualcomm SoCs and uses these =
-idle
-> +states. Idle states have different enter/exit latency and residency =
-values.
-> +The idle states supported by the QCOM SoC are defined as -
-> +
-> +    * Standby
-> +    * Retention
-> +    * Standalone Power Collapse (Standalone PC or SPC)
-> +    * Power Collapse (PC)
-> +
-> +Standby: Standby does a little more in addition to architectural clo=
-ck gating.
-> +When the WFI instruction is executed the ARM core would gate its int=
-ernal
-> +clocks. In addition to gating the clocks, QCOM cpus use this instruc=
-tion as a
-> +trigger to execute the SPM state machine.  The SPM state machine wai=
-ts for the
-> +interrupt to trigger the core back in to active. This triggers the c=
-ache
-> +heirarchy to enter standby states, when all cpus are idle. An interr=
-upt brings
+> > I only received emails 2 and 3 of this series, so I'm lacking the
+> > context necessary to understand the bindings.
+> 
+> Some bubble in the pipe... As of now they all seem to have hit the
+> e-mail list(s), patchwork and hopefully your Inbox
 
-s/heirarchy/hierarchy/
+They've all come through now, yes.
 
-> +the SPM state machine out of its wait, the next step is to ensure th=
-at the
-> +cache heirarchy is also out of standby, and then the cpu is allowed =
-to resume
+I'd expected to see the relevant code too -- in isolation the bindings
+are somewhat difficult to grok.
 
-s/heirarchy/hierarchy/
+> 
+> >> Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
+> >> Change-Id: I6d245ffc14ba3d0e91d403ac7c3b91b75a9e6a95
+> >> ---
+> >>  .../bindings/powerpc/fsl/bman-portals.txt          | 50 ++++++++++++++++++++++
+> >>  1 file changed, 50 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt b/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
+> >> new file mode 100644
+> >> index 0000000..40e607e
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
+> >> @@ -0,0 +1,50 @@
+> >> +QorIQ DPAA Buffer Manager Portals Device Tree Binding
+> >> +
+> >> +Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
+> >> +
+> >> +CONTENTS
+> >> +
+> >> +	- BMan Portal
+> >> +	- Example
+> >> +
+> >> +NOTE:	The bindings described in this document are preliminary and subject to
+> >> +	change
+> > 
+> > While we've tried that elsewhere, unstable DT bindings have been shown
+> > to be a major source of pain.
+> 
+> Agreed
+> 
+> > I'd feel rather uncomfortable accepting a
+> > binding that we already believe to be insufficient to describe the
+> > hardware.
+> > 
+> > What do you expect to change?
+> 
+> Related bindings seem incomplete. As such, the PAMU binding (pamu.txt)
+> covers incompletely a dynamic LIODN assignment/programming model. The
+> current driver uses a static assignment scheme that the binding needs to
+> include. I also suspect that once the driver starts supporting the
+> dynamic LIODN assignment/programming we might find some wrinkles
 
-> +execution.
-> +
-> +Retention: Retention is a low power state where the core is clock ga=
-ted and
-> +the memory and the registers associated with the core are retained. =
-The
-> +voltage may be reduced to the minimum value needed to keep the proce=
-ssor
-> +registers active. The SPM should be configured to execute the retent=
-ion
-> +sequence and would wait for interrupt, before restoring the cpu to e=
-xecution
-> +state. Retention may have a slightly higher latency than Standby.
-> +
-> +Standalone PC: A cpu can power down and warmboot if there is a suffi=
-cient time
-> +between the time it enters idle and the next known wake up. SPC mode=
- is used
-> +to indicate a core entering a power down state without consulting an=
-y other
-> +cpu or the system resources. This helps save power only on that core=
-=2E  The SPM
-> +sequence for this idle state is programmed to power down the supply =
-to the
-> +core, wait for the interrupt,  restore power to the core, and ensure=
- the
+Ok. Given that the driver doesn't seem to be in mainline (per a quick
+grep), just put "DO NOT MERGE" or something like that in the commit
+message. Once this is merged you're going to need to support it.
 
-                                 ^^ extra space
+> >> +BMan Portal Node
+> >> +
+> >> +PROPERTIES
+> >> +
+> >> +- compatible
+> >> +	Usage:		Required
+> >> +	Value type:	<stringlist>
+> >> +	Definition:	Must include "fsl,bman-portal-<hardware revision>"
+> >> +			May include "fsl,<SoC>-bman-portal" or "fsl,bman-portal"
+> >> +
+> >> +- reg
+> >> +	Usage:		Required
+> >> +	Value type:	<prop-encoded-array>
+> >> +	Definition:	Two regions. The first is the cache-enabled region of
+> >> +			the portal. The second is the cache-inhibited region of
+> >> +			the portal
+> >> +
+> >> +EXAMPLE
+> >> +
+> >> +The example below shows a (P4080) BMan portals container/bus node with two portals
+> > 
+> > Is there any particular reason to place these under a simple-bus?
+> 
+> I think they fit the ePAPR definition for simple-bus container. They can
+> be accessed directly and can be used independently. What are you suggesting?
+> 
+> >> +
+> >> +	bman-portals@ff4000000 {
+> >> +		#address-cells = <1>;
+> >> +		#size-cells = <1>;
+> >> +		compatible = "simple-bus";
+> >> +		ranges = <0 0xf 0xf4000000 0x200000>;
+> >> +
+> >> +		bman-portal@0 {
+> >> +			compatible = "fsl,bman-portal-1.0.0", "fsl,bman-portal";
+> >> +			reg = <0x0 0x4000 0x100000 0x1000>;
+> > 
+> > It would be easier to read is each entry had its own set of brackets.
+> > Initially this looked to me like a single 64-bit address/size pair.
+> 
+> Something like <>, <>?
 
-> +system state including cache hierarchy is ready before allowing core=
- to
-> +resume.  Applying power and resetting the core causes the core to wa=
-rmboot
+So here we'd have:
 
-           ^^ extra space
+	reg = <0x000000 0x4000>,
+	      <0x100000 0x1000>;
 
-> +back into Elevation Level (EL) which trampolines the control back to=
- the
-> +kernel.  Entering a power down state for the cpu, needs to be done b=
-y trapping
+> It doesn't seem widely used but I agree is more readable. I can
+> include it in the the next spin
 
-           ^^ extra space
+Thanks.
 
-> +into a EL. Failing to do so, would result in a crash enforced by the=
- warm boot
-> +code in the EL for the SoC. On SoCs with write-back L1 cache, the ca=
-che has to
-> +be flushed in s/w, before powering down the core.
-> +
-> +Power Collapse: This state is similar to the SPC mode, but distingui=
-shes
-> +itself in that the cpu acknowledges and permits the SoC to enter dee=
-per sleep
-> +modes. In a hierarchical power domain SoC, this means L2 and other c=
-aches can
-> +be flushed, system bus, clocks - lowered, and SoC main XO clock gate=
-d and
-> +voltages reduced, provided all cpus enter this state.  Since the spa=
-n of low
+> 
+> >> +			interrupts = <105 2 0 0>;
+> >> +		};
+> > 
+> > Given the description above, surely you need to know what the portal is
+> > used for? Or is that queried from the portal?
+> 
+> We don't need/want to include such information in the DT. Portals are
+> "allocated" dynamically and used by the respective context
 
-                                                         ^^ extra space
+Ok. So they have no fixed purpose and software allocates as necessary?
+There are no constraints on how each portal may be used, or which portal
+another agetn might use?
 
-> +power modes possible at this state is vast, the exit latency and the=
- residency
-> +of this low power mode would be considered high even though at a cpu=
- level,
-> +this essentially is cpu power down.  The SPM in this state also may =
-handshake
-
-                                       ^^ extra space
-
-> +with the Resource power manager processor in the SoC to indicate a c=
-omplete
-> +application processor subsystem shut down.
-> +
-> +The idle-state for QCOM SoCs are distinguished by the compatible pro=
-perty of
-> +the idle-states device node.
-> +The devicetree representation of the idle state should be -
-> +
-> +Required properties:
-> +
-> +- compatible: Must be one of -
-> +			"qcom,idle-state-stby",
-> +			"qcom,idle-state-ret",
-> +			"qcom,idle-state-spc",
-> +			"qcom,idle-state-pc",
-> +		and "arm,idle-state".
-> +
-> +Other required and optional properties are specified in [1].
-> +
-> +Example:
-> +
-> +	idle-states {
-> +		CPU_SPC: spc {
-> +			compatible =3D "qcom,idle-state-spc", "arm,idle-state";
-> +			entry-latency-us =3D <150>;
-> +			exit-latency-us =3D <200>;
-> +			min-residency-us =3D <2000>;
-> +		};
-> +	};
-> +
-> +[1]. Documentation/devicetree/bindings/arm/idle-states.txt
-> diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.ar=
-m
-> index 38cff69..6a9ee12 100644
-> --- a/drivers/cpuidle/Kconfig.arm
-> +++ b/drivers/cpuidle/Kconfig.arm
-> @@ -62,3 +62,10 @@ config ARM_MVEBU_V7_CPUIDLE
->   	depends on ARCH_MVEBU
->   	help
->   	  Select this to enable cpuidle on Armada 370, 38x and XP processo=
-rs.
-> +
-> +config ARM_QCOM_CPUIDLE
-> +	bool "CPU Idle drivers for Qualcomm processors"
-> +	depends on QCOM_PM
-
-+ depends on ARCH_QCOM
-
-> +	select DT_IDLE_STATES
-> +	help
-> +	  Select this to enable cpuidle for QCOM processors
-> diff --git a/drivers/cpuidle/Makefile b/drivers/cpuidle/Makefile
-> index 4d177b9..6c222d5 100644
-> --- a/drivers/cpuidle/Makefile
-> +++ b/drivers/cpuidle/Makefile
-> @@ -17,6 +17,7 @@ obj-$(CONFIG_ARM_ZYNQ_CPUIDLE)		+=3D cpuidle-zynq.o
->   obj-$(CONFIG_ARM_U8500_CPUIDLE)         +=3D cpuidle-ux500.o
->   obj-$(CONFIG_ARM_AT91_CPUIDLE)          +=3D cpuidle-at91.o
->   obj-$(CONFIG_ARM_EXYNOS_CPUIDLE)        +=3D cpuidle-exynos.o
-> +obj-$(CONFIG_ARM_QCOM_CPUIDLE)		+=3D cpuidle-qcom.o
->
->   ###################################################################=
-############
->   # MIPS drivers
-> diff --git a/drivers/cpuidle/cpuidle-qcom.c b/drivers/cpuidle/cpuidle=
--qcom.c
-> new file mode 100644
-> index 0000000..0a65065
-> --- /dev/null
-> +++ b/drivers/cpuidle/cpuidle-qcom.c
-> @@ -0,0 +1,79 @@
-> +/*
-> + * Copyright (c) 2014, Linaro Limited.
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License version 2 an=
-d
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-> +
-> +#include <linux/cpu_pm.h>
-> +#include <linux/cpuidle.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include <soc/qcom/pm.h>
-> +#include "dt_idle_states.h"
-> +
-> +static void (*qcom_idle_enter)(enum pm_sleep_mode);
-> +
-> +static int qcom_lpm_enter_stby(struct cpuidle_device *dev,
-> +				struct cpuidle_driver *drv, int index)
-> +{
-> +	qcom_idle_enter(PM_SLEEP_MODE_STBY);
-
-Could you replace this function by a generic one ?
-
-It would be nice to have qcom_cpu_standby(void) and=20
-qcom_cpu_powerdown(void) and let behind the mysterious words 'Single=20
-Power Collapse' in the low level code which is qcom specific :)
-
-I guess you had to create a single "qcom_idle_enter" because of a singl=
-e=20
-pointer in the platform data. I am working on a common structure to be=20
-shared across the drivers as a common way to pass the different=20
-callbacks without including a soc specific header.
-
-struct cpuidle_ops {
-	int (*standby)(void *data);
-	int (*retention)(void *data);
-	int (*poweroff)(void *data);
-};
-
-So maybe you can either:
-
-1. wait I post this structure and provide the driver with this one
-2. create a similar structure and I will take care to upgrade when I=20
-post the patchset with the common structure.
-
-The issue I see with this common structure is the initialization of the=
-=20
-qcom_idle_state_match array.
-
-> +	local_irq_enable();
-
-local_irq_enable() is handled by the cpuidle framework.
-Please remove all occurrences of this function in the driver otherwise=20
-time measurement will include irq time processing and will no longer be=
-=20
-valid.
-
-> +	return index;
-> +}
-> +
-> +static int qcom_lpm_enter_spc(struct cpuidle_device *dev,
-> +				struct cpuidle_driver *drv, int index)
-> +{
-> +	cpu_pm_enter();
-> +	qcom_idle_enter(PM_SLEEP_MODE_SPC);
-
-Where is cpu_suspend ?
-
-> +	cpu_pm_exit();
-> +	local_irq_enable();
-> +
-> +	return index;
-> +}
-> +
-> +static struct cpuidle_driver qcom_cpuidle_driver =3D {
-> +	.name	=3D "qcom_cpuidle",
-> +};
-> +
-> +static const struct of_device_id qcom_idle_state_match[] =3D {
-> +	{ .compatible =3D "qcom,idle-state-stby", .data =3D qcom_lpm_enter_=
-stby},
-> +	{ .compatible =3D "qcom,idle-state-spc", .data =3D qcom_lpm_enter_s=
-pc },
-> +	{ },
-> +};
-> +
-> +static int qcom_cpuidle_probe(struct platform_device *pdev)
-> +{
-> +	struct cpuidle_driver *drv =3D &qcom_cpuidle_driver;
-> +	int ret;
-> +
-> +	qcom_idle_enter =3D pdev->dev.platform_data;
-> +	if (!qcom_idle_enter)
-> +		return -EFAULT;
-
-It shouldn't fail because if the probe is called then the cpuidle devic=
-e=20
-was registered with its callback which is hardcoded.
-
-> +	 /* Probe for other states, including standby */
-> +	ret =3D dt_init_idle_driver(drv, qcom_idle_state_match, 0);
-
-Are you sure it is not worth to add the simple WFI state ? It may have=20
-less latency than the standby mode, no ?
-
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return cpuidle_register(drv, NULL);
-> +}
-> +
-> +static struct platform_driver qcom_cpuidle_plat_driver =3D {
-> +	.probe	=3D qcom_cpuidle_probe,
-> +	.driver =3D {
-> +		.name =3D "qcom_cpuidle",
-> +	},
-> +};
-> +
-> +module_platform_driver(qcom_cpuidle_plat_driver);
-
-
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Thanks,
+Mark.
