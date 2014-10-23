@@ -1,50 +1,58 @@
-From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
-Subject: Re: [BISECTED] arm: mvebu: Kernel hang after ae9304c9d311 if OF_SELFTEST=y
-Date: Thu, 23 Oct 2014 23:52:22 +0200
-Message-ID: <87siie4fop.fsf@natisbad.org>
-References: <87mw8nt5io.fsf@natisbad.org>
-	<5448EB5E.3010405@free-electrons.com> <87h9yuu9jk.fsf@natisbad.org>
-	<87wq7q4kcp.fsf@natisbad.org>
+From: <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCH v2 0/3] fpga bridge framework
+Date: Thu, 23 Oct 2014 18:51:04 -0500
+Message-ID: <1414108267-22058-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87wq7q4kcp.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org> (Arnaud Ebalard's message of "Thu,
-	23 Oct 2014 22:11:34 +0200")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iws-lulEs6mt1IksTUYHLfqkUA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-ynQEQJNshbs@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, philip-6RQC9ztksjxg9hUCZPvPmw@public.gmane.org, rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, kyle.teske-acOepvfBmUk@public.gmane.org, nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mgerlach-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-> arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard) writes:
->
->>>> I bisected it up to ae9304c9d31117 ("Adding selftest testdata
->>>> dynamically into live tree"). For a while, my kernels are compiled w/
->>>> OF_SELFTEST and it works w/o issue. After that commit, boot hangs as
->>>
->>> It would be interesting to have a feedback of a kernel with an appended dtb
->>> and OF_SELFTEST enabled to a different platform (ie non mvebu). Then we
->>> will know if it something related to mvebu or to the device tree support.
->>>
->>> I will try to see if I can do this.
->>
->> I can test that on a kirkwood (6282) this evening.
->
-> FWIW, the problem does not only show up on Armada 370 but also on
-> kirwood. I just tested it on a ReadyNAS Duo v2. I do not have any
-> other non-mvebu platform at hand ATM. I'll try and see if I can
-> find some ARM board to boot a recent kernel tomorrow.
+Followup to bridge framework that was posted on 2013/10/3
 
-Ok, I just built an u-boot and two 3.17.1 kernels for versatile express,
-which I then loaded via qemu. The result is the same as for mvebu, i.e.
-w/o OF_SELFTEST the first kernel just boots as expected and the second
-kernel compiled w/ OF_SELFTEST hangs. Both kernels are built w/ appended
-dtb support.
+This is a driver for enabling/disabling the fpga bridges under control
+of a sys entry.  It has a common framework and individual drivers for
+the various bridges.
 
-Cheers,
+This framework uses the reset driver where appropriate.
 
-a+
+Alan
+
+
+Alan Tull (3):
+  add sysfs document for fpga bridges
+  ARM: dts: socfpga: fpga bridges bindings docs
+  fpga bridge driver
+
+ Documentation/ABI/testing/sysfs-class-fpga-bridge  |    5 +
+ .../bindings/fpga/altera-fpga2sdram-bridge.txt     |   57 +++++
+ .../bindings/fpga/altera-hps2fpga-bridge.txt       |   53 +++++
+ drivers/misc/Kconfig                               |    3 +-
+ drivers/misc/Makefile                              |    1 +
+ drivers/misc/fpga-bridge/Kconfig                   |   20 ++
+ drivers/misc/fpga-bridge/Makefile                  |    6 +
+ drivers/misc/fpga-bridge/altera-fpga2sdram.c       |  236 ++++++++++++++++++++
+ drivers/misc/fpga-bridge/altera-hps2fpga.c         |  220 ++++++++++++++++++
+ drivers/misc/fpga-bridge/fpga-bridge.c             |  230 +++++++++++++++++++
+ drivers/misc/fpga-bridge/fpga-bridge.h             |   51 +++++
+ 11 files changed, 881 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-bridge
+ create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+ create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+ create mode 100644 drivers/misc/fpga-bridge/Kconfig
+ create mode 100644 drivers/misc/fpga-bridge/Makefile
+ create mode 100644 drivers/misc/fpga-bridge/altera-fpga2sdram.c
+ create mode 100644 drivers/misc/fpga-bridge/altera-hps2fpga.c
+ create mode 100644 drivers/misc/fpga-bridge/fpga-bridge.c
+ create mode 100644 drivers/misc/fpga-bridge/fpga-bridge.h
+
+-- 
+1.7.9.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
