@@ -1,91 +1,137 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH v4 3/7] genirq: Add more helper functions to support stacked
- irq_chip
-Date: Thu, 23 Oct 2014 23:53:11 +0800
-Message-ID: <1414079595-26129-4-git-send-email-yingjoe.chen@mediatek.com>
-References: <1414079595-26129-1-git-send-email-yingjoe.chen@mediatek.com>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 0/3] Rockchip IOMMU driver and devicetree bindings
+Date: Fri, 24 Oct 2014 00:11:06 +0800
+Message-ID: <CAGS+omB+si1J-gjyvyjJF0x=QBTyPyNKbqyV0QM=sKNo9zecDw@mail.gmail.com>
+References: <1412158843-8115-1-git-send-email-djkurtz@chromium.org>
+	<20141022152019.GK10074@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1414079595-26129-1-git-send-email-yingjoe.chen@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Jiang Liu <jiang.liu@linux.intel.com>, Marc Zyngier <marc.zyngier@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, arm@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, yingjoe.chen@gmail.com, Boris BREZILLON <boris.brezillon@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, yh.chen@mediatek.com, nathan.chung@mediatek.com, Grant Likely <grant.likely@linaro.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hans de Goede <hdegoede@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, hc.yen@mediatek.com, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>
+Content-Type: multipart/mixed; boundary="===============4416192821699340330=="
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20141022152019.GK10074-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add more helper function for stacked irq_chip to just call parent's
-function.
+--===============4416192821699340330==
+Content-Type: multipart/alternative; boundary=90e6ba6e8ca4037b7e0506195132
 
-Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
----
- include/linux/irq.h |  6 ++++++
- kernel/irq/chip.c   | 28 ++++++++++++++++++++++++++++
- 2 files changed, 34 insertions(+)
+--90e6ba6e8ca4037b7e0506195132
+Content-Type: text/plain; charset=UTF-8
 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index 07abf5a..071b1e8 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -437,6 +437,12 @@ extern void handle_nested_irq(unsigned int irq);
- 
- #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
- extern void irq_chip_ack_parent(struct irq_data *data);
-+extern void irq_chip_mask_parent(struct irq_data *data);
-+extern void irq_chip_unmask_parent(struct irq_data *data);
-+extern void irq_chip_eoi_parent(struct irq_data *data);
-+extern int irq_chip_set_affinity_parent(struct irq_data *data,
-+					const struct cpumask *dest,
-+					bool force);
- extern int irq_chip_retrigger_hierarchy(struct irq_data *data);
- #endif
- 
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index 58ed9ed..0ecc270 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -829,6 +829,34 @@ void irq_chip_ack_parent(struct irq_data *data)
- 	data->chip->irq_ack(data);
- }
- 
-+void irq_chip_mask_parent(struct irq_data *data)
-+{
-+	data = data->parent_data;
-+	data->chip->irq_mask(data);
-+}
-+
-+void irq_chip_unmask_parent(struct irq_data *data)
-+{
-+	data = data->parent_data;
-+	data->chip->irq_unmask(data);
-+}
-+
-+void irq_chip_eoi_parent(struct irq_data *data)
-+{
-+	data = data->parent_data;
-+	data->chip->irq_eoi(data);
-+}
-+
-+int irq_chip_set_affinity_parent(struct irq_data *data,
-+				 const struct cpumask *dest, bool force)
-+{
-+	data = data->parent_data;
-+	if (data->chip->irq_set_affinity)
-+		return data->chip->irq_set_affinity(data, dest, force);
-+
-+	return -ENOSYS;
-+}
-+
- int irq_chip_retrigger_hierarchy(struct irq_data *data)
- {
- 	for (data = data->parent_data; data; data = data->parent_data)
--- 
-1.8.1.1.dirty
+On Wed, Oct 22, 2014 at 11:20 PM, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org> wrote:
+
+> On Wed, Oct 01, 2014 at 06:20:40PM +0800, Daniel Kurtz wrote:
+> > Add a driver and devicetree bindings for the IOMMU found in Rockchip
+> RK3288
+> > SoCs.
+> >
+> > Daniel Kurtz (3):
+> >   iommu/rockchip: rk3288 iommu driver
+> >   dt-bindings: iommu: Add documentation for rockchip iommu
+> >   ARM: dts: rk3288: add VOP iommu nodes
+> >
+> >  .../devicetree/bindings/iommu/rockchip,iommu.txt   |  26 +
+> >  arch/arm/boot/dts/rk3288.dtsi                      |  18 +
+> >  drivers/iommu/Kconfig                              |  11 +
+> >  drivers/iommu/Makefile                             |   1 +
+> >  drivers/iommu/rockchip-iommu.c                     | 924
+> +++++++++++++++++++++
+> >  5 files changed, 980 insertions(+)
+> >  create mode 100644
+> Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+> >  create mode 100644 drivers/iommu/rockchip-iommu.c
+>
+> Please make sure you also get Acks for the DT bindings. With that and
+> the issue I mentioned in the other email fixed, I will apply these
+> patches?
+>
+
+Hi Joerg,
+
+Thanks for your reviews.
+Can you help me get these DT bindings Acked?
+AFAICT, the DT maintainers are CC'ed on this patch, I'm not sure what else
+to do.
+
+Thanks,
+-Daniel
+
+
+>
+>
+>         Joerg
+>
+>
+
+--90e6ba6e8ca4037b7e0506195132
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
+te">On Wed, Oct 22, 2014 at 11:20 PM, Joerg Roedel <span dir=3D"ltr">&lt;<a=
+ href=3D"mailto:joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" target=3D"_blank">joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org</a>&gt;<=
+/span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8=
+ex;border-left:1px #ccc solid;padding-left:1ex"><div class=3D"HOEnZb"><div =
+class=3D"h5">On Wed, Oct 01, 2014 at 06:20:40PM +0800, Daniel Kurtz wrote:<=
+br>
+&gt; Add a driver and devicetree bindings for the IOMMU found in Rockchip R=
+K3288<br>
+&gt; SoCs.<br>
+&gt;<br>
+&gt; Daniel Kurtz (3):<br>
+&gt;=C2=A0 =C2=A0iommu/rockchip: rk3288 iommu driver<br>
+&gt;=C2=A0 =C2=A0dt-bindings: iommu: Add documentation for rockchip iommu<b=
+r>
+&gt;=C2=A0 =C2=A0ARM: dts: rk3288: add VOP iommu nodes<br>
+&gt;<br>
+&gt;=C2=A0 .../devicetree/bindings/iommu/rockchip,iommu.txt=C2=A0 =C2=A0|=
+=C2=A0 26 +<br>
+&gt;=C2=A0 arch/arm/boot/dts/rk3288.dtsi=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 18 +<br>
+&gt;=C2=A0 drivers/iommu/Kconfig=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 11 +=
+<br>
+&gt;=C2=A0 drivers/iommu/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=
+=A01 +<br>
+&gt;=C2=A0 drivers/iommu/rockchip-iommu.c=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| 924 +++++++++++++++++++++<br>
+&gt;=C2=A0 5 files changed, 980 insertions(+)<br>
+&gt;=C2=A0 create mode 100644 Documentation/devicetree/bindings/iommu/rockc=
+hip,iommu.txt<br>
+&gt;=C2=A0 create mode 100644 drivers/iommu/rockchip-iommu.c<br>
+<br>
+</div></div>Please make sure you also get Acks for the DT bindings. With th=
+at and<br>
+the issue I mentioned in the other email fixed, I will apply these<br>
+patches?<br></blockquote><div><br></div><div>Hi Joerg,</div><div><br></div>=
+<div>Thanks for your reviews.</div><div>Can you help me get these DT bindin=
+gs Acked?</div><div>AFAICT, the DT maintainers are CC&#39;ed on this patch,=
+ I&#39;m not sure what else to do.</div><div><br></div><div>Thanks,</div><d=
+iv>-Daniel</div><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D=
+"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 Joerg<br>
+<br>
+</font></span></blockquote></div><br></div></div>
+
+--90e6ba6e8ca4037b7e0506195132--
+
+--===============4416192821699340330==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============4416192821699340330==--
