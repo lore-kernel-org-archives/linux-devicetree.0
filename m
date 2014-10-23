@@ -1,103 +1,44 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 00/12] rtc: omap: fixes and power-off feature
-Date: Thu, 23 Oct 2014 13:55:13 -0500
-Message-ID: <20141023185513.GD21407@saruman>
-References: <1412881594-25678-1-git-send-email-johan@kernel.org>
- <20141015165452.GB15770@saruman>
- <20141015170628.GA13824@localhost>
- <20141015170832.GD15770@saruman>
- <20141022102305.GM2113@localhost>
-Reply-To: <balbi@ti.com>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: Re: [BISECTED] arm: mvebu: Kernel hang after ae9304c9d311 if OF_SELFTEST=y
+Date: Thu, 23 Oct 2014 22:11:34 +0200
+Message-ID: <87wq7q4kcp.fsf@natisbad.org>
+References: <87mw8nt5io.fsf@natisbad.org>
+	<5448EB5E.3010405@free-electrons.com> <87h9yuu9jk.fsf@natisbad.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DrWhICOqskFTAXiy"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141022102305.GM2113@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Felipe Balbi <balbi@ti.com>, Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Andrew Morton <akpm@linux-foundation.org>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, Colin Foe-Parker <colin.foeparker@logicpd.com>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87h9yuu9jk.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org> (Arnaud Ebalard's message of "Thu,
+	23 Oct 2014 16:48:15 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---DrWhICOqskFTAXiy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Wed, Oct 22, 2014 at 12:23:05PM +0200, Johan Hovold wrote:
-> On Wed, Oct 15, 2014 at 12:08:32PM -0500, Felipe Balbi wrote:
-> > On Wed, Oct 15, 2014 at 07:06:28PM +0200, Johan Hovold wrote:
-> > > On Wed, Oct 15, 2014 at 11:55:02AM -0500, Felipe Balbi wrote:
->=20
-> > > > BTW, how do you test this series ?
-> > >=20
-> > > Set a 30 second wakealarm using the sysfs attribute of the rtc class
-> > > device and power off the BBB:
-> > >=20
-> > > 	echo +30 >wakealarm; poweroff
-> >=20
-> > sweet!!!! It worked just fine :-)
->=20
-> :)
->=20
-> > Too bad there's yet another DRM bug:
-> >=20
-> > [  271.150158] Kernel panic - not syncing: Attempted to kill init! exit=
-code=3D0x00000000
-> > [  271.150158]=20
-> > [  271.159725] CPU: 0 PID: 1 Comm: systemd-shutdow Not tainted 3.17.0-0=
-8392-g7fe2269-dirty #326
-> > [  271.168567] [<c00175a4>] (unwind_backtrace) from [<c00132f0>] (show_=
-stack+0x20/0x24)
-> > [  271.176668] [<c00132f0>] (show_stack) from [<c06573a4>] (dump_stack+=
-0x8c/0xa4)
-> > [  271.184215] [<c06573a4>] (dump_stack) from [<c0654f10>] (panic+0xa0/=
-0x220)
-> > [  271.191405] [<c0654f10>] (panic) from [<c0049e54>] (do_exit+0x974/0x=
-9d0)
-> > [  271.198410] [<c0049e54>] (do_exit) from [<c0067694>] (SyS_reboot+0x1=
-4c/0x1e8)
-> > [  271.205870] [<c0067694>] (SyS_reboot) from [<c000f080>] (ret_fast_sy=
-scall+0x0/0x48)
-> > [  271.214023] drm_kms_helper: panic occurred, switching back to text c=
-onsole
-> > [  271.221312] ---[ end Kernel panic - not syncing: Attempted to kill i=
-nit! exitcode=3D0x00000000
-> >=20
-> > In any case, board still powered up after 30 seconds(-ish). So this gets
-> > a:
-> >=20
-> > Tested-by: Felipe Balbi <balbi@ti.com>
->=20
-> Thanks for testing. I didn't include your Tested-by in v2 due to the
-> invasiveness of the new device-abstraction patch. Still works fine on BBB
-> here though.
+arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard) writes:
 
-alright, if I have time I'll test again, but not this week.
+>>> I bisected it up to ae9304c9d31117 ("Adding selftest testdata
+>>> dynamically into live tree"). For a while, my kernels are compiled w/
+>>> OF_SELFTEST and it works w/o issue. After that commit, boot hangs as
+>>
+>> It would be interesting to have a feedback of a kernel with an appended dtb
+>> and OF_SELFTEST enabled to a different platform (ie non mvebu). Then we
+>> will know if it something related to mvebu or to the device tree support.
+>>
+>> I will try to see if I can do this.
+>
+> I can test that on a kirkwood (6282) this evening.
 
---=20
-balbi
+FWIW, the problem does not only show up on Armada 370 but also on
+kirwood. I just tested it on a ReadyNAS Duo v2. I do not have any
+other non-mvebu platform at hand ATM. I'll try and see if I can
+find some ARM board to boot a recent kernel tomorrow.
 
---DrWhICOqskFTAXiy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Cheers,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUSU8RAAoJEIaOsuA1yqREJhgP/jD6sXPiaAZsND1tKsxZBcXB
-eeE0aw96cpntMCmbaSsZHyuj1odDv9eHsctNlDnBm27qU9vlUrjl9skiOZQL+dZq
-xVRnvqOOF0YOeei0KQWSGNQdXv5v4Q12amLhWNy8cu26t/5e1eVDeiwtNQNBt6Rk
-XzNVw/2wg/GFbn/3Belz0HSxHvgA4xrH2AABCG93a83YfgOxR9ZFjg6BHVMIO6bz
-vKojss1WTY6KfoIleK2Sy+LnhmMmyUm0lbphCF0MtcVv6ab9d4GmMHPkgPlXru7o
-XKbJeWd4SWLCuBGnnzkjFMoj/MiJ+pchJ3PUIB6IxPsKZGGPNVM+Yg+WaO15pBUS
-NPbtkYf+0/P8ZTkGuaRfpfM2xuBIWcWBDZQcWIMGQ3x1dbUNq0Zlcyxi/Tc9GvhU
-d8ZGfm0Rc9xyaDXdfmoy+nBmAjobqJkKULvZXZ30+nwE0UjQh9BaTpQ4XxZHDj7/
-o4GKDFoPikrUrdtPNqS4pnSfjUkRmLMT/LwUvRIdFKEGGv1dHAADK6+opftnuZf2
-MCo1RrYi4DVfs9ED9X7Ym0KcVxc0hAwwkgqeEqMpMG8ioL6W/r8wEI+QUeJdlULd
-4qGlD0d2Y3K1xEncMUdvgIOhpb9ANTX/MnEww3NgAtl5FnrP/9pKN3hLG0fX+umU
-q+g0lgk5FS9GeEllXPSH
-=9mAo
------END PGP SIGNATURE-----
-
---DrWhICOqskFTAXiy--
+a+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
