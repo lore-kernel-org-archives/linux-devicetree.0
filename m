@@ -1,66 +1,95 @@
-From: Zhou Wang <wangzhou.bry@gmail.com>
-Subject: [PATCH v2 2/2] mtd: hisilicon: add device tree binding documentation
-Date: Thu, 23 Oct 2014 22:04:45 +0800
-Message-ID: <1414073085-19296-3-git-send-email-wangzhou.bry@gmail.com>
-References: <1414073085-19296-1-git-send-email-wangzhou.bry@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414073085-19296-1-git-send-email-wangzhou.bry@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org
-Cc: mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, caizhiyong@huawei.com, haojian.zhuang@gmail.com, xuwei5@hisilicon.com, wangzhou1@hisilicon.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Zhou Wang <wangzhou.bry@gmail.com>
+From: Geoff Thorpe <Geoff.Thorpe@freescale.com>
+Subject: RE: [PATCH 2/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
+ portal(s)
+Date: Thu, 23 Oct 2014 13:28:49 +0000
+Message-ID: <bb882c85ecf447589d2ff62121541889@BL2PR03MB483.namprd03.prod.outlook.com>
+References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
+ <1413986972-621-2-git-send-email-Emilian.Medve@Freescale.com>
+ <20141022142931.GA4010@leverpostej> <54480DE6.4090604@Freescale.com>
+ <20141023111622.GB13690@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20141023111622.GB13690@leverpostej>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Mark Rutland <mark.rutland@arm.com>, Emilian Medve <Emilian.Medve@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "corbet@lwn.net" <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, Scott Wood <scottwood@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Zhou Wang <wangzhou.bry@gmail.com>
----
- .../devicetree/bindings/mtd/hisi504-nand.txt       |   40 ++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/hisi504-nand.txt
-
-diff --git a/Documentation/devicetree/bindings/mtd/hisi504-nand.txt b/Documentation/devicetree/bindings/mtd/hisi504-nand.txt
-new file mode 100644
-index 0000000..c8b3988
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/hisi504-nand.txt
-@@ -0,0 +1,40 @@
-+Hisilicon Hip04 Soc NAND controller DT binding
-+
-+Required properties:
-+- compatible:          Should be "hisilicon,504-nfc".
-+- reg:                 The first contains base physical address and size of
-+                       NAND controller's registers. The second contains base
-+                       physical address and size of NAND controller's buffer.
-+- interrupts:          Interrupt number for nfc.
-+- nand-bus-width:      See nand.txt.
-+- nand-ecc-mode:       See nand.txt.
-+- hisi,nand-ecc-bits:  ECC bits type support.
-+                 <0>:  none ecc
-+                 <1>:  Can correct 1bit per 512byte.
-+                 <6>:  Can correct 16bits per 1K byte.
-+- #address-cells:      partition address, should be set 1.
-+- #size-cells:         partition size, should be set 1.
-+
-+Flash chip may optionally contain additional sub-nodes describing partitions of
-+the address space. See partition.txt for more detail.
-+
-+Example:
-+
-+	nand: nand@4020000 {
-+		compatible = "hisilicon,504-nfc";
-+		reg = <0x4020000 0x10000>, <0x5000000 0x1000>;
-+		interrupts = <0 379 4>;
-+		nand-bus-width = <8>;
-+		nand-ecc-mode = "hw";
-+		hisi,nand-ecc-bits = <1>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		partition@0 {
-+			label = "nand_text";
-+			reg = <0x00000000 0x00400000>;
-+		};
-+
-+		...
-+
-+	};
--- 
-1.7.9.5
+SGksDQoNCkxlYXBpbmcgaW4gaGVyZSBhIGxpdHRsZSBhZnRlciB0aGUgZmFjdCwgdG8gYWRkIGEg
+Yml0IG9mIGJhY2tncm91bmQgaW5mbyBvbiB0aGUgaGFyZHdhcmUgaW4gY2FzZSBpdCBoZWxwcy4N
+Cg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNYXJrIFJ1dGxhbmQgW21h
+aWx0bzptYXJrLnJ1dGxhbmRAYXJtLmNvbV0NCj4gU2VudDogT2N0b2Jlci0yMy0xNCA3OjE2IEFN
+DQo+IFRvOiBNZWR2ZSBFbWlsaWFuLUVNTUVEVkUxDQo+IA0KPiBPbiBXZWQsIE9jdCAyMiwgMjAx
+NCBhdCAwOTowNDo1NFBNICswMTAwLCBFbWlsIE1lZHZlIHdyb3RlOg0KPiA+IEhlbGxvIE1hcmss
+DQo+ID4NCj4gPg0KPiA+IFRoYW5rcyBmb3IgaGF2aW5nIGEgbG9vayBhdCB0aGlzDQo+ID4NCj4g
+PiBPbiAxMC8yMi8yMDE0IDA5OjI5IEFNLCBNYXJrIFJ1dGxhbmQgd3JvdGU6DQo+ID4gPiBPbiBX
+ZWQsIE9jdCAyMiwgMjAxNCBhdCAwMzowOTozMFBNICswMTAwLCBFbWlsIE1lZHZlIHdyb3RlOg0K
+PiA+ID4+IFBvcnRhbHMgYXJlIHVzZWQgYnkgc29mdHdhcmUgcnVubmluZyBvbiBwcm9jZXNzb3Ig
+Y29yZXMsDQo+IGFjY2VsZXJhdG9ycyBhbmQNCj4gPiA+PiBuZXR3b3JrIGludGVyZmFjZXMgdG8g
+Y29tbXVuaWNhdGUgd2l0aCB0aGUgQk1hbg0KPiA+ID4NCj4gPiA+IFdoYXQgZXhhY3RseSBpcyBh
+IHBvcnRhbD8NCj4gPiA+DQo+ID4gPiBJcyBpdCBhIHJlZ2lvbiBvZiBzaGFyZWQgbWVtb3J5PyBB
+IGRldmljZT8NCg0KSnVzdCB0byBzdXBwbGVtZW50IHdoYXQgRW1pbCBhbHJlYWR5IG1lbnRpb25l
+ZCwgdGhlIHBvcnRhbHMgZWFjaCBjb250YWluIHR3byBtZW1vcnktbWFwcGVkIHJlZ2lvbnMgYW5k
+IGEgc2luZ2xlIGludGVycnVwdC4gT25lIG9mIHRoZSByZWdpb25zIGlzIGEgY29udmVudGlvbmFs
+IDRLIHBhZ2Ugb2YgMzItYml0IGNhY2hlLWluaGliaXRlZCByZWdpc3RlcnMgKGFuZCB0aGlzIGlu
+Y2x1ZGVzIGFsbCB0aGUgY29udHJvbHMgYW5kIHN0YXR1cyBmb3IgdGhlIHBvcnRhbCdzIGludGVy
+cnVwdCBsaW5lLCB3aGljaCBjb252ZXlzIGEgdmFyaWV0eSBvZiBpbmRpdmlkdWFsbHktY29uZmln
+dXJhYmxlIGludGVycnVwdCBzb3VyY2UgY29uZGl0aW9ucykuIFRoZSBvdGhlciByZWdpb24gaXMg
+YSAxNksgY2FjaGUtZW5hYmxlZCBzcGFjZSwgc28gdGhlICJyZWdpc3RlcnMiIGFyZSBjYWNoZWxp
+bmUgd2lkdGggLSBpbnRlcmFjdGlvbiB3aXRoIHRoaXMgcmVsaWVzIG9uIGNhY2hlbGluZSBtYW5p
+cHVsYXRpb24gaW5zdHJ1Y3Rpb25zIChmbHVzaGluZywgcHJlZmV0Y2hpbmcsIGV0YyksIGFuZCBp
+biBzb21lIGNvbmZpZ3VyYXRpb25zIGhhcmR3YXJlIHdpbGwgaW5pdGlhdGUgc3Rhc2hpbmcgKGNh
+Y2hlLXdhcm1pbmcpIGZvciBzb21lIG9mIHRob3NlIGNhY2hlbGluZXMsIHdoaWNoIGlzIG9uZSBv
+ZiB0aGUgcmVhc29ucyB0aGF0IHRoZXNlIHBvcnRhbHMgaGF2ZSAiTElPRE4iIGluZm9ybWF0aW9u
+IGNvbmZpZ3VyZWQgaW50byB0aGVtIChzdGFzaGluZyB0cmFuc2FjdGlvbnMgZ28gdGhyb3VnaCB0
+aGUgSU9NTVUpLiBUaGUgb3RoZXIgcmVhc29uIGZvciBMSU9ETi9JT01NVSBjb250ZXh0IGlzIHRo
+YXQgYWxsIHRoZSBhY2NlbGVyYXRvciBhbmQgbmV0d29ya2luZyBmdW5jdGlvbnMgYWNjZXNzZWQg
+dmlhIGEgcG9ydGFsIHdpbGwgYmUgc3ViamVjdGVkIHRvIHRoZSBJT01NVSBjb250ZXh0IGluZm8g
+b2YgdGhhdCBwb3J0YWwuIEluIHRoaXMgd2F5LCBhIHBvcnRhbCB0aGF0IGlzIG1hcHBlZC91c2Vk
+IGJ5IGEgZ2l2ZW4gc29mdHdhcmUgY29udGV4dCBjYW4gYmUgc2V0dXAgc3VjaCB0aGF0IERNQSBn
+ZW5lcmF0ZWQgYnkgaXRzIGhhcmR3YXJlIGludGVyYWN0aW9ucyB3aWxsIHJlc3BlY3QgdGhlIHNh
+bWUgZ3Vlc3QtcGh5c2ljYWwgdHJhbnNsYXRpb25zIGFuZCByZXN0cmljdGlvbnMgYXMgYXBwbHkg
+dG8gdGhlIHNvZnR3YXJlIGNvbnRleHQgaXRzZWxmLg0KDQpCVFcsIGEgc3Vic2V0IG9mIHRoZSBD
+Q1NSIHJlZ2lzdGVycyBmb3IgdGhlIFFNYW4gYW5kIEJNYW4gYmxvY2tzIGFyZSB1c2VkIHRvIGNv
+bmZpZ3VyZSB0aGVzZSBMSU9ETi9JT01NVSBhdHRyaWJ1dGVzIG9mIHRoZSBwb3J0YWxzLCBhcyBv
+cHBvc2VkIHRvIHRob3NlIGF0dHJpYnV0ZXMgYmVpbmcgZXhwb3NlZCBpbiB0aGUgcmVnaXN0ZXIg
+c3BhY2Ugb2YgdGhlIHBvcnRhbHMgdGhlbXNlbHZlcy4gSW4gdGhpcyB3YXksIHRoZSB1c2VyIG9m
+IGEgbWVtb3J5LW1hcHBlZCBwb3J0YWwgY2Fubm90IHNldCB0aGVpciBvd24gTElPRE4vSU9NTVUg
+YXR0cmlidXRlcywgdGhhdCBkZWNpc2lvbiBiZWxvbmdzIHRvIHdob2V2ZXIgdHdpZGRsZXMgd2l0
+aCBDQ1NSLg0KDQo+ID4gR2l2ZW4gdGhlIGRlc2NyaXB0aW9uIGFib3ZlLCBzdXJlbHkgeW91IG5l
+ZWQgdG8ga25vdyB3aGF0IHRoZQ0KPiBwb3J0YWwgaXMNCj4gPiA+IHVzZWQgZm9yPyBPciBpcyB0
+aGF0IHF1ZXJpZWQgZnJvbSB0aGUgcG9ydGFsPw0KPiA+DQo+ID4gV2UgZG9uJ3QgbmVlZC93YW50
+IHRvIGluY2x1ZGUgc3VjaCBpbmZvcm1hdGlvbiBpbiB0aGUgRFQuIFBvcnRhbHMNCj4gYXJlDQo+
+ID4gImFsbG9jYXRlZCIgZHluYW1pY2FsbHkgYW5kIHVzZWQgYnkgdGhlIHJlc3BlY3RpdmUgY29u
+dGV4dA0KPiANCj4gT2suIFNvIHRoZXkgaGF2ZSBubyBmaXhlZCBwdXJwb3NlIGFuZCBzb2Z0d2Fy
+ZSBhbGxvY2F0ZXMgYXMgbmVjZXNzYXJ5Pw0KPiBUaGVyZSBhcmUgbm8gY29uc3RyYWludHMgb24g
+aG93IGVhY2ggcG9ydGFsIG1heSBiZSB1c2VkLCBvciB3aGljaA0KPiBwb3J0YWwNCj4gYW5vdGhl
+ciBhZ2V0biBtaWdodCB1c2U/DQoNClllcywgcHJlY2lzZWx5LiBUaGV5J3JlIGludGVyY2hhbmdl
+YWJsZSB3aW5kb3dzL2NvbnRleHRzIGludG8gdGhlIGhhcmR3YXJlLCBmb3IgaXNzdWluZyB2YXJp
+b3VzIGtpbmRzIG9mIGNvbW1hbmRzIGFuZCBvYnRhaW5pbmcgdmFyaW91cyBraW5kcyBvZiByZXN1
+bHRzL3N0YXR1cy4gVGhlIFNvQyBwcm92aWRlcyBhIGNlcnRhaW4gbnVtYmVyIG9mIHRoZXNlIHBv
+cnRhbHMsIGFuZCBzb2Z0d2FyZSBjYW4gYWxsb2NhdGUgdGhlbSBvdXQgYW5kIGNvbmZpZ3VyZSB0
+aGVtIGluIHdoYXRldmVyIG1hbm5lciAoc3RhdGljLCBkeW5hbWljLCAuLi4pLiBCZWNhdXNlIG9m
+IHRoZSBDQ1NSLWNvbnRyb2xsZWQgTElPRE4vSU9NTVUgcG9ydGFsIGF0dHJpYnV0ZXMsIHR3byBw
+b3J0YWxzIGNhbiBiZSBzZXQgdXAgdG8gaGF2ZSBkaWZmZXJlbnQgImFjY2VzcyIgYW5kIG9wZXJh
+dGUgaW4gZGlmZmVyZW50IGNvbnRleHRzIChlZy4gYXBwcywgdmlydHVhbCBtYWNoaW5lcyksIGJ1
+dCB0aGF0IGlzIGRldGVybWluZWQgYnkgY29udHJvbCBzb2Z0d2FyZSAoa2VybmVsIGRyaXZlcikg
+Y29uZmlndXJhdGlvbiBvZiB0aG9zZSBwb3J0YWxzIGJlZm9yZSB0aGVpciB1c2UuIEluIHNob3J0
+LCB0aGVyZSdzIG5vdGhpbmcgaW50cmluc2ljIHRvIHRoZSBwb3J0YWxzIChpZS4gZnJvbSBhIGhh
+cmR3YXJlIHBlcnNwZWN0aXZlKSB0aGF0IGRpc3Rpbmd1aXNoZXMgdGhlbSBvciBwcmVkZXRlcm1p
+bmVzIHRoZWlyIHVzZS4NCg0KQ2hlZXJzLA0KR2VvZmYNCg0KDQpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0Ckxp
+bnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0
+aW5mby9saW51eHBwYy1kZXY=
