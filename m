@@ -1,102 +1,66 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH] ARM: at91/dt: Fix sama5d3x typos.
-Date: Thu, 23 Oct 2014 11:56:25 +0000
-Message-ID: <ec77270840f94da6a6d7548e7a3bf5a8@EMAIL.axentia.se>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: GPIO bindings guidelines (Was: Re: [PATCH v5 10/12] gpio: Support for unified device properties interface)
+Date: Thu, 23 Oct 2014 14:08:50 +0200
+Message-ID: <2608520.83ytdyNNIq@wuerfel>
+References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com> <1971792.8pKYWlGxB9@vostro.rjw.lan> <CAAVeFuJBu-2_z-wCyHF=oVqZUkbNscHk_YGuRLyMkKhhccaPUw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: sv-SE
+In-Reply-To: <CAAVeFuJBu-2_z-wCyHF=oVqZUkbNscHk_YGuRLyMkKhhccaPUw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
->From c23d712fe924b929c2eb39eba644fe74bcccfd37 Mon Sep 17 00:00:00 2001
-From: Peter Rosin <peda@axentia.se>
-Date: Thu, 23 Oct 2014 13:52:03 +0200
-Subject: [PATCH] ARM: at91/dt: Fix sama5d3x typos.
+On Thursday 23 October 2014 15:10:55 Alexandre Courbot wrote:
+> >
+> > Then, the driver needs to do something like:
+> >
+> >         if (!device_property_present(dev, "known_property_that_should_be_present")
+> >             && ACPI_COMPANION(dev))
+> >                 acpi_probe_gpios(dev);
+> >
+> > and in the acpi_probe_gpios() routine there may be checks like:
+> >
+> >         if (device_has_id(dev, "MARY0001")) {
+> >                 The first pin in the first GpioIo resource in _CRS is "fred" and
+> >                 it is active-low.
+> >                 The third pin in the second GpioIo resource in _CRS is "steve"
+> >                 and it is not active-low.
+> >         } else if (device_has_id(dev, "JANE0002")) {
+> >                 The first pin in the second GpioIo resource in _CRS is "fred" and
+> >                 it is not active-low.
+> >                 The second pin in the first GpioIo resource in _CRS is "steve"
+> >                 and it is active-low.
+> >         }
+> >
+> > and so on.  Of course, there may be drivers knowing that the meaning of the
+> > GpioIo resources in _CRS is the same for all devices handled by them, in which
+> > case they will not need to check device IDs, but the core has now way of
+> > knowing that.  Only the drivers have that information and the core has now
+> > way to figure out what to do for a given specific device.
+> >
+> > So here's a radical idea: Why don't we introduce something like
+> >
+> >         acpi_enumerate_gpio(dev, name, GpioIo_index, pin_index, active_low)
+> >
+> > such that after calling, say, acpi_enumerate_gpio(dev, "fred", 0, 0, true) the
+> > driver can do something like:
+> >
+> >         desc = get_gpiod_by_name(dev, "fred");
+> >
+> > and it'll all work.  Then, the only part of the driver that really needs to be
+> > ACPI-specific will be the acpi_probe_gpios() function calling acpi_enumerate_gpio()
+> > in accordance with what the device ID is.
+> 
+> I like this idea. It doesn't complicate the GPIO interface (i.e. no
+> "if you are on ACPI and no _DSD is present then gpiod_get() will
+> behave that way...") and does the plumbing behind the scenes.
+> 
+> I will also allow us to finally push the use of names instead of
+> indexes in the GPIO API. I'm all for it.
 
-The DT compatible strings also need binding documentation, but that is for
-someone else to write.
+Yes, sounds good.
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- arch/arm/boot/dts/sama5d31.dtsi   |    2 +-
- arch/arm/boot/dts/sama5d33.dtsi   |    2 +-
- arch/arm/boot/dts/sama5d34.dtsi   |    2 +-
- arch/arm/boot/dts/sama5d35.dtsi   |    2 +-
- arch/arm/boot/dts/sama5d36.dtsi   |    2 +-
- arch/arm/boot/dts/sama5d3xcm.dtsi |    2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sama5d31.dtsi b/arch/arm/boot/dts/sama5d31.dtsi
-index 7997dc9..883878b 100644
---- a/arch/arm/boot/dts/sama5d31.dtsi
-+++ b/arch/arm/boot/dts/sama5d31.dtsi
-@@ -12,5 +12,5 @@
- #include "sama5d3_uart.dtsi"
- 
- / {
--	compatible = "atmel,samad31", "atmel,sama5d3", "atmel,sama5";
-+	compatible = "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
- };
-diff --git a/arch/arm/boot/dts/sama5d33.dtsi b/arch/arm/boot/dts/sama5d33.dtsi
-index 39f8322..4b4434a 100644
---- a/arch/arm/boot/dts/sama5d33.dtsi
-+++ b/arch/arm/boot/dts/sama5d33.dtsi
-@@ -10,5 +10,5 @@
- #include "sama5d3_gmac.dtsi"
- 
- / {
--	compatible = "atmel,samad33", "atmel,sama5d3", "atmel,sama5";
-+	compatible = "atmel,sama5d33", "atmel,sama5d3", "atmel,sama5";
- };
-diff --git a/arch/arm/boot/dts/sama5d34.dtsi b/arch/arm/boot/dts/sama5d34.dtsi
-index 89cda2c..aa01573 100644
---- a/arch/arm/boot/dts/sama5d34.dtsi
-+++ b/arch/arm/boot/dts/sama5d34.dtsi
-@@ -12,5 +12,5 @@
- #include "sama5d3_mci2.dtsi"
- 
- / {
--	compatible = "atmel,samad34", "atmel,sama5d3", "atmel,sama5";
-+	compatible = "atmel,sama5d34", "atmel,sama5d3", "atmel,sama5";
- };
-diff --git a/arch/arm/boot/dts/sama5d35.dtsi b/arch/arm/boot/dts/sama5d35.dtsi
-index d20cd71..16c39f4 100644
---- a/arch/arm/boot/dts/sama5d35.dtsi
-+++ b/arch/arm/boot/dts/sama5d35.dtsi
-@@ -14,5 +14,5 @@
- #include "sama5d3_tcb1.dtsi"
- 
- / {
--	compatible = "atmel,samad35", "atmel,sama5d3", "atmel,sama5";
-+	compatible = "atmel,sama5d35", "atmel,sama5d3", "atmel,sama5";
- };
-diff --git a/arch/arm/boot/dts/sama5d36.dtsi b/arch/arm/boot/dts/sama5d36.dtsi
-index db58cad..e85139e 100644
---- a/arch/arm/boot/dts/sama5d36.dtsi
-+++ b/arch/arm/boot/dts/sama5d36.dtsi
-@@ -16,5 +16,5 @@
- #include "sama5d3_uart.dtsi"
- 
- / {
--	compatible = "atmel,samad36", "atmel,sama5d3", "atmel,sama5";
-+	compatible = "atmel,sama5d36", "atmel,sama5d3", "atmel,sama5";
- };
-diff --git a/arch/arm/boot/dts/sama5d3xcm.dtsi b/arch/arm/boot/dts/sama5d3xcm.dtsi
-index f7d8583..56574c8 100644
---- a/arch/arm/boot/dts/sama5d3xcm.dtsi
-+++ b/arch/arm/boot/dts/sama5d3xcm.dtsi
-@@ -8,7 +8,7 @@
-  */
- 
- / {
--	compatible = "atmel,samad3xcm", "atmel,sama5d3", "atmel,sama5";
-+	compatible = "atmel,sama5d3xcm", "atmel,sama5d3", "atmel,sama5";
- 
- 	chosen {
- 		bootargs = "console=ttyS0,115200 rootfstype=ubifs ubi.mtd=5 root=ubi0:rootfs";
--- 
-1.7.10.4
+	Arnd
