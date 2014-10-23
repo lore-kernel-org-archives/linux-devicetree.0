@@ -1,62 +1,114 @@
-From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
-Subject: Re: [BISECTED] arm: mvebu: Kernel hang after ae9304c9d311 if OF_SELFTEST=y
-Date: Thu, 23 Oct 2014 16:48:15 +0200
-Message-ID: <87h9yuu9jk.fsf@natisbad.org>
-References: <87mw8nt5io.fsf@natisbad.org>
-	<5448EB5E.3010405@free-electrons.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 3/4] watchdog: st_wdt: Provide binding documentation for
+ ST's LPC Watchdog driver
+Date: Thu, 23 Oct 2014 16:02:01 +0100
+Message-ID: <20141023150201.GD10395@x1>
+References: <1412760810-23199-1-git-send-email-lee.jones@linaro.org>
+ <1412760810-23199-4-git-send-email-lee.jones@linaro.org>
+ <20141009095649.GC3869@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5448EB5E.3010405-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Gregory CLEMENT's message
-	of "Thu, 23 Oct 2014 13:49:50 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141009095649.GC3869@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel@stlinux.com" <kernel@stlinux.com>, "wim@iguana.be" <wim@iguana.be>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Paris <david.paris@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, 09 Oct 2014, Mark Rutland wrote:
 
-Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
+> On Wed, Oct 08, 2014 at 10:33:29AM +0100, Lee Jones wrote:
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: David Paris <david.paris@st.com>
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  .../devicetree/bindings/watchdog/st-lpc-wdt.txt    | 30 ++++++++++=
+++++++++++++
+> >  1 file changed, 30 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/watchdog/st-l=
+pc-wdt.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.=
+txt b/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt
+> > new file mode 100644
+> > index 0000000..520ce90
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt
+> > @@ -0,0 +1,30 @@
+> > +STMicroelectronics LPC Watchdog
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +Required properties
+> > +
+> > +- compatible 	: Must be one of:
+> > +			"st,stih407-watchdog"
+> > +			"st,stih416-watchdog"
+> > +			"st,stih415-watchdog"
+> > +			"st,stid127-watchdog"
+> > +- reg		: LPC registers base address + range
+>=20
+> s/range/size/
+>=20
+> Please append something like "one entryfor each entry in reg-names".
+>=20
+> > +- reg-names	: Register map "base" and "syscfg-en" are compulsory. =
+"type" is
+> > +		  platform dependent and not required for the STiH407
+>=20
+> I don't understand the mention of "type".
 
-> On 23/10/2014 13:00, Arnaud Ebalard wrote:
->> Hi,
->> 
->> Trying to boot a 3.17.1 (same thing w/ current tip of Linus tree or
->> 3.17.1) on two Marvell Armada 370 based platforms (NETGEAR ReadyNAS
->> 102 and Synology DS213j) ends up w/ the following:
->> 
->>    Starting kernel ...
->>    
->>    Uncompressing Linux... done, booting the kernel.
->>    
->>    Error: unrecognized/unsupported machine ID (r1 = 0x00000bde).
->>    
->>    Available machine support:
->>    
->>    ID (hex)        NAME
->>    ffffffff        Generic DT based system
->>    ffffffff        Marvell Armada 380/385 (Device Tree)
->>    ffffffff        Marvell Armada 375 (Device Tree)
->>    ffffffff        Marvell Armada 370/XP (Device Tree)
->>    
->>    Please check your kernel config and/or bootloader.
->> 
->> I bisected it up to ae9304c9d31117 ("Adding selftest testdata
->> dynamically into live tree"). For a while, my kernels are compiled w/
->> OF_SELFTEST and it works w/o issue. After that commit, boot hangs as
->
-> It would be interesting to have a feedback of a kernel with an appended dtb
-> and OF_SELFTEST enabled to a different platform (ie non mvebu). Then we
-> will know if it something related to mvebu or to the device tree support.
->
-> I will try to see if I can do this.
+This is a typo.  It should be "syscfg-type".
 
-I can test that on a kirkwood (6282) this evening.
+> Additionally, "syscfg-en" looks to be a portion of another device
+> (shared system controller?), and probably should be described by
+> reference.
 
-Cheers,
+Answer below.
 
-a+
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +- clock-names 	: Should be "lpc_wdt"
+> > +- clocks	: Clock used by LPC device
+> > +- timeout-sec	: Watchdog timeout in seconds
+> > +- st,syscfg	: Syscfg node used to configure CPU reset type and mas=
+k
+>=20
+> Does this relate to the syscfg-en entry in the reg proeprty?
+=20
+Yes.  We map these registers with regmap and use the read-in register
+values of syscfg-en and syscfg-type to manipulate them.  It's either
+that or supplying a property for each read-in, which I like less.
+
+> > +- st,warm_reset	: If present, reset type will be 'warm'. If not, i=
+t will be cold
+>=20
+> s/_/-/ in property names.
+
+You're right.  This slipped my gaze.
+
+> Why does this need to be in the binding? It seems like a choice rathe=
+r
+> than a property of the system.
+
+What do you mean?  It's something which needs to be configured at
+initialisation time.  If we provide it here, it means that we don't
+have to re-complie to change the config.
+
+> > +Example:
+> > +	watchdog@fde05000 {
+> > +		compatible	=3D "st,stih416-lpc-watchdog";
+> > +		reg		=3D <0xfde05000 0x1000> <0x204 0x4>;
+> > +		reg-names	=3D "base", "syscfg-en"
+> > +		clock-names	=3D "lpc_wdt";
+> > +		clocks 		=3D <&clk_s_d3_flexgen CLK_LPC_0>;
+> > +		timeout-sec	=3D <600>;
+> > +		st,syscfg	=3D <&syscfg_core>;
+> > +		st,warm_reset;
+> > +	};
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
