@@ -1,39 +1,73 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v3 4/5] regulator: max77802: Parse regulator operating mode properties
-Date: Thu, 23 Oct 2014 11:28:09 +0200
-Message-ID: <0DA944C5-7A6B-461B-A8E6-D47343D22E0B@collabora.co.uk>
-References: <1413816472-1895-1-git-send-email-javier.martinez@collabora.co.uk> <1413816472-1895-5-git-send-email-javier.martinez@collabora.co.uk> <20141022164813.GD2344@sirena.org.uk>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-	charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141022164813.GD2344@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: hip04: NAND controller support
+Date: Thu, 23 Oct 2014 17:32:22 +0800
+Message-ID: <CAN1soZyCojPe8HYQQqrPj7e84TrhTsQpupMqf5semZDn3NabCQ@mail.gmail.com>
+References: <1414052649-17868-1-git-send-email-wangzhou.bry@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414052649-17868-1-git-send-email-wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
+On Thu, Oct 23, 2014 at 4:24 PM, Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> This patch adds dts support of NAND flash controller for Hisilicon Soc Hip04.
+> The patch is based on v3.18-rc1. I have tested that NAND flash controller
+> works fine in Hip04 D01 board.
+>
+> Signed-off-by: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/hip04.dtsi |   30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/hip04.dtsi b/arch/arm/boot/dts/hip04.dtsi
+> index 93b6c90..642a160 100644
+> --- a/arch/arm/boot/dts/hip04.dtsi
+> +++ b/arch/arm/boot/dts/hip04.dtsi
+> @@ -263,5 +263,35 @@
+>                         interrupts = <0 372 4>;
+>                 };
+>
+> +               nand: nand@4020000 {
+> +                       compatible = "hisilicon,504-nfc";
+> +                       reg = <0x4020000 0x10000>, <0x5000000 0x1000>;
+> +                       interrupts = <0 379 4>;
+> +                       nand-bus-width = <8>;
+> +                       nand-ecc-mode = "none";
+> +                       hisi,nand-ecc-bits = <0>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +
+> +                       partition@0 {
+> +                               label = "nand_text";
+> +                               reg = <0x00000000 0x00400000>;
+> +                       };
+> +
+> +                       partition@00400000 {
+> +                               label = "nand_monitor";
+> +                               reg = <0x00400000 0x00400000>;
+> +                       };
+> +
+> +                       partition@00800000 {
+> +                               label = "nand_kernel";
+> +                               reg = <0x00800000 0x00800000>;
+> +                       };
+> +
+> +                       partition@01000000 {
+> +                               label = "nand_fs";
+> +                               reg = <0x01000000 0x1f000000>;
+> +                       };
 
-> On 22/10/2014, at 18:48, Mark Brown <broonie@kernel.org> wrote:
-> 
->> On Mon, Oct 20, 2014 at 04:47:51PM +0200, Javier Martinez Canillas wrote:
->> 
->> +    char *states[PM_SUSPEND_MAX + 1] = {
->> +        [PM_SUSPEND_MEM] = "regulator-state-mem",
->> +        [PM_SUSPEND_MAX] = "regulator-state-disk",
->> +    };
-> 
-> This still has the same problem as your previous patch with things not
-> being as joined up with the core as they should be.  What I'd like to
-> see is that the code to extract the number for each state is in the core
-> and then the drivers just provide a translation function to map from
-> this to the internal modes.
+Partitions are different on different boards. But nand controller is
+same on each chip. You
+should define nand controller in soc dtsi file, and define partition
+in board dts file.
 
-Ok, I'll send a new version parsing it in the core and providing a translation function in the driver as you said.
-
-However this is an implementation detail and should not change the DT bindings in the current version. Could you please let me know if you have any issues with the other patches from this series so I can address all of them when doing a re-spin?
-
-Thanks a lot and best regards,
-Javier
+Regards
+Haojian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
