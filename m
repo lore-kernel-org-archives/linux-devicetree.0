@@ -1,106 +1,80 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 09/10] tty: serial: of-serial: Allow OF earlycon to
- default to "on"
-Date: Thu, 23 Oct 2014 12:47:30 +0800
-Message-ID: <CAL_JsqJbva6i5BwDMf9f0TcuToxzP2u9_oe1t92zQXJyS077oA@mail.gmail.com>
-References: <1413930186-23168-1-git-send-email-cernekee@gmail.com>
- <1413930186-23168-10-git-send-email-cernekee@gmail.com> <CAL_Jsq+AuqTOU7UFdYi28YGjL1QorY=3zOSccN43Vb1a=q6SHw@mail.gmail.com>
- <CAJiQ=7BrfnyOQYptBCTR8GP8hLq4+q1NQ2H988wHK=8PnkqLkg@mail.gmail.com>
+From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] adv7604: Add DT parsing support
+Date: Thu, 23 Oct 2014 07:51:50 +0200
+Message-ID: <CAL8zT=gUaBDiq=KC5YqCD5dqx2WO1PSXGckvchX_9XxDbJJEpw@mail.gmail.com>
+References: <1413992061-28678-1-git-send-email-jean-michel.hautbois@vodalys.com>
+ <1645583.LAOF2HV7Iq@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <CAJiQ=7BrfnyOQYptBCTR8GP8hLq4+q1NQ2H988wHK=8PnkqLkg@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1645583.LAOF2HV7Iq@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 23, 2014 at 11:25 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
-> On Wed, Oct 22, 2014 at 2:27 AM, Rob Herring <robh@kernel.org> wrote:
->> On Wed, Oct 22, 2014 at 6:23 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
->>> On many development systems it is very common to see failures during the
->>> early stages of the boot process, e.g. SMP boot or PCIe initialization.
->>> This is one likely reason why some existing earlyprintk implementations,
->>> such as arch/mips/kernel/early_printk.c, are enabled unconditionally
->>> at compile time.
->>>
->>> Now that earlycon's operating parameters can be passed into the kernel
->>> via DT, it is helpful to be able to configure the kernel to turn it on
->>> automatically.  Introduce a new CONFIG_SERIAL_EARLYCON_FORCE option for
->>> this purpose.
+Hi Laurent,
+
+Thank you for reviewing,
+
+2014-10-23 1:53 GMT+02:00 Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>:
+> Hi Jean-Michel,
+>
+> Thank you for the patch.
+>
+> On Wednesday 22 October 2014 17:34:21 Jean-Michel Hautbois wrote:
+>> This patch adds support for DT parsing of ADV7604 as well as ADV7611.
+>> It needs to be improved in order to get ports parsing too.
+>
+> Let's improve it then :-) The DT bindings as proposed by this patch are
+> incomplete, that's just asking for trouble.
+>
+> How would you model the adv7604 ports ?
+
+I am opened to suggestions :).
+But it has to remain as simple as possible, ideally allowing for
+giving names to the ports.
+As done today, it works, ports are parsed but are all the same...
+
+>> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/media/i2c/adv7604.txt | 1 +
+>>  drivers/media/i2c/adv7604.c                             | 1 +
+>>  2 files changed, 2 insertions(+)
 >>
->> You can already force this using the CMDLINE_EXTEND option. I'm not
->> sure we need more options.
->
-> Hi Rob,
->
-> Now that earlycon can get all of its parameters from DT, do you think
-> it might make sense to drop the command line option entirely from
-> fdt.c and enable it all of the time if stdout-path is set correctly?
->
-> From the user's standpoint, how important is it to be able to run
-> without earlycon?
-
-It may affect boot time for one although if you care you probably
-disable console altogether.
-
-I think we'd just have to add a noearlycon option instead if we made
-it the default. It's never been the default before, so I don't think
-we should change now. There's also an implicit requirement that the
-bootloader has configured the uart already. You could easily hang if
-the uart has not been setup.
-
->>>  void __init early_init_dt_scan_nodes(void)
->>>  {
->>> +#ifdef CONFIG_SERIAL_EARLYCON_FORCE
->>> +       if (early_init_dt_scan_chosen_serial() < 0)
->>> +               pr_warn("Unable to set up earlycon from stdout-path\n");
->>> +#endif
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+>> b/Documentation/devicetree/bindings/media/i2c/adv7604.txt index
+>> c27cede..5c8b3e6 100644
+>> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+>> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+>> @@ -10,6 +10,7 @@ Required Properties:
 >>
->> Doesn't this make the earlycon get scanned and setup twice? Hopefully
->> that is safe...
+>>    - compatible: Must contain one of the following
+>>      - "adi,adv7611" for the ADV7611
+>> +    - "adi,adv7604" for the ADV7604
 >
-> Patch 08/10 makes it safe.  Without Patch 08/10, specifying "earlycon
-> earlycon" also generates a backtrace.
+> Please switch the two lines to keep them alphabetically sorted.
+>>
+>>    - reg: I2C slave address
+>>
+>> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
+>> index 47795ff..421035f 100644
+>> --- a/drivers/media/i2c/adv7604.c
+>> +++ b/drivers/media/i2c/adv7604.c
+>> @@ -2677,6 +2677,7 @@ MODULE_DEVICE_TABLE(i2c, adv7604_i2c_id);
+>>
+>>  static struct of_device_id adv7604_of_id[] __maybe_unused = {
+>>       { .compatible = "adi,adv7611", .data = &adv7604_chip_info[ADV7611] },
+>> +     { .compatible = "adi,adv7604", .data = &adv7604_chip_info[ADV7604] },
 >
->> This also introduces the scanning at another point in time during boot
->> which may not work depending on the arch.
->
-> Currently the sequence looks like:
->
->  - arch code calls early_init_dt_scan() to populate boot_command_line
-> and memory ranges
->
->  - arch code might do some other stuff, possibly setting up page
-> tables, register mappings, etc.
+> Same comment here.
 
-Yes, like the page table needed to map your earlycon uart.
+Done on my side, but will wait for your suggestions, in order to add
+ports parsing ;-).
 
->  - arch code calls parse_early_param() to look at the final command line
->
->  - parse_early_param() might call early_init_dt_scan_chosen_serial()
->
-> So we're assuming that the arch code knows not to call
-> parse_early_param() until the mappings are configured.  But this is an
-> implicit requirement, and might not be totally obvious.  Since
-> SERIAL_EARLYCON is enabled by the UART driver, not the arch code, it
-> is possible that some platforms have ordering issues here that won't
-> be discovered until somebody tries to use earlycon.
-
-Right, if you enable earlycon and the architecture doesn't support it,
-you will crash. This is not really new. Doing "earlycon=uart8250..."
-on ARM will crash as long as the 8250 driver has supported that
-option.
-
-> Would it be more straightforward to have the arch code explicitly call
-> early_init_dt_scan_chosen_serial() to indicate that it is ready for
-> the early UART driver to run?
-
-Yes, but then when do you handle earlycon command line option for
-non-DT case? Having these at different points in time is asking for
-problems.
-
-Also, I've been trying to reduce the number of DT hooks into the arch
-code, so adding that would be moving in the wrong direction.
-
-Rob
+Thanks,
+JM
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
