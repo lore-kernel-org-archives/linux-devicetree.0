@@ -1,176 +1,62 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v2 2/3] ARM: keystone: pm: switch to use generic pm domains
-Date: Thu, 23 Oct 2014 17:37:31 +0300
-Message-ID: <544912AB.3050801@ti.com>
-References: <1413809764-21995-1-git-send-email-grygorii.strashko@ti.com>	<1413809764-21995-3-git-send-email-grygorii.strashko@ti.com>	<5446A065.9050308@gmail.com>	<544793B5.6080601@ti.com>	<CAPDyKFo97D3XbwDQrDzHw+qr4b24Fsq9EwDbdOMhy_L-RoYsLw@mail.gmail.com>	<CAMuHMdVsqsSHxirzoWspGz7y+2qBk42p-VUBNkys3_rr6Th_9Q@mail.gmail.com>	<CAPDyKFp6T1a1XXHdxiubP2RaS26uSqkUS3rbBgsNV_y+dSFfvw@mail.gmail.com>	<CAMuHMdVO4nMoeYdzLf6wdKW876gYVyML3C2+QKoteGPtisD4sA@mail.gmail.com> <CAPDyKFrVCczc+fSy1ax4XinhB4SMfZZWP=d4QdY5Lv4zjOrHPA@mail.gmail.com>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: Re: [BISECTED] arm: mvebu: Kernel hang after ae9304c9d311 if OF_SELFTEST=y
+Date: Thu, 23 Oct 2014 16:48:15 +0200
+Message-ID: <87h9yuu9jk.fsf@natisbad.org>
+References: <87mw8nt5io.fsf@natisbad.org>
+	<5448EB5E.3010405@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFrVCczc+fSy1ax4XinhB4SMfZZWP=d4QdY5Lv4zjOrHPA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Santosh Shilimkar <santosh.shilimkar@gmail.com>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5448EB5E.3010405-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Gregory CLEMENT's message
+	of "Thu, 23 Oct 2014 13:49:50 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+Hi,
 
-On 10/23/2014 11:11 AM, Ulf Hansson wrote:
-> On 22 October 2014 17:44, Geert Uytterhoeven <geert@linux-m68k.org> w=
-rote:
->> On Wed, Oct 22, 2014 at 5:28 PM, Ulf Hansson <ulf.hansson@linaro.org=
-> wrote:
->>> On 22 October 2014 17:09, Geert Uytterhoeven <geert@linux-m68k.org>=
- wrote:
->>>> On Wed, Oct 22, 2014 at 5:01 PM, Ulf Hansson <ulf.hansson@linaro.o=
-rg> wrote:
->>>>>>>> +void keystone_pm_domain_attach_dev(struct device *dev)
->>>>>>>>    {
->>>>>>>> +    struct clk *clk;
->>>>>>>>        int ret;
->>>>>>>> +    int i =3D 0;
->>>>>>>>
->>>>>>>>        dev_dbg(dev, "%s\n", __func__);
->>>>>>>>
->>>>>>>> -    ret =3D pm_generic_runtime_suspend(dev);
->>>>>>>> -    if (ret)
->>>>>>>> -        return ret;
->>>>>>>> -
->>>>>>>> -    ret =3D pm_clk_suspend(dev);
->>>>>>>> +    ret =3D pm_clk_create(dev);
->>>>>>>>        if (ret) {
->>>>>>>> -        pm_generic_runtime_resume(dev);
->>>>>>>> -        return ret;
->>>>>>>> +        dev_err(dev, "pm_clk_create failed %d\n", ret);
->>>>>>>> +        return;
->>>>>>>> +    };
->>>>>>>> +
->>>>>>>> +    while ((clk =3D of_clk_get(dev->of_node, i++)) && !IS_ERR=
-(clk)) {
->>>>>>>> +        ret =3D pm_clk_add_clk(dev, clk);
->>>>>>>> +        if (ret) {
->>>>>>>> +            dev_err(dev, "pm_clk_add_clk failed %d\n", ret);
->>>>>>>> +            goto clk_err;
->>>>>>>> +        };
->>>>>>>>        }
->>>>>>>>
->>>>>>>> -    return 0;
->>>>>>>> +    if (!IS_ENABLED(CONFIG_PM_RUNTIME)) {
->>>>>>> Can we not okkup two seperate callbacks instead of above check =
-?
->>>>>>> I don't like this CONFIG check here. Its slightly better versio=
-n of
->>>>>>> ifdef in middle of the code.
->>>>>>
->>>>>> I've found more-less similar comment on patch
->>>>>> "Re: [PATCH v3 1/3] power-domain: add power domain drivers for R=
-ockchip platform"
->>>>>> https://lkml.org/lkml/2014/10/17/257
->>>>>>
->>>>>> So, Would you like me to create patch which will enable clocks i=
-n pm_clk_add/_clk()
->>>>>> in case !IS_ENABLED(CONFIG_PM_RUNTIME)
->>>>>
->>>>> I am wondering whether we actually should/could do this, no matte=
-r of
->>>>> CONFIG_PM_RUNTIME.
->>>>>
->>>>> Typically, for configurations that uses CONFIG_PM_RUNTIME, the PM
->>>>> clocks through pm_clk_suspend(), will be gated once the device be=
-comes
->>>>> runtime PM suspended. Right?
->>>>
->>>> Doing it unconditionally means we'll have lots of unneeded clocks =
-running
->>>> for a short while.
->>
->>> As long as the pm_clk_add() is being invoked from the ->attach_dev(=
-)
->>> callback, we are in the probe path. Certainly we would like to have
->>> clocks enabled while probing, don't you think?
->>>
->>> If we wouldn't enable the clocks for CONFIG_PM_RUNTIME, when will
->>> those be enabled?
->>
->> They will be enabled when the driver does
->>
->>          pm_runtime_enable(dev);
->>          pm_runtime_get_sync(dev);
->>
->> in its .probe() method.
->=20
-> No! This doesn't work for drivers which have used
-> pm_runtime_set_active() prior pm_runtime_enable().
+Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
 
-Sorry, but some misunderstanding is here:
-1) If some code call pm_runtime_set_active() it has to ensure
-that all PM resources switched to ON state. All! So, it will=20
-be ok to call enable & get after that - these functions will only=20
-adjust counters.
+> On 23/10/2014 13:00, Arnaud Ebalard wrote:
+>> Hi,
+>> 
+>> Trying to boot a 3.17.1 (same thing w/ current tip of Linus tree or
+>> 3.17.1) on two Marvell Armada 370 based platforms (NETGEAR ReadyNAS
+>> 102 and Synology DS213j) ends up w/ the following:
+>> 
+>>    Starting kernel ...
+>>    
+>>    Uncompressing Linux... done, booting the kernel.
+>>    
+>>    Error: unrecognized/unsupported machine ID (r1 = 0x00000bde).
+>>    
+>>    Available machine support:
+>>    
+>>    ID (hex)        NAME
+>>    ffffffff        Generic DT based system
+>>    ffffffff        Marvell Armada 380/385 (Device Tree)
+>>    ffffffff        Marvell Armada 375 (Device Tree)
+>>    ffffffff        Marvell Armada 370/XP (Device Tree)
+>>    
+>>    Please check your kernel config and/or bootloader.
+>> 
+>> I bisected it up to ae9304c9d31117 ("Adding selftest testdata
+>> dynamically into live tree"). For a while, my kernels are compiled w/
+>> OF_SELFTEST and it works w/o issue. After that commit, boot hangs as
+>
+> It would be interesting to have a feedback of a kernel with an appended dtb
+> and OF_SELFTEST enabled to a different platform (ie non mvebu). Then we
+> will know if it something related to mvebu or to the device tree support.
+>
+> I will try to see if I can do this.
 
-2) if CONFIG_PM_RUNTIME=3Dn the pm_runtime_set_active() will
-be empty (see pm_runtime.h) and you can't relay on it.
+I can test that on a kirkwood (6282) this evening.
 
-3) if CONFIG_PM_RUNTIME=3Dn the pm_runtime_enable/disable() will
-be empty - and disable_depth =3D=3D 1 all the time.
+Cheers,
 
-In my case, the combination of generic PD and PM clock framework
-will do everything I need for both cases CONFIG_PM_RUNTIME=3Dy/n.
-
-PM domain attach_dev/detach_dev callbacks - will fill PM resources
-and enable them if CONFIG_PM_RUNTIME=3Dn.
-
-if CONFIG_PM_RUNTIME - PM resources will be enabled/disabled
-by Runtime PM through .start()/.stop() callbacks.
-
-And seems suspend/resume will work too - can't try it now, but it
-should work, because .start()/.stop() callbacks have to be called
-from pm_genpd_suspend_noirq.
-
-
->=20
-> That should also be a common good practice for most drivers, otherwis=
-e
-> they wouldn=E2=80=99t work unless CONFIG_PM_RUNTIME is enabled.
->=20
-> Please have a look at the following patchset, which is fixing up one
-> driver to behave better.
-> http://marc.info/?l=3Dlinux-pm&m=3D141327095713390&w=3D2
-
-It always was (and seems will) a big challenge to support both
-CONFIG_PM_RUNTIME=3Dy and system suspend in drivers ;), especially if d=
-river was
-initially created using Runtime PM centric approach.
-
-But, for the case CONFIG_PM_RUNTIME + !CONFIG_PM_RUNTIME + suspend...
-It will be painful :..((
-
-
-=46or example your patches (may be I'm not fully understand your proble=
-m,=20
-so here are just comments to code):
-patch 3:
-  - I think you can do smth like this in probe=20
-        ret =3D pm_runtime_get_sync(&pdev->dev);
-        if (ret < 0)
-                goto err_m2m;
-+      =20
-+       if (!pm_runtime_enabled(dev)) {
-+               gsc_runtime_resume(dev);
-+       }=20
-
- - and similar thing in remove, before pm_runtime_disable
-=20
-patch 5 - pm_runtime_force_suspend/resume() will not take into
-account or change Runtime PM state of the device if !CONFIG_PM_RUNTIME.
-runtime_status =3D=3D RPM_SUSPENDED always in this case!
-So, there may be some side-effects.
-
-patch 7 - you can't call clk_prepare/unprepare from Runtime PM
-callbacks, because they aren't atomic
-
-Oh, You definitely will be enjoyed ;)
-
-regards,
--grygorii
-
+a+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
