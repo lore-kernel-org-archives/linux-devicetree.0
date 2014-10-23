@@ -1,72 +1,34 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 0/3] Rockchip IOMMU driver and devicetree bindings
-Date: Thu, 23 Oct 2014 18:23 +0200
-Message-ID: <2804227.ziAnEUAn0E@diego>
-References: <1412158843-8115-1-git-send-email-djkurtz@chromium.org> <20141022152019.GK10074@8bytes.org> <CAGS+omB+si1J-gjyvyjJF0x=QBTyPyNKbqyV0QM=sKNo9zecDw@mail.gmail.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
+Date: Thu, 23 Oct 2014 10:52:06 -0600
+Message-ID: <20141023165206.GB13465@obsidianresearch.com>
+References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <3256560.C0cZnIlnAv@wuerfel>
+ <20141022155914.GB25939@e102568-lin.cambridge.arm.com>
+ <2148776.X8NPqiYA6S@wuerfel>
+ <20141023091309.GF25302@e106497-lin.cambridge.arm.com>
+ <20141023112731.GA5823@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGS+omB+si1J-gjyvyjJF0x=QBTyPyNKbqyV0QM=sKNo9zecDw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>
-Cc: Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Simon Xue <xxm@rock-chips.com>, Grant Grundler <grundler@chromium.org>, =?ISO-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141023112731.GA5823@e102568-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 24. Oktober 2014, 00:11:06 schrieb Daniel Kurtz:
-> On Wed, Oct 22, 2014 at 11:20 PM, Joerg Roedel <joro@8bytes.org> wrote:
-> > On Wed, Oct 01, 2014 at 06:20:40PM +0800, Daniel Kurtz wrote:
-> > > Add a driver and devicetree bindings for the IOMMU found in Rockchip
-> > 
-> > RK3288
-> > 
-> > > SoCs.
-> > > 
-> > > Daniel Kurtz (3):
-> > >   iommu/rockchip: rk3288 iommu driver
-> > >   dt-bindings: iommu: Add documentation for rockchip iommu
-> > >   ARM: dts: rk3288: add VOP iommu nodes
-> > >  
-> > >  .../devicetree/bindings/iommu/rockchip,iommu.txt   |  26 +
-> > >  arch/arm/boot/dts/rk3288.dtsi                      |  18 +
-> > >  drivers/iommu/Kconfig                              |  11 +
-> > >  drivers/iommu/Makefile                             |   1 +
-> > >  drivers/iommu/rockchip-iommu.c                     | 924
-> > 
-> > +++++++++++++++++++++
-> > 
-> > >  5 files changed, 980 insertions(+)
-> > >  create mode 100644
-> > 
-> > Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
-> > 
-> > >  create mode 100644 drivers/iommu/rockchip-iommu.c
-> > 
-> > Please make sure you also get Acks for the DT bindings. With that and
-> > the issue I mentioned in the other email fixed, I will apply these
-> > patches?
-> 
-> Hi Joerg,
-> 
-> Thanks for your reviews.
-> Can you help me get these DT bindings Acked?
-> AFAICT, the DT maintainers are CC'ed on this patch, I'm not sure what else
-> to do.
+On Thu, Oct 23, 2014 at 12:27:31PM +0100, Lorenzo Pieralisi wrote:
 
-I think the generally accepted way is, to give the dt maintainers an 
-appropriate amount of time [0] to complain and assume an implicit ack if no 
-complaint arrives.
+> I think that by removing that, we could switch to CONFIG_PCI_DOMAINS_GENERIC
+> on ARM32. I will remove the dependency in drivers/pci/host/pci-mvebu.c
+> introduced by commit 2613ba48. pci_sys_data.domain is always 0 in that
+> driver so its usefulness is doubtful, comments welcome, copied Jason in
+> if he has comments.
 
-This is especially true, as the dt-binding for the iommu itself does not even 
-introduce any new properties and simply uses widely established ones.
+pcie-mvebu is like all the other new drivers, each top level DT node
+that introduces the interface should have a unique domain number. It
+would be very strange (and currently unsupported by the driver) to
+ever have more than 1 mvebu top level node in any DT.
 
-
-As a sidenote ... I'd like to take the dts changes in patch 3, once Joerg 
-takes patches 1 and 2.
-
-
-Heiko
-
-
-
-[0] 3 weeks seems to be the most widely used timespan
+Jason
