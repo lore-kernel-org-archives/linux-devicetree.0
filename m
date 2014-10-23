@@ -1,8 +1,8 @@
 From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH v4 2/7] irqdomain: Add back xlate and set_type for hierarchy
- irq domain
-Date: Thu, 23 Oct 2014 23:53:10 +0800
-Message-ID: <1414079595-26129-3-git-send-email-yingjoe.chen@mediatek.com>
+Subject: [PATCH v4 3/7] genirq: Add more helper functions to support stacked
+ irq_chip
+Date: Thu, 23 Oct 2014 23:53:11 +0800
+Message-ID: <1414079595-26129-4-git-send-email-yingjoe.chen@mediatek.com>
 References: <1414079595-26129-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,61 +22,70 @@ To: Rob Herring <robh+dt@kernel.org>, Jiang Liu <jiang.liu@linux.intel.com>, Mar
 Cc: Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, yingjoe.chen@gmail.com, Boris BREZILLON <boris.brezillon@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, yh.chen@mediatek.com, nathan.chung@mediatek.com, Grant Likely <grant.likely@linaro.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hans de Goede <hdegoede@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, hc.yen@mediatek.com, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Move xlate and set_type out to common code for hierarchy irq domain.
-Withouth this common code, all outermost irq domain will have to duplicate
-these function.
+Add more helper function for stacked irq_chip to just call parent's
+function.
 
 Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
 ---
- kernel/irq/irqdomain.c | 29 ++++++++++++++++++++---------
- 1 file changed, 20 insertions(+), 9 deletions(-)
+ include/linux/irq.h |  6 ++++++
+ kernel/irq/chip.c   | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index dd8d3ab..b3288e8 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -478,11 +478,6 @@ unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data)
- 		return 0;
- 	}
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 07abf5a..071b1e8 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -437,6 +437,12 @@ extern void handle_nested_irq(unsigned int irq);
  
--	if (irq_domain_is_hierarchy(domain)) {
--		virq = irq_domain_alloc_irqs(domain, 1, NUMA_NO_NODE, irq_data);
--		return virq <= 0 ? 0 : virq;
--	}
--
- 	/* If domain has no translation, then we assume interrupt line */
- 	if (domain->ops->xlate == NULL)
- 		hwirq = irq_data->args[0];
-@@ -492,10 +487,26 @@ unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data)
- 			return 0;
- 	}
+ #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+ extern void irq_chip_ack_parent(struct irq_data *data);
++extern void irq_chip_mask_parent(struct irq_data *data);
++extern void irq_chip_unmask_parent(struct irq_data *data);
++extern void irq_chip_eoi_parent(struct irq_data *data);
++extern int irq_chip_set_affinity_parent(struct irq_data *data,
++					const struct cpumask *dest,
++					bool force);
+ extern int irq_chip_retrigger_hierarchy(struct irq_data *data);
+ #endif
  
--	/* Create mapping */
--	virq = irq_create_mapping(domain, hwirq);
--	if (!virq)
--		return virq;
-+	if (irq_domain_is_hierarchy(domain)) {
-+		if (domain->ops->xlate) {
-+			/*
-+			 * If we've already configured this interrupt,
-+			 * don't do it again, or hell will break loose.
-+			 */
-+			virq = irq_find_mapping(domain, hwirq);
-+			if (virq)
-+				return virq;
-+		}
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 58ed9ed..0ecc270 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -829,6 +829,34 @@ void irq_chip_ack_parent(struct irq_data *data)
+ 	data->chip->irq_ack(data);
+ }
+ 
++void irq_chip_mask_parent(struct irq_data *data)
++{
++	data = data->parent_data;
++	data->chip->irq_mask(data);
++}
 +
-+		virq = irq_domain_alloc_irqs(domain, 1, NUMA_NO_NODE, irq_data);
-+		if (virq <= 0)
-+			return 0;
-+	} else {
-+		/* Create mapping */
-+		virq = irq_create_mapping(domain, hwirq);
-+		if (!virq)
-+			return virq;
-+	}
- 
- 	/* Set type if specified and different than the current one */
- 	if (type != IRQ_TYPE_NONE &&
++void irq_chip_unmask_parent(struct irq_data *data)
++{
++	data = data->parent_data;
++	data->chip->irq_unmask(data);
++}
++
++void irq_chip_eoi_parent(struct irq_data *data)
++{
++	data = data->parent_data;
++	data->chip->irq_eoi(data);
++}
++
++int irq_chip_set_affinity_parent(struct irq_data *data,
++				 const struct cpumask *dest, bool force)
++{
++	data = data->parent_data;
++	if (data->chip->irq_set_affinity)
++		return data->chip->irq_set_affinity(data, dest, force);
++
++	return -ENOSYS;
++}
++
+ int irq_chip_retrigger_hierarchy(struct irq_data *data)
+ {
+ 	for (data = data->parent_data; data; data = data->parent_data)
 -- 
 1.8.1.1.dirty
