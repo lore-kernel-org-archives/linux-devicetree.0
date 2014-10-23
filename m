@@ -1,111 +1,122 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v3 1/5] PM / clock_ops: Add pm_clk_add_clk()
-Date: Thu, 23 Oct 2014 21:04:19 +0300
-Message-ID: <54494323.7030805@ti.com>
-References: <1414074182-25980-1-git-send-email-grygorii.strashko@ti.com> <1414074182-25980-2-git-send-email-grygorii.strashko@ti.com> <20141023154928.GC18714@dtor-ws> <54492A69.5070505@ti.com> <20141023171305.GA24671@dtor-ws>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 08/12] rtc: omap: restore irq state after reading TC
+ registers
+Date: Thu, 23 Oct 2014 13:52:47 -0500
+Message-ID: <20141023185247.GB21407@saruman>
+References: <1412881594-25678-1-git-send-email-johan@kernel.org>
+ <1412881594-25678-9-git-send-email-johan@kernel.org>
+ <20141010180225.GT31348@saruman>
+ <20141011101201.GC18988@localhost>
+ <20141012004758.GB21128@saruman>
+ <20141022105011.GN2113@localhost>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="rJwd6BRFiFCcLxzm"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141023171305.GA24671@dtor-ws>
+Content-Disposition: inline
+In-Reply-To: <20141022105011.GN2113@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, khilman@linaro.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Ulf Hansson <ulf.hansson@linaro.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Felipe Balbi <balbi@ti.com>, Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Andrew Morton <akpm@linux-foundation.org>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/23/2014 08:13 PM, Dmitry Torokhov wrote:
-> On Thu, Oct 23, 2014 at 07:18:49PM +0300, Grygorii Strashko wrote:
->> On 10/23/2014 06:49 PM, Dmitry Torokhov wrote:
->>> On Thu, Oct 23, 2014 at 05:22:58PM +0300, Grygorii Strashko wrote:
->>>> From: Geert Uytterhoeven <geert+renesas@glider.be>
->>>>
->>>> The existing pm_clk_add() allows to pass a clock by con_id. However,
->>>> when referring to a specific clock from DT, no con_id is available.
->>>>
->>>> Add pm_clk_add_clk(), which allows to specify the struct clk * directly.
->>>>
->>>> CC: Ulf Hansson <ulf.hansson@linaro.org>
->>>> CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->>>> Reviewed-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->>>> Reviewed-by: Kevin Hilman <khilman@linaro.org>
->>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>>> ---
->>>>   drivers/base/power/clock_ops.c | 41 +++++++++++++++++++++++++++++++----------
->>>>   include/linux/pm_clock.h       |  8 ++++++++
->>>>   2 files changed, 39 insertions(+), 10 deletions(-)
->>>>
->>>> diff --git a/drivers/base/power/clock_ops.c b/drivers/base/power/clock_ops.c
->>>> index 7836930..f14b767 100644
->>>> --- a/drivers/base/power/clock_ops.c
->>>> +++ b/drivers/base/power/clock_ops.c
->>>> @@ -53,7 +53,8 @@ static inline int __pm_clk_enable(struct device *dev, struct clk *clk)
->>>>    */
->>>>   static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
->>>>   {
->>>> -	ce->clk = clk_get(dev, ce->con_id);
->>>> +	if (!ce->clk)
->>>> +		ce->clk = clk_get(dev, ce->con_id);
->>>>   	if (IS_ERR(ce->clk)) {
->>>>   		ce->status = PCE_STATUS_ERROR;
->>>>   	} else {
->>>> @@ -63,15 +64,8 @@ static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
->>>>   	}
->>>>   }
->>>>
->>>> -/**
->>>> - * pm_clk_add - Start using a device clock for power management.
->>>> - * @dev: Device whose clock is going to be used for power management.
->>>> - * @con_id: Connection ID of the clock.
->>>> - *
->>>> - * Add the clock represented by @con_id to the list of clocks used for
->>>> - * the power management of @dev.
->>>> - */
->>>> -int pm_clk_add(struct device *dev, const char *con_id)
->>>> +static int __pm_clk_add(struct device *dev, const char *con_id,
->>>> +			struct clk *clk)
->>>>   {
->>>>   	struct pm_subsys_data *psd = dev_to_psd(dev);
->>>>   	struct pm_clock_entry *ce;
->>>> @@ -93,6 +87,8 @@ int pm_clk_add(struct device *dev, const char *con_id)
->>>>   			kfree(ce);
->>>>   			return -ENOMEM;
->>>>   		}
->>>> +	} else {
->>>
->>> You need __clk_get(clk) here, otherwise when you will be removing clocks
->>> you'll be dropping a reference that does not belong to you (as yiou have
->>> not taken it).
->>
->> No, I don't ;)
->>
->> pm_clk_add_clk is intended to be used with valid pointer on clk,
->> which means clk_get() has been called already. In our case:
->> 	clk = of_clk_get(dev->of_node, i));
->> 	ret = pm_clk_add_clk(dev, clk);
->>
->> It's just a different way to fill list of clocks for device,
->> once pm_clk_add_clk() is called - PM clock framework will be the owner
->> of clock.
->
-> No, this is not how the rest of refcounted APIs work in the kernel. You
-> do not take over other's references and if you need to store pointer to
-> refcounted object you are responsible for taking your own reference. See
-> how we work with device structures, OF nodes, etc, etc.
->
-> The proper pattern here should be (unless the driver wants to hold on to
-> the clock for its own purposes):
->
-> 	clk = of_clk_get(dev->of_node, i));
-> 	ret = pm_clk_add_clk(dev, clk);
-> 	clk_put(clk);
->
-> with pm_clk_add_clk() taking and managing _its own_ reference and the
-> caller (driver) managing _its_ reference.
->
-> So FWIW strong NAK here from me.
+--rJwd6BRFiFCcLxzm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ok. I'll update and resend.
+On Wed, Oct 22, 2014 at 12:50:11PM +0200, Johan Hovold wrote:
+> On Sat, Oct 11, 2014 at 07:47:58PM -0500, Felipe Balbi wrote:
+> > On Sat, Oct 11, 2014 at 12:12:01PM +0200, Johan Hovold wrote:
+> > > On Fri, Oct 10, 2014 at 01:02:31PM -0500, Felipe Balbi wrote:
+> > > > Hi,
+> > > >=20
+> > > > On Thu, Oct 09, 2014 at 09:06:30PM +0200, Johan Hovold wrote:
+> > > > > Make sure to restore local irq state when reading the timer/calen=
+dar
+> > > > > (TC) registers, so that omap_rtc_read_time() can be called with
+> > > > > interrupts disabled.
+> > > > >=20
+> > > > > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > > > > ---
+> > > > >  drivers/rtc/rtc-omap.c | 6 ++++--
+> > > > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > > >=20
+> > > > > diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
+> > > > > index 0ef016553a97..62e2e9a9887a 100644
+> > > > > --- a/drivers/rtc/rtc-omap.c
+> > > > > +++ b/drivers/rtc/rtc-omap.c
+> > > > > @@ -239,8 +239,10 @@ static void bcd2tm(struct rtc_time *tm)
+> > > > > =20
+> > > > >  static int omap_rtc_read_time(struct device *dev, struct rtc_tim=
+e *tm)
+> > > > >  {
+> > > > > +	unsigned long flags;
+> > > > > +
+> > > > >  	/* we don't report wday/yday/isdst ... */
+> > > > > -	local_irq_disable();
+> > > > > +	local_irq_save(flags);
+> > > >=20
+> > > > you should really convert these to a real spin_lock_irq*(), that's
+> > > > because local_irq* do not get re-written with RT patchset, so this
+> > > > pretty much "breaks" RT.
+> > >=20
+> > > The driver uses local_irq* throughout to guarantee registers are not
+> > > read or written during an update event.
+> > >=20
+> > > In fact, at least on AM33xx, this is not even necessary when reading =
+(as
+> > > opposed to writing) the TC registers, but I did not dare change that
+> > > without knowing how the legacy platforms work in this respect.
+> > >=20
+> > > Do you suggest doing this conversion as part of, or on top of, this
+> > > series?
+> >=20
+> > probably on top of is. Safer that way.
+>=20
+> I didn't include this conversion in v2 as you may have noticed. In fact,
+> I'm not even sure it should be done.
+>=20
+> Using local_irq* "breaks" RT, but if we change it to spin_lock_irq* and
+> RT preempts us, we may miss the 15us access window which would break the
+> driver:
+>=20
+> 	"If the ARM accesses the TC registers outside of the access
+> 	 period, then the access is not guaranteed."
+>=20
+> On am33xx this only affects updating the TC (timer/calendar) or alarm
+> registers, but the driver currently disables interrupts also on reading
+> the time (possibly because the early IP revisions did not have the
+> shadow read registers).
 
-regards,
--grygorii
+that's alright, better not to change the behavior in this case. But as a
+future patch, you might want to convert this to a raw_spinlock. That
+won't get preempted.
+
+--=20
+balbi
+
+--rJwd6BRFiFCcLxzm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUSU5/AAoJEIaOsuA1yqRE6f8QAKZrfi0zty3h+uHjFdm3aHFA
+6qh7bjLtJkLFxcCiMG1ZchkyQSbeYY/3hEmv8YjrsFKj+WHohw5yNP6ZDbmCftyt
+eflAhFgjnjm+8XtO763PX10O7OFUJWu4sibsj81KbBV4i/bL5NcbI4NKJOmUYBoD
+IUXO3bbqIXbeCmcMFkghGf8QMHrmDcAKQMtfdwAe53KtlY3bTPoSPk5uUsS+EwMY
+ULlo4d/TKb5ol0jPnDlBw/fQ8rCcSJYdKdzQKnH5TQ+qLbA+9JLdHQLcBnirr9yC
+pkDbnA3BOWHfvnrMmsAzpFtP479XPXhlv8anYjgT8qcw7gJv0La1zBXDBR4zwiiJ
+3olgs7/yV83T8Y4tQyuY5sPQbpwqsh/dJo1Hel4Ljq6m+MuBexSo/1g1IBWEE9Qv
+5G1NgKklvev6Q2uhio3Ly2u4bWPmQBwQy45OzGzSFrc5nHG9UxJJz0yaQspLabW/
+NpRzv7GE2Vs30Tx0hrcxP96HhMKy8Sn6tSEWrdMzzVOHbzKg6LJmT4LqIZP4A1fN
+k2YAbiGByZztbMvpfSOCrw3TNcayjy2Pw3NL2iCdnVp00UJSpundZBqF3nIo+yIc
+B6GEmZP1z1EALh12odtFC0Z0C91X/tzvguRK+Yp+m7XHobpwNg/sykwLUdu7iku7
+E9hynAD3kQcuwvbVKqY2
+=6iin
+-----END PGP SIGNATURE-----
+
+--rJwd6BRFiFCcLxzm--
