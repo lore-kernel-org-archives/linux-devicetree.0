@@ -1,94 +1,210 @@
 From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH v4 0/7] ARM: mediatek: Add support for interrupt polarity
-Date: Thu, 23 Oct 2014 23:53:08 +0800
-Message-ID: <1414079595-26129-1-git-send-email-yingjoe.chen@mediatek.com>
+Subject: [PATCH v4 5/7] ARM: mediatek: Add sysirq interrupt polarity support
+Date: Thu, 23 Oct 2014 23:53:13 +0800
+Message-ID: <1414079595-26129-6-git-send-email-yingjoe.chen@mediatek.com>
+References: <1414079595-26129-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414079595-26129-1-git-send-email-yingjoe.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Jiang Liu <jiang.liu@linux.intel.com>, Marc Zyngier <marc.zyngier@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, arm@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, yingjoe.chen@gmail.com, Boris BREZILLON <boris.brezillon@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, yh.chen@mediatek.com, nathan.chung@mediatek.com, Grant Likely <grant.likely@linaro.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hans de Goede <hdegoede@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, hc.yen@mediatek.com, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Grant Likely <grant.likely@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, srv_heupstream@mediatek.com, yingjoe.chen@gmail.com, hc.yen@mediatek.com, eddie.huang@mediatek.com, nathan.chung@mediatek.com, yh.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-This series is 4th version of interrupt polarity support for MediaTek SoCs.
-This is based on Jiang's hierarchy irqdomain v2 [1] and my mediatek SoC
-basic support [2].
+Mediatek SoCs have interrupt polarity in sysirq which allows
+to swap the polarity for given interrupts. Add this support
+using hierarchy irq domain.
 
-This version addressed comments from previous discussion[3]. I removed
-arm,hierarchy-irq-domain property. When GIC is probed by DT, it will
-support hierarchy irqdomain. I still keep the first patch because this is
-still base on hierarchy irqdomain v2.
-
-In Jiang's version of irq_create_of_mapping, if irqdomain is hierarchy, it
-will not perform irq_find_mapping check and set_type. The outermost
-irqdomain need to take care of that. Because we will have several different
-outermost irqdomain in different ARM SoCs, this cause code duplication. I
-moved them back to irq_create_of_mapping. Since Jiang's changes are not
-merged yet, maybe that patch should be merged there.
-
-Simplified block diagram for interrupt on my system:
-
-    +-------+      +-------+
- ---| SYSIRQ|------|ARM GIC|
- ---|       |------|       |
- ---|       |------|       |
- ---|       |------|       |
- ---|       |------|       |
-    +-------+      +-------+
-
-In device tree, interrupt-parent for other devices is sysirq, child of gic.
-This describe HW better and allow device to specify polarity as it is sent
-by the device.
-
-When using hierarchy irq domain, gic will use irq_domain_add_linear to
-create irqdomain and all interrupt numbers must come from device tree. My
-/proc/interrupts looks like this now:
-
-# cat /proc/interrupts
-           CPU0
- 16:       1862  MT_SYSIRQ 113  mtk_timer
- 17:         67  MT_SYSIRQ  54  mtk-uart
-
-Changes in v3:
- - Discussion in [3]
- - First implementation using hierarchy irqdomain
-
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/290832.html
-[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/284553.html
-[3] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/293766.html
-
-Yingjoe Chen (7):
-  irqdomain: Fix irq_domain_alloc_irqs return check.
-  irqdomain: Add back xlate and set_type for hierarchy irq domain
-  genirq: Add more helper functions to support stacked irq_chip
-  irqchip: gic: Support hierarchy irq domain.
-  ARM: mediatek: Add sysirq interrupt polarity support
-  ARM: mediatek: Add sysirq in mt6589/mt8135/mt8127 dtsi
-  dt-bindings: add bindings for mediatek sysirq
-
- .../bindings/arm/mediatek/mediatek,sysirq.txt      |  26 ++++
- arch/arm/boot/dts/mt6589.dtsi                      |  14 +-
- arch/arm/boot/dts/mt8127.dtsi                      |  14 +-
- arch/arm/boot/dts/mt8135.dtsi                      |  14 +-
- drivers/irqchip/Kconfig                            |   1 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-gic.c                          |  54 +++++--
- drivers/irqchip/irq-mtk-sysirq.c                   | 168 +++++++++++++++++++++
- include/linux/irq.h                                |   6 +
- kernel/irq/chip.c                                  |  28 ++++
- kernel/irq/irqdomain.c                             |  31 ++--
- 11 files changed, 332 insertions(+), 25 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+---
+ drivers/irqchip/Makefile         |   1 +
+ drivers/irqchip/irq-mtk-sysirq.c | 168 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 169 insertions(+)
  create mode 100644 drivers/irqchip/irq-mtk-sysirq.c
 
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index 73052ba..5a4dd73 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -34,3 +34,4 @@ obj-$(CONFIG_XTENSA)			+= irq-xtensa-pic.o
+ obj-$(CONFIG_XTENSA_MX)			+= irq-xtensa-mx.o
+ obj-$(CONFIG_IRQ_CROSSBAR)		+= irq-crossbar.o
+ obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
++obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o
+diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
+new file mode 100644
+index 0000000..4403bcf
+--- /dev/null
++++ b/drivers/irqchip/irq-mtk-sysirq.c
+@@ -0,0 +1,168 @@
++/*
++ * Copyright (c) 2014 MediaTek Inc.
++ * Author: Joe.C <yingjoe.chen@mediatek.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/irq.h>
++#include <linux/irqdomain.h>
++#include <linux/of.h>
++#include <linux/of_irq.h>
++#include <linux/of_address.h>
++#include <linux/io.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
++
++#include "irqchip.h"
++
++#define MT6577_SYS_INTPOL_NUM	(224)
++
++struct mtk_sysirq_chip_data {
++	spinlock_t lock;
++	void __iomem *intpol_base;
++};
++
++static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
++{
++	irq_hw_number_t hwirq = data->hwirq;
++	struct mtk_sysirq_chip_data *chip_data = data->chip_data;
++	u32 offset, reg_index, value;
++	unsigned long flags;
++	int ret;
++
++	offset = hwirq & 0x1f;
++	reg_index = hwirq >> 5;
++
++	spin_lock_irqsave(&chip_data->lock, flags);
++	value = readl_relaxed(chip_data->intpol_base + reg_index * 4);
++	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_EDGE_FALLING) {
++		if (type == IRQ_TYPE_LEVEL_LOW)
++			type = IRQ_TYPE_LEVEL_HIGH;
++		else
++			type = IRQ_TYPE_EDGE_RISING;
++		value |= (1 << offset);
++	} else
++		value &= ~(1 << offset);
++	writel(value, chip_data->intpol_base + reg_index * 4);
++
++	data = data->parent_data;
++	ret = data->chip->irq_set_type(data, type);
++	spin_unlock_irqrestore(&chip_data->lock, flags);
++	return ret;
++}
++
++static struct irq_chip mtk_sysirq_chip = {
++	.name			= "MT_SYSIRQ",
++	.irq_mask		= irq_chip_mask_parent,
++	.irq_unmask		= irq_chip_unmask_parent,
++	.irq_eoi		= irq_chip_eoi_parent,
++	.irq_set_type		= mtk_sysirq_set_type,
++	.irq_retrigger		= irq_chip_retrigger_hierarchy,
++	.irq_set_affinity	= irq_chip_set_affinity_parent,
++};
++
++static int mtk_sysirq_domain_xlate(struct irq_domain *d,
++				   struct device_node *controller,
++				   const u32 *intspec, unsigned int intsize,
++				   unsigned long *out_hwirq,
++				   unsigned int *out_type)
++{
++	if (intsize < 3)
++		return -EINVAL;
++
++	/* sysirq doesn't support PPI */
++	if (intspec[0])
++		return -EINVAL;
++
++	*out_hwirq = intspec[1];
++	*out_type = intspec[2] & IRQ_TYPE_SENSE_MASK;
++	return 0;
++}
++
++static int mtk_sysirq_domain_alloc(struct irq_domain *domain, unsigned int virq,
++				   unsigned int nr_irqs, void *arg)
++{
++	int i;
++	irq_hw_number_t hwirq;
++	struct of_phandle_args *irq_data = arg;
++
++	if (irq_data->args_count < 3)
++		return -EINVAL;
++
++	hwirq = irq_data->args[1];
++	for (i = 0; i < nr_irqs; i++)
++		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
++					      &mtk_sysirq_chip,
++					      domain->host_data);
++
++	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
++}
++
++static void mtk_sysirq_domain_free(struct irq_domain *domain, unsigned int virq,
++				   unsigned int nr_irqs)
++{
++	int i;
++
++	for (i = 0; i < nr_irqs; i++) {
++		irq_set_handler(virq + i, NULL);
++		irq_domain_set_hwirq_and_chip(domain, virq + i, 0, NULL, NULL);
++	}
++	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
++}
++
++static struct irq_domain_ops sysirq_domain_ops = {
++	.xlate = mtk_sysirq_domain_xlate,
++	.alloc = mtk_sysirq_domain_alloc,
++	.free = mtk_sysirq_domain_free,
++};
++
++static int __init mtk_sysirq_of_init(struct device_node *node,
++				     struct device_node *parent)
++{
++	struct irq_domain *domain, *domain_parent;
++	struct mtk_sysirq_chip_data *chip_data;
++	int ret = 0;
++
++	domain_parent = irq_find_host(parent);
++	if (!domain_parent) {
++		pr_err("mtk_sysirq: interrupt-parent not found\n");
++		return -EINVAL;
++	}
++
++	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
++	if (!chip_data)
++		return -ENOMEM;
++
++	chip_data->intpol_base = of_io_request_and_map(node, 0, "intpol");
++	if (!chip_data->intpol_base) {
++		pr_err("mtk_sysirq: unable to map sysirq register\n");
++		ret = -ENOMEM;
++		goto out_free;
++	}
++
++	domain = irq_domain_add_linear(node, MT6577_SYS_INTPOL_NUM,
++				       &sysirq_domain_ops, chip_data);
++	if (!domain) {
++		ret = -ENOMEM;
++		goto out_unmap;
++	}
++	domain->parent = domain_parent;
++	spin_lock_init(&chip_data->lock);
++
++	return 0;
++
++out_unmap:
++	iounmap(chip_data->intpol_base);
++out_free:
++	kfree(chip_data);
++	return ret;
++}
++IRQCHIP_DECLARE(mtk_sysirq, "mediatek,mt6577-sysirq", mtk_sysirq_of_init);
 -- 
 1.8.1.1.dirty
