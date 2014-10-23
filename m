@@ -1,85 +1,37 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v3 1/5] PM / clock_ops: Add pm_clk_add_clk()
-Date: Thu, 23 Oct 2014 08:49:28 -0700
-Message-ID: <20141023154928.GC18714@dtor-ws>
-References: <1414074182-25980-1-git-send-email-grygorii.strashko@ti.com>
- <1414074182-25980-2-git-send-email-grygorii.strashko@ti.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: [PATCH v4 1/7] irqdomain: Fix irq_domain_alloc_irqs return check.
+Date: Thu, 23 Oct 2014 23:53:09 +0800
+Message-ID: <1414079595-26129-2-git-send-email-yingjoe.chen@mediatek.com>
+References: <1414079595-26129-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1414074182-25980-2-git-send-email-grygorii.strashko@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, khilman@linaro.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414079595-26129-1-git-send-email-yingjoe.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Jiang Liu <jiang.liu@linux.intel.com>, Marc Zyngier <marc.zyngier@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, arm@kernel.org
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Grant Likely <grant.likely@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, srv_heupstream@mediatek.com, yingjoe.chen@gmail.com, hc.yen@mediatek.com, eddie.huang@mediatek.com, nathan.chung@mediatek.com, yh.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 23, 2014 at 05:22:58PM +0300, Grygorii Strashko wrote:
-> From: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> The existing pm_clk_add() allows to pass a clock by con_id. However,
-> when referring to a specific clock from DT, no con_id is available.
-> 
-> Add pm_clk_add_clk(), which allows to specify the struct clk * directly.
-> 
-> CC: Ulf Hansson <ulf.hansson@linaro.org>
-> CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Reviewed-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Reviewed-by: Kevin Hilman <khilman@linaro.org>
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
->  drivers/base/power/clock_ops.c | 41 +++++++++++++++++++++++++++++++----------
->  include/linux/pm_clock.h       |  8 ++++++++
->  2 files changed, 39 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/base/power/clock_ops.c b/drivers/base/power/clock_ops.c
-> index 7836930..f14b767 100644
-> --- a/drivers/base/power/clock_ops.c
-> +++ b/drivers/base/power/clock_ops.c
-> @@ -53,7 +53,8 @@ static inline int __pm_clk_enable(struct device *dev, struct clk *clk)
->   */
->  static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
->  {
-> -	ce->clk = clk_get(dev, ce->con_id);
-> +	if (!ce->clk)
-> +		ce->clk = clk_get(dev, ce->con_id);
->  	if (IS_ERR(ce->clk)) {
->  		ce->status = PCE_STATUS_ERROR;
->  	} else {
-> @@ -63,15 +64,8 @@ static void pm_clk_acquire(struct device *dev, struct pm_clock_entry *ce)
->  	}
->  }
->  
-> -/**
-> - * pm_clk_add - Start using a device clock for power management.
-> - * @dev: Device whose clock is going to be used for power management.
-> - * @con_id: Connection ID of the clock.
-> - *
-> - * Add the clock represented by @con_id to the list of clocks used for
-> - * the power management of @dev.
-> - */
-> -int pm_clk_add(struct device *dev, const char *con_id)
-> +static int __pm_clk_add(struct device *dev, const char *con_id,
-> +			struct clk *clk)
->  {
->  	struct pm_subsys_data *psd = dev_to_psd(dev);
->  	struct pm_clock_entry *ce;
-> @@ -93,6 +87,8 @@ int pm_clk_add(struct device *dev, const char *con_id)
->  			kfree(ce);
->  			return -ENOMEM;
->  		}
-> +	} else {
+Change virq type from unsigned int to int. Otherwise the return value
+check for irq_domain_alloc_irqs will always pass.
 
-You need __clk_get(clk) here, otherwise when you will be removing clocks
-you'll be dropping a reference that does not belong to you (as yiou have
-not taken it).
+Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+---
+ kernel/irq/irqdomain.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +		ce->clk = clk;
->  	}
->  
-
-Thanks.
-
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 584be46..dd8d3ab 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -469,7 +469,7 @@ unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data)
+ 	struct irq_domain *domain;
+ 	irq_hw_number_t hwirq;
+ 	unsigned int type = IRQ_TYPE_NONE;
+-	unsigned int virq;
++	int virq;
+ 
+ 	domain = irq_data->np ? irq_find_host(irq_data->np) : irq_default_domain;
+ 	if (!domain) {
 -- 
-Dmitry
+1.8.1.1.dirty
