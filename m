@@ -1,114 +1,64 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 3/4] watchdog: st_wdt: Provide binding documentation for
- ST's LPC Watchdog driver
-Date: Thu, 23 Oct 2014 16:02:01 +0100
-Message-ID: <20141023150201.GD10395@x1>
-References: <1412760810-23199-1-git-send-email-lee.jones@linaro.org>
- <1412760810-23199-4-git-send-email-lee.jones@linaro.org>
- <20141009095649.GC3869@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141009095649.GC3869@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel@stlinux.com" <kernel@stlinux.com>, "wim@iguana.be" <wim@iguana.be>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Paris <david.paris@st.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 3/4] watchdog: st_wdt: Provide binding documentation for ST's LPC Watchdog driver
+Date: Thu, 23 Oct 2014 16:18:43 +0100
+Message-ID: <1414077524-6469-4-git-send-email-lee.jones@linaro.org>
+References: <1414077524-6469-1-git-send-email-lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414077524-6469-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Paris <david.paris-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 09 Oct 2014, Mark Rutland wrote:
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: David Paris <david.paris-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/watchdog/st-lpc-wdt.txt    | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt
 
-> On Wed, Oct 08, 2014 at 10:33:29AM +0100, Lee Jones wrote:
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: David Paris <david.paris@st.com>
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  .../devicetree/bindings/watchdog/st-lpc-wdt.txt    | 30 ++++++++++=
-++++++++++++
-> >  1 file changed, 30 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/watchdog/st-l=
-pc-wdt.txt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.=
-txt b/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt
-> > new file mode 100644
-> > index 0000000..520ce90
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt
-> > @@ -0,0 +1,30 @@
-> > +STMicroelectronics LPC Watchdog
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +Required properties
-> > +
-> > +- compatible 	: Must be one of:
-> > +			"st,stih407-watchdog"
-> > +			"st,stih416-watchdog"
-> > +			"st,stih415-watchdog"
-> > +			"st,stid127-watchdog"
-> > +- reg		: LPC registers base address + range
->=20
-> s/range/size/
->=20
-> Please append something like "one entryfor each entry in reg-names".
->=20
-> > +- reg-names	: Register map "base" and "syscfg-en" are compulsory. =
-"type" is
-> > +		  platform dependent and not required for the STiH407
->=20
-> I don't understand the mention of "type".
+diff --git a/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt b/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt
+new file mode 100644
+index 0000000..2d0328b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt
+@@ -0,0 +1,31 @@
++STMicroelectronics LPC Watchdog
++===============================
++
++Required properties
++
++- compatible 	: Must be one of:
++			"st,stih407-watchdog"
++			"st,stih416-watchdog"
++			"st,stih415-watchdog"
++			"st,stid127-watchdog"
++- reg		: LPC registers base address + size
++- reg-names	: Register map "base" and "syscfg-en" are compulsory.
++		  "syscfg-type" is platform dependent and not required for the
++		  STiH407
++- clock-names 	: Should be "lpc_wdt"
++- clocks	: Clock used by LPC device
++- timeout-sec	: Watchdog timeout in seconds
++- st,syscfg	: Syscfg node used to configure CPU reset type and mask
++- st,warm_reset	: If present, reset type will be 'warm'. If not, it will be cold
++
++Example:
++	watchdog@fde05000 {
++		compatible	= "st,stih416-lpc-watchdog";
++		reg		= <0xfde05000 0x1000> <0x204 0x4>;
++		reg-names	= "base", "syscfg-en"
++		clock-names	= "lpc_wdt";
++		clocks 		= <&clk_s_d3_flexgen CLK_LPC_0>;
++		timeout-sec	= <600>;
++		st,syscfg	= <&syscfg_core>;
++		st,warm_reset;
++	};
+-- 
+1.9.1
 
-This is a typo.  It should be "syscfg-type".
-
-> Additionally, "syscfg-en" looks to be a portion of another device
-> (shared system controller?), and probably should be described by
-> reference.
-
-Answer below.
-
-> > +- clock-names 	: Should be "lpc_wdt"
-> > +- clocks	: Clock used by LPC device
-> > +- timeout-sec	: Watchdog timeout in seconds
-> > +- st,syscfg	: Syscfg node used to configure CPU reset type and mas=
-k
->=20
-> Does this relate to the syscfg-en entry in the reg proeprty?
-=20
-Yes.  We map these registers with regmap and use the read-in register
-values of syscfg-en and syscfg-type to manipulate them.  It's either
-that or supplying a property for each read-in, which I like less.
-
-> > +- st,warm_reset	: If present, reset type will be 'warm'. If not, i=
-t will be cold
->=20
-> s/_/-/ in property names.
-
-You're right.  This slipped my gaze.
-
-> Why does this need to be in the binding? It seems like a choice rathe=
-r
-> than a property of the system.
-
-What do you mean?  It's something which needs to be configured at
-initialisation time.  If we provide it here, it means that we don't
-have to re-complie to change the config.
-
-> > +Example:
-> > +	watchdog@fde05000 {
-> > +		compatible	=3D "st,stih416-lpc-watchdog";
-> > +		reg		=3D <0xfde05000 0x1000> <0x204 0x4>;
-> > +		reg-names	=3D "base", "syscfg-en"
-> > +		clock-names	=3D "lpc_wdt";
-> > +		clocks 		=3D <&clk_s_d3_flexgen CLK_LPC_0>;
-> > +		timeout-sec	=3D <600>;
-> > +		st,syscfg	=3D <&syscfg_core>;
-> > +		st,warm_reset;
-> > +	};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
