@@ -1,34 +1,186 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
-Date: Thu, 23 Oct 2014 10:52:06 -0600
-Message-ID: <20141023165206.GB13465@obsidianresearch.com>
-References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com>
- <3256560.C0cZnIlnAv@wuerfel>
- <20141022155914.GB25939@e102568-lin.cambridge.arm.com>
- <2148776.X8NPqiYA6S@wuerfel>
- <20141023091309.GF25302@e106497-lin.cambridge.arm.com>
- <20141023112731.GA5823@e102568-lin.cambridge.arm.com>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH v8 5/7] qcom: cpuidle: Add cpuidle driver for QCOM cpus
+Date: Thu, 23 Oct 2014 10:58:08 -0600
+Message-ID: <20141023165808.GC30210@ilina-mac.qualcomm.com>
+References: <1412718106-17049-1-git-send-email-lina.iyer@linaro.org>
+ <1412718106-17049-6-git-send-email-lina.iyer@linaro.org>
+ <5448E103.9070505@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20141023112731.GA5823@e102568-lin.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <5448E103.9070505@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 23, 2014 at 12:27:31PM +0100, Lorenzo Pieralisi wrote:
+On Thu, Oct 23 2014 at 05:05 -0600, Daniel Lezcano wrote:
+>On 10/07/2014 11:41 PM, Lina Iyer wrote:
+>>Add cpuidle driver interface to allow cpus to go into C-States. Use t=
+he
+>>cpuidle DT interface, common across ARM architectures, to provide the
+>>C-State information to the cpuidle framework.
+>>
+>>Supported modes at this time are Standby and Standalone Power Collaps=
+e.
+>
+>Why not the retention mode which is in between the standby and the=20
+>retention ?
+>
+Retention would appear 'hacky' in comparision to these code, and has
+dependencies on clocks. So at some point, yes, I will submit a patch to
+address this deficiency.=20
 
-> I think that by removing that, we could switch to CONFIG_PCI_DOMAINS_GENERIC
-> on ARM32. I will remove the dependency in drivers/pci/host/pci-mvebu.c
-> introduced by commit 2613ba48. pci_sys_data.domain is always 0 in that
-> driver so its usefulness is doubtful, comments welcome, copied Jason in
-> if he has comments.
+>diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
+>>index 38cff69..6a9ee12 100644
+>>--- a/drivers/cpuidle/Kconfig.arm
+>>+++ b/drivers/cpuidle/Kconfig.arm
+>>@@ -62,3 +62,10 @@ config ARM_MVEBU_V7_CPUIDLE
+>>  	depends on ARCH_MVEBU
+>>  	help
+>>  	  Select this to enable cpuidle on Armada 370, 38x and XP processo=
+rs.
+>>+
+>>+config ARM_QCOM_CPUIDLE
+>>+	bool "CPU Idle drivers for Qualcomm processors"
+>>+	depends on QCOM_PM
+>
+>+ depends on ARCH_QCOM
+>
+I may have removed it, which I will check, QCOM_PM used to depend on
+ARCH_QCOM
 
-pcie-mvebu is like all the other new drivers, each top level DT node
-that introduces the interface should have a unique domain number. It
-would be very strange (and currently unsupported by the driver) to
-ever have more than 1 mvebu top level node in any DT.
+>+
+>>+static void (*qcom_idle_enter)(enum pm_sleep_mode);
+>>+
+>>+static int qcom_lpm_enter_stby(struct cpuidle_device *dev,
+>>+				struct cpuidle_driver *drv, int index)
+>>+{
+>>+	qcom_idle_enter(PM_SLEEP_MODE_STBY);
+>
+>Could you replace this function by a generic one ?
+>
+>It would be nice to have qcom_cpu_standby(void) and=20
+>qcom_cpu_powerdown(void) and let behind the mysterious words 'Single=20
+>Power Collapse' in the low level code which is qcom specific :)
+>
+>I guess you had to create a single "qcom_idle_enter" because of a=20
+>single pointer in the platform data. I am working on a common=20
+>structure to be shared across the drivers as a common way to pass the=20
+>different callbacks without including a soc specific header.
+>
+>struct cpuidle_ops {
+>	int (*standby)(void *data);
+>	int (*retention)(void *data);
+>	int (*poweroff)(void *data);
+>};
+>
+>So maybe you can either:
+>
+>1. wait I post this structure and provide the driver with this one
+>2. create a similar structure and I will take care to upgrade when I=20
+>post the patchset with the common structure.
+>
+>The issue I see with this common structure is the initialization of=20
+>the qcom_idle_state_match array.
+>
+>>+	local_irq_enable();
+>
+>local_irq_enable() is handled by the cpuidle framework.
+>Please remove all occurrences of this function in the driver otherwise=
+=20
+>time measurement will include irq time processing and will no longer=20
+>be valid.
+OK. Thanks for pointing that out.
 
-Jason
+>
+>>+	return index;
+>>+}
+>>+
+>>+static int qcom_lpm_enter_spc(struct cpuidle_device *dev,
+>>+				struct cpuidle_driver *drv, int index)
+>>+{
+>>+	cpu_pm_enter();
+>>+	qcom_idle_enter(PM_SLEEP_MODE_SPC);
+>
+>Where is cpu_suspend ?
+>
+Inside that function qcom_idle_enter() in the SoC layer (pm.c)
+
+>>+	cpu_pm_exit();
+>>+	local_irq_enable();
+>>+
+>>+	return index;
+>>+}
+>>+
+>>+static struct cpuidle_driver qcom_cpuidle_driver =3D {
+>>+	.name	=3D "qcom_cpuidle",
+>>+};
+>>+
+>>+static const struct of_device_id qcom_idle_state_match[] =3D {
+>>+	{ .compatible =3D "qcom,idle-state-stby", .data =3D qcom_lpm_enter_=
+stby},
+>>+	{ .compatible =3D "qcom,idle-state-spc", .data =3D qcom_lpm_enter_s=
+pc },
+>>+	{ },
+>>+};
+>>+
+>>+static int qcom_cpuidle_probe(struct platform_device *pdev)
+>>+{
+>>+	struct cpuidle_driver *drv =3D &qcom_cpuidle_driver;
+>>+	int ret;
+>>+
+>>+	qcom_idle_enter =3D pdev->dev.platform_data;
+>>+	if (!qcom_idle_enter)
+>>+		return -EFAULT;
+>
+>It shouldn't fail because if the probe is called then the cpuidle=20
+>device was registered with its callback which is hardcoded.
+>
+Yeah, I see the paradigm shift. Even though I know how the caller is, I
+am always backing up the expectation with an error check. Will remove
+that.
+
+>>+	 /* Probe for other states, including standby */
+>>+	ret =3D dt_init_idle_driver(drv, qcom_idle_state_match, 0);
+>
+>Are you sure it is not worth to add the simple WFI state ? It may have=
+=20
+>less latency than the standby mode, no ?
+>
+May be. But it would split the bucket between wfi and the cpu plus
+allowing the L2 and the power hierarachy to enter their standby states.
+This could very well be useful and possible, when there is a QoS reques=
+t
+that disallows power down and high latency states.
+IMO, the benefit of the possible heirarchical standby seems to outweigh=
+ the
+latency gain we may get by just doing a core's clock gating.
+
+>>+	if (ret < 0)
+>>+		return ret;
+>>+
+>>+	return cpuidle_register(drv, NULL);
+>>+}
+>>+
+>>+static struct platform_driver qcom_cpuidle_plat_driver =3D {
+>>+	.probe	=3D qcom_cpuidle_probe,
+>>+	.driver =3D {
+>>+		.name =3D "qcom_cpuidle",
+>>+	},
+>>+};
+>>+
+>>+module_platform_driver(qcom_cpuidle_plat_driver);
+>
+>
+>--=20
+> <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+>
+>Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+><http://twitter.com/#!/linaroorg> Twitter |
+><http://www.linaro.org/linaro-blog/> Blog
+>
