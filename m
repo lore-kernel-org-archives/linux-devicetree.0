@@ -1,56 +1,94 @@
 From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH v4 7/7] dt-bindings: add bindings for mediatek sysirq
-Date: Thu, 23 Oct 2014 23:53:15 +0800
-Message-ID: <1414079595-26129-8-git-send-email-yingjoe.chen@mediatek.com>
-References: <1414079595-26129-1-git-send-email-yingjoe.chen@mediatek.com>
+Subject: [PATCH v4 0/7] ARM: mediatek: Add support for interrupt polarity
+Date: Thu, 23 Oct 2014 23:53:08 +0800
+Message-ID: <1414079595-26129-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414079595-26129-1-git-send-email-yingjoe.chen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Jiang Liu <jiang.liu@linux.intel.com>, Marc Zyngier <marc.zyngier@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, arm@kernel.org
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Grant Likely <grant.likely@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, srv_heupstream@mediatek.com, yingjoe.chen@gmail.com, hc.yen@mediatek.com, eddie.huang@mediatek.com, nathan.chung@mediatek.com, yh.chen@mediatek.com
+Cc: Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, yingjoe.chen@gmail.com, Boris BREZILLON <boris.brezillon@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, yh.chen@mediatek.com, nathan.chung@mediatek.com, Grant Likely <grant.likely@linaro.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hans de Goede <hdegoede@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, hc.yen@mediatek.com, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for Mediatek SoC SYSIRQ.
+This series is 4th version of interrupt polarity support for MediaTek SoCs.
+This is based on Jiang's hierarchy irqdomain v2 [1] and my mediatek SoC
+basic support [2].
 
-Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
----
- .../bindings/arm/mediatek/mediatek,sysirq.txt      | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+This version addressed comments from previous discussion[3]. I removed
+arm,hierarchy-irq-domain property. When GIC is probed by DT, it will
+support hierarchy irqdomain. I still keep the first patch because this is
+still base on hierarchy irqdomain v2.
+
+In Jiang's version of irq_create_of_mapping, if irqdomain is hierarchy, it
+will not perform irq_find_mapping check and set_type. The outermost
+irqdomain need to take care of that. Because we will have several different
+outermost irqdomain in different ARM SoCs, this cause code duplication. I
+moved them back to irq_create_of_mapping. Since Jiang's changes are not
+merged yet, maybe that patch should be merged there.
+
+Simplified block diagram for interrupt on my system:
+
+    +-------+      +-------+
+ ---| SYSIRQ|------|ARM GIC|
+ ---|       |------|       |
+ ---|       |------|       |
+ ---|       |------|       |
+ ---|       |------|       |
+    +-------+      +-------+
+
+In device tree, interrupt-parent for other devices is sysirq, child of gic.
+This describe HW better and allow device to specify polarity as it is sent
+by the device.
+
+When using hierarchy irq domain, gic will use irq_domain_add_linear to
+create irqdomain and all interrupt numbers must come from device tree. My
+/proc/interrupts looks like this now:
+
+# cat /proc/interrupts
+           CPU0
+ 16:       1862  MT_SYSIRQ 113  mtk_timer
+ 17:         67  MT_SYSIRQ  54  mtk-uart
+
+Changes in v3:
+ - Discussion in [3]
+ - First implementation using hierarchy irqdomain
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/290832.html
+[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/284553.html
+[3] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/293766.html
+
+Yingjoe Chen (7):
+  irqdomain: Fix irq_domain_alloc_irqs return check.
+  irqdomain: Add back xlate and set_type for hierarchy irq domain
+  genirq: Add more helper functions to support stacked irq_chip
+  irqchip: gic: Support hierarchy irq domain.
+  ARM: mediatek: Add sysirq interrupt polarity support
+  ARM: mediatek: Add sysirq in mt6589/mt8135/mt8127 dtsi
+  dt-bindings: add bindings for mediatek sysirq
+
+ .../bindings/arm/mediatek/mediatek,sysirq.txt      |  26 ++++
+ arch/arm/boot/dts/mt6589.dtsi                      |  14 +-
+ arch/arm/boot/dts/mt8127.dtsi                      |  14 +-
+ arch/arm/boot/dts/mt8135.dtsi                      |  14 +-
+ drivers/irqchip/Kconfig                            |   1 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-gic.c                          |  54 +++++--
+ drivers/irqchip/irq-mtk-sysirq.c                   | 168 +++++++++++++++++++++
+ include/linux/irq.h                                |   6 +
+ kernel/irq/chip.c                                  |  28 ++++
+ kernel/irq/irqdomain.c                             |  31 ++--
+ 11 files changed, 332 insertions(+), 25 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+ create mode 100644 drivers/irqchip/irq-mtk-sysirq.c
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-new file mode 100644
-index 0000000..8669536
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-@@ -0,0 +1,26 @@
-+Mediatek 65xx/81xx sysirq
-+
-+Mediatek SOCs sysirq support controllable irq inverter for each GIC SPI
-+interrupt.
-+
-+Required properties:
-+- compatible: should be one of:
-+	"mediatek,mt8135-sysirq"
-+	"mediatek,mt8127-sysirq"
-+	"mediatek,mt6589-sysirq"
-+	"mediatek,mt6582-sysirq"
-+	"mediatek,mt6577-sysirq"
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Must use the same cells/format as parent controller.
-+- interrupt-parent: phandle of irq domain parent for sysirq.
-+- reg: Physical base address of the intpol registers and length of memory
-+  mapped region.
-+
-+Example:
-+	sysirq: interrupt-controller@10200100 {
-+		compatible = "mediatek,mt6589-sysirq", "mediatek,mt6577-sysirq";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
-+		reg = <0 0x10200100 0 0x1c>;
-+	};
 -- 
 1.8.1.1.dirty
