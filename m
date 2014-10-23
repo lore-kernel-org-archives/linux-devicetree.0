@@ -1,59 +1,37 @@
-From: <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCH v2 0/3] fpga bridge framework
-Date: Thu, 23 Oct 2014 18:51:04 -0500
-Message-ID: <1414108267-22058-1-git-send-email-atull@opensource.altera.com>
+From: <atull@opensource.altera.com>
+Subject: [PATCH v2 1/3] add sysfs document for fpga bridges
+Date: Thu, 23 Oct 2014 18:51:05 -0500
+Message-ID: <1414108267-22058-2-git-send-email-atull@opensource.altera.com>
+References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iws-lulEs6mt1IksTUYHLfqkUA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-ynQEQJNshbs@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, philip-6RQC9ztksjxg9hUCZPvPmw@public.gmane.org, rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, kyle.teske-acOepvfBmUk@public.gmane.org, nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mgerlach-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414108267-22058-1-git-send-email-atull@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com, Alan Tull <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+From: Alan Tull <atull@opensource.altera.com>
 
-Followup to bridge framework that was posted on 2013/10/3
+Add sysfs document for fpga bridges.
 
-This is a driver for enabling/disabling the fpga bridges under control
-of a sys entry.  It has a common framework and individual drivers for
-the various bridges.
-
-This framework uses the reset driver where appropriate.
-
-Alan
-
-
-Alan Tull (3):
-  add sysfs document for fpga bridges
-  ARM: dts: socfpga: fpga bridges bindings docs
-  fpga bridge driver
-
- Documentation/ABI/testing/sysfs-class-fpga-bridge  |    5 +
- .../bindings/fpga/altera-fpga2sdram-bridge.txt     |   57 +++++
- .../bindings/fpga/altera-hps2fpga-bridge.txt       |   53 +++++
- drivers/misc/Kconfig                               |    3 +-
- drivers/misc/Makefile                              |    1 +
- drivers/misc/fpga-bridge/Kconfig                   |   20 ++
- drivers/misc/fpga-bridge/Makefile                  |    6 +
- drivers/misc/fpga-bridge/altera-fpga2sdram.c       |  236 ++++++++++++++++++++
- drivers/misc/fpga-bridge/altera-hps2fpga.c         |  220 ++++++++++++++++++
- drivers/misc/fpga-bridge/fpga-bridge.c             |  230 +++++++++++++++++++
- drivers/misc/fpga-bridge/fpga-bridge.h             |   51 +++++
- 11 files changed, 881 insertions(+), 1 deletion(-)
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+---
+ Documentation/ABI/testing/sysfs-class-fpga-bridge |    5 +++++
+ 1 file changed, 5 insertions(+)
  create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-bridge
- create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
- create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
- create mode 100644 drivers/misc/fpga-bridge/Kconfig
- create mode 100644 drivers/misc/fpga-bridge/Makefile
- create mode 100644 drivers/misc/fpga-bridge/altera-fpga2sdram.c
- create mode 100644 drivers/misc/fpga-bridge/altera-hps2fpga.c
- create mode 100644 drivers/misc/fpga-bridge/fpga-bridge.c
- create mode 100644 drivers/misc/fpga-bridge/fpga-bridge.h
 
+diff --git a/Documentation/ABI/testing/sysfs-class-fpga-bridge b/Documentation/ABI/testing/sysfs-class-fpga-bridge
+new file mode 100644
+index 0000000..b3303ae
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-class-fpga-bridge
+@@ -0,0 +1,5 @@
++What:		/sys/class/fpga-bridge/<bridge>/enable
++Date:		October 2014
++KernelVersion:	3.18
++Contact:	Alan Tull <atull@opensource.altera.com>
++Description:	Enable bridge.  Write 1 to bring bridge out of reset.
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
