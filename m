@@ -1,113 +1,79 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 00/20] rtc: omap: fixes and power-off feature
-Date: Fri, 24 Oct 2014 15:08:33 -0500
-Message-ID: <20141024200833.GI11455@saruman>
-References: <1412881594-25678-1-git-send-email-johan@kernel.org>
- <1413913086-12730-1-git-send-email-johan@kernel.org>
- <20141024160845.GM26941@saruman>
- <20141024190251.GB19377@localhost>
- <20141024192540.GD11455@saruman>
- <20141024192948.GE11455@saruman>
- <20141024193655.GD19377@localhost>
- <20141024194442.GG11455@saruman>
- <20141024195532.GF19377@localhost>
-Reply-To: <balbi@ti.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] phy: berlin-sata: Move PHY_BASE into private data
+ struct
+Date: Fri, 24 Oct 2014 22:14:55 +0200
+Message-ID: <544AB33F.9030701@gmail.com>
+References: <1413882477-27922-1-git-send-email-sebastian.hesselbarth@gmail.com> <1413882477-27922-2-git-send-email-sebastian.hesselbarth@gmail.com> <54462865.6000205@ti.com> <544629F0.3090505@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="LG0Ll82vYr46+VA1"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141024195532.GF19377@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Felipe Balbi <balbi@ti.com>, Andrew Morton <akpm@linux-foundation.org>, Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, Russell King <rmk+kernel@arm.linux.org.uk>
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <544629F0.3090505-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---LG0Ll82vYr46+VA1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 21.10.2014 11:40, Sebastian Hesselbarth wrote:
+> On 10/21/2014 11:33 AM, Kishon Vijay Abraham I wrote:
+>> On Tuesday 21 October 2014 02:37 PM, Sebastian Hesselbarth wrote:
+>>> Currently, Berlin SATA PHY driver assumes PHY_BASE address being
+>>> constant. While this PHY_BASE is correct for BG2Q, older BG2 PHY_BA=
+SE
+>>> is different. Prepare the driver for BG2 support by moving the phy_=
+base
+>>> into private driver data.
+>>>
+>>> Acked-by: Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.c=
+om>
+> ...
+>>> ---
+>>>   drivers/phy/phy-berlin-sata.c | 42
+>>> ++++++++++++++++++++++++++++--------------
+>>>   1 file changed, 28 insertions(+), 14 deletions(-)
+>>>
+>>> diff --git a/drivers/phy/phy-berlin-sata.c
+>>> b/drivers/phy/phy-berlin-sata.c
+>>> index 69ced52d72aa..9682b0f66177 100644
+>>> --- a/drivers/phy/phy-berlin-sata.c
+>>> +++ b/drivers/phy/phy-berlin-sata.c
+>>> @@ -30,7 +30,7 @@
+>>>   #define MBUS_WRITE_REQUEST_SIZE_128    (BIT(2) << 16)
+>>>   #define MBUS_READ_REQUEST_SIZE_128    (BIT(2) << 19)
+>>>
+>>> -#define PHY_BASE        0x200
+>>> +#define BG2Q_PHY_BASE        0x200
+> [...]
+>>> +static u32 bg2q_sata_phy_base =3D BG2Q_PHY_BASE;
+>>> +
+>>> +static const struct of_device_id phy_berlin_sata_of_match[] =3D {
+>>> +    {
+>>> +        .compatible =3D "marvell,berlin2q-sata-phy",
+>>> +        .data =3D &bg2q_sata_phy_base,
+>>
+>> Can't the base directly come from dt?
+>
+> You are suggesting a "marvell,phy-base-address" property, right?
+> I have no strong opinion about it, I accept your call (or DT maintain=
+er
+> ones).
 
-On Fri, Oct 24, 2014 at 09:55:32PM +0200, Johan Hovold wrote:
-> On Fri, Oct 24, 2014 at 02:44:42PM -0500, Felipe Balbi wrote:
-> > On Fri, Oct 24, 2014 at 09:36:55PM +0200, Johan Hovold wrote:
-> > > On Fri, Oct 24, 2014 at 02:29:48PM -0500, Felipe Balbi wrote:
-> > > > Hi,
-> > > >=20
-> > > > On Fri, Oct 24, 2014 at 02:25:40PM -0500, Felipe Balbi wrote:
->=20
-> > > > > with this I always get to "Power off failed -- system halted". If=
- I
-> > > > > switch to v3.18-rc1 vanilla, then it works. So it's definitely ca=
-used by
-> > > > > your rtc-only patches.
-> > >=20
-> > > That's expected (see below). It works with v3.18-rc1 vanilla because
-> > > machine_halt is called instead of machine_power_off as there is no
-> > > registered power-off handler.
-> >=20
-> > yeah, that much I figured :-)
-> >=20
-> > > > ok, so it seems like it takes more than 1 second for things to
-> > > > propagate. If I increase that mdelay() to 3000, then everything wor=
-ks
-> > > > fine on my end. I think we should get RMK's input on this 3000ms de=
-lay
-> > > > to machine_power_off(). Should it be generic, or should we add it t=
-o our
-> > > > rtc pm_power_off implementation ?
-> > >=20
-> > > As I wrote above, we still need a 2-second mdelay in rtc-omap, which I
-> > > intend to add to the pmic_power_en patch.
-> >=20
-> > oh, alright then. If you can Cc me, I'll make sure to test that too ;-)
->=20
-> I will. :) Just wanted to see whether Andrew preferred I resend the
-> whole series or just that one patch first.
->=20
-> The diff is minimal:
->=20
-> diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
-> index e74750f00b18..e4f97ad9eb21 100644
-> --- a/drivers/rtc/rtc-omap.c
-> +++ b/drivers/rtc/rtc-omap.c
-> @@ -423,6 +423,8 @@ static void omap_rtc_power_off(void)
->         val =3D rtc_read(rtc, OMAP_RTC_INTERRUPTS_REG);
->         rtc_writel(rtc, OMAP_RTC_INTERRUPTS_REG,
->                         val | OMAP_RTC_INTERRUPTS_IT_ALARM2);
-> +
-> +       mdelay(2000);
->  }
+Kishon,
 
-you can add my:
+I still have the DT patches for BG2Q queued up for v3.19 (I missed the
+arm-soc merge window for v3.18). That means, there has been no release
+with the phy binding used and I can rework a little more.
 
-Tested-by: Felipe Balbi <balbi@ti.com>
+Can you please confirm that you want a DT property for the phy base=20
+address, e.g. marvell,phy-base-address =3D <{0x200,0x80}> ?
 
-for this too. Now it's all good.
+If so, I'd also rename the compatible from berlin2q-sata-phy to more
+generic berlin-sata-phy.
 
---=20
-balbi
-
---LG0Ll82vYr46+VA1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUSrHBAAoJEIaOsuA1yqRETL4P/j2+2S8Eum0WZ4Ed7IeMAWrT
-drWTYcsVbcXO8qUyfrD/5YTBgLcYiE/w2flcUANCGb6oPv2tXMv7hYJH4v+ez9Mu
-Me9Xq0mX6oy6vzskzoguFNh8IPZNlBVVZ01a9xMVc/HzfCsGXyO9yXAdKpDtyaRN
-7fFdOG4ROvCHvbh2vuCTM2OFwvgQCAM5k0ahEzXeJMcwQLBedyJXTlFimMr/l8Ek
-WsJvYz79XnlH0lvx5z2cM+cnJYKBRO/Bb8lC9KMBBJRCLUyrfyKkBtJNW/pbv39R
-bFWpqRWC/m0tJJHiZdHuoxuWpUMATUWPZEXI9fsTGF8bYLYKo4Ph4v/8LRYqIp83
-eXD2WLbC0Vor6mTBnw/G+tYGOFYZKbyTealZZ1oH9tmjhk3WniYcRXIWU9+KuDp9
-wuQJ/spBIatf2Bt/+Its8l+VN0ACCT0+RGT3sRo9CtsrDZ2m0bA5MyCWrZxgi0qu
-LgG2xV6rxxuXBMk/tSu5F/7URjsD+eb42tQKpz4Jq47hIl62oXt4Dc0gVyv3cJ/3
-vtKZ7vagn5mUR0yDu5P5t9QPhAvnV6TTfXIBbyi/5oIN//fwDeiHPnbKooQe7Woy
-HXWRpNRtLaCdjwmpBLXWB0Xbyz3h/ebg4HS3uI+RMR5RMed8dAv3AH3DbTNwjD7V
-9b5yWt3/Q3xLIXTMTWL4
-=chnY
------END PGP SIGNATURE-----
-
---LG0Ll82vYr46+VA1--
+Sebastian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
