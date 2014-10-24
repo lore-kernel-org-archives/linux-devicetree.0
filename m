@@ -1,97 +1,28 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCHv5 RESEND 5/6] ARM: imx: Add initial support for Freescale LS1021A
-Date: Fri, 24 Oct 2014 18:08:46 +0800
-Message-ID: <1414145327-23541-6-git-send-email-jingchang.lu@freescale.com>
-References: <1414145327-23541-1-git-send-email-jingchang.lu@freescale.com>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH v2 2/3] ARM: dts: socfpga: fpga bridges bindings docs
+Date: Fri, 24 Oct 2014 12:57:52 +0200
+Message-ID: <20141024105752.GC20775@amd>
+References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com>
+ <1414108267-22058-3-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414145327-23541-1-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414108267-22058-3-git-send-email-atull@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: atull@opensource.altera.com
+Cc: jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-From: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Thu 2014-10-23 18:51:06, atull@opensource.altera.com wrote:
+> From: Alan Tull <atull@opensource.altera.com>
+> 
+> Add DTS binding documentation for the Altera FPGA bridges.
+> 
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
 
-The LS1021A SoC is a dual-core Cortex-A7 based processor,
-this adds the initial support for it.
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
-Signed-off-by: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/arm/mach-imx/Kconfig        | 14 ++++++++++++++
- arch/arm/mach-imx/Makefile       |  2 ++
- arch/arm/mach-imx/mach-ls1021a.c | 21 +++++++++++++++++++++
- 3 files changed, 37 insertions(+)
- create mode 100644 arch/arm/mach-imx/mach-ls1021a.c
-
-diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-index 11b2957..49a0096 100644
---- a/arch/arm/mach-imx/Kconfig
-+++ b/arch/arm/mach-imx/Kconfig
-@@ -639,6 +639,20 @@ config SOC_VF610
- 	help
- 	  This enable support for Freescale Vybrid VF610 processor.
- 
-+config FSL_SOC
-+	bool
-+
-+config SOC_LS1021A
-+	bool "Freescale LS1021A support"
-+	select ARM_GIC
-+	select HAVE_ARM_ARCH_TIMER
-+	select FSL_SOC
-+	select PCI_DOMAINS if PCI
-+	select ZONE_DMA if ARM_LPAE
-+
-+	help
-+	  This enable support for Freescale LS1021A processor.
-+
- endif
- 
- source "arch/arm/mach-imx/devices/Kconfig"
-diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
-index 6e4fcd8..ce137bc 100644
---- a/arch/arm/mach-imx/Makefile
-+++ b/arch/arm/mach-imx/Makefile
-@@ -110,4 +110,6 @@ obj-$(CONFIG_SOC_IMX53) += mach-imx53.o
- 
- obj-$(CONFIG_SOC_VF610) += clk-vf610.o mach-vf610.o
- 
-+obj-$(CONFIG_SOC_LS1021A) += mach-ls1021a.o
-+
- obj-y += devices/
-diff --git a/arch/arm/mach-imx/mach-ls1021a.c b/arch/arm/mach-imx/mach-ls1021a.c
-new file mode 100644
-index 0000000..9d2034b
---- /dev/null
-+++ b/arch/arm/mach-imx/mach-ls1021a.c
-@@ -0,0 +1,21 @@
-+/*
-+ * Copyright 2013-2014 Freescale Semiconductor, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <asm/mach/arch.h>
-+
-+#include "common.h"
-+
-+static const char * const ls1021a_dt_compat[] __initconst = {
-+	"fsl,ls1021a",
-+	NULL,
-+};
-+
-+DT_MACHINE_START(LS1021A, "Freescale LS1021A")
-+	.dt_compat	= ls1021a_dt_compat,
-+MACHINE_END
 -- 
-1.8.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
