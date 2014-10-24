@@ -1,76 +1,93 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: Re: [PATCH 0/2] Qualcomm PM8941 power key driver
-Date: Fri, 24 Oct 2014 08:23:51 -0700
-Message-ID: <20141024152350.GD28611@sonymobile.com>
-References: <1412644321-27683-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1412672510.1027.57.camel@iivanov-dev>
- <20141007184640.GB31125@sonymobile.com>
- <1412761807.13569.12.camel@iivanov-dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 0/6] Add support for USB cluster(PHY muxer) on the Armada 375
+Date: Fri, 24 Oct 2014 17:24:08 +0200
+Message-ID: <1414164254-13053-1-git-send-email-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1412761807.13569.12.camel@iivanov-dev>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 08 Oct 02:50 PDT 2014, Ivan T. Ivanov wrote:
+Hello,
 
-> On Tue, 2014-10-07 at 11:46 -0700, Bjorn Andersson wrote:
-> > On Tue 07 Oct 02:01 PDT 2014, Ivan T. Ivanov wrote:
-> > 
-> > > 
-> > > Hi Bjorn,
-> > > 
-> > > On Mon, 2014-10-06 at 18:11 -0700, Bjorn Andersson wrote:
-[..]
-> > > >  create mode 100644 drivers/input/misc/pm8941-pwrkey.c
-> > > 
-> > > Any reason why we cannot reuse pm8xxx-pwrkey driver? It have been
-> > > converted to regmap already. 
-> > > 
-> > 
-> > The boilerplate code is the same,
-> 
-> The boilerplate code is almost 100% :-)
-> 
-> >  but configuration registers have different
-> > layout and values written in them are different. 
-> 
-> We talk about 3 registers and 2 bit defines. struct regmap_field
-> should be able to help here.
-> 
+this is the second version of a series I initially submitted in May:
+https://lkml.org/lkml/2014/5/16/743
 
-You're totally right, we could rewrite the driver to use regmap_field and make
-the rest of the differences conditional. In my eyes we end up with two drivers
-in one file - but it can be done.
+This series adds support for the USB cluster which is on the Armada
+375 SoC. We can mainly see this device as a PHY muxer.
 
-A difference however is that in pm8941 the ps hold behavious (reboot vs power
-off) is controlled by this same block. So I have an additional patch that adds
-a restart handler here that sets the pmic in the right state before we pull
-pshold (but I haven't been able to test it properly).
+I more or less forgotten this series until the talk of Kishon Vijay
+Abraham I about the phy framework.
 
-In pm8xxx this is handled in the pmic misc block and does not belong in this
-driver.
+Since this time, things have changed in the USB framework and I no
+longer have to add the generic phy support in the xhci driver since it
+was done at the usb core level.
 
-[..]
-> > 
-> > Maybe if we introduce some vagueness related to interrupts in the dt binding
-> > documentation for pm8xxx we could simply reuse that binding.
-> > 
-> 
-> I would not say vagueness, we just can say that pm8941 did not have
-> second interrupt?
-> 
+While I ran coccicheck on my code I also found some possible
+improvement in the phy driver: it was done in the 1st patch.
 
-I don't like having conditional documentation - it's not only that the second
-interrupt is missing, the first one have different meaning. But you're right
-that it's a minor thing and can be done.
+The second patch was a patch initially submitted by Andrew. This patch
+added the mvebu-phy.txt but fell through a crack when adding the
+driver. I join this patch on my series in order to be able to add the
+new binding for the USB cluster of the Armada 375.
 
-Regards,
-Bjorn
+This was done in the third patch.
+
+The forth patch was the addition of the phys driver itself.
+
+The fifth and sixth patches are updating the device tree files related
+to the Armada 375 using the new biding.
+
+Thanks,
+
+Gregory
+
+Changelog:
+
+v1 -> v2:
+
+- Add a patch fixing the use of PTR_ERR_OR_ZERO.
+
+- Add the patch adding the DT binding documentation for Marvell MVEBU
+SATA phy from Andrew Lunn
+
+- Move the DT binding documentation of the Armada 375 USB cluster into
+  the phy-mvebu.txt file.
+
+- Made the armada375_usb_phy_xlate more robust" if there is a phy_put
+  and then a phy_get".
+
+Andrew Lunn (1):
+  Phy: DT binding documentation for Marvell MVEBU SATA phy.
+
+Gregory CLEMENT (5):
+  phy: Use PTR_ERR_OR_ZERO to fix warning raised by coccinelle
+  Phy: DT binding documentation for the Armada 375 USB cluster binding
+  phy: add support for USB cluster on the Armada 375 SoC
+  ARM: mvebu: add Device Tree description of USB cluster controller on
+    Armada 375
+  ARM: mvebu: add PHY support to the dts for the USB controllers on
+    Armada 375
+
+ Documentation/devicetree/bindings/ata/marvell.txt  |   6 +
+ .../devicetree/bindings/phy/phy-mvebu.txt          |  43 ++++++
+ arch/arm/boot/dts/armada-375.dtsi                  |  11 ++
+ drivers/phy/Kconfig                                |   6 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-armada375-usb2.c                   | 145 +++++++++++++++++++++
+ drivers/phy/phy-berlin-sata.c                      |   5 +-
+ drivers/phy/phy-hix5hd2-sata.c                     |   5 +-
+ drivers/phy/phy-miphy365x.c                        |   5 +-
+ drivers/phy/phy-stih41x-usb.c                      |   5 +-
+ include/dt-bindings/phy/armada-375-usb-cluster.h   |  19 +++
+ 11 files changed, 235 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-mvebu.txt
+ create mode 100644 drivers/phy/phy-armada375-usb2.c
+ create mode 100644 include/dt-bindings/phy/armada-375-usb-cluster.h
+
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
