@@ -1,134 +1,66 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 0/7] ARM: mediatek: Add support for interrupt
- polarity
-Date: Fri, 24 Oct 2014 23:06:49 +0800
-Message-ID: <1414163209.14830.614.camel@mtksdaap41>
-References: <1414079595-26129-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <CABuKBeLjFDm2TSqxc=K3rDnYTKRok3sCvEuL+chxxo7p1UbhLQ@mail.gmail.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v8 0/7] QCOM 8974 and 8084 cpuidle driver
+Date: Fri, 24 Oct 2014 18:10:01 +0300
+Message-ID: <1414163401.15302.10.camel@mm-sol.com>
+References: <1412718106-17049-1-git-send-email-lina.iyer@linaro.org>
+	 <1414078317.4214.4.camel@mm-sol.com>
+	 <20141023155435.GA30210@ilina-mac.qualcomm.com>
+	 <1414144885.2025.4.camel@mm-sol.com>
+	 <20141024143039.GD30210@ilina-mac.qualcomm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABuKBeLjFDm2TSqxc=K3rDnYTKRok3sCvEuL+chxxo7p1UbhLQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, srv_heupstream <srv_heupstream@media>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20141024143039.GD30210@ilina-mac.qualcomm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-10-24 at 16:59 +0200, Matthias Brugger wrote:
-> Hi Joe,
-> 
-> 2014-10-23 17:53 GMT+02:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
-> > This series is 4th version of interrupt polarity support for MediaTek SoCs.
-> > This is based on Jiang's hierarchy irqdomain v2 [1] and my mediatek SoC
-> > basic support [2].
-> >
-> > This version addressed comments from previous discussion[3]. I removed
-> > arm,hierarchy-irq-domain property. When GIC is probed by DT, it will
-> > support hierarchy irqdomain. I still keep the first patch because this is
-> > still base on hierarchy irqdomain v2.
-> 
-> Is this set based on v3.17-rc1?
-> Is it based on one of Jiangs trees [0]?
-> 
-> I tried to use your patch set with v3.18-rc1 using Jiangs tree but the
-> kernel crashed on mt6589 with a null-pointer exception [1]. A test
-> with mt6592 didn't work either.
-> 
-> It would be convenient if you rebase your patches to v3.18-rc1.
 
-It is based on Jiang's tree[0], which is based on v3.17-rc1. So yes,
-this series is still on v3.17-rc1.
-
-All I need from Jiang's series are the first 2 patches, I'll bring them
-to v3.18-rc1 to test next week.
-
-Joe.C
-
-[0] https://github.com/jiangliu/linux.git irqdomain/p2v2
-
-
-
+On Fri, 2014-10-24 at 08:30 -0600, Lina Iyer wrote:
+> On Fri, Oct 24 2014 at 04:01 -0600, Ivan T. Ivanov wrote:
+> > >
+> > >On Thu, 2014-10-23 at 09:54 -0600, Lina Iyer wrote:
+> > >  On Thu, Oct 23 2014 at 09:31 -0600, Ivan T. Ivanov wrote:
+> > > > > >
+> > > > > >Hi,
+> > > > > >
+> > > > > >On Tue, 2014-10-07 at 15:41 -0600, Lina Iyer wrote:
+> > > > >   Hi,
+> > > > > > >
+> > > > >   This v8 revision of the cpuidle driver is available at
+> > > > >   git.linaro.org:/people/lina.iyer/linux-next cpuidle-v8
+> > > > > > >
+> > > > > >
+> > > > > >Probably I missing something, but should I expect that
+> > > > > >once these patches are applied driver could be successfully
+> > > >   compiled?
+> > >  Yes they should.
+> > >
+> > >Do these patches depends on other patches, which I am missing.
+> > >I am applying them on current linus/master. At least 
+> > 
+> > >and <soc/qcom/scm-boot.h> are missing from this patch-set v8 :-|
+> > >
 > 
-> Thanks,
-> Matthias
+> Oh sorry, if you look at the cover letter, in the past, these patches
+> have been pulled in or being staged.
 > 
-> [0] https://github.com/jiangliu/linux
-> [1] http://pastebin.com/3F1pVaM9
-> 
-> >
-> > In Jiang's version of irq_create_of_mapping, if irqdomain is hierarchy, it
-> > will not perform irq_find_mapping check and set_type. The outermost
-> > irqdomain need to take care of that. Because we will have several different
-> > outermost irqdomain in different ARM SoCs, this cause code duplication. I
-> > moved them back to irq_create_of_mapping. Since Jiang's changes are not
-> > merged yet, maybe that patch should be merged there.
-> >
-> > Simplified block diagram for interrupt on my system:
-> >
-> >     +-------+      +-------+
-> >  ---| SYSIRQ|------|ARM GIC|
-> >  ---|       |------|       |
-> >  ---|       |------|       |
-> >  ---|       |------|       |
-> >  ---|       |------|       |
-> >     +-------+      +-------+
-> >
-> > In device tree, interrupt-parent for other devices is sysirq, child of gic.
-> > This describe HW better and allow device to specify polarity as it is sent
-> > by the device.
-> >
-> > When using hierarchy irq domain, gic will use irq_domain_add_linear to
-> > create irqdomain and all interrupt numbers must come from device tree. My
-> > /proc/interrupts looks like this now:
-> >
-> > # cat /proc/interrupts
-> >            CPU0
-> >  16:       1862  MT_SYSIRQ 113  mtk_timer
-> >  17:         67  MT_SYSIRQ  54  mtk-uart
-> >
-> > Changes in v3:
-> >  - Discussion in [3]
-> >  - First implementation using hierarchy irqdomain
-> >
-> > [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/290832.html
-> > [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/284553.html
-> > [3] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/293766.html
-> >
-> > Yingjoe Chen (7):
-> >   irqdomain: Fix irq_domain_alloc_irqs return check.
-> >   irqdomain: Add back xlate and set_type for hierarchy irq domain
-> >   genirq: Add more helper functions to support stacked irq_chip
-> >   irqchip: gic: Support hierarchy irq domain.
-> >   ARM: mediatek: Add sysirq interrupt polarity support
-> >   ARM: mediatek: Add sysirq in mt6589/mt8135/mt8127 dtsi
-> >   dt-bindings: add bindings for mediatek sysirq
-> >
-> >  .../bindings/arm/mediatek/mediatek,sysirq.txt      |  26 ++++
-> >  arch/arm/boot/dts/mt6589.dtsi                      |  14 +-
-> >  arch/arm/boot/dts/mt8127.dtsi                      |  14 +-
-> >  arch/arm/boot/dts/mt8135.dtsi                      |  14 +-
-> >  drivers/irqchip/Kconfig                            |   1 +
-> >  drivers/irqchip/Makefile                           |   1 +
-> >  drivers/irqchip/irq-gic.c                          |  54 +++++--
-> >  drivers/irqchip/irq-mtk-sysirq.c                   | 168 +++++++++++++++++++++
-> >  include/linux/irq.h                                |   6 +
-> >  kernel/irq/chip.c                                  |  28 ++++
-> >  kernel/irq/irqdomain.c                             |  31 ++--
-> >  11 files changed, 332 insertions(+), 25 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-> >  create mode 100644 drivers/irqchip/irq-mtk-sysirq.c
-> >
-> > --
-> > 1.8.1.1.dirty
-> >
-> 
-> 
-> 
+> You can get the tree and the the patches from
 
+> https://git.linaro.org/people/lina.iyer/linux-next.git/shortlog/refs/heads/cpuidle-v8
+> 
+> which are on top of 3.17-rc1, but you should be able to pull it on 
+> top
+> of yours, without any issue. Do note that some of these patches that 
+> I
+> have on top of 3.17-rc1 (like the ARM idle states) may already be
+> available in linus/master.
+> 
+> Hope that helps.
 
+Yep, this is better.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thank you,
+Ivan
