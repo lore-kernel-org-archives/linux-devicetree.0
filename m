@@ -1,47 +1,60 @@
-From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
-Subject: Re: [PATCH v5 0/6] Add initial support for pinctrl on Exynos7
-Date: Fri, 24 Oct 2014 20:03:06 +0530
-Message-ID: <CAM4voamzXmEsk28O04Pozw4ZeWJ=H25G3TSK_KBmrff4NuCLiA@mail.gmail.com>
-References: <1412862874-9335-1-git-send-email-a.kesavan@samsung.com>
-	<54397DAA.4020607@gmail.com>
-	<CAM4voa=k=bq67mTMtaQiFp-m2byY=U-gMyWoeckvhW-HTaRhag@mail.gmail.com>
-	<CACRpkdYDETw8NMOp-yT129ffDz-aFDpgo5xy-8bfcOVbd9TbeA@mail.gmail.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 12/17] ARM: mvebu: Armada XP GP specific suspend/resume
+ code
+Date: Fri, 24 Oct 2014 16:51:19 +0200
+Message-ID: <20141024145119.GD3142@lunn.ch>
+References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1414151970-6626-13-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20141024142044.GB3142@lunn.ch>
+ <20141024162824.67f9ce3d@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYDETw8NMOp-yT129ffDz-aFDpgo5xy-8bfcOVbd9TbeA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, Naveen Krishna <naveenkrishna.ch@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141024162824.67f9ce3d-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Fri, Oct 24, 2014 at 04:28:24PM +0200, Thomas Petazzoni wrote:
+> Dear Andrew Lunn,
+> 
+> On Fri, 24 Oct 2014 16:20:44 +0200, Andrew Lunn wrote:
+> 
+> > Does Marvell mandate this PIC and gpio interface? Or is a board
+> > designer free to implement it some other way? It seems to me, this
+> > should be considered specific to the Marvell reference design.
+> 
+> They don't mandate this interface, it's really a board-specific
+> decision, which is why I've split my implementation between:
+> 
+>  * SoC-specific code, in mach-mvebu/pm.c.
+> 
+>  * Board-specific code, in mach-mvebu/pm-board.c.
+> 
+> > I'm wondering if this code should be a power driver, living in
+> > drivers/power/reset/.
+> 
+> I'm fine with that, but have you seen the *very* tight interaction
+> between the SoC-specific code and the board-specific code? The problem
+> is that the board-specific code needs to put the SDRAM into
+> self-refresh *right* before shutting down the SoC, and all that while
+> making sure the code doing both of these operations remains in the
+> I-Cache, and does not touch any other location in memory (which has
+> become inaccessible due to being in self-refresh mode).
+> 
+> Look at the mvebu_armada_xp_gp_pm_enter() function: it takes two
+> arguments, received from the SoC-level code. How to handle this thing
+> with a driver in drivers/power/reset/ ?
 
-On Fri, Oct 24, 2014 at 5:31 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, Oct 20, 2014 at 4:01 PM, Abhilash Kesavan
-> <kesavan.abhilash@gmail.com> wrote:
->
->> Can you please pick this series up.
->
-> Yes, sorry for the delay. I've applied patches
-> 1,2,3,4. The patches to the DTS files should be taken
-> through whatever tree funnels arm64 dts files.
+It looks like reset drivers can register a notifier block, and you can
+pass this notifier a void * parameter. So you should be able to pass
+parameters. Nobody currently does this, so it might not work....
 
-Thank you for applying my patches. However, this version (v5) was
-based on Tomasz's clean-up series and makes use of structures such as
-"samsung_pin_bank_data" introduced by his series. It also marks the
-samsung_pin_ctrl instance as __initconst. Thus, patch 4 would cause
-compilation issues if Tomasz's clean-up patches have not been applied
-before it.
+	    Andrew
 
-My v4 version was independent of Tomasz's patch series and could be
-applied directly.
-
-Regards,
-Abhilash
->
-> I hope Tomasz can rebase his nice
-> clean-up patches on top of this now.
->
-> Yours,
-> Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
