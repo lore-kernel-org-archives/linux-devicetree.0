@@ -1,79 +1,51 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH v2 2/3] ARM: dts: socfpga: fpga bridges bindings docs
-Date: Fri, 24 Oct 2014 12:20:53 +0300
-Message-ID: <5FB7B7FD-7B5B-4250-BADE-85573FDBBE48@konsulko.com>
-References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com> <1414108267-22058-3-git-send-email-atull@opensource.altera.com> <20141024070042.GL10262@pengutronix.de>
-Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141024070042.GL10262@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: atull@opensource.altera.com, jgunthorpe@obsidianresearch.com, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, michal.simek@xilinx.com, rdunlap@infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+From: Emil Medve <Emilian.Medve@Freescale.com>
+Subject: Re: [PATCH 2/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan portal(s)
+Date: Fri, 24 Oct 2014 04:26:37 -0500
+Message-ID: <544A1B4D.3050904@Freescale.com>
+References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
+ <1413986972-621-2-git-send-email-Emilian.Medve@Freescale.com>
+ <20141022142931.GA4010@leverpostej> <54480DE6.4090604@Freescale.com>
+ <20141023111622.GB13690@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141023111622.GB13690@leverpostej>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "scottwood@freescale.com" <scottwood@Freescale.com>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Pawel Moll <Pawel.Moll@arm.com>, "Geoff.Thorpe@freescale.com" <Geoff.Thorpe@Freescale.com>, "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan, Allan,
+Hello Mark,
 
-Sorry, haven=E2=80=99t had a chance to review all this yet; will do so =
-in the weekend.
-Just wanted to pop in and comment on a few things.
 
-> On Oct 24, 2014, at 10:00 AM, Steffen Trumtrar <s.trumtrar@pengutroni=
-x.de> wrote:
->=20
-> Hi!
->=20
-> On Thu, Oct 23, 2014 at 06:51:06PM -0500, atull@opensource.altera.com=
- wrote:
->> From: Alan Tull <atull@opensource.altera.com>
->=20
-> (...)
->=20
->> diff --git a/Documentation/devicetree/bindings/fpga/altera-hps2fpga-=
-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bri=
-dge.txt
->> new file mode 100644
->> index 0000000..bc24a2e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.=
-txt
->> @@ -0,0 +1,53 @@
->> +Altera FPGA/HPS Bridge Driver
->> +
->> +This driver manages a bridge between a FPGA and a host processor sy=
-stem (HPS).
->> +User space can enable or disable the bridge by writing a "1" or a "=
-0",
->> +respectively, to its enable file under bridge's entry in
->> +/sys/class/fpga-bridge.  Typically, one disables the bridges before
->> +reprogramming the FPGA.  Once the FPGA is reprogrammed, the bridges=
- are
->> +reenabled.
->> +
->=20
-> NAK.
->=20
-> This is all linux specific and doesn't belong here.
->=20
+On 10/23/2014 06:16 AM, Mark Rutland wrote:
+>>>> +NOTE:	The bindings described in this document are preliminary and subject to
+>>>> +	change
+>>>
+>>> While we've tried that elsewhere, unstable DT bindings have been shown
+>>> to be a major source of pain.
+>>
+>> Agreed
+>>
+>>> I'd feel rather uncomfortable accepting a
+>>> binding that we already believe to be insufficient to describe the
+>>> hardware.
+>>>
+>>> What do you expect to change?
+>>
+>> Related bindings seem incomplete. As such, the PAMU binding (pamu.txt)
+>> covers incompletely a dynamic LIODN assignment/programming model. The
+>> current driver uses a static assignment scheme that the binding needs to
+>> include. I also suspect that once the driver starts supporting the
+>> dynamic LIODN assignment/programming we might find some wrinkles
+> 
+> Ok. Given that the driver doesn't seem to be in mainline (per a quick
+> grep), just put "DO NOT MERGE" or something like that in the commit
+> message. Once this is merged you're going to need to support it.
 
-We know. The DT spec hasn=E2=80=99t been updated for a while, and this =
-is going to be
-part of what we want to do with the restarting of the ePAPR spec proces=
-s.
+We have a driver and once the bindings get accepted we'll (update the
+driver as needed and) post the code
 
-So absolutes like =E2=80=9CDT is a hardware description only" might be =
-too strong statements, that
-do not work in practice anymore.
 
-There=E2=80=99s no such thing as pure hardware devices lately - there i=
-s always a configuration
-component; some of it OS specific, some of it not.
-
-We have to be engaged in the process and figure out how to update the s=
-pec for what is
-now the state of the art in the industry.
-
-Regards
-
-=E2=80=94 Pantelis
+Cheers,
