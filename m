@@ -1,42 +1,79 @@
-From: Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH v1 1/5] mfd: tps65910: Convert ti,system-power-controller
- DT property to poweroff-source
-Date: Fri, 24 Oct 2014 11:04:18 +0200
-Message-ID: <CABgxDoLT7puSr11Xw3D7diGRXj15oktfd7=ATTvjmf2MKKYp0A@mail.gmail.com>
-References: <1413991587-11110-1-git-send-email-romain.perier@gmail.com>
-	<20141023081230.GK32045@tbergstrom-lnx.Nvidia.com>
-	<CABgxDoKm5kKKCTD1njAerUrM24iVcGRDuhJ7b4qBVPqKBC4ftQ@mail.gmail.com>
-	<20141024080240.GN32045@tbergstrom-lnx.Nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH v2 2/3] ARM: dts: socfpga: fpga bridges bindings docs
+Date: Fri, 24 Oct 2014 12:20:53 +0300
+Message-ID: <5FB7B7FD-7B5B-4250-BADE-85573FDBBE48@konsulko.com>
+References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com> <1414108267-22058-3-git-send-email-atull@opensource.altera.com> <20141024070042.GL10262@pengutronix.de>
+Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141024080240.GN32045@tbergstrom-lnx.Nvidia.com>
+In-Reply-To: <20141024070042.GL10262@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: "sameo@linux.intel.com" <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, robh+dt@kernel.org, "pawel.moll" <pawel.moll@arm.com>, mark.rutland@arm.com, ijc+devicetree <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: atull@opensource.altera.com, jgunthorpe@obsidianresearch.com, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, michal.simek@xilinx.com, rdunlap@infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-Okay, will do these changes.
+Hi Stefan, Allan,
 
-2014-10-24 10:02 GMT+02:00 Peter De Schrijver <pdeschrijver@nvidia.com>:
-> On Thu, Oct 23, 2014 at 11:39:34AM +0200, PERIER Romain wrote:
->> Hi Peter,
->>
->> 2014-10-23 10:12 GMT+02:00 Peter De Schrijver <pdeschrijver@nvidia.com>:
->> > This breaks DT ABI stability right? An existing device tree using ti,system-power-controller won't work anymore after this patch right? I don't think that's acceptable.
->> >
->>
->> This is why I converted all dts which use "ti,system-power-controller"
->> and tps65910/tps65911 to the new property (everything is in the
->> patches serie). However, with an existing dtb it will no longer work,
->> yes.
->> What do you suggest ? keep these two properties in the driver ? :/
->>
->
-> Yes. Existing DTs should work with new kernels. So there's no other choice
-> than leaving support for the existing property in place. Obviously DTs for new
-> boards can use the new standardized property.
->
-> Cheers,
->
-> Peter.
+Sorry, haven=E2=80=99t had a chance to review all this yet; will do so =
+in the weekend.
+Just wanted to pop in and comment on a few things.
+
+> On Oct 24, 2014, at 10:00 AM, Steffen Trumtrar <s.trumtrar@pengutroni=
+x.de> wrote:
+>=20
+> Hi!
+>=20
+> On Thu, Oct 23, 2014 at 06:51:06PM -0500, atull@opensource.altera.com=
+ wrote:
+>> From: Alan Tull <atull@opensource.altera.com>
+>=20
+> (...)
+>=20
+>> diff --git a/Documentation/devicetree/bindings/fpga/altera-hps2fpga-=
+bridge.txt b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bri=
+dge.txt
+>> new file mode 100644
+>> index 0000000..bc24a2e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.=
+txt
+>> @@ -0,0 +1,53 @@
+>> +Altera FPGA/HPS Bridge Driver
+>> +
+>> +This driver manages a bridge between a FPGA and a host processor sy=
+stem (HPS).
+>> +User space can enable or disable the bridge by writing a "1" or a "=
+0",
+>> +respectively, to its enable file under bridge's entry in
+>> +/sys/class/fpga-bridge.  Typically, one disables the bridges before
+>> +reprogramming the FPGA.  Once the FPGA is reprogrammed, the bridges=
+ are
+>> +reenabled.
+>> +
+>=20
+> NAK.
+>=20
+> This is all linux specific and doesn't belong here.
+>=20
+
+We know. The DT spec hasn=E2=80=99t been updated for a while, and this =
+is going to be
+part of what we want to do with the restarting of the ePAPR spec proces=
+s.
+
+So absolutes like =E2=80=9CDT is a hardware description only" might be =
+too strong statements, that
+do not work in practice anymore.
+
+There=E2=80=99s no such thing as pure hardware devices lately - there i=
+s always a configuration
+component; some of it OS specific, some of it not.
+
+We have to be engaged in the process and figure out how to update the s=
+pec for what is
+now the state of the art in the industry.
+
+Regards
+
+=E2=80=94 Pantelis
