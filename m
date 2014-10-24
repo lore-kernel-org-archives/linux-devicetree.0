@@ -1,93 +1,87 @@
 From: "jinkun.hong" <jinkun.hong@rock-chips.com>
-Subject: [PATCH v7 0/3] ARM: rk3288 : Add PM Domain support
-Date: Fri, 24 Oct 2014 00:29:18 -0700
-Message-ID: <1414135761-3406-1-git-send-email-jinkun.hong@rock-chips.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
+Subject: [PATCH v7 2/3] dt-bindings: add document of Rockchip power domain
+Date: Fri, 24 Oct 2014 00:29:20 -0700
+Message-ID: <1414135761-3406-3-git-send-email-jinkun.hong@rock-chips.com>
+References: <1414135761-3406-1-git-send-email-jinkun.hong@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414135761-3406-1-git-send-email-jinkun.hong@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org
-Cc: Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, "jinkun.hong" <jinkun.hong@rock-chips.com>
+Cc: Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, "jinkun.hong" <jinkun.hong@rock-chips.com>, Jack Dai <jack.dai@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
 From: "jinkun.hong" <jinkun.hong@rock-chips.com>
 
-Add power domain drivers based on generic power domain for Rockchip platform,
-and support RK3288.
+Signed-off-by: Jack Dai <jack.dai@rock-chips.com>
+Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
 
-https://chromium-review.googlesource.com/#/c/220253/9
-This is the GPU driver, add the following information in DT,
-and it can support the PMDOMAIN.
+---
 
-gpu: gpu@ffa30000 {
-	compatible = "arm,malit764",
-		     "arm,malit76x",
-		     "arm,malit7xx",
-		     "arm,mali-midgard";
-	reg = <0xffa30000 0x10000>;
-	interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-	interrupt-names = "JOB", "MMU", "GPU";
-	clocks = <&cru ACLK_GPU>;
-	clock-names = "aclk_gpu";
-	operating-points = <
-		/* KHz uV */
-		100000 800000
-		200000 850000
-		300000 950000
-		400000 1000000
-		600000 1150000
-	>;
-	power-domains = <&gpu_power>;
-	status = "disabled";
-};
-
-Based on:
-- [PATCH v1 1/4] PM / clock_ops: Add pm_clk_add_clk()
-  http://www.mail-archive.com/linux-kernel@vger.kernel.org/msg735599.html
-
-Changes in v7:
-- Delete unused variables
-
-Changes in v6:
-- delete pmu_lock
-- modify dev_lock using mutex
-- pm_clk_resume(pd->dev) change to pm_clk_resume(ed->dev)
-- pm_clk_suspend(pd->dev) change to pm_clk_suspend(ed->dev)
-- add devm_kfree(pd->dev, de) in rockchip_pm_domain_detach_dev
-
-Changes in v5:
-- delete idle_lock
-- add timeout in rockchip_pmu_set_idle_request()
-
-Changes in v4:
-- use list storage dev
-
+Changes in v7: None
+Changes in v6: None
+Changes in v5: None
+Changes in v4: None
 Changes in v3:
-- change use pm_clk_resume() and pm_clk_suspend()
 - DT structure has changed
-- Decomposition power-controller, changed to multiple controller
-   (gpu-power-controller, hevc-power-controller)
 
 Changes in v2:
-- remove the "pd->pd.of_node = np"
 - move clocks to "optional"
-- make pd_vio clocks all one entry per line and alphabetize.
-- power: power-controller move back to pinctrl: pinctrl.
 
-jinkun.hong (3):
-  power-domain: add power domain drivers for Rockchip platform
-  dt-bindings: add document of Rockchip power domain
-  ARM: dts: add rk3288 power-domain node
-
- .../bindings/arm/rockchip/power_domain.txt         |   46 +++
- arch/arm/boot/dts/rk3288.dtsi                      |   24 ++
- arch/arm/mach-rockchip/Kconfig                     |    1 +
- arch/arm/mach-rockchip/Makefile                    |    1 +
- arch/arm/mach-rockchip/pm_domains.c                |  355 ++++++++++++++++++++
- 5 files changed, 427 insertions(+)
+ .../bindings/arm/rockchip/power_domain.txt         |   46 ++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/arm/rockchip/power_domain.txt
- create mode 100644 arch/arm/mach-rockchip/pm_domains.c
 
+diff --git a/Documentation/devicetree/bindings/arm/rockchip/power_domain.txt b/Documentation/devicetree/bindings/arm/rockchip/power_domain.txt
+new file mode 100644
+index 0000000..f8357b3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/rockchip/power_domain.txt
+@@ -0,0 +1,46 @@
++* Rockchip Power Domains
++
++Rockchip processors include support for multiple power domains which can be
++powered up/down by software based on different application scenes to save power.
++
++Required properties for power domain controller:
++- compatible: should be one of the following.
++    * rockchip,rk3288-power-gpu - for rk3288 type gpu power domain.
++    * rockchip,rk3288-power-hevc - for rk3288 type hevc power domain.
++    * rockchip,rk3288-power-video - for rk3288 type video power domain.
++    * rockchip,rk3288-power-vio - for rk3288 type vio power domain.
++- rockchip,pmu: phandle referencing a syscon providing the pmu registers
++- #power-domain-cells: Number of cells in a power-domain specifier.
++		       should be 0.
++
++Example:
++
++	gpu_power: gpu-power-controller {
++		compatible = "rockchip,rk3288-power-gpu";
++		rockchip,pmu = <&pmu>;
++		#power-domain-cells = <0>;
++	};
++
++	hevc_power: hevc-power-controller {
++		compatible = "rockchip,rk3288-power-hevc";
++		rockchip,pmu = <&pmu>;
++		#power-domain-cells = <0>;
++	};
++
++	video_power: video-power-controller {
++		compatible = "rockchip,rk3288-power-video";
++		rockchip,pmu = <&pmu>;
++		#power-domain-cells = <0>;
++	};
++
++	vio_power: vio-power-controller {
++		compatible = "rockchip,rk3288-power-vio";
++		rockchip,pmu = <&pmu>;
++		#power-domain-cells = <0>;
++	};
++
++	gpu: gpu@0xffa30000 {
++		...
++		power-domains = <&gpu_power>;
++		...
++	};
 -- 
 1.7.9.5
-
