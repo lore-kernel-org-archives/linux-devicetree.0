@@ -1,43 +1,30 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/2] ARM: shmobile: add USB3.0 device node on r8a7790
-Date: Fri, 24 Oct 2014 14:08:48 +0900
-Message-ID: <20141024050848.GH7537@verge.net.au>
-References: <1412749470-6028-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20141024042114.GD11281@verge.net.au>
- <ea8c5c855c604eb9acf73a08ee9a0a3f@HKNPR06MB322.apcprd06.prod.outlook.com>
+Subject: Re: [PATCH v4 0/2] Add HS-USB device tree support for R8A7790/Lager
+ board
+Date: Fri, 24 Oct 2014 14:09:28 +0900
+Message-ID: <20141024050928.GI7537@verge.net.au>
+References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <ea8c5c855c604eb9acf73a08ee9a0a3f@HKNPR06MB322.apcprd06.prod.outlook.com>
+In-Reply-To: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: yoshihiro shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, yoshihiro.shimoda.uh@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 24, 2014 at 04:44:28AM +0000, yoshihiro shimoda wrote:
-> Hi Simon-san,
+On Wed, Oct 08, 2014 at 11:53:11PM +0400, Sergei Shtylyov wrote:
+> Hello.
 > 
-> > On Wed, Oct 08, 2014 at 03:24:28PM +0900, Yoshihiro Shimoda wrote:
-> > >  This series is based on Simon's renesas.git branch and
-> > > renesas-devel-20141007-v3.17 tag. If we use the generic phy driver for
-> > > R-Car Gen2 (drivers/phy/phy-rcar-gen2.c), we can use the USB3.0 on
-> > > lager.
-> > >
-> > > Yoshihiro Shimoda (2):
-> > >   ARM: shmobile: r8a7790: add USB3.0 device node
-> > >   ARM: shmobile: lager: enable USB3.0
-> > >
-> > >  arch/arm/boot/dts/r8a7790-lager.dts |    6 ++++++
-> > >  arch/arm/boot/dts/r8a7790.dtsi      |   10 ++++++++++
-> > >  2 files changed, 16 insertions(+)
-> > 
-> > Hi Shimoda-san,
-> > 
-> > could you update me on the status of this patch.
-> > Should I queue it up?
+>    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+> 'renesas-devel-20141007-v3.17' tag. Here we add the HS-USB device tree support
+> on the R8A7790/Lager reference board. The patchset requires the USB PHY
+> driver (already merged by Kishon and Greg) and the generic PHY support patches
+> for the HS-USB driver posted by Yoshihiro Shimoda in order to work...
 > 
-> Yes.
-> So, should I rebase this patch serias on the current your repository?
+> [1/2] ARM: shmobile: r8a7790: add HS-USB device node
+> [2/2] ARM: shmobile: lager: enable HS-USB
 
-Yes, please rebase it on renesas-devel-20141024-v3.18-rc1
+Now that v3.18-rc1 is present in my devel branch should I queue-up
+these patches? If so, please rebase them on renesas-devel-20141024-v3.18-rc1
