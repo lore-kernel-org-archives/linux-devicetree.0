@@ -1,69 +1,49 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [RFC 6/7] mfd: qcom-smd-rpm: Driver for the Qualcomm RPM over SMD
-Date: Fri, 24 Oct 2014 09:45:24 -0700
-Message-ID: <20141024164523.GH28611@sonymobile.com>
-References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1412037291-16880-7-git-send-email-bjorn.andersson@sonymobile.com>
- <20141008084017.GD20647@lee--X1>
- <20141017135553.GA28882@sonymobile.com>
- <20141020072211.GC25349@x1>
+From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: [PATCH 2/4] ARM: dts: hummingboard: add mSATA support for iMX6
+ quad/dual HummingBoard
+Date: Fri, 24 Oct 2014 17:55:31 +0100
+Message-ID: <E1Xhi9D-0005pL-HS@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20141020072211.GC25349@x1>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 20 Oct 00:22 PDT 2014, Lee Jones wrote:
+From: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> On Fri, 17 Oct 2014, Bjorn Andersson wrote:
-> > On Wed 08 Oct 01:40 PDT 2014, Lee Jones wrote:
-> 
-> [...]
-> 
-> > > > +static struct qcom_smd_driver qcom_smd_rpm_driver = {
-> > > > +	.probe = qcom_smd_rpm_probe,
-> > > > +	.remove = qcom_smd_rpm_remove,
-> > > > +	.callback = qcom_smd_rpm_callback,
-> > > > +	.driver  = {
-> > > > +		.name  = "qcom_smd_rpm",
-> > > > +		.owner = THIS_MODULE,
-> > > > +		.of_match_table = qcom_smd_rpm_of_match,
-> > > > +	},
-> > > > +};
-> > > > +
-> > > > +module_qcom_smd_driver(qcom_smd_rpm_driver);
-> > > 
-> > > I don't like this.  What's wrong with the existing platform driver
-> > > code?
-> > > 
-> > 
-> > I started off with having smd child devices as platform drivers and had some
-> > accessor functions to find the open handles that triggered the probe() and
-> > register the callback with those. But this didn't feel very sane, so I did
-> > implemented a custom driver struct and probe prototype to simplify writing
-> > drivers.
-> > 
-> > May I ask why you dislike this? This is how it's done in so many other places
-> > in the kernel...
-> 
-> I don't believe that's the case.  All owners of their own
-> module_*_driver() registration calls are busses (see below), whereas
-> 'qcom_smd' is just a driver.  Things would soon get out of control if
-> we allowed every driver in the kernel to supply their own driver
-> registration information variants.
-> 
+Initial patch from Rabeeh, but with the electrical properties added.
 
-I modelled this after rpmsg, with the intention of having qcom_smd provide a
-"smd bus" and all client drivers sitting on that bus being probed and removed
-as the remote services appear and disappear.
+Signed-off-by: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6q-hummingboard.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-I'm afraid I don't understand what part I missed that makes my smd driver "just
-a driver". I will reread the documentation and try to figure out what I might
-have missed.
+diff --git a/arch/arm/boot/dts/imx6q-hummingboard.dts b/arch/arm/boot/dts/imx6q-hummingboard.dts
+index 0a3574105165..c2bf8476ce45 100644
+--- a/arch/arm/boot/dts/imx6q-hummingboard.dts
++++ b/arch/arm/boot/dts/imx6q-hummingboard.dts
+@@ -11,3 +11,11 @@
+ 	model = "SolidRun HummingBoard Dual/Quad";
+ 	compatible = "solidrun,hummingboard/q", "fsl,imx6q";
+ };
++
++&sata {
++	status = "okay";
++	fsl,transmit-level-mV = <1025>;
++	fsl,transmit-boost-mdB = <3330>;
++	fsl,transmit-atten-16ths = <9>;
++	fsl,receive-eq-mdB = <3000>;
++};
+-- 
+1.8.3.1
 
-Regards,
-Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
