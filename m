@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 15/17] ARM: mvebu: add suspend/resume DT information for Armada XP GP
-Date: Fri, 24 Oct 2014 13:59:28 +0200
-Message-ID: <1414151970-6626-16-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCH 13/17] ARM: mvebu: make sure MMU is disabled in armada_370_xp_cpu_resume
+Date: Fri, 24 Oct 2014 13:59:26 +0200
+Message-ID: <1414151970-6626-14-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1414151970-6626-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,67 +10,45 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit improves the Armada XP GP Device Tree description to
-describe the 3 GPIOs that are used to connect the SoC to the PIC
-micro-controller that we talk to shutdown the SoC when entering
-suspend to RAM.
+The armada_370_xp_cpu_resume() until now was used only as the function
+called by the SoC when returning from a deep idle state (as used in
+cpuidle, or when the CPU is brought offline using CPU hotplug).
+
+However, it is now also used when exiting the suspend to RAM state. In
+this case, it is the bootloader that calls back into this function,
+with the MMU left enabled by the BootROM. Having the MMU enabled when
+entering this function confuses the kerrnel because we are not using
+the kernel page tables at this point, but in other mvebu functions we
+use the information on whether the MMU is enabled or not to find out
+whether we should talk to the coherency fabric using a physical
+address or a virtual address. To fix that, we simply disable the MMU
+when entering this function, so that the kernel is in an expected
+situation.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
 ---
-This probably needs some Device Tree binding documentation, but I'm
-not sure where to put it
-exactly. Documentation/devicetree/bindings/arm/armada-xp-gp-pic.txt ?
+ arch/arm/mach-mvebu/pmsu_ll.S | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/armada-xp-gp.dts | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
-index 0478c55..ea86736 100644
---- a/arch/arm/boot/dts/armada-xp-gp.dts
-+++ b/arch/arm/boot/dts/armada-xp-gp.dts
-@@ -23,6 +23,7 @@
+diff --git a/arch/arm/mach-mvebu/pmsu_ll.S b/arch/arm/mach-mvebu/pmsu_ll.S
+index a945756..ae7e6b0 100644
+--- a/arch/arm/mach-mvebu/pmsu_ll.S
++++ b/arch/arm/mach-mvebu/pmsu_ll.S
+@@ -18,6 +18,14 @@
   */
- 
- /dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
- #include "armada-xp-mv78460.dtsi"
- 
- / {
-@@ -48,6 +49,14 @@
- 		      <0x00000001 0x00000000 0x00000001 0x00000000>;
- 	};
- 
-+	cpus {
-+		pm_pic {
-+			ctrl-gpios = <&gpio0 16 GPIO_ACTIVE_LOW>,
-+				     <&gpio0 17 GPIO_ACTIVE_LOW>,
-+				     <&gpio0 18 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
- 	soc {
- 		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
- 			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
-@@ -115,7 +124,15 @@
- 			serial@12300 {
- 				status = "okay";
- 			};
--
-+			pinctrl {
-+				pinctrl-0 = <&pic_pins>;
-+				pinctrl-names = "default";
-+				pic_pins: pic-pins-0 {
-+					marvell,pins = "mpp16", "mpp17",
-+						       "mpp18";
-+					marvell,function = "gpio";
-+				};
-+			};
- 			sata@a0000 {
- 				nr-ports = <2>;
- 				status = "okay";
+ ENTRY(armada_370_xp_cpu_resume)
+ ARM_BE8(setend	be )			@ go BE8 if entered LE
++	/*
++	 * Disable the MMU that might have been enabled in BootROM if
++	 * this code is used in the resume path of a suspend/resume
++	 * cycle.
++	 */
++	mrc	p15, 0, r1, c1, c0, 0
++	bic	r1, #1
++	mcr	p15, 0, r1, c1, c0, 0
+ 	bl	ll_add_cpu_to_smp_group
+ 	bl	ll_enable_coherency
+ 	b	cpu_resume
 -- 
 2.0.0
 
