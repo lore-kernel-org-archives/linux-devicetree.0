@@ -1,67 +1,35 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v5 2/2] ARM: shmobile: lager: enable HS-USB
-Date: Fri, 24 Oct 2014 19:44:34 +0900
-Message-ID: <1414147474-2348-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1414147474-2348-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v4 0/3] HS-USB device tree support for R8A7791/Koelsch/Henninger board
+Date: Fri, 24 Oct 2014 19:45:05 +0900
+Message-ID: <1414147508-5556-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414147474-2348-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, sergei.shtylyov@cogentembedded.com, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable HS-USB device for the Lager board, defining the GPIO that the driver
-should check when probing. Since this board doesn't have the OTG ID pin, we
-assume that GP5_18 (USB0_PWEN) is an ID pin because it is 1 when the SW5 is
-in position 2-3 (meaning USB function) and 0 in other positions.
+   Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
+'renesas-devel-20141024-v3.18-rc1' tag. Here we add the HS-USB device tree
+support on the R8A7791/Koelsch/Henninger reference boards. The patchset
+requires the USB PHY driver (already merged by Kishon and Greg) and the
+generic PHY support patches for the HS-USB driver posted by Yoshihiro Shimoda
+in order to work...
 
-Note that there will be pinctrl-related error messages if both internal PCI
-and HS-USB drivers are enabled but they should be just ignored.
+Changes from v3:
+ - rebase the repository.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-[Sergei: added pin node and prop, moved device node, fixed summary, supplemented
-changelog]
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/r8a7790-lager.dts |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Yoshihiro Shimoda (3):
+  ARM: shmobile: r8a7791: add HS-USB device node
+  ARM: shmobile: koelsch: enable HS-USB
+  ARM: shmobile: henninger: enable HS-USB
 
-diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-index b48173b..e5ade61 100644
---- a/arch/arm/boot/dts/r8a7790-lager.dts
-+++ b/arch/arm/boot/dts/r8a7790-lager.dts
-@@ -221,6 +221,11 @@
- 		renesas,function = "iic3";
- 	};
- 
-+	hsusb_pins: hsusb {
-+		renesas,groups = "usb0_ovc_vbus";
-+		renesas,function = "usb0";
-+	};
-+
- 	usb0_pins: usb0 {
- 		renesas,groups = "usb0";
- 		renesas,function = "usb0";
-@@ -431,6 +436,13 @@
- 	pinctrl-names = "default";
- };
- 
-+&hsusb {
-+	status = "okay";
-+	pinctrl-0 = <&hsusb_pins>;
-+	pinctrl-names = "default";
-+	renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_HIGH>;
-+};
-+
- &usbphy {
- 	status = "okay";
- };
+ arch/arm/boot/dts/r8a7791-henninger.dts |    7 +++++++
+ arch/arm/boot/dts/r8a7791-koelsch.dts   |    7 +++++++
+ arch/arm/boot/dts/r8a7791.dtsi          |   11 +++++++++++
+ 3 files changed, 25 insertions(+)
+
 -- 
 1.7.9.5
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
