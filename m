@@ -1,75 +1,51 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH v2 2/3] fpga manager: framework core
-Date: Fri, 24 Oct 2014 12:52:00 +0200
-Message-ID: <20141024105200.GA20775@amd>
-References: <1414007405-32186-1-git-send-email-atull@opensource.altera.com>
- <1414007405-32186-3-git-send-email-atull@opensource.altera.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/1] devicetree: bindings: Add vendor prefix for Micron
+ Technology Co., Ltd.
+Date: Fri, 24 Oct 2014 11:53:26 +0100
+Message-ID: <20141024105326.GF3729@sirena.org.uk>
+References: <A765B125120D1346A63912DDE6D8B6315E79C3@NTXXIAMBX02.xacn.micron.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="WlEyl6ow+jlIgNUh"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1414007405-32186-3-git-send-email-atull@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: atull@opensource.altera.com
-Cc: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+In-Reply-To: <A765B125120D1346A63912DDE6D8B6315E79C3@NTXXIAMBX02.xacn.micron.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bpqw <bpqw@micron.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Andrew Lunn <andrew@lunn.ch>, Silvio F <silvio.fricke@gmail.com>, Hayato Suzuki <hytszk@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
 
-> * /sys/class/fpga_manager/<fpga>/firmware
->   Name of FPGA image file to load using firmware class.
->   $ echo image.rbf > /sys/class/fpga_manager/<fpga>/firmware
+--WlEyl6ow+jlIgNUh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I .. still don't think this is good idea. What about namespaces?
-The path corresponds to path in which namespace?
+On Fri, Oct 24, 2014 at 12:46:35AM +0000, bpqw wrote:
+> This patch is used to add vendor prefix for Micron Technology Inc in the vendor-prefixes.txt file.
 
-> +int fpga_mgr_write(struct fpga_manager *mgr, const char *buf, size_t count)
-> +{
-> +	int ret;
-> +
-> +	if (test_and_set_bit_lock(FPGA_MGR_BUSY, &mgr->flags))
-> +		return -EBUSY;
-> +
-> +	dev_info(mgr->dev, "writing buffer to %s\n", mgr->name);
-> +
-> +	ret = __fpga_mgr_write(mgr, buf, count);
-> +	clear_bit_unlock(FPGA_MGR_BUSY, &mgr->flags);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(fpga_mgr_write);
+This is the *third* time you've sent this patch this week, please stop
+and allow a reasonable time for the maintainers to respond, a few weeks
+would be normal.
 
-Is the EBUSY -- userspace please try again, but you don't know when to
-try again -- right interface? I mean, normally kernel would wait, so
-that userland does not have to poll?
+Please also take a look at the submission format in SubmittingPatches -
+commit logs should be wrapped to less than 80 columns and you've not
+added your own signoff to the patch (or at least you're using a
+different name and e-mail address to that in the patch).
 
-> +static ssize_t fpga_mgr_firmware_store(struct device *dev,
-> +				       struct device_attribute *attr,
-> +				       const char *buf, size_t count)
-> +{
-> +	struct fpga_manager *mgr = dev_get_drvdata(dev);
-> +	unsigned int len;
-> +	char image_name[NAME_MAX];
-> +	int ret;
-> +
-> +	/* lose terminating \n */
-> +	strcpy(image_name, buf);
-> +	len = strlen(image_name);
-> +	if (image_name[len - 1] == '\n')
-> +		image_name[len - 1] = 0;
-> +
-> +	ret = fpga_mgr_firmware_write(mgr, image_name);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +}
+--WlEyl6ow+jlIgNUh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-This shows why the interface is not right... Valid filename may
-contain \n, right? It may even end with \n.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Best regards,
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+iQEcBAEBAgAGBQJUSi+lAAoJECTWi3JdVIfQTycH/RjjGIFROfwrB7rdH777N+RF
+2Q2hoqJOPoKXNshq7PIM3NqA35mrUVTaeUSqOVm6IFf300X0EAITqb8ecB41Nra+
+qH3WDRs7tiD6mzdaC6gspKHM7gkrDyWV+xN+U3PwwkkutoMVZzgbsNz0bmFm6F9p
+So53ru6hQYgOirz3IVTKVpICmy01SVd1VhiXgCJ6jCIqzp/DI2h6j1a4ARoegUUr
+AAswVA0QuRNtOUahF6UGs84zU0p884C7Oj+JQ5qJ2WtJw5zU4nrUkJkw82lzGYqn
+MRdq68YBqK/P98UR0m+MIt5Uo2lJ3JiMJYJA6qXiIdvN6aZz3qmh35er5z7KR94=
+=3OyA
+-----END PGP SIGNATURE-----
+
+--WlEyl6ow+jlIgNUh--
