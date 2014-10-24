@@ -1,54 +1,107 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH] bcm2835: add VideoCore Mailbox to the device tree
-Date: Fri, 24 Oct 2014 15:20:05 +0200
-Message-ID: <1414156805-30253-1-git-send-email-lkundrak@v3.sk>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V3 3/3] rtc: omap: Support regulator supply for RTC
+Date: Fri, 24 Oct 2014 08:26:43 -0500
+Message-ID: <544A5393.6090504@ti.com>
+References: <1414126425-13198-1-git-send-email-lokeshvutla@ti.com> <1414126425-13198-4-git-send-email-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-rpi-kernel@lists.infradead.org
-Cc: Lubomir Rintel <lkundrak@v3.sk>, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@wwwdotorg.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1414126425-13198-4-git-send-email-lokeshvutla@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>, rtc-linux@googlegroups.com, linux-omap@vger.kernel.org, a.zummo@towertech.it, johan@kernel.org
+Cc: tony@atomide.com, bcousson@baylibre.com, balbi@ti.com, akpm@linux-foundation.org, linux@roeck-us.net, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Follows the generic Mailbox Controller bindings as documented in
-Documentation/devicetree/bindings/mailbox/mailbox.txt.
+On 10/23/2014 11:53 PM, Lokesh Vutla wrote:
+> On some Soc's RTC is powered by an external power regulator.
+SoC ? -> could you rephrase this to indicate "certain SoCs such as
+DRA7, RTC is an independent voltage domain of it's own and on
+platforms such as DRA7-evm, this may be supplied by individual
+regulator on it's own.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-rpi-kernel@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org
----
- arch/arm/boot/dts/bcm2835.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+> e.g. RTC on DRA7 SoC. Make the OMAP RTC driver support a
+> power regulator.
 
-diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
-index 3342cb1..bd046a9 100644
---- a/arch/arm/boot/dts/bcm2835.dtsi
-+++ b/arch/arm/boot/dts/bcm2835.dtsi
-@@ -50,6 +50,13 @@
- 			#interrupt-cells = <2>;
- 		};
- 
-+		mailbox: mailbox@0x7e00b880 {
-+			compatible = "brcm,bcm2835-mbox";
-+			reg = <0x7e00b880 0x40>;
-+			interrupts = <0 1>;
-+			#mbox-cells = <1>;
-+		};
-+
- 		watchdog@7e100000 {
- 			compatible = "brcm,bcm2835-pm-wdt";
- 			reg = <0x7e100000 0x28>;
+Question ofcourse is what voltage would you like that regulator to be
+at? As you are aware, certain LDOs and SMPS can drive varying voltage
+and just enable/disable would do just the default voltage of the
+SMPS/LDO, right? OR am i missing something here?
+
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+>  Documentation/devicetree/bindings/rtc/rtc-omap.txt |  3 +++
+>  drivers/rtc/rtc-omap.c                             | 24 ++++++++++++++++++++++
+>  2 files changed, 27 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+> index 750efd4..e7ad12b 100644
+> --- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+> +++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+> @@ -15,6 +15,8 @@ Required properties:
+>  Optional properties:
+>  - ti,system-power-controller: whether the rtc is controlling the system power
+>    through pmic_power_en
+> +Optional Properties:
+^^ already commented on..
+
+> +- vrtc-supply: phandle to the regulator device tree node if needed
+
+"phandle to supply regulator" ? since it is optional, "if needed" is
+redundant?
+
+>  
+>  Example:
+>  
+> @@ -25,4 +27,5 @@ rtc@1c23000 {
+>  		      19>;
+>  	interrupt-parent = <&intc>;
+>  	ti,system-power-controller;
+> +	vrtc-supply = <&ldo9_reg>;
+>  };
+> diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
+> index d9bb5e7..61fe630 100644
+> --- a/drivers/rtc/rtc-omap.c
+> +++ b/drivers/rtc/rtc-omap.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/of_device.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/io.h>
+> +#include <linux/regulator/consumer.h>
+>  
+>  /*
+>   * The OMAP RTC is a year/month/day/hours/minutes/seconds BCD clock
+> @@ -134,6 +135,7 @@ struct omap_rtc {
+>  	u8 interrupts_reg;
+>  	bool is_pmic_controller;
+>  	const struct omap_rtc_device_type *type;
+> +	struct regulator *supply;
+>  };
+>  
+>  static inline u8 rtc_read(struct omap_rtc *rtc, unsigned int reg)
+> @@ -516,6 +518,22 @@ static int omap_rtc_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, rtc);
+>  
+> +	rtc->supply = devm_regulator_get_optional(&pdev->dev, "vrtc");
+> +	if (IS_ERR(rtc->supply)) {
+> +		if (PTR_ERR(rtc->supply) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +
+> +		rtc->supply = NULL;
+> +	}
+> +
+> +	if (rtc->supply) {
+> +		ret = regulator_enable(rtc->supply);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "regulator enable failed\n");
+
+would be nice to print the result as well - since it helps debug from
+log a little easier.
+
+
+
 -- 
-2.1.0
+Regards,
+Nishanth Menon
