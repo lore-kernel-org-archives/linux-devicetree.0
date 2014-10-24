@@ -1,35 +1,33 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] clocksource: sh_tmu: Document r8a7778 binding
-Date: Fri, 24 Oct 2014 13:31:52 +0200
-Message-ID: <1414150312-5542-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
+Subject: [PATCH v2] clocksource: sh_mtu2: Drop incorrect SoC family name
+Date: Fri, 24 Oct 2014 13:29:38 +0200
+Message-ID: <1414150178-4986-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Daniel Lezcano <daniel.lezcano@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.au>
 Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-The r8a7778 is very similar to the r8a7779, and already handled by
-the current driver in the non-DT case.
+The TPU2 hardware block is found in many Renesas SH and ARM SoCs, but
+not in R-Car.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-This depends on "clocksource: sh_tmu: Document R-Mobile r8a7740 binding"
+v2:
+  - Drop family name instead of changing it to RZ.
+---
+ Documentation/devicetree/bindings/timer/renesas,mtu2.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- Documentation/devicetree/bindings/timer/renesas,tmu.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.txt b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-index 4ae7910af09ffcb4..cd5f20bf2582e742 100644
---- a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-@@ -10,6 +10,7 @@ Required Properties:
+diff --git a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
+index d9a8d5af1a21270f..ba0a34d97eb80261 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
++++ b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
+@@ -1,4 +1,4 @@
+-* Renesas R-Car Multi-Function Timer Pulse Unit 2 (MTU2)
++* Renesas Multi-Function Timer Pulse Unit 2 (MTU2)
  
-   - compatible: must contain one or more of the following:
-     - "renesas,tmu-r8a7740" for the r8a7740 TMU
-+    - "renesas,tmu-r8a7778" for the r8a7778 TMU
-     - "renesas,tmu-r8a7779" for the r8a7779 TMU
-     - "renesas,tmu" for any TMU.
-       This is a fallback for the above renesas,tmu-* entries
+ The MTU2 is a multi-purpose, multi-channel timer/counter with configurable
+ clock inputs and programmable compare match.
 -- 
 1.9.1
-
