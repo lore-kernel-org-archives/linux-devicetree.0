@@ -1,68 +1,118 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH 01/17] Documentation: dt-bindings: minimal documentation for
- MVEBU SDRAM controller
-Date: Fri, 24 Oct 2014 13:59:14 +0200
-Message-ID: <1414151970-6626-2-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 11/17] ARM: mvebu: reserve the first 10 KB of each memory bank for suspend/resume
+Date: Fri, 24 Oct 2014 13:59:24 +0200
+Message-ID: <1414151970-6626-12-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, devicetree@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414151970-6626-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The suspend/resume code for Armada XP has to modify certain registers
-of the SDRAM controller. Therefore, we need to define a Device Tree
-binding for this hardware block.
+When going out of suspend to RAM, the Marvell EBU platforms go through
+the bootloader, which re-configures the DRAM controller. To achieve
+this, the bootloader executes a piece of code called the "DDR3
+training code". It does some reads/writes to the memory to find out
+the optimal timings for the memory chip being used.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: devicetree@vger.kernel.org
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
+This has the nasty side effect that the first 10 KB of each DRAM
+chip-select are overwritten by the bootloader when exiting the suspend
+to RAM state.
+
+Therefore, this commit implements the ->reserve() hook for the 'struct
+machine_desc' used on Armada XP, to reserve the 10 KB of each DRAM
+chip-select using the memblock API.
+
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- .../memory-controllers/mvebu-sdram-controller.txt   | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt
+ arch/arm/mach-mvebu/board-v7.c | 51 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt b/Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt
-new file mode 100644
-index 0000000..89657d1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt
-@@ -0,0 +1,21 @@
-+Device Tree bindings for MVEBU SDRAM controllers
+diff --git a/arch/arm/mach-mvebu/board-v7.c b/arch/arm/mach-mvebu/board-v7.c
+index 6478626..bc52231 100644
+--- a/arch/arm/mach-mvebu/board-v7.c
++++ b/arch/arm/mach-mvebu/board-v7.c
+@@ -16,10 +16,12 @@
+ #include <linux/init.h>
+ #include <linux/clk-provider.h>
+ #include <linux/of_address.h>
++#include <linux/of_fdt.h>
+ #include <linux/of_platform.h>
+ #include <linux/io.h>
+ #include <linux/clocksource.h>
+ #include <linux/dma-mapping.h>
++#include <linux/memblock.h>
+ #include <linux/mbus.h>
+ #include <linux/signal.h>
+ #include <linux/slab.h>
+@@ -57,6 +59,54 @@ void __iomem *mvebu_get_scu_base(void)
+ }
+ 
+ /*
++ * When returning from suspend, the platform goes through the
++ * bootloader, which executes its DDR3 training code. This code has
++ * the unfortunate idea of using the first 10 KB of each DRAM bank to
++ * exercise the RAM and calculate the optimal timings. Therefore, this
++ * area of RAM is overwritten, and shouldn't be used by the kernel if
++ * suspend/resume is supported.
++ */
 +
-+The Marvell EBU SoCs all have a SDRAM controller. The SDRAM controller
-+differs from one SoC variant to another, but they also share a number
-+of commonalities.
++#ifdef CONFIG_SUSPEND
++#define MVEBU_DDR_TRAINING_AREA_SZ (10 * SZ_1K)
++static int __init mvebu_scan_mem(unsigned long node, const char *uname,
++				 int depth, void *data)
++{
++	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
++	const __be32 *reg, *endp;
++	int l;
 +
-+For now, this Device Tree binding documentation only documents the
-+Armada XP SDRAM controller.
++	if (type == NULL || strcmp(type, "memory"))
++		return 0;
 +
-+Required properties:
++	reg = of_get_flat_dt_prop(node, "linux,usable-memory", &l);
++	if (reg == NULL)
++		reg = of_get_flat_dt_prop(node, "reg", &l);
++	if (reg == NULL)
++		return 0;
 +
-+ - compatible: for Armada XP, "marvell,armada-xp-sdram-controller"
-+ - reg: a resource specifier for the register space, which should
-+   include all SDRAM controller registers as per the datasheet.
++	endp = reg + (l / sizeof(__be32));
++	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
++		u64 base, size;
 +
-+Example:
++		base = dt_mem_next_cell(dt_root_addr_cells, &reg);
++		size = dt_mem_next_cell(dt_root_size_cells, &reg);
 +
-+sdramc@1400 {
-+	compatible = "marvell,armada-xp-sdram-controller";
-+	reg = <0x1400 0x500>;
-+};
++		memblock_reserve(base, MVEBU_DDR_TRAINING_AREA_SZ);
++	}
++
++	return 0;
++}
++
++static void __init mvebu_memblock_reserve(void)
++{
++	of_scan_flat_dt(mvebu_scan_mem, NULL);
++}
++#else
++static void __init mvebu_memblock_reserve(void) {}
++#endif
++
++/*
+  * Early versions of Armada 375 SoC have a bug where the BootROM
+  * leaves an external data abort pending. The kernel is hit by this
+  * data abort as soon as it enters userspace, because it unmasks the
+@@ -210,6 +260,7 @@ DT_MACHINE_START(ARMADA_370_XP_DT, "Marvell Armada 370/XP (Device Tree)")
+ 	.init_machine	= mvebu_dt_init,
+ 	.init_irq       = mvebu_init_irq,
+ 	.restart	= mvebu_restart,
++	.reserve        = mvebu_memblock_reserve,
+ 	.dt_compat	= armada_370_xp_dt_compat,
+ MACHINE_END
+ 
 -- 
 2.0.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
