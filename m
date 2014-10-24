@@ -1,31 +1,43 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 0/2] ARM: shmobile: add USB3.0 device node on r8a7790
-Date: Fri, 24 Oct 2014 19:41:45 +0900
-Message-ID: <1414147307-4584-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 1/2] ARM: shmobile: r8a7790: add USB3.0 device node
+Date: Fri, 24 Oct 2014 19:41:46 +0900
+Message-ID: <1414147307-4584-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1414147307-4584-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1414147307-4584-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
 Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
- This series is based on Simon's renesas.git branch and
-renesas-devel-20141024-v3.18-rc1 tag. If we use the generic phy
-driver for R-Car Gen2 (drivers/phy/phy-rcar-gen2.c), we can use
-the USB3.0 on lager.
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ arch/arm/boot/dts/r8a7790.dtsi |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Changes from v1:
- - rebase the repository.
-
-Yoshihiro Shimoda (2):
-  ARM: shmobile: r8a7790: add USB3.0 device node
-  ARM: shmobile: lager: enable USB3.0
-
- arch/arm/boot/dts/r8a7790-lager.dts |    6 ++++++
- arch/arm/boot/dts/r8a7790.dtsi      |   10 ++++++++++
- 2 files changed, 16 insertions(+)
-
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 3f1e4b3..776f1c4 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -1147,6 +1147,16 @@
+ 		status = "disabled";
+ 	};
+ 
++	xhci: usb@ee000000 {
++		compatible = "renesas,xhci-r8a7790";
++		reg = <0 0xee000000 0 0xc00>;
++		interrupts = <0 101 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp3_clks R8A7790_CLK_SSUSB>;
++		phys = <&usb2 1>;
++		phy-names = "usb";
++		status = "disabled";
++	};
++
+ 	pci0: pci@ee090000 {
+ 		compatible = "renesas,pci-r8a7790";
+ 		device_type = "pci";
 -- 
 1.7.9.5
 
