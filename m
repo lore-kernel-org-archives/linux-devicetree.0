@@ -1,69 +1,42 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/3] clocksource: sh_tmu: Document R-Mobile r8a7740
- binding
-Date: Fri, 24 Oct 2014 11:34:55 +0900
-Message-ID: <20141024023451.GE7537@verge.net.au>
+Subject: Re: [PATCH 3/3] ARM: shmobile: armadillo800eva dts: Enable TMU0
+Date: Fri, 24 Oct 2014 11:39:54 +0900
+Message-ID: <20141024023953.GF7537@verge.net.au>
 References: <1413970709-26607-1-git-send-email-geert+renesas@glider.be>
- <1413970709-26607-2-git-send-email-geert+renesas@glider.be>
- <6890235.hnMLlLN6KA@avalon>
+ <1413970709-26607-4-git-send-email-geert+renesas@glider.be>
+ <1909016.A6gXeHnn7V@avalon>
+ <CAMuHMdUDTk=V=07aTt4YmkcXLWLMwS58_+g15BkQ=Gh9Q7Oibw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6890235.hnMLlLN6KA@avalon>
+In-Reply-To: <CAMuHMdUDTk=V=07aTt4YmkcXLWLMwS58_+g15BkQ=Gh9Q7Oibw@mail.gmail.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-sh@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux-sh list <linux-sh@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 22, 2014 at 05:59:25PM +0300, Laurent Pinchart wrote:
-> Hi Geert,
+On Wed, Oct 22, 2014 at 05:17:06PM +0200, Geert Uytterhoeven wrote:
+> On Wed, Oct 22, 2014 at 4:58 PM, Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> > On Wednesday 22 October 2014 11:38:29 Geert Uytterhoeven wrote:
+> >> ch0 will be used for clock events and for periodic clock events,
+> >> ch1 will be used as clock source.
+> >>
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > Simon has posted the same change as "[PATCH v2 20/30] ARM: shmobile:
+> > armadillo800eva-reference: Initialise TMU device using DT". You might want to
+> > credit him.
 > 
-> Thank you for the patch.
+> Bummer, didn't look hard enough...
 > 
-> On Wednesday 22 October 2014 11:38:27 Geert Uytterhoeven wrote:
-> > Compared to the r8a7779, the r8a7740 lacks the input capture register,
-> > which is not used by the driver (the current driver already handles the
-> > r8a7740 in the non-DT case).
-> > 
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> Acked-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Simon: what's the reason these hadn't been applied yet?
+> Likewise for r8a7778.
 
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
+Good question. It looks like a number of patches from that series
+slipped through the cracks.
 
-> 
-> > ---
-> >  Documentation/devicetree/bindings/timer/renesas,tmu.txt | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-> > b/Documentation/devicetree/bindings/timer/renesas,tmu.txt index
-> > 7db89fb2544411b5..4ae7910af09ffcb4 100644
-> > --- a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-> > +++ b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-> > @@ -1,4 +1,4 @@
-> > -* Renesas R-Car Timer Unit (TMU)
-> > +* Renesas R-Mobile/R-Car Timer Unit (TMU)
-> > 
-> >  The TMU is a 32-bit timer/counter with configurable clock inputs and
-> >  programmable compare match.
-> > @@ -9,6 +9,7 @@ are independent. The TMU hardware supports up to three
-> > channels. Required Properties:
-> > 
-> >    - compatible: must contain one or more of the following:
-> > +    - "renesas,tmu-r8a7740" for the r8a7740 TMU
-> >      - "renesas,tmu-r8a7779" for the r8a7779 TMU
-> >      - "renesas,tmu" for any TMU.
-> >        This is a fallback for the above renesas,tmu-* entries
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+I have queued up your r8a7740 patches (patches 2 and 3 of this series)
+and my r8a7778 patches. I have also queued up my r8a73a4 CMT1 patches
+from the same series that Laurent referred to above.
