@@ -1,63 +1,57 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH V3 1/3] rtc: omap: use module_platform_driver
-Date: Fri, 24 Oct 2014 09:33:46 +0200
-Message-ID: <20141024073346.GC28808@localhost>
-References: <1414126425-13198-1-git-send-email-lokeshvutla@ti.com>
- <1414126425-13198-2-git-send-email-lokeshvutla@ti.com>
+From: Gyungoh Yoo <gyungoh@gmail.com>
+Subject: Re: [RESUBMIT PATCH v4 7/8] regulator: sky81452: Add compatible
+ string for device binding
+Date: Fri, 24 Oct 2014 16:54:23 +0900
+Message-ID: <20141024075423.GA3239@jack-ThinkPad-T520>
+References: <20141014011112.GB2751@jack-ThinkPad-T520>
+ <20141014075606.GN27755@sirena.org.uk>
+ <20141017091950.GA3233@jack-ThinkPad-T520>
+ <20141017101734.GB1820@sirena.org.uk>
+ <20141017104309.GA3136@jack-ThinkPad-T520>
+ <20141017142605.GU1820@sirena.org.uk>
+ <20141020061024.GA9406@jack-ThinkPad-T520>
+ <20141022102723.GL2344@sirena.org.uk>
+ <20141023031443.GA3244@jack-ThinkPad-T520>
+ <20141023130103.GC3729@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1414126425-13198-2-git-send-email-lokeshvutla@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: rtc-linux@googlegroups.com, linux-omap@vger.kernel.org, a.zummo@towertech.it, johan@kernel.org, tony@atomide.com, bcousson@baylibre.com, balbi@ti.com, akpm@linux-foundation.org, linux@roeck-us.net, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <20141023130103.GC3729@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 24, 2014 at 10:23:43AM +0530, Lokesh Vutla wrote:
-> module_platform_driver_probe() prevents driver from requesting probe deferral.
-> So using module_platform_drive() to support probe deferral.
-> And also removing .owner field which is set by module_platform_driver.
+On Thu, Oct 23, 2014 at 02:01:03PM +0100, Mark Brown wrote:
+> On Thu, Oct 23, 2014 at 12:14:43PM +0900, Gyungoh Yoo wrote:
 > 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-
-Reviewed-by: Johan Hovold <johan@kernel.org>
-
-> ---
->  drivers/rtc/rtc-omap.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> > So, what do you think about DT like below?
 > 
-> diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
-> index e74750f..d9bb5e7 100644
-> --- a/drivers/rtc/rtc-omap.c
-> +++ b/drivers/rtc/rtc-omap.c
-> @@ -477,7 +477,7 @@ static const struct of_device_id omap_rtc_of_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, omap_rtc_of_match);
->  
-> -static int __init omap_rtc_probe(struct platform_device *pdev)
-> +static int omap_rtc_probe(struct platform_device *pdev)
->  {
->  	struct omap_rtc	*rtc;
->  	struct resource	*res;
-> @@ -708,18 +708,18 @@ static void omap_rtc_shutdown(struct platform_device *pdev)
->  }
->  
->  static struct platform_driver omap_rtc_driver = {
-> +	.probe		= omap_rtc_probe,
->  	.remove		= __exit_p(omap_rtc_remove),
->  	.shutdown	= omap_rtc_shutdown,
->  	.driver		= {
->  		.name	= "omap_rtc",
-> -		.owner	= THIS_MODULE,
->  		.pm	= &omap_rtc_pm_ops,
->  		.of_match_table = omap_rtc_of_match,
->  	},
->  	.id_table	= omap_rtc_id_table,
->  };
->  
-> -module_platform_driver_probe(omap_rtc_driver, omap_rtc_probe);
-> +module_platform_driver(omap_rtc_driver);
->  
->  MODULE_ALIAS("platform:omap_rtc");
->  MODULE_AUTHOR("George G. Davis (and others)");
+> > sky81452@2c {
+> > 	compatible = "skyworks,sky81452";
+> > 	reg = <0x2c>;
+> > 
+> > 	backlight {
+> > 		compatible = "skyworks,sky81452-backlight";
+> > 		name = "pwm-backlight";
+> > 		enable = <0x3F>;
+> > 		ignore-pwm;
+> > 	};
+> > 
+> > 	regulator {
+> > 		compatible = "skyworks,sky81452-regulator";
+> 
+> Yes, this is good but I still feel that the above compatible is
+> redundant and shouildn't be there.
+
+I see. I will remove compatible string at the next resubmit.
+
+> 
+> > 		lout@0 {
+> > 			regulator-name = "LOUT";
+> > 			regulator-min-microvolt = <4500000>;
+> > 			regulator-max-microvolt = <8000000>;
+> > 		};
+> > 	};
+> > };
