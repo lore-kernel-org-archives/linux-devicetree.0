@@ -1,68 +1,77 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v2 0/3] fpga bridge framework
-Date: Thu, 23 Oct 2014 18:57:24 -0500
-Message-ID: <alpine.DEB.2.02.1410231856100.22137@atx-linux-37>
-References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v13 4/5] ARM: dts: add main Thermal info to rk3288
+Date: Thu, 23 Oct 2014 17:46:25 -0700
+Message-ID: <20141024004625.GD9463@dtor-ws>
+References: <1414057207-1576-1-git-send-email-caesar.wang@rock-chips.com>
+ <1414057207-1576-5-git-send-email-caesar.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1414108267-22058-1-git-send-email-atull@opensource.altera.com>
+Content-Disposition: inline
+In-Reply-To: <1414057207-1576-5-git-send-email-caesar.wang@rock-chips.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 23 Oct 2014, atull@opensource.altera.com wrote:
+Hi Caesar,
 
-> From: Alan Tull <atull@opensource.altera.com>
+On Thu, Oct 23, 2014 at 05:40:06PM +0800, Caesar Wang wrote:
+> This patch is depend on rk3288-thermal.dtsi,or
+> it will compile error.
 > 
-> Followup to bridge framework that was posted on 2013/10/3
+> If the temperature over a period of time High,over 120C
+> the resulting TSHUT gave CRU module,let it reset
+> the entire chip,or via GPIO give PMIC.
 > 
-> This is a driver for enabling/disabling the fpga bridges under control
-> of a sys entry.  It has a common framework and individual drivers for
-> the various bridges.
+> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+> ---
+>  arch/arm/boot/dts/rk3288.dtsi | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 > 
-> This framework uses the reset driver where appropriate.
-> 
-> Alan
-> 
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index cb18bb4..85fc17a 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -15,6 +15,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/pinctrl/rockchip.h>
+>  #include <dt-bindings/clock/rk3288-cru.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>  #include "skeleton.dtsi"
+>  
+>  / {
+> @@ -66,6 +67,7 @@
+>  				 216000  900000
+>  				 126000  900000
+>  			>;
+> +			#cooling-cells = <2>; /* min followed by max */
+>  			clock-latency = <40000>;
+>  			clocks = <&cru ARMCLK>;
+>  		};
+> @@ -346,6 +348,19 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	tsadc: tsadc@ff280000 {
+> +		compatible = "rockchip,rk3288-tsadc";
+> +		reg = <0xff280000 0x100>;
+> +		interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
+> +		clock-names = "tsadc", "apb_pclk";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&otp_out>;
+> +		#thermal-sensor-cells = <1>;
+> +		hw-shut-temp = <120000>;
 
-Forgot to mention: This patchset needs Dinh Nguyen's
-"reset: add reset_control_status helper function" patches
+I do not think this is a good value. You have (in the other DTS file)
+passive trip point at 80 and critical (which should result in orderly
+shutdown) at 125. But here you define hardware-controlled shutdown at
+120C, which is backwards. You should have:
 
-https://lkml.org/lkml/2014/10/10/256
+passive <= critical <= hardware
 
-Alan
+Thanks.
 
-> 
-> Alan Tull (3):
->   add sysfs document for fpga bridges
->   ARM: dts: socfpga: fpga bridges bindings docs
->   fpga bridge driver
-> 
->  Documentation/ABI/testing/sysfs-class-fpga-bridge  |    5 +
->  .../bindings/fpga/altera-fpga2sdram-bridge.txt     |   57 +++++
->  .../bindings/fpga/altera-hps2fpga-bridge.txt       |   53 +++++
->  drivers/misc/Kconfig                               |    3 +-
->  drivers/misc/Makefile                              |    1 +
->  drivers/misc/fpga-bridge/Kconfig                   |   20 ++
->  drivers/misc/fpga-bridge/Makefile                  |    6 +
->  drivers/misc/fpga-bridge/altera-fpga2sdram.c       |  236 ++++++++++++++++++++
->  drivers/misc/fpga-bridge/altera-hps2fpga.c         |  220 ++++++++++++++++++
->  drivers/misc/fpga-bridge/fpga-bridge.c             |  230 +++++++++++++++++++
->  drivers/misc/fpga-bridge/fpga-bridge.h             |   51 +++++
->  11 files changed, 881 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-bridge
->  create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
->  create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
->  create mode 100644 drivers/misc/fpga-bridge/Kconfig
->  create mode 100644 drivers/misc/fpga-bridge/Makefile
->  create mode 100644 drivers/misc/fpga-bridge/altera-fpga2sdram.c
->  create mode 100644 drivers/misc/fpga-bridge/altera-hps2fpga.c
->  create mode 100644 drivers/misc/fpga-bridge/fpga-bridge.c
->  create mode 100644 drivers/misc/fpga-bridge/fpga-bridge.h
-> 
-> -- 
-> 1.7.9.5
-> 
-> 
+-- 
+Dmitry
