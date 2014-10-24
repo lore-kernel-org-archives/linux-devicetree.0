@@ -1,66 +1,50 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v8 0/7] QCOM 8974 and 8084 cpuidle driver
-Date: Fri, 24 Oct 2014 18:10:01 +0300
-Message-ID: <1414163401.15302.10.camel@mm-sol.com>
-References: <1412718106-17049-1-git-send-email-lina.iyer@linaro.org>
-	 <1414078317.4214.4.camel@mm-sol.com>
-	 <20141023155435.GA30210@ilina-mac.qualcomm.com>
-	 <1414144885.2025.4.camel@mm-sol.com>
-	 <20141024143039.GD30210@ilina-mac.qualcomm.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v2 1/3] add sysfs document for fpga bridges
+Date: Fri, 24 Oct 2014 10:11:26 -0500
+Message-ID: <alpine.DEB.2.02.1410241009010.23446@atx-linux-37>
+References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com> <1414108267-22058-2-git-send-email-atull@opensource.altera.com> <20141024105420.GB20775@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20141024143039.GD30210@ilina-mac.qualcomm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>
-Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141024105420.GB20775@amd>
+Sender: linux-doc-owner@vger.kernel.org
+To: Pavel Machek <pavel@denx.de>
+Cc: jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 24 Oct 2014, Pavel Machek wrote:
 
-On Fri, 2014-10-24 at 08:30 -0600, Lina Iyer wrote:
-> On Fri, Oct 24 2014 at 04:01 -0600, Ivan T. Ivanov wrote:
-> > >
-> > >On Thu, 2014-10-23 at 09:54 -0600, Lina Iyer wrote:
-> > >  On Thu, Oct 23 2014 at 09:31 -0600, Ivan T. Ivanov wrote:
-> > > > > >
-> > > > > >Hi,
-> > > > > >
-> > > > > >On Tue, 2014-10-07 at 15:41 -0600, Lina Iyer wrote:
-> > > > >   Hi,
-> > > > > > >
-> > > > >   This v8 revision of the cpuidle driver is available at
-> > > > >   git.linaro.org:/people/lina.iyer/linux-next cpuidle-v8
-> > > > > > >
-> > > > > >
-> > > > > >Probably I missing something, but should I expect that
-> > > > > >once these patches are applied driver could be successfully
-> > > >   compiled?
-> > >  Yes they should.
-> > >
-> > >Do these patches depends on other patches, which I am missing.
-> > >I am applying them on current linus/master. At least 
+> On Thu 2014-10-23 18:51:05, atull@opensource.altera.com wrote:
+> > From: Alan Tull <atull@opensource.altera.com>
 > > 
-> > >and <soc/qcom/scm-boot.h> are missing from this patch-set v8 :-|
-> > >
+> > Add sysfs document for fpga bridges.
+> > 
+> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-class-fpga-bridge |    5 +++++
+> >  1 file changed, 5 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-bridge
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-class-fpga-bridge b/Documentation/ABI/testing/sysfs-class-fpga-bridge
+> > new file mode 100644
+> > index 0000000..b3303ae
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-class-fpga-bridge
+> > @@ -0,0 +1,5 @@
+> > +What:		/sys/class/fpga-bridge/<bridge>/enable
+> > +Date:		October 2014
+> > +KernelVersion:	3.18
+> > +Contact:	Alan Tull <atull@opensource.altera.com>
+> > +Description:	Enable bridge.  Write 1 to bring bridge out of reset.
 > 
-> Oh sorry, if you look at the cover letter, in the past, these patches
-> have been pulled in or being staged.
-> 
-> You can get the tree and the the patches from
+> Specify, what happens when 0 is written there?
+> 									Pavel
 
-> https://git.linaro.org/people/lina.iyer/linux-next.git/shortlog/refs/heads/cpuidle-v8
-> 
-> which are on top of 3.17-rc1, but you should be able to pull it on 
-> top
-> of yours, without any issue. Do note that some of these patches that 
-> I
-> have on top of 3.17-rc1 (like the ARM idle states) may already be
-> available in linus/master.
-> 
-> Hope that helps.
+Yes, I will add:  'Write 0 has no effect.'
 
-Yep, this is better.
+Alan
 
-Thank you,
-Ivan
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+> 
