@@ -1,49 +1,75 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v4 3/3] ARM: shmobile: henninger: enable HS-USB
-Date: Fri, 24 Oct 2014 19:45:08 +0900
-Message-ID: <1414147508-5556-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1414147508-5556-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH v2 2/3] fpga manager: framework core
+Date: Fri, 24 Oct 2014 12:52:00 +0200
+Message-ID: <20141024105200.GA20775@amd>
+References: <1414007405-32186-1-git-send-email-atull@opensource.altera.com>
+ <1414007405-32186-3-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1414147508-5556-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, sergei.shtylyov@cogentembedded.com, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414007405-32186-3-git-send-email-atull@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: atull@opensource.altera.com
+Cc: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-Enable HS-USB device for the Henninger board, defining the GPIO that the driver
-should check when probing (which is the ID output from MAX3355 OTG chip).
+Hi!
 
-Note that there will be pinctrl-related error messages if both internal PCI
-and HS-USB drivers are enabled but they should be just ignored.
+> * /sys/class/fpga_manager/<fpga>/firmware
+>   Name of FPGA image file to load using firmware class.
+>   $ echo image.rbf > /sys/class/fpga_manager/<fpga>/firmware
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-[Sergei: added pin function/group and prop, moved device node, fixed summary,
-added changelog]
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
----
- arch/arm/boot/dts/r8a7791-henninger.dts |    7 +++++++
- 1 file changed, 7 insertions(+)
+I .. still don't think this is good idea. What about namespaces?
+The path corresponds to path in which namespace?
 
-diff --git a/arch/arm/boot/dts/r8a7791-henninger.dts b/arch/arm/boot/dts/r8a7791-henninger.dts
-index ef2cb92..740e386 100644
---- a/arch/arm/boot/dts/r8a7791-henninger.dts
-+++ b/arch/arm/boot/dts/r8a7791-henninger.dts
-@@ -272,6 +272,13 @@
- 	pinctrl-names = "default";
- };
- 
-+&hsusb {
-+	status = "okay";
-+	pinctrl-0 = <&usb0_pins>;
-+	pinctrl-names = "default";
-+	renesas,enable-gpio = <&gpio5 31 GPIO_ACTIVE_HIGH>;
-+};
-+
- &usbphy {
- 	status = "okay";
- };
+> +int fpga_mgr_write(struct fpga_manager *mgr, const char *buf, size_t count)
+> +{
+> +	int ret;
+> +
+> +	if (test_and_set_bit_lock(FPGA_MGR_BUSY, &mgr->flags))
+> +		return -EBUSY;
+> +
+> +	dev_info(mgr->dev, "writing buffer to %s\n", mgr->name);
+> +
+> +	ret = __fpga_mgr_write(mgr, buf, count);
+> +	clear_bit_unlock(FPGA_MGR_BUSY, &mgr->flags);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(fpga_mgr_write);
+
+Is the EBUSY -- userspace please try again, but you don't know when to
+try again -- right interface? I mean, normally kernel would wait, so
+that userland does not have to poll?
+
+> +static ssize_t fpga_mgr_firmware_store(struct device *dev,
+> +				       struct device_attribute *attr,
+> +				       const char *buf, size_t count)
+> +{
+> +	struct fpga_manager *mgr = dev_get_drvdata(dev);
+> +	unsigned int len;
+> +	char image_name[NAME_MAX];
+> +	int ret;
+> +
+> +	/* lose terminating \n */
+> +	strcpy(image_name, buf);
+> +	len = strlen(image_name);
+> +	if (image_name[len - 1] == '\n')
+> +		image_name[len - 1] = 0;
+> +
+> +	ret = fpga_mgr_firmware_write(mgr, image_name);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return count;
+> +}
+
+This shows why the interface is not right... Valid filename may
+contain \n, right? It may even end with \n.
+
+Best regards,
+									Pavel
 -- 
-1.7.9.5
-
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
