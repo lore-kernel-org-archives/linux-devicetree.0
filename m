@@ -1,29 +1,46 @@
-From: Yingjoe Chen <srv_yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH 6/7] arm: mediatek: enable gpt6 on boot up to make arch
- timer working
-Date: Fri, 24 Oct 2014 21:53:34 +0800
-Message-ID: <1414158814.14830.610.camel@mtksdaap41>
-References: <1406824943-24052-1-git-send-email-matthias.bgg@gmail.com>
-	 <1406824943-24052-7-git-send-email-matthias.bgg@gmail.com>
-	 <CACRpkdbRhGE8tcKj+W_4F9-xmcm-fxcYuCmLOqX-ESC+3PAmyA@mail.gmail.com>
-	 <CABuKBe+Q3tnN0s22EMY-dK_6FeN_xN9SmrsW3dPONR6QDJ+V_w@mail.gmail.com>
-	 <CACRpkdZOB=9wQ3R3sfcBEiNXLVRtgob4iLZ9QWXyVrgjqyvGXQ@mail.gmail.com>
-	 <CABuKBeJOgkDZ8drPf3LnT2jPH7PEWX2__HDM7_jZbg2BhDRy3g@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine driver support
+Date: Fri, 24 Oct 2014 15:58:51 +0200
+Message-ID: <1967130.oYyZRWCcEF@wuerfel>
+References: <1413374436-14410-1-git-send-email-sthokal@xilinx.com> <3236720.MHeqOodrCV@wuerfel> <7dc11ef7ccec49bcb052c30b9aa916c3@BL2FFO11FD044.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABuKBeJOgkDZ8drPf3LnT2jPH7PEWX2__HDM7_jZbg2BhDRy3g@mail.gmail.com>
+In-Reply-To: <7dc11ef7ccec49bcb052c30b9aa916c3@BL2FFO11FD044.protection.gbl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Mike Turquette <mturquette@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbart>
+To: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, Srikanth Vemula <svemula@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srikanth Thokala <sthokal@xilinx.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>
 List-Id: devicetree@vger.kernel.org
 
+On Friday 24 October 2014 12:08:26 Appana Durga Kedareswara Rao wrote:
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> > On Tuesday 21 October 2014 09:06:13 Appana Durga Kedareswara Rao wrote:
+> > > The above mentioned API's  and structures will be used by the dma test
+> > > client driver's to set hardware configuration information. The dma
+> > > client drivers are not mainlined  yet and it is Internally used by
+> > > our git-tree  to test the DMA functionality in loopback .
+> > 
+> > I would suggest you add the test driver into the main dmaengine driver
+> > file directly then, so you don't need to export the symbols. If there are
+> > important reasons to keep that as separate files, just move the header to
+> > the drivers/dma/ directory and add the test driver there.
+> 
+> Sorry I forgot to mention the below things in the mail .The Config API's and
+> structures not only used by the dmaengine driver's but also used by
+> the  various IP's  (Ex: Ethernet driver and SRIO driver these drivers are
+> under development).For example the Ethernet driver is resides under
+> drivers/net/ethernet but it needs to set some specific configuration
+> parameters of the dma that's why created a separate header file for the h/w
+> configurable parameters.
 
-Hi Matthias,
+That is a bug in the ethernet driver, and we should not merge such code.
 
-I didn't saw this in v3.18-rc1, are you working on version 2 of this?
-mt8135 and m8127 also need this fixup and we need this to have SMP
-working.
+Please fix those drivers before submitting them, so they don't rely on
+additional interfaces beyond what the DMA engine API provides.
 
-Joe.C
+If you need something that the common interface is missing, you can
+send a patch to extend the dmaengine core driver, but more likely it
+already does what you need and you are just not using it right.
+
+	Arnd
