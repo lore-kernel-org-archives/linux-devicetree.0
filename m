@@ -1,35 +1,49 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v4 0/3] HS-USB device tree support for R8A7791/Koelsch/Henninger board
-Date: Fri, 24 Oct 2014 19:45:05 +0900
-Message-ID: <1414147508-5556-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v4 1/3] ARM: shmobile: r8a7791: add HS-USB device node
+Date: Fri, 24 Oct 2014 19:45:06 +0900
+Message-ID: <1414147508-5556-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1414147508-5556-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1414147508-5556-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: horms@verge.net.au, sergei.shtylyov@cogentembedded.com, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
 Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-   Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
-'renesas-devel-20141024-v3.18-rc1' tag. Here we add the HS-USB device tree
-support on the R8A7791/Koelsch/Henninger reference boards. The patchset
-requires the USB PHY driver (already merged by Kishon and Greg) and the
-generic PHY support patches for the HS-USB driver posted by Yoshihiro Shimoda
-in order to work...
+Define the R8A7791 generic part of the HS-USB device node. It is up to the board
+file to enable the device.
 
-Changes from v3:
- - rebase the repository.
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+[Sergei: fixed summary, added changelog]
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+---
+ arch/arm/boot/dts/r8a7791.dtsi |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Yoshihiro Shimoda (3):
-  ARM: shmobile: r8a7791: add HS-USB device node
-  ARM: shmobile: koelsch: enable HS-USB
-  ARM: shmobile: henninger: enable HS-USB
-
- arch/arm/boot/dts/r8a7791-henninger.dts |    7 +++++++
- arch/arm/boot/dts/r8a7791-koelsch.dts   |    7 +++++++
- arch/arm/boot/dts/r8a7791.dtsi          |   11 +++++++++++
- 3 files changed, 25 insertions(+)
-
+diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
+index 1f4b6db..51a1b84 100644
+--- a/arch/arm/boot/dts/r8a7791.dtsi
++++ b/arch/arm/boot/dts/r8a7791.dtsi
+@@ -637,6 +637,17 @@
+ 		status = "disabled";
+ 	};
+ 
++	hsusb: usb@e6590000 {
++		compatible = "renesas,usbhs-r8a7791";
++		reg = <0 0xe6590000 0 0x100>;
++		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp7_clks R8A7791_CLK_HSUSB>;
++		renesas,buswait = <4>;
++		phys = <&usb0 1>;
++		phy-names = "usb";
++		status = "disabled";
++	};
++
+ 	usbphy: usb-phy@e6590100 {
+ 		compatible = "renesas,usb-phy-r8a7791";
+ 		reg = <0 0xe6590100 0 0x100>;
 -- 
 1.7.9.5
 
