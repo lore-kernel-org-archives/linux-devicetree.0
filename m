@@ -1,57 +1,123 @@
-From: Gyungoh Yoo <gyungoh@gmail.com>
-Subject: Re: [RESUBMIT PATCH v4 7/8] regulator: sky81452: Add compatible
- string for device binding
-Date: Fri, 24 Oct 2014 16:54:23 +0900
-Message-ID: <20141024075423.GA3239@jack-ThinkPad-T520>
-References: <20141014011112.GB2751@jack-ThinkPad-T520>
- <20141014075606.GN27755@sirena.org.uk>
- <20141017091950.GA3233@jack-ThinkPad-T520>
- <20141017101734.GB1820@sirena.org.uk>
- <20141017104309.GA3136@jack-ThinkPad-T520>
- <20141017142605.GU1820@sirena.org.uk>
- <20141020061024.GA9406@jack-ThinkPad-T520>
- <20141022102723.GL2344@sirena.org.uk>
- <20141023031443.GA3244@jack-ThinkPad-T520>
- <20141023130103.GC3729@sirena.org.uk>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH V3 3/3] rtc: omap: Support regulator supply for RTC
+Date: Fri, 24 Oct 2014 09:53:12 +0200
+Message-ID: <20141024075312.GD28808@localhost>
+References: <1414126425-13198-1-git-send-email-lokeshvutla@ti.com>
+ <1414126425-13198-4-git-send-email-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20141023130103.GC3729@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
+In-Reply-To: <1414126425-13198-4-git-send-email-lokeshvutla@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: rtc-linux@googlegroups.com, linux-omap@vger.kernel.org, a.zummo@towertech.it, johan@kernel.org, tony@atomide.com, bcousson@baylibre.com, balbi@ti.com, akpm@linux-foundation.org, linux@roeck-us.net, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 23, 2014 at 02:01:03PM +0100, Mark Brown wrote:
-> On Thu, Oct 23, 2014 at 12:14:43PM +0900, Gyungoh Yoo wrote:
+On Fri, Oct 24, 2014 at 10:23:45AM +0530, Lokesh Vutla wrote:
+> On some Soc's RTC is powered by an external power regulator.
+> e.g. RTC on DRA7 SoC. Make the OMAP RTC driver support a
+> power regulator.
 > 
-> > So, what do you think about DT like below?
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+>  Documentation/devicetree/bindings/rtc/rtc-omap.txt |  3 +++
+>  drivers/rtc/rtc-omap.c                             | 24 ++++++++++++++++++++++
+>  2 files changed, 27 insertions(+)
 > 
-> > sky81452@2c {
-> > 	compatible = "skyworks,sky81452";
-> > 	reg = <0x2c>;
-> > 
-> > 	backlight {
-> > 		compatible = "skyworks,sky81452-backlight";
-> > 		name = "pwm-backlight";
-> > 		enable = <0x3F>;
-> > 		ignore-pwm;
-> > 	};
-> > 
-> > 	regulator {
-> > 		compatible = "skyworks,sky81452-regulator";
-> 
-> Yes, this is good but I still feel that the above compatible is
-> redundant and shouildn't be there.
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+> index 750efd4..e7ad12b 100644
+> --- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+> +++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+> @@ -15,6 +15,8 @@ Required properties:
+>  Optional properties:
+>  - ti,system-power-controller: whether the rtc is controlling the system power
+>    through pmic_power_en
+> +Optional Properties:
 
-I see. I will remove compatible string at the next resubmit.
+No need to repeat the "Optional Properties" header.
 
-> 
-> > 		lout@0 {
-> > 			regulator-name = "LOUT";
-> > 			regulator-min-microvolt = <4500000>;
-> > 			regulator-max-microvolt = <8000000>;
-> > 		};
-> > 	};
-> > };
+> +- vrtc-supply: phandle to the regulator device tree node if needed
+>  
+>  Example:
+>  
+> @@ -25,4 +27,5 @@ rtc@1c23000 {
+>  		      19>;
+>  	interrupt-parent = <&intc>;
+>  	ti,system-power-controller;
+> +	vrtc-supply = <&ldo9_reg>;
+>  };
+> diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
+> index d9bb5e7..61fe630 100644
+> --- a/drivers/rtc/rtc-omap.c
+> +++ b/drivers/rtc/rtc-omap.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/of_device.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/io.h>
+> +#include <linux/regulator/consumer.h>
+>  
+>  /*
+>   * The OMAP RTC is a year/month/day/hours/minutes/seconds BCD clock
+> @@ -134,6 +135,7 @@ struct omap_rtc {
+>  	u8 interrupts_reg;
+>  	bool is_pmic_controller;
+>  	const struct omap_rtc_device_type *type;
+> +	struct regulator *supply;
+>  };
+>  
+>  static inline u8 rtc_read(struct omap_rtc *rtc, unsigned int reg)
+> @@ -516,6 +518,22 @@ static int omap_rtc_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, rtc);
+
+Also could you move the regulator allocation before this
+platform_set_drvdata when resending? It's not required, but that call
+sort of separates the allocations from the device initialisation
+currently.
+
+> +	rtc->supply = devm_regulator_get_optional(&pdev->dev, "vrtc");
+> +	if (IS_ERR(rtc->supply)) {
+> +		if (PTR_ERR(rtc->supply) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +
+> +		rtc->supply = NULL;
+> +	}
+> +
+> +	if (rtc->supply) {
+> +		ret = regulator_enable(rtc->supply);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "regulator enable failed\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	/* Enable the clock/module so that we can access the registers */
+>  	pm_runtime_enable(&pdev->dev);
+>  	pm_runtime_get_sync(&pdev->dev);
+> @@ -624,6 +642,9 @@ err:
+>  	pm_runtime_put_sync(&pdev->dev);
+>  	pm_runtime_disable(&pdev->dev);
+>  
+> +	if (rtc->supply)
+> +		regulator_disable(rtc->supply);
+> +
+>  	return ret;
+>  }
+>  
+> @@ -649,6 +670,9 @@ static int __exit omap_rtc_remove(struct platform_device *pdev)
+>  	pm_runtime_put_sync(&pdev->dev);
+>  	pm_runtime_disable(&pdev->dev);
+>  
+> +	if (rtc->supply)
+> +		regulator_disable(rtc->supply);
+> +
+>  	return 0;
+>  }
+
+Looks good otherwise. Feel free to add
+
+Reviewed-by: Johan Hovold <johan@kernel.org>
+
+Thanks,
+Johan
