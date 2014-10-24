@@ -1,129 +1,54 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v2 7/9] video: Add ADV751[13] DT bindings documentation
-Date: Fri, 24 Oct 2014 15:58:13 +0300
-Message-ID: <1414155495-3979-8-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1414155495-3979-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1414155495-3979-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH] bcm2835: add VideoCore Mailbox to the device tree
+Date: Fri, 24 Oct 2014 15:20:05 +0200
+Message-ID: <1414156805-30253-1-git-send-email-lkundrak@v3.sk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-rpi-kernel@lists.infradead.org
+Cc: Lubomir Rintel <lkundrak@v3.sk>, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-The ADV7511, ADV7511W and ADV7513 are HDMI audio and video transmitters
-compatible with HDMI 1.4 and DVI 1.0. They're described in DT using the
-OF graph bindings and a list of custom properties pertaining to the
-input video bus configuration.
+Follows the generic Mailbox Controller bindings as documented in
+Documentation/devicetree/bindings/mailbox/mailbox.txt.
 
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Lee Jones <lee.jones@linaro.org>
 Cc: devicetree@vger.kernel.org
-Cc: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-
+Cc: linux-rpi-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
 ---
+ arch/arm/boot/dts/bcm2835.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Changes since v1:
-
-- Clarify the adi,input-format DT property documentation
-- Fixed typo
----
- .../devicetree/bindings/video/adi,adv7511.txt      | 88 ++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/adi,adv7511.txt
-
-diff --git a/Documentation/devicetree/bindings/video/adi,adv7511.txt b/Documentation/devicetree/bindings/video/adi,adv7511.txt
-new file mode 100644
-index 000000000000..96c25ee01501
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/adi,adv7511.txt
-@@ -0,0 +1,88 @@
-+Analog Device ADV7511(W)/13 HDMI Encoders
-+-----------------------------------------
-+
-+The ADV7511, ADV7511W and ADV7513 are HDMI audio and video transmitters
-+compatible with HDMI 1.4 and DVI 1.0. They support color space conversion,
-+S/PDIF, CEC and HDCP.
-+
-+Required properties:
-+
-+- compatible: Should be one of "adi,adv7511", "adi,adv7511w" or "adi,adv7513"
-+- reg: I2C slave address
-+
-+The ADV7511 supports a large number of input data formats that differ by their
-+color depth, color format, clock mode, bit justification and random
-+arrangement of components on the data bus. The combination of the following
-+properties describe the input and map directly to the video input tables of the
-+ADV7511 datasheet that document all the supported combinations.
-+
-+- adi,input-depth: Number of bits per color component at the input (8, 10 or
-+  12).
-+- adi,input-colorspace: The input color space, one of "rgb", "yuv422" or
-+  "yuv444".
-+- adi,input-clock: The input clock type, one of "1x" (one clock cycle per
-+  pixel), "2x" (two clock cycles per pixel), "ddr" (one clock cycle per pixel,
-+  data driven on both edges).
-+
-+The following input format properties are required except in "rgb 1x" and
-+"yuv444 1x" modes, in which case they must not be specified.
-+
-+- adi,input-style: The input components arrangement variant (1, 2 or 3), as
-+  listed in the input format tables in the datasheet.
-+- adi,input-justification: The input bit justification ("left", "evenly",
-+  "right").
-+
-+Optional properties:
-+
-+- interrupts: Specifier for the ADV7511 interrupt
-+- pd-gpios: Specifier for the GPIO connected to the power down signal
-+
-+- adi,clock-delay: Video data clock delay relative to the pixel clock, in ps
-+  (-1200 ps .. 1600 ps). Defaults to no delay.
-+- adi,embedded-sync: The input uses synchronization signals embedded in the
-+  data stream (similar to BT.656). Defaults to separate H/V synchronization
-+  signals.
-+
-+Required nodes:
-+
-+The ADV7511 has two video ports. Their connections are modelled using the OF
-+graph bindings specified in Documentation/devicetree/bindings/graph.txt.
-+
-+- Video port 0 for the RGB or YUV input
-+- Video port 1 for the HDMI output
-+
-+
-+Example
-+-------
-+
-+	adv7511w: hdmi@39 {
-+		compatible = "adi,adv7511w";
-+		reg = <39>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
-+
-+		adi,input-depth = <8>;
-+		adi,input-colorspace = "rgb";
-+		adi,input-clock = "1x";
-+		adi,input-style = <1>;
-+		adi,input-justification = "evenly";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				adv7511w_in: endpoint {
-+					remote-endpoint = <&dpi_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				adv7511_out: endpoint {
-+					remote-endpoint = <&hdmi_connector_in>;
-+				};
-+			};
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index 3342cb1..bd046a9 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -50,6 +50,13 @@
+ 			#interrupt-cells = <2>;
+ 		};
+ 
++		mailbox: mailbox@0x7e00b880 {
++			compatible = "brcm,bcm2835-mbox";
++			reg = <0x7e00b880 0x40>;
++			interrupts = <0 1>;
++			#mbox-cells = <1>;
 +		};
-+	};
++
+ 		watchdog@7e100000 {
+ 			compatible = "brcm,bcm2835-pm-wdt";
+ 			reg = <0x7e100000 0x28>;
 -- 
-2.0.4
-
+2.1.0
