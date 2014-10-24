@@ -1,7 +1,7 @@
 From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCHv6 3/6] ARM: dts: Add initial LS1021A TWR board dts support
-Date: Fri, 24 Oct 2014 18:08:44 +0800
-Message-ID: <1414145327-23541-4-git-send-email-jingchang.lu@freescale.com>
+Subject: [PATCHv6 6/6] ARM: imx: Add Freescale LS1021A SMP support
+Date: Fri, 24 Oct 2014 18:08:47 +0800
+Message-ID: <1414145327-23541-7-git-send-email-jingchang.lu@freescale.com>
 References: <1414145327-23541-1-git-send-email-jingchang.lu@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,169 +9,105 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1414145327-23541-1-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The LS1021A TWR is a low cost, high-performance evaluation,
-development and test platform supporting the LS1021A processor.
-It is optimized to support the high-bandwidth DDR3L memory and
-a full complement of high-speed SerDes ports.
+From: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-For more detail information about the LS1021A TWR board, please
-refer to LS1021A QorIQ Tower System Reference Manual.
+Freescale LS1021A SoCs deploy two cortex-A7 processors,
+this adds bring-up support for the secondary core.
 
-Signed-off-by: Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile       |   1 +
- arch/arm/boot/dts/ls1021atwr.dts | 127 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 128 insertions(+)
- create mode 100755 arch/arm/boot/dts/ls1021atwr.dts
+ arch/arm/mach-imx/Makefile       |  2 +-
+ arch/arm/mach-imx/common.h       |  1 +
+ arch/arm/mach-imx/mach-ls1021a.c |  1 +
+ arch/arm/mach-imx/platsmp.c      | 33 +++++++++++++++++++++++++++++++++
+ 4 files changed, 36 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d75527a..9ce43aa 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -252,6 +252,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
- 	imx6sl-evk.dtb \
- 	imx6sx-sdb.dtb \
- 	ls1021aqds.dtb \
-+	ls1021atwr.dtb \
- 	vf610-colibri-eval-v3.dtb \
- 	vf610-cosmic.dtb \
- 	vf610-twr.dtb
-diff --git a/arch/arm/boot/dts/ls1021atwr.dts b/arch/arm/boot/dts/ls1021atwr.dts
-new file mode 100755
-index 0000000..a2c591e
---- /dev/null
-+++ b/arch/arm/boot/dts/ls1021atwr.dts
-@@ -0,0 +1,127 @@
-+/*
-+ * Copyright 2013-2014 Freescale Semiconductor, Inc.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of
-+ *     the License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this file; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
+diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
+index ce137bc..38d75e2 100644
+--- a/arch/arm/mach-imx/Makefile
++++ b/arch/arm/mach-imx/Makefile
+@@ -89,7 +89,7 @@ obj-$(CONFIG_HAVE_IMX_ANATOP) += anatop.o
+ obj-$(CONFIG_HAVE_IMX_GPC) += gpc.o
+ obj-$(CONFIG_HAVE_IMX_MMDC) += mmdc.o
+ obj-$(CONFIG_HAVE_IMX_SRC) += src.o
+-ifdef CONFIG_SOC_IMX6
++ifneq ($(CONFIG_SOC_IMX6)$(CONFIG_SOC_LS1021A),)
+ AFLAGS_headsmp.o :=-Wa,-march=armv7-a
+ obj-$(CONFIG_SMP) += headsmp.o platsmp.o
+ obj-$(CONFIG_HOTPLUG_CPU) += hotplug.o
+diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
+index 1dabf43..c473ca5 100644
+--- a/arch/arm/mach-imx/common.h
++++ b/arch/arm/mach-imx/common.h
+@@ -157,5 +157,6 @@ static inline void imx_init_l2cache(void) {}
+ #endif
+ 
+ extern struct smp_operations imx_smp_ops;
++extern struct smp_operations ls1021a_smp_ops;
+ 
+ #endif
+diff --git a/arch/arm/mach-imx/mach-ls1021a.c b/arch/arm/mach-imx/mach-ls1021a.c
+index 9d2034b..b89c858 100644
+--- a/arch/arm/mach-imx/mach-ls1021a.c
++++ b/arch/arm/mach-imx/mach-ls1021a.c
+@@ -17,5 +17,6 @@ static const char * const ls1021a_dt_compat[] __initconst = {
+ };
+ 
+ DT_MACHINE_START(LS1021A, "Freescale LS1021A")
++	.smp		= smp_ops(ls1021a_smp_ops),
+ 	.dt_compat	= ls1021a_dt_compat,
+ MACHINE_END
+diff --git a/arch/arm/mach-imx/platsmp.c b/arch/arm/mach-imx/platsmp.c
+index 771bd25..7f27001 100644
+--- a/arch/arm/mach-imx/platsmp.c
++++ b/arch/arm/mach-imx/platsmp.c
+@@ -11,7 +11,10 @@
+  */
+ 
+ #include <linux/init.h>
++#include <linux/of_address.h>
++#include <linux/of.h>
+ #include <linux/smp.h>
 +
-+/dts-v1/;
-+#include "ls1021a.dtsi"
+ #include <asm/cacheflush.h>
+ #include <asm/page.h>
+ #include <asm/smp_scu.h>
+@@ -94,3 +97,33 @@ struct smp_operations  imx_smp_ops __initdata = {
+ 	.cpu_kill		= imx_cpu_kill,
+ #endif
+ };
 +
-+/ {
-+	model = "LS1021A TWR Board";
++#define DCFG_CCSR_SCRATCHRW1	0x200
 +
-+	aliases {
-+		enet2_rgmii_phy = &rgmii_phy1;
-+		enet0_sgmii_phy = &sgmii_phy2;
-+		enet1_sgmii_phy = &sgmii_phy0;
-+	};
-+};
++static int ls1021a_boot_secondary(unsigned int cpu, struct task_struct *idle)
++{
++	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
 +
-+&dspi1 {
-+	bus-num = <0>;
-+	status = "okay";
++	return 0;
++}
 +
-+	dspiflash: s25fl064k@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25fl064k";
-+		spi-max-frequency = <16000000>;
-+		spi-cpol;
-+		spi-cpha;
-+		reg = <0>;
-+	};
-+};
++static void __init ls1021a_smp_prepare_cpus(unsigned int max_cpus)
++{
++	struct device_node *np;
++	void __iomem *dcfg_base;
++	unsigned long paddr;
 +
-+&i2c0 {
-+	status = "okay";
-+};
++	np = of_find_compatible_node(NULL, NULL, "fsl,ls1021a-dcfg");
++	dcfg_base = of_iomap(np, 0);
++	BUG_ON(!dcfg_base);
 +
-+&i2c1 {
-+	status = "okay";
-+};
++	paddr = virt_to_phys(secondary_startup);
++	writel_relaxed(cpu_to_be32(paddr), dcfg_base + DCFG_CCSR_SCRATCHRW1);
 +
-+&ifc {
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+	/* NOR Flash on board */
-+	ranges = <0x0 0x0 0x0 0x60000000 0x08000000>;
-+	status = "okay";
++	iounmap(dcfg_base);
++}
 +
-+	nor@0,0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "cfi-flash";
-+		reg = <0x0 0x0 0x8000000>;
-+		bank-width = <2>;
-+		device-width = <1>;
-+	};
-+};
-+
-+&lpuart0 {
-+	status = "okay";
-+};
-+
-+&mdio0 {
-+	sgmii_phy0: ethernet-phy@0 {
-+		reg = <0x0>;
-+	};
-+	rgmii_phy1: ethernet-phy@1 {
-+		reg = <0x1>;
-+	};
-+	sgmii_phy2: ethernet-phy@2 {
-+		reg = <0x2>;
-+	};
-+	tbi1: tbi-phy@1f {
-+		reg = <0x1f>;
-+		device_type = "tbi-phy";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
++struct smp_operations  ls1021a_smp_ops __initdata = {
++	.smp_prepare_cpus	= ls1021a_smp_prepare_cpus,
++	.smp_boot_secondary	= ls1021a_boot_secondary,
 +};
 -- 
 1.8.0
