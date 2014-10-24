@@ -1,181 +1,56 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: GPIO bindings guidelines (Was: Re: [PATCH v5 10/12] gpio: Support for unified device properties interface)
-Date: Sat, 25 Oct 2014 00:00:33 +0200
-Message-ID: <1971306.rIA5QAW7ve@vostro.rjw.lan>
-References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com> <1581499.2RkCnyfbq6@vostro.rjw.lan> <20141024073436.GN1484@lahna.fi.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20141024073436.GN1484@lahna.fi.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH] ARM: dts: Add SPI DMA into rk3288.dtsi
+Date: Fri, 24 Oct 2014 14:42:06 -0700
+Message-ID: <1414186926-25986-1-git-send-email-dianders@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, October 24, 2014 10:34:36 AM Mika Westerberg wrote:
-> On Thu, Oct 23, 2014 at 11:51:59PM +0200, Rafael J. Wysocki wrote:
-> > OK, let's try to take that a bit farther. :-)
-> > 
-> > With the (untested) patch below applied (which is a replacement for the one
-> > sent previously), the driver can use static tables like these:
-> > 
-> > static struct acpi_gpio_params reset_gpios = { 0, 0, false };
-> > statuc struct acpi_gpio_params shutdown_gpios = { 1, 0, false };
-> > 
-> > static struct acpi_gpio_mapping my_gpio_mapping[] = {
-> > 	{ "reset-gpios", &reset_gpios, 1 },
-> > 	{ "shutdown-gpios", &shutdown_gpios, 1 },
-> > 	NULL,
-> > };
-> > 
-> 
-> This is even better :-)
-> 
-> I tried this with few changes:
-> 
->  - constify the mapping parameter
->  - check for NULL adev->driver_gpios in acpi_get_driver_gpio_data()
->  - check for gm->name instead of gm in acpi_get_driver_gpio_data()
-> 
-> It works just fine. For reference here are my changes to rkill-gpio.c:
-> 
-> diff --git a/net/rfkill/rfkill-gpio.c b/net/rfkill/rfkill-gpio.c
-> index 0f62326c0f5e..ec8f5ac53520 100644
-> --- a/net/rfkill/rfkill-gpio.c
-> +++ b/net/rfkill/rfkill-gpio.c
-> @@ -63,6 +63,15 @@ static const struct rfkill_ops rfkill_gpio_ops = {
->  	.set_block = rfkill_gpio_set_power,
->  };
->  
-> +static const struct acpi_gpio_params reset_gpios = { 0, 0, false };
-> +static const struct acpi_gpio_params shutdown_gpios = { 1, 0, false };
-> +
-> +static const struct acpi_gpio_mapping acpi_rfkill_default_gpios[] = {
-> +	{ "reset-gpios", &reset_gpios, 1 },
-> +	{ "shutdown-gpios", &shutdown_gpios, 1 },
-> +	{ },
-> +};
-> +
->  static int rfkill_gpio_acpi_probe(struct device *dev,
->  				  struct rfkill_gpio_data *rfkill)
->  {
-> @@ -75,7 +84,8 @@ static int rfkill_gpio_acpi_probe(struct device *dev,
->  	rfkill->name = dev_name(dev);
->  	rfkill->type = (unsigned)id->driver_data;
->  
-> -	return 0;
-> +	return acpi_dev_add_driver_gpios(ACPI_COMPANION(dev),
-> +					 acpi_rfkill_default_gpios);
->  }
->  
->  static int rfkill_gpio_probe(struct platform_device *pdev)
-> @@ -110,7 +120,7 @@ static int rfkill_gpio_probe(struct platform_device *pdev)
->  		rfkill->reset_gpio = gpio;
->  	}
->  
-> -	gpio = devm_gpiod_get_index(&pdev->dev, "shutdown", 1);
-> +	gpio = devm_gpiod_get_index(&pdev->dev, "shutdown", 0);
->  	if (!IS_ERR(gpio)) {
->  		ret = gpiod_direction_output(gpio, 0);
->  		if (ret)
-> @@ -150,6 +160,8 @@ static int rfkill_gpio_remove(struct platform_device *pdev)
->  	rfkill_unregister(rfkill->rfkill_dev);
->  	rfkill_destroy(rfkill->rfkill_dev);
->  
-> +	acpi_dev_remove_driver_gpios(ACPI_COMPANION(&pdev->dev));
-> +
->  	return 0;
->  }
->  
-> And here are the changes on top of your patch:
-> 
-> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> index 691501b53c5e..4151cd774f2f 100644
-> --- a/drivers/gpio/gpiolib-acpi.c
-> +++ b/drivers/gpio/gpiolib-acpi.c
-> @@ -288,7 +288,7 @@ void acpi_gpiochip_free_interrupts(struct gpio_chip *chip)
->  }
->  
->  int acpi_dev_add_driver_gpios(struct acpi_device *adev,
-> -			      struct acpi_gpio_mapping *gpios)
-> +			      const struct acpi_gpio_mapping *gpios)
->  {
->  	if (adev && gpios) {
->  		adev->driver_gpios = gpios;
-> @@ -302,11 +302,14 @@ static bool acpi_get_driver_gpio_data(struct acpi_device *adev,
->  				      const char *name, int index,
->  				      struct acpi_reference_args *args)
->  {
-> -	struct acpi_gpio_mapping *gm;
-> +	const struct acpi_gpio_mapping *gm;
->  
-> -	for (gm = adev->driver_gpios; gm; gm++)
-> +	if (!adev->driver_gpios)
-> +		return false;
-> +
-> +	for (gm = adev->driver_gpios; gm->name; gm++)
->  		if (!strcmp(name, gm->name) && gm->data && index < gm->size) {
-> -			struct acpi_gpio_params *par = gm->data + index;
-> +			const struct acpi_gpio_params *par = gm->data + index;
->  
->  			args->adev = adev;
->  			args->args[0] = par->crs_entry_index;
-> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> index 2de7a2614c61..98d992062270 100644
-> --- a/include/acpi/acpi_bus.h
-> +++ b/include/acpi/acpi_bus.h
-> @@ -368,7 +368,7 @@ struct acpi_device {
->  	struct acpi_scan_handler *handler;
->  	struct acpi_hotplug_context *hp;
->  	struct acpi_driver *driver;
-> -	struct acpi_gpio_mapping *driver_gpios;
-> +	const struct acpi_gpio_mapping *driver_gpios;
->  	void *driver_data;
->  	struct device dev;
->  	unsigned int physical_node_count;
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 26b7a639f4b9..23f9c55d0331 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -680,13 +680,13 @@ struct acpi_gpio_params {
->  
->  struct acpi_gpio_mapping {
->  	const char *name;
-> -	struct acpi_gpio_params *data;
-> +	const struct acpi_gpio_params *data;
->  	unsigned int size;
->  };
->  
->  #if defined(CONFIG_ACPI) && defined(CONFIG_GPIOLIB)
->  int acpi_dev_add_driver_gpios(struct acpi_device *adev,
-> -			      struct acpi_gpio_mapping *gpios);
-> +			      const struct acpi_gpio_mapping *gpios);
->  
->  static inline void acpi_dev_remove_driver_gpios(struct acpi_device *adev)
->  {
-> @@ -695,7 +695,7 @@ static inline void acpi_dev_remove_driver_gpios(struct acpi_device *adev)
->  }
->  #else
->  static inline int acpi_dev_add_driver_gpios(struct acpi_device *adev,
-> -			      struct acpi_gpio_mapping *gpios)
-> +			      const struct acpi_gpio_mapping *gpios)
->  {
->  	return -ENXIO;
->  }
+Now that SPI DMA has been fixed on rk3288 we can enable it.
 
-Thanks!
+Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ arch/arm/boot/dts/rk3288.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I folded your fixes into my patch and I'm going to send the result, with a
-changelog, in a reply to this message.
-
-If everyone is happy with it, I'll add it to the device properties patch
-series as it depends on those.
-
-I guess you can add a changelog to your rfkill changes and then we could
-add them to that series too if there are no objections.
-
-
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 874e66d..e0b99f7 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -177,6 +177,8 @@
+ 		compatible = "rockchip,rk3288-spi", "rockchip,rk3066-spi";
+ 		clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
+ 		clock-names = "spiclk", "apb_pclk";
++		dmas = <&dmac_peri 11>, <&dmac_peri 12>;
++		dma-names = "tx", "rx";
+ 		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&spi0_clk &spi0_tx &spi0_rx &spi0_cs0>;
+@@ -190,6 +192,8 @@
+ 		compatible = "rockchip,rk3288-spi", "rockchip,rk3066-spi";
+ 		clocks = <&cru SCLK_SPI1>, <&cru PCLK_SPI1>;
+ 		clock-names = "spiclk", "apb_pclk";
++		dmas = <&dmac_peri 13>, <&dmac_peri 14>;
++		dma-names = "tx", "rx";
+ 		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&spi1_clk &spi1_tx &spi1_rx &spi1_cs0>;
+@@ -203,6 +207,8 @@
+ 		compatible = "rockchip,rk3288-spi", "rockchip,rk3066-spi";
+ 		clocks = <&cru SCLK_SPI2>, <&cru PCLK_SPI2>;
+ 		clock-names = "spiclk", "apb_pclk";
++		dmas = <&dmac_peri 15>, <&dmac_peri 16>;
++		dma-names = "tx", "rx";
+ 		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&spi2_clk &spi2_tx &spi2_rx &spi2_cs0>;
 -- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+2.1.0.rc2.206.gedb03e5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
