@@ -1,38 +1,47 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: shmobile: add USB3.0 device node on r8a7791
-Date: Fri, 24 Oct 2014 13:20:30 +0900
-Message-ID: <20141024042030.GC11281@verge.net.au>
-References: <1412749498-2748-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <5434D96B.4030304@renesas.com>
+From: Amit Kucheria <amit.kucheria@verdurent.com>
+Subject: Re: [PATCH v8 0/7] QCOM 8974 and 8084 cpuidle driver
+Date: Fri, 24 Oct 2014 09:51:15 +0530
+Message-ID: <CAHLCerMY3SCNixQjh7k2F=3DK1qa7JMeWsvwv426wNt8A_Vm-A@mail.gmail.com>
+References: <1412718106-17049-1-git-send-email-lina.iyer@linaro.org>
+	<1414078317.4214.4.camel@mm-sol.com>
+	<20141023155435.GA30210@ilina-mac.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5434D96B.4030304@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20141023155435.GA30210@ilina-mac.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Kevin Hilman <khilman@linaro.org>, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 08, 2014 at 03:27:55PM +0900, Yoshihiro Shimoda wrote:
-> (2014/10/08 15:24), Yoshihiro Shimoda wrote:
-> >  This patch is based on Simon's renesas.git branch and
-> > renesas-devel-20141007-v3.17 tag.
-> > Since koelsch and henninger doesn't have a USB3.0 connector,
-> > I submit a patch for r8a7791.dtsi only.
-> > 
-> > Yoshihiro Shimoda (1):
-> >   ARM: shmobile: r8a7791: add USB3.0 device node
-> > 
-> >  arch/arm/boot/dts/r8a7791.dtsi |   10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> > 
-> 
-> Oops, this patch means [PATCH 0/1]...
-> Also the "[PATCH] ARM: shmobile: r8a7791: add USB3.0 device node" email means
-> [PATCH 1/1].
+On Thu, Oct 23, 2014 at 9:24 PM, Lina Iyer <lina.iyer@linaro.org> wrote:
+> On Thu, Oct 23 2014 at 09:31 -0600, Ivan T. Ivanov wrote:
+>>
+>>
+>> Hi,
+>>
+>> On Tue, 2014-10-07 at 15:41 -0600, Lina Iyer wrote:
+>>>
+>>> Hi,
+>>>
+>>> This v8 revision of the cpuidle driver is available at
+>>> git.linaro.org:/people/lina.iyer/linux-next cpuidle-v8
+>>>
+>>
+>> Probably I missing something, but should I expect that
+>> once these patches are applied driver could be successfully
+>> compiled?
+>
+> Yes they should.
+>>
+>>
+>> Patches definitely break bisectability. For example [PATCH v8 1/7]
+>> is using <soc/qcom/pm.h> which is introduced [PATCH v8 4/7].
+>>
+> You are right. I missed checking compilation against each patch.
+> Based on some discussion, I need to see if pm.h is even needed.
+>
 
-Hi Shimoda-san,
+git test-sequence[1] is your friend.
 
-could you update me on the status of this patch.
-Should I queue it up?
+[1] http://dustin.sallings.org/2010/03/28/git-test-sequence.html
