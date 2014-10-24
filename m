@@ -1,53 +1,61 @@
-From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] mtd: hisilicon: add a new NAND controller driver
- for hisilicon hip04 Soc
-Date: Fri, 24 Oct 2014 19:46:11 +0800
-Message-ID: <CAN1soZz8NYxppaY4cXadqynERZ=6ZRAynDtptGAps+yUJZ0Qsw@mail.gmail.com>
-References: <1414073085-19296-1-git-send-email-wangzhou.bry@gmail.com>
-	<1414073085-19296-2-git-send-email-wangzhou.bry@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/3] pinctrl: meson: add device tree bindings documentation
+Date: Fri, 24 Oct 2014 13:53:28 +0200
+Message-ID: <CACRpkdb4WLX+FeEAuh=YZteaNPzq0WMN0PTTpHnMWmwTts6=Bg@mail.gmail.com>
+References: <1412717576-19737-1-git-send-email-b.galvani@gmail.com>
+	<1412717576-19737-3-git-send-email-b.galvani@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414073085-19296-2-git-send-email-wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1412717576-19737-3-git-send-email-b.galvani@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Beniamino Galvani <b.galvani@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Carlo Caione <carlo@caione.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 23, 2014 at 10:04 PM, Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Signed-off-by: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/mtd/nand/Kconfig        |    5 +
->  drivers/mtd/nand/Makefile       |    1 +
->  drivers/mtd/nand/hisi504_nand.c |  836 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 842 insertions(+)
->  create mode 100644 drivers/mtd/nand/hisi504_nand.c
+On Tue, Oct 7, 2014 at 11:32 PM, Beniamino Galvani <b.galvani@gmail.com> wrote:
+
+> Add device tree bindings documentation for Amlogic Meson pinmux and
+> GPIO controller.
 >
+> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+(...)
+> +Required properties for gpio sub-nodes:
+> + - reg: should contain address and size for mux, pull-enable, pull and
+> +   gpio register sets
+> + - reg-names: an array of strings describing the "reg" entries. Must
+> +   contain "mux", "pull" and "gpio". "pull-enable" is optional and
+> +   when it is missing the "pull" registers are used instead
 
-I think that you need to run scripts/checkpatch.pl. There're some
-warnings reported on this patch.
+So it seems segmenting the registers is done to sort of control the
+hardware versioning.
 
-> +
-> +       case NAND_CMD_SEQIN:
-> +               host->offset = column;
-> +
+I think it's better to use the compatible string to indicate different
+versions of the hardware and then have just have one big
+regs to cover all registers.
 
-It's better not using waterfall style. Maybe you can write it clearly.
-            case NAND_CMD_SEQIN:
-                    host->offset = column;
-                    set_addr(mtd, column, page_addr);
-                    break;
+> +Valid gpio sub-nodes name are:
+> + - "banks" for the standard banks
+> + - "ao-bank" for the AO bank which belong to the special always-on
+> +   power domain
 
-> +       chip->ecc.mode = of_get_nand_ecc_mode(np);
-> +       /* read ecc-bits from dts */
-> +       of_property_read_u32(np, "hisi,nand-ecc-bits", &host->ecc_bits);
+I think it's unnecessary to split up banks, the compatible property
+should be enough to know how many banks this controller has
+and where they are located in relation to the base offset.
 
-Do you need to check the ecc_bits at here? Maybe user inputed the
-wrong ecc_bits in DTS.
+> +Required properties for configuration nodes:
+> + - pins: the name of a pin group. The list of all available groups can
+> +   be found in driver sources.
+> + - function: the name of a function to activate for the specified set
+> +   of groups. The list of all available functions can be found in
+> +   driver sources.
 
-Best Regards
-Haojian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is interesting. I have established that for controllers mapping
+functions to groups we use
+"function" and "groups".
+
+So for per-pin configuration, "function" and "pins" would be
+apropriate.
+
+Yours,
+Linus Walleij
