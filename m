@@ -1,39 +1,61 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH v1 1/5] mfd: tps65910: Convert ti,system-power-controller
- DT property to poweroff-source
-Date: Fri, 24 Oct 2014 11:11:30 +0900
-Message-ID: <CAAVeFuLccYzU6aHUjGu-oUZoXaZ0dgRiiCHy5QoOvJgKypm=ug@mail.gmail.com>
-References: <1413991587-11110-1-git-send-email-romain.perier@gmail.com>
- <20141023081230.GK32045@tbergstrom-lnx.Nvidia.com> <CABgxDoKm5kKKCTD1njAerUrM24iVcGRDuhJ7b4qBVPqKBC4ftQ@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] clocksource: sh_mtu2: Correct SoC family name
+Date: Fri, 24 Oct 2014 11:15:16 +0900
+Message-ID: <20141024021513.GD7537@verge.net.au>
+References: <1413969978-15946-1-git-send-email-geert+renesas@glider.be>
+ <1593823.SBtdMLb0Ra@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABgxDoKm5kKKCTD1njAerUrM24iVcGRDuhJ7b4qBVPqKBC4ftQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: PERIER Romain <romain.perier@gmail.com>
-Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, "pawel.moll" <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1593823.SBtdMLb0Ra@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 23, 2014 at 6:39 PM, PERIER Romain <romain.perier@gmail.com> wrote:
-> Hi Peter,
->
-> 2014-10-23 10:12 GMT+02:00 Peter De Schrijver <pdeschrijver@nvidia.com>:
->> This breaks DT ABI stability right? An existing device tree using ti,system-power-controller won't work anymore after this patch right? I don't think that's acceptable.
->>
->
-> This is why I converted all dts which use "ti,system-power-controller"
-> and tps65910/tps65911 to the new property (everything is in the
-> patches serie). However, with an existing dtb it will no longer work,
-> yes.
-> What do you suggest ? keep these two properties in the driver ? :/
->
-> I mean, this is a standardization, so all the corresponding dts must
-> be updated and rebuilt... Like when you change something in a
-> dt-binding, you should update and rebuilt the dts... I Don't compute.
+On Wed, Oct 22, 2014 at 06:00:19PM +0300, Laurent Pinchart wrote:
+> Hi Geert,
+> 
+> Thank you for the patch.
+> 
+> On Wednesday 22 October 2014 11:26:18 Geert Uytterhoeven wrote:
+> > r7s72100 is a member of the RZ family, not of the R-Car family
+> > 
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Acked-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 
-DT ABI stability rule: any DTB that worked with kernel x must also
-work with kernel x+1. It seems like this patch would break that rule.
+My understanding is that mtu2 is an IP block that has been around
+inside Renesas for quite some time and has a history of use
+on the SH architecture as well as its more recent use on the r7s72100.
 
-It's ok to manage new properties and to deprecate the use of older
-ones if it makes sense (and in this case it seems like it does). But
-the old property must still be handled for compatibility reasons.
+So perhaps "Renesas Multi-Function Timer Pulse Unit 2 (MTU2)"
+would be (slightly) better.
+
+> > ---
+> >  Documentation/devicetree/bindings/timer/renesas,mtu2.txt | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
+> > b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt index
+> > d9a8d5af1a21270f..55484a77a6ae54d0 100644
+> > --- a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
+> > +++ b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
+> > @@ -1,4 +1,4 @@
+> > -* Renesas R-Car Multi-Function Timer Pulse Unit 2 (MTU2)
+> > +* Renesas RZ Multi-Function Timer Pulse Unit 2 (MTU2)
+> > 
+> >  The MTU2 is a multi-purpose, multi-channel timer/counter with configurable
+> >  clock inputs and programmable compare match.
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
