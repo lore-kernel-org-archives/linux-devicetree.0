@@ -1,41 +1,36 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: shmobile: add USB3.0 device node on r8a7791
-Date: Fri, 24 Oct 2014 14:08:40 +0900
-Message-ID: <20141024050840.GG7537@verge.net.au>
-References: <1412749498-2748-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <5434D96B.4030304@renesas.com>
- <20141024042030.GC11281@verge.net.au>
- <c7fdc1369aa14de7a4b1cde5db6a43ff@HKNPR06MB322.apcprd06.prod.outlook.com>
+Subject: Re: [PATCH 0/2] ARM: shmobile: add USB3.0 device node on r8a7790
+Date: Fri, 24 Oct 2014 14:08:48 +0900
+Message-ID: <20141024050848.GH7537@verge.net.au>
+References: <1412749470-6028-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20141024042114.GD11281@verge.net.au>
+ <ea8c5c855c604eb9acf73a08ee9a0a3f@HKNPR06MB322.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <c7fdc1369aa14de7a4b1cde5db6a43ff@HKNPR06MB322.apcprd06.prod.outlook.com>
+In-Reply-To: <ea8c5c855c604eb9acf73a08ee9a0a3f@HKNPR06MB322.apcprd06.prod.outlook.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: yoshihiro shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc: "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 24, 2014 at 04:43:55AM +0000, yoshihiro shimoda wrote:
+On Fri, Oct 24, 2014 at 04:44:28AM +0000, yoshihiro shimoda wrote:
 > Hi Simon-san,
 > 
-> > On Wed, Oct 08, 2014 at 03:27:55PM +0900, Yoshihiro Shimoda wrote:
-> > > (2014/10/08 15:24), Yoshihiro Shimoda wrote:
-> > > >  This patch is based on Simon's renesas.git branch and
-> > > > renesas-devel-20141007-v3.17 tag.
-> > > > Since koelsch and henninger doesn't have a USB3.0 connector, I
-> > > > submit a patch for r8a7791.dtsi only.
-> > > >
-> > > > Yoshihiro Shimoda (1):
-> > > >   ARM: shmobile: r8a7791: add USB3.0 device node
-> > > >
-> > > >  arch/arm/boot/dts/r8a7791.dtsi |   10 ++++++++++
-> > > >  1 file changed, 10 insertions(+)
-> > > >
+> > On Wed, Oct 08, 2014 at 03:24:28PM +0900, Yoshihiro Shimoda wrote:
+> > >  This series is based on Simon's renesas.git branch and
+> > > renesas-devel-20141007-v3.17 tag. If we use the generic phy driver for
+> > > R-Car Gen2 (drivers/phy/phy-rcar-gen2.c), we can use the USB3.0 on
+> > > lager.
 > > >
-> > > Oops, this patch means [PATCH 0/1]...
-> > > Also the "[PATCH] ARM: shmobile: r8a7791: add USB3.0 device node"
-> > > email means [PATCH 1/1].
+> > > Yoshihiro Shimoda (2):
+> > >   ARM: shmobile: r8a7790: add USB3.0 device node
+> > >   ARM: shmobile: lager: enable USB3.0
+> > >
+> > >  arch/arm/boot/dts/r8a7790-lager.dts |    6 ++++++
+> > >  arch/arm/boot/dts/r8a7790.dtsi      |   10 ++++++++++
+> > >  2 files changed, 16 insertions(+)
 > > 
 > > Hi Shimoda-san,
 > > 
@@ -43,7 +38,6 @@ On Fri, Oct 24, 2014 at 04:43:55AM +0000, yoshihiro shimoda wrote:
 > > Should I queue it up?
 > 
 > Yes.
-> So, should I rebase this patch on the current your repository?
+> So, should I rebase this patch serias on the current your repository?
 
 Yes, please rebase it on renesas-devel-20141024-v3.18-rc1
-
