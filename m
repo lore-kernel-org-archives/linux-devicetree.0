@@ -1,64 +1,158 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] ARM: dts: Add SPI DMA into rk3288.dtsi
-Date: Sat, 25 Oct 2014 00:10:16 +0200
-Message-ID: <1433094.iLN0prRLzJ@diego>
-References: <1414186926-25986-1-git-send-email-dianders@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414186926-25986-1-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Addy Ke <addy.ke@rock-chips.com>, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Alexandru M Stan <amstan@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: [PATCH v9 0/9] cpuidle driver for QCOM SoCs: 8064, 8074, 8084
+Date: Fri, 24 Oct 2014 17:40:15 -0600
+Message-ID: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org, Lina Iyer <lina.iyer@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 24. Oktober 2014, 14:42:06 schrieb Doug Anderson:
-> Now that SPI DMA has been fixed on rk3288 we can enable it.
-> 
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
-> Signed-off-by: Alexandru M Stan <amstan@chromium.org>
+Changes since v8:
+[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg11473.html ]
+- Flatten out the file structure - merge pm.c into spm.c after discussions
+- Add a new function to set warm boot address, in scm-boot.c
+- Support for 8064 (New)
+- Tested on 8074, 8084. 8064 was tested with a WIP tree
+- Address review comments from v8
+- Looking into possiblility of  initializing the cpuidle device for a cpu,
+only when the corresponding spm device is probed successfully.
 
-applied into my v3.19-armsoc/dts branch
+Changes since v7:
+[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg11199.html ]
+- Address review comments
+- Tested on 8974 but not 8084
+- WFI renamed to Standby
+- Update commit text with original author and link to the downstream tree
 
-I've taken the liberty of changing the subject to
-	ARM: dts: rockchip: Add SPI DMA into rk3288.dtsi
+Changes since v6:
+[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg11012.html ]
+- SPM device nodes merged with existing SAW DT nodes
+- SPM register information is handled within the driver
+- Clean up from using 'msm' to 'qcom'
+        - Shorten some enumerations as well
+- Review comments from v6 addressed
+- New: Support for 8084 SoC
+        - Not tested. I do not have a board with this SoC, but the SPM
+        configuration should be identical for WFI and SPC
+
+Changes since v5:
+[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg10559.html ]
+- Merge spm-devices.c and spm.c into one file and one patch
+        - Simplify implementation of the driver.
+        - Update documentation mapping the DT properties with corresponding
+          SPM register information.
+- Removed scm-boot changes for quad core warmboot, its has been pulled in.
+
+Changes since v4:
+[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg10327.html ]
+- Update to the v8 of ARM generic idle states patches
+- Use platform device model for cpuidle-qcom
+- Clean up msm-pm.c to remove unnecessary include files and functions
+- Update commit text and documentation for all idle states
+- Remove scm-boot relocate patch from this series, submitted earlier
+[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg10518.html ]
+
+Changes since v3:
+[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg10288.html ]
+- Fix CONFIG_QCOM_PM Kconfig as bool
+- More clean ups in spm.c and spm-devices.c
+        - Removed and re-organized data structures to make initialization simple
+        - Remove export of sequence flush functions
+        - Updated commit text
+        - Comments for use of barriers.
+- Rebase on top of 3.17-rc1
+
+Changes since v2:
+[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg10148.html ]
+- Prune all the drivers to support basic WFI and power down cpuidle
+  functionality. Remove debug code.
+- Integrate KConfig changes into the drivers' patches.
+- Use Lorenzo's ARM idle-states patches as the basis for reading cpuidle
+  c-states from DT.
+  [ http://marc.info/?l=linux-pm&m=140794514812383&w=2 ]
+- Incorporate review comments
+- Rebase on top of 3.16
+
+Changes since v1/RFC:
+[ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg10065.html ]
+- Remove hotplug from the patch series. Will submit it separately.
+- Fix SPM drivers per the review comments
+- Modify patch sequence to compile SPM drivers independent of msm-pm, so as to
+  allow wfi() calls to use SPM even without SoC interface driver.
+
+8074/8084/8064 like any ARM SoC can do architectural clock gating, that helps save
+on power, but not enough of leakage power.  Leakage power of the SoC can be
+further reduced by turning off power to the core. To aid this, every core (cpu
+and L2) is accompanied by a Sub-system Power Manager (SPM), that can be
+configured to indicate the low power mode, the core would be put into and the
+SPM programs the peripheral h/w accordingly to enter low power and turn off the
+power rail to the core.
+
+The idle invocation hierarchy -
+
+CPUIDLE
+        |
+        cpuidle-qcom.c [CPUIdle driver]
+        |
+        ------> spm.c [SPM driver]
+                |
+                ------> scm-boot.c [SCM interface layer]
+                        |
+------------------------|--------------------------
+(EL)                    Secure Monitor Code
+                        |
+                        |
+                        wfi();
+------------------------|--------------------------
+(HW)                    [CPU] {clock gate}
+                        |
+                        -----> [SPM] {statemachine}
 
 
-Heiko
+The patchset does the following -
 
-> ---
->  arch/arm/boot/dts/rk3288.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index 874e66d..e0b99f7 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -177,6 +177,8 @@
->  		compatible = "rockchip,rk3288-spi", "rockchip,rk3066-spi";
->  		clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
->  		clock-names = "spiclk", "apb_pclk";
-> +		dmas = <&dmac_peri 11>, <&dmac_peri 12>;
-> +		dma-names = "tx", "rx";
->  		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&spi0_clk &spi0_tx &spi0_rx &spi0_cs0>;
-> @@ -190,6 +192,8 @@
->  		compatible = "rockchip,rk3288-spi", "rockchip,rk3066-spi";
->  		clocks = <&cru SCLK_SPI1>, <&cru PCLK_SPI1>;
->  		clock-names = "spiclk", "apb_pclk";
-> +		dmas = <&dmac_peri 13>, <&dmac_peri 14>;
-> +		dma-names = "tx", "rx";
->  		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&spi1_clk &spi1_tx &spi1_rx &spi1_cs0>;
-> @@ -203,6 +207,8 @@
->  		compatible = "rockchip,rk3288-spi", "rockchip,rk3066-spi";
->  		clocks = <&cru SCLK_SPI2>, <&cru PCLK_SPI2>;
->  		clock-names = "spiclk", "apb_pclk";
-> +		dmas = <&dmac_peri 15>, <&dmac_peri 16>;
-> +		dma-names = "tx", "rx";
->  		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&spi2_clk &spi2_tx &spi2_rx &spi2_cs0>;
+- Introduce the SPM driver to control power to the core
+- Add device bindings for 8974, 8084, 8064 CPU SPM devices
+- Add cpuidle driver for QCOM cpus, using ARM generic idle state definitions.
+- Add device bindings for 8974, 8084, 8064 idle-states - WFI and SPC
+
+Thanks,
+Lina
+
+
+Lina Iyer (9):
+  qcom: scm: scm_set_warm_boot_addr() to set the warmboot address
+  qcom: spm: Add Subsystem Power Manager driver
+  arm: dts: qcom: Add power-controller device node for 8974 Krait CPUs
+  arm: dts: qcom: Add power-controller device node for 8084 Krait CPUs
+  arm: dts: qcom: Update power-controller device node for 8064 Krait
+    CPUs
+  qcom: cpuidle: Add cpuidle driver for QCOM cpus
+  arm: dts: qcom: Add idle states device nodes for 8974
+  arm: dts: qcom: Add idle states device nodes for 8084
+  arm: dts: qcom: Add idle state device nodes for 8064
+
+ .../bindings/arm/msm/qcom,idle-state.txt           |  81 +++++
+ .../devicetree/bindings/arm/msm/qcom,saw2.txt      |  31 +-
+ arch/arm/boot/dts/qcom-apq8064.dtsi                |  37 ++-
+ arch/arm/boot/dts/qcom-apq8084.dtsi                |  46 ++-
+ arch/arm/boot/dts/qcom-msm8974.dtsi                |  46 ++-
+ drivers/cpuidle/Kconfig.arm                        |   7 +
+ drivers/cpuidle/Makefile                           |   1 +
+ drivers/cpuidle/cpuidle-qcom.c                     |  72 +++++
+ drivers/soc/qcom/Kconfig                           |   8 +
+ drivers/soc/qcom/Makefile                          |   1 +
+ drivers/soc/qcom/scm-boot.c                        |  22 ++
+ drivers/soc/qcom/spm.c                             | 334 +++++++++++++++++++++
+ include/soc/qcom/pm.h                              |  31 ++
+ include/soc/qcom/scm-boot.h                        |   1 +
+ 14 files changed, 702 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,idle-state.txt
+ create mode 100644 drivers/cpuidle/cpuidle-qcom.c
+ create mode 100644 drivers/soc/qcom/spm.c
+ create mode 100644 include/soc/qcom/pm.h
+
+-- 
+2.1.0
+
