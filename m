@@ -1,107 +1,66 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V3 3/3] rtc: omap: Support regulator supply for RTC
-Date: Fri, 24 Oct 2014 08:26:43 -0500
-Message-ID: <544A5393.6090504@ti.com>
-References: <1414126425-13198-1-git-send-email-lokeshvutla@ti.com> <1414126425-13198-4-git-send-email-lokeshvutla@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v1 1/3] gpio: Add APM X-Gene standby GPIO controller driver
+Date: Fri, 24 Oct 2014 15:46:59 +0200
+Message-ID: <2988580.WvjMBY1UOc@wuerfel>
+References: <1412779948-28769-1-git-send-email-yvo@apm.com> <1412779948-28769-2-git-send-email-yvo@apm.com> <CACRpkdY3-Y0eA_o2enfxbqWUpwPoo_5oM9t=uU=QSTAw4MPf9Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1414126425-13198-4-git-send-email-lokeshvutla@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, rtc-linux@googlegroups.com, linux-omap@vger.kernel.org, a.zummo@towertech.it, johan@kernel.org
-Cc: tony@atomide.com, bcousson@baylibre.com, balbi@ti.com, akpm@linux-foundation.org, linux@roeck-us.net, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdY3-Y0eA_o2enfxbqWUpwPoo_5oM9t=uU=QSTAw4MPf9Q@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Y Vo <yvo@apm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Tin Huynh <tnhuynh@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/23/2014 11:53 PM, Lokesh Vutla wrote:
-> On some Soc's RTC is powered by an external power regulator.
-SoC ? -> could you rephrase this to indicate "certain SoCs such as
-DRA7, RTC is an independent voltage domain of it's own and on
-platforms such as DRA7-evm, this may be supplied by individual
-regulator on it's own.
-
-> e.g. RTC on DRA7 SoC. Make the OMAP RTC driver support a
-> power regulator.
-
-Question ofcourse is what voltage would you like that regulator to be
-at? As you are aware, certain LDOs and SMPS can drive varying voltage
-and just enable/disable would do just the default voltage of the
-SMPS/LDO, right? OR am i missing something here?
-
+On Friday 24 October 2014 14:14:43 Linus Walleij wrote:
+> On Wed, Oct 8, 2014 at 4:52 PM, Y Vo <yvo@apm.com> wrote:
 > 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> ---
->  Documentation/devicetree/bindings/rtc/rtc-omap.txt |  3 +++
->  drivers/rtc/rtc-omap.c                             | 24 ++++++++++++++++++++++
->  2 files changed, 27 insertions(+)
+> > Add APM X-Gene standby GPIO controller driver.
+> >
+> > Signed-off-by: Y Vo <yvo@apm.com>
 > 
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-> index 750efd4..e7ad12b 100644
-> --- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-> @@ -15,6 +15,8 @@ Required properties:
->  Optional properties:
->  - ti,system-power-controller: whether the rtc is controlling the system power
->    through pmic_power_en
-> +Optional Properties:
-^^ already commented on..
+> That's a very terse commit message. Please tell us a bit about the
+> hardware and what platforms it is used on, etc.
+> 
+> For example that is uses ACPI, as seems to be the case.
 
-> +- vrtc-supply: phandle to the regulator device tree node if needed
+I think that was just the header file inclusion, but no actual ACPI
+support. Al Stone is experimenting with ACPI support for X-Gene, and
+some earlier patches from APM had rudimentary support as well, but
+we are not adding ACPI support to X-Gene drivers upstream until we
+know whether we can support the entire platform in that mode or not.
 
-"phandle to supply regulator" ? since it is optional, "if needed" is
-redundant?
+> So this platform uses some interesting combination of ACPI and device tree
+> at the same time? Or alternatively?
 
->  
->  Example:
->  
-> @@ -25,4 +27,5 @@ rtc@1c23000 {
->  		      19>;
->  	interrupt-parent = <&intc>;
->  	ti,system-power-controller;
-> +	vrtc-supply = <&ldo9_reg>;
->  };
-> diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
-> index d9bb5e7..61fe630 100644
-> --- a/drivers/rtc/rtc-omap.c
-> +++ b/drivers/rtc/rtc-omap.c
-> @@ -25,6 +25,7 @@
->  #include <linux/of_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/io.h>
-> +#include <linux/regulator/consumer.h>
->  
->  /*
->   * The OMAP RTC is a year/month/day/hours/minutes/seconds BCD clock
-> @@ -134,6 +135,7 @@ struct omap_rtc {
->  	u8 interrupts_reg;
->  	bool is_pmic_controller;
->  	const struct omap_rtc_device_type *type;
-> +	struct regulator *supply;
->  };
->  
->  static inline u8 rtc_read(struct omap_rtc *rtc, unsigned int reg)
-> @@ -516,6 +518,22 @@ static int omap_rtc_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, rtc);
->  
-> +	rtc->supply = devm_regulator_get_optional(&pdev->dev, "vrtc");
-> +	if (IS_ERR(rtc->supply)) {
-> +		if (PTR_ERR(rtc->supply) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +
-> +		rtc->supply = NULL;
-> +	}
-> +
-> +	if (rtc->supply) {
-> +		ret = regulator_enable(rtc->supply);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "regulator enable failed\n");
+Just DT at the moment.
 
-would be nice to print the result as well - since it helps debug from
-log a little easier.
+> > +       apm_gc->irq = devm_kzalloc(&pdev->dev, sizeof(u32) * XGENE_MAX_GPIO_DS,
+> > +                                  GFP_KERNEL);
+> > +       if (!apm_gc->irq)
+> > +               return -ENOMEM;
+> > +       memset(apm_gc->irq, 0, sizeof(u32) * XGENE_MAX_GPIO_DS);
+> (...)
+> > +       for (i = 0; i < apm_gc->nirq; i++) {
+> > +               apm_gc->irq[default_pins[i]] = platform_get_irq(pdev, i);
+> 
+> So the IRQs for all the GPIO pins are handled somewhere else instead
+> of being a cascaded IRQ controller.
+> 
+> This means that the IRQ lines from each individual GPIO pin is
+> connected to a unique IRQ line on a secondary interrupt controller,
+> instead of the GPIO block being a cascaded interrupt controller
+> in its own right.
+> 
+> Is this correct?
 
+See the discussion I had on this. Yes, each line is connected to a
+GIC SPI interrupt by itself. I've discussed this with Marc Zyngier
+and Thomas Gleixner at the conference last week, and we concluded
+that we will need a new generic interface to get data out of the
+parent interrupt controller in a proper way. The current implementation
+just maps the GIC registers and reads them directly, which of course
+is not a proper way to do it.
 
-
--- 
-Regards,
-Nishanth Menon
+	Arnd
