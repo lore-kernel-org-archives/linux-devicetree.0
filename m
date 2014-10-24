@@ -1,120 +1,69 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v13 4/5] ARM: dts: add main Thermal info to rk3288
-Date: Thu, 23 Oct 2014 19:32:36 -0700
-Message-ID: <20141024023236.GA19910@dtor-ws>
-References: <1414057207-1576-1-git-send-email-caesar.wang@rock-chips.com>
- <1414057207-1576-5-git-send-email-caesar.wang@rock-chips.com>
- <20141024004625.GD9463@dtor-ws>
- <5449A6A4.3070608@rock-chips.com>
- <E4EEE800-5701-45E5-9E97-D3B036DC2F17@gmail.com>
- <5449B433.5040003@rock-chips.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/3] clocksource: sh_tmu: Document R-Mobile r8a7740
+ binding
+Date: Fri, 24 Oct 2014 11:34:55 +0900
+Message-ID: <20141024023451.GE7537@verge.net.au>
+References: <1413970709-26607-1-git-send-email-geert+renesas@glider.be>
+ <1413970709-26607-2-git-send-email-geert+renesas@glider.be>
+ <6890235.hnMLlLN6KA@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5449B433.5040003@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Caesar Wang <caesar.wang@rock-chips.com>
-Cc: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com
+In-Reply-To: <6890235.hnMLlLN6KA@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-sh@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 24, 2014 at 10:06:43AM +0800, Caesar Wang wrote:
->=20
-> =E5=9C=A8 2014/10/24 9:37, Dmitry Torokhov =E5=86=99=E9=81=93:
-> >On October 23, 2014 6:08:52 PM PDT, Caesar Wang <caesar.wang@rock-ch=
-ips.com> wrote:
-> >>Dmitry,
-> >>
-> >>=E5=9C=A8 2014/10/24 8:46, Dmitry Torokhov =E5=86=99=E9=81=93:
-> >>>Hi Caesar,
-> >>>
-> >>>On Thu, Oct 23, 2014 at 05:40:06PM +0800, Caesar Wang wrote:
-> >>>>This patch is depend on rk3288-thermal.dtsi,or
-> >>>>it will compile error.
-> >>>>
-> >>>>If the temperature over a period of time High,over 120C
-> >>>>the resulting TSHUT gave CRU module,let it reset
-> >>>>the entire chip,or via GPIO give PMIC.
-> >>>>
-> >>>>Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
-> >>>>---
-> >>>>   arch/arm/boot/dts/rk3288.dtsi | 21 +++++++++++++++++++++
-> >>>>   1 file changed, 21 insertions(+)
-> >>>>
-> >>>>diff --git a/arch/arm/boot/dts/rk3288.dtsi
-> >>b/arch/arm/boot/dts/rk3288.dtsi
-> >>>>index cb18bb4..85fc17a 100644
-> >>>>--- a/arch/arm/boot/dts/rk3288.dtsi
-> >>>>+++ b/arch/arm/boot/dts/rk3288.dtsi
-> >>>>@@ -15,6 +15,7 @@
-> >>>>   #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >>>>   #include <dt-bindings/pinctrl/rockchip.h>
-> >>>>   #include <dt-bindings/clock/rk3288-cru.h>
-> >>>>+#include <dt-bindings/thermal/thermal.h>
-> >>>>   #include "skeleton.dtsi"
-> >>>>   / {
-> >>>>@@ -66,6 +67,7 @@
-> >>>>   				 216000  900000
-> >>>>   				 126000  900000
-> >>>>   			>;
-> >>>>+			#cooling-cells =3D <2>; /* min followed by max */
-> >>>>   			clock-latency =3D <40000>;
-> >>>>   			clocks =3D <&cru ARMCLK>;
-> >>>>   		};
-> >>>>@@ -346,6 +348,19 @@
-> >>>>   		status =3D "disabled";
-> >>>>   	};
-> >>>>+	tsadc: tsadc@ff280000 {
-> >>>>+		compatible =3D "rockchip,rk3288-tsadc";
-> >>>>+		reg =3D <0xff280000 0x100>;
-> >>>>+		interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-> >>>>+		clocks =3D <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
-> >>>>+		clock-names =3D "tsadc", "apb_pclk";
-> >>>>+		pinctrl-names =3D "default";
-> >>>>+		pinctrl-0 =3D <&otp_out>;
-> >>>>+		#thermal-sensor-cells =3D <1>;
-> >>>>+		hw-shut-temp =3D <120000>;
-> >>>I do not think this is a good value. You have (in the other DTS fi=
-le)
-> >>>passive trip point at 80 and critical (which should result in orde=
-rly
-> >>>shutdown) at 125. But here you define hardware-controlled shutdown=
- at
-> >>>120C, which is backwards. You should have:
-> >>>
-> >>>passive <=3D critical <=3D hardware
-> >>Hmmm....
-> >>but, the system will shutdown when temperature over critial value,
-> >>there is no chance of triggering the TSHUT.
-> >>
-> >>If the temperature over a period of time High,as we know,
-> >>the resulting TSHUT gave CRU module,let it hot-reset the entire chi=
-p,
-> >>or via GPIO give PMIC cold-reset the entire chip.
-> >Having tshut trigger is not the goal, tshut is the measure of last r=
-esort. If we can handle thermal conditions without triggering tshut, we=
- achieved our goal.
-> >
-> >Tshut triggering is " oh, crap, nothing we tried works" scenario.
->=20
-> I don't think so.
->=20
-> In general,We should have:
-> passive <=3D hardware(reset entire chip) <=3D critical(shutdown)
->=20
-> The temperature be rising qulckly if have some other conditions,
-> the "critical" will play a role.
+On Wed, Oct 22, 2014 at 05:59:25PM +0300, Laurent Pinchart wrote:
+> Hi Geert,
+> 
+> Thank you for the patch.
+> 
+> On Wednesday 22 October 2014 11:38:27 Geert Uytterhoeven wrote:
+> > Compared to the r8a7779, the r8a7740 lacks the input capture register,
+> > which is not used by the driver (the current driver already handles the
+> > r8a7740 in the non-DT case).
+> > 
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Acked-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 
-No, I think it should be the other way around: if we are unable to cool
-down the laptop under load we need to shut it down and let it cool. If
-for some reason we are unable to shut it down in orderly fashion (kerne=
-l
-is stuck holding a lock or similar) then hardware will reset it.
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
 
-At least that's how I understand it.
-
-Thanks.
-
---=20
-Dmitry
+> 
+> > ---
+> >  Documentation/devicetree/bindings/timer/renesas,tmu.txt | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+> > b/Documentation/devicetree/bindings/timer/renesas,tmu.txt index
+> > 7db89fb2544411b5..4ae7910af09ffcb4 100644
+> > --- a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+> > +++ b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+> > @@ -1,4 +1,4 @@
+> > -* Renesas R-Car Timer Unit (TMU)
+> > +* Renesas R-Mobile/R-Car Timer Unit (TMU)
+> > 
+> >  The TMU is a 32-bit timer/counter with configurable clock inputs and
+> >  programmable compare match.
+> > @@ -9,6 +9,7 @@ are independent. The TMU hardware supports up to three
+> > channels. Required Properties:
+> > 
+> >    - compatible: must contain one or more of the following:
+> > +    - "renesas,tmu-r8a7740" for the r8a7740 TMU
+> >      - "renesas,tmu-r8a7779" for the r8a7779 TMU
+> >      - "renesas,tmu" for any TMU.
+> >        This is a fallback for the above renesas,tmu-* entries
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
