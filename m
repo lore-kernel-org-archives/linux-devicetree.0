@@ -1,60 +1,54 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 06/17] gpio: mvebu: add suspend/resume support
-Date: Fri, 24 Oct 2014 22:45:32 +0200
-Message-ID: <20141024204532.GA6436@lunn.ch>
-References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1414151970-6626-7-git-send-email-thomas.petazzoni@free-electrons.com>
- <20141024163051.GG4529@psi-dev26.jf.intel.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 4/5] regulator: max77802: Parse regulator operating
+ mode properties
+Date: Fri, 24 Oct 2014 22:02:15 +0100
+Message-ID: <20141024210214.GO3729@sirena.org.uk>
+References: <1413816472-1895-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1413816472-1895-5-git-send-email-javier.martinez@collabora.co.uk>
+ <20141022164813.GD2344@sirena.org.uk>
+ <0DA944C5-7A6B-461B-A8E6-D47343D22E0B@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="AA9g+nFNFPYNJKiL"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20141024163051.GG4529@psi-dev26.jf.intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: David Cohen <david.a.cohen@linux.intel.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org
+In-Reply-To: <0DA944C5-7A6B-461B-A8E6-D47343D22E0B@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> > +	switch (mvchip->soc_variant) {
-> > +	case MVEBU_GPIO_SOC_VARIANT_ORION:
-> > +		mvchip->edge_mask_regs[0] =
-> > +			readl(mvchip->membase + GPIO_EDGE_MASK_OFF);
-> > +		mvchip->level_mask_regs[0] =
-> > +			readl(mvchip->membase + GPIO_LEVEL_MASK_OFF);
-> > +		break;
-> > +	case MVEBU_GPIO_SOC_VARIANT_MV78200:
-> > +		for (i = 0; i < 2; i++) {
-> > +			mvchip->edge_mask_regs[i] =
-> > +				readl(mvchip->membase +
-> > +				      GPIO_EDGE_MASK_MV78200_OFF(i));
-> > +			mvchip->level_mask_regs[i] =
-> > +				readl(mvchip->membase +
-> > +				      GPIO_LEVEL_MASK_MV78200_OFF(i));
-> > +		}
-> > +		break;
-> > +	case MVEBU_GPIO_SOC_VARIANT_ARMADAXP:
-> > +		for (i = 0; i < 4; i++) {
-> > +			mvchip->edge_mask_regs[i] =
-> > +				readl(mvchip->membase +
-> > +				      GPIO_EDGE_MASK_ARMADAXP_OFF(i));
-> > +			mvchip->level_mask_regs[i] =
-> > +				readl(mvchip->membase +
-> > +				      GPIO_LEVEL_MASK_ARMADAXP_OFF(i));
-> > +		}
-> > +		break;
-> > +	default:
-> > +		BUG();
-> 
-> Isn't it too severe? Is the platform going too unstable if driver
-> reaches this case?
-> I'd consider a WARN() instead.
 
-This is a common pattern in this driver. So i guess Thomas just
-cut/pasted the switch statement from _probe(), which also has the
-BUG().
+--AA9g+nFNFPYNJKiL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Given that _probe() should of thrown a BUG() in this situation, if it
-happens here, it means mvchip->soc_variant has been corrupted, and so
-bad things are happening. So a BUG() is maybe called for?
+On Thu, Oct 23, 2014 at 11:28:09AM +0200, Javier Martinez Canillas wrote:
 
-	 Andrew
+Please fix your mailer to word wrap within paragraphs - you should know
+this by now :/  I've reflowed for legibility.
+
+> However this is an implementation detail and should not change the DT
+> bindings in the current version. Could you please let me know if you
+> have any issues with the other patches from this series so I can
+> address all of them when doing a re-spin?
+
+I can't recall anything but I'm not sure I looked at them in any detail.
+
+--AA9g+nFNFPYNJKiL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUSr5WAAoJECTWi3JdVIfQlhMH/2XE67VcrSF7j0bGBNd4hHt+
+WXiySErF4lpTjq8x8RtFnmWYpZevatt/BjltMcIDkajU8WNuR61A6IMtXkYUvtM/
+Tj0aUeHcbrWkkXoNgufLQAF8yeJ0/ziHxikfI3EK8uPmYkECzNjiwrArf6GPDU2R
+CUK/3k7b9qZrOMqNjPpMr+fbtqkhP9nYe7b7Rkw/qkNOoIPk9s9853jbCiaExmPG
+nVs8dwN4XK5coyUfdacgwwZA2apVAnXIik/ye9n7W2qRliCcU44WEH64ZrCozsCf
+czffdAw1zUSZX4Ic9blsXDutZvWrSSRTkbZroIEOwmkwlWsVOte+BgvRooYGlQ8=
+=vEul
+-----END PGP SIGNATURE-----
+
+--AA9g+nFNFPYNJKiL--
