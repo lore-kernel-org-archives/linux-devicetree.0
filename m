@@ -1,42 +1,48 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 4/6] ARM: rockchip: add suspend and resume for RK3288
-Date: Thu, 23 Oct 2014 21:44:36 -0700
-Message-ID: <CAD=FV=XOvPP+2yJ10e03ko9iWmyU7BawrVyA6Dqt8RkSDMXgTg@mail.gmail.com>
-References: <1413933461-25602-1-git-send-email-zyw@rock-chips.com>
-	<1413933928-25803-1-git-send-email-zyw@rock-chips.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH V3 2/3] rtc: omap: Update Kconfig for OMAP RTC
+Date: Fri, 24 Oct 2014 10:23:44 +0530
+Message-ID: <1414126425-13198-3-git-send-email-lokeshvutla@ti.com>
+References: <1414126425-13198-1-git-send-email-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413933928-25803-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Xie <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1414126425-13198-1-git-send-email-lokeshvutla@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: rtc-linux@googlegroups.com, linux-omap@vger.kernel.org, a.zummo@towertech.it, johan@kernel.org
+Cc: tony@atomide.com, bcousson@baylibre.com, balbi@ti.com, akpm@linux-foundation.org, linux@roeck-us.net, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, lokeshvutla@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Chris,
+From: Tero Kristo <t-kristo@ti.com>
 
-On Tue, Oct 21, 2014 at 4:25 PM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> +static inline void rk3288_copy_data_to_sram(void)
-> +{
-> +       u32 resume_code_size = (u32)&rkpm_bootdata_cpu_code -
-> +                              (u32)rockchip_slp_cpu_resume + 4;
-> +
-> +       /* save root sram data in ddr mem */
-> +       memcpy(rk3288_bootram_base, bootram_save_data, SZ_4K);
+RTC is present in AM43xx and DRA7xx also. Updating the Kconfig
+to depend on ARCH_OMAP or ARCH_DAVINCI
 
-I swore we looked at this before, but the above memcpy is backwards.
+Reviewed-by: Felipe Balbi <balbi@ti.com>
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+ drivers/rtc/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> +       /* move resume code and data to bootsram */
-> +       memcpy(rk3288_bootram_base, rockchip_slp_cpu_resume,
-> +              resume_code_size);
-> +}
-> +
-> +static inline void rk3288_restore_original_sram(void)
-> +{
-> +       memcpy(bootram_save_data, rk3288_bootram_base, SZ_4K);
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 94ae179..8dfcb1b 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1001,11 +1001,11 @@ config RTC_DRV_IMXDI
+ 	   will be called "rtc-imxdi".
+ 
+ config RTC_DRV_OMAP
+-	tristate "TI OMAP1"
+-	depends on ARCH_OMAP15XX || ARCH_OMAP16XX || ARCH_OMAP730 || ARCH_DAVINCI_DA8XX || SOC_AM33XX
++	tristate "TI OMAP Real Time Clock"
++	depends on ARCH_OMAP || ARCH_DAVINCI
+ 	help
+ 	  Say "yes" here to support the on chip real time clock
+-	  present on TI OMAP1, AM33xx and DA8xx/OMAP-L13x.
++	  present on TI OMAP1, AM33xx, DA8xx/OMAP-L13x, AM43xx and DRA7xx.
+ 
+ 	  This driver can also be built as a module, if so, module
+ 	  will be called rtc-omap.
+-- 
+1.9.1
 
-This one too.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
