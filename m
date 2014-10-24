@@ -1,28 +1,35 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH v2 2/3] ARM: dts: socfpga: fpga bridges bindings docs
-Date: Fri, 24 Oct 2014 12:57:52 +0200
-Message-ID: <20141024105752.GC20775@amd>
-References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com>
- <1414108267-22058-3-git-send-email-atull@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1414108267-22058-3-git-send-email-atull@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: atull@opensource.altera.com
-Cc: jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] clocksource: sh_tmu: Document r8a7778 binding
+Date: Fri, 24 Oct 2014 13:31:52 +0200
+Message-ID: <1414150312-5542-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.au>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 2014-10-23 18:51:06, atull@opensource.altera.com wrote:
-> From: Alan Tull <atull@opensource.altera.com>
-> 
-> Add DTS binding documentation for the Altera FPGA bridges.
-> 
-> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+The r8a7778 is very similar to the r8a7779, and already handled by
+the current driver in the non-DT case.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+This depends on "clocksource: sh_tmu: Document R-Mobile r8a7740 binding"
 
+ Documentation/devicetree/bindings/timer/renesas,tmu.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.txt b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+index 4ae7910af09ffcb4..cd5f20bf2582e742 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
++++ b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+@@ -10,6 +10,7 @@ Required Properties:
+ 
+   - compatible: must contain one or more of the following:
+     - "renesas,tmu-r8a7740" for the r8a7740 TMU
++    - "renesas,tmu-r8a7778" for the r8a7778 TMU
+     - "renesas,tmu-r8a7779" for the r8a7779 TMU
+     - "renesas,tmu" for any TMU.
+       This is a fallback for the above renesas,tmu-* entries
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+1.9.1
+
