@@ -1,94 +1,52 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 0/6] Add support for USB cluster(PHY muxer) on the Armada 375
-Date: Fri, 24 Oct 2014 17:24:08 +0200
-Message-ID: <1414164254-13053-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v2 6/6] ARM: mvebu: add PHY support to the dts for the USB controllers on Armada 375
+Date: Fri, 24 Oct 2014 17:24:14 +0200
+Message-ID: <1414164254-13053-7-git-send-email-gregory.clement@free-electrons.com>
+References: <1414164254-13053-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414164254-13053-1-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Now that the USB cluster node has been added, use it as a PHY provider
+for the USB controller linked to it: the first EHCI and the xHCI.
 
-this is the second version of a series I initially submitted in May:
-https://lkml.org/lkml/2014/5/16/743
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+---
+ arch/arm/boot/dts/armada-375.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-This series adds support for the USB cluster which is on the Armada
-375 SoC. We can mainly see this device as a PHY muxer.
-
-I more or less forgotten this series until the talk of Kishon Vijay
-Abraham I about the phy framework.
-
-Since this time, things have changed in the USB framework and I no
-longer have to add the generic phy support in the xhci driver since it
-was done at the usb core level.
-
-While I ran coccicheck on my code I also found some possible
-improvement in the phy driver: it was done in the 1st patch.
-
-The second patch was a patch initially submitted by Andrew. This patch
-added the mvebu-phy.txt but fell through a crack when adding the
-driver. I join this patch on my series in order to be able to add the
-new binding for the USB cluster of the Armada 375.
-
-This was done in the third patch.
-
-The forth patch was the addition of the phys driver itself.
-
-The fifth and sixth patches are updating the device tree files related
-to the Armada 375 using the new biding.
-
-Thanks,
-
-Gregory
-
-Changelog:
-
-v1 -> v2:
-
-- Add a patch fixing the use of PTR_ERR_OR_ZERO.
-
-- Add the patch adding the DT binding documentation for Marvell MVEBU
-SATA phy from Andrew Lunn
-
-- Move the DT binding documentation of the Armada 375 USB cluster into
-  the phy-mvebu.txt file.
-
-- Made the armada375_usb_phy_xlate more robust" if there is a phy_put
-  and then a phy_get".
-
-Andrew Lunn (1):
-  Phy: DT binding documentation for Marvell MVEBU SATA phy.
-
-Gregory CLEMENT (5):
-  phy: Use PTR_ERR_OR_ZERO to fix warning raised by coccinelle
-  Phy: DT binding documentation for the Armada 375 USB cluster binding
-  phy: add support for USB cluster on the Armada 375 SoC
-  ARM: mvebu: add Device Tree description of USB cluster controller on
-    Armada 375
-  ARM: mvebu: add PHY support to the dts for the USB controllers on
-    Armada 375
-
- Documentation/devicetree/bindings/ata/marvell.txt  |   6 +
- .../devicetree/bindings/phy/phy-mvebu.txt          |  43 ++++++
- arch/arm/boot/dts/armada-375.dtsi                  |  11 ++
- drivers/phy/Kconfig                                |   6 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-armada375-usb2.c                   | 145 +++++++++++++++++++++
- drivers/phy/phy-berlin-sata.c                      |   5 +-
- drivers/phy/phy-hix5hd2-sata.c                     |   5 +-
- drivers/phy/phy-miphy365x.c                        |   5 +-
- drivers/phy/phy-stih41x-usb.c                      |   5 +-
- include/dt-bindings/phy/armada-375-usb-cluster.h   |  19 +++
- 11 files changed, 235 insertions(+), 16 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-mvebu.txt
- create mode 100644 drivers/phy/phy-armada375-usb2.c
- create mode 100644 include/dt-bindings/phy/armada-375-usb-cluster.h
-
+diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
+index 8f45cf5d2a50..39a3afbb293d 100644
+--- a/arch/arm/boot/dts/armada-375.dtsi
++++ b/arch/arm/boot/dts/armada-375.dtsi
+@@ -14,6 +14,7 @@
+ #include "skeleton.dtsi"
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/phy/armada-375-usb-cluster.h>
+ 
+ #define MBUS_ID(target,attributes) (((target) << 24) | ((attributes) << 16))
+ 
+@@ -396,6 +397,8 @@
+ 				reg = <0x50000 0x500>;
+ 				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&gateclk 18>;
++				phys = <&usbcluster PHY_USB2>;
++				phy-names = "usb";
+ 				status = "disabled";
+ 			};
+ 
+@@ -412,6 +415,8 @@
+ 				reg = <0x58000 0x20000>,<0x5b880 0x80>;
+ 				interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&gateclk 16>;
++				phys = <&usbcluster PHY_USB3>;
++				phy-names = "usb";
+ 				status = "disabled";
+ 			};
+ 
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
