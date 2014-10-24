@@ -1,50 +1,77 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v2 1/3] add sysfs document for fpga bridges
-Date: Fri, 24 Oct 2014 10:11:26 -0500
-Message-ID: <alpine.DEB.2.02.1410241009010.23446@atx-linux-37>
-References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com> <1414108267-22058-2-git-send-email-atull@opensource.altera.com> <20141024105420.GB20775@amd>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: Re: [PATCH 0/2] Qualcomm PM8941 power key driver
+Date: Fri, 24 Oct 2014 08:23:51 -0700
+Message-ID: <20141024152350.GD28611@sonymobile.com>
+References: <1412644321-27683-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1412672510.1027.57.camel@iivanov-dev>
+ <20141007184640.GB31125@sonymobile.com>
+ <1412761807.13569.12.camel@iivanov-dev>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20141024105420.GB20775@amd>
-Sender: linux-doc-owner@vger.kernel.org
-To: Pavel Machek <pavel@denx.de>
-Cc: jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1412761807.13569.12.camel@iivanov-dev>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 24 Oct 2014, Pavel Machek wrote:
+On Wed 08 Oct 02:50 PDT 2014, Ivan T. Ivanov wrote:
 
-> On Thu 2014-10-23 18:51:05, atull@opensource.altera.com wrote:
-> > From: Alan Tull <atull@opensource.altera.com>
+> On Tue, 2014-10-07 at 11:46 -0700, Bjorn Andersson wrote:
+> > On Tue 07 Oct 02:01 PDT 2014, Ivan T. Ivanov wrote:
 > > 
-> > Add sysfs document for fpga bridges.
+> > > 
+> > > Hi Bjorn,
+> > > 
+> > > On Mon, 2014-10-06 at 18:11 -0700, Bjorn Andersson wrote:
+[..]
+> > > >  create mode 100644 drivers/input/misc/pm8941-pwrkey.c
+> > > 
+> > > Any reason why we cannot reuse pm8xxx-pwrkey driver? It have been
+> > > converted to regmap already. 
+> > > 
 > > 
-> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-class-fpga-bridge |    5 +++++
-> >  1 file changed, 5 insertions(+)
-> >  create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-bridge
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-class-fpga-bridge b/Documentation/ABI/testing/sysfs-class-fpga-bridge
-> > new file mode 100644
-> > index 0000000..b3303ae
-> > --- /dev/null
-> > +++ b/Documentation/ABI/testing/sysfs-class-fpga-bridge
-> > @@ -0,0 +1,5 @@
-> > +What:		/sys/class/fpga-bridge/<bridge>/enable
-> > +Date:		October 2014
-> > +KernelVersion:	3.18
-> > +Contact:	Alan Tull <atull@opensource.altera.com>
-> > +Description:	Enable bridge.  Write 1 to bring bridge out of reset.
+> > The boilerplate code is the same,
 > 
-> Specify, what happens when 0 is written there?
-> 									Pavel
-
-Yes, I will add:  'Write 0 has no effect.'
-
-Alan
-
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+> The boilerplate code is almost 100% :-)
 > 
+> >  but configuration registers have different
+> > layout and values written in them are different. 
+> 
+> We talk about 3 registers and 2 bit defines. struct regmap_field
+> should be able to help here.
+> 
+
+You're totally right, we could rewrite the driver to use regmap_field and make
+the rest of the differences conditional. In my eyes we end up with two drivers
+in one file - but it can be done.
+
+A difference however is that in pm8941 the ps hold behavious (reboot vs power
+off) is controlled by this same block. So I have an additional patch that adds
+a restart handler here that sets the pmic in the right state before we pull
+pshold (but I haven't been able to test it properly).
+
+In pm8xxx this is handled in the pmic misc block and does not belong in this
+driver.
+
+[..]
+> > 
+> > Maybe if we introduce some vagueness related to interrupts in the dt binding
+> > documentation for pm8xxx we could simply reuse that binding.
+> > 
+> 
+> I would not say vagueness, we just can say that pm8941 did not have
+> second interrupt?
+> 
+
+I don't like having conditional documentation - it's not only that the second
+interrupt is missing, the first one have different meaning. But you're right
+that it's a minor thing and can be done.
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
