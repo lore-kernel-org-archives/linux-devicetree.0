@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v4 1/3] ARM: shmobile: r8a7791: add HS-USB device node
-Date: Fri, 24 Oct 2014 19:45:06 +0900
-Message-ID: <1414147508-5556-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v4 2/3] ARM: shmobile: koelsch: enable HS-USB
+Date: Fri, 24 Oct 2014 19:45:07 +0900
+Message-ID: <1414147508-5556-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1414147508-5556-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,38 +12,38 @@ To: horms@verge.net.au, sergei.shtylyov@cogentembedded.com, magnus.damm@gmail.co
 Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Define the R8A7791 generic part of the HS-USB device node. It is up to the board
-file to enable the device.
+Enable HS-USB device for the Koelsch board, defining the GPIO that the driver
+should check when probing (which is the ID output from MAX3355 OTG chip).
+
+Note that there will be pinctrl-related error messages if both internal PCI
+and HS-USB drivers are enabled but they should be just ignored.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-[Sergei: fixed summary, added changelog]
+[Sergei: added pin function/group and prop, moved device node, fixed summary,
+added changelog]
 Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 ---
- arch/arm/boot/dts/r8a7791.dtsi |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/r8a7791-koelsch.dts |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index 1f4b6db..51a1b84 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -637,6 +637,17 @@
- 		status = "disabled";
- 	};
+diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
+index 5318463..6e63200 100644
+--- a/arch/arm/boot/dts/r8a7791-koelsch.dts
++++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
+@@ -464,6 +464,13 @@
+ 	pinctrl-names = "default";
+ };
  
-+	hsusb: usb@e6590000 {
-+		compatible = "renesas,usbhs-r8a7791";
-+		reg = <0 0xe6590000 0 0x100>;
-+		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp7_clks R8A7791_CLK_HSUSB>;
-+		renesas,buswait = <4>;
-+		phys = <&usb0 1>;
-+		phy-names = "usb";
-+		status = "disabled";
-+	};
++&hsusb {
++	status = "okay";
++	pinctrl-0 = <&usb0_pins>;
++	pinctrl-names = "default";
++	renesas,enable-gpio = <&gpio5 31 GPIO_ACTIVE_HIGH>;
++};
 +
- 	usbphy: usb-phy@e6590100 {
- 		compatible = "renesas,usb-phy-r8a7791";
- 		reg = <0 0xe6590100 0 0x100>;
+ &usbphy {
+ 	status = "okay";
+ };
 -- 
 1.7.9.5
 
