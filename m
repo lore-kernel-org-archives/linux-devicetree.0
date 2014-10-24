@@ -1,76 +1,120 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v8 5/7] qcom: cpuidle: Add cpuidle driver for QCOM cpus
-Date: Fri, 24 Oct 2014 09:59:26 -0600
-Message-ID: <20141024155926.GE30210@ilina-mac.qualcomm.com>
-References: <1412718106-17049-1-git-send-email-lina.iyer@linaro.org>
- <1412718106-17049-6-git-send-email-lina.iyer@linaro.org>
- <5448E103.9070505@linaro.org>
- <20141023165808.GC30210@ilina-mac.qualcomm.com>
- <544A10EF.9010505@linaro.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2 00/20] rtc: omap: fixes and power-off feature
+Date: Fri, 24 Oct 2014 11:08:45 -0500
+Message-ID: <20141024160845.GM26941@saruman>
+References: <1412881594-25678-1-git-send-email-johan@kernel.org>
+ <1413913086-12730-1-git-send-email-johan@kernel.org>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HxQt9wRz9wbL5Edg"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <544A10EF.9010505@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+In-Reply-To: <1413913086-12730-1-git-send-email-johan@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Felipe Balbi <balbi@ti.com>, Andrew Morton <akpm@linux-foundation.org>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 24 2014 at 02:42 -0600, Daniel Lezcano wrote:
->On 10/23/2014 06:58 PM, Lina Iyer wrote:
->>On Thu, Oct 23 2014 at 05:05 -0600, Daniel Lezcano wrote:
->>>On 10/07/2014 11:41 PM, Lina Iyer wrote:
+--HxQt9wRz9wbL5Edg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->>>+static int qcom_lpm_enter_spc(struct cpuidle_device *dev,
->>>>+                struct cpuidle_driver *drv, int index)
->>>>+{
->>>>+    cpu_pm_enter();
->>>>+    qcom_idle_enter(PM_SLEEP_MODE_SPC);
->>>
->>>Where is cpu_suspend ?
->>>
->>Inside that function qcom_idle_enter() in the SoC layer (pm.c)
->
->It would be preferable to group cpu_suspend with cpu_pm_enter/exit in 
->this function.
->
-OK. Sure.
+Hi,
+
+On Tue, Oct 21, 2014 at 07:37:46PM +0200, Johan Hovold wrote:
+> This series fixes a few issues with the omap rtc-driver, cleans up a
+> bit, adds device abstraction, and finally adds support for the PMIC
+> control feature found in some revisions of this RTC IP block.
+>=20
+> Ultimately, this allows for powering off the Beaglebone and waking it up
+> again on RTC alarms.
+>=20
+> Changes since v1 include:
+>=20
+>  - add device abstraction
+>  - add structured device-type info
+>  - fix interrupt disable at probe separately
+>  - register interrupts after class device as before
+>  - add helper to read raw bcd time
+>  - more clean ups
+>  - add copyright entry
+>  - enable pmic control only for Beaglebone Black
+>=20
+> I realised that it was better to keep this patch series self-contained
+> and include the device abstraction in it, rather than rely on some
+> patches yet to be posted (contrary to what I proposed in v1). It should
+> now be straight forward to add deferred-probing and regulator support on
+> top of this series instead. [1]
+>=20
+> I've kept Felipe's Reviewed-by tags only on the first and last couple of
+> patches which have not changed (in any significant way).
+>=20
+> For the record, the new functionality is easily tested on BBB with:
+>=20
+> 	echo +30 >/sys/class/rtc/rtc0/wakealarm; poweroff
+>=20
+> There are some patches floating around to add power-off handler
+> call chains [2] as well as an RFC for a generic "poweroff-source"
+> property [3]. Since it is unclear if, when (and through which tree) this
+> will eventually go in, I suggest merging this series as-is now and do
+> the trivial updates to use these new interfaces once the infrastructure
+> is in place.
+
+I tested this entire series with my BBB and it still works fine. However
+I still get below panic. This time without any DRM errors:
+
+[   63.087832] Kernel panic - not syncing: Attempted to kill init! exitcode=
+=3D0x00000000
+[   63.087832]=20
+[   63.097399] CPU: 0 PID: 1 Comm: systemd-shutdow Not tainted 3.18.0-rc1-0=
+0095-g8524e69 #556
+[   63.106060] [<c00175a4>] (unwind_backtrace) from [<c00132f0>] (show_stac=
+k+0x20/0x24)
+[   63.114160] [<c00132f0>] (show_stack) from [<c0657404>] (dump_stack+0x8c=
+/0xa4)
+[   63.121706] [<c0657404>] (dump_stack) from [<c0654f70>] (panic+0xa0/0x22=
+0)
+[   63.128895] [<c0654f70>] (panic) from [<c0049e64>] (do_exit+0x974/0x9d0)
+[   63.135900] [<c0049e64>] (do_exit) from [<c006775c>] (SyS_reboot+0x14c/0=
+x1e8)
+[   63.143361] [<c006775c>] (SyS_reboot) from [<c000f080>] (ret_fast_syscal=
+l+0x0/0x48)
+[   63.151596] ---[ end Kernel panic - not syncing: Attempted to kill init!=
+ exitcode=3D0x00000000
+
+Then again, this also happens by simply calling poweroff without
+enabling wakealarm.
+
+In any case, for the whole series:
+
+Tested-by: Felipe Balbi <balbi@ti.com>
 
 
->>>+     /* Probe for other states, including standby */
->>>>+    ret = dt_init_idle_driver(drv, qcom_idle_state_match, 0);
->>>
->>>Are you sure it is not worth to add the simple WFI state ? It may have
->>>less latency than the standby mode, no ?
->>>
->>May be. But it would split the bucket between wfi and the cpu plus
->>allowing the L2 and the power hierarachy to enter their standby states.
->>This could very well be useful and possible, when there is a QoS request
->>that disallows power down and high latency states.
->
->Not necessarly a QoS, it could be a state selection from the governor 
->with very short latencies.
->
->>IMO, the benefit of the possible heirarchical standby seems to outweigh the
->>latency gain we may get by just doing a core's clock gating.
->
->It is up to the governor/scheduler to figure out this :)
->
-There is a bit more problem than that, which I should have mentioned
-earlier.
-If we have SPM available and configured for the SoC, then unless we
-explictly disable the SPM, the WFI instruction executed by the cpu core
-would trigger SPM state machine and since we decided to set up the SPM
-state machine to do its SPM sequence for standby only when we choose
-standby in cpuidle, SPM might remain configured to do the previous idle
-state and as such the WFI instruction from the core would do that
-(possibly deeper), uintentionally, even when the scheduler decided only
-to do cpu clock gating.
+--=20
+balbi
 
-So we have to disable SPM everytime, per our pattern, if we want to do
-that, that means, we still have to enter the SoC specific code, and
-cannot get-by with the WFI instruction alone.
+--HxQt9wRz9wbL5Edg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Lina
+iQIcBAEBAgAGBQJUSnmNAAoJEIaOsuA1yqREp18P/iLnSEuLHjHKG9Uf2i/cuu4f
+jW0RkduPYcTZ6zMlk1hoVIyXI1m7TL5gysD0887DoxotclFE/XWuNrz5EKectWIX
+nd1T6IcAgDiFP93SWRJEzL5wRNEaurkiQpifj0/00WcDEsCD8agivPk63KxWcOG4
+bTs9m0WRI+PjVhul5spR1rxkZMyLt4yhzIcePpsOqZefK9sVK+o+7dnl0kSyOZo0
+vwYVLSjAyKbySslxOIxDMNvbfjwdPcBh2L/A+qnkjGzfFCd9Ylnpg7XH7CCgpCXL
+dlcILZHjWmxln9sx30tCoRmhgXGvgmdEfNqwfJxIEMUl/W6ACRk5orxrmHF0bTwd
+fFfiSD1k2qbsM4Arn/Zuy7P9VZeCaJqhsE7JnmtpjJuf46UUth6xwZooxu3yqG99
+OO3tWADLABjs0pvrrTHpskMY4TzUmWWI3pYENxOf7IXVMqRhd557dvSFXjn7rd/1
+YQJz8u85dswWI/sUPA779LUDNZSVwq7idE+hlVjGxYG4Ts8tV2wztF5Pyxs9aMlD
+ulgkaehd/KvEi/rTejKjUwaw6Wc89yGL1a6Xd4prsFz4ZmLFAI5rIcEouN7PS3ch
+HgdUts86TqOZ1kiWxqvejdQcF3+L2I7aIl33XMSaIkpyF4jAQX8Kq9uoOdJtEIvN
+bPcVdp58T7F+6pPGNjhL
+=NX4z
+-----END PGP SIGNATURE-----
+
+--HxQt9wRz9wbL5Edg--
