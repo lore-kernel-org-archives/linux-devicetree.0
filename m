@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v5 1/2] ARM: shmobile: r8a7790: add HS-USB device node
-Date: Fri, 24 Oct 2014 19:44:33 +0900
-Message-ID: <1414147474-2348-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v5 2/2] ARM: shmobile: lager: enable HS-USB
+Date: Fri, 24 Oct 2014 19:44:34 +0900
+Message-ID: <1414147474-2348-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1414147474-2348-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,38 +12,52 @@ To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MR
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the R8A7790 generic part of the HS-USB device node.
-It is up to the board file to enable the device.
+Enable HS-USB device for the Lager board, defining the GPIO that the driver
+should check when probing. Since this board doesn't have the OTG ID pin, we
+assume that GP5_18 (USB0_PWEN) is an ID pin because it is 1 when the SW5 is
+in position 2-3 (meaning USB function) and 0 in other positions.
+
+Note that there will be pinctrl-related error messages if both internal PCI
+and HS-USB drivers are enabled but they should be just ignored.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-[Sergei: fixed summary, added changelog]
+[Sergei: added pin node and prop, moved device node, fixed summary, supplemented
+changelog]
 Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/r8a7790.dtsi |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/r8a7790-lager.dts |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index 776f1c4..42a90c3 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -600,6 +600,17 @@
- 		status = "disabled";
+diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+index b48173b..e5ade61 100644
+--- a/arch/arm/boot/dts/r8a7790-lager.dts
++++ b/arch/arm/boot/dts/r8a7790-lager.dts
+@@ -221,6 +221,11 @@
+ 		renesas,function = "iic3";
  	};
  
-+	hsusb: usb@e6590000 {
-+		compatible = "renesas,usbhs-r8a7790";
-+		reg = <0 0xe6590000 0 0x100>;
-+		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
-+		renesas,buswait = <4>;
-+		phys = <&usb0 1>;
-+		phy-names = "usb";
-+		status = "disabled";
++	hsusb_pins: hsusb {
++		renesas,groups = "usb0_ovc_vbus";
++		renesas,function = "usb0";
 +	};
 +
- 	usbphy: usb-phy@e6590100 {
- 		compatible = "renesas,usb-phy-r8a7790";
- 		reg = <0 0xe6590100 0 0x100>;
+ 	usb0_pins: usb0 {
+ 		renesas,groups = "usb0";
+ 		renesas,function = "usb0";
+@@ -431,6 +436,13 @@
+ 	pinctrl-names = "default";
+ };
+ 
++&hsusb {
++	status = "okay";
++	pinctrl-0 = <&hsusb_pins>;
++	pinctrl-names = "default";
++	renesas,enable-gpio = <&gpio5 18 GPIO_ACTIVE_HIGH>;
++};
++
+ &usbphy {
+ 	status = "okay";
+ };
 -- 
 1.7.9.5
 
