@@ -1,116 +1,141 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/7] ARM: mediatek: Add support for interrupt polarity
-Date: Fri, 24 Oct 2014 16:59:44 +0200
-Message-ID: <CABuKBeLjFDm2TSqxc=K3rDnYTKRok3sCvEuL+chxxo7p1UbhLQ@mail.gmail.com>
-References: <1414079595-26129-1-git-send-email-yingjoe.chen@mediatek.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v2 2/3] fpga manager: framework core
+Date: Fri, 24 Oct 2014 09:54:00 -0500
+Message-ID: <alpine.DEB.2.02.1410240906340.23446@atx-linux-37>
+References: <1414007405-32186-1-git-send-email-atull@opensource.altera.com> <1414007405-32186-3-git-send-email-atull@opensource.altera.com> <20141024105200.GA20775@amd> <B914D894-E486-4EF1-8F84-169E939C58B4@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414079595-26129-1-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, srv_heupstream <srv_heupstream@mediate>
+Content-Type: multipart/mixed;
+	boundary="8323329-1652249636-1414162620=:23446"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <B914D894-E486-4EF1-8F84-169E939C58B4@konsulko.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Pavel Machek <pavel@denx.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, jgunthorpe@obsidianresearch.com, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini@gnudd.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, Rob Landley <rob@landley.net>, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, Linus Walleij <linus.walleij@linaro.org>, Alan Tull <delicious.quinoa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joe,
+--8323329-1652249636-1414162620=:23446
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 
-2014-10-23 17:53 GMT+02:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
-> This series is 4th version of interrupt polarity support for MediaTek SoCs.
-> This is based on Jiang's hierarchy irqdomain v2 [1] and my mediatek SoC
-> basic support [2].
->
-> This version addressed comments from previous discussion[3]. I removed
-> arm,hierarchy-irq-domain property. When GIC is probed by DT, it will
-> support hierarchy irqdomain. I still keep the first patch because this is
-> still base on hierarchy irqdomain v2.
+On Fri, 24 Oct 2014, Pantelis Antoniou wrote:
 
-Is this set based on v3.17-rc1?
-Is it based on one of Jiangs trees [0]?
+> Hi Pavel,
+> 
+> > On Oct 24, 2014, at 1:52 PM, Pavel Machek <pavel@denx.de> wrote:
+> > 
+> > Hi!
+> > 
+> >> * /sys/class/fpga_manager/<fpga>/firmware
+> >>  Name of FPGA image file to load using firmware class.
+> >>  $ echo image.rbf > /sys/class/fpga_manager/<fpga>/firmware
+> > 
+> > I .. still don't think this is good idea. What about namespaces?
+> > The path corresponds to path in which namespace?
+> > 
 
-I tried to use your patch set with v3.18-rc1 using Jiangs tree but the
-kernel crashed on mt6589 with a null-pointer exception [1]. A test
-with mt6592 didn't work either.
+Hi Pavel,
 
-It would be convenient if you rebase your patches to v3.18-rc1.
+Sorry if my documentation is too brief here.  The context is the
+firmware class.  The 'image.rbf' is a image file that is located
+on the filesystem in the firmware search patch.
+See Documentation/firmware_class/README.
 
-Thanks,
-Matthias
+Basically we need some way of loading a FPGA image to the FPGA.
+I don't think any one way is going to meet everybody's needs so
+I wanted to export enough functions from fpga-mgr.c that other
+interfaces can by built.  I think firmware will work just fine
+for some people and it is great in that it already exists in the
+kernel.
 
-[0] https://github.com/jiangliu/linux
-[1] http://pastebin.com/3F1pVaM9
+If I missed your point, please let me know.
 
->
-> In Jiang's version of irq_create_of_mapping, if irqdomain is hierarchy, it
-> will not perform irq_find_mapping check and set_type. The outermost
-> irqdomain need to take care of that. Because we will have several different
-> outermost irqdomain in different ARM SoCs, this cause code duplication. I
-> moved them back to irq_create_of_mapping. Since Jiang's changes are not
-> merged yet, maybe that patch should be merged there.
->
-> Simplified block diagram for interrupt on my system:
->
->     +-------+      +-------+
->  ---| SYSIRQ|------|ARM GIC|
->  ---|       |------|       |
->  ---|       |------|       |
->  ---|       |------|       |
->  ---|       |------|       |
->     +-------+      +-------+
->
-> In device tree, interrupt-parent for other devices is sysirq, child of gic.
-> This describe HW better and allow device to specify polarity as it is sent
-> by the device.
->
-> When using hierarchy irq domain, gic will use irq_domain_add_linear to
-> create irqdomain and all interrupt numbers must come from device tree. My
-> /proc/interrupts looks like this now:
->
-> # cat /proc/interrupts
->            CPU0
->  16:       1862  MT_SYSIRQ 113  mtk_timer
->  17:         67  MT_SYSIRQ  54  mtk-uart
->
-> Changes in v3:
->  - Discussion in [3]
->  - First implementation using hierarchy irqdomain
->
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/290832.html
-> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/284553.html
-> [3] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/293766.html
->
-> Yingjoe Chen (7):
->   irqdomain: Fix irq_domain_alloc_irqs return check.
->   irqdomain: Add back xlate and set_type for hierarchy irq domain
->   genirq: Add more helper functions to support stacked irq_chip
->   irqchip: gic: Support hierarchy irq domain.
->   ARM: mediatek: Add sysirq interrupt polarity support
->   ARM: mediatek: Add sysirq in mt6589/mt8135/mt8127 dtsi
->   dt-bindings: add bindings for mediatek sysirq
->
->  .../bindings/arm/mediatek/mediatek,sysirq.txt      |  26 ++++
->  arch/arm/boot/dts/mt6589.dtsi                      |  14 +-
->  arch/arm/boot/dts/mt8127.dtsi                      |  14 +-
->  arch/arm/boot/dts/mt8135.dtsi                      |  14 +-
->  drivers/irqchip/Kconfig                            |   1 +
->  drivers/irqchip/Makefile                           |   1 +
->  drivers/irqchip/irq-gic.c                          |  54 +++++--
->  drivers/irqchip/irq-mtk-sysirq.c                   | 168 +++++++++++++++++++++
->  include/linux/irq.h                                |   6 +
->  kernel/irq/chip.c                                  |  28 ++++
->  kernel/irq/irqdomain.c                             |  31 ++--
->  11 files changed, 332 insertions(+), 25 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
->  create mode 100644 drivers/irqchip/irq-mtk-sysirq.c
->
-> --
-> 1.8.1.1.dirty
->
+> 
+> FWIW the overlays patchset uses binary configfs attribute to make this work.
+> 
 
+Hi Pantelis,
 
+Yes I think you've mentioned that before.  So that would be another
+way of giving a device tree overlay to configfs, right?  I should
+that to the documentation in the patch header.
 
--- 
-motzblog.wordpress.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >> +int fpga_mgr_write(struct fpga_manager *mgr, const char *buf, size_t count)
+> >> +{
+> >> +	int ret;
+> >> +
+> >> +	if (test_and_set_bit_lock(FPGA_MGR_BUSY, &mgr->flags))
+> >> +		return -EBUSY;
+> >> +
+> >> +	dev_info(mgr->dev, "writing buffer to %s\n", mgr->name);
+> >> +
+> >> +	ret = __fpga_mgr_write(mgr, buf, count);
+> >> +	clear_bit_unlock(FPGA_MGR_BUSY, &mgr->flags);
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(fpga_mgr_write);
+> > 
+> > Is the EBUSY -- userspace please try again, but you don't know when to
+> > try again -- right interface? I mean, normally kernel would wait, so
+> > that userland does not have to poll?
+> > 
+
+Yes, for fpga_mgr_write it may be more useful for this to be
+a blocking call.
+
+> >> +static ssize_t fpga_mgr_firmware_store(struct device *dev,
+> >> +				       struct device_attribute *attr,
+> >> +				       const char *buf, size_t count)
+> >> +{
+> >> +	struct fpga_manager *mgr = dev_get_drvdata(dev);
+> >> +	unsigned int len;
+> >> +	char image_name[NAME_MAX];
+> >> +	int ret;
+> >> +
+> >> +	/* lose terminating \n */
+> >> +	strcpy(image_name, buf);
+> >> +	len = strlen(image_name);
+> >> +	if (image_name[len - 1] == '\n')
+> >> +		image_name[len - 1] = 0;
+> >> +
+> >> +	ret = fpga_mgr_firmware_write(mgr, image_name);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	return count;
+> >> +}
+> > 
+> > This shows why the interface is not right... Valid filename may
+> > contain \n, right? It may even end with \n.
+> > 
+> 
+> I could argue that a valid firmware file is one that’s well formed and does not
+> contain those characters.
+> 
+> I guess this is only for make echo file >foo work. You could specify that echo -n file >foo is
+> required.
+> 
+
+I am accustomed to doing 'echo -n' for most of sysfs anyway.  Once in a
+while I am a bonehead and forget the '-n' and spend a few minutes
+wondering why this thing that worked last week suddenly rejects all
+commands.  I'm just trying to make my user interface a bit user-friendly.
+
+I will take out the '\n' stripping and update the documentation.  I didn't
+realize this would be controversial.
+
+Alan
+
+> 
+> > Best regards,
+> > 									Pavel
+> > -- 
+> > (english) http://www.livejournal.com/~pavelmachek
+> > (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+> 
+> Regards
+> 
+> — Pantelis
+> 
+> 
+--8323329-1652249636-1414162620=:23446--
