@@ -1,100 +1,77 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH v2 2/3] fpga manager: framework core
-Date: Fri, 24 Oct 2014 13:55:10 +0300
-Message-ID: <B914D894-E486-4EF1-8F84-169E939C58B4@konsulko.com>
-References: <1414007405-32186-1-git-send-email-atull@opensource.altera.com> <1414007405-32186-3-git-send-email-atull@opensource.altera.com> <20141024105200.GA20775@amd>
-Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20141024105200.GA20775@amd>
-Sender: linux-doc-owner@vger.kernel.org
-To: Pavel Machek <pavel@denx.de>
-Cc: atull@opensource.altera.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, jgunthorpe@obsidianresearch.com, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini@gnudd.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, Rob Landley <rob@landley.net>, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, Linus Walleij <linus.walleij@linaro.org>, Alan Tull <delicious.quinoa@gmail.com>, dinguyen@opensource.altera.com, yvand
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCHv6 0/6] ARM: imx: Add Freescale LS1021A SoC and board support
+Date: Fri, 24 Oct 2014 18:08:41 +0800
+Message-ID: <1414145327-23541-1-git-send-email-jingchang.lu@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+This series contain the support for Freescale LS1021A CPU and LS1021A-QDS
+and LS1021A-TWR board.
 
-> On Oct 24, 2014, at 1:52 PM, Pavel Machek <pavel@denx.de> wrote:
->=20
-> Hi!
->=20
->> * /sys/class/fpga_manager/<fpga>/firmware
->>  Name of FPGA image file to load using firmware class.
->>  $ echo image.rbf > /sys/class/fpga_manager/<fpga>/firmware
->=20
-> I .. still don't think this is good idea. What about namespaces?
-> The path corresponds to path in which namespace?
->=20
+The LS1021A SoC combines two ARM Cortex-A7 cores that have been optimized
+for high reliability and pack the highest level of integration available
+for sub-3W embedded communications processors and with a comprehensive
+enablement model focused on ease of programmability.
 
-=46WIW the overlays patchset uses binary configfs attribute to make thi=
-s work.
+The LS1021A SoC shares IPs with i.MX family, Vybrid family and Freescale
+PowerPC platform. 
 
->> +int fpga_mgr_write(struct fpga_manager *mgr, const char *buf, size_=
-t count)
->> +{
->> +	int ret;
->> +
->> +	if (test_and_set_bit_lock(FPGA_MGR_BUSY, &mgr->flags))
->> +		return -EBUSY;
->> +
->> +	dev_info(mgr->dev, "writing buffer to %s\n", mgr->name);
->> +
->> +	ret =3D __fpga_mgr_write(mgr, buf, count);
->> +	clear_bit_unlock(FPGA_MGR_BUSY, &mgr->flags);
->> +
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL_GPL(fpga_mgr_write);
->=20
-> Is the EBUSY -- userspace please try again, but you don't know when t=
-o
-> try again -- right interface? I mean, normally kernel would wait, so
-> that userland does not have to poll?
->=20
->> +static ssize_t fpga_mgr_firmware_store(struct device *dev,
->> +				       struct device_attribute *attr,
->> +				       const char *buf, size_t count)
->> +{
->> +	struct fpga_manager *mgr =3D dev_get_drvdata(dev);
->> +	unsigned int len;
->> +	char image_name[NAME_MAX];
->> +	int ret;
->> +
->> +	/* lose terminating \n */
->> +	strcpy(image_name, buf);
->> +	len =3D strlen(image_name);
->> +	if (image_name[len - 1] =3D=3D '\n')
->> +		image_name[len - 1] =3D 0;
->> +
->> +	ret =3D fpga_mgr_firmware_write(mgr, image_name);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return count;
->> +}
->=20
-> This shows why the interface is not right... Valid filename may
-> contain \n, right? It may even end with \n.
->=20
+For the detail information about LS1021A SoC, please refer to the RM doc.
 
-I could argue that a valid firmware file is one that=E2=80=99s well for=
-med and does not
-contain those characters.
+---
+changes in v6:
+ add dts patch description.
+ remove '-' from QDS and TWR board dts name for consistence with u-boot.
 
-I guess this is only for make echo file >foo work. You could specify th=
-at echo -n file >foo is
-required.
+changes in v5:
+ remove unideal dts nodes for later add.
+ add X11 license to dts files.
 
+changes in v4:
+ add "syscon" compatible to scfg and dcfg dts node.
+ remove mxc_restart in the platform machine desc.
+ remove dma_zone_size defination.
 
-> Best regards,
-> 									Pavel
-> --=20
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/hors=
-es/blog.html
+changes in v3:
+ rewrite scfg and dcfg binding doc description.
+ remove sai related node leaving to the driver support.
 
-Regards
+changes in v2:
+ remove unused nodes.
+ wakeup the secondary core by IPI call to u-boot standby procedure. 
+ add dt-bindings for LS1021A SoC and platform gerenal configuration nodes.
 
-=E2=80=94 Pantelis
+----------------------------------------------------------------
+Jingchang Lu (6):
+	ARM: dts: Add SoC level device tree support for LS1021A
+	ARM: dts: Add initial LS1021A QDS board dts support
+	ARM: dts: Add initial LS1021A TWR board dts support
+	dt-bindings: arm: add Freescale LS1021A SoC device tree binding
+	ARM: imx: Add initial support for Freescale LS1021A
+	ARM: imx: Add Freescale LS1021A SMP support
 
+ Documentation/devicetree/bindings/arm/fsl.txt |  38 +++++
+ arch/arm/boot/dts/Makefile                    |   2 +
+ arch/arm/boot/dts/ls1021a.dtsi                | 408 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/ls1021aqds.dts              | 240 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/ls1021atwr.dts              | 127 ++++++++++++++++
+ arch/arm/mach-imx/Kconfig                     |  14 ++
+ arch/arm/mach-imx/Makefile                    |   4 +-
+ arch/arm/mach-imx/common.h                    |   1 +
+ arch/arm/mach-imx/mach-ls1021a.c              |  22 +++
+ arch/arm/mach-imx/platsmp.c                   |  33 ++++
+ 10 files changed, 888 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/ls1021a.dtsi
+ create mode 100644 arch/arm/boot/dts/ls1021aqds.dts
+ create mode 100755 arch/arm/boot/dts/ls1021atwr.dts
+ create mode 100644 arch/arm/mach-imx/mach-ls1021a.c
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
