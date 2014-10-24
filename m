@@ -1,58 +1,80 @@
-From: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] bcm2835: add VideoCore Mailbox to the device tree
-Date: Fri, 24 Oct 2014 16:53:22 +0100
-Message-ID: <20141024155321.GF10395@x1>
-References: <1414156805-30253-1-git-send-email-lkundrak@v3.sk>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [RFC 3/7] mfd: devicetree: bindings: Add Qualcomm SMD based RPM
+ DT binding
+Date: Fri, 24 Oct 2014 08:59:38 -0700
+Message-ID: <20141024155937.GG28611@sonymobile.com>
+References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1412037291-16880-4-git-send-email-bjorn.andersson@sonymobile.com>
+ <85C5C172-D309-41B4-B511-7820BAFDA017@codeaurora.org>
+ <20140930143740.GK28481@sonymobile.com>
+ <542B39BD.3030208@codeaurora.org>
+ <20141001000846.GZ28481@sonymobile.com>
+ <5435B0DA.1000707@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1414156805-30253-1-git-send-email-lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <5435B0DA.1000707@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 24 Oct 2014, Lubomir Rintel wrote:
+On Wed 08 Oct 14:47 PDT 2014, Jeffrey Hugo wrote:
 
-> Follows the generic Mailbox Controller bindings as documented in
-> Documentation/devicetree/bindings/mailbox/mailbox.txt.
+> On 9/30/2014 6:08 PM, Bjorn Andersson wrote:
+> > On Tue 30 Sep 16:16 PDT 2014, Jeffrey Hugo wrote:
+> >
+> >> On 9/30/2014 8:37 AM, Bjorn Andersson wrote:
+[..]
+> >
+> > That's right, because you have these tables in devicetree in the caf version.
+> > You have to have this information somewhere!
 > 
-> Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> ---
->  arch/arm/boot/dts/bcm2835.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
+> True, it must exist somewhere.  However since its information tied 
+> directly to the hardware, it seems like its information that would fit 
+> right in DT.
 > 
-> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
-> index 3342cb1..bd046a9 100644
-> --- a/arch/arm/boot/dts/bcm2835.dtsi
-> +++ b/arch/arm/boot/dts/bcm2835.dtsi
-> @@ -50,6 +50,13 @@
->  			#interrupt-cells = <2>;
->  		};
->  
-> +		mailbox: mailbox@0x7e00b880 {
 
-Remove the 0x.
+For family B it would be reasonable to move this to device tree, replacing my
+"reg" property with a "resource" property taking type and id for the resource
+(e.g resource = <0x616f646c 17>; for ldo 17).
 
-> +			compatible = "brcm,bcm2835-mbox";
-> +			reg = <0x7e00b880 0x40>;
-> +			interrupts = <0 1>;
+For family A this does not work thought, but maybe we should just skip the idea
+of having a common look in favour of not having the tables.
 
-2 interrupts one cell right?  No flags?
+> I talked to my contact, and it seems like the table attributes vary more 
+> than I thought, target to target, so the single table design seems less 
+> plausible.  Its my understanding you've had an offline discussion with 
+> him and some of our regulator guys to discuss the specifics of our 
+> needs.  I'll let them take over as the experts.
+> 
 
-> +			#mbox-cells = <1>;
-> +		};
-> +
->  		watchdog@7e100000 {
->  			compatible = "brcm,bcm2835-pm-wdt";
->  			reg = <0x7e100000 0x28>;
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, I met with Stephen, David and Mahesh to discuss the matter. The issues
+that we discussed was:
+
+1) It must be possible to set the active and sleep state of a resource
+independently.
+
+2) Deferring less important writes (e.g. writes to sleep state) to reduce
+communication
+
+3) With deferred writes, we need to flush the data when going to sleep and that
+requires some special handling - so that we don't wake up again or crash the
+rpm.
+
+4) The scalability of the table
+
+
+I'm working on figuring out how to do 1) in a sane way, as this is needed.
+
+2) gives 3) which gives a bunch of implementation awkwardness and I'm still not
+convinced that it is a problem beyond someones KPI, so I will have to do some
+measurements. If nothing else it's "just" an optimization that we should be
+able to add incrementally later.
+
+I guess 4) is a matter of taste, with the table the client reference a
+resource, with all the data in DT it also describes part of how the rpm works.
+
+Regards,
+Bjorn
