@@ -1,55 +1,89 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
- driver support
-Date: Fri, 24 Oct 2014 12:08:26 +0000
-Message-ID: <7dc11ef7ccec49bcb052c30b9aa916c3@BL2FFO11FD044.protection.gbl>
-References: <1413374436-14410-1-git-send-email-sthokal@xilinx.com>
- <4301925.4pMHXMXqA4@wuerfel>
- <ff137744d6474640aab09e5d6f62921a@BN1AFFO11FD019.protection.gbl>
- <3236720.MHeqOodrCV@wuerfel>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/3] gpio: Add APM X-Gene standby GPIO controller driver
+Date: Fri, 24 Oct 2014 14:14:43 +0200
+Message-ID: <CACRpkdY3-Y0eA_o2enfxbqWUpwPoo_5oM9t=uU=QSTAw4MPf9Q@mail.gmail.com>
+References: <1412779948-28769-1-git-send-email-yvo@apm.com>
+	<1412779948-28769-2-git-send-email-yvo@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3236720.MHeqOodrCV@wuerfel>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, Srikanth Vemula <svemula@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srikanth Thokala <sthokal@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1412779948-28769-2-git-send-email-yvo@apm.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Y Vo <yvo@apm.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Tin Huynh <tnhuynh@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Wed, Oct 8, 2014 at 4:52 PM, Y Vo <yvo@apm.com> wrote:
 
------Original Message-----
-From: Arnd Bergmann [mailto:arnd@arndb.de]
-Sent: Tuesday, October 21, 2014 2:45 PM
-To: linux-arm-kernel@lists.infradead.org
-Cc: Appana Durga Kedareswara Rao; devicetree@vger.kernel.org; vinod.koul@intel.com; Srikanth Vemula; linux-kernel@vger.kernel.org; Srikanth Thokala; dmaengine@vger.kernel.org; robh+dt@kernel.org; Michal Simek; Anirudha Sarangi; grant.likely@linaro.org; dan.j.williams@intel.com
-Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine driver support
+> Add APM X-Gene standby GPIO controller driver.
+>
+> Signed-off-by: Y Vo <yvo@apm.com>
 
-On Tuesday 21 October 2014 09:06:13 Appana Durga Kedareswara Rao wrote:
-> The above mentioned API's  and structures will be used by the dma test
-> client driver's to set hardware configuration information. The dma
-> client drivers are not mainlined  yet and it is Internally used by
-> our git-tree  to test the DMA functionality in loopback .
+That's a very terse commit message. Please tell us a bit about the
+hardware and what platforms it is used on, etc.
 
-I would suggest you add the test driver into the main dmaengine driver file directly then, so you don't need to export the symbols. If there are important reasons to keep that as separate files, just move the header to the drivers/dma/ directory and add the test driver there.
+For example that is uses ACPI, as seems to be the case.
 
-        Arnd
+> +config GPIO_XGENE_SB
+> +       tristate "APM X-Gene GPIO standby controller support"
+> +       depends on ARCH_XGENE && OF_GPIO
 
-Sorry I forgot to mention the below things in the mail .The Config API's and structures not only used by the dmaengine driver's but also used by the  various IP's  (Ex: Ethernet driver and SRIO driver these drivers are under development).For example the Ethernet driver is resides under drivers/net/ethernet but it needs to set some specific configuration parameters of the dma that's why created a separate header file for the h/w configurable parameters.
+If this platform uses ACPI (as is implied below), why is it depending on
+OF_GPIO but not GPIO_ACPI...
+
+(...)
+> +#include <linux/of_gpio.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/acpi.h>
+
+So this platform uses some interesting combination of ACPI and device tree
+at the same time? Or alternatively?
 
 
-Regards,
-Kedar.
+> +struct xgene_gpio_sb {
+> +       struct of_mm_gpio_chip mm;
+> +       u32 *irq;
+> +       u32 nirq;
+> +       void __iomem *gic_regs;
+> +       spinlock_t lock; /* mutual exclusion */
+> +};
 
+Document this struct using kerneldoc instead.
 
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+> +       apm_gc->irq = devm_kzalloc(&pdev->dev, sizeof(u32) * XGENE_MAX_GPIO_DS,
+> +                                  GFP_KERNEL);
+> +       if (!apm_gc->irq)
+> +               return -ENOMEM;
+> +       memset(apm_gc->irq, 0, sizeof(u32) * XGENE_MAX_GPIO_DS);
+(...)
+> +       for (i = 0; i < apm_gc->nirq; i++) {
+> +               apm_gc->irq[default_pins[i]] = platform_get_irq(pdev, i);
+
+So the IRQs for all the GPIO pins are handled somewhere else instead
+of being a cascaded IRQ controller.
+
+This means that the IRQ lines from each individual GPIO pin is
+connected to a unique IRQ line on a secondary interrupt controller,
+instead of the GPIO block being a cascaded interrupt controller
+in its own right.
+
+Is this correct?
+
+Usually there is a single IRQ line out from a GPIO block... not
+one per GPIO.
+
+I really want to look at the code for that interrupt controller to see
+what's going on here, please provide me a pointer to the
+relevant code.
+
+> +static int xgene_gpio_sb_remove(struct platform_device *pdev)
+> +{
+> +       struct of_mm_gpio_chip *mm = platform_get_drvdata(pdev);
+> +
+> +       return gpiochip_remove(&mm->gc);
+
+This function has changed signature and doesn't return a value
+anymore.
+
+Yours,
+Linus Walleij
