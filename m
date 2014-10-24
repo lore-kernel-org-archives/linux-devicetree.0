@@ -1,435 +1,466 @@
-From: "jinkun.hong" <jinkun.hong@rock-chips.com>
-Subject: [PATCH v7 1/3] power-domain: add power domain drivers for Rockchip platform
-Date: Fri, 24 Oct 2014 00:29:19 -0700
-Message-ID: <1414135761-3406-2-git-send-email-jinkun.hong@rock-chips.com>
-References: <1414135761-3406-1-git-send-email-jinkun.hong@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414135761-3406-1-git-send-email-jinkun.hong@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org
-Cc: Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, "jinkun.hong" <jinkun.hong@rock-chips.com>, Jack Dai <jack.dai@rock-chips.com>
+From: =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal@aksignal.cz>
+Subject: Re: [PATCH] gpio: add gpio_of_helper
+Date: Fri, 24 Oct 2014 09:31:44 +0200
+Message-ID: <544A0060.60404@aksignal.cz>
+References: <4b0bcf4679163c0da53e412a47eecd4bb03849b8.1413966148.git.jiri.prchal@aksignal.cz> <CAAVeFuJrmea6yZn2J28ihs3+=FYkZ2QxDv6F7qiq+TPpv_odpw@mail.gmail.com> <E5E0C172-C51D-46DC-AE15-71308BDC9829@antoniou-consulting.com> <CAAVeFuLh99MJXNNuh=L37pNzgun-Qi=3J4uK4eUSC5Qy107Gzw@mail.gmail.com> <E44127F1-1B6B-4BB0-866A-7B142F295FAE@antoniou-consulting.com> <CAAVeFuKj66r4UNZ33z3BT5m=7iB3tMC-u_eUDcJmvaNFj-0y5Q@mail.gmail.com> <54489EC9.4020108@aksignal.cz> <CAAVeFuK4HxzwKye-RJCMeOSHNGNcvXV49hxnKL+u6ttidze7Tg@mail.gmail.com> <F82900FA-5999-4B39-8E7E-6FAA99ABDB2D@antoniou-consulting.com> <CAAVeFuKd7s3qgud0buWgHeSSjOXjVC5M82bjy4m3=B7Tr2OPzw@mail.gmail.com>
+Reply-To: jiri.prchal@aksignal.cz
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAAVeFuKd7s3qgud0buWgHeSSjOXjVC5M82bjy4m3=B7Tr2OPzw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "jinkun.hong" <jinkun.hong@rock-chips.com>
+Hi all,
 
-Add power domain drivers based on generic power domain for Rockchip platform,
-and support RK3288.
+Dne 24.10.2014 v 08:23 Alexandre Courbot napsal(a):
+> Added the DT maintainers and fixed the DT mailing-list's address so
+> this discussion becomes visible to them as well.
+>
+> On Thu, Oct 23, 2014 at 8:23 PM, Pantelis Antoniou
+> <panto@antoniou-consulting.com> wrote:
+>> Hi Alexandre,
+>>
+>>> On Oct 23, 2014, at 11:53 AM, Alexandre Courbot <gnurou@gmail.com> =
+wrote:
+>>>
+>>> On Thu, Oct 23, 2014 at 3:23 PM, Ji=C5=99=C3=AD Prchal <jiri.prchal=
+@aksignal.cz> wrote:
+>>>>
+>>>>
+>>>> Dne 23.10.2014 v 07:08 Alexandre Courbot napsal(a):
+>>>>
+>>>>> On Wed, Oct 22, 2014 at 6:58 PM, Pantelis Antoniou
+>>>>> <panto@antoniou-consulting.com> wrote:
+>>>>>>
+>>>>>> Hi Alexandre,
+>>>>>>
+>>>>>>> On Oct 22, 2014, at 12:41 PM, Alexandre Courbot <gnurou@gmail.c=
+om>
+>>>>>>> wrote:
+>>>>>>>
+>>>>>>> On Wed, Oct 22, 2014 at 6:24 PM, Pantelis Antoniou
+>>>>>>> <panto@antoniou-consulting.com> wrote:
+>>>>>>>>
+>>>>>>>> Hi Alexandre,
+>>>>>>>>
+>>>>>>>>> On Oct 22, 2014, at 12:18 PM, Alexandre Courbot <gnurou@gmail=
+=2Ecom>
+>>>>>>>>> wrote:
+>>>>>>>>>
+>>>>>>>>> On Wed, Oct 22, 2014 at 5:26 PM, Jiri Prchal <jiri.prchal@aks=
+ignal.cz>
+>>>>>>>>> wrote:
+>>>>>>>>>>
+>>>>>>>>>> This patch adds new driver "gpio-of-helper", witch has possi=
+bility to
+>>>>>>>>>> export
+>>>>>>>>>> gpios defined in dt. It exports them in defined name under
+>>>>>>>>>> /sysfs/class/gpio/name.
+>>>>>>>>>> It's rebased from Pantelis Antoniou patch to new kernel.
+>>>>>>>>>> Usage example:
+>>>>>>>>>>        gpio {
+>>>>>>>>>>                compatible =3D "gpio-of-helper";
+>>>>>>>>>>                status =3D "okay";
+>>>>>>>>>>                pinctrl-names =3D "default";
+>>>>>>>>>>                pinctrl-0 =3D <&pinctrl_gpio>;
+>>>>>>>>>>
+>>>>>>>>>>                gsm_on {
+>>>>>>>>>>                        gpio-name =3D "gsm_on";
+>>>>>>>>>>                        gpio =3D <&pioB 13 GPIO_ACTIVE_HIGH>;
+>>>>>>>>>>                        output;
+>>>>>>>>>>                        init-low;
+>>>>>>>>>>                };
+>>>>>>>>>>        };
+>>>>>>>>>>
+>>>>>>>>>> This patch needs Alexey Ignatov [PATCH] gpiolib: allow expor=
+ting
+>>>>>>>>>> gpios with
+>>>>>>>>>> custom names.
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> We will need to see whether the pre-requisite patch can get m=
+erged
+>>>>>>>>> first, but there are a couple of things that are wrong with y=
+our patch
+>>>>>>>>> anyway:
+>>>>>>>>>
+>>>>>>>>> - it is missing a bindings documentation
+>>>>>>>>> - it is using the legacy integer GPIOs instead of the descrip=
+tor
+>>>>>>>>> interface (see include/linux/gpio/consumer.h). Since this is =
+DT-based,
+>>>>>>>>> there is absolutely no reason to not use the descriptors inte=
+rface.
+>>>>>>>>> - it seems quite long for what it needs to do
+>>>>>>>>> - the MODULE_AUTHOR has not signed-off this patch (?)
+>>>>>>>>>
+>>>>>>>>> But what makes me nervous is that this encourages more usage =
+of the
+>>>>>>>>> sysfs interface, an in a way that is potentially harmful.
+>>>>>>>>>
+>>>>>>>>> Also, I don't know if the DT people will be happy with this i=
+dea.
+>>>>>>>>> Since this concerns DT, please also add the devicetree list a=
+nd get a
+>>>>>>>>> Acked-by for the bindings you want to push by a DT maintainer=
+=2E
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> Since I=E2=80=99m the original perpetrator, let me put a few w=
+ords here for
+>>>>>>>> posterity.
+>>>>>>>>
+>>>>>>>> This patch was meant as a quick and dirty method for doing the
+>>>>>>>> automatic export
+>>>>>>>> and pinmux configuration from DT on a 3.8 kernel. The kernel A=
+PIs have
+>>>>>>>> moved on
+>>>>>>>> since. It wasn=E2=80=99t meant to be submitted for mainline ri=
+ght as it is.
+>>>>>>>>
+>>>>>>>> Unfortunately (or fortunately for many people) it does what a =
+lot of
+>>>>>>>> people need
+>>>>>>>> i.e. configures a board with heavily pinmuxed GPIO right at bo=
+ot time.
+>>>>>>>>
+>>>>>>>> I=E2=80=99m open at having a small discussion about how to do =
+what the users of
+>>>>>>>> this patch
+>>>>>>>> do =E2=80=98right=E2=80=99.
+>>>>>>>
+>>>>>>>
+>>>>>>> Sure, although the discussion might turn out to not be that "sm=
+all". :)
+>>>>>>>
+>>>>>>
+>>>>>> Heh ;)
+>>>>>>
+>>>>>>> Pinmux configuration sounds like a job for pinmux more than GPI=
+O, and
+>>>>>>> exporting potentially many GPIOs to user-space sounds like a wo=
+rk for
+>>>>>>> a proper driver.
+>>>>>>>
+>>>>>>
+>>>>>> I=E2=80=99m afraid that=E2=80=99s not the case. A great many use=
+rs do not require
+>>>>>> anything
+>>>>>> more than setting a pinmux and the GPIO configuration (input/out=
+put).
+>>>>>> They can then do low speed I/O using the sysfs interface, withou=
+t having
+>>>>>> to
+>>>>>> use any complex APIs (shell works just fine).
+>>>>>>
+>>>>>> Think of stuff like controlling a sprinkler valve, or something =
+like a
+>>>>>> mechanical
+>>>>>> door detection open state.
+>>>>>
+>>>>>
+>>>>> That sounds like any kind of arbitrary device that can be tempora=
+rily
+>>>>> connected to a set of GPIOs that will be bit-banged. Is my
+>>>>> interpretation correct?
+>>>>
+>>>>
+>>>> Not only temporarily. For example on/off switch of some hw on boar=
+d like gsm
+>>>> modem.
+>>>
+>>> ... which should be handled in-kernel.
+>>>
+>>
+>> Not really. This is part of some kind user-space ABI but which has t=
+o do
+>> with the mapping of an named GPIO in the board schematics to user-sp=
+ace.
+>>
+>>>> Or some optocoupler isoleted in/outs for general use from userspac=
+e.
+>>>
+>>> ... which should thus be configured from userspace.
+>>>
+>>
+>> No. It is used from userspace, but the the configuration of such is =
+performed
+>> by board specific means in the kernel.
+>>
+>>>>>
+>>>>>
+>>>>> In that case, I seriously doubt that this should be part of the D=
+T.
+>>>>> Right now the DT is part of the firmware, and an immutable descri=
+ption
+>>>>> of the hardware layout of a board - definitely such devices do no=
+t fit
+>>>>
+>>>> This is our case of gpio. It's like LEDs, they are hw layout of bo=
+ard,
+>>>> but they are in/out instead of LEDs are only output.
+>>>>>
+>>>>> into that definition. This might change once the Device Tree Over=
+lays
+>>>>> are merged, but we are not there yet. If the DT maintainers say t=
+his
+>>>>> is a valid use-case for overlays, then I will reconsider my posit=
+ion,
+>>>>> but in any case it really looks like this could/should be done fr=
+om
+>>>>> user-space.
+>>>>
+>>>> I don't think so as I explained - HW layout of boerd.
+>>>
+>>> If it is a static hardware layout that makes the case even clearer =
+-
+>>> these devices should have a proper kernel driver that configures th=
+ese
+>>> GPIOs, and exports a proper interface to userspace, not just raw
+>>> GPIOs.
+>>
+>> Raw GPIOs is what the user-space application wants to use. There is =
+no
+>> higher abstraction possible.
+>
+> Why can't the application use something else than raw GPIOs? Don't yo=
+u
+> have its source code?
+>
+>>
+>> What these applications need are:
+>>
+>> 1. A way to map a GPIO to a name that is board invariant. Many board=
+s
+>> move GPIOs around but the function typically stays the same. So for
+>> instance rev-0 might have GARAGE_DOOR to GPIO_A10, and on subsequent
+>> revision rev-1 it might be GARAGE_DOOR to GPIO_B08. The user-space
+>> application that controls everything does not want to deal with revi=
+sions
+>> ideally, just to know that the named GARAGE_DOOR gpio exists.
+>
+> This sounds pretty much like you are asking to register
+> application-specific configuration into the DT.
+Not application specific, it's board hw specific.
+>
+>>
+>> 2. A way to have the pinmux configuration of said GPIO configured wi=
+thout
+>> having to do anything explicit. I.e. on am335x the pinmux configurat=
+ion is
+>> decoupled from the GPIO driver; having a GPIO configured as a GPIO d=
+oes not
+>> alter the pinmux settings.
+>
+> Shouldn't that be fixed in the pinmux/GPIO kernel drivers? I am not
+> too familiar with pinmux, but IIUC pixmux configuration when GPIOs ar=
+e
+> requested is something that is commonly done.
+>
+>>
+>> 3. The user-space facing API must be simple, preferably file based l=
+ike the
+>> sysfs method right now. It is very simple to use even from within sc=
+ripts.
+>
+> That we definitely agree, and as of today there are many ways to do t=
+his:
+> 1) A dedicated driver that exposes exactly the right interface to
+> sysfs. I know it may seem overkill, but we have drivers for other
+> simple things like GPIO-controlled LEDs.
+Let me ask: what is the difference between kernel exported gpios and us=
+er space?
+User-space interface is good enough for usage gpios, so why write other=
+ driver
+doing the same. What only we like is export board layout gpio from kern=
+el
+using dt.
+> 2) If you think writing a driver is not worth the effort, you can
+> already export and configure (and I'm willing to discuss the
+> possibility to add "give names" to that list) GPIOs, from user-space.
+>
+> I understand that you want to keep the GPIO exporting/configuration
+> from the DT to have all the board-specific settings in one place, but
+> my understanding of the device tree is that it is supposed to say "I
+> have a garage door control device connected to this GPIO", not "expor=
+t
+> this GPIO as input active-low, and name it GARAGE_DOOR".
+Exactly we like to export "out0" ... "out7". If user will use some of t=
+hem for
+"GARAGE_DOOR" is up to him. But he knows that somewhere on some connect=
+or on
+the board is "out0" and he will find "out0" in "sysfs". Not strange "gp=
+ioA25"
+and set by default as input.
+Thats all what we need.
+>
+>>
+>>>
+>>>> In other way I'm looking forward for DT overlays.
+>>>>>
+>>>>>
+>>>>> You have almost all the necessary pieces: you can export, configu=
+re
+>>>>> and manipulate any GPIO from the sysfs interface. The only thing =
+you
+>>>>> would be missing is a way to give a name to a GPIO, something tha=
+t can
+>>>>> easily be fixed.
+>>>>
+>>>> But isn't it nice to have already exported gpios which are layoute=
+d out
+>>>> from board. All other unexported gpios aren't connected to anywher=
+e on
+>>>> board. So user don't have to export or unexport anything.
+>>>>>
+>>>>>
+>>>>> Since the devices you want to configure that way are typically
+>>>>> removable or usage-specific, why would you want to store that
+>>>>> information all the way up into the firmware? A commonly accepted
+>>>>> wisdom is that what can be done in user-space should be done in
+>>>>> user-space, and it really looks like this applies here.
+>>>>
+>>>> They are NOT removable.
+>>>>>
+>>>>>
+>>>>> Say you buy a Jetson TK1 to control that sprinkler valve (a good =
+use
+>>>>> for all these GPU cores!). The mainline DT has no knowledge about=
+ the
+>>>>> valve, so using your proposed way you will have to re-build and f=
+lash
+>>>>> a custom device tree just to be able to use your sprinkler. If yo=
+u
+>>>>> decide to assign your board to something else, you will need anot=
+her
+>>>>> DT.
+>>>>
+>>>> But if you buy more "real world ready" board with for example 8 po=
+wer
+>>>> outputs for sprinkler valves, why has user think about what gpio t=
+o
+>>>> export, if there could be valve0 - 7 ready. If he will use only va=
+lve0
+>>>> does not mater, all unused gpio can't be used for anything else si=
+nce
+>>>> they has layout for valves.
+>>>
+>>> The problem is indeed different.
+>>>
+>>> If your sprinkler valves are wired on your board and the lines cann=
+ot
+>>> be used for anything else, then what you need is a driver for the
+>>> valve that will acquire the GPIOs and export its own userspace
+>>> interface under /sys/.
+>>>
+>>> You device tree must reflect the layout of the board ; in this case
+>>> "here is a valve that uses this GPIO active-low". Saying "this GPIO=
+ is
+>>> output active-low and named valve0" is not a good description of yo=
+ur
+>>> hardware.
+>>>
+>>
+>> There is no higher layer driver API. We don=E2=80=99t want to litter=
+ the kernel
+>> with =E2=80=98valve=E2=80=99 drivers, there=E2=80=99s no such thing.=
+ There=E2=80=99s only digital I/Os
+>> that=E2=80=99s connected to low speed devices.
+>>
+>> If we are going for a higher layer API that would be something very =
+thin
+>> like a user-space GPIO driver. Do you see the conundrum?
+>
+> Could you maybe point me to references of the hardware (both the
+> devices connected to the GPIOs and the board itself if the specs are
+> available) so I can understand the issue fully?
+Short example:
+		in13 {
+			gpio-name =3D "in13";
+			input;
+			gpio =3D <&pioC 18 GPIO_ACTIVE_LOW>;
+		};
+		in14 {
+			gpio-name =3D "in14";
+			input;
+			gpio =3D <&pioC 20 GPIO_ACTIVE_LOW>;
+		};
+		in17 {
+			gpio-name =3D "in17";
+			input;
+			gpio =3D <&pioC 16 GPIO_ACTIVE_LOW>;
+		};
+		out18 {
+			gpio-name =3D "out18";
+			gpio =3D <&pioA 30 GPIO_ACTIVE_HIGH>;
+			output;
+			init-low;
+		};
+		out19 {
+			gpio-name =3D "out19";
+			gpio =3D <&pioA 31 GPIO_ACTIVE_HIGH>;
+			output;
+			init-low;
+		};
+		out20 {
+			gpio-name =3D "out20";
+			gpio =3D <&pioA 29 GPIO_ACTIVE_HIGH>;
+			output;
+			init-low;
+		};
 
-Signed-off-by: Jack Dai <jack.dai@rock-chips.com>
-Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
-
----
-
-Changes in v7:
-- Delete unused variables
-
-Changes in v6:
-- delete pmu_lock
-- modify dev_lock using mutex
-- pm_clk_resume(pd->dev) change to pm_clk_resume(ed->dev)
-- pm_clk_suspend(pd->dev) change to pm_clk_suspend(ed->dev)
-- add devm_kfree(pd->dev, de) in rockchip_pm_domain_detach_dev
-
-Changes in v5:
-- delete idle_lock
-- add timeout in rockchip_pmu_set_idle_request()
-
-Changes in v4:
-- use list storage dev
-
-Changes in v3:
-- change use pm_clk_resume() and pm_clk_suspend()
-
-Changes in v2:
-- remove the "pd->pd.of_node = np"
-
- arch/arm/mach-rockchip/Kconfig      |    1 +
- arch/arm/mach-rockchip/Makefile     |    1 +
- arch/arm/mach-rockchip/pm_domains.c |  355 +++++++++++++++++++++++++++++++++++
- 3 files changed, 357 insertions(+)
- create mode 100644 arch/arm/mach-rockchip/pm_domains.c
-
-diff --git a/arch/arm/mach-rockchip/Kconfig b/arch/arm/mach-rockchip/Kconfig
-index d168669..4920a88 100644
---- a/arch/arm/mach-rockchip/Kconfig
-+++ b/arch/arm/mach-rockchip/Kconfig
-@@ -12,6 +12,7 @@ config ARCH_ROCKCHIP
- 	select DW_APB_TIMER_OF
- 	select ARM_GLOBAL_TIMER
- 	select CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
-+	select PM_GENERIC_DOMAINS if PM
- 	help
- 	  Support for Rockchip's Cortex-A9 Single-to-Quad-Core-SoCs
- 	  containing the RK2928, RK30xx and RK31xx series.
-diff --git a/arch/arm/mach-rockchip/Makefile b/arch/arm/mach-rockchip/Makefile
-index b29d8ea..805268d 100644
---- a/arch/arm/mach-rockchip/Makefile
-+++ b/arch/arm/mach-rockchip/Makefile
-@@ -2,3 +2,4 @@ CFLAGS_platsmp.o := -march=armv7-a
- 
- obj-$(CONFIG_ARCH_ROCKCHIP) += rockchip.o
- obj-$(CONFIG_SMP) += headsmp.o platsmp.o
-+obj-$(CONFIG_PM_GENERIC_DOMAINS) += pm_domains.o
-diff --git a/arch/arm/mach-rockchip/pm_domains.c b/arch/arm/mach-rockchip/pm_domains.c
-new file mode 100644
-index 0000000..f6d2f79
---- /dev/null
-+++ b/arch/arm/mach-rockchip/pm_domains.c
-@@ -0,0 +1,355 @@
-+/*
-+ * Rockchip Generic power domain support.
-+ *
-+ * Copyright (c) 2014 ROCKCHIP, Co. Ltd.
-+ * Author: Hong Jinkun <jinkun.hong@rock-chips.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#include <linux/module.h>
-+#include <linux/io.h>
-+#include <linux/err.h>
-+#include <linux/slab.h>
-+#include <linux/pm_domain.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/sched.h>
-+#include <linux/clk.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/spinlock.h>
-+#include <linux/pm_clock.h>
-+#include <linux/delay.h>
-+
-+#define PWR_OFFSET			0x08
-+#define STATUS_OFFSET		0x0c
-+#define REQ_OFFSET			0x10
-+#define IDLE_OFFSET			0x14
-+#define ACK_OFFSET			0x14
-+#define PMU_TIMEOUT_MAX		10000
-+
-+struct rockchip_dev_entry {
-+	struct list_head node;
-+	struct device *dev;
-+};
-+
-+struct rockchip_domain {
-+	struct generic_pm_domain base;
-+	struct device *dev;
-+	struct regmap *regmap_pmu;
-+	struct list_head dev_list;
-+	/* mutex lock for dev_list */
-+	struct mutex  dev_lock;
-+	u32 pwr_shift;
-+	u32 status_shift;
-+	u32 req_shift;
-+	u32 idle_shift;
-+	u32 ack_shift;
-+};
-+
-+#define to_rockchip_pd(_gpd) container_of(_gpd, struct rockchip_domain, base)
-+
-+static int rockchip_pmu_set_idle_request(struct rockchip_domain *pd,
-+					 bool idle)
-+{
-+	u32 idle_mask = BIT(pd->idle_shift);
-+	u32 idle_target = idle << (pd->idle_shift);
-+	u32 ack_mask = BIT(pd->ack_shift);
-+	u32 ack_target = idle << (pd->ack_shift);
-+	unsigned int mask = BIT(pd->req_shift);
-+	unsigned int val;
-+	int timeout = 0;
-+
-+	val = (idle) ? mask : 0;
-+	regmap_update_bits(pd->regmap_pmu, REQ_OFFSET, mask, val);
-+	dsb();
-+
-+	do {
-+		regmap_read(pd->regmap_pmu, ACK_OFFSET, &val);
-+		udelay(1);
-+		if (timeout > PMU_TIMEOUT_MAX) {
-+			pr_err("%s wait pmu ack timeout!\n", __func__);
-+			break;
-+		}
-+		timeout += 1;
-+	} while ((val & ack_mask) != ack_target);
-+
-+	timeout = 0;
-+
-+	do {
-+		regmap_read(pd->regmap_pmu, IDLE_OFFSET, &val);
-+		udelay(1);
-+		if (timeout > PMU_TIMEOUT_MAX) {
-+			pr_err("%s wait pmu idle timeout!\n", __func__);
-+			break;
-+		}
-+		timeout += 1;
-+	} while ((val & idle_mask) != idle_target);
-+
-+	return 0;
-+}
-+
-+static bool rockchip_pmu_power_domain_is_on(struct rockchip_domain *pd)
-+{
-+	unsigned int val;
-+
-+	regmap_read(pd->regmap_pmu, STATUS_OFFSET, &val);
-+
-+	/* 1'b0: power on, 1'b1: power off */
-+	return !(val & BIT(pd->status_shift));
-+}
-+
-+static void rockchip_do_pmu_set_power_domain(
-+		struct rockchip_domain *pd, bool on)
-+{
-+	unsigned int mask = BIT(pd->pwr_shift);
-+	unsigned int val;
-+
-+	val = (on) ? 0 : mask;
-+	regmap_update_bits(pd->regmap_pmu, PWR_OFFSET, mask, val);
-+	dsb();
-+
-+	do {
-+		regmap_read(pd->regmap_pmu, STATUS_OFFSET, &val);
-+	} while ((val & BIT(pd->status_shift)) == on);
-+}
-+
-+static int rockchip_pmu_set_power_domain(struct rockchip_domain *pd,
-+					 bool on)
-+{
-+	if (rockchip_pmu_power_domain_is_on(pd) == on)
-+		return 0;
-+
-+	if (!on) {
-+		/* FIXME: add code to save AXI_QOS */
-+		/* if power down, idle request to NIU first */
-+		rockchip_pmu_set_idle_request(pd, true);
-+	}
-+
-+	rockchip_do_pmu_set_power_domain(pd, on);
-+
-+	if (on) {
-+		/* if power up, idle request release to NIU */
-+		rockchip_pmu_set_idle_request(pd, false);
-+		/* FIXME: add code to restore AXI_QOS */
-+	}
-+
-+	return 0;
-+}
-+
-+static int rockchip_pd_power(struct rockchip_domain *pd, bool power_on)
-+{
-+	int ret = 0;
-+	struct rockchip_dev_entry *de;
-+
-+	mutex_lock(&pd->dev_lock);
-+	/* no clk, set power domain will fail */
-+	if (list_empty(&pd->dev_list)) {
-+		pr_err("%s: no devices in %s power domain\n", __func__,
-+			pd->base.name);
-+		goto out;
-+	}
-+
-+	list_for_each_entry(de, &pd->dev_list, node) {
-+		pm_clk_resume(de->dev);
-+	}
-+
-+	ret = rockchip_pmu_set_power_domain(pd, power_on);
-+
-+	list_for_each_entry(de, &pd->dev_list, node) {
-+		pm_clk_suspend(de->dev);
-+	}
-+out:
-+	mutex_unlock(&pd->dev_lock);
-+	return ret;
-+}
-+
-+static int rockchip_pd_power_on(struct generic_pm_domain *domain)
-+{
-+	struct rockchip_domain *pd = to_rockchip_pd(domain);
-+
-+	return rockchip_pd_power(pd, true);
-+}
-+
-+static int rockchip_pd_power_off(struct generic_pm_domain *domain)
-+{
-+	struct rockchip_domain *pd = to_rockchip_pd(domain);
-+
-+	return rockchip_pd_power(pd, false);
-+}
-+
-+void rockchip_pm_domain_attach_dev(struct device *dev)
-+{
-+	int ret;
-+	int i = 0;
-+	struct clk *clk;
-+	struct rockchip_domain *pd;
-+	struct rockchip_dev_entry *de;
-+
-+	pd = (struct rockchip_domain *)dev->pm_domain;
-+	ret = pm_clk_create(dev);
-+	if (ret) {
-+		dev_err(dev, "pm_clk_create failed %d\n", ret);
-+		return;
-+	}
-+
-+	while ((clk = of_clk_get(dev->of_node, i++)) && !IS_ERR(clk)) {
-+		ret = pm_clk_add_clk(dev, clk);
-+		if (ret) {
-+			dev_err(dev, "pm_clk_add_clk failed %d\n", ret);
-+			pm_clk_destroy(dev);
-+			return;
-+		}
-+	}
-+
-+	de = devm_kzalloc(pd->dev,
-+			sizeof(struct rockchip_dev_entry *), GFP_KERNEL);
-+	de->dev = dev;
-+	mutex_lock(&pd->dev_lock);
-+	list_add_tail(&de->node, &pd->dev_list);
-+	mutex_unlock(&pd->dev_lock);
-+
-+	return;
-+}
-+
-+void rockchip_pm_domain_detach_dev(struct device *dev)
-+{
-+	struct rockchip_domain *pd;
-+	struct rockchip_dev_entry *de;
-+
-+	pd = (struct rockchip_domain *)dev->pm_domain;
-+	mutex_lock(&pd->dev_lock);
-+
-+	list_for_each_entry(de, &pd->dev_list, node) {
-+		if (de->dev == dev) {
-+			list_del(&de->node);
-+			pm_clk_destroy(dev);
-+			devm_kfree(pd->dev, de);
-+		}
-+	}
-+
-+	mutex_unlock(&pd->dev_lock);
-+}
-+
-+static const struct of_device_id rockchip_pm_domain_dt_match[];
-+
-+static int rockchip_pm_domain_probe(struct platform_device *pdev)
-+{
-+	struct device_node *node;
-+	struct regmap *regmap_pmu;
-+	struct rockchip_domain *pd;
-+	const struct of_device_id *match;
-+
-+	match = of_match_node(rockchip_pm_domain_dt_match, pdev->dev.of_node);
-+	pd = (struct rockchip_domain *)match->data;
-+	if (!pd)
-+		return -ENOMEM;
-+
-+	node = of_parse_phandle(pdev->dev.of_node, "rockchip,pmu", 0);
-+	regmap_pmu = syscon_node_to_regmap(node);
-+	of_node_put(node);
-+	if (IS_ERR(regmap_pmu)) {
-+		pr_err("%s: failed to get regmap_pmu", __func__);
-+		return PTR_ERR(regmap_pmu);
-+	}
-+
-+	pd->regmap_pmu = regmap_pmu;
-+	pd->dev = &pdev->dev;
-+
-+	INIT_LIST_HEAD(&pd->dev_list);
-+	mutex_init(&pd->dev_lock);
-+	pm_genpd_init(&pd->base, NULL, false);
-+
-+	return of_genpd_add_provider_simple(pdev->dev.of_node, &pd->base);
-+}
-+
-+static struct rockchip_domain gpu_domain = {
-+	.base = {
-+		.name = "pd_gpu",
-+		.attach_dev = rockchip_pm_domain_attach_dev,
-+		.detach_dev = rockchip_pm_domain_detach_dev,
-+		.power_off = rockchip_pd_power_off,
-+		.power_on = rockchip_pd_power_on,
-+	},
-+	.pwr_shift = 9,
-+	.status_shift = 9,
-+	.req_shift = 2,
-+	.idle_shift = 2,
-+	.ack_shift = 18,
-+};
-+
-+static struct rockchip_domain hevc_domain = {
-+	.base = {
-+		.name = "pd_hevc",
-+		.attach_dev = rockchip_pm_domain_attach_dev,
-+		.detach_dev = rockchip_pm_domain_detach_dev,
-+		.power_off = rockchip_pd_power_off,
-+		.power_on = rockchip_pd_power_on,
-+	},
-+	.pwr_shift = 14,
-+	.status_shift = 10,
-+	.req_shift = 9,
-+	.idle_shift = 9,
-+	.ack_shift = 25,
-+
-+};
-+
-+static struct rockchip_domain video_domain = {
-+	.base = {
-+		.name = "pd_video",
-+		.attach_dev = rockchip_pm_domain_attach_dev,
-+		.detach_dev = rockchip_pm_domain_detach_dev,
-+		.power_off = rockchip_pd_power_off,
-+		.power_on = rockchip_pd_power_on,
-+	},
-+	.pwr_shift = 8,
-+	.status_shift = 8,
-+	.req_shift = 3,
-+	.idle_shift = 3,
-+	.ack_shift = 19,
-+};
-+
-+static struct rockchip_domain vio_domain = {
-+	.base = {
-+		.name = "pd_vio",
-+		.attach_dev = rockchip_pm_domain_attach_dev,
-+		.detach_dev = rockchip_pm_domain_detach_dev,
-+		.power_off = rockchip_pd_power_off,
-+		.power_on = rockchip_pd_power_on,
-+	},
-+	.pwr_shift = 7,
-+	.status_shift = 7,
-+	.req_shift = 4,
-+	.idle_shift = 4,
-+	.ack_shift = 20,
-+};
-+
-+static const struct of_device_id rockchip_pm_domain_dt_match[] = {
-+	{ .compatible = "rockchip,rk3288-power-gpu",
-+		.data = (void *)&gpu_domain},
-+	{ .compatible = "rockchip,rk3288-power-hevc",
-+		.data = (void *)&hevc_domain},
-+	{ .compatible = "rockchip,rk3288-power-video",
-+			.data = (void *)&video_domain},
-+	{ .compatible = "rockchip,rk3288-power-vio",
-+		.data = (void *)&vio_domain},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, rockchip_pm_domain_dt_match);
-+
-+static struct platform_driver rockchip_pm_domain_driver = {
-+	.probe = rockchip_pm_domain_probe,
-+	.driver = {
-+		.name   = "rockchip-pm-domain",
-+		.owner  = THIS_MODULE,
-+		.of_match_table = rockchip_pm_domain_dt_match,
-+	},
-+};
-+
-+static int __init rockchip_pm_domain_drv_register(void)
-+{
-+	return platform_driver_register(&rockchip_pm_domain_driver);
-+}
-+postcore_initcall(rockchip_pm_domain_drv_register);
--- 
-1.7.9.5
+>>
+>>>>>
+>>>>>
+>>>>> Instead, have a shell script or a systemd unit tmpfile that will
+>>>>> perform the correct setup at boot time. Then you can easily switc=
+h
+>>>>> usages from user-space (systemctl stop sprinkler && systemctl sta=
+rt
+>>>>> doordetect). This is much, much more flexible. At least until the
+>>>>> Device Tree Overlays are merged, but even then this seems overkil=
+l.
+>>>>
+>>>> I seriously think about it, but I think if LEDs are in DT, GPIOs s=
+hould
+>>>> be there too. In other way, I don't like exporting without given n=
+ame.
+>>>
+>>> LEDs are actually a perfect example of what you should do. They are=
+ a
+>>> simple device often plugged to a GPIO that controls them. We could
+>>> very well do what you propose: export GPIOs named "ledXX" and call =
+it
+>>> a day. Instead we have a driver that exports a proper device node i=
+n
+>>> /sys with the operations that are relevant to a LED.
+>>>
+>>> Once your GPIOs are assigned to a given function, they are not
+>>> "general purpose" anymore. Therefore you should expose the right
+>>> abstraction to your users, even if that means writing some more cod=
+e.
+>>
+>> Please, try to understand how our users use our linux kernel drivers=
+=2E
+>
+> In that case my problem is precisely that there is no kernel driver.
+>
+> Anyway, the first question to answer is "is it reasonable to export
+> and configure GPIOs from the Device Tree", and it concerns the DT
+> maintainers mostly ; so let's hear what they think about this first.
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
