@@ -1,116 +1,39 @@
-From: Caesar Wang <caesar.wang@rock-chips.com>
-Subject: Re: [PATCH v13 4/5] ARM: dts: add main Thermal info to rk3288
-Date: Fri, 24 Oct 2014 10:06:43 +0800
-Message-ID: <5449B433.5040003@rock-chips.com>
-References: <1414057207-1576-1-git-send-email-caesar.wang@rock-chips.com> <1414057207-1576-5-git-send-email-caesar.wang@rock-chips.com> <20141024004625.GD9463@dtor-ws> <5449A6A4.3070608@rock-chips.com> <E4EEE800-5701-45E5-9E97-D3B036DC2F17@gmail.com>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCH v1 1/5] mfd: tps65910: Convert ti,system-power-controller
+ DT property to poweroff-source
+Date: Fri, 24 Oct 2014 11:11:30 +0900
+Message-ID: <CAAVeFuLccYzU6aHUjGu-oUZoXaZ0dgRiiCHy5QoOvJgKypm=ug@mail.gmail.com>
+References: <1413991587-11110-1-git-send-email-romain.perier@gmail.com>
+ <20141023081230.GK32045@tbergstrom-lnx.Nvidia.com> <CABgxDoKm5kKKCTD1njAerUrM24iVcGRDuhJ7b4qBVPqKBC4ftQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <E4EEE800-5701-45E5-9E97-D3B036DC2F17@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABgxDoKm5kKKCTD1njAerUrM24iVcGRDuhJ7b4qBVPqKBC4ftQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: PERIER Romain <romain.perier@gmail.com>
+Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, "pawel.moll" <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-=E5=9C=A8 2014/10/24 9:37, Dmitry Torokhov =E5=86=99=E9=81=93:
-> On October 23, 2014 6:08:52 PM PDT, Caesar Wang <caesar.wang@rock-chi=
-ps.com> wrote:
->> Dmitry,
+On Thu, Oct 23, 2014 at 6:39 PM, PERIER Romain <romain.perier@gmail.com> wrote:
+> Hi Peter,
+>
+> 2014-10-23 10:12 GMT+02:00 Peter De Schrijver <pdeschrijver@nvidia.com>:
+>> This breaks DT ABI stability right? An existing device tree using ti,system-power-controller won't work anymore after this patch right? I don't think that's acceptable.
 >>
->> =E5=9C=A8 2014/10/24 8:46, Dmitry Torokhov =E5=86=99=E9=81=93:
->>> Hi Caesar,
->>>
->>> On Thu, Oct 23, 2014 at 05:40:06PM +0800, Caesar Wang wrote:
->>>> This patch is depend on rk3288-thermal.dtsi,or
->>>> it will compile error.
->>>>
->>>> If the temperature over a period of time High,over 120C
->>>> the resulting TSHUT gave CRU module,let it reset
->>>> the entire chip,or via GPIO give PMIC.
->>>>
->>>> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
->>>> ---
->>>>    arch/arm/boot/dts/rk3288.dtsi | 21 +++++++++++++++++++++
->>>>    1 file changed, 21 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/rk3288.dtsi
->> b/arch/arm/boot/dts/rk3288.dtsi
->>>> index cb18bb4..85fc17a 100644
->>>> --- a/arch/arm/boot/dts/rk3288.dtsi
->>>> +++ b/arch/arm/boot/dts/rk3288.dtsi
->>>> @@ -15,6 +15,7 @@
->>>>    #include <dt-bindings/interrupt-controller/arm-gic.h>
->>>>    #include <dt-bindings/pinctrl/rockchip.h>
->>>>    #include <dt-bindings/clock/rk3288-cru.h>
->>>> +#include <dt-bindings/thermal/thermal.h>
->>>>    #include "skeleton.dtsi"
->>>>   =20
->>>>    / {
->>>> @@ -66,6 +67,7 @@
->>>>    				 216000  900000
->>>>    				 126000  900000
->>>>    			>;
->>>> +			#cooling-cells =3D <2>; /* min followed by max */
->>>>    			clock-latency =3D <40000>;
->>>>    			clocks =3D <&cru ARMCLK>;
->>>>    		};
->>>> @@ -346,6 +348,19 @@
->>>>    		status =3D "disabled";
->>>>    	};
->>>>   =20
->>>> +	tsadc: tsadc@ff280000 {
->>>> +		compatible =3D "rockchip,rk3288-tsadc";
->>>> +		reg =3D <0xff280000 0x100>;
->>>> +		interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
->>>> +		clocks =3D <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
->>>> +		clock-names =3D "tsadc", "apb_pclk";
->>>> +		pinctrl-names =3D "default";
->>>> +		pinctrl-0 =3D <&otp_out>;
->>>> +		#thermal-sensor-cells =3D <1>;
->>>> +		hw-shut-temp =3D <120000>;
->>> I do not think this is a good value. You have (in the other DTS fil=
-e)
->>> passive trip point at 80 and critical (which should result in order=
-ly
->>> shutdown) at 125. But here you define hardware-controlled shutdown =
-at
->>> 120C, which is backwards. You should have:
->>>
->>> passive <=3D critical <=3D hardware
->> Hmmm....
->> but, the system will shutdown when temperature over critial value,
->> there is no chance of triggering the TSHUT.
->>
->> If the temperature over a period of time High,as we know,
->> the resulting TSHUT gave CRU module,let it hot-reset the entire chip=
-,
->> or via GPIO give PMIC cold-reset the entire chip.
-> Having tshut trigger is not the goal, tshut is the measure of last re=
-sort. If we can handle thermal conditions without triggering tshut, we =
-achieved our goal.
 >
-> Tshut triggering is " oh, crap, nothing we tried works" scenario.
-
-I don't think so.
-
-In general,We should have:
-passive <=3D hardware(reset entire chip) <=3D critical(shutdown)
-
-The temperature be rising qulckly if have some other conditions,
-the "critical" will play a role.
-
-Agreed?
-
-
+> This is why I converted all dts which use "ti,system-power-controller"
+> and tps65910/tps65911 to the new property (everything is in the
+> patches serie). However, with an existing dtb it will no longer work,
+> yes.
+> What do you suggest ? keep these two properties in the driver ? :/
 >
-> Thanks.
->
+> I mean, this is a standardization, so all the corresponding dts must
+> be updated and rebuilt... Like when you change something in a
+> dt-binding, you should update and rebuilt the dts... I Don't compute.
 
---=20
-Best regards,
-Caesar
+DT ABI stability rule: any DTB that worked with kernel x must also
+work with kernel x+1. It seems like this patch would break that rule.
 
-
+It's ok to manage new properties and to deprecate the use of older
+ones if it makes sense (and in this case it seems like it does). But
+the old property must still be handled for compatibility reasons.
