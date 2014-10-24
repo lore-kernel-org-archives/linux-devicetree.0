@@ -1,37 +1,77 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2 0/9] Marvell PXA168 libphy handling and Berlin
- Ethernet
-Date: Fri, 24 Oct 2014 15:50:31 -0400 (EDT)
-Message-ID: <20141024.155031.1468501419050363586.davem@davemloft.net>
-References: <1414002412-13615-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 00/20] rtc: omap: fixes and power-off feature
+Date: Fri, 24 Oct 2014 21:55:32 +0200
+Message-ID: <20141024195532.GF19377@localhost>
+References: <1412881594-25678-1-git-send-email-johan@kernel.org>
+ <1413913086-12730-1-git-send-email-johan@kernel.org>
+ <20141024160845.GM26941@saruman>
+ <20141024190251.GB19377@localhost>
+ <20141024192540.GD11455@saruman>
+ <20141024192948.GE11455@saruman>
+ <20141024193655.GD19377@localhost>
+ <20141024194442.GG11455@saruman>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414002412-13615-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20141024194442.GG11455@saruman>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com
-Cc: antoine.tenart@free-electrons.com, f.fainelli@gmail.com, eric.y.miao@gmail.com, haojian.zhuang@gmail.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Johan Hovold <johan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, Russell King <rmk+kernel@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Date: Wed, 22 Oct 2014 20:26:43 +0200
+On Fri, Oct 24, 2014 at 02:44:42PM -0500, Felipe Balbi wrote:
+> On Fri, Oct 24, 2014 at 09:36:55PM +0200, Johan Hovold wrote:
+> > On Fri, Oct 24, 2014 at 02:29:48PM -0500, Felipe Balbi wrote:
+> > > Hi,
+> > > 
+> > > On Fri, Oct 24, 2014 at 02:25:40PM -0500, Felipe Balbi wrote:
 
-> This patch series deals with a removing a IP feature that can be found
-> on all currently supported Marvell Ethernet IP (pxa168_eth, mv643xx_eth,
-> mvneta). The MAC IP allows to automatically perform PHY auto-negotiation
-> without software interaction.
+> > > > with this I always get to "Power off failed -- system halted". If I
+> > > > switch to v3.18-rc1 vanilla, then it works. So it's definitely caused by
+> > > > your rtc-only patches.
+> > 
+> > That's expected (see below). It works with v3.18-rc1 vanilla because
+> > machine_halt is called instead of machine_power_off as there is no
+> > registered power-off handler.
 > 
-> However, this feature (a) fundamentally clashes with the way libphy works
-> and (b) is unable to deal with quirky PHYs that require special treatment.
-> In this series, pxa168_eth driver is rewritten to completely disable that
-> feature and properly deal with libphy provided PHYs.
+> yeah, that much I figured :-)
 > 
-> As usual, a branch on top of v3.18-rc1 can be found at
+> > > ok, so it seems like it takes more than 1 second for things to
+> > > propagate. If I increase that mdelay() to 3000, then everything works
+> > > fine on my end. I think we should get RMK's input on this 3000ms delay
+> > > to machine_power_off(). Should it be generic, or should we add it to our
+> > > rtc pm_power_off implementation ?
+> > 
+> > As I wrote above, we still need a 2-second mdelay in rtc-omap, which I
+> > intend to add to the pmic_power_en patch.
 > 
-> git://git.infradead.org/users/hesselba/linux-berlin.git devel/bg2-bg2cd-eth-v2
-> 
-> Patches 1-5 should go through David's net tree, I'll pick up the DT patches
-> 6-9.
+> oh, alright then. If you can Cc me, I'll make sure to test that too ;-)
 
-Patches 1-5 applied to net-next, thanks.
+I will. :) Just wanted to see whether Andrew preferred I resend the
+whole series or just that one patch first.
+
+The diff is minimal:
+
+diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
+index e74750f00b18..e4f97ad9eb21 100644
+--- a/drivers/rtc/rtc-omap.c
++++ b/drivers/rtc/rtc-omap.c
+@@ -423,6 +423,8 @@ static void omap_rtc_power_off(void)
+        val = rtc_read(rtc, OMAP_RTC_INTERRUPTS_REG);
+        rtc_writel(rtc, OMAP_RTC_INTERRUPTS_REG,
+                        val | OMAP_RTC_INTERRUPTS_IT_ALARM2);
++
++       mdelay(2000);
+ }
+
+> > The one-second delay is there in machine_power_off to catch most cases
+> > which wouldn't take nearly as long as rtc-omap and hence wouldn't be
+> > adding an explicit delay in the driver power-off handler.
+> 
+> alright.
+
+I'll call it a day now. Will keep you posted.
+
+Thanks,
+Johan
