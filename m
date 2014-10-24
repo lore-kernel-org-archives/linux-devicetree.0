@@ -1,46 +1,38 @@
 From: Feng Kan <fkan@apm.com>
-Subject: [PATCH 2/7] Documentation: arm64: add SCU dts binding documentation to linux kernel
-Date: Thu, 23 Oct 2014 18:24:17 -0700
-Message-ID: <1414113862-15067-3-git-send-email-fkan@apm.com>
+Subject: [PATCH 7/7] arm64: dts: Add PMU node for APM X-Gene Storm SOC
+Date: Thu, 23 Oct 2014 18:24:22 -0700
+Message-ID: <1414113862-15067-8-git-send-email-fkan@apm.com>
 References: <1414113862-15067-1-git-send-email-fkan@apm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1414113862-15067-1-git-send-email-fkan@apm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: catalin.marinas@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com
-Cc: Feng Kan <fkan@apm.com>
+Cc: Feng Kan <fkan@apm.com>, Vinayak Kale <vkale@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-This add documentation for the SCU system clock unit device tree binding
-to the kernel.
+This patch adds the PMU device tree node for APM X-Gene Storm SOC.
 
+Signed-off-by: Vinayak Kale <vkale@apm.com>
 Signed-off-by: Feng Kan <fkan@apm.com>
 ---
- Documentation/devicetree/bindings/arm/apm/scu.txt | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/apm/scu.txt
+ arch/arm64/boot/dts/apm-storm.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/apm/scu.txt b/Documentation/devicetree/bindings/arm/apm/scu.txt
-new file mode 100644
-index 0000000..b45be06
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/apm/scu.txt
-@@ -0,0 +1,17 @@
-+APM X-GENE SoC series SCU Registers
-+
-+This system clock unit contain various register that control block resets,
-+clock enable/disables, clock divisors and other deepsleep registers.
-+
-+Properties:
-+ - compatible : should contain two values. First value must be:
-+		   - "apm,xgene-scu"
-+		second value must be always "syscon".
-+
-+ - reg : offset and length of the register set.
-+
-+Example :
-+	scu: system-clk-controller@17000000 {
-+		compatible = "apm,xgene-scu","syscon";
-+		reg = <0x0 0x17000000 0x0 0x400>;
+diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
+index b2e6068..85d2dd7 100644
+--- a/arch/arm64/boot/dts/apm-storm.dtsi
++++ b/arch/arm64/boot/dts/apm-storm.dtsi
+@@ -97,6 +97,11 @@
+ 		clock-frequency = <50000000>;
+ 	};
+ 
++	pmu {
++		compatible = "apm,potenza-pmu", "arm,armv8-pmuv3";
++		interrupts = <1 12 0xff04>;
 +	};
++
+ 	soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <2>;
 -- 
 1.9.1
