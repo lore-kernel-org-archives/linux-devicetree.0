@@ -1,44 +1,68 @@
-From: bpqw <bpqw-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/1] devicetree: bindings: Add vendor prefix for Micron
- Technology Co., Ltd.
-Date: Fri, 24 Oct 2014 00:46:35 +0000
-Message-ID: <A765B125120D1346A63912DDE6D8B6315E79C3@NTXXIAMBX02.xacn.micron.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v13 3/5] ARM: dts: add RK3288 Thermal data
+Date: Thu, 23 Oct 2014 17:48:11 -0700
+Message-ID: <20141024004811.GE9463@dtor-ws>
+References: <1414057207-1576-1-git-send-email-caesar.wang@rock-chips.com>
+ <1414057207-1576-4-git-send-email-caesar.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Silvio F <silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bpqw <bpqw-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414057207-1576-4-git-send-email-caesar.wang@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-This patch is used to add vendor prefix for Micron Technology Inc in the vendor-prefixes.txt file.
+Hi Caesar,
 
-Micron Technology, Inc. is an American multinational corporation based in Boise, Idaho, 
-best known for producing many forms of semiconductor devices. This includes DRAM, SDRAM, 
-flash memory, eMMC and SSDs.
+On Thu, Oct 23, 2014 at 05:40:05PM +0800, Caesar Wang wrote:
+> This patch changes a dtsi file to contain the thermal data
+> on RK3288 and later SoCs. This data will
+> enable a thermal shutdown over 125C.
+> 
+> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+> ---
+>  arch/arm/boot/dts/rk3288-thermal.dtsi | 65 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/rk3288-thermal.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/rk3288-thermal.dtsi b/arch/arm/boot/dts/rk3288-thermal.dtsi
+> new file mode 100644
+> index 0000000..c361262
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/rk3288-thermal.dtsi
+> @@ -0,0 +1,65 @@
+> +/*
+> + * Device Tree Source for RK3288 SoC thermal
+> + *
+> + * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
+> + *
+> + * This file is licensed under the terms of the GNU General Public License
+> + * version 2.  This program is licensed "as is" without any warranty of any
+> + * kind, whether express or implied.
+> + */
+> +
+> +#include <dt-bindings/thermal/thermal.h>
+> +
+> +reserve_thermal: reserve_thermal {
+> +	polling-delay-passive = <500>; /* milliseconds */
+> +	polling-delay = <1000>; /* milliseconds */
+> +
+> +			/* sensor	ID */
+> +	thermal-sensors = <&tsadc	0>;
+> +
+> +};
+> +
+> +cpu_thermal: cpu_thermal {
+> +	polling-delay-passive = <500>; /* milliseconds */
+> +	polling-delay = <1000>; /* milliseconds */
 
-Signed-off-by: bean huo <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- 1 file changed, 1 insertion(+)
+Given that the hardware supports alarm interrupts I think we should be
+able to lower polling frequency. I'd say 5 seconds for polling-delay and
+1 second for when we trip over passive point?
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 723999d..a7bbf6e 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -92,6 +92,7 @@ maxim	Maxim Integrated Products
- mediatek	MediaTek Inc.
- micrel	Micrel Inc.
- microchip	Microchip Technology Inc.
-+micron	Micron Technology Inc.
- mitsubishi	Mitsubishi Electric Corporation
- mosaixtech	Mosaix Technologies, Inc.
- moxa	Moxa
---
-1.7.9.5
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks.
+
+-- 
+Dmitry
