@@ -1,54 +1,44 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 4/5] regulator: max77802: Parse regulator operating
- mode properties
-Date: Fri, 24 Oct 2014 22:02:15 +0100
-Message-ID: <20141024210214.GO3729@sirena.org.uk>
-References: <1413816472-1895-1-git-send-email-javier.martinez@collabora.co.uk>
- <1413816472-1895-5-git-send-email-javier.martinez@collabora.co.uk>
- <20141022164813.GD2344@sirena.org.uk>
- <0DA944C5-7A6B-461B-A8E6-D47343D22E0B@collabora.co.uk>
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH v2 2/3] fpga manager: framework core
+Date: Fri, 24 Oct 2014 22:00:13 +0100
+Message-ID: <20141024220013.37c38f7a@alan.etchedpixels.co.uk>
+References: <1414007405-32186-1-git-send-email-atull@opensource.altera.com>
+	<1414007405-32186-3-git-send-email-atull@opensource.altera.com>
+	<20141024105200.GA20775@amd>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="AA9g+nFNFPYNJKiL"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0DA944C5-7A6B-461B-A8E6-D47343D22E0B@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141024105200.GA20775@amd>
+Sender: linux-doc-owner@vger.kernel.org
+To: Pavel Machek <pavel@denx.de>
+Cc: atull@opensource.altera.com, gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
 
---AA9g+nFNFPYNJKiL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> > +int fpga_mgr_write(struct fpga_manager *mgr, const char *buf, size_t count)
+> > +{
+> > +	int ret;
+> > +
+> > +	if (test_and_set_bit_lock(FPGA_MGR_BUSY, &mgr->flags))
+> > +		return -EBUSY;
+> > +
+> > +	dev_info(mgr->dev, "writing buffer to %s\n", mgr->name);
+> > +
+> > +	ret = __fpga_mgr_write(mgr, buf, count);
+> > +	clear_bit_unlock(FPGA_MGR_BUSY, &mgr->flags);
+> > +
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(fpga_mgr_write);
+> 
+> Is the EBUSY -- userspace please try again, but you don't know when to
+> try again -- right interface? I mean, normally kernel would wait, so
+> that userland does not have to poll?
 
-On Thu, Oct 23, 2014 at 11:28:09AM +0200, Javier Martinez Canillas wrote:
+And if userland has to also support polling you must support poll/select
+on the file handle so it knows when to retry the I/O.
 
-Please fix your mailer to word wrap within paragraphs - you should know
-this by now :/  I've reflowed for legibility.
+The error should be EAGAIN for a retriable write with O_NDELAY set.
 
-> However this is an implementation detail and should not change the DT
-> bindings in the current version. Could you please let me know if you
-> have any issues with the other patches from this series so I can
-> address all of them when doing a re-spin?
-
-I can't recall anything but I'm not sure I looked at them in any detail.
-
---AA9g+nFNFPYNJKiL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUSr5WAAoJECTWi3JdVIfQlhMH/2XE67VcrSF7j0bGBNd4hHt+
-WXiySErF4lpTjq8x8RtFnmWYpZevatt/BjltMcIDkajU8WNuR61A6IMtXkYUvtM/
-Tj0aUeHcbrWkkXoNgufLQAF8yeJ0/ziHxikfI3EK8uPmYkECzNjiwrArf6GPDU2R
-CUK/3k7b9qZrOMqNjPpMr+fbtqkhP9nYe7b7Rkw/qkNOoIPk9s9853jbCiaExmPG
-nVs8dwN4XK5coyUfdacgwwZA2apVAnXIik/ye9n7W2qRliCcU44WEH64ZrCozsCf
-czffdAw1zUSZX4Ic9blsXDutZvWrSSRTkbZroIEOwmkwlWsVOte+BgvRooYGlQ8=
-=vEul
------END PGP SIGNATURE-----
-
---AA9g+nFNFPYNJKiL--
+Alan
