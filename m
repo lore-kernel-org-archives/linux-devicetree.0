@@ -1,350 +1,55 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v2 2/3] ARM: keystone: pm: switch to use generic pm domains
-Date: Fri, 24 Oct 2014 15:07:39 +0300
-Message-ID: <544A410B.3050903@ti.com>
-References: <1413809764-21995-1-git-send-email-grygorii.strashko@ti.com>	<1413809764-21995-3-git-send-email-grygorii.strashko@ti.com>	<5446A065.9050308@gmail.com>	<544793B5.6080601@ti.com>	<CAPDyKFo97D3XbwDQrDzHw+qr4b24Fsq9EwDbdOMhy_L-RoYsLw@mail.gmail.com>	<CAMuHMdVsqsSHxirzoWspGz7y+2qBk42p-VUBNkys3_rr6Th_9Q@mail.gmail.com>	<CAPDyKFp6T1a1XXHdxiubP2RaS26uSqkUS3rbBgsNV_y+dSFfvw@mail.gmail.com>	<CAMuHMdVO4nMoeYdzLf6wdKW876gYVyML3C2+QKoteGPtisD4sA@mail.gmail.com>	<CAPDyKFrVCczc+fSy1ax4XinhB4SMfZZWP=d4QdY5Lv4zjOrHPA@mail.gmail.com>	<544912AB.3050801@ti.com> <CAPDyKFpwguzd_iy46mpPcwDs98bh1k_3fVNfe4UAjYYwNoBJPQ@mail.gmail.com>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine
+ driver support
+Date: Fri, 24 Oct 2014 12:08:26 +0000
+Message-ID: <7dc11ef7ccec49bcb052c30b9aa916c3@BL2FFO11FD044.protection.gbl>
+References: <1413374436-14410-1-git-send-email-sthokal@xilinx.com>
+ <4301925.4pMHXMXqA4@wuerfel>
+ <ff137744d6474640aab09e5d6f62921a@BN1AFFO11FD019.protection.gbl>
+ <3236720.MHeqOodrCV@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFpwguzd_iy46mpPcwDs98bh1k_3fVNfe4UAjYYwNoBJPQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Santosh Shilimkar <santosh.shilimkar@gmail.com>, ssantosh@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <3236720.MHeqOodrCV@wuerfel>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, Srikanth Vemula <svemula@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srikanth Thokala <sthokal@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+Hi Arnd,
 
-On 10/24/2014 12:53 PM, Ulf Hansson wrote:
-> On 23 October 2014 16:37, Grygorii Strashko <grygorii.strashko@ti.com=
-> wrote:
->> On 10/23/2014 11:11 AM, Ulf Hansson wrote:
->>> On 22 October 2014 17:44, Geert Uytterhoeven <geert@linux-m68k.org>=
- wrote:
->>>> On Wed, Oct 22, 2014 at 5:28 PM, Ulf Hansson <ulf.hansson@linaro.o=
-rg> wrote:
->>>>> On 22 October 2014 17:09, Geert Uytterhoeven <geert@linux-m68k.or=
-g> wrote:
->>>>>> On Wed, Oct 22, 2014 at 5:01 PM, Ulf Hansson <ulf.hansson@linaro=
-=2Eorg> wrote:
->>>>>>>>>> +void keystone_pm_domain_attach_dev(struct device *dev)
->>>>>>>>>>     {
->>>>>>>>>> +    struct clk *clk;
->>>>>>>>>>         int ret;
->>>>>>>>>> +    int i =3D 0;
->>>>>>>>>>
->>>>>>>>>>         dev_dbg(dev, "%s\n", __func__);
->>>>>>>>>>
->>>>>>>>>> -    ret =3D pm_generic_runtime_suspend(dev);
->>>>>>>>>> -    if (ret)
->>>>>>>>>> -        return ret;
->>>>>>>>>> -
->>>>>>>>>> -    ret =3D pm_clk_suspend(dev);
->>>>>>>>>> +    ret =3D pm_clk_create(dev);
->>>>>>>>>>         if (ret) {
->>>>>>>>>> -        pm_generic_runtime_resume(dev);
->>>>>>>>>> -        return ret;
->>>>>>>>>> +        dev_err(dev, "pm_clk_create failed %d\n", ret);
->>>>>>>>>> +        return;
->>>>>>>>>> +    };
->>>>>>>>>> +
->>>>>>>>>> +    while ((clk =3D of_clk_get(dev->of_node, i++)) && !IS_E=
-RR(clk)) {
->>>>>>>>>> +        ret =3D pm_clk_add_clk(dev, clk);
->>>>>>>>>> +        if (ret) {
->>>>>>>>>> +            dev_err(dev, "pm_clk_add_clk failed %d\n", ret)=
-;
->>>>>>>>>> +            goto clk_err;
->>>>>>>>>> +        };
->>>>>>>>>>         }
->>>>>>>>>>
->>>>>>>>>> -    return 0;
->>>>>>>>>> +    if (!IS_ENABLED(CONFIG_PM_RUNTIME)) {
->>>>>>>>> Can we not okkup two seperate callbacks instead of above chec=
-k ?
->>>>>>>>> I don't like this CONFIG check here. Its slightly better vers=
-ion of
->>>>>>>>> ifdef in middle of the code.
->>>>>>>>
->>>>>>>> I've found more-less similar comment on patch
->>>>>>>> "Re: [PATCH v3 1/3] power-domain: add power domain drivers for=
- Rockchip platform"
->>>>>>>> https://lkml.org/lkml/2014/10/17/257
->>>>>>>>
->>>>>>>> So, Would you like me to create patch which will enable clocks=
- in pm_clk_add/_clk()
->>>>>>>> in case !IS_ENABLED(CONFIG_PM_RUNTIME)
->>>>>>>
->>>>>>> I am wondering whether we actually should/could do this, no mat=
-ter of
->>>>>>> CONFIG_PM_RUNTIME.
->>>>>>>
->>>>>>> Typically, for configurations that uses CONFIG_PM_RUNTIME, the =
-PM
->>>>>>> clocks through pm_clk_suspend(), will be gated once the device =
-becomes
->>>>>>> runtime PM suspended. Right?
->>>>>>
->>>>>> Doing it unconditionally means we'll have lots of unneeded clock=
-s running
->>>>>> for a short while.
->>>>
->>>>> As long as the pm_clk_add() is being invoked from the ->attach_de=
-v()
->>>>> callback, we are in the probe path. Certainly we would like to ha=
-ve
->>>>> clocks enabled while probing, don't you think?
->>>>>
->>>>> If we wouldn't enable the clocks for CONFIG_PM_RUNTIME, when will
->>>>> those be enabled?
->>>>
->>>> They will be enabled when the driver does
->>>>
->>>>           pm_runtime_enable(dev);
->>>>           pm_runtime_get_sync(dev);
->>>>
->>>> in its .probe() method.
->>>
->>> No! This doesn't work for drivers which have used
->>> pm_runtime_set_active() prior pm_runtime_enable().
->>
->> Sorry, but some misunderstanding is here:
->> 1) If some code call pm_runtime_set_active() it has to ensure
->> that all PM resources switched to ON state. All! So, it will
->> be ok to call enable & get after that - these functions will only
->> adjust counters.
->=20
-> Correct.
->=20
-> This is also the key problem with your approach. You requires a
-> pm_runtime_get_sync() to trigger the runtime PM resume callbacks to b=
-e
-> invoked. That's a fragile design.
+-----Original Message-----
+From: Arnd Bergmann [mailto:arnd@arndb.de]
+Sent: Tuesday, October 21, 2014 2:45 PM
+To: linux-arm-kernel@lists.infradead.org
+Cc: Appana Durga Kedareswara Rao; devicetree@vger.kernel.org; vinod.koul@intel.com; Srikanth Vemula; linux-kernel@vger.kernel.org; Srikanth Thokala; dmaengine@vger.kernel.org; robh+dt@kernel.org; Michal Simek; Anirudha Sarangi; grant.likely@linaro.org; dan.j.williams@intel.com
+Subject: Re: [PATCH v4] dma: Add Xilinx AXI Direct Memory Access Engine driver support
 
-Sorry, but what I'm expecting is that these APIs will work according to
-documentation - nothing specific actually :) And for Paltform bus devic=
-es
-it's usual way to enable device.
+On Tuesday 21 October 2014 09:06:13 Appana Durga Kedareswara Rao wrote:
+> The above mentioned API's  and structures will be used by the dma test
+> client driver's to set hardware configuration information. The dma
+> client drivers are not mainlined  yet and it is Internally used by
+> our git-tree  to test the DMA functionality in loopback .
 
->=20
-> The solution that I propose is to "manually" enable your PM clks
-> during the probe sequence. We can do that as a part of pm_clk_add() o=
-r
+I would suggest you add the test driver into the main dmaengine driver file directly then, so you don't need to export the symbols. If there are important reasons to keep that as separate files, just move the header to the drivers/dma/ directory and add the test driver there.
 
-Done in patch set 3 - but only if !CONFIG_PM_RUNTIME
+        Arnd
 
-> we invoke pm_clk_resume() separately, but more important no matter of
-> CONFIG_PM_RUNTIME.
->=20
-
-Why? What benefits will be doing this if CONFIG_PM_RUNTIME=3Dy?
-=46or Keystone 2 CONFIG_PM_RUNTIME=3Dy is intended to be normal operati=
-onal mode and=20
-all devices belongs to Platform bus.
-
-Also, device's resuming operation is usually heavy operation and, takin=
-g into
-account deferred probing mechanism and usual implementation of .probe()=
- function,
-your proposition will lead to runtime overhead at least for Platform de=
-vices.
-
-What is usually done in probe:
-<- here you propose to resume device
-
-1) get resources (IO, IRQ, regulators, GPIO, phys, ..) - for each
-resource -EPROBE_DEFER can be returned.
-
-2) allocate and fill device context - can fail.
-
-3) configure resources (set gpio, enable regulators or phys,..) - can f=
-ail
-
-4) [now] resume device=20
-
-5) configure device
-
-6) setup irq
-=20
-7) [optional] suspend device
-
-As you can see from above, the Platform devices aren't need to be enabl=
-ed before step 5 and,=20
-if your proposition will be accepted, it will lead to few additional re=
-sume/suspend
-cycles per-device. It's not good as for me. Is it?
+Sorry I forgot to mention the below things in the mail .The Config API's and structures not only used by the dmaengine driver's but also used by the  various IP's  (Ex: Ethernet driver and SRIO driver these drivers are under development).For example the Ethernet driver is resides under drivers/net/ethernet but it needs to set some specific configuration parameters of the dma that's why created a separate header file for the h/w configurable parameters.
 
 
-> The driver could then be responsible to invoke pm_runtime_set_active(=
-)
-> to reflect that all runtime PM resources are enabled.
+Regards,
+Kedar.
 
-[runtime_pm.txt] - this is recovery function and caller should be very =
-careful.
-=20
-Again, from implementation point of view:
--- how it's done now:
-    .probe()
-	pm_runtime_enable(&pdev->dev);
-	pm_runtime_get_sync(&pdev->dev);
 
-    .remove()
-	pm_runtime_put_sync(&pdev->dev);
-	pm_runtime_disable(&pdev->dev);
-
--- how it will be:
-     .probe()
-	//pm_runtime_enable(&pdev->dev);
-	//pm_runtime_get_sync(&pdev->dev);
-
-	[optional] call .runtime_resume();
-
-	pm_runtime_set_active(dev);
-	pm_runtime_enable(dev);
-	[optional, to keep device active] pm_runtime_get_sync()
-
-     .remove()
-	[optional] pm_runtime_put_sync(&pdev->dev);
-	pm_runtime_disable(&pdev->dev);
-=09
-	call .runtime_suspend();
-	pm_runtime_set_suspended(dev);
-
-And that would need to be done for all drivers.
-
->=20
->>
->> 2) if CONFIG_PM_RUNTIME=3Dn the pm_runtime_set_active() will
->> be empty (see pm_runtime.h) and you can't relay on it.
->>
->> 3) if CONFIG_PM_RUNTIME=3Dn the pm_runtime_enable/disable() will
->> be empty - and disable_depth =3D=3D 1 all the time.
->>
->> In my case, the combination of generic PD and PM clock framework
->> will do everything I need for both cases CONFIG_PM_RUNTIME=3Dy/n.
->>
->> PM domain attach_dev/detach_dev callbacks - will fill PM resources
->> and enable them if CONFIG_PM_RUNTIME=3Dn.
->>
->> if CONFIG_PM_RUNTIME - PM resources will be enabled/disabled
->> by Runtime PM through .start()/.stop() callbacks.
->>
->> And seems suspend/resume will work too - can't try it now, but it
->> should work, because .start()/.stop() callbacks have to be called
->> from pm_genpd_suspend_noirq.
->>
->>
->>>
->>> That should also be a common good practice for most drivers, otherw=
-ise
->>> they wouldn=E2=80=99t work unless CONFIG_PM_RUNTIME is enabled.
->>>
->>> Please have a look at the following patchset, which is fixing up on=
-e
->>> driver to behave better.
->>> http://marc.info/?l=3Dlinux-pm&m=3D141327095713390&w=3D2
->>
->> It always was (and seems will) a big challenge to support both
->> CONFIG_PM_RUNTIME=3Dy and system suspend in drivers ;), especially i=
-f driver was
->> initially created using Runtime PM centric approach.
->>
->> But, for the case CONFIG_PM_RUNTIME + !CONFIG_PM_RUNTIME + suspend..=
-=2E
->> It will be painful :..((
->=20
-> I agree to that this _has_ been an issue. It also remarkable that
-> people have been just accepting that for so long.
->=20
-> Now, we have added the pm_runtime_force_suspend|resume() helpers.
-> Those will help to solve these cases.
->=20
->>
->>
->> For example your patches (may be I'm not fully understand your probl=
-em,
->> so here are just comments to code):
->> patch 3:
->>    - I think you can do smth like this in probe
->>          ret =3D pm_runtime_get_sync(&pdev->dev);
->>          if (ret < 0)
->>                  goto err_m2m;
->=20
-> This is wrong!
->=20
-> 1) It will break the driver for !CONFIG_PM_RUNTIME.
-
-Hm. It should work. In your driver you have (for the case !CONFIG_PM_RU=
-NTIME):
-	pm_runtime_enable(dev); ------------------------ NOP
-	ret =3D pm_runtime_get_sync(&pdev->dev); --------- NOP
-	if (ret < 0)
-		goto err_m2m;
-so, if you add:
-	if (!pm_runtime_enabled(dev)) { ---------------- always FALSE
-               gsc_runtime_resume(dev);=20
-	       /* ^ is the same as
-		gsc_hw_set_sw_reset(gsc);
-		gsc_wait_reset(gsc);
-		gsc_m2m_resume(gsc);
-	       */
-       }
-it will work in both cases, because pm_runtime_enabled() =3D=3D true
-when  CONFIG_PM_RUNTIME=3Dy.
-
->=20
-> 2) It would also be broken for CONFIG_PM_RUNTIME for the scenario
-> where a bus also handles runtime PM resources.
-> Typically from the bus' ->probe() this is done:
-> pm_runtime_get_noresume()
-> pm_runtime_set_active()
-
-So, Has your device been enabled by bus?
-
->=20
-> As stated earlier, we shouldn't require the runtime PM resume callbac=
-k
-> to be invoked just because a pm_runtime_get_sync(). It's fragile.
->=20
->> +
->> +       if (!pm_runtime_enabled(dev)) {
->> +               gsc_runtime_resume(dev);
->> +       }
->>
->>   - and similar thing in remove, before pm_runtime_disable
->>
->> patch 5 - pm_runtime_force_suspend/resume() will not take into
->> account or change Runtime PM state of the device if !CONFIG_PM_RUNTI=
-ME.
->> runtime_status =3D=3D RPM_SUSPENDED always in this case!
->> So, there may be some side-effects.
->=20
-> pm_runtime_status_suspended() will always return false for !CONFIG_PM=
-_RUNTIME.
-
-Nice workaround.
-
->=20
-> There are no side effects as long as you have defined your runtime PM
-> callbacks within CONFIG_PM. SET_PM_RUNTIME_PM_OPS() also helps out
-> here.
->=20
->>
->> patch 7 - you can't call clk_prepare/unprepare from Runtime PM
->> callbacks, because they aren't atomic
->=20
-> If the runtime PM callbacks are invoked in atomic context, the driver
-> needs to tell the runtime PM core about it. That's done through,
-> pm_runtime_irq_safe(), which it doesn't.
->=20
->>
->> Oh, You definitely will be enjoyed ;)
->=20
-> Likely you to. :-)
-
-Oh. Yes definitely :) I'm trying to reuse what is already in kernel
-(even not to implement smth. new) more then 3 months already :( - It's =
-sad.
-
-regards,
--grygorii
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
