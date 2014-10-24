@@ -1,60 +1,33 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 2/2] ARM: shmobile: lager: enable USB3.0
-Date: Fri, 24 Oct 2014 19:41:47 +0900
-Message-ID: <1414147307-4584-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1414147307-4584-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 0/1] ARM: shmobile: add USB3.0 device node on r8a7791
+Date: Fri, 24 Oct 2014 19:43:01 +0900
+Message-ID: <1414147382-4660-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1414147307-4584-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Since the PHY of USB3.0 and EHCI/OHCI ch2 are the same, the USB3.0
-driver cannot use the phy driver when the EHCI/OHCI ch2 already used it:
+ This patch is based on Simon's renesas.git branch and
+renesas-devel-20141024-v3.18-rc1 tag.
+Since koelsch and henninger doesn't have a USB3.0 connector,
+I submit a patch for r8a7791.dtsi only.
 
-phy phy-e6590100.usb-phy.3: phy init failed --> -16
-xhci-hcd: probe of ee000000.usb failed with error -16
+Changes from v1:
+ - rebase the repository.
 
-If so, we have to unbind the EHCI/OHCI ch2, and then we have to bind
-the USB3.0 driver as the following:
+Yoshihiro Shimoda (1):
+  ARM: shmobile: r8a7791: add USB3.0 device node
 
-  echo 0000:02:02.0 > /sys/bus/pci/drivers/ehci-pci/unbind
-  echo 0000:02:01.0 > /sys/bus/pci/drivers/ohci-pci/unbind
-  echo ee000000.usb > /sys/bus/platform/drivers/xhci-hcd/bind
+ arch/arm/boot/dts/r8a7791.dtsi |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Note that there will be pinctrl-related error messages if both
-internal PCI and USB3.0 are enabled but they should be just ignored:
-
-sh-pfc e6060000.pfc: pin GP_5_22 already requested by ee0d0000.pci; cannot claim for ee000000.usb
-sh-pfc e6060000.pfc: pin-182 (ee000000.usb) status -22
-ata1: SATA link down (SStatus 0 SControl 300)
-sh-pfc e6060000.pfc: could not request pin 182 (GP_5_22) from group usb2  on device sh-pfc
-
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- arch/arm/boot/dts/r8a7790-lager.dts |    6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-index 2115de2..b48173b 100644
---- a/arch/arm/boot/dts/r8a7790-lager.dts
-+++ b/arch/arm/boot/dts/r8a7790-lager.dts
-@@ -419,6 +419,12 @@
- 	pinctrl-names = "default";
- };
- 
-+&xhci {
-+	status = "okay";
-+	pinctrl-0 = <&usb2_pins>;
-+	pinctrl-names = "default";
-+};
-+
- &pci2 {
- 	status = "okay";
- 	pinctrl-0 = <&usb2_pins>;
 -- 
 1.7.9.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
