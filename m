@@ -1,44 +1,33 @@
-From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH v2 2/3] fpga manager: framework core
-Date: Fri, 24 Oct 2014 22:00:13 +0100
-Message-ID: <20141024220013.37c38f7a@alan.etchedpixels.co.uk>
-References: <1414007405-32186-1-git-send-email-atull@opensource.altera.com>
-	<1414007405-32186-3-git-send-email-atull@opensource.altera.com>
-	<20141024105200.GA20775@amd>
+From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Subject: [PATCHv0 0/2] arm: mvebu: non-critical fixes for NETGEAR ReadyNAS 102
+Date: Fri, 24 Oct 2014 23:21:52 +0200
+Message-ID: <cover.1414185031.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20141024105200.GA20775@amd>
-Sender: linux-doc-owner@vger.kernel.org
-To: Pavel Machek <pavel@denx.de>
-Cc: atull@opensource.altera.com, gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johan Kristell <johan.kristell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-> > +int fpga_mgr_write(struct fpga_manager *mgr, const char *buf, size_t count)
-> > +{
-> > +	int ret;
-> > +
-> > +	if (test_and_set_bit_lock(FPGA_MGR_BUSY, &mgr->flags))
-> > +		return -EBUSY;
-> > +
-> > +	dev_info(mgr->dev, "writing buffer to %s\n", mgr->name);
-> > +
-> > +	ret = __fpga_mgr_write(mgr, buf, count);
-> > +	clear_bit_unlock(FPGA_MGR_BUSY, &mgr->flags);
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(fpga_mgr_write);
-> 
-> Is the EBUSY -- userspace please try again, but you don't know when to
-> try again -- right interface? I mean, normally kernel would wait, so
-> that userland does not have to poll?
+This two patches are non-critical and respectively fix the following
+in RN102 .dts file:
+ - the color for LEDs labels (they are blue, and not green)
+ - eSATA/SATA ports info
 
-And if userland has to also support polling you must support poll/select
-on the file handle so it knows when to retry the I/O.
+Arnaud Ebalard (2):
+  arm: mvebu: fix LED color in NETGEAR ReadyNAS 102 .dts file
+  arm: mvebu: clarify (e)SATA ports info in NETGEAR ReadyNAS 102 .dts file
 
-The error should be EAGAIN for a retriable write with O_NDELAY set.
+ arch/arm/boot/dts/armada-370-netgear-rn102.dts | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-Alan
+-- 
+2.1.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
