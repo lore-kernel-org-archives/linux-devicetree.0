@@ -1,56 +1,69 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v7 1/3] power-domain: add power domain drivers for
- Rockchip platform
-Date: Fri, 24 Oct 2014 09:44:31 -0700
-Message-ID: <20141024164431.GE19933@dtor-ws>
-References: <1414135761-3406-1-git-send-email-jinkun.hong@rock-chips.com>
- <1414135761-3406-2-git-send-email-jinkun.hong@rock-chips.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [RFC 6/7] mfd: qcom-smd-rpm: Driver for the Qualcomm RPM over SMD
+Date: Fri, 24 Oct 2014 09:45:24 -0700
+Message-ID: <20141024164523.GH28611@sonymobile.com>
+References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1412037291-16880-7-git-send-email-bjorn.andersson@sonymobile.com>
+ <20141008084017.GD20647@lee--X1>
+ <20141017135553.GA28882@sonymobile.com>
+ <20141020072211.GC25349@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1414135761-3406-2-git-send-email-jinkun.hong@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "jinkun.hong" <jinkun.hong@rock-chips.com>
-Cc: linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, Jack Dai <jack.dai@rock-chips.com>
+In-Reply-To: <20141020072211.GC25349@x1>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jinkun,
+On Mon 20 Oct 00:22 PDT 2014, Lee Jones wrote:
 
-On Fri, Oct 24, 2014 at 12:29:19AM -0700, jinkun.hong wrote:
-> +static int rockchip_pd_power(struct rockchip_domain *pd, bool power_on)
-> +{
-> +	int ret = 0;
-> +	struct rockchip_dev_entry *de;
-> +
-> +	mutex_lock(&pd->dev_lock);
-> +	/* no clk, set power domain will fail */
-> +	if (list_empty(&pd->dev_list)) {
-> +		pr_err("%s: no devices in %s power domain\n", __func__,
-> +			pd->base.name);
-> +		goto out;
-> +	}
-> +
-> +	list_for_each_entry(de, &pd->dev_list, node) {
-> +		pm_clk_resume(de->dev);
-> +	}
-> +
-> +	ret = rockchip_pmu_set_power_domain(pd, power_on);
-> +
-> +	list_for_each_entry(de, &pd->dev_list, node) {
-> +		pm_clk_suspend(de->dev);
-> +	}
-> +out:
-> +	mutex_unlock(&pd->dev_lock);
-> +	return ret;
-> +}
+> On Fri, 17 Oct 2014, Bjorn Andersson wrote:
+> > On Wed 08 Oct 01:40 PDT 2014, Lee Jones wrote:
+> 
+> [...]
+> 
+> > > > +static struct qcom_smd_driver qcom_smd_rpm_driver = {
+> > > > +	.probe = qcom_smd_rpm_probe,
+> > > > +	.remove = qcom_smd_rpm_remove,
+> > > > +	.callback = qcom_smd_rpm_callback,
+> > > > +	.driver  = {
+> > > > +		.name  = "qcom_smd_rpm",
+> > > > +		.owner = THIS_MODULE,
+> > > > +		.of_match_table = qcom_smd_rpm_of_match,
+> > > > +	},
+> > > > +};
+> > > > +
+> > > > +module_qcom_smd_driver(qcom_smd_rpm_driver);
+> > > 
+> > > I don't like this.  What's wrong with the existing platform driver
+> > > code?
+> > > 
+> > 
+> > I started off with having smd child devices as platform drivers and had some
+> > accessor functions to find the open handles that triggered the probe() and
+> > register the callback with those. But this didn't feel very sane, so I did
+> > implemented a custom driver struct and probe prototype to simplify writing
+> > drivers.
+> > 
+> > May I ask why you dislike this? This is how it's done in so many other places
+> > in the kernel...
+> 
+> I don't believe that's the case.  All owners of their own
+> module_*_driver() registration calls are busses (see below), whereas
+> 'qcom_smd' is just a driver.  Things would soon get out of control if
+> we allowed every driver in the kernel to supply their own driver
+> registration information variants.
+> 
 
-For my education, could you please tell me why we need to enable all
-clocks of all devices in a power domain when we are talking to the PMU
-and then turn them immediately off? Would not we want to enable clocks
-in start()) callbacks, like Ulf mentioned?
+I modelled this after rpmsg, with the intention of having qcom_smd provide a
+"smd bus" and all client drivers sitting on that bus being probed and removed
+as the remote services appear and disappear.
 
-Thanks.
+I'm afraid I don't understand what part I missed that makes my smd driver "just
+a driver". I will reread the documentation and try to figure out what I might
+have missed.
 
--- 
-Dmitry
+Regards,
+Bjorn
