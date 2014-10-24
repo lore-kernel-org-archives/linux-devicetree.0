@@ -1,74 +1,56 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 12/17] ARM: mvebu: Armada XP GP specific suspend/resume
- code
-Date: Fri, 24 Oct 2014 16:28:24 +0200
-Message-ID: <20141024162824.67f9ce3d@free-electrons.com>
-References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1414151970-6626-13-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20141024142044.GB3142@lunn.ch>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH v8 0/7] QCOM 8974 and 8084 cpuidle driver
+Date: Fri, 24 Oct 2014 08:30:39 -0600
+Message-ID: <20141024143039.GD30210@ilina-mac.qualcomm.com>
+References: <1412718106-17049-1-git-send-email-lina.iyer@linaro.org>
+ <1414078317.4214.4.camel@mm-sol.com>
+ <20141023155435.GA30210@ilina-mac.qualcomm.com>
+ <1414144885.2025.4.camel@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141024142044.GB3142-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414144885.2025.4.camel@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Andrew Lunn,
+On Fri, Oct 24 2014 at 04:01 -0600, Ivan T. Ivanov wrote:
+>
+>On Thu, 2014-10-23 at 09:54 -0600, Lina Iyer wrote:
+>> On Thu, Oct 23 2014 at 09:31 -0600, Ivan T. Ivanov wrote:
+>> > >
+>> > >Hi,
+>> > >
+>> > >On Tue, 2014-10-07 at 15:41 -0600, Lina Iyer wrote:
+>> > >  Hi,
+>> > > >
+>> > >  This v8 revision of the cpuidle driver is available at
+>> > >  git.linaro.org:/people/lina.iyer/linux-next cpuidle-v8
+>> > > >
+>> > >
+>> > >Probably I missing something, but should I expect that
+>> > >once these patches are applied driver could be successfully
+>> >  compiled?
+>> Yes they should.
+>
+>Do these patches depends on other patches, which I am missing.
+>I am applying them on current linus/master. At least <soc/qcom/scm.h>
+>and <soc/qcom/scm-boot.h> are missing from this patch-set v8 :-|
+>
 
-On Fri, 24 Oct 2014 16:20:44 +0200, Andrew Lunn wrote:
+Oh sorry, if you look at the cover letter, in the past, these patches
+have been pulled in or being staged.
 
-> Does Marvell mandate this PIC and gpio interface? Or is a board
-> designer free to implement it some other way? It seems to me, this
-> should be considered specific to the Marvell reference design.
+You can get the tree and the the patches from 
+https://git.linaro.org/people/lina.iyer/linux-next.git/shortlog/refs/heads/cpuidle-v8
 
-They don't mandate this interface, it's really a board-specific
-decision, which is why I've split my implementation between:
+which are on top of 3.17-rc1, but you should be able to pull it on top
+of yours, without any issue. Do note that some of these patches that I
+have on top of 3.17-rc1 (like the ARM idle states) may already be
+available in linus/master.
 
- * SoC-specific code, in mach-mvebu/pm.c.
+Hope that helps.
 
- * Board-specific code, in mach-mvebu/pm-board.c.
-
-> I'm wondering if this code should be a power driver, living in
-> drivers/power/reset/.
-
-I'm fine with that, but have you seen the *very* tight interaction
-between the SoC-specific code and the board-specific code? The problem
-is that the board-specific code needs to put the SDRAM into
-self-refresh *right* before shutting down the SoC, and all that while
-making sure the code doing both of these operations remains in the
-I-Cache, and does not touch any other location in memory (which has
-become inaccessible due to being in self-refresh mode).
-
-Look at the mvebu_armada_xp_gp_pm_enter() function: it takes two
-arguments, received from the SoC-level code. How to handle this thing
-with a driver in drivers/power/reset/ ?
-
-> A few kirkwood boards have a PIC controlling the power. QNAP devices
-> use a serial port to talk to it. Others use a single gpio line. Is
-> there something to stop a designer doing this for XP?
-
-Nothing stops that. I think Marvell told me they wanted to standardize
-this GPIO interface with a PIC, but that's only for their own
-development boards. Since it remains something outside the SoC, it is
-by nature board-specific, and designers can do pretty much what they
-want.
-
-> It seems like you would have a more generic solution by allowing DT to
-> specify a power off driver to use.
-
-Sure, but see above. If you have some suggestion, I'm surely interested.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Lina
