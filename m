@@ -1,33 +1,35 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] clocksource: sh_mtu2: Drop incorrect SoC family name
-Date: Fri, 24 Oct 2014 13:29:38 +0200
-Message-ID: <1414150178-4986-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.au>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/2] ARM: shmobile: r8a73a4: Add SoC-specific CMT compatible property
+Date: Fri, 24 Oct 2014 13:36:02 +0200
+Message-ID: <1414150563-6645-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-The TPU2 hardware block is found in many Renesas SH and ARM SoCs, but
-not in R-Car.
+The CMT1 timer used the generic compatible property only.
+Add the SoC-specific one, which is already documented, to make it future
+proof.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-v2:
-  - Drop family name instead of changing it to RZ.
----
- Documentation/devicetree/bindings/timer/renesas,mtu2.txt | 2 +-
+ arch/arm/boot/dts/r8a73a4.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
-index d9a8d5af1a21270f..ba0a34d97eb80261 100644
---- a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
-@@ -1,4 +1,4 @@
--* Renesas R-Car Multi-Function Timer Pulse Unit 2 (MTU2)
-+* Renesas Multi-Function Timer Pulse Unit 2 (MTU2)
+diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
+index 80939671b0342006..b5ead845c6c32f24 100644
+--- a/arch/arm/boot/dts/r8a73a4.dtsi
++++ b/arch/arm/boot/dts/r8a73a4.dtsi
+@@ -114,7 +114,7 @@
+ 	};
  
- The MTU2 is a multi-purpose, multi-channel timer/counter with configurable
- clock inputs and programmable compare match.
+ 	cmt1: timer@e6130000 {
+-		compatible = "renesas,cmt-48-gen2";
++		compatible = "renesas,cmt-48-r8a73a4", "renesas,cmt-48-gen2";
+ 		reg = <0 0xe6130000 0 0x1004>;
+ 		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>;
+ 
 -- 
 1.9.1
+
