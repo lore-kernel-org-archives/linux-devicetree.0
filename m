@@ -1,136 +1,145 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v2 2/3] ARM: dts: socfpga: fpga bridges bindings docs
-Date: Sat, 25 Oct 2014 16:42:29 +0200
-Message-ID: <20141025144229.GR10262@pengutronix.de>
-References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com>
- <1414108267-22058-3-git-send-email-atull@opensource.altera.com>
- <20141024070042.GL10262@pengutronix.de>
- <5FB7B7FD-7B5B-4250-BADE-85573FDBBE48@konsulko.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [RFC v3 PATCH 1/5] of: Add standard property for poweroff
+ capability
+Date: Sat, 25 Oct 2014 10:37:33 +0200
+Message-ID: <20141025083733.GG19377@localhost>
+References: <1413268273-15151-1-git-send-email-romain.perier@gmail.com>
+ <20141023095339.GC6641@localhost>
+ <CABgxDoLcnzaAYuDMB3x=EdNrY=8mwjceVVCpfXUYBURVm44ZVQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5FB7B7FD-7B5B-4250-BADE-85573FDBBE48@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: atull@opensource.altera.com, jgunthorpe@obsidianresearch.com, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, michal.simek@xilinx.com, rdunlap@infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+In-Reply-To: <CABgxDoLcnzaAYuDMB3x=EdNrY=8mwjceVVCpfXUYBURVm44ZVQ@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Romain Perier <romain.perier@gmail.com>
+Cc: Johan Hovold <johan@kernel.org>, devicetree <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Grant Likely <grant.likely@linaro.org>, robh <robh@kernel.org>, mark.rutland@arm.com, linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee.jones@linaro.org>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pantelis!
+[+CC: Felipe ]
 
-On Fri, Oct 24, 2014 at 12:20:53PM +0300, Pantelis Antoniou wrote:
-> Hi Stefan, Allan,
->=20
-> Sorry, haven=E2=80=99t had a chance to review all this yet; will do s=
-o in the weekend.
-> Just wanted to pop in and comment on a few things.
->=20
-> > On Oct 24, 2014, at 10:00 AM, Steffen Trumtrar <s.trumtrar@pengutro=
-nix.de> wrote:
-> >=20
-> > Hi!
-> >=20
-> > On Thu, Oct 23, 2014 at 06:51:06PM -0500, atull@opensource.altera.c=
-om wrote:
-> >> From: Alan Tull <atull@opensource.altera.com>
-> >=20
-> > (...)
-> >=20
-> >> diff --git a/Documentation/devicetree/bindings/fpga/altera-hps2fpg=
-a-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-b=
-ridge.txt
-> >> new file mode 100644
-> >> index 0000000..bc24a2e
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridg=
-e.txt
-> >> @@ -0,0 +1,53 @@
-> >> +Altera FPGA/HPS Bridge Driver
-> >> +
-> >> +This driver manages a bridge between a FPGA and a host processor =
-system (HPS).
-> >> +User space can enable or disable the bridge by writing a "1" or a=
- "0",
-> >> +respectively, to its enable file under bridge's entry in
-> >> +/sys/class/fpga-bridge.  Typically, one disables the bridges befo=
-re
-> >> +reprogramming the FPGA.  Once the FPGA is reprogrammed, the bridg=
-es are
-> >> +reenabled.
-> >> +
-> >=20
-> > NAK.
-> >=20
-> > This is all linux specific and doesn't belong here.
-> >=20
->=20
-> We know. The DT spec hasn=E2=80=99t been updated for a while, and thi=
-s is going to be
-> part of what we want to do with the restarting of the ePAPR spec proc=
-ess.
->
+On Sat, Oct 25, 2014 at 09:28:36AM +0200, Romain Perier wrote:
+> Hi Johan,
+> 
+> If that's still possible to do these changes, I am opened to suggestions.
 
-As we don't have a new spec yet, I go with the current state of the art=
-=2E
-And I don't see how "file under ... /sys/class/fpga-bridge" fits the
-current spec.
+Before v3.18 comes out, we can always change it with a follow-up patch.
 
-> So absolutes like =E2=80=9CDT is a hardware description only" might b=
-e too strong statements, that
-> do not work in practice anymore.
->=20
-> There=E2=80=99s no such thing as pure hardware devices lately - there=
- is always a configuration
-> component; some of it OS specific, some of it not.
->=20
+> 2014-10-23 11:53 GMT+02:00 Johan Hovold <johan@kernel.org>:
+> > [ +CC: Guenter, Lee, linux-pm ]
+> >
+> > On Tue, Oct 14, 2014 at 06:31:09AM +0000, Romain Perier wrote:
+> >> Several drivers create their own devicetree property when they register
+> >> poweroff capabilities. This is for example the case for mfd, regulator
+> >> or power drivers which define "vendor,system-power-controller" property.
+> >> This patch adds support for a standard property "poweroff-source"
+> >
+> > Shouldn't this property really be called "power-off-source" or even
+> > "power-off-controller"?
+> >
+> > The power-off handler call-chain infrastructure is about to be merged
+> > and will be using power[-_ ]off (i.e. not "poweroff") consistently (at
+> > least in its interface).
+> 
+> "poweroff" or "power-off", I don't care. If people prefer "power-off",
+> choose this name :)
 
-If it really is necessary, I'm not against it, don't get me wrong.
-But in the grand scheme I wouldn't say that this fits my experience.
-There are some devices that need configuration and often when it is
-done in the DT, it is just a shortcut or not thought through.
-And can be also introspected dynamically. With some discussion on the
-list these bindings often change.
+Let's try to stick to power off (and power_off) then.
 
-Regarding OS specifics: already there, e.g. console setup in the chosen=
- node.
-And other things I saw are ethernet aliases just for u-boot. Not a prob=
-lem
-of the spec, just a problem of u-boot and unneccessary "configuration".
-Just to fix a bad bootloader. barebox can handle this without any
-such stuff. Maybe we should integrate the DT "overlays" barebox uses in=
-to
-the in-kernel DTs as well...but does it really help/interest someone wh=
-o
-decides to use u-boot where barebox stores its environment? I guess not=
-=2E
+> > Furthermore, isn't "controller" as in "power-off-controller" more
+> > appropriate than "source" in this case? We have wake-up sources, which
+> > might appear analogous, but that really isn't the same thing.
+> 
+> As I said, the idea with "power-off-source" (or "poweroff-source",
+> that's not the point here) is to mark the device as able to poweroff
+> the system, like "wakeup-source" which marks the device as able to
+> wakeup the system.
+> This is why I chose this name, because it is quite similar to wakeup
+> property except that it is for handling power, so it did make sense to
+> me.
+> 
+> The question is: what is the advantage of the suffix "controller"
+> compared to "source" ?
 
-> We have to be engaged in the process and figure out how to update the=
- spec for what is
-> now the state of the art in the industry.
->=20
+Yeah, I figured you had been inspired by the "wakeup-source" property.
 
-Again, not against that if it is necessary. For example your overlay st=
-uff might
-be a good update to the spec. Would be better if it is official instead=
- of a "hack".
-I want that for SoCFPGA.
+The problem is that "source" tends to be used for inputs, for example,
+wake-up source, interrupt source, entropy source, etc. Something that is
+outside of the control of the OS. Contrary to for instance an output
+which turns the system-power off.
 
-But having looked at one or two vendor kernels+DTs, the state of the ar=
-t in the
-industry is: using DT wrong. (And doing HW wrong, which makes some upda=
-tes to the
-ePAPR necessary ;-))
+> > I now this has already been merged to the regulator tree, but there's
+> > still still time to fix this.
+> >
+> >> which marks the device as able to shutdown the system.
+> >>
+> >> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> >> ---
+> >>  include/linux/of.h | 11 +++++++++++
+> >>  1 file changed, 11 insertions(+)
+> >>
+> >> diff --git a/include/linux/of.h b/include/linux/of.h
+> >> index 6545e7a..27b3ba1 100644
+> >> --- a/include/linux/of.h
+> >> +++ b/include/linux/of.h
+> >> @@ -866,4 +866,15 @@ static inline int of_changeset_update_property(struct of_changeset *ocs,
+> >>  /* CONFIG_OF_RESOLVE api */
+> >>  extern int of_resolve_phandles(struct device_node *tree);
+> >>
+> >> +/**
+> >> + * of_system_has_poweroff_source - Tells if poweroff-source is found for device_node
+> >> + * @np: Pointer to the given device_node
+> >> + *
+> >> + * return true if present false otherwise
+> >> + */
+> >> +static inline bool of_system_has_poweroff_source(const struct device_node *np)
+> >
+> > Why "system_has"? Shouldn't this be of_is_power_off_source (controller)?
+> 
+> Note that the current custom vendor properties contain "system-" as prefix ;)
 
-Regards,
-Steffen
+Yes, but you dropped it. ;)
 
---=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
+And it's not the system that has the property (e.g. "poweroff-source"),
+it's the node (or the device it describes).
+ 
+> we have several possibilities:
+> - of_system_has_power_off_source()
+> - of_has_power_off_source()
+> 
+> We should either to use "has" or "is" as prefix because that's a
+> predicate function.
+> I would prefer "has" since it refers to a property inside a node :
+> this node "has" the corresponding property, so "is" is not a good
+> candidate.
+
+The boolean property in question describes a feature of the node
+(device). Say the feature would be redness and call the property "red".
+You would then generally ask whether the node *is red*, rather than
+whether it has (the property) red (or has redness).
+
+I'm actually inclined to just sticking to the current name
+"system-power-controller" and just drop the vendor prefixes. Perhaps
+your helper function can be used to parse both versions (i.e. with or
+without a vendor prefix) as we will still need to support both.
+
+I suggest you call that helper function
+
+	of_is_system_power_controller(node)
+
+or alternatively
+
+	of_is_power_off_controller(node)
+
+if that property name is preferred.
+
+Note also that in at least one case (rtc-omap, patches in mm, see [1])
+the property describes that the RTC is used to control an external PMIC,
+which both allows us to power off the system *and* power back on again
+on subsequent RTC alarms. This seems to suggest that the more generic
+"system-power-controller" property name should be preferred.
+
+Thanks,
+Johan
+
+[1] https://lkml.org/lkml/2014/10/21/631
