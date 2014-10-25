@@ -1,22 +1,11 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 2/3] ARM: keystone: pm: switch to use generic pm domains
-Date: Sat, 25 Oct 2014 12:45:23 +0200
-Message-ID: <CAPDyKFoFcyMc6j45aoPj_mejXMqZQn3CDpUvVj4hiJzLsDEy7g@mail.gmail.com>
-References: <1413809764-21995-3-git-send-email-grygorii.strashko@ti.com>
- <5446A065.9050308@gmail.com> <544793B5.6080601@ti.com>
- <CAPDyKFo97D3XbwDQrDzHw+qr4b24Fsq9EwDbdOMhy_L-RoYsLw@mail.gmail.com>
- <CAMuHMdVsqsSHxirzoWspGz7y+2qBk42p-VUBNkys3_rr6Th_9Q@mail.gmail.com>
- <CAPDyKFp6T1a1XXHdxiubP2RaS26uSqkUS3rbBgsNV_y+dSFfvw@mail.gmail.com>
- <CAMuHMdVO4nMoeYdzLf6wdKW876gYVyML3C2+QKoteGPtisD4sA@mail.gmail.com>
- <CAPDyKFrVCczc+fSy1ax4XinhB4SMfZZWP=d4QdY5Lv4zjOrHPA@mail.gmail.com>
- <544912AB.3050801@ti.com>
- <CAPDyKFpwguzd_iy46mpPcwDs98bh1k_3fVNfe4UAjYYwNoBJPQ@mail.gmail.com>
- <20141024163901.GD19933@dtor-ws>
+From: Arnaud Ebalard <arno@natisbad.org>
+Subject: [PATCHv0] arm: mvebu: enable rear eSATA ports of NETGEAR ReadyNAS 2120
+Date: Sat, 25 Oct 2014 17:32:42 +0200
+Message-ID: <f3876c7a9ef11eb758b9df18c671ee740b8be614.1414250947.git.arno@natisbad.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20141024163901.GD19933@dtor-ws>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -26,109 +15,40 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Santosh Shilimkar <santosh.shilimkar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Kevin Hilman <khilman@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, ssantosh@kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 24 October 2014 18:39, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-> On Fri, Oct 24, 2014 at 11:53:05AM +0200, Ulf Hansson wrote:
->> On 23 October 2014 16:37, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
->> > Hi Ulf,
->> >
->> > On 10/23/2014 11:11 AM, Ulf Hansson wrote:
->> >> On 22 October 2014 17:44, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->> >>> On Wed, Oct 22, 2014 at 5:28 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> >>>> On 22 October 2014 17:09, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->> >>>>> On Wed, Oct 22, 2014 at 5:01 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> >>>>>>>>> +void keystone_pm_domain_attach_dev(struct device *dev)
->> >>>>>>>>>    {
->> >>>>>>>>> +    struct clk *clk;
->> >>>>>>>>>        int ret;
->> >>>>>>>>> +    int i = 0;
->> >>>>>>>>>
->> >>>>>>>>>        dev_dbg(dev, "%s\n", __func__);
->> >>>>>>>>>
->> >>>>>>>>> -    ret = pm_generic_runtime_suspend(dev);
->> >>>>>>>>> -    if (ret)
->> >>>>>>>>> -        return ret;
->> >>>>>>>>> -
->> >>>>>>>>> -    ret = pm_clk_suspend(dev);
->> >>>>>>>>> +    ret = pm_clk_create(dev);
->> >>>>>>>>>        if (ret) {
->> >>>>>>>>> -        pm_generic_runtime_resume(dev);
->> >>>>>>>>> -        return ret;
->> >>>>>>>>> +        dev_err(dev, "pm_clk_create failed %d\n", ret);
->> >>>>>>>>> +        return;
->> >>>>>>>>> +    };
->> >>>>>>>>> +
->> >>>>>>>>> +    while ((clk = of_clk_get(dev->of_node, i++)) && !IS_ERR(clk)) {
->> >>>>>>>>> +        ret = pm_clk_add_clk(dev, clk);
->> >>>>>>>>> +        if (ret) {
->> >>>>>>>>> +            dev_err(dev, "pm_clk_add_clk failed %d\n", ret);
->> >>>>>>>>> +            goto clk_err;
->> >>>>>>>>> +        };
->> >>>>>>>>>        }
->> >>>>>>>>>
->> >>>>>>>>> -    return 0;
->> >>>>>>>>> +    if (!IS_ENABLED(CONFIG_PM_RUNTIME)) {
->> >>>>>>>> Can we not okkup two seperate callbacks instead of above check ?
->> >>>>>>>> I don't like this CONFIG check here. Its slightly better version of
->> >>>>>>>> ifdef in middle of the code.
->> >>>>>>>
->> >>>>>>> I've found more-less similar comment on patch
->> >>>>>>> "Re: [PATCH v3 1/3] power-domain: add power domain drivers for Rockchip platform"
->> >>>>>>> https://lkml.org/lkml/2014/10/17/257
->> >>>>>>>
->> >>>>>>> So, Would you like me to create patch which will enable clocks in pm_clk_add/_clk()
->> >>>>>>> in case !IS_ENABLED(CONFIG_PM_RUNTIME)
->> >>>>>>
->> >>>>>> I am wondering whether we actually should/could do this, no matter of
->> >>>>>> CONFIG_PM_RUNTIME.
->> >>>>>>
->> >>>>>> Typically, for configurations that uses CONFIG_PM_RUNTIME, the PM
->> >>>>>> clocks through pm_clk_suspend(), will be gated once the device becomes
->> >>>>>> runtime PM suspended. Right?
->> >>>>>
->> >>>>> Doing it unconditionally means we'll have lots of unneeded clocks running
->> >>>>> for a short while.
->> >>>
->> >>>> As long as the pm_clk_add() is being invoked from the ->attach_dev()
->> >>>> callback, we are in the probe path. Certainly we would like to have
->> >>>> clocks enabled while probing, don't you think?
->> >>>>
->> >>>> If we wouldn't enable the clocks for CONFIG_PM_RUNTIME, when will
->> >>>> those be enabled?
->> >>>
->> >>> They will be enabled when the driver does
->> >>>
->> >>>          pm_runtime_enable(dev);
->> >>>          pm_runtime_get_sync(dev);
->> >>>
->> >>> in its .probe() method.
->> >>
->> >> No! This doesn't work for drivers which have used
->> >> pm_runtime_set_active() prior pm_runtime_enable().
->> >
->> > Sorry, but some misunderstanding is here:
->> > 1) If some code call pm_runtime_set_active() it has to ensure
->> > that all PM resources switched to ON state. All! So, it will
->> > be ok to call enable & get after that - these functions will only
->> > adjust counters.
->>
->> Correct.
->>
->> This is also the key problem with your approach. You requires a
->> pm_runtime_get_sync() to trigger the runtime PM resume callbacks to be
->> invoked. That's a fragile design.
->
-> Why is this fragile design? Having pm_runtime_get_sync() result in
-> resuming the device (and in turn the PM domain it is in) if device is
-> suspended is the proper behavior, no?
 
-It's fragile, because the device may very well be "runtime PM active"
-at the point when we invoke pm_runtime_get_sync(). Thus the runtime PM
-resume callback isn't invoked, which is a requirement for these cases
-to work.
+NETGEAR ReadyNAS 2120 supports its four main SATA disks via 2
+Marvell 88SE9170 SATA controllers connected on the PCIe bus
+of the the SoC. The two eSATA ports available at the rear of
+the device are handled by the native SATA controller of the
+Armada XP SoC powering the NAS. This patch enables the SoC
+SATA controller in the .dts file to make those two rear ports
+available.
 
-Kind regards
-Uffe
+Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
+---
+ arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+index 7d8f32873e82..e3a8c456bb84 100644
+--- a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
++++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+@@ -137,6 +137,12 @@
+ 				};
+ 			};
+ 
++			/* Two rear eSATA ports */
++			sata@a0000 {
++				nr-ports = <2>;
++				status = "okay";
++			};
++
+ 			serial@12000 {
+ 				status = "okay";
+ 			};
+-- 
+2.1.1
