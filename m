@@ -1,61 +1,55 @@
-From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 4/4] ARM: dts: rockchip: Enable emac node in rk3066a-marsboard
-Date: Sun, 26 Oct 2014 13:23:49 +0000
-Message-ID: <1414329829-8031-4-git-send-email-romain.perier@gmail.com>
-References: <1414329829-8031-1-git-send-email-romain.perier@gmail.com>
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCHv6 0/6] ARM: imx: Add Freescale LS1021A SoC and board
+ support
+Date: Sun, 26 Oct 2014 14:57:11 +0000
+Message-ID: <1414335419636.17637@freescale.com>
+References: <1414145327-23541-1-git-send-email-jingchang.lu@freescale.com>,<20141026002354.GC6973@tiger>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414329829-8031-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20141026002354.GC6973@tiger>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This enables EMAC Rockchip and adds initial ethernet support
-for the MarsBoard RK3066.
 
-Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/rk3066a-marsboard.dts | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+________________________________________
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sent: Sunday, October 26, 2014 8:23 AM
+To: Lu Jingchang-B35083
+Cc: arnd-r2nGTMty4D4@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: Re: [PATCHv6 0/6] ARM: imx: Add Freescale LS1021A SoC and board support
 
-diff --git a/arch/arm/boot/dts/rk3066a-marsboard.dts b/arch/arm/boot/dts/rk3066a-marsboard.dts
-index d7d4cd1..d4a1dfe 100644
---- a/arch/arm/boot/dts/rk3066a-marsboard.dts
-+++ b/arch/arm/boot/dts/rk3066a-marsboard.dts
-@@ -122,6 +122,30 @@
- /* must be included after &tps gets defined */
- #include "tps65910.dtsi"
- 
-+&emac {
-+	status = "okay";
-+
-+	phy = <&phy0>;
-+	phy-supply = <&vaux33_reg>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&phy_int>;
-+
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+&pinctrl {
-+	lan8720a {
-+		phy_int: phy-int {
-+			rockchip,pins = <RK_GPIO1 26 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+};
-+
- &uart0 {
- 	status = "okay";
- };
--- 
-1.9.1
+On Fri, Oct 24, 2014 at 06:08:41PM +0800, Jingchang Lu wrote:
+>> This series contain the support for Freescale LS1021A CPU and LS1021A-QDS
+>> and LS1021A-TWR board.
+>>
+>> The LS1021A SoC combines two ARM Cortex-A7 cores that have been optimized
+>> for high reliability and pack the highest level of integration available
+> >for sub-3W embedded communications processors and with a comprehensive
+>> enablement model focused on ease of programmability.
+>>
+>> The LS1021A SoC shares IPs with i.MX family, Vybrid family and Freescale
+>> PowerPC platform.
+>>
+>> For the detail information about LS1021A SoC, please refer to the RM doc.
+>>
+>> ---
+>> changes in v6:
+>>  add dts patch description.
+>>  remove '-' from QDS and TWR board dts name for consistence with u-boot.
 
+>I'm not sure it's a good idea.  The most idiomatic DTS naming schema is
+just <socname>-<boardname>.dts.
+Many our PowerPC platforms doesn't have '-' between SoCs and board names. This becomes a project requirement when integrating in our SDK release, and I have renamed these board names internally, so I also rename them on upstream for consistence. Thanks.
+
+Best Regards,
+Jingchang
+
+>Shawn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
