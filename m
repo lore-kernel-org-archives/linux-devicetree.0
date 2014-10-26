@@ -1,7 +1,7 @@
 From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 3/4] ARM: dts: rockchip: Add EMAC Rockchip for RK3066 SoCs
-Date: Sun, 26 Oct 2014 13:23:48 +0000
-Message-ID: <1414329829-8031-3-git-send-email-romain.perier@gmail.com>
+Subject: [PATCH v1 2/4] dt-bindings: Document Marsboard RK3066 in Rockchip platforms dt-bindings
+Date: Sun, 26 Oct 2014 13:23:47 +0000
+Message-ID: <1414329829-8031-2-git-send-email-romain.perier@gmail.com>
 References: <1414329829-8031-1-git-send-email-romain.perier@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1414329829-8031-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,52 +10,26 @@ To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
 Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the right pins topology for the MAC and MDIO
-found in RK3066 SoCs. Boards based on this SoC have an
-initial support for the emac-rockchip dt-binding.
-
 Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/rk3066a.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ Documentation/devicetree/bindings/arm/rockchip.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index ad9c2db..7bec55f 100644
---- a/arch/arm/boot/dts/rk3066a.dtsi
-+++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -179,6 +179,24 @@
- 			bias-disable;
- 		};
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+index 857f126..e163678 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.txt
++++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+@@ -1,6 +1,10 @@
+ Rockchip platforms device tree bindings
+ ---------------------------------------
  
-+		emac {
-+			emac_xfer: emac-xfer {
-+				rockchip,pins = <RK_GPIO1 16 RK_FUNC_2 &pcfg_pull_none>, /* mac_clk */
-+						<RK_GPIO1 17 RK_FUNC_2 &pcfg_pull_none>, /* tx_en */
-+						<RK_GPIO1 18 RK_FUNC_2 &pcfg_pull_none>, /* txd1 */
-+						<RK_GPIO1 19 RK_FUNC_2 &pcfg_pull_none>, /* txd0 */
-+						<RK_GPIO1 20 RK_FUNC_2 &pcfg_pull_none>, /* rx_err */
-+						<RK_GPIO1 21 RK_FUNC_2 &pcfg_pull_none>, /* crs_dvalid */
-+						<RK_GPIO1 22 RK_FUNC_2 &pcfg_pull_none>, /* rxd1 */
-+						<RK_GPIO1 23 RK_FUNC_2 &pcfg_pull_none>; /* rxd0 */
-+			};
++- MarsBoard RK3066 board:
++    Required root node properties:
++      - compatible = "haoyuelectronics,marsboard-rk3066", "rockchip,rk3066a";
 +
-+			emac_mdio: emac-mdio {
-+				rockchip,pins = <RK_GPIO1 24 RK_FUNC_2 &pcfg_pull_none>, /* mac_md */
-+						<RK_GPIO1 25 RK_FUNC_2 &pcfg_pull_none>; /* mac_mdclk */
-+			};
-+		};
-+
- 		emmc {
- 			emmc_clk: emmc-clk {
- 				rockchip,pins = <RK_GPIO3 31 RK_FUNC_2 &pcfg_pull_default>;
-@@ -496,3 +514,7 @@
- &wdt {
- 	compatible = "rockchip,rk3066-wdt", "snps,dw-wdt";
- };
-+
-+&emac {
-+	compatible = "rockchip,rk3066-emac";
-+};
+ - bq Curie 2 tablet:
+     Required root node properties:
+       - compatible = "mundoreader,bq-curie2", "rockchip,rk3066a";
 -- 
 1.9.1
 
