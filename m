@@ -1,45 +1,55 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v4 0/3] gpio-charger: add devicetree support
-Date: Sun, 26 Oct 2014 13:06:28 +0100
-Message-ID: <2175750.C5jxjiuVyT@diego>
-References: <1411504936-21026-1-git-send-email-heiko@sntech.de>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2] clocksource: sh_mtu2: Drop incorrect SoC family name
+Date: Sun, 26 Oct 2014 15:14:19 +0200
+Message-ID: <2748392.6fMSe2cx9z@avalon>
+References: <1414150178-4986-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411504936-21026-1-git-send-email-heiko@sntech.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sre@kernel.org
-Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dianders@chromium.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1414150178-4986-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.au>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+Hi Geert,
 
-Am Dienstag, 23. September 2014, 22:42:13 schrieb Heiko Stuebner:
-> This series adds devicetree support to the gpio-charger and fixes a small
-> issue with the return value of gpio_get_value.
+Thank you for the patch.
+
+On Friday 24 October 2014 13:29:38 Geert Uytterhoeven wrote:
+> The TPU2 hardware block is found in many Renesas SH and ARM SoCs, but
+
+s/TPU2/MTU2/
+
+With this fixed,
+
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> not in R-Car.
 > 
-> changes since v3:
-> - remove of_match_ptr. All used of_xx function have stubs for !OF
->   and of_device_id also is always defined, so no need for of_match_ptr
-> changes since v2:
-> - fix (hopefully all) issues pointed out by Doug Anderson
-> - add missing of_node assignment to charger
-> changes since v1:
-> - adapt binding example to show how the charger fits into the
->   power-supplies structure
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v2:
+>   - Drop family name instead of changing it to RZ.
+> ---
+>  Documentation/devicetree/bindings/timer/renesas,mtu2.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
+> b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt index
+> d9a8d5af1a21270f..ba0a34d97eb80261 100644
+> --- a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
+> +++ b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
+> @@ -1,4 +1,4 @@
+> -* Renesas R-Car Multi-Function Timer Pulse Unit 2 (MTU2)
+> +* Renesas Multi-Function Timer Pulse Unit 2 (MTU2)
 > 
-> Heiko Stuebner (3):
->   dt-bindings: document gpio-charger bindings
->   power: gpio-charger: add device tree support
->   power: gpio-charger: do not use gpio value directly
+>  The MTU2 is a multi-purpose, multi-channel timer/counter with configurable
+>  clock inputs and programmable compare match.
 
-I can see patch3 in your tree (and 3.18-rc). Will you take patches 1 and 2 for 
-3.19?
+-- 
+Regards,
 
-The generally used 3 week period for devicetree-binding related complaints 
-also should be over by now.
+Laurent Pinchart
 
-
-Heiko
