@@ -1,52 +1,185 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] clocksource: sh_tmu: Document r8a7778 binding
-Date: Sun, 26 Oct 2014 15:14:38 +0200
-Message-ID: <47146431.booHXpnU55@avalon>
-References: <1414150312-5542-1-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1414150312-5542-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.au>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v1 1/4] ARM: dts: rockchip: Add devicetree source for MarsBoard RK3066
+Date: Sun, 26 Oct 2014 13:23:46 +0000
+Message-ID: <1414329829-8031-1-git-send-email-romain.perier@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile              |   1 +
+ arch/arm/boot/dts/rk3066a-marsboard.dts | 143 ++++++++++++++++++++++++++++++++
+ 2 files changed, 144 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rk3066a-marsboard.dts
 
-Thank you for the patch.
-
-On Friday 24 October 2014 13:31:52 Geert Uytterhoeven wrote:
-> The r8a7778 is very similar to the r8a7779, and already handled by
-> the current driver in the non-DT case.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
-> This depends on "clocksource: sh_tmu: Document R-Mobile r8a7740 binding"
-> 
->  Documentation/devicetree/bindings/timer/renesas,tmu.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-> b/Documentation/devicetree/bindings/timer/renesas,tmu.txt index
-> 4ae7910af09ffcb4..cd5f20bf2582e742 100644
-> --- a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-> +++ b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-> @@ -10,6 +10,7 @@ Required Properties:
-> 
->    - compatible: must contain one or more of the following:
->      - "renesas,tmu-r8a7740" for the r8a7740 TMU
-> +    - "renesas,tmu-r8a7778" for the r8a7778 TMU
->      - "renesas,tmu-r8a7779" for the r8a7779 TMU
->      - "renesas,tmu" for any TMU.
->        This is a fallback for the above renesas,tmu-* entries
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index ca58df9..3c32efe 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -365,6 +365,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-msm8960-cdp.dtb \
+ 	qcom-msm8974-sony-xperia-honami.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
++	rk3066a-marsboard.dtb \
+ 	rk3066a-bqcurie2.dtb \
+ 	rk3188-radxarock.dtb \
+ 	rk3288-evb-act8846.dtb \
+diff --git a/arch/arm/boot/dts/rk3066a-marsboard.dts b/arch/arm/boot/dts/rk3066a-marsboard.dts
+new file mode 100644
+index 0000000..d7d4cd1
+--- /dev/null
++++ b/arch/arm/boot/dts/rk3066a-marsboard.dts
+@@ -0,0 +1,143 @@
++/*
++ * Copyright (c) 2014 Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++/dts-v1/;
++#include "rk3066a.dtsi"
++
++/ {
++	model = "MarsBoard RK3066";
++	compatible = "haoyuelectronics,marsboard-rk3066", "rockchip,rk3066a";
++
++	memory {
++		reg = <0x60000000 0x40000000>;
++	};
++
++	vcc_sd0: fixed-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "sdmmc-supply";
++		regulator-min-microvolt = <3000000>;
++		regulator-max-microvolt = <3000000>;
++		gpio = <&gpio3 7 GPIO_ACTIVE_LOW>;
++		startup-delay-us = <100000>;
++		vin-supply = <&vcc_io>;
++	};
++};
++
++
++
++&i2c1 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	tps: tps@2d {
++		reg = <0x2d>;
++
++		interrupt-parent = <&gpio6>;
++		interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
++
++		vcc5-supply = <&vcc_io>;
++		vcc6-supply = <&vcc_io>;
++
++		regulators {
++			vcc_rtc: regulator@0 {
++				regulator-name = "vcc_rtc";
++				regulator-always-on;
++			};
++
++			vcc_io: regulator@1 {
++				regulator-name = "vcc_io";
++				regulator-always-on;
++			};
++
++			vdd_arm: regulator@2 {
++				regulator-name = "vdd_arm";
++				regulator-min-microvolt = <600000>;
++				regulator-max-microvolt = <1500000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vcc_ddr: regulator@3 {
++				regulator-name = "vcc_ddr";
++				regulator-min-microvolt = <600000>;
++				regulator-max-microvolt = <1500000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vcc18_cif: regulator@5 {
++				regulator-name = "vcc18_cif";
++				regulator-always-on;
++			};
++
++			vdd_11: regulator@6 {
++				regulator-name = "vdd_11";
++				regulator-always-on;
++			};
++
++			vcc_25: regulator@7 {
++				regulator-name = "vcc_25";
++				regulator-always-on;
++			};
++
++			vcc_18: regulator@8 {
++				regulator-name = "vcc_18";
++				regulator-always-on;
++			};
++
++			vcc25_hdmi: regulator@9 {
++				regulator-name = "vcc25_hdmi";
++				regulator-always-on;
++			};
++
++			vcca_33: regulator@10 {
++				regulator-name = "vcca_33";
++				regulator-always-on;
++			};
++
++			vcc_tp: regulator@11 {
++				regulator-name = "vcc_tp";
++				regulator-always-on;
++			};
++
++			vcc28_cif: regulator@12 {
++				regulator-name = "vcc28_cif";
++				regulator-always-on;
++			};
++		};
++	};
++};
++
++/* must be included after &tps gets defined */
++#include "tps65910.dtsi"
++
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&uart3 {
++	status = "okay";
++};
++
++&wdt {
++	status = "okay";
++};
 -- 
-Regards,
+1.9.1
 
-Laurent Pinchart
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
