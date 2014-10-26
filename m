@@ -1,37 +1,75 @@
-From: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Subject: Re: [PATCHv0] arm: mvebu: add .dts file for Synology DS213j
-Date: Mon, 27 Oct 2014 03:42:42 +1000
-Message-ID: <544D3292.4090805@killerwolves.net>
-References: <3d0cc6de9ea5506d5fb201129ad277e57d0cdfc8.1414268057.git.arno@natisbad.org> <20141025221611.GA14620@lunn.ch> <544CB246.2030607@killerwolves.net>
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: Re: [PATCH 2/3] pinctrl: meson: add device tree bindings
+ documentation
+Date: Sun, 26 Oct 2014 19:25:41 +0100
+Message-ID: <20141026182541.GA23020@gmail.com>
+References: <1412717576-19737-1-git-send-email-b.galvani@gmail.com>
+ <1412717576-19737-3-git-send-email-b.galvani@gmail.com>
+ <CACRpkdb4WLX+FeEAuh=YZteaNPzq0WMN0PTTpHnMWmwTts6=Bg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <544CB246.2030607-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Guinot <sguinot-D+JDLXUtGQkAvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdb4WLX+FeEAuh=YZteaNPzq0WMN0PTTpHnMWmwTts6=Bg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Carlo Caione <carlo@caione.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-On 26/10/14 18:35, Ben Peddell wrote:
-> On 26/10/14 08:16, Andrew Lunn wrote:
->> What does seem odd is the Reboot, FIS, etc, mtd partition names. 
->> Is there redboot installed at all?
+On Fri, Oct 24, 2014 at 01:53:28PM +0200, Linus Walleij wrote:
+> On Tue, Oct 7, 2014 at 11:32 PM, Beniamino Galvani <b.galvani@gmail.com> wrote:
 > 
-> I think the RedBoot partition names are carried over from the older
-> PPC-based Synology DiskStations.  As far as I can tell, the FIS 
-> directory partition is never referenced by the Synology kernel or
-> bootloader, though the information in it does match what is used by
-> the kernel, and it appears it may be used by the Synology updater.
+> > Add device tree bindings documentation for Amlogic Meson pinmux and
+> > GPIO controller.
+> >
+> > Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+> (...)
+> > +Required properties for gpio sub-nodes:
+> > + - reg: should contain address and size for mux, pull-enable, pull and
+> > +   gpio register sets
+> > + - reg-names: an array of strings describing the "reg" entries. Must
+> > +   contain "mux", "pull" and "gpio". "pull-enable" is optional and
+> > +   when it is missing the "pull" registers are used instead
+> 
+> So it seems segmenting the registers is done to sort of control the
+> hardware versioning.
+> 
+> I think it's better to use the compatible string to indicate different
+> versions of the hardware and then have just have one big
+> regs to cover all registers.
 
-I stand corrected here - on the Marvell Armada XP and Armada 370
-DiskStations, the FIS directory (RedBoot parts) does appear to be
-used by the Synology kernel.
+The problem here is that the register ranges are not contiguous and
+the holes in between are used by other devices, so I can't use a
+single range.
 
-If I'm reading it right, unless otherwise configured, the RedBoot
-partition maps will take precedence over the device tree partition 
-maps when CONFIG_MTD_REDBOOT_PARTS is enabled.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> > +Valid gpio sub-nodes name are:
+> > + - "banks" for the standard banks
+> > + - "ao-bank" for the AO bank which belong to the special always-on
+> > +   power domain
+> 
+> I think it's unnecessary to split up banks, the compatible property
+> should be enough to know how many banks this controller has
+> and where they are located in relation to the base offset.
+
+I wanted to avoid a reg property with a list of 7 ranges. Anyway, I
+agree that the split seems a bit arbitrary; I'll remove it.
+
+> > +Required properties for configuration nodes:
+> > + - pins: the name of a pin group. The list of all available groups can
+> > +   be found in driver sources.
+> > + - function: the name of a function to activate for the specified set
+> > +   of groups. The list of all available functions can be found in
+> > +   driver sources.
+> 
+> This is interesting. I have established that for controllers mapping
+> functions to groups we use
+> "function" and "groups".
+> 
+> So for per-pin configuration, "function" and "pins" would be
+> apropriate.
+
+I will use "groups" instead of "pins" for the pinmux configuration.
+
+Thanks!
+Beniamino
