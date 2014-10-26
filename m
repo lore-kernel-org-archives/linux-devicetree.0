@@ -1,22 +1,43 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH] dma: imx-sdma: Add a new DMATYPE for SAI
-Date: Sun, 26 Oct 2014 08:19:45 +0800
-Message-ID: <20141026001944.GB6973@tiger>
-References: <1414179461-3522-1-git-send-email-nicoleotsuka@gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv6 0/6] ARM: imx: Add Freescale LS1021A SoC and board
+ support
+Date: Sun, 26 Oct 2014 08:23:55 +0800
+Message-ID: <20141026002354.GC6973@tiger>
+References: <1414145327-23541-1-git-send-email-jingchang.lu@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1414179461-3522-1-git-send-email-nicoleotsuka@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: vinod.koul@intel.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dan.j.williams@intel.com, s.hauer@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, b38343@freescale.com
+In-Reply-To: <1414145327-23541-1-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 24, 2014 at 12:37:41PM -0700, Nicolin Chen wrote:
-> This patch simply adds a new DMATYPE for SAI which's included
-> in i.MX6 Solo X.
+On Fri, Oct 24, 2014 at 06:08:41PM +0800, Jingchang Lu wrote:
+> This series contain the support for Freescale LS1021A CPU and LS1021A-QDS
+> and LS1021A-TWR board.
 > 
-> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> The LS1021A SoC combines two ARM Cortex-A7 cores that have been optimized
+> for high reliability and pack the highest level of integration available
+> for sub-3W embedded communications processors and with a comprehensive
+> enablement model focused on ease of programmability.
+> 
+> The LS1021A SoC shares IPs with i.MX family, Vybrid family and Freescale
+> PowerPC platform. 
+> 
+> For the detail information about LS1021A SoC, please refer to the RM doc.
+> 
+> ---
+> changes in v6:
+>  add dts patch description.
+>  remove '-' from QDS and TWR board dts name for consistence with u-boot.
 
-Acked-by: Shawn Guo <shawn.guo@linaro.org>
+I'm not sure it's a good idea.  The most idiomatic DTS naming schema is
+just <socname>-<boardname>.dts.
+
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
