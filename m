@@ -1,501 +1,57 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: dts: hummingboard: Split HummingBoard DT to
- support s/dl and d/q
-Date: Sun, 26 Oct 2014 08:51:14 +0800
-Message-ID: <20141026005112.GD6973@tiger>
-References: <E1Xhi98-0005pH-D5@rmk-PC.arm.linux.org.uk>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] bcm2835: add VideoCore Mailbox to the device tree
+Date: Sat, 25 Oct 2014 20:52:52 -0600
+Message-ID: <544C6204.50607@wwwdotorg.org>
+References: <1414156805-30253-1-git-send-email-lkundrak@v3.sk> <20141024155321.GF10395@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <E1Xhi98-0005pH-D5-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
+In-Reply-To: <20141024155321.GF10395@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 24, 2014 at 05:55:26PM +0100, Russell King wrote:
-> From: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
-> To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 10/24/2014 09:53 AM, Lee Jones wrote:
+> On Fri, 24 Oct 2014, Lubomir Rintel wrote:
 > 
-> Signed-off-by: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
-> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-
-
-Not sure why these patches are resent, but they are already merged into
-v3.18-rc1.
-
-Shawn
-
-> ---
->  arch/arm/boot/dts/Makefile                  |   1 +
->  arch/arm/boot/dts/imx6dl-hummingboard.dts   | 203 +---------------------------
->  arch/arm/boot/dts/imx6q-hummingboard.dts    |  13 ++
->  arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 200 +++++++++++++++++++++++++++
->  4 files changed, 219 insertions(+), 198 deletions(-)
->  create mode 100644 arch/arm/boot/dts/imx6q-hummingboard.dts
->  create mode 100644 arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+>> Follows the generic Mailbox Controller bindings as documented in
+>> Documentation/devicetree/bindings/mailbox/mailbox.txt.
+>>
+>> Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+>> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> ---
+>>  arch/arm/boot/dts/bcm2835.dtsi | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+>> index 3342cb1..bd046a9 100644
+>> --- a/arch/arm/boot/dts/bcm2835.dtsi
+>> +++ b/arch/arm/boot/dts/bcm2835.dtsi
+>> @@ -50,6 +50,13 @@
+>>  			#interrupt-cells = <2>;
+>>  		};
+>>  
+>> +		mailbox: mailbox@0x7e00b880 {
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index b8c5cd3ddeb9..bef8619536ae 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -223,6 +223,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
->  	imx6q-gw53xx.dtb \
->  	imx6q-gw5400-a.dtb \
->  	imx6q-gw54xx.dtb \
-> +	imx6q-hummingboard.dtb \
->  	imx6q-nitrogen6x.dtb \
->  	imx6q-phytec-pbab01.dtb \
->  	imx6q-rex-pro.dtb \
-> diff --git a/arch/arm/boot/dts/imx6dl-hummingboard.dts b/arch/arm/boot/dts/imx6dl-hummingboard.dts
-> index 71598546087f..44a0e6736bb1 100644
-> --- a/arch/arm/boot/dts/imx6dl-hummingboard.dts
-> +++ b/arch/arm/boot/dts/imx6dl-hummingboard.dts
-> @@ -1,206 +1,13 @@
->  /*
-> - * Copyright (C) 2013,2014 Russell King
-> + * Copyright (C) 2014 Rabeeh Khoury (rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org)
-> + * Based on dt work by Russell King
->   */
->  /dts-v1/;
->  
->  #include "imx6dl.dtsi"
-> -#include "imx6qdl-microsom.dtsi"
-> -#include "imx6qdl-microsom-ar8035.dtsi"
-> +#include "imx6qdl-hummingboard.dtsi"
->  
->  / {
-> -	model = "SolidRun HummingBoard DL/Solo";
-> -	compatible = "solidrun,hummingboard", "fsl,imx6dl";
-> -
-> -	chosen {
-> -		stdout-path = &uart1;
-> -	};
-> -
-> -	ir_recv: ir-receiver {
-> -		compatible = "gpio-ir-receiver";
-> -		gpios = <&gpio1 2 1>;
-> -		pinctrl-names = "default";
-> -		pinctrl-0 = <&pinctrl_hummingboard_gpio1_2>;
-> -	};
-> -
-> -	regulators {
-> -		compatible = "simple-bus";
-> -
-> -		reg_3p3v: 3p3v {
-> -			compatible = "regulator-fixed";
-> -			regulator-name = "3P3V";
-> -			regulator-min-microvolt = <3300000>;
-> -			regulator-max-microvolt = <3300000>;
-> -			regulator-always-on;
-> -		};
-> -
-> -		reg_usbh1_vbus: usb-h1-vbus {
-> -			compatible = "regulator-fixed";
-> -			enable-active-high;
-> -			gpio = <&gpio1 0 0>;
-> -			pinctrl-names = "default";
-> -			pinctrl-0 = <&pinctrl_hummingboard_usbh1_vbus>;
-> -			regulator-name = "usb_h1_vbus";
-> -			regulator-min-microvolt = <5000000>;
-> -			regulator-max-microvolt = <5000000>;
-> -		};
-> -
-> -		reg_usbotg_vbus: usb-otg-vbus {
-> -			compatible = "regulator-fixed";
-> -			enable-active-high;
-> -			gpio = <&gpio3 22 0>;
-> -			pinctrl-names = "default";
-> -			pinctrl-0 = <&pinctrl_hummingboard_usbotg_vbus>;
-> -			regulator-name = "usb_otg_vbus";
-> -			regulator-min-microvolt = <5000000>;
-> -			regulator-max-microvolt = <5000000>;
-> -		};
-> -	};
-> -
-> -	sound-spdif {
-> -		compatible = "fsl,imx-audio-spdif";
-> -		model = "On-board SPDIF";
-> -		/* IMX6 doesn't implement this yet */
-> -		spdif-controller = <&spdif>;
-> -		spdif-out;
-> -	};
-> -};
-> -
-> -&can1 {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_hummingboard_flexcan1>;
-> -	status = "okay";
-> -};
-> -
-> -&hdmi {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_hummingboard_hdmi>;
-> -	ddc-i2c-bus = <&i2c2>;
-> -	status = "okay";
-> -};
-> -
-> -&i2c1 {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_hummingboard_i2c1>;
-> -
-> -	/*
-> -	 * Not fitted on Carrier-1 board... yet
-> -	status = "okay";
-> -
-> -	rtc: pcf8523@68 {
-> -		compatible = "nxp,pcf8523";
-> -		reg = <0x68>;
-> -	};
-> -	 */
-> -};
-> -
-> -&i2c2 {
-> -	clock-frequency = <100000>;
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_hummingboard_i2c2>;
-> -	status = "okay";
-> -};
-> -
-> -&iomuxc {
-> -	hummingboard {
-> -		pinctrl_hummingboard_flexcan1: hummingboard-flexcan1 {
-> -			fsl,pins = <
-> -				MX6QDL_PAD_SD3_CLK__FLEXCAN1_RX 0x80000000
-> -				MX6QDL_PAD_SD3_CMD__FLEXCAN1_TX 0x80000000
-> -			>;
-> -		};
-> -
-> -		pinctrl_hummingboard_gpio1_2: hummingboard-gpio1_2 {
-> -			fsl,pins = <
-> -				MX6QDL_PAD_GPIO_2__GPIO1_IO02 0x80000000
-> -			>;
-> -		};
-> -
-> -		pinctrl_hummingboard_hdmi: hummingboard-hdmi {
-> -			fsl,pins = <
-> -				MX6QDL_PAD_KEY_ROW2__HDMI_TX_CEC_LINE 0x1f8b0
-> -			>;
-> -		};
-> -
-> -		pinctrl_hummingboard_i2c1: hummingboard-i2c1 {
-> -			fsl,pins = <
-> -				MX6QDL_PAD_EIM_D21__I2C1_SCL 0x4001b8b1
-> -				MX6QDL_PAD_EIM_D28__I2C1_SDA 0x4001b8b1
-> -			>;
-> -		};
-> -
-> -		pinctrl_hummingboard_i2c2: hummingboard-i2c2 {
-> -			fsl,pins = <
-> -				MX6QDL_PAD_KEY_COL3__I2C2_SCL 0x4001b8b1
-> -				MX6QDL_PAD_KEY_ROW3__I2C2_SDA 0x4001b8b1
-> -			>;
-> -		};
-> -
-> -		pinctrl_hummingboard_spdif: hummingboard-spdif {
-> -			fsl,pins = <MX6QDL_PAD_GPIO_17__SPDIF_OUT 0x13091>;
-> -		};
-> -
-> -		pinctrl_hummingboard_usbh1_vbus: hummingboard-usbh1-vbus {
-> -			fsl,pins = <MX6QDL_PAD_GPIO_0__GPIO1_IO00 0x1b0b0>;
-> -		};
-> -
-> -		pinctrl_hummingboard_usbotg_id: hummingboard-usbotg-id {
-> -			/*
-> -			 * Similar to pinctrl_usbotg_2, but we want it
-> -			 * pulled down for a fixed host connection.
-> -			 */
-> -			fsl,pins = <MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x13059>;
-> -		};
-> -
-> -		pinctrl_hummingboard_usbotg_vbus: hummingboard-usbotg-vbus {
-> -			fsl,pins = <MX6QDL_PAD_EIM_D22__GPIO3_IO22 0x1b0b0>;
-> -		};
-> -
-> -		pinctrl_hummingboard_usdhc2_aux: hummingboard-usdhc2-aux {
-> -			fsl,pins = <
-> -				MX6QDL_PAD_GPIO_4__GPIO1_IO04    0x1f071
-> -			>;
-> -		};
-> -
-> -		pinctrl_hummingboard_usdhc2: hummingboard-usdhc2 {
-> -			fsl,pins = <
-> -				MX6QDL_PAD_SD2_CMD__SD2_CMD    0x17059
-> -				MX6QDL_PAD_SD2_CLK__SD2_CLK    0x10059
-> -				MX6QDL_PAD_SD2_DAT0__SD2_DATA0 0x17059
-> -				MX6QDL_PAD_SD2_DAT1__SD2_DATA1 0x17059
-> -				MX6QDL_PAD_SD2_DAT2__SD2_DATA2 0x17059
-> -				MX6QDL_PAD_SD2_DAT3__SD2_DATA3 0x13059
-> -			>;
-> -		};
-> -	};
-> -};
-> -
-> -&spdif {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_hummingboard_spdif>;
-> -	status = "okay";
-> -};
-> -
-> -&usbh1 {
-> -	disable-over-current;
-> -	vbus-supply = <&reg_usbh1_vbus>;
-> -	status = "okay";
-> -};
-> -
-> -&usbotg {
-> -	disable-over-current;
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_hummingboard_usbotg_id>;
-> -	vbus-supply = <&reg_usbotg_vbus>;
-> -	status = "okay";
-> -};
-> -
-> -&usdhc2 {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <
-> -		&pinctrl_hummingboard_usdhc2_aux
-> -		&pinctrl_hummingboard_usdhc2
-> -	>;
-> -	vmmc-supply = <&reg_3p3v>;
-> -	cd-gpios = <&gpio1 4 0>;
-> -	status = "okay";
-> +	model = "SolidRun HummingBoard Solo/DualLite";
-> +	compatible = "solidrun,hummingboard/dl", "fsl,imx6dl";
->  };
-> diff --git a/arch/arm/boot/dts/imx6q-hummingboard.dts b/arch/arm/boot/dts/imx6q-hummingboard.dts
-> new file mode 100644
-> index 000000000000..0a3574105165
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6q-hummingboard.dts
-> @@ -0,0 +1,13 @@
-> +/*
-> + * Copyright (C) 2014 Rabeeh Khoury (rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org)
-> + * Based on dt work by Russell King
-> + */
-> +/dts-v1/;
-> +
-> +#include "imx6q.dtsi"
-> +#include "imx6qdl-hummingboard.dtsi"
-> +
-> +/ {
-> +	model = "SolidRun HummingBoard Dual/Quad";
-> +	compatible = "solidrun,hummingboard/q", "fsl,imx6q";
-> +};
-> diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-> new file mode 100644
-> index 000000000000..bf38072a2779
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-> @@ -0,0 +1,200 @@
-> +/*
-> + * Copyright (C) 2013,2014 Russell King
-> + */
-> +#include "imx6qdl-microsom.dtsi"
-> +#include "imx6qdl-microsom-ar8035.dtsi"
-> +
-> +/ {
-> +	chosen {
-> +		stdout-path = &uart1;
-> +	};
-> +
-> +	ir_recv: ir-receiver {
-> +		compatible = "gpio-ir-receiver";
-> +		gpios = <&gpio1 2 1>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_hummingboard_gpio1_2>;
-> +	};
-> +
-> +	regulators {
-> +		compatible = "simple-bus";
-> +
-> +		reg_3p3v: 3p3v {
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "3P3V";
-> +			regulator-min-microvolt = <3300000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		reg_usbh1_vbus: usb-h1-vbus {
-> +			compatible = "regulator-fixed";
-> +			enable-active-high;
-> +			gpio = <&gpio1 0 0>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pinctrl_hummingboard_usbh1_vbus>;
-> +			regulator-name = "usb_h1_vbus";
-> +			regulator-min-microvolt = <5000000>;
-> +			regulator-max-microvolt = <5000000>;
-> +		};
-> +
-> +		reg_usbotg_vbus: usb-otg-vbus {
-> +			compatible = "regulator-fixed";
-> +			enable-active-high;
-> +			gpio = <&gpio3 22 0>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pinctrl_hummingboard_usbotg_vbus>;
-> +			regulator-name = "usb_otg_vbus";
-> +			regulator-min-microvolt = <5000000>;
-> +			regulator-max-microvolt = <5000000>;
-> +		};
-> +	};
-> +
-> +	sound-spdif {
-> +		compatible = "fsl,imx-audio-spdif";
-> +		model = "On-board SPDIF";
-> +		/* IMX6 doesn't implement this yet */
-> +		spdif-controller = <&spdif>;
-> +		spdif-out;
-> +	};
-> +};
-> +
-> +&can1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_hummingboard_flexcan1>;
-> +	status = "okay";
-> +};
-> +
-> +&hdmi {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_hummingboard_hdmi>;
-> +	ddc-i2c-bus = <&i2c2>;
-> +	status = "okay";
-> +};
-> +
-> +&i2c1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_hummingboard_i2c1>;
-> +
-> +	/*
-> +	 * Not fitted on Carrier-1 board... yet
-> +	status = "okay";
-> +
-> +	rtc: pcf8523@68 {
-> +		compatible = "nxp,pcf8523";
-> +		reg = <0x68>;
-> +	};
-> +	 */
-> +};
-> +
-> +&i2c2 {
-> +	clock-frequency = <100000>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_hummingboard_i2c2>;
-> +	status = "okay";
-> +};
-> +
-> +&iomuxc {
-> +	hummingboard {
-> +		pinctrl_hummingboard_flexcan1: hummingboard-flexcan1 {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_SD3_CLK__FLEXCAN1_RX 0x80000000
-> +				MX6QDL_PAD_SD3_CMD__FLEXCAN1_TX 0x80000000
-> +			>;
-> +		};
-> +
-> +		pinctrl_hummingboard_gpio1_2: hummingboard-gpio1_2 {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_GPIO_2__GPIO1_IO02 0x80000000
-> +			>;
-> +		};
-> +
-> +		pinctrl_hummingboard_hdmi: hummingboard-hdmi {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_KEY_ROW2__HDMI_TX_CEC_LINE 0x1f8b0
-> +			>;
-> +		};
-> +
-> +		pinctrl_hummingboard_i2c1: hummingboard-i2c1 {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_EIM_D21__I2C1_SCL 0x4001b8b1
-> +				MX6QDL_PAD_EIM_D28__I2C1_SDA 0x4001b8b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_hummingboard_i2c2: hummingboard-i2c2 {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_KEY_COL3__I2C2_SCL 0x4001b8b1
-> +				MX6QDL_PAD_KEY_ROW3__I2C2_SDA 0x4001b8b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_hummingboard_spdif: hummingboard-spdif {
-> +			fsl,pins = <MX6QDL_PAD_GPIO_17__SPDIF_OUT 0x13091>;
-> +		};
-> +
-> +		pinctrl_hummingboard_usbh1_vbus: hummingboard-usbh1-vbus {
-> +			fsl,pins = <MX6QDL_PAD_GPIO_0__GPIO1_IO00 0x1b0b0>;
-> +		};
-> +
-> +		pinctrl_hummingboard_usbotg_id: hummingboard-usbotg-id {
-> +			/*
-> +			 * Similar to pinctrl_usbotg_2, but we want it
-> +			 * pulled down for a fixed host connection.
-> +			 */
-> +			fsl,pins = <MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x13059>;
-> +		};
-> +
-> +		pinctrl_hummingboard_usbotg_vbus: hummingboard-usbotg-vbus {
-> +			fsl,pins = <MX6QDL_PAD_EIM_D22__GPIO3_IO22 0x1b0b0>;
-> +		};
-> +
-> +		pinctrl_hummingboard_usdhc2_aux: hummingboard-usdhc2-aux {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_GPIO_4__GPIO1_IO04    0x1f071
-> +			>;
-> +		};
-> +
-> +		pinctrl_hummingboard_usdhc2: hummingboard-usdhc2 {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_SD2_CMD__SD2_CMD    0x17059
-> +				MX6QDL_PAD_SD2_CLK__SD2_CLK    0x10059
-> +				MX6QDL_PAD_SD2_DAT0__SD2_DATA0 0x17059
-> +				MX6QDL_PAD_SD2_DAT1__SD2_DATA1 0x17059
-> +				MX6QDL_PAD_SD2_DAT2__SD2_DATA2 0x17059
-> +				MX6QDL_PAD_SD2_DAT3__SD2_DATA3 0x13059
-> +			>;
-> +		};
-> +	};
-> +};
-> +
-> +&spdif {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_hummingboard_spdif>;
-> +	status = "okay";
-> +};
-> +
-> +&usbh1 {
-> +	disable-over-current;
-> +	vbus-supply = <&reg_usbh1_vbus>;
-> +	status = "okay";
-> +};
-> +
-> +&usbotg {
-> +	disable-over-current;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_hummingboard_usbotg_id>;
-> +	vbus-supply = <&reg_usbotg_vbus>;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <
-> +		&pinctrl_hummingboard_usdhc2_aux
-> +		&pinctrl_hummingboard_usdhc2
-> +	>;
-> +	vmmc-supply = <&reg_3p3v>;
-> +	cd-gpios = <&gpio1 4 0>;
-> +	status = "okay";
-> +};
-> -- 
-> 1.8.3.1
+> Remove the 0x.
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +			compatible = "brcm,bcm2835-mbox";
+>> +			reg = <0x7e00b880 0x40>;
+>> +			interrupts = <0 1>;
+> 
+> 2 interrupts one cell right?  No flags?
+
+The DT binding says 1 IRQ in the list, and the interrupt controller in
+bcm2835.dtsi has 2 cells per IRQ.
+
+Whether that's all the IRQs the HW has for this HW module, I don't know.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
