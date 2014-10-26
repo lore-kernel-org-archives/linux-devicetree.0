@@ -1,73 +1,151 @@
-From: Ben Peddell <klightspeed@killerwolves.net>
-Subject: Re: [PATCHv0] arm: mvebu: add .dts file for Synology DS213j
-Date: Sun, 26 Oct 2014 18:35:18 +1000
-Message-ID: <544CB246.2030607@killerwolves.net>
-References: <3d0cc6de9ea5506d5fb201129ad277e57d0cdfc8.1414268057.git.arno@natisbad.org>
- <20141025221611.GA14620@lunn.ch>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [RFC v3 PATCH 1/5] of: Add standard property for poweroff capability
+Date: Sun, 26 Oct 2014 12:53:23 +0100
+Message-ID: <1788971.BnbvZ8bisu@diego>
+References: <1413268273-15151-1-git-send-email-romain.perier@gmail.com> <CABgxDoLcnzaAYuDMB3x=EdNrY=8mwjceVVCpfXUYBURVm44ZVQ@mail.gmail.com> <20141025083733.GG19377@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20141025221611.GA14620@lunn.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>, Arnaud Ebalard <arno@natisbad.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Simon Guinot <sguinot@lacie.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141025083733.GG19377@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Romain Perier <romain.perier@gmail.com>, devicetree <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, robh <robh@kernel.org>, mark.rutland@arm.com, linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee.jones@linaro.org>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 26/10/14 08:16, Andrew Lunn wrote:
-> Hi Arnaud
+Am Samstag, 25. Oktober 2014, 10:37:33 schrieb Johan Hovold:
+> [+CC: Felipe ]
 > 
-> Nice to see another device supported.
+> On Sat, Oct 25, 2014 at 09:28:36AM +0200, Romain Perier wrote:
+> > Hi Johan,
+> > 
+> > If that's still possible to do these changes, I am opened to suggestions.
 > 
->> - When I bought the NAS, it had an old Marvell bootloader. After install
->>   of latest DSM version, the u-boot was a new one w/ I had to change the
->>   'ranges' in the .dts to the ones below to have the kernel boot. I guess
->>   new DS213j hardware will be shipped with new u-boot version at some
->>   point and this will be fine; Otherwise, users will either have to
->>   upgrade their DSM or manually s/1f/d0/ in .dts.
+> Before v3.18 comes out, we can always change it with a follow-up patch.
 > 
-> Marvell have made a real mess here. Since there seems to be two
-> different base addresses in use, i suggest you put a fat comment on
-> the top of the .dts file about this issue. Give users a clue what to
-> try if the kernel does not do anything at all.
+> > 2014-10-23 11:53 GMT+02:00 Johan Hovold <johan@kernel.org>:
+> > > [ +CC: Guenter, Lee, linux-pm ]
+> > > 
+> > > On Tue, Oct 14, 2014 at 06:31:09AM +0000, Romain Perier wrote:
+> > >> Several drivers create their own devicetree property when they register
+> > >> poweroff capabilities. This is for example the case for mfd, regulator
+> > >> or power drivers which define "vendor,system-power-controller"
+> > >> property.
+> > >> This patch adds support for a standard property "poweroff-source"
+> > > 
+> > > Shouldn't this property really be called "power-off-source" or even
+> > > "power-off-controller"?
+> > > 
+> > > The power-off handler call-chain infrastructure is about to be merged
+> > > and will be using power[-_ ]off (i.e. not "poweroff") consistently (at
+> > > least in its interface).
+> > 
+> > "poweroff" or "power-off", I don't care. If people prefer "power-off",
+> > choose this name :)
 > 
->  
->> - Andrew,Ben: SPI flash partitions are correct, I can read all those,
->>   'file' recognize them and the content looks kosher. Nonetheless, I did
->>   a diff before and after a 'saveenv' under u-boot and u-boot
->>   environment is saved by u-boot itself in the middle of the kernel
->>   (0x40000 after the start of mtd1). This make kernel CRC incorrect and
->>   prevent u-boot to boot the kernel. If you have any idea on this, I am
->>   interested.
+> Let's try to stick to power off (and power_off) then.
 > 
-> This sounds like the default install of u-boot does not make use of
-> any environment variables which are not the default value. Hence the
-> uboot environment store being in the middle of the kernel is not an
-> issue. Maybe you can ask for the u-boot sources, or see if they are on
-> the synology download site, and check this? Again, a fat warning in
-> the .dts file may be a good idea. 
+> > > Furthermore, isn't "controller" as in "power-off-controller" more
+> > > appropriate than "source" in this case? We have wake-up sources, which
+> > > might appear analogous, but that really isn't the same thing.
+> > 
+> > As I said, the idea with "power-off-source" (or "poweroff-source",
+> > that's not the point here) is to mark the device as able to poweroff
+> > the system, like "wakeup-source" which marks the device as able to
+> > wakeup the system.
+> > This is why I chose this name, because it is quite similar to wakeup
+> > property except that it is for handling power, so it did make sense to
+> > me.
+> > 
+> > The question is: what is the advantage of the suffix "controller"
+> > compared to "source" ?
+> 
+> Yeah, I figured you had been inspired by the "wakeup-source" property.
+> 
+> The problem is that "source" tends to be used for inputs, for example,
+> wake-up source, interrupt source, entropy source, etc. Something that is
+> outside of the control of the OS. Contrary to for instance an output
+> which turns the system-power off.
+> 
+> > > I now this has already been merged to the regulator tree, but there's
+> > > still still time to fix this.
+> > > 
+> > >> which marks the device as able to shutdown the system.
+> > >> 
+> > >> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> > >> ---
+> > >> 
+> > >>  include/linux/of.h | 11 +++++++++++
+> > >>  1 file changed, 11 insertions(+)
+> > >> 
+> > >> diff --git a/include/linux/of.h b/include/linux/of.h
+> > >> index 6545e7a..27b3ba1 100644
+> > >> --- a/include/linux/of.h
+> > >> +++ b/include/linux/of.h
+> > >> @@ -866,4 +866,15 @@ static inline int
+> > >> of_changeset_update_property(struct of_changeset *ocs,> >> 
+> > >>  /* CONFIG_OF_RESOLVE api */
+> > >>  extern int of_resolve_phandles(struct device_node *tree);
+> > >> 
+> > >> +/**
+> > >> + * of_system_has_poweroff_source - Tells if poweroff-source is found
+> > >> for device_node + * @np: Pointer to the given device_node
+> > >> + *
+> > >> + * return true if present false otherwise
+> > >> + */
+> > >> +static inline bool of_system_has_poweroff_source(const struct
+> > >> device_node *np)> > 
+> > > Why "system_has"? Shouldn't this be of_is_power_off_source (controller)?
+> > 
+> > Note that the current custom vendor properties contain "system-" as prefix
+> > ;)
+> Yes, but you dropped it. ;)
+> 
+> And it's not the system that has the property (e.g. "poweroff-source"),
+> it's the node (or the device it describes).
+> 
+> > we have several possibilities:
+> > - of_system_has_power_off_source()
+> > - of_has_power_off_source()
+> > 
+> > We should either to use "has" or "is" as prefix because that's a
+> > predicate function.
+> > I would prefer "has" since it refers to a property inside a node :
+> > this node "has" the corresponding property, so "is" is not a good
+> > candidate.
+> 
+> The boolean property in question describes a feature of the node
+> (device). Say the feature would be redness and call the property "red".
+> You would then generally ask whether the node *is red*, rather than
+> whether it has (the property) red (or has redness).
+> 
+> I'm actually inclined to just sticking to the current name
+> "system-power-controller" and just drop the vendor prefixes. Perhaps
+> your helper function can be used to parse both versions (i.e. with or
+> without a vendor prefix) as we will still need to support both.
+> 
+> I suggest you call that helper function
+> 
+> 	of_is_system_power_controller(node)
+> 
+> or alternatively
+> 
+> 	of_is_power_off_controller(node)
+> 
+> if that property name is preferred.
+> 
+> Note also that in at least one case (rtc-omap, patches in mm, see [1])
+> the property describes that the RTC is used to control an external PMIC,
+> which both allows us to power off the system *and* power back on again
+> on subsequent RTC alarms. This seems to suggest that the more generic
+> "system-power-controller" property name should be preferred.
 
-On the Kirkwood-based Synology DiskStations, saving the environment is
-not possible, and the "RedBoot Config" partition is not used.
+just as sidenote, I'll hold off on applying patch3 (the dts change) then.
 
-It sounds as if Synology configured the Marvell u-boot bootloader on the
-Marvell Armada series for a 1MiB bootloader partition size (instead of 
-768KiB), with the config partition following immediately after it, and
-never tested (or forgot to disable) saving environment variables.
+Romain, after you two (and maybe Mark) agree on the final naming of the 
+property and function you'd need to
+- send a followup patch against Marks tree, implementing the changes
+- a new patch adding the property to the Radxa board
 
-> What does seem odd is the Reboot, FIS, etc, mtd partition names. 
-> Is there redboot installed at all?
 
-I think the RedBoot partition names are carried over from the older
-PPC-based Synology DiskStations.  As far as I can tell, the FIS 
-directory partition is never referenced by the Synology kernel or
-bootloader, though the information in it does match what is used by
-the kernel, and it appears it may be used by the Synology updater.
+Heiko
