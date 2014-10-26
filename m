@@ -1,56 +1,202 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCHv6 0/6] ARM: imx: Add Freescale LS1021A SoC and board
- support
-Date: Sun, 26 Oct 2014 14:57:11 +0000
-Message-ID: <1414335419636.17637@freescale.com>
-References: <1414145327-23541-1-git-send-email-jingchang.lu@freescale.com>,<20141026002354.GC6973@tiger>
+From: Romain Perier <romain.perier@gmail.com>
+Subject: Re: [RFC v3 PATCH 1/5] of: Add standard property for poweroff capability
+Date: Sun, 26 Oct 2014 15:58:16 +0100
+Message-ID: <CABgxDoLsH_eaSeEHdktCkJYzjEgS+w+kkM6AXuzMW12TSom4LQ@mail.gmail.com>
+References: <1413268273-15151-1-git-send-email-romain.perier@gmail.com>
+	<CABgxDoLcnzaAYuDMB3x=EdNrY=8mwjceVVCpfXUYBURVm44ZVQ@mail.gmail.com>
+	<20141025083733.GG19377@localhost>
+	<1788971.BnbvZ8bisu@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141026002354.GC6973@tiger>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1788971.BnbvZ8bisu@diego>
+Sender: linux-pm-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Johan Hovold <johan@kernel.org>, devicetree <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, robh <robh@kernel.org>, mark.rutland@arm.com, linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee.jones@linaro.org>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Johan,
 
-________________________________________
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sent: Sunday, October 26, 2014 8:23 AM
-To: Lu Jingchang-B35083
-Cc: arnd-r2nGTMty4D4@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Subject: Re: [PATCHv6 0/6] ARM: imx: Add Freescale LS1021A SoC and board support
+You convinced me. I will add an helper function
+"of_is_system_power_controller(node)" which is compatible with both
+properties: with or without the vendor prefix (until everything switch
+to the new one).
+In this case , we can adapt all drivers without break compatibility
+and in few months if we plan to remove this compability we will just
+need to modify this helper function.
 
-On Fri, Oct 24, 2014 at 06:08:41PM +0800, Jingchang Lu wrote:
->> This series contain the support for Freescale LS1021A CPU and LS1021A-QDS
->> and LS1021A-TWR board.
+Heiko: will do, thanks your help. I will use the regulator tree as
+based repository and then send fixes to Mark.
+
+Romain
+
+
+
+2014-10-26 12:53 GMT+01:00 Heiko St=C3=BCbner <heiko@sntech.de>:
+> Am Samstag, 25. Oktober 2014, 10:37:33 schrieb Johan Hovold:
+>> [+CC: Felipe ]
 >>
->> The LS1021A SoC combines two ARM Cortex-A7 cores that have been optimized
->> for high reliability and pack the highest level of integration available
-> >for sub-3W embedded communications processors and with a comprehensive
->> enablement model focused on ease of programmability.
+>> On Sat, Oct 25, 2014 at 09:28:36AM +0200, Romain Perier wrote:
+>> > Hi Johan,
+>> >
+>> > If that's still possible to do these changes, I am opened to sugge=
+stions.
 >>
->> The LS1021A SoC shares IPs with i.MX family, Vybrid family and Freescale
->> PowerPC platform.
+>> Before v3.18 comes out, we can always change it with a follow-up pat=
+ch.
 >>
->> For the detail information about LS1021A SoC, please refer to the RM doc.
+>> > 2014-10-23 11:53 GMT+02:00 Johan Hovold <johan@kernel.org>:
+>> > > [ +CC: Guenter, Lee, linux-pm ]
+>> > >
+>> > > On Tue, Oct 14, 2014 at 06:31:09AM +0000, Romain Perier wrote:
+>> > >> Several drivers create their own devicetree property when they =
+register
+>> > >> poweroff capabilities. This is for example the case for mfd, re=
+gulator
+>> > >> or power drivers which define "vendor,system-power-controller"
+>> > >> property.
+>> > >> This patch adds support for a standard property "poweroff-sourc=
+e"
+>> > >
+>> > > Shouldn't this property really be called "power-off-source" or e=
+ven
+>> > > "power-off-controller"?
+>> > >
+>> > > The power-off handler call-chain infrastructure is about to be m=
+erged
+>> > > and will be using power[-_ ]off (i.e. not "poweroff") consistent=
+ly (at
+>> > > least in its interface).
+>> >
+>> > "poweroff" or "power-off", I don't care. If people prefer "power-o=
+ff",
+>> > choose this name :)
 >>
->> ---
->> changes in v6:
->>  add dts patch description.
->>  remove '-' from QDS and TWR board dts name for consistence with u-boot.
-
->I'm not sure it's a good idea.  The most idiomatic DTS naming schema is
-just <socname>-<boardname>.dts.
-Many our PowerPC platforms doesn't have '-' between SoCs and board names. This becomes a project requirement when integrating in our SDK release, and I have renamed these board names internally, so I also rename them on upstream for consistence. Thanks.
-
-Best Regards,
-Jingchang
-
->Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Let's try to stick to power off (and power_off) then.
+>>
+>> > > Furthermore, isn't "controller" as in "power-off-controller" mor=
+e
+>> > > appropriate than "source" in this case? We have wake-up sources,=
+ which
+>> > > might appear analogous, but that really isn't the same thing.
+>> >
+>> > As I said, the idea with "power-off-source" (or "poweroff-source",
+>> > that's not the point here) is to mark the device as able to powero=
+ff
+>> > the system, like "wakeup-source" which marks the device as able to
+>> > wakeup the system.
+>> > This is why I chose this name, because it is quite similar to wake=
+up
+>> > property except that it is for handling power, so it did make sens=
+e to
+>> > me.
+>> >
+>> > The question is: what is the advantage of the suffix "controller"
+>> > compared to "source" ?
+>>
+>> Yeah, I figured you had been inspired by the "wakeup-source" propert=
+y.
+>>
+>> The problem is that "source" tends to be used for inputs, for exampl=
+e,
+>> wake-up source, interrupt source, entropy source, etc. Something tha=
+t is
+>> outside of the control of the OS. Contrary to for instance an output
+>> which turns the system-power off.
+>>
+>> > > I now this has already been merged to the regulator tree, but th=
+ere's
+>> > > still still time to fix this.
+>> > >
+>> > >> which marks the device as able to shutdown the system.
+>> > >>
+>> > >> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+>> > >> ---
+>> > >>
+>> > >>  include/linux/of.h | 11 +++++++++++
+>> > >>  1 file changed, 11 insertions(+)
+>> > >>
+>> > >> diff --git a/include/linux/of.h b/include/linux/of.h
+>> > >> index 6545e7a..27b3ba1 100644
+>> > >> --- a/include/linux/of.h
+>> > >> +++ b/include/linux/of.h
+>> > >> @@ -866,4 +866,15 @@ static inline int
+>> > >> of_changeset_update_property(struct of_changeset *ocs,> >>
+>> > >>  /* CONFIG_OF_RESOLVE api */
+>> > >>  extern int of_resolve_phandles(struct device_node *tree);
+>> > >>
+>> > >> +/**
+>> > >> + * of_system_has_poweroff_source - Tells if poweroff-source is=
+ found
+>> > >> for device_node + * @np: Pointer to the given device_node
+>> > >> + *
+>> > >> + * return true if present false otherwise
+>> > >> + */
+>> > >> +static inline bool of_system_has_poweroff_source(const struct
+>> > >> device_node *np)> >
+>> > > Why "system_has"? Shouldn't this be of_is_power_off_source (cont=
+roller)?
+>> >
+>> > Note that the current custom vendor properties contain "system-" a=
+s prefix
+>> > ;)
+>> Yes, but you dropped it. ;)
+>>
+>> And it's not the system that has the property (e.g. "poweroff-source=
+"),
+>> it's the node (or the device it describes).
+>>
+>> > we have several possibilities:
+>> > - of_system_has_power_off_source()
+>> > - of_has_power_off_source()
+>> >
+>> > We should either to use "has" or "is" as prefix because that's a
+>> > predicate function.
+>> > I would prefer "has" since it refers to a property inside a node :
+>> > this node "has" the corresponding property, so "is" is not a good
+>> > candidate.
+>>
+>> The boolean property in question describes a feature of the node
+>> (device). Say the feature would be redness and call the property "re=
+d".
+>> You would then generally ask whether the node *is red*, rather than
+>> whether it has (the property) red (or has redness).
+>>
+>> I'm actually inclined to just sticking to the current name
+>> "system-power-controller" and just drop the vendor prefixes. Perhaps
+>> your helper function can be used to parse both versions (i.e. with o=
+r
+>> without a vendor prefix) as we will still need to support both.
+>>
+>> I suggest you call that helper function
+>>
+>>       of_is_system_power_controller(node)
+>>
+>> or alternatively
+>>
+>>       of_is_power_off_controller(node)
+>>
+>> if that property name is preferred.
+>>
+>> Note also that in at least one case (rtc-omap, patches in mm, see [1=
+])
+>> the property describes that the RTC is used to control an external P=
+MIC,
+>> which both allows us to power off the system *and* power back on aga=
+in
+>> on subsequent RTC alarms. This seems to suggest that the more generi=
+c
+>> "system-power-controller" property name should be preferred.
+>
+> just as sidenote, I'll hold off on applying patch3 (the dts change) t=
+hen.
+>
+> Romain, after you two (and maybe Mark) agree on the final naming of t=
+he
+> property and function you'd need to
+> - send a followup patch against Marks tree, implementing the changes
+> - a new patch adding the property to the Radxa board
+>
+>
+> Heiko
