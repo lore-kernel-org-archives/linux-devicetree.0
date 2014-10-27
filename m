@@ -1,33 +1,51 @@
-From: Feng Kan <fkan@apm.com>
-Subject: [PATCH RESEND 0/7] APM X-Gene SoC platform device tree cleanup
-Date: Mon, 27 Oct 2014 12:28:21 -0700
-Message-ID: <1414438108-8384-1-git-send-email-fkan@apm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: catalin.marinas@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com
-Cc: Feng Kan <fkan@apm.com>
+From: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH RESEND 2/7] Documentation: arm64: add SCU dts binding documentation to linux kernel
+Date: Mon, 27 Oct 2014 12:28:23 -0700
+Message-ID: <1414438108-8384-3-git-send-email-fkan@apm.com>
+References: <1414438108-8384-1-git-send-email-fkan@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414438108-8384-1-git-send-email-fkan-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
+Cc: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This sums up the dts changes of the recent committed drivers into the kernel.
-This will grant PMU, reboot, USB and gpio functionalities to the platform.
-These patches are all based on existing and approved driver that is in the
-kernel tree today.
+This add documentation for the SCU system clock unit device tree binding
+to the kernel.
 
-Feng Kan (7):
-  arm64: dts: Add APM X-Gene USB 2.0 DTS node
-  Documentation: arm64: add SCU dts binding documentation to linux
-    kernel
-  arm64: dts: Add X-Gene reboot driver dts node
-  arm64: dts: Add Designware GPIO dts binding to APM X-Gene platform
-  arm64: dts: Add APM X-Gene SoC GFC GPIO controller DTS entries
-  Documentation: arm: pmu: Add Potenza PMU binding
-  arm64: dts: Add PMU node for APM X-Gene Storm SOC
-
- Documentation/devicetree/bindings/arm/apm/scu.txt | 17 ++++++++
- Documentation/devicetree/bindings/arm/pmu.txt     |  1 +
- arch/arm64/boot/dts/apm-storm.dtsi                | 53 +++++++++++++++++++++++
- 3 files changed, 71 insertions(+)
+Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/apm/scu.txt | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/arm/apm/scu.txt
 
+diff --git a/Documentation/devicetree/bindings/arm/apm/scu.txt b/Documentation/devicetree/bindings/arm/apm/scu.txt
+new file mode 100644
+index 0000000..b45be06
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/apm/scu.txt
+@@ -0,0 +1,17 @@
++APM X-GENE SoC series SCU Registers
++
++This system clock unit contain various register that control block resets,
++clock enable/disables, clock divisors and other deepsleep registers.
++
++Properties:
++ - compatible : should contain two values. First value must be:
++		   - "apm,xgene-scu"
++		second value must be always "syscon".
++
++ - reg : offset and length of the register set.
++
++Example :
++	scu: system-clk-controller@17000000 {
++		compatible = "apm,xgene-scu","syscon";
++		reg = <0x0 0x17000000 0x0 0x400>;
++	};
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
