@@ -1,74 +1,146 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 12/17] ARM: mvebu: Armada XP GP specific suspend/resume
- code
-Date: Mon, 27 Oct 2014 13:51:29 +0100
-Message-ID: <20141027135129.292bd882@free-electrons.com>
-References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1414151970-6626-13-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20141024142044.GB3142@lunn.ch>
-	<20141024162824.67f9ce3d@free-electrons.com>
-	<20141024145119.GD3142@lunn.ch>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH RESEND 06/12] mmc: sdhci-pxav3: Move I/O clock to private data
+Date: Mon, 27 Oct 2014 14:28:41 +0100
+Message-ID: <CAPDyKFroUmuQU_mBmSNEQAHe9Y-OF4pkkK=4Qe=JtibWThaHPA@mail.gmail.com>
+References: <1413883364-681-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1413883364-681-7-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141024145119.GD3142-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413883364-681-7-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Chris Ball <chris@printf.net>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Andrew Lunn,
+On 21 October 2014 11:22, Sebastian Hesselbarth
+<sebastian.hesselbarth@gmail.com> wrote:
+> As we are using references to the I/O clock throughout the driver,
+> move it to the private data. Also, in preparation for core clock,
+> rename it to clk_io.
+>
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com=
+>
+> ---
+> Cc: Chris Ball <chris@printf.net>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: "Antoine T=C3=A9nart" <antoine.tenart@free-electrons.com>
+> Cc: linux-mmc@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/mmc/host/sdhci-pxav3.c | 24 +++++++++++++-----------
+>  1 file changed, 13 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-=
+pxav3.c
+> index e52bbbb09d88..a34a589670e6 100644
+> --- a/drivers/mmc/host/sdhci-pxav3.c
+> +++ b/drivers/mmc/host/sdhci-pxav3.c
+> @@ -59,6 +59,7 @@
+>  #define SDCE_MISC_INT_EN       (1<<1)
+>
+>  struct sdhci_pxa {
+> +       struct clk *clk_io;
+>         u8      power_mode;
+>  };
+>
+> @@ -288,9 +289,7 @@ static int sdhci_pxav3_probe(struct platform_devi=
+ce *pdev)
+>         struct sdhci_host *host =3D NULL;
+>         struct sdhci_pxa *pxa =3D NULL;
+>         const struct of_device_id *match;
+> -
+>         int ret;
+> -       struct clk *clk;
+>
+>         pxa =3D devm_kzalloc(&pdev->dev, sizeof(struct sdhci_pxa), GF=
+P_KERNEL);
+>         if (!pxa)
+> @@ -310,14 +309,14 @@ static int sdhci_pxav3_probe(struct platform_de=
+vice *pdev)
+>         pltfm_host =3D sdhci_priv(host);
+>         pltfm_host->priv =3D pxa;
+>
+> -       clk =3D devm_clk_get(dev, NULL);
+> -       if (IS_ERR(clk)) {
+> +       pxa->clk_io =3D devm_clk_get(dev, NULL);
+> +       if (IS_ERR(pxa->clk_io)) {
+>                 dev_err(dev, "failed to get io clock\n");
+> -               ret =3D PTR_ERR(clk);
+> +               ret =3D PTR_ERR(pxa->clk_io);
+>                 goto err_clk_get;
+>         }
+> -       pltfm_host->clk =3D clk;
+> -       clk_prepare_enable(clk);
+> +       pltfm_host->clk =3D pxa->clk_io;
 
-On Fri, 24 Oct 2014 16:51:19 +0200, Andrew Lunn wrote:
+Is the above still needed?
 
-> > > I'm wondering if this code should be a power driver, living in
-> > > drivers/power/reset/.
-> > 
-> > I'm fine with that, but have you seen the *very* tight interaction
-> > between the SoC-specific code and the board-specific code? The problem
-> > is that the board-specific code needs to put the SDRAM into
-> > self-refresh *right* before shutting down the SoC, and all that while
-> > making sure the code doing both of these operations remains in the
-> > I-Cache, and does not touch any other location in memory (which has
-> > become inaccessible due to being in self-refresh mode).
-> > 
-> > Look at the mvebu_armada_xp_gp_pm_enter() function: it takes two
-> > arguments, received from the SoC-level code. How to handle this thing
-> > with a driver in drivers/power/reset/ ?
-> 
-> It looks like reset drivers can register a notifier block, and you can
-> pass this notifier a void * parameter. So you should be able to pass
-> parameters. Nobody currently does this, so it might not work....
+> +       clk_prepare_enable(pxa->clk_io);
+>
+>         /* enable 1/8V DDR capable */
+>         host->mmc->caps |=3D MMC_CAP_1_8V_DDR;
+> @@ -390,7 +389,7 @@ err_add_host:
+>         pm_runtime_disable(&pdev->dev);
+>  err_of_parse:
+>  err_cd_req:
+> -       clk_disable_unprepare(clk);
+> +       clk_disable_unprepare(pxa->clk_io);
+>  err_clk_get:
+>  err_mbus_win:
+>         sdhci_pltfm_free(pdev);
+> @@ -401,12 +400,13 @@ static int sdhci_pxav3_remove(struct platform_d=
+evice *pdev)
+>  {
+>         struct sdhci_host *host =3D platform_get_drvdata(pdev);
+>         struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
+> +       struct sdhci_pxa *pxa =3D pltfm_host->priv;
+>
+>         pm_runtime_get_sync(&pdev->dev);
+>         sdhci_remove_host(host, 1);
+>         pm_runtime_disable(&pdev->dev);
+>
+> -       clk_disable_unprepare(pltfm_host->clk);
+> +       clk_disable_unprepare(pxa->clk_io);
+>
+>         sdhci_pltfm_free(pdev);
+>
+> @@ -446,13 +446,14 @@ static int sdhci_pxav3_runtime_suspend(struct d=
+evice *dev)
+>  {
+>         struct sdhci_host *host =3D dev_get_drvdata(dev);
+>         struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
+> +       struct sdhci_pxa *pxa =3D pltfm_host->priv;
+>         unsigned long flags;
+>
+>         spin_lock_irqsave(&host->lock, flags);
+>         host->runtime_suspended =3D true;
+>         spin_unlock_irqrestore(&host->lock, flags);
+>
+> -       clk_disable_unprepare(pltfm_host->clk);
+> +       clk_disable_unprepare(pxa->clk_io);
+>
+>         return 0;
+>  }
+> @@ -461,9 +462,10 @@ static int sdhci_pxav3_runtime_resume(struct dev=
+ice *dev)
+>  {
+>         struct sdhci_host *host =3D dev_get_drvdata(dev);
+>         struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
+> +       struct sdhci_pxa *pxa =3D pltfm_host->priv;
+>         unsigned long flags;
+>
+> -       clk_prepare_enable(pltfm_host->clk);
+> +       clk_prepare_enable(pxa->clk_io);
+>
+>         spin_lock_irqsave(&host->lock, flags);
+>         host->runtime_suspended =3D false;
+> --
+> 2.1.1
+>
 
-I had a closer look, but I'm sorry, I don't really see how
-drivers/power/reset can help here. In drivers/power/reset, there are
-only drivers that handle powering off a platform, or rebooting a
-platform. They hook up by setting a value to the pm_power_off and/or
-arm_pm_restart function pointers.
-
-But in my case, what's needed is neither a power off nor a reboot, but
-an entry to suspend to RAM, which is a different state. I don't see how
-the drivers/power/reset driver would get "called" by the suspend/resume
-procedure.
-
-I also don't see how notifiers can help here. On which notification
-would the drivers/power/reset driver register itself? By creating a new
-notification type, specific to the mvebu platform?
-
-I'm fine with reworking the implementation I've proposed, but if you
-could shed some more light on what your proposal would look like, it
-would be useful, as I currently don't see how drivers/power/reset fits
-the need of the Armada XP suspend/resume mechanism.
-
-Thanks,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
