@@ -1,86 +1,59 @@
-From: David Cohen <david.a.cohen@linux.intel.com>
-Subject: Re: [PATCH 06/17] gpio: mvebu: add suspend/resume support
-Date: Mon, 27 Oct 2014 10:45:52 -0700
-Message-ID: <20141027174552.GH4529@psi-dev26.jf.intel.com>
-References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1414151970-6626-7-git-send-email-thomas.petazzoni@free-electrons.com>
- <20141024163051.GG4529@psi-dev26.jf.intel.com>
- <20141024204532.GA6436@lunn.ch>
- <CAAVeFu+_UZkQHa38wvaBSmRZCWof6-J13eVYgrG6KS7yargsYA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v1 02/10] dt-bindings: Document the standard property
+ "system-power-controller"
+Date: Mon, 27 Oct 2014 17:57:25 +0000
+Message-ID: <20141027175725.GB18557@sirena.org.uk>
+References: <1414427215-14380-1-git-send-email-romain.perier@gmail.com>
+ <1414427215-14380-2-git-send-email-romain.perier@gmail.com>
+ <20141027163918.GB14253@saruman>
+ <20141027172636.GZ18557@sirena.org.uk>
+ <20141027173025.GA16005@saruman>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="N+dhEFW7Y2Uiel/w"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAAVeFu+_UZkQHa38wvaBSmRZCWof6-J13eVYgrG6KS7yargsYA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+In-Reply-To: <20141027173025.GA16005@saruman>
+Sender: linux-pm-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Romain Perier <romain.perier@gmail.com>, heiko@sntech.de, devicetree@vger.kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, robh@kernel.org, mark.rutland@arm.com, johan@kernel.org, linux-pm@vger.kernel.org, linux@roeck-us.net, lee.jones@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, swarren@wwwdotorg.org, thierry.reding@gmail.com, gnurou@gmail.com, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 27, 2014 at 02:27:16PM +0900, Alexandre Courbot wrote:
-> On Sat, Oct 25, 2014 at 5:45 AM, Andrew Lunn <andrew@lunn.ch> wrote:
-> >> > +   switch (mvchip->soc_variant) {
-> >> > +   case MVEBU_GPIO_SOC_VARIANT_ORION:
-> >> > +           mvchip->edge_mask_regs[0] =
-> >> > +                   readl(mvchip->membase + GPIO_EDGE_MASK_OFF);
-> >> > +           mvchip->level_mask_regs[0] =
-> >> > +                   readl(mvchip->membase + GPIO_LEVEL_MASK_OFF);
-> >> > +           break;
-> >> > +   case MVEBU_GPIO_SOC_VARIANT_MV78200:
-> >> > +           for (i = 0; i < 2; i++) {
-> >> > +                   mvchip->edge_mask_regs[i] =
-> >> > +                           readl(mvchip->membase +
-> >> > +                                 GPIO_EDGE_MASK_MV78200_OFF(i));
-> >> > +                   mvchip->level_mask_regs[i] =
-> >> > +                           readl(mvchip->membase +
-> >> > +                                 GPIO_LEVEL_MASK_MV78200_OFF(i));
-> >> > +           }
-> >> > +           break;
-> >> > +   case MVEBU_GPIO_SOC_VARIANT_ARMADAXP:
-> >> > +           for (i = 0; i < 4; i++) {
-> >> > +                   mvchip->edge_mask_regs[i] =
-> >> > +                           readl(mvchip->membase +
-> >> > +                                 GPIO_EDGE_MASK_ARMADAXP_OFF(i));
-> >> > +                   mvchip->level_mask_regs[i] =
-> >> > +                           readl(mvchip->membase +
-> >> > +                                 GPIO_LEVEL_MASK_ARMADAXP_OFF(i));
-> >> > +           }
-> >> > +           break;
-> >> > +   default:
-> >> > +           BUG();
-> >>
-> >> Isn't it too severe? Is the platform going too unstable if driver
-> >> reaches this case?
-> >> I'd consider a WARN() instead.
-> >
-> > This is a common pattern in this driver. So i guess Thomas just
-> > cut/pasted the switch statement from _probe(), which also has the
-> > BUG().
-> >
-> > Given that _probe() should of thrown a BUG() in this situation, if it
-> > happens here, it means mvchip->soc_variant has been corrupted, and so
-> > bad things are happening. So a BUG() is maybe called for?
-> 
-> I agree that BUG() is adequate here. probe() should recognize the
-> exact same set of chips - if we reach this point this means that
-> either the data has been corrupted or we added support for a new chip
-> in probe() and forgot suspend/resume. In both cases the driver should
-> express its discontent.
 
-Just for the records, since I don't know this platform very well :)
+--N+dhEFW7Y2Uiel/w
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-IMHO unless this issue is the source of a serious instability or data
-corruption, a WARN() would be a better way for the driver express its
-discontent. It's way better to have a functional platform for further
-debugging.
+On Mon, Oct 27, 2014 at 12:30:25PM -0500, Felipe Balbi wrote:
+> On Mon, Oct 27, 2014 at 05:26:36PM +0000, Mark Brown wrote:
 
-This driver can also be compiled as a module. I wonder if it's a good
-behavior boot the platform and then crash the kernel when loading the
-module driver.
+> > Given that poweroff-source hasn't made it into a released kernel yet we
+> > can probably just kill it off completely can't we?
 
-But anyway, that would be just me.
+> please do, then we will never have that commit in Linus' tree to give us
+> nightmares.
 
-Br, David Cohen
+Well, the commit isn't a particularly big deal (and got cross-merged
+into another tree already) - if it's convenient to rebase it out we
+probably should but it's also not the end of the world either so long as
+it doesn't appear in a release.  Worst case people adopt it based on the
+list discussions and we check for two properties which also isn't that
+bad.
 
-> 
-> Acked-by: Alexandre Courbot <acourbot@nvidia.com>
+--N+dhEFW7Y2Uiel/w
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUToeEAAoJECTWi3JdVIfQK2AIAIN2zFphnGcpGDJz2FXka0Xt
+qAnh3Xe3qYnBmY7DjvviSDrkj8epCj+POBhBocHp4VeCxTULLx/V9OptA1dULRjG
+NO5gc6UZKszhCsRnbqsr53h5gHP2TqyYNVjfdi3qVTAHAs9ks7eyfKYugnL2SY0T
+OIPfmpk+mL1S5DuThmGeYRcNeBQjMF0daKLR+nOGQ/8QjiUNmTvND01wiZxMAC5c
+g+WF9fEi0J+Rh0TzxK+W1acaJgNndVtwEr3WwQ3aHOXvyfZeOJe7NL6y3ydd05eX
+OTHZViA9JhgTRU7CeFHqI9uDKHl3MoV0GocDRIXhQVEYbzKmZO7UmYdO/rK/mkA=
+=6y00
+-----END PGP SIGNATURE-----
+
+--N+dhEFW7Y2Uiel/w--
