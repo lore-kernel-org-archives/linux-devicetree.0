@@ -1,7 +1,7 @@
 From: gyungoh@gmail.com
-Subject: [RESUBMIT PATCH v5 6/8] devicetree: i2c: Add SKY81452 to the Trivial Devices list
-Date: Mon, 27 Oct 2014 16:02:47 +0900
-Message-ID: <1414393369-31583-7-git-send-email-jack.yoo@skyworksinc.com>
+Subject: [RESUBMIT PATCH v5 5/8] devicetree: Add vendor prefix for Skyworks Solutions, Inc.
+Date: Mon, 27 Oct 2014 16:02:46 +0900
+Message-ID: <1414393369-31583-6-git-send-email-jack.yoo@skyworksinc.com>
 References: <1413179262-27636-1-git-send-email-jack.yoo@skyworksinc.com>
  <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -27,22 +27,22 @@ Changes v3:
 Nothing
 
 Changes v2:
-Add SKY81452 to the Trivial Devices list
+Added vendor prefix for Skyworks Solutions, Inc.
 
- Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index fbde415..122fa1e 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -77,6 +77,7 @@ ramtron,24c64		i2c serial eeprom  (24cxx)
- ricoh,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
- samsung,24ad0xd1	S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Power)
- sii,s35390a		2-wire CMOS real-time clock
-+skyworks,sky81452	Skyworks SKY81452: Six-Channel White LED Driver with Touch Panel Bias Supply
- st-micro,24c256		i2c serial eeprom  (24cxx)
- stm,m41t00		Serial Access TIMEKEEPER
- stm,m41t62		Serial real-time clock (RTC) with alarm
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 723999d..03e7730 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -137,6 +137,7 @@ sii	Seiko Instruments, Inc.
+ silergy	Silergy Corp.
+ sirf	SiRF Technology, Inc.
+ sitronix	Sitronix Technology Corporation
++skyworks	Skyworks Solutions, Inc.
+ smsc	Standard Microsystems Corporation
+ snps 	Synopsys, Inc.
+ solidrun	SolidRun
 -- 
 1.9.1
