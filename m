@@ -1,97 +1,105 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH v5 0/4] regulator: max77686/trats2: Disable some regulators in
- suspend
-Date: Mon, 27 Oct 2014 13:11:46 +0100
-Message-ID: <1414411911-5539-1-git-send-email-k.kozlowski@samsung.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] phy: berlin-sata: Move PHY_BASE into private data
+ struct
+Date: Mon, 27 Oct 2014 17:57:11 +0530
+Message-ID: <544E3A1F.2060304@ti.com>
+References: <1413882477-27922-1-git-send-email-sebastian.hesselbarth@gmail.com> <1413882477-27922-2-git-send-email-sebastian.hesselbarth@gmail.com> <54462865.6000205@ti.com> <544629F0.3090505@gmail.com> <544AB33F.9030701@gmail.com> <20141024202510.GK11455@saruman>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141024202510.GK11455@saruman>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?windows-1252?Q?Antoine_T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
+On Saturday 25 October 2014 01:55 AM, Felipe Balbi wrote:
+> Hi,
+>=20
+> On Fri, Oct 24, 2014 at 10:14:55PM +0200, Sebastian Hesselbarth wrote=
+:
+>> On 21.10.2014 11:40, Sebastian Hesselbarth wrote:
+>>> On 10/21/2014 11:33 AM, Kishon Vijay Abraham I wrote:
+>>>> On Tuesday 21 October 2014 02:37 PM, Sebastian Hesselbarth wrote:
+>>>>> Currently, Berlin SATA PHY driver assumes PHY_BASE address being
+>>>>> constant. While this PHY_BASE is correct for BG2Q, older BG2 PHY_=
+BASE
+>>>>> is different. Prepare the driver for BG2 support by moving the ph=
+y_base
+>>>>> into private driver data.
+>>>>>
+>>>>> Acked-by: Antoine T=E9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>>>> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail=
+=2Ecom>
+>>> ...
+>>>>> ---
+>>>>>  drivers/phy/phy-berlin-sata.c | 42
+>>>>> ++++++++++++++++++++++++++++--------------
+>>>>>  1 file changed, 28 insertions(+), 14 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/phy/phy-berlin-sata.c
+>>>>> b/drivers/phy/phy-berlin-sata.c
+>>>>> index 69ced52d72aa..9682b0f66177 100644
+>>>>> --- a/drivers/phy/phy-berlin-sata.c
+>>>>> +++ b/drivers/phy/phy-berlin-sata.c
+>>>>> @@ -30,7 +30,7 @@
+>>>>>  #define MBUS_WRITE_REQUEST_SIZE_128    (BIT(2) << 16)
+>>>>>  #define MBUS_READ_REQUEST_SIZE_128    (BIT(2) << 19)
+>>>>>
+>>>>> -#define PHY_BASE        0x200
+>>>>> +#define BG2Q_PHY_BASE        0x200
+>>> [...]
+>>>>> +static u32 bg2q_sata_phy_base =3D BG2Q_PHY_BASE;
+>>>>> +
+>>>>> +static const struct of_device_id phy_berlin_sata_of_match[] =3D =
+{
+>>>>> +    {
+>>>>> +        .compatible =3D "marvell,berlin2q-sata-phy",
+>>>>> +        .data =3D &bg2q_sata_phy_base,
+>>>>
+>>>> Can't the base directly come from dt?
+>>>
+>>> You are suggesting a "marvell,phy-base-address" property, right?
+>>> I have no strong opinion about it, I accept your call (or DT mainta=
+iner
+>>> ones).
+>>
+>> Kishon,
+>>
+>> I still have the DT patches for BG2Q queued up for v3.19 (I missed t=
+he
+>> arm-soc merge window for v3.18). That means, there has been no relea=
+se
+>> with the phy binding used and I can rework a little more.
+>>
+>> Can you please confirm that you want a DT property for the phy base =
+address,
+>> e.g. marvell,phy-base-address =3D <{0x200,0x80}> ?
+>>
+>> If so, I'd also rename the compatible from berlin2q-sata-phy to more
+>> generic berlin-sata-phy.
+>=20
+> I think what Kishon is asking, is why this 0x200 offset isn't already=
+ on
+> reg. so that instead of, e.g.:
+>=20
+> 	reg =3D <0x40000000 0x1000>;
+>=20
+> you would have:
+>=20
+> 	reg =3D <0x40000200 0x1000>;
 
-Changes since v4
-================
-1. New patch: 2/4. Store the current value of opmode in
-   non-shifted form. Along with changes in defines used for opmodes
-   this simplifies everything a lot. Suggested by Javier.
-2. Drop Javier's review-by from patch 1 because I changed the
-   defines to cover both LDO and buck at the same time.
-3. Patch 3/4: adding suspend disable is now simpler - just re-use
-   the existing function.
+I had something similar to what Sebastian suggested in mind. I think ph=
+y_base
+is used for a different reason and can't be directly used in 'reg'.
 
-Changes since v3
-================
-1. Dropped patch 3/4 ("mfd/regulator: dt-bindings: max77686: Document
-   regulators off in suspend"), applied by Lee Jones.
-2. Patch 2/3: Fix missing shift when checking if current opmode is
-   equal to off in suspend. The shift is various so I added a simple
-   function max77686_set_opmode_enable(). Dropped Javier's review-by.
-3. Patch 1/3: Add Javier's review-by.
-4. Patch 3/3: Add Chanwoo's review-by.
-
-Changes since v2
-================
-1. Patch 1/4: Fully describe different values used for controlling
-   the regulators (low power modes, enable, disable). Remove "opmode"
-   from new defines. Suggested by Javier.
-2. Patch 2/4: minor nits after changing patch 1.
-3. Add Javier's reviewed-by to 2, 3 and 4 patch.
-4. Patch 3/4 (changes in documentation) should be picked up by Lee
-   Jones but I'm resending it anyway.
-
-Changes since v1
-================
-1. Add patch 1/4 and 3/4.
-2. Patch 2/4: Extend existing set_suspend_disable (for bucks) with
-   LDO support. Implement set_suspend_enable. Suggested by Javier.
-3. Patch 4/4: Add regulator suspend properties only to regulators
-   actually supporting this. Other regulators, not implementing
-   suspend enable/disable, will warn ("VCC_1.8V_IO: No configuration").
-4. Patch 4/4: In suspend enable VHSIC_1.0V and VHSIC_1.8V regulators.
-   Suggested by Chanwoo Choi.
-
-
-Description
-===========
-This patchset makes use of Javier Martinez Cainllas changes [1].
-It allows disabling some of the regulators during suspend to RAM.
-
-Javier's patchset is necessary only to test it.
-
-[1] [PATCH v3 0/2] ARM: EXYNOS: Call regulator suspend prepare/finish
-    https://lkml.org/lkml/2014/10/20/545
-
-
-Best regards,
-Krzysztof
-
-
-Krzysztof Kozlowski (4):
-  regulator: max77686: Replace hard-coded opmode values with defines
-  regulator: max77686: Store opmode non-shifted
-  regulator: max77686: Implement suspend disable for some LDOs
-  ARM: dts: exynos4412-trats: Add suspend configuration for max77686
-    regulators
-
- arch/arm/boot/dts/exynos4412-trats2.dts | 72 +++++++++++++++++------------
- drivers/gpu/arm/mali400/ump/arch        |  1 +
- drivers/regulator/max77686.c            | 81 +++++++++++++++++++++++++--------
- 3 files changed, 105 insertions(+), 49 deletions(-)
- create mode 120000 drivers/gpu/arm/mali400/ump/arch
-
--- 
-1.9.1
+Thanks
+Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
