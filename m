@@ -1,71 +1,32 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH 3/4] arm: boot: dts: am335x-evm: Make charge delay a DT parameter for tsc
-Date: Mon, 27 Oct 2014 16:38:30 +0530
-Message-ID: <1414408111-2631-4-git-send-email-vigneshr@ti.com>
-References: <1414408111-2631-1-git-send-email-vigneshr@ti.com>
+From: Haojian Zhuang <haojian.zhuang@gmail.com>
+Subject: Re: [PATCH v1 0/2] ARM: hip04: add GPIO support
+Date: Mon, 27 Oct 2014 19:23:47 +0800
+Message-ID: <CAN1soZzn6p5LjpMSeP5crShARWU2=SOPQbs1vSosstXPqRFLKQ@mail.gmail.com>
+References: <1413978960-10717-1-git-send-email-wangzhou.bry@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414408111-2631-1-git-send-email-vigneshr@ti.com>
+In-Reply-To: <1413978960-10717-1-git-send-email-wangzhou.bry@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Felipe Balbi <balbi@ti.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Jan Kardell <jan.kardell@telliq.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Brad Griffis <bgriffis@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, Vignesh R <vigneshr@ti.com>
+To: Zhou Wang <wangzhou.bry@gmail.com>
+Cc: Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Wei Xu <xuwei5@hisilicon.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, wangzhou1@hisilicon.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The charge delay value is by default 0xB000. But it can be set to lower
-values on some boards as long as false pen-ups are avoided. Lowering the
-value increases the sampling rate (though current sampling rate is
-sufficient for tsc operation). Hence charge delay has been made a DT
-parameter.
+On Wed, Oct 22, 2014 at 7:55 PM, Zhou Wang <wangzhou.bry@gmail.com> wrote:
+> This series add the support for the GPIOs of Hisilicon Soc hip04. Hip04 uses
+> synopsis' GPIO IP, and we use the dwapb GPIO driver here. This series add the
+> corresponding dts.
+>
+> As the hip04 basic dts has been merged in 3.18 mainline kernel, I just resend
+> this patchset for review.
+>
+> Zhou Wang (2):
+>   ARM: hip04: set ARCH_NR_GPIO to 128
+>   ARM: dts: hip04: add GPIO pieces
+>
+>  arch/arm/Kconfig             |    1 +
+>  arch/arm/boot/dts/hip04.dtsi |   75 ++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 76 insertions(+)
+>
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
- .../devicetree/bindings/input/touchscreen/ti-tsc-adc.txt    | 13 +++++++++++++
- arch/arm/boot/dts/am335x-evm.dts                            |  1 +
- 2 files changed, 14 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-index 878549ba814d..ac62769e70e4 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-@@ -28,6 +28,18 @@ Required properties:
- 	ti,adc-channels: List of analog inputs available for ADC.
- 			 AIN0 = 0, AIN1 = 1 and so on till AIN7 = 7.
- 
-+Optional properties:
-+- child "tsc"
-+	ti,charge-delay: Length of touch screen charge delay step in terms of
-+			 ADC clock cycles. Charge delay value should be large in order
-+			 to avoid false pen-up events. This value affects the overall
-+			 sampling speed hence need to be kept as low as possible while
-+			 avoiding false pen-up event. Start from a lower value say 0x400
-+			 and increase value until false pen-up events are avoided. The
-+			 pen-up detection happens immediately after the charge step
-+			 so this does in fact function as a hardware knob for adjusting
-+			 the amount of "settling time".
-+
- Example:
- 	tscadc: tscadc@44e0d000 {
- 		compatible = "ti,am3359-tscadc";
-@@ -36,6 +48,7 @@ Example:
- 			ti,x-plate-resistance = <200>;
- 			ti,coordiante-readouts = <5>;
- 			ti,wire-config = <0x00 0x11 0x22 0x33>;
-+			ti,charge-delay = <0xB000>;
- 		};
- 
- 		adc {
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index e2156a583de7..80be0462298b 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -641,6 +641,7 @@
- 		ti,x-plate-resistance = <200>;
- 		ti,coordinate-readouts = <5>;
- 		ti,wire-config = <0x00 0x11 0x22 0x33>;
-+		ti,charge-delay = <0xB000>;
- 	};
- 
- 	adc {
--- 
-1.9.1
+Acked-by: Haojian Zhuang <haojian.zhuang@gmail.com>
