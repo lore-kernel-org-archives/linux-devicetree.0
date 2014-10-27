@@ -1,32 +1,39 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: GPIO bindings guidelines (Was: Re: [PATCH v5 10/12] gpio:
- Support for unified device properties interface)
-Date: Mon, 27 Oct 2014 09:50:04 +0200
-Message-ID: <20141027075004.GW1484@lahna.fi.intel.com>
-References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com>
- <1581499.2RkCnyfbq6@vostro.rjw.lan>
- <20141024073436.GN1484@lahna.fi.intel.com>
- <1971306.rIA5QAW7ve@vostro.rjw.lan>
+From: NEO-Technologies / Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
+Subject: Re: [PATCH] ARM: dts: rockchip: use internal pull-up resistors on
+ I2C busses
+Date: Mon, 27 Oct 2014 09:02:57 +0100
+Message-ID: <544DFC31.4090307@neo-technologies.fr>
+References: <1413556830-27854-1-git-send-email-julien.chauveau@neo-technologies.fr>
+ <8843018.dv9ckEkBvo@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1971306.rIA5QAW7ve@vostro.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="windows-1252"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8843018.dv9ckEkBvo@diego>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?windows-1252?Q?Heiko_St=FCbner?= <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, open list <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 25, 2014 at 12:00:33AM +0200, Rafael J. Wysocki wrote:
-> I folded your fixes into my patch and I'm going to send the result, with a
-> changelog, in a reply to this message.
+Hi Heiko,
 
-Thanks!
+Le 27/10/2014 01:27, Heiko St=FCbner a =E9crit :
+> The rk3066a does not support distinguishing between up and down pulls. On=
+ it
+> only &pcfg_pull_default is possible that configures the pull to a pin-spe=
+cific
+> pull direction. For the i2c pins the direction is (of course) "up".
 
-> If everyone is happy with it, I'll add it to the device properties patch
-> series as it depends on those.
-> 
-> I guess you can add a changelog to your rfkill changes and then we could
-> add them to that series too if there are no objections.
+Thank you for the information. I will send a new patch to fix the pull =
 
-OK, I'll do that today.
+configuration for the rk3066a.
+
+Julien
