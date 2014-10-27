@@ -1,63 +1,58 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v2 3/7] clk: samsung: exynos7: add clocks for RTC block
-Date: Mon, 27 Oct 2014 17:31:41 +0100
-Message-ID: <544E736D.1070001@samsung.com>
-References: <1413870237-1821-1-git-send-email-a.kesavan@samsung.com>
- <1413870237-1821-4-git-send-email-a.kesavan@samsung.com>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 06/10] mfd: tps65910: Use the standard DT property
+ system-power-controller
+Date: Mon, 27 Oct 2014 17:35:49 +0100
+Message-ID: <1414427749.2421.5.camel@pengutronix.de>
+References: <1414427215-14380-1-git-send-email-romain.perier@gmail.com>
+	 <1414427215-14380-6-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1413870237-1821-4-git-send-email-a.kesavan@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Abhilash Kesavan <a.kesavan@samsung.com>, Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, robh@kernel.org, devicetree@vger.kernel.org, tomasz.figa@gmail.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414427215-14380-6-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 21/10/14 07:43, Abhilash Kesavan wrote:
-> From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Am Montag, den 27.10.2014, 16:26 +0000 schrieb Romain Perier:
+> No longer use custom property to define poweroff capability, use the standard
+> DT property instead.
 > 
-> Add clock support for the RTC block in Exynos7.
-> 
-> Signed-off-by: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+> Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  .../devicetree/bindings/clock/exynos7-clock.txt    |    5 ++
->  drivers/clk/samsung/clk-exynos7.c                  |   54 ++++++++++++++++++++
->  include/dt-bindings/clock/exynos7-clk.h            |   17 +++---
->  3 files changed, 70 insertions(+), 6 deletions(-)
-[...]
-> diff --git a/include/dt-bindings/clock/exynos7-clk.h b/include/dt-bindings/clock/exynos7-clk.h
-> index ff63c4e..3227679 100644
-> --- a/include/dt-bindings/clock/exynos7-clk.h
-> +++ b/include/dt-bindings/clock/exynos7-clk.h
-> @@ -11,12 +11,13 @@
->  #define _DT_BINDINGS_CLOCK_EXYNOS7_H
+>  drivers/mfd/tps65910.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
+> index 7612d89..a7faff2 100644
+> --- a/drivers/mfd/tps65910.c
+> +++ b/drivers/mfd/tps65910.c
+> @@ -423,8 +423,7 @@ static struct tps65910_board *tps65910_parse_dt(struct i2c_client *client,
 >  
->  /* TOPC */
-> -#define DOUT_ACLK_PERIS			1
-> -#define DOUT_SCLK_BUS0_PLL		2
-> -#define DOUT_SCLK_BUS1_PLL		3
-> -#define DOUT_SCLK_CC_PLL		4
-> -#define DOUT_SCLK_MFC_PLL		5
-> -#define TOPC_NR_CLK			6
-> +#define DOUT_ACLK_CCORE_133		1
-> +#define DOUT_ACLK_PERIS			2
-> +#define DOUT_SCLK_BUS0_PLL		3
-> +#define DOUT_SCLK_BUS1_PLL		4
-> +#define DOUT_SCLK_CC_PLL		5
-> +#define DOUT_SCLK_MFC_PLL		6
-> +#define TOPC_NR_CLK			7
+>  	board_info->irq = client->irq;
+>  	board_info->irq_base = -1;
+> -	board_info->pm_off = of_property_read_bool(np,
+> -			"ti,system-power-controller");
+> +	board_info->pm_off = of_is_system_power_controller();
+>  
+>  	return board_info;
+>  }
+You are breaking compatibility with older DTs here. This is not
+acceptable.
 
-Please don't do that, don't change the meaning of already defined
-clock identifiers. We should carefully assign the clock identifiers
-based on the SoC documentation beforehand, not at will when we see
-fit for development of the Linux driver. Please either add
-DOUT_ACLK_CCORE_133 at the end of list or move this change to the
-first patch in your series adding initial support for Exynos7 SoC.
+You may change all in-tree DTs to use the new property and also patch
+the driver to understand it, but you must make sure that the driver
+still understands the old, custom property. And especially in this case
+it isn't really hard to do.
+
+Regards,
+Lucas
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
 
 --
-Thanks,
-Sylwester
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
