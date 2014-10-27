@@ -1,7 +1,7 @@
 From: Roman Byshko <rbyshko@gmail.com>
-Subject: [PATCH 5/5] ARM: dts: sun7i: Cubietruck: add power supply regulator for USB OTG VBUS
-Date: Mon, 27 Oct 2014 22:43:05 +0100
-Message-ID: <e5211c01c83a307415ba1db23279fe8b72070314.1414444953.git.rbyshko@gmail.com>
+Subject: [PATCH 2/5] ARM: dtsi: sunxi: add common VBUS regulator
+Date: Mon, 27 Oct 2014 22:43:02 +0100
+Message-ID: <210cc2a03d43e3d65b08f302b3b32663044ad94f.1414444953.git.rbyshko@gmail.com>
 References: <cover.1414444953.git.rbyshko@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1414444953.git.rbyshko@gmail.com>
@@ -12,21 +12,49 @@ To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetr
 Cc: Kishon Vijay Abraham I <kishon@ti.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Until now the regulator nodes for powering USB VBUS
+existed only for the two host controllers. Now the regulator
+is added for USB OTG too.
 ---
- arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/sunxi-common-regulators.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-index 1682307..a281d25 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-@@ -40,6 +40,7 @@
- 		};
+diff --git a/arch/arm/boot/dts/sunxi-common-regulators.dtsi b/arch/arm/boot/dts/sunxi-common-regulators.dtsi
+index c9c5b10..f521672 100644
+--- a/arch/arm/boot/dts/sunxi-common-regulators.dtsi
++++ b/arch/arm/boot/dts/sunxi-common-regulators.dtsi
+@@ -21,6 +21,13 @@
+ 				allwinner,pull = <0>;
+ 			};
  
- 		usbphy: phy@01c13400 {
-+			usb0_vbus-supply = <&reg_usb0_vbus>;
- 			usb1_vbus-supply = <&reg_usb1_vbus>;
- 			usb2_vbus-supply = <&reg_usb2_vbus>;
- 			status = "okay";
++			usb0_vbus_pin_a: usb0_vbus_pin@0 {
++				allwinner,pins = "PB9";
++				allwinner,function = "gpio_out";
++				allwinner,drive = <0>;
++				allwinner,pull = <0>;
++			};
++
+ 			usb1_vbus_pin_a: usb1_vbus_pin@0 {
+ 				allwinner,pins = "PH6";
+ 				allwinner,function = "gpio_out";
+@@ -49,6 +56,18 @@
+ 		status = "disabled";
+ 	};
+ 
++	reg_usb0_vbus: usb0-vbus {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb0_vbus_pin_a>;
++		regulator-name = "usb0-vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		enable-active-high;
++		gpio = <&pio 1 9 0>;
++		status = "disabled";
++	};
++
+ 	reg_usb1_vbus: usb1-vbus {
+ 		compatible = "regulator-fixed";
+ 		pinctrl-names = "default";
 -- 
 2.1.2
