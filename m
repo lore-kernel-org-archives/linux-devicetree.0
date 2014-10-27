@@ -1,51 +1,56 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH v2 2/3] ARM: dts: socfpga: fpga bridges bindings docs
-Date: Mon, 27 Oct 2014 19:21:22 +0200
-Message-ID: <09D1D469-01B8-44BD-BC18-EB879297BB85@konsulko.com>
-References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com> <1414108267-22058-3-git-send-email-atull@opensource.altera.com> <CCE2D027-AA89-41C4-B9AA-2B92AA62129B@konsulko.com> <20141027150147.GX18557@sirena.org.uk> <31BBCD26-65E2-431A-9ADF-95D7EDC7E34E@konsulko.com> <20141027153205.GW10262@pengutronix.de> <1C42AF5D-4776-4B09-BDF4-24F001439F46@konsulko.com> <20141027171731.GY18557@sirena.org.uk>
-Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20141027171731.GY18557@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, atull@opensource.altera.com, jgunthorpe@obsidianresearch.com, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, michal.simek@xilinx.com, rdunlap@infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Pavel Machek <pavel@denx.de>, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, Rob Landley <rob@landley.net>, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, Linus Walleij <linus.walleij@linaro.org>, mgerlach@opensource.altera.com, Alan Tull <delicious.quinoa@gmail.com>, dinguye
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 02/10] dt-bindings: Document the standard property
+ "system-power-controller"
+Date: Mon, 27 Oct 2014 17:26:36 +0000
+Message-ID: <20141027172636.GZ18557@sirena.org.uk>
+References: <1414427215-14380-1-git-send-email-romain.perier@gmail.com>
+ <1414427215-14380-2-git-send-email-romain.perier@gmail.com>
+ <20141027163918.GB14253@saruman>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="YPOU9eFKIy6Wf5kE"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141027163918.GB14253@saruman>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
 
-> On Oct 27, 2014, at 19:17 , Mark Brown <broonie@kernel.org> wrote:
->=20
-> On Mon, Oct 27, 2014 at 05:45:03PM +0200, Pantelis Antoniou wrote:
->=20
-> Please fix your mail client to word wrap at less than 80 columns.
->=20
->> Well, it=E2=80=99s not my speciality, but my understanding is that F=
-PGAs take (considerable)
->> time to be programmed. If someone has already configured the =E2=80=98=
-bus=E2=80=99 it is considered
->> a win to not reload the bitstream. I.e. if you boot with the bootloa=
-der having loaded
->> the bitstream already, you don=E2=80=99t want to do it again.
->=20
-> That's not what your property is saying, though - if it were just abo=
-ut
-> handover between the bootloader and the kernel that'd be one thing bu=
-t
-> it's also got this additional possibility to instruct the kernel that
-> the device must be either disabled or explicitly programmed.  Having =
-a
-> property that just says "this FPGA is programmed" covers the handover
-> case but this property does more than that.
+--YPOU9eFKIy6Wf5kE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It=E2=80=99s not my property. This is not my driver. The property is ba=
-dly-named
-as it is IMHO.
+On Mon, Oct 27, 2014 at 11:39:18AM -0500, Felipe Balbi wrote:
+> On Mon, Oct 27, 2014 at 04:26:47PM +0000, Romain Perier wrote:
 
-Why don=E2=80=99t we let Alan chime in?
+> > +act8846: act8846@5 {
+> > +	 compatible = "active-semi,act8846";
+> > +	 status = "okay";
+> > +	 system-power-controller;
+> > +}
 
-Regards
+> there is no mention here that system-power-controller superseeds
+> poweroff-source and deprecates that.
 
-=E2=80=94 Pantelis
+Given that poweroff-source hasn't made it into a released kernel yet we
+can probably just kill it off completely can't we?
 
+--YPOU9eFKIy6Wf5kE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUToBLAAoJECTWi3JdVIfQ5DYH/RI8OXmYY0W2YOW2mndiN6ux
+eH0/FrQVFLEGTn4UP9EWVSBYIPVpoKFAzWmUfWqW31J0LgzsSyy2k9CRq6sD6MXS
+PlqwsgVN8rNn1GBvp18w9PFJM2lDtpIPYWQLttWAJlCDmc5KXdGSuBn1p4Rutnzy
+i71n4qKADI3IkDy/k6fnkyJXyTvwct61NBsfQiKImUpstqy0j4oP4qKT+c/8Mh5z
+RpsWbuN+3YC/uOm11rTjGcmBGcG564BfOOueiJN+HnkE9PKB9opi/t40rQXy0s0O
+FBf3dVZEkH3bqmuy0rj+b4ETBLX2SgOp/KIEZAKgh5gVploewmAGBE3yMZt9FSs=
+=Gk4X
+-----END PGP SIGNATURE-----
+
+--YPOU9eFKIy6Wf5kE--
