@@ -1,93 +1,59 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] ARM: dts: rockchip: use internal pull-up resistors on I2C busses
-Date: Mon, 27 Oct 2014 01:27:15 +0100
-Message-ID: <8843018.dv9ckEkBvo@diego>
-References: <1413556830-27854-1-git-send-email-julien.chauveau@neo-technologies.fr>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] clocksource: sh_mtu2: Drop incorrect SoC family name
+Date: Mon, 27 Oct 2014 09:26:40 +0900
+Message-ID: <20141027002639.GJ25692@verge.net.au>
+References: <1414150178-4986-1-git-send-email-geert+renesas@glider.be>
+ <2748392.6fMSe2cx9z@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413556830-27854-1-git-send-email-julien.chauveau@neo-technologies.fr>
+Content-Disposition: inline
+In-Reply-To: <2748392.6fMSe2cx9z@avalon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Daniel Lezcano <daniel.lezcano@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Julien,
+On Sun, Oct 26, 2014 at 03:14:19PM +0200, Laurent Pinchart wrote:
+> Hi Geert,
+> 
+> Thank you for the patch.
+> 
+> On Friday 24 October 2014 13:29:38 Geert Uytterhoeven wrote:
+> > The TPU2 hardware block is found in many Renesas SH and ARM SoCs, but
+> 
+> s/TPU2/MTU2/
+> 
+> With this fixed,
+> 
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Am Freitag, 17. Oktober 2014, 16:40:30 schrieb Julien CHAUVEAU:
-> According to the I2C bus specification, it is required to use pull-up
-> resistors on the clock and data lines. Probing the I2C busses with
-> i2cdetect results in bad results when no devices are connected and no
-> external resistors are used.
-> 
-> This patch configures the I2C busses to use the internal pull-up resistors
-> on the RK3066, RK3188 and RK3288 Rockchip processors. It should also be
-> noted that these default pull settings match the original configuration on
-> these SoCs.
-> 
-> Below is the results of using i2cdetect on a I2C bus with no devices
-> connected before (1) and after (2) applying this patch.
-> 
-> (1) root@localhost:~# i2cdetect 3
-> 
-> WARNING! This program can confuse your I2C bus, cause data loss and worse!
-> I will probe file /dev/i2c-3.
-> I will probe address range 0x03-0x77.
-> Continue? [Y/n]
->      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
-> 00:          03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f
-> 10: 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f
-> 20: 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f
-> 30: -- -- -- -- -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x81, state: 2
-> -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 2
-> -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 2
-> -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 3
-> -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 3
-> -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 3
-> -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 3
-> ...
-> 
-> (2) root@localhost:~# i2cdetect 3
-> 
-> WARNING! This program can confuse your I2C bus, cause data loss and worse!
-> I will probe file /dev/i2c-3.
-> I will probe address range 0x03-0x77.
-> Continue? [Y/n]
->      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
-> 00:          -- -- -- -- -- -- -- -- -- -- -- -- --
-> 10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> 20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> 30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> 40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> 50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> 60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> 70: -- -- -- -- -- -- -- --
-> 
-> Signed-off-by: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
-> ---
->  arch/arm/boot/dts/rk3066a.dtsi | 20 ++++++++++----------
->  arch/arm/boot/dts/rk3188.dtsi  | 20 ++++++++++----------
->  arch/arm/boot/dts/rk3288.dtsi  | 24 ++++++++++++------------
->  3 files changed, 32 insertions(+), 32 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-> index ad9c2db..c5cdf55 100644
-> --- a/arch/arm/boot/dts/rk3066a.dtsi
-> +++ b/arch/arm/boot/dts/rk3066a.dtsi
-> @@ -202,36 +202,36 @@
-> 
->  		i2c0 {
->  			i2c0_xfer: i2c0-xfer {
-> -				rockchip,pins = <RK_GPIO2 28 RK_FUNC_1 &pcfg_pull_none>,
-> -						<RK_GPIO2 29 RK_FUNC_1 &pcfg_pull_none>;
-> +				rockchip,pins = <RK_GPIO2 28 RK_FUNC_1 &pcfg_pull_up>,
-> +						<RK_GPIO2 29 RK_FUNC_1 &pcfg_pull_up>;
-
-The rk3066a does not support distinguishing between up and down pulls. On it 
-only &pcfg_pull_default is possible that configures the pull to a pin-specific 
-pull direction. For the i2c pins the direction is (of course) "up".
+Thanks, I have fixed that and queued up the following:
 
 
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Heiko
+[PATCH] clocksource: sh_mtu2: Drop incorrect SoC family name
+
+The MTU2 hardware block is found in many Renesas SH and ARM SoCs, but
+not in R-Car.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ Documentation/devicetree/bindings/timer/renesas,mtu2.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
+index d9a8d5a..ba0a34d 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
++++ b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
+@@ -1,4 +1,4 @@
+-* Renesas R-Car Multi-Function Timer Pulse Unit 2 (MTU2)
++* Renesas Multi-Function Timer Pulse Unit 2 (MTU2)
+ 
+ The MTU2 is a multi-purpose, multi-channel timer/counter with configurable
+ clock inputs and programmable compare match.
+-- 
+2.1.1
