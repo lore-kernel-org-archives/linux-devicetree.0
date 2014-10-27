@@ -1,116 +1,63 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v2 1/5] phy: berlin-sata: Move PHY_BASE into private data
- struct
-Date: Mon, 27 Oct 2014 19:32:59 +0100
-Message-ID: <544E8FDB.109@gmail.com>
-References: <1413882477-27922-1-git-send-email-sebastian.hesselbarth@gmail.com> <1413882477-27922-2-git-send-email-sebastian.hesselbarth@gmail.com> <54462865.6000205@ti.com> <544629F0.3090505@gmail.com> <544AB33F.9030701@gmail.com> <20141024202510.GK11455@saruman> <544E3A1F.2060304@ti.com>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCHv2 0/4] Add Altera peripheral memories to EDAC framework
+Date: Mon, 27 Oct 2014 13:50:24 -0500
+Message-ID: <544E93F0.3030409@opensource.altera.com>
+References: <1413578029-13205-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <544E3A1F.2060304@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, balbi@ti.com
-Cc: =?windows-1252?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1413578029-13205-1-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@altera.com
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@altera.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/27/2014 01:27 PM, Kishon Vijay Abraham I wrote:
-> On Saturday 25 October 2014 01:55 AM, Felipe Balbi wrote:
->> On Fri, Oct 24, 2014 at 10:14:55PM +0200, Sebastian Hesselbarth wrot=
-e:
->>> On 21.10.2014 11:40, Sebastian Hesselbarth wrote:
->>>> On 10/21/2014 11:33 AM, Kishon Vijay Abraham I wrote:
->>>>> On Tuesday 21 October 2014 02:37 PM, Sebastian Hesselbarth wrote:
->>>>>> Currently, Berlin SATA PHY driver assumes PHY_BASE address being
->>>>>> constant. While this PHY_BASE is correct for BG2Q, older BG2 PHY=
-_BASE
->>>>>> is different. Prepare the driver for BG2 support by moving the p=
-hy_base
->>>>>> into private driver data.
->>>>>>
->>>>>> Acked-by: Antoine T=E9nart <antoine.tenart@free-electrons.com>
->>>>>> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmai=
-l.com>
->>>> ...
->>>>>> ---
->>>>>>   drivers/phy/phy-berlin-sata.c | 42
->>>>>> ++++++++++++++++++++++++++++--------------
->>>>>>   1 file changed, 28 insertions(+), 14 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/phy/phy-berlin-sata.c
->>>>>> b/drivers/phy/phy-berlin-sata.c
->>>>>> index 69ced52d72aa..9682b0f66177 100644
->>>>>> --- a/drivers/phy/phy-berlin-sata.c
->>>>>> +++ b/drivers/phy/phy-berlin-sata.c
->>>>>> @@ -30,7 +30,7 @@
->>>>>>   #define MBUS_WRITE_REQUEST_SIZE_128    (BIT(2) << 16)
->>>>>>   #define MBUS_READ_REQUEST_SIZE_128    (BIT(2) << 19)
->>>>>>
->>>>>> -#define PHY_BASE        0x200
->>>>>> +#define BG2Q_PHY_BASE        0x200
->>>> [...]
->>>>>> +static u32 bg2q_sata_phy_base =3D BG2Q_PHY_BASE;
->>>>>> +
->>>>>> +static const struct of_device_id phy_berlin_sata_of_match[] =3D=
- {
->>>>>> +    {
->>>>>> +        .compatible =3D "marvell,berlin2q-sata-phy",
->>>>>> +        .data =3D &bg2q_sata_phy_base,
->>>>>
->>>>> Can't the base directly come from dt?
->>>>
->>>> You are suggesting a "marvell,phy-base-address" property, right?
->>>> I have no strong opinion about it, I accept your call (or DT maint=
-ainer
->>>> ones).
->>>
->>> I still have the DT patches for BG2Q queued up for v3.19 (I missed =
-the
->>> arm-soc merge window for v3.18). That means, there has been no rele=
-ase
->>> with the phy binding used and I can rework a little more.
->>>
->>> Can you please confirm that you want a DT property for the phy base=
- address,
->>> e.g. marvell,phy-base-address =3D <{0x200,0x80}> ?
->>>
->>> If so, I'd also rename the compatible from berlin2q-sata-phy to mor=
-e
->>> generic berlin-sata-phy.
->>
->> I think what Kishon is asking, is why this 0x200 offset isn't alread=
-y on
->> reg. so that instead of, e.g.:
->>
->> 	reg =3D <0x40000000 0x1000>;
->>
->> you would have:
->>
->> 	reg =3D <0x40000200 0x1000>;
+Hi Borislav,
+
+On 10/17/2014 03:33 PM, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
 >
-> I had something similar to what Sebastian suggested in mind. I think =
-phy_base
-> is used for a different reason and can't be directly used in 'reg'.
+> This patch adds the L2 cache and OCRAM peripherals to the EDAC framework
+> using the EDAC device framework. The ECC is enabled early in the boot
+> process in the platform specific code.
+>
+> Thor Thayer (4):
+>    arm: socfpga: Enable L2 Cache ECC on startup.
+>    arm: socfpga: Enable OCRAM ECC on startup.
+>    edac: altera: Add Altera L2 Cache and OCRAM EDAC Support
+>    arm: dts: Add Altera L2 Cache and OCRAM EDAC
+>
+>   .../bindings/arm/altera/socfpga-l2-edac.txt        |   15 ++
+>   .../bindings/arm/altera/socfpga-ocram-edac.txt     |   16 ++
+>   MAINTAINERS                                        |    4 +-
+>   arch/arm/boot/dts/socfpga.dtsi                     |   15 +-
+>   arch/arm/mach-socfpga/Makefile                     |    2 +
+>   arch/arm/mach-socfpga/l2_cache.c                   |   44 ++++
+>   arch/arm/mach-socfpga/l2_cache.h                   |   28 +++
+>   arch/arm/mach-socfpga/ocram.c                      |   90 +++++++
+>   arch/arm/mach-socfpga/ocram.h                      |   28 +++
+>   arch/arm/mach-socfpga/socfpga.c                    |   13 +-
+>   drivers/edac/Kconfig                               |   14 ++
+>   drivers/edac/Makefile                              |    3 +
+>   drivers/edac/altera_edac_mgr.c                     |  261 ++++++++++++++++++++
+>   drivers/edac/altera_edac_mgr.h                     |   56 +++++
+>   drivers/edac/altera_l2_edac.c                      |  130 ++++++++++
+>   drivers/edac/altera_ocram_edac.c                   |  107 ++++++++
+>   16 files changed, 823 insertions(+), 3 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
+>   create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
+>   create mode 100644 arch/arm/mach-socfpga/l2_cache.c
+>   create mode 100644 arch/arm/mach-socfpga/l2_cache.h
+>   create mode 100644 arch/arm/mach-socfpga/ocram.c
+>   create mode 100644 arch/arm/mach-socfpga/ocram.h
+>   create mode 100644 drivers/edac/altera_edac_mgr.c
+>   create mode 100644 drivers/edac/altera_edac_mgr.h
+>   create mode 100644 drivers/edac/altera_l2_edac.c
+>   create mode 100644 drivers/edac/altera_ocram_edac.c
+>
+Do you have any comments about this driver?
 
-Kishon,
+Thanks,
 
-thanks for the clarification. While the extra marvell,phy-base-address
-property basically works and I agree with it, I may have some
-_potential_ draw-backs:
-
-The Marvell BSP code (which I have no clue _why_ it does what it does
-or if it is required) has some magic writes to "improve" serial signal
-quality. I left them out as my HDD was detected with and without them.
-
-Now, if we find that they are required, we have to find a way to make
-the PHY driver know about the PHY revision. We'd usually add a
-different compatible and deal with it accordingly.
-
-So, not adding the compatible now _may_ just postpone a follow-up patch
-for the different PHY setup of BG2 and render the new phy_base property
-basically useless.
-
-If you are just unhappy with the "static u32 bg2q_sata_phy_base"
-assigned to of_device_id.data, I can convert that to Felipe's proposal.
-
-Sebastian
+Thor
