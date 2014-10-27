@@ -1,54 +1,40 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] adv7604: Add DT parsing support
-Date: Mon, 27 Oct 2014 01:30:33 +0200
-Message-ID: <19115179.EGFbFL174J@avalon>
-References: <1413992061-28678-1-git-send-email-jean-michel.hautbois@vodalys.com> <1645583.LAOF2HV7Iq@avalon> <CAL8zT=gUaBDiq=KC5YqCD5dqx2WO1PSXGckvchX_9XxDbJJEpw@mail.gmail.com>
+From: bpqw <bpqw@micron.com>
+Subject: [PATCH 1/1] devicetree: bindings: Add vendor prefix for Micron
+ Technology Co., Ltd.
+Date: Mon, 27 Oct 2014 00:07:43 +0000
+Message-ID: <A765B125120D1346A63912DDE6D8B6315E7ABD@NTXXIAMBX02.xacn.micron.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <CAL8zT=gUaBDiq=KC5YqCD5dqx2WO1PSXGckvchX_9XxDbJJEpw@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
-Cc: Linux Media Mailing List <linux-media@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, wsa@the-dreams.de, Lars-Peter Clausen <lars@metafoo.de>, Hans Verkuil <hverkuil@xs4all.nl>
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Jason Cooper <jason@lakedaemon.net>, Mark Brown <broonie@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Andrew Lunn <andrew@lunn.ch>, Silvio F <silvio.fricke@gmail.com>, Hayato Suzuki <hytszk@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean-Michel,
+This patch is used to add vendor prefix for Micron Technology Inc in the vendor-prefixes.txt file.
 
-On Thursday 23 October 2014 07:51:50 Jean-Michel Hautbois wrote:
-> 2014-10-23 1:53 GMT+02:00 Laurent Pinchart:
-> > On Wednesday 22 October 2014 17:34:21 Jean-Michel Hautbois wrote:
-> >> This patch adds support for DT parsing of ADV7604 as well as ADV7611.
-> >> It needs to be improved in order to get ports parsing too.
-> > 
-> > Let's improve it then :-) The DT bindings as proposed by this patch are
-> > incomplete, that's just asking for trouble.
-> > 
-> > How would you model the adv7604 ports ?
-> 
-> I am opened to suggestions :).
-> But it has to remain as simple as possible, ideally allowing for giving
-> names to the ports.
-> As done today, it works, ports are parsed but are all the same...
+Micron Technology, Inc. is an American multinational corporation based in Boise,
+Idaho, best known for producing many forms of semiconductor devices. This includes
+DRAM, SDRAM, flash memory, eMMC and SSDs.
 
-The ADV7611 was easy, it had a single HDMI input only. The ADV7612 is easy as 
-well as it just has two separate HDMI inputs.
+Signed-off-by: bean huo <beanhuo@micron.com>
+---
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 1 file changed, 1 insertion(+)
 
-The ADV7604 is a more complex beast. The HDMI inputs shouldn't be much of an 
-issue as they're independent and multiplexed internally. You can just create 
-one pad per HDMI input.
-
-The analog inputs, however, can't be modeled as easily. A naive approach would 
-be to create one pad for each of the 12 analog inputs, but the chip has three 
-separate ADCs and can combine 3 inputs in a single digital video stream. I 
-don't know how we should model support for that. Lars-Peter, Hans, would you 
-have a revolutionary idea to same the world today ?
-
-> >> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
-
-[...]
-
--- 
-Regards,
-
-Laurent Pinchart
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 723999d..a7bbf6e 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -92,6 +92,7 @@ maxim	Maxim Integrated Products
+ mediatek	MediaTek Inc.
+ micrel	Micrel Inc.
+ microchip	Microchip Technology Inc.
++micron	Micron Technology Inc.
+ mitsubishi	Mitsubishi Electric Corporation
+ mosaixtech	Mosaix Technologies, Inc.
+ moxa	Moxa
+--
+1.7.9.5
