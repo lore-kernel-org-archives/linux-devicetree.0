@@ -1,62 +1,52 @@
-From: Torsten Fleischer <torfl6749@gmail.com>
-Subject: [PATCH 1/1] spi: spi-gpio: Add dt support for a single device with no chip select
-Date: Mon, 27 Oct 2014 16:27:17 +0100
-Message-ID: <1414423637-2817-1-git-send-email-torfl6749@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org
-Cc: Torsten Fleischer <torfl6749@gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH 0/8] regulator: max77686: Add GPIO control
+Date: Mon, 27 Oct 2014 16:03:38 +0100
+Message-ID: <1414422226-10948-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Torsten Fleischer <torfl6749@gmail.com>
+Hi,
 
-Use an empty 'cs-gpios' property if a single device is connected which
-has no chip select.
-This refers to the discussion at https://lkml.org/lkml/2013/11/13/62.
 
-Signed-off-by: Torsten Fleischer <torfl6749@gmail.com>
----
- Documentation/devicetree/bindings/spi/spi-gpio.txt |  6 ++++--
- drivers/spi/spi-gpio.c                             | 10 +++++++---
- 2 files changed, 11 insertions(+), 5 deletions(-)
+This patch helps in proper description of max77686 regulators in DTS by
+allowing to control them over GPIO. This allows removal of
+fixed regulators from DTS which duplicate the description of hardware.
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-gpio.txt b/Documentation/devicetree/bindings/spi/spi-gpio.txt
-index 8a824be..ad8795f 100644
---- a/Documentation/devicetree/bindings/spi/spi-gpio.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-gpio.txt
-@@ -8,8 +8,10 @@ Required properties:
-  - gpio-sck: GPIO spec for the SCK line to use
-  - gpio-miso: GPIO spec for the MISO line to use
-  - gpio-mosi: GPIO spec for the MOSI line to use
-- - cs-gpios: GPIOs to use for chipselect lines
-- - num-chipselects: number of chipselect lines
-+ - cs-gpios: GPIOs to use for chipselect lines. Leave this property empty if
-+             a single device with no chip select is connected.
-+ - num-chipselects: Number of chipselect lines. Has to be "1" even if a single
-+                    device with no chip select is connected.
- 
- Example:
- 
-diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
-index 9f59553..b343818a 100644
---- a/drivers/spi/spi-gpio.c
-+++ b/drivers/spi/spi-gpio.c
-@@ -461,9 +461,13 @@ static int spi_gpio_probe(struct platform_device *pdev)
- 		 * property of the node.
- 		 */
- 
--		for (i = 0; i < SPI_N_CHIPSEL; i++)
--			spi_gpio->cs_gpios[i] =
--				of_get_named_gpio(np, "cs-gpios", i);
-+		if ((SPI_N_CHIPSEL == 1) &&
-+				(of_gpio_named_count(np, "cs-gpios") == 0))
-+			spi_gpio->cs_gpios[0] = SPI_GPIO_NO_CHIPSELECT;
-+		else
-+			for (i = 0; i < SPI_N_CHIPSEL; i++)
-+				spi_gpio->cs_gpios[i] =
-+					of_get_named_gpio(np, "cs-gpios", i);
- 	}
- #endif
- 
+The first five patches are cleanups, including board support removal.
+
+The whole patchset should be taken at once.
+
+Patchset is rebased on next-20141023 AND:
+1. ARM: EXYNOS: Call regulator suspend prepare/finish
+   https://lkml.org/lkml/2014/10/20/545
+2. regulator: max77686/trats2: Disable some regulators in suspend
+   https://lkml.org/lkml/2014/10/27/280
+
+
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (8):
+  regulator: max77802: Remove support for board files
+  regulator: max77686: Remove support for board files
+  mfd: max77686/802: Remove support for board files
+  regulator: max77686: Make regulator_desc array const
+  regulator: max77686: Initialize opmode explicitly to normal mode
+  regulator: max77686: Add external GPIO control
+  mfd/regulator: dt-bindings: max77686: Document gpio property
+  ARM: dts: exynos4412-trats: Switch max77686 regulators to GPIO control
+
+ Documentation/devicetree/bindings/mfd/max77686.txt |   3 +
+ arch/arm/boot/dts/exynos4412-trats2.dts            |  25 +---
+ drivers/mfd/max77686.c                             |  23 ---
+ drivers/regulator/max77686.c                       | 158 +++++++++++++++------
+ drivers/regulator/max77802.c                       |  44 ++----
+ include/linux/mfd/max77686-private.h               |   1 -
+ include/linux/mfd/max77686.h                       |  22 ---
+ 7 files changed, 141 insertions(+), 135 deletions(-)
+
 -- 
-1.8.4.5
+1.9.1
