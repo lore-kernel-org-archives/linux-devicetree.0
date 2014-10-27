@@ -1,29 +1,44 @@
-From: Borislav Petkov <bp@alien8.de>
+From: Thor Thayer <tthayer@opensource.altera.com>
 Subject: Re: [PATCHv2 0/4] Add Altera peripheral memories to EDAC framework
-Date: Mon, 27 Oct 2014 21:43:07 +0100
-Message-ID: <20141027204307.GB4741@pd.tnic>
-References: <1413578029-13205-1-git-send-email-tthayer@opensource.altera.com>
- <544E93F0.3030409@opensource.altera.com>
+Date: Mon, 27 Oct 2014 16:35:00 -0500
+Message-ID: <544EBA84.7080109@opensource.altera.com>
+References: <1413578029-13205-1-git-send-email-tthayer@opensource.altera.com> <544E93F0.3030409@opensource.altera.com> <20141027204307.GB4741@pd.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <544E93F0.3030409@opensource.altera.com>
+In-Reply-To: <20141027204307.GB4741@pd.tnic>
 Sender: linux-doc-owner@vger.kernel.org
-To: Thor Thayer <tthayer@opensource.altera.com>
-Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@altera.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@altera.com
+To: Borislav Petkov <bp@alien8.de>
+Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 27, 2014 at 01:50:24PM -0500, Thor Thayer wrote:
-> Do you have any comments about this driver?
 
-Just a question: why do you have three .c files for something which
-does only error injection and nothing else AFAICT? Why isn't this part
-of altera_edac.c?
+On 10/27/2014 03:43 PM, Borislav Petkov wrote:
+> On Mon, Oct 27, 2014 at 01:50:24PM -0500, Thor Thayer wrote:
+>> Do you have any comments about this driver?
+> Just a question: why do you have three .c files for something which
+> does only error injection and nothing else AFAICT? Why isn't this part
+> of altera_edac.c?
+>
+There are 2 files for doing the error injection (altera_l2_edac.c and 
+altera_ocram_edac.c) and then 1 file for the irq handling and probe 
+(altera_edac_mgr.c).
 
--- 
-Regards/Gruss,
-    Boris.
+The L2 cache and the On-Chip RAM drivers were based on the Calxeda L2 
+cache driver and when written as 2 separate files, the resulting code 
+was very similar from the probe and error handling standpoint so the 
+common code was combined (altera_edac_mgr.c).
 
-Sent from a fat crate under my desk. Formatting is fine.
---
+The Memory Controller model was used for the SDRAM EDAC (altera_edac.c) 
+since it matches the DIMM model.  The MC model didn't seem to fit the 
+discrete memories like OCRAM and L2 cache (these files) so I used the 
+EDAC device model which agreed with the Calxeda L2 cache driver.
+
+Should I move the EDAC Device probe and error handling from 
+altera_edac_mgr.c to altera_edac.c? Can I mix the MC and Device models 
+in the same file?
+
+Thanks for reviewing and for commenting.
+
+Thor
