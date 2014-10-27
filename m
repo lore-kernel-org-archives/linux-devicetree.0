@@ -1,66 +1,61 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH 06/17] gpio: mvebu: add suspend/resume support
-Date: Mon, 27 Oct 2014 14:27:16 +0900
-Message-ID: <CAAVeFu+_UZkQHa38wvaBSmRZCWof6-J13eVYgrG6KS7yargsYA@mail.gmail.com>
-References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1414151970-6626-7-git-send-email-thomas.petazzoni@free-electrons.com>
- <20141024163051.GG4529@psi-dev26.jf.intel.com> <20141024204532.GA6436@lunn.ch>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] devicetree: bindings: Add vendor prefix for TBS Technologies
+Date: Mon, 27 Oct 2014 13:46:04 +0800
+Message-ID: <CAL_Jsq+8EuPz1ceBjY_LWZtrXN1WATG4LcsHksj+U8j334ghHA@mail.gmail.com>
+References: <1414300502-6511-1-git-send-email-smoch@web.de> <1414300502-6511-2-git-send-email-smoch@web.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20141024204532.GA6436@lunn.ch>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: David Cohen <david.a.cohen@linux.intel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414300502-6511-2-git-send-email-smoch-S0/GAf8tV78@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Soeren Moch <smoch-S0/GAf8tV78@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 25, 2014 at 5:45 AM, Andrew Lunn <andrew@lunn.ch> wrote:
->> > +   switch (mvchip->soc_variant) {
->> > +   case MVEBU_GPIO_SOC_VARIANT_ORION:
->> > +           mvchip->edge_mask_regs[0] =
->> > +                   readl(mvchip->membase + GPIO_EDGE_MASK_OFF);
->> > +           mvchip->level_mask_regs[0] =
->> > +                   readl(mvchip->membase + GPIO_LEVEL_MASK_OFF);
->> > +           break;
->> > +   case MVEBU_GPIO_SOC_VARIANT_MV78200:
->> > +           for (i = 0; i < 2; i++) {
->> > +                   mvchip->edge_mask_regs[i] =
->> > +                           readl(mvchip->membase +
->> > +                                 GPIO_EDGE_MASK_MV78200_OFF(i));
->> > +                   mvchip->level_mask_regs[i] =
->> > +                           readl(mvchip->membase +
->> > +                                 GPIO_LEVEL_MASK_MV78200_OFF(i));
->> > +           }
->> > +           break;
->> > +   case MVEBU_GPIO_SOC_VARIANT_ARMADAXP:
->> > +           for (i = 0; i < 4; i++) {
->> > +                   mvchip->edge_mask_regs[i] =
->> > +                           readl(mvchip->membase +
->> > +                                 GPIO_EDGE_MASK_ARMADAXP_OFF(i));
->> > +                   mvchip->level_mask_regs[i] =
->> > +                           readl(mvchip->membase +
->> > +                                 GPIO_LEVEL_MASK_ARMADAXP_OFF(i));
->> > +           }
->> > +           break;
->> > +   default:
->> > +           BUG();
->>
->> Isn't it too severe? Is the platform going too unstable if driver
->> reaches this case?
->> I'd consider a WARN() instead.
+On Sun, Oct 26, 2014 at 1:15 PM, Soeren Moch <smoch-S0/GAf8tV78@public.gmane.org> wrote:
+> TBS Technologies is a company which specializes in developing, producing
+> and marketing of digital TV tuner cards for PCs.
 >
-> This is a common pattern in this driver. So i guess Thomas just
-> cut/pasted the switch statement from _probe(), which also has the
-> BUG().
+> for additional details refer to http://www.tbsdtv.com/about-us.html
 >
-> Given that _probe() should of thrown a BUG() in this situation, if it
-> happens here, it means mvchip->soc_variant has been corrupted, and so
-> bad things are happening. So a BUG() is maybe called for?
+> Signed-off-by: Soeren Moch <smoch-S0/GAf8tV78@public.gmane.org>
 
-I agree that BUG() is adequate here. probe() should recognize the
-exact same set of chips - if we reach this point this means that
-either the data has been corrupted or we added support for a new chip
-in probe() and forgot suspend/resume. In both cases the driver should
-express its discontent.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Acked-by: Alexandre Courbot <acourbot@nvidia.com>
+> ---
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index ac7269f..cdc29d4 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -133,6 +133,7 @@ st  STMicroelectronics
+>  ste    ST-Ericsson
+>  stericsson     ST-Ericsson
+>  synology       Synology, Inc.
+> +tbs    TBS Technologies
+>  ti     Texas Instruments
+>  tlm    Trusted Logic Mobility
+>  toradex        Toradex AG
+> --
+> 1.9.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
