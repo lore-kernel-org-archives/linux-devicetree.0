@@ -1,238 +1,86 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v2 2/3] ARM: dts: socfpga: fpga bridges bindings docs
-Date: Mon, 27 Oct 2014 18:47:43 +0100
-Message-ID: <20141027174743.GX10262@pengutronix.de>
-References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com>
- <1414108267-22058-3-git-send-email-atull@opensource.altera.com>
- <20141024070042.GL10262@pengutronix.de>
- <5FB7B7FD-7B5B-4250-BADE-85573FDBBE48@konsulko.com>
- <20141025144229.GR10262@pengutronix.de>
- <16E8EC52-0A91-4F28-8113-3CC5352215A5@konsulko.com>
- <20141027152306.GV10262@pengutronix.de>
- <194BE134-7804-4E84-BD5D-AB9A5892ED6F@konsulko.com>
+From: David Cohen <david.a.cohen@linux.intel.com>
+Subject: Re: [PATCH 06/17] gpio: mvebu: add suspend/resume support
+Date: Mon, 27 Oct 2014 10:45:52 -0700
+Message-ID: <20141027174552.GH4529@psi-dev26.jf.intel.com>
+References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1414151970-6626-7-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20141024163051.GG4529@psi-dev26.jf.intel.com>
+ <20141024204532.GA6436@lunn.ch>
+ <CAAVeFu+_UZkQHa38wvaBSmRZCWof6-J13eVYgrG6KS7yargsYA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <194BE134-7804-4E84-BD5D-AB9A5892ED6F@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: atull@opensource.altera.com, jgunthorpe@obsidianresearch.com, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, michal.simek@xilinx.com, rdunlap@infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+In-Reply-To: <CAAVeFu+_UZkQHa38wvaBSmRZCWof6-J13eVYgrG6KS7yargsYA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 27, 2014 at 05:52:02PM +0200, Pantelis Antoniou wrote:
-> Hi Steffen,
->=20
-> > On Oct 27, 2014, at 17:23 , Steffen Trumtrar <s.trumtrar@pengutroni=
-x.de> wrote:
-> >=20
-> > Hi!
-> >=20
-> > On Mon, Oct 27, 2014 at 01:54:20PM +0200, Pantelis Antoniou wrote:
-> >> Hi Stefen,
-> >>=20
-> >>> On Oct 25, 2014, at 17:42 , Steffen Trumtrar <s.trumtrar@pengutro=
-nix.de> wrote:
-> >>>=20
-> >>> Hi Pantelis!
-> >>>=20
-> >>> On Fri, Oct 24, 2014 at 12:20:53PM +0300, Pantelis Antoniou wrote=
-:
-> >>>> Hi Stefan, Allan,
-> >>>>=20
-> >>>> Sorry, haven=E2=80=99t had a chance to review all this yet; will=
- do so in the weekend.
-> >>>> Just wanted to pop in and comment on a few things.
-> >>>>=20
-> >>>>> On Oct 24, 2014, at 10:00 AM, Steffen Trumtrar <s.trumtrar@peng=
-utronix.de> wrote:
-> >>>>>=20
-> >>>>> Hi!
-> >>>>>=20
-> >>>>> On Thu, Oct 23, 2014 at 06:51:06PM -0500, atull@opensource.alte=
-ra.com wrote:
-> >>>>>> From: Alan Tull <atull@opensource.altera.com>
-> >>>>>=20
-> >>>>> (...)
-> >>>>>=20
-> >>>>>> diff --git a/Documentation/devicetree/bindings/fpga/altera-hps=
-2fpga-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-hps2fp=
-ga-bridge.txt
-> >>>>>> new file mode 100644
-> >>>>>> index 0000000..bc24a2e
-> >>>>>> --- /dev/null
-> >>>>>> +++ b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-b=
-ridge.txt
-> >>>>>> @@ -0,0 +1,53 @@
-> >>>>>> +Altera FPGA/HPS Bridge Driver
-> >>>>>> +
-> >>>>>> +This driver manages a bridge between a FPGA and a host proces=
-sor system (HPS).
-> >>>>>> +User space can enable or disable the bridge by writing a "1" =
-or a "0",
-> >>>>>> +respectively, to its enable file under bridge's entry in
-> >>>>>> +/sys/class/fpga-bridge.  Typically, one disables the bridges =
-before
-> >>>>>> +reprogramming the FPGA.  Once the FPGA is reprogrammed, the b=
-ridges are
-> >>>>>> +reenabled.
-> >>>>>> +
-> >>>>>=20
-> >>>>> NAK.
-> >>>>>=20
-> >>>>> This is all linux specific and doesn't belong here.
-> >>>>>=20
-> >>>>=20
-> >>>> We know. The DT spec hasn=E2=80=99t been updated for a while, an=
-d this is going to be
-> >>>> part of what we want to do with the restarting of the ePAPR spec=
- process.
-> >>>>=20
-> >>>=20
-> >>> As we don't have a new spec yet, I go with the current state of t=
-he art.
-> >>> And I don't see how "file under ... /sys/class/fpga-bridge" fits =
-the
-> >>> current spec.
-> >>>=20
-> >>>> So absolutes like =E2=80=9CDT is a hardware description only" mi=
-ght be too strong statements, that
-> >>>> do not work in practice anymore.
-> >>>>=20
-> >>>> There=E2=80=99s no such thing as pure hardware devices lately - =
-there is always a configuration
-> >>>> component; some of it OS specific, some of it not.
-> >>>>=20
-> >>>=20
-> >>> If it really is necessary, I'm not against it, don't get me wrong=
-=2E
-> >>> But in the grand scheme I wouldn't say that this fits my experien=
-ce.
-> >>> There are some devices that need configuration and often when it =
-is
-> >>> done in the DT, it is just a shortcut or not thought through.
-> >>> And can be also introspected dynamically. With some discussion on=
- the
-> >>> list these bindings often change.
-> >>>=20
-> >>=20
-> >> Already answered and given a possible way this might work; admitte=
-dly this
-> >> specific example is not a good fit for what I was trying to say, b=
-ut whatever.
-> >> Let=E2=80=99s get the ball rolling.
-> >>=20
-> >=20
-> > I would be okay with chosen-node. Not for this driver; but in gener=
-al.
-> >=20
->=20
-> Let=E2=80=99s figure out how to do it then=E2=80=A6
->=20
-> >>> Regarding OS specifics: already there, e.g. console setup in the =
-chosen node.
-> >>> And other things I saw are ethernet aliases just for u-boot. Not =
-a problem
-> >>> of the spec, just a problem of u-boot and unneccessary "configura=
-tion".
-> >>> Just to fix a bad bootloader. barebox can handle this without any
-> >>> such stuff. Maybe we should integrate the DT "overlays" barebox u=
-ses into
-> >>> the in-kernel DTs as well...but does it really help/interest some=
-one who
-> >>> decides to use u-boot where barebox stores its environment? I gue=
-ss not.
-> >>>=20
-> >>=20
-> >> Although I=E2=80=99m not against having DT overlays in the bootloa=
-der, I only see them
-> >> as a method that helps a platform developer express things easier.=
- I am completely
-> >> against having the kernel tied to any particular bootloader.
-> >>=20
-> >> We=E2=80=99ve all been through the hell where a kernel only boots =
-if the bootloader has=20
-> >> setup the platform =E2=80=9Ccorrectly=E2=80=9D. This =E2=80=9Ccorr=
-ectly=E2=80=9D has a very loose definition and
-> >> 99/100 times is extremely badly documented or not at all.
-> >>=20
-> >> IMHO the bootloader should (as part of the normal boot sequence) o=
-nly setup the
-> >> absolutely bare minimum and then pass control to the kernel as soo=
-n as possible.
-> >>=20
-> >> The full featured bootloader environment should only be presented =
-when the user
-> >> requests so.
-> >>=20
-> >=20
-> > Totally agree. The kernel shouldn't be tied to any bootloader if at=
- all possible
-> > (the SoCFPGA is an especially bad example here again, as the pinmux=
-ing can only
-> > happen in the bootloader).
->=20
-> I=E2=80=99m not familiar with SoCFPGA. Why pinmuxing is only possible=
- in the bootloader?
-> Can=E2=80=99t the bootloader configure the minimum pinmux config and =
-then have Linux setup
-> the rest?
->=20
-> If we=E2=80=99re feeling particularly nasty, we might just require bo=
-otloaders to clean the
-> hardware state before passing control to Linux (besides memory contro=
-ller setup) and
-> see what=E2=80=99s broken.
->=20
+On Mon, Oct 27, 2014 at 02:27:16PM +0900, Alexandre Courbot wrote:
+> On Sat, Oct 25, 2014 at 5:45 AM, Andrew Lunn <andrew@lunn.ch> wrote:
+> >> > +   switch (mvchip->soc_variant) {
+> >> > +   case MVEBU_GPIO_SOC_VARIANT_ORION:
+> >> > +           mvchip->edge_mask_regs[0] =
+> >> > +                   readl(mvchip->membase + GPIO_EDGE_MASK_OFF);
+> >> > +           mvchip->level_mask_regs[0] =
+> >> > +                   readl(mvchip->membase + GPIO_LEVEL_MASK_OFF);
+> >> > +           break;
+> >> > +   case MVEBU_GPIO_SOC_VARIANT_MV78200:
+> >> > +           for (i = 0; i < 2; i++) {
+> >> > +                   mvchip->edge_mask_regs[i] =
+> >> > +                           readl(mvchip->membase +
+> >> > +                                 GPIO_EDGE_MASK_MV78200_OFF(i));
+> >> > +                   mvchip->level_mask_regs[i] =
+> >> > +                           readl(mvchip->membase +
+> >> > +                                 GPIO_LEVEL_MASK_MV78200_OFF(i));
+> >> > +           }
+> >> > +           break;
+> >> > +   case MVEBU_GPIO_SOC_VARIANT_ARMADAXP:
+> >> > +           for (i = 0; i < 4; i++) {
+> >> > +                   mvchip->edge_mask_regs[i] =
+> >> > +                           readl(mvchip->membase +
+> >> > +                                 GPIO_EDGE_MASK_ARMADAXP_OFF(i));
+> >> > +                   mvchip->level_mask_regs[i] =
+> >> > +                           readl(mvchip->membase +
+> >> > +                                 GPIO_LEVEL_MASK_ARMADAXP_OFF(i));
+> >> > +           }
+> >> > +           break;
+> >> > +   default:
+> >> > +           BUG();
+> >>
+> >> Isn't it too severe? Is the platform going too unstable if driver
+> >> reaches this case?
+> >> I'd consider a WARN() instead.
+> >
+> > This is a common pattern in this driver. So i guess Thomas just
+> > cut/pasted the switch statement from _probe(), which also has the
+> > BUG().
+> >
+> > Given that _probe() should of thrown a BUG() in this situation, if it
+> > happens here, it means mvchip->soc_variant has been corrupted, and so
+> > bad things are happening. So a BUG() is maybe called for?
+> 
+> I agree that BUG() is adequate here. probe() should recognize the
+> exact same set of chips - if we reach this point this means that
+> either the data has been corrupted or we added support for a new chip
+> in probe() and forgot suspend/resume. In both cases the driver should
+> express its discontent.
 
-Okay, offtopic, but:
+Just for the records, since I don't know this platform very well :)
 
-a) datasheet explicitely states that dynamic pinmuxing is not supported=
-=2E
-b) last time I checked, no documentation at all. You get some magic val=
-ues spit
-   out by Altera's tools.
-c) you don't have registers. Pinmuxing is done via JTAG scan chain; whi=
-ch you
-   feed the magic values.
+IMHO unless this issue is the source of a serious instability or data
+corruption, a WARN() would be a better way for the driver express its
+discontent. It's way better to have a functional platform for further
+debugging.
 
-Apart from that, it seems to be the most sane idea, to at least write y=
-our
-driver in a way, that doesn't make any assumptions on HW state.
-But I think this is already common practice in mainline.
+This driver can also be compiled as a module. I wonder if it's a good
+behavior boot the platform and then crash the kernel when loading the
+module driver.
 
-> > But should the DT include stuff than, that is only interesting for =
-linux?
-> >=20
->=20
-> Like it or not it=E2=80=99s Linux that=E2=80=99s in the forefront of =
-many hardware designs.
->=20
+But anyway, that would be just me.
 
-I like it; pays my rent ;-)
-But I also like freedom to choose...
+Br, David Cohen
 
-> There are configuration settings in DT that are part of the way hardw=
-are is presented to
-> Linux and user-space, and have been for quite some time. We=E2=80=99v=
-e been pretending they don=E2=80=99t
-> exist, but they are there=E2=80=A6
->=20
-
-As far as I know, a lot of that are older bindings, where more
-things just got applied, because it wasn't clear where DT will go.
-
-
-Regards,
-Steffen
-
---=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
+> 
+> Acked-by: Alexandre Courbot <acourbot@nvidia.com>
