@@ -1,241 +1,148 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] iommu/rockchip: rk3288 iommu driver
-Date: Mon, 27 Oct 2014 18:08:10 +0800
-Message-ID: <CAGS+omDXb8M7RswgmQ33+PAh5VEnt9q00+Xn6KL1ZD_g-=q2cw@mail.gmail.com>
-References: <1414136029-22695-1-git-send-email-djkurtz@chromium.org>
-	<1414136029-22695-2-git-send-email-djkurtz@chromium.org>
-	<9308178.MnIriKUXEi@diego>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v4 2/3] regulator: max77686: Implement suspend disable
+ for some LDOs
+Date: Mon, 27 Oct 2014 11:08:36 +0100
+Message-ID: <544E19A4.6040603@collabora.co.uk>
+References: <1414403066-7872-1-git-send-email-k.kozlowski@samsung.com> <1414403066-7872-3-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <9308178.MnIriKUXEi@diego>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414403066-7872-3-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBPY3QgMjcsIDIwMTQgYXQgNDozMiBBTSwgSGVpa28gU3TDvGJuZXIgPGhlaWtvQHNu
-dGVjaC5kZT4gd3JvdGU6Cj4gSGkgRGFuaWVsLAo+Cj4gQW0gRnJlaXRhZywgMjQuIE9rdG9iZXIg
-MjAxNCwgMTU6MzM6NDcgc2NocmllYiBEYW5pZWwgS3VydHo6Cj4KPiBbLi4uXQo+Cj4+ICtzdGF0
-aWMgaW50IHJrX2lvbW11X2F0dGFjaF9kZXZpY2Uoc3RydWN0IGlvbW11X2RvbWFpbiAqZG9tYWlu
-LAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkZXZpY2UgKmRldikK
-Pj4gK3sKPj4gKyAgICAgc3RydWN0IHJrX2lvbW11ICppb21tdSA9IGRldl9nZXRfZHJ2ZGF0YShk
-ZXYtPmFyY2hkYXRhLmlvbW11KTsKPgo+IEhlcmUgSSBnZXQgYSBudWxsLXB0ciBkZXJlZmVyZW5j
-ZSBbMF0gd2hlbiB1c2luZyB0aGUgaW9tbXUgZHJpdmVyIHdpdGggdGhlCj4gcGVuZGluZyBkcm0g
-Y2hhbmdlcy4KClRoYXQncyB3aGF0IEkgZ2V0IGZvciB0ZXN0aW5nIGFnYWluc3QgYSBoZWF2aWx5
-IG1vZGlmaWVkIHYzLjE0LWJhc2VkIGtlcm5lbC4uLgoKSW4gdjMuMTQsIGRldl9nZXRfZHJ2ZGF0
-YSgpIHdvdWxkIGhhcHBpbHkgcmV0dXJuIE5VTEwgaWYgZGV2PU5VTEwuClRoaXMgImZlYXR1cmUi
-IHdhcyByZW1vdmVkIGluIHYzLjE1IGJ5IHRoaXMgcGF0Y2g6Cgpjb21taXQgZDQzMzIwMTM5MTlh
-YTg3ZGJkZWRlNjdkNjc3ZTRjZjJjZDMyZTg5OApBdXRob3I6IEplYW4gRGVsdmFyZSA8amRlbHZh
-cmVAc3VzZS5kZT4KRGF0ZTogICBNb24gQXByIDE0IDEyOjU3OjQzIDIwMTQgKzAyMDAKZHJpdmVy
-IGNvcmU6IGRldl9nZXRfZHJ2ZGF0YTogRG9uJ3QgY2hlY2sgZm9yIE5VTEwgZGV2Cgo+Cj4+ICsg
-ICAgIHN0cnVjdCBya19pb21tdV9kb21haW4gKnJrX2RvbWFpbiA9IGRvbWFpbi0+cHJpdjsKPj4g
-KyAgICAgdW5zaWduZWQgbG9uZyBmbGFnczsKPj4gKyAgICAgaW50IHJldDsKPj4gKyAgICAgcGh5
-c19hZGRyX3QgZHRlX2FkZHI7Cj4+ICsKPj4gKyAgICAgLyoKPj4gKyAgICAgICogQWxsb3cgJ3Zp
-cnR1YWwgZGV2aWNlcycgKGUuZy4sIGRybSkgdG8gYXR0YWNoIHRvIGRvbWFpbi4KPj4gKyAgICAg
-ICogU3VjaCBhIGRldmljZSBoYXMgYSBOVUxMIGFyY2hkYXRhLmlvbW11Lgo+PiArICAgICAgKi8K
-Pj4gKyAgICAgaWYgKCFpb21tdSkKPgo+IFdoZW4gdGhlIGNvbW1lbnQgaXMgY29ycmVjdCwgdGhl
-IGNvZGUgc2hvdWxkIHByb2JhYmx5IGRvIHNvbWV0aGluZyBsaWtlCj4gdGhlIGZvbGxvd2luZz8K
-Pgo+IGlmICghZGV2LT5hcmNoZGF0YS5pb21tdSkKPiAgICAgICAgIHJldHVybiAwOwo+Cj4gaW9t
-bXUgPSBkZXZfZ2V0X2RydmRhdGEoZGV2LT5hcmNoZGF0YS5pb21tdSk7Cj4KClllcywgdGhhdCBs
-b29rcyByZWFzb25hYmxlLgoKPgo+PiArICAgICAgICAgICAgIHJldHVybiAwOwo+PiArCj4+ICsg
-ICAgIHJldCA9IHJrX2lvbW11X2VuYWJsZV9zdGFsbChpb21tdSk7Cj4+ICsgICAgIGlmIChyZXQp
-Cj4+ICsgICAgICAgICAgICAgcmV0dXJuIHJldDsKPj4gKwo+PiArICAgICByZXQgPSBya19pb21t
-dV9mb3JjZV9yZXNldChpb21tdSk7Cj4+ICsgICAgIGlmIChyZXQpCj4+ICsgICAgICAgICAgICAg
-cmV0dXJuIHJldDsKPj4gKwo+PiArICAgICBpb21tdS0+ZG9tYWluID0gZG9tYWluOwo+PiArCj4+
-ICsgICAgIHJldCA9IGRldm1fcmVxdWVzdF9pcnEoZGV2LCBpb21tdS0+aXJxLCBya19pb21tdV9p
-cnEsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgSVJRRl9TSEFSRUQsIGRldl9uYW1l
-KGRldiksIGlvbW11KTsKPj4gKyAgICAgaWYgKHJldCkKPj4gKyAgICAgICAgICAgICByZXR1cm4g
-cmV0Owo+PiArCj4+ICsgICAgIGR0ZV9hZGRyID0gdmlydF90b19waHlzKHJrX2RvbWFpbi0+ZHQp
-Owo+PiArICAgICBya19pb21tdV93cml0ZShpb21tdSwgUktfTU1VX0RURV9BRERSLCBkdGVfYWRk
-cik7Cj4+ICsgICAgIHJrX2lvbW11X2NvbW1hbmQoaW9tbXUsIFJLX01NVV9DTURfWkFQX0NBQ0hF
-KTsKPj4gKyAgICAgcmtfaW9tbXVfd3JpdGUoaW9tbXUsIFJLX01NVV9JTlRfTUFTSywgUktfTU1V
-X0lSUV9NQVNLKTsKPj4gKwo+PiArICAgICByZXQgPSBya19pb21tdV9lbmFibGVfcGFnaW5nKGlv
-bW11KTsKPj4gKyAgICAgaWYgKHJldCkKPj4gKyAgICAgICAgICAgICByZXR1cm4gcmV0Owo+PiAr
-Cj4+ICsgICAgIHNwaW5fbG9ja19pcnFzYXZlKCZya19kb21haW4tPmlvbW11c19sb2NrLCBmbGFn
-cyk7Cj4+ICsgICAgIGxpc3RfYWRkX3RhaWwoJmlvbW11LT5ub2RlLCAmcmtfZG9tYWluLT5pb21t
-dXMpOwo+PiArICAgICBzcGluX3VubG9ja19pcnFyZXN0b3JlKCZya19kb21haW4tPmlvbW11c19s
-b2NrLCBmbGFncyk7Cj4+ICsKPj4gKyAgICAgZGV2X2luZm8oZGV2LCAiQXR0YWNoZWQgdG8gaW9t
-bXUgZG9tYWluXG4iKTsKPj4gKwo+PiArICAgICBya19pb21tdV9kaXNhYmxlX3N0YWxsKGlvbW11
-KTsKPj4gKwo+PiArICAgICByZXR1cm4gMDsKPj4gK30KPgo+IFsuLi5dCj4KPj4gKwo+PiArc3Rh
-dGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgcmtfaW9tbXVfZHJpdmVyID0gewo+PiArICAgICAu
-cHJvYmUgPSBya19pb21tdV9wcm9iZSwKPj4gKyAgICAgLnJlbW92ZSA9IHJrX2lvbW11X3JlbW92
-ZSwKPj4gKyAgICAgLmRyaXZlciA9IHsKPj4gKyAgICAgICAgICAgICAgICAubmFtZSA9ICJya19p
-b21tdSIsCj4+ICsgICAgICAgICAgICAgICAgLm93bmVyID0gVEhJU19NT0RVTEUsCj4+ICsgICAg
-ICAgICAgICAgICAgLm9mX21hdGNoX3RhYmxlID0gb2ZfbWF0Y2hfcHRyKHJrX2lvbW11X2R0X2lk
-cyksCj4+ICsgICAgIH0sCj4+ICt9Owo+PiArCj4+ICtzdGF0aWMgaW50IF9faW5pdCBya19pb21t
-dV9pbml0KHZvaWQpCj4+ICt7Cj4+ICsgICAgIGludCByZXQ7Cj4+ICsKPj4gKyAgICAgcmV0ID0g
-YnVzX3NldF9pb21tdSgmcGxhdGZvcm1fYnVzX3R5cGUsICZya19pb21tdV9vcHMpOwo+Cj4gb24g
-My4xOC1yYzEgdGhpcyBmYWlscyB3aXRoIC1FTk9ERVYsIGFzIGFkZF9pb21tdV9ncm91cCgpIGlz
-IG1pc3NpbmcgdGhlCj4gYWRkX2RldmljZSBjYWxsYmFjayBpbiBya19pb21tdV9vcHMsIHNvIHRo
-ZSBpb21tdSBkcml2ZXIgYWN0dWFsbHkgbmV2ZXIKPiBnZXRzIHJlZ2lzdGVyZWQuCgp2My4xOC1y
-YzEgaGFzIHBhdGNoIFswXSB3aGljaCBjaGFuZ2VzCmJ1c19zZXRfaW9tbXUoKS0+aW9tbXVfYnVz
-X2luaXQoKSB0byBwcm9wYWdhdGUgdGhlIHJldHVybiB2YWx1ZSBvZgphZGRfaW9tbXVfZ3JvdXAo
-KSwgd2hlcmVhcyBpdCB3YXMgaWdub3JlZCBpbiB2My4xNy4KClswXSBjb21taXQgZmIzZTMwNjUx
-NWJhNmEwMTIzNjRiNjk4YjhjYTcxYzMzNzQyNGVkMwpBdXRob3I6IE1hcmsgU2FsdGVyIDxtc2Fs
-dGVyQHJlZGhhdC5jb20+CkRhdGU6ICAgU3VuIFNlcCAyMSAxMzo1ODoyNCAyMDE0IC0wNDAwCgog
-ICAgaW9tbXU6IEZpeCBidXMgbm90aWZpZXIgYnJlYWthZ2UKCgpUaGlzIHBhdGNoIG1hZGUgaXQg
-bWFuZGF0b3J5IHRoYXQgaW9tbXUgZHJpdmVycyBwcm92aWRlIGFuIGFkZF9ncm91cApjYWxsYmFj
-ay4gICBJJ20gbm90IGV4YWN0bHkgc3VyZSB3aHkuICBJb21tdSBncm91cHMgZG8gbm90IHNlZW0g
-dG8gYmUKYSBnb29kIGZpdCBmb3IgdGhlIHJvY2tjaGlwIGlvbW11cywgc2luY2UgdGhlIGlvbW11
-cyBhcmUgYWxsIDE6MSB3aXRoCnRoZWlyIG1hc3RlciBkZXZpY2UuCgpUaGUgZXh5bm9zIGFkZF9n
-cm91cCgpIGlzIGEgcG9zc2liaWxpdHksIGhvd2V2ZXIsIGl0IGNhdXNlcyBhbgppb21tdV9ncm91
-cCB0byBiZSBhbGxvY2F0ZWQgZm9yIGV2ZXJ5IHNpbmdsZSBwbGF0Zm9ybV9kZXZpY2UsIGV2ZW4g
-aWYKdGhleSBkbyBub3QgdXNlIGFuIGlvbW11LiAgVGhpcyBzZWVtcyB2ZXJ5IHdhc3RlZnVsLiAg
-SW5zdGVhZCB3ZSBjYW4KY2hlY2sgdGhlIGRldmljZSdzIGR0IG5vZGUgZm9yIGFuIGlvbW11cyBm
-aWVsZCB0byBhIHBoYW5kbGUgd2l0aCBhCiIjaW9tbXUtY2VsbHMiIGZpZWxkLgoKQWxzbywgcGVy
-aGFwcyB0aGUgYWRkX2RldmljZSgpIGlzIGEgZ29vZCBwbGFjZSB0byBzdGljayBvdGhlciBnZW5l
-cmljCmRldmljZSBpbml0aWFsaXphdGlvbiBjb2RlLCB3aGljaCB3ZSBhcmUgY3VycmVudGx5IHNw
-cmlua2xpbmcgaW4gdGhlCmRyaXZlcnMgb2Ygcm9ja2NoaXAgaW9tbXUgbWFzdGVycyAoZHJtL2Nv
-ZGVjKS4gIE90aGVyIGRyaXZlcnMgZG8gdGhpczoKICogc2htb2JpbGU6IHNldHMgdXAgdGhlIGlv
-bW11IG1hcHBpbmcgd2l0aCBhcm1faW9tbXVfY3JlYXRlX21hcHBpbmcoKQovIGFybV9pb21tdV9h
-dHRhY2hfZGV2aWNlKCkKICogb21hcDogdXNlIG9mX3BhcnNlX3BoYW5kbGUoKS9vZl9maW5kX2Rl
-dmljZV9ieV9ub2RlKCkgdG8gc2V0IGEKbWFzdGVyIGRldmljZSdzIGRldi0+YXJjaGRhdGEuaW9t
-bXUuCgpPciwgcGVyaGFwcyB3ZSBjYW4ganVzdCBpZ25vcmUgaW9tbXUgZ3JvdXBzIGVudGlyZWx5
-IGFuZCB1c2UgZHVtbXkgZnVuY3Rpb25zOgogc3RhdGljIGludCBya19pb21tdV9hZGRfZGV2aWNl
-KHN0cnVjdCBkZXZpY2UgKmRldikgeyByZXR1cm4gMDsgfQogc3RhdGljIHZvaWQgcmtfaW9tbXVf
-cmVtb3ZlX2RldmljZShzdHJ1Y3QgZGV2aWNlICpkZXYpIHsgfQoKSSdsbCBpbnZlc3RpZ2F0ZSBt
-b3JlLgoKLURhbgoKPgo+IEkndmUgc3RvbGVuIHRoZSBnZW5lcmljIGFkZF9kZXZpY2UgYW5kIHJl
-bW92ZV9kZXZpY2UgY2FsbGJhY2tzIGZyb20gdGhlCj4gZXh5bm9zIGlvbW11IGRyaXZlciB3aGlj
-aCBtYWtlcyB0aGUgcmsgb25lIGF0IGxlYXN0IHByb2JlLgo+Cj4gQ2FuJ3Qgc2F5IGhvdyBmYXIg
-aXQgZ29lcywgYXMgSSdtIHN0aWxsIHN0cnVnZ2xpbmcgd2l0aCB0aGUgZmxvYXRpbmcgZGlzcGxh
-eQo+IHN1YnN5c3RlbSBwYXJ0cy4gTXkgY3VycmVudCBkaWZmIGFnYWluc3QgdGhpcyB2ZXJzaW9u
-IGNhbiBiZSBmb3VuZCBpbiBbMV0uCj4KPiBNYXliZSB0aGUgaXNzdWUgSSBoYWQgaW4gYXR0YWNo
-X2RldmljZSBhbHNvIHNpbXBseSByZXN1bHRlZCBmcm9tIHRoaXMgb25lLAo+IG5vdCBzdXJlIHJp
-Z2h0IG5vdy4KPgo+Cj4gSGVpa28KPgo+PiArICAgICBpZiAocmV0KQo+PiArICAgICAgICAgICAg
-IHJldHVybiByZXQ7Cj4+ICsKPj4gKyAgICAgcmV0dXJuIHBsYXRmb3JtX2RyaXZlcl9yZWdpc3Rl
-cigmcmtfaW9tbXVfZHJpdmVyKTsKPj4gK30KPj4gK3N0YXRpYyB2b2lkIF9fZXhpdCBya19pb21t
-dV9leGl0KHZvaWQpCj4+ICt7Cj4+ICsgICAgIHBsYXRmb3JtX2RyaXZlcl91bnJlZ2lzdGVyKCZy
-a19pb21tdV9kcml2ZXIpOwo+PiArfQo+PiArCj4+ICtzdWJzeXNfaW5pdGNhbGwocmtfaW9tbXVf
-aW5pdCk7Cj4+ICttb2R1bGVfZXhpdChya19pb21tdV9leGl0KTsKPj4gKwo+PiArTU9EVUxFX0RF
-U0NSSVBUSU9OKCJJT01NVSBBUEkgZm9yIFJvY2tjaGlwIik7Cj4+ICtNT0RVTEVfQVVUSE9SKCJT
-aW1vbiBYdWUgPHh4bUByb2NrLWNoaXBzLmNvbT4gYW5kIERhbmllbCBLdXJ0ego+PiA8ZGprdXJ0
-ekBjaHJvbWl1bS5vcmc+Iik7ICtNT0RVTEVfQUxJQVMoInBsYXRmb3JtOnJvY2tjaGlwLWlvbW11
-Iik7Cj4+ICtNT0RVTEVfTElDRU5TRSgiR1BMIHYyIik7Cj4KPgo+Cj4gWzBdCj4KPiBbZHJtXSBJ
-bml0aWFsaXplZCBkcm0gMS4xLjAgMjAwNjA4MTAKPiBVbmFibGUgdG8gaGFuZGxlIGtlcm5lbCBO
-VUxMIHBvaW50ZXIgZGVyZWZlcmVuY2UgYXQgdmlydHVhbCBhZGRyZXNzIDAwMDAwMDU4Cj4gcGdk
-ID0gYzAwMDQwMDAKPiBbMDAwMDAwNThdICpwZ2Q9MDAwMDAwMDAKPiBJbnRlcm5hbCBlcnJvcjog
-T29wczogNSBbIzFdIFNNUCBBUk0KPiBNb2R1bGVzIGxpbmtlZCBpbjoKPiBDUFU6IDAgUElEOiAx
-IENvbW06IHN3YXBwZXIvMCBOb3QgdGFpbnRlZCAzLjE4LjAtcmMxKyAjMTI3NAo+IHRhc2s6IGVl
-MDY3YjQwIHRpOiBlZTA2ODAwMCB0YXNrLnRpOiBlZTA2ODAwMAo+IFBDIGlzIGF0IHJrX2lvbW11
-X2F0dGFjaF9kZXZpY2UrMHgzYy8weDI5Ywo+IExSIGlzIGF0IHJrX2lvbW11X2F0dGFjaF9kZXZp
-Y2UrMHgzMC8weDI5Ywo+IHBjIDogWzxjMDM2ODZkND5dICAgIGxyIDogWzxjMDM2ODZjOD5dICAg
-IHBzcjogNjAwMDAxNTMKPiBzcCA6IGVlMDY5ZGI4ICBpcCA6IDAwMDAwMDAwICBmcCA6IDAwMDAw
-MDAwCj4gcjEwOiBlZTI3NmYwMCAgcjkgOiAwMDAwMDAwMCAgcjggOiBlZTI3Y2MwMAo+IHI3IDog
-ZWUyN2NmODAgIHI2IDogZWUxMWI2MTAgIHI1IDogZWUxMWI2MTAgIHI0IDogZWUyN2NmODAKPiBy
-MyA6IDAwMDAwMDAwICByMiA6IGMwN2JiNTg4ICByMSA6IGMwNDViNmQwICByMCA6IGMwNTRhMjdm
-Cj4gRmxhZ3M6IG5aQ3YgIElSUXMgb24gIEZJUXMgb2ZmICBNb2RlIFNWQ18zMiAgSVNBIEFSTSAg
-U2VnbWVudCBrZXJuZWwKPiBDb250cm9sOiAxMGM1Mzg3ZCAgVGFibGU6IDAwMDA0MDZhICBEQUM6
-IDAwMDAwMDE1Cj4gUHJvY2VzcyBzd2FwcGVyLzAgKHBpZDogMSwgc3RhY2sgbGltaXQgPSAweGVl
-MDY4MjQwKQo+IFN0YWNrOiAoMHhlZTA2OWRiOCB0byAweGVlMDZhMDAwKQo+IDlkYTA6ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGMwN2M3NWE4
-IGMwMzY3ZmVjCj4gOWRjMDogYzAzNjdmYzQgZWUyNzZmMDAgYzA3Yzc1YTggZWUyN2NmODAgZWUx
-MWI2MTAgMDAwMDAwMDAgZWUyN2NmODAgZWUyN2NjMDAKPiA5ZGUwOiAwMDAwMDAwMCBjMDM2NmM0
-OCBlZTI3YzI1MCBjMDAxYTQ3MCBlZTI3YzI1MCBlZTExYjYxMCBlZTJjZjQwMCAwMDAwMDAwMAo+
-IDllMDA6IGVlMjdjZjgwIGMwMjI1Mzg4IGMwMjI1Mjk4IGVlMmNmNDAwIDAwMDAwMDAwIDAwMDAw
-MDAwIDAwMDAwMDAwIGMwMjEzY2IwCj4gOWUyMDogZWUxMWNhNDAgZWUxMWI2MTAgZWUyY2Y0MDAg
-MDAwMDAwMDAgZWUyZGIxMzAgYzAyMjUyMmMgZWUyZGJmODAgMDAwMDAwMDQKPiA5ZTQwOiBlZTJk
-YjExMCBjMDIyYTllNCBlZTI3Y2MwMCBjMDdjNzNmOCBlZTJkYmY4MCBjMDdkYTdjMCBjMDgyNjMz
-YyBjMDIyYWJlNAo+IDllNjA6IGMwNDQ2NzEwIGVlMTI3MDEwIGZmZmZmZmVkIGMwN2M3MzU0IGMw
-N2RhN2MwIGMwMjMwMTc0IGVlMTI3MDEwIGMwN2M3MzU0Cj4gOWU4MDogMDAwMDAwMDAgYzAyMmVi
-YzAgYzA3YzczNTQgZWUxMjcwMTAgZWUwNjllYTggZWUxMjcwMTAgZWUxMjcwNDQgYzA3YzczNTQK
-PiA5ZWEwOiAwMDAwMDAwMCBjMDViZTRhMCBlZTA2ODAwMCBjMDIyZWUzOCAwMDAwMDAwMCBjMDdj
-NzM1NCBjMDIyZWRkMCBjMDIyZDI4Ywo+IDllYzA6IGVlMDQ2NzVjIGVlMTIyNmI0IGMwN2M3MzU0
-IGVlMmQ2YTgwIGMwN2M3NWE4IGMwMjJlMmI0IGMwNTEyZTZkIGMwNTEyZTZkCj4gOWVlMDogMDAw
-MDAwNzIgYzA3YzczNTQgYzA3YjZlMTggYzA3ZGZhYzAgYzA1ZGQyNzQgYzAyMmY0YjAgMDAwMDAw
-MDAgZWUyN2NkMDAKPiA5ZjAwOiBjMDdiNmUxOCBjMDAwODlkMCBlZTBlOTMwMCBjMDEwMDAxOCBl
-ZTBlOTMwMCBlZTBlOTA4MCBlZTBlOTAwMCBjMDQyMGUzOAo+IDlmMjA6IGMwODAyNDQ0IDAwMDAw
-MDAwIGMwNTdkOTgwIGMwMTAwMWE0IGMwNWE3NTk0IGVmN2ZjYzA1IDAwMDAwMDAwIGMwMDM2YjY4
-Cj4gOWY0MDogMDAwMDAwMDAgMDAwMDAwMDAgYzA1N2Q5ODAgYzA1N2NkOTAgMDAwMDAwYmYgMDAw
-MDAwMDYgYzA3YmE1ZjAgMDAwMDAwMDYKPiA5ZjYwOiBjMDVkMTU2OCBjMDdkZmFjMCBjMDVkZDI3
-NCAwMDAwMDBiZiAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCBjMDVhN2QyMAo+IDlmODA6IDAw
-MDAwMDA2IDAwMDAwMDA2IGMwNWE3NTk0IGVlMDY4MDAwIDAwMDAwMDAwIGMwNDE3MWFjIDAwMDAw
-MDAwIDAwMDAwMDAwCj4gOWZhMDogMDAwMDAwMDAgYzA0MTcxYjQgMDAwMDAwMDAgYzAwMGU4Nzgg
-MDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAKPiA5ZmMwOiAwMDAwMDAwMCAwMDAw
-MDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAw
-MAo+IDlmZTA6IDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDEzIDAw
-MDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwCj4gWzxjMDM2ODZkND5dIChya19pb21tdV9hdHRhY2hf
-ZGV2aWNlKSBmcm9tIFs8YzAzNjZjNDg+XSAoaW9tbXVfYXR0YWNoX2RldmljZSsweDE4LzB4MjQp
-Cj4gWzxjMDM2NmM0OD5dIChpb21tdV9hdHRhY2hfZGV2aWNlKSBmcm9tIFs8YzAwMWE0NzA+XSAo
-YXJtX2lvbW11X2F0dGFjaF9kZXZpY2UrMHgxOC8weGQwKQo+IFs8YzAwMWE0NzA+XSAoYXJtX2lv
-bW11X2F0dGFjaF9kZXZpY2UpIGZyb20gWzxjMDIyNTM4OD5dIChyb2NrY2hpcF9kcm1fbG9hZCsw
-eGYwLzB4MTk4KQo+IFs8YzAyMjUzODg+XSAocm9ja2NoaXBfZHJtX2xvYWQpIGZyb20gWzxjMDIx
-M2NiMD5dIChkcm1fZGV2X3JlZ2lzdGVyKzB4ODAvMHgxMDApCj4gWzxjMDIxM2NiMD5dIChkcm1f
-ZGV2X3JlZ2lzdGVyKSBmcm9tIFs8YzAyMjUyMmM+XSAocm9ja2NoaXBfZHJtX2JpbmQrMHg0OC8w
-eDc0KQo+IFs8YzAyMjUyMmM+XSAocm9ja2NoaXBfZHJtX2JpbmQpIGZyb20gWzxjMDIyYTllND5d
-ICh0cnlfdG9fYnJpbmdfdXBfbWFzdGVyLnBhcnQuMisweGE0LzB4ZjQpCj4gWzxjMDIyYTllND5d
-ICh0cnlfdG9fYnJpbmdfdXBfbWFzdGVyLnBhcnQuMikgZnJvbSBbPGMwMjJhYmU0Pl0gKGNvbXBv
-bmVudF9hZGQrMHg5Yy8weDEwNCkKPiBbPGMwMjJhYmU0Pl0gKGNvbXBvbmVudF9hZGQpIGZyb20g
-WzxjMDIzMDE3ND5dIChwbGF0Zm9ybV9kcnZfcHJvYmUrMHg0OC8weDkwKQo+IFs8YzAyMzAxNzQ+
-XSAocGxhdGZvcm1fZHJ2X3Byb2JlKSBmcm9tIFs8YzAyMmViYzA+XSAoZHJpdmVyX3Byb2JlX2Rl
-dmljZSsweDEzMC8weDM0MCkKPiBbPGMwMjJlYmMwPl0gKGRyaXZlcl9wcm9iZV9kZXZpY2UpIGZy
-b20gWzxjMDIyZWUzOD5dIChfX2RyaXZlcl9hdHRhY2grMHg2OC8weDhjKQo+IFs8YzAyMmVlMzg+
-XSAoX19kcml2ZXJfYXR0YWNoKSBmcm9tIFs8YzAyMmQyOGM+XSAoYnVzX2Zvcl9lYWNoX2Rldisw
-eDZjLzB4ODApCj4gWzxjMDIyZDI4Yz5dIChidXNfZm9yX2VhY2hfZGV2KSBmcm9tIFs8YzAyMmUy
-YjQ+XSAoYnVzX2FkZF9kcml2ZXIrMHhmYy8weDFmMCkKPiBbPGMwMjJlMmI0Pl0gKGJ1c19hZGRf
-ZHJpdmVyKSBmcm9tIFs8YzAyMmY0YjA+XSAoZHJpdmVyX3JlZ2lzdGVyKzB4OWMvMHhlMCkKPiBb
-PGMwMjJmNGIwPl0gKGRyaXZlcl9yZWdpc3RlcikgZnJvbSBbPGMwMDA4OWQwPl0gKGRvX29uZV9p
-bml0Y2FsbCsweDExMC8weDFiYykKPiBbPGMwMDA4OWQwPl0gKGRvX29uZV9pbml0Y2FsbCkgZnJv
-bSBbPGMwNWE3ZDIwPl0gKGtlcm5lbF9pbml0X2ZyZWVhYmxlKzB4ZmMvMHgxYzgpCj4gWzxjMDVh
-N2QyMD5dIChrZXJuZWxfaW5pdF9mcmVlYWJsZSkgZnJvbSBbPGMwNDE3MWI0Pl0gKGtlcm5lbF9p
-bml0KzB4OC8weGU0KQo+IFs8YzA0MTcxYjQ+XSAoa2VybmVsX2luaXQpIGZyb20gWzxjMDAwZTg3
-OD5dIChyZXRfZnJvbV9mb3JrKzB4MTQvMHgzYykKPiBDb2RlOiBlYjAyYzA3ZCBlNTk2MzE0MCBl
-NTlmMTIzNCBlNTlmMDIzNCAoZTU5MzQwNTgpCj4gLS0tWyBlbmQgdHJhY2UgNDFlNGY4ZTU1ZTcx
-MTlhZiBdLS0tCj4gS2VybmVsIHBhbmljIC0gbm90IHN5bmNpbmc6IEF0dGVtcHRlZCB0byBraWxs
-IGluaXQhIGV4aXRjb2RlPTB4MDAwMDAwMGIKPgo+IC0tLVsgZW5kIEtlcm5lbCBwYW5pYyAtIG5v
-dCBzeW5jaW5nOiBBdHRlbXB0ZWQgdG8ga2lsbCBpbml0ISBleGl0Y29kZT0weDAwMDAwMDBiCj4K
-Pgo+Cj4gWzFdCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pb21tdS9yb2NrY2hpcC1pb21tdS5j
-IGIvZHJpdmVycy9pb21tdS9yb2NrY2hpcC1pb21tdS5jCj4gaW5kZXggNTZmZmI3Ni4uOTU5MzQ4
-ZiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2lvbW11L3JvY2tjaGlwLWlvbW11LmMKPiArKysgYi9k
-cml2ZXJzL2lvbW11L3JvY2tjaGlwLWlvbW11LmMKPiBAQCAtNzA4LDggKzcwOCw4IEBAIHN0YXRp
-YyBzaXplX3QgcmtfaW9tbXVfdW5tYXAoc3RydWN0IGlvbW11X2RvbWFpbiAqZG9tYWluLCB1bnNp
-Z25lZCBsb25nIF9pb3ZhLAo+ICBzdGF0aWMgaW50IHJrX2lvbW11X2F0dGFjaF9kZXZpY2Uoc3Ry
-dWN0IGlvbW11X2RvbWFpbiAqZG9tYWluLAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gIHsKPiAtICAgICAgIHN0cnVjdCBya19pb21tdSAq
-aW9tbXUgPSBkZXZfZ2V0X2RydmRhdGEoZGV2LT5hcmNoZGF0YS5pb21tdSk7Cj4gICAgICAgICBz
-dHJ1Y3QgcmtfaW9tbXVfZG9tYWluICpya19kb21haW4gPSBkb21haW4tPnByaXY7Cj4gKyAgICAg
-ICBzdHJ1Y3QgcmtfaW9tbXUgKmlvbW11Owo+ICAgICAgICAgdW5zaWduZWQgbG9uZyBmbGFnczsK
-PiAgICAgICAgIGludCByZXQ7Cj4gICAgICAgICBwaHlzX2FkZHJfdCBkdGVfYWRkcjsKPiBAQCAt
-NzE4LDkgKzcxOCwxMSBAQCBzdGF0aWMgaW50IHJrX2lvbW11X2F0dGFjaF9kZXZpY2Uoc3RydWN0
-IGlvbW11X2RvbWFpbiAqZG9tYWluLAo+ICAgICAgICAgICogQWxsb3cgJ3ZpcnR1YWwgZGV2aWNl
-cycgKGUuZy4sIGRybSkgdG8gYXR0YWNoIHRvIGRvbWFpbi4KPiAgICAgICAgICAqIFN1Y2ggYSBk
-ZXZpY2UgaGFzIGEgTlVMTCBhcmNoZGF0YS5pb21tdS4KPiAgICAgICAgICAqLwo+IC0gICAgICAg
-aWYgKCFpb21tdSkKPiArICAgICAgIGlmICghZGV2LT5hcmNoZGF0YS5pb21tdSkKPiAgICAgICAg
-ICAgICAgICAgcmV0dXJuIDA7Cj4KPiArICAgICAgIGlvbW11ID0gZGV2X2dldF9kcnZkYXRhKGRl
-di0+YXJjaGRhdGEuaW9tbXUpOwo+ICsKPiAgICAgICAgIHJldCA9IHJrX2lvbW11X2VuYWJsZV9z
-dGFsbChpb21tdSk7Cj4gICAgICAgICBpZiAocmV0KQo+ICAgICAgICAgICAgICAgICByZXR1cm4g
-cmV0Owo+IEBAIC04MzcsNiArODM5LDMyIEBAIHN0YXRpYyB2b2lkIHJrX2lvbW11X2RvbWFpbl9k
-ZXN0cm95KHN0cnVjdCBpb21tdV9kb21haW4gKmRvbWFpbikKPiAgICAgICAgIGRvbWFpbi0+cHJp
-diA9IE5VTEw7Cj4gIH0KPgo+ICtzdGF0aWMgaW50IHJrX2lvbW11X2FkZF9kZXZpY2Uoc3RydWN0
-IGRldmljZSAqZGV2KQo+ICt7Cj4gKyAgICAgICBzdHJ1Y3QgaW9tbXVfZ3JvdXAgKmdyb3VwOwo+
-ICsgICAgICAgaW50IHJldDsKPiArCj4gKyAgICAgICBncm91cCA9IGlvbW11X2dyb3VwX2dldChk
-ZXYpOwo+ICsKPiArICAgICAgIGlmICghZ3JvdXApIHsKPiArICAgICAgICAgICAgICAgZ3JvdXAg
-PSBpb21tdV9ncm91cF9hbGxvYygpOwo+ICsgICAgICAgICAgICAgICBpZiAoSVNfRVJSKGdyb3Vw
-KSkgewo+ICsgICAgICAgICAgICAgICAgICAgICAgIGRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGFs
-bG9jYXRlIElPTU1VIGdyb3VwXG4iKTsKPiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4g
-UFRSX0VSUihncm91cCk7Cj4gKyAgICAgICAgICAgICAgIH0KPiArICAgICAgIH0KPiArCj4gKyAg
-ICAgICByZXQgPSBpb21tdV9ncm91cF9hZGRfZGV2aWNlKGdyb3VwLCBkZXYpOwo+ICsgICAgICAg
-aW9tbXVfZ3JvdXBfcHV0KGdyb3VwKTsKPiArCj4gKyAgICAgICByZXR1cm4gcmV0Owo+ICt9Cj4g
-Kwo+ICtzdGF0aWMgdm9pZCBya19pb21tdV9yZW1vdmVfZGV2aWNlKHN0cnVjdCBkZXZpY2UgKmRl
-dikKPiArewo+ICsgICAgICAgaW9tbXVfZ3JvdXBfcmVtb3ZlX2RldmljZShkZXYpOwo+ICt9Cj4g
-Kwo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IGlvbW11X29wcyBya19pb21tdV9vcHMgPSB7Cj4gICAg
-ICAgICAuZG9tYWluX2luaXQgPSBya19pb21tdV9kb21haW5faW5pdCwKPiAgICAgICAgIC5kb21h
-aW5fZGVzdHJveSA9IHJrX2lvbW11X2RvbWFpbl9kZXN0cm95LAo+IEBAIC04NDUsNiArODczLDgg
-QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBpb21tdV9vcHMgcmtfaW9tbXVfb3BzID0gewo+ICAgICAg
-ICAgLm1hcCA9IHJrX2lvbW11X21hcCwKPiAgICAgICAgIC51bm1hcCA9IHJrX2lvbW11X3VubWFw
-LAo+ICAgICAgICAgLmlvdmFfdG9fcGh5cyA9IHJrX2lvbW11X2lvdmFfdG9fcGh5cywKPiArICAg
-ICAgIC5hZGRfZGV2aWNlID0gcmtfaW9tbXVfYWRkX2RldmljZSwKPiArICAgICAgIC5yZW1vdmVf
-ZGV2aWNlID0gcmtfaW9tbXVfcmVtb3ZlX2RldmljZSwKPiAgICAgICAgIC5wZ3NpemVfYml0bWFw
-ID0gUktfSU9NTVVfUEdTSVpFX0JJVE1BUCwKPiAgfTsKPgo+Cl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmlvbW11IG1haWxpbmcgbGlzdAppb21tdUBsaXN0
-cy5saW51eC1mb3VuZGF0aW9uLm9yZwpodHRwczovL2xpc3RzLmxpbnV4Zm91bmRhdGlvbi5vcmcv
-bWFpbG1hbi9saXN0aW5mby9pb21tdQ==
+Hello Krzysztof,
+
+On 10/27/2014 10:44 AM, Krzysztof Kozlowski wrote:
+> Some LDOs of Maxim 77686 PMIC support disabling during system suspend
+> (LDO{2,6,7,8,10,11,12,14,15,16}). This was already implemented as part
+> of set_suspend_mode function. In that case the mode was one of:
+>  - disable,
+>  - normal mode,
+>  - low power mode.
+> However there are no bindings for setting the mode during suspend.
+> 
+> Add suspend disable for LDO regulators supporting this to the existing
+> max77686_buck_set_suspend_disable() function. This helps reducing
+> energy consumption during system sleep.
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> ---
+>  drivers/regulator/max77686.c | 75 ++++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 66 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/regulator/max77686.c b/drivers/regulator/max77686.c
+> index 3d0922051488..4b35c19c9286 100644
+> --- a/drivers/regulator/max77686.c
+> +++ b/drivers/regulator/max77686.c
+> @@ -87,18 +87,31 @@ struct max77686_data {
+>  	unsigned int opmode[MAX77686_REGULATORS];
+>  };
+>  
+> -/* Some BUCKS supports Normal[ON/OFF] mode during suspend */
+> -static int max77686_buck_set_suspend_disable(struct regulator_dev *rdev)
+> +/* Some BUCKs and LDOs supports Normal[ON/OFF] mode during suspend */
+> +static int max77686_set_suspend_disable(struct regulator_dev *rdev)
+>  {
+>  	unsigned int val;
+>  	struct max77686_data *max77686 = rdev_get_drvdata(rdev);
+>  	int ret, id = rdev_get_id(rdev);
+>  
+> -	if (id == MAX77686_BUCK1)
+> +	switch (id) {
+> +	case MAX77686_BUCK1:
+>  		val = MAX77686_BUCK_OFF_PWRREQ;
+> -	else
+> -		val = MAX77686_BUCK_OFF_PWRREQ
+> -			<< MAX77686_OPMODE_BUCK234_SHIFT;
+> +		break;
+> +	case MAX77686_BUCK2 ...	MAX77686_BUCK4:
+> +		val = MAX77686_BUCK_OFF_PWRREQ << MAX77686_OPMODE_BUCK234_SHIFT;
+> +		break;
+> +	case MAX77686_LDO2:
+> +	case MAX77686_LDO6 ... MAX77686_LDO8:
+> +	case MAX77686_LDO10 ... MAX77686_LDO12:
+> +	case MAX77686_LDO14 ... MAX77686_LDO16:
+> +		val = MAX77686_LDO_OFF_PWRREQ << MAX77686_OPMODE_SHIFT;
+> +		break;
+> +	default:
+> +		pr_warn("%s: regulator_suspend_disable not supported\n",
+> +			rdev->desc->name);
+> +		return -EINVAL;
+> +	}
+>  
+>  	ret = regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
+>  				 rdev->desc->enable_mask, val);
+> @@ -176,13 +189,53 @@ static int max77686_ldo_set_suspend_mode(struct regulator_dev *rdev,
+>  	return 0;
+>  }
+>  
+> +/*
+> + * For regulators supporting disabled in suspend it checks if opmode
+> + * is 'off_pwrreq' mode (disabled in suspend) and changes it to 'enable'.
+> + * For other regulators does nothing.
+> + */
+> +static void max77686_set_opmode_enable(struct max77686_data *max77686, int id)
+> +{
+> +	unsigned int opmode_shift;
+> +
+> +	/*
+> +	 * Same enable function is used for LDO and bucks. Assuming
+> +	 * the same values are used for enable registers.
+> +	 */
+> +	BUILD_BUG_ON(MAX77686_LDO_OFF_PWRREQ != MAX77686_BUCK_OFF_PWRREQ);
+> +	BUILD_BUG_ON(MAX77686_LDO_NORMAL != MAX77686_BUCK_NORMAL);
+> +
+> +	switch (id) {
+> +	case MAX77686_BUCK1:
+> +		opmode_shift = 0;
+> +		break;
+> +	case MAX77686_BUCK2 ...	MAX77686_BUCK4:
+> +		opmode_shift = MAX77686_OPMODE_BUCK234_SHIFT;
+> +		break;
+> +	case MAX77686_LDO2:
+> +	case MAX77686_LDO6 ... MAX77686_LDO8:
+> +	case MAX77686_LDO10 ... MAX77686_LDO12:
+> +	case MAX77686_LDO14 ... MAX77686_LDO16:
+> +		opmode_shift = MAX77686_OPMODE_SHIFT;
+> +		break;
+> +	default:
+> +		return;
+> +	}
+> +
+> +	if (max77686->opmode[id] == (MAX77686_LDO_OFF_PWRREQ << opmode_shift))
+> +		max77686->opmode[id] = MAX77686_LDO_NORMAL << opmode_shift;
+> +}
+> +
+>  static int max77686_enable(struct regulator_dev *rdev)
+>  {
+>  	struct max77686_data *max77686 = rdev_get_drvdata(rdev);
+> +	int id = rdev_get_id(rdev);
+> +
+> +	max77686_set_opmode_enable(max77686, id);
+>  
+>  	return regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
+>  				  rdev->desc->enable_mask,
+> -				  max77686->opmode[rdev_get_id(rdev)]);
+> +				  max77686->opmode[id]);
+>  }
+
+the max77802 driver handles this slightly differently. It stores in opmode[id]
+just the value without the shift and there is a max77802_get_opmode_shift() to
+obtain the shift that is used before updating the register, e.g:
+
+int shift = max77802_get_opmode_shift(id);
+return regmap_update_bits(..., max77802->opmode[id] << shift);
+
+I think the max77802 driver approach is better since it avoids duplicating the
+switch statement to get the shift for each regulator. Just look how the max77802
+enable and disable functions are easier to read. Looking at the max77686 driver,
+I see that there are assumptions that opmode[id] has the value shifted so your
+changes are consistent with the rest of the driver but I would consider changing
+this.
+
+Best regards,
+Javier
