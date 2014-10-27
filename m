@@ -1,7 +1,7 @@
 From: Roman Byshko <rbyshko@gmail.com>
-Subject: [PATCH 1/5] phy: sun4i: add support for USB phy0
-Date: Mon, 27 Oct 2014 22:43:01 +0100
-Message-ID: <668c1b5541fc0175957573bd5f8d40dd2eaccae1.1414444953.git.rbyshko@gmail.com>
+Subject: [PATCH 4/5] ARM: dts: sun7i: Cubietruck: override regulator pin
+Date: Mon, 27 Oct 2014 22:43:04 +0100
+Message-ID: <43a07cc5db10fbd0465cdea43e00a92424be1fda.1414444953.git.rbyshko@gmail.com>
 References: <cover.1414444953.git.rbyshko@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1414444953.git.rbyshko@gmail.com>
@@ -12,47 +12,42 @@ To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetr
 Cc: Kishon Vijay Abraham I <kishon@ti.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The driver for sun4i USB phys currently supports
-only phy1 and phy2 which are used for USB host
-controllers. This patch adds support for USB phy0,
-which is used by the musb hdrc USB controller.
+Cubietruck uses different pin for the USB OTG VBUS that
+is why we override the one defined in sunxi-common-regulators.dtsi
 ---
- drivers/phy/phy-sun4i-usb.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-index 0baf5ef..a24728b 100644
---- a/drivers/phy/phy-sun4i-usb.c
-+++ b/drivers/phy/phy-sun4i-usb.c
-@@ -157,6 +157,10 @@ static int sun4i_usb_phy_init(struct phy *_phy)
- 		return ret;
- 	}
- 
-+	/* Regulation 45 ohms */
-+	if (phy->index == 0)
-+		sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
+diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+index a6c1a3c..1682307 100644
+--- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
++++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+@@ -92,6 +92,13 @@
+ 				allwinner,drive = <0>;
+ 				allwinner,pull = <0>;
+ 			};
 +
- 	/* Adjust PHY's magnitude and rate */
- 	sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
++			usb0_vbus_pin_a: usb0_vbus_pin@0 {
++				allwinner,pins = "PH17";
++				allwinner,function = "gpio_out";
++				allwinner,drive = <0>;
++				allwinner,pull = <0>;
++			};
+ 		};
  
-@@ -213,7 +217,7 @@ static struct phy *sun4i_usb_phy_xlate(struct device *dev,
- {
- 	struct sun4i_usb_phy_data *data = dev_get_drvdata(dev);
+ 		pwm: pwm@01c20e00 {
+@@ -185,6 +192,12 @@
+ 		status = "okay";
+ 	};
  
--	if (WARN_ON(args->args[0] == 0 || args->args[0] >= data->num_phys))
-+	if (args->args[0] >= data->num_phys)
- 		return ERR_PTR(-ENODEV);
- 
- 	return data->phys[args->args[0]].phy;
-@@ -255,8 +259,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
- 	if (IS_ERR(data->base))
- 		return PTR_ERR(data->base);
- 
--	/* Skip 0, 0 is the phy for otg which is not yet supported. */
--	for (i = 1; i < data->num_phys; i++) {
-+	for (i = 0; i < data->num_phys; i++) {
- 		struct sun4i_usb_phy *phy = data->phys + i;
- 		char name[16];
- 
++	reg_usb0_vbus: usb0-vbus {
++		pinctrl-0 = <&usb0_vbus_pin_a>;
++		gpio = <&pio 7 17 0>;
++		status = "okay";
++	};
++
+ 	reg_usb1_vbus: usb1-vbus {
+ 		status = "okay";
+ 	};
 -- 
 2.1.2
