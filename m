@@ -1,45 +1,68 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] ARM: shmobile: r8a73a4: Add SoC-specific CMT
+Subject: Re: [PATCH 2/2] ARM: shmobile: r8a7778: Add SoC-specific TMU
  compatible property
-Date: Mon, 27 Oct 2014 09:27:38 +0900
-Message-ID: <20141027002738.GK25692@verge.net.au>
+Date: Mon, 27 Oct 2014 09:27:48 +0900
+Message-ID: <20141027002747.GL25692@verge.net.au>
 References: <1414150563-6645-1-git-send-email-geert+renesas@glider.be>
+ <1414150563-6645-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1414150563-6645-1-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1414150563-6645-2-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 24, 2014 at 01:36:02PM +0200, Geert Uytterhoeven wrote:
-> The CMT1 timer used the generic compatible property only.
-> Add the SoC-specific one, which is already documented, to make it future
-> proof.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Fri, Oct 24, 2014 at 01:36:03PM +0200, Geert Uytterhoeven wrote:
+> The TMU timers used the generic compatible property only.
+> Add the SoC-specific one, to make it future proof.
 
 Thanks, I have queued this up.
 
-> ---
->  arch/arm/boot/dts/r8a73a4.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
-> index 80939671b0342006..b5ead845c6c32f24 100644
-> --- a/arch/arm/boot/dts/r8a73a4.dtsi
-> +++ b/arch/arm/boot/dts/r8a73a4.dtsi
-> @@ -114,7 +114,7 @@
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  arch/arm/boot/dts/r8a7778.dtsi | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7778.dtsi b/arch/arm/boot/dts/r8a7778.dtsi
+> index 1e80e4c694828e15..96297f67fda8e632 100644
+> --- a/arch/arm/boot/dts/r8a7778.dtsi
+> +++ b/arch/arm/boot/dts/r8a7778.dtsi
+> @@ -163,7 +163,7 @@
 >  	};
 >  
->  	cmt1: timer@e6130000 {
-> -		compatible = "renesas,cmt-48-gen2";
-> +		compatible = "renesas,cmt-48-r8a73a4", "renesas,cmt-48-gen2";
->  		reg = <0 0xe6130000 0 0x1004>;
->  		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>;
+>  	tmu0: timer@ffd80000 {
+> -		compatible = "renesas,tmu";
+> +		compatible = "renesas,tmu-r8a7778", "renesas,tmu";
+>  		reg = <0xffd80000 0x30>;
+>  		interrupts = <0 32 IRQ_TYPE_LEVEL_HIGH>,
+>  			     <0 33 IRQ_TYPE_LEVEL_HIGH>,
+> @@ -175,7 +175,7 @@
+>  	};
 >  
+>  	tmu1: timer@ffd81000 {
+> -		compatible = "renesas,tmu";
+> +		compatible = "renesas,tmu-r8a7778", "renesas,tmu";
+>  		reg = <0xffd81000 0x30>;
+>  		interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>,
+>  			     <0 37 IRQ_TYPE_LEVEL_HIGH>,
+> @@ -187,7 +187,7 @@
+>  	};
+>  
+>  	tmu2: timer@ffd82000 {
+> -		compatible = "renesas,tmu";
+> +		compatible = "renesas,tmu-r8a7778", "renesas,tmu";
+>  		reg = <0xffd82000 0x30>;
+>  		interrupts = <0 40 IRQ_TYPE_LEVEL_HIGH>,
+>  			     <0 41 IRQ_TYPE_LEVEL_HIGH>,
 > -- 
 > 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
