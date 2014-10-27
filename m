@@ -1,50 +1,38 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 6/7] arm: mediatek: enable gpt6 on boot up to make arch
- timer working
-Date: Mon, 27 Oct 2014 11:28:44 +0100
-Message-ID: <CABuKBe++mqhMCPxci9_4KKgq9vdoLLwZQkdb2xAGMud+=YVhkw@mail.gmail.com>
-References: <1406824943-24052-1-git-send-email-matthias.bgg@gmail.com>
-	<1406824943-24052-7-git-send-email-matthias.bgg@gmail.com>
-	<CACRpkdbRhGE8tcKj+W_4F9-xmcm-fxcYuCmLOqX-ESC+3PAmyA@mail.gmail.com>
-	<CABuKBe+Q3tnN0s22EMY-dK_6FeN_xN9SmrsW3dPONR6QDJ+V_w@mail.gmail.com>
-	<CACRpkdZOB=9wQ3R3sfcBEiNXLVRtgob4iLZ9QWXyVrgjqyvGXQ@mail.gmail.com>
-	<CABuKBeJOgkDZ8drPf3LnT2jPH7PEWX2__HDM7_jZbg2BhDRy3g@mail.gmail.com>
-	<1414158814.14830.610.camel@mtksdaap41>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v4 2/3] regulator: max77686: Implement suspend disable
+ for some LDOs
+Date: Mon, 27 Oct 2014 11:32:40 +0100
+Message-ID: <544E1F48.9050105@collabora.co.uk>
+References: <1414403066-7872-1-git-send-email-k.kozlowski@samsung.com> <1414403066-7872-3-git-send-email-k.kozlowski@samsung.com> <544E19A4.6040603@collabora.co.uk> <1414405641.1674.1.camel@AMDC1943>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414158814.14830.610.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <srv_yingjoe.chen@mediatek.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Mike Turquette <mturquette@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbart>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1414405641.1674.1.camel@AMDC1943>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joe,
+On 10/27/2014 11:27 AM, Krzysztof Kozlowski wrote:
+> 
+> Storing opmode in non-shifted form is intuitive also to me. That's way I
+> slipped the bug in previous version.
+> 
 
-2014-10-24 15:53 GMT+02:00 Yingjoe Chen <srv_yingjoe.chen@mediatek.com>:
->
-> Hi Matthias,
->
-> I didn't saw this in v3.18-rc1, are you working on version 2 of this?
-> mt8135 and m8127 also need this fixup and we need this to have SMP
-> working.
+Great.
 
-I had a discussion with Mark Rutland from ARM on this [0].
-At that point he convinced me that this was not critical.
+> I'll change this to non-shifted opmode. The patch will grow bigger but
+> the code should be more readable.
+> 
 
-If we need this for SMP, things really change here I think.
+Maybe split in two patches? A preparatory that adds max77686_get_opmode_shift()
+and changes the current driver and a second one that implements suspend disable
+for LDOs?
 
-Cheers,
-Matthias
+> Thanks!
 
-[0] https://lkml.org/lkml/2014/8/21/170
+You are welcome.
 
->
-> Joe.C
->
->
-
-
-
--- 
-motzblog.wordpress.com
+Best regards,
+Javier
