@@ -1,146 +1,60 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH RESEND 06/12] mmc: sdhci-pxav3: Move I/O clock to private data
-Date: Mon, 27 Oct 2014 14:28:41 +0100
-Message-ID: <CAPDyKFroUmuQU_mBmSNEQAHe9Y-OF4pkkK=4Qe=JtibWThaHPA@mail.gmail.com>
-References: <1413883364-681-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1413883364-681-7-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v5 2/4] regulator: max77686: Store opmode non-shifted
+Date: Mon, 27 Oct 2014 14:37:18 +0100
+Message-ID: <544E4A8E.3060803@collabora.co.uk>
+References: <1414411911-5539-1-git-send-email-k.kozlowski@samsung.com> <1414411911-5539-3-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413883364-681-7-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Chris Ball <chris@printf.net>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1414411911-5539-3-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 21 October 2014 11:22, Sebastian Hesselbarth
-<sebastian.hesselbarth@gmail.com> wrote:
-> As we are using references to the I/O clock throughout the driver,
-> move it to the private data. Also, in preparation for core clock,
-> rename it to clk_io.
->
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com=
->
+Hello Krzysztof,
+
+On 10/27/2014 01:11 PM, Krzysztof Kozlowski wrote:
+> Introduce simple helper for calculating the shift for OPMODE field in
+> registers. This allows storing the current value of opmode in
+> non-shifted form and simplifies a little set_suspend_disable and enable
+> functions. Additionally this will allow adding support LDOs to the
+> existing set_suspend_disable function.
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Suggested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 > ---
-> Cc: Chris Ball <chris@printf.net>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: "Antoine T=C3=A9nart" <antoine.tenart@free-electrons.com>
-> Cc: linux-mmc@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/mmc/host/sdhci-pxav3.c | 24 +++++++++++++-----------
->  1 file changed, 13 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-=
-pxav3.c
-> index e52bbbb09d88..a34a589670e6 100644
-> --- a/drivers/mmc/host/sdhci-pxav3.c
-> +++ b/drivers/mmc/host/sdhci-pxav3.c
-> @@ -59,6 +59,7 @@
->  #define SDCE_MISC_INT_EN       (1<<1)
->
->  struct sdhci_pxa {
-> +       struct clk *clk_io;
->         u8      power_mode;
->  };
->
-> @@ -288,9 +289,7 @@ static int sdhci_pxav3_probe(struct platform_devi=
-ce *pdev)
->         struct sdhci_host *host =3D NULL;
->         struct sdhci_pxa *pxa =3D NULL;
->         const struct of_device_id *match;
-> -
->         int ret;
-> -       struct clk *clk;
->
->         pxa =3D devm_kzalloc(&pdev->dev, sizeof(struct sdhci_pxa), GF=
-P_KERNEL);
->         if (!pxa)
-> @@ -310,14 +309,14 @@ static int sdhci_pxav3_probe(struct platform_de=
-vice *pdev)
->         pltfm_host =3D sdhci_priv(host);
->         pltfm_host->priv =3D pxa;
->
-> -       clk =3D devm_clk_get(dev, NULL);
-> -       if (IS_ERR(clk)) {
-> +       pxa->clk_io =3D devm_clk_get(dev, NULL);
-> +       if (IS_ERR(pxa->clk_io)) {
->                 dev_err(dev, "failed to get io clock\n");
-> -               ret =3D PTR_ERR(clk);
-> +               ret =3D PTR_ERR(pxa->clk_io);
->                 goto err_clk_get;
->         }
-> -       pltfm_host->clk =3D clk;
-> -       clk_prepare_enable(clk);
-> +       pltfm_host->clk =3D pxa->clk_io;
+>  drivers/regulator/max77686.c | 49 ++++++++++++++++++++++++++++++--------------
+>  1 file changed, 34 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/regulator/max77686.c b/drivers/regulator/max77686.c
 
-Is the above still needed?
+The patch looks good to me.
 
-> +       clk_prepare_enable(pxa->clk_io);
->
->         /* enable 1/8V DDR capable */
->         host->mmc->caps |=3D MMC_CAP_1_8V_DDR;
-> @@ -390,7 +389,7 @@ err_add_host:
->         pm_runtime_disable(&pdev->dev);
->  err_of_parse:
->  err_cd_req:
-> -       clk_disable_unprepare(clk);
-> +       clk_disable_unprepare(pxa->clk_io);
->  err_clk_get:
->  err_mbus_win:
->         sdhci_pltfm_free(pdev);
-> @@ -401,12 +400,13 @@ static int sdhci_pxav3_remove(struct platform_d=
-evice *pdev)
->  {
->         struct sdhci_host *host =3D platform_get_drvdata(pdev);
->         struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
-> +       struct sdhci_pxa *pxa =3D pltfm_host->priv;
->
->         pm_runtime_get_sync(&pdev->dev);
->         sdhci_remove_host(host, 1);
->         pm_runtime_disable(&pdev->dev);
->
-> -       clk_disable_unprepare(pltfm_host->clk);
-> +       clk_disable_unprepare(pxa->clk_io);
->
->         sdhci_pltfm_free(pdev);
->
-> @@ -446,13 +446,14 @@ static int sdhci_pxav3_runtime_suspend(struct d=
-evice *dev)
->  {
->         struct sdhci_host *host =3D dev_get_drvdata(dev);
->         struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
-> +       struct sdhci_pxa *pxa =3D pltfm_host->priv;
->         unsigned long flags;
->
->         spin_lock_irqsave(&host->lock, flags);
->         host->runtime_suspended =3D true;
->         spin_unlock_irqrestore(&host->lock, flags);
->
-> -       clk_disable_unprepare(pltfm_host->clk);
-> +       clk_disable_unprepare(pxa->clk_io);
->
->         return 0;
->  }
-> @@ -461,9 +462,10 @@ static int sdhci_pxav3_runtime_resume(struct dev=
-ice *dev)
->  {
->         struct sdhci_host *host =3D dev_get_drvdata(dev);
->         struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
-> +       struct sdhci_pxa *pxa =3D pltfm_host->priv;
->         unsigned long flags;
->
-> -       clk_prepare_enable(pltfm_host->clk);
-> +       clk_prepare_enable(pxa->clk_io);
->
->         spin_lock_irqsave(&host->lock, flags);
->         host->runtime_suspended =3D false;
-> --
-> 2.1.1
->
+Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 
-Kind regards
-Uffe
+>  
+>  static int max77686_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
+> @@ -495,7 +513,8 @@ static int max77686_pmic_probe(struct platform_device *pdev)
+>  		config.init_data = pdata->regulators[i].initdata;
+>  		config.of_node = pdata->regulators[i].of_node;
+>  
+> -		max77686->opmode[i] = regulators[i].enable_mask;
+> +		max77686->opmode[i] = regulators[i].enable_mask >>
+> +						max77686_get_opmode_shift(i);
+
+I don't think it has to be done in your patch but as a follow-up it would be
+good to change this to:
+
+		max77686->opmode[i] = MAX77686_NORMAL;
+
+since that is really what this code is trying to do AFAIU. This just happens
+to work because the value of MAX77686_OPMODE_MASK (0x3) is also "Output ON in
+Normal Mode" but the code is not correct IMHO.
+
+Or even better, the regulator mode should be read from the hw registers instead
+of setting always to normal. That is what the max77802 driver does for example.
+
+Best regards,
+Javier
