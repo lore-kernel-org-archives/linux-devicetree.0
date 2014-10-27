@@ -1,55 +1,74 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: [PATCH v6 3/3] ARM: dts: rk3288: add VOP iommu nodes
-Date: Mon, 27 Oct 2014 20:37:28 +0800
-Message-ID: <1414413448-15819-4-git-send-email-djkurtz@chromium.org>
-References: <1414413448-15819-1-git-send-email-djkurtz@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414413448-15819-1-git-send-email-djkurtz@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joerg Roedel <joro@8bytes.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: Grant Grundler <grundler@chromium.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>, Daniel Kurtz <djkurtz@chromium.org>, Simon Xue <xxm@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 12/17] ARM: mvebu: Armada XP GP specific suspend/resume
+ code
+Date: Mon, 27 Oct 2014 13:51:29 +0100
+Message-ID: <20141027135129.292bd882@free-electrons.com>
+References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1414151970-6626-13-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20141024142044.GB3142@lunn.ch>
+	<20141024162824.67f9ce3d@free-electrons.com>
+	<20141024145119.GD3142@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141024145119.GD3142-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device nodes for the VOP iommus.
-Device nodes for other iommus will be added in later patches.
+Dear Andrew Lunn,
 
-The iommu nodes use the #iommu-cells property as described in:
-  Documentation/devicetree/bindings/iommu/iommu.txt
+On Fri, 24 Oct 2014 16:51:19 +0200, Andrew Lunn wrote:
 
-Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-Signed-off-by: Simon Xue <xxm@rock-chips.com>
----
- arch/arm/boot/dts/rk3288.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+> > > I'm wondering if this code should be a power driver, living in
+> > > drivers/power/reset/.
+> > 
+> > I'm fine with that, but have you seen the *very* tight interaction
+> > between the SoC-specific code and the board-specific code? The problem
+> > is that the board-specific code needs to put the SDRAM into
+> > self-refresh *right* before shutting down the SoC, and all that while
+> > making sure the code doing both of these operations remains in the
+> > I-Cache, and does not touch any other location in memory (which has
+> > become inaccessible due to being in self-refresh mode).
+> > 
+> > Look at the mvebu_armada_xp_gp_pm_enter() function: it takes two
+> > arguments, received from the SoC-level code. How to handle this thing
+> > with a driver in drivers/power/reset/ ?
+> 
+> It looks like reset drivers can register a notifier block, and you can
+> pass this notifier a void * parameter. So you should be able to pass
+> parameters. Nobody currently does this, so it might not work....
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 5950b0a..df1170c 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -271,6 +271,24 @@
- 		status = "disabled";
- 	};
- 
-+	vopb_mmu: iommu@ff930300 {
-+		compatible = "rockchip,iommu";
-+		reg = <0xff930300 0x100>;
-+		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "vopb_mmu";
-+		#iommu-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	vopl_mmu: iommu@ff940300 {
-+		compatible = "rockchip,iommu";
-+		reg = <0xff940300 0x100>;
-+		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "vopl_mmu";
-+		#iommu-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	gic: interrupt-controller@ffc01000 {
- 		compatible = "arm,gic-400";
- 		interrupt-controller;
+I had a closer look, but I'm sorry, I don't really see how
+drivers/power/reset can help here. In drivers/power/reset, there are
+only drivers that handle powering off a platform, or rebooting a
+platform. They hook up by setting a value to the pm_power_off and/or
+arm_pm_restart function pointers.
+
+But in my case, what's needed is neither a power off nor a reboot, but
+an entry to suspend to RAM, which is a different state. I don't see how
+the drivers/power/reset driver would get "called" by the suspend/resume
+procedure.
+
+I also don't see how notifiers can help here. On which notification
+would the drivers/power/reset driver register itself? By creating a new
+notification type, specific to the mvebu platform?
+
+I'm fine with reworking the implementation I've proposed, but if you
+could shed some more light on what your proposal would look like, it
+would be useful, as I currently don't see how drivers/power/reset fits
+the need of the Armada XP suspend/resume mechanism.
+
+Thanks,
+
+Thomas
 -- 
-2.1.0.rc2.206.gedb03e5
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
