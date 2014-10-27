@@ -1,40 +1,43 @@
-From: bpqw <bpqw@micron.com>
-Subject: [PATCH 1/1] devicetree: bindings: Add vendor prefix for Micron
- Technology Co., Ltd.
-Date: Mon, 27 Oct 2014 00:07:43 +0000
-Message-ID: <A765B125120D1346A63912DDE6D8B6315E7ABD@NTXXIAMBX02.xacn.micron.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/2] ARM: shmobile: add USB3.0 device node on r8a7790
+Date: Mon, 27 Oct 2014 09:22:25 +0900
+Message-ID: <20141027002225.GE25692@verge.net.au>
+References: <1414147307-4584-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: Jason Cooper <jason@lakedaemon.net>, Mark Brown <broonie@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Andrew Lunn <andrew@lunn.ch>, Silvio F <silvio.fricke@gmail.com>, Hayato Suzuki <hytszk@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414147307-4584-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch is used to add vendor prefix for Micron Technology Inc in the vendor-prefixes.txt file.
+On Fri, Oct 24, 2014 at 07:41:45PM +0900, Yoshihiro Shimoda wrote:
+>  This series is based on Simon's renesas.git branch and
+> renesas-devel-20141024-v3.18-rc1 tag. If we use the generic phy
+> driver for R-Car Gen2 (drivers/phy/phy-rcar-gen2.c), we can use
+> the USB3.0 on lager.
 
-Micron Technology, Inc. is an American multinational corporation based in Boise,
-Idaho, best known for producing many forms of semiconductor devices. This includes
-DRAM, SDRAM, flash memory, eMMC and SSDs.
+Thanks, I have queued these up.
 
-Signed-off-by: bean huo <beanhuo@micron.com>
----
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 723999d..a7bbf6e 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -92,6 +92,7 @@ maxim	Maxim Integrated Products
- mediatek	MediaTek Inc.
- micrel	Micrel Inc.
- microchip	Microchip Technology Inc.
-+micron	Micron Technology Inc.
- mitsubishi	Mitsubishi Electric Corporation
- mosaixtech	Mosaix Technologies, Inc.
- moxa	Moxa
---
-1.7.9.5
+> 
+> Changes from v1:
+>  - rebase the repository.
+> 
+> Yoshihiro Shimoda (2):
+>   ARM: shmobile: r8a7790: add USB3.0 device node
+>   ARM: shmobile: lager: enable USB3.0
+> 
+>  arch/arm/boot/dts/r8a7790-lager.dts |    6 ++++++
+>  arch/arm/boot/dts/r8a7790.dtsi      |   10 ++++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
