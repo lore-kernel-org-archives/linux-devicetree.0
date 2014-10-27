@@ -1,48 +1,43 @@
 From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: [PATCH v6 2/3] dt-bindings: iommu: Add documentation for rockchip iommu
-Date: Mon, 27 Oct 2014 20:37:27 +0800
-Message-ID: <1414413448-15819-3-git-send-email-djkurtz@chromium.org>
+Subject: [PATCH v6 3/3] ARM: dts: rk3288: add VOP iommu nodes
+Date: Mon, 27 Oct 2014 20:37:28 +0800
+Message-ID: <1414413448-15819-4-git-send-email-djkurtz@chromium.org>
 References: <1414413448-15819-1-git-send-email-djkurtz@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1414413448-15819-1-git-send-email-djkurtz@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Joerg Roedel <joro@8bytes.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: Grant Grundler <grundler@chromium.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>, Daniel Kurtz <djkurtz@chromium.org>, Simon Xue <xxm@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Doug Anderson <dianders@chromium.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Grant Grundler <grundler@chromium.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>, Daniel Kurtz <djkurtz@chromium.org>, Simon Xue <xxm@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for Rockchip IOMMU.
+Add device nodes for the VOP iommus.
+Device nodes for other iommus will be added in later patches.
+
+The iommu nodes use the #iommu-cells property as described in:
+  Documentation/devicetree/bindings/iommu/iommu.txt
 
 Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
 Signed-off-by: Simon Xue <xxm@rock-chips.com>
 ---
- .../devicetree/bindings/iommu/rockchip,iommu.txt   | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+ arch/arm/boot/dts/rk3288.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
-new file mode 100644
-index 0000000..9a55ac3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
-@@ -0,0 +1,26 @@
-+Rockchip IOMMU
-+==============
-+
-+A Rockchip DRM iommu translates io virtual addresses to physical addresses for
-+its master device.  Each slave device is bound to a single master device, and
-+shares its clocks, power domain and irq.
-+
-+Required properties:
-+- compatible      : Should be "rockchip,iommu"
-+- reg             : Address space for the configuration registers
-+- interrupts      : Interrupt specifier for the IOMMU instance
-+- interrupt-names : Interrupt name for the IOMMU instance
-+- #iommu-cells    : Should be <0>.  This indicates the iommu is a
-+                    "single-master" device, and needs no additional information
-+                    to associate with its master device.  See:
-+                    Documentation/devicetree/bindings/iommu/iommu.txt
-+
-+Example:
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 5950b0a..df1170c 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -271,6 +271,24 @@
+ 		status = "disabled";
+ 	};
+ 
++	vopb_mmu: iommu@ff930300 {
++		compatible = "rockchip,iommu";
++		reg = <0xff930300 0x100>;
++		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "vopb_mmu";
++		#iommu-cells = <0>;
++		status = "disabled";
++	};
 +
 +	vopl_mmu: iommu@ff940300 {
 +		compatible = "rockchip,iommu";
@@ -50,6 +45,11 @@ index 0000000..9a55ac3
 +		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
 +		interrupt-names = "vopl_mmu";
 +		#iommu-cells = <0>;
++		status = "disabled";
 +	};
++
+ 	gic: interrupt-controller@ffc01000 {
+ 		compatible = "arm,gic-400";
+ 		interrupt-controller;
 -- 
 2.1.0.rc2.206.gedb03e5
