@@ -1,77 +1,109 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v5 0/8] arch: arm64: Enable support for Samsung Exynos7 SoC
-Date: Mon, 27 Oct 2014 17:47:29 +0100
-Message-ID: <544E7721.3040108@samsung.com>
-References: <1411361228-18279-1-git-send-email-a.kesavan@samsung.com>
- <541FE357.5090000@gmail.com>
- <CAM4voa=Hsux0+rccSvDJsNTFakZwuwYwjkDkkNFfndFm03Pn3g@mail.gmail.com>
- <542AD2AE.6060109@gmail.com> <01a501cfe1e5$759fc8c0$60df5a40$@kernel.org>
- <CAM4voak5DpRHghgF=EdmPCHeenMFZQeOTsm9QLE1fSXDoM1a+g@mail.gmail.com>
- <CAM4voanMX__N6=q8gg1LEGxqGTtByJXPdj+oAucHoyDh5ybaEA@mail.gmail.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2 06/10] mfd: tps65910: Use the standard DT property
+ system-power-controller
+Date: Mon, 27 Oct 2014 11:49:50 -0500
+Message-ID: <20141027164950.GK14253@saruman>
+References: <1414427215-14380-1-git-send-email-romain.perier@gmail.com>
+ <1414427749.2421.5.camel@pengutronix.de>
+ <20141027164153.GE14253@saruman>
+ <5506459.umvW5Ff7a7@diego>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <CAM4voanMX__N6=q8gg1LEGxqGTtByJXPdj+oAucHoyDh5ybaEA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Abhilash Kesavan <kesavan.abhilash@gmail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kukjin Kim <kgene@kernel.org>, Naveen Krishna <naveenkrishna.ch@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yr6OvWOSyJed8q4v"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5506459.umvW5Ff7a7@diego>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: balbi@ti.com, Lucas Stach <l.stach@pengutronix.de>, Romain Perier <romain.perier@gmail.com>, devicetree@vger.kernel.org, broonie@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, robh@kernel.org, mark.rutland@arm.com, johan@kernel.org, linux-pm@vger.kernel.org, linux@roeck-us.net, lee.jones@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, swarren@wwwdotorg.org, thierry.reding@gmail.com, gnurou@gmail.com, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Abhilash,
+--yr6OvWOSyJed8q4v
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 24/10/14 16:32, Abhilash Kesavan wrote:
-> On Wed, Oct 8, 2014 at 11:18 AM, Abhilash Kesavan
-> <kesavan.abhilash@gmail.com> wrote:
->> On Tue, Oct 7, 2014 at 9:46 AM, Kukjin Kim <kgene@kernel.org> wrote:
->>> Tomasz Figa wrote:
->>>> On 30.09.2014 17:12, Abhilash Kesavan wrote:
->>>>> On Mon, Sep 22, 2014 at 2:22 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
->>>>>>
->>>>>> The clock patches look good to me, but since they are doing quite a lot
->>>>>> of code moving I'd prefer to take them through clk tree. Based on the
->>>>>> fact that there are no code dependencies between clock patches and
->>>>>> remaining ones and Exynos7 is a new material for 3.18, I'm inclined to
->>>>>> apply them to my tree if nobody minds.
->>>>>
->>>>> Will you be picking up the clock changes soon ?
->>>>
->>>> I'd like to do so. Kukjin, since clock changes are a part of this
->>>> series, might I have your Ack for them to be applied separately?
->>>>
->>> Sure, I'm fine so please go ahead with my ack on the changes.
->>>
->>> Acked-by: Kukjin Kim <kgene.kim@samsung.com>
->>>
->>> Thanks for your asking.
->>
->> Can you please pick up the clock changes now that Kukjin has ack'ed it.
-> 
-> Sylwester, you mentioned in another thread that Tomasz might not be
-> available for the next few days. Could you please consider applying
-> the clock changes in this series to samsung clk-next if they look OK ?
-> 
-> Please take a look at clock changes at
-> http://www.spinics.net/lists/arm-kernel/msg370673.html too.
+On Mon, Oct 27, 2014 at 05:49:34PM +0100, Heiko St=FCbner wrote:
+> Am Montag, 27. Oktober 2014, 11:41:53 schrieb Felipe Balbi:
+> > On Mon, Oct 27, 2014 at 05:35:49PM +0100, Lucas Stach wrote:
+> > > Am Montag, den 27.10.2014, 16:26 +0000 schrieb Romain Perier:
+> > > > No longer use custom property to define poweroff capability, use the
+> > > > standard DT property instead.
+> > > >=20
+> > > > Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> > > > ---
+> > > >=20
+> > > >  drivers/mfd/tps65910.c | 3 +--
+> > > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > > >=20
+> > > > diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
+> > > > index 7612d89..a7faff2 100644
+> > > > --- a/drivers/mfd/tps65910.c
+> > > > +++ b/drivers/mfd/tps65910.c
+> > > > @@ -423,8 +423,7 @@ static struct tps65910_board
+> > > > *tps65910_parse_dt(struct i2c_client *client,> >=20
+> > > >  	board_info->irq =3D client->irq;
+> > > >  	board_info->irq_base =3D -1;
+> > > >=20
+> > > > -	board_info->pm_off =3D of_property_read_bool(np,
+> > > > -			"ti,system-power-controller");
+> > > > +	board_info->pm_off =3D of_is_system_power_controller();
+> > > >=20
+> > > >  	return board_info;
+> > > > =20
+> > > >  }
+> > >=20
+> > > You are breaking compatibility with older DTs here. This is not
+> > > acceptable.
+> > >=20
+> > > You may change all in-tree DTs to use the new property and also patch
+> > > the driver to understand it, but you must make sure that the driver
+> > > still understands the old, custom property. And especially in this ca=
+se
+> > > it isn't really hard to do.
+> >=20
+> > correct, it should be simple to hide that under
+> > of_is_system_power_controller() itself.
+>=20
+> If I'm reading patch 1 correctly, it already does handle the generic "sys=
+tem-
+> power-controller", as well as any foo,system-power-controller properties.
 
-I've picked up patches from the $subject series.  But please see my
-comment the the second series you've pointed out with the link above.
-If you decide to rearrange changes to exynos7-clk.h header file among
-those two series I will drop that 4 patches.  Perhaps you could gather
-all pending exynos7 clk patches, fix any issues and send to me in one
-series ?
-I'd like to avoid modifying indices assigned to specific clocks in
-subsequent patches, DT binding should be defined in advance and ideally
-be specifying exact indices for each possible clock.
+that's very true, but it doesn't handle poweroff-source which, one way
+or another, will be merged into Linus' tree creating a bisection point
+where things won't work.
 
---
-Thanks,
-Sylwester
+The best solution would be for those patches to be removed from
+whichever tree they are, otherwise there will always be a commit in the
+mainline kernel with that binding and, even if unlikely, there will
+always be the possibility of people using that commit or a developer
+having to bisect an issue only to find a few commits where things don't
+even build.
+
+--=20
+balbi
+
+--yr6OvWOSyJed8q4v
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUTneuAAoJEIaOsuA1yqRELrsP/R9YUDNU4bGwfdQos4FVBmjS
+BXl7orLx7p3p9o7d3m5/RO84VHuBwFQHk9jWsnpPcIXC+wwYpaKvY1U4f5/pPxxs
+/qSUko09foZVRh3Y7XlCDpJ0VMuyZDdlKr1O7He1xEwPEtBD3L+xTaJ67vak6K9g
+Q1GZlG5zPBB8U3KuizgZVOF4WRMt5mIIz3QSjTEYETjJVc23kGHB2IoOnlRu+isa
+DMMsiW6Y/Wka9pYnLqtC51Qp4ywF5rdjR1U6iCziRZW2OTV3EDoB/grXy58YIaKO
+4z9FUfwnEtqcM05pWlnBoXE4w2fg/j0M4TmSNURM+XRYnmkMccPGcdOyY3VLbHuS
+TLC/GT6rml+m0pEtH43JeMEPf2yIZk19ZTSTvxi/9Y++fJs7M9210hEgiSVjNukv
+AlJ7mKo1XFuDASmtwc/vLfBldbIvwPLLmFGFWeVNQJkt6GxiesumVh2jXu5SJ0Tw
+8pNWLy8o87rwobZlj8zdpb22g38cKd0BjQnWtVzhd79hbp+wu8Wq3Eev5WJ4zUta
+8g2LoTxE3XmqZY7i5SEGAKrIbOsgj5DxYhzZvMYjqfJjX/g7d3rMXvt0VFxDpY9B
+0wTQpA/TO0Bbo0JQV3ZeQU6DiTySK7yRN/CRVry6tEleZTwokERw64ZoQ5NZbWiO
+buhludXmlVWKj35Za+gS
+=WSdR
+-----END PGP SIGNATURE-----
+
+--yr6OvWOSyJed8q4v--
