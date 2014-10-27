@@ -1,51 +1,48 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: [PATCH v3 07/47] qnap-poweroff: Drop reference to pm_power_off from devicetree bindings
-Date: Mon, 27 Oct 2014 08:55:14 -0700
-Message-ID: <1414425354-10359-8-git-send-email-linux@roeck-us.net>
-References: <1414425354-10359-1-git-send-email-linux@roeck-us.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414425354-10359-1-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
+Date: Mon, 27 Oct 2014 16:10:27 +0000
+Message-ID: <20141027161027.GA922@red-moon>
+References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <3256560.C0cZnIlnAv@wuerfel>
+ <20141022155914.GB25939@e102568-lin.cambridge.arm.com>
+ <2148776.X8NPqiYA6S@wuerfel>
+ <20141023091309.GF25302@e106497-lin.cambridge.arm.com>
+ <20141023112731.GA5823@e102568-lin.cambridge.arm.com>
+ <20141023165206.GB13465@obsidianresearch.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141023165206.GB13465@obsidianresearch.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Replace reference to pm_power_off (which is an implementation detail)
-and replace it with a more generic description of the driver's functionality.
+On Thu, Oct 23, 2014 at 05:52:06PM +0100, Jason Gunthorpe wrote:
+> On Thu, Oct 23, 2014 at 12:27:31PM +0100, Lorenzo Pieralisi wrote:
+> 
+> > I think that by removing that, we could switch to CONFIG_PCI_DOMAINS_GENERIC
+> > on ARM32. I will remove the dependency in drivers/pci/host/pci-mvebu.c
+> > introduced by commit 2613ba48. pci_sys_data.domain is always 0 in that
+> > driver so its usefulness is doubtful, comments welcome, copied Jason in
+> > if he has comments.
+> 
+> pcie-mvebu is like all the other new drivers, each top level DT node
+> that introduces the interface should have a unique domain number. It
+> would be very strange (and currently unsupported by the driver) to
+> ever have more than 1 mvebu top level node in any DT.
 
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
----
-v3:
-- No change
-v2:
-- Drop implementation details
+Which as a matter of fact I should take as pci_sys_data.domain is
+useless on pci-mvebu.c, since that value will always be 0 (at least it
+is in the current driver):
 
- Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+#ifdef CONFIG_PCI_DOMAINS
+	domain = sys->domain;
+#endif
 
-diff --git a/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt b/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
-index af25e77..c363d71 100644
---- a/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
-+++ b/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
-@@ -3,8 +3,7 @@
- QNAP NAS devices have a microcontroller controlling the main power
- supply. This microcontroller is connected to UART1 of the Kirkwood and
- Orion5x SoCs. Sending the character 'A', at 19200 baud, tells the
--microcontroller to turn the power off. This driver adds a handler to
--pm_power_off which is called to turn the power off.
-+microcontroller to turn the power off.
- 
- Synology NAS devices use a similar scheme, but a different baud rate,
- 9600, and a different character, '1'.
--- 
-1.9.1
+Am I missing something ? Is that domain number meant to be used for anything
+else ?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Lorenzo
