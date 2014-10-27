@@ -1,33 +1,238 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 5/6] ARM: rockchip: Add pmu-sram binding
-Date: Mon, 27 Oct 2014 10:46:14 -0700
-Message-ID: <CAD=FV=VNuMc+J_3vhpD6Op4Qz8YW8NVyYrcmHnuehrFx7X2Fow@mail.gmail.com>
-References: <1413933461-25602-1-git-send-email-zyw@rock-chips.com>
-	<1413933960-25839-1-git-send-email-zyw@rock-chips.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v2 2/3] ARM: dts: socfpga: fpga bridges bindings docs
+Date: Mon, 27 Oct 2014 18:47:43 +0100
+Message-ID: <20141027174743.GX10262@pengutronix.de>
+References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com>
+ <1414108267-22058-3-git-send-email-atull@opensource.altera.com>
+ <20141024070042.GL10262@pengutronix.de>
+ <5FB7B7FD-7B5B-4250-BADE-85573FDBBE48@konsulko.com>
+ <20141025144229.GR10262@pengutronix.de>
+ <16E8EC52-0A91-4F28-8113-3CC5352215A5@konsulko.com>
+ <20141027152306.GV10262@pengutronix.de>
+ <194BE134-7804-4E84-BD5D-AB9A5892ED6F@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413933960-25839-1-git-send-email-zyw@rock-chips.com>
+Content-Disposition: inline
+In-Reply-To: <194BE134-7804-4E84-BD5D-AB9A5892ED6F@konsulko.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Mike Turquette <mturquette@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.org>, Tony Xie <xxx@rock-chips.com>
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: atull@opensource.altera.com, jgunthorpe@obsidianresearch.com, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, michal.simek@xilinx.com, rdunlap@infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-Chris,
+On Mon, Oct 27, 2014 at 05:52:02PM +0200, Pantelis Antoniou wrote:
+> Hi Steffen,
+>=20
+> > On Oct 27, 2014, at 17:23 , Steffen Trumtrar <s.trumtrar@pengutroni=
+x.de> wrote:
+> >=20
+> > Hi!
+> >=20
+> > On Mon, Oct 27, 2014 at 01:54:20PM +0200, Pantelis Antoniou wrote:
+> >> Hi Stefen,
+> >>=20
+> >>> On Oct 25, 2014, at 17:42 , Steffen Trumtrar <s.trumtrar@pengutro=
+nix.de> wrote:
+> >>>=20
+> >>> Hi Pantelis!
+> >>>=20
+> >>> On Fri, Oct 24, 2014 at 12:20:53PM +0300, Pantelis Antoniou wrote=
+:
+> >>>> Hi Stefan, Allan,
+> >>>>=20
+> >>>> Sorry, haven=E2=80=99t had a chance to review all this yet; will=
+ do so in the weekend.
+> >>>> Just wanted to pop in and comment on a few things.
+> >>>>=20
+> >>>>> On Oct 24, 2014, at 10:00 AM, Steffen Trumtrar <s.trumtrar@peng=
+utronix.de> wrote:
+> >>>>>=20
+> >>>>> Hi!
+> >>>>>=20
+> >>>>> On Thu, Oct 23, 2014 at 06:51:06PM -0500, atull@opensource.alte=
+ra.com wrote:
+> >>>>>> From: Alan Tull <atull@opensource.altera.com>
+> >>>>>=20
+> >>>>> (...)
+> >>>>>=20
+> >>>>>> diff --git a/Documentation/devicetree/bindings/fpga/altera-hps=
+2fpga-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-hps2fp=
+ga-bridge.txt
+> >>>>>> new file mode 100644
+> >>>>>> index 0000000..bc24a2e
+> >>>>>> --- /dev/null
+> >>>>>> +++ b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-b=
+ridge.txt
+> >>>>>> @@ -0,0 +1,53 @@
+> >>>>>> +Altera FPGA/HPS Bridge Driver
+> >>>>>> +
+> >>>>>> +This driver manages a bridge between a FPGA and a host proces=
+sor system (HPS).
+> >>>>>> +User space can enable or disable the bridge by writing a "1" =
+or a "0",
+> >>>>>> +respectively, to its enable file under bridge's entry in
+> >>>>>> +/sys/class/fpga-bridge.  Typically, one disables the bridges =
+before
+> >>>>>> +reprogramming the FPGA.  Once the FPGA is reprogrammed, the b=
+ridges are
+> >>>>>> +reenabled.
+> >>>>>> +
+> >>>>>=20
+> >>>>> NAK.
+> >>>>>=20
+> >>>>> This is all linux specific and doesn't belong here.
+> >>>>>=20
+> >>>>=20
+> >>>> We know. The DT spec hasn=E2=80=99t been updated for a while, an=
+d this is going to be
+> >>>> part of what we want to do with the restarting of the ePAPR spec=
+ process.
+> >>>>=20
+> >>>=20
+> >>> As we don't have a new spec yet, I go with the current state of t=
+he art.
+> >>> And I don't see how "file under ... /sys/class/fpga-bridge" fits =
+the
+> >>> current spec.
+> >>>=20
+> >>>> So absolutes like =E2=80=9CDT is a hardware description only" mi=
+ght be too strong statements, that
+> >>>> do not work in practice anymore.
+> >>>>=20
+> >>>> There=E2=80=99s no such thing as pure hardware devices lately - =
+there is always a configuration
+> >>>> component; some of it OS specific, some of it not.
+> >>>>=20
+> >>>=20
+> >>> If it really is necessary, I'm not against it, don't get me wrong=
+=2E
+> >>> But in the grand scheme I wouldn't say that this fits my experien=
+ce.
+> >>> There are some devices that need configuration and often when it =
+is
+> >>> done in the DT, it is just a shortcut or not thought through.
+> >>> And can be also introspected dynamically. With some discussion on=
+ the
+> >>> list these bindings often change.
+> >>>=20
+> >>=20
+> >> Already answered and given a possible way this might work; admitte=
+dly this
+> >> specific example is not a good fit for what I was trying to say, b=
+ut whatever.
+> >> Let=E2=80=99s get the ball rolling.
+> >>=20
+> >=20
+> > I would be okay with chosen-node. Not for this driver; but in gener=
+al.
+> >=20
+>=20
+> Let=E2=80=99s figure out how to do it then=E2=80=A6
+>=20
+> >>> Regarding OS specifics: already there, e.g. console setup in the =
+chosen node.
+> >>> And other things I saw are ethernet aliases just for u-boot. Not =
+a problem
+> >>> of the spec, just a problem of u-boot and unneccessary "configura=
+tion".
+> >>> Just to fix a bad bootloader. barebox can handle this without any
+> >>> such stuff. Maybe we should integrate the DT "overlays" barebox u=
+ses into
+> >>> the in-kernel DTs as well...but does it really help/interest some=
+one who
+> >>> decides to use u-boot where barebox stores its environment? I gue=
+ss not.
+> >>>=20
+> >>=20
+> >> Although I=E2=80=99m not against having DT overlays in the bootloa=
+der, I only see them
+> >> as a method that helps a platform developer express things easier.=
+ I am completely
+> >> against having the kernel tied to any particular bootloader.
+> >>=20
+> >> We=E2=80=99ve all been through the hell where a kernel only boots =
+if the bootloader has=20
+> >> setup the platform =E2=80=9Ccorrectly=E2=80=9D. This =E2=80=9Ccorr=
+ectly=E2=80=9D has a very loose definition and
+> >> 99/100 times is extremely badly documented or not at all.
+> >>=20
+> >> IMHO the bootloader should (as part of the normal boot sequence) o=
+nly setup the
+> >> absolutely bare minimum and then pass control to the kernel as soo=
+n as possible.
+> >>=20
+> >> The full featured bootloader environment should only be presented =
+when the user
+> >> requests so.
+> >>=20
+> >=20
+> > Totally agree. The kernel shouldn't be tied to any bootloader if at=
+ all possible
+> > (the SoCFPGA is an especially bad example here again, as the pinmux=
+ing can only
+> > happen in the bootloader).
+>=20
+> I=E2=80=99m not familiar with SoCFPGA. Why pinmuxing is only possible=
+ in the bootloader?
+> Can=E2=80=99t the bootloader configure the minimum pinmux config and =
+then have Linux setup
+> the rest?
+>=20
+> If we=E2=80=99re feeling particularly nasty, we might just require bo=
+otloaders to clean the
+> hardware state before passing control to Linux (besides memory contro=
+ller setup) and
+> see what=E2=80=99s broken.
+>=20
 
-On Tue, Oct 21, 2014 at 4:26 PM, Chris Zhong <zyw@rock-chips.com> wrote:
-> The pmu-sram is used to store resume code, suspend/resume need get the
-> address of it. Therefore add a binding and documentation for it.
->
-> Signed-off-by: Tony Xie <xxx@rock-chips.com>
-> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
-> ---
->
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
->
->  .../devicetree/bindings/arm/rockchip/pmu-sram.txt  |   15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+Okay, offtopic, but:
 
-Reviewed-by: Doug Anderson <dianders@chromium.org>
+a) datasheet explicitely states that dynamic pinmuxing is not supported=
+=2E
+b) last time I checked, no documentation at all. You get some magic val=
+ues spit
+   out by Altera's tools.
+c) you don't have registers. Pinmuxing is done via JTAG scan chain; whi=
+ch you
+   feed the magic values.
+
+Apart from that, it seems to be the most sane idea, to at least write y=
+our
+driver in a way, that doesn't make any assumptions on HW state.
+But I think this is already common practice in mainline.
+
+> > But should the DT include stuff than, that is only interesting for =
+linux?
+> >=20
+>=20
+> Like it or not it=E2=80=99s Linux that=E2=80=99s in the forefront of =
+many hardware designs.
+>=20
+
+I like it; pays my rent ;-)
+But I also like freedom to choose...
+
+> There are configuration settings in DT that are part of the way hardw=
+are is presented to
+> Linux and user-space, and have been for quite some time. We=E2=80=99v=
+e been pretending they don=E2=80=99t
+> exist, but they are there=E2=80=A6
+>=20
+
+As far as I know, a lot of that are older bindings, where more
+things just got applied, because it wasn't clear where DT will go.
+
+
+Regards,
+Steffen
+
+--=20
+Pengutronix e.K.                           |                           =
+  |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
+  |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
+5 |
