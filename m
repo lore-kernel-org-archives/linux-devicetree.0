@@ -1,64 +1,77 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/3] ARM: dts: socfpga: fpga bridges bindings docs
-Date: Mon, 27 Oct 2014 17:17:31 +0000
-Message-ID: <20141027171731.GY18557@sirena.org.uk>
-References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com>
- <1414108267-22058-3-git-send-email-atull@opensource.altera.com>
- <CCE2D027-AA89-41C4-B9AA-2B92AA62129B@konsulko.com>
- <20141027150147.GX18557@sirena.org.uk>
- <31BBCD26-65E2-431A-9ADF-95D7EDC7E34E@konsulko.com>
- <20141027153205.GW10262@pengutronix.de>
- <1C42AF5D-4776-4B09-BDF4-24F001439F46@konsulko.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v1 01/10] of: Rename "poweroff-source" property to
+ "system-power-controller"
+Date: Mon, 27 Oct 2014 18:16:55 +0100
+Message-ID: <20141027171655.GH2006@localhost>
+References: <1414427215-14380-1-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YBGzgpgHAney5ErF"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1C42AF5D-4776-4B09-BDF4-24F001439F46@konsulko.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, atull@opensource.altera.com, jgunthorpe@obsidianresearch.com, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, michal.simek@xilinx.com, rdunlap@infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Pavel Machek <pavel@denx.de>, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, Rob Landley <rob@landley.net>, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, Linus Walleij <linus.walleij@linaro.org>, mgerlach@opensource.altera.com, Alan Tull <delicious.quinoa@gmail.com>, dinguye
+In-Reply-To: <1414427215-14380-1-git-send-email-romain.perier@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Romain Perier <romain.perier@gmail.com>
+Cc: heiko@sntech.de, devicetree@vger.kernel.org, broonie@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, robh@kernel.org, mark.rutland@arm.com, johan@kernel.org, linux-pm@vger.kernel.org, linux@roeck-us.net, lee.jones@linaro.org, balbi@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, swarren@wwwdotorg.org, thierry.reding@gmail.com, gnurou@gmail.com, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 27, 2014 at 04:26:46PM +0000, Romain Perier wrote:
+> As discussed on the mailing list, it makes more sense to rename this property
+> to "system-power-controller". Problem being that the word "source" usually tends
+> to be used for inputs and that is out of control of the OS. The poweroff
+> capability is an output which simply turns the system-power off. Also, this
+> property might be used by drivers which power-off the system and power back on
+> subsequent RTC alarms. This seems to suggest to remove "poweroff" from the
+> property name and to choose "system-power-controller" as the more generic name.
+> This patchs adds the required renaming changes and defines an helper function
+> which is compatible with both properties, the old one prefixed by a vendor name
+> and the new one without any prefix.
+> 
+> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> ---
+>  include/linux/of.h | 27 +++++++++++++++++++++++----
+>  1 file changed, 23 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 27b3ba1..c1ed2a5 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -867,14 +867,33 @@ static inline int of_changeset_update_property(struct of_changeset *ocs,
+>  extern int of_resolve_phandles(struct device_node *tree);
+>  
+>  /**
+> - * of_system_has_poweroff_source - Tells if poweroff-source is found for device_node
+> + * of_is_system_power_controller - Tells if the property for controlling system
+> + * power is found in device_node.
+>   * @np: Pointer to the given device_node
+>   *
+>   * return true if present false otherwise
+>   */
+> -static inline bool of_system_has_poweroff_source(const struct device_node *np)
+> -{
+> -	return of_property_read_bool(np, "poweroff-source");
+> +static inline bool of_is_system_power_controller(const struct device_node *np)
+> +{
+> +	struct property *pp;
+> +	unsigned long flags;
+> +	char *sep;
+> +	bool found = false;
+> +
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+> +	for_each_property_of_node(np, pp) {
+> +		if (of_prop_cmp(pp->name, "system-power-controller") == 0) {
+> +			found = true;
+> +			break;
+> +		}
+> +		sep = strchr(pp->name, ',');
+> +		if (sep && sep - pp->name && of_prop_cmp(sep + 1, "system-power-controller") == 0) {
+> +			found = true;
+> +			break;
+> +		}
+> +	}
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +	return found;
+>  }
 
---YBGzgpgHAney5ErF
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+You probably don't want this to be inline.
 
-On Mon, Oct 27, 2014 at 05:45:03PM +0200, Pantelis Antoniou wrote:
-
-Please fix your mail client to word wrap at less than 80 columns.
-
-> Well, it=E2=80=99s not my speciality, but my understanding is that FPGAs =
-take (considerable)
-> time to be programmed. If someone has already configured the =E2=80=98bus=
-=E2=80=99 it is considered
-> a win to not reload the bitstream. I.e. if you boot with the bootloader h=
-aving loaded
-> the bitstream already, you don=E2=80=99t want to do it again.
-
-That's not what your property is saying, though - if it were just about
-handover between the bootloader and the kernel that'd be one thing but
-it's also got this additional possibility to instruct the kernel that
-the device must be either disabled or explicitly programmed.  Having a
-property that just says "this FPGA is programmed" covers the handover
-case but this property does more than that.
-
---YBGzgpgHAney5ErF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUTn4qAAoJECTWi3JdVIfQ63kH/2i8gFq/EKKOgHea8XOh+ss7
-nDfdO8UPUkA4Szj588ABrsmG6Vg0cgNJMX+oFKVWjiY+RkC3j1WBS/VNTN1cfG5W
-FnnTQKxAr15rW0PTnkO+pWNaB+PDaLv0m+WgDyUFzVUDhg0aOjwtBXlW93SAw+E7
-9t0Xnc+RxoBZhJLLVa1iF/mqfwyNc09Q4QHFeMwa4o8WoOGVlAYfSYIVND/94wZw
-h2/JzF7dft5mU1YaxD63eE+lHIkP+pEV7CcV2XMcsQaM64PYTjwQM7h90Fx2R33h
-T0YCG4cOYtFXTPHiiOS1Ykg4/Uc0Tyz2F6hui0DXgBoYYsCs1y8bXY9hq9k9fik=
-=m35G
------END PGP SIGNATURE-----
-
---YBGzgpgHAney5ErF--
+Johan
