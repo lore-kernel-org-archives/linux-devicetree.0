@@ -1,228 +1,165 @@
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 Subject: Re: [PATCH v2 2/3] ARM: dts: socfpga: fpga bridges bindings docs
-Date: Mon, 27 Oct 2014 13:48:02 +0200
-Message-ID: <CCE2D027-AA89-41C4-B9AA-2B92AA62129B@konsulko.com>
-References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com> <1414108267-22058-3-git-send-email-atull@opensource.altera.com>
+Date: Mon, 27 Oct 2014 13:54:20 +0200
+Message-ID: <16E8EC52-0A91-4F28-8113-3CC5352215A5@konsulko.com>
+References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com> <1414108267-22058-3-git-send-email-atull@opensource.altera.com> <20141024070042.GL10262@pengutronix.de> <5FB7B7FD-7B5B-4250-BADE-85573FDBBE48@konsulko.com> <20141025144229.GR10262@pengutronix.de>
 Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1414108267-22058-3-git-send-email-atull@opensource.altera.com>
+In-Reply-To: <20141025144229.GR10262@pengutronix.de>
 Sender: linux-doc-owner@vger.kernel.org
-To: atull@opensource.altera.com
-Cc: jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: atull@opensource.altera.com, jgunthorpe@obsidianresearch.com, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, michal.simek@xilinx.com, rdunlap@infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
+Hi Stefen,
 
-> On Oct 24, 2014, at 02:51 , atull@opensource.altera.com wrote:
+> On Oct 25, 2014, at 17:42 , Steffen Trumtrar <s.trumtrar@pengutronix.=
+de> wrote:
 >=20
-> From: Alan Tull <atull@opensource.altera.com>
+> Hi Pantelis!
 >=20
-> Add DTS binding documentation for the Altera FPGA bridges.
+> On Fri, Oct 24, 2014 at 12:20:53PM +0300, Pantelis Antoniou wrote:
+>> Hi Stefan, Allan,
+>>=20
+>> Sorry, haven=E2=80=99t had a chance to review all this yet; will do =
+so in the weekend.
+>> Just wanted to pop in and comment on a few things.
+>>=20
+>>> On Oct 24, 2014, at 10:00 AM, Steffen Trumtrar <s.trumtrar@pengutro=
+nix.de> wrote:
+>>>=20
+>>> Hi!
+>>>=20
+>>> On Thu, Oct 23, 2014 at 06:51:06PM -0500, atull@opensource.altera.c=
+om wrote:
+>>>> From: Alan Tull <atull@opensource.altera.com>
+>>>=20
+>>> (...)
+>>>=20
+>>>> diff --git a/Documentation/devicetree/bindings/fpga/altera-hps2fpg=
+a-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-b=
+ridge.txt
+>>>> new file mode 100644
+>>>> index 0000000..bc24a2e
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridg=
+e.txt
+>>>> @@ -0,0 +1,53 @@
+>>>> +Altera FPGA/HPS Bridge Driver
+>>>> +
+>>>> +This driver manages a bridge between a FPGA and a host processor =
+system (HPS).
+>>>> +User space can enable or disable the bridge by writing a "1" or a=
+ "0",
+>>>> +respectively, to its enable file under bridge's entry in
+>>>> +/sys/class/fpga-bridge.  Typically, one disables the bridges befo=
+re
+>>>> +reprogramming the FPGA.  Once the FPGA is reprogrammed, the bridg=
+es are
+>>>> +reenabled.
+>>>> +
+>>>=20
+>>> NAK.
+>>>=20
+>>> This is all linux specific and doesn't belong here.
+>>>=20
+>>=20
+>> We know. The DT spec hasn=E2=80=99t been updated for a while, and th=
+is is going to be
+>> part of what we want to do with the restarting of the ePAPR spec pro=
+cess.
+>>=20
 >=20
-> Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> ---
-> .../bindings/fpga/altera-fpga2sdram-bridge.txt     |   57 +++++++++++=
-+++++++++
-> .../bindings/fpga/altera-hps2fpga-bridge.txt       |   53 +++++++++++=
-+++++++
-> 2 files changed, 110 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga=
-2sdram-bridge.txt
-> create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2=
-fpga-bridge.txt
+> As we don't have a new spec yet, I go with the current state of the a=
+rt.
+> And I don't see how "file under ... /sys/class/fpga-bridge" fits the
+> current spec.
 >=20
-> diff --git a/Documentation/devicetree/bindings/fpga/altera-fpga2sdram=
--bridge.txt b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-=
-bridge.txt
-> new file mode 100644
-> index 0000000..cc8f522
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge=
-=2Etxt
-> @@ -0,0 +1,57 @@
-> +Altera FPGA To SDRAM Bridge Driver
-> +
-> +This driver manages a bridge between an FPGA and the SDRAM used by a=
-n host
-> +processor system (HPS). The bridge contains a number read ports, wri=
-te ports,
-> +and command ports.  Reconfiguring these ports requires that no SDRAM
-> +transactions occur during reconfiguration.  In other words, the code
-> +reconfiguring the ports cannot be run out of SDRAM nor can the FPGA =
-access the
-> +SDRAM during the reconfiguration.  This driver does not support reco=
-nfiguring
-> +the ports.  Typcially, the ports are configured by code running out =
-of onchip
-> +ram before Linux is started.
-> +
-> +This driver supports enabling and disabling of the configured ports =
-all at
-> +once, which allows for safe reprogramming of the FPGA from user spac=
-e, provided
-> +the new FPGA image uses the same port configuration. User space can =
-enable or
-> +disable the bridge by writing a "1" or a "0", respectively, to its e=
-nable file
-> +under bridge's entry in /sys/class/fpga-bridge. Typically, one disab=
-les the
-> +bridges before reprogramming the FPGA.  Once the FPGA is reprogramme=
-d, the
-> +bridges are reenabled.
-> +
-> +Required properties:
-> +
-> + - compatible       : "altr,socfpga-fpga2sdram-bridge"
-> +
-> + - read-ports-mask  : Bits 0 to 3 corresponds read ports 0 to 3. A b=
-it set to 1
-> +                      indicates the corresponding read port should b=
-e enabled.
-> +
-> + - write-ports-mask : Bits 0 to 3 corresponds write ports 0 to 3. A =
-bit set
-> +                      to 1 indicates the corresponding write port sh=
-ould be
-> +                      enabled.
-> +
-> + - cmd-ports-mask   : Bits 0 to 5 correspond to command ports 0 to 5=
-=2E A bit set
-> +                      to 1 indicates the corresponding command port =
-should be
-> +                      enabled.
-> +
-> + - altr,sdr-syscon  : phandle of the sdr module
-> +
-> +Optional properties:
-> +
-> + - label            : name that you want this bridge to show up as u=
-nder
-> +                      /sys/class/fpga-bridge. Default is br<device#>=
- if this is
-> +                      not specified.
-> +
-> + - init-val         : 0 if driver should disable bridge at startup
-> +                      1 if driver should enable bridge at startup
-> +                      driver leaves bridge in current state if prope=
-rty not
-> +		      specified.
-
-Isn=E2=80=99t init-val a boolean property? It=E2=80=99s not named very =
-well.
-
-Along with the label, is kinda hard to defend as configuration in DT.
-
-We need to start thinking about configuration, so let me throw that in
-and fan the Monday flames to a nice red-hot color.
-
-/ {
-	chosen {
-		linux {
-			fpga-bridge {
-				node =3D <&FPGA_BRIDGE>;
-				label =3D =E2=80=9Cfoo=E2=80=9D;
-				enable-bridge-on-startup;
-			}
-		};
-	};
-};
-
-We will need accessors for drivers that iterate over the chosen/linux n=
-ode children
-and pick up the properties meant for the given driver node.
-
-We also need to define behaviour in case those configuration properties=
- are absent.=20
-
-Let the flames begin=E2=80=A6
-
-> +
-> +Example:
-> +	fpga2sdram_br: fpgabridge@3 {
-> +		compatible =3D "altr,socfpga-fpga2sdram-bridge";
-> +		label =3D "fpga2sdram";
-> +		altr,sdr-syscon =3D <&sdr>;
-> +		read-ports-mask =3D <3>;
-> +		write-ports-mask =3D <3>;
-> +		cmd-ports-mask =3D <0xd>;
-> +		init-val =3D <0>;
-> +	};
-> diff --git a/Documentation/devicetree/bindings/fpga/altera-hps2fpga-b=
-ridge.txt b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-brid=
-ge.txt
-> new file mode 100644
-> index 0000000..bc24a2e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.t=
-xt
-> @@ -0,0 +1,53 @@
-> +Altera FPGA/HPS Bridge Driver
-> +
-> +This driver manages a bridge between a FPGA and a host processor sys=
-tem (HPS).
-> +User space can enable or disable the bridge by writing a "1" or a "0=
-",
-> +respectively, to its enable file under bridge's entry in
-> +/sys/class/fpga-bridge.  Typically, one disables the bridges before
-> +reprogramming the FPGA.  Once the FPGA is reprogrammed, the bridges =
-are
-> +reenabled.
-> +
-> +Required properties:
-> +
-> + - compatible     : should contain one of:
-> +                     "altr,socfpga-hps2fpga-bridge"
-> +                     "altr,socfpga-lwhps2fpga-bridge"
-> +                     "altr,socfpga-fpga2hps-bridge"
-> +
-> + - clocks         : clocks used by this module
-> +
-> + - altr,l3-syscon : phandle of the l3 interconnect module
-> +
-> +Optional properties:
-> + - label          : name that you want this bridge to show up as und=
-er
-> +                    /sys/class/fpga-bridge.  Default is br<device#> =
-if this is
-> +                    not specified.
-> +
-> + - init-val       : 0 if driver should disable bridge at startup
-> +                    1 if driver should enable bridge at startup
-> +                    driver leaves bridge in current state if propert=
-y not
-> +                    specified.
-> +
-> +Example:
-> +	hps_fpgabridge0: fpgabridge@0 {
-> +		compatible =3D "altr,socfpga-hps2fpga-bridge";
-> +		label =3D "hps2fpga";
-> +		altr,l3-syscon =3D <&l3regs>;
-> +		clocks =3D <&l4_main_clk>;
-> +		init-val =3D <1>;
-> +	};
-> +
-> +	hps_fpgabridge1: fpgabridge@1 {
-> +		compatible =3D "altr,socfpga-lwhps2fpga-bridge";
-> +		label =3D "lwhps2fpga";
-> +		altr,l3-syscon =3D <&l3regs>;
-> +		clocks =3D <&l4_main_clk>;
-> +		init-val =3D <0>;
-> +	};
-> +
-> +	hps_fpgabridge2: fpgabridge@2 {
-> +		compatible =3D "altr,socfpga-fpga2hps-bridge";
-> +		label =3D "fpga2hps";
-> +		altr,l3-syscon =3D <&l3regs>;
-> +		clocks =3D <&l4_main_clk>;
-> +	};
-> --=20
-> 1.7.9.5
+>> So absolutes like =E2=80=9CDT is a hardware description only" might =
+be too strong statements, that
+>> do not work in practice anymore.
+>>=20
+>> There=E2=80=99s no such thing as pure hardware devices lately - ther=
+e is always a configuration
+>> component; some of it OS specific, some of it not.
+>>=20
 >=20
+> If it really is necessary, I'm not against it, don't get me wrong.
+> But in the grand scheme I wouldn't say that this fits my experience.
+> There are some devices that need configuration and often when it is
+> done in the DT, it is just a shortcut or not thought through.
+> And can be also introspected dynamically. With some discussion on the
+> list these bindings often change.
+>=20
+
+Already answered and given a possible way this might work; admittedly t=
+his
+specific example is not a good fit for what I was trying to say, but wh=
+atever.
+Let=E2=80=99s get the ball rolling.
+
+> Regarding OS specifics: already there, e.g. console setup in the chos=
+en node.
+> And other things I saw are ethernet aliases just for u-boot. Not a pr=
+oblem
+> of the spec, just a problem of u-boot and unneccessary "configuration=
+".
+> Just to fix a bad bootloader. barebox can handle this without any
+> such stuff. Maybe we should integrate the DT "overlays" barebox uses =
+into
+> the in-kernel DTs as well...but does it really help/interest someone =
+who
+> decides to use u-boot where barebox stores its environment? I guess n=
+ot.
+>=20
+
+Although I=E2=80=99m not against having DT overlays in the bootloader, =
+I only see them
+as a method that helps a platform developer express things easier. I am=
+ completely
+against having the kernel tied to any particular bootloader.
+
+We=E2=80=99ve all been through the hell where a kernel only boots if th=
+e bootloader has=20
+setup the platform =E2=80=9Ccorrectly=E2=80=9D. This =E2=80=9Ccorrectly=
+=E2=80=9D has a very loose definition and
+99/100 times is extremely badly documented or not at all.
+
+IMHO the bootloader should (as part of the normal boot sequence) only s=
+etup the
+absolutely bare minimum and then pass control to the kernel as soon as =
+possible.
+
+The full featured bootloader environment should only be presented when =
+the user
+requests so.
+
+>> We have to be engaged in the process and figure out how to update th=
+e spec for what is
+>> now the state of the art in the industry.
+>>=20
+>=20
+> Again, not against that if it is necessary. For example your overlay =
+stuff might
+> be a good update to the spec. Would be better if it is official inste=
+ad of a "hack".
+> I want that for SoCFPGA.
+>=20
+> But having looked at one or two vendor kernels+DTs, the state of the =
+art in the
+> industry is: using DT wrong. (And doing HW wrong, which makes some up=
+dates to the
+> ePAPR necessary ;-))
+>=20
+
+Vendor H/W, vendor DT and a crack pipe. Or as I call it Monday.
+
+> Regards,
+> Steffen
 
 Regards
 
 =E2=80=94 Pantelis
-
 
