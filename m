@@ -1,75 +1,64 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v4 0/3] gpio-charger: add devicetree support
-Date: Mon, 27 Oct 2014 16:55:15 +0100
-Message-ID: <20141027155514.GA20765@earth.universe>
-References: <1411504936-21026-1-git-send-email-heiko@sntech.de>
- <2175750.C5jxjiuVyT@diego>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2175750.C5jxjiuVyT@diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dianders@chromium.org
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH v3 06/47] gpio-poweroff: Drop reference to pm_power_off from devicetree bindings
+Date: Mon, 27 Oct 2014 08:55:13 -0700
+Message-ID: <1414425354-10359-7-git-send-email-linux@roeck-us.net>
+References: <1414425354-10359-1-git-send-email-linux@roeck-us.net>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1414425354-10359-1-git-send-email-linux@roeck-us.net>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+pm_power_off is an implementation detail. Replace it with a more generic
+description of the driver's functionality.
 
---azLHFNyN32YCQGCU
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+v3:
+- Replace poweroff in all newly introduced variables and in text
+  with power_off or power-off as appropriate
+v2:
+- No change
 
-Hi Heiko,
+ Documentation/devicetree/bindings/gpio/gpio-poweroff.txt | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-On Sun, Oct 26, 2014 at 01:06:28PM +0100, Heiko St=FCbner wrote:
-> Am Dienstag, 23. September 2014, 22:42:13 schrieb Heiko Stuebner:
-> > This series adds devicetree support to the gpio-charger and fixes a sma=
-ll
-> > issue with the return value of gpio_get_value.
-> >=20
-> > [...]
-> >
-> > Heiko Stuebner (3):
-> >   dt-bindings: document gpio-charger bindings
-> >   power: gpio-charger: add device tree support
-> >   power: gpio-charger: do not use gpio value directly
->=20
-> I can see patch3 in your tree (and 3.18-rc). Will you take patches 1 and =
-2 for=20
-> 3.19?
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt b/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
+index d4eab92..78262de 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
+@@ -2,12 +2,12 @@ Driver a GPIO line that can be used to turn the power off.
+ 
+ The driver supports both level triggered and edge triggered power off.
+ At driver load time, the driver will request the given gpio line and
+-install a pm_power_off handler. If the optional properties 'input' is
+-not found, the GPIO line will be driven in the inactive
++install a handler to power off the system. If the optional properties
++'input' is not found, the GPIO line will be driven in the inactive
+ state. Otherwise its configured as an input.
+ 
+-When the pm_power_off is called, the gpio is configured as an output,
+-and drive active, so triggering a level triggered power off
++When the the power-off handler is called, the gpio is configured as an
++output, and drive active, so triggering a level triggered power off
+ condition. This will also cause an inactive->active edge condition, so
+ triggering positive edge triggered power off. After a delay of 100ms,
+ the GPIO is set to inactive, thus causing an active->inactive edge,
+@@ -24,7 +24,7 @@ Required properties:
+ 
+ Optional properties:
+ - input : Initially configure the GPIO line as an input. Only reconfigure
+-  it to an output when the pm_power_off function is called. If this optional
++  it to an output when the power-off handler is called. If this optional
+   property is not specified, the GPIO is initialized as an output in its
+   inactive state.
+ 
+-- 
+1.9.1
 
-Yes.
-
-> The generally used 3 week period for devicetree-binding related complaint=
-s=20
-> also should be over by now.
-
-Right.
-
--- Sebastian
-
---azLHFNyN32YCQGCU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJUTmriAAoJENju1/PIO/qalcsP/A7hQoH9M68yinExk6meFThE
-cYWypG2aFlwYGK0K0gwOWu2PJZLQ6W8oMjxDcAp0fj3CzpR9ZRzipbEkcUPEH/1m
-/Ap4o3MapJA/CiIicxoF1BKbmPuGCaoNWctbbfZwz7wBYpW3XsHil+9Z3LpU97oh
-iOyH1FDYy1AxS/8k1kjXskXVznjiSFLBsyPTYnTTjywMIApUCb48W5bz/QH/JF/W
-eyhaA1QQQLQrocOnFuN7xfd0QBJcVPNT0ehzgOnlh8wv+Ulr/ISMNcT0HIlm23mD
-uHVuHHomkIzt5exHDfCaKPOd2X4mJdKOxomohRLP8dSPltOjaKlwf3i31EHZ0xoz
-c+s2Jm475179UWMLAJhVNTbZjZtpjgy4FSN5glxly/9ZHWqu53ED+bd8W6lMQlxl
-flowrQT74CDrW8Kc+Uv7Ptb7Pey2fb6g+oRiQ2XBz4OT/aiYM8wSQ9jTj/UBDPRF
-+K9MXKV2BCxHbMen1w5650l+y9n/23zH4tq9OV6o4MQNRjflYBsxfnL/xX9UNdt5
-/rvdvQZFaK2R8//O41UpX9++/CuwTbKXp0CTOHqGOGiHjNiOBpeqXbjnypvZZuG2
-vDRaEDB1PKvqOAHS4rQXv3eWPb2yN/esa/JS+FfRDPp8svs2IPcKArzTHyCxnqDi
-5DTVI9jZzLk8vlqVDxEt
-=uBSt
------END PGP SIGNATURE-----
-
---azLHFNyN32YCQGCU--
