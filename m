@@ -1,60 +1,99 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [git pull] Devicetree changes for v3.15
-Date: Mon, 27 Oct 2014 16:39:08 +0100
-Message-ID: <CACRpkdYmJWy1_vs0tWRA7SvkQnvbXXKqf7pHpH5b5tZ6vR+KJg@mail.gmail.com>
-References: <CACxGe6vCrkHPL6UNy1p8AO4+z5VFRY6w4_2grQEZQwp_3jJ7Yw@mail.gmail.com>
-	<CACRpkdZoo=P7uTO1rNDD_HUPjfAk26C0=mNYPoZmTV0wcO3V-w@mail.gmail.com>
-	<20140926141943.GC23926@titan.lakedaemon.net>
-	<CACRpkdYtiRyJK32M2z5EVxW1wXEfv-YDqJ=JPK3TeThV2=7sHA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH v2 2/3] ARM: dts: socfpga: fpga bridges bindings docs
+Date: Mon, 27 Oct 2014 17:45:03 +0200
+Message-ID: <1C42AF5D-4776-4B09-BDF4-24F001439F46@konsulko.com>
+References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com> <1414108267-22058-3-git-send-email-atull@opensource.altera.com> <CCE2D027-AA89-41C4-B9AA-2B92AA62129B@konsulko.com> <20141027150147.GX18557@sirena.org.uk> <31BBCD26-65E2-431A-9ADF-95D7EDC7E34E@konsulko.com> <20141027153205.GW10262@pengutronix.de>
+Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYtiRyJK32M2z5EVxW1wXEfv-YDqJ=JPK3TeThV2=7sHA@mail.gmail.com>
+In-Reply-To: <20141027153205.GW10262@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Linus Torvalds <torvalds@linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@linaro.org>
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Mark Brown <broonie@kernel.org>, atull@opensource.altera.com, jgunthorpe@obsidianresearch.com, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, michal.simek@xilinx.com, rdunlap@infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Pavel Machek <pavel@denx.de>, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, Rob Landley <rob@landley.net>, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, Linus Walleij <linus.walleij@linaro.org>, mgerlach@opensource.altera.com, Alan Tull <delicious.quinoa@gmail.com>, dinguyen@opensource.
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 29, 2014 at 10:52 AM, Linus Walleij
-<linus.walleij@linaro.org> wrote:
-> On Fri, Sep 26, 2014 at 4:19 PM, Jason Cooper <jason@lakedaemon.net> wrote:
->> On Fri, Sep 26, 2014 at 02:30:53PM +0200, Linus Walleij wrote:
->
->> Exact patch is:
->>
->>   f4d4ffc03efc kbuild: dtbs_install: new make target
->>
->>> After this patch a while back I have observed the following behaviour
->>> of the kernel build:
->>>
->>> make zImage
->>> make zImage
->>> -> incremental build, just relink
->>>
->>> make zImage
->>> make dtbs
->>> make zImage
->>> -> The whole kernel gets rebuilt
->>>
->>> So now if I happen to recompile my device trees, I suddenly want
->>> the entire zImage to be rebuilt to? It's by definition not changes that
->>> affect the kernel build :-(
->>>
->>> I noticed this because my build scripts calls make dtbs && make zImage,
->>> and started to rebuild absolutely everything all the time.
->>>
->>> Do you think this can be fixed? It's quite simple to reproduce...
->>
->> Does the attached fix your problem?
->
-> Yes!
-> Tested-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Please get this upstream marked for stable.
+Hi Stefan,
 
-So is there a proper fix for this coming or not?
+> On Oct 27, 2014, at 17:32 , Steffen Trumtrar <s.trumtrar@pengutronix.=
+de> wrote:
+>=20
+> On Mon, Oct 27, 2014 at 05:05:29PM +0200, Pantelis Antoniou wrote:
+>> Hi Mark,
+>>=20
+>>> On Oct 27, 2014, at 17:01 , Mark Brown <broonie@kernel.org> wrote:
+>>>=20
+>>> On Mon, Oct 27, 2014 at 01:48:02PM +0200, Pantelis Antoniou wrote:
+>>>>> On Oct 24, 2014, at 02:51 , atull@opensource.altera.com wrote:
+>>>=20
+>>>>> + - init-val         : 0 if driver should disable bridge at start=
+up
+>>>>> +                      1 if driver should enable bridge at startu=
+p
+>>>>> +                      driver leaves bridge in current state if p=
+roperty not
+>>>>> +		      specified.
+>>>=20
+>>>> Isn=E2=80=99t init-val a boolean property? It=E2=80=99s not named =
+very well.
+>>>=20
+>>> It's not boolean, it's tristate - turn on, turn off or don't touch.
+>>>=20
+>>=20
+>> I see. Even then =E2=80=98init-val=E2=80=99 is cryptic. I=E2=80=99d =
+prefer two booleans,
+>> enable-at-startup; disable-at-startup.
+>>=20
+>>>> Along with the label, is kinda hard to defend as configuration in =
+DT.
+>>>=20
+>>> Yeah...  presumably this decision would fall out of the users?
+>>=20
+>> Well, it=E2=80=99s the user that should make the decision, but the d=
+river should
+>> pick it up. This works but it=E2=80=99s not very nice.
+>>=20
+>=20
+> Hm, convince me why this AXI bus is so special, that I even need an
+> "init-val" property? Other buses don't have that.
+> Why don't I add a property "init-val" to my SPI buses, so I can enabl=
+e
+> it in the DT and still have it in reset, just because....
+>=20
+> The bridges on the SoCFPGA are buses, from the HPS to the FPGA. If I =
+have
+> written firmware to the FPGA and I have subnodes on that bus, I have =
+to
+> get it out of reset and probe everything. Normal procedure, no ?!
+>=20
 
-I am suffering from this problem :-(
+Well, it=E2=80=99s not my speciality, but my understanding is that FPGA=
+s take (considerable)
+time to be programmed. If someone has already configured the =E2=80=98b=
+us=E2=80=99 it is considered
+a win to not reload the bitstream. I.e. if you boot with the bootloader=
+ having loaded
+the bitstream already, you don=E2=80=99t want to do it again.
 
-Yours,
-Linus Walleij
+I=E2=80=99m afraid there=E2=80=99s no such analogue with standard hardw=
+are busses like SPI, where
+the bus setup time is instantaneous.
+
+>=20
+> Regards,
+> Steffen
+>=20
+
+Regards
+
+=E2=80=94 Pantelis
+
+> --=20
+> Pengutronix e.K.                           |                         =
+    |
+> Industrial Linux Solutions                 | http://www.pengutronix.d=
+e/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0=
+    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5=
+555 |
