@@ -1,56 +1,83 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 02/10] dt-bindings: Document the standard property
- "system-power-controller"
-Date: Mon, 27 Oct 2014 17:26:36 +0000
-Message-ID: <20141027172636.GZ18557@sirena.org.uk>
-References: <1414427215-14380-1-git-send-email-romain.perier@gmail.com>
- <1414427215-14380-2-git-send-email-romain.perier@gmail.com>
- <20141027163918.GB14253@saruman>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/1] spi: spi-gpio: Add dt support for a single device
+ with no chip select
+Date: Mon, 27 Oct 2014 17:30:55 +0000
+Message-ID: <20141027173055.GD4971@leverpostej>
+References: <1414423637-2817-1-git-send-email-torfl6749@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YPOU9eFKIy6Wf5kE"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20141027163918.GB14253@saruman>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1414423637-2817-1-git-send-email-torfl6749@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Torsten Fleischer <torfl6749@gmail.com>
+Cc: "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 27, 2014 at 03:27:17PM +0000, Torsten Fleischer wrote:
+> From: Torsten Fleischer <torfl6749@gmail.com>
+> 
+> Use an empty 'cs-gpios' property if a single device is connected which
+> has no chip select.
+> This refers to the discussion at https://lkml.org/lkml/2013/11/13/62.
+> 
+> Signed-off-by: Torsten Fleischer <torfl6749@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/spi/spi-gpio.txt |  6 ++++--
+>  drivers/spi/spi-gpio.c                             | 10 +++++++---
+>  2 files changed, 11 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-gpio.txt b/Documentation/devicetree/bindings/spi/spi-gpio.txt
+> index 8a824be..ad8795f 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-gpio.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-gpio.txt
+> @@ -8,8 +8,10 @@ Required properties:
+>   - gpio-sck: GPIO spec for the SCK line to use
+>   - gpio-miso: GPIO spec for the MISO line to use
+>   - gpio-mosi: GPIO spec for the MOSI line to use
+> - - cs-gpios: GPIOs to use for chipselect lines
+> - - num-chipselects: number of chipselect lines
+> + - cs-gpios: GPIOs to use for chipselect lines. Leave this property empty if
+> +             a single device with no chip select is connected.
+> + - num-chipselects: Number of chipselect lines. Has to be "1" even if a single
+> +                    device with no chip select is connected.
 
---YPOU9eFKIy6Wf5kE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Why not just have num-chipselectes = <0>, and no cs-gpios property?
 
-On Mon, Oct 27, 2014 at 11:39:18AM -0500, Felipe Balbi wrote:
-> On Mon, Oct 27, 2014 at 04:26:47PM +0000, Romain Perier wrote:
+That would match the HW, and is unambigious as the author has to state
+explicitly that there are no chipselects.
 
-> > +act8846: act8846@5 {
-> > +	 compatible = "active-semi,act8846";
-> > +	 status = "okay";
-> > +	 system-power-controller;
-> > +}
+Mark.
 
-> there is no mention here that system-power-controller superseeds
-> poweroff-source and deprecates that.
-
-Given that poweroff-source hasn't made it into a released kernel yet we
-can probably just kill it off completely can't we?
-
---YPOU9eFKIy6Wf5kE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUToBLAAoJECTWi3JdVIfQ5DYH/RI8OXmYY0W2YOW2mndiN6ux
-eH0/FrQVFLEGTn4UP9EWVSBYIPVpoKFAzWmUfWqW31J0LgzsSyy2k9CRq6sD6MXS
-PlqwsgVN8rNn1GBvp18w9PFJM2lDtpIPYWQLttWAJlCDmc5KXdGSuBn1p4Rutnzy
-i71n4qKADI3IkDy/k6fnkyJXyTvwct61NBsfQiKImUpstqy0j4oP4qKT+c/8Mh5z
-RpsWbuN+3YC/uOm11rTjGcmBGcG564BfOOueiJN+HnkE9PKB9opi/t40rQXy0s0O
-FBf3dVZEkH3bqmuy0rj+b4ETBLX2SgOp/KIEZAKgh5gVploewmAGBE3yMZt9FSs=
-=Gk4X
------END PGP SIGNATURE-----
-
---YPOU9eFKIy6Wf5kE--
+>  
+>  Example:
+>  
+> diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
+> index 9f59553..b343818a 100644
+> --- a/drivers/spi/spi-gpio.c
+> +++ b/drivers/spi/spi-gpio.c
+> @@ -461,9 +461,13 @@ static int spi_gpio_probe(struct platform_device *pdev)
+>  		 * property of the node.
+>  		 */
+>  
+> -		for (i = 0; i < SPI_N_CHIPSEL; i++)
+> -			spi_gpio->cs_gpios[i] =
+> -				of_get_named_gpio(np, "cs-gpios", i);
+> +		if ((SPI_N_CHIPSEL == 1) &&
+> +				(of_gpio_named_count(np, "cs-gpios") == 0))
+> +			spi_gpio->cs_gpios[0] = SPI_GPIO_NO_CHIPSELECT;
+> +		else
+> +			for (i = 0; i < SPI_N_CHIPSEL; i++)
+> +				spi_gpio->cs_gpios[i] =
+> +					of_get_named_gpio(np, "cs-gpios", i);
+>  	}
+>  #endif
+>  
+> -- 
+> 1.8.4.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
