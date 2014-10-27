@@ -1,90 +1,21 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH RESEND 06/12] mmc: sdhci-pxav3: Move I/O clock to private
- data
-Date: Mon, 27 Oct 2014 19:15:40 +0100
-Message-ID: <544E8BCC.5080208@gmail.com>
-References: <1413883364-681-1-git-send-email-sebastian.hesselbarth@gmail.com> <1413883364-681-7-git-send-email-sebastian.hesselbarth@gmail.com> <CAPDyKFroUmuQU_mBmSNEQAHe9Y-OF4pkkK=4Qe=JtibWThaHPA@mail.gmail.com>
+From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 01/10] of: Rename "poweroff-source" property to "system-power-controller"
+Date: Mon, 27 Oct 2014 19:16:27 +0100
+Message-ID: <CABgxDoKMPm1+Ue2pE2zwzz8t-xpQ4pBK2pVYm5rJMEFkErHEjQ@mail.gmail.com>
+References: <1414427215-14380-1-git-send-email-romain.perier@gmail.com>
+	<20141027171655.GH2006@localhost>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFroUmuQU_mBmSNEQAHe9Y-OF4pkkK=4Qe=JtibWThaHPA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Chris Ball <chris@printf.net>, =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141027171655.GH2006@localhost>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "pawel.moll" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/27/2014 02:28 PM, Ulf Hansson wrote:
-> On 21 October 2014 11:22, Sebastian Hesselbarth
-> <sebastian.hesselbarth@gmail.com> wrote:
->> As we are using references to the I/O clock throughout the driver,
->> move it to the private data. Also, in preparation for core clock,
->> rename it to clk_io.
->>
->> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.co=
-m>
->> ---
->> Cc: Chris Ball <chris@printf.net>
->> Cc: Ulf Hansson <ulf.hansson@linaro.org>
->> Cc: "Antoine T=C3=A9nart" <antoine.tenart@free-electrons.com>
->> Cc: linux-mmc@vger.kernel.org
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> ---
->>   drivers/mmc/host/sdhci-pxav3.c | 24 +++++++++++++-----------
->>   1 file changed, 13 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci=
--pxav3.c
->> index e52bbbb09d88..a34a589670e6 100644
->> --- a/drivers/mmc/host/sdhci-pxav3.c
->> +++ b/drivers/mmc/host/sdhci-pxav3.c
->> @@ -59,6 +59,7 @@
->>   #define SDCE_MISC_INT_EN       (1<<1)
->>
->>   struct sdhci_pxa {
->> +       struct clk *clk_io;
->>          u8      power_mode;
->>   };
->>
->> @@ -288,9 +289,7 @@ static int sdhci_pxav3_probe(struct platform_dev=
-ice *pdev)
->>          struct sdhci_host *host =3D NULL;
->>          struct sdhci_pxa *pxa =3D NULL;
->>          const struct of_device_id *match;
->> -
->>          int ret;
->> -       struct clk *clk;
->>
->>          pxa =3D devm_kzalloc(&pdev->dev, sizeof(struct sdhci_pxa), =
-GFP_KERNEL);
->>          if (!pxa)
->> @@ -310,14 +309,14 @@ static int sdhci_pxav3_probe(struct platform_d=
-evice *pdev)
->>          pltfm_host =3D sdhci_priv(host);
->>          pltfm_host->priv =3D pxa;
->>
->> -       clk =3D devm_clk_get(dev, NULL);
->> -       if (IS_ERR(clk)) {
->> +       pxa->clk_io =3D devm_clk_get(dev, NULL);
->> +       if (IS_ERR(pxa->clk_io)) {
->>                  dev_err(dev, "failed to get io clock\n");
->> -               ret =3D PTR_ERR(clk);
->> +               ret =3D PTR_ERR(pxa->clk_io);
->>                  goto err_clk_get;
->>          }
->> -       pltfm_host->clk =3D clk;
->> -       clk_prepare_enable(clk);
->> +       pltfm_host->clk =3D pxa->clk_io;
+2014-10-27 18:16 GMT+01:00 Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> You probably don't want this to be inline.
 >
-> Is the above still needed?
->
->> +       clk_prepare_enable(pxa->clk_io);
-
-Ulf,
-
-I guess it is. It sets sdhci_pltfm_host's clk field which is used
-by sdhci-pltfm.c to e.g. determine sdhci clock rate.
-
-Sebastian
+Yeah this is what I thought, I agree, it's a bit big to be inline... I
+will fix it, I just wait a bit to see what is decided for this
+serie...
