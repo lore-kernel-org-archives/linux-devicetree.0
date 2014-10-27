@@ -1,36 +1,312 @@
-From: "Griffis, Brad" <bgriffis@ti.com>
-Subject: RE: [PATCH 0/4] Touchscreen performance related fixes
-Date: Mon, 27 Oct 2014 19:02:47 +0000
-Message-ID: <912A29987EAE174BA6CF187D7CDFA9CE26F46B2B@DLEE08.ent.ti.com>
-References: <1414408111-2631-1-git-send-email-vigneshr@ti.com>
- <544E821D.5040004@linutronix.de>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH v5] hwspinlock: qcom: Add support for Qualcomm HW Mutex block
+Date: Mon, 27 Oct 2014 12:07:22 -0700
+Message-ID: <1414436842-3859-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <544E821D.5040004@linutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, "R, Vignesh" <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit
- Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Dmitry
- Torokhov <dmitry.torokhov@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Samuel Ortiz <sameo@linux.intel.com>, Jan Kardell <jan.kardell@telliq.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Balbi,
- Felipe" <balbi@ti.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Peter Meerwald <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Suman Anna <s-anna@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>, Eric Holmberg <eholmber@codeaurora.org>, Courtney Cavin <courtney.cavin@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/27/2014 12:34 PM, Sebastian Andrzej Siewior wrote:
-> Do we really need #3 (and then #4)? Given the complexity we have already, is there any benefit by decreasing this value? 
+From: Kumar Gala <galak@codeaurora.org>
 
-I specifically requested we add ti,charge-delay to the device tree because it is THE critical value to tune for a given design.  Although I think the current value of 0xB000 will be suitable for a great many designs, I expect that many users will need to adjust this value for their hardware.  Details such as which touchscreen vendor is being used and how the touchscreen is connected (header vs cable) have an effect on what's appropriate here.
+Add driver for Qualcomm Hardware Mutex block that exists on newer
+Qualcomm SoCs.
 
-> Would  someone want to increase it? Can we safely determine a value which works for everyone?
+Signed-off-by: Kumar Gala <galak@codeaurora.org>
+[bjorn: added pm_runtime calls, from Courtney,
+	added sfpb-mutex compatible,
+	updated DT binding documentation formatting,
+	replaced msm prefix with qcom,
+	cleaned up includes]
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+---
 
-This value represents a hardware delay before checking for the pen-up event.  So in the scenario where someone is seeing excessive false pen-up events they will want to increase this parameter.  The downsize of making this larger is that it decreases the overall sampling speed of both the touchscreen as well as the standalone ADC samples.  At one point I tried making it huge, but that made the touchscreen overly sluggish because the sampling became too slow.  So there is a definite trade-off that if you make it too large the touchscreen becomes sluggish, and if you make it too small then you may see false pen-up events.  The optimal value will need to be tuned for a given design.
+We need this driver to add support for the shared memory manager, so I'm
+reviving Kumars patch from a year ago, with some additional sprinkles on top.
+
+Changes since v4:
+ - Aligned with devicetree support in hwlock framework and hence depends on [1]
+
+Changes since v3:
+ - Reverted back to getting stride from of_match, per Kumars request
+
+Changes since v2:
+ - MODULE_DEVICE_TABLE
+ - Changed prefix to qcom
+ - Cleaned up includes
+ - Rely on reg and num-locks to figure out stride, instead of of_match data
+
+Changes since v1:
+ - Added the pm_runtime calls needed to be able to boot a kernel with
+   pm_runtime and this driver, patch from Courtney.
+ - Added sfpb-mutex compatible, for re-use of the driver in family A platforms.
+ - Updated formatting of DT binding documentation, while adding the extra
+   compatible.
+ - Dropped Stephen Boyds Reviewed-by due to these changes.
+
+
+ [1] https://lkml.org/lkml/2014/9/12/636
+
+ .../devicetree/bindings/hwlock/qcom-hwspinlock.txt |   50 +++++++
+ drivers/hwspinlock/Kconfig                         |   11 ++
+ drivers/hwspinlock/Makefile                        |    1 +
+ drivers/hwspinlock/qcom_hwspinlock.c               |  156 ++++++++++++++++++++
+ 4 files changed, 218 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
+ create mode 100644 drivers/hwspinlock/qcom_hwspinlock.c
+
+diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
+new file mode 100644
+index 0000000..cd2b912
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
+@@ -0,0 +1,50 @@
++Qualcomm Hardware Mutex Block:
++
++The hardware block provides mutexes utilized between different processors
++on the SoC as part of the communication protocol used by these processors.
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,sfpb-mutex",
++		    "qcom,tcsr-mutex"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: base address and size of the mutex registers
++
++- reg-names:
++	Usage: required
++	Value type: <string>
++	Definition: must be "mutex-base"
++
++- hwlock-base-id:
++	Usage: optional
++	Value type: <u32>
++	Definition: base id of the hwlock device
++		    (hwlock standard property, see hwlock.txt)
++
++- #hwlock-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 1, the specified cell represent the lock id
++		    (hwlock standard property, see hwlock.txt)
++
++- hwlock-num-locks:
++	Usage: required
++	Value type: <u32>
++	Definition: the number of locks/mutex available in this block
++		    (hwlock standard property, see hwlock.txt)
++
++Example:
++
++	hwlock@fd484000 {
++		compatible = "qcom,tcsr-mutex";
++		reg = <0xfd484000 0x1000>;
++		reg-names = "mutex-base";
++
++		hwlock-num-locks = <8>;
++		#hwlock-cells = <1>;
++	};
+diff --git a/drivers/hwspinlock/Kconfig b/drivers/hwspinlock/Kconfig
+index 3612cb5..762216d 100644
+--- a/drivers/hwspinlock/Kconfig
++++ b/drivers/hwspinlock/Kconfig
+@@ -18,6 +18,17 @@ config HWSPINLOCK_OMAP
+ 
+ 	  If unsure, say N.
+ 
++config HWSPINLOCK_QCOM
++	tristate "Qualcomm Hardware Spinlock device"
++	depends on ARCH_QCOM
++	select HWSPINLOCK
++	help
++	  Say y here to support the Qualcomm Hardware Mutex functionality, which
++	  provides a synchronisation mechanism for the various processors on
++	  the SoC.
++
++	  If unsure, say N.
++
+ config HSEM_U8500
+ 	tristate "STE Hardware Semaphore functionality"
+ 	depends on ARCH_U8500
+diff --git a/drivers/hwspinlock/Makefile b/drivers/hwspinlock/Makefile
+index 93eb64b..68f95d9 100644
+--- a/drivers/hwspinlock/Makefile
++++ b/drivers/hwspinlock/Makefile
+@@ -4,4 +4,5 @@
+ 
+ obj-$(CONFIG_HWSPINLOCK)		+= hwspinlock_core.o
+ obj-$(CONFIG_HWSPINLOCK_OMAP)		+= omap_hwspinlock.o
++obj-$(CONFIG_HWSPINLOCK_QCOM)		+= qcom_hwspinlock.o
+ obj-$(CONFIG_HSEM_U8500)		+= u8500_hsem.o
+diff --git a/drivers/hwspinlock/qcom_hwspinlock.c b/drivers/hwspinlock/qcom_hwspinlock.c
+new file mode 100644
+index 0000000..93a8a5d
+--- /dev/null
++++ b/drivers/hwspinlock/qcom_hwspinlock.c
+@@ -0,0 +1,156 @@
++/*
++ * Copyright (c) 2013, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2014, Sony Mobile Communications AB
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/hwspinlock.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++
++#include "hwspinlock_internal.h"
++
++#define SPINLOCK_ID_APPS_PROC	1
++
++static int qcom_hwspinlock_trylock(struct hwspinlock *lock)
++{
++	void __iomem *lock_addr = lock->priv;
++
++	writel_relaxed(SPINLOCK_ID_APPS_PROC, lock_addr);
++
++	return readl_relaxed(lock_addr) == SPINLOCK_ID_APPS_PROC;
++}
++
++static void qcom_hwspinlock_unlock(struct hwspinlock *lock)
++{
++	void __iomem *lock_addr = lock->priv;
++	u32 lock_owner;
++
++	lock_owner = readl_relaxed(lock_addr);
++	if (lock_owner != SPINLOCK_ID_APPS_PROC) {
++		pr_err("%s: spinlock not owned by us (actual owner is %d)\n",
++				__func__, lock_owner);
++	}
++
++	writel_relaxed(0, lock_addr);
++}
++
++static const struct hwspinlock_ops qcom_hwspinlock_ops = {
++	.trylock	= qcom_hwspinlock_trylock,
++	.unlock		= qcom_hwspinlock_unlock,
++};
++
++static const struct of_device_id qcom_hwspinlock_of_match[] = {
++	{ .compatible = "qcom,sfpb-mutex", .data = (void *)0x4 },
++	{ .compatible = "qcom,tcsr-mutex" , .data = (void *)0x80 },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, qcom_hwspinlock_of_match);
++
++static int qcom_hwspinlock_probe(struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	const struct of_device_id *match;
++	struct hwspinlock_device *bank;
++	struct hwspinlock *hwlock;
++	struct resource *res;
++	void __iomem *iobase;
++	unsigned stride, i;
++	size_t array_size;
++	int num_locks;
++	int base_id;
++	int ret;
++
++	match = of_match_device(qcom_hwspinlock_of_match, &pdev->dev);
++
++	ret = of_hwspin_lock_get_base_id(node);
++	if (ret < 0 && ret != -EINVAL)
++		return ret;
++	base_id = ret > 0 ? ret : 0;
++
++	num_locks = of_hwspin_lock_get_num_locks(node);
++	if (num_locks < 0)
++		return num_locks;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mutex-base");
++	iobase = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(iobase))
++		return PTR_ERR(iobase);
++
++	array_size = num_locks * sizeof(*hwlock);
++	bank = devm_kzalloc(&pdev->dev, sizeof(*bank) + array_size, GFP_KERNEL);
++	if (!bank)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, bank);
++
++	stride = (unsigned)match->data;
++	for (i = 0, hwlock = &bank->lock[0]; i < num_locks; i++, hwlock++)
++		hwlock->priv = iobase + i * stride;
++
++	pm_runtime_enable(&pdev->dev);
++
++	ret = hwspin_lock_register(bank, &pdev->dev, &qcom_hwspinlock_ops,
++				   base_id, num_locks);
++	if (ret)
++		pm_runtime_disable(&pdev->dev);
++
++	return ret;
++}
++
++static int qcom_hwspinlock_remove(struct platform_device *pdev)
++{
++	struct hwspinlock_device *bank = platform_get_drvdata(pdev);
++	int ret;
++
++	ret = hwspin_lock_unregister(bank);
++	if (ret) {
++		dev_err(&pdev->dev, "%s failed: %d\n", __func__, ret);
++		return ret;
++	}
++
++	pm_runtime_disable(&pdev->dev);
++
++	return 0;
++}
++
++static struct platform_driver qcom_hwspinlock_driver = {
++	.probe		= qcom_hwspinlock_probe,
++	.remove		= qcom_hwspinlock_remove,
++	.driver		= {
++		.name	= "qcom_hwspinlock",
++		.of_match_table = qcom_hwspinlock_of_match,
++	},
++};
++
++static int __init qcom_hwspinlock_init(void)
++{
++	return platform_driver_register(&qcom_hwspinlock_driver);
++}
++/* board init code might need to reserve hwspinlocks for predefined purposes */
++postcore_initcall(qcom_hwspinlock_init);
++
++static void __exit qcom_hwspinlock_exit(void)
++{
++	platform_driver_unregister(&qcom_hwspinlock_driver);
++}
++module_exit(qcom_hwspinlock_exit);
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("Hardware spinlock driver for Qualcomm SoCs");
++MODULE_AUTHOR("Kumar Gala <galak@codeaurora.org>");
++MODULE_AUTHOR("Jeffrey Hugo <jhugo@codeaurora.org>");
++MODULE_AUTHOR("Eric Holmberg <eholmber@codeaurora.org>");
+-- 
+1.7.9.5
