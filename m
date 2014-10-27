@@ -1,103 +1,41 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3] rtc: omap: add support for pmic_power_en
-Date: Mon, 27 Oct 2014 15:40:31 -0700
-Message-ID: <20141027154031.4492ea11d401045ca04a3ff8@linux-foundation.org>
-References: <1413913086-12730-1-git-send-email-johan@kernel.org>
-	<1414397368-26480-1-git-send-email-johan@kernel.org>
+From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCHv2 0/4] Add Altera peripheral memories to EDAC framework
+Date: Mon, 27 Oct 2014 17:48:17 -0500
+Message-ID: <544ECBB1.2040600@opensource.altera.com>
+References: <1413578029-13205-1-git-send-email-tthayer@opensource.altera.com> <544E93F0.3030409@opensource.altera.com> <20141027204307.GB4741@pd.tnic> <544EBA84.7080109@opensource.altera.com> <20141027215908.GC4741@pd.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414397368-26480-1-git-send-email-johan@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Felipe Balbi <balbi@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141027215908.GC4741-fF5Pk5pvG8Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 27 Oct 2014 09:09:28 +0100 Johan Hovold <johan@kernel.org> wrote:
 
-> Add new property "ti,system-power-controller" to register the RTC as a
-> power-off handler.
-> 
-> Some RTC IP revisions can control an external PMIC via the pmic_power_en
-> pin, which can be configured to transition to OFF on ALARM2 events and
-> back to ON on subsequent ALARM (wakealarm) events.
-> 
-> This is based on earlier work by Colin Foe-Parker and AnilKumar Ch. [1]
-> 
-> [1] https://www.mail-archive.com/linux-omap@vger.kernel.org/msg82127.html
-> 
-> Tested-by: Felipe Balbi <balbi@ti.com>
-> Signed-off-by: Johan Hovold <johan@kernel.org>
-> ---
-> 
-> Changes since v2:
->  - add two-second delay to allow alarm to trigger before returning
-
-hmpf.  As this sentence is below the ^--- it doesn't get into the
-changelog.
-
-> ...
+On 10/27/2014 04:59 PM, Borislav Petkov wrote:
+> On Mon, Oct 27, 2014 at 04:35:00PM -0500, Thor Thayer wrote:
+>> Should I move the EDAC Device probe and error handling from
+>> altera_edac_mgr.c to altera_edac.c? Can I mix the MC and Device models
+>> in the same file?
+> Right, for basic practical reasons, I'd like to keep all functionality
+> pertaining to one hw flavour in one compilation unit/one driver. We can
+> always split them later if a compelling reason emerges.
 >
-> +static void omap_rtc_power_off(void)
-> +{
-> +	struct omap_rtc *rtc = omap_rtc_power_off_rtc;
-> +	struct rtc_time tm;
-> +	unsigned long now;
-> +	u32 val;
-> +
-> +	/* enable pmic_power_en control */
-> +	val = rtc_readl(rtc, OMAP_RTC_PMIC_REG);
-> +	rtc_writel(rtc, OMAP_RTC_PMIC_REG, val | OMAP_RTC_PMIC_POWER_EN_EN);
-> +
-> +	/* set alarm two seconds from now */
-> +	omap_rtc_read_time_raw(rtc, &tm);
-> +	bcd2tm(&tm);
-> +	rtc_tm_to_time(&tm, &now);
-> +	rtc_time_to_tm(now + 2, &tm);
-> +
-> +	if (tm2bcd(&tm) < 0) {
-> +		dev_err(&rtc->rtc->dev, "power off failed\n");
-> +		return;
-> +	}
-> +
-> +	rtc_wait_not_busy(rtc);
-> +
-> +	rtc_write(rtc, OMAP_RTC_ALARM2_SECONDS_REG, tm.tm_sec);
-> +	rtc_write(rtc, OMAP_RTC_ALARM2_MINUTES_REG, tm.tm_min);
-> +	rtc_write(rtc, OMAP_RTC_ALARM2_HOURS_REG, tm.tm_hour);
-> +	rtc_write(rtc, OMAP_RTC_ALARM2_DAYS_REG, tm.tm_mday);
-> +	rtc_write(rtc, OMAP_RTC_ALARM2_MONTHS_REG, tm.tm_mon);
-> +	rtc_write(rtc, OMAP_RTC_ALARM2_YEARS_REG, tm.tm_year);
-> +
-> +	/*
-> +	 * enable ALARM2 interrupt
-> +	 *
-> +	 * NOTE: this fails on AM3352 if rtc_write (writeb) is used
-> +	 */
-> +	val = rtc_read(rtc, OMAP_RTC_INTERRUPTS_REG);
-> +	rtc_writel(rtc, OMAP_RTC_INTERRUPTS_REG,
-> +			val | OMAP_RTC_INTERRUPTS_IT_ALARM2);
-> +
-> +	mdelay(2000);
+> Thanks.
+>
+OK. I will make the changes.
 
-And it is uncommented.
+Would the L2 cache and OCRAM specific functions also be in 
+altera_edac.c? Each of these EDAC pieces is independent and can be 
+compiled in without the others. I've read that the use of #ifdef's is 
+discouraged and having separate files in the Makefile solves that.
 
-How on earth is a reader to know why this is here?
+Thanks for the clarification.
 
-I can do this
-
---- a/drivers/rtc/rtc-omap.c~rtc-omap-add-support-for-pmic_power_en-v3-fix
-+++ a/drivers/rtc/rtc-omap.c
-@@ -417,6 +417,7 @@ static void omap_rtc_power_off(void)
- 	rtc_writel(rtc, OMAP_RTC_INTERRUPTS_REG,
- 			val | OMAP_RTC_INTERRUPTS_IT_ALARM2);
- 
-+	/* Allow alarm to trigger before returning */
- 	mdelay(2000);
- }
- 
-
-
-But it doesn't explain *why* we want the alarm to trigger before
-returning.
+Thor
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
