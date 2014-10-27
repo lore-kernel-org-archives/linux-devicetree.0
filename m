@@ -1,52 +1,50 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v9 0/9] cpuidle driver for QCOM SoCs: 8064, 8074, 8084
-Date: Mon, 27 Oct 2014 08:45:35 -0600
-Message-ID: <20141027144535.GF30210@ilina-mac.qualcomm.com>
-References: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org>
- <1414401339.2343.2.camel@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1414401339.2343.2.camel@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v2] ARM: dts: exynos4412-trats: Add micro SD card SDHCI node
+Date: Mon, 27 Oct 2014 15:59:55 +0100
+Message-ID: <1414421995-22618-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 27 2014 at 03:15 -0600, Ivan T. Ivanov wrote:
+Add SDHCI node for supporting the micro SD card. On Trats2 board the
+SDHCI does not use sd2_cd pins (gpk2-2) for card detect but gpx3-4
+instead.
 
-Hi Ivan, 
->
->Hi Lina,
->
->On Fri, 2014-10-24 at 17:40 -0600, Lina Iyer wrote:
->> Changes since v8:
->> [ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg11473.html ]
->> - Flatten out the file structure - merge pm.c into spm.c after discussions
->> - Add a new function to set warm boot address, in scm-boot.c
->> - Support for 8064 (New)
->> - Tested on 8074, 8084. 8064 was tested with a WIP tree
->> - Address review comments from v8
->> - Looking into possiblility of  initializing the cpuidle device for a cpu,
->> only when the corresponding spm device is probed successfully.
->>
->>
->
->And this is based on...? Please, could you be explicit what kind
->of patches are needed before applying this patch set. Is seems
->that they don't depend just on "Lorenzo's ARM idle-states patches",
->I see patches from Stephen Boyd, Olav Haugan and Vikram Mulukutla
->in your tree.
+Power is supplied from LDO21 regulator which in off state is controlled
+by external GPIO pin.
 
-You need these series of patches - 
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-1. Lorenzo's ARM common idle states
-2. Stephen Boyd's SCM update series -
-	https://lkml.org/lkml/2014/8/4/767
-3. My SCM patches updating Stephen's (that I believe Kumar pulled in) - 
-	http://www.spinics.net/lists/linux-arm-msm/msg10799.html
-	http://www.spinics.net/lists/linux-arm-msm/msg10795.html
+---
 
-Thanks,
-Lina
+Changes since v1:
+1. Drop FIXME comment (about findings during testing).
+---
+ arch/arm/boot/dts/exynos4412-trats2.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+index a5aa52bba72c..7a68e0832cd6 100644
+--- a/arch/arm/boot/dts/exynos4412-trats2.dts
++++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+@@ -603,6 +603,16 @@
+ 		cap-mmc-highspeed;
+ 	};
+ 
++	sdhci@12530000 {
++		bus-width = <4>;
++		cd-gpios = <&gpx3 4 0>;
++		cd-inverted;
++		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus4>;
++		pinctrl-names = "default";
++		vmmc-supply = <&ldo21_reg>;
++		status = "okay";
++	};
++
+ 	serial@13800000 {
+ 		status = "okay";
+ 	};
+-- 
+1.9.1
