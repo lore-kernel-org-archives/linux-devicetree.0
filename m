@@ -1,61 +1,85 @@
-From: Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH v2 06/10] mfd: tps65910: Use the standard DT property system-power-controller
-Date: Mon, 27 Oct 2014 17:53:01 +0100
-Message-ID: <CABgxDoJJ26nT4CmQoChOaWRYK8RzJDP7TRxmg6eow+MgjoQm8Q@mail.gmail.com>
-References: <1414427215-14380-1-git-send-email-romain.perier@gmail.com>
-	<1414427215-14380-6-git-send-email-romain.perier@gmail.com>
-	<1414427749.2421.5.camel@pengutronix.de>
-	<20141027164153.GE14253@saruman>
-	<20141027164338.GE2006@localhost>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v3] rtc: omap: add support for pmic_power_en
+Date: Mon, 27 Oct 2014 17:56:54 +0100
+Message-ID: <20141027165654.GF2006@localhost>
+References: <1413913086-12730-1-git-send-email-johan@kernel.org>
+ <1414397368-26480-1-git-send-email-johan@kernel.org>
+ <20141027164544.GI14253@saruman>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20141027164338.GE2006@localhost>
-Sender: linux-pm-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Felipe Balbi <balbi@ti.com>, Lucas Stach <l.stach@pengutronix.de>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, devicetree <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, robh <robh@kernel.org>, mark.rutland@arm.com, linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee.jones@linaro.org>, robh+dt@kernel.org, "pawel.moll" <pawel.moll@arm.com>, ijc+devicetree <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, linux-arm-kernel@lists.infradead.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141027164544.GI14253@saruman>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Johan Hovold <johan@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Andrew Morton <akpm@linux-foundation.org>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Please take a look at "PATCH v1 1/10" of this serie, read it
-carefully... it's already handled ^^
+On Mon, Oct 27, 2014 at 11:45:44AM -0500, Felipe Balbi wrote:
+> On Mon, Oct 27, 2014 at 09:09:28AM +0100, Johan Hovold wrote:
+> > Add new property "ti,system-power-controller" to register the RTC as a
+> > power-off handler.
+> > 
+> > Some RTC IP revisions can control an external PMIC via the pmic_power_en
+> > pin, which can be configured to transition to OFF on ALARM2 events and
+> > back to ON on subsequent ALARM (wakealarm) events.
+> > 
+> > This is based on earlier work by Colin Foe-Parker and AnilKumar Ch. [1]
+> > 
+> > [1] https://www.mail-archive.com/linux-omap@vger.kernel.org/msg82127.html
+> > 
+> > Tested-by: Felipe Balbi <balbi@ti.com>
+> > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > ---
+> > 
+> > Changes since v2:
+> >  - add two-second delay to allow alarm to trigger before returning
+> > 
+> > Andrew, can you replace just this patch in the series that you already
+> > have in your tree, or do you prefer I resend the whole series (with
+> > Felipe's Tested-by tags)?
+> > 
+> > Thanks,
+> > Johan
+> > 
+> > 
+> >  Documentation/devicetree/bindings/rtc/rtc-omap.txt |  9 +-
+> >  drivers/rtc/rtc-omap.c                             | 95 ++++++++++++++++++++++
+> >  2 files changed, 103 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+> > index 5a0f02d34d95..750efd40c72e 100644
+> > --- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+> > +++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+> > @@ -5,11 +5,17 @@ Required properties:
+> >  	- "ti,da830-rtc"  - for RTC IP used similar to that on DA8xx SoC family.
+> >  	- "ti,am3352-rtc" - for RTC IP used similar to that on AM335x SoC family.
+> >  			    This RTC IP has special WAKE-EN Register to enable
+> > -			    Wakeup generation for event Alarm.
+> > +			    Wakeup generation for event Alarm. It can also be
+> > +			    used to control an external PMIC via the
+> > +			    pmic_power_en pin.
+> >  - reg: Address range of rtc register set
+> >  - interrupts: rtc timer, alarm interrupts in order
+> >  - interrupt-parent: phandle for the interrupt controller
+> >  
+> > +Optional properties:
+> > +- ti,system-power-controller: whether the rtc is controlling the system power
+> 
+> isn't there a discussion going on to drop the vendor prefix ? I wonder
+> if we should just use the final binding to avoid supporting this for
+> rtc-omap too. OTOH, all of that can be hidden under
+> of_is_system_power_controller() itself.
 
-2014-10-27 17:43 GMT+01:00 Johan Hovold <johan@kernel.org>:
-> On Mon, Oct 27, 2014 at 11:41:53AM -0500, Felipe Balbi wrote:
->> On Mon, Oct 27, 2014 at 05:35:49PM +0100, Lucas Stach wrote:
->> > Am Montag, den 27.10.2014, 16:26 +0000 schrieb Romain Perier:
->> > > No longer use custom property to define poweroff capability, use the standard
->> > > DT property instead.
->> > >
->> > > Signed-off-by: Romain Perier <romain.perier@gmail.com>
->> > > ---
->> > >  drivers/mfd/tps65910.c | 3 +--
->> > >  1 file changed, 1 insertion(+), 2 deletions(-)
->> > >
->> > > diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
->> > > index 7612d89..a7faff2 100644
->> > > --- a/drivers/mfd/tps65910.c
->> > > +++ b/drivers/mfd/tps65910.c
->> > > @@ -423,8 +423,7 @@ static struct tps65910_board *tps65910_parse_dt(struct i2c_client *client,
->> > >
->> > >   board_info->irq = client->irq;
->> > >   board_info->irq_base = -1;
->> > > - board_info->pm_off = of_property_read_bool(np,
->> > > -                 "ti,system-power-controller");
->> > > + board_info->pm_off = of_is_system_power_controller();
->> > >
->> > >   return board_info;
->> > >  }
->> > You are breaking compatibility with older DTs here. This is not
->> > acceptable.
->> >
->> > You may change all in-tree DTs to use the new property and also patch
->> > the driver to understand it, but you must make sure that the driver
->> > still understands the old, custom property. And especially in this case
->> > it isn't really hard to do.
->>
->> correct, it should be simple to hide that under
->> of_is_system_power_controller() itself.
->
-> Guys, take a look at the code (PATCH 1/10). ;)
->
-> Johan
+Exactly, Romain intends to support both versions (i.e. with and without
+the prefix) with his helper function as there are already other uses of
+this variant in the wild.
+
+As I believe I mentioned in my cover letter, I suggest simply updating
+to the generic property name (i.e. use the helper and drop the prefix)
+once that code has been merged. Either way, we should always be able
+to change the property name before it has been used in a mainline
+release (as long as we update the driver and any dts use in one commit
+in order not to break bisectability).
+
+Johan
