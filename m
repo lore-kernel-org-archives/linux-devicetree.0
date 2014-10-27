@@ -1,133 +1,92 @@
 From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v3] rtc: omap: add support for pmic_power_en
-Date: Mon, 27 Oct 2014 11:45:44 -0500
-Message-ID: <20141027164544.GI14253@saruman>
-References: <1413913086-12730-1-git-send-email-johan@kernel.org>
- <1414397368-26480-1-git-send-email-johan@kernel.org>
-Reply-To: balbi@ti.com
+Subject: Re: [PATCH v1 01/10] of: Rename "poweroff-source" property to
+ "system-power-controller"
+Date: Mon, 27 Oct 2014 11:47:41 -0500
+Message-ID: <20141027164741.GJ14253@saruman>
+References: <1414427215-14380-1-git-send-email-romain.perier@gmail.com>
+ <20141027163840.GA14253@saruman>
+ <20141027164103.GD2006@localhost>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2715572116266837779=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1414397368-26480-1-git-send-email-johan@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="CxDuMX1Cv2n9FQfo"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141027164103.GD2006@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Johan Hovold <johan@kernel.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, j-keerthy@ti.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, t-kristo@ti.com, Lokesh Vutla <lokeshvutla@ti.com>, linux-arm-kernel@lists.infradead.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Andrew Morton <akpm@linux-foundation.org>, linux-omap@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
+Cc: Felipe Balbi <balbi@ti.com>, Romain Perier <romain.perier@gmail.com>, heiko@sntech.de, devicetree@vger.kernel.org, broonie@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, robh@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, linux@roeck-us.net, lee.jones@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, swarren@wwwdotorg.org, thierry.reding@gmail.com, gnurou@gmail.com, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---===============2715572116266837779==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="o7gdRJTuwFmWapyH"
-Content-Disposition: inline
-
---o7gdRJTuwFmWapyH
+--CxDuMX1Cv2n9FQfo
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 27, 2014 at 09:09:28AM +0100, Johan Hovold wrote:
-> Add new property "ti,system-power-controller" to register the RTC as a
-> power-off handler.
+On Mon, Oct 27, 2014 at 05:41:03PM +0100, Johan Hovold wrote:
+> On Mon, Oct 27, 2014 at 11:38:40AM -0500, Felipe Balbi wrote:
+> > On Mon, Oct 27, 2014 at 04:26:46PM +0000, Romain Perier wrote:
+> > > As discussed on the mailing list, it makes more sense to rename this =
+property
+> > > to "system-power-controller". Problem being that the word "source" us=
+ually tends
+> > > to be used for inputs and that is out of control of the OS. The power=
+off
+> > > capability is an output which simply turns the system-power off. Also=
+, this
+> > > property might be used by drivers which power-off the system and powe=
+r back on
+> > > subsequent RTC alarms. This seems to suggest to remove "poweroff" fro=
+m the
+> > > property name and to choose "system-power-controller" as the more gen=
+eric name.
+> > > This patchs adds the required renaming changes and defines an helper =
+function
+> > > which is compatible with both properties, the old one prefixed by a v=
+endor name
+> > > and the new one without any prefix.
 >=20
-> Some RTC IP revisions can control an external PMIC via the pmic_power_en
-> pin, which can be configured to transition to OFF on ALARM2 events and
-> back to ON on subsequent ALARM (wakealarm) events.
+> > I think you still need to support poweroff-source since it has been
+> > released on a stable kernel. Perhaps add a warning message telling users
+> > it's deprecated and asking them to switch over to
+> > system-power-controller ? Still, simply removing it isn't very nice.
 >=20
-> This is based on earlier work by Colin Foe-Parker and AnilKumar Ch. [1]
->=20
-> [1] https://www.mail-archive.com/linux-omap@vger.kernel.org/msg82127.html
->=20
-> Tested-by: Felipe Balbi <balbi@ti.com>
-> Signed-off-by: Johan Hovold <johan@kernel.org>
-> ---
->=20
-> Changes since v2:
->  - add two-second delay to allow alarm to trigger before returning
->=20
-> Andrew, can you replace just this patch in the series that you already
-> have in your tree, or do you prefer I resend the whole series (with
-> Felipe's Tested-by tags)?
->=20
-> Thanks,
-> Johan
->=20
->=20
->  Documentation/devicetree/bindings/rtc/rtc-omap.txt |  9 +-
->  drivers/rtc/rtc-omap.c                             | 95 ++++++++++++++++=
-++++++
->  2 files changed, 103 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documen=
-tation/devicetree/bindings/rtc/rtc-omap.txt
-> index 5a0f02d34d95..750efd40c72e 100644
-> --- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-> @@ -5,11 +5,17 @@ Required properties:
->  	- "ti,da830-rtc"  - for RTC IP used similar to that on DA8xx SoC family.
->  	- "ti,am3352-rtc" - for RTC IP used similar to that on AM335x SoC famil=
-y.
->  			    This RTC IP has special WAKE-EN Register to enable
-> -			    Wakeup generation for event Alarm.
-> +			    Wakeup generation for event Alarm. It can also be
-> +			    used to control an external PMIC via the
-> +			    pmic_power_en pin.
->  - reg: Address range of rtc register set
->  - interrupts: rtc timer, alarm interrupts in order
->  - interrupt-parent: phandle for the interrupt controller
-> =20
-> +Optional properties:
-> +- ti,system-power-controller: whether the rtc is controlling the system =
-power
+> No, Romain sent a patch that replaced "<vendor>,system-power-controller"
+> with "poweroff-source". It's now in Mark's tree (for v3.19), and this
+> series "reverts" to the old name minus the vendor-prefix.
 
-isn't there a discussion going on to drop the vendor prefix ? I wonder
-if we should just use the final binding to avoid supporting this for
-rtc-omap too. OTOH, all of that can be hidden under
-of_is_system_power_controller() itself.
+oh, so poweroff-source isn't in Linus' tree yet ? (/me goes grep)
+
+Then it should be fine. My bad.
+
+Many of the other comments are still valid because even though
+poweroff-source isn't in mainline yet, this series still creates
+bisection points which are broken. The best solution would be to drop
+all those patches from Mark's tree. Read, not revert, drop.
 
 --=20
 balbi
 
---o7gdRJTuwFmWapyH
+--CxDuMX1Cv2n9FQfo
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJUTna4AAoJEIaOsuA1yqREgwEP/1K5u2SMMrSwStmF5zXsQFcU
-hCY7y0v3LxtgZYeBJpIQH4cZcxi3VPlO/9+pRL49JQ1eYZoBcDgKVNwYJHpKHP3v
-EZM9QzfBLhXjyCi/vAIRj/A9MPGsa/YQFViLiLJrfI98SqOvJSk5/4C0MC0N0Tbj
-AEFMCVxZw+98xJseQhNrsgDg6VGoOsnuIyeiX4erei6jn9mHvMSS+9O3EaBta7Aw
-dvZSRxqSKqXeceP7uv4kCl1uECJIXb+NYlb+999QhPgJxKEsYMf/kVfqkTA4+4PQ
-XG2ue0ZcKck9CQIRrbE+RHCnlA+0RqGNmu2L7HINu7+QNLdbg5LuPynkW/lIVh4Q
-5v7ER1Q6jrBk2jMaALnvvu5XVJbcBd55VejeaxM7CO4aLZJLCLvX0hVw7yUXRo9s
-UwsAeB2y8KhhjDwRbWaMNadi84VLqgFhigq5rxS7pcxGG6voQP4eu08o9olwGRYB
-iXl8AlLj7TsfLS/sGboglrTeXXQmfmyW/mHqk1/cwvOnUEFmv3v5TKh4VBLt4Tos
-kYMU62NxoDHN5jd2mqViXmy0IIs42RXbGdfalclsTPBTGWL355M1i4zks5SqJAR6
-BVx+IEX3dVrCroqImctdS6RKGYqCglhoRZdIcfMp411wQJpbDpmhxEsVK5RVsuFP
-C83DS/Cf3678jPDKawiy
-=+xdL
+iQIcBAEBAgAGBQJUTnctAAoJEIaOsuA1yqREsJkQALJ3aXbosR8yYYtnJFpbgj95
+vPH6TxKswvvyVXgqVXY4qhkO2iUVZVeFXO5HZmrBW7Xy9Sclr539L+df97s30rpG
+4/HbvH/VS3QI5FB4ZLh5z+yvYQ3mBd2In/6jB6RQV4HC1xvnnfchC2bHtSuEoB88
+Es4giJh/xgOst0eaMWfC+oo3pk8gjWXWGzi6O323I+2npzDv41IBNJpEdNErSSaW
+lCRNTS6BhqyGNCDs41lti5ylLaDZaBecSR5WkYdw55yM2yuXyPlBtk1LnnN0+VVA
+zijfIQ0WF7eU0MhATOeHmV3v5+jYSKAM0pHldqYCBwmp+ObeMxzP13UGGgfG/xqn
+7gh00ZqJeXccC1gjRd/KWM0onyBvilqv5tZ1XRgvyLjdxf4z3dx6WoNjv+HoRc9y
+e43iRbPx1C3nTK33E3XT9a83ZURDgMNZuYrxoeQyd17deL6OdolUzI5VocTHSO6T
+cbaLwAo5mj+/Yplj0JgmZf1Fqg9gKK1WJOoJ2nR4Jt12hWqJSD4+twe46Y2KmHmh
+cdiTYCBFrGP/9HU4AGRTfz4QE82WrBQQ8RLt4gHjISgbaFjtAszpxl0tTNkJ7hD3
+cSfus/RtT9cV5tC/JSfz149IXmVZHvw+HRBYzBCU2v7CrTD+u6aa/FHX64bBOyP+
+5Vd07CyjRSk5pYwy/FSe
+=gpvh
 -----END PGP SIGNATURE-----
 
---o7gdRJTuwFmWapyH--
-
-
---===============2715572116266837779==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2715572116266837779==--
+--CxDuMX1Cv2n9FQfo--
