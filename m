@@ -1,153 +1,202 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH] net: smc91x: Fix gpios for device tree based booting
-Date: Mon, 27 Oct 2014 13:25:56 -0700
-Message-ID: <20141027202556.GT2560@atomide.com>
+From: Max Filippov <jcmvbkbc@gmail.com>
+Subject: Re: [PATCH] ASoC: add xtensa xtfpga I2S interface and platform
+Date: Mon, 27 Oct 2014 23:38:53 +0300
+Message-ID: <CAMo8Bf+Z9V8mkiC3JOupPQmi1EJUDKrb1qcNncDbsEbhjigbww@mail.gmail.com>
+References: <1414436825-19416-1-git-send-email-jcmvbkbc@gmail.com>
+	<20141027193229.GE18557@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-omap-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Kevin Hilman <khilman@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141027193229.GE18557@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, LKML <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-With legacy booting, the platform init code was taking care of
-the configuring of GPIOs. With device tree based booting, things
-may or may not work depending what bootloader has configured or
-if the legacy platform code gets called.
+On Mon, Oct 27, 2014 at 10:32 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Mon, Oct 27, 2014 at 10:07:05PM +0300, Max Filippov wrote:
+>
+>> +config SND_SOC_XTENSA_XTFPGA
+>> +     tristate "SoC Audio for xtensa xtfpga"
+>> +     depends on XTENSA_PLATFORM_XTFPGA
+>> +     select SND_SOC_XTFPGA_I2S
+>> +     select SND_SOC_TLV320AIC23_SPI
+>> +     select SND_SIMPLE_CARD
+>
+> I've only got this far in the file and have to leave now so I'll look
+> properly at the actual code later but the above shouldn't have the CODEC
+> or card driver selected, if the I2S driver is well written it should be
+> usable independently of either.
 
-Let's add support for the pwrdn and reset GPIOs to the smc91x
-driver to fix the issues of smc91x not working properly when
-booted in device tree mode.
+The above entry is for the whole sound subsystem of that SoC.
+An entry for I2S driver is above it.
 
-And let's change n900 to use these settings as some versions
-of the bootloader do not configure things properly causing
-errors.
+>> +++ b/sound/soc/xtensa/Makefile
+>> @@ -0,0 +1 @@
+>> +obj-$(CONFIG_SND_SOC_XTFPGA_I2S) += xtfpga-i2s.o
+>
+> Please follow the style for all other ASoC drivers and name the module
+> snd-soc-foo.
 
-Reported-by: Kevin Hilman <khilman@linaro.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Ok.
 
---- a/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
-+++ b/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
-@@ -11,3 +11,5 @@ Optional properties:
-   are supported on the device.  Valid value for SMSC LAN91c111 are
-   1, 2 or 4.  If it's omitted or invalid, the size would be 2 meaning
-   16-bit access only.
-+- power-gpios: GPIO to control the PWRDWN pin
-+- reset-gpios: GPIO to control the RESET pin
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -697,6 +697,8 @@
- 		bank-width = <2>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&ethernet_pins>;
-+		power-gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;	/* gpio86 */
-+		reset-gpios = <&gpio6 4 GPIO_ACTIVE_HIGH>;	/* gpio164 */
- 		gpmc,device-width = <2>;
- 		gpmc,sync-clk-ps = <0>;
- 		gpmc,cs-on-ns = <0>;
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -253,9 +253,6 @@ static void __init nokia_n900_legacy_init(void)
- 		platform_device_register(&omap3_rom_rng_device);
- 
- 	}
--
--	/* Only on some development boards */
--	gpio_request_one(164, GPIOF_OUT_INIT_LOW, "smc91x reset");
- }
- 
- static void __init omap3_tao3530_legacy_init(void)
---- a/drivers/net/ethernet/smsc/smc91x.c
-+++ b/drivers/net/ethernet/smsc/smc91x.c
-@@ -81,6 +81,7 @@ static const char version[] =
- #include <linux/workqueue.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- 
- #include <linux/netdevice.h>
- #include <linux/etherdevice.h>
-@@ -2190,6 +2191,41 @@ static const struct of_device_id smc91x_match[] = {
- MODULE_DEVICE_TABLE(of, smc91x_match);
- #endif
- 
-+/**
-+ * of_try_set_control_gpio - configure a gpio if it exists
-+ */
-+static int try_toggle_control_gpio(struct device *dev,
-+				   struct gpio_desc **desc,
-+				   const char *name, int index,
-+				   int value, unsigned int nsdelay)
-+{
-+	struct gpio_desc *gpio = *desc;
-+	int res;
-+
-+	gpio = devm_gpiod_get_index(dev, name, index);
-+	if (IS_ERR(gpio)) {
-+		if (PTR_ERR(gpio) == -ENOENT) {
-+			*desc = NULL;
-+			return 0;
-+		}
-+
-+		return PTR_ERR(gpio);
-+	}
-+	res = gpiod_direction_output(gpio, !value);
-+	if (res) {
-+		dev_err(dev, "unable to toggle gpio %s: %i\n", name, res);
-+		devm_gpiod_put(dev, gpio);
-+		gpio = NULL;
-+		return res;
-+	}
-+	if (nsdelay)
-+		usleep_range(nsdelay, 2 * nsdelay);
-+	gpiod_set_value_cansleep(gpio, value);
-+	*desc = gpio;
-+
-+	return 0;
-+}
-+
- /*
-  * smc_init(void)
-  *   Input parameters:
-@@ -2237,6 +2273,28 @@ static int smc_drv_probe(struct platform_device *pdev)
- 		struct device_node *np = pdev->dev.of_node;
- 		u32 val;
- 
-+		/* Optional pwrdwn GPIO configured? */
-+		ret = try_toggle_control_gpio(&pdev->dev, &lp->power_gpio,
-+					      "power", 0, 0, 100);
-+		if (ret)
-+			return ret;
-+
-+		/*
-+		 * Optional reset GPIO configured? Minimum 100 ns reset needed
-+		 * according to LAN91C96 datasheet page 14.
-+		 */
-+		ret = try_toggle_control_gpio(&pdev->dev, &lp->reset_gpio,
-+					      "reset", 0, 0, 100);
-+		if (ret)
-+			return ret;
-+
-+		/*
-+		 * Need to wait for optional EEPROM to load, max 750 us according
-+		 * to LAN91C96 datasheet page 55.
-+		 */
-+		if (lp->reset_gpio)
-+			usleep_range(750, 1000);
-+
- 		/* Combination of IO widths supported, default to 16-bit */
- 		if (!of_property_read_u32(np, "reg-io-width", &val)) {
- 			if (val & 1)
---- a/drivers/net/ethernet/smsc/smc91x.h
-+++ b/drivers/net/ethernet/smsc/smc91x.h
-@@ -298,6 +298,9 @@ struct smc_local {
- 	struct sk_buff *pending_tx_skb;
- 	struct tasklet_struct tx_task;
- 
-+	struct gpio_desc *power_gpio;
-+	struct gpio_desc *reset_gpio;
-+
- 	/* version/revision of the SMC91x chip */
- 	int	version;
- 
+>> +static void xtfpga_i2s_push_tx(struct xtfpga_i2s *i2s)
+>> +{
+>> +     struct snd_pcm_substream *tx_substream;
+>> +     struct snd_pcm_runtime *runtime;
+>> +
+>> +     rcu_read_lock();
+>> +     tx_substream = rcu_dereference(i2s->tx_substream);
+>> +     runtime = tx_substream->runtime;
+>> +#define xtfpga_i2s_tx_loop(i2s, runtime, channels, sample_bits) \
+>> +     do { \
+>> +             const u##sample_bits (*p)[channels] = \
+>> +                     (void *)runtime->dma_area; \
+>> +             for (; i2s->tx_fifo_sz < i2s->tx_fifo_high; \
+>> +                  i2s->tx_fifo_sz += 2) { \
+>> +                     iowrite32(p[i2s->tx_ptr][0], \
+>> +                               i2s->regs + XTFPGA_I2S_CHAN0_DATA); \
+>> +                     iowrite32(p[i2s->tx_ptr][channels - 1], \
+>> +                               i2s->regs + XTFPGA_I2S_CHAN0_DATA); \
+>> +                     if (++i2s->tx_ptr >= runtime->buffer_size) \
+>> +                             i2s->tx_ptr = 0; \
+>> +             } \
+>> +     } while (0)
+>> +
+>> +     switch (runtime->sample_bits | (runtime->channels << 8)) {
+>> +     case 0x110:
+>> +             xtfpga_i2s_tx_loop(i2s, runtime, 1, 16);
+>> +             break;
+>
+> This really needs some rework to be legible.  I'd suggest making your
+> macro an inline function and either replacing these magic numbers in the
+> switch statement with defines or just writing the code clearly and
+> letting the compiler figure it out.
+
+Ok, I'll rewrite it.
+
+> Some documentation explaining what your RCU usage is all about would
+> also be good...  I'm not clear why it's being used, none of the FIQ
+> drivers do this and I can't entirely figure out what we're defending
+> against other than the tasklet which we should be stopping anyway and
+> why what we're doing is safe.
+
+Ok, I'll document it. I'm synchronizing trigger callback with both interrupt
+handler and the tasklet. All that they need to know is whether we're playing
+a stream or not, so I protect the stream pointer with RCU. A spinlock for
+protection of a single pointer seems too big for me.
+
+> I would also expect to see the data transfer and I2S bits more split
+> out, presumably this IP can actually be used in designs with a DMA
+> controller and one would expect that for practical systems this would be
+> the common case?
+
+I don't know of other designs that use this IP block. Can we do it when
+we get such users?
+
+>> +     if (int_status & XTFPGA_I2S_INT_UNDERRUN) {
+>> +             i2s->tx_fifo_sz = 0;
+>> +             regmap_update_bits(i2s->regmap, XTFPGA_I2S_CONFIG,
+>> +                                XTFPGA_I2S_CONFIG_INT_ENABLE |
+>> +                                XTFPGA_I2S_CONFIG_TX_ENABLE, 0);
+>> +     } else {
+>> +             i2s->tx_fifo_sz = i2s->tx_fifo_low;
+>> +             regmap_update_bits(i2s->regmap, XTFPGA_I2S_CONFIG,
+>> +                                XTFPGA_I2S_CONFIG_INT_ENABLE, 0);
+>> +     }
+>
+> We're trying to implement a NAPI style thing here?
+
+No, there's no way to retrieve the exact FIFO level from the hardware,
+there's no such register. But there are two interrupt reasons: one
+when the FIFO is below preset level and another when FIFO is empty.
+So this code tracks the FIFO level according to the interrupt reason.
+
+>> +     if (tx_active) {
+>> +             if (i2s->tx_fifo_high < 256)
+>> +                     xtfpga_i2s_refill_fifo(i2s);
+>> +             else
+>> +                     tasklet_hi_schedule(&i2s->refill_fifo);
+>
+> How does the interrupt handler avoid getting into a fight with the
+> tasklet if the interrupt line is shared?
+
+IRQ is masked in the I2S controller once we're in the interrupt
+handler and is not re-enabled until we're done with FIFO, which
+happens at the very end of a tasklet. But if the line could ever be
+shared interrupt handler logic that checks if IRQ came from our
+device needs an additional check. Thanks for pointing that out.
+
+>> +static int xtfpga_i2s_hw_params(struct snd_pcm_substream *substream,
+>> +                                struct snd_pcm_hw_params *params,
+>> +                                struct snd_soc_dai *dai)
+>> +{
+>> +     struct xtfpga_i2s *i2s = snd_soc_dai_get_drvdata(dai);
+>> +     unsigned srate = params_rate(params);
+>> +     unsigned channels = params_channels(params);
+>> +     unsigned period_size = params_period_size(params);
+>> +     unsigned sample_size = snd_pcm_format_width(params_format(params));
+>> +     unsigned freq, ratio, level;
+>> +     int err;
+>> +
+>> +     switch (params_format(params)) {
+>> +     case SNDRV_PCM_FORMAT_S16_LE:
+>> +     case SNDRV_PCM_FORMAT_S32_LE:
+>> +             break;
+>
+> This looks buggy, we're accepting two different formats but not storing
+> anything or telling the hardware - especially concerning given that this
+> is a master only driver.
+
+xtfpga_i2s_push_tx does the right thing based on runtime->sample_bits
+value.
+
+>> +     regmap_update_bits(i2s->regmap, XTFPGA_I2S_CONFIG,
+>> +                        XTFPGA_I2S_CONFIG_RES_MASK,
+>> +                        sample_size << XTFPGA_I2S_CONFIG_RES_BASE);
+>> +
+>> +     if (i2s->clk_enabled) {
+>> +             clk_disable_unprepare(i2s->clk);
+>> +             i2s->clk_enabled = false;
+>> +     }
+>> +     freq = 256 * srate;
+>> +     err = clk_set_rate(i2s->clk, freq);
+>> +     if (err < 0)
+>> +             return err;
+>> +
+>> +     err = clk_prepare_enable(i2s->clk);
+>> +     if (err < 0)
+>> +             return err;
+>> +     i2s->clk_enabled = true;
+>
+> This stuff with the clock seems complicated, why not just leave it
+> disabled when not in use and take advantage of the reference counting
+> the core already has?
+
+Because this callback is said to be potentially called multiple times per
+initialization. Is it not?
+
+>> +     ratio = (freq - srate * sample_size * 8) /
+>> +             (srate * sample_size * 4);
+>
+> What ratio exactly?  This needs more brackets in the first line and a
+> comment explaining what it's calculating.
+
+It controls the divider in the I2S controller that derives I2S bus frequency
+from the master clock. The manual basically says 'use the following
+equation to determine the ratio value'.
+
+>> +     i2s->tx_fifo_low = XTFPGA_I2S_FIFO_SIZE / 2;
+>> +     for (level = 1;
+>> +          /* period_size * 2: FIFO always gets 2 samples per frame */
+>> +          i2s->tx_fifo_low / 2 >= period_size * 2;
+>> +          ++level)
+>> +             i2s->tx_fifo_low /= 2;
+>
+> This can't come out with a bad value?
+
+I've tested it in the range of frequencies that we support -- works well.
+
+-- 
+Thanks.
+-- Max
