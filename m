@@ -1,33 +1,39 @@
-From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 1/4] ARM: dts: rockchip: Add devicetree source for
- MarsBoard RK3066
-Date: Mon, 27 Oct 2014 09:32:49 +0100
-Message-ID: <CABgxDo+cdj9AUbqjXiGb74ys5fY_4mXd=xekVY7bvWs5WLsVtQ@mail.gmail.com>
-References: <1414329829-8031-1-git-send-email-romain.perier@gmail.com>
-	<544DF60B.4070909@neo-technologies.fr>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v9 0/9] cpuidle driver for QCOM SoCs: 8064, 8074, 8084
+Date: Mon, 27 Oct 2014 11:15:39 +0200
+Message-ID: <1414401339.2343.2.camel@mm-sol.com>
+References: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <544DF60B.4070909-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: NEO-Technologies / Julien CHAUVEAU <julien.chauveau-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Julien,
 
-2014-10-27 8:36 GMT+01:00 NEO-Technologies / Julien CHAUVEAU
-<julien.chauveau-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org>:
->
-> I think you should use "haoyu" for the vendor prefix, according to
-> Documentation/devicetree/bindings/vendor-prefixes.txt
->
+Hi Lina,
 
-Good catch. I completly forgot this file...
+On Fri, 2014-10-24 at 17:40 -0600, Lina Iyer wrote:
+> Changes since v8:
+> [ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg11473.html ]
+> - Flatten out the file structure - merge pm.c into spm.c after discussions
+> - Add a new function to set warm boot address, in scm-boot.c
+> - Support for 8064 (New)
+> - Tested on 8074, 8084. 8064 was tested with a WIP tree
+> - Address review comments from v8
+> - Looking into possiblility of  initializing the cpuidle device for a cpu,
+> only when the corresponding spm device is probed successfully.
+> 
+> 
 
-Thanks,
-Romain
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+And this is based on...? Please, could you be explicit what kind
+of patches are needed before applying this patch set. Is seems
+that they don't depend just on "Lorenzo's ARM idle-states patches",
+I see patches from Stephen Boyd, Olav Haugan and Vikram Mulukutla
+in your tree.
+
+Regards,
+Ivan
