@@ -1,312 +1,772 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH v5] hwspinlock: qcom: Add support for Qualcomm HW Mutex block
-Date: Mon, 27 Oct 2014 12:07:22 -0700
-Message-ID: <1414436842-3859-1-git-send-email-bjorn.andersson@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PATCH] ASoC: add xtensa xtfpga I2S interface and platform
+Date: Mon, 27 Oct 2014 22:07:05 +0300
+Message-ID: <1414436825-19416-1-git-send-email-jcmvbkbc@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Suman Anna <s-anna@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>, Eric Holmberg <eholmber@codeaurora.org>, Courtney Cavin <courtney.cavin@sonymobile.com>
+To: alsa-devel@alsa-project.org
+Cc: devicetree@vger.kernel.org, linux-xtensa@linux-xtensa.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Max Filippov <jcmvbkbc@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Kumar Gala <galak@codeaurora.org>
+XTFPGA boards providean audio subsystem that consists of TI CDCE706
+clock synthesizer, I2S transmitter and TLV320AIC23 audio codec.
 
-Add driver for Qualcomm Hardware Mutex block that exists on newer
-Qualcomm SoCs.
+I2S transmitter has MMIO-based interface that resembles that of the
+OpenCores I2S transmitter. I2S transmitter is always a master on I2S
+bus. There's no specialized audio DMA, sample data are transferred to
+I2S transmitter FIFO by CPU through memory-mapped queue interface.
 
-Signed-off-by: Kumar Gala <galak@codeaurora.org>
-[bjorn: added pm_runtime calls, from Courtney,
-	added sfpb-mutex compatible,
-	updated DT binding documentation formatting,
-	replaced msm prefix with qcom,
-	cleaned up includes]
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 ---
+ .../devicetree/bindings/sound/cdns,xtfpga-i2s.txt  |  18 +
+ MAINTAINERS                                        |   1 +
+ sound/soc/Kconfig                                  |   1 +
+ sound/soc/Makefile                                 |   1 +
+ sound/soc/xtensa/Kconfig                           |  14 +
+ sound/soc/xtensa/Makefile                          |   1 +
+ sound/soc/xtensa/xtfpga-i2s.c                      | 647 +++++++++++++++++++++
+ 7 files changed, 683 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cdns,xtfpga-i2s.txt
+ create mode 100644 sound/soc/xtensa/Kconfig
+ create mode 100644 sound/soc/xtensa/Makefile
+ create mode 100644 sound/soc/xtensa/xtfpga-i2s.c
 
-We need this driver to add support for the shared memory manager, so I'm
-reviving Kumars patch from a year ago, with some additional sprinkles on top.
-
-Changes since v4:
- - Aligned with devicetree support in hwlock framework and hence depends on [1]
-
-Changes since v3:
- - Reverted back to getting stride from of_match, per Kumars request
-
-Changes since v2:
- - MODULE_DEVICE_TABLE
- - Changed prefix to qcom
- - Cleaned up includes
- - Rely on reg and num-locks to figure out stride, instead of of_match data
-
-Changes since v1:
- - Added the pm_runtime calls needed to be able to boot a kernel with
-   pm_runtime and this driver, patch from Courtney.
- - Added sfpb-mutex compatible, for re-use of the driver in family A platforms.
- - Updated formatting of DT binding documentation, while adding the extra
-   compatible.
- - Dropped Stephen Boyds Reviewed-by due to these changes.
-
-
- [1] https://lkml.org/lkml/2014/9/12/636
-
- .../devicetree/bindings/hwlock/qcom-hwspinlock.txt |   50 +++++++
- drivers/hwspinlock/Kconfig                         |   11 ++
- drivers/hwspinlock/Makefile                        |    1 +
- drivers/hwspinlock/qcom_hwspinlock.c               |  156 ++++++++++++++++++++
- 4 files changed, 218 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
- create mode 100644 drivers/hwspinlock/qcom_hwspinlock.c
-
-diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
+diff --git a/Documentation/devicetree/bindings/sound/cdns,xtfpga-i2s.txt b/Documentation/devicetree/bindings/sound/cdns,xtfpga-i2s.txt
 new file mode 100644
-index 0000000..cd2b912
+index 0000000..befd125
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
-@@ -0,0 +1,50 @@
-+Qualcomm Hardware Mutex Block:
++++ b/Documentation/devicetree/bindings/sound/cdns,xtfpga-i2s.txt
+@@ -0,0 +1,18 @@
++Bindings for I2S controller built into xtfpga Xtensa bitstreams.
 +
-+The hardware block provides mutexes utilized between different processors
-+on the SoC as part of the communication protocol used by these processors.
++Required properties:
++- compatible: shall be "cdns,xtfpga-i2s".
++- reg: memory region (address and length) with device registers.
++- interrupts: interrupt for the device.
++- clocks: phandle to the clk used as master clock. I2S bus clock
++  is derived from it.
 +
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be one of:
-+		    "qcom,sfpb-mutex",
-+		    "qcom,tcsr-mutex"
++Examples:
 +
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: base address and size of the mutex registers
-+
-+- reg-names:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be "mutex-base"
-+
-+- hwlock-base-id:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: base id of the hwlock device
-+		    (hwlock standard property, see hwlock.txt)
-+
-+- #hwlock-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 1, the specified cell represent the lock id
-+		    (hwlock standard property, see hwlock.txt)
-+
-+- hwlock-num-locks:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: the number of locks/mutex available in this block
-+		    (hwlock standard property, see hwlock.txt)
-+
-+Example:
-+
-+	hwlock@fd484000 {
-+		compatible = "qcom,tcsr-mutex";
-+		reg = <0xfd484000 0x1000>;
-+		reg-names = "mutex-base";
-+
-+		hwlock-num-locks = <8>;
-+		#hwlock-cells = <1>;
++	i2s0: xtfpga-i2s@0d080000 {
++		#sound-dai-cells = <0>;
++		compatible = "cdns,xtfpga-i2s";
++		reg = <0x0d080000 0x40>;
++		interrupts = <2 1>;
++		clocks = <&cdce706 4>;
 +	};
-diff --git a/drivers/hwspinlock/Kconfig b/drivers/hwspinlock/Kconfig
-index 3612cb5..762216d 100644
---- a/drivers/hwspinlock/Kconfig
-+++ b/drivers/hwspinlock/Kconfig
-@@ -18,6 +18,17 @@ config HWSPINLOCK_OMAP
+diff --git a/MAINTAINERS b/MAINTAINERS
+index acb4523..d7bfeec 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10204,6 +10204,7 @@ M:	Max Filippov <jcmvbkbc@gmail.com>
+ L:	linux-xtensa@linux-xtensa.org
+ S:	Maintained
+ F:	drivers/spi/spi-xtensa-xtfpga.c
++F:	sound/soc/xtensa/xtfpga-i2s.c
  
- 	  If unsure, say N.
+ YAM DRIVER FOR AX.25
+ M:	Jean-Paul Roubelat <jpr@f6fbb.org>
+diff --git a/sound/soc/Kconfig b/sound/soc/Kconfig
+index 0e96233..9ca12e7 100644
+--- a/sound/soc/Kconfig
++++ b/sound/soc/Kconfig
+@@ -56,6 +56,7 @@ source "sound/soc/spear/Kconfig"
+ source "sound/soc/tegra/Kconfig"
+ source "sound/soc/txx9/Kconfig"
+ source "sound/soc/ux500/Kconfig"
++source "sound/soc/xtensa/Kconfig"
  
-+config HWSPINLOCK_QCOM
-+	tristate "Qualcomm Hardware Spinlock device"
-+	depends on ARCH_QCOM
-+	select HWSPINLOCK
-+	help
-+	  Say y here to support the Qualcomm Hardware Mutex functionality, which
-+	  provides a synchronisation mechanism for the various processors on
-+	  the SoC.
-+
-+	  If unsure, say N.
-+
- config HSEM_U8500
- 	tristate "STE Hardware Semaphore functionality"
- 	depends on ARCH_U8500
-diff --git a/drivers/hwspinlock/Makefile b/drivers/hwspinlock/Makefile
-index 93eb64b..68f95d9 100644
---- a/drivers/hwspinlock/Makefile
-+++ b/drivers/hwspinlock/Makefile
-@@ -4,4 +4,5 @@
- 
- obj-$(CONFIG_HWSPINLOCK)		+= hwspinlock_core.o
- obj-$(CONFIG_HWSPINLOCK_OMAP)		+= omap_hwspinlock.o
-+obj-$(CONFIG_HWSPINLOCK_QCOM)		+= qcom_hwspinlock.o
- obj-$(CONFIG_HSEM_U8500)		+= u8500_hsem.o
-diff --git a/drivers/hwspinlock/qcom_hwspinlock.c b/drivers/hwspinlock/qcom_hwspinlock.c
+ # Supported codecs
+ source "sound/soc/codecs/Kconfig"
+diff --git a/sound/soc/Makefile b/sound/soc/Makefile
+index 534714a..99d7222 100644
+--- a/sound/soc/Makefile
++++ b/sound/soc/Makefile
+@@ -33,3 +33,4 @@ obj-$(CONFIG_SND_SOC)	+= spear/
+ obj-$(CONFIG_SND_SOC)	+= tegra/
+ obj-$(CONFIG_SND_SOC)	+= txx9/
+ obj-$(CONFIG_SND_SOC)	+= ux500/
++obj-$(CONFIG_SND_SOC)	+= xtensa/
+diff --git a/sound/soc/xtensa/Kconfig b/sound/soc/xtensa/Kconfig
 new file mode 100644
-index 0000000..93a8a5d
+index 0000000..98d6e0c
 --- /dev/null
-+++ b/drivers/hwspinlock/qcom_hwspinlock.c
-@@ -0,0 +1,156 @@
++++ b/sound/soc/xtensa/Kconfig
+@@ -0,0 +1,14 @@
++config SND_SOC_XTFPGA_I2S
++	tristate
++	select REGMAP_MMIO
++
++config SND_SOC_XTENSA_XTFPGA
++	tristate "SoC Audio for xtensa xtfpga"
++	depends on XTENSA_PLATFORM_XTFPGA
++	select SND_SOC_XTFPGA_I2S
++	select SND_SOC_TLV320AIC23_SPI
++	select SND_SIMPLE_CARD
++	help
++	  Say Y or M if you want to add support for codecs attached to
++	  xtfpga daughter board. You will also need to select the platform
++	  to support below.
+diff --git a/sound/soc/xtensa/Makefile b/sound/soc/xtensa/Makefile
+new file mode 100644
+index 0000000..97b8eb5
+--- /dev/null
++++ b/sound/soc/xtensa/Makefile
+@@ -0,0 +1 @@
++obj-$(CONFIG_SND_SOC_XTFPGA_I2S) += xtfpga-i2s.o
+diff --git a/sound/soc/xtensa/xtfpga-i2s.c b/sound/soc/xtensa/xtfpga-i2s.c
+new file mode 100644
+index 0000000..393d5c3
+--- /dev/null
++++ b/sound/soc/xtensa/xtfpga-i2s.c
+@@ -0,0 +1,647 @@
 +/*
-+ * Copyright (c) 2013, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2014, Sony Mobile Communications AB
++ * Xtfpga I2S controller driver
 + *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
++ * Copyright (c) 2014 Cadence Design Systems Inc.
 + *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + */
 +
-+#include <linux/hwspinlock.h>
++#include <linux/clk.h>
 +#include <linux/io.h>
-+#include <linux/kernel.h>
 +#include <linux/module.h>
 +#include <linux/of.h>
-+#include <linux/of_device.h>
 +#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
++#include <sound/pcm_params.h>
++#include <sound/soc.h>
 +
-+#include "hwspinlock_internal.h"
++#define DRV_NAME	"xtfpga-i2s"
 +
-+#define SPINLOCK_ID_APPS_PROC	1
++#define XTFPGA_I2S_VERSION	0x00
++#define XTFPGA_I2S_CONFIG	0x04
++#define XTFPGA_I2S_INT_MASK	0x08
++#define XTFPGA_I2S_INT_STATUS	0x0c
++#define XTFPGA_I2S_CHAN0_DATA	0x10
++#define XTFPGA_I2S_CHAN1_DATA	0x14
++#define XTFPGA_I2S_CHAN2_DATA	0x18
++#define XTFPGA_I2S_CHAN3_DATA	0x1c
 +
-+static int qcom_hwspinlock_trylock(struct hwspinlock *lock)
++#define XTFPGA_I2S_CONFIG_TX_ENABLE	0x1
++#define XTFPGA_I2S_CONFIG_INT_ENABLE	0x2
++#define XTFPGA_I2S_CONFIG_LEFT		0x4
++#define XTFPGA_I2S_CONFIG_RATIO_BASE	8
++#define XTFPGA_I2S_CONFIG_RATIO_MASK	0x0000ff00
++#define XTFPGA_I2S_CONFIG_RES_BASE	16
++#define XTFPGA_I2S_CONFIG_RES_MASK	0x003f0000
++#define XTFPGA_I2S_CONFIG_LEVEL_BASE	24
++#define XTFPGA_I2S_CONFIG_LEVEL_MASK	0x0f000000
++#define XTFPGA_I2S_CONFIG_CHANNEL_BASE	28
++
++#define XTFPGA_I2S_INT_UNDERRUN		0x1
++#define XTFPGA_I2S_INT_LEVEL		0x2
++#define XTFPGA_I2S_INT_VALID		0x3
++
++#define XTFPGA_I2S_FIFO_SIZE		8192
++#define XTFPGA_I2S_CONFIG_DEFAULT_LEVEL	3
++
++/*
++ * I2S controller operation:
++ *
++ * Enabling TX: output 1 period of zeros (starting with left channel)
++ * and then queued data.
++ *
++ * Level status and interrupt: whenever FIFO level is below FIFO trigger,
++ * level status is 1 and an IRQ is asserted (if enabled).
++ *
++ * Underrun status and interrupt: whenever FIFO is empty, underrun status
++ * is 1 and an IRQ is asserted (if enabled).
++ */
++struct xtfpga_i2s {
++	struct device *dev;
++	struct clk *clk;
++	bool clk_enabled;
++	struct regmap *regmap;
++	void __iomem *regs;
++
++	struct snd_pcm_substream *tx_substream;
++	unsigned tx_ptr; /* next frame index in the sample buffer */
++	unsigned tx_fifo_sz; /* current fifo level estimate */
++	unsigned tx_fifo_low; /* FIFO level when level interrupt occurs */
++	unsigned tx_fifo_high; /* maximal FIFO level */
++	struct tasklet_struct refill_fifo; /* FIFO refilling tasklet */
++};
++
++static bool xtfpga_i2s_wr_reg(struct device *dev, unsigned int reg)
 +{
-+	void __iomem *lock_addr = lock->priv;
-+
-+	writel_relaxed(SPINLOCK_ID_APPS_PROC, lock_addr);
-+
-+	return readl_relaxed(lock_addr) == SPINLOCK_ID_APPS_PROC;
++	return reg >= XTFPGA_I2S_CONFIG;
 +}
 +
-+static void qcom_hwspinlock_unlock(struct hwspinlock *lock)
++static bool xtfpga_i2s_rd_reg(struct device *dev, unsigned int reg)
 +{
-+	void __iomem *lock_addr = lock->priv;
-+	u32 lock_owner;
++	return reg < XTFPGA_I2S_CHAN0_DATA;
++}
 +
-+	lock_owner = readl_relaxed(lock_addr);
-+	if (lock_owner != SPINLOCK_ID_APPS_PROC) {
-+		pr_err("%s: spinlock not owned by us (actual owner is %d)\n",
-+				__func__, lock_owner);
++static bool xtfpga_i2s_volatile_reg(struct device *dev, unsigned int reg)
++{
++	return reg == XTFPGA_I2S_INT_STATUS;
++}
++
++static const struct regmap_config xtfpga_i2s_regmap_config = {
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.max_register = XTFPGA_I2S_CHAN3_DATA,
++	.writeable_reg = xtfpga_i2s_wr_reg,
++	.readable_reg = xtfpga_i2s_rd_reg,
++	.volatile_reg = xtfpga_i2s_volatile_reg,
++	.cache_type = REGCACHE_FLAT,
++};
++
++static void xtfpga_i2s_push_tx(struct xtfpga_i2s *i2s)
++{
++	struct snd_pcm_substream *tx_substream;
++	struct snd_pcm_runtime *runtime;
++
++	rcu_read_lock();
++	tx_substream = rcu_dereference(i2s->tx_substream);
++	runtime = tx_substream->runtime;
++#define xtfpga_i2s_tx_loop(i2s, runtime, channels, sample_bits) \
++	do { \
++		const u##sample_bits (*p)[channels] = \
++			(void *)runtime->dma_area; \
++		for (; i2s->tx_fifo_sz < i2s->tx_fifo_high; \
++		     i2s->tx_fifo_sz += 2) { \
++			iowrite32(p[i2s->tx_ptr][0], \
++				  i2s->regs + XTFPGA_I2S_CHAN0_DATA); \
++			iowrite32(p[i2s->tx_ptr][channels - 1], \
++				  i2s->regs + XTFPGA_I2S_CHAN0_DATA); \
++			if (++i2s->tx_ptr >= runtime->buffer_size) \
++				i2s->tx_ptr = 0; \
++		} \
++	} while (0)
++
++	switch (runtime->sample_bits | (runtime->channels << 8)) {
++	case 0x110:
++		xtfpga_i2s_tx_loop(i2s, runtime, 1, 16);
++		break;
++	case 0x210:
++		xtfpga_i2s_tx_loop(i2s, runtime, 2, 16);
++		break;
++	case 0x120:
++		xtfpga_i2s_tx_loop(i2s, runtime, 1, 32);
++		break;
++	case 0x220:
++		xtfpga_i2s_tx_loop(i2s, runtime, 2, 32);
++		break;
++	}
++	rcu_read_unlock();
++}
++
++static void xtfpga_i2s_irq_update_config(struct xtfpga_i2s *i2s,
++					 unsigned int_status)
++{
++	if (!(int_status & XTFPGA_I2S_INT_LEVEL))
++		regmap_write(i2s->regmap, XTFPGA_I2S_INT_MASK,
++			     XTFPGA_I2S_INT_VALID);
++	else if (!(int_status & XTFPGA_I2S_INT_UNDERRUN))
++		regmap_write(i2s->regmap, XTFPGA_I2S_INT_MASK,
++			     XTFPGA_I2S_INT_UNDERRUN);
++
++	if (!(int_status & XTFPGA_I2S_INT_UNDERRUN))
++		regmap_update_bits(i2s->regmap, XTFPGA_I2S_CONFIG,
++				   XTFPGA_I2S_CONFIG_INT_ENABLE |
++				   XTFPGA_I2S_CONFIG_TX_ENABLE,
++				   XTFPGA_I2S_CONFIG_INT_ENABLE |
++				   XTFPGA_I2S_CONFIG_TX_ENABLE);
++}
++
++static void xtfpga_i2s_refill_fifo(struct xtfpga_i2s *i2s)
++{
++	struct snd_pcm_substream *tx_substream;
++	unsigned int_status;
++	unsigned i;
++
++	rcu_read_lock();
++	tx_substream = rcu_dereference(i2s->tx_substream);
++	if (tx_substream && snd_pcm_running(tx_substream)) {
++		for (i = 0; i < 2; ++i) {
++			xtfpga_i2s_push_tx(i2s);
++			regmap_write(i2s->regmap, XTFPGA_I2S_INT_STATUS,
++				     XTFPGA_I2S_INT_VALID);
++			regmap_read(i2s->regmap, XTFPGA_I2S_INT_STATUS,
++				    &int_status);
++
++			if (!(int_status & XTFPGA_I2S_INT_LEVEL))
++				break;
++			i2s->tx_fifo_sz = i2s->tx_fifo_low;
++		}
++	} else {
++		regmap_read(i2s->regmap, XTFPGA_I2S_INT_STATUS,
++			    &int_status);
++	}
++	rcu_read_unlock();
++	xtfpga_i2s_irq_update_config(i2s, int_status);
++}
++
++static void xtfpga_i2s_refill_fifo_tasklet(unsigned long p)
++{
++	xtfpga_i2s_refill_fifo((struct xtfpga_i2s *)p);
++}
++
++static irqreturn_t xtfpga_i2s_interrupt(int irq, void *dev_id)
++{
++	struct xtfpga_i2s *i2s = dev_id;
++	struct snd_pcm_substream *tx_substream;
++	int tx_active;
++	unsigned int_status;
++
++	regmap_read(i2s->regmap, XTFPGA_I2S_INT_STATUS, &int_status);
++	if (!(int_status & XTFPGA_I2S_INT_VALID))
++		return IRQ_NONE;
++
++	if (int_status & XTFPGA_I2S_INT_UNDERRUN) {
++		i2s->tx_fifo_sz = 0;
++		regmap_update_bits(i2s->regmap, XTFPGA_I2S_CONFIG,
++				   XTFPGA_I2S_CONFIG_INT_ENABLE |
++				   XTFPGA_I2S_CONFIG_TX_ENABLE, 0);
++	} else {
++		i2s->tx_fifo_sz = i2s->tx_fifo_low;
++		regmap_update_bits(i2s->regmap, XTFPGA_I2S_CONFIG,
++				   XTFPGA_I2S_CONFIG_INT_ENABLE, 0);
 +	}
 +
-+	writel_relaxed(0, lock_addr);
++	rcu_read_lock();
++	tx_substream = rcu_dereference(i2s->tx_substream);
++	tx_active = tx_substream && snd_pcm_running(tx_substream);
++	if (tx_active) {
++		snd_pcm_period_elapsed(tx_substream);
++		if (int_status & XTFPGA_I2S_INT_UNDERRUN)
++			dev_dbg_ratelimited(i2s->dev, "%s: underrun\n",
++					    __func__);
++		tx_substream = rcu_dereference(i2s->tx_substream);
++		tx_active = tx_substream && snd_pcm_running(tx_substream);
++	}
++	rcu_read_unlock();
++
++	if (tx_active) {
++		if (i2s->tx_fifo_high < 256)
++			xtfpga_i2s_refill_fifo(i2s);
++		else
++			tasklet_hi_schedule(&i2s->refill_fifo);
++	} else {
++		xtfpga_i2s_irq_update_config(i2s, int_status);
++	}
++
++	return IRQ_HANDLED;
 +}
 +
-+static const struct hwspinlock_ops qcom_hwspinlock_ops = {
-+	.trylock	= qcom_hwspinlock_trylock,
-+	.unlock		= qcom_hwspinlock_unlock,
-+};
-+
-+static const struct of_device_id qcom_hwspinlock_of_match[] = {
-+	{ .compatible = "qcom,sfpb-mutex", .data = (void *)0x4 },
-+	{ .compatible = "qcom,tcsr-mutex" , .data = (void *)0x80 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, qcom_hwspinlock_of_match);
-+
-+static int qcom_hwspinlock_probe(struct platform_device *pdev)
++static int xtfpga_i2s_startup(struct snd_pcm_substream *substream,
++				 struct snd_soc_dai *dai)
 +{
-+	struct device_node *node = pdev->dev.of_node;
-+	const struct of_device_id *match;
-+	struct hwspinlock_device *bank;
-+	struct hwspinlock *hwlock;
-+	struct resource *res;
-+	void __iomem *iobase;
-+	unsigned stride, i;
-+	size_t array_size;
-+	int num_locks;
-+	int base_id;
++	struct xtfpga_i2s *i2s = snd_soc_dai_get_drvdata(dai);
++
++	snd_soc_dai_set_dma_data(dai, substream, i2s);
++	return 0;
++}
++
++static int xtfpga_i2s_start(struct xtfpga_i2s *i2s,
++			    struct snd_pcm_substream *substream)
++{
++	i2s->tx_ptr = 0;
++	rcu_assign_pointer(i2s->tx_substream, substream);
++
++	xtfpga_i2s_push_tx(i2s);
++	regmap_write(i2s->regmap, XTFPGA_I2S_INT_STATUS, XTFPGA_I2S_INT_VALID);
++	regmap_write(i2s->regmap, XTFPGA_I2S_INT_MASK, XTFPGA_I2S_INT_VALID);
++	regmap_update_bits(i2s->regmap, XTFPGA_I2S_CONFIG,
++			   XTFPGA_I2S_CONFIG_INT_ENABLE |
++			   XTFPGA_I2S_CONFIG_TX_ENABLE,
++			   XTFPGA_I2S_CONFIG_INT_ENABLE |
++			   XTFPGA_I2S_CONFIG_TX_ENABLE);
++	return 0;
++}
++
++static int xtfpga_i2s_stop(struct xtfpga_i2s *i2s,
++			   struct snd_pcm_substream *substream)
++{
++	rcu_assign_pointer(i2s->tx_substream, NULL);
++	return 0;
++}
++
++static int xtfpga_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
++				 struct snd_soc_dai *dai)
++{
 +	int ret;
++	struct xtfpga_i2s *i2s = snd_soc_dai_get_drvdata(dai);
 +
-+	match = of_match_device(qcom_hwspinlock_of_match, &pdev->dev);
++	switch (cmd) {
++	case SNDRV_PCM_TRIGGER_START:
++	case SNDRV_PCM_TRIGGER_RESUME:
++	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
++		ret = xtfpga_i2s_start(i2s, substream);
++		break;
 +
-+	ret = of_hwspin_lock_get_base_id(node);
-+	if (ret < 0 && ret != -EINVAL)
-+		return ret;
-+	base_id = ret > 0 ? ret : 0;
++	case SNDRV_PCM_TRIGGER_STOP:
++	case SNDRV_PCM_TRIGGER_SUSPEND:
++	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
++		ret = xtfpga_i2s_stop(i2s, substream);
++		break;
 +
-+	num_locks = of_hwspin_lock_get_num_locks(node);
-+	if (num_locks < 0)
-+		return num_locks;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mutex-base");
-+	iobase = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(iobase))
-+		return PTR_ERR(iobase);
-+
-+	array_size = num_locks * sizeof(*hwlock);
-+	bank = devm_kzalloc(&pdev->dev, sizeof(*bank) + array_size, GFP_KERNEL);
-+	if (!bank)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, bank);
-+
-+	stride = (unsigned)match->data;
-+	for (i = 0, hwlock = &bank->lock[0]; i < num_locks; i++, hwlock++)
-+		hwlock->priv = iobase + i * stride;
-+
-+	pm_runtime_enable(&pdev->dev);
-+
-+	ret = hwspin_lock_register(bank, &pdev->dev, &qcom_hwspinlock_ops,
-+				   base_id, num_locks);
-+	if (ret)
-+		pm_runtime_disable(&pdev->dev);
-+
++	default:
++		ret = -EINVAL;
++		break;
++	}
 +	return ret;
 +}
 +
-+static int qcom_hwspinlock_remove(struct platform_device *pdev)
++static int xtfpga_i2s_hw_params(struct snd_pcm_substream *substream,
++				   struct snd_pcm_hw_params *params,
++				   struct snd_soc_dai *dai)
 +{
-+	struct hwspinlock_device *bank = platform_get_drvdata(pdev);
-+	int ret;
++	struct xtfpga_i2s *i2s = snd_soc_dai_get_drvdata(dai);
++	unsigned srate = params_rate(params);
++	unsigned channels = params_channels(params);
++	unsigned period_size = params_period_size(params);
++	unsigned sample_size = snd_pcm_format_width(params_format(params));
++	unsigned freq, ratio, level;
++	int err;
 +
-+	ret = hwspin_lock_unregister(bank);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s failed: %d\n", __func__, ret);
-+		return ret;
++	switch (params_format(params)) {
++	case SNDRV_PCM_FORMAT_S16_LE:
++	case SNDRV_PCM_FORMAT_S32_LE:
++		break;
++
++	default:
++		return -EINVAL;
 +	}
 +
-+	pm_runtime_disable(&pdev->dev);
++	regmap_update_bits(i2s->regmap, XTFPGA_I2S_CONFIG,
++			   XTFPGA_I2S_CONFIG_RES_MASK,
++			   sample_size << XTFPGA_I2S_CONFIG_RES_BASE);
++
++	if (i2s->clk_enabled) {
++		clk_disable_unprepare(i2s->clk);
++		i2s->clk_enabled = false;
++	}
++	freq = 256 * srate;
++	err = clk_set_rate(i2s->clk, freq);
++	if (err < 0)
++		return err;
++
++	err = clk_prepare_enable(i2s->clk);
++	if (err < 0)
++		return err;
++	i2s->clk_enabled = true;
++
++	ratio = (freq - srate * sample_size * 8) /
++		(srate * sample_size * 4);
++
++	regmap_update_bits(i2s->regmap, XTFPGA_I2S_CONFIG,
++			   XTFPGA_I2S_CONFIG_RATIO_MASK,
++			   ratio << XTFPGA_I2S_CONFIG_RATIO_BASE);
++
++	i2s->tx_fifo_low = XTFPGA_I2S_FIFO_SIZE / 2;
++	for (level = 1;
++	     /* period_size * 2: FIFO always gets 2 samples per frame */
++	     i2s->tx_fifo_low / 2 >= period_size * 2;
++	     ++level)
++		i2s->tx_fifo_low /= 2;
++
++	i2s->tx_fifo_high = 2 * i2s->tx_fifo_low;
++	i2s->tx_fifo_sz = 0;
++	i2s->tx_ptr = 0;
++
++	regmap_update_bits(i2s->regmap, XTFPGA_I2S_CONFIG,
++			   XTFPGA_I2S_CONFIG_LEVEL_MASK,
++			   level << XTFPGA_I2S_CONFIG_LEVEL_BASE);
++
++	dev_dbg(i2s->dev,
++		"%s srate: %u, channels: %u, sample_size: %u, period_size: %u\n",
++		__func__, srate, channels, sample_size, period_size);
++	dev_dbg(i2s->dev, "%s freq: %u, ratio: %u, level: %u\n",
++		__func__, freq, ratio, level);
 +
 +	return 0;
 +}
 +
-+static struct platform_driver qcom_hwspinlock_driver = {
-+	.probe		= qcom_hwspinlock_probe,
-+	.remove		= qcom_hwspinlock_remove,
-+	.driver		= {
-+		.name	= "qcom_hwspinlock",
-+		.of_match_table = qcom_hwspinlock_of_match,
++static int xtfpga_i2s_hw_free(struct snd_pcm_substream *substream,
++			      struct snd_soc_dai *dai)
++{
++	struct xtfpga_i2s *i2s = snd_soc_dai_get_drvdata(dai);
++
++	if (i2s->clk_enabled) {
++		clk_disable_unprepare(i2s->clk);
++		i2s->clk_enabled = false;
++	}
++	return 0;
++}
++
++static int xtfpga_i2s_set_fmt(struct snd_soc_dai *cpu_dai,
++				 unsigned int fmt)
++{
++	if ((fmt & SND_SOC_DAIFMT_INV_MASK) != SND_SOC_DAIFMT_NB_NF)
++		return -EINVAL;
++	if ((fmt & SND_SOC_DAIFMT_MASTER_MASK) != SND_SOC_DAIFMT_CBS_CFS)
++		return -EINVAL;
++	if ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_I2S)
++		return -EINVAL;
++
++	return 0;
++}
++
++/* PCM */
++
++static const struct snd_pcm_hardware xtfpga_pcm_hardware = {
++	.info = SNDRV_PCM_INFO_INTERLEAVED |
++		SNDRV_PCM_INFO_MMAP_VALID |
++		SNDRV_PCM_INFO_BLOCK_TRANSFER,
++	.formats		= SNDRV_PCM_FMTBIT_S16_LE |
++				  SNDRV_PCM_FMTBIT_S32_LE,
++	.channels_min		= 1,
++	.channels_max		= 2,
++	.period_bytes_min	= 2,
++	.period_bytes_max	= XTFPGA_I2S_FIFO_SIZE / 2 * 8,
++	.periods_min		= 2,
++	.periods_max		= XTFPGA_I2S_FIFO_SIZE * 8 / 2,
++	.buffer_bytes_max	= XTFPGA_I2S_FIFO_SIZE * 8,
++	.fifo_size		= 16,
++};
++
++static int xtfpga_pcm_open(struct snd_pcm_substream *substream)
++{
++	struct snd_pcm_runtime *runtime = substream->runtime;
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	void *p;
++
++	snd_soc_set_runtime_hwparams(substream, &xtfpga_pcm_hardware);
++	p = snd_soc_dai_get_dma_data(rtd->cpu_dai, substream);
++	runtime->private_data = p;
++
++	return 0;
++}
++
++static int xtfpga_pcm_close(struct snd_pcm_substream *substream)
++{
++	synchronize_rcu();
++	return 0;
++}
++
++static int xtfpga_pcm_hw_params(struct snd_pcm_substream *substream,
++				struct snd_pcm_hw_params *hw_params)
++{
++	int ret;
++
++	ret = snd_pcm_lib_malloc_pages(substream,
++				       params_buffer_bytes(hw_params));
++	return ret;
++}
++
++static int xtfpga_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
++{
++	int ret;
++
++	switch (cmd) {
++	case SNDRV_PCM_TRIGGER_START:
++	case SNDRV_PCM_TRIGGER_RESUME:
++	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
++	case SNDRV_PCM_TRIGGER_STOP:
++	case SNDRV_PCM_TRIGGER_SUSPEND:
++	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
++		ret = 0;
++		break;
++
++	default:
++		ret = -EINVAL;
++		break;
++	}
++	return ret;
++}
++
++static snd_pcm_uframes_t xtfpga_pcm_pointer(struct snd_pcm_substream *substream)
++{
++	struct snd_pcm_runtime *runtime = substream->runtime;
++	struct xtfpga_i2s *i2s = runtime->private_data;
++	snd_pcm_uframes_t pos = i2s->tx_ptr;
++
++	return pos < runtime->buffer_size ? pos : 0;
++}
++
++static int xtfpga_pcm_new(struct snd_soc_pcm_runtime *rtd)
++{
++	struct snd_card *card = rtd->card->snd_card;
++	size_t size = xtfpga_pcm_hardware.buffer_bytes_max;
++
++	return snd_pcm_lib_preallocate_pages_for_all(rtd->pcm,
++						     SNDRV_DMA_TYPE_DEV,
++						     card->dev, size, size);
++}
++
++static void xtfpga_pcm_free(struct snd_pcm *pcm)
++{
++	snd_pcm_lib_preallocate_free_for_all(pcm);
++}
++
++static struct snd_pcm_ops xtfpga_pcm_ops = {
++	.open		= xtfpga_pcm_open,
++	.close		= xtfpga_pcm_close,
++	.ioctl		= snd_pcm_lib_ioctl,
++	.hw_params	= xtfpga_pcm_hw_params,
++	.trigger	= xtfpga_pcm_trigger,
++	.pointer	= xtfpga_pcm_pointer,
++};
++
++struct snd_soc_platform_driver xtfpga_soc_platform = {
++	.pcm_new	= xtfpga_pcm_new,
++	.pcm_free	= xtfpga_pcm_free,
++	.ops		= &xtfpga_pcm_ops,
++};
++
++static const struct snd_soc_component_driver xtfpga_i2s_component = {
++	.name		= DRV_NAME,
++};
++
++static const struct snd_soc_dai_ops xtfpga_i2s_dai_ops = {
++	.startup	= xtfpga_i2s_startup,
++	.trigger	= xtfpga_i2s_trigger,
++	.hw_params      = xtfpga_i2s_hw_params,
++	.hw_free	= xtfpga_i2s_hw_free,
++	.set_fmt        = xtfpga_i2s_set_fmt,
++};
++
++static struct snd_soc_dai_driver xtfpga_i2s_dai[] = {
++	{
++		.name = "xtfpga-i2s",
++		.id = 0,
++		.playback = {
++			.channels_min = 1,
++			.channels_max = 2,
++			.rates = SNDRV_PCM_RATE_8000_96000,
++			.formats = SNDRV_PCM_FMTBIT_S16_LE |
++				   SNDRV_PCM_FMTBIT_S32_LE,
++		},
++		.ops = &xtfpga_i2s_dai_ops,
 +	},
 +};
 +
-+static int __init qcom_hwspinlock_init(void)
++static int xtfpga_i2s_probe(struct platform_device *pdev)
 +{
-+	return platform_driver_register(&qcom_hwspinlock_driver);
-+}
-+/* board init code might need to reserve hwspinlocks for predefined purposes */
-+postcore_initcall(qcom_hwspinlock_init);
++	struct xtfpga_i2s *i2s;
++	struct resource *mem, *irq;
++	int err;
 +
-+static void __exit qcom_hwspinlock_exit(void)
++	i2s = devm_kzalloc(&pdev->dev, sizeof(*i2s), GFP_KERNEL);
++	if (!i2s) {
++		err = -ENOMEM;
++		goto err;
++	}
++	dev_set_drvdata(&pdev->dev, i2s);
++	i2s->dev = &pdev->dev;
++	dev_dbg(&pdev->dev, "dev: %p, i2s: %p\n", &pdev->dev, i2s);
++
++	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!mem) {
++		dev_err(&pdev->dev, "No memory resource\n");
++		err = -ENODEV;
++		goto err;
++	}
++	i2s->regs = devm_ioremap_resource(&pdev->dev, mem);
++	if (IS_ERR(i2s->regs)) {
++		err = PTR_ERR(i2s->regs);
++		goto err;
++	}
++
++	i2s->regmap = devm_regmap_init_mmio(&pdev->dev, i2s->regs,
++					    &xtfpga_i2s_regmap_config);
++	if (IS_ERR(i2s->regmap)) {
++		dev_err(&pdev->dev, "regmap init failed\n");
++		err = PTR_ERR(i2s->regmap);
++		goto err;
++	}
++
++	i2s->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(i2s->clk)) {
++		dev_err(&pdev->dev, "couldn't get clock\n");
++		err = PTR_ERR(i2s->clk);
++		goto err;
++	}
++
++	irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
++	if (!irq) {
++		dev_err(&pdev->dev, "No IRQ resource\n");
++		err = -ENODEV;
++		goto err;
++	}
++	err = devm_request_irq(&pdev->dev, irq->start, xtfpga_i2s_interrupt,
++			       IRQF_SHARED, pdev->name, i2s);
++	if (err < 0) {
++		dev_err(&pdev->dev, "request_irq failed\n");
++		goto err;
++	}
++	tasklet_init(&i2s->refill_fifo, xtfpga_i2s_refill_fifo_tasklet,
++		     (unsigned long)i2s);
++
++	regmap_write(i2s->regmap, XTFPGA_I2S_CONFIG,
++		     (0x1 << XTFPGA_I2S_CONFIG_CHANNEL_BASE));
++	regmap_write(i2s->regmap, XTFPGA_I2S_INT_STATUS, XTFPGA_I2S_INT_VALID);
++	regmap_write(i2s->regmap, XTFPGA_I2S_INT_MASK, XTFPGA_I2S_INT_UNDERRUN);
++
++	err = snd_soc_register_platform(&pdev->dev, &xtfpga_soc_platform);
++	if (err < 0) {
++		dev_err(&pdev->dev, "couldn't register platform\n");
++		goto err;
++	}
++	err = devm_snd_soc_register_component(&pdev->dev,
++					      &xtfpga_i2s_component,
++					      xtfpga_i2s_dai,
++					      ARRAY_SIZE(xtfpga_i2s_dai));
++	if (err < 0)
++		dev_err(&pdev->dev, "couldn't register component\n");
++err:
++	if (err)
++		dev_err(&pdev->dev, "%s: err = %d\n", __func__, err);
++	return err;
++}
++
++static int xtfpga_i2s_remove(struct platform_device *pdev)
 +{
-+	platform_driver_unregister(&qcom_hwspinlock_driver);
-+}
-+module_exit(qcom_hwspinlock_exit);
++	struct xtfpga_i2s *i2s = dev_get_drvdata(&pdev->dev);
 +
++	if (i2s) {
++		tasklet_kill(&i2s->refill_fifo);
++		if (i2s->regmap && !IS_ERR(i2s->regmap)) {
++			regmap_write(i2s->regmap, XTFPGA_I2S_CONFIG, 0);
++			regmap_write(i2s->regmap, XTFPGA_I2S_INT_MASK, 0);
++			regmap_write(i2s->regmap, XTFPGA_I2S_INT_STATUS,
++				     XTFPGA_I2S_INT_VALID);
++		}
++		if (i2s->clk_enabled)
++			clk_disable_unprepare(i2s->clk);
++	}
++
++	return 0;
++}
++
++#ifdef CONFIG_OF
++static const struct of_device_id xtfpga_i2s_of_match[] = {
++	{ .compatible = "cdns,xtfpga-i2s", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, xtfpga_i2s_of_match);
++#endif
++
++static struct platform_driver xtfpga_i2s_driver = {
++	.probe   = xtfpga_i2s_probe,
++	.remove  = xtfpga_i2s_remove,
++	.driver  = {
++		.name = "xtfpga-i2s",
++		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(xtfpga_i2s_of_match),
++	},
++};
++
++module_platform_driver(xtfpga_i2s_driver);
++
++MODULE_AUTHOR("Max Filippov <jcmvbkbc@gmail.com>");
++MODULE_DESCRIPTION("xtfpga I2S controller driver");
 +MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Hardware spinlock driver for Qualcomm SoCs");
-+MODULE_AUTHOR("Kumar Gala <galak@codeaurora.org>");
-+MODULE_AUTHOR("Jeffrey Hugo <jhugo@codeaurora.org>");
-+MODULE_AUTHOR("Eric Holmberg <eholmber@codeaurora.org>");
 -- 
-1.7.9.5
+1.8.1.4
