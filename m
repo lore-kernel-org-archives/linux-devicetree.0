@@ -1,63 +1,68 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCHv2 0/4] Add Altera peripheral memories to EDAC framework
-Date: Mon, 27 Oct 2014 13:50:24 -0500
-Message-ID: <544E93F0.3030409@opensource.altera.com>
-References: <1413578029-13205-1-git-send-email-tthayer@opensource.altera.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v2 4/5] power: max77693: Add charger driver for Maxim
+ 77693
+Date: Mon, 27 Oct 2014 19:56:57 +0100
+Message-ID: <20141027185656.GB18965@earth.universe>
+References: <1413808489-3524-1-git-send-email-k.kozlowski@samsung.com>
+ <1413808489-3524-5-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1413578029-13205-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@altera.com
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@altera.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="A6N2fC+uXW/VQSAv"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1413808489-3524-5-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-api@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Borislav,
 
-On 10/17/2014 03:33 PM, tthayer@opensource.altera.com wrote:
-> From: Thor Thayer <tthayer@opensource.altera.com>
->
-> This patch adds the L2 cache and OCRAM peripherals to the EDAC framework
-> using the EDAC device framework. The ECC is enabled early in the boot
-> process in the platform specific code.
->
-> Thor Thayer (4):
->    arm: socfpga: Enable L2 Cache ECC on startup.
->    arm: socfpga: Enable OCRAM ECC on startup.
->    edac: altera: Add Altera L2 Cache and OCRAM EDAC Support
->    arm: dts: Add Altera L2 Cache and OCRAM EDAC
->
->   .../bindings/arm/altera/socfpga-l2-edac.txt        |   15 ++
->   .../bindings/arm/altera/socfpga-ocram-edac.txt     |   16 ++
->   MAINTAINERS                                        |    4 +-
->   arch/arm/boot/dts/socfpga.dtsi                     |   15 +-
->   arch/arm/mach-socfpga/Makefile                     |    2 +
->   arch/arm/mach-socfpga/l2_cache.c                   |   44 ++++
->   arch/arm/mach-socfpga/l2_cache.h                   |   28 +++
->   arch/arm/mach-socfpga/ocram.c                      |   90 +++++++
->   arch/arm/mach-socfpga/ocram.h                      |   28 +++
->   arch/arm/mach-socfpga/socfpga.c                    |   13 +-
->   drivers/edac/Kconfig                               |   14 ++
->   drivers/edac/Makefile                              |    3 +
->   drivers/edac/altera_edac_mgr.c                     |  261 ++++++++++++++++++++
->   drivers/edac/altera_edac_mgr.h                     |   56 +++++
->   drivers/edac/altera_l2_edac.c                      |  130 ++++++++++
->   drivers/edac/altera_ocram_edac.c                   |  107 ++++++++
->   16 files changed, 823 insertions(+), 3 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
->   create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
->   create mode 100644 arch/arm/mach-socfpga/l2_cache.c
->   create mode 100644 arch/arm/mach-socfpga/l2_cache.h
->   create mode 100644 arch/arm/mach-socfpga/ocram.c
->   create mode 100644 arch/arm/mach-socfpga/ocram.h
->   create mode 100644 drivers/edac/altera_edac_mgr.c
->   create mode 100644 drivers/edac/altera_edac_mgr.h
->   create mode 100644 drivers/edac/altera_l2_edac.c
->   create mode 100644 drivers/edac/altera_ocram_edac.c
->
-Do you have any comments about this driver?
+--A6N2fC+uXW/VQSAv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+Hi,
 
-Thor
+On Mon, Oct 20, 2014 at 02:34:48PM +0200, Krzysztof Kozlowski wrote:
+> Add new driver for Maxim 77693 switch-mode charger (part of max77693
+> MFD driver) providing power supply class information to userspace.
+>=20
+> The charger has +20V tolerant input. Current input can be set from 0 to
+> 2.58 A. The charger can deliver up to 2.1 A to the battery or 3.5 A to
+> the system (when supplying additional current from battery to system).
+>=20
+> The driver is configured through DTS (battery and system related
+> settings) and sysfs entries (timers and top-off charging threshold).
+>=20
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+
+I guess it makes sense to queue this together with the mfd parts.
+
+Acked-By: Sebastian Reichel <sre@kernel.org>
+
+-- Sebastian
+
+--A6N2fC+uXW/VQSAv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJUTpV4AAoJENju1/PIO/qary4P/iWSe9y80CmfQzeVxEYgipwf
+GFdNMLnSaWeL7lLeDFS823GL+3HWVzoweXmXmmXwgTKS/yTlOYnOllj3gmloyVoL
+pMs7x9tT9lfUg58VyEjBbtuSmvoJevzpCMp7opdEaFdt8WicItcFJU3kvqEOliAs
+ZjLBqzhpnDkWeUfDlVG8pSNFqJY39VSH6ctBoGoGFaaYXP/m6c/DvrlHPv8+bgXP
+Jv5sChSjfOfEtMyA1lOVFLl6ihUgApLicwWyXWx/bRwnFPRK/rO7pVObOLZRFHj0
+y8KrcB8QWWVmkI/a/IayRWN1jaRAXrkcbFcqKQhNWnB36cMeq7DEyGpOqeUnO5z/
+rU8oPVKXfhHKlN3/HfTRx1+xPCq8eNGPzbMG/v5jOOeUYp3DF27Cxpl64Nx85MHz
+sNpTWDpyp3kNk3Mymkm0Rnu5i1eQFnBaeD0ZLlgNBA7/LAlrzgUmMwf3XCilHRv1
+KtVVUR9llOHjjN8MHgKdHApG+DSzEWpYjyPL2K1hBHSLAjjD+XDDeV7XDGAM90m0
+Yqx2DGba505jw0aqv6ueOz/HktPTgn3rH+HRrKpeg5G7gJGq4o7YlQ5ON0+yX+Jq
+3pL3qh+BGbVb7cAgexEM+iDfNv6vgAwv6E1fJWFULNohOMYXHXS+jRfZKMcRdAq/
+mqJSGoYw4q8w4ibO/2wp
+=t70r
+-----END PGP SIGNATURE-----
+
+--A6N2fC+uXW/VQSAv--
