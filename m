@@ -1,34 +1,103 @@
-From: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 0/5] ARM: sunxi: Add support for USB OTG PHY
-Date: Mon, 27 Oct 2014 23:27:26 +0100
-Message-ID: <544EC6CE.6090107@suse.de>
-References: <cover.1414444953.git.rbyshko@gmail.com>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3] rtc: omap: add support for pmic_power_en
+Date: Mon, 27 Oct 2014 15:40:31 -0700
+Message-ID: <20141027154031.4492ea11d401045ca04a3ff8@linux-foundation.org>
+References: <1413913086-12730-1-git-send-email-johan@kernel.org>
+	<1414397368-26480-1-git-send-email-johan@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1414444953.git.rbyshko@gmail.com>
+In-Reply-To: <1414397368-26480-1-git-send-email-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roman Byshko <rbyshko@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+To: Johan Hovold <johan@kernel.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Felipe Balbi <balbi@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Roman,
+On Mon, 27 Oct 2014 09:09:28 +0100 Johan Hovold <johan@kernel.org> wrote:
 
-Am 27.10.2014 um 22:43 schrieb Roman Byshko:
-> There is already support for two USB phys, which are used for
-> USB host controllers on Allwinner SoC aka sunxi.
->=20
-> This patch series add support for the USB OTG phy (aka phy0).
->=20
-> The code has been tested on Allwinner A20 aka sun7i (Cubietruck).
+> Add new property "ti,system-power-controller" to register the RTC as a
+> power-off handler.
+> 
+> Some RTC IP revisions can control an external PMIC via the pmic_power_en
+> pin, which can be configured to transition to OFF on ALARM2 events and
+> back to ON on subsequent ALARM (wakealarm) events.
+> 
+> This is based on earlier work by Colin Foe-Parker and AnilKumar Ch. [1]
+> 
+> [1] https://www.mail-archive.com/linux-omap@vger.kernel.org/msg82127.html
+> 
+> Tested-by: Felipe Balbi <balbi@ti.com>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+> ---
+> 
+> Changes since v2:
+>  - add two-second delay to allow alarm to trigger before returning
 
-All these patches are lacking a Signed-off-by.
+hmpf.  As this sentence is below the ^--- it doesn't get into the
+changelog.
 
-Regards,
-Andreas
+> ...
+>
+> +static void omap_rtc_power_off(void)
+> +{
+> +	struct omap_rtc *rtc = omap_rtc_power_off_rtc;
+> +	struct rtc_time tm;
+> +	unsigned long now;
+> +	u32 val;
+> +
+> +	/* enable pmic_power_en control */
+> +	val = rtc_readl(rtc, OMAP_RTC_PMIC_REG);
+> +	rtc_writel(rtc, OMAP_RTC_PMIC_REG, val | OMAP_RTC_PMIC_POWER_EN_EN);
+> +
+> +	/* set alarm two seconds from now */
+> +	omap_rtc_read_time_raw(rtc, &tm);
+> +	bcd2tm(&tm);
+> +	rtc_tm_to_time(&tm, &now);
+> +	rtc_time_to_tm(now + 2, &tm);
+> +
+> +	if (tm2bcd(&tm) < 0) {
+> +		dev_err(&rtc->rtc->dev, "power off failed\n");
+> +		return;
+> +	}
+> +
+> +	rtc_wait_not_busy(rtc);
+> +
+> +	rtc_write(rtc, OMAP_RTC_ALARM2_SECONDS_REG, tm.tm_sec);
+> +	rtc_write(rtc, OMAP_RTC_ALARM2_MINUTES_REG, tm.tm_min);
+> +	rtc_write(rtc, OMAP_RTC_ALARM2_HOURS_REG, tm.tm_hour);
+> +	rtc_write(rtc, OMAP_RTC_ALARM2_DAYS_REG, tm.tm_mday);
+> +	rtc_write(rtc, OMAP_RTC_ALARM2_MONTHS_REG, tm.tm_mon);
+> +	rtc_write(rtc, OMAP_RTC_ALARM2_YEARS_REG, tm.tm_year);
+> +
+> +	/*
+> +	 * enable ALARM2 interrupt
+> +	 *
+> +	 * NOTE: this fails on AM3352 if rtc_write (writeb) is used
+> +	 */
+> +	val = rtc_read(rtc, OMAP_RTC_INTERRUPTS_REG);
+> +	rtc_writel(rtc, OMAP_RTC_INTERRUPTS_REG,
+> +			val | OMAP_RTC_INTERRUPTS_IT_ALARM2);
+> +
+> +	mdelay(2000);
 
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
-berg
+And it is uncommented.
+
+How on earth is a reader to know why this is here?
+
+I can do this
+
+--- a/drivers/rtc/rtc-omap.c~rtc-omap-add-support-for-pmic_power_en-v3-fix
++++ a/drivers/rtc/rtc-omap.c
+@@ -417,6 +417,7 @@ static void omap_rtc_power_off(void)
+ 	rtc_writel(rtc, OMAP_RTC_INTERRUPTS_REG,
+ 			val | OMAP_RTC_INTERRUPTS_IT_ALARM2);
+ 
++	/* Allow alarm to trigger before returning */
+ 	mdelay(2000);
+ }
+ 
+
+
+But it doesn't explain *why* we want the alarm to trigger before
+returning.
