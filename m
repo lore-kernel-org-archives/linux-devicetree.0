@@ -1,68 +1,65 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v5 2/4] regulator: max77686: Store opmode non-shifted
-Date: Mon, 27 Oct 2014 14:45:37 +0100
-Message-ID: <1414417537.1674.5.camel@AMDC1943>
-References: <1414411911-5539-1-git-send-email-k.kozlowski@samsung.com>
- <1414411911-5539-3-git-send-email-k.kozlowski@samsung.com>
- <544E4A8E.3060803@collabora.co.uk>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 12/17] ARM: mvebu: Armada XP GP specific suspend/resume
+ code
+Date: Mon, 27 Oct 2014 15:19:58 +0100
+Message-ID: <20141027141958.GB12627@lunn.ch>
+References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1414151970-6626-13-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20141024142044.GB3142@lunn.ch>
+ <20141024162824.67f9ce3d@free-electrons.com>
+ <20141024145119.GD3142@lunn.ch>
+ <20141027135129.292bd882@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <544E4A8E.3060803@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141027135129.292bd882-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On pon, 2014-10-27 at 14:37 +0100, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
-> 
-> On 10/27/2014 01:11 PM, Krzysztof Kozlowski wrote:
-> > Introduce simple helper for calculating the shift for OPMODE field in
-> > registers. This allows storing the current value of opmode in
-> > non-shifted form and simplifies a little set_suspend_disable and enable
-> > functions. Additionally this will allow adding support LDOs to the
-> > existing set_suspend_disable function.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> > Suggested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> > ---
-> >  drivers/regulator/max77686.c | 49 ++++++++++++++++++++++++++++++--------------
-> >  1 file changed, 34 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/drivers/regulator/max77686.c b/drivers/regulator/max77686.c
-> 
-> The patch looks good to me.
-> 
-> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> 
-> >  
-> >  static int max77686_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
-> > @@ -495,7 +513,8 @@ static int max77686_pmic_probe(struct platform_device *pdev)
-> >  		config.init_data = pdata->regulators[i].initdata;
-> >  		config.of_node = pdata->regulators[i].of_node;
-> >  
-> > -		max77686->opmode[i] = regulators[i].enable_mask;
-> > +		max77686->opmode[i] = regulators[i].enable_mask >>
-> > +						max77686_get_opmode_shift(i);
-> 
-> I don't think it has to be done in your patch but as a follow-up it would be
-> good to change this to:
-> 
-> 		max77686->opmode[i] = MAX77686_NORMAL;
-> 
-> since that is really what this code is trying to do AFAIU. This just happens
-> to work because the value of MAX77686_OPMODE_MASK (0x3) is also "Output ON in
-> Normal Mode" but the code is not correct IMHO.
+Hi Thomas
+ 
+> I had a closer look, but I'm sorry, I don't really see how
+> drivers/power/reset can help here. In drivers/power/reset, there are
+> only drivers that handle powering off a platform, or rebooting a
+> platform. They hook up by setting a value to the pm_power_off and/or
+> arm_pm_restart function pointers.
 
-It is technically correct (and regulator core use it this way if
-enable_val is not specified) but I agree that MAX77686_NORMAL would be
-more readable. I have some next patches almost ready, so I'll change it
-there.
+This has changed recently. I think pm_power_off and arm_pm_restart
+have been replaced by a notifier chain.
+ 
+> But in my case, what's needed is neither a power off nor a reboot, but
+> an entry to suspend to RAM, which is a different state. I don't see how
+> the drivers/power/reset driver would get "called" by the suspend/resume
+> procedure.
 
-> Or even better, the regulator mode should be read from the hw registers instead
-> of setting always to normal. That is what the max77802 driver does for example.
+I'm not sure it will work. It is just an idea.
 
-This would put trust on the bootloader... I don't know if I could trust
-him :)
+I'm making some assumptions here, which could be wrong.
+
+#1 This GPIO interface does more than suspend to RAM power off. I
+assume it also does full power off? It might also support Wake on LAN?
+
+#2 Any code can call a notifier chain and pass parameters to that
+chain?
+
+If #1 is true, you are going to write a drivers/power/reset driver at
+some point, so you can power off the board. So once you have that
+code, all you need to do is pass an additional parameter, saying this
+is a suspend to RAM power off, not a full power off. It then puts the
+DRAM controller into self refresh before bit banging the gpios.
+
+If #2 is correct, you have a mechanism to do this. In your suspend
+function, call the notifier chain passing the needed parameter.  If
+the notifier chain is called for a normal power off, the parameters
+will be missing, and you know it is a full power off.
+
+Anyway, it is just an idea. Feel free it ignore it.
+
+	Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
