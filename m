@@ -1,44 +1,197 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 12/17] ARM: mvebu: Armada XP GP specific suspend/resume
- code
-Date: Mon, 27 Oct 2014 16:15:20 +0100
-Message-ID: <20141027151520.GA29934@lunn.ch>
-References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1414151970-6626-13-git-send-email-thomas.petazzoni@free-electrons.com>
- <20141024142044.GB3142@lunn.ch>
- <20141024162824.67f9ce3d@free-electrons.com>
- <20141024145119.GD3142@lunn.ch>
- <20141027135129.292bd882@free-electrons.com>
- <20141027141958.GB12627@lunn.ch>
- <20141027154049.583e4cd2@free-electrons.com>
- <20141027145939.GD12627@lunn.ch>
- <20141027161226.199cca96@free-electrons.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v2 2/3] ARM: dts: socfpga: fpga bridges bindings docs
+Date: Mon, 27 Oct 2014 16:23:06 +0100
+Message-ID: <20141027152306.GV10262@pengutronix.de>
+References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com>
+ <1414108267-22058-3-git-send-email-atull@opensource.altera.com>
+ <20141024070042.GL10262@pengutronix.de>
+ <5FB7B7FD-7B5B-4250-BADE-85573FDBBE48@konsulko.com>
+ <20141025144229.GR10262@pengutronix.de>
+ <16E8EC52-0A91-4F28-8113-3CC5352215A5@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20141027161226.199cca96-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <16E8EC52-0A91-4F28-8113-3CC5352215A5@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: atull@opensource.altera.com, jgunthorpe@obsidianresearch.com, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, michal.simek@xilinx.com, rdunlap@infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-> So I'm a bit reluctant to create a dependency of the Armada XP
-> suspend/resume code to a very large unmerged patch series that doesn't
-> seem to even be close of having a consensus amongst the maintainers.
+Hi!
 
-I totally agree.
+On Mon, Oct 27, 2014 at 01:54:20PM +0200, Pantelis Antoniou wrote:
+> Hi Stefen,
+>=20
+> > On Oct 25, 2014, at 17:42 , Steffen Trumtrar <s.trumtrar@pengutroni=
+x.de> wrote:
+> >=20
+> > Hi Pantelis!
+> >=20
+> > On Fri, Oct 24, 2014 at 12:20:53PM +0300, Pantelis Antoniou wrote:
+> >> Hi Stefan, Allan,
+> >>=20
+> >> Sorry, haven=E2=80=99t had a chance to review all this yet; will d=
+o so in the weekend.
+> >> Just wanted to pop in and comment on a few things.
+> >>=20
+> >>> On Oct 24, 2014, at 10:00 AM, Steffen Trumtrar <s.trumtrar@pengut=
+ronix.de> wrote:
+> >>>=20
+> >>> Hi!
+> >>>=20
+> >>> On Thu, Oct 23, 2014 at 06:51:06PM -0500, atull@opensource.altera=
+=2Ecom wrote:
+> >>>> From: Alan Tull <atull@opensource.altera.com>
+> >>>=20
+> >>> (...)
+> >>>=20
+> >>>> diff --git a/Documentation/devicetree/bindings/fpga/altera-hps2f=
+pga-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-hps2fpga=
+-bridge.txt
+> >>>> new file mode 100644
+> >>>> index 0000000..bc24a2e
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bri=
+dge.txt
+> >>>> @@ -0,0 +1,53 @@
+> >>>> +Altera FPGA/HPS Bridge Driver
+> >>>> +
+> >>>> +This driver manages a bridge between a FPGA and a host processo=
+r system (HPS).
+> >>>> +User space can enable or disable the bridge by writing a "1" or=
+ a "0",
+> >>>> +respectively, to its enable file under bridge's entry in
+> >>>> +/sys/class/fpga-bridge.  Typically, one disables the bridges be=
+fore
+> >>>> +reprogramming the FPGA.  Once the FPGA is reprogrammed, the bri=
+dges are
+> >>>> +reenabled.
+> >>>> +
+> >>>=20
+> >>> NAK.
+> >>>=20
+> >>> This is all linux specific and doesn't belong here.
+> >>>=20
+> >>=20
+> >> We know. The DT spec hasn=E2=80=99t been updated for a while, and =
+this is going to be
+> >> part of what we want to do with the restarting of the ePAPR spec p=
+rocess.
+> >>=20
+> >=20
+> > As we don't have a new spec yet, I go with the current state of the=
+ art.
+> > And I don't see how "file under ... /sys/class/fpga-bridge" fits th=
+e
+> > current spec.
+> >=20
+> >> So absolutes like =E2=80=9CDT is a hardware description only" migh=
+t be too strong statements, that
+> >> do not work in practice anymore.
+> >>=20
+> >> There=E2=80=99s no such thing as pure hardware devices lately - th=
+ere is always a configuration
+> >> component; some of it OS specific, some of it not.
+> >>=20
+> >=20
+> > If it really is necessary, I'm not against it, don't get me wrong.
+> > But in the grand scheme I wouldn't say that this fits my experience=
+=2E
+> > There are some devices that need configuration and often when it is
+> > done in the DT, it is just a shortcut or not thought through.
+> > And can be also introspected dynamically. With some discussion on t=
+he
+> > list these bindings often change.
+> >=20
+>=20
+> Already answered and given a possible way this might work; admittedly=
+ this
+> specific example is not a good fit for what I was trying to say, but =
+whatever.
+> Let=E2=80=99s get the ball rolling.
+>=20
 
-> Isn't this something we can rework afterwards once the poweroff
-> discussion has settled? I wouldn't mind declaring the particular
-> aspects of the DT bindings related to the PIC GPIOs as "staging", so
-> that we keep the freedom to change them for a few kernel releases until
-> we settle on the final solution for that.
+I would be okay with chosen-node. Not for this driver; but in general.
 
-Yes. That seems very reasonable.
+> > Regarding OS specifics: already there, e.g. console setup in the ch=
+osen node.
+> > And other things I saw are ethernet aliases just for u-boot. Not a =
+problem
+> > of the spec, just a problem of u-boot and unneccessary "configurati=
+on".
+> > Just to fix a bad bootloader. barebox can handle this without any
+> > such stuff. Maybe we should integrate the DT "overlays" barebox use=
+s into
+> > the in-kernel DTs as well...but does it really help/interest someon=
+e who
+> > decides to use u-boot where barebox stores its environment? I guess=
+ not.
+> >=20
+>=20
+> Although I=E2=80=99m not against having DT overlays in the bootloader=
+, I only see them
+> as a method that helps a platform developer express things easier. I =
+am completely
+> against having the kernel tied to any particular bootloader.
+>=20
+> We=E2=80=99ve all been through the hell where a kernel only boots if =
+the bootloader has=20
+> setup the platform =E2=80=9Ccorrectly=E2=80=9D. This =E2=80=9Ccorrect=
+ly=E2=80=9D has a very loose definition and
+> 99/100 times is extremely badly documented or not at all.
+>=20
+> IMHO the bootloader should (as part of the normal boot sequence) only=
+ setup the
+> absolutely bare minimum and then pass control to the kernel as soon a=
+s possible.
+>=20
+> The full featured bootloader environment should only be presented whe=
+n the user
+> requests so.
+>=20
 
-     Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Totally agree. The kernel shouldn't be tied to any bootloader if at all=
+ possible
+(the SoCFPGA is an especially bad example here again, as the pinmuxing =
+can only
+happen in the bootloader).
+But should the DT include stuff than, that is only interesting for linu=
+x?
+
+> >> We have to be engaged in the process and figure out how to update =
+the spec for what is
+> >> now the state of the art in the industry.
+> >>=20
+> >=20
+> > Again, not against that if it is necessary. For example your overla=
+y stuff might
+> > be a good update to the spec. Would be better if it is official ins=
+tead of a "hack".
+> > I want that for SoCFPGA.
+> >=20
+> > But having looked at one or two vendor kernels+DTs, the state of th=
+e art in the
+> > industry is: using DT wrong. (And doing HW wrong, which makes some =
+updates to the
+> > ePAPR necessary ;-))
+> >=20
+>=20
+> Vendor H/W, vendor DT and a crack pipe. Or as I call it Monday.
+>=20
+
+;-)
+
+Regards,
+Steffen
+
+--=20
+Pengutronix e.K.                           |                           =
+  |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
+  |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
+5 |
