@@ -1,43 +1,38 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4 0/3] HS-USB device tree support for
- R8A7791/Koelsch/Henninger board
-Date: Mon, 27 Oct 2014 09:22:58 +0900
-Message-ID: <20141027002258.GH25692@verge.net.au>
-References: <1414147508-5556-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH 1/3] clocksource: sh_tmu: Document R-Mobile r8a7740
+ binding
+Date: Mon, 27 Oct 2014 09:24:03 +0900
+Message-ID: <20141027002402.GB32437@verge.net.au>
+References: <1413970709-26607-1-git-send-email-geert+renesas@glider.be>
+ <1413970709-26607-2-git-send-email-geert+renesas@glider.be>
+ <6890235.hnMLlLN6KA@avalon>
+ <20141024023451.GE7537@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1414147508-5556-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20141024023451.GE7537@verge.net.au>
 Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: sergei.shtylyov@cogentembedded.com, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-sh@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 24, 2014 at 07:45:05PM +0900, Yoshihiro Shimoda wrote:
->    Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
-> 'renesas-devel-20141024-v3.18-rc1' tag. Here we add the HS-USB device tree
-> support on the R8A7791/Koelsch/Henninger reference boards. The patchset
-> requires the USB PHY driver (already merged by Kishon and Greg) and the
-> generic PHY support patches for the HS-USB driver posted by Yoshihiro Shimoda
-> in order to work...
+On Fri, Oct 24, 2014 at 11:34:55AM +0900, Simon Horman wrote:
+> On Wed, Oct 22, 2014 at 05:59:25PM +0300, Laurent Pinchart wrote:
+> > Hi Geert,
+> > 
+> > Thank you for the patch.
+> > 
+> > On Wednesday 22 October 2014 11:38:27 Geert Uytterhoeven wrote:
+> > > Compared to the r8a7779, the r8a7740 lacks the input capture register,
+> > > which is not used by the driver (the current driver already handles the
+> > > r8a7740 in the non-DT case).
+> > > 
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > 
+> > Acked-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 > 
-> Changes from v3:
->  - rebase the repository.
+> Acked-by: Simon Horman <horms+renesas@verge.net.au>
 
-Thanks, I have queued these up.
-
-> 
-> Yoshihiro Shimoda (3):
->   ARM: shmobile: r8a7791: add HS-USB device node
->   ARM: shmobile: koelsch: enable HS-USB
->   ARM: shmobile: henninger: enable HS-USB
-> 
->  arch/arm/boot/dts/r8a7791-henninger.dts |    7 +++++++
->  arch/arm/boot/dts/r8a7791-koelsch.dts   |    7 +++++++
->  arch/arm/boot/dts/r8a7791.dtsi          |   11 +++++++++++
->  3 files changed, 25 insertions(+)
-> 
-> -- 
-> 1.7.9.5
-> 
+It seems that I have committed the last few changes to this file,
+so I've queued up this one too.
