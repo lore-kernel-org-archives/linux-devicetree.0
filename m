@@ -1,71 +1,25 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v1 02/10] dt-bindings: Document the standard property
- "system-power-controller"
-Date: Mon, 27 Oct 2014 12:30:25 -0500
-Message-ID: <20141027173025.GA16005@saruman>
-References: <1414427215-14380-1-git-send-email-romain.perier@gmail.com>
- <1414427215-14380-2-git-send-email-romain.perier@gmail.com>
- <20141027163918.GB14253@saruman>
- <20141027172636.GZ18557@sirena.org.uk>
-Reply-To: <balbi@ti.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH 0/4] Touchscreen performance related fixes
+Date: Mon, 27 Oct 2014 18:34:21 +0100
+Message-ID: <544E821D.5040004@linutronix.de>
+References: <1414408111-2631-1-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141027172636.GZ18557@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Felipe Balbi <balbi@ti.com>, Romain Perier <romain.perier@gmail.com>, heiko@sntech.de, devicetree@vger.kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, robh@kernel.org, mark.rutland@arm.com, johan@kernel.org, linux-pm@vger.kernel.org, linux@roeck-us.net, lee.jones@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, swarren@wwwdotorg.org, thierry.reding@gmail.com, gnurou@gmail.com, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1414408111-2631-1-git-send-email-vigneshr@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Felipe Balbi <balbi@ti.com>, Jan Kardell <jan.kardell@telliq.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Brad Griffis <bgriffis@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---3V7upXqbjpZ4EhLz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 10/27/2014 12:08 PM, Vignesh R wrote:
+> This series of patches fix TSC defects related to lag in touchscreen
 
-On Mon, Oct 27, 2014 at 05:26:36PM +0000, Mark Brown wrote:
-> On Mon, Oct 27, 2014 at 11:39:18AM -0500, Felipe Balbi wrote:
-> > On Mon, Oct 27, 2014 at 04:26:47PM +0000, Romain Perier wrote:
->=20
-> > > +act8846: act8846@5 {
-> > > +	 compatible =3D "active-semi,act8846";
-> > > +	 status =3D "okay";
-> > > +	 system-power-controller;
-> > > +}
->=20
-> > there is no mention here that system-power-controller superseeds
-> > poweroff-source and deprecates that.
->=20
-> Given that poweroff-source hasn't made it into a released kernel yet we
-> can probably just kill it off completely can't we?
+I will try to look this in the next few days. Do we really need #3 (and
+then #4)? Given the complexity we have already, is there any benefit by
+decreasing this value? Would  someone want to increase it? Can we safely
+determine a value which works for everyone?
 
-please do, then we will never have that commit in Linus' tree to give us
-nightmares.
+Sebastian
 
---=20
-balbi
-
---3V7upXqbjpZ4EhLz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUToExAAoJEIaOsuA1yqRE8lEQAJSBOEnbUNdYcqNo7k08faOa
-9gNfcmn4vOFXqZPw9O1Br65QbMjMsuAZqo5CvR02e0MLBMJJbQHvRj0IoxLVGxDy
-9M35aHMgv1Fi2oHgGaDuKJnKGfS6VoEyMTdxopkrCDwDNQvZD/G4KgENodwYZtC9
-N0bPoQhEwynrcIknxyEZeDNOhaHHARsrPCMwPCdGMQkbmS+yPZbFyJiySR6pziOS
-DNIFoAxLMYCfznbpRh6sXSiMNINSZcKrExgRPrYkeLzroMxm5FisMWpw2hAh2nem
-zn73/0KVJJX6w4PDTThHNx/BUUDcBf7MmtEt6DPHrj+Ley+khS/pgic5YwiTAuMm
-YZKgXrX/01rN5Mst8xE9Q4NA+HuQgc091JjYq7dvXRlOycYe4nHLnTzZcNIDSb31
-Bz75vuZ/HKkUdHlgBYLPKyOiYeohtMgwuP81T6q9f/fbgMgAfYlvs8PKPxT6SHv2
-DYa9Atgl9/ybgZNUKHntTLXVon1+uLPzgmSpEYxtnyxt2L0c8qokR7c2F6e7DguH
-4BgvJkFW42lB8eiIiSQg0ROTkAeG36BdVSD8el2QvgvEC5bvseImtswVQxMTcf/J
-Ulmixlmdng9U7WyFE27gflIZTinrAGFUOj6QnF1qzAAx5d8o/8g2zbGWrvn57zwY
-S/NKQf8VGhKpV4odHmSL
-=XBwX
------END PGP SIGNATURE-----
-
---3V7upXqbjpZ4EhLz--
