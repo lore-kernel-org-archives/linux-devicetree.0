@@ -1,39 +1,63 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v9 0/9] cpuidle driver for QCOM SoCs: 8064, 8074, 8084
-Date: Mon, 27 Oct 2014 11:15:39 +0200
-Message-ID: <1414401339.2343.2.camel@mm-sol.com>
-References: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 2/2] Documentation: devicetree: Add bindings for Wi2Wi
+ w2sg0004 gps
+Date: Mon, 27 Oct 2014 10:31:26 +0100
+Message-ID: <20141027093126.GC9807@amd>
+References: <1413491183-15018-1-git-send-email-marek@goldelico.com>
+ <1413491183-15018-2-git-send-email-marek@goldelico.com>
+ <20141017093714.GB4202@leverpostej>
+ <D65FF64A-856F-47EC-B3DE-7F2FCE505087@goldelico.com>
+ <20141017110043.GA5335@leverpostej>
+ <27AD2801-6410-44E3-9E0C-911D73E6A457@goldelico.com>
+ <20141020093536.GA25360@leverpostej>
+ <7A9F8C73-6CBD-435A-934C-14A80FFE452F@goldelico.com>
+ <FDDD1C99-81F9-4933-815A-CC686A19115E@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1414194024-55547-1-git-send-email-lina.iyer@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>
-Cc: daniel.lezcano@linaro.org, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <FDDD1C99-81F9-4933-815A-CC686A19115E@goldelico.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Marek Belisko <marek@goldelico.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, NeilBrown <neilb@suse.de>, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-Hi Lina,
+> > I think we just disagree about implementing a version that =E2=80=9C=
+works=E2=80=9D in a quite specific
+> > setup (there are necessary assumptions about OMAP pinmux and omap-s=
+erial) with
+> > existing APIs versus a general one that might need a lot of changes=
+ outside the driver
+> > and introduce new APIs.
+>=20
+> After re-thinking what we have discussed so far (and considering othe=
+r recommendations
+> I have received off-list) I currently see these options/questions:
+>=20
+> * who could modify the serial drivers and APIs so that this driver ca=
+n become
+>   a subnode (=E2=80=9Cbus client=E2=80=9D) of an UART? How long does =
+it take to
+> become available?
 
-On Fri, 2014-10-24 at 17:40 -0600, Lina Iyer wrote:
-> Changes since v8:
-> [ https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg11473.html ]
-> - Flatten out the file structure - merge pm.c into spm.c after discussions
-> - Add a new function to set warm boot address, in scm-boot.c
-> - Support for 8064 (New)
-> - Tested on 8074, 8084. 8064 was tested with a WIP tree
-> - Address review comments from v8
-> - Looking into possiblility of  initializing the cpuidle device for a cpu,
-> only when the corresponding spm device is probed successfully.
-> 
-> 
+I believe that is called "tty line discipline".
 
-And this is based on...? Please, could you be explicit what kind
-of patches are needed before applying this patch set. Is seems
-that they don't depend just on "Lorenzo's ARM idle-states patches",
-I see patches from Stephen Boyd, Olav Haugan and Vikram Mulukutla
-in your tree.
+> * would it be an option to simply rename the driver to =E2=80=9Cw2sg0=
+004-power=E2=80=9D
+>   to make clear that it is not at all related to the UART data commun=
+ication
+>   channel but only controlling the power of the w2sg0004 chip?
 
-Regards,
-Ivan
+Sounds sane.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
+/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
