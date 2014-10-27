@@ -1,92 +1,77 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v1 01/10] of: Rename "poweroff-source" property to
- "system-power-controller"
-Date: Mon, 27 Oct 2014 11:47:41 -0500
-Message-ID: <20141027164741.GJ14253@saruman>
-References: <1414427215-14380-1-git-send-email-romain.perier@gmail.com>
- <20141027163840.GA14253@saruman>
- <20141027164103.GD2006@localhost>
-Reply-To: <balbi@ti.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v5 0/8] arch: arm64: Enable support for Samsung Exynos7 SoC
+Date: Mon, 27 Oct 2014 17:47:29 +0100
+Message-ID: <544E7721.3040108@samsung.com>
+References: <1411361228-18279-1-git-send-email-a.kesavan@samsung.com>
+ <541FE357.5090000@gmail.com>
+ <CAM4voa=Hsux0+rccSvDJsNTFakZwuwYwjkDkkNFfndFm03Pn3g@mail.gmail.com>
+ <542AD2AE.6060109@gmail.com> <01a501cfe1e5$759fc8c0$60df5a40$@kernel.org>
+ <CAM4voak5DpRHghgF=EdmPCHeenMFZQeOTsm9QLE1fSXDoM1a+g@mail.gmail.com>
+ <CAM4voanMX__N6=q8gg1LEGxqGTtByJXPdj+oAucHoyDh5ybaEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="CxDuMX1Cv2n9FQfo"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141027164103.GD2006@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Felipe Balbi <balbi@ti.com>, Romain Perier <romain.perier@gmail.com>, heiko@sntech.de, devicetree@vger.kernel.org, broonie@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, robh@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, linux@roeck-us.net, lee.jones@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, swarren@wwwdotorg.org, thierry.reding@gmail.com, gnurou@gmail.com, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <CAM4voanMX__N6=q8gg1LEGxqGTtByJXPdj+oAucHoyDh5ybaEA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Abhilash Kesavan <kesavan.abhilash@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kukjin Kim <kgene@kernel.org>, Naveen Krishna <naveenkrishna.ch@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---CxDuMX1Cv2n9FQfo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Abhilash,
 
-On Mon, Oct 27, 2014 at 05:41:03PM +0100, Johan Hovold wrote:
-> On Mon, Oct 27, 2014 at 11:38:40AM -0500, Felipe Balbi wrote:
-> > On Mon, Oct 27, 2014 at 04:26:46PM +0000, Romain Perier wrote:
-> > > As discussed on the mailing list, it makes more sense to rename this =
-property
-> > > to "system-power-controller". Problem being that the word "source" us=
-ually tends
-> > > to be used for inputs and that is out of control of the OS. The power=
-off
-> > > capability is an output which simply turns the system-power off. Also=
-, this
-> > > property might be used by drivers which power-off the system and powe=
-r back on
-> > > subsequent RTC alarms. This seems to suggest to remove "poweroff" fro=
-m the
-> > > property name and to choose "system-power-controller" as the more gen=
-eric name.
-> > > This patchs adds the required renaming changes and defines an helper =
-function
-> > > which is compatible with both properties, the old one prefixed by a v=
-endor name
-> > > and the new one without any prefix.
->=20
-> > I think you still need to support poweroff-source since it has been
-> > released on a stable kernel. Perhaps add a warning message telling users
-> > it's deprecated and asking them to switch over to
-> > system-power-controller ? Still, simply removing it isn't very nice.
->=20
-> No, Romain sent a patch that replaced "<vendor>,system-power-controller"
-> with "poweroff-source". It's now in Mark's tree (for v3.19), and this
-> series "reverts" to the old name minus the vendor-prefix.
+On 24/10/14 16:32, Abhilash Kesavan wrote:
+> On Wed, Oct 8, 2014 at 11:18 AM, Abhilash Kesavan
+> <kesavan.abhilash@gmail.com> wrote:
+>> On Tue, Oct 7, 2014 at 9:46 AM, Kukjin Kim <kgene@kernel.org> wrote:
+>>> Tomasz Figa wrote:
+>>>> On 30.09.2014 17:12, Abhilash Kesavan wrote:
+>>>>> On Mon, Sep 22, 2014 at 2:22 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+>>>>>>
+>>>>>> The clock patches look good to me, but since they are doing quite a lot
+>>>>>> of code moving I'd prefer to take them through clk tree. Based on the
+>>>>>> fact that there are no code dependencies between clock patches and
+>>>>>> remaining ones and Exynos7 is a new material for 3.18, I'm inclined to
+>>>>>> apply them to my tree if nobody minds.
+>>>>>
+>>>>> Will you be picking up the clock changes soon ?
+>>>>
+>>>> I'd like to do so. Kukjin, since clock changes are a part of this
+>>>> series, might I have your Ack for them to be applied separately?
+>>>>
+>>> Sure, I'm fine so please go ahead with my ack on the changes.
+>>>
+>>> Acked-by: Kukjin Kim <kgene.kim@samsung.com>
+>>>
+>>> Thanks for your asking.
+>>
+>> Can you please pick up the clock changes now that Kukjin has ack'ed it.
+> 
+> Sylwester, you mentioned in another thread that Tomasz might not be
+> available for the next few days. Could you please consider applying
+> the clock changes in this series to samsung clk-next if they look OK ?
+> 
+> Please take a look at clock changes at
+> http://www.spinics.net/lists/arm-kernel/msg370673.html too.
 
-oh, so poweroff-source isn't in Linus' tree yet ? (/me goes grep)
+I've picked up patches from the $subject series.  But please see my
+comment the the second series you've pointed out with the link above.
+If you decide to rearrange changes to exynos7-clk.h header file among
+those two series I will drop that 4 patches.  Perhaps you could gather
+all pending exynos7 clk patches, fix any issues and send to me in one
+series ?
+I'd like to avoid modifying indices assigned to specific clocks in
+subsequent patches, DT binding should be defined in advance and ideally
+be specifying exact indices for each possible clock.
 
-Then it should be fine. My bad.
-
-Many of the other comments are still valid because even though
-poweroff-source isn't in mainline yet, this series still creates
-bisection points which are broken. The best solution would be to drop
-all those patches from Mark's tree. Read, not revert, drop.
-
---=20
-balbi
-
---CxDuMX1Cv2n9FQfo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUTnctAAoJEIaOsuA1yqREsJkQALJ3aXbosR8yYYtnJFpbgj95
-vPH6TxKswvvyVXgqVXY4qhkO2iUVZVeFXO5HZmrBW7Xy9Sclr539L+df97s30rpG
-4/HbvH/VS3QI5FB4ZLh5z+yvYQ3mBd2In/6jB6RQV4HC1xvnnfchC2bHtSuEoB88
-Es4giJh/xgOst0eaMWfC+oo3pk8gjWXWGzi6O323I+2npzDv41IBNJpEdNErSSaW
-lCRNTS6BhqyGNCDs41lti5ylLaDZaBecSR5WkYdw55yM2yuXyPlBtk1LnnN0+VVA
-zijfIQ0WF7eU0MhATOeHmV3v5+jYSKAM0pHldqYCBwmp+ObeMxzP13UGGgfG/xqn
-7gh00ZqJeXccC1gjRd/KWM0onyBvilqv5tZ1XRgvyLjdxf4z3dx6WoNjv+HoRc9y
-e43iRbPx1C3nTK33E3XT9a83ZURDgMNZuYrxoeQyd17deL6OdolUzI5VocTHSO6T
-cbaLwAo5mj+/Yplj0JgmZf1Fqg9gKK1WJOoJ2nR4Jt12hWqJSD4+twe46Y2KmHmh
-cdiTYCBFrGP/9HU4AGRTfz4QE82WrBQQ8RLt4gHjISgbaFjtAszpxl0tTNkJ7hD3
-cSfus/RtT9cV5tC/JSfz149IXmVZHvw+HRBYzBCU2v7CrTD+u6aa/FHX64bBOyP+
-5Vd07CyjRSk5pYwy/FSe
-=gpvh
------END PGP SIGNATURE-----
-
---CxDuMX1Cv2n9FQfo--
+--
+Thanks,
+Sylwester
