@@ -1,73 +1,67 @@
-From: Frans Klaver <fransklaver@gmail.com>
-Subject: Re: [PATCH v3 1/2] mtd: hisilicon: add a new NAND controller driver
- for hisilicon hip04 Soc
-Date: Tue, 28 Oct 2014 15:22:01 +0100
-Message-ID: <CAH6sp9MuL+AAvMi1VrmOhq5Y-ri2DKO3g0h1hw040h5=CRu6UQ@mail.gmail.com>
-References: <1414493629-12570-1-git-send-email-wangzhou.bry@gmail.com>
-	<1414493629-12570-2-git-send-email-wangzhou.bry@gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v6 2/3] dt-bindings: iommu: Add documentation for rockchip iommu
+Date: Tue, 28 Oct 2014 15:36:21 +0100
+Message-ID: <1857030.bPXkUHlXFx@diego>
+References: <1414413448-15819-1-git-send-email-djkurtz@chromium.org> <1414413448-15819-3-git-send-email-djkurtz@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414493629-12570-2-git-send-email-wangzhou.bry@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zhou Wang <wangzhou.bry@gmail.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, haojian.zhuang@gmail.com, wangzhou1@hisilicon.com, Rob Herring <robh+dt@kernel.org>, xuwei5@hisilicon.com, Kumar Gala <galak@codeaurora.org>, caizhiyong@huawei.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414413448-15819-3-git-send-email-djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?ISO-8859-1?Q?St=E9phane?= Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 28, 2014 at 11:53 AM, Zhou Wang <wangzhou.bry@gmail.com> wrote:
-> +
-> +static int hisi_nfc_probe(struct platform_device *pdev)
-> +{
-> +       int ret = 0, irq, buswidth, flag, max_chips = HINFC504_MAX_CHIP;
-> +       struct device *dev = &pdev->dev;
-> +       struct hinfc_host *host;
-> +       struct nand_chip  *chip;
-> +       struct mtd_info   *mtd;
-> +       struct resource   *res;
-> +       struct device_node *np = dev->of_node;
-> +       struct mtd_part_parser_data ppdata;
-> +
-> +       host = devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
-> +       if (!host)
-> +               return -ENOMEM;
-> +       host->dev = dev;
-> +
-> +       platform_set_drvdata(pdev, host);
-> +       chip = &host->chip;
-> +       mtd  = &host->mtd;
-> +
-> +       irq = platform_get_irq(pdev, 0);
-> +       if (irq < 0) {
-> +               dev_err(dev, "no IRQ resource defined\n");
-> +               ret = -ENXIO;
-> +               goto err_res;
-> +       }
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       host->iobase = devm_ioremap_resource(dev, res);
-> +       if (IS_ERR(host->iobase)) {
-> +               ret = PTR_ERR(host->iobase);
-> +               dev_err(dev, "devm_ioremap_resource[0] fail\n");
-> +               goto err_res;
-> +       }
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +       chip->IO_ADDR_R = chip->IO_ADDR_W = devm_ioremap_resource(dev, res);
-> +       if (IS_ERR(chip->IO_ADDR_R)) {
-> +               ret = PTR_ERR(chip->IO_ADDR_R);
-> +               dev_err(dev, "devm_ioremap_resource[1] fail\n");
-> +               goto err_res;
-> +       }
-> +
-> +       mtd->priv               = chip;
-> +       mtd->owner              = THIS_MODULE;
-> +       mtd->name               = "hisi_nand";
+Am Montag, 27. Oktober 2014, 20:37:27 schrieb Daniel Kurtz:
+> Add binding documentation for Rockchip IOMMU.
+> 
+> Signed-off-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-+ mtd->dev.parent = &pdev->dev;
+Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 
-This is a bug that lives in a bunch of other nand drivers as well.
-add_mtd_device (called by mtd_device_parse_register()) expects
-dev.parent to be set for properly adding a device reference to the
-sysfs node.
+> ---
+>  .../devicetree/bindings/iommu/rockchip,iommu.txt   | 26
+> ++++++++++++++++++++++ 1 file changed, 26 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+> b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt new file mode
+> 100644
+> index 0000000..9a55ac3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+> @@ -0,0 +1,26 @@
+> +Rockchip IOMMU
+> +==============
+> +
+> +A Rockchip DRM iommu translates io virtual addresses to physical addresses
+> for +its master device.  Each slave device is bound to a single master
+> device, and +shares its clocks, power domain and irq.
+> +
+> +Required properties:
+> +- compatible      : Should be "rockchip,iommu"
+> +- reg             : Address space for the configuration registers
+> +- interrupts      : Interrupt specifier for the IOMMU instance
+> +- interrupt-names : Interrupt name for the IOMMU instance
+> +- #iommu-cells    : Should be <0>.  This indicates the iommu is a
+> +                    "single-master" device, and needs no additional
+> information +                    to associate with its master device.  See:
+> +                    Documentation/devicetree/bindings/iommu/iommu.txt
+> +
+> +Example:
+> +
+> +	vopl_mmu: iommu@ff940300 {
+> +		compatible = "rockchip,iommu";
+> +		reg = <0xff940300 0x100>;
+> +		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "vopl_mmu";
+> +		#iommu-cells = <0>;
+> +	};
 
-Frans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
