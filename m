@@ -1,57 +1,107 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 7/8] mfd/regulator: dt-bindings: max77686: Document gpio
- property
-Date: Tue, 28 Oct 2014 09:53:19 +0100
-Message-ID: <1414486399.24949.20.camel@AMDC1943>
-References: <1414422226-10948-1-git-send-email-k.kozlowski@samsung.com>
- <1414422226-10948-8-git-send-email-k.kozlowski@samsung.com>
- <544EA7D4.8070406@collabora.co.uk>
+From: Caesar Wang <caesar.wang@rock-chips.com>
+Subject: [PATCH v15 3/5] ARM: dts: add RK3288 Thermal data
+Date: Tue, 28 Oct 2014 16:51:25 +0800
+Message-ID: <1414486287-25498-4-git-send-email-caesar.wang@rock-chips.com>
+References: <1414486287-25498-1-git-send-email-caesar.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <544EA7D4.8070406@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1414486287-25498-1-git-send-email-caesar.wang@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com
+Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, dbasehore@chromium.org, dmitry.torokhov@gmail.com, linux-pm@vger.kernel.org, linux-doc@vger.kernel.org, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Caesar Wang <caesar.wang@rock-chips.com>, cf@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com, linux-arm-kernel@lists.infradead.org, zyf@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
+This patch changes a dtsi file to contain the thermal data
+on RK3288 and later SoCs. This data will
+enable a thermal shutdown over 120C.
 
+Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ arch/arm/boot/dts/rk3288-thermal.dtsi | 65 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rk3288-thermal.dtsi
 
-
-On pon, 2014-10-27 at 21:15 +0100, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
-> 
-> On 10/27/2014 04:03 PM, Krzysztof Kozlowski wrote:
-> > Document usage of gpio property which turns on external control over
-> > regulator.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/max77686.txt | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/max77686.txt b/Documentation/devicetree/bindings/mfd/max77686.txt
-> > index 75fdfaf41831..e41dfa7e2b90 100644
-> > --- a/Documentation/devicetree/bindings/mfd/max77686.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/max77686.txt
-> > @@ -39,6 +39,9 @@ to get matched with their hardware counterparts as follow:
-> >  	-BUCKn	:	1-4.
-> >    Use standard regulator bindings for it ('regulator-off-in-suspend').
-> >  
-> > +  Optional properties:
-> > +  - gpio : GPIO to use for external control. Valid only for LDO20, LDO21,
-> > +    LDO22, BUCK8 and BUCK9 regulators.
-> 
-> When using the descriptor-based GPIO interface the standard is to use as the DT
-> property name a prefix documenting the GPIO function + a -gpios or -gpio suffix.
-> So this should be something like ec-gpio.
-
-OK.
-
-Best regards,
-Krzysztof
-
-> 
-> Best regards,
-> Javier
+diff --git a/arch/arm/boot/dts/rk3288-thermal.dtsi b/arch/arm/boot/dts/rk3288-thermal.dtsi
+new file mode 100644
+index 0000000..2a018dc
+--- /dev/null
++++ b/arch/arm/boot/dts/rk3288-thermal.dtsi
+@@ -0,0 +1,65 @@
++/*
++ * Device Tree Source for RK3288 SoC thermal
++ *
++ * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++#include <dt-bindings/thermal/thermal.h>
++
++reserve_thermal: reserve_thermal {
++	polling-delay-passive = <1000>; /* milliseconds */
++	polling-delay = <5000>; /* milliseconds */
++
++			/* sensor	ID */
++	thermal-sensors = <&tsadc	0>;
++
++};
++
++cpu_thermal: cpu_thermal {
++	polling-delay-passive = <1000>; /* milliseconds */
++	polling-delay = <5000>; /* milliseconds */
++
++			/* sensor	ID */
++	thermal-sensors = <&tsadc	1>;
++
++	trips {
++		cpu_alert0: cpu_alert0 {
++			temperature = <80000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "passive";
++		};
++		cpu_crit: cpu_crit {
++			temperature = <120000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "critical";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu_alert0>;
++			cooling-device =
++				<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++gpu_thermal: gpu_thermal {
++	polling-delay-passive = <1000>; /* milliseconds */
++	polling-delay = <5000>; /* milliseconds */
++
++			/* sensor	ID */
++	thermal-sensors = <&tsadc	2>;
++
++	trips {
++		gpu_crit: gpu_crit {
++			temperature = <120000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "critical";
++		};
++	};
++};
+-- 
+1.9.1
