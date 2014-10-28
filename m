@@ -1,98 +1,70 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: dts: dra72-evm: Add NAND support
-Date: Tue, 28 Oct 2014 17:04:28 +0200
-Message-ID: <544FB07C.80406@ti.com>
-References: <1413888080-2669-1-git-send-email-rogerq@ti.com> <1413888080-2669-2-git-send-email-rogerq@ti.com> <54468D29.4070706@ti.com> <CAGo_u6q5SO74FYK61Zyx-oweiui=zatJzWjomVm7y6VES+a7Kg@mail.gmail.com> <20141021173211.GA13160@kahuna>
+From: Qais Yousef <qais.yousef@imgtec.com>
+Subject: Re: [PATCH 00/11] Add AXD Audio Processing IP driver
+Date: Tue, 28 Oct 2014 15:05:16 +0000
+Message-ID: <544FB0AC.4020205@imgtec.com>
+References: <1414495589-8579-1-git-send-email-qais.yousef@imgtec.com> <544F8439.4080402@ladisch.de> <544F97A4.7080209@imgtec.com> <20141028141348.GD18384@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141021173211.GA13160@kahuna>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: dt list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, george.cherian-l0cyMroinI0@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141028141348.GD18384@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Clemens Ladisch <clemens@ladisch.de>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Neil Jones <neil.jones@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Nishant,
+On 10/28/2014 02:13 PM, Greg Kroah-Hartman wrote:
+> On Tue, Oct 28, 2014 at 01:18:28PM +0000, Qais Yousef wrote:
+>> On 10/28/2014 11:55 AM, Clemens Ladisch wrote:
+>>> Qais Yousef wrote:
+>>>> AXD Audio Processing IP performs audio decoding, encoding, mixing, equalisation,
+>>>> synchronisation and playback.
+>>> What exactly do you mean with "synchronisation" and "playback"?
+>> Synchronisation refers to accurate audio playout relative to a master
+>> clock source including compensation of drift between the master clock
+>> source and the playout clock of the audio hardware. Hence allowing
+>> synchronised audio playout across multiple independent devices.
+>>
+>> Playback simple refers to the fact that AXD is capable of managing audio
+>> playout hardware like I2S and SPDIF interfaces.
+>>
+>>
+>>>> It doesn't fit in alsa subsystem but I Cced them to confirm.
+>>> ... because those two words sound like something that a sound card could do.
+>> The problem mainly stems from the fact that we take a variety of
+>> compressed audio as input and we could perform audio encoding. The
+>> problem with the compressed audio is that the range of decoders and
+>> configuration supported in alsa is limited and there's no support for
+>> taking raw pcm and producing compressed output. I'm not an expert on
+>> alsa but when I looked it looked like there's more infra structure
+>> required.
+>>
+>> The following not supported points from Documentation/sound/alsa/compress_offload.txt affect us:
+>>
+>> - Volume control/routing is not handled by this API. Devices exposing a
+>>    compressed data interface will be considered as regular ALSA devices;
+>>    volume changes and routing information will be provided with regular
+>>    ALSA kcontrols.
+>>
+>> - Embedded audio effects. Such effects should be enabled in the same
+>>    manner, no matter if the input was PCM or compressed.
+>>
+>> - Encoding/decoding acceleration is not supported as mentioned
+>>    above. It is possible to route the output of a decoder to a capture
+>>    stream, or even implement transcoding capabilities. This routing
+>>    would be enabled with ALSA kcontrols.
+> So instead you created a one-off api just for this hardware?  Ick, no,
+> please work with the audio developers to incorporate it into the
+> standard Linux audio apis so that everyone can benifit and not require
+> special userspace programs to drive this hardware.
+>
+> thanks,
+>
+> greg k-h
 
-On 10/21/2014 08:32 PM, Nishanth Menon wrote:
-> On 12:16-20141021, Nishanth Menon wrote:
->> On Tue, Oct 21, 2014 at 11:43 AM, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> wrote:
->>> Roger,
->>>
->>> On 10/21/2014 05:41 AM, Roger Quadros wrote:
->>>> DRA72-evm has a 256MB 16-bit wide NAND chip. Add
->>>> pinmux and NAND node.
->>>>
->>>> The NAND chips 'Chip select' and 'Write protect' can be
->>>> controlled using DIP Switch SW5. To use NAND,
->>>> the switch must be configured like so:
->>>>
->>>> SW5.1 (NAND_SELn) = ON (LOW)
->>>> SW5.9 (GPMC_WPN) = OFF (HIGH)
->>>
->>> Could we move this description to the dts as a comment? it would be
->>> little more easier to refer to than figuring it out from git log. I
->>> recollect trying to figure this out while attempting to test out NAND
->>> previously, never actually thought to check in git log. just a
->>> suggestion..
->>
->> [...]
->>
->>>> +&gpmc {
->>>> +     status = "okay";
->>>> +     pinctrl-names = "default";
->>>> +     pinctrl-0 = <&nand_default>;
->>>> +     ranges = <0 0 0 0x01000000>;    /* minimum GPMC partition = 16MB */
->>>> +     nand@0,0 {
->>>> +             /* To use NAND, DIP switch SW5 must be set like so:
-> 		      ^^ minor:
-> 		      /*
-> 		       * To use NAND,.... 
->>>> +              * SW5.1 (NAND_SELn) = ON (LOW)
->>>> +              * SW5.9 (GPMC_WPN) = OFF (HIGH)
->>>> +              */
->>
->> [...]
->>
->> Uggh.. ignore my comment - I see you already did that.. my bad.. i missed it :(
->>
->> Quickly trying to test this, I got the following:
->> "
->>
->> [    1.840728] omap-gpmc 50000000.gpmc: GPMC revision 6.0
->> [    1.847290] nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xca
->> [    1.854003] nand: Micron MT29F2G16ABAEAWP
->> [    1.858245] nand: 256MiB, SLC, page size: 2048, OOB size: 64
->> [    1.864227] omap2-nand omap2-nand.0: CONFIG_MTD_NAND_OMAP_BCH not enabled
->> [    1.871459] omap2-nand: probe of omap2-nand.0 failed with error -22
->> "
->>
->> Full log: http://hastebin.com/ozugepemin.md
->>
->> Does this depend on
->> http://marc.info/?l=linux-omap&m=141389532511600&w=2 to function? I
->> assume yes.
-> 
-> looks like we'd want Tony to enable CONFIG_MTD_NAND_OMAP_BCH in
-> omap2plus_defconfig?
-> 
-> With that, it works like a charm..
-> http://slexy.org/raw/s29rfTTWB4
-> 
-> 
-> Feel free to add my:
-> Tested-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> 
+OK. I'll wait to hear from alsa developers to see the extent of work 
+required. I can't see it being trivial though. Would it be possible for 
+this to be accepted into staging until this is resolved?
 
-Thanks for testing. Sorry for being silent for a while. This whole thread
-got moved accidentally to old-inbox ;). Took a while to figure out if I really
-sent these patches or just in my dreamworld. :)
-
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Qais
