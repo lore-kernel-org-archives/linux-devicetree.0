@@ -1,106 +1,143 @@
-From: Max Filippov <jcmvbkbc@gmail.com>
-Subject: Re: [PATCH] ASoC: add xtensa xtfpga I2S interface and platform
-Date: Tue, 28 Oct 2014 21:11:34 +0300
-Message-ID: <CAMo8BfL+vW7BjC1bQPNjhuBMTcRTkf8_DDS3NO2HmBUnfHYAFQ@mail.gmail.com>
-References: <1414436825-19416-1-git-send-email-jcmvbkbc@gmail.com>
-	<20141027193229.GE18557@sirena.org.uk>
-	<CAMo8Bf+Z9V8mkiC3JOupPQmi1EJUDKrb1qcNncDbsEbhjigbww@mail.gmail.com>
-	<20141028154224.GX18557@sirena.org.uk>
-	<CAMo8BfLpJ0bdmaFt9+gLQ_kEjB68XdjAJUw8f8s=Owv46h_yDQ@mail.gmail.com>
-	<20141028173853.GD18557@sirena.org.uk>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 1/2] mtd: nand: add sunxi NAND flash
+ controller support
+Date: Tue, 28 Oct 2014 11:13:11 -0700
+Message-ID: <20141028181310.GA23619@ld-irv-0074>
+References: <1413896922-11680-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1413896922-11680-2-git-send-email-boris.brezillon@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141028173853.GD18557@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: alsa-devel@alsa-project.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, LKML <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Return-path: <linux-sunxi+bncBCZ6PSPVXMNBBPVZX6RAKGQE4A5W2CA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1413896922-11680-2-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+Content-Disposition: inline
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yassin Jaffer <yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 28, 2014 at 8:38 PM, Mark Brown <broonie@kernel.org> wrote:
-> On Tue, Oct 28, 2014 at 08:00:45PM +0300, Max Filippov wrote:
->> On Tue, Oct 28, 2014 at 6:42 PM, Mark Brown <broonie@kernel.org> wrote:
->> > So atomics don't work?  Simple flags are one of the few cases where they
->> > might cover it...  again, the fact that this isn't similar to other code
->> > doing the same thing is worrying.
->
->> tx_substream use pattern is the same as of a typical RCU variable.
->> RCU wrappers combine ACCESS_ONCE and barriers that I'd otherwise
->> have to write myself.
->
-> You *really* need to explain how it's supposed to work - right now it's
-> not at all obvious, like I say the fact that this is a rarely used idiom
-> is not helping.  For example when we tear down the stream we just assign
-> the pointer in _stop() but don't bother with a sync until the stream is
-> closed - why?
+Hi Boris,
 
-Because we can't wait in stop and syncing is not time critical, we can
-do it any time before the stream becomes invalid.
+On Tue, Oct 21, 2014 at 03:08:41PM +0200, Boris Brezillon wrote:
+> +static int sunxi_nand_hw_ecc_ctrl_init(struct mtd_info *mtd,
+> +				       struct nand_ecc_ctrl *ecc,
+> +				       struct device_node *np)
+> +{
+> +	struct nand_ecclayout *layout;
+> +	int i, j;
+> +	int ret;
+> +
+> +	ret = sunxi_nand_hw_common_ecc_ctrl_init(mtd, ecc, np);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ecc->read_page = sunxi_nfc_hw_ecc_read_page;
+> +	ecc->write_page = sunxi_nfc_hw_ecc_write_page;
+> +	layout = ecc->layout;
+> +
+> +	for (i = 0; i < ecc->steps; i++) {
 
-> We also appear to be doing several different dereferences
-> of the pointer inside a single rcu_read_lock() for some reason which is
-> worrying.
+Hmm, did you retest this since changing this to ecc->steps? I think this
+won't work, since ecc->steps is only initialized in nand_scan_tail(),
+which comes after this. I only recommended the change for the
+{read,write}_page() type of functions, not the initialization functions.
 
-I've cleaned that up.
+[snip the rest]
 
->> > it'd be better to just add a DMA controller on the FPGA, everyone will
->> > be much happier).
->
->> Hardware people think different and it's been like that for more than 5
->> years.
->
-> They appear to be the only hardware people who think this way, while we
+So I'd suggest the following additional patch, and otherwise, the series
+is fine with me. If you give your ack, I can just squash this in and
+apply it to my tree:
 
-The whole audio subsystem on xtfpga boards is there for, I think, a single
-purpose: for the demonstration of CPU audio processing capabilities.
-That's why it's that simple.
-
-> do have some FIQ based PIO stuff in mainline all the examples I can
-> think of are there because people didn't work out how to drive the DMA
-> controller yet (and even there we're using FIQs not bashing things in
-> from a regular interrupt).
-
-Currently we don't support fast interrupt handlers written in C on xtensa.
-
->> >> Because this callback is said to be potentially called multiple times per
->> >> initialization. Is it not?
->
->> > It can but but I'm not seeing any connection between that and the idea
->> > of not keeping the clock enabled when the device isn't in use?
->
->> hw_params callback can change MCLK rate, so it has to disable and
->> enable the clock anyway, and since enable can fail it does not guarantee
->> that the clock will be left in the same state. Or should I adjust MCLK rate
->> w/o disabling the clock?
->
-> So yet again: why not just enable the clock only when the device is in
-> use?  If it's being configured it stands to reason that the device isn't
-> actively in use...
-
-Mark, I don't get it, sorry ): My clock synthesizer is I2C controlled, so
-I can't prepare/unprepare it in the trigger callback. When should I do it?
-
->> > I'm not sure I find that terribly convincing, I'd like to be able to
->> > look at the code and tell that it's not going to blow up.  This again
->> > comes back to the general comment about clarity - the code *looks*
->> > suspicious (strange indentation of the for loop with a comment in the
->> > middle of the statement itself for example).
->
->> The level field in the control register is 4 bit wide, so the allowed range of
->> level is 0..15. FIFO size is 8192 entries, level = 1 corresponds to
->> FIFO size / 2, level = 14 -- to FIFO size of 0. I guess this function
->> won't get period_size of 0?
->
-> So if the IP gets changed and the code gets blown up this could well
-> explode then...  which doesn't seem entirely unlikely considering this
-> is a FPGA platform so presumably this is easy to update.  To repeat this
-> is about clarity and the code looking like it's probably hiding bugs as
-> much as if the code actually works if you really sit down and study it.
-
-The calculation does not depend on the actual hardware, but on the
-constant definitions in the same file. They need to be updated if the
-hardware changes. I'll try to rewrite it in a cleaner way.
-
--- 
-Thanks.
--- Max
+diff --git a/drivers/mtd/nand/sunxi_nand.c b/drivers/mtd/nand/sunxi_nand.c
+index ea615dc442a4..ccaa8e283388 100644
+--- a/drivers/mtd/nand/sunxi_nand.c
++++ b/drivers/mtd/nand/sunxi_nand.c
+@@ -931,6 +931,7 @@ static int sunxi_nand_hw_common_ecc_ctrl_init(struct mtd_info *mtd,
+ 	struct sunxi_nfc *nfc = to_sunxi_nfc(sunxi_nand->nand.controller);
+ 	struct sunxi_nand_hw_ecc *data;
+ 	struct nand_ecclayout *layout;
++	int nsectors;
+ 	int ret;
+ 	int i;
+ 
+@@ -959,13 +960,14 @@ static int sunxi_nand_hw_common_ecc_ctrl_init(struct mtd_info *mtd,
+ 	ecc->bytes = ALIGN(ecc->bytes, 2);
+ 
+ 	layout = &data->layout;
++	nsectors = mtd->writesize / ecc->size;
+ 
+-	if (mtd->oobsize < ((ecc->bytes + 4) * ecc->steps)) {
++	if (mtd->oobsize < ((ecc->bytes + 4) * nsectors)) {
+ 		ret = -EINVAL;
+ 		goto err;
+ 	}
+ 
+-	layout->eccbytes = (ecc->bytes * ecc->steps);
++	layout->eccbytes = (ecc->bytes * nsectors);
+ 
+ 	ecc->layout = layout;
+ 	ecc->priv = data;
+@@ -988,6 +990,7 @@ static int sunxi_nand_hw_ecc_ctrl_init(struct mtd_info *mtd,
+ 				       struct device_node *np)
+ {
+ 	struct nand_ecclayout *layout;
++	int nsectors;
+ 	int i, j;
+ 	int ret;
+ 
+@@ -998,8 +1001,9 @@ static int sunxi_nand_hw_ecc_ctrl_init(struct mtd_info *mtd,
+ 	ecc->read_page = sunxi_nfc_hw_ecc_read_page;
+ 	ecc->write_page = sunxi_nfc_hw_ecc_write_page;
+ 	layout = ecc->layout;
++	nsectors = mtd->writesize / ecc->size;
+ 
+-	for (i = 0; i < ecc->steps; i++) {
++	for (i = 0; i < nsectors; i++) {
+ 		if (i) {
+ 			layout->oobfree[i].offset =
+ 				layout->oobfree[i - 1].offset +
+@@ -1022,13 +1026,13 @@ static int sunxi_nand_hw_ecc_ctrl_init(struct mtd_info *mtd,
+ 					layout->oobfree[i].length + j;
+ 	}
+ 
+-	if (mtd->oobsize > (ecc->bytes + 4) * ecc->steps) {
+-		layout->oobfree[ecc->steps].offset =
+-				layout->oobfree[ecc->steps - 1].offset +
+-				layout->oobfree[ecc->steps - 1].length +
++	if (mtd->oobsize > (ecc->bytes + 4) * nsectors) {
++		layout->oobfree[nsectors].offset =
++				layout->oobfree[nsectors - 1].offset +
++				layout->oobfree[nsectors - 1].length +
+ 				ecc->bytes;
+-		layout->oobfree[ecc->steps].length = mtd->oobsize -
+-				((ecc->bytes + 4) * ecc->steps);
++		layout->oobfree[nsectors].length = mtd->oobsize -
++				((ecc->bytes + 4) * nsectors);
+ 	}
+ 
+ 	return 0;
+@@ -1039,6 +1043,7 @@ static int sunxi_nand_hw_syndrome_ecc_ctrl_init(struct mtd_info *mtd,
+ 						struct device_node *np)
+ {
+ 	struct nand_ecclayout *layout;
++	int nsectors;
+ 	int i;
+ 	int ret;
+ 
+@@ -1051,8 +1056,9 @@ static int sunxi_nand_hw_syndrome_ecc_ctrl_init(struct mtd_info *mtd,
+ 	ecc->write_page = sunxi_nfc_hw_syndrome_ecc_write_page;
+ 
+ 	layout = ecc->layout;
++	nsectors = mtd->writesize / ecc->size;
+ 
+-	for (i = 0; i < (ecc->bytes * ecc->steps); i++)
++	for (i = 0; i < (ecc->bytes * nsectors); i++)
+ 		layout->eccpos[i] = i;
+ 
+ 	layout->oobfree[0].length = mtd->oobsize - i;
