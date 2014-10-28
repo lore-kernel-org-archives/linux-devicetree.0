@@ -1,7 +1,7 @@
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH 1/5] of: resolver: Switch to new local fixups format.
-Date: Tue, 28 Oct 2014 22:33:49 +0200
-Message-ID: <1414528433-9650-2-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH 4/5] of: Add old prop argument on OF_RECONFIG_UPDATE_PROPERTY
+Date: Tue, 28 Oct 2014 22:33:52 +0200
+Message-ID: <1414528433-9650-5-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1414528433-9650-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1414528433-9650-1-git-send-email-pantelis.antoniou@konsulko.com>
@@ -10,268 +10,130 @@ To: Grant Likely <grant.likely@secretlab.ca>
 Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis
 List-Id: devicetree@vger.kernel.org
 
-The original resolver format is way too cryptic, switch
-to using a tree based format that gets rid of repetitions,
-is more compact and readable.
+The notifier now includes the old_prop argument when updating
+properties, propagate this API to changeset internals while
+also retaining the old behaviour of retrieving the old_property
+when NULL is passed.
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- drivers/of/resolver.c | 191 +++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 165 insertions(+), 26 deletions(-)
+ drivers/of/dynamic.c  | 18 ++++++++++++++----
+ drivers/of/selftest.c |  2 +-
+ include/linux/of.h    | 20 +++++++++++++-------
+ 3 files changed, 28 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-index aed7959..0224348 100644
---- a/drivers/of/resolver.c
-+++ b/drivers/of/resolver.c
-@@ -111,7 +111,8 @@ static void __of_adjust_tree_phandles(struct device_node *node,
- 		__of_adjust_tree_phandles(child, phandle_delta);
- }
- 
--static int __of_adjust_phandle_ref(struct device_node *node, struct property *rprop, int value, bool is_delta)
-+static int __of_adjust_phandle_ref(struct device_node *node,
-+		struct property *rprop, int value)
- {
- 	phandle phandle;
- 	struct device_node *refnode;
-@@ -181,7 +182,7 @@ static int __of_adjust_phandle_ref(struct device_node *node, struct property *rp
- 			goto err_fail;
- 		}
- 
--		phandle = is_delta ? be32_to_cpup(sprop->value + offset) + value : value;
-+		phandle = value;
- 		*(__be32 *)(sprop->value + offset) = cpu_to_be32(phandle);
- 	}
- 
-@@ -190,42 +191,166 @@ err_fail:
- 	return err;
- }
- 
-+/* compare nodes taking into account that 'name' strips out the @ part */
-+static int __of_node_name_cmp(const struct device_node *dn1,
-+		const struct device_node *dn2)
-+{
-+	const char *n1;
-+	const char *n2;
-+
-+	n1 = strrchr(dn1->full_name, '/');
-+	if (n1 == NULL)
-+		n1 = "/";
-+
-+	n2 = strrchr(dn2->full_name, '/');
-+	if (n2 == NULL)
-+		n2 = "/";
-+
-+	return of_node_cmp(n1, n2);
-+}
-+
- /*
-- * Adjust the local phandle references by the given phandle delta.
-- * Assumes the existances of a __local_fixups__ node at the root
-+ * Verify that the local phandle references are correct.
-+ * Assumes the existence of a __local_fixups__ node at the root
-  * of the tree. Does not take any devtree locks so make sure you
-  * call this on a tree which is at the detached state.
-  */
--static int __of_adjust_tree_phandle_references(struct device_node *node,
--		int phandle_delta)
-+static int __of_verify_tree_phandle_references(struct device_node *node,
-+		struct device_node *target)
- {
--	struct device_node *child;
--	struct property *rprop;
--	int err;
-+	struct device_node *child, *childtarget;
-+	struct property *rprop, *sprop;
-+	int err, i, count;
-+	unsigned int off;
- 
--	/* locate the symbols & fixups nodes on resolve */
--	for_each_child_of_node(node, child)
--		if (of_node_cmp(child->name, "__local_fixups__") == 0)
--			break;
--
--	/* no local fixups */
--	if (!child)
-+	if (node == NULL)
- 		return 0;
- 
--	/* find the local fixups property */
--	for_each_property_of_node(child, rprop) {
-+	for_each_property_of_node(node, rprop) {
-+
- 		/* skip properties added automatically */
--		if (of_prop_cmp(rprop->name, "name") == 0)
-+		if (of_prop_cmp(rprop->name, "name") == 0 ||
-+		    of_prop_cmp(rprop->name, "phandle") == 0 ||
-+		    of_prop_cmp(rprop->name, "linux,phandle") == 0)
- 			continue;
- 
--		err = __of_adjust_phandle_ref(node, rprop, phandle_delta, true);
--		if (err)
-+		if ((rprop->length % 4) != 0 || rprop->length == 0) {
-+			pr_err("%s: Illegal property (size) '%s' @%s\n",
-+					__func__, rprop->name, node->full_name);
-+			return -EINVAL;
-+		}
-+		count = rprop->length / sizeof(__be32);
-+
-+		/* now find the target property */
-+		for_each_property_of_node(target, sprop) {
-+			if (of_prop_cmp(sprop->name, rprop->name) == 0)
-+				break;
-+		}
-+
-+		if (sprop == NULL) {
-+			pr_err("%s: Could not find target property '%s' @%s\n",
-+					__func__, rprop->name, node->full_name);
-+			return -EINVAL;
-+		}
-+
-+		for (i = 0; i < count; i++) {
-+			off = be32_to_cpu(((__be32 *)rprop->value)[i]);
-+			/* make sure the offset doesn't overstep (even wrap) */
-+			if (off >= sprop->length ||
-+					(off + 4) > sprop->length) {
-+				pr_err("%s: Illegal property '%s' @%s\n",
-+						__func__, rprop->name,
-+						node->full_name);
-+				return -EINVAL;
-+			}
-+		}
-+	}
-+
-+	for_each_child_of_node(node, child) {
-+
-+		for_each_child_of_node(target, childtarget)
-+			if (__of_node_name_cmp(child, childtarget) == 0)
-+				break;
-+
-+		if (!childtarget) {
-+			pr_err("%s: Could not find target child '%s' @%s\n",
-+					__func__, child->name, node->full_name);
-+			return -EINVAL;
-+		}
-+
-+		err = __of_verify_tree_phandle_references(child, childtarget);
-+		if (err != 0)
- 			return err;
- 	}
- 
- 	return 0;
- }
- 
-+/*
-+ * Adjust the local phandle references by the given phandle delta.
-+ * Assumes the existances of a __local_fixups__ node at the root.
-+ * Assumes that __of_verify_tree_phandle_references has been called.
-+ * Does not take any devtree locks so make sure you call this on a tree
-+ * which is at the detached state.
-+ */
-+static void __of_adjust_tree_phandle_references(struct device_node *node,
-+		struct device_node *target, int phandle_delta)
-+{
-+	struct device_node *child, *childtarget;
-+	struct property *rprop, *sprop;
-+	int i, count;
-+	unsigned int off;
-+	phandle phandle;
-+
-+	if (node == NULL)
-+		return;
-+
-+	for_each_property_of_node(node, rprop) {
-+
-+		/* skip properties added automatically */
-+		if (of_prop_cmp(rprop->name, "name") == 0 ||
-+		    of_prop_cmp(rprop->name, "phandle") == 0 ||
-+		    of_prop_cmp(rprop->name, "linux,phandle") == 0)
-+			continue;
-+
-+		BUG_ON((rprop->length % 4) != 0 || rprop->length == 0);
-+
-+		count = rprop->length / sizeof(__be32);
-+
-+		/* now find the target property */
-+		for_each_property_of_node(target, sprop) {
-+			if (of_prop_cmp(sprop->name, rprop->name) == 0)
-+				break;
-+		}
-+
-+		BUG_ON(sprop == NULL);
-+
-+		for (i = 0; i < count; i++) {
-+			off = be32_to_cpu(((__be32 *)rprop->value)[i]);
-+			/* make sure the offset doesn't overstep (even wrap) */
-+			BUG_ON(off >= sprop->length ||
-+					(off + 4) > sprop->length);
-+
-+			/* adjust */
-+			phandle = be32_to_cpu(*(__be32 *)(sprop->value + off));
-+			phandle += phandle_delta;
-+			*(__be32 *)(sprop->value + off) = cpu_to_be32(phandle);
-+		}
-+	}
-+
-+	for_each_child_of_node(node, child) {
-+
-+		for_each_child_of_node(target, childtarget)
-+			if (__of_node_name_cmp(child, childtarget) == 0)
-+				break;
-+
-+		BUG_ON(childtarget == NULL);
-+
-+		__of_adjust_tree_phandle_references(child, childtarget,
-+				phandle_delta);
-+	}
-+}
-+
- /**
-  * of_resolve	- Resolve the given node against the live tree.
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index 8e8b614..9eb8528 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -627,6 +627,7 @@ int of_changeset_revert(struct of_changeset *ocs)
+  * @action:	action to perform
+  * @np:		Pointer to device node
+  * @prop:	Pointer to property
++ * @old_prop:	Pointer to old property (if updating)
   *
-@@ -241,7 +366,7 @@ static int __of_adjust_tree_phandle_references(struct device_node *node,
+  * On action being one of:
+  * + OF_RECONFIG_ATTACH_NODE
+@@ -637,10 +638,21 @@ int of_changeset_revert(struct of_changeset *ocs)
+  * Returns 0 on success, a negative error value in case of an error.
   */
- int of_resolve_phandles(struct device_node *resolve)
+ int of_changeset_action(struct of_changeset *ocs, unsigned long action,
+-		struct device_node *np, struct property *prop)
++		struct device_node *np, struct property *prop,
++		struct property *oldprop)
  {
--	struct device_node *child, *refnode;
-+	struct device_node *child, *childroot, *refnode;
- 	struct device_node *root_sym, *resolve_sym, *resolve_fix;
- 	struct property *rprop;
- 	const char *refpath;
-@@ -255,9 +380,23 @@ int of_resolve_phandles(struct device_node *resolve)
- 	/* first we need to adjust the phandles */
- 	phandle_delta = of_get_tree_max_phandle() + 1;
- 	__of_adjust_tree_phandles(resolve, phandle_delta);
--	err = __of_adjust_tree_phandle_references(resolve, phandle_delta);
--	if (err != 0)
--		return err;
-+
-+	/* locate the local fixups */
-+	childroot = NULL;
-+	for_each_child_of_node(resolve, childroot)
-+		if (of_node_cmp(childroot->name, "__local_fixups__") == 0)
-+			break;
-+
-+	if (childroot != NULL) {
-+		/* resolve root is guaranteed to be the '/' */
-+		err = __of_verify_tree_phandle_references(childroot,
-+				resolve);
-+		if (err != 0)
-+			return err;
-+
-+		__of_adjust_tree_phandle_references(childroot,
-+				resolve, phandle_delta);
+ 	struct of_changeset_entry *ce;
+ 
++	/* in case someone passed NULL as old_prop, find it */
++	if (action == OF_RECONFIG_UPDATE_PROPERTY && prop && !oldprop) {
++		oldprop = of_find_property(np, prop->name, NULL);
++		if (!oldprop) {
++			pr_err("%s: Failed to find old_prop for \"%s/%s\"\n",
++					__func__, np->full_name, prop->name);
++			return -EINVAL;
++		}
 +	}
++
+ 	ce = kzalloc(sizeof(*ce), GFP_KERNEL);
+ 	if (!ce) {
+ 		pr_err("%s: Failed to allocate\n", __func__);
+@@ -650,9 +662,7 @@ int of_changeset_action(struct of_changeset *ocs, unsigned long action,
+ 	ce->action = action;
+ 	ce->np = of_node_get(np);
+ 	ce->prop = prop;
+-
+-	if (action == OF_RECONFIG_UPDATE_PROPERTY && prop)
+-		ce->old_prop = of_find_property(np, prop->name, NULL);
++	ce->old_prop = oldprop;
  
- 	root_sym = NULL;
- 	resolve_sym = NULL;
-@@ -322,7 +461,7 @@ int of_resolve_phandles(struct device_node *resolve)
- 		pr_debug("%s: %s phandle is 0x%08x\n",
- 				__func__, rprop->name, phandle);
+ 	/* add it to the list */
+ 	list_add_tail(&ce->node, &ocs->entries);
+diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+index 7800127..16102fd 100644
+--- a/drivers/of/selftest.c
++++ b/drivers/of/selftest.c
+@@ -427,7 +427,7 @@ static void __init of_selftest_changeset(void)
+ 	selftest(!of_changeset_detach_node(&chgset, nremove), "fail remove node\n");
+ 	selftest(!of_changeset_attach_node(&chgset, n21), "fail attach n21\n");
+ 	selftest(!of_changeset_add_property(&chgset, parent, ppadd), "fail add prop\n");
+-	selftest(!of_changeset_update_property(&chgset, parent, ppupdate), "fail update prop\n");
++	selftest(!of_changeset_update_property(&chgset, parent, ppupdate, NULL), "fail update prop\n");
+ 	selftest(!of_changeset_remove_property(&chgset, parent, ppremove), "fail remove prop\n");
+ 	mutex_lock(&of_mutex);
+ 	selftest(!of_changeset_apply(&chgset), "apply failed\n");
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 6545e7a..71d25aa 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -830,36 +830,42 @@ extern int of_changeset_apply(struct of_changeset *ocs);
+ extern int of_changeset_revert(struct of_changeset *ocs);
+ extern int of_changeset_action(struct of_changeset *ocs,
+ 		unsigned long action, struct device_node *np,
+-		struct property *prop);
++		struct property *prop, struct property *old_prop);
  
--		err = __of_adjust_phandle_ref(resolve, rprop, phandle, false);
-+		err = __of_adjust_phandle_ref(resolve, rprop, phandle);
- 		if (err)
- 			break;
- 	}
+ static inline int of_changeset_attach_node(struct of_changeset *ocs,
+ 		struct device_node *np)
+ {
+-	return of_changeset_action(ocs, OF_RECONFIG_ATTACH_NODE, np, NULL);
++	return of_changeset_action(ocs, OF_RECONFIG_ATTACH_NODE, np, NULL,
++			NULL);
+ }
+ 
+ static inline int of_changeset_detach_node(struct of_changeset *ocs,
+ 		struct device_node *np)
+ {
+-	return of_changeset_action(ocs, OF_RECONFIG_DETACH_NODE, np, NULL);
++	return of_changeset_action(ocs, OF_RECONFIG_DETACH_NODE, np, NULL,
++			NULL);
+ }
+ 
+ static inline int of_changeset_add_property(struct of_changeset *ocs,
+ 		struct device_node *np, struct property *prop)
+ {
+-	return of_changeset_action(ocs, OF_RECONFIG_ADD_PROPERTY, np, prop);
++	return of_changeset_action(ocs, OF_RECONFIG_ADD_PROPERTY, np, prop,
++			NULL);
+ }
+ 
+ static inline int of_changeset_remove_property(struct of_changeset *ocs,
+ 		struct device_node *np, struct property *prop)
+ {
+-	return of_changeset_action(ocs, OF_RECONFIG_REMOVE_PROPERTY, np, prop);
++	return of_changeset_action(ocs, OF_RECONFIG_REMOVE_PROPERTY, np, prop,
++			NULL);
+ }
+ 
+ static inline int of_changeset_update_property(struct of_changeset *ocs,
+-		struct device_node *np, struct property *prop)
++		struct device_node *np, struct property *prop,
++		struct property *old_prop)
+ {
+-	return of_changeset_action(ocs, OF_RECONFIG_UPDATE_PROPERTY, np, prop);
++	return of_changeset_action(ocs, OF_RECONFIG_UPDATE_PROPERTY, np, prop,
++			old_prop);
+ }
+ #endif
+ 
 -- 
 1.7.12
