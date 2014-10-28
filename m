@@ -1,115 +1,43 @@
-From: Caesar Wang <caesar.wang@rock-chips.com>
-Subject: Re: [PATCH v14 2/5] dt-bindings: document Rockchip thermal
-Date: Tue, 28 Oct 2014 08:32:45 +0800
-Message-ID: <544EE42D.3030208@rock-chips.com>
-References: <1414377588-2237-1-git-send-email-caesar.wang@rock-chips.com> <1414377588-2237-3-git-send-email-caesar.wang@rock-chips.com> <20141028002915.GJ7594@dtor-ws>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [RFC 4/7] soc: qcom: Add Shared Memory Manager driver
+Date: Mon, 27 Oct 2014 17:34:26 -0700
+Message-ID: <20141028003424.GP28611@sonymobile.com>
+References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1412037291-16880-5-git-send-email-bjorn.andersson@sonymobile.com>
+ <5435AD8E.2000109@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20141028002915.GJ7594@dtor-ws>
-Sender: linux-pm-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5435AD8E.2000109@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Dmitry,
+On Wed 08 Oct 14:33 PDT 2014, Jeffrey Hugo wrote:
 
-=E5=9C=A8 2014=E5=B9=B410=E6=9C=8828=E6=97=A5 08:29, Dmitry Torokhov =E5=
-=86=99=E9=81=93:
-> On Mon, Oct 27, 2014 at 10:39:45AM +0800, Caesar Wang wrote:
->> This add the necessary binding documentation for the thermal
->> found on Rockchip SoCs
->>
->> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
->> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
->> ---
->>   .../bindings/thermal/rockchip-thermal.txt          | 53 ++++++++++=
-++++++++++++
->>   1 file changed, 53 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/thermal/rockc=
-hip-thermal.txt
->>
->> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-ther=
-mal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.tx=
-t
->> new file mode 100644
->> index 0000000..d5b1401
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
->> @@ -0,0 +1,53 @@
->> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
->> +
->> +Required properties:
->> +- compatible : "rockchip,rk3288-tsadc"
->> +- reg : physical base address of the controller and length of memor=
-y mapped
->> +	region.
->> +- interrupts : The interrupt number to the cpu. The interrupt speci=
-fier format
->> +	       depends on the interrupt controller.
->> +- clocks : Must contain an entry for each entry in clock-names.
->> +- clock-names : Shall be "tsadc" for the converter-clock, and "apb_=
-pclk" for
->> +		the peripheral clock.
->> +- #thermal-sensor-cells : Should be 1. See ./thermal.txt for a desc=
-ription.
-> I think you are missing description of hw-shut-temp, tsadc-tshut-mode
-> and tsadc-tshut-mode
->   and optional pinctrl settings.
+[..]
+> > + */
+> > +struct smem_header {
+> > +     struct smem_proc_comm proc_comm[4];
+> > +     u32 version[32];
+> > +     u32 smem_initialized;
+> > +     u32 free_offset;
+> > +     u32 available;
+> > +     u32 unused;
+> 
+> I see that you inlined the smem_heap_info struct.  That is slightly
+> problematic since we have some uses of that structure, and without it,
+> accessing id 1 becomes complicated.  I would prefer you reintroduce it.
+> 
 
-If it's really need,we just have hw-shut-temp,tsadc-tshut-mode
-and tsadc-tshut-mode,no need  pinctrl setting,I think.
+Could you help me better understand what you mean here? I've scanned through
+msm-3.4 and msm-3.10 and read your comment numerous times, but I can't find any
+uses that needs it nor figure out why it would be difficult to access item 1.
 
->> +
->> +Exiample:
->> +tsadc: tsadc@ff280000 {
->> +	compatible =3D "rockchip,rk3288-tsadc";
->> +	reg =3D <0xff280000 0x100>;
->> +	interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
->> +	clocks =3D <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
->> +	clock-names =3D "tsadc", "apb_pclk";
->> +};
->> +
->> +Example: referring to thermal sensors:
->> +thermal-zones {
->> +	cpu_thermal: cpu_thermal {
->> +		polling-delay-passive =3D <1000>; /* milliseconds */
->> +		polling-delay =3D <5000>; /* milliseconds */
->> +
->> +		/* sensor	ID */
->> +		thermal-sensors =3D <&tsadc	1>;
->> +
->> +		trips {
->> +			cpu_alert0: cpu_alert {
->> +				temperature =3D <80000>; /* millicelsius */
->> +				hysteresis =3D <2000>; /* millicelsius */
->> +				type =3D "passive";
->> +			};
->> +			cpu_crit: cpu_crit {
->> +				temperature =3D <120000>; /* millicelsius */
->> +				hysteresis =3D <2000>; /* millicelsius */
->> +				type =3D "critical";
->> +			};
->> +		};
->> +
->> +		cooling-maps {
->> +			map0 {
->> +				trip =3D <&cpu_alert0>;
->> +				cooling-device =3D
->> +					<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +			};
->> +		};
->> +	};
->> +};
->> --=20
->> 1.9.1
->>
->>
+> > +     struct smem_entry toc[SMEM_MAX_ITEMS];
+> > +};
 
---=20
-Best regards,
-Caesar
-
-
+Thanks,
+Bjorn
