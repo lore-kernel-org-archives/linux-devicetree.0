@@ -1,137 +1,54 @@
-From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] rtc: omap: add support for pmic_power_en
-Date: Tue, 28 Oct 2014 09:36:33 +0100
-Message-ID: <20141028083633.GM2006@localhost>
-References: <1413913086-12730-1-git-send-email-johan@kernel.org>
- <1414397368-26480-1-git-send-email-johan@kernel.org>
- <20141027154031.4492ea11d401045ca04a3ff8@linux-foundation.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 2/8] regulator: max77686: Remove support for board files
+Date: Tue, 28 Oct 2014 09:40:50 +0100
+Message-ID: <1414485650.24949.10.camel@AMDC1943>
+References: <1414422226-10948-1-git-send-email-k.kozlowski@samsung.com>
+ <1414422226-10948-3-git-send-email-k.kozlowski@samsung.com>
+ <20141028003709.GL18557@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141027154031.4492ea11d401045ca04a3ff8-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20141028003709.GL18557@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 27, 2014 at 03:40:31PM -0700, Andrew Morton wrote:
-> On Mon, 27 Oct 2014 09:09:28 +0100 Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+On wto, 2014-10-28 at 00:37 +0000, Mark Brown wrote:
+> On Mon, Oct 27, 2014 at 04:03:40PM +0100, Krzysztof Kozlowski wrote:
+> > The driver is used only on Exynos4 based boards with DTS support.
+> > Convert the driver to DTS-only version.
 > 
-> > Add new property "ti,system-power-controller" to register the RTC as a
-> > power-off handler.
-> > 
-> > Some RTC IP revisions can control an external PMIC via the pmic_power_en
-> > pin, which can be configured to transition to OFF on ALARM2 events and
-> > back to ON on subsequent ALARM (wakealarm) events.
-> > 
-> > This is based on earlier work by Colin Foe-Parker and AnilKumar Ch. [1]
-> > 
-> > [1] https://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg82127.html
-> > 
-> > Tested-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> > Signed-off-by: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > ---
-> > 
-> > Changes since v2:
-> >  - add two-second delay to allow alarm to trigger before returning
+> This doesn't seem like a particularly persuasive reason honestly and if
+> you're going to mess around with this stuff please fix it properly...
 > 
-> hmpf.  As this sentence is below the ^--- it doesn't get into the
-> changelog.
-
-We usually don't keep the patch-revision change log in the commit message
-(e.g. put in the cover letter).
-
-But in general, how do you want to handle updates to a single patch in a
-series you already have in your tree? Do you prefer a proper
-incremental-fix patch (with commit message), just an updated single
-patch, or a resend of the whole series?
-
-> > ...
-> >
-> > +static void omap_rtc_power_off(void)
-> > +{
-> > +	struct omap_rtc *rtc = omap_rtc_power_off_rtc;
-> > +	struct rtc_time tm;
-> > +	unsigned long now;
-> > +	u32 val;
+> >  struct max77686_data {
+> > +	struct max77686_regulator_data *regulators;
+> > +	int num_regulators;
 > > +
-> > +	/* enable pmic_power_en control */
-> > +	val = rtc_readl(rtc, OMAP_RTC_PMIC_REG);
-> > +	rtc_writel(rtc, OMAP_RTC_PMIC_REG, val | OMAP_RTC_PMIC_POWER_EN_EN);
-> > +
-> > +	/* set alarm two seconds from now */
-> > +	omap_rtc_read_time_raw(rtc, &tm);
-> > +	bcd2tm(&tm);
-> > +	rtc_tm_to_time(&tm, &now);
-> > +	rtc_time_to_tm(now + 2, &tm);
-> > +
-> > +	if (tm2bcd(&tm) < 0) {
-> > +		dev_err(&rtc->rtc->dev, "power off failed\n");
-> > +		return;
-> > +	}
-> > +
-> > +	rtc_wait_not_busy(rtc);
-> > +
-> > +	rtc_write(rtc, OMAP_RTC_ALARM2_SECONDS_REG, tm.tm_sec);
-> > +	rtc_write(rtc, OMAP_RTC_ALARM2_MINUTES_REG, tm.tm_min);
-> > +	rtc_write(rtc, OMAP_RTC_ALARM2_HOURS_REG, tm.tm_hour);
-> > +	rtc_write(rtc, OMAP_RTC_ALARM2_DAYS_REG, tm.tm_mday);
-> > +	rtc_write(rtc, OMAP_RTC_ALARM2_MONTHS_REG, tm.tm_mon);
-> > +	rtc_write(rtc, OMAP_RTC_ALARM2_YEARS_REG, tm.tm_year);
-> > +
-> > +	/*
-> > +	 * enable ALARM2 interrupt
-> > +	 *
-> > +	 * NOTE: this fails on AM3352 if rtc_write (writeb) is used
-> > +	 */
-> > +	val = rtc_read(rtc, OMAP_RTC_INTERRUPTS_REG);
-> > +	rtc_writel(rtc, OMAP_RTC_INTERRUPTS_REG,
-> > +			val | OMAP_RTC_INTERRUPTS_IT_ALARM2);
-> > +
-> > +	mdelay(2000);
 > 
-> And it is uncommented.
+> ...the only reason for this array and the specification of the number of
+> regulators is to make platform data easier to do...
 > 
-> How on earth is a reader to know why this is here?
-
-The comment above the function reads:
-
- * The RTC can be used to control an external PMIC via the pmic_power_en pin,
- * which can be configured to transition to OFF on ALARM2 events.
- *
- * Notes:
- * The two-second alarm offset is the shortest offset possible as the alarm
- * registers must be set before the next timer update and the offset
- * calculation is too heavy for everything to be done within a single access
- * period (~15us).
-
-So it's effect is at least fairly obvious and documented.
-
-> I can do this
+> > -	pdata->num_regulators = ARRAY_SIZE(regulators);
+> > +	max77686->num_regulators = ARRAY_SIZE(regulators);
 > 
-> --- a/drivers/rtc/rtc-omap.c~rtc-omap-add-support-for-pmic_power_en-v3-fix
-> +++ a/drivers/rtc/rtc-omap.c
-> @@ -417,6 +417,7 @@ static void omap_rtc_power_off(void)
->  	rtc_writel(rtc, OMAP_RTC_INTERRUPTS_REG,
->  			val | OMAP_RTC_INTERRUPTS_IT_ALARM2);
->  
-> +	/* Allow alarm to trigger before returning */
->  	mdelay(2000);
->  }
+> ...and indeed we wind up with a constant here anyway.  At the very least
+> it'd be better to pull the parsing into the registration, right now we
+> have the code still laid out for platform data so it's hard to see it as
+> a win in cleanup terms.  If we're not translating into platform data we
+> shouldn't need to keep this stuff around outside of the probe function.
+> 
+> What would be even better would be to convert to use the standard DT
+> parsing with regulators_node and of_match specified in the descriptor
+> and then delete most of this code entirely.
 
-Looks good, and I should have put something like that there nonetheless.
+You're right, there's a lot to clean in this driver.
 
-> But it doesn't explain *why* we want the alarm to trigger before
-> returning.
+The only caveat is that I can't test the max77802 regulator so I
+refrained from doing intrusive changes to it. I'll try to clean up both
+drivers and make max77802 as RFT.
 
-Should we really require every power-off handler to document arch
-behaviour (even if its inconsistent and currently undocumented); in
-this case that some arches return to user-space where we may oops if
-called from process 0 (e.g. systemd, but not if using sysvinit)?
-
-Johan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
