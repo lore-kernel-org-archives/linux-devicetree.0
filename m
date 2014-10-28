@@ -1,135 +1,107 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
-Date: Tue, 28 Oct 2014 13:19:33 -0500
-Message-ID: <1414520373.23458.92.camel@snotra.buserror.net>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH 4/4] dt/bindings: Introduce the FSL QorIQ DPAA QMan
+ portal(s)
+Date: Tue, 28 Oct 2014 13:27:57 -0500
+Message-ID: <1414520877.23458.97.camel@snotra.buserror.net>
 References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
+	 <1413986972-621-4-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413986972-621-1-git-send-email-Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Cc: galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Geoff.Thorpe-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1413986972-621-4-git-send-email-Emilian.Medve@Freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Emil Medve <Emilian.Medve@Freescale.com>
+Cc: galak@kernel.crashing.org, corbet@lwn.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, Geoff.Thorpe@Freescale.com, linuxppc-dev@ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On Wed, 2014-10-22 at 09:09 -0500, Emil Medve wrote:
-> The Buffer Manager is part of the Data-Path Acceleration Architecture (DPAA).
-> BMan supports hardware allocation and deallocation of buffers belonging to
-> pools originally created by software with configurable depletion thresholds.
-> This binding covers the CCSR space programming model
-> 
-> Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-> Change-Id: I3ec479bfb3c91951e96902f091f5d7d2adbef3b2
-> ---
->  .../devicetree/bindings/powerpc/fsl/bman.txt       | 98 ++++++++++++++++++++++
->  1 file changed, 98 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/bman.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/bman.txt b/Documentation/devicetree/bindings/powerpc/fsl/bman.txt
-> new file mode 100644
-> index 0000000..c30bdde
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/bman.txt
-> @@ -0,0 +1,98 @@
-> +QorIQ DPAA Buffer Manager Device Tree Bindings
-> +
-> +Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
-> +
-> +CONTENTS
-> +
-> +	- BMan Node
-> +	- BMan Private Memory Node
-> +	- Example
-> +
-> +NOTE:	The bindings described in this document are preliminary and subject to
-> +	change
-> +
-> +BMan Node
-> +
-> +PROPERTIES
-> +
-> +- compatible
-> +	Usage:		Required
-> +	Value type:	<stringlist>
-> +	Definition:	Must include "fsl,bman"
-> +			May include "fsl,<SoC>-bman"
-> +
-> +- reg
-> +	Usage:		Required
+> +- fsl,liodn
+> +	Usage:		See pamu.txt
 > +	Value type:	<prop-encoded-array>
-> +	Definition:	Registers region within the CCSR address space
+> +	Definition:	PAMU property used for static LIODN assignment
 
-Is there a version register in reg?  It would be nice to point it out in
-the binding along with an example chip for each version, similar to
-Documentation/devicetree/bindings/powerpc/fsl/interlaken-lac.txt.  This
-would make it clear that the compatible needs to be changed if the
-version register moves or no longer works the same way.
+There are two LIODNs on these nodes; you need to specifiy here which is
+which.  Likewise on the crypto subnode.
 
-> +BMan Private Memory Node
+> +The currently support sub-nodes are:
+> +	* fman@0
+> +	* fman@1
+> +	* pme@0
+> +	* crypto@0
+
+s/support/supported/
+
+> +These subnodes should have the following properties:
 > +
-> +BMan requires a contiguous range of physical memory used for the backing store
-> +for BMan Free Buffer Proxy Records. This memory is reserved/allocated as a node
-> +under the /reserved-memory node
+> +- fsl,liodn
+> +	Usage:		See pamu.txt
+> +	Value type:	<prop-encoded-array>
+> +	Definition:	PAMU property used for static LIODN assignment
 > +
-> +The BMan FBPR memory node must be named "bman-fbpr"
+> +- fsl,iommu-parent
+> +	Usage:		See pamu.txt
+> +	Value type:	<phandle>
+> +	Definition:	PAMU property used for dynamic LIODN assignment
+> +
+> +- dev-handle
+> +	Usage:		Required
+> +	Value type:	<phandle>
+> +	Definition:	The phandle to the particular hardware device that this
+> +			portal is connected to.
+> +
+> +DPAA QMan Pool Channel Nodes
+> +
+> +Pool Channels are defined with the following properties.
 > +
 > +PROPERTIES
 > +
 > +- compatible
-> +	Usage:		required
+> +	Usage:		Required
 > +	Value type:	<stringlist>
-> +	Definition:	Must inclide "fsl,bman-fbpr"
+> +	Definition:	Must include "fsl,qman-pool-channel"
+> +			May include "fsl,<SoC>-qman-pool-channel"
 > +
-> +The following constraints are relevant to the FBPR private memory:
-> +	- The size must be 2^(size + 1), with size = 11..33. That is 4 KiB to
-> +	  16 GiB
-> +	- The alignment must be a muliptle of the memory size
+> +- fsl,qman-channel-id
+> +	Usage:		Required
+> +	Value type:	<u32>
+> +	Definition:	The hardware index of the channel. This can also be
+> +			determined by dividing any of the channel's 8 work queue
+> +			IDs by 8
 > +
-> +The size of the FBPR must be chosen by observing the hardware features configured
-> +via the RCW and that are relevant to a specific board (e.g. number of MAC(s)
-> +pinned-out, number of offline/host command FMan ports, etc.). The size configured
-> +in the DT must reflect the hardware capabilities and not the specific needs of an
-> +application
+> +EXAMPLE
+> +
+> +The example below shows a (P4080) BMan portals container/bus node with two portals
+> +
+> +	qman-portals@ff4200000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+> +		ranges = <0 0xf 0xf4200000 0x200000>;
+> +
+> +		qman-portal@0 {
+> +			cell-index = <0>;
+> +			compatible = "fsl,qman-portal-1.2.0", "fsl,qman-portal";
+> +			reg = <0 0x4000 0x100000 0x1000>;
+> +			interrupts = <104 2 0 0>;
+> +			fsl,liodn = <1 2>;
+> +			fsl,qman-channel-id = <0>;
+> +
+> +			fman@0 {
+> +				fsl,liodn = <0x21>;
+> +				dev-handle = <&fman0>;
+> +			};
+> +			fman@1 {
+> +				fsl,liodn = <0xa1>;
+> +				dev-handle = <&fman1>;
+> +			};
+> +			crypto@0 {
+> +				fsl,liodn = <0x41 0x66>;
+> +				dev-handle = <&crypto>;
+> +			};
 
-What about accelerators?
-
-> +If the memory reserved in the device tree proves to be larger then the needs of
-> +the application a BMan driver may provide a method to release the extra memory
-> +back to the OS
-
-What if the memory reserved in the device tree proves to be smaller than
-the needs of the application?
-
-I think we should document this size as being a sane default for the
-hardware, and add a way of describing that the size is tunable.
-
-Below is the reserved-memory extension that I suggested to you
-internally:
-
-resizable (optional) - empty property
-    - Indicates that the size of the dynamic allocation is flexible.  If
-resizeable is present, the size property is optional.  If both resizable
-and size are present, the size property indicates a recommended default
-size for this hardware.
-
-pow2-aligned (optional) - empty property
-    - Only valid if resizable is present.  Indicates that the size must
-be a power of two, and the address must be aligned to its size.  If both
-pow2-aligned and alignment properties are present, pow2-aligned is used
-if the region is resized, and the alignment property is used if the
-region is not resized.
-
-min-size (optional) - Only valid if resizable is present.  Specifies a
-minimum acceptable size.
-
-max-size (optional) - Only valid if resizable is present.  Specifies a
-maximum acceptable size.
+Shouldn't have unit address without reg; use fman0/fman1/crypto instead.
 
 -Scott
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
