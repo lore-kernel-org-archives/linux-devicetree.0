@@ -1,141 +1,102 @@
-From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v9 7/8] ARM: mach-bcm: ARCH_BCM_MOBILE: remove one level of menu from Kconfig
-Date: Tue, 28 Oct 2014 16:15:10 -0700
-Message-ID: <1414538111-11668-8-git-send-email-sbranden@broadcom.com>
-References: <Scott Branden <sbranden@broadcom.com>
- <1414538111-11668-1-git-send-email-sbranden@broadcom.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH 1/3] powerpc/dts: Factorize the clock control node
+Date: Tue, 28 Oct 2014 18:21:40 -0500
+Message-ID: <1414538500.23458.125.camel@snotra.buserror.net>
+References: <1413988937-27885-1-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414538111-11668-1-git-send-email-sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>
-Cc: JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1413988937-27885-1-git-send-email-Emilian.Medve@Freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Emil Medve <Emilian.Medve@Freescale.com>
+Cc: yuantian.tang@Freescale.com, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-remove menu "Broadcom Mobile SoC Selection"
-This requires:
-- selecting ARCH_BCM_MOBILE based on SoC selections
-- fixup bcm_defconfig and multi_v7_defconfig to work with new menu levels.
-
-Signed-off-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- arch/arm/configs/bcm_defconfig      |    3 ++-
- arch/arm/configs/multi_v7_defconfig |    3 ++-
- arch/arm/mach-bcm/Kconfig           |   26 ++++++++++----------------
- 3 files changed, 14 insertions(+), 18 deletions(-)
-
-diff --git a/arch/arm/configs/bcm_defconfig b/arch/arm/configs/bcm_defconfig
-index bc614f4..83a87e4 100644
---- a/arch/arm/configs/bcm_defconfig
-+++ b/arch/arm/configs/bcm_defconfig
-@@ -25,7 +25,8 @@ CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
- CONFIG_ARCH_BCM=y
--CONFIG_ARCH_BCM_MOBILE=y
-+CONFIG_ARCH_BCM_21664=y
-+CONFIG_ARCH_BCM_281XX=y
- CONFIG_ARM_THUMBEE=y
- CONFIG_SMP=y
- CONFIG_PREEMPT=y
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index f1dc7fc..6e0d7cb 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -17,7 +17,8 @@ CONFIG_MACH_ARMADA_38X=y
- CONFIG_MACH_ARMADA_XP=y
- CONFIG_MACH_DOVE=y
- CONFIG_ARCH_BCM=y
--CONFIG_ARCH_BCM_MOBILE=y
-+CONFIG_ARCH_BCM_21664=y
-+CONFIG_ARCH_BCM_281XX=y
- CONFIG_ARCH_BCM_5301X=y
- CONFIG_ARCH_BRCMSTB=y
- CONFIG_ARCH_BERLIN=y
-diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-index 6e79696..cceb69f 100644
---- a/arch/arm/mach-bcm/Kconfig
-+++ b/arch/arm/mach-bcm/Kconfig
-@@ -51,8 +51,10 @@ config ARCH_BCM_5301X
- 	  different SoC or with the older BCM47XX and BCM53XX based
- 	  network SoC using a MIPS CPU, they are supported by arch/mips/bcm47xx
- 
-+comment "KONA architected SoCs"
-+
- config ARCH_BCM_MOBILE
--	bool "Broadcom Mobile SoC Support" if ARCH_MULTI_V7
-+	bool
- 	select ARCH_REQUIRE_GPIOLIB
- 	select ARM_ERRATA_754322
- 	select ARM_ERRATA_775420
-@@ -61,16 +63,13 @@ config ARCH_BCM_MOBILE
- 	select TICK_ONESHOT
- 	select HAVE_ARM_ARCH_TIMER
- 	select PINCTRL
-+	select ARCH_BCM_MOBILE_SMP if SMP
- 	help
- 	  This enables support for systems based on Broadcom mobile SoCs.
- 
--if ARCH_BCM_MOBILE
--
--menu "Broadcom Mobile SoC Selection"
--
- config ARCH_BCM_281XX
- 	bool "Broadcom BCM281XX SoC family"
--	default y
-+	select ARCH_BCM_MOBILE
- 	select HAVE_SMP
- 	help
- 	  Enable support for the BCM281XX family, which includes
-@@ -79,7 +78,7 @@ config ARCH_BCM_281XX
- 
- config ARCH_BCM_21664
- 	bool "Broadcom BCM21664 SoC family"
--	default y
-+	select ARCH_BCM_MOBILE
- 	select HAVE_SMP
- 	help
- 	  Enable support for the BCM21664 family, which includes
-@@ -87,19 +86,18 @@ config ARCH_BCM_21664
- 
- config ARCH_BCM_MOBILE_L2_CACHE
- 	bool "Broadcom mobile SoC level 2 cache support"
--	depends on (ARCH_BCM_281XX || ARCH_BCM_21664)
-+	depends on ARCH_BCM_MOBILE
- 	default y
- 	select CACHE_L2X0
- 	select ARCH_BCM_MOBILE_SMC
- 
- config ARCH_BCM_MOBILE_SMC
- 	bool
--	depends on ARCH_BCM_281XX || ARCH_BCM_21664
-+	depends on ARCH_BCM_MOBILE
- 
- config ARCH_BCM_MOBILE_SMP
--	bool "Broadcom mobile SoC SMP support"
--	depends on (ARCH_BCM_281XX || ARCH_BCM_21664) && SMP
--	default y
-+	bool
-+	depends on ARCH_BCM_MOBILE
- 	select HAVE_ARM_SCU
- 	select ARM_ERRATA_764369
- 	help
-@@ -107,10 +105,6 @@ config ARCH_BCM_MOBILE_SMP
- 	  Provided as an option so SMP support for SoCs of this type
- 	  can be disabled for an SMP-enabled kernel.
- 
--endmenu
--
--endif
--
- comment "Other Architectures"
- 
- config ARCH_BCM2835
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCAyMDE0LTEwLTIyIGF0IDA5OjQyIC0wNTAwLCBFbWlsIE1lZHZlIHdyb3RlOgo+IFNp
+Z25lZC1vZmYtYnk6IEVtaWwgTWVkdmUgPEVtaWxpYW4uTWVkdmVARnJlZXNjYWxlLmNvbT4KPiBD
+aGFuZ2UtSWQ6IEkyNWNlMjRhMjU4NjJiNGNhNDYwMTY0MTU5ODY3YWJlZmUwMGNjZGQxCgpQbGVh
+c2UgcmVtb3ZlIGdlcnJpdCBzdHVmZiBwcmlvciB0byBzdWJtaXR0aW5nLgoKPiBkaWZmIC0tZ2l0
+IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9xb3JpcS1jbG9ja2dlbjEuZHRzaSBiL2FyY2gv
+cG93ZXJwYy9ib290L2R0cy9mc2wvcW9yaXEtY2xvY2tnZW4xLmR0c2kKPiBuZXcgZmlsZSBtb2Rl
+IDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLjQ4NzEwNDgKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIv
+YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9xb3JpcS1jbG9ja2dlbjEuZHRzaQo+IEBAIC0wLDAg
+KzEsNzggQEAKPiArLyoKPiArICogUW9ySVEgY2xvY2sgY29udHJvbCBkZXZpY2UgdHJlZSBzdHVi
+IFsgY29udHJvbGxlciBAIG9mZnNldCAweGUxMDAwIF0KPiArICoKPiArICogQ29weXJpZ2h0IDIw
+MTQgRnJlZXNjYWxlIFNlbWljb25kdWN0b3IgSW5jLgo+ICsgKgo+ICsgKiBSZWRpc3RyaWJ1dGlv
+biBhbmQgdXNlIGluIHNvdXJjZSBhbmQgYmluYXJ5IGZvcm1zLCB3aXRoIG9yIHdpdGhvdXQKPiAr
+ICogbW9kaWZpY2F0aW9uLCBhcmUgcGVybWl0dGVkIHByb3ZpZGVkIHRoYXQgdGhlIGZvbGxvd2lu
+ZyBjb25kaXRpb25zIGFyZSBtZXQ6Cj4gKyAqICAgICAqIFJlZGlzdHJpYnV0aW9ucyBvZiBzb3Vy
+Y2UgY29kZSBtdXN0IHJldGFpbiB0aGUgYWJvdmUgY29weXJpZ2h0Cj4gKyAqCSBub3RpY2UsIHRo
+aXMgbGlzdCBvZiBjb25kaXRpb25zIGFuZCB0aGUgZm9sbG93aW5nIGRpc2NsYWltZXIuCj4gKyAq
+ICAgICAqIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUg
+YWJvdmUgY29weXJpZ2h0Cj4gKyAqCSBub3RpY2UsIHRoaXMgbGlzdCBvZiBjb25kaXRpb25zIGFu
+ZCB0aGUgZm9sbG93aW5nIGRpc2NsYWltZXIgaW4gdGhlCj4gKyAqCSBkb2N1bWVudGF0aW9uIGFu
+ZC9vciBvdGhlciBtYXRlcmlhbHMgcHJvdmlkZWQgd2l0aCB0aGUgZGlzdHJpYnV0aW9uLgo+ICsg
+KiAgICAgKiBOZWl0aGVyIHRoZSBuYW1lIG9mIEZyZWVzY2FsZSBTZW1pY29uZHVjdG9yIG5vciB0
+aGUKPiArICoJIG5hbWVzIG9mIGl0cyBjb250cmlidXRvcnMgbWF5IGJlIHVzZWQgdG8gZW5kb3Jz
+ZSBvciBwcm9tb3RlIHByb2R1Y3RzCj4gKyAqCSBkZXJpdmVkIGZyb20gdGhpcyBzb2Z0d2FyZSB3
+aXRob3V0IHNwZWNpZmljIHByaW9yIHdyaXR0ZW4gcGVybWlzc2lvbi4KPiArICoKPiArICoKPiAr
+ICogQUxURVJOQVRJVkVMWSwgdGhpcyBzb2Z0d2FyZSBtYXkgYmUgZGlzdHJpYnV0ZWQgdW5kZXIg
+dGhlIHRlcm1zIG9mIHRoZQo+ICsgKiBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSAoIkdQTCIp
+IGFzIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZQo+ICsgKiBGb3VuZGF0aW9uLCBlaXRo
+ZXIgdmVyc2lvbiAyIG9mIHRoYXQgTGljZW5zZSBvciAoYXQgeW91ciBvcHRpb24pIGFueQo+ICsg
+KiBsYXRlciB2ZXJzaW9uLgo+ICsgKgo+ICsgKiBUSElTIFNPRlRXQVJFIElTIFBST1ZJREVEIEJZ
+IEZyZWVzY2FsZSBTZW1pY29uZHVjdG9yIGBgQVMgSVMnJyBBTkQgQU5ZCj4gKyAqIEVYUFJFU1Mg
+T1IgSU1QTElFRCBXQVJSQU5USUVTLCBJTkNMVURJTkcsIEJVVCBOT1QgTElNSVRFRCBUTywgVEhF
+IElNUExJRUQKPiArICogV0FSUkFOVElFUyBPRiBNRVJDSEFOVEFCSUxJVFkgQU5EIEZJVE5FU1Mg
+Rk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFIEFSRQo+ICsgKiBESVNDTEFJTUVELiBJTiBOTyBFVkVO
+VCBTSEFMTCBGcmVlc2NhbGUgU2VtaWNvbmR1Y3RvciBCRSBMSUFCTEUgRk9SIEFOWQo+ICsgKiBE
+SVJFQ1QsIElORElSRUNULCBJTkNJREVOVEFMLCBTUEVDSUFMLCBFWEVNUExBUlksIE9SIENPTlNF
+UVVFTlRJQUwgREFNQUdFUwo+ICsgKiAoSU5DTFVESU5HLCBCVVQgTk9UIExJTUlURUQgVE8sIFBS
+T0NVUkVNRU5UIE9GIFNVQlNUSVRVVEUgR09PRFMgT1IgU0VSVklDRVM7Cj4gKyAqIExPU1MgT0Yg
+VVNFLCBEQVRBLCBPUiBQUk9GSVRTOyBPUiBCVVNJTkVTUyBJTlRFUlJVUFRJT04pIEhPV0VWRVIg
+Q0FVU0VEIEFORAo+ICsgKiBPTiBBTlkgVEhFT1JZIE9GIExJQUJJTElUWSwgV0hFVEhFUiBJTiBD
+T05UUkFDVCwgU1RSSUNUIExJQUJJTElUWSwgT1IgVE9SVAo+ICsgKiAoSU5DTFVESU5HIE5FR0xJ
+R0VOQ0UgT1IgT1RIRVJXSVNFKSBBUklTSU5HIElOIEFOWSBXQVkgT1VUIE9GIFRIRSBVU0UgT0Yg
+VEhJUwo+ICsgKiBTT0ZUV0FSRSwgRVZFTiBJRiBBRFZJU0VEIE9GIFRIRSBQT1NTSUJJTElUWSBP
+RiBTVUNIIERBTUFHRS4KPiArICovCj4gKwo+ICtnbG9iYWwtdXRpbGl0aWVzQGUxMDAwIHsKPiAr
+CWNvbXBhdGlibGUgPSAiZnNsLHFvcmlxLWNsb2NrZ2VuLTEuMCI7Cj4gKwlyYW5nZXMgPSA8MHgw
+IDB4ZTEwMDAgMHgxMDAwPjsKPiArCXJlZyA9IDwweGUxMDAwIDB4MTAwMD47Cj4gKwljbG9jay1m
+cmVxdWVuY3kgPSA8MD47Cj4gKwkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCSNzaXplLWNlbGxz
+ID0gPDE+Owo+ICsKPiArCXN5c2Nsazogc3lzY2xrIHsKPiArCQkjY2xvY2stY2VsbHMgPSA8MD47
+Cj4gKwkJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEtc3lzY2xrLTEuMCIsICJmaXhlZC1jbG9jayI7
+Cj4gKwkJY2xvY2stb3V0cHV0LW5hbWVzID0gInN5c2NsayI7Cj4gKwl9Owo+ICsJcGxsMDogcGxs
+MEA4MDAgewo+ICsJCSNjbG9jay1jZWxscyA9IDwxPjsKPiArCQlyZWcgPSA8MHg4MDAgMHg0PjsK
+PiArCQljb21wYXRpYmxlID0gImZzbCxxb3JpcS1jb3JlLXBsbC0xLjAiOwo+ICsJCWNsb2NrcyA9
+IDwmc3lzY2xrPjsKPiArCQljbG9jay1vdXRwdXQtbmFtZXMgPSAicGxsMCIsICJwbGwwLWRpdjIi
+Owo+ICsJfTsKPiArCXBsbDE6IHBsbDFAODIwIHsKPiArCQkjY2xvY2stY2VsbHMgPSA8MT47Cj4g
+KwkJcmVnID0gPDB4ODIwIDB4ND47Cj4gKwkJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEtY29yZS1w
+bGwtMS4wIjsKPiArCQljbG9ja3MgPSA8JnN5c2Nsaz47Cj4gKwkJY2xvY2stb3V0cHV0LW5hbWVz
+ID0gInBsbDEiLCAicGxsMS1kaXYyIjsKPiArCX07Cj4gKwltdXgwOiBtdXgwQDAgewo+ICsJCSNj
+bG9jay1jZWxscyA9IDwwPjsKPiArCQlyZWcgPSA8MHgwIDB4ND47Cj4gKwkJY29tcGF0aWJsZSA9
+ICJmc2wscW9yaXEtY29yZS1tdXgtMS4wIjsKPiArCQljbG9ja3MgPSA8JnBsbDAgMD4sIDwmcGxs
+MCAxPiwgPCZwbGwxIDA+LCA8JnBsbDEgMT47Cj4gKwkJY2xvY2stbmFtZXMgPSAicGxsMCIsICJw
+bGwwLWRpdjIiLCAicGxsMSIsICJwbGwxLWRpdjIiOwo+ICsJCWNsb2NrLW91dHB1dC1uYW1lcyA9
+ICJjbXV4MCI7Cj4gKwl9Owo+ICsJbXV4MTogbXV4MUAyMCB7Cj4gKwkJI2Nsb2NrLWNlbGxzID0g
+PDA+Owo+ICsJCXJlZyA9IDwweDIwIDB4ND47Cj4gKwkJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEt
+Y29yZS1tdXgtMS4wIjsKPiArCQljbG9ja3MgPSA8JnBsbDAgMD4sIDwmcGxsMCAxPiwgPCZwbGwx
+IDA+LCA8JnBsbDEgMT47Cj4gKwkJY2xvY2stbmFtZXMgPSAicGxsMCIsICJwbGwwLWRpdjIiLCAi
+cGxsMSIsICJwbGwxLWRpdjIiOwo+ICsJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJjbXV4MSI7Cj4g
+Kwl9Owo+ICt9OwoKSSBkb24ndCB0aGluayB0aGUgbXV4IHN0dWZmIGJlbG9uZ3MgaGVyZSwgZ2l2
+ZW4gdGhhdCBjbG9ja2dlbjIuZHRzaQpkb2Vzbid0IGhhdmUgaXQsIGFuZCBJIHNhdyBhdCBsZWFz
+dCBvbmUgY2xvY2tnZW4xIHVzZXIgbmVlZGluZyB0bwpzdXBwbGVtZW50IHRoaXMgd2l0aCBtb3Jl
+IG11eGVzLgoKPiBAQCAtMTA2OCw3ICsxMDQzLDYgQEAKPiAgCQkJY2xvY2tzID0gPCZzeXNjbGs+
+Owo+ICAJCQljbG9jay1vdXRwdXQtbmFtZXMgPSAicGxsMiIsICJwbGwyLWRpdjIiLCAicGxsMi1k
+aXY0IjsKPiAgCQl9Owo+IC0KPiAgCQlwbGwzOiBwbGwzQDg2MCB7Cj4gIAkJCSNjbG9jay1jZWxs
+cyA9IDwxPjsKPiAgCQkJcmVnID0gPDB4ODYwIDB4ND47Cj4gQEAgLTEwNzYsNyArMTA1MCw2IEBA
+Cj4gIAkJCWNsb2NrcyA9IDwmc3lzY2xrPjsKPiAgCQkJY2xvY2stb3V0cHV0LW5hbWVzID0gInBs
+bDMiLCAicGxsMy1kaXYyIiwgInBsbDMtZGl2NCI7Cj4gIAkJfTsKPiAtCj4gIAkJcGxsNDogcGxs
+NEA4ODAgewo+ICAJCQkjY2xvY2stY2VsbHMgPSA8MT47Cj4gIAkJCXJlZyA9IDwweDg4MCAweDQ+
+OwoKV2h5PwoKLVNjb3R0CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3ps
+YWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
