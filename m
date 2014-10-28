@@ -1,91 +1,42 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 6/8] regulator: max77686: Add external GPIO control
-Date: Tue, 28 Oct 2014 13:11:48 +0100
-Message-ID: <1414498308.24949.32.camel@AMDC1943>
-References: <1414422226-10948-1-git-send-email-k.kozlowski@samsung.com>
- <1414422226-10948-7-git-send-email-k.kozlowski@samsung.com>
- <544EA4FA.6040704@collabora.co.uk> <1414486356.24949.19.camel@AMDC1943>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1414486356.24949.19.camel@AMDC1943>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 2/4] dt-bindings: Document Marsboard RK3066 in Rockchip platforms dt-bindings
+Date: Tue, 28 Oct 2014 12:24:20 +0000
+Message-ID: <1414499062-23875-2-git-send-email-romain.perier@gmail.com>
+References: <1414499062-23875-1-git-send-email-romain.perier@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414499062-23875-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On wto, 2014-10-28 at 09:52 +0100, Krzysztof Kozlowski wrote:
-> On pon, 2014-10-27 at 21:03 +0100, Javier Martinez Canillas wrote:
-> > Hello Krzysztof,
-> > 
-> > On 10/27/2014 04:03 PM, Krzysztof Kozlowski wrote:
-> > > @@ -85,6 +91,9 @@ struct max77686_data {
-> > >  	struct max77686_regulator_data *regulators;
-> > >  	int num_regulators;
-> > >  
-> > > +	/* Array of size num_regulators with GPIOs for external control. */
-> > > +	int *ext_control_gpio;
-> > > +
-> > 
-> > The integer-based GPIO API is deprecated in favor of the descriptor-based GPIO
-> > interface (Documentation/gpio/consumer.txt). Could you please use the later?
-> 
-> Sure, I can. Please have in mind that regulator core still accepts old
-> GPIO so I will have to use desc_to_gpio(). That should work... and
-> should be future-ready.
+Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Changes since v1:
+  - Replaced hoayuelectronics by hoayu as suggested by the vendor-prefix doc in dt-bindings
 
-It seems I was too hasty... I think usage of the new gpiod API implies
-completely different bindings.
+ Documentation/devicetree/bindings/arm/rockchip.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-The gpiod_get() gets GPIO from a device level, not from given sub-node
-pointer. This means that you cannot have DTS like this:
-ldo21_reg: ldo21 {
-	regulator-compatible = "LDO21";
-	regulator-name = "VTF_2.8V";
-	regulator-min-microvolt = <2800000>;
-	regulator-max-microvolt = <2800000>;
-	ec-gpio = <&gpy2 0 0>;
-};
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+index 857f126..eaa3d1a 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.txt
++++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+@@ -1,6 +1,10 @@
+ Rockchip platforms device tree bindings
+ ---------------------------------------
+ 
++- MarsBoard RK3066 board:
++    Required root node properties:
++      - compatible = "haoyu,marsboard-rk3066", "rockchip,rk3066a";
++
+ - bq Curie 2 tablet:
+     Required root node properties:
+       - compatible = "mundoreader,bq-curie2", "rockchip,rk3066a";
+-- 
+1.9.1
 
-ldo22_reg: ldo22 {
-	regulator-compatible = "LDO22";
-	regulator-name = "VMEM_VDD_2.8V";
-	regulator-min-microvolt = <2800000>;
-	regulator-max-microvolt = <2800000>;
-	ec-gpio = <&gpk0 2 0>;
-};
-
-
-I could put GPIOs in device node:
-
-max77686_pmic@09 {
-	compatible = "maxim,max77686";
-	interrupt-parent = <&gpx0>;
-	interrupts = <7 0>;
-	reg = <0x09>;
-	#clock-cells = <1>;
-	ldo21-gpio = <&gpy2 0 0>;
-	ldo22-gpio = <&gpk0 2 0>;
-
-	ldo21_reg: ldo21 {
-		regulator-compatible = "LDO21";
-		regulator-name = "VTF_2.8V";
-		regulator-min-microvolt = <2800000>;
-		regulator-max-microvolt = <2800000>;
-	};
-
-	ldo22_reg: ldo22 {
-		regulator-compatible = "LDO22";
-		regulator-name = "VMEM_VDD_2.8V";
-		regulator-min-microvolt = <2800000>;
-		regulator-max-microvolt = <2800000>;
-	};
-
-This would work but I don't like it. The properties of a regulator are
-above the node configuring that regulator.
-
-Any ideas?
-
-Best regards,
-Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
