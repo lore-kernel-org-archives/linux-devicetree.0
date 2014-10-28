@@ -1,54 +1,137 @@
-From: Alexander Stein <alexander.stein@systec-electronic.com>
-Subject: Re: [PATCH v4 1/1] ARM: at91/dt: sam9x5: Add CAN device nodes
-Date: Tue, 28 Oct 2014 09:27:15 +0100
-Message-ID: <1963737.sgbgq0RFOC@ws-stein>
-References: <1412682710-14219-1-git-send-email-alexander.stein@systec-electronic.com>
- <544692A6.9030509@atmel.com>
+From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] rtc: omap: add support for pmic_power_en
+Date: Tue, 28 Oct 2014 09:36:33 +0100
+Message-ID: <20141028083633.GM2006@localhost>
+References: <1413913086-12730-1-git-send-email-johan@kernel.org>
+ <1414397368-26480-1-git-send-email-johan@kernel.org>
+ <20141027154031.4492ea11d401045ca04a3ff8@linux-foundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <544692A6.9030509@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141027154031.4492ea11d401045ca04a3ff8-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Nicolas,
-
-On Tuesday 21 October 2014 19:06:46, Nicolas Ferre wrote:
-> On 07/10/2014 13:51, Alexander Stein :
-> > Add the missing CAN devices node including their pin muxing to the shared
-> > .dtsi for at91sam9x5. Actually include this file.
-> > While at it, fix white spaces of can1_clk.
+On Mon, Oct 27, 2014 at 03:40:31PM -0700, Andrew Morton wrote:
+> On Mon, 27 Oct 2014 09:09:28 +0100 Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 > 
-> Well, no: I split the patch in two to separate these whitespace
-> modifications and the addition of nodes. But now worries, I did it and
-> stacked the 2 patches on top of my WIP at91-3.19-dt branch.
+> > Add new property "ti,system-power-controller" to register the RTC as a
+> > power-off handler.
+> > 
+> > Some RTC IP revisions can control an external PMIC via the pmic_power_en
+> > pin, which can be configured to transition to OFF on ALARM2 events and
+> > back to ON on subsequent ALARM (wakealarm) events.
+> > 
+> > This is based on earlier work by Colin Foe-Parker and AnilKumar Ch. [1]
+> > 
+> > [1] https://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg82127.html
+> > 
+> > Tested-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> > Signed-off-by: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
+> > 
+> > Changes since v2:
+> >  - add two-second delay to allow alarm to trigger before returning
+> 
+> hmpf.  As this sentence is below the ^--- it doesn't get into the
+> changelog.
 
-It seems this branch is not public, yet. At least I could not find it on git.kernel.org.
-Did you also pick "ARM: at91/dt: sam9263: Add CAN device nodes"? (https://www.mail-archive.com/devicetree@vger.kernel.org/msg44970.html)
+We usually don't keep the patch-revision change log in the commit message
+(e.g. put in the cover letter).
 
-Best regards,
-Alexander
--- 
-Dipl.-Inf. Alexander Stein
+But in general, how do you want to handle updates to a single patch in a
+series you already have in your tree? Do you prefer a proper
+incremental-fix patch (with commit message), just an updated single
+patch, or a resend of the whole series?
 
-SYS TEC electronic GmbH
-Am Windrad 2
-08468 Heinsdorfergrund
-Tel.: 03765 38600-1156
-Fax: 03765 38600-4100
-Email: alexander.stein@systec-electronic.com
-Website: www.systec-electronic.com
- 
-Managing Director: Dipl.-Phys. Siegmar Schmidt
-Commercial registry: Amtsgericht Chemnitz, HRB 28082
+> > ...
+> >
+> > +static void omap_rtc_power_off(void)
+> > +{
+> > +	struct omap_rtc *rtc = omap_rtc_power_off_rtc;
+> > +	struct rtc_time tm;
+> > +	unsigned long now;
+> > +	u32 val;
+> > +
+> > +	/* enable pmic_power_en control */
+> > +	val = rtc_readl(rtc, OMAP_RTC_PMIC_REG);
+> > +	rtc_writel(rtc, OMAP_RTC_PMIC_REG, val | OMAP_RTC_PMIC_POWER_EN_EN);
+> > +
+> > +	/* set alarm two seconds from now */
+> > +	omap_rtc_read_time_raw(rtc, &tm);
+> > +	bcd2tm(&tm);
+> > +	rtc_tm_to_time(&tm, &now);
+> > +	rtc_time_to_tm(now + 2, &tm);
+> > +
+> > +	if (tm2bcd(&tm) < 0) {
+> > +		dev_err(&rtc->rtc->dev, "power off failed\n");
+> > +		return;
+> > +	}
+> > +
+> > +	rtc_wait_not_busy(rtc);
+> > +
+> > +	rtc_write(rtc, OMAP_RTC_ALARM2_SECONDS_REG, tm.tm_sec);
+> > +	rtc_write(rtc, OMAP_RTC_ALARM2_MINUTES_REG, tm.tm_min);
+> > +	rtc_write(rtc, OMAP_RTC_ALARM2_HOURS_REG, tm.tm_hour);
+> > +	rtc_write(rtc, OMAP_RTC_ALARM2_DAYS_REG, tm.tm_mday);
+> > +	rtc_write(rtc, OMAP_RTC_ALARM2_MONTHS_REG, tm.tm_mon);
+> > +	rtc_write(rtc, OMAP_RTC_ALARM2_YEARS_REG, tm.tm_year);
+> > +
+> > +	/*
+> > +	 * enable ALARM2 interrupt
+> > +	 *
+> > +	 * NOTE: this fails on AM3352 if rtc_write (writeb) is used
+> > +	 */
+> > +	val = rtc_read(rtc, OMAP_RTC_INTERRUPTS_REG);
+> > +	rtc_writel(rtc, OMAP_RTC_INTERRUPTS_REG,
+> > +			val | OMAP_RTC_INTERRUPTS_IT_ALARM2);
+> > +
+> > +	mdelay(2000);
+> 
+> And it is uncommented.
+> 
+> How on earth is a reader to know why this is here?
+
+The comment above the function reads:
+
+ * The RTC can be used to control an external PMIC via the pmic_power_en pin,
+ * which can be configured to transition to OFF on ALARM2 events.
+ *
+ * Notes:
+ * The two-second alarm offset is the shortest offset possible as the alarm
+ * registers must be set before the next timer update and the offset
+ * calculation is too heavy for everything to be done within a single access
+ * period (~15us).
+
+So it's effect is at least fairly obvious and documented.
+
+> I can do this
+> 
+> --- a/drivers/rtc/rtc-omap.c~rtc-omap-add-support-for-pmic_power_en-v3-fix
+> +++ a/drivers/rtc/rtc-omap.c
+> @@ -417,6 +417,7 @@ static void omap_rtc_power_off(void)
+>  	rtc_writel(rtc, OMAP_RTC_INTERRUPTS_REG,
+>  			val | OMAP_RTC_INTERRUPTS_IT_ALARM2);
+>  
+> +	/* Allow alarm to trigger before returning */
+>  	mdelay(2000);
+>  }
+
+Looks good, and I should have put something like that there nonetheless.
+
+> But it doesn't explain *why* we want the alarm to trigger before
+> returning.
+
+Should we really require every power-off handler to document arch
+behaviour (even if its inconsistent and currently undocumented); in
+this case that some arches return to user-space where we may oops if
+called from process 0 (e.g. systemd, but not if using sysvinit)?
+
+Johan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
