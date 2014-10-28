@@ -1,56 +1,81 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH] Add devicetree binding documentation for the LTC2941/LTC2943 driver
-Date: Tue, 28 Oct 2014 08:08:04 +0100
-Message-ID: <1414480084-3604-1-git-send-email-mike.looijmans@topic.nl>
-References: <20141027163842.GB20765@earth.universe>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141027163842.GB20765@earth.universe>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sre@kernel.org
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, devicetree@vger.kernel.org, Mike Looijmans <mike.looijmans@topic.nl>
+From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
+Subject: Re: [PATCH v2 3/7] clk: samsung: exynos7: add clocks for RTC block
+Date: Tue, 28 Oct 2014 12:48:48 +0530
+Message-ID: <CAM4voamtQfY2gvtKt3_yg4eVshxswtEaCbp8+n-jWDc3xx2TLA@mail.gmail.com>
+References: <1413870237-1821-1-git-send-email-a.kesavan@samsung.com>
+	<1413870237-1821-4-git-send-email-a.kesavan@samsung.com>
+	<544E736D.1070001@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <544E736D.1070001@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the devicetree binding documentation for the LTC2941 and LTC2943
-driver. These are I2C connected battery gas gauge ICs.
+Hello Sylwester,
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
- .../devicetree/bindings/power/ltc2941.txt          |   27 ++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/ltc2941.txt
+On Mon, Oct 27, 2014 at 10:01 PM, Sylwester Nawrocki
+<s.nawrocki@samsung.com> wrote:
+> Hi,
+>
+> On 21/10/14 07:43, Abhilash Kesavan wrote:
+>> From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+>>
+>> Add clock support for the RTC block in Exynos7.
+>>
+>> Signed-off-by: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+>> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+>> ---
+>>  .../devicetree/bindings/clock/exynos7-clock.txt    |    5 ++
+>>  drivers/clk/samsung/clk-exynos7.c                  |   54 ++++++++++++++++++++
+>>  include/dt-bindings/clock/exynos7-clk.h            |   17 +++---
+>>  3 files changed, 70 insertions(+), 6 deletions(-)
+> [...]
+>> diff --git a/include/dt-bindings/clock/exynos7-clk.h b/include/dt-bindings/clock/exynos7-clk.h
+>> index ff63c4e..3227679 100644
+>> --- a/include/dt-bindings/clock/exynos7-clk.h
+>> +++ b/include/dt-bindings/clock/exynos7-clk.h
+>> @@ -11,12 +11,13 @@
+>>  #define _DT_BINDINGS_CLOCK_EXYNOS7_H
+>>
+>>  /* TOPC */
+>> -#define DOUT_ACLK_PERIS                      1
+>> -#define DOUT_SCLK_BUS0_PLL           2
+>> -#define DOUT_SCLK_BUS1_PLL           3
+>> -#define DOUT_SCLK_CC_PLL             4
+>> -#define DOUT_SCLK_MFC_PLL            5
+>> -#define TOPC_NR_CLK                  6
+>> +#define DOUT_ACLK_CCORE_133          1
+>> +#define DOUT_ACLK_PERIS                      2
+>> +#define DOUT_SCLK_BUS0_PLL           3
+>> +#define DOUT_SCLK_BUS1_PLL           4
+>> +#define DOUT_SCLK_CC_PLL             5
+>> +#define DOUT_SCLK_MFC_PLL            6
+>> +#define TOPC_NR_CLK                  7
+>
+> Please don't do that, don't change the meaning of already defined
+> clock identifiers. We should carefully assign the clock identifiers
+> based on the SoC documentation beforehand, not at will when we see
+> fit for development of the Linux driver. Please either add
+> DOUT_ACLK_CCORE_133 at the end of list or move this change to the
+> first patch in your series adding initial support for Exynos7 SoC.
 
-diff --git a/Documentation/devicetree/bindings/power/ltc2941.txt b/Documentation/devicetree/bindings/power/ltc2941.txt
-new file mode 100644
-index 0000000..ea42ae1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/ltc2941.txt
-@@ -0,0 +1,27 @@
-+binding for LTC2941 and LTC2943 battery gauges
-+
-+Both the LTC2941 and LTC2943 measure battery capacity.
-+The LTC2943 is compatible with the LTC2941, it adds voltage and
-+temperature monitoring, and uses a slightly different conversion
-+formula for the charge counter.
-+
-+Required properties:
-+- compatible: Should contain "ltc2941" or "ltc2943" which also indicates the
-+    type of I2C chip attached.
-+- reg: The 7-bit I2C address.
-+- lltc,resistor-sense: The sense resistor value in milli-ohms. Can be a 32-bit
-+    negative value when the battery has been connected to the wrong end of the
-+    resistor.
-+- lltc,prescaler-exponent: The prescaler exponent as explained in the datasheet.
-+    This determines the range and accuracy of the gauge. The value is programmed
-+    into the chip only if it differs from the current setting. The setting is
-+    lost when the battery is disconnected.
-+
-+Example from the Topic Miami Florida board:
-+
-+	fuelgauge: ltc2943@64 {
-+		compatible = "ltc2943";
-+		reg = <0x64>;
-+		lltc,resistor-sense = <15>;
-+		lltc,prescaler-exponent = <5>; /* 2^(2*5) = 1024 */
-+	};
--- 
-1.7.9.5
+Thanks for reviewing this series and picking up the initial patchset.
+I will re-post this patchset with the ccore clock at the end of the
+list. All the future clock id entries will be added at the bottom of
+the list.
+
+Regards,
+Abhilash
+>
+> --
+> Thanks,
+> Sylwester
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
