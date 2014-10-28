@@ -1,35 +1,63 @@
-From: Qais Yousef <qais.yousef@imgtec.com>
-Subject: Re: [alsa-devel] [PATCH 00/11] Add AXD Audio Processing IP driver
-Date: Tue, 28 Oct 2014 13:21:32 +0000
-Message-ID: <544F985C.9020905@imgtec.com>
-References: <1414495589-8579-1-git-send-email-qais.yousef@imgtec.com> <544F86C1.8040500@metafoo.de>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V4 3/3] rtc: omap: Support regulator supply for RTC
+Date: Tue, 28 Oct 2014 09:02:45 -0500
+Message-ID: <544FA205.3000102@ti.com>
+References: <1414490332-14856-1-git-send-email-lokeshvutla@ti.com> <1414490332-14856-4-git-send-email-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <544F86C1.8040500@metafoo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, alsa-devel@alsa-project.org, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414490332-14856-4-git-send-email-lokeshvutla-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/28/2014 12:06 PM, Lars-Peter Clausen wrote:
-> On 10/28/2014 12:26 PM, Qais Yousef wrote:
->> AXD Audio Processing IP performs audio decoding, encoding, mixing, 
->> equalisation,
->> synchronisation and playback. This series adds the driver and DT binding
->> document.
->> [...]
->> I added it to drivers/char as this is the best location I could think 
->> of at the
->> moment. It doesn't fit in alsa subsystem but I Cced them to confirm.
-> > [...]
->
-> I think it will fit in nicely.
->
-> - Lars
->
-Check my answer to Clemens.
+On 10/28/2014 04:58 AM, Lokesh Vutla wrote:
+> Certain SoCs such as DRA7, RTC is an independent voltage domain of it's own
+> and on platforms such as DRA7-evm, this may be supplied by individual
+> regulator on it's own.
+> So make the OMAP RTC driver support a power regulator.
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+> ---
+> - Dropped the Reviewed-by tags as this patch is changed from previous version.
+>  Documentation/devicetree/bindings/rtc/rtc-omap.txt |  6 ++++
+>  drivers/rtc/rtc-omap.c                             | 41 +++++++++++++++++++++-
+>  2 files changed, 46 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+> index 750efd4..c1d84ac 100644
+> --- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+> +++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+> @@ -15,6 +15,9 @@ Required properties:
+>  Optional properties:
+>  - ti,system-power-controller: whether the rtc is controlling the system power
+>    through pmic_power_en
+> +- vrtc-supply: phandle to the regulator device tree node.
+> +- vrtc-minuV: Minimum required voltage in uV, If default voltage needs to be changed
+> +- vrtc-maxuV: Maximum acceptable voltage in uV, If default voltage needs to be changed
+>  
+>  Example:
+>  
+> @@ -25,4 +28,7 @@ rtc@1c23000 {
+>  		      19>;
+>  	interrupt-parent = <&intc>;
+>  	ti,system-power-controller;
+> +	vrtc-supply = <&ldo9_reg>;
+> +	vrtc-minuV = <1050000>;
+> +	vrtc-maxuV = <1050000>;
 
-Thanks,
-Qais
+
+why would we want to duplicate machine constraints that regulators
+already have? if there is a constant voltage needed, then it should be
+compatible property as it is not really a configuration option, right?
+
+[...]
+-- 
+Regards,
+Nishanth Menon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
