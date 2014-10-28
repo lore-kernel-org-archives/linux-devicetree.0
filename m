@@ -1,70 +1,95 @@
-From: Qais Yousef <qais.yousef@imgtec.com>
-Subject: Re: [PATCH 00/11] Add AXD Audio Processing IP driver
-Date: Tue, 28 Oct 2014 15:05:16 +0000
-Message-ID: <544FB0AC.4020205@imgtec.com>
-References: <1414495589-8579-1-git-send-email-qais.yousef@imgtec.com> <544F8439.4080402@ladisch.de> <544F97A4.7080209@imgtec.com> <20141028141348.GD18384@kroah.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V4 3/3] rtc: omap: Support regulator supply for RTC
+Date: Tue, 28 Oct 2014 15:11:16 +0000
+Message-ID: <20141028151116.GV18557@sirena.org.uk>
+References: <1414490332-14856-1-git-send-email-lokeshvutla@ti.com>
+ <1414490332-14856-4-git-send-email-lokeshvutla@ti.com>
+ <20141028150148.GE8123@saruman>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141028141348.GD18384@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Clemens Ladisch <clemens@ladisch.de>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Neil Jones <neil.jones@imgtec.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Yzwzo2Lpb9tBI5S/"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141028150148.GE8123@saruman>
+Sender: linux-omap-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Lokesh Vutla <lokeshvutla@ti.com>, rtc-linux@googlegroups.com, linux-omap@vger.kernel.org, johan@kernel.org, tony@atomide.com, akpm@linux-foundation.org, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, nm@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/28/2014 02:13 PM, Greg Kroah-Hartman wrote:
-> On Tue, Oct 28, 2014 at 01:18:28PM +0000, Qais Yousef wrote:
->> On 10/28/2014 11:55 AM, Clemens Ladisch wrote:
->>> Qais Yousef wrote:
->>>> AXD Audio Processing IP performs audio decoding, encoding, mixing, equalisation,
->>>> synchronisation and playback.
->>> What exactly do you mean with "synchronisation" and "playback"?
->> Synchronisation refers to accurate audio playout relative to a master
->> clock source including compensation of drift between the master clock
->> source and the playout clock of the audio hardware. Hence allowing
->> synchronised audio playout across multiple independent devices.
->>
->> Playback simple refers to the fact that AXD is capable of managing audio
->> playout hardware like I2S and SPDIF interfaces.
->>
->>
->>>> It doesn't fit in alsa subsystem but I Cced them to confirm.
->>> ... because those two words sound like something that a sound card could do.
->> The problem mainly stems from the fact that we take a variety of
->> compressed audio as input and we could perform audio encoding. The
->> problem with the compressed audio is that the range of decoders and
->> configuration supported in alsa is limited and there's no support for
->> taking raw pcm and producing compressed output. I'm not an expert on
->> alsa but when I looked it looked like there's more infra structure
->> required.
->>
->> The following not supported points from Documentation/sound/alsa/compress_offload.txt affect us:
->>
->> - Volume control/routing is not handled by this API. Devices exposing a
->>    compressed data interface will be considered as regular ALSA devices;
->>    volume changes and routing information will be provided with regular
->>    ALSA kcontrols.
->>
->> - Embedded audio effects. Such effects should be enabled in the same
->>    manner, no matter if the input was PCM or compressed.
->>
->> - Encoding/decoding acceleration is not supported as mentioned
->>    above. It is possible to route the output of a decoder to a capture
->>    stream, or even implement transcoding capabilities. This routing
->>    would be enabled with ALSA kcontrols.
-> So instead you created a one-off api just for this hardware?  Ick, no,
-> please work with the audio developers to incorporate it into the
-> standard Linux audio apis so that everyone can benifit and not require
-> special userspace programs to drive this hardware.
->
-> thanks,
->
-> greg k-h
 
-OK. I'll wait to hear from alsa developers to see the extent of work 
-required. I can't see it being trivial though. Would it be possible for 
-this to be accepted into staging until this is resolved?
+--Yzwzo2Lpb9tBI5S/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Qais
+On Tue, Oct 28, 2014 at 10:01:48AM -0500, Felipe Balbi wrote:
+> On Tue, Oct 28, 2014 at 03:28:52PM +0530, Lokesh Vutla wrote:
+
+> > +- vrtc-minuV: Minimum required voltage in uV, If default voltage needs=
+ to be changed
+> > +- vrtc-maxuV: Maximum acceptable voltage in uV, If default voltage nee=
+ds to be changed
+
+> huh ? minuV and maxuV is already part of the regulator binding itself.
+
+No, they aren't - there's bindings for setting constraints but not
+bindings for setting values in consumers since consumers generally
+understand why they are setting a voltage if they do so.  I'd expect
+that we'd have a property for whatever system feature might cause us to
+need to explicitly set the voltage if we need to vary the voltage at
+runtime, or alternatively for systems to set a voltage through the
+constraints on the supply rather than having properties on the consumer
+- why are they here?
+
+If for some reason we really need these properties they should be -max-uV
+and -min-uV.
+
+> > @@ -514,6 +516,37 @@ static int omap_rtc_probe(struct platform_device *=
+pdev)
+> >  	if (IS_ERR(rtc->base))
+> >  		return PTR_ERR(rtc->base);
+> > =20
+> > +	rtc->supply =3D devm_regulator_get_optional(&pdev->dev, "vrtc");
+
+> I'm not sure if this is optional either, it's just that many of our
+> current DTS don't really pass a regulator to RTC, right ?
+
+If the RTC can run without power that would certainly be most
+impressive.  I can't see any reason for this driver to use anything
+other than a standard regulator_get().
+
+> > +		if (vrtc_minuV && vrtc_maxuV) {
+> > +			ret =3D regulator_set_voltage(rtc->supply,
+> > +						    vrtc_minuV, vrtc_maxuV);
+> > +			if (ret) {
+> > +				dev_err(&pdev->dev, "failed to set volt %d\n",
+> > +					ret);
+> > +				return ret;
+> > +			}
+> > +		}
+
+> I'd really like to Mark's comments here but I was under the impression
+> that if the binding already gives min_microvolt =3D=3D max_microvolt then
+> driver shouldn't really care about a set_voltage. Mark ?
+
+That's what happens for the standard properties on the supplying
+regulator, these properties are separate to that.  Like I say I'm not
+sure I understand why this is being done on a per-consumer basis.
+
+--Yzwzo2Lpb9tBI5S/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUT7IUAAoJECTWi3JdVIfQu78H/ifkVg7vhquFaJAD/XLQd87h
+pPXUhWJfprKyn3giq5pmMbr+CsAF9wwkeui9hYPPqvumFEN46dPCkMdiegkypXsv
+15ZGoBdB3lUdX7dzMY8vvHD8G35rVUHIiemqYU+iX1xAfm+N+MgjP6dp4SSRKuXu
+jgqwzQHvCYCs/xDjCGhN+S0ZU18cckvqZaNIkixE3OWnQ1Ex1dC14d7ydpKiSWwd
+8eg5ScKGMp4dbyjWtNAvQOZbEO3Dx3Rm+5u4YxXd/dm7UxavUpoge4TwS6xGqxKk
+LNnhd8ywQL1jKABQdt70M0736i0UtJS32TQEOVYiccEa8akhzF7MaC/e3dfCoOc=
+=KyNh
+-----END PGP SIGNATURE-----
+
+--Yzwzo2Lpb9tBI5S/--
