@@ -1,38 +1,170 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH] Documentation: gpio: guidelines for bindings
-Date: Tue, 28 Oct 2014 18:18:32 +0900
-Message-ID: <CAAVeFu+2OfRbU845uD29-oZww1Xu2VrGbx_m0J0SaoMr7Z8UQQ@mail.gmail.com>
-References: <1414470034-16143-1-git-send-email-acourbot@nvidia.com> <4048602.9BsHAsA6cq@wuerfel>
+From: Emil Medve <Emilian.Medve@Freescale.com>
+Subject: [PATCH v2 3/4] dt/bindings: Introduce the FSL QorIQ DPAA QMan
+Date: Tue, 28 Oct 2014 04:15:50 -0500
+Message-ID: <1414487751-31568-4-git-send-email-Emilian.Medve@Freescale.com>
+References: <1414487751-31568-1-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <4048602.9BsHAsA6cq@wuerfel>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Alexandre Courbot <acourbot@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1414487751-31568-1-git-send-email-Emilian.Medve@Freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: scottwood@Freescale.com, galak@kernel.crashing.org, corbet@lwn.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, grant.likely@linaro.org, Geoff.Thorpe@Freescale.com, linuxppc-dev@ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Emil Medve <Emilian.Medve@Freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 28, 2014 at 6:08 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 28 October 2014 13:20:34 Alexandre Courbot wrote:
->> +GPIO properties should be named "[<name>-]gpios", with <name> being the con_id
->> +argument that is passed to gpiod_get(). While a NULL con_id is accepted by the
->> +GPIO API for compatibility reasons (resolving to the "gpios" property), it is
->> +not allowed for new bindings.
->> +
->> +GPIO properties can contain one or more GPIO phandles, but only in exceptional
->> +cases should they contain more than one. If your device uses several GPIOs with
->> +distinct functions, reference each of them under its own property, giving it a
->> +meaningful name. The only case where an array of GPIOs is accepted is when
->> +several GPIOs serve the same function (e.g. a parallel data line). In that case
->> +individual GPIOs can be retrieved using gpiod_get_index().
->> +
->> +The exact meaning of each gpios property must be documented in the device tree
->>  binding for each device.
->
-> The binding should be written in an OS neutral way, so it would be better to avoid
-> direct references to Linux APIs in the part that specifies the allowed properties.
->
-> Could you reword this so the Linux interfaces are described in an "implementation
-> notes" section that is separate from the main part?
+The Queue Manager is part of the Data-Path Acceleration Architecture (DPAA).
+QMan supports queuing and QoS scheduling of frames to CPUs, network interfaces
+and DPAA logic modules, maintains packet ordering within flows. Besides
+providing flow-level queuing, is also responsible for congestion management
+functions such as RED/WRED, congestion notifications and tail discards. This
+binding covers the CCSR space programming model
 
-You're right - will fix this and resubmit. Thanks!
+Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
+Change-Id: I3acb223893e42003d6c9dc061db568ec0b10d29b
+---
+ .../devicetree/bindings/powerpc/fsl/qman.txt       | 133 +++++++++++++++++++++
+ 1 file changed, 133 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/qman.txt
+
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/qman.txt b/Documentation/devicetree/bindings/powerpc/fsl/qman.txt
+new file mode 100644
+index 0000000..a21e097
+--- /dev/null
++++ b/Documentation/devicetree/bindings/powerpc/fsl/qman.txt
+@@ -0,0 +1,133 @@
++QorIQ DPAA Queue Manager Device Tree Binding
++
++Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
++
++CONTENTS
++
++	- QMan Node
++	- QMan Private Memory Nodes
++	- Example
++
++QMan Node
++
++PROPERTIES
++
++- compatible
++	Usage:		Required
++	Value type:	<stringlist>
++	Definition:	Must include "fsl,qman"
++			May include "fsl,<SoC>-qman"
++
++- reg
++	Usage:		Required
++	Value type:	<prop-encoded-array>
++	Definition:	Registers region within the CCSR address space
++
++- interrupts
++	Usage:		Required
++	Value type:	<prop-encoded-array>
++	Definition:	Standard property. The error interrupt
++
++- fsl,liodn
++	Usage:		See pamu.txt
++	Value type:	<prop-encoded-array>
++	Definition:	PAMU property used for static LIODN assignment
++
++- fsl,iommu-parent
++	Usage:		See pamu.txt
++	Value type:	<phandle>
++	Definition:	PAMU property used for dynamic LIODN assignment
++
++	For additional details about the PAMU/LIODN binding(s) see pamu.txt
++
++- clocks
++	Usage:		See clock-bindings.txt and qoriq-clock.txt
++	Value type:	<prop-encoded-array>
++	Definition:	Reference input clock. Its frequency is half of the
++			platform clock
++
++QMan Private Memory Nodes
++
++QMan requires two contiguous range of physical memory used for the backing store
++for QMan Frame Queue Descriptor and Packed Frame Descriptor Record. This memory
++is reserved/allocated as a nodes under the /reserved-memory node
++
++The QMan FQD memory node must be named "qman-fqd"
++
++PROPERTIES
++
++- compatible
++	Usage:		required
++	Value type:	<stringlist>
++	Definition:	Must inclide "fsl,qman-fqd"
++
++The QMan PFDR memory node must be named "qman-pfdr"
++
++PROPERTIES
++
++- compatible
++	Usage:		required
++	Value type:	<stringlist>
++	Definition:	Must inclide "fsl,qman-pfdr"
++
++The following constraints are relevant to the FQD and PFDR private memory:
++	- The size must be 2^(size + 1), with size = 11..29. That is 4 KiB to
++	  1 GiB
++	- The alignment must be a muliptle of the memory size
++
++The size of the FQD and PFDP must be chosen by observing the hardware features
++configured via the RCW and that are relevant to a specific board (e.g. number of
++MAC(s) pinned-out, number of offline/host command FMan ports, etc.). The size
++configured in the DT must reflect the hardware capabilities and not the specific
++needs of an application
++
++For additional details about reserved memory regions see reserved-memory.txt
++
++EXAMPLE
++
++The example below shows a QMan FQD and a PFDR dynamic allocation memory nodes
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		qman-fqd {
++			compatible = "fsl,qman-fqd";
++			alloc-ranges = <0 0 0xf 0xffffffff>;
++			size = <0 0x400000>;
++			alignment = <0 0x400000>;
++		};
++		qman-pfdr {
++			compatible = "fsl,qman-pfdr";
++			alloc-ranges = <0 0 0xf 0xffffffff>;
++			size = <0 0x2000000>;
++			alignment = <0 0x2000000>;
++		};
++	};
++
++The example below shows a (P4080) QMan CCSR-space node
++
++	clockgen: global-utilities@e1000 {
++		...
++		sysclk: sysclk {
++			...
++		};
++		...
++		platform_pll: platform-pll@c00 {
++			#clock-cells = <1>;
++			reg = <0xc00 0x4>;
++			compatible = "fsl,qoriq-platform-pll-1.0";
++			clocks = <&sysclk>;
++			clock-output-names = "platform-pll", "platform-pll-div2";
++		};
++		...
++	};
++
++	qman@318000 {
++		compatible = "fsl,qman";
++		reg = <0x318000 0x1000>;
++		interrupts = <16 2 1 3>
++		fsl,liodn = <0x16>;
++		clocks = <&platform_pll 1>;
++	};
+-- 
+2.1.2
+
