@@ -1,72 +1,37 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: [RFC PATCH 1/2] pinctrl: Add output-disable
-Date: Tue, 28 Oct 2014 13:57:14 -0700
-Message-ID: <1414529835-16207-1-git-send-email-dianders@chromium.org>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3] rtc: omap: add support for pmic_power_en
+Date: Tue, 28 Oct 2014 14:18:05 -0700
+Message-ID: <20141028141805.7b67bba29734be326354957f@linux-foundation.org>
+References: <1413913086-12730-1-git-send-email-johan@kernel.org>
+	<1414397368-26480-1-git-send-email-johan@kernel.org>
+	<20141027154031.4492ea11d401045ca04a3ff8@linux-foundation.org>
+	<20141028083633.GM2006@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141028083633.GM2006@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: Sonny Rao <sonnyrao@chromium.org>, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, iivanov@mm-sol.com, syin@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Felipe Balbi <balbi@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The pinctrl bindings / API allow you to specify that:
-- a pin should be an output
-- a pin should have its input path enabled / disabled
+On Tue, 28 Oct 2014 09:36:33 +0100 Johan Hovold <johan@kernel.org> wrote:
 
-...but they don't allow you to tell a pin to stop outputting.  Lets
-add a new setting for that just in case the bootloader (or the default
-state) left a pin as an output and we don't want it that way anymore.
+> > But it doesn't explain *why* we want the alarm to trigger before
+> > returning.
+> 
+> Should we really require every power-off handler to document arch
+> behaviour (even if its inconsistent and currently undocumented); in
+> this case that some arches return to user-space where we may oops if
+> called from process 0 (e.g. systemd, but not if using sysvinit)?
 
-Signed-off-by: Doug Anderson <dianders@chromium.org>
----
- Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 1 +
- drivers/pinctrl/pinconf-generic.c                              | 1 +
- include/linux/pinctrl/pinconf-generic.h                        | 3 +++
- 3 files changed, 5 insertions(+)
+The kernel really doesn't have a problem related to excessive amounts
+of useful code comments :(
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-index 98eb94d..9ac8591 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-@@ -183,6 +183,7 @@ low-power-enable	- enable low power mode
- low-power-disable	- disable low power mode
- output-low		- set the pin to output mode with low level
- output-high		- set the pin to output mode with high level
-+output-disable		- disable output to the pin
- slew-rate		- set the slew rate
- 
- For example:
-diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-index 29ff77f..ec4d95f 100644
---- a/drivers/pinctrl/pinconf-generic.c
-+++ b/drivers/pinctrl/pinconf-generic.c
-@@ -171,6 +171,7 @@ static struct pinconf_generic_dt_params dt_params[] = {
- 	{ "low-power-disable", PIN_CONFIG_LOW_POWER_MODE, 0 },
- 	{ "output-low", PIN_CONFIG_OUTPUT, 0, },
- 	{ "output-high", PIN_CONFIG_OUTPUT, 1, },
-+	{ "output-disable", PIN_CONFIG_OUTPUT_DISABLE, 1, },
- 	{ "slew-rate", PIN_CONFIG_SLEW_RATE, 0},
- };
- 
-diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
-index d578a60..52b0429 100644
---- a/include/linux/pinctrl/pinconf-generic.h
-+++ b/include/linux/pinctrl/pinconf-generic.h
-@@ -89,6 +89,8 @@
-  *	1 to indicate high level, argument 0 to indicate low level. (Please
-  *	see Documentation/pinctrl.txt, section "GPIO mode pitfalls" for a
-  *	discussion around this parameter.)
-+ * @PIN_CONFIG_OUTPUT_DISABLE: this will configure the pin _not_ to output.
-+ *	Parameter should be 1.
-  * @PIN_CONFIG_END: this is the last enumerator for pin configurations, if
-  *	you need to pass in custom configurations to the pin controller, use
-  *	PIN_CONFIG_END+1 as the base offset.
-@@ -112,6 +114,7 @@ enum pin_config_param {
- 	PIN_CONFIG_SLEW_RATE,
- 	PIN_CONFIG_LOW_POWER_MODE,
- 	PIN_CONFIG_OUTPUT,
-+	PIN_CONFIG_OUTPUT_DISABLE,
- 	PIN_CONFIG_END = 0x7FFF,
- };
- 
--- 
-2.1.0.rc2.206.gedb03e5
+The bottom line is: did I provide a reader with the ability to
+understand why the code is this way?  If "no" then improvements beckon.
+
+This does look like one code site where an elaborate explanation is
+warranted.  There's no way in which a reader can get to your above
+paragraph from the current rtc-omap.c.
