@@ -1,37 +1,85 @@
 From: Emil Medve <Emilian.Medve@Freescale.com>
-Subject: [PATCH v2 0/4] dt/bindings: Introduce the FSL B/QMan
-Date: Tue, 28 Oct 2014 04:15:47 -0500
-Message-ID: <1414487751-31568-1-git-send-email-Emilian.Medve@Freescale.com>
+Subject: [PATCH v2 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
+Date: Tue, 28 Oct 2014 04:15:48 -0500
+Message-ID: <1414487751-31568-2-git-send-email-Emilian.Medve@Freescale.com>
+References: <1414487751-31568-1-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1414487751-31568-1-git-send-email-Emilian.Medve@Freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 To: scottwood@Freescale.com, galak@kernel.crashing.org, corbet@lwn.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, grant.likely@linaro.org, Geoff.Thorpe@Freescale.com, linuxppc-dev@ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 Cc: Emil Medve <Emilian.Medve@Freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-v2: Incorporate feedback from Mark Rutland
-	- Remove "subject to change" notes
-	- Add/document the 'interrupts' properties
-	- Make multiple windows 'reg' properties more readable
-	- Improve portal description
-
-Emil Medve (4):
-  dt/bindings: Introduce the FSL QorIQ DPAA BMan
-  dt/bindings: Introduce the FSL QorIQ DPAA BMan portal(s)
-  dt/bindings: Introduce the FSL QorIQ DPAA QMan
-  dt/bindings: Introduce the FSL QorIQ DPAA QMan portal(s)
-
- .../bindings/powerpc/fsl/bman-portals.txt          |  52 +++++++
- .../devicetree/bindings/powerpc/fsl/bman.txt       |  95 +++++++++++++
- .../bindings/powerpc/fsl/qman-portals.txt          | 151 +++++++++++++++++++++
- .../devicetree/bindings/powerpc/fsl/qman.txt       | 133 ++++++++++++++++++
- 4 files changed, 431 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
- create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/bman.txt
- create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/qman-portals.txt
- create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/qman.txt
-
--- 
-2.1.2
-
+VGhlIEJ1ZmZlciBNYW5hZ2VyIGlzIHBhcnQgb2YgdGhlIERhdGEtUGF0aCBBY2NlbGVyYXRpb24g
+QXJjaGl0ZWN0dXJlIChEUEFBKS4KQk1hbiBzdXBwb3J0cyBoYXJkd2FyZSBhbGxvY2F0aW9uIGFu
+ZCBkZWFsbG9jYXRpb24gb2YgYnVmZmVycyBiZWxvbmdpbmcgdG8KcG9vbHMgb3JpZ2luYWxseSBj
+cmVhdGVkIGJ5IHNvZnR3YXJlIHdpdGggY29uZmlndXJhYmxlIGRlcGxldGlvbiB0aHJlc2hvbGRz
+LgpUaGlzIGJpbmRpbmcgY292ZXJzIHRoZSBDQ1NSIHNwYWNlIHByb2dyYW1taW5nIG1vZGVsCgpT
+aWduZWQtb2ZmLWJ5OiBFbWlsIE1lZHZlIDxFbWlsaWFuLk1lZHZlQEZyZWVzY2FsZS5jb20+CkNo
+YW5nZS1JZDogSTNlYzQ3OWJmYjNjOTE5NTFlOTY5MDJmMDkxZjVkN2QyYWRiZWYzYjIKLS0tCiAu
+Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9ibWFuLnR4dCAgICAgICB8IDk1ICsr
+KysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA5NSBpbnNlcnRpb25zKCspCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2Vy
+cGMvZnNsL2JtYW4udHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3Bvd2VycGMvZnNsL2JtYW4udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3Bvd2VycGMvZnNsL2JtYW4udHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAw
+MDAwMDAuLmQzZmQxZTMKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvYm1hbi50eHQKQEAgLTAsMCArMSw5NSBAQAorUW9ySVEg
+RFBBQSBCdWZmZXIgTWFuYWdlciBEZXZpY2UgVHJlZSBCaW5kaW5ncworCitDb3B5cmlnaHQgKEMp
+IDIwMDggLSAyMDE0IEZyZWVzY2FsZSBTZW1pY29uZHVjdG9yIEluYy4KKworQ09OVEVOVFMKKwor
+CS0gQk1hbiBOb2RlCisJLSBCTWFuIFByaXZhdGUgTWVtb3J5IE5vZGUKKwktIEV4YW1wbGUKKwor
+Qk1hbiBOb2RlCisKK1BST1BFUlRJRVMKKworLSBjb21wYXRpYmxlCisJVXNhZ2U6CQlSZXF1aXJl
+ZAorCVZhbHVlIHR5cGU6CTxzdHJpbmdsaXN0PgorCURlZmluaXRpb246CU11c3QgaW5jbHVkZSAi
+ZnNsLGJtYW4iCisJCQlNYXkgaW5jbHVkZSAiZnNsLDxTb0M+LWJtYW4iCisKKy0gcmVnCisJVXNh
+Z2U6CQlSZXF1aXJlZAorCVZhbHVlIHR5cGU6CTxwcm9wLWVuY29kZWQtYXJyYXk+CisJRGVmaW5p
+dGlvbjoJUmVnaXN0ZXJzIHJlZ2lvbiB3aXRoaW4gdGhlIENDU1IgYWRkcmVzcyBzcGFjZQorCist
+IGludGVycnVwdHMKKwlVc2FnZToJCVJlcXVpcmVkCisJVmFsdWUgdHlwZToJPHByb3AtZW5jb2Rl
+ZC1hcnJheT4KKwlEZWZpbml0aW9uOglTdGFuZGFyZCBwcm9wZXJ0eS4gVGhlIGVycm9yIGludGVy
+cnVwdAorCistIGZzbCxsaW9kbgorCVVzYWdlOgkJU2VlIHBhbXUudHh0CisJVmFsdWUgdHlwZToJ
+PHByb3AtZW5jb2RlZC1hcnJheT4KKwlEZWZpbml0aW9uOglQQU1VIHByb3BlcnR5IHVzZWQgZm9y
+IHN0YXRpYyBMSU9ETiBhc3NpZ25tZW50CisKKy0gZnNsLGlvbW11LXBhcmVudAorCVVzYWdlOgkJ
+U2VlIHBhbXUudHh0CisJVmFsdWUgdHlwZToJPHBoYW5kbGU+CisJRGVmaW5pdGlvbjoJUEFNVSBw
+cm9wZXJ0eSB1c2VkIGZvciBkeW5hbWljIExJT0ROIGFzc2lnbm1lbnQKKworCUZvciBhZGRpdGlv
+bmFsIGRldGFpbHMgYWJvdXQgdGhlIFBBTVUvTElPRE4gYmluZGluZyhzKSBzZWUgcGFtdS50eHQK
+KworQk1hbiBQcml2YXRlIE1lbW9yeSBOb2RlCisKK0JNYW4gcmVxdWlyZXMgYSBjb250aWd1b3Vz
+IHJhbmdlIG9mIHBoeXNpY2FsIG1lbW9yeSB1c2VkIGZvciB0aGUgYmFja2luZyBzdG9yZQorZm9y
+IEJNYW4gRnJlZSBCdWZmZXIgUHJveHkgUmVjb3Jkcy4gVGhpcyBtZW1vcnkgaXMgcmVzZXJ2ZWQv
+YWxsb2NhdGVkIGFzIGEgbm9kZQordW5kZXIgdGhlIC9yZXNlcnZlZC1tZW1vcnkgbm9kZQorCitU
+aGUgQk1hbiBGQlBSIG1lbW9yeSBub2RlIG11c3QgYmUgbmFtZWQgImJtYW4tZmJwciIKKworUFJP
+UEVSVElFUworCistIGNvbXBhdGlibGUKKwlVc2FnZToJCXJlcXVpcmVkCisJVmFsdWUgdHlwZToJ
+PHN0cmluZ2xpc3Q+CisJRGVmaW5pdGlvbjoJTXVzdCBpbmNsaWRlICJmc2wsYm1hbi1mYnByIgor
+CitUaGUgZm9sbG93aW5nIGNvbnN0cmFpbnRzIGFyZSByZWxldmFudCB0byB0aGUgRkJQUiBwcml2
+YXRlIG1lbW9yeToKKwktIFRoZSBzaXplIG11c3QgYmUgMl4oc2l6ZSArIDEpLCB3aXRoIHNpemUg
+PSAxMS4uMzMuIFRoYXQgaXMgNCBLaUIgdG8KKwkgIDE2IEdpQgorCS0gVGhlIGFsaWdubWVudCBt
+dXN0IGJlIGEgbXVsaXB0bGUgb2YgdGhlIG1lbW9yeSBzaXplCisKK1RoZSBzaXplIG9mIHRoZSBG
+QlBSIG11c3QgYmUgY2hvc2VuIGJ5IG9ic2VydmluZyB0aGUgaGFyZHdhcmUgZmVhdHVyZXMgY29u
+ZmlndXJlZAordmlhIHRoZSBSQ1cgYW5kIHRoYXQgYXJlIHJlbGV2YW50IHRvIGEgc3BlY2lmaWMg
+Ym9hcmQgKGUuZy4gbnVtYmVyIG9mIE1BQyhzKQorcGlubmVkLW91dCwgbnVtYmVyIG9mIG9mZmxp
+bmUvaG9zdCBjb21tYW5kIEZNYW4gcG9ydHMsIGV0Yy4pLiBUaGUgc2l6ZSBjb25maWd1cmVkCitp
+biB0aGUgRFQgbXVzdCByZWZsZWN0IHRoZSBoYXJkd2FyZSBjYXBhYmlsaXRpZXMgYW5kIG5vdCB0
+aGUgc3BlY2lmaWMgbmVlZHMgb2YgYW4KK2FwcGxpY2F0aW9uCisKK0ZvciBhZGRpdGlvbmFsIGRl
+dGFpbHMgYWJvdXQgcmVzZXJ2ZWQgbWVtb3J5IHJlZ2lvbnMgc2VlIHJlc2VydmVkLW1lbW9yeS50
+eHQKKworRVhBTVBMRQorCitUaGUgZXhhbXBsZSBiZWxvdyBzaG93cyBhIEJNYW4gRkJQUiBkeW5h
+bWljIGFsbG9jYXRpb24gbWVtb3J5IG5vZGUKKworCXJlc2VydmVkLW1lbW9yeSB7CisJCSNhZGRy
+ZXNzLWNlbGxzID0gPDI+OworCQkjc2l6ZS1jZWxscyA9IDwyPjsKKwkJcmFuZ2VzOworCisJCWJt
+YW4tZmJwciB7CisJCQljb21wYXRpYmxlID0gImZzbCxibWFuLWZicHIiOworCQkJYWxsb2MtcmFu
+Z2VzID0gPDAgMCAweGYgMHhmZmZmZmZmZj47CisJCQlzaXplID0gPDAgMHgxMDAwMDAwPjsKKwkJ
+CWFsaWdubWVudCA9IDwwIDB4MTAwMDAwMD47CisJCX07CisJfTsKKworVGhlIGV4YW1wbGUgYmVs
+b3cgc2hvd3MgYSAoUDQwODApIEJNYW4gQ0NTUi1zcGFjZSBub2RlCisKKwlibWFuQDMxYTAwMCB7
+CisJCWNvbXBhdGlibGUgPSAiZnNsLGJtYW4iOworCQlyZWcgPSA8MHgzMWEwMDAgMHgxMDAwPjsK
+KwkJaW50ZXJydXB0cyA9IDwxNiAyIDEgMj47CisJCWZzbCxsaW9kbiA9IDwweDE3PjsKKwl9Owot
+LSAKMi4xLjIKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcK
+aHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
