@@ -1,93 +1,28 @@
-From: Scott Branden <sbranden@broadcom.com>
-Subject: [PATCH v8 6/8] ARM: mach-bcm: Consolidate currently supported IPROC
- SoCs
-Date: Tue, 28 Oct 2014 12:53:10 -0700
-Message-ID: <1414525992-3678-7-git-send-email-sbranden@broadcom.com>
-References: <Scott Branden <sbranden@broadcom.com>
- <1414525992-3678-1-git-send-email-sbranden@broadcom.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v8 8/8] ARM: multi_v7_defconfig: Enable Broadcom Cygnus
+Date: Tue, 28 Oct 2014 21:01:11 +0100
+Message-ID: <5089697.D8odgNlVtY@wuerfel>
+References: <1414525992-3678-9-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1414525992-3678-1-git-send-email-sbranden@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar
- Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho
- Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>
-Cc: devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, JD Zheng <jdzheng@broadcom.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414525992-3678-9-git-send-email-sbranden@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Scott Branden <sbranden@broadcom.com>
+Cc: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>, JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Move ARCH_BCM_5301X subarch under ARCH_IPROC architecture.
-Additional IPROC chipsets that share a lot of commonality should be
-added under ARCH_IPROC as well.
+On Tuesday 28 October 2014 12:53:12 Scott Branden wrote:
+> From: Ray Jui <rjui@broadcom.com>
+> 
+> Enable Broadcom Cygnus platform support in multi_v7_defconfig
+> 
+> Signed-off-by: Ray Jui <rjui@broadcom.com>
+> Signed-off-by: Scott Branden <sbranden@broadcom.com>
+> 
 
-Signed-off-by: Scott Branden <sbranden@broadcom.com>
----
- arch/arm/mach-bcm/Kconfig |   37 ++++++++++++++++---------------------
- 1 file changed, 16 insertions(+), 21 deletions(-)
+Just to be sure: did you check that multi_v7_defconfig contains
+all the drivers you need that you enable in your other defconfig?
 
-diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-index 73d95c2..6e79696 100644
---- a/arch/arm/mach-bcm/Kconfig
-+++ b/arch/arm/mach-bcm/Kconfig
-@@ -35,6 +35,22 @@ config ARCH_BCM_CYGNUS
- 	  BCM11300, BCM11320, BCM11350, BCM11360,
- 	  BCM58300, BCM58302, BCM58303, BCM58305.
- 
-+config ARCH_BCM_5301X
-+	bool "Broadcom BCM470X / BCM5301X ARM SoC" if ARCH_MULTI_V7
-+	select ARCH_BCM_IPROC
-+	help
-+	  Support for Broadcom BCM470X and BCM5301X SoCs with ARM CPU cores.
-+
-+	  This is a network SoC line mostly used in home routers and
-+	  wifi access points, it's internal name is Northstar.
-+	  This inclused the following SoC: BCM53010, BCM53011, BCM53012,
-+	  BCM53014, BCM53015, BCM53016, BCM53017, BCM53018, BCM4707,
-+	  BCM4708 and BCM4709.
-+
-+	  Do not confuse this with the BCM4760 which is a totally
-+	  different SoC or with the older BCM47XX and BCM53XX based
-+	  network SoC using a MIPS CPU, they are supported by arch/mips/bcm47xx
-+
- config ARCH_BCM_MOBILE
- 	bool "Broadcom Mobile SoC Support" if ARCH_MULTI_V7
- 	select ARCH_REQUIRE_GPIOLIB
-@@ -110,27 +126,6 @@ config ARCH_BCM2835
- 	  This enables support for the Broadcom BCM2835 SoC. This SoC is
- 	  used in the Raspberry Pi and Roku 2 devices.
- 
--config ARCH_BCM_5301X
--	bool "Broadcom BCM470X / BCM5301X ARM SoC" if ARCH_MULTI_V7
--	select ARM_GIC
--	select CACHE_L2X0
--	select HAVE_ARM_SCU if SMP
--	select HAVE_ARM_TWD if SMP
--	select ARM_GLOBAL_TIMER
--	select CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
--	help
--	  Support for Broadcom BCM470X and BCM5301X SoCs with ARM CPU cores.
--
--	  This is a network SoC line mostly used in home routers and
--	  wifi access points, it's internal name is Northstar.
--	  This inclused the following SoC: BCM53010, BCM53011, BCM53012,
--	  BCM53014, BCM53015, BCM53016, BCM53017, BCM53018, BCM4707,
--	  BCM4708 and BCM4709.
--
--	  Do not confuse this with the BCM4760 which is a totally
--	  different SoC or with the older BCM47XX and BCM53XX based
--	  network SoC using a MIPS CPU, they are supported by arch/mips/bcm47xx
--
- config ARCH_BCM_63XX
- 	bool "Broadcom BCM63xx DSL SoC" if ARCH_MULTI_V7
- 	depends on MMU
--- 
-1.7.9.5
+	Arnd
