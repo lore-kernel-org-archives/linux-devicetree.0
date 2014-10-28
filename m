@@ -1,107 +1,169 @@
-From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: Re: [PATCH RFC V3 2/3] mxs: add driver for ocotp in i.MX23 and i.MX28
-Date: Tue, 28 Oct 2014 14:17:39 -0300
-Message-ID: <544FCFB3.10100@vanguardiasur.com.ar>
-References: <1413628372-2809-1-git-send-email-stefan.wahren@i2se.com> <1413628372-2809-3-git-send-email-stefan.wahren@i2se.com> <3434817.dk7dLDFrcN@wuerfel>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio: add gpio_of_helper
+Date: Tue, 28 Oct 2014 18:25:04 +0100
+Message-ID: <CACRpkdZ2K0dE3ZmBqHDJijN2i4bJtNra-RFemE_XUa+3meD70Q@mail.gmail.com>
+References: <4b0bcf4679163c0da53e412a47eecd4bb03849b8.1413966148.git.jiri.prchal@aksignal.cz>
+	<CAAVeFuJrmea6yZn2J28ihs3+=FYkZ2QxDv6F7qiq+TPpv_odpw@mail.gmail.com>
+	<E5E0C172-C51D-46DC-AE15-71308BDC9829@antoniou-consulting.com>
+	<CAAVeFuLh99MJXNNuh=L37pNzgun-Qi=3J4uK4eUSC5Qy107Gzw@mail.gmail.com>
+	<E44127F1-1B6B-4BB0-866A-7B142F295FAE@antoniou-consulting.com>
+	<CAAVeFuKj66r4UNZ33z3BT5m=7iB3tMC-u_eUDcJmvaNFj-0y5Q@mail.gmail.com>
+	<54489EC9.4020108@aksignal.cz>
+	<CAAVeFuK4HxzwKye-RJCMeOSHNGNcvXV49hxnKL+u6ttidze7Tg@mail.gmail.com>
+	<F82900FA-5999-4B39-8E7E-6FAA99ABDB2D@antoniou-consulting.com>
+	<CAAVeFuKd7s3qgud0buWgHeSSjOXjVC5M82bjy4m3=B7Tr2OPzw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="7GL98nxVT9EPhllPUc7DaWsFecI6wCQO2"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3434817.dk7dLDFrcN@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAAVeFuKd7s3qgud0buWgHeSSjOXjVC5M82bjy4m3=B7Tr2OPzw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jiri Prchal <jiri.prchal@aksignal.cz>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---7GL98nxVT9EPhllPUc7DaWsFecI6wCQO2
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On Fri, Oct 24, 2014 at 8:23 AM, Alexandre Courbot <gnurou@gmail.com> w=
+rote:
+> On Thu, Oct 23, 2014 at 8:23 PM, Pantelis Antoniou
+> <panto@antoniou-consulting.com> wrote:
 
-On 10/20/2014 11:44 AM, Arnd Bergmann wrote:
-> On Saturday 18 October 2014 10:32:51 Stefan Wahren wrote:
->> This patch brings readonly support for the On Chip OTP cells in the i.=
-MX23
->> and i.MX28 processor. The driver uses files (one for each cell) in sys=
-fs
->> as interface.
->>
->> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
->> ---
->>  drivers/misc/Kconfig     |   13 ++
->>  drivers/misc/Makefile    |    1 +
->>  drivers/misc/fsl_ocotp.c |  332 +++++++++++++++++++++++++++++++++++++=
-+++++++++
->>  3 files changed, 346 insertions(+)
->>  create mode 100644 drivers/misc/fsl_ocotp.c
->>
->> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
->> index b841180..7455efa 100644
->> --- a/drivers/misc/Kconfig
->> +++ b/drivers/misc/Kconfig
->> @@ -515,6 +515,19 @@ config VEXPRESS_SYSCFG
->>           bus. System Configuration interface is one of the possible m=
-eans
->>           of generating transactions on this bus.
->> =20
->> +config FSL_OCOTP
->> +        tristate "Freescale MXS On-Chip OTP Memory Support"
->> +        depends on ARCH_MXS && SYSFS
->> +        help
->> +          If you say Y here, you will get support for a readonly
->> +         SysFS interface for the One Time Programmable memory pages t=
-hat
->> +         are stored on the Freescale i.MX23/i.MX28 processor.
->> +
->> +          To compile this driver as a module, choose M here: the modu=
-le
->> +          will be called fsl_ocotp.
->> +
->> +          If unsure, it is safe to say N.
->>
->=20
-> I think this needs to be an MTD driver, not a "misc" driver, and it
-> should use the proper MTD interfaces instead of introducing an
-> incompatible set of interfaces.
->=20
+>> 2. A way to have the pinmux configuration of said GPIO configured wi=
+thout
+>> having to do anything explicit. I.e. on am335x the pinmux configurat=
+ion is
+>> decoupled from the GPIO driver; having a GPIO configured as a GPIO d=
+oes not
+>> alter the pinmux settings.
+>
+> Shouldn't that be fixed in the pinmux/GPIO kernel drivers? I am not
+> too familiar with pinmux, but IIUC pixmux configuration when GPIOs ar=
+e
+> requested is something that is commonly done.
 
-Are you sure MTD is the right place? Recently an eFuse driver was merged
-in drivers/soc/tegra/fuse:
+The answer is in Documentation/pinctrl.txt:
 
-http://lxr.free-electrons.com/source/drivers/soc/tegra/fuse/fuse-tegra.c
+Pin control interaction with the GPIO subsystem
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-Isn't this a similar device?
---=20
-Ezequiel Garcia, VanguardiaSur
-www.vanguardiasur.com.ar
+Note that the following implies that the use case is to use a certain p=
+in
+from the Linux kernel using the API in <linux/gpio.h> with gpio_request=
+()
+and similar functions. There are cases where you may be using something
+that your datasheet calls "GPIO mode", but actually is just an electric=
+al
+configuration for a certain device. See the section below named
+"GPIO mode pitfalls" for more details on this scenario.
 
+The public pinmux API contains two functions named pinctrl_request_gpio=
+()
+and pinctrl_free_gpio(). These two functions shall *ONLY* be called fro=
+m
+gpiolib-based drivers as part of their gpio_request() and
+gpio_free() semantics. Likewise the pinctrl_gpio_direction_[input|outpu=
+t]
+shall only be called from within respective gpio_direction_[input|outpu=
+t]
+gpiolib implementation.
 
---7GL98nxVT9EPhllPUc7DaWsFecI6wCQO2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+NOTE that platforms and individual drivers shall *NOT* request GPIO pin=
+s to be
+controlled e.g. muxed in. Instead, implement a proper gpiolib driver an=
+d have
+that driver request proper muxing and other control for its pins.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+The function list could become long, especially if you can convert ever=
+y
+individual pin into a GPIO pin independent of any other pins, and then =
+try
+the approach to define every pin as a function.
 
-iQIcBAEBAgAGBQJUT8+zAAoJEIOKbhOEIHKi1a4P/RReC01cKhc/VC3iflSo/YRS
-Yo9z6loI4nm00mlLZc7OhUTJ26osoxnDlPfhPKdzz/nJqSlXcdu6lpXHCDHg4vKr
-PW0VnS1c+QJi7XJjOv5/B2GmL3CvrnYUqVkDIAfB6Nuckw0gS/14//m3nQ/6kwqZ
-U+7F6KyCk+//qws5It2somjdJunC1LiQRx2dFC8uWoJOj9PGf0sjbv62pIhgyvRE
-bIMH/D4sQRmMdsKjAxBq7TlLXoEdfLVQ9W3s8dWOf72gZQjONjdPTThoQXzJew21
-yQPHSiPlgAldTAKm8sYcRlxhIY2B9syc1wynhIRzq4HoFQyIJQsYFyYM1zrPkBQI
-2CrU4oQrPhMhMynoavx8kJpuLfGJP++XPa3PnR4pBl3HI4l00GApB0Bnpt4vY6hL
-bhegSTGLSt50q9vD8Wzt5v5LWSQqlYb9h9FEUmku3lIGf80iD4qdi+EsW7cvjHH5
-vGIAclbj+DkmmY0vvmprnvC78ojQ9RylH4fjGrj/NE/MDWwBEpWymZul2kurWA3G
-ndVYl1KXDg9/yjCoOlTiddi7uhfFlP7/wlVaWCtUezgUTPIBb2DTCf3q70AyB5Q1
-JFobYMdWVPbN77mFOiryGhDeCxykgzMdwo8Q1ri3MkluEEC58FxinyEWtFp42Ad/
-yz2YeF58IShUy/D8MfD+
-=RvIS
------END PGP SIGNATURE-----
+In this case, the function array would become 64 entries for each GPIO
+setting and then the device functions.
 
---7GL98nxVT9EPhllPUc7DaWsFecI6wCQO2--
+=46or this reason there are two functions a pin control driver can impl=
+ement
+to enable only GPIO on an individual pin: .gpio_request_enable() and
+=2Egpio_disable_free().
+
+This function will pass in the affected GPIO range identified by the pi=
+n
+controller core, so you know which GPIO pins are being affected by the =
+request
+operation.
+
+If your driver needs to have an indication from the framework of whethe=
+r the
+GPIO pin shall be used for input or output you can implement the
+=2Egpio_set_direction() function. As described this shall be called fro=
+m the
+gpiolib driver and the affected GPIO range, pin offset and desired dire=
+ction
+will be passed along to this function.
+
+Alternatively to using these special functions, it is fully allowed to =
+use
+named functions for each GPIO pin, the pinctrl_request_gpio() will atte=
+mpt to
+obtain the function "gpioN" where "N" is the global GPIO pin number if =
+no
+special GPIO-handler is registered.
+(...)
+
+>> There is no higher layer driver API. We don=E2=80=99t want to litter=
+ the kernel
+>> with =E2=80=98valve=E2=80=99 drivers, there=E2=80=99s no such thing.=
+ There=E2=80=99s only digital I/Os
+>> that=E2=80=99s connected to low speed devices.
+
+This is true.
+
+But we do want the kernel to handle: LEDs, switches, PWMs, and
+other simple, yet normally kernel-business things. Here is an example:
+
+        /* The user LED on the board is set up to be used for heartbeat=
+ */
+        leds {
+                compatible =3D "gpio-leds";
+                user-led {
+                        label =3D "user_led";
+                        gpios =3D <&gpio0 2 0x1>;
+                        default-state =3D "off";
+                        linux,default-trigger =3D "heartbeat";
+                        pinctrl-names =3D "default";
+                        pinctrl-0 =3D <&user_led_default_mode>;
+                };
+        };
+
+        /* User key mapped in as "escape" */
+        gpio-keys {
+                compatible =3D "gpio-keys";
+                user-button {
+                        label =3D "user_button";
+                        gpios =3D <&gpio0 3 0x1>;
+                        linux,code =3D <1>; /* KEY_ESC */
+                        gpio-key,wakeup;
+                        pinctrl-names =3D "default";
+                        pinctrl-0 =3D <&user_button_default_mode>;
+                };
+        };
+
+This is just setting up already existing in-kernel drivers to
+use GPIOs as backend for a LED and a key (switch).
+
+Is someone prefers to handle LEDs or keys in userspace
+they are plain *WRONG* from our point of view.
+
+I agree that valves and doors should not have kernel drivers,
+that is not the issue. They should probably use sysfs. But for
+hardware the kernel normally handles and that is not exceptional,
+no way.
+
+Yours,
+Linus Walleij
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
