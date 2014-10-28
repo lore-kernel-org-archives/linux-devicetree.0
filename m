@@ -1,202 +1,92 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] pinctrl: add driver for Amlogic Meson SoCs
-Date: Tue, 28 Oct 2014 15:11:05 +0100
-Message-ID: <CACRpkdZO24g4wezqKTWpTjQwwbWGt2XNZ4p_ikyfyPNhFGLp6Q@mail.gmail.com>
-References: <1412717576-19737-1-git-send-email-b.galvani@gmail.com>
-	<1412717576-19737-2-git-send-email-b.galvani@gmail.com>
-	<CACRpkdZV9Gmx7Oy4QRh4y2MNN=FXbSF2W0cnjbtxkrB4vT2UOg@mail.gmail.com>
-	<20141022200633.GA31080@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 03/11] drivers: char: add AXD Audio Processing IP driver
+Date: Tue, 28 Oct 2014 22:10:38 +0800
+Message-ID: <20141028141038.GA18384@kroah.com>
+References: <1414495589-8579-1-git-send-email-qais.yousef@imgtec.com>
+ <1414495589-8579-4-git-send-email-qais.yousef@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141022200633.GA31080-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414495589-8579-4-git-send-email-qais.yousef@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Qais Yousef <qais.yousef@imgtec.com>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 22, 2014 at 10:06 PM, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Oct 21, 2014 at 03:39:25PM +0200, Linus Walleij wrote:
+On Tue, Oct 28, 2014 at 11:26:21AM +0000, Qais Yousef wrote:
+> AXD is Audio Processing IP by Imagination Technologies that can
+> perform decoding, encoding, equalisation, resampling, mixing,
+> synchronisation and audio playback.
 
->> > +static int meson_gpio_of_xlate(struct gpio_chip *chip,
->> > +                              const struct of_phandle_args *gpiospec,
->> > +                              u32 *flags)
->> > +{
->> > +       unsigned gpio = gpiospec->args[0];
->> > +
->> > +       if (gpio < chip->base || gpio >= chip->base + chip->ngpio)
->> > +               return -EINVAL;
->> > +
->> > +       if (flags)
->> > +               *flags = gpiospec->args[1];
->> > +
->> > +       return gpio - chip->base;
->> > +}
->>
->> Why is this necessary? We want to get rid of all use of
->> chip->base so introducing new users is not nice.
->
-> The driver instantiates one pinctrl device with 136 pins and two
-> gpio_chips, one with 120 gpios and the other with 16 (for more
-> details, see below). The macros for pins in the header file use a
-> single range from 0 to 135 that matches the order of pins in the
-> pinctrl device:
->
->         /* First gpio-chip */
->         #define GPIOX_0         0
->         [...]
->         #define BOOT_18         119
->
->         /* Second gpio-chip */
->         #define GPIOAO_0        120
->         [...]
->         #define GPIO_TEST_N     135
->
-> Since the macros are also used in DT as GPIO numbers, this function
-> translates that value to the relative offset for the gpio chip.
+Isn't that a codec?  Why is this a "char" driver and not one that fits
+into our existing audio subsystem?
 
-That is not wise. You should let each gpio_chip register its
-chip with base = -1, so they get whatever random GPIO numbers
-they get, then register the pin range relatively to what they
-get from the gpiochip side using gpiochip_add_pin_range().
+> this patch adds defs and initialisation files
 
->> The default of_gpio_simple_xlate() should be enough,
->> don't you agree?
->
-> Probably yes, but for it to work then I have either to:
->  - change the pin macros to use a relative value
->
->         /* First gpio-chip */
->         #define GPIOX_0         0
->         [...]
->         #define BOOT_18         119
->
->         /* Second gpio-chip */
->         #define GPIOAO_0        0
->         [...]
->         #define GPIO_TEST_N     15
->
->  - or use a single gpio chip
+Spell check :)
 
-Or (C) register the pin ranges from the gpio_chip side instead
-of doing it from the pin controller side. Look at how
-gpiochip_add_pin_range() works, I inisist.
+> Signed-off-by: Qais Yousef <qais.yousef@imgtec.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: <devicetree@vger.kernel.org>
+> Cc: <alsa-devel@alsa-project.org>
+> ---
+>  drivers/char/axd/axd_api.h    |  641 +++++++++++++++++++++++++
+>  drivers/char/axd/axd_module.c | 1064 +++++++++++++++++++++++++++++++++++++++++
+>  drivers/char/axd/axd_module.h |   99 ++++
+>  include/linux/axd.h           |   32 ++
+>  4 files changed, 1836 insertions(+)
+>  create mode 100644 drivers/char/axd/axd_api.h
+>  create mode 100644 drivers/char/axd/axd_module.c
+>  create mode 100644 drivers/char/axd/axd_module.h
+>  create mode 100644 include/linux/axd.h
+> 
+> diff --git a/drivers/char/axd/axd_api.h b/drivers/char/axd/axd_api.h
+> new file mode 100644
+> index 000000000000..0d732f173f55
+> --- /dev/null
+> +++ b/drivers/char/axd/axd_api.h
+> @@ -0,0 +1,641 @@
+> +/*
+> + *  Copyright (C) 2011-2014 Imagination Technologies Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
 
->> > +       /* Copy group and function definitions from domains to pinctrl */
->> > +       pc->groups = devm_kzalloc(pc->dev, pc->num_groups *
->> > +                                 sizeof(struct meson_pmx_group), GFP_KERNEL);
->> > +       pc->funcs = devm_kzalloc(pc->dev, pc->num_funcs *
->> > +                                 sizeof(struct meson_pmx_func), GFP_KERNEL);
->> > +       if (!pc->groups || !pc->funcs)
->> > +               return -ENOMEM;
->>
->> Again more copying. Why can't we just have one set of this data
->> and only pass pointers?
->
-> This code copies information on groups and functions from the
-> different domains and merge it in a single array so that the driver
-> can look it up easily.
->
-> Probably the initial information should not be splitted so that it can
-> be reused without additional copies.
+Do you really mean "any later version"?
 
-Yeah I will look at V2 and see how it looks...
 
->> Why can't static arrays and ARRAY_SIZE() be used throughout
->> instead, just pass around pointers?
->
-> The goal of the dynamic code is to simplify the declaration of groups,
-> which can be done with a single statement in the form:
->
->         GROUP(_name, _reg, _bit, _pins...)
->
-> for example:
->
->         GROUP(sdxc_d0_c,        4,      30,     BOOT_0),
->         GROUP(sdxc_d13_c,       4,      29,     BOOT_1, BOOT_2, BOOT_3),
->         GROUP(sdxc_d47_c,       4,      28,     BOOT_4, BOOT_5, BOOT_6, BOOT_7),
->         GROUP(sdxc_cmd_c,       4,      27,     BOOT_16),
->         GROUP(sdxc_clk_c,       4,      26,     BOOT_17),
->         GROUP(nand_io,          2,      26,     BOOT_0, BOOT_1, BOOT_2, BOOT_3,
->                                                 BOOT_4, BOOT_5, BOOT_6, BOOT_7),
->
-> instead of having to define an array of pins and reference it in the
-> group declaration. The same goes for functions. I admit that this is a
-> bit hackish, I will stick to the classical way in the next respin.
+> + *
+> + *  Main API to the AXD for access from the host.
+> + */
+> +#ifndef AXD_API_H_
+> +#define AXD_API_H_
+> +
+> +#include <linux/types.h>
+> +
+> +
+> +#define THREAD_COUNT 4
+> +#define AXD_MAX_PIPES 3
+> +
+> +
+> +#define AXD_DESCRIPTOR_READY_BIT	0x80000000
+> +#define AXD_DESCRIPTOR_INUSE_BIT	0x40000000
+> +#define AXD_DESCRIPTOR_EOS_BIT		0x20000000
+> +#define AXD_DESCRIPTOR_SIZE_MASK	0x0000FFFF
+> +
+> +struct axd_buffer_desc {
+> +	uint32_t status_size;
+> +	uint32_t data_ptr;
+> +	uint32_t pts_high;
+> +	uint32_t pts_low;
 
-OK thanks.
+Please always use standard Linux kernel types, "u32" in this case.
 
->> > +/**
->> > + * struct meson_domain
->> > + *
->> > + * @reg_mux:   registers for mux settings
->> > + * @reg_pullen:        registers for pull-enable settings
->> > + * @reg_pull:  registers for pull settings
->> > + * @reg_gpio:  registers for gpio settings
->> > + * @mux_size:  size of mux register range (in words)
->> > + * @pullen_size:size of pull-enable register range
->> > + * @pull_size: size of pull register range
->> > + * @gpio_size: size of gpio register range
->> > + * @chip:      gpio chip associated with the domain
->> > + * @data;      platform data for the domain
->> > + * @node:      device tree node for the domain
->> > + * @gpio_range:        gpio range that maps domain gpios to the pin controller
->> > + * @lock:      spinlock for accessing domain registers
->> > + *
->> > + * A domain represents a set of banks controlled by the same set of
->> > + * registers. Typically there is a domain for the normal banks and
->> > + * another one for the Always-On bus.
->> > + */
->>
->> Can I get a long-ish explanation of the domains vs banks etc
->> because that's really key to understanding this driver!
->
-> Yes, I hope that the following explanation is clear enough. If anyone
-> wants to know the details, the relevant information can be found in
-> the Amlogic sources available at:
->
-> http://openlinux.amlogic.com:8000/download/ARM/kernel/
->
-> The GPIOs are organized in banks (X,Y,DV,H,Z,BOOT,CARD,AO) and each
-> bank has a number of GPIOs variable from 7 to 30.
->
-> There are different register sets for changing pins properties:
->  - for all banks except AO:
->         <0xc11080b0 0x28> for mux configuration
->         <0xc11080e4 0x18> for pull-enable configuration
->         <0xc1108120 0x18> for pull configuration
->         <0xc1108030 0x30> for gpio (in/out/dir) configuration
->
->  - for AO bank
->         <0xc8100014 0x4> for mux configuration
->         <0xc810002c 0x4> for pull and pull-enable configuration
->         <0xc8100024 0x8> for gpio (in/out/dir) configuration
->
-> The regular banks belong to the "standard" power domain, while AO
-> belongs to the Always-On power domain, which, like the name says,
-> can't be powered off.
->
-> Each bank uses contiguous ranges of bits in the register sets
-> described above and the same register can be used by different banks
-> (for example, for the pull-enable configuration the BOOT bank uses
-> bits [0:18] of 0xc11080f0 and the CARD bank uses bits [20:25]).
->
-> In addition to this, there seem to be some other registers, shared
-> between all the banks, for the interrupt functionality.
+thanks,
 
-I get it now I think, thanks!
-
-Arguably the whole shebang is one big hardware unit so the right
-thing is indeed to have a single driver for all of it.
-
-> The driver then instantiates a gpio_chip for each subnode and a single
-> pinctrl device.
-
-This is the right design. We just need to hash out the details.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+greg k-h
