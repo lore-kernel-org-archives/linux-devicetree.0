@@ -1,39 +1,111 @@
 From: Scott Branden <sbranden@broadcom.com>
-Subject: [PATCH v8 8/8] ARM: multi_v7_defconfig: Enable Broadcom Cygnus
-Date: Tue, 28 Oct 2014 12:53:12 -0700
-Message-ID: <1414525992-3678-9-git-send-email-sbranden@broadcom.com>
+Subject: [PATCH v8 0/8] Add initial support for Broadcom Cygnus SoC
+Date: Tue, 28 Oct 2014 12:53:04 -0700
+Message-ID: <1414525992-3678-1-git-send-email-sbranden@broadcom.com>
 References: <Scott Branden <sbranden@broadcom.com>
- <1414525992-3678-1-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414525992-3678-1-git-send-email-sbranden@broadcom.com>
+In-Reply-To: <Scott Branden <sbranden@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>
 Cc: JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ray Jui <rjui@broadcom.com>
+This patchset contains initial support for Broadcom's Cygnus SoC based on our
+iProc architecture. Initial support is minimal and includes just the mach
+platform code, clock driver, and a basic device tree configuration. Peripheral
+drivers will be submitted soon, as will device tree configurations for other
+Cygnus board variants.
 
-Enable Broadcom Cygnus platform support in multi_v7_defconfig
+Changes from v7:
+ - Fixed dts to move uart code to board specific dts files
+ - Add Cygnus to multi_v7_defconfig. It boots.
 
-Signed-off-by: Ray Jui <rjui@broadcom.com>
-Signed-off-by: Scott Branden <sbranden@broadcom.com>
----
- arch/arm/configs/multi_v7_defconfig |    1 +
- 1 file changed, 1 insertion(+)
+Changes from v6:
+ - Additional patch added for cleanup of other areas of mach-bcm/Kconfig
+   discovered during Cygnus submission review to:
+   - removed one level of menu for ARCH_BCM_MOBILE in mach-bcm-Kconfig based
+     on feedback from Arnd
+   - added comment sections to Kconfig to identify SoC architecture groupings
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 6e0d7cb..c223da3 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -17,6 +17,7 @@ CONFIG_MACH_ARMADA_38X=y
- CONFIG_MACH_ARMADA_XP=y
- CONFIG_MACH_DOVE=y
- CONFIG_ARCH_BCM=y
-+CONFIG_ARCH_BCM_CYGNUS=y
- CONFIG_ARCH_BCM_21664=y
- CONFIG_ARCH_BCM_281XX=y
- CONFIG_ARCH_BCM_5301X=y
+Changes from v5:
+ - removed one level of menu used in mach-bcm/Kconfig
+ - changed MAINTAINERS to use N: to support all files associated with iproc
+   and cygnus going forward
+ - updated bcm_cygnus_defconfig to remove some DEBUG options that greatly
+   hamper performance
+
+Changes from v4:
+ - simple clock tree used. reworked clock driver will be submitted later
+ - fixed MAINTAINERS patchset error
+ - removed DEBUG_UART_8250 Kconfig.debug legacy support
+ - made ARCH_BCM_IPROC a silent Kconfig option
+ - removed multi_v7_defconfig as it is not needed at this time, can
+   support in future patchset but does not seem optimal configs for our
+   current usage.
+ 
+Changes from v3:
+ - restart functionality removed.  Will be added in a different patchset
+   in drivers/power
+ - removed NEON init sequence.  Will be moved to bootloader
+ - cleaned up Kconfigs for ARCH_BCM_CYGNUS by removing unnecessary selects
+ - consolidated ARCH_BCM_IPROC with select from ARCH_BCM_CYGNUS and
+   ARCH_BCM5301X
+ - removed bcm911360_entphn binding
+ - added documentation for SoCs currently supported in Cygnus family
+
+Changes from v2:
+ - rebased to 3.17 kernel
+
+Changes from v1:
+ - Address code review comments as per previous responses.
+ - Copyright headers updated to remove Broadcom URL.
+ - mach platform code still contains hard coded addresses. These address are
+   the same for all Cygnus variants. Could you please provide guidance on where
+   they should go if you would still like them changed.  There does not seem to
+   be a reason to change them to device tree as they do not change.
+
+Jonathan Richardson (3):
+  ARM: cygnus: Initial support for Broadcom Cygnus SoC
+  dt-bindings: Document Broadcom Cygnus SoC and clocks
+  ARM: cygnus defconfig : Initial defconfig for Broadcom Cygnus SoC
+
+Ray Jui (1):
+  ARM: multi_v7_defconfig: Enable Broadcom Cygnus
+
+Scott Branden (4):
+  ARM: dts: Enable Broadcom Cygnus SoC
+  MAINTAINERS: Entry for Cygnus/iproc arm architecture
+  ARM: mach-bcm: Consolidate currently supported IPROC SoCs
+  ARM: mach-bcm: ARCH_BCM_MOBILE: remove one level of menu from Kconfig
+
+ .../devicetree/bindings/arm/bcm/cygnus.txt         |   31 +++
+ .../devicetree/bindings/clock/bcm-cygnus-clock.txt |   34 +++
+ MAINTAINERS                                        |   14 ++
+ arch/arm/boot/dts/Makefile                         |    4 +
+ arch/arm/boot/dts/bcm-cygnus-clock.dtsi            |   73 ++++++
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |  100 +++++++++
+ arch/arm/boot/dts/bcm911360_entphn.dts             |   32 +++
+ arch/arm/boot/dts/bcm911360k.dts                   |   32 +++
+ arch/arm/boot/dts/bcm958300k.dts                   |   32 +++
+ arch/arm/configs/bcm_cygnus_defconfig              |  237 ++++++++++++++++++++
+ arch/arm/configs/bcm_defconfig                     |    3 +-
+ arch/arm/configs/multi_v7_defconfig                |    4 +-
+ arch/arm/mach-bcm/Kconfig                          |   93 +++++---
+ arch/arm/mach-bcm/Makefile                         |    3 +
+ arch/arm/mach-bcm/bcm_cygnus.c                     |   26 +++
+ 15 files changed, 680 insertions(+), 38 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/cygnus.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/bcm-cygnus-clock.txt
+ create mode 100644 arch/arm/boot/dts/bcm-cygnus-clock.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm-cygnus.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm911360_entphn.dts
+ create mode 100644 arch/arm/boot/dts/bcm911360k.dts
+ create mode 100644 arch/arm/boot/dts/bcm958300k.dts
+ create mode 100644 arch/arm/configs/bcm_cygnus_defconfig
+ create mode 100644 arch/arm/mach-bcm/bcm_cygnus.c
+
 -- 
 1.7.9.5
