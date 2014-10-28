@@ -1,115 +1,146 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH V3 3/3] rtc: omap: Support regulator supply for RTC
-Date: Tue, 28 Oct 2014 15:19:32 +0530
-Message-ID: <544F66AC.10201@ti.com>
-References: <1414126425-13198-1-git-send-email-lokeshvutla@ti.com> <1414126425-13198-4-git-send-email-lokeshvutla@ti.com> <544A5393.6090504@ti.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH RESEND 06/12] mmc: sdhci-pxav3: Move I/O clock to private data
+Date: Tue, 28 Oct 2014 10:52:35 +0100
+Message-ID: <CAPDyKFpGoa13JuodY3iKt38BBy_WP0qmCsr4yRyuJq0hmTizHQ@mail.gmail.com>
+References: <1413883364-681-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1413883364-681-7-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <544A5393.6090504@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, rtc-linux@googlegroups.com, linux-omap@vger.kernel.org, a.zummo@towertech.it, johan@kernel.org
-Cc: tony@atomide.com, bcousson@baylibre.com, balbi@ti.com, akpm@linux-foundation.org, linux@roeck-us.net, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413883364-681-7-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Chris Ball <chris@printf.net>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 24 October 2014 06:56 PM, Nishanth Menon wrote:
-> On 10/23/2014 11:53 PM, Lokesh Vutla wrote:
->> On some Soc's RTC is powered by an external power regulator.
-> SoC ? -> could you rephrase this to indicate "certain SoCs such as
-> DRA7, RTC is an independent voltage domain of it's own and on
-> platforms such as DRA7-evm, this may be supplied by individual
-> regulator on it's own.
-Ok. will do it.
-> 
->> e.g. RTC on DRA7 SoC. Make the OMAP RTC driver support a
->> power regulator.
-> 
-> Question ofcourse is what voltage would you like that regulator to be
-> at? As you are aware, certain LDOs and SMPS can drive varying voltage
-> and just enable/disable would do just the default voltage of the
-> SMPS/LDO, right? OR am i missing something here?
-Yes I agree that enable/disable would just do the default voltage of SMPS/LDO.
-If default voltage needs to be changed, driver should explicitly call regulator_set_voltage.
-Currently this is missing. Ill update and repost it. Thanks for pointing it out.
-> 
->>
->> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->> ---
->>  Documentation/devicetree/bindings/rtc/rtc-omap.txt |  3 +++
->>  drivers/rtc/rtc-omap.c                             | 24 ++++++++++++++++++++++
->>  2 files changed, 27 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
->> index 750efd4..e7ad12b 100644
->> --- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
->> +++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
->> @@ -15,6 +15,8 @@ Required properties:
->>  Optional properties:
->>  - ti,system-power-controller: whether the rtc is controlling the system power
->>    through pmic_power_en
->> +Optional Properties:
-> ^^ already commented on..
-> 
->> +- vrtc-supply: phandle to the regulator device tree node if needed
-> 
-> "phandle to supply regulator" ? since it is optional, "if needed" is
-> redundant?
-Okay. will update it in next version.
-> 
->>  
->>  Example:
->>  
->> @@ -25,4 +27,5 @@ rtc@1c23000 {
->>  		      19>;
->>  	interrupt-parent = <&intc>;
->>  	ti,system-power-controller;
->> +	vrtc-supply = <&ldo9_reg>;
->>  };
->> diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
->> index d9bb5e7..61fe630 100644
->> --- a/drivers/rtc/rtc-omap.c
->> +++ b/drivers/rtc/rtc-omap.c
->> @@ -25,6 +25,7 @@
->>  #include <linux/of_device.h>
->>  #include <linux/pm_runtime.h>
->>  #include <linux/io.h>
->> +#include <linux/regulator/consumer.h>
->>  
->>  /*
->>   * The OMAP RTC is a year/month/day/hours/minutes/seconds BCD clock
->> @@ -134,6 +135,7 @@ struct omap_rtc {
->>  	u8 interrupts_reg;
->>  	bool is_pmic_controller;
->>  	const struct omap_rtc_device_type *type;
->> +	struct regulator *supply;
->>  };
->>  
->>  static inline u8 rtc_read(struct omap_rtc *rtc, unsigned int reg)
->> @@ -516,6 +518,22 @@ static int omap_rtc_probe(struct platform_device *pdev)
->>  
->>  	platform_set_drvdata(pdev, rtc);
->>  
->> +	rtc->supply = devm_regulator_get_optional(&pdev->dev, "vrtc");
->> +	if (IS_ERR(rtc->supply)) {
->> +		if (PTR_ERR(rtc->supply) == -EPROBE_DEFER)
->> +			return -EPROBE_DEFER;
->> +
->> +		rtc->supply = NULL;
->> +	}
->> +
->> +	if (rtc->supply) {
->> +		ret = regulator_enable(rtc->supply);
->> +		if (ret) {
->> +			dev_err(&pdev->dev, "regulator enable failed\n");
-> 
-> would be nice to print the result as well - since it helps debug from
-> log a little easier.
-Will update it in next version.
+On 21 October 2014 11:22, Sebastian Hesselbarth
+<sebastian.hesselbarth@gmail.com> wrote:
+> As we are using references to the I/O clock throughout the driver,
+> move it to the private data. Also, in preparation for core clock,
+> rename it to clk_io.
+>
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com=
+>
+> ---
+> Cc: Chris Ball <chris@printf.net>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: "Antoine T=C3=A9nart" <antoine.tenart@free-electrons.com>
+> Cc: linux-mmc@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
 
-Thanks and regards,
-Lokesh
-> 
-> 
-> 
+Thanks! Applied for next!
 
+Kind regards
+Uffe
+
+> ---
+>  drivers/mmc/host/sdhci-pxav3.c | 24 +++++++++++++-----------
+>  1 file changed, 13 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-=
+pxav3.c
+> index e52bbbb09d88..a34a589670e6 100644
+> --- a/drivers/mmc/host/sdhci-pxav3.c
+> +++ b/drivers/mmc/host/sdhci-pxav3.c
+> @@ -59,6 +59,7 @@
+>  #define SDCE_MISC_INT_EN       (1<<1)
+>
+>  struct sdhci_pxa {
+> +       struct clk *clk_io;
+>         u8      power_mode;
+>  };
+>
+> @@ -288,9 +289,7 @@ static int sdhci_pxav3_probe(struct platform_devi=
+ce *pdev)
+>         struct sdhci_host *host =3D NULL;
+>         struct sdhci_pxa *pxa =3D NULL;
+>         const struct of_device_id *match;
+> -
+>         int ret;
+> -       struct clk *clk;
+>
+>         pxa =3D devm_kzalloc(&pdev->dev, sizeof(struct sdhci_pxa), GF=
+P_KERNEL);
+>         if (!pxa)
+> @@ -310,14 +309,14 @@ static int sdhci_pxav3_probe(struct platform_de=
+vice *pdev)
+>         pltfm_host =3D sdhci_priv(host);
+>         pltfm_host->priv =3D pxa;
+>
+> -       clk =3D devm_clk_get(dev, NULL);
+> -       if (IS_ERR(clk)) {
+> +       pxa->clk_io =3D devm_clk_get(dev, NULL);
+> +       if (IS_ERR(pxa->clk_io)) {
+>                 dev_err(dev, "failed to get io clock\n");
+> -               ret =3D PTR_ERR(clk);
+> +               ret =3D PTR_ERR(pxa->clk_io);
+>                 goto err_clk_get;
+>         }
+> -       pltfm_host->clk =3D clk;
+> -       clk_prepare_enable(clk);
+> +       pltfm_host->clk =3D pxa->clk_io;
+> +       clk_prepare_enable(pxa->clk_io);
+>
+>         /* enable 1/8V DDR capable */
+>         host->mmc->caps |=3D MMC_CAP_1_8V_DDR;
+> @@ -390,7 +389,7 @@ err_add_host:
+>         pm_runtime_disable(&pdev->dev);
+>  err_of_parse:
+>  err_cd_req:
+> -       clk_disable_unprepare(clk);
+> +       clk_disable_unprepare(pxa->clk_io);
+>  err_clk_get:
+>  err_mbus_win:
+>         sdhci_pltfm_free(pdev);
+> @@ -401,12 +400,13 @@ static int sdhci_pxav3_remove(struct platform_d=
+evice *pdev)
+>  {
+>         struct sdhci_host *host =3D platform_get_drvdata(pdev);
+>         struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
+> +       struct sdhci_pxa *pxa =3D pltfm_host->priv;
+>
+>         pm_runtime_get_sync(&pdev->dev);
+>         sdhci_remove_host(host, 1);
+>         pm_runtime_disable(&pdev->dev);
+>
+> -       clk_disable_unprepare(pltfm_host->clk);
+> +       clk_disable_unprepare(pxa->clk_io);
+>
+>         sdhci_pltfm_free(pdev);
+>
+> @@ -446,13 +446,14 @@ static int sdhci_pxav3_runtime_suspend(struct d=
+evice *dev)
+>  {
+>         struct sdhci_host *host =3D dev_get_drvdata(dev);
+>         struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
+> +       struct sdhci_pxa *pxa =3D pltfm_host->priv;
+>         unsigned long flags;
+>
+>         spin_lock_irqsave(&host->lock, flags);
+>         host->runtime_suspended =3D true;
+>         spin_unlock_irqrestore(&host->lock, flags);
+>
+> -       clk_disable_unprepare(pltfm_host->clk);
+> +       clk_disable_unprepare(pxa->clk_io);
+>
+>         return 0;
+>  }
+> @@ -461,9 +462,10 @@ static int sdhci_pxav3_runtime_resume(struct dev=
+ice *dev)
+>  {
+>         struct sdhci_host *host =3D dev_get_drvdata(dev);
+>         struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
+> +       struct sdhci_pxa *pxa =3D pltfm_host->priv;
+>         unsigned long flags;
+>
+> -       clk_prepare_enable(pltfm_host->clk);
+> +       clk_prepare_enable(pxa->clk_io);
+>
+>         spin_lock_irqsave(&host->lock, flags);
+>         host->runtime_suspended =3D false;
+> --
+> 2.1.1
+>
