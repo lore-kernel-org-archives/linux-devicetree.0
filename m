@@ -1,64 +1,113 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH] ACPI / GPIO: Driver GPIO mappings for ACPI GPIOs
-Date: Tue, 28 Oct 2014 13:11:50 +0900
-Message-ID: <CAAVeFuKStrzzwW7s37y7-a8y+j1gD-EzAYfc1h2KTo8uyd+dSA@mail.gmail.com>
-References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com>
- <2758495.RYBbleVHkC@vostro.rjw.lan> <CAAVeFuK2sBC2n5TdMwEbhi3gq7DqQm-3h-esQpoQd3U1jDJxpg@mail.gmail.com>
- <3242497.urQmuvpeyA@vostro.rjw.lan>
+From: Alexandre Courbot <acourbot@nvidia.com>
+Subject: [PATCH] Documentation: gpio: guidelines for bindings
+Date: Tue, 28 Oct 2014 13:20:34 +0900
+Message-ID: <1414470034-16143-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3242497.urQmuvpeyA@vostro.rjw.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, gnurou@gmail.com, Alexandre Courbot <acourbot@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 28, 2014 at 7:34 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> On Monday, October 27, 2014 02:21:23 PM Alexandre Courbot wrote:
->> On Sat, Oct 25, 2014 at 7:05 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->> >
->> > Provide a way for device drivers using GPIOs described by ACPI
->> > GpioIo resources in _CRS to tell the GPIO subsystem what names
->> > (connection IDs) to associate with specific GPIO pins defined
->> > in there.
->> >
->> > To do that, a driver needs to define a mapping table as a
->> > NULL-terminated array of struct acpi_gpio_mapping objects
->> > that each contain a name, a pointer to an array of pin data
->> > (struct acpi_gpio_params) objects and the size of that array.
->> >
->> > Each struct acpi_gpio_params object consists of three fields,
->> > crs_entry_index, pin_index, active_low, representing the index of
->> > the target GpioIo()/GpioInt() resource in _CRS starting from zero,
->> > the index of the target pin in that resource starting from zero,
->> > and the active-low flag for that pin, respectively.
->> >
->> > Next, the mapping table needs to be passed as the second argument to
->> > acpi_dev_add_driver_gpios() that will register it with the ACPI device
->> > object pointed to by its first argument.  That object must represent
->> > the ACPI namespace node containing the _CRS object referred to by the
->> > GPIO mapping.  That should be done in the driver's .probe() routine.
->> >
->> > On removal, the driver should unregister its GPIO mapping table
->> > by calling acpi_dev_remove_driver_gpios() on the ACPI device
->> > object where that table was previously registered.
->> >
->> > Included are fixes from Mika Westerberg.
->>
->> Acked-by: Alexandre Courbot <acourbot@nvidia.com>
->>
->> As we discussed already, this is a great idea. The only thing that is
->> missing is a paragraph in Documentation/gpio/consumer.txt with an
->> explanation of the global mechanism and a simple example to illustrate
->> how and when this should be used.
->
-> Yes, I'm going to provide documentation.
->
-> One question, though.  We're already adding gpio-properties.txt under
-> Documentation/acpi/ containing analogous information for _DSD-based
-> mappings.  I thought I'd add a section to that file and a short paragraph
-> pointing to it into consumer.txt, would that work?
+Now that ACPI supports named GPIO properties, either through ACPI 5.1 or
+the per-driver ACPI GPIO mappings, we can be more narrow about the way
+GPIOs should be specified in Device Tree bindings.
 
-Definitely yes, since this is ACPI-specific. Thanks!
+This patch updates the GPIO DT bindings documentation to highlight the
+following rules for new GPIO bindings:
+
+- All new bindings must have a meaningful name (e.g. the "gpios"
+  property must not be used)
+- The only suffix allowed is "-gpios", no matter the number of
+  descriptors in the property
+- GPIOs can only be grouped under the same property when they serve the
+  same purpose, a case that should remain exceptional (e.g. bit-banged
+  data lines).
+
+Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+CC: Linus Walleij <linus.walleij@linaro.org>
+CC: Arnd Bergmann <arnd@arndb.de>
+CC: Rafael J. Wysocki <rjw@rjwysocki.net>
+CC: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ Documentation/devicetree/bindings/gpio/gpio.txt | 41 +++++++++++++++++--------
+ 1 file changed, 29 insertions(+), 12 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index 3fb8f53071b8..1043f8b47433 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -13,13 +13,23 @@ properties, each containing a 'gpio-list':
+ 	gpio-specifier : Array of #gpio-cells specifying specific gpio
+ 			 (controller specific)
+ 
+-GPIO properties should be named "[<name>-]gpios". The exact
+-meaning of each gpios property must be documented in the device tree
++GPIO properties should be named "[<name>-]gpios", with <name> being the con_id
++argument that is passed to gpiod_get(). While a NULL con_id is accepted by the
++GPIO API for compatibility reasons (resolving to the "gpios" property), it is
++not allowed for new bindings.
++
++GPIO properties can contain one or more GPIO phandles, but only in exceptional
++cases should they contain more than one. If your device uses several GPIOs with
++distinct functions, reference each of them under its own property, giving it a
++meaningful name. The only case where an array of GPIOs is accepted is when
++several GPIOs serve the same function (e.g. a parallel data line). In that case
++individual GPIOs can be retrieved using gpiod_get_index().
++
++The exact meaning of each gpios property must be documented in the device tree
+ binding for each device.
+ 
+ For example, the following could be used to describe GPIO pins used
+-as chip select lines; with chip selects 0, 1 and 3 populated, and chip
+-select 2 left empty:
++as device enable and bit-banged data signals:
+ 
+ 	gpio1: gpio1 {
+ 		gpio-controller
+@@ -30,10 +40,16 @@ select 2 left empty:
+ 		 #gpio-cells = <1>;
+ 	};
+ 	[...]
+-	 chipsel-gpios = <&gpio1 12 0>,
+-			 <&gpio1 13 0>,
+-			 <0>, /* holes are permitted, means no GPIO 2 */
+-			 <&gpio2 2>;
++
++	enable-gpios = <&gpio2 2>;
++	data-gpios = <&gpio1 12 0>,
++		     <&gpio1 13 0>,
++		     <&gpio1 14 0>,
++		     <&gpio1 15 0>;
++
++The "enable" GPIO can then be retrieved using gpiod_get(dev, "enable", ...),
++and the data GPIOs are reached by calling gpiod_get_index(dev, "data", idx, ...)
++where idx can go from 0 to 3 included.
+ 
+ Note that gpio-specifier length is controller dependent.  In the
+ above example, &gpio1 uses 2 cells to specify a gpio, while &gpio2
+@@ -42,16 +58,17 @@ only uses one.
+ gpio-specifier may encode: bank, pin position inside the bank,
+ whether pin is open-drain and whether pin is logically inverted.
+ Exact meaning of each specifier cell is controller specific, and must
+-be documented in the device tree binding for the device.
++be documented in the device tree binding for the device. Use the macros
++defined in include/dt-bindings/gpio/gpio.h whenever possible:
+ 
+ Example of a node using GPIOs:
+ 
+ 	node {
+-		gpios = <&qe_pio_e 18 0>;
++		enable-gpios = <&qe_pio_e 18 GPIO_ACTIVE_HIGH>;
+ 	};
+ 
+-In this example gpio-specifier is "18 0" and encodes GPIO pin number,
+-and GPIO flags as accepted by the "qe_pio_e" gpio-controller.
++GPIO_ACTIVE_HIGH is 0, so in this example gpio-specifier is "18 0" and encodes
++GPIO pin number, and GPIO flags as accepted by the "qe_pio_e" gpio-controller.
+ 
+ 1.1) GPIO specifier best practices
+ ----------------------------------
+-- 
+2.1.2
