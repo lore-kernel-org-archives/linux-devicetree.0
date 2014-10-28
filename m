@@ -1,59 +1,107 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] [PATCH] ASoC: add xtensa xtfpga I2S interface and
- platform
-Date: Tue, 28 Oct 2014 17:06:44 +0000
-Message-ID: <20141028170644.GC18557@sirena.org.uk>
+From: Max Filippov <jcmvbkbc@gmail.com>
+Subject: Re: [alsa-devel] [PATCH] ASoC: add xtensa xtfpga I2S interface and platform
+Date: Tue, 28 Oct 2014 20:16:33 +0300
+Message-ID: <CAMo8Bf+mbQpP0bmbq=2mK5X1ZYVOXTywJjrsT7A-zmch3b6+3Q@mail.gmail.com>
 References: <1414436825-19416-1-git-send-email-jcmvbkbc@gmail.com>
- <544FBD20.5000604@metafoo.de>
- <20141028160414.GY18557@sirena.org.uk>
- <544FC6B1.1060002@metafoo.de>
+	<544FBD20.5000604@metafoo.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="n2RoZOfqketZuWCG"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <544FC6B1.1060002@metafoo.de>
+In-Reply-To: <544FBD20.5000604@metafoo.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Max Filippov <jcmvbkbc@gmail.com>, alsa-devel@alsa-project.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, linux-xtensa@linux-xtensa.org, Takashi Iwai <tiwai@suse.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Cc: alsa-devel@alsa-project.org, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, Takashi Iwai <tiwai@suse.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Lars-Peter,
 
---n2RoZOfqketZuWCG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, Oct 28, 2014 at 6:58 PM, Lars-Peter Clausen <lars@metafoo.de> wrote:
+> On 10/27/2014 08:07 PM, Max Filippov wrote:
+>
+> A few minor things.
+>
+> [...]
+>
+>> +static irqreturn_t xtfpga_i2s_interrupt(int irq, void *dev_id)
+>> +       if (tx_active) {
+>> +               if (i2s->tx_fifo_high < 256)
+>> +                       xtfpga_i2s_refill_fifo(i2s);
+>> +               else
+>> +                       tasklet_hi_schedule(&i2s->refill_fifo);
+>
+> Maybe use threaded IRQs instead of IRQ + tasklet.
 
-On Tue, Oct 28, 2014 at 05:39:13PM +0100, Lars-Peter Clausen wrote:
-> On 10/28/2014 05:04 PM, Mark Brown wrote:
+Ok, I'll look at it.
 
-> >Is that going to play nicely with the fact that the interrupt can be
-> >shared and the desire to (AFAICT) do NAPI style stuff with the interrupt
-> >disabled for long periods?
+>> +static int xtfpga_pcm_trigger(struct snd_pcm_substream *substream, int
 
-> Threaded interrupts got support for interrupt sharing a while ago, so I
-> guess yes. I think it will even work better than the tasklet approach. You
-> can configure the IRQ to disable itself as long as the thread is running.
+> If you don't do anything you don't need the handler. The core will handle
+> things if it is NULL.
 
-I know you *can* share threaded interrupts, I'm just not sure that
-hogging the threaded handler plays nicely with other users.  Though now
-I look at this again tx_fifo_high is a "constant" so it's not actually
-trying to do a NAPI type mitigation thing and this is really just an
-open coded threaded interrupt as you say.
+Ok.
 
---n2RoZOfqketZuWCG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>> +static struct snd_pcm_ops xtfpga_pcm_ops = {
+>
+> const
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Ok.
 
-iQEcBAEBAgAGBQJUT80jAAoJECTWi3JdVIfQgUgH/1FAr8h7Ttski6CahzubwkA+
-Unp3ehJ36F2UR4Gwcr8pFbKJ88oFi9WmLqJ4ZQ+TRDg8axEKJW5rKfO9Ho8Y1UGn
-h1wTSxYKNJlzNK9H0r85k5lrhdZlqoPtC8DDXyv4/nJCnwAEwgezEcaaqdsnqS0p
-pp4giA1N4oKGEZD3dfzvdlk6S+m9mfL9DGnddDZy8EJGFDyIv8tzVg1RirTWok/u
-mAquqw6cX9eWThcvwTWKQ545JcfZUBEDwnZOGMWy9778HR+I4g0qZI8n1iM3TIxn
-R721beh5f3Bqkw4Ewgpj+A0A/h8peueLU0afxHkxxMSheF/HvyFqOYP8K2QlS/w=
-=briD
------END PGP SIGNATURE-----
+>> +static int xtfpga_i2s_probe(struct platform_device *pdev)
+>> +       dev_set_drvdata(&pdev->dev, i2s);
+>
+> platform_set_drvdata(...)
 
---n2RoZOfqketZuWCG--
+Ok.
+
+>> +       i2s->dev = &pdev->dev;
+>> +       dev_dbg(&pdev->dev, "dev: %p, i2s: %p\n", &pdev->dev, i2s);
+>> +
+>> +       mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +       if (!mem) {
+>> +               dev_err(&pdev->dev, "No memory resource\n");
+>> +               err = -ENODEV;
+>> +               goto err;
+>> +       }
+>
+> devm_ioremap_resource will check if mem is NULL and print a error message,
+> so the check above can be removed.
+
+Ok.
+
+>> +       irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+>
+> platform_get_irq(...)
+
+Ok.
+
+>> +       err = devm_request_irq(&pdev->dev, irq->start,
+>> xtfpga_i2s_interrupt,
+>> +                              IRQF_SHARED, pdev->name, i2s);
+>> +       if (err < 0) {
+>> +               dev_err(&pdev->dev, "request_irq failed\n");
+>> +               goto err;
+>> +       }
+>> +       tasklet_init(&i2s->refill_fifo, xtfpga_i2s_refill_fifo_tasklet,
+>> +                    (unsigned long)i2s);
+>> +
+>
+>
+> Since the tasklet is is used in the interrupt handler it should initialized
+> before the IRQ is requested.
+
+Ok.
+
+>> +static int xtfpga_i2s_remove(struct platform_device *pdev)
+>> +{
+>> +       struct xtfpga_i2s *i2s = dev_get_drvdata(&pdev->dev);
+>> +
+>> +       if (i2s) {
+>
+>
+> This will always be non NULL.
+
+Ok.
+
+-- 
+Thanks.
+-- Max
