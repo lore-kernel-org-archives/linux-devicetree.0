@@ -1,143 +1,135 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 1/2] mtd: nand: add sunxi NAND flash
- controller support
-Date: Tue, 28 Oct 2014 11:13:11 -0700
-Message-ID: <20141028181310.GA23619@ld-irv-0074>
-References: <1413896922-11680-1-git-send-email-boris.brezillon@free-electrons.com>
- <1413896922-11680-2-git-send-email-boris.brezillon@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
+Date: Tue, 28 Oct 2014 13:19:33 -0500
+Message-ID: <1414520373.23458.92.camel@snotra.buserror.net>
+References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZ6PSPVXMNBBPVZX6RAKGQE4A5W2CA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1413896922-11680-2-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-Content-Disposition: inline
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yassin Jaffer <yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413986972-621-1-git-send-email-Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Cc: galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Geoff.Thorpe-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
-
-On Tue, Oct 21, 2014 at 03:08:41PM +0200, Boris Brezillon wrote:
-> +static int sunxi_nand_hw_ecc_ctrl_init(struct mtd_info *mtd,
-> +				       struct nand_ecc_ctrl *ecc,
-> +				       struct device_node *np)
-> +{
-> +	struct nand_ecclayout *layout;
-> +	int i, j;
-> +	int ret;
+On Wed, 2014-10-22 at 09:09 -0500, Emil Medve wrote:
+> The Buffer Manager is part of the Data-Path Acceleration Architecture (DPAA).
+> BMan supports hardware allocation and deallocation of buffers belonging to
+> pools originally created by software with configurable depletion thresholds.
+> This binding covers the CCSR space programming model
+> 
+> Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+> Change-Id: I3ec479bfb3c91951e96902f091f5d7d2adbef3b2
+> ---
+>  .../devicetree/bindings/powerpc/fsl/bman.txt       | 98 ++++++++++++++++++++++
+>  1 file changed, 98 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/bman.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/bman.txt b/Documentation/devicetree/bindings/powerpc/fsl/bman.txt
+> new file mode 100644
+> index 0000000..c30bdde
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/bman.txt
+> @@ -0,0 +1,98 @@
+> +QorIQ DPAA Buffer Manager Device Tree Bindings
 > +
-> +	ret = sunxi_nand_hw_common_ecc_ctrl_init(mtd, ecc, np);
-> +	if (ret)
-> +		return ret;
+> +Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
 > +
-> +	ecc->read_page = sunxi_nfc_hw_ecc_read_page;
-> +	ecc->write_page = sunxi_nfc_hw_ecc_write_page;
-> +	layout = ecc->layout;
+> +CONTENTS
 > +
-> +	for (i = 0; i < ecc->steps; i++) {
+> +	- BMan Node
+> +	- BMan Private Memory Node
+> +	- Example
+> +
+> +NOTE:	The bindings described in this document are preliminary and subject to
+> +	change
+> +
+> +BMan Node
+> +
+> +PROPERTIES
+> +
+> +- compatible
+> +	Usage:		Required
+> +	Value type:	<stringlist>
+> +	Definition:	Must include "fsl,bman"
+> +			May include "fsl,<SoC>-bman"
+> +
+> +- reg
+> +	Usage:		Required
+> +	Value type:	<prop-encoded-array>
+> +	Definition:	Registers region within the CCSR address space
 
-Hmm, did you retest this since changing this to ecc->steps? I think this
-won't work, since ecc->steps is only initialized in nand_scan_tail(),
-which comes after this. I only recommended the change for the
-{read,write}_page() type of functions, not the initialization functions.
+Is there a version register in reg?  It would be nice to point it out in
+the binding along with an example chip for each version, similar to
+Documentation/devicetree/bindings/powerpc/fsl/interlaken-lac.txt.  This
+would make it clear that the compatible needs to be changed if the
+version register moves or no longer works the same way.
 
-[snip the rest]
+> +BMan Private Memory Node
+> +
+> +BMan requires a contiguous range of physical memory used for the backing store
+> +for BMan Free Buffer Proxy Records. This memory is reserved/allocated as a node
+> +under the /reserved-memory node
+> +
+> +The BMan FBPR memory node must be named "bman-fbpr"
+> +
+> +PROPERTIES
+> +
+> +- compatible
+> +	Usage:		required
+> +	Value type:	<stringlist>
+> +	Definition:	Must inclide "fsl,bman-fbpr"
+> +
+> +The following constraints are relevant to the FBPR private memory:
+> +	- The size must be 2^(size + 1), with size = 11..33. That is 4 KiB to
+> +	  16 GiB
+> +	- The alignment must be a muliptle of the memory size
+> +
+> +The size of the FBPR must be chosen by observing the hardware features configured
+> +via the RCW and that are relevant to a specific board (e.g. number of MAC(s)
+> +pinned-out, number of offline/host command FMan ports, etc.). The size configured
+> +in the DT must reflect the hardware capabilities and not the specific needs of an
+> +application
 
-So I'd suggest the following additional patch, and otherwise, the series
-is fine with me. If you give your ack, I can just squash this in and
-apply it to my tree:
+What about accelerators?
 
-diff --git a/drivers/mtd/nand/sunxi_nand.c b/drivers/mtd/nand/sunxi_nand.c
-index ea615dc442a4..ccaa8e283388 100644
---- a/drivers/mtd/nand/sunxi_nand.c
-+++ b/drivers/mtd/nand/sunxi_nand.c
-@@ -931,6 +931,7 @@ static int sunxi_nand_hw_common_ecc_ctrl_init(struct mtd_info *mtd,
- 	struct sunxi_nfc *nfc = to_sunxi_nfc(sunxi_nand->nand.controller);
- 	struct sunxi_nand_hw_ecc *data;
- 	struct nand_ecclayout *layout;
-+	int nsectors;
- 	int ret;
- 	int i;
- 
-@@ -959,13 +960,14 @@ static int sunxi_nand_hw_common_ecc_ctrl_init(struct mtd_info *mtd,
- 	ecc->bytes = ALIGN(ecc->bytes, 2);
- 
- 	layout = &data->layout;
-+	nsectors = mtd->writesize / ecc->size;
- 
--	if (mtd->oobsize < ((ecc->bytes + 4) * ecc->steps)) {
-+	if (mtd->oobsize < ((ecc->bytes + 4) * nsectors)) {
- 		ret = -EINVAL;
- 		goto err;
- 	}
- 
--	layout->eccbytes = (ecc->bytes * ecc->steps);
-+	layout->eccbytes = (ecc->bytes * nsectors);
- 
- 	ecc->layout = layout;
- 	ecc->priv = data;
-@@ -988,6 +990,7 @@ static int sunxi_nand_hw_ecc_ctrl_init(struct mtd_info *mtd,
- 				       struct device_node *np)
- {
- 	struct nand_ecclayout *layout;
-+	int nsectors;
- 	int i, j;
- 	int ret;
- 
-@@ -998,8 +1001,9 @@ static int sunxi_nand_hw_ecc_ctrl_init(struct mtd_info *mtd,
- 	ecc->read_page = sunxi_nfc_hw_ecc_read_page;
- 	ecc->write_page = sunxi_nfc_hw_ecc_write_page;
- 	layout = ecc->layout;
-+	nsectors = mtd->writesize / ecc->size;
- 
--	for (i = 0; i < ecc->steps; i++) {
-+	for (i = 0; i < nsectors; i++) {
- 		if (i) {
- 			layout->oobfree[i].offset =
- 				layout->oobfree[i - 1].offset +
-@@ -1022,13 +1026,13 @@ static int sunxi_nand_hw_ecc_ctrl_init(struct mtd_info *mtd,
- 					layout->oobfree[i].length + j;
- 	}
- 
--	if (mtd->oobsize > (ecc->bytes + 4) * ecc->steps) {
--		layout->oobfree[ecc->steps].offset =
--				layout->oobfree[ecc->steps - 1].offset +
--				layout->oobfree[ecc->steps - 1].length +
-+	if (mtd->oobsize > (ecc->bytes + 4) * nsectors) {
-+		layout->oobfree[nsectors].offset =
-+				layout->oobfree[nsectors - 1].offset +
-+				layout->oobfree[nsectors - 1].length +
- 				ecc->bytes;
--		layout->oobfree[ecc->steps].length = mtd->oobsize -
--				((ecc->bytes + 4) * ecc->steps);
-+		layout->oobfree[nsectors].length = mtd->oobsize -
-+				((ecc->bytes + 4) * nsectors);
- 	}
- 
- 	return 0;
-@@ -1039,6 +1043,7 @@ static int sunxi_nand_hw_syndrome_ecc_ctrl_init(struct mtd_info *mtd,
- 						struct device_node *np)
- {
- 	struct nand_ecclayout *layout;
-+	int nsectors;
- 	int i;
- 	int ret;
- 
-@@ -1051,8 +1056,9 @@ static int sunxi_nand_hw_syndrome_ecc_ctrl_init(struct mtd_info *mtd,
- 	ecc->write_page = sunxi_nfc_hw_syndrome_ecc_write_page;
- 
- 	layout = ecc->layout;
-+	nsectors = mtd->writesize / ecc->size;
- 
--	for (i = 0; i < (ecc->bytes * ecc->steps); i++)
-+	for (i = 0; i < (ecc->bytes * nsectors); i++)
- 		layout->eccpos[i] = i;
- 
- 	layout->oobfree[0].length = mtd->oobsize - i;
+> +If the memory reserved in the device tree proves to be larger then the needs of
+> +the application a BMan driver may provide a method to release the extra memory
+> +back to the OS
+
+What if the memory reserved in the device tree proves to be smaller than
+the needs of the application?
+
+I think we should document this size as being a sane default for the
+hardware, and add a way of describing that the size is tunable.
+
+Below is the reserved-memory extension that I suggested to you
+internally:
+
+resizable (optional) - empty property
+    - Indicates that the size of the dynamic allocation is flexible.  If
+resizeable is present, the size property is optional.  If both resizable
+and size are present, the size property indicates a recommended default
+size for this hardware.
+
+pow2-aligned (optional) - empty property
+    - Only valid if resizable is present.  Indicates that the size must
+be a power of two, and the address must be aligned to its size.  If both
+pow2-aligned and alignment properties are present, pow2-aligned is used
+if the region is resized, and the alignment property is used if the
+region is not resized.
+
+min-size (optional) - Only valid if resizable is present.  Specifies a
+minimum acceptable size.
+
+max-size (optional) - Only valid if resizable is present.  Specifies a
+maximum acceptable size.
+
+-Scott
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
