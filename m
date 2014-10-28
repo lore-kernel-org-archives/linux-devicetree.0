@@ -1,43 +1,42 @@
-From: Caesar Wang <caesar.wang@rock-chips.com>
-Subject: [PATCH v15 5/5] ARM: dts: enable Thermal on rk3288-evb board
-Date: Tue, 28 Oct 2014 16:51:27 +0800
-Message-ID: <1414486287-25498-6-git-send-email-caesar.wang@rock-chips.com>
-References: <1414486287-25498-1-git-send-email-caesar.wang@rock-chips.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1414486287-25498-1-git-send-email-caesar.wang@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com
-Cc: zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dmitry.torokhov@gmail.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com, Caesar Wang <caesar.wang@rock-chips.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 6/8] regulator: max77686: Add external GPIO control
+Date: Tue, 28 Oct 2014 09:52:36 +0100
+Message-ID: <1414486356.24949.19.camel@AMDC1943>
+References: <1414422226-10948-1-git-send-email-k.kozlowski@samsung.com>
+ <1414422226-10948-7-git-send-email-k.kozlowski@samsung.com>
+ <544EA4FA.6040704@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <544EA4FA.6040704@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-when a thermal temperature over TSHUT.Default to via
-CRU reset the entire chip on rk3288-evb Board,
-TSHUT is low active on rk3288-evb board.
+On pon, 2014-10-27 at 21:03 +0100, Javier Martinez Canillas wrote:
+> Hello Krzysztof,
+> 
+> On 10/27/2014 04:03 PM, Krzysztof Kozlowski wrote:
+> > @@ -85,6 +91,9 @@ struct max77686_data {
+> >  	struct max77686_regulator_data *regulators;
+> >  	int num_regulators;
+> >  
+> > +	/* Array of size num_regulators with GPIOs for external control. */
+> > +	int *ext_control_gpio;
+> > +
+> 
+> The integer-based GPIO API is deprecated in favor of the descriptor-based GPIO
+> interface (Documentation/gpio/consumer.txt). Could you please use the later?
 
-Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
-Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- arch/arm/boot/dts/rk3288-evb.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Sure, I can. Please have in mind that regulator core still accepts old
+GPIO so I will have to use desc_to_gpio(). That should work... and
+should be future-ready.
 
-diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-index cb83cea..fb70523 100644
---- a/arch/arm/boot/dts/rk3288-evb.dtsi
-+++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-@@ -148,6 +148,12 @@
- 	status = "okay";
- };
- 
-+&tsadc {
-+	tsadc-tshut-mode = <0>; /* tshut mode 0:CRU 1:GPIO */
-+	tsadc-tshut-polarity = <0>; /* tshut polarity 0:LOW 1:HIGH */
-+	status = "okay";
-+};
-+
- &pinctrl {
- 	backlight {
- 		bl_en: bl-en {
--- 
-1.9.1
+Thanks for feedback,
+Krzysztof
 
-
+> 
+> Best regards,
+> Javier
