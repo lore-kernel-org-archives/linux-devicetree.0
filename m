@@ -1,162 +1,107 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v5 07/12] leds: leds-gpio: Add support for GPIO descriptors
-Date: Tue, 28 Oct 2014 22:56:09 +0100
-Message-ID: <17483842.EFni4iQX1H@vostro.rjw.lan>
-References: <2660541.BycO7TFnA2@vostro.rjw.lan> <3395005.IveyhHQnye@vostro.rjw.lan> <CACRpkdYR70Az1uLyjsaujQN-q-4+qRD=GpqJaOuvnKZhypL=cA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: add xtensa xtfpga I2S interface and platform
+Date: Tue, 28 Oct 2014 21:34:26 +0000
+Message-ID: <20141028213426.GE18557@sirena.org.uk>
+References: <1414436825-19416-1-git-send-email-jcmvbkbc@gmail.com>
+ <20141027193229.GE18557@sirena.org.uk>
+ <CAMo8Bf+Z9V8mkiC3JOupPQmi1EJUDKrb1qcNncDbsEbhjigbww@mail.gmail.com>
+ <20141028154224.GX18557@sirena.org.uk>
+ <CAMo8BfLpJ0bdmaFt9+gLQ_kEjB68XdjAJUw8f8s=Owv46h_yDQ@mail.gmail.com>
+ <20141028173853.GD18557@sirena.org.uk>
+ <CAMo8BfL+vW7BjC1bQPNjhuBMTcRTkf8_DDS3NO2HmBUnfHYAFQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="o1Pxsi7EGdPPGBHz"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYR70Az1uLyjsaujQN-q-4+qRD=GpqJaOuvnKZhypL=cA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAMo8BfL+vW7BjC1bQPNjhuBMTcRTkf8_DDS3NO2HmBUnfHYAFQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+To: Max Filippov <jcmvbkbc@gmail.com>
+Cc: alsa-devel@alsa-project.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, LKML <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, October 28, 2014 04:26:25 PM Linus Walleij wrote:
-> On Fri, Oct 17, 2014 at 2:11 PM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> 
-> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
-> >
-> > GPIO descriptors are the preferred way over legacy GPIO numbers
-> > nowadays. Convert the driver to use GPIO descriptors internally but
-> > still allow passing legacy GPIO numbers from platform data to support
-> > existing platforms.
-> >
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Acked-by: Alexandre Courbot <acourbot@nvidia.com>
-> > Acked-by: Bryan Wu <cooloney@gmail.com>
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> (...)
-> 
-> >         if (led_dat->blinking) {
-> > -               led_dat->platform_gpio_blink_set(led_dat->gpio,
-> > -                                                led_dat->new_level,
-> > -                                                NULL, NULL);
-> > +               int gpio = desc_to_gpio(led_dat->gpiod);
-> > +               int level = led_dat->new_level;
-> 
-> So this desc_to_gpio() is done only to call the legacy callback below?
-> 
-> > +               if (gpiod_is_active_low(led_dat->gpiod))
-> > +                       level = !level;
-> 
-> And that leads to making it necessary to have this helper variable
-> to invert the level since that callback does not pass a descriptor
-> (which would inherently know if it's active low)....
-> 
-> > +
-> > +               led_dat->platform_gpio_blink_set(gpio, level, NULL, NULL);
-> 
-> Is it *really* impossible to change all the users of this callback?
 
-You said it could be done in a followup patch.  Here:
-http://marc.info/?l=linux-acpi&m=141154536921643&w=4
+--o1Pxsi7EGdPPGBHz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-And Mika said he would add that to his TODO list:
-http://marc.info/?l=linux-acpi&m=141155173924101&w=4
+On Tue, Oct 28, 2014 at 09:11:34PM +0300, Max Filippov wrote:
+> On Tue, Oct 28, 2014 at 8:38 PM, Mark Brown <broonie@kernel.org> wrote:
 
-I suppose that is still valid.
+> > You *really* need to explain how it's supposed to work - right now it's
+> > not at all obvious, like I say the fact that this is a rarely used idiom
+> > is not helping.  For example when we tear down the stream we just assign
+> > the pointer in _stop() but don't bother with a sync until the stream is
+> > closed - why?
 
-> 
-> >                 led_dat->blinking = 0;
-> >         } else
-> > -               gpio_set_value_cansleep(led_dat->gpio, led_dat->new_level);
-> > +               gpiod_set_value_cansleep(led_dat->gpiod, led_dat->new_level);
-> 
-> (...)
-> >         /* Setting GPIOs with I2C/etc requires a task context, and we don't
-> >          * seem to have a reliable way to know if we're already in one; so
-> >          * let's just assume the worst.
-> > @@ -72,11 +73,16 @@ static void gpio_led_set(struct led_clas
-> >                 schedule_work(&led_dat->work);
-> >         } else {
-> >                 if (led_dat->blinking) {
-> > -                       led_dat->platform_gpio_blink_set(led_dat->gpio, level,
-> > -                                                        NULL, NULL);
-> > +                       int gpio = desc_to_gpio(led_dat->gpiod);
-> > +
-> > +                       if (gpiod_is_active_low(led_dat->gpiod))
-> > +                               level = !level;
-> > +
-> > +                       led_dat->platform_gpio_blink_set(gpio, level, NULL,
-> > +                                                        NULL);
-> 
-> Same comment.
-> 
-> > @@ -85,9 +91,10 @@ static int gpio_blink_set(struct led_cla
-> >  {
-> >         struct gpio_led_data *led_dat =
-> >                 container_of(led_cdev, struct gpio_led_data, cdev);
-> > +       int gpio = desc_to_gpio(led_dat->gpiod);
-> >
-> >         led_dat->blinking = 1;
-> > -       return led_dat->platform_gpio_blink_set(led_dat->gpio, GPIO_LED_BLINK,
-> > +       return led_dat->platform_gpio_blink_set(gpio, GPIO_LED_BLINK,
-> >                                                 delay_on, delay_off);
-> 
-> Same comment.
-> 
-> > @@ -97,24 +104,33 @@ static int create_gpio_led(const struct
-> >  {
-> >         int ret, state;
-> >
-> > -       led_dat->gpio = -1;
-> > +       if (!template->gpiod) {
-> > +               unsigned long flags = 0;
-> >
-> > -       /* skip leds that aren't available */
-> > -       if (!gpio_is_valid(template->gpio)) {
-> > -               dev_info(parent, "Skipping unavailable LED gpio %d (%s)\n",
-> > -                               template->gpio, template->name);
-> > -               return 0;
-> > +               /* skip leds that aren't available */
-> > +               if (!gpio_is_valid(template->gpio)) {
-> > +                       dev_info(parent, "Skipping unavailable LED gpio %d (%s)\n",
-> > +                                       template->gpio, template->name);
-> > +                       return 0;
-> > +               }
-> > +
-> > +               if (template->active_low)
-> > +                       flags |= GPIOF_ACTIVE_LOW;
-> > +
-> > +               ret = devm_gpio_request_one(parent, template->gpio, flags,
-> > +                                           template->name);
-> > +               if (ret < 0)
-> > +                       return ret;
-> > +
-> > +               led_dat->gpiod = gpio_to_desc(template->gpio);
-> > +               if (IS_ERR(led_dat->gpiod))
-> > +                       return PTR_ERR(led_dat->gpiod);
-> >         }
-> 
-> OK so this is the legacy codepath: point it out in a big fat
-> comment that this is the legacy codepath.
+> Because we can't wait in stop and syncing is not time critical, we can
+> do it any time before the stream becomes invalid.
 
-That looks like it could be done in a followup patch too.
+To be clear: the important part is that someone reading the code can
+understand what's going on.
 
-Since the series is in my linux-next branch at this point, I really wouldn't
-like to reshuffle commits in it if that can be avoided.
+> >> > it'd be better to just add a DMA controller on the FPGA, everyone will
+> >> > be much happier).
 
-> > Index: linux-pm/include/linux/leds.h
-> > ===================================================================
-> > --- linux-pm.orig/include/linux/leds.h
-> > +++ linux-pm/include/linux/leds.h
-> > @@ -251,6 +251,7 @@ struct gpio_led {
-> >         unsigned        retain_state_suspended : 1;
-> >         unsigned        default_state : 2;
-> >         /* default_state should be one of LEDS_GPIO_DEFSTATE_(ON|OFF|KEEP) */
-> > +       struct gpio_desc *gpiod;
-> 
-> Put the new struct member right below the current "gpio"
-> member,
+> >> Hardware people think different and it's been like that for more than 5
+> >> years.
 
-It was done like that in previous versions, but turned out to cause problems
-to happen in testing.  Unfortunately, I don't seem to be able to find a pointer
-to the original report ATM, but perhaps Mika can.  Mika?
+> > They appear to be the only hardware people who think this way, while we
 
-> and add comments saying that either needs to be
-> specified but "gpio" is deprecated for "gpiod".
+> The whole audio subsystem on xtfpga boards is there for, I think, a single
+> purpose: for the demonstration of CPU audio processing capabilities.
+> That's why it's that simple.
 
-Kind regards,
-Rafael
+This means that the demos include cycles spent taking interrupts and
+stuffing data into the FIFO (with associated cache impacts) instead of
+signal processing which isn't usually helpful for benchmarks.
+
+> >> hw_params callback can change MCLK rate, so it has to disable and
+> >> enable the clock anyway, and since enable can fail it does not guarantee
+> >> that the clock will be left in the same state. Or should I adjust MCLK rate
+> >> w/o disabling the clock?
+
+> > So yet again: why not just enable the clock only when the device is in
+> > use?  If it's being configured it stands to reason that the device isn't
+> > actively in use...
+
+> Mark, I don't get it, sorry ): My clock synthesizer is I2C controlled, so
+> I can't prepare/unprepare it in the trigger callback. When should I do it?
+
+Runtime PM is the normal way of doing it.
+
+> >> The level field in the control register is 4 bit wide, so the allowed range of
+> >> level is 0..15. FIFO size is 8192 entries, level = 1 corresponds to
+> >> FIFO size / 2, level = 14 -- to FIFO size of 0. I guess this function
+> >> won't get period_size of 0?
+
+> > So if the IP gets changed and the code gets blown up this could well
+> > explode then...  which doesn't seem entirely unlikely considering this
+> > is a FPGA platform so presumably this is easy to update.  To repeat this
+> > is about clarity and the code looking like it's probably hiding bugs as
+> > much as if the code actually works if you really sit down and study it.
+
+> The calculation does not depend on the actual hardware, but on the
+> constant definitions in the same file. They need to be updated if the
+> hardware changes. I'll try to rewrite it in a cleaner way.
+
+Right, my point is that if someone changes the hardware they'll just
+update the constants and then things will break.
+
+--o1Pxsi7EGdPPGBHz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUUAvhAAoJECTWi3JdVIfQx+IH+wbCe8/ralW+77h3qoNIpCyO
+eN0Bsqx34r78LcAIHbStdiadMMM1uQk83ob3Me50rOZ1apEEOWCV5q8HzPeazPVQ
+LdjfJlf2ptzmtmWzesITcEZP7o8YPc+uw4Ba/o6nu5ilKjV0yqI622bYCvQBXnuO
+FxdE0v/RL1wI7GcdE5pjalaiZMBa2FeP2qXqcExKdJNzB2hGHogG7ZyTed4f+cfr
+oySx1mZc5yMLumcGRYHKCfrIW9FvE4DZ9OIxuFIBvEwm9snEjdCQS8UR0bKoxaep
+RzErdFYeejkdbmmP7tR8Jcgx9+Us6g3DK3LhkZOW2goPFgNt4i7wuZJikBktgQY=
+=bAYO
+-----END PGP SIGNATURE-----
+
+--o1Pxsi7EGdPPGBHz--
