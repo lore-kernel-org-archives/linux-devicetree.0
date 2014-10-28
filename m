@@ -1,41 +1,115 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/8] ARM: ux500: Add initial support for PM domains
-Date: Tue, 28 Oct 2014 10:51:34 +0100
-Message-ID: <CACRpkdZPtuC-AQsrZD8xhcg9GacKb2ifZ9u8HqcPU6H1NgGKdA@mail.gmail.com>
-References: <1413277981-27451-1-git-send-email-ulf.hansson@linaro.org>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH V3 3/3] rtc: omap: Support regulator supply for RTC
+Date: Tue, 28 Oct 2014 15:19:32 +0530
+Message-ID: <544F66AC.10201@ti.com>
+References: <1414126425-13198-1-git-send-email-lokeshvutla@ti.com> <1414126425-13198-4-git-send-email-lokeshvutla@ti.com> <544A5393.6090504@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413277981-27451-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jack Dai <jack.dai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jinkun Hong <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <544A5393.6090504@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, rtc-linux@googlegroups.com, linux-omap@vger.kernel.org, a.zummo@towertech.it, johan@kernel.org
+Cc: tony@atomide.com, bcousson@baylibre.com, balbi@ti.com, akpm@linux-foundation.org, linux@roeck-us.net, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 14, 2014 at 11:12 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+On Friday 24 October 2014 06:56 PM, Nishanth Menon wrote:
+> On 10/23/2014 11:53 PM, Lokesh Vutla wrote:
+>> On some Soc's RTC is powered by an external power regulator.
+> SoC ? -> could you rephrase this to indicate "certain SoCs such as
+> DRA7, RTC is an independent voltage domain of it's own and on
+> platforms such as DRA7-evm, this may be supplied by individual
+> regulator on it's own.
+Ok. will do it.
+> 
+>> e.g. RTC on DRA7 SoC. Make the OMAP RTC driver support a
+>> power regulator.
+> 
+> Question ofcourse is what voltage would you like that regulator to be
+> at? As you are aware, certain LDOs and SMPS can drive varying voltage
+> and just enable/disable would do just the default voltage of the
+> SMPS/LDO, right? OR am i missing something here?
+Yes I agree that enable/disable would just do the default voltage of SMPS/LDO.
+If default voltage needs to be changed, driver should explicitly call regulator_set_voltage.
+Currently this is missing. Ill update and repost it. Thanks for pointing it out.
+> 
+>>
+>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/rtc/rtc-omap.txt |  3 +++
+>>  drivers/rtc/rtc-omap.c                             | 24 ++++++++++++++++++++++
+>>  2 files changed, 27 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+>> index 750efd4..e7ad12b 100644
+>> --- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+>> +++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+>> @@ -15,6 +15,8 @@ Required properties:
+>>  Optional properties:
+>>  - ti,system-power-controller: whether the rtc is controlling the system power
+>>    through pmic_power_en
+>> +Optional Properties:
+> ^^ already commented on..
+> 
+>> +- vrtc-supply: phandle to the regulator device tree node if needed
+> 
+> "phandle to supply regulator" ? since it is optional, "if needed" is
+> redundant?
+Okay. will update it in next version.
+> 
+>>  
+>>  Example:
+>>  
+>> @@ -25,4 +27,5 @@ rtc@1c23000 {
+>>  		      19>;
+>>  	interrupt-parent = <&intc>;
+>>  	ti,system-power-controller;
+>> +	vrtc-supply = <&ldo9_reg>;
+>>  };
+>> diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
+>> index d9bb5e7..61fe630 100644
+>> --- a/drivers/rtc/rtc-omap.c
+>> +++ b/drivers/rtc/rtc-omap.c
+>> @@ -25,6 +25,7 @@
+>>  #include <linux/of_device.h>
+>>  #include <linux/pm_runtime.h>
+>>  #include <linux/io.h>
+>> +#include <linux/regulator/consumer.h>
+>>  
+>>  /*
+>>   * The OMAP RTC is a year/month/day/hours/minutes/seconds BCD clock
+>> @@ -134,6 +135,7 @@ struct omap_rtc {
+>>  	u8 interrupts_reg;
+>>  	bool is_pmic_controller;
+>>  	const struct omap_rtc_device_type *type;
+>> +	struct regulator *supply;
+>>  };
+>>  
+>>  static inline u8 rtc_read(struct omap_rtc *rtc, unsigned int reg)
+>> @@ -516,6 +518,22 @@ static int omap_rtc_probe(struct platform_device *pdev)
+>>  
+>>  	platform_set_drvdata(pdev, rtc);
+>>  
+>> +	rtc->supply = devm_regulator_get_optional(&pdev->dev, "vrtc");
+>> +	if (IS_ERR(rtc->supply)) {
+>> +		if (PTR_ERR(rtc->supply) == -EPROBE_DEFER)
+>> +			return -EPROBE_DEFER;
+>> +
+>> +		rtc->supply = NULL;
+>> +	}
+>> +
+>> +	if (rtc->supply) {
+>> +		ret = regulator_enable(rtc->supply);
+>> +		if (ret) {
+>> +			dev_err(&pdev->dev, "regulator enable failed\n");
+> 
+> would be nice to print the result as well - since it helps debug from
+> log a little easier.
+Will update it in next version.
 
-> This patchset enables initial support for PM domains for ux500.
->
-> The implementation is based upon the generic PM domain and its corresponding
-> DT support, which is used to decribe PM domains and tell what devices resides
-> in what PM domain.
->
-> In this initial step, the VAPE PM domain is added and the devices with
-> corresponding drivers that properly implements runtime PM support. Especially,
-> to gate the VAPE PM domain drivers must implement register context save/restore.
-> Typically that must be done from the driver's runtime PM callbacks.
->
-> Currently the generic PM domain, doesn't handle IRQ safe devices very well. For
-> example, having such device in a PM domain would keep it always powered. The
-> DMA controller in ux500, handled by the ste_dma40 driver is configured as IRQ
-> safe. That limitation in the generic PM domain needs to be fixed, prior we can
-> add the DMA device to the VAPE PM domain.
+Thanks and regards,
+Lokesh
+> 
+> 
+> 
 
-All patches applied and will send a pull request to ARM SoC ASAP.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
