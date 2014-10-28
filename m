@@ -1,47 +1,38 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] power: max77693: Add charger driver for Maxim 77693
-Date: Tue, 28 Oct 2014 10:16:22 +0100
-Message-ID: <1414487782.24949.23.camel@AMDC1943>
-References: <1413808489-3524-1-git-send-email-k.kozlowski@samsung.com>
- <1413808489-3524-5-git-send-email-k.kozlowski@samsung.com>
- <20141027185656.GB18965@earth.universe>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCH] Documentation: gpio: guidelines for bindings
+Date: Tue, 28 Oct 2014 18:18:32 +0900
+Message-ID: <CAAVeFu+2OfRbU845uD29-oZww1Xu2VrGbx_m0J0SaoMr7Z8UQQ@mail.gmail.com>
+References: <1414470034-16143-1-git-send-email-acourbot@nvidia.com> <4048602.9BsHAsA6cq@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20141027185656.GB18965-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <4048602.9BsHAsA6cq@wuerfel>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Alexandre Courbot <acourbot@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Oct 28, 2014 at 6:08 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday 28 October 2014 13:20:34 Alexandre Courbot wrote:
+>> +GPIO properties should be named "[<name>-]gpios", with <name> being the con_id
+>> +argument that is passed to gpiod_get(). While a NULL con_id is accepted by the
+>> +GPIO API for compatibility reasons (resolving to the "gpios" property), it is
+>> +not allowed for new bindings.
+>> +
+>> +GPIO properties can contain one or more GPIO phandles, but only in exceptional
+>> +cases should they contain more than one. If your device uses several GPIOs with
+>> +distinct functions, reference each of them under its own property, giving it a
+>> +meaningful name. The only case where an array of GPIOs is accepted is when
+>> +several GPIOs serve the same function (e.g. a parallel data line). In that case
+>> +individual GPIOs can be retrieved using gpiod_get_index().
+>> +
+>> +The exact meaning of each gpios property must be documented in the device tree
+>>  binding for each device.
+>
+> The binding should be written in an OS neutral way, so it would be better to avoid
+> direct references to Linux APIs in the part that specifies the allowed properties.
+>
+> Could you reword this so the Linux interfaces are described in an "implementation
+> notes" section that is separate from the main part?
 
-On pon, 2014-10-27 at 19:56 +0100, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Mon, Oct 20, 2014 at 02:34:48PM +0200, Krzysztof Kozlowski wrote:
-> > Add new driver for Maxim 77693 switch-mode charger (part of max77693
-> > MFD driver) providing power supply class information to userspace.
-> > 
-> > The charger has +20V tolerant input. Current input can be set from 0 to
-> > 2.58 A. The charger can deliver up to 2.1 A to the battery or 3.5 A to
-> > the system (when supplying additional current from battery to system).
-> > 
-> > The driver is configured through DTS (battery and system related
-> > settings) and sysfs entries (timers and top-off charging threshold).
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> 
-> I guess it makes sense to queue this together with the mfd parts.
-> 
-> Acked-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-Thank you. Could you also look at documentation change, patch 5/5:
-Documentation: charger: max77693: Document exported sysfs entry
-https://lkml.org/lkml/2014/10/20/232
-
-I think that one also needs your ack as this is power supply related
-ABI.
-
-Best regards,
-Krzysztof
+You're right - will fix this and resubmit. Thanks!
