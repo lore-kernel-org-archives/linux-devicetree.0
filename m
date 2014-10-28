@@ -1,35 +1,47 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
- ps8622 DT properties
-Date: Tue, 28 Oct 2014 10:12:16 +0100
-Message-ID: <CABxcv=kNBpNCOM-=PgHcR23eAVuzR8ECROeGxOs-Hk0JCSK1Lw@mail.gmail.com>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
-	<20141008070918.GA4999@ulmo>
-	<CAEC9eQPn2GAn6nrSvgso2QTXQErtY+8dH5-LbZS9mGTYcYC5Gw@mail.gmail.com>
-	<15883554.FBq3UbZUdh@avalon>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] power: max77693: Add charger driver for Maxim 77693
+Date: Tue, 28 Oct 2014 10:16:22 +0100
+Message-ID: <1414487782.24949.23.camel@AMDC1943>
+References: <1413808489-3524-1-git-send-email-k.kozlowski@samsung.com>
+ <1413808489-3524-5-git-send-email-k.kozlowski@samsung.com>
+ <20141027185656.GB18965@earth.universe>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <15883554.FBq3UbZUdh@avalon>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Ajay kumar <ajaynumb@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Ajay Kumar <ajaykumar.rs@samsung.com>, InKi Dae <inki.dae@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20141027185656.GB18965-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Ajay,
 
-On Thu, Oct 16, 2014 at 11:04 AM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->>
->> Right. It would be great if you guys come to agreement ASAP!
->
-> I don't think we'll agree any time soon, so I believe it's up to you to decide
-> which option is best based on all arguments that have been presented.
->
+On pon, 2014-10-27 at 19:56 +0100, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Mon, Oct 20, 2014 at 02:34:48PM +0200, Krzysztof Kozlowski wrote:
+> > Add new driver for Maxim 77693 switch-mode charger (part of max77693
+> > MFD driver) providing power supply class information to userspace.
+> > 
+> > The charger has +20V tolerant input. Current input can be set from 0 to
+> > 2.58 A. The charger can deliver up to 2.1 A to the battery or 3.5 A to
+> > the system (when supplying additional current from battery to system).
+> > 
+> > The driver is configured through DTS (battery and system related
+> > settings) and sysfs entries (timers and top-off charging threshold).
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> 
+> I guess it makes sense to queue this together with the mfd parts.
+> 
+> Acked-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Did you decide what's the correct approach? I don't have a strong
-opinion, I'm just asking because it would be a pity if your series
-miss another kernel release...
+Thank you. Could you also look at documentation change, patch 5/5:
+Documentation: charger: max77693: Document exported sysfs entry
+https://lkml.org/lkml/2014/10/20/232
+
+I think that one also needs your ack as this is power supply related
+ABI.
 
 Best regards,
-Javier
+Krzysztof
