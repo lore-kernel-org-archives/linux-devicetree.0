@@ -1,38 +1,59 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] Documentation: gpio: guidelines for bindings
-Date: Tue, 28 Oct 2014 10:08:45 +0100
-Message-ID: <4048602.9BsHAsA6cq@wuerfel>
-References: <1414470034-16143-1-git-send-email-acourbot@nvidia.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 3/8] mfd: max77686/802: Remove support for board files
+Date: Tue, 28 Oct 2014 10:11:08 +0100
+Message-ID: <1414487468.24949.21.camel@AMDC1943>
+References: <1414422226-10948-1-git-send-email-k.kozlowski@samsung.com>
+ <1414422226-10948-4-git-send-email-k.kozlowski@samsung.com>
+ <544EA178.3090506@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1414470034-16143-1-git-send-email-acourbot@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, gnurou@gmail.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <544EA178.3090506@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 28 October 2014 13:20:34 Alexandre Courbot wrote:
-> +GPIO properties should be named "[<name>-]gpios", with <name> being the con_id
-> +argument that is passed to gpiod_get(). While a NULL con_id is accepted by the
-> +GPIO API for compatibility reasons (resolving to the "gpios" property), it is
-> +not allowed for new bindings.
-> +
-> +GPIO properties can contain one or more GPIO phandles, but only in exceptional
-> +cases should they contain more than one. If your device uses several GPIOs with
-> +distinct functions, reference each of them under its own property, giving it a
-> +meaningful name. The only case where an array of GPIOs is accepted is when
-> +several GPIOs serve the same function (e.g. a parallel data line). In that case
-> +individual GPIOs can be retrieved using gpiod_get_index().
-> +
-> +The exact meaning of each gpios property must be documented in the device tree
->  binding for each device.
+On pon, 2014-10-27 at 20:48 +0100, Javier Martinez Canillas wrote:
+> Hello Krzysztof,
+> 
+> On 10/27/2014 04:03 PM, Krzysztof Kozlowski wrote:
+> > The driver is used only on Exynos based boards with DTS support.
+> > Convert the driver to DTS-only version. This simplifies a little the
+> > code:
+> > 1. No dead (unused) entries in platform_data structure.
+> > 2. More code removed (from all three patches: 34 insertions(+), 107
+> >    deletions).
+> > 3. Regulator driver does not depend on allocated memory
+> >    from MFD driver.
+> > 4. It makes also easier extending the regulator driver
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> > ---
+> >  drivers/mfd/max77686.c               | 23 -----------------------
+> >  include/linux/mfd/max77686-private.h |  1 -
+> >  include/linux/mfd/max77686.h         | 22 ----------------------
+> >  3 files changed, 46 deletions(-)
+> > 
+> > diff --git a/drivers/mfd/max77686.c b/drivers/mfd/max77686.c
+> > index 929795eae9fc..3da237afacde 100644
+> > --- a/drivers/mfd/max77686.c
+> > +++ b/drivers/mfd/max77686.c
+> 
+> As I said in Patch 2/8, I think this driver should depend on OF since
+> is now DT-only. Regulator drivers don't need to do this since they
+> already depend on MFD_MAX77686. With that change feel free to add:
+> 
+> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> 
+> Please also add my Reviewed-by tag to Patch 2/8 since I just noticed
+> that I forgot to add it.
 
-The binding should be written in an OS neutral way, so it would be better to avoid
-direct references to Linux APIs in the part that specifies the allowed properties.
+Thank you, I'll add depends on OF.
 
-Could you reword this so the Linux interfaces are described in an "implementation
-notes" section that is separate from the main part?
-
-	Arnd
+Best regards,
+Krzysztof
+> 
+> Best regards,
+> Javier
