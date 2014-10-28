@@ -1,67 +1,108 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v6 3/3] ARM: dts: rk3288: add VOP iommu nodes
-Date: Tue, 28 Oct 2014 15:37:52 +0100
-Message-ID: <6644033.fY7Wj4BQVl@diego>
-References: <1414413448-15819-1-git-send-email-djkurtz@chromium.org> <1414413448-15819-4-git-send-email-djkurtz@chromium.org>
+From: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 03/11] drivers: char: add AXD Audio Processing IP driver
+Date: Tue, 28 Oct 2014 14:36:39 +0000
+Message-ID: <544FA9F7.1020101@imgtec.com>
+References: <1414495589-8579-1-git-send-email-qais.yousef@imgtec.com> <1414495589-8579-4-git-send-email-qais.yousef@imgtec.com> <20141028141038.GA18384@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414413448-15819-4-git-send-email-djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20141028141038.GA18384-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?ISO-8859-1?Q?St=E9phane?= Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 27. Oktober 2014, 20:37:28 schrieb Daniel Kurtz:
-> Add device nodes for the VOP iommus.
-> Device nodes for other iommus will be added in later patches.
-> 
-> The iommu nodes use the #iommu-cells property as described in:
->   Documentation/devicetree/bindings/iommu/iommu.txt
-> 
-> Signed-off-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On 10/28/2014 02:10 PM, Greg Kroah-Hartman wrote:
+> On Tue, Oct 28, 2014 at 11:26:21AM +0000, Qais Yousef wrote:
+>> AXD is Audio Processing IP by Imagination Technologies that can
+>> perform decoding, encoding, equalisation, resampling, mixing,
+>> synchronisation and audio playback.
+> Isn't that a codec?  Why is this a "char" driver and not one that fits
+> into our existing audio subsystem?
 
-Looks fine and I'll pick this patch up, once Joerg is statisfied with the iommu 
-driver (patches 1 and 2).
+As far as I understand it doesn't fit into current alsa framework 
+because of a number of unsupported features that we need. Specifically 
+the range of compressed decoders we support and their configurations and 
+encoding. I might have gotten it wrong though so I'll wait to see what 
+alsa people say.
+
+>> this patch adds defs and initialisation files
+> Spell check :)
+
+Hmm UK spelling vs US spelling :) Unless you mean the defs then I'll 
+expand it.
 
 
-Heiko
+>> Signed-off-by: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+>> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+>> Cc: <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>
+>> ---
+>>   drivers/char/axd/axd_api.h    |  641 +++++++++++++++++++++++++
+>>   drivers/char/axd/axd_module.c | 1064 +++++++++++++++++++++++++++++++++++++++++
+>>   drivers/char/axd/axd_module.h |   99 ++++
+>>   include/linux/axd.h           |   32 ++
+>>   4 files changed, 1836 insertions(+)
+>>   create mode 100644 drivers/char/axd/axd_api.h
+>>   create mode 100644 drivers/char/axd/axd_module.c
+>>   create mode 100644 drivers/char/axd/axd_module.h
+>>   create mode 100644 include/linux/axd.h
+>>
+>> diff --git a/drivers/char/axd/axd_api.h b/drivers/char/axd/axd_api.h
+>> new file mode 100644
+>> index 000000000000..0d732f173f55
+>> --- /dev/null
+>> +++ b/drivers/char/axd/axd_api.h
+>> @@ -0,0 +1,641 @@
+>> +/*
+>> + *  Copyright (C) 2011-2014 Imagination Technologies Ltd.
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License
+>> + * as published by the Free Software Foundation; either version 2
+>> + * of the License, or (at your option) any later version.
+> Do you really mean "any later version"?
+>
 
-> ---
->  arch/arm/boot/dts/rk3288.dtsi | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index 5950b0a..df1170c 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -271,6 +271,24 @@
->  		status = "disabled";
->  	};
-> 
-> +	vopb_mmu: iommu@ff930300 {
-> +		compatible = "rockchip,iommu";
-> +		reg = <0xff930300 0x100>;
-> +		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "vopb_mmu";
-> +		#iommu-cells = <0>;
-> +		status = "disabled";
-> +	};
-> +
-> +	vopl_mmu: iommu@ff940300 {
-> +		compatible = "rockchip,iommu";
-> +		reg = <0xff940300 0x100>;
-> +		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "vopl_mmu";
-> +		#iommu-cells = <0>;
-> +		status = "disabled";
-> +	};
-> +
->  	gic: interrupt-controller@ffc01000 {
->  		compatible = "arm,gic-400";
->  		interrupt-controller;
+Nope. I probably copied that from the wrong source.
+
+>> + *
+>> + *  Main API to the AXD for access from the host.
+>> + */
+>> +#ifndef AXD_API_H_
+>> +#define AXD_API_H_
+>> +
+>> +#include <linux/types.h>
+>> +
+>> +
+>> +#define THREAD_COUNT 4
+>> +#define AXD_MAX_PIPES 3
+>> +
+>> +
+>> +#define AXD_DESCRIPTOR_READY_BIT	0x80000000
+>> +#define AXD_DESCRIPTOR_INUSE_BIT	0x40000000
+>> +#define AXD_DESCRIPTOR_EOS_BIT		0x20000000
+>> +#define AXD_DESCRIPTOR_SIZE_MASK	0x0000FFFF
+>> +
+>> +struct axd_buffer_desc {
+>> +	uint32_t status_size;
+>> +	uint32_t data_ptr;
+>> +	uint32_t pts_high;
+>> +	uint32_t pts_low;
+> Please always use standard Linux kernel types, "u32" in this case.
+
+OK.
+
+Thanks,
+Qais
+
+> thanks,
+>
+> greg k-h
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
