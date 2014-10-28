@@ -1,58 +1,37 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 1/8] regulator: max77802: Remove support for board files
-Date: Tue, 28 Oct 2014 09:45:16 +0100
-Message-ID: <1414485916.24949.15.camel@AMDC1943>
-References: <1414422226-10948-1-git-send-email-k.kozlowski@samsung.com>
- <1414422226-10948-2-git-send-email-k.kozlowski@samsung.com>
- <544E9EB2.2010408@collabora.co.uk>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v2 00/20] rtc: omap: fixes and power-off feature
+Date: Tue, 28 Oct 2014 08:47:46 +0000
+Message-ID: <20141028084745.GY12379@n2100.arm.linux.org.uk>
+References: <20141024160845.GM26941@saruman> <20141024190251.GB19377@localhost> <20141024192540.GD11455@saruman> <20141024192948.GE11455@saruman> <20141024193655.GD19377@localhost> <20141024194442.GG11455@saruman> <20141024195532.GF19377@localhost> <20141027162251.d7ff2a5f31917c638d4e47f7@linux-foundation.org> <20141028002552.GX12379@n2100.arm.linux.org.uk> <20141028081616.GL2006@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <544E9EB2.2010408@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141028081616.GL2006@localhost>
+Sender: linux-omap-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Felipe Balbi <balbi@ti.com>, Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On pon, 2014-10-27 at 20:36 +0100, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
-> 
-> On 10/27/2014 04:03 PM, Krzysztof Kozlowski wrote:
-> > The driver is used only on Exynos based boards with DTS support.
-> > Convert the driver to DTS-only version.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> > ---
-> >  drivers/regulator/max77802.c | 44 +++++++++++++++-----------------------------
-> >  1 file changed, 15 insertions(+), 29 deletions(-)
-> > 
-> > diff --git a/drivers/regulator/max77802.c b/drivers/regulator/max77802.c
-> > index 5839c4509e1f..61d03e9f8acf 100644
-> > --- a/drivers/regulator/max77802.c
-> > +++ b/drivers/regulator/max77802.c
-> 
-> The original ChromeOS max77xxx driver supported both DT and platform data
-> configuration and that's why the max77802 driver was not DT-only.
+On Tue, Oct 28, 2014 at 09:16:16AM +0100, Johan Hovold wrote:
+> It looks like we're soon to be having power-off call chains, with
+> configurable priorities, to shut of various parts of the hardware
 
-If you mean custom vendor kernel (probably 3.4, 3.8 or 3.10 with board
-files) then we shouldn't care. It is out of tree. The driver is for the
-mainline kernel.
+I really hope that they *don't* get used like that.  I guess this is
+what happens when people don't read the code before they decide to
+implement something.
 
-> 
-> But I looked at the ChromeOS kernel now and indeed even in that tree there
-> are no board files using the max77802 platform data so I agree that it
-> should be removed.
-> 
-> Acked-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+All the reboot/power off/halt methods already call into the driver model,
+and the driver model then iterates over all bound drivers calling their
+"shutdown" method.  So, today, as it has been for years, all device
+drivers are notified of system power off.
 
-Thanks! However Mark had some comments which will reorganize the patch
-completely. I'll be sending next version and probably I would need your
-ack and testing again.
+That's where most device drivers should be cleanly stopping their
+hardware.
 
-Best regards,
-Krzysztof
+The only thing which is left is the actual hardware triggering of the
+action, and that should be what's done via the notifier.
 
-> 
-> Best regards,
-> Javier
+-- 
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
