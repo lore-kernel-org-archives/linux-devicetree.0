@@ -1,71 +1,128 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 00/11] Add AXD Audio Processing IP driver
-Date: Tue, 28 Oct 2014 22:13:48 +0800
-Message-ID: <20141028141348.GD18384@kroah.com>
-References: <1414495589-8579-1-git-send-email-qais.yousef@imgtec.com>
- <544F8439.4080402@ladisch.de>
- <544F97A4.7080209@imgtec.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/3] pinctrl: add driver for Amlogic Meson SoCs
+Date: Tue, 28 Oct 2014 15:19:13 +0100
+Message-ID: <CACRpkdaO5wHB1fMR1Pw6R7bs9Qk14p3wOP8dxco7yAnqMOP_Lg@mail.gmail.com>
+References: <1413321714-25931-1-git-send-email-b.galvani@gmail.com>
+	<1413321714-25931-2-git-send-email-b.galvani@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <544F97A4.7080209-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Clemens Ladisch <clemens-P6GI/4k7KOmELgA04lAiVw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Neil Jones <neil.jones-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413321714-25931-2-git-send-email-b.galvani@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Beniamino Galvani <b.galvani@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Carlo Caione <carlo@caione.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 28, 2014 at 01:18:28PM +0000, Qais Yousef wrote:
-> On 10/28/2014 11:55 AM, Clemens Ladisch wrote:
-> >Qais Yousef wrote:
-> >>AXD Audio Processing IP performs audio decoding, encoding, mixing, equalisation,
-> >>synchronisation and playback.
-> >What exactly do you mean with "synchronisation" and "playback"?
-> 
-> Synchronisation refers to accurate audio playout relative to a master
-> clock source including compensation of drift between the master clock
-> source and the playout clock of the audio hardware. Hence allowing
-> synchronised audio playout across multiple independent devices.
-> 
-> Playback simple refers to the fact that AXD is capable of managing audio
-> playout hardware like I2S and SPDIF interfaces.
-> 
-> 
-> >>It doesn't fit in alsa subsystem but I Cced them to confirm.
-> >... because those two words sound like something that a sound card could do.
-> 
-> The problem mainly stems from the fact that we take a variety of
-> compressed audio as input and we could perform audio encoding. The
-> problem with the compressed audio is that the range of decoders and
-> configuration supported in alsa is limited and there's no support for
-> taking raw pcm and producing compressed output. I'm not an expert on
-> alsa but when I looked it looked like there's more infra structure
-> required.
-> 
-> The following not supported points from Documentation/sound/alsa/compress_offload.txt affect us:
-> 
-> - Volume control/routing is not handled by this API. Devices exposing a
->   compressed data interface will be considered as regular ALSA devices;
->   volume changes and routing information will be provided with regular
->   ALSA kcontrols.
-> 
-> - Embedded audio effects. Such effects should be enabled in the same
->   manner, no matter if the input was PCM or compressed.
-> 
-> - Encoding/decoding acceleration is not supported as mentioned
->   above. It is possible to route the output of a decoder to a capture
->   stream, or even implement transcoding capabilities. This routing
->   would be enabled with ALSA kcontrols.
+On Tue, Oct 14, 2014 at 11:21 PM, Beniamino Galvani <b.galvani@gmail.com> wrote:
 
-So instead you created a one-off api just for this hardware?  Ick, no,
-please work with the audio developers to incorporate it into the
-standard Linux audio apis so that everyone can benifit and not require
-special userspace programs to drive this hardware.
+> This is a driver for the pinmux and GPIO controller available in
+> Amlogic Meson SoCs. At the moment it only supports Meson8 devices,
+> however other SoC families like Meson6 and Meson8b (the Cortex-A5
+> variant) appear to be similar, with just different sets of banks and
+> registers.
+>
+> GPIO interrupts are not supported at the moment due to lack of
+> documentation.
+>
+> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
 
-thanks,
+(...)
+>  arch/arm/mach-meson/Kconfig            |   3 +
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Still not split off from the main patch.
+
+> +static void meson_domain_set_bit(struct meson_domain *domain,
+> +                                void __iomem *addr, unsigned int bit,
+> +                                unsigned int value)
+
+Still not migrated to regmap MMIO.
+
+> +       /* Copy group and function definitions from domains to pinctrl */
+> +       pc->groups = devm_kzalloc(pc->dev, pc->num_groups *
+> +                                 sizeof(struct meson_pmx_group), GFP_KERNEL);
+> +       pc->funcs = devm_kzalloc(pc->dev, pc->num_funcs *
+> +                                 sizeof(struct meson_pmx_func), GFP_KERNEL);
+> +       if (!pc->groups || !pc->funcs)
+> +               return -ENOMEM;
+
+Still lots of copying of data.
+
+> +static int meson_gpiolib_register(struct meson_pinctrl *pc)
+> +{
+> +       struct meson_domain *domain;
+> +       unsigned int base = 0;
+
+No.
+
+> +       int i, ret;
+> +
+> +       for (i = 0; i < pc->num_domains; i++) {
+> +               domain = &pc->domains[i];
+> +
+> +               domain->chip.label = domain->data->name;
+> +               domain->chip.dev = pc->dev;
+> +               domain->chip.request = meson_gpio_request;
+> +               domain->chip.free = meson_gpio_free;
+> +               domain->chip.direction_input = meson_gpio_direction_input;
+> +               domain->chip.direction_output = meson_gpio_direction_output;
+> +               domain->chip.get = meson_gpio_get;
+> +               domain->chip.set = meson_gpio_set;
+> +               domain->chip.base = base;
+
+No. Set it to -1 and let the gpiolib assign some random GPIO numbers.
+
+> +               domain->chip.ngpio = domain->data->num_pins;
+> +               domain->chip.names = domain->data->pin_names;
+> +               domain->chip.can_sleep = false;
+> +               domain->chip.of_node = domain->of_node;
+> +               domain->chip.of_gpio_n_cells = 2;
+> +               domain->chip.of_xlate = meson_gpio_of_xlate;
+
+Go for the generic xlate function instead.
+
+> +               domain->gpio_range.name = domain->data->name;
+> +               domain->gpio_range.id = i;
+> +               domain->gpio_range.base = base;
+> +               domain->gpio_range.pin_base = base;
+> +               domain->gpio_range.npins = domain->data->num_pins;
+> +               domain->gpio_range.gc = &domain->chip;
+> +
+> +               pinctrl_add_gpio_range(pc->pcdev, &domain->gpio_range);
+
+Don't add the gpio range from the pinctrl side, add it from the
+gpiolib side using gpiochip_add_pin_range() instead.
+
+> +static int __init meson_pinctrl_drv_register(void)
+> +{
+> +       return platform_driver_register(&meson_pinctrl_driver);
+> +}
+> +postcore_initcall(meson_pinctrl_drv_register);
+
+Does it have to be this early?
+
+> +/**
+> + * struct meson_domain
+> + *
+> + * @reg_mux:   registers for mux settings
+> + * @reg_pullen:        registers for pull-enable settings
+> + * @reg_pull:  registers for pull settings
+> + * @reg_gpio:  registers for gpio settings
+> + * @mux_size:  size of mux register range (in words)
+> + * @pullen_size:size of pull-enable register range
+> + * @pull_size: size of pull register range
+> + * @gpio_size: size of gpio register range
+> + * @chip:      gpio chip associated with the domain
+> + * @data;      platform data for the domain
+> + * @node:      device tree node for the domain
+> + * @gpio_range:        gpio range that maps domain gpios to the pin controller
+> + * @lock:      spinlock for accessing domain registers
+> + *
+> + * A domain represents a set of banks controlled by the same set of
+> + * registers. Typically there is a domain for the normal banks and
+> + * another one for the Always-On bus.
+> + */
+
+Insert all the info from your previous mail.
+
+Yours,
+Linus Walleij
