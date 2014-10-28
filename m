@@ -1,27 +1,91 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [alsa-devel] [PATCH 00/11] Add AXD Audio Processing IP driver
-Date: Tue, 28 Oct 2014 13:06:25 +0100
-Message-ID: <544F86C1.8040500@metafoo.de>
-References: <1414495589-8579-1-git-send-email-qais.yousef@imgtec.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 6/8] regulator: max77686: Add external GPIO control
+Date: Tue, 28 Oct 2014 13:11:48 +0100
+Message-ID: <1414498308.24949.32.camel@AMDC1943>
+References: <1414422226-10948-1-git-send-email-k.kozlowski@samsung.com>
+ <1414422226-10948-7-git-send-email-k.kozlowski@samsung.com>
+ <544EA4FA.6040704@collabora.co.uk> <1414486356.24949.19.camel@AMDC1943>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414495589-8579-1-git-send-email-qais.yousef@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Qais Yousef <qais.yousef@imgtec.com>, linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, alsa-devel@alsa-project.org, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1414486356.24949.19.camel@AMDC1943>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/28/2014 12:26 PM, Qais Yousef wrote:
-> AXD Audio Processing IP performs audio decoding, encoding, mixing, equalisation,
-> synchronisation and playback. This series adds the driver and DT binding
-> document.
-> [...]
-> I added it to drivers/char as this is the best location I could think of at the
-> moment. It doesn't fit in alsa subsystem but I Cced them to confirm.
- > [...]
+On wto, 2014-10-28 at 09:52 +0100, Krzysztof Kozlowski wrote:
+> On pon, 2014-10-27 at 21:03 +0100, Javier Martinez Canillas wrote:
+> > Hello Krzysztof,
+> > 
+> > On 10/27/2014 04:03 PM, Krzysztof Kozlowski wrote:
+> > > @@ -85,6 +91,9 @@ struct max77686_data {
+> > >  	struct max77686_regulator_data *regulators;
+> > >  	int num_regulators;
+> > >  
+> > > +	/* Array of size num_regulators with GPIOs for external control. */
+> > > +	int *ext_control_gpio;
+> > > +
+> > 
+> > The integer-based GPIO API is deprecated in favor of the descriptor-based GPIO
+> > interface (Documentation/gpio/consumer.txt). Could you please use the later?
+> 
+> Sure, I can. Please have in mind that regulator core still accepts old
+> GPIO so I will have to use desc_to_gpio(). That should work... and
+> should be future-ready.
 
-I think it will fit in nicely.
+It seems I was too hasty... I think usage of the new gpiod API implies
+completely different bindings.
 
-- Lars
+The gpiod_get() gets GPIO from a device level, not from given sub-node
+pointer. This means that you cannot have DTS like this:
+ldo21_reg: ldo21 {
+	regulator-compatible = "LDO21";
+	regulator-name = "VTF_2.8V";
+	regulator-min-microvolt = <2800000>;
+	regulator-max-microvolt = <2800000>;
+	ec-gpio = <&gpy2 0 0>;
+};
+
+ldo22_reg: ldo22 {
+	regulator-compatible = "LDO22";
+	regulator-name = "VMEM_VDD_2.8V";
+	regulator-min-microvolt = <2800000>;
+	regulator-max-microvolt = <2800000>;
+	ec-gpio = <&gpk0 2 0>;
+};
+
+
+I could put GPIOs in device node:
+
+max77686_pmic@09 {
+	compatible = "maxim,max77686";
+	interrupt-parent = <&gpx0>;
+	interrupts = <7 0>;
+	reg = <0x09>;
+	#clock-cells = <1>;
+	ldo21-gpio = <&gpy2 0 0>;
+	ldo22-gpio = <&gpk0 2 0>;
+
+	ldo21_reg: ldo21 {
+		regulator-compatible = "LDO21";
+		regulator-name = "VTF_2.8V";
+		regulator-min-microvolt = <2800000>;
+		regulator-max-microvolt = <2800000>;
+	};
+
+	ldo22_reg: ldo22 {
+		regulator-compatible = "LDO22";
+		regulator-name = "VMEM_VDD_2.8V";
+		regulator-min-microvolt = <2800000>;
+		regulator-max-microvolt = <2800000>;
+	};
+
+This would work but I don't like it. The properties of a regulator are
+above the node configuring that regulator.
+
+Any ideas?
+
+Best regards,
+Krzysztof
