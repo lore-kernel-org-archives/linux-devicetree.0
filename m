@@ -1,57 +1,156 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 00/11] Add AXD Audio Processing IP driver
-Date: Tue, 28 Oct 2014 15:54:45 +0100
-Message-ID: <544FAE35.4000509@metafoo.de>
-References: <1414495589-8579-1-git-send-email-qais.yousef@imgtec.com> <544F8439.4080402@ladisch.de> <544F97A4.7080209@imgtec.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH V4 3/3] rtc: omap: Support regulator supply for RTC
+Date: Tue, 28 Oct 2014 10:01:48 -0500
+Message-ID: <20141028150148.GE8123@saruman>
+References: <1414490332-14856-1-git-send-email-lokeshvutla@ti.com>
+ <1414490332-14856-4-git-send-email-lokeshvutla@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <544F97A4.7080209@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Qais Yousef <qais.yousef@imgtec.com>, Clemens Ladisch <clemens@ladisch.de>, linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Neil Jones <neil.jones@imgtec.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ytoMbUMiTKPMT3hY"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414490332-14856-4-git-send-email-lokeshvutla@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>, broonie@kernel.org
+Cc: rtc-linux@googlegroups.com, linux-omap@vger.kernel.org, johan@kernel.org, tony@atomide.com, balbi@ti.com, akpm@linux-foundation.org, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, nm@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/28/2014 02:18 PM, Qais Yousef wrote:
-> On 10/28/2014 11:55 AM, Clemens Ladisch wrote:
->> Qais Yousef wrote:
->>> AXD Audio Processing IP performs audio decoding, encoding, mixing,
->>> equalisation,
->>> synchronisation and playback.
->> What exactly do you mean with "synchronisation" and "playback"?
->
-> Synchronisation refers to accurate audio playout relative to a master
-> clock source including compensation of drift between the master clock
-> source and the playout clock of the audio hardware. Hence allowing
-> synchronised audio playout across multiple independent devices.
->
-> Playback simple refers to the fact that AXD is capable of managing audio
-> playout hardware like I2S and SPDIF interfaces.
->
->
->>> It doesn't fit in alsa subsystem but I Cced them to confirm.
->> ... because those two words sound like something that a sound card could do.
->
-> The problem mainly stems from the fact that we take a variety of
-> compressed audio as input and we could perform audio encoding. The
-> problem with the compressed audio is that the range of decoders and
-> configuration supported in alsa is limited and there's no support for
-> taking raw pcm and producing compressed output. I'm not an expert on
-> alsa but when I looked it looked like there's more infra structure
-> required.
->
-> [...]
+--ytoMbUMiTKPMT3hY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This doesn't sound to different from any of the other supported audio DSPs. 
-ALSA seems to have 95% of what you need. And the missing 5% is probably 
-stuff that is not specific to your hardware but rather something that other 
-hardware will need as well. The framework is not set in stone you can make 
-modifications and add the features that are missing to make your hardware work.
+On Tue, Oct 28, 2014 at 03:28:52PM +0530, Lokesh Vutla wrote:
+> Certain SoCs such as DRA7, RTC is an independent voltage domain of it's o=
+wn
+> and on platforms such as DRA7-evm, this may be supplied by individual
+> regulator on it's own.
+> So make the OMAP RTC driver support a power regulator.
+>=20
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+> - Dropped the Reviewed-by tags as this patch is changed from previous ver=
+sion.
+>  Documentation/devicetree/bindings/rtc/rtc-omap.txt |  6 ++++
+>  drivers/rtc/rtc-omap.c                             | 41 ++++++++++++++++=
++++++-
+>  2 files changed, 46 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documen=
+tation/devicetree/bindings/rtc/rtc-omap.txt
+> index 750efd4..c1d84ac 100644
+> --- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+> +++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+> @@ -15,6 +15,9 @@ Required properties:
+>  Optional properties:
+>  - ti,system-power-controller: whether the rtc is controlling the system =
+power
+>    through pmic_power_en
+> +- vrtc-supply: phandle to the regulator device tree node.
+> +- vrtc-minuV: Minimum required voltage in uV, If default voltage needs t=
+o be changed
+> +- vrtc-maxuV: Maximum acceptable voltage in uV, If default voltage needs=
+ to be changed
 
-E.g. look at sound/soc/intel/ for an example of a audio DSP.
+huh ? minuV and maxuV is already part of the regulator binding itself.
 
-No integrating this into ALSA will quite likely result in a quite messy 
-situation for you on the long run.
+> @@ -514,6 +516,37 @@ static int omap_rtc_probe(struct platform_device *pd=
+ev)
+>  	if (IS_ERR(rtc->base))
+>  		return PTR_ERR(rtc->base);
+> =20
+> +	rtc->supply =3D devm_regulator_get_optional(&pdev->dev, "vrtc");
 
-- Lars
+I'm not sure if this is optional either, it's just that many of our
+current DTS don't really pass a regulator to RTC, right ?
+
+> +	if (IS_ERR(rtc->supply)) {
+> +		if (PTR_ERR(rtc->supply) =3D=3D -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +
+> +		rtc->supply =3D NULL;
+> +	}
+> +
+> +	if (rtc->supply) {
+> +		of_property_read_u32(pdev->dev.of_node, "vrtc-minuV",
+> +				     &vrtc_minuV);
+> +		of_property_read_u32(pdev->dev.of_node, "vrtc-maxuV",
+> +				     &vrtc_maxuV);
+> +		if (vrtc_minuV && vrtc_maxuV) {
+> +			ret =3D regulator_set_voltage(rtc->supply,
+> +						    vrtc_minuV, vrtc_maxuV);
+> +			if (ret) {
+> +				dev_err(&pdev->dev, "failed to set volt %d\n",
+> +					ret);
+> +				return ret;
+> +			}
+> +		}
+
+I'd really like to Mark's comments here but I was under the impression
+that if the binding already gives min_microvolt =3D=3D max_microvolt then
+driver shouldn't really care about a set_voltage. Mark ?
+
+> +
+> +		ret =3D regulator_enable(rtc->supply);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "regulator enable failed %d\n",
+> +				ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	platform_set_drvdata(pdev, rtc);
+> =20
+>  	/* Enable the clock/module so that we can access the registers */
+> @@ -624,6 +657,9 @@ err:
+>  	pm_runtime_put_sync(&pdev->dev);
+>  	pm_runtime_disable(&pdev->dev);
+> =20
+> +	if (rtc->supply)
+> +		regulator_disable(rtc->supply);
+> +
+>  	return ret;
+>  }
+> =20
+> @@ -649,6 +685,9 @@ static int __exit omap_rtc_remove(struct platform_dev=
+ice *pdev)
+>  	pm_runtime_put_sync(&pdev->dev);
+>  	pm_runtime_disable(&pdev->dev);
+> =20
+> +	if (rtc->supply)
+> +		regulator_disable(rtc->supply);
+> +
+>  	return 0;
+>  }
+> =20
+> --=20
+> 1.9.1
+>=20
+
+--=20
+balbi
+
+--ytoMbUMiTKPMT3hY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUT6/cAAoJEIaOsuA1yqREUNIP/2Q9ycWiI2mgHdSEGBkJ8S1L
+m3hxUv1L/qxQm9xEBGY6Mfkf7Dx+wjVNB8tPi2jt1ScLai8HBVfz1MlTpMRep9JI
+jPJCeDxjS0UlgqEdJbaaLRi7wH6CEbyEoP/h2Ajv7VBG/IJvMTyhe2tMxS3P2P5Z
+subwWPasJX9tDUe4UryqoFY9O/7pL8xMhJvRZU+eshoCEa5uyt1gn182kSp4j+uh
+04XihYfLPCRIhEZkra+go0LKZemuRKuZg5uLru5j15g1h1tt0UYZ/AVtt79ozFib
+68UMyvrDKp1/4I4+tckwxcFxC0j85+I+YgwgrtNVaSUs+5BLCrLP7i+ha4h+iS24
+LRKrk16pttps8DKJ0uQrsSnea7hs8ONM0Vsinhli2ucvZjOAYZIfUd7WWEBZFSW5
+ALXY3MybYVa/HbxUXHPx8eJCdgQFN6KiCgO9CnlHoDLLCJ8cY2iN404KEK6i473s
+MJp+XBJwKvbgAojeZL30OnURk3BP92TBSVZN2ckBIoHlzTQDEhvayG3zLn/8MQSS
++/iseZvb/rm2hJWjjqO+llnbMoxQ+x7Sj3lNoGMXo0UeGpOvGaR+QZ9NP7ySmVtW
+BWPl0P7LuDvt69NPg/doMGd3zX4eMFOheNpgrgzzN5EgqC5o4ytidadvisxzE0sv
+A5W2TEEDgUJg8y9igYQW
+=4V3C
+-----END PGP SIGNATURE-----
+
+--ytoMbUMiTKPMT3hY--
