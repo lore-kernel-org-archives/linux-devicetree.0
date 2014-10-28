@@ -1,63 +1,43 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 0/5] simplefb: add clock handling code
-Date: Tue, 28 Oct 2014 12:08:04 +0100
-Message-ID: <544F7914.8090007@redhat.com>
-References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com> <544F737A.7000109@ti.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Ajay kumar <ajaynumb@gmail.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
+ ps8622 DT properties
+Date: Tue, 28 Oct 2014 16:42:09 +0530
+Message-ID: <CAEC9eQM4dwtuoY64DYgUon=qwm0nNs6L7Rgf0XJH6pSSQfLyHQ@mail.gmail.com>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
+ <20141008070918.GA4999@ulmo>
+ <CAEC9eQPn2GAn6nrSvgso2QTXQErtY+8dH5-LbZS9mGTYcYC5Gw@mail.gmail.com>
+ <15883554.FBq3UbZUdh@avalon>
+ <CABxcv=kNBpNCOM-=PgHcR23eAVuzR8ECROeGxOs-Hk0JCSK1Lw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBI7SXWRAKGQEAILKOHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <544F737A.7000109-l0cyMroinI0@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CABxcv=kNBpNCOM-=PgHcR23eAVuzR8ECROeGxOs-Hk0JCSK1Lw@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 10/28/2014 11:44 AM, Tomi Valkeinen wrote:
-> On 22/10/14 19:45, Hans de Goede wrote:
-> 
->> Since we seem to have broad agreement on how to move forward with this, I
->> would like to ask you to please merge this patch-set for 3.19.
->>
->> I know 3.19 is still somewhat ar away, but I would like to submit the u-boot
->> side of this to upstream ASAP, so can you please let me know if you plan to 
->> take this patch-set for 3.19 soon ?
-> 
-> This series looks fine to me, except patch 3 is missing a description,
-
-Description for patch 3:
-
-"Add a proper struct describing simplefb private data, with the palette in there,
-instead of directly storing the palette in the fb_info->par pointer."
-
-> and patch 4 makes the desc a continuation of the subject.
-
-Description for patch 4:
-
-"Use the usual kernel style of goto error_foo to free resources on probe
-error. This is a preparation patch for adding clocks support.
-
-While at it update ioremap_wc error return from ENODEV to ENOMEM."
-
-> Each patch should have a description (independent from subject).
-
-Ok, I'll remember that for future patches.
-
-> No need to resend, I can cook up something for those, or I can edit the
-> descs if you provide the text.
-
-Descriptions provided above, thanks!
-
-> So if there are no strong objections, I'll queue this for 3.19.
-
-Regards,
-
-Hans
+T24gVHVlLCBPY3QgMjgsIDIwMTQgYXQgMjo0MiBQTSwgSmF2aWVyIE1hcnRpbmV6IENhbmlsbGFz
+CjxqYXZpZXJAZG93aGlsZTAub3JnPiB3cm90ZToKPiBIZWxsbyBBamF5LAo+Cj4gT24gVGh1LCBP
+Y3QgMTYsIDIwMTQgYXQgMTE6MDQgQU0sIExhdXJlbnQgUGluY2hhcnQKPiA8bGF1cmVudC5waW5j
+aGFydEBpZGVhc29uYm9hcmQuY29tPiB3cm90ZToKPj4+Cj4+PiBSaWdodC4gSXQgd291bGQgYmUg
+Z3JlYXQgaWYgeW91IGd1eXMgY29tZSB0byBhZ3JlZW1lbnQgQVNBUCEKPj4KPj4gSSBkb24ndCB0
+aGluayB3ZSdsbCBhZ3JlZSBhbnkgdGltZSBzb29uLCBzbyBJIGJlbGlldmUgaXQncyB1cCB0byB5
+b3UgdG8gZGVjaWRlCj4+IHdoaWNoIG9wdGlvbiBpcyBiZXN0IGJhc2VkIG9uIGFsbCBhcmd1bWVu
+dHMgdGhhdCBoYXZlIGJlZW4gcHJlc2VudGVkLgo+Pgo+Cj4gRGlkIHlvdSBkZWNpZGUgd2hhdCdz
+IHRoZSBjb3JyZWN0IGFwcHJvYWNoPyBJIGRvbid0IGhhdmUgYSBzdHJvbmcKPiBvcGluaW9uLCBJ
+J20ganVzdCBhc2tpbmcgYmVjYXVzZSBpdCB3b3VsZCBiZSBhIHBpdHkgaWYgeW91ciBzZXJpZXMK
+PiBtaXNzIGFub3RoZXIga2VybmVsIHJlbGVhc2UuLi4KSSB3aWxsIGJlIHVzaW5nIGdyYXBocyBp
+bnN0ZWFkIG9mIHBoYW5kbGVzLCBhbmQgd291bGQgc2VuZCBhIHNlcmllcyBBU0FQLgoKQWpheQpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
