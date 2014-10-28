@@ -1,57 +1,54 @@
 From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v6 2/3] dt-bindings: iommu: Add documentation for rockchip iommu
-Date: Tue, 28 Oct 2014 15:36:21 +0100
-Message-ID: <1857030.bPXkUHlXFx@diego>
-References: <1414413448-15819-1-git-send-email-djkurtz@chromium.org> <1414413448-15819-3-git-send-email-djkurtz@chromium.org>
+Subject: Re: [PATCH v6 3/3] ARM: dts: rk3288: add VOP iommu nodes
+Date: Tue, 28 Oct 2014 15:37:52 +0100
+Message-ID: <6644033.fY7Wj4BQVl@diego>
+References: <1414413448-15819-1-git-send-email-djkurtz@chromium.org> <1414413448-15819-4-git-send-email-djkurtz@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414413448-15819-3-git-send-email-djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1414413448-15819-4-git-send-email-djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?ISO-8859-1?Q?St=E9phane?= Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?ISO-8859-1?Q?St=E9phane?= Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 27. Oktober 2014, 20:37:27 schrieb Daniel Kurtz:
-> Add binding documentation for Rockchip IOMMU.
+Am Montag, 27. Oktober 2014, 20:37:28 schrieb Daniel Kurtz:
+> Add device nodes for the VOP iommus.
+> Device nodes for other iommus will be added in later patches.
+> 
+> The iommu nodes use the #iommu-cells property as described in:
+>   Documentation/devicetree/bindings/iommu/iommu.txt
 > 
 > Signed-off-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 > Signed-off-by: Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Looks fine and I'll pick this patch up, once Joerg is statisfied with the iommu 
+driver (patches 1 and 2).
+
+
+Heiko
 
 > ---
->  .../devicetree/bindings/iommu/rockchip,iommu.txt   | 26
-> ++++++++++++++++++++++ 1 file changed, 26 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+>  arch/arm/boot/dts/rk3288.dtsi | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
-> b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt new file mode
-> 100644
-> index 0000000..9a55ac3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
-> @@ -0,0 +1,26 @@
-> +Rockchip IOMMU
-> +==============
-> +
-> +A Rockchip DRM iommu translates io virtual addresses to physical addresses
-> for +its master device.  Each slave device is bound to a single master
-> device, and +shares its clocks, power domain and irq.
-> +
-> +Required properties:
-> +- compatible      : Should be "rockchip,iommu"
-> +- reg             : Address space for the configuration registers
-> +- interrupts      : Interrupt specifier for the IOMMU instance
-> +- interrupt-names : Interrupt name for the IOMMU instance
-> +- #iommu-cells    : Should be <0>.  This indicates the iommu is a
-> +                    "single-master" device, and needs no additional
-> information +                    to associate with its master device.  See:
-> +                    Documentation/devicetree/bindings/iommu/iommu.txt
-> +
-> +Example:
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index 5950b0a..df1170c 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -271,6 +271,24 @@
+>  		status = "disabled";
+>  	};
+> 
+> +	vopb_mmu: iommu@ff930300 {
+> +		compatible = "rockchip,iommu";
+> +		reg = <0xff930300 0x100>;
+> +		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "vopb_mmu";
+> +		#iommu-cells = <0>;
+> +		status = "disabled";
+> +	};
 > +
 > +	vopl_mmu: iommu@ff940300 {
 > +		compatible = "rockchip,iommu";
@@ -59,7 +56,12 @@ Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 > +		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
 > +		interrupt-names = "vopl_mmu";
 > +		#iommu-cells = <0>;
+> +		status = "disabled";
 > +	};
+> +
+>  	gic: interrupt-controller@ffc01000 {
+>  		compatible = "arm,gic-400";
+>  		interrupt-controller;
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
