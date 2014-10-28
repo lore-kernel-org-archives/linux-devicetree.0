@@ -1,44 +1,77 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 8/8] ARM: multi_v7_defconfig: Enable Broadcom Cygnus
-Date: Tue, 28 Oct 2014 21:13:20 +0100
-Message-ID: <1982026.E1VTksgscj@wuerfel>
-References: <1414525992-3678-9-git-send-email-sbranden@broadcom.com> <5089697.D8odgNlVtY@wuerfel> <544FF744.5020707@broadcom.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v7 1/2] mtd: nand: add sunxi NAND flash
+ controller support
+Date: Tue, 28 Oct 2014 21:15:55 +0100
+Message-ID: <20141028211555.5b6bb2d6@bbrezillon>
+References: <1413896922-11680-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1413896922-11680-2-git-send-email-boris.brezillon@free-electrons.com>
+	<20141028181310.GA23619@ld-irv-0074>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <544FF744.5020707@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Scott Branden <sbranden@broadcom.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Antti Palosaari <crope@iki.fi>, bcm-kernel-feedback-list@broadcom.com, Alex Elder <elder@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, Matt Porter <mporter@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christian Daudt <bcm@fixthebug.org>, linux-kernel@vger.kernel.org, JD Zheng <jdzheng@broadcom.com>, Kumar Gala <galak@codeaurora.org>, Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBB77SX6RAKGQEBKQ7HWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20141028181310.GA23619@ld-irv-0074>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yassin Jaffer <yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 28 October 2014 13:06:28 Scott Branden wrote:
-> On 14-10-28 01:01 PM, Arnd Bergmann wrote:
-> > On Tuesday 28 October 2014 12:53:12 Scott Branden wrote:
-> >> From: Ray Jui <rjui@broadcom.com>
-> >>
-> >> Enable Broadcom Cygnus platform support in multi_v7_defconfig
-> >>
-> >> Signed-off-by: Ray Jui <rjui@broadcom.com>
-> >> Signed-off-by: Scott Branden <sbranden@broadcom.com>
-> >>
-> >
-> > Just to be sure: did you check that multi_v7_defconfig contains
-> > all the drivers you need that you enable in your other defconfig?
-> No - the other defconfig has more that have not been tested on the 
-> device.  The defconfig builds, but the other drivers haven't been 
-> tested.  I guess we can try adding them to the multi_defconfig right now 
-> as well or wait until we have tested them?  There will need to be 
-> addition dts changes in the future after we have tested the other drivers.
+Hi Brian,
+
+On Tue, 28 Oct 2014 11:13:11 -0700
+Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+> Hi Boris,
 > 
-> Can we wait to add them to multi_v7_defconfig or do you want them in 
-> this patchset?
+> On Tue, Oct 21, 2014 at 03:08:41PM +0200, Boris Brezillon wrote:
+> > +static int sunxi_nand_hw_ecc_ctrl_init(struct mtd_info *mtd,
+> > +				       struct nand_ecc_ctrl *ecc,
+> > +				       struct device_node *np)
+> > +{
+> > +	struct nand_ecclayout *layout;
+> > +	int i, j;
+> > +	int ret;
+> > +
+> > +	ret = sunxi_nand_hw_common_ecc_ctrl_init(mtd, ecc, np);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ecc->read_page = sunxi_nfc_hw_ecc_read_page;
+> > +	ecc->write_page = sunxi_nfc_hw_ecc_write_page;
+> > +	layout = ecc->layout;
+> > +
+> > +	for (i = 0; i < ecc->steps; i++) {
+> 
+> Hmm, did you retest this since changing this to ecc->steps? I think this
+> won't work, since ecc->steps is only initialized in nand_scan_tail(),
+> which comes after this. I only recommended the change for the
+> {read,write}_page() type of functions, not the initialization functions.
 
-The important part is that you don't break other platforms, and that
-is independent of whether the code actually does the right thing.
+Oh, crap!
+Indeed, I only checked that the NAND was properly detected, but didn't
+test all the features.
+Anyway, I'm glad you found this issue before applying the series.
 
-If you know that you will need certain drivers to make use of
-the platform, just enable them now.
+> 
+> [snip the rest]
+> 
+> So I'd suggest the following additional patch, and otherwise, the series
+> is fine with me. If you give your ack, I can just squash this in and
+> apply it to my tree:
 
-	Arnd
+I'll test it tomorrow (and this time I'll test everything ;-)).
+
+Thanks,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
