@@ -1,232 +1,76 @@
-From: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
-Subject: [PATCH v2] ARM: dts: rockchip: use internal pull-up resistors on I2C
- busses
-Date: Tue, 28 Oct 2014 11:36:36 +0100
-Message-ID: <1414492597-13566-1-git-send-email-julien.chauveau@neo-technologies.fr>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 0/5] simplefb: add clock handling code
+Date: Tue, 28 Oct 2014 12:44:10 +0200
+Message-ID: <544F737A.7000109@ti.com>
+References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="OlxhDqcf3w05tM4r8FnJdrENGuXD7ElC7"
+Return-path: <linux-sunxi+bncBCGMHFOOT4LBBC7HXWRAKGQEHZBCMMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1413996311-4287-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-According to the I2C bus specification, it is required to use pull-up resistors
-on the clock and data lines. Probing the I2C busses with i2cdetect results in
-bad results when no devices are connected and no external resistors are used.
+--OlxhDqcf3w05tM4r8FnJdrENGuXD7ElC7
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-This patch configures the I2C busses to use the internal pull-up resistors
-on the RK3066, RK3188 and RK3288 Rockchip processors. It should also be noted
-that these default pull settings match the original configuration on these SoCs.
+On 22/10/14 19:45, Hans de Goede wrote:
 
-Below is the results of using i2cdetect on a I2C bus with no devices connected
-before (1) and after (2) applying this patch.
+> Since we seem to have broad agreement on how to move forward with this,=
+ I
+> would like to ask you to please merge this patch-set for 3.19.
+>=20
+> I know 3.19 is still somewhat ar away, but I would like to submit the u=
+-boot
+> side of this to upstream ASAP, so can you please let me know if you pla=
+n to=20
+> take this patch-set for 3.19 soon ?
 
-(1) root@localhost:~# i2cdetect -y 3
-     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
-00:          03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f
-10: 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f
-20: 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f
-30: -- -- -- -- -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x81, state: 2
--- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 2
--- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 2
--- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 3
--- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 3
--- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 3
-...
+This series looks fine to me, except patch 3 is missing a description,
+and patch 4 makes the desc a continuation of the subject. Each patch
+should have a description (independent from subject).
 
-(2) root@localhost:~# i2cdetect -y 3
-     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
-00:          -- -- -- -- -- -- -- -- -- -- -- -- --
-10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-70: -- -- -- -- -- -- -- --
+No need to resend, I can cook up something for those, or I can edit the
+descs if you provide the text.
 
-Signed-off-by: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
----
-Changes since v1:
-- fix the rk3066a pull settings (only available is pull_none/pull_default)
-- remove the warnings in the results of i2cdetect
+So if there are no strong objections, I'll queue this for 3.19.
 
- arch/arm/boot/dts/rk3066a.dtsi | 20 ++++++++++----------
- arch/arm/boot/dts/rk3188.dtsi  | 20 ++++++++++----------
- arch/arm/boot/dts/rk3288.dtsi  | 24 ++++++++++++------------
- 3 files changed, 32 insertions(+), 32 deletions(-)
+ Tomi
 
-diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index ad9c2db..dbc1a0b 100644
---- a/arch/arm/boot/dts/rk3066a.dtsi
-+++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -202,36 +202,36 @@
- 
- 		i2c0 {
- 			i2c0_xfer: i2c0-xfer {
--				rockchip,pins = <RK_GPIO2 28 RK_FUNC_1 &pcfg_pull_none>,
--						<RK_GPIO2 29 RK_FUNC_1 &pcfg_pull_none>;
-+				rockchip,pins = <RK_GPIO2 28 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO2 29 RK_FUNC_1 &pcfg_pull_default>;
- 			};
- 		};
- 
- 		i2c1 {
- 			i2c1_xfer: i2c1-xfer {
--				rockchip,pins = <RK_GPIO2 30 RK_FUNC_1 &pcfg_pull_none>,
--						<RK_GPIO2 31 RK_FUNC_1 &pcfg_pull_none>;
-+				rockchip,pins = <RK_GPIO2 30 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO2 31 RK_FUNC_1 &pcfg_pull_default>;
- 			};
- 		};
- 
- 		i2c2 {
- 			i2c2_xfer: i2c2-xfer {
--				rockchip,pins = <RK_GPIO3 0 RK_FUNC_1 &pcfg_pull_none>,
--						<RK_GPIO3 1 RK_FUNC_1 &pcfg_pull_none>;
-+				rockchip,pins = <RK_GPIO3 0 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO3 1 RK_FUNC_1 &pcfg_pull_default>;
- 			};
- 		};
- 
- 		i2c3 {
- 			i2c3_xfer: i2c3-xfer {
--				rockchip,pins = <RK_GPIO3 2 RK_FUNC_2 &pcfg_pull_none>,
--						<RK_GPIO3 3 RK_FUNC_2 &pcfg_pull_none>;
-+				rockchip,pins = <RK_GPIO3 2 RK_FUNC_2 &pcfg_pull_default>,
-+						<RK_GPIO3 3 RK_FUNC_2 &pcfg_pull_default>;
- 			};
- 		};
- 
- 		i2c4 {
- 			i2c4_xfer: i2c4-xfer {
--				rockchip,pins = <RK_GPIO3 4 RK_FUNC_1 &pcfg_pull_none>,
--						<RK_GPIO3 5 RK_FUNC_1 &pcfg_pull_none>;
-+				rockchip,pins = <RK_GPIO3 4 RK_FUNC_1 &pcfg_pull_default>,
-+						<RK_GPIO3 5 RK_FUNC_1 &pcfg_pull_default>;
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-index ddaada7..ee2865f 100644
---- a/arch/arm/boot/dts/rk3188.dtsi
-+++ b/arch/arm/boot/dts/rk3188.dtsi
-@@ -188,36 +188,36 @@
- 
- 		i2c0 {
- 			i2c0_xfer: i2c0-xfer {
--				rockchip,pins = <RK_GPIO1 24 RK_FUNC_1 &pcfg_pull_none>,
--						<RK_GPIO1 25 RK_FUNC_1 &pcfg_pull_none>;
-+				rockchip,pins = <RK_GPIO1 24 RK_FUNC_1 &pcfg_pull_up>,
-+						<RK_GPIO1 25 RK_FUNC_1 &pcfg_pull_up>;
- 			};
- 		};
- 
- 		i2c1 {
- 			i2c1_xfer: i2c1-xfer {
--				rockchip,pins = <RK_GPIO1 26 RK_FUNC_1 &pcfg_pull_none>,
--						<RK_GPIO1 27 RK_FUNC_1 &pcfg_pull_none>;
-+				rockchip,pins = <RK_GPIO1 26 RK_FUNC_1 &pcfg_pull_up>,
-+						<RK_GPIO1 27 RK_FUNC_1 &pcfg_pull_up>;
- 			};
- 		};
- 
- 		i2c2 {
- 			i2c2_xfer: i2c2-xfer {
--				rockchip,pins = <RK_GPIO1 28 RK_FUNC_1 &pcfg_pull_none>,
--						<RK_GPIO1 29 RK_FUNC_1 &pcfg_pull_none>;
-+				rockchip,pins = <RK_GPIO1 28 RK_FUNC_1 &pcfg_pull_up>,
-+						<RK_GPIO1 29 RK_FUNC_1 &pcfg_pull_up>;
- 			};
- 		};
- 
- 		i2c3 {
- 			i2c3_xfer: i2c3-xfer {
--				rockchip,pins = <RK_GPIO3 14 RK_FUNC_2 &pcfg_pull_none>,
--						<RK_GPIO3 15 RK_FUNC_2 &pcfg_pull_none>;
-+				rockchip,pins = <RK_GPIO3 14 RK_FUNC_2 &pcfg_pull_up>,
-+						<RK_GPIO3 15 RK_FUNC_2 &pcfg_pull_up>;
- 			};
- 		};
- 
- 		i2c4 {
- 			i2c4_xfer: i2c4-xfer {
--				rockchip,pins = <RK_GPIO1 30 RK_FUNC_1 &pcfg_pull_none>,
--						<RK_GPIO1 31 RK_FUNC_1 &pcfg_pull_none>;
-+				rockchip,pins = <RK_GPIO1 30 RK_FUNC_1 &pcfg_pull_up>,
-+						<RK_GPIO1 31 RK_FUNC_1 &pcfg_pull_up>;
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 874e66d..9a4b1f7 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -636,43 +636,43 @@
- 
- 		i2c0 {
- 			i2c0_xfer: i2c0-xfer {
--				rockchip,pins = <0 15 RK_FUNC_1 &pcfg_pull_none>,
--						<0 16 RK_FUNC_1 &pcfg_pull_none>;
-+				rockchip,pins = <0 15 RK_FUNC_1 &pcfg_pull_up>,
-+						<0 16 RK_FUNC_1 &pcfg_pull_up>;
- 			};
- 		};
- 
- 		i2c1 {
- 			i2c1_xfer: i2c1-xfer {
--				rockchip,pins = <8 4 RK_FUNC_1 &pcfg_pull_none>,
--						<8 5 RK_FUNC_1 &pcfg_pull_none>;
-+				rockchip,pins = <8 4 RK_FUNC_1 &pcfg_pull_up>,
-+						<8 5 RK_FUNC_1 &pcfg_pull_up>;
- 			};
- 		};
- 
- 		i2c2 {
- 			i2c2_xfer: i2c2-xfer {
--				rockchip,pins = <6 9 RK_FUNC_1 &pcfg_pull_none>,
--						<6 10 RK_FUNC_1 &pcfg_pull_none>;
-+				rockchip,pins = <6 9 RK_FUNC_1 &pcfg_pull_up>,
-+						<6 10 RK_FUNC_1 &pcfg_pull_up>;
- 			};
- 		};
- 
- 		i2c3 {
- 			i2c3_xfer: i2c3-xfer {
--				rockchip,pins = <2 16 RK_FUNC_1 &pcfg_pull_none>,
--						<2 17 RK_FUNC_1 &pcfg_pull_none>;
-+				rockchip,pins = <2 16 RK_FUNC_1 &pcfg_pull_up>,
-+						<2 17 RK_FUNC_1 &pcfg_pull_up>;
- 			};
- 		};
- 
- 		i2c4 {
- 			i2c4_xfer: i2c4-xfer {
--				rockchip,pins = <7 17 RK_FUNC_1 &pcfg_pull_none>,
--						<7 18 RK_FUNC_1 &pcfg_pull_none>;
-+				rockchip,pins = <7 17 RK_FUNC_1 &pcfg_pull_up>,
-+						<7 18 RK_FUNC_1 &pcfg_pull_up>;
- 			};
- 		};
- 
- 		i2c5 {
- 			i2c5_xfer: i2c5-xfer {
--				rockchip,pins = <7 19 RK_FUNC_1 &pcfg_pull_none>,
--						<7 20 RK_FUNC_1 &pcfg_pull_none>;
-+				rockchip,pins = <7 19 RK_FUNC_1 &pcfg_pull_up>,
-+						<7 20 RK_FUNC_1 &pcfg_pull_up>;
- 			};
- 		};
- 
--- 
-1.9.1
+
+
+--OlxhDqcf3w05tM4r8FnJdrENGuXD7ElC7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUT3N+AAoJEPo9qoy8lh71m+0P/0LdN7HM5Utmnuza5UDHOO2P
+fD3h4p7EDUvGxP+kE7QwV+2YNnY1cGWHIDy0wL0URrRpVrtV9BVrpLHssIPqWCQt
+w3IE9fK8S3vpkw21YQdN+vz0HmzESM52kODAjn1seiLtCSuytEXIBSym/bMQP6DD
+W4sY99+8Rww68mmD3l1Jv3yMX2GyovMPmmQYLGbpNfKdpcVNYIPDBwbfS0udEePt
+jq7PzWj9niC1CVEW7/LxklowDG89p3yuh1bQsHhPnpqqX8paxIq3pDx151+qRdH3
+gsRBPwRzJik4BiLRkHqYy40svhq8cPWgsR8cyOLkSQ0/zFGzDEuX9nxxRQbuMU/5
+tmhbYCV2+cidlMytPHNVMpGYXqBme6nA7cKyIsswk8lj2G4fX52tArQH9dMJl84l
+HxqXDfj4+O2sRksPwc9IdXeQ7RE6zET8ZXU4rJ/sA9MqgUjVmJsryG4X1cQSrG7K
+npSC1+ZLtDQ14I8v03IzP3Nb7dqY94AAgJqJWKkMwL1DIYdO5MH3jDh22IXv1VVV
+3f29epRXrcEBl4EjEldg8xNnX/U301c0fhBhZq636rx0XuAEi68j2/E9xhre33JW
+4Zj8gZfNU7WlKNZRI8fRdiRuPr6zx67JtNC3zlD0DHSOLL9RPxewbzys+oNgwrRV
+uRjDW0XAeZAaohs7+RFA
+=NbE4
+-----END PGP SIGNATURE-----
+
+--OlxhDqcf3w05tM4r8FnJdrENGuXD7ElC7--
