@@ -1,14 +1,15 @@
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH RESEND 08/12] mmc: sdhci-pxav3: Get optional core clock
-Date: Tue, 28 Oct 2014 10:53:21 +0100
-Message-ID: <CAPDyKFoXzyFnuEwaa_q-uzhQMioAEs=9HyKTfOwV9KahCJnZhQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND 09/12] mmc: sdhci-pxav3: Document clocks and
+ additional clock-names property
+Date: Tue, 28 Oct 2014 10:53:37 +0100
+Message-ID: <CAPDyKFqibXtPB57m772HcMsicDbjHH8TiJUtSMRypAJrePygPg@mail.gmail.com>
 References: <1413883364-681-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1413883364-681-9-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1413883364-681-10-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1413883364-681-9-git-send-email-sebastian.hesselbarth@gmail.com>
+In-Reply-To: <1413883364-681-10-git-send-email-sebastian.hesselbarth@gmail.com>
 Sender: linux-mmc-owner@vger.kernel.org
 To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 Cc: Chris Ball <chris@printf.net>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
@@ -16,9 +17,9 @@ List-Id: devicetree@vger.kernel.org
 
 On 21 October 2014 11:22, Sebastian Hesselbarth
 <sebastian.hesselbarth@gmail.com> wrote:
-> Besides the I/O clock, some PXAv3 SDHCI IP also requires a core clock=
- to
-> be enabled. Add an optional core clock to the corresponding driver.
+> Now that sdhci-pxav3 driver allows to have more than one IP clock def=
+ined,
+> document both clocks and clock-names properties.
 >
 > Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com=
 >
@@ -38,73 +39,45 @@ Uffe
 > Cc: linux-arm-kernel@lists.infradead.org
 > Cc: linux-kernel@vger.kernel.org
 > ---
->  drivers/mmc/host/sdhci-pxav3.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+>  Documentation/devicetree/bindings/mmc/sdhci-pxa.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
 >
-> diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-=
-pxav3.c
-> index 3dfd97977515..ad0badad0ebc 100644
-> --- a/drivers/mmc/host/sdhci-pxav3.c
-> +++ b/drivers/mmc/host/sdhci-pxav3.c
-> @@ -59,6 +59,7 @@
->  #define SDCE_MISC_INT_EN       (1<<1)
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt b/Do=
+cumentation/devicetree/bindings/mmc/sdhci-pxa.txt
+> index 86223c3eda90..4dd6deb90719 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+> @@ -12,6 +12,10 @@ Required properties:
+>    * for "marvell,armada-380-sdhci", two register areas. The first on=
+e
+>      for the SDHCI registers themselves, and the second one for the
+>      AXI/Mbus bridge registers of the SDHCI unit.
+> +- clocks: Array of clocks required for SDHCI; requires at least one =
+for
+> +    I/O clock.
+> +- clock-names: Array of names corresponding to clocks property; shal=
+l be
+> +    "io" for I/O clock and "core" for optional core clock.
 >
->  struct sdhci_pxa {
-> +       struct clk *clk_core;
->         struct clk *clk_io;
->         u8      power_mode;
+>  Optional properties:
+>  - mrvl,clk-delay-cycles: Specify a number of cycles to delay for tun=
+ing.
+> @@ -23,6 +27,8 @@ sdhci@d4280800 {
+>         reg =3D <0xd4280800 0x800>;
+>         bus-width =3D <8>;
+>         interrupts =3D <27>;
+> +       clocks =3D <&chip CLKID_SDIO1XIN>, <&chip CLKID_SDIO1>;
+> +       clock-names =3D "io", "core";
+>         non-removable;
+>         mrvl,clk-delay-cycles =3D <31>;
 >  };
-> @@ -320,6 +321,10 @@ static int sdhci_pxav3_probe(struct platform_dev=
-ice *pdev)
->         pltfm_host->clk =3D pxa->clk_io;
->         clk_prepare_enable(pxa->clk_io);
->
-> +       pxa->clk_core =3D devm_clk_get(dev, "core");
-> +       if (!IS_ERR(pxa->clk_core))
-> +               clk_prepare_enable(pxa->clk_core);
-> +
->         /* enable 1/8V DDR capable */
->         host->mmc->caps |=3D MMC_CAP_1_8V_DDR;
->
-> @@ -392,6 +397,8 @@ err_add_host:
->  err_of_parse:
->  err_cd_req:
->         clk_disable_unprepare(pxa->clk_io);
-> +       if (!IS_ERR(pxa->clk_core))
-> +               clk_disable_unprepare(pxa->clk_core);
->  err_clk_get:
->  err_mbus_win:
->         sdhci_pltfm_free(pdev);
-> @@ -409,6 +416,8 @@ static int sdhci_pxav3_remove(struct platform_dev=
-ice *pdev)
->         pm_runtime_disable(&pdev->dev);
->
->         clk_disable_unprepare(pxa->clk_io);
-> +       if (!IS_ERR(pxa->clk_core))
-> +               clk_disable_unprepare(pxa->clk_core);
->
->         sdhci_pltfm_free(pdev);
->
-> @@ -456,6 +465,8 @@ static int sdhci_pxav3_runtime_suspend(struct dev=
-ice *dev)
->         spin_unlock_irqrestore(&host->lock, flags);
->
->         clk_disable_unprepare(pxa->clk_io);
-> +       if (!IS_ERR(pxa->clk_core))
-> +               clk_disable_unprepare(pxa->clk_core);
->
->         return 0;
->  }
-> @@ -468,6 +479,8 @@ static int sdhci_pxav3_runtime_resume(struct devi=
-ce *dev)
->         unsigned long flags;
->
->         clk_prepare_enable(pxa->clk_io);
-> +       if (!IS_ERR(pxa->clk_core))
-> +               clk_prepare_enable(pxa->clk_core);
->
->         spin_lock_irqsave(&host->lock, flags);
->         host->runtime_suspended =3D false;
+> @@ -32,5 +38,6 @@ sdhci@d8000 {
+>         reg =3D <0xd8000 0x1000>, <0xdc000 0x100>;
+>         interrupts =3D <0 25 0x4>;
+>         clocks =3D <&gateclk 17>;
+> +       clock-names =3D "io";
+>         mrvl,clk-delay-cycles =3D <0x1F>;
+>  };
 > --
 > 2.1.1
 >
