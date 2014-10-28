@@ -1,171 +1,55 @@
-From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] iio: exyno-adc: use syscon for PMU register access
-Date: Tue, 28 Oct 2014 18:01:36 +0530
-Message-ID: <CAFp+6iH77ToXfOG1bXpCi60JpuzhhxOqaz99=9v4_9DppkSCNw@mail.gmail.com>
-References: <1410857931-4980-1-git-send-email-ch.naveen@samsung.com>
-	<1410857931-4980-2-git-send-email-ch.naveen@samsung.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 00/20] rtc: omap: fixes and power-off feature
+Date: Tue, 28 Oct 2014 14:12:57 +0100
+Message-ID: <20141028131257.GS2006@localhost>
+References: <20141024190251.GB19377@localhost>
+ <20141024192540.GD11455@saruman>
+ <20141024192948.GE11455@saruman>
+ <20141024193655.GD19377@localhost>
+ <20141024194442.GG11455@saruman>
+ <20141024195532.GF19377@localhost>
+ <20141027162251.d7ff2a5f31917c638d4e47f7@linux-foundation.org>
+ <20141028002552.GX12379@n2100.arm.linux.org.uk>
+ <20141028081616.GL2006@localhost>
+ <20141028084745.GY12379@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410857931-4980-2-git-send-email-ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, CPGS <cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141028084745.GY12379@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Johan Hovold <johan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Felipe Balbi <balbi@ti.com>, Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Tue, Oct 28, 2014 at 08:47:46AM +0000, Russell King - ARM Linux wrote:
+> On Tue, Oct 28, 2014 at 09:16:16AM +0100, Johan Hovold wrote:
+> > It looks like we're soon to be having power-off call chains, with
+> > configurable priorities, to shut of various parts of the hardware
+> 
+> I really hope that they *don't* get used like that.  I guess this is
+> what happens when people don't read the code before they decide to
+> implement something.
+> 
+> All the reboot/power off/halt methods already call into the driver model,
+> and the driver model then iterates over all bound drivers calling their
+> "shutdown" method.  So, today, as it has been for years, all device
+> drivers are notified of system power off.
+> 
+> That's where most device drivers should be cleanly stopping their
+> hardware.
+> 
+> The only thing which is left is the actual hardware triggering of the
+> action, and that should be what's done via the notifier.
 
+That's not what I was trying to refer to. But the patch set explicitly
+allows for multiple, prioritised power-off handlers, which can power
+off a board in different ways and with various degrees of success.
+Specifically, it allows for fallback handlers in case one or more
+power-off handlers fail.
 
-CC'ing Naveen's gmail id, since the Samsung id is invalid now.
+So if we allow for that, what is to prevent the final power-off handler
+from failing? And should this not be logged by arch code in the same way
+as failure to restart is?
 
-
-On Tue, Sep 16, 2014 at 2:28 PM, Naveen Krishna Chatradhi
-<ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> This patch updates the IIO based ADC driver to use syscon and regmap
-> APIs to access and use PMU registers instead of remapping the PMU
-> registers in the driver.
->
-> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
-> Changes since v1:
-> Rebased on top of togreg branch of IIO git
-
-If the changes look good, then first two patches of this series can be
-picked up ?
-The last dt patch then belongs to samsung tree.
-
->
->  drivers/iio/adc/exynos_adc.c |   30 +++++++++++++++++++++---------
->  1 file changed, 21 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
-> index 43620fd..fe03177 100644
-> --- a/drivers/iio/adc/exynos_adc.c
-> +++ b/drivers/iio/adc/exynos_adc.c
-> @@ -39,6 +39,8 @@
->  #include <linux/iio/iio.h>
->  #include <linux/iio/machine.h>
->  #include <linux/iio/driver.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/regmap.h>
->
->  /* S3C/EXYNOS4412/5250 ADC_V1 registers definitions */
->  #define ADC_V1_CON(x)          ((x) + 0x00)
-> @@ -90,11 +92,14 @@
->
->  #define EXYNOS_ADC_TIMEOUT     (msecs_to_jiffies(100))
->
-> +#define EXYNOS_ADCV1_PHY_OFFSET        0x0718
-> +#define EXYNOS_ADCV2_PHY_OFFSET        0x0720
-> +
->  struct exynos_adc {
->         struct exynos_adc_data  *data;
->         struct device           *dev;
->         void __iomem            *regs;
-> -       void __iomem            *enable_reg;
-> +       struct regmap           *pmu_map;
->         struct clk              *clk;
->         struct clk              *sclk;
->         unsigned int            irq;
-> @@ -110,6 +115,7 @@ struct exynos_adc_data {
->         int num_channels;
->         bool needs_sclk;
->         bool needs_adc_phy;
-> +       int phy_offset;
->         u32 mask;
->
->         void (*init_hw)(struct exynos_adc *info);
-> @@ -183,7 +189,7 @@ static void exynos_adc_v1_init_hw(struct exynos_adc *info)
->         u32 con1;
->
->         if (info->data->needs_adc_phy)
-> -               writel(1, info->enable_reg);
-> +               regmap_write(info->pmu_map, info->data->phy_offset, 1);
->
->         /* set default prescaler values and Enable prescaler */
->         con1 =  ADC_V1_CON_PRSCLV(49) | ADC_V1_CON_PRSCEN;
-> @@ -198,7 +204,7 @@ static void exynos_adc_v1_exit_hw(struct exynos_adc *info)
->         u32 con;
->
->         if (info->data->needs_adc_phy)
-> -               writel(0, info->enable_reg);
-> +               regmap_write(info->pmu_map, info->data->phy_offset, 0);
->
->         con = readl(ADC_V1_CON(info->regs));
->         con |= ADC_V1_CON_STANDBY;
-> @@ -225,6 +231,7 @@ static const struct exynos_adc_data exynos_adc_v1_data = {
->         .num_channels   = MAX_ADC_V1_CHANNELS,
->         .mask           = ADC_DATX_MASK,        /* 12 bit ADC resolution */
->         .needs_adc_phy  = true,
-> +       .phy_offset     = EXYNOS_ADCV1_PHY_OFFSET,
->
->         .init_hw        = exynos_adc_v1_init_hw,
->         .exit_hw        = exynos_adc_v1_exit_hw,
-> @@ -314,7 +321,7 @@ static void exynos_adc_v2_init_hw(struct exynos_adc *info)
->         u32 con1, con2;
->
->         if (info->data->needs_adc_phy)
-> -               writel(1, info->enable_reg);
-> +               regmap_write(info->pmu_map, info->data->phy_offset, 1);
->
->         con1 = ADC_V2_CON1_SOFT_RESET;
->         writel(con1, ADC_V2_CON1(info->regs));
-> @@ -332,7 +339,7 @@ static void exynos_adc_v2_exit_hw(struct exynos_adc *info)
->         u32 con;
->
->         if (info->data->needs_adc_phy)
-> -               writel(0, info->enable_reg);
-> +               regmap_write(info->pmu_map, info->data->phy_offset, 0);
->
->         con = readl(ADC_V2_CON1(info->regs));
->         con &= ~ADC_CON_EN_START;
-> @@ -362,6 +369,7 @@ static const struct exynos_adc_data exynos_adc_v2_data = {
->         .num_channels   = MAX_ADC_V2_CHANNELS,
->         .mask           = ADC_DATX_MASK, /* 12 bit ADC resolution */
->         .needs_adc_phy  = true,
-> +       .phy_offset     = EXYNOS_ADCV2_PHY_OFFSET,
->
->         .init_hw        = exynos_adc_v2_init_hw,
->         .exit_hw        = exynos_adc_v2_exit_hw,
-> @@ -374,6 +382,7 @@ static const struct exynos_adc_data exynos3250_adc_data = {
->         .mask           = ADC_DATX_MASK, /* 12 bit ADC resolution */
->         .needs_sclk     = true,
->         .needs_adc_phy  = true,
-> +       .phy_offset     = EXYNOS_ADCV1_PHY_OFFSET,
->
->         .init_hw        = exynos_adc_v2_init_hw,
->         .exit_hw        = exynos_adc_v2_exit_hw,
-> @@ -558,10 +567,13 @@ static int exynos_adc_probe(struct platform_device *pdev)
->
->
->         if (info->data->needs_adc_phy) {
-> -               mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> -               info->enable_reg = devm_ioremap_resource(&pdev->dev, mem);
-> -               if (IS_ERR(info->enable_reg))
-> -                       return PTR_ERR(info->enable_reg);
-> +               info->pmu_map = syscon_regmap_lookup_by_phandle(
-> +                                       pdev->dev.of_node,
-> +                                       "samsung,syscon-phandle");
-> +               if (IS_ERR(info->pmu_map)) {
-> +                       dev_err(&pdev->dev, "syscon regmap lookup failed.\n");
-> +                       return PTR_ERR(info->pmu_map);
-> +               }
->         }
->
->         irq = platform_get_irq(pdev, 0);
-> --
-> 1.7.9.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
--- 
-Best Regards
-Vivek Gautam
-Samsung R&D Institute, Bangalore
-India
+Johan
