@@ -1,107 +1,90 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: add xtensa xtfpga I2S interface and platform
-Date: Tue, 28 Oct 2014 21:34:26 +0000
-Message-ID: <20141028213426.GE18557@sirena.org.uk>
-References: <1414436825-19416-1-git-send-email-jcmvbkbc@gmail.com>
- <20141027193229.GE18557@sirena.org.uk>
- <CAMo8Bf+Z9V8mkiC3JOupPQmi1EJUDKrb1qcNncDbsEbhjigbww@mail.gmail.com>
- <20141028154224.GX18557@sirena.org.uk>
- <CAMo8BfLpJ0bdmaFt9+gLQ_kEjB68XdjAJUw8f8s=Owv46h_yDQ@mail.gmail.com>
- <20141028173853.GD18557@sirena.org.uk>
- <CAMo8BfL+vW7BjC1bQPNjhuBMTcRTkf8_DDS3NO2HmBUnfHYAFQ@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/5] phy: sun4i: add support for USB phy0
+Date: Tue, 28 Oct 2014 22:47:56 +0100
+Message-ID: <20141028214756.GF9255@lukather>
+References: <cover.1414444953.git.rbyshko@gmail.com>
+ <668c1b5541fc0175957573bd5f8d40dd2eaccae1.1414444953.git.rbyshko@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="o1Pxsi7EGdPPGBHz"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="L2Brqb15TUChFOBK"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAMo8BfL+vW7BjC1bQPNjhuBMTcRTkf8_DDS3NO2HmBUnfHYAFQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Max Filippov <jcmvbkbc@gmail.com>
-Cc: alsa-devel@alsa-project.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, LKML <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+In-Reply-To: <668c1b5541fc0175957573bd5f8d40dd2eaccae1.1414444953.git.rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---o1Pxsi7EGdPPGBHz
+--L2Brqb15TUChFOBK
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 28, 2014 at 09:11:34PM +0300, Max Filippov wrote:
-> On Tue, Oct 28, 2014 at 8:38 PM, Mark Brown <broonie@kernel.org> wrote:
+Hi Roman,
 
-> > You *really* need to explain how it's supposed to work - right now it's
-> > not at all obvious, like I say the fact that this is a rarely used idiom
-> > is not helping.  For example when we tear down the stream we just assign
-> > the pointer in _stop() but don't bother with a sync until the stream is
-> > closed - why?
+Thanks for your patches
 
-> Because we can't wait in stop and syncing is not time critical, we can
-> do it any time before the stream becomes invalid.
+On Mon, Oct 27, 2014 at 10:43:01PM +0100, Roman Byshko wrote:
+> The driver for sun4i USB phys currently supports
+> only phy1 and phy2 which are used for USB host
+> controllers. This patch adds support for USB phy0,
+> which is used by the musb hdrc USB controller.
 
-To be clear: the important part is that someone reading the code can
-understand what's going on.
+Like Andreas already pointed out, your signed-off-by is missing from
+all your patches.
 
-> >> > it'd be better to just add a DMA controller on the FPGA, everyone will
-> >> > be much happier).
+> ---
+>  drivers/phy/phy-sun4i-usb.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+> index 0baf5ef..a24728b 100644
+> --- a/drivers/phy/phy-sun4i-usb.c
+> +++ b/drivers/phy/phy-sun4i-usb.c
+> @@ -157,6 +157,10 @@ static int sun4i_usb_phy_init(struct phy *_phy)
+>  		return ret;
+>  	}
+> =20
+> +	/* Regulation 45 ohms */
+> +	if (phy->index =3D=3D 0)
+> +		sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
 
-> >> Hardware people think different and it's been like that for more than 5
-> >> years.
+What is this code supposed to do?
 
-> > They appear to be the only hardware people who think this way, while we
+Some define for this bit and/or a better comment would be nice.
 
-> The whole audio subsystem on xtfpga boards is there for, I think, a single
-> purpose: for the demonstration of CPU audio processing capabilities.
-> That's why it's that simple.
+Maxime
 
-This means that the demos include cycles spent taking interrupts and
-stuffing data into the FIFO (with associated cache impacts) instead of
-signal processing which isn't usually helpful for benchmarks.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-> >> hw_params callback can change MCLK rate, so it has to disable and
-> >> enable the clock anyway, and since enable can fail it does not guarantee
-> >> that the clock will be left in the same state. Or should I adjust MCLK rate
-> >> w/o disabling the clock?
-
-> > So yet again: why not just enable the clock only when the device is in
-> > use?  If it's being configured it stands to reason that the device isn't
-> > actively in use...
-
-> Mark, I don't get it, sorry ): My clock synthesizer is I2C controlled, so
-> I can't prepare/unprepare it in the trigger callback. When should I do it?
-
-Runtime PM is the normal way of doing it.
-
-> >> The level field in the control register is 4 bit wide, so the allowed range of
-> >> level is 0..15. FIFO size is 8192 entries, level = 1 corresponds to
-> >> FIFO size / 2, level = 14 -- to FIFO size of 0. I guess this function
-> >> won't get period_size of 0?
-
-> > So if the IP gets changed and the code gets blown up this could well
-> > explode then...  which doesn't seem entirely unlikely considering this
-> > is a FPGA platform so presumably this is easy to update.  To repeat this
-> > is about clarity and the code looking like it's probably hiding bugs as
-> > much as if the code actually works if you really sit down and study it.
-
-> The calculation does not depend on the actual hardware, but on the
-> constant definitions in the same file. They need to be updated if the
-> hardware changes. I'll try to rewrite it in a cleaner way.
-
-Right, my point is that if someone changes the hardware they'll just
-update the constants and then things will break.
-
---o1Pxsi7EGdPPGBHz
+--L2Brqb15TUChFOBK
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Version: GnuPG v1
 
-iQEcBAEBAgAGBQJUUAvhAAoJECTWi3JdVIfQx+IH+wbCe8/ralW+77h3qoNIpCyO
-eN0Bsqx34r78LcAIHbStdiadMMM1uQk83ob3Me50rOZ1apEEOWCV5q8HzPeazPVQ
-LdjfJlf2ptzmtmWzesITcEZP7o8YPc+uw4Ba/o6nu5ilKjV0yqI622bYCvQBXnuO
-FxdE0v/RL1wI7GcdE5pjalaiZMBa2FeP2qXqcExKdJNzB2hGHogG7ZyTed4f+cfr
-oySx1mZc5yMLumcGRYHKCfrIW9FvE4DZ9OIxuFIBvEwm9snEjdCQS8UR0bKoxaep
-RzErdFYeejkdbmmP7tR8Jcgx9+Us6g3DK3LhkZOW2goPFgNt4i7wuZJikBktgQY=
-=bAYO
+iQIcBAEBAgAGBQJUUA8MAAoJEBx+YmzsjxAgM0QP/2ZXa7TA8q6vNv1+wTapPFg0
+2CD6nTL+KDzDceNqm3U58dH0qjNqOXxKcEgoaxDD69FE/HJn4F7y1JHDHMSrNJDd
+B/26qHFA2UYqAEltVpVGQRhz5zolKZmpiQ2w4vADiA2z+UYVbkqu7oDKuaKu7otH
+Wb/eedjYXWHf9+WTWA1K0sdbBUz605L7+i71AUQx5A8IiPzIb8hfLRW0gO6iJCr4
+4QUHKGr102rQK3jJ7vcaFN+Wc3rxvP4+Ge3HLTB6v05j6e8jnqHG2NwNkwY8wbbp
+ICKRoORFe7XubVsyOsNx74bJdS8fMGHP34Ia77oetXmPc75LuiIZ3UV3hbV8PmAG
+4vrcKO3Dctdhgm+jlgc4YM6nbvR2lCCd3Y0lmFrv9WhcTjE+8qr0h6k2M5CURSRk
+Zt9DDwbF4l1WytS0gwJkfRbNj7X1TPoIu6fuv6rvQiskQTlPcCFYy2DXtNLd8WLJ
+vehqTYVozqxGPmUPxMLvp7Q4wfZ19Vs/IGD4S3mrkHuI7oJVsCJxb8M1HPG67sUT
+QlzeA7/4DlPOAGDKObiquJwvipWVO+Zamq37C9iYnNXeXBpU8ZrNu1RLr7Bm5SDe
+4ZxLmztQvqFSiomAXc2u3iDnhEMlW4/7PXrqXl8HDuyV0AgDiR07hzS14AsblRaV
+MaxK2lL/MownZOuibJCV
+=HpcL
 -----END PGP SIGNATURE-----
 
---o1Pxsi7EGdPPGBHz--
+--L2Brqb15TUChFOBK--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
