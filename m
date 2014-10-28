@@ -1,30 +1,38 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 0/4] Qualcomm SPMI PMIC pin controller drivers
-Date: Tue, 28 Oct 2014 17:29:10 +0100
-Message-ID: <CACRpkdaq8Y_+JHTjZWmWQUh9xnSSGOd+-XVpZeutfwRaZXTQxQ@mail.gmail.com>
-References: <1413971927-9168-1-git-send-email-iivanov@mm-sol.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [alsa-devel] [PATCH] ASoC: add xtensa xtfpga I2S interface and
+ platform
+Date: Tue, 28 Oct 2014 17:39:13 +0100
+Message-ID: <544FC6B1.1060002@metafoo.de>
+References: <1414436825-19416-1-git-send-email-jcmvbkbc@gmail.com> <544FBD20.5000604@metafoo.de> <20141028160414.GY18557@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1413971927-9168-1-git-send-email-iivanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Georgi Djakov <gdjakov@mm-sol.com>, Andy Gross <agross@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141028160414.GY18557@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Max Filippov <jcmvbkbc@gmail.com>, alsa-devel@alsa-project.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, linux-xtensa@linux-xtensa.org, Takashi Iwai <tiwai@suse.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 22, 2014 at 11:58 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
-
-> Changes since v4:
+On 10/28/2014 05:04 PM, Mark Brown wrote:
+> On Tue, Oct 28, 2014 at 04:58:24PM +0100, Lars-Peter Clausen wrote:
+>> On 10/27/2014 08:07 PM, Max Filippov wrote:
 >
-> - Rebased on v3.18-rc1:
->   pinmux_ops.enable is now pinmux_ops.set_mux
->   gpiochip_remove() did not return a value.
-> - Added Ack's from Bjorn
+>>> +	if (tx_active) {
+>>> +		if (i2s->tx_fifo_high < 256)
+>>> +			xtfpga_i2s_refill_fifo(i2s);
+>>> +		else
+>>> +			tasklet_hi_schedule(&i2s->refill_fifo);
+>
+>> Maybe use threaded IRQs instead of IRQ + tasklet.
+>
+> Is that going to play nicely with the fact that the interrupt can be
+> shared and the desire to (AFAICT) do NAPI style stuff with the interrupt
+> disabled for long periods?
+>
 
-Thanks guys, I have applied the latest version of the v6 patch series,
-including the v6-prim version of 3/4 that fixed the compile error...
+Threaded interrupts got support for interrupt sharing a while ago, so I 
+guess yes. I think it will even work better than the tasklet approach. You 
+can configure the IRQ to disable itself as long as the thread is running.
 
-Unless something radically bad happens it goes into v3.19.
-
-Yours,
-Linus Walleij
+- Lars
