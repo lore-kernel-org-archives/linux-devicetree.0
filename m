@@ -1,86 +1,41 @@
-From: Emil Medve <Emilian.Medve@Freescale.com>
-Subject: [PATCH v2 2/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan portal(s)
-Date: Tue, 28 Oct 2014 04:15:49 -0500
-Message-ID: <1414487751-31568-3-git-send-email-Emilian.Medve@Freescale.com>
-References: <1414487751-31568-1-git-send-email-Emilian.Medve@Freescale.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/8] ARM: ux500: Add initial support for PM domains
+Date: Tue, 28 Oct 2014 10:51:34 +0100
+Message-ID: <CACRpkdZPtuC-AQsrZD8xhcg9GacKb2ifZ9u8HqcPU6H1NgGKdA@mail.gmail.com>
+References: <1413277981-27451-1-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1414487751-31568-1-git-send-email-Emilian.Medve@Freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: scottwood@Freescale.com, galak@kernel.crashing.org, corbet@lwn.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, grant.likely@linaro.org, Geoff.Thorpe@Freescale.com, linuxppc-dev@ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Emil Medve <Emilian.Medve@Freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413277981-27451-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jack Dai <jack.dai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jinkun Hong <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Portals are memory mapped interfaces to BMan that allow low-latency,
-lock-less interaction by software running on processor cores, accelerators
-and network interfaces with the BMan
+On Tue, Oct 14, 2014 at 11:12 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
-Change-Id: I6d245ffc14ba3d0e91d403ac7c3b91b75a9e6a95
----
- .../bindings/powerpc/fsl/bman-portals.txt          | 52 ++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
+> This patchset enables initial support for PM domains for ux500.
+>
+> The implementation is based upon the generic PM domain and its corresponding
+> DT support, which is used to decribe PM domains and tell what devices resides
+> in what PM domain.
+>
+> In this initial step, the VAPE PM domain is added and the devices with
+> corresponding drivers that properly implements runtime PM support. Especially,
+> to gate the VAPE PM domain drivers must implement register context save/restore.
+> Typically that must be done from the driver's runtime PM callbacks.
+>
+> Currently the generic PM domain, doesn't handle IRQ safe devices very well. For
+> example, having such device in a PM domain would keep it always powered. The
+> DMA controller in ux500, handled by the ste_dma40 driver is configured as IRQ
+> safe. That limitation in the generic PM domain needs to be fixed, prior we can
+> add the DMA device to the VAPE PM domain.
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt b/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
-new file mode 100644
-index 0000000..02e0231
---- /dev/null
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
-@@ -0,0 +1,52 @@
-+QorIQ DPAA Buffer Manager Portals Device Tree Binding
-+
-+Copyright (C) 2008 - 2014 Freescale Semiconductor Inc.
-+
-+CONTENTS
-+
-+	- BMan Portal
-+	- Example
-+
-+BMan Portal Node
-+
-+PROPERTIES
-+
-+- compatible
-+	Usage:		Required
-+	Value type:	<stringlist>
-+	Definition:	Must include "fsl,bman-portal-<hardware revision>"
-+			May include "fsl,<SoC>-bman-portal" or "fsl,bman-portal"
-+
-+- reg
-+	Usage:		Required
-+	Value type:	<prop-encoded-array>
-+	Definition:	Two regions. The first is the cache-enabled region of
-+			the portal. The second is the cache-inhibited region of
-+			the portal
-+
-+- interrupts
-+	Usage:		Required
-+	Value type:	<prop-encoded-array>
-+	Definition:	Standard property
-+
-+EXAMPLE
-+
-+The example below shows a (P4080) BMan portals container/bus node with two portals
-+
-+	bman-portals@ff4000000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges = <0 0xf 0xf4000000 0x200000>;
-+
-+		bman-portal@0 {
-+			compatible = "fsl,bman-portal-1.0.0", "fsl,bman-portal";
-+			reg = <0x0 0x4000>, <0x100000 0x1000>;
-+			interrupts = <105 2 0 0>;
-+		};
-+		bman-portal@4000 {
-+			compatible = "fsl,bman-portal-1.0.0", "fsl,bman-portal";
-+			reg = <0x4000 0x4000>, <0x101000 0x1000>;
-+			interrupts = <107 2 0 0>;
-+		};
-+	};
--- 
-2.1.2
+All patches applied and will send a pull request to ARM SoC ASAP.
 
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
