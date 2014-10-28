@@ -1,44 +1,110 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/5] simplefb: add clock handling code
-Date: Tue, 28 Oct 2014 19:11:47 +0800
-Message-ID: <CAL_JsqJ2JRg7k21CEVe4-At7enD+y3TN_7wfqhY0OHZm-_j17w@mail.gmail.com>
-References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com> <544F737A.7000109@ti.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Qais Yousef <qais.yousef@imgtec.com>
+Subject: [PATCH 00/11] Add AXD Audio Processing IP driver
+Date: Tue, 28 Oct 2014 11:26:18 +0000
+Message-ID: <1414495589-8579-1-git-send-email-qais.yousef@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD62P6P6EQIIP5F5UICRUBCIIZVQ4-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <544F737A.7000109-l0cyMroinI0@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Qais Yousef <qais.yousef@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 28, 2014 at 6:44 PM, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
-> On 22/10/14 19:45, Hans de Goede wrote:
->
->> Since we seem to have broad agreement on how to move forward with this, I
->> would like to ask you to please merge this patch-set for 3.19.
->>
->> I know 3.19 is still somewhat ar away, but I would like to submit the u-boot
->> side of this to upstream ASAP, so can you please let me know if you plan to
->> take this patch-set for 3.19 soon ?
->
-> This series looks fine to me, except patch 3 is missing a description,
-> and patch 4 makes the desc a continuation of the subject. Each patch
-> should have a description (independent from subject).
->
-> No need to resend, I can cook up something for those, or I can edit the
-> descs if you provide the text.
->
-> So if there are no strong objections, I'll queue this for 3.19.
+AXD Audio Processing IP performs audio decoding, encoding, mixing, equalisation,
+synchronisation and playback. This series adds the driver and DT binding
+document.
 
-Yes, I object to the binding still as it has not changed from what was
-previously posted.
+I tried to split it into 'logical' units as there are many files and some of them
+are big (necessarily I believe). If it is still difficult to review as is I'd
+be happy to take on any suggestion to make things easier.
 
-Rob
+I added it to drivers/char as this is the best location I could think of at the
+moment. It doesn't fit in alsa subsystem but I Cced them to confirm.
+Also I'm not sure if new drivers should go to staging first then get promoted or
+they can be accepted directly.
+
+This is based on Linus' 3.18-rc2
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: <devicetree@vger.kernel.org>
+Cc: <alsa-devel@alsa-project.org>
+
+Qais Yousef (11):
+  MAINTANERS: Add AXD as a supported driver
+  dt: bindings: add AXD Audio Processing IP binding document
+  drivers: char: add AXD Audio Processing IP driver
+  drivers: char: axd: add fw binary header manipulation files
+  drivers: char: axd: add buffers manipulation files
+  drivers: char: axd: add basic files for sending/receiving axd cmds
+  drivers: char: axd: add cmd interfce helper functions
+  drivers: char: axd: add low level AXD platform setup files
+  drivers: char: axd: add sysfs setup files
+  drivers: char: axd: add ts interface file
+  drivers: char: axd: add Kconfig and Makefile
+
+ Documentation/devicetree/bindings/axd.txt  |   39 +
+ MAINTAINERS                                |    6 +
+ drivers/char/Kconfig                       |    2 +
+ drivers/char/Makefile                      |    2 +
+ drivers/char/axd/Kconfig                   |   19 +
+ drivers/char/axd/Makefile                  |   20 +
+ drivers/char/axd/axd_api.h                 |  641 ++++++
+ drivers/char/axd/axd_buffers.c             |  245 +++
+ drivers/char/axd/axd_buffers.h             |   70 +
+ drivers/char/axd/axd_cmds.c                |   98 +
+ drivers/char/axd/axd_cmds.h                |  531 +++++
+ drivers/char/axd/axd_cmds_codec_internal.c |   58 +
+ drivers/char/axd/axd_cmds_codec_internal.h |   28 +
+ drivers/char/axd/axd_cmds_config.c         | 1194 ++++++++++
+ drivers/char/axd/axd_cmds_decoder_config.c | 1806 ++++++++++++++++
+ drivers/char/axd/axd_cmds_encoder_config.c |  519 +++++
+ drivers/char/axd/axd_cmds_info.c           | 1409 ++++++++++++
+ drivers/char/axd/axd_cmds_internal.c       | 3237 ++++++++++++++++++++++++++++
+ drivers/char/axd/axd_cmds_internal.h       |  306 +++
+ drivers/char/axd/axd_cmds_pipes.c          | 1368 ++++++++++++
+ drivers/char/axd/axd_hdr.c                 |   69 +
+ drivers/char/axd/axd_hdr.h                 |   20 +
+ drivers/char/axd/axd_module.c              | 1064 +++++++++
+ drivers/char/axd/axd_module.h              |   99 +
+ drivers/char/axd/axd_platform.h            |   31 +
+ drivers/char/axd/axd_platform_mips.c       |  270 +++
+ drivers/char/axd/axd_sysfs.h               |   37 +
+ drivers/char/axd/axd_sysfs_ctrl.c          |  539 +++++
+ drivers/char/axd/axd_sysfs_input.c         |  406 ++++
+ drivers/char/axd/axd_sysfs_output.c        | 1373 ++++++++++++
+ drivers/char/axd/axd_ts_driver.h           |   24 +
+ include/linux/axd.h                        |   32 +
+ 32 files changed, 15562 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/axd.txt
+ create mode 100644 drivers/char/axd/Kconfig
+ create mode 100644 drivers/char/axd/Makefile
+ create mode 100644 drivers/char/axd/axd_api.h
+ create mode 100644 drivers/char/axd/axd_buffers.c
+ create mode 100644 drivers/char/axd/axd_buffers.h
+ create mode 100644 drivers/char/axd/axd_cmds.c
+ create mode 100644 drivers/char/axd/axd_cmds.h
+ create mode 100644 drivers/char/axd/axd_cmds_codec_internal.c
+ create mode 100644 drivers/char/axd/axd_cmds_codec_internal.h
+ create mode 100644 drivers/char/axd/axd_cmds_config.c
+ create mode 100644 drivers/char/axd/axd_cmds_decoder_config.c
+ create mode 100644 drivers/char/axd/axd_cmds_encoder_config.c
+ create mode 100644 drivers/char/axd/axd_cmds_info.c
+ create mode 100644 drivers/char/axd/axd_cmds_internal.c
+ create mode 100644 drivers/char/axd/axd_cmds_internal.h
+ create mode 100644 drivers/char/axd/axd_cmds_pipes.c
+ create mode 100644 drivers/char/axd/axd_hdr.c
+ create mode 100644 drivers/char/axd/axd_hdr.h
+ create mode 100644 drivers/char/axd/axd_module.c
+ create mode 100644 drivers/char/axd/axd_module.h
+ create mode 100644 drivers/char/axd/axd_platform.h
+ create mode 100644 drivers/char/axd/axd_platform_mips.c
+ create mode 100644 drivers/char/axd/axd_sysfs.h
+ create mode 100644 drivers/char/axd/axd_sysfs_ctrl.c
+ create mode 100644 drivers/char/axd/axd_sysfs_input.c
+ create mode 100644 drivers/char/axd/axd_sysfs_output.c
+ create mode 100644 drivers/char/axd/axd_ts_driver.h
+ create mode 100644 include/linux/axd.h
+
+-- 
+2.1.0
