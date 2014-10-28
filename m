@@ -1,39 +1,31 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 4/7] ARM: dts: Enable Broadcom Cygnus SoC
-Date: Tue, 28 Oct 2014 17:10:24 +0100
-Message-ID: <12464460.6zhqY1bzdG@wuerfel>
-References: <1414011474-11821-5-git-send-email-sbranden@broadcom.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 1/6] pinctrl: rockchip: add suspend/resume functions
+Date: Tue, 28 Oct 2014 17:23:17 +0100
+Message-ID: <CACRpkdZhQpCS+S-EA_ehjrpj=uS7bnb4L_OohbnBw5sXfGgaeA@mail.gmail.com>
+References: <1413933461-25602-1-git-send-email-zyw@rock-chips.com>
+	<1413933557-25684-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414011474-11821-5-git-send-email-sbranden@broadcom.com>
+In-Reply-To: <1413933557-25684-1-git-send-email-zyw@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Scott Branden <sbranden@broadcom.com>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, JD Zheng <jdzheng@broadcom.com>
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Mike Turquette <mturquette@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Doug Anderson <dianders@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 22 October 2014 13:57:51 Scott Branden wrote:
-> +
-> +       aliases {
-> +               serial0 = &uart3;
-> +               serial1 = &uart0;
-> +       };
-> +
-> +       chosen {
-> +               bootargs = "console=ttyS0,115200 earlyprintk debug";
-> +       };
-> 
+On Wed, Oct 22, 2014 at 1:19 AM, Chris Zhong <zyw@rock-chips.com> wrote:
 
-Please move the 'aliases' and 'chosen' node into the .dts files, these
-are board specific, not SoC specific.
+> From: Chris <zyw@rock-chips.com>
+>
+> support suspend/resume of pinctrl, it allows handling sleep mode
+> for hogged pins in pinctrl
+>
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
 
-For chosen, please remove earlyprintk and debug, which don't normally
-make sense unless you are debugging, and which will break in a multiplatform
-kernel.
+Looks good but I'm delegating to Heiko to collect and review patches
+on the Rockchip pin control driver.
 
-Please also add an "stdout-path = &uart3" property in chosen so that
-earlycon can work. Note that earlycon is currently broken on arm32,
-but we'll get there.
+I will point out if I see something immediately disturbing.
 
-	Arnd
+Yours,
+Linus Walleij
