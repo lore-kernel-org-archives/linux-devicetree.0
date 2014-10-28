@@ -1,62 +1,201 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V4 3/3] rtc: omap: Support regulator supply for RTC
-Date: Tue, 28 Oct 2014 09:02:45 -0500
-Message-ID: <544FA205.3000102@ti.com>
-References: <1414490332-14856-1-git-send-email-lokeshvutla@ti.com> <1414490332-14856-4-git-send-email-lokeshvutla@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] pinctrl: add driver for Amlogic Meson SoCs
+Date: Tue, 28 Oct 2014 15:11:05 +0100
+Message-ID: <CACRpkdZO24g4wezqKTWpTjQwwbWGt2XNZ4p_ikyfyPNhFGLp6Q@mail.gmail.com>
+References: <1412717576-19737-1-git-send-email-b.galvani@gmail.com>
+	<1412717576-19737-2-git-send-email-b.galvani@gmail.com>
+	<CACRpkdZV9Gmx7Oy4QRh4y2MNN=FXbSF2W0cnjbtxkrB4vT2UOg@mail.gmail.com>
+	<20141022200633.GA31080@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414490332-14856-4-git-send-email-lokeshvutla-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20141022200633.GA31080-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/28/2014 04:58 AM, Lokesh Vutla wrote:
-> Certain SoCs such as DRA7, RTC is an independent voltage domain of it's own
-> and on platforms such as DRA7-evm, this may be supplied by individual
-> regulator on it's own.
-> So make the OMAP RTC driver support a power regulator.
-> 
-> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-> ---
-> - Dropped the Reviewed-by tags as this patch is changed from previous version.
->  Documentation/devicetree/bindings/rtc/rtc-omap.txt |  6 ++++
->  drivers/rtc/rtc-omap.c                             | 41 +++++++++++++++++++++-
->  2 files changed, 46 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-> index 750efd4..c1d84ac 100644
-> --- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-> @@ -15,6 +15,9 @@ Required properties:
->  Optional properties:
->  - ti,system-power-controller: whether the rtc is controlling the system power
->    through pmic_power_en
-> +- vrtc-supply: phandle to the regulator device tree node.
-> +- vrtc-minuV: Minimum required voltage in uV, If default voltage needs to be changed
-> +- vrtc-maxuV: Maximum acceptable voltage in uV, If default voltage needs to be changed
->  
->  Example:
->  
-> @@ -25,4 +28,7 @@ rtc@1c23000 {
->  		      19>;
->  	interrupt-parent = <&intc>;
->  	ti,system-power-controller;
-> +	vrtc-supply = <&ldo9_reg>;
-> +	vrtc-minuV = <1050000>;
-> +	vrtc-maxuV = <1050000>;
+On Wed, Oct 22, 2014 at 10:06 PM, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Oct 21, 2014 at 03:39:25PM +0200, Linus Walleij wrote:
 
+>> > +static int meson_gpio_of_xlate(struct gpio_chip *chip,
+>> > +                              const struct of_phandle_args *gpiospec,
+>> > +                              u32 *flags)
+>> > +{
+>> > +       unsigned gpio = gpiospec->args[0];
+>> > +
+>> > +       if (gpio < chip->base || gpio >= chip->base + chip->ngpio)
+>> > +               return -EINVAL;
+>> > +
+>> > +       if (flags)
+>> > +               *flags = gpiospec->args[1];
+>> > +
+>> > +       return gpio - chip->base;
+>> > +}
+>>
+>> Why is this necessary? We want to get rid of all use of
+>> chip->base so introducing new users is not nice.
+>
+> The driver instantiates one pinctrl device with 136 pins and two
+> gpio_chips, one with 120 gpios and the other with 16 (for more
+> details, see below). The macros for pins in the header file use a
+> single range from 0 to 135 that matches the order of pins in the
+> pinctrl device:
+>
+>         /* First gpio-chip */
+>         #define GPIOX_0         0
+>         [...]
+>         #define BOOT_18         119
+>
+>         /* Second gpio-chip */
+>         #define GPIOAO_0        120
+>         [...]
+>         #define GPIO_TEST_N     135
+>
+> Since the macros are also used in DT as GPIO numbers, this function
+> translates that value to the relative offset for the gpio chip.
 
-why would we want to duplicate machine constraints that regulators
-already have? if there is a constant voltage needed, then it should be
-compatible property as it is not really a configuration option, right?
+That is not wise. You should let each gpio_chip register its
+chip with base = -1, so they get whatever random GPIO numbers
+they get, then register the pin range relatively to what they
+get from the gpiochip side using gpiochip_add_pin_range().
 
-[...]
--- 
-Regards,
-Nishanth Menon
+>> The default of_gpio_simple_xlate() should be enough,
+>> don't you agree?
+>
+> Probably yes, but for it to work then I have either to:
+>  - change the pin macros to use a relative value
+>
+>         /* First gpio-chip */
+>         #define GPIOX_0         0
+>         [...]
+>         #define BOOT_18         119
+>
+>         /* Second gpio-chip */
+>         #define GPIOAO_0        0
+>         [...]
+>         #define GPIO_TEST_N     15
+>
+>  - or use a single gpio chip
+
+Or (C) register the pin ranges from the gpio_chip side instead
+of doing it from the pin controller side. Look at how
+gpiochip_add_pin_range() works, I inisist.
+
+>> > +       /* Copy group and function definitions from domains to pinctrl */
+>> > +       pc->groups = devm_kzalloc(pc->dev, pc->num_groups *
+>> > +                                 sizeof(struct meson_pmx_group), GFP_KERNEL);
+>> > +       pc->funcs = devm_kzalloc(pc->dev, pc->num_funcs *
+>> > +                                 sizeof(struct meson_pmx_func), GFP_KERNEL);
+>> > +       if (!pc->groups || !pc->funcs)
+>> > +               return -ENOMEM;
+>>
+>> Again more copying. Why can't we just have one set of this data
+>> and only pass pointers?
+>
+> This code copies information on groups and functions from the
+> different domains and merge it in a single array so that the driver
+> can look it up easily.
+>
+> Probably the initial information should not be splitted so that it can
+> be reused without additional copies.
+
+Yeah I will look at V2 and see how it looks...
+
+>> Why can't static arrays and ARRAY_SIZE() be used throughout
+>> instead, just pass around pointers?
+>
+> The goal of the dynamic code is to simplify the declaration of groups,
+> which can be done with a single statement in the form:
+>
+>         GROUP(_name, _reg, _bit, _pins...)
+>
+> for example:
+>
+>         GROUP(sdxc_d0_c,        4,      30,     BOOT_0),
+>         GROUP(sdxc_d13_c,       4,      29,     BOOT_1, BOOT_2, BOOT_3),
+>         GROUP(sdxc_d47_c,       4,      28,     BOOT_4, BOOT_5, BOOT_6, BOOT_7),
+>         GROUP(sdxc_cmd_c,       4,      27,     BOOT_16),
+>         GROUP(sdxc_clk_c,       4,      26,     BOOT_17),
+>         GROUP(nand_io,          2,      26,     BOOT_0, BOOT_1, BOOT_2, BOOT_3,
+>                                                 BOOT_4, BOOT_5, BOOT_6, BOOT_7),
+>
+> instead of having to define an array of pins and reference it in the
+> group declaration. The same goes for functions. I admit that this is a
+> bit hackish, I will stick to the classical way in the next respin.
+
+OK thanks.
+
+>> > +/**
+>> > + * struct meson_domain
+>> > + *
+>> > + * @reg_mux:   registers for mux settings
+>> > + * @reg_pullen:        registers for pull-enable settings
+>> > + * @reg_pull:  registers for pull settings
+>> > + * @reg_gpio:  registers for gpio settings
+>> > + * @mux_size:  size of mux register range (in words)
+>> > + * @pullen_size:size of pull-enable register range
+>> > + * @pull_size: size of pull register range
+>> > + * @gpio_size: size of gpio register range
+>> > + * @chip:      gpio chip associated with the domain
+>> > + * @data;      platform data for the domain
+>> > + * @node:      device tree node for the domain
+>> > + * @gpio_range:        gpio range that maps domain gpios to the pin controller
+>> > + * @lock:      spinlock for accessing domain registers
+>> > + *
+>> > + * A domain represents a set of banks controlled by the same set of
+>> > + * registers. Typically there is a domain for the normal banks and
+>> > + * another one for the Always-On bus.
+>> > + */
+>>
+>> Can I get a long-ish explanation of the domains vs banks etc
+>> because that's really key to understanding this driver!
+>
+> Yes, I hope that the following explanation is clear enough. If anyone
+> wants to know the details, the relevant information can be found in
+> the Amlogic sources available at:
+>
+> http://openlinux.amlogic.com:8000/download/ARM/kernel/
+>
+> The GPIOs are organized in banks (X,Y,DV,H,Z,BOOT,CARD,AO) and each
+> bank has a number of GPIOs variable from 7 to 30.
+>
+> There are different register sets for changing pins properties:
+>  - for all banks except AO:
+>         <0xc11080b0 0x28> for mux configuration
+>         <0xc11080e4 0x18> for pull-enable configuration
+>         <0xc1108120 0x18> for pull configuration
+>         <0xc1108030 0x30> for gpio (in/out/dir) configuration
+>
+>  - for AO bank
+>         <0xc8100014 0x4> for mux configuration
+>         <0xc810002c 0x4> for pull and pull-enable configuration
+>         <0xc8100024 0x8> for gpio (in/out/dir) configuration
+>
+> The regular banks belong to the "standard" power domain, while AO
+> belongs to the Always-On power domain, which, like the name says,
+> can't be powered off.
+>
+> Each bank uses contiguous ranges of bits in the register sets
+> described above and the same register can be used by different banks
+> (for example, for the pull-enable configuration the BOOT bank uses
+> bits [0:18] of 0xc11080f0 and the CARD bank uses bits [20:25]).
+>
+> In addition to this, there seem to be some other registers, shared
+> between all the banks, for the interrupt functionality.
+
+I get it now I think, thanks!
+
+Arguably the whole shebang is one big hardware unit so the right
+thing is indeed to have a single driver for all of it.
+
+> The driver then instantiates a gpio_chip for each subnode and a single
+> pinctrl device.
+
+This is the right design. We just need to hash out the details.
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
