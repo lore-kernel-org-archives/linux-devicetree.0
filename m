@@ -1,78 +1,67 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v14 2/5] dt-bindings: document Rockchip thermal
-Date: Mon, 27 Oct 2014 17:37:38 -0700
-Message-ID: <4038023.8IINY8khj6@dtor-glaptop>
-References: <1414377588-2237-1-git-send-email-caesar.wang@rock-chips.com> <20141028002915.GJ7594@dtor-ws> <544EE42D.3030208@rock-chips.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/8] regulator: max77686: Remove support for board files
+Date: Tue, 28 Oct 2014 00:37:09 +0000
+Message-ID: <20141028003709.GL18557@sirena.org.uk>
+References: <1414422226-10948-1-git-send-email-k.kozlowski@samsung.com>
+ <1414422226-10948-3-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <544EE42D.3030208@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Caesar Wang <caesar.wang@rock-chips.com>
-Cc: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="QV9egoCq9O4JbpTr"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414422226-10948-3-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, October 28, 2014 08:32:45 AM Caesar Wang wrote:
-> Dmitry,
->=20
-> =E5=9C=A8 2014=E5=B9=B410=E6=9C=8828=E6=97=A5 08:29, Dmitry Torokhov =
-=E5=86=99=E9=81=93:
-> > On Mon, Oct 27, 2014 at 10:39:45AM +0800, Caesar Wang wrote:
-> >> This add the necessary binding documentation for the thermal
-> >> found on Rockchip SoCs
-> >>=20
-> >> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
-> >> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
-> >> ---
-> >>=20
-> >>   .../bindings/thermal/rockchip-thermal.txt          | 53
-> >>   ++++++++++++++++++++++ 1 file changed, 53 insertions(+)
-> >>   create mode 100644
-> >>   Documentation/devicetree/bindings/thermal/rockchip-thermal.txt>>=
-=20
-> >> diff --git
-> >> a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> >> b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt n=
-ew
-> >> file mode 100644
-> >> index 0000000..d5b1401
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.t=
-xt
-> >> @@ -0,0 +1,53 @@
-> >> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
-> >> +
-> >> +Required properties:
-> >> +- compatible : "rockchip,rk3288-tsadc"
-> >> +- reg : physical base address of the controller and length of mem=
-ory
-> >> mapped +	region.
-> >> +- interrupts : The interrupt number to the cpu. The interrupt spe=
-cifier
-> >> format +	       depends on the interrupt controller.
-> >> +- clocks : Must contain an entry for each entry in clock-names.
-> >> +- clock-names : Shall be "tsadc" for the converter-clock, and "ap=
-b_pclk"
-> >> for +		the peripheral clock.
-> >> +- #thermal-sensor-cells : Should be 1. See ./thermal.txt for a
-> >> description.>=20
-> > I think you are missing description of hw-shut-temp, tsadc-tshut-mo=
-de
-> > and tsadc-tshut-mode
-> >=20
-> >   and optional pinctrl settings.
->=20
-> If it's really need,we just have hw-shut-temp,tsadc-tshut-mode
-> and tsadc-tshut-mode,no need  pinctrl setting,I think.
 
-This is more question to DeviceTree guys, but I can see us not document=
-ing
-pinctrl since it is generic property used by every driver out there. We=
- should
-definitely document driver-specific properties.
+--QV9egoCq9O4JbpTr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks.
+On Mon, Oct 27, 2014 at 04:03:40PM +0100, Krzysztof Kozlowski wrote:
+> The driver is used only on Exynos4 based boards with DTS support.
+> Convert the driver to DTS-only version.
 
---=20
-Dmitry
+This doesn't seem like a particularly persuasive reason honestly and if
+you're going to mess around with this stuff please fix it properly...
+
+>  struct max77686_data {
+> +	struct max77686_regulator_data *regulators;
+> +	int num_regulators;
+> +
+
+...the only reason for this array and the specification of the number of
+regulators is to make platform data easier to do...
+
+> -	pdata->num_regulators = ARRAY_SIZE(regulators);
+> +	max77686->num_regulators = ARRAY_SIZE(regulators);
+
+...and indeed we wind up with a constant here anyway.  At the very least
+it'd be better to pull the parsing into the registration, right now we
+have the code still laid out for platform data so it's hard to see it as
+a win in cleanup terms.  If we're not translating into platform data we
+shouldn't need to keep this stuff around outside of the probe function.
+
+What would be even better would be to convert to use the standard DT
+parsing with regulators_node and of_match specified in the descriptor
+and then delete most of this code entirely.
+
+--QV9egoCq9O4JbpTr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUTuU1AAoJECTWi3JdVIfQ9c8H/0RuK+0E4zNfoMDInchjmjXn
+X10/j/Qy4TjcHpEEbYboaeV+n0UmCs8jlLOJKHoqHmpkJkWZQbZNQHygMHmgAlYN
+MDBCsiHE/kxs+TAK3FomM5GFtQme/KzUQQkBHdW+RnGlL3U8sF9FwT1k3eUHTCqt
+5tJT8z5Vv7utiD6wxR3I6X3YMdc1f0+A9KYb4nz+uoFwdXfKmvW6zpQuzAaAeUhB
+AalWvsFH9XvoUDRzES20MxxYavGO4FApwdUY48Ef2FN6HTR91d4KGxsFTamCxRKt
+KAYEhZ3kyeWCFT/mHX4Vq0tdhuHXRkLavW5GpRQS5Hm7vuLJaATL35OGzkuTpQQ=
+=Kg22
+-----END PGP SIGNATURE-----
+
+--QV9egoCq9O4JbpTr--
