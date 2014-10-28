@@ -1,201 +1,162 @@
-From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] ARM: dts: socfpga: fpga bridges bindings docs
-Date: Tue, 28 Oct 2014 16:19:03 -0500
-Message-ID: <alpine.DEB.2.02.1410281601570.11910@atx-linux-37>
-References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com> <1414108267-22058-3-git-send-email-atull@opensource.altera.com> <20141024070042.GL10262@pengutronix.de>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v5 07/12] leds: leds-gpio: Add support for GPIO descriptors
+Date: Tue, 28 Oct 2014 22:56:09 +0100
+Message-ID: <17483842.EFni4iQX1H@vostro.rjw.lan>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan> <3395005.IveyhHQnye@vostro.rjw.lan> <CACRpkdYR70Az1uLyjsaujQN-q-4+qRD=GpqJaOuvnKZhypL=cA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141024070042.GL10262-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iws-lulEs6mt1IksTUYHLfqkUA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-ynQEQJNshbs@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, philip-6RQC9ztksjxg9hUCZPvPmw@public.gmane.org, rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, kyle.teske-acOepvfBmUk@public.gmane.org, nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mgerlach-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYR70Az1uLyjsaujQN-q-4+qRD=GpqJaOuvnKZhypL=cA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 24 Oct 2014, Steffen Trumtrar wrote:
-
-> Hi!
+On Tuesday, October 28, 2014 04:26:25 PM Linus Walleij wrote:
+> On Fri, Oct 17, 2014 at 2:11 PM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
 > 
-
-Hi,
-
-I see that my documentation sucks and needs cleanup.  I'll try to
-answer some of the flames and get a more coherent version out soon.
-
-> On Thu, Oct 23, 2014 at 06:51:06PM -0500, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> > From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> 
+> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> >
+> > GPIO descriptors are the preferred way over legacy GPIO numbers
+> > nowadays. Convert the driver to use GPIO descriptors internally but
+> > still allow passing legacy GPIO numbers from platform data to support
+> > existing platforms.
+> >
+> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Acked-by: Alexandre Courbot <acourbot@nvidia.com>
+> > Acked-by: Bryan Wu <cooloney@gmail.com>
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > (...)
 > 
-> > diff --git a/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
-> > new file mode 100644
-> > index 0000000..bc24a2e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
-> > @@ -0,0 +1,53 @@
-> > +Altera FPGA/HPS Bridge Driver
+> >         if (led_dat->blinking) {
+> > -               led_dat->platform_gpio_blink_set(led_dat->gpio,
+> > -                                                led_dat->new_level,
+> > -                                                NULL, NULL);
+> > +               int gpio = desc_to_gpio(led_dat->gpiod);
+> > +               int level = led_dat->new_level;
+> 
+> So this desc_to_gpio() is done only to call the legacy callback below?
+> 
+> > +               if (gpiod_is_active_low(led_dat->gpiod))
+> > +                       level = !level;
+> 
+> And that leads to making it necessary to have this helper variable
+> to invert the level since that callback does not pass a descriptor
+> (which would inherently know if it's active low)....
+> 
 > > +
-> > +This driver manages a bridge between a FPGA and a host processor system (HPS).
-> > +User space can enable or disable the bridge by writing a "1" or a "0",
-> > +respectively, to its enable file under bridge's entry in
-> > +/sys/class/fpga-bridge.  Typically, one disables the bridges before
-> > +reprogramming the FPGA.  Once the FPGA is reprogrammed, the bridges are
-> > +reenabled.
+> > +               led_dat->platform_gpio_blink_set(gpio, level, NULL, NULL);
+> 
+> Is it *really* impossible to change all the users of this callback?
+
+You said it could be done in a followup patch.  Here:
+http://marc.info/?l=linux-acpi&m=141154536921643&w=4
+
+And Mika said he would add that to his TODO list:
+http://marc.info/?l=linux-acpi&m=141155173924101&w=4
+
+I suppose that is still valid.
+
+> 
+> >                 led_dat->blinking = 0;
+> >         } else
+> > -               gpio_set_value_cansleep(led_dat->gpio, led_dat->new_level);
+> > +               gpiod_set_value_cansleep(led_dat->gpiod, led_dat->new_level);
+> 
+> (...)
+> >         /* Setting GPIOs with I2C/etc requires a task context, and we don't
+> >          * seem to have a reliable way to know if we're already in one; so
+> >          * let's just assume the worst.
+> > @@ -72,11 +73,16 @@ static void gpio_led_set(struct led_clas
+> >                 schedule_work(&led_dat->work);
+> >         } else {
+> >                 if (led_dat->blinking) {
+> > -                       led_dat->platform_gpio_blink_set(led_dat->gpio, level,
+> > -                                                        NULL, NULL);
+> > +                       int gpio = desc_to_gpio(led_dat->gpiod);
 > > +
-> 
-> NAK.
-> 
-> This is all linux specific and doesn't belong here.
-
-Right.  This stuff shouldn't be in this document.  While I was squashing
-patches and cleaning up for posting on the mailing list, I added a sysfs
-document and forgot to clean up my DT bindings documents.
-
-> 
-> > +Required properties:
+> > +                       if (gpiod_is_active_low(led_dat->gpiod))
+> > +                               level = !level;
 > > +
-> > + - compatible     : should contain one of:
-> > +                     "altr,socfpga-hps2fpga-bridge"
-> > +                     "altr,socfpga-lwhps2fpga-bridge"
-> > +                     "altr,socfpga-fpga2hps-bridge"
+> > +                       led_dat->platform_gpio_blink_set(gpio, level, NULL,
+> > +                                                        NULL);
+> 
+> Same comment.
+> 
+> > @@ -85,9 +91,10 @@ static int gpio_blink_set(struct led_cla
+> >  {
+> >         struct gpio_led_data *led_dat =
+> >                 container_of(led_cdev, struct gpio_led_data, cdev);
+> > +       int gpio = desc_to_gpio(led_dat->gpiod);
+> >
+> >         led_dat->blinking = 1;
+> > -       return led_dat->platform_gpio_blink_set(led_dat->gpio, GPIO_LED_BLINK,
+> > +       return led_dat->platform_gpio_blink_set(gpio, GPIO_LED_BLINK,
+> >                                                 delay_on, delay_off);
+> 
+> Same comment.
+> 
+> > @@ -97,24 +104,33 @@ static int create_gpio_led(const struct
+> >  {
+> >         int ret, state;
+> >
+> > -       led_dat->gpio = -1;
+> > +       if (!template->gpiod) {
+> > +               unsigned long flags = 0;
+> >
+> > -       /* skip leds that aren't available */
+> > -       if (!gpio_is_valid(template->gpio)) {
+> > -               dev_info(parent, "Skipping unavailable LED gpio %d (%s)\n",
+> > -                               template->gpio, template->name);
+> > -               return 0;
+> > +               /* skip leds that aren't available */
+> > +               if (!gpio_is_valid(template->gpio)) {
+> > +                       dev_info(parent, "Skipping unavailable LED gpio %d (%s)\n",
+> > +                                       template->gpio, template->name);
+> > +                       return 0;
+> > +               }
 > > +
-> > + - clocks         : clocks used by this module
+> > +               if (template->active_low)
+> > +                       flags |= GPIOF_ACTIVE_LOW;
 > > +
-> > + - altr,l3-syscon : phandle of the l3 interconnect module
+> > +               ret = devm_gpio_request_one(parent, template->gpio, flags,
+> > +                                           template->name);
+> > +               if (ret < 0)
+> > +                       return ret;
 > > +
+> > +               led_dat->gpiod = gpio_to_desc(template->gpio);
+> > +               if (IS_ERR(led_dat->gpiod))
+> > +                       return PTR_ERR(led_dat->gpiod);
+> >         }
 > 
-> L3 shouldn't be a syscon.
+> OK so this is the legacy codepath: point it out in a big fat
+> comment that this is the legacy codepath.
 
-L3 is actually a good candidate for syscon.  Lots of registers, each one
-affects a different hardware block.
+That looks like it could be done in a followup patch too.
 
-> Have you tried dumping the regmap in the debugfs if L3
-> is a syscon? Doesn't work.
+Since the series is in my linux-next branch at this point, I really wouldn't
+like to reshuffle commits in it if that can be avoided.
 
-Is that a bug in regmap or is that because the register in L3 that
-I am actully interested in here is write-only (ugh)?
-
+> > Index: linux-pm/include/linux/leds.h
+> > ===================================================================
+> > --- linux-pm.orig/include/linux/leds.h
+> > +++ linux-pm/include/linux/leds.h
+> > @@ -251,6 +251,7 @@ struct gpio_led {
+> >         unsigned        retain_state_suspended : 1;
+> >         unsigned        default_state : 2;
+> >         /* default_state should be one of LEDS_GPIO_DEFSTATE_(ON|OFF|KEEP) */
+> > +       struct gpio_desc *gpiod;
 > 
-> > +Optional properties:
-> > + - label          : name that you want this bridge to show up as under
-> > +                    /sys/class/fpga-bridge.  Default is br<device#> if this is
-> > +                    not specified.
-> > +
-> 
-> Why? Linux-specific.
+> Put the new struct member right below the current "gpio"
+> member,
 
-That was a convience for the user.  I can take that out and won't miss it.
+It was done like that in previous versions, but turned out to cause problems
+to happen in testing.  Unfortunately, I don't seem to be able to find a pointer
+to the original report ATM, but perhaps Mika can.  Mika?
 
-> 
-> > + - init-val       : 0 if driver should disable bridge at startup
-> > +                    1 if driver should enable bridge at startup
-> > +                    driver leaves bridge in current state if property not
-> > +                    specified.
-> > +
-> 
-> Configuration in the DT? Really?
-> 
-> > +Example:
-> > +	hps_fpgabridge0: fpgabridge@0 {
-> > +		compatible = "altr,socfpga-hps2fpga-bridge";
-> > +		label = "hps2fpga";
-> > +		altr,l3-syscon = <&l3regs>;
-> > +		clocks = <&l4_main_clk>;
-> > +		init-val = <1>;
-> > +	};
-> > +
-> > +	hps_fpgabridge1: fpgabridge@1 {
-> > +		compatible = "altr,socfpga-lwhps2fpga-bridge";
-> > +		label = "lwhps2fpga";
-> > +		altr,l3-syscon = <&l3regs>;
-> > +		clocks = <&l4_main_clk>;
-> > +		init-val = <0>;
-> > +	};
-> > +
-> > +	hps_fpgabridge2: fpgabridge@2 {
-> > +		compatible = "altr,socfpga-fpga2hps-bridge";
-> > +		label = "fpga2hps";
-> > +		altr,l3-syscon = <&l3regs>;
-> > +		clocks = <&l4_main_clk>;
-> > +	};
-> 
-> The bridges are the buses into the FPGA. This has to be accomodated.
-> The bridges have two specified memory ranges: one the address space
-> of the bus, the second the register space for configuration.
-> 
-> This binding does NOT correctly describe the hardware. Sorry.
-> 
+> and add comments saying that either needs to be
+> specified but "gpio" is deprecated for "gpiod".
 
-OK that was outdated.  More cleanup needed.  How about this type of
-binding?  Here's an actual use case for something that has multiple
-pieces of soft IP in the FPGA (sysid, gpio).  I eliminated a few.
-
-*snippet of DT*
-sopc@0 {
-	device_type = "soc";
-	ranges;
-	#address-cells = <0x1>;
-	#size-cells = <0x1>;
-	compatible = "ALTR,avalon", "simple-bus";
-	bus-frequency = <0x0>;
-
-	bridge@0xc0000000 {
-		compatible = "altr,bridge-14.0", "simple-bus";
-		reg = <0xc0000000 0x20000000 0xff200000 0x200000>;
-		reg-names = "axi_h2f", "axi_h2f_lw";
-		clocks = <0x2 0x2 0x2>;
-		clock-names = "h2f_axi_clock", "h2f_lw_axi_clock",
-		              "f2h_sdram0_clock";
-		#address-cells = <0x2>;
-		#size-cells = <0x1>;
-		ranges = <0x0 0x0 0xc0000000 0x10000
-		          0x1 0x10000 0xff210000 0x8
-			  0x1 0x10040 0xff210040 0x20 
-			  0x1 0x10080 0xff210080 0x10 
-			  0x1 0x100c0 0xff2100c0 0x10 
-			  0x1 0x20000 0xff220000 0x8>;
-
-		sysid@0x100010000 {
-			compatible = "altr,sysid-14.0", "altr,sysid-1.0";
-			reg = <0x1 0x10000 0x8>;
-			clocks = <0x2>;
-			id = <0xacd51402>;
-			timestamp = <0x540a048e>;
-		};
-
-		gpio@0x100010040 {
-			compatible = "altr,pio-14.0", "altr,pio-1.0";
-			reg = <0x1 0x10040 0x20>;
-			clocks = <0x2>;
-			altr,gpio-bank-width = <0x4>;
-			resetvalue = <0x0>;
-			#gpio-cells = <0x2>;
-			gpio-controller;
-			linux,phandle = <0x2a>;
-		};
-
-		/* other hardware that exists on FPGA here */
-
-	};
-};
-
-Alan
-
-> Regards,
-> Steffen
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards,
+Rafael
