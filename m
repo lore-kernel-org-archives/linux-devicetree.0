@@ -1,41 +1,100 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH v2 07/10] ARM: dts: tegra: Use standard power-off property
- in tps65911 for tegra30 apalis
-Date: Tue, 28 Oct 2014 13:34:03 +0900
-Message-ID: <CAAVeFuL2MvbC9U-8fM=QPhkvnaMRZ8kep9WpD8hhU4m4cGWjLw@mail.gmail.com>
-References: <1414427215-14380-1-git-send-email-romain.perier@gmail.com>
- <1414427215-14380-7-git-send-email-romain.perier@gmail.com> <20141027164214.GF14253@saruman>
+From: Dave Airlie <airlied@gmail.com>
+Subject: Re: [PATCH v3 0/9] Renesas R-Car DU HDMI support
+Date: Tue, 28 Oct 2014 15:30:05 +1000
+Message-ID: <CAPM=9tzCRxwLqJTk3kWM47jVUUqyMNKBnm1h2RG3N0zGiMxivg@mail.gmail.com>
+References: <1414337068-28664-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141027164214.GF14253@saruman>
-Sender: linux-kernel-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Romain Perier <romain.perier@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, robh@kernel.org, Mark Rutland <mark.rutland@arm.com>, Johan Hovold <johan@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.or>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1414337068-28664-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: Simon <horms@verge.net.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 28, 2014 at 1:42 AM, Felipe Balbi <balbi@ti.com> wrote:
-> On Mon, Oct 27, 2014 at 04:26:52PM +0000, Romain Perier wrote:
->> Signed-off-by: Romain Perier <romain.perier@gmail.com>
->> ---
->>  arch/arm/boot/dts/tegra30-apalis.dtsi | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
->> index a5446cb..ced4436 100644
->> --- a/arch/arm/boot/dts/tegra30-apalis.dtsi
->> +++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
->> @@ -412,7 +412,7 @@
->>                       #interrupt-cells = <2>;
->>                       interrupt-controller;
->>
->> -                     ti,system-power-controller;
->> +                     system-power-controller;
->
-> this board is broken until this patch is applied.
-
-It should not. Supporting a new property in the tps65911 is fine, but
-the old property must keep being supported to preserve DT
-compatibility. If a change removing support for
-"ti,system-power-controller" has landed in -next, then it should be
-removed.
+Pgo+IFRoZSBsYXN0IHBhdGNoIGluc3RhbnRpYXRlcyB0aGUgSERNSSBlbmNvZGVyIGluIHRoZSBL
+b2Vsc2NoIGJvYXJkIERUIGZpbGUgYW5kCj4gY29ubmVjdHMgaXQgdG8gdGhlIERVIG91dHB1dC4K
+Pgo+IFRoZSBwYXRjaCBzZXJpZXMgZGVwZW5kcyBvbiBLb2Vsc2NoIERVIERUIGVuYWJsZW1lbnQg
+KHNjaGVkdWxlZCBmb3IgbWVyZ2UgaW4KPiB2My4xOS1yYzEpLiBEYXZlLCBJJ2QgbGlrZSB0byBn
+ZXQgdGhpcyBtZXJnZWQgaW4gdjMuMTktcmMxLCBob3cgd291bGQgeW91IGxpa2UKPiB0byBwcm9j
+ZWVkID8gQ291bGQgaXQgZ28gdGhyb3VnaCBTaW1vbidzIFJlbmVzYXMgdHJlZSA/IFRoZXJlJ3Mg
+YSBzbWFsbCByaXNrCj4gb2YgY29uZmxpY3QgaW4gZHJpdmVycy9ncHUvZHJtL2RybV9lZGlkLmMs
+IGluY2x1ZGUvZHJtL2RybV9lZGlkLmgsCj4gZHJpdmVycy9ncHUvZHJtL2kyYy9LY29uZmlnIGFu
+ZCBkcml2ZXJzL2dwdS9kcm0vaTJjL01ha2VmaWxlLiBTaW1vbiwgY291bGQgeW91Cj4gYWx0ZXJu
+YXRpdmVseSBwcm92aWRlIGEgc3RhYmxlIGJyYW5jaCB3aXRoIHRoZSByZXF1aXJlZCBkZXBlbmRl
+bmNpZXMgPwoKSSdkIHByb2JhYmx5IGxpa2UgdG8gdGFrZSB0aGUgZHJtIHBhdGNoZXMgaW50byBk
+cm0tbmV4dCBmaXJzdCwgdGhlbgptYXliZSBnZXQgYSBzdGFibGUKYnJhbmNoIGZyb20gU2ltb24g
+SSBjb3VsZCB1c2UgdG8gYmFzZSB0aGUgcmVzdCBvbi4KCkRhdmUuCgo+Cj4gQ2hhbmdlcyBzaW5j
+ZSB2MjoKPgo+IC0gTmFtZSBhcmd1bWVudHMgdG8gZ2V0X2VkaWRfYmxvY2soKQo+Cj4gQ2hhbmdl
+cyBzaW5jZSB2MToKPgo+IC0gRHJvcHBlZCBQaGlsaXBwIFphYmVsJ3MgT0YgZ3JhcGggcGF0Y2hl
+cyAodGhlIHJjYXItZHUtZHJtIGRyaXZlciB3aWxsIGJlCj4gICB1ZHBhdGVkIHRvIHVzZSBmb3Jf
+ZWFjaF9lbmRwb2ludF9vZl9ub2RlIHdoZW4gdGhlIGltcGxlbWVudGF0aW9uIGhpdHMKPiAgIHVw
+c3RyZWFtKQo+IC0gYWR2NzUxMTogQ2xhcmlmeSB0aGUgYWRpLGlucHV0LWZvcm1hdCBEVCBwcm9w
+ZXJ0eSBkb2N1bWVudGF0aW9uCj4gLSBhZHY3NTExOiBVc2UgbWFwIGFycmF5IHRvIGNvbnZlcnQg
+aW5wdXQgc3R5bGUgdG8gaGFyZHdhcmUgdmFsdWUKPiAtIGFkdjc1MTE6IEZpeGVkIHR5cG9zCj4K
+PiBGb3IgZWFzZSBvZiB0ZXN0aW5nIGFuZCByZXZpZXcgSSd2ZSBwdXNoZWQgdGhpcyBzZXJpZXMg
+YW5kIGl0cyBkZXBlbmRlbmNpZXMgdG8KPiBhIGdpdCBicmFuY2ggb24KPgo+ICAgICAgICAgZ2l0
+Oi8vbGludXh0di5vcmcvcGluY2hhcnRsL2ZiZGV2LmdpdCBkcm0vZHUvYWR2NzUxMQo+Cj4gQ2M6
+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4gQ2M6IERhdmUgQWlybGllIDxhaXJsaWVkQGdt
+YWlsLmNvbT4KPiBDYzogTGFycy1QZXRlciBDbGF1c2VuIDxsYXJzQG1ldGFmb28uZGU+Cj4gQ2M6
+IFNpbW9uIDxob3Jtc0B2ZXJnZS5uZXQuYXU+Cj4KPiBMYXJzLVBldGVyIENsYXVzZW4gKDIpOgo+
+ICAgZHJtOiBEZWNvdXBsZSBFRElEIHBhcnNpbmcgZnJvbSBJMkMgYWRhcHRlcgo+ICAgZHJtOiBB
+ZGQgYWR2NzUxMSBlbmNvZGVyIGRyaXZlcgo+Cj4gTGF1cmVudCBQaW5jaGFydCAoNyk6Cj4gICBk
+cm06IHJjYXItZHU6IFJlbW92ZSBwbGF0Zm9ybSBkYXRhIHN1cHBvcnQKPiAgIGRybTogcmNhci1k
+dTogUGFzcyB0aGUgZW5jb2RlciBEVCBub2RlIHRvIHJjYXJfZHVfZW5jb2Rlcl9pbml0KCkKPiAg
+IGRybTogcmNhci1kdTogUmVwbGFjZSBkaXJlY3QgRFJNIGVuY29kZXIgYWNjZXNzIHdpdGggY2Fz
+dCBtYWNybwo+ICAgZHJtOiByY2FyLWR1OiBSZXBsYWNlIGRybV9lbmNvZGVyIHdpdGggZHJtX3Ns
+YXZlX2VuY29kZXIKPiAgIGRybTogcmNhci1kdTogQWRkIEhETUkgZW5jb2RlciBhbmQgY29ubmVj
+dG9yIHN1cHBvcnQKPiAgIHZpZGVvOiBBZGQgQURWNzUxWzEzXSBEVCBiaW5kaW5ncyBkb2N1bWVu
+dGF0aW9uCj4gICBBUk06IHNobW9iaWxlOiBrb2Vsc2NoOiBBZGQgRFUgSERNSSBvdXRwdXQgc3Vw
+cG9ydAo+Cj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2FkaSxhZHY3NTExLnR4dCAg
+ICAgIHwgICA4OCArKwo+ICBhcmNoL2FybS9ib290L2R0cy9yOGE3NzkxLWtvZWxzY2guZHRzICAg
+ICAgICAgICAgICB8ICAgNTAgKy0KPiAgZHJpdmVycy9ncHUvZHJtL2RybV9lZGlkLmMgICAgICAg
+ICAgICAgICAgICAgICAgICAgfCAgIDI3ICstCj4gIGRyaXZlcnMvZ3B1L2RybS9pMmMvS2NvbmZp
+ZyAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgNiArCj4gIGRyaXZlcnMvZ3B1L2RybS9pMmMv
+TWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMiArCj4gIGRyaXZlcnMvZ3B1L2Ry
+bS9pMmMvYWR2NzUxMS5jICAgICAgICAgICAgICAgICAgICAgIHwgMTAxMCArKysrKysrKysrKysr
+KysrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vaTJjL2Fkdjc1MTEuaCAgICAgICAgICAgICAgICAg
+ICAgICB8ICAyODkgKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L0tjb25maWcgICAg
+ICAgICAgICAgICAgICAgIHwgICAxMSArLQo+ICBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9NYWtl
+ZmlsZSAgICAgICAgICAgICAgICAgICB8ICAgIDIgKwo+ICBkcml2ZXJzL2dwdS9kcm0vcmNhci1k
+dS9yY2FyX2R1X2NydGMuaCAgICAgICAgICAgICB8ICAgMTAgKy0KPiAgZHJpdmVycy9ncHUvZHJt
+L3JjYXItZHUvcmNhcl9kdV9kcnYuYyAgICAgICAgICAgICAgfCAgICA0ICstCj4gIGRyaXZlcnMv
+Z3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfZHJ2LmggICAgICAgICAgICAgIHwgICAgMiAtCj4gIGRy
+aXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfZW5jb2Rlci5jICAgICAgICAgIHwgICA0NSAr
+LQo+ICBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2VuY29kZXIuaCAgICAgICAgICB8
+ICAgMjMgKy0KPiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9oZG1pY29uLmMgICAg
+ICAgICAgfCAgMTE4ICsrKwo+ICBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2hkbWlj
+b24uaCAgICAgICAgICB8ICAgMzEgKwo+ICBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1
+X2hkbWllbmMuYyAgICAgICAgICB8ICAxNTEgKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1
+L3JjYXJfZHVfaGRtaWVuYy5oICAgICAgICAgIHwgICAzNSArCj4gIGRyaXZlcnMvZ3B1L2RybS9y
+Y2FyLWR1L3JjYXJfZHVfa21zLmMgICAgICAgICAgICAgIHwgICA1MyArLQo+ICBkcml2ZXJzL2dw
+dS9kcm0vcmNhci1kdS9yY2FyX2R1X2x2ZHNjb24uYyAgICAgICAgICB8ICAgMzEgKy0KPiAgZHJp
+dmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9sdmRzY29uLmggICAgICAgICAgfCAgICAyIC0K
+PiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9sdmRzZW5jLmggICAgICAgICAgfCAg
+ICAxIC0KPiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV92Z2Fjb24uYyAgICAgICAg
+ICAgfCAgICA1ICstCj4gIGluY2x1ZGUvZHJtL2RybV9lZGlkLmggICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHwgICAgNSArCj4gIGluY2x1ZGUvbGludXgvcGxhdGZvcm1fZGF0YS9yY2FyLWR1
+LmggICAgICAgICAgICAgIHwgICA3NCAtLQo+ICAyNSBmaWxlcyBjaGFuZ2VkLCAxODk0IGluc2Vy
+dGlvbnMoKyksIDE4MSBkZWxldGlvbnMoLSkKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9hZGksYWR2NzUxMS50eHQKPiAgY3JlYXRl
+IG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9pMmMvYWR2NzUxMS5jCj4gIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaTJjL2Fkdjc1MTEuaAo+ICBjcmVhdGUgbW9kZSAxMDA2
+NDQgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9oZG1pY29uLmMKPiAgY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfaGRtaWNvbi5oCj4gIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2hkbWllbmMu
+Ywo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9o
+ZG1pZW5jLmgKPiAgZGVsZXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvcGxhdGZvcm1fZGF0
+YS9yY2FyLWR1LmgKPgo+IC0tCj4gUmVnYXJkcywKPgo+IExhdXJlbnQgUGluY2hhcnQKPgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
