@@ -1,31 +1,30 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 1/6] pinctrl: rockchip: add suspend/resume functions
-Date: Tue, 28 Oct 2014 17:23:17 +0100
-Message-ID: <CACRpkdZhQpCS+S-EA_ehjrpj=uS7bnb4L_OohbnBw5sXfGgaeA@mail.gmail.com>
-References: <1413933461-25602-1-git-send-email-zyw@rock-chips.com>
-	<1413933557-25684-1-git-send-email-zyw@rock-chips.com>
+Subject: Re: [PATCH v6 0/4] Qualcomm SPMI PMIC pin controller drivers
+Date: Tue, 28 Oct 2014 17:29:10 +0100
+Message-ID: <CACRpkdaq8Y_+JHTjZWmWQUh9xnSSGOd+-XVpZeutfwRaZXTQxQ@mail.gmail.com>
+References: <1413971927-9168-1-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413933557-25684-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Mike Turquette <mturquette@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Doug Anderson <dianders@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1413971927-9168-1-git-send-email-iivanov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Georgi Djakov <gdjakov@mm-sol.com>, Andy Gross <agross@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 22, 2014 at 1:19 AM, Chris Zhong <zyw@rock-chips.com> wrote:
+On Wed, Oct 22, 2014 at 11:58 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
 
-> From: Chris <zyw@rock-chips.com>
+> Changes since v4:
 >
-> support suspend/resume of pinctrl, it allows handling sleep mode
-> for hogged pins in pinctrl
->
-> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> - Rebased on v3.18-rc1:
+>   pinmux_ops.enable is now pinmux_ops.set_mux
+>   gpiochip_remove() did not return a value.
+> - Added Ack's from Bjorn
 
-Looks good but I'm delegating to Heiko to collect and review patches
-on the Rockchip pin control driver.
+Thanks guys, I have applied the latest version of the v6 patch series,
+including the v6-prim version of 3/4 that fixed the compile error...
 
-I will point out if I see something immediately disturbing.
+Unless something radically bad happens it goes into v3.19.
 
 Yours,
 Linus Walleij
