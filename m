@@ -1,65 +1,106 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH 2/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
- portal(s)
-Date: Tue, 28 Oct 2014 13:09:48 -0500
-Message-ID: <1414519788.23458.85.camel@snotra.buserror.net>
-References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
-	 <1413986972-621-2-git-send-email-Emilian.Medve@Freescale.com>
-	 <20141022142931.GA4010@leverpostej> <54480DE6.4090604@Freescale.com>
+From: Max Filippov <jcmvbkbc@gmail.com>
+Subject: Re: [PATCH] ASoC: add xtensa xtfpga I2S interface and platform
+Date: Tue, 28 Oct 2014 21:11:34 +0300
+Message-ID: <CAMo8BfL+vW7BjC1bQPNjhuBMTcRTkf8_DDS3NO2HmBUnfHYAFQ@mail.gmail.com>
+References: <1414436825-19416-1-git-send-email-jcmvbkbc@gmail.com>
+	<20141027193229.GE18557@sirena.org.uk>
+	<CAMo8Bf+Z9V8mkiC3JOupPQmi1EJUDKrb1qcNncDbsEbhjigbww@mail.gmail.com>
+	<20141028154224.GX18557@sirena.org.uk>
+	<CAMo8BfLpJ0bdmaFt9+gLQ_kEjB68XdjAJUw8f8s=Owv46h_yDQ@mail.gmail.com>
+	<20141028173853.GD18557@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <54480DE6.4090604@Freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Emil Medve <Emilian.Medve@Freescale.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Pawel Moll <Pawel.Moll@arm.com>, "Geoff.Thorpe@freescale.com" <Geoff.Thorpe@Freescale.com>, "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141028173853.GD18557@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, LKML <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-10-22 at 15:04 -0500, Emil Medve wrote:
-> Hello Mark,
-> 
-> 
-> Thanks for having a look at this
-> 
-> On 10/22/2014 09:29 AM, Mark Rutland wrote:
-> > I'd feel rather uncomfortable accepting a
-> > binding that we already believe to be insufficient to describe the
-> > hardware.
-> > 
-> > What do you expect to change?
-> 
-> Related bindings seem incomplete. As such, the PAMU binding (pamu.txt)
-> covers incompletely a dynamic LIODN assignment/programming model. The
-> current driver uses a static assignment scheme that the binding needs to
-> include. I also suspect that once the driver starts supporting the
-> dynamic LIODN assignment/programming we might find some wrinkles
+On Tue, Oct 28, 2014 at 8:38 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Tue, Oct 28, 2014 at 08:00:45PM +0300, Max Filippov wrote:
+>> On Tue, Oct 28, 2014 at 6:42 PM, Mark Brown <broonie@kernel.org> wrote:
+>> > So atomics don't work?  Simple flags are one of the few cases where they
+>> > might cover it...  again, the fact that this isn't similar to other code
+>> > doing the same thing is worrying.
+>
+>> tx_substream use pattern is the same as of a typical RCU variable.
+>> RCU wrappers combine ACCESS_ONCE and barriers that I'd otherwise
+>> have to write myself.
+>
+> You *really* need to explain how it's supposed to work - right now it's
+> not at all obvious, like I say the fact that this is a rarely used idiom
+> is not helping.  For example when we tear down the stream we just assign
+> the pointer in _stop() but don't bother with a sync until the stream is
+> closed - why?
 
-How is this different from any of the other QorIQ bindings that have
-been merged without such a disclaimer?  The static LIODN model is
-already there, even if documentation is missing, and should continue to
-be supported even if we eventually implement a dynamic LIODN model.
+Because we can't wait in stop and syncing is not time critical, we can
+do it any time before the stream becomes invalid.
 
-> >> +
-> >> +	bman-portals@ff4000000 {
-> >> +		#address-cells = <1>;
-> >> +		#size-cells = <1>;
-> >> +		compatible = "simple-bus";
-> >> +		ranges = <0 0xf 0xf4000000 0x200000>;
-> >> +
-> >> +		bman-portal@0 {
-> >> +			compatible = "fsl,bman-portal-1.0.0", "fsl,bman-portal";
-> >> +			reg = <0x0 0x4000 0x100000 0x1000>;
-> > 
-> > It would be easier to read is each entry had its own set of brackets.
-> > Initially this looked to me like a single 64-bit address/size pair.
-> 
-> Something like <>, <>? It doesn't seem widely used but I agree is more
-> readable. I can include it in the the next spin
+> We also appear to be doing several different dereferences
+> of the pointer inside a single rcu_read_lock() for some reason which is
+> worrying.
 
-The older PPC device trees haven't used it much but I think it's pretty
-common in the newer ARM trees.
+I've cleaned that up.
 
--Scott
+>> > it'd be better to just add a DMA controller on the FPGA, everyone will
+>> > be much happier).
+>
+>> Hardware people think different and it's been like that for more than 5
+>> years.
+>
+> They appear to be the only hardware people who think this way, while we
 
+The whole audio subsystem on xtfpga boards is there for, I think, a single
+purpose: for the demonstration of CPU audio processing capabilities.
+That's why it's that simple.
 
+> do have some FIQ based PIO stuff in mainline all the examples I can
+> think of are there because people didn't work out how to drive the DMA
+> controller yet (and even there we're using FIQs not bashing things in
+> from a regular interrupt).
+
+Currently we don't support fast interrupt handlers written in C on xtensa.
+
+>> >> Because this callback is said to be potentially called multiple times per
+>> >> initialization. Is it not?
+>
+>> > It can but but I'm not seeing any connection between that and the idea
+>> > of not keeping the clock enabled when the device isn't in use?
+>
+>> hw_params callback can change MCLK rate, so it has to disable and
+>> enable the clock anyway, and since enable can fail it does not guarantee
+>> that the clock will be left in the same state. Or should I adjust MCLK rate
+>> w/o disabling the clock?
+>
+> So yet again: why not just enable the clock only when the device is in
+> use?  If it's being configured it stands to reason that the device isn't
+> actively in use...
+
+Mark, I don't get it, sorry ): My clock synthesizer is I2C controlled, so
+I can't prepare/unprepare it in the trigger callback. When should I do it?
+
+>> > I'm not sure I find that terribly convincing, I'd like to be able to
+>> > look at the code and tell that it's not going to blow up.  This again
+>> > comes back to the general comment about clarity - the code *looks*
+>> > suspicious (strange indentation of the for loop with a comment in the
+>> > middle of the statement itself for example).
+>
+>> The level field in the control register is 4 bit wide, so the allowed range of
+>> level is 0..15. FIFO size is 8192 entries, level = 1 corresponds to
+>> FIFO size / 2, level = 14 -- to FIFO size of 0. I guess this function
+>> won't get period_size of 0?
+>
+> So if the IP gets changed and the code gets blown up this could well
+> explode then...  which doesn't seem entirely unlikely considering this
+> is a FPGA platform so presumably this is easy to update.  To repeat this
+> is about clarity and the code looking like it's probably hiding bugs as
+> much as if the code actually works if you really sit down and study it.
+
+The calculation does not depend on the actual hardware, but on the
+constant definitions in the same file. They need to be updated if the
+hardware changes. I'll try to rewrite it in a cleaner way.
+
+-- 
+Thanks.
+-- Max
