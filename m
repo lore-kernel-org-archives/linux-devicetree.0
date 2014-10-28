@@ -1,61 +1,80 @@
-From: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH] dt:numa: adding numa node mapping for memory nodes.
-Date: Tue, 28 Oct 2014 15:50:13 +0800
-Message-ID: <544F4AB5.5070107@linaro.org>
-References: <1410944189-3608-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <541A01B7.8030601@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v1] mtd: hisilicon: add device tree node for NAND controller
+Date: Tue, 28 Oct 2014 16:06:39 +0800
+Message-ID: <1414483599-9470-1-git-send-email-wangzhou.bry@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <541A01B7.8030601-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2014-9-18 5:48, Nathan Lynch wrote:
-> On 09/17/2014 03:56 AM, Ganapatrao Kulkarni wrote:
->> From: Ganapatrao Kulkarni <ganapatrao.kulkarni-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>
->> This patch adds property "nid" to memory node to provide the memory range to
->> numa node id mapping.
->>
->> Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>
->> ---
->>  Documentation/devicetree/bindings/numa.txt | 58 ++++++++++++++++++++++++++++++
->>  1 file changed, 58 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/numa.txt
->>
->> diff --git a/Documentation/devicetree/bindings/numa.txt b/Documentation/devicetree/bindings/numa.txt
->> new file mode 100644
->> index 0000000..c4a94f2
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/numa.txt
->> @@ -0,0 +1,58 @@
->> +======================================================
->> +numa id binding description
->> +======================================================
->> +
->> +======================================================
->> +1 - Introduction
->> +======================================================
->> +The device node  property "nid(numa node id)" can be added to memory
->> +device node to map the range of memory addresses as defined in property "reg".
->> +The property "nid" maps the memory range to the numa node id, which is used to
->> +find the local and remory pages on numa aware systems.
-> 
-> "Local" and "remote" memory are notions that relate to some other
-> resource -- typically a CPU, but also I/O resources on some systems.  It
-> seems to me that a useful NUMA binding would at least specify a "nid"
-> property, or something like it, for both cpu and memory nodes.  But this
-> document speaks only of memory nodes.
+This patch adds dts support for NAND flash controller of Hisilicon Soc Hip04
 
-Agreed. and more, I think I/O resources also need such property, it will
-have performance influence for the proximity domain of I/O devices too.
+Changes in v1:
+- Move partition and other board related information into board dts file:
+  hip04-d01.dts
 
-Thanks
-Hanjun
+Signed-off-by: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/hip04-d01.dts |   26 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/hip04.dtsi    |    7 +++++++
+ 2 files changed, 33 insertions(+)
+
+diff --git a/arch/arm/boot/dts/hip04-d01.dts b/arch/arm/boot/dts/hip04-d01.dts
+index 40a9e33..0f69a1d 100644
+--- a/arch/arm/boot/dts/hip04-d01.dts
++++ b/arch/arm/boot/dts/hip04-d01.dts
+@@ -28,5 +28,31 @@
+ 		uart0: uart@4007000 {
+ 			status = "ok";
+ 		};
++
++		nand: nand@4020000 {
++			nand-bus-width = <8>;
++			nand-ecc-mode = "none";
++			hisi,nand-ecc-bits = <0>;
++
++			partition@0 {
++				label = "nand_text";
++				reg = <0x00000000 0x00400000>;
++			};
++
++			partition@00400000 {
++				label = "nand_monitor";
++				reg = <0x00400000 0x00400000>;
++			};
++
++			partition@00800000 {
++				label = "nand_kernel";
++				reg = <0x00800000 0x00800000>;
++			};
++
++			partition@01000000 {
++				label = "nand_fs";
++				reg = <0x01000000 0x1f000000>;
++			};
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/hip04.dtsi b/arch/arm/boot/dts/hip04.dtsi
+index 93b6c90..267d7f2 100644
+--- a/arch/arm/boot/dts/hip04.dtsi
++++ b/arch/arm/boot/dts/hip04.dtsi
+@@ -263,5 +263,12 @@
+ 			interrupts = <0 372 4>;
+ 		};
+ 
++		nand: nand@4020000 {
++			compatible = "hisilicon,504-nfc";
++			reg = <0x4020000 0x10000>, <0x5000000 0x1000>;
++			interrupts = <0 379 4>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++		};
+ 	};
+ };
+-- 
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
