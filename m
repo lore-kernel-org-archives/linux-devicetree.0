@@ -1,68 +1,142 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v2 00/20] rtc: omap: fixes and power-off feature
-Date: Tue, 28 Oct 2014 15:16:10 +0000
-Message-ID: <20141028151610.GA12379@n2100.arm.linux.org.uk>
-References: <20141024192540.GD11455@saruman> <20141024192948.GE11455@saruman> <20141024193655.GD19377@localhost> <20141024194442.GG11455@saruman> <20141024195532.GF19377@localhost> <20141027162251.d7ff2a5f31917c638d4e47f7@linux-foundation.org> <20141028002552.GX12379@n2100.arm.linux.org.uk> <20141028081616.GL2006@localhost> <20141028084745.GY12379@n2100.arm.linux.org.uk> <20141028131257.GS2006@localhost>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 07/12] leds: leds-gpio: Add support for GPIO descriptors
+Date: Tue, 28 Oct 2014 16:26:25 +0100
+Message-ID: <CACRpkdYR70Az1uLyjsaujQN-q-4+qRD=GpqJaOuvnKZhypL=cA@mail.gmail.com>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan>
+	<11223831.j9KAEfSQsY@vostro.rjw.lan>
+	<3395005.IveyhHQnye@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141028131257.GS2006@localhost>
-Sender: linux-omap-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Felipe Balbi <balbi@ti.com>, Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Lokesh Vutla <lokeshvutla@ti.com>, Guenter Roeck <linux@roeck-us.net>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <3395005.IveyhHQnye@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 28, 2014 at 02:12:57PM +0100, Johan Hovold wrote:
-> That's not what I was trying to refer to. But the patch set explicitly
-> allows for multiple, prioritised power-off handlers, which can power
-> off a board in different ways and with various degrees of success.
-> Specifically, it allows for fallback handlers in case one or more
-> power-off handlers fail.
-> 
-> So if we allow for that, what is to prevent the final power-off handler
-> from failing? And should this not be logged by arch code in the same way
-> as failure to restart is?
+On Fri, Oct 17, 2014 at 2:11 PM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
 
-And how is that different from having a set of power-off handlers, and
-reporting when each individual one fails?  Don't you want to know if
-your primary high priority reboot handler fails, just as much as you
-want to know if your final last-resort power-off handler fails?
+> From: Mika Westerberg <mika.westerberg@linux.intel.com>
+>
+> GPIO descriptors are the preferred way over legacy GPIO numbers
+> nowadays. Convert the driver to use GPIO descriptors internally but
+> still allow passing legacy GPIO numbers from platform data to support
+> existing platforms.
+>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Acked-by: Alexandre Courbot <acourbot@nvidia.com>
+> Acked-by: Bryan Wu <cooloney@gmail.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+(...)
 
-Or different from having no power-off handlers.
+>         if (led_dat->blinking) {
+> -               led_dat->platform_gpio_blink_set(led_dat->gpio,
+> -                                                led_dat->new_level,
+> -                                                NULL, NULL);
+> +               int gpio = desc_to_gpio(led_dat->gpiod);
+> +               int level = led_dat->new_level;
 
-Here's the x86 code:
+So this desc_to_gpio() is done only to call the legacy callback below?
 
-void machine_power_off(void)
-{
-        machine_ops.power_off();
-}
+> +               if (gpiod_is_active_low(led_dat->gpiod))
+> +                       level = !level;
 
-struct machine_ops machine_ops = {
-        .power_off = native_machine_power_off,
-...
+And that leads to making it necessary to have this helper variable
+to invert the level since that callback does not pass a descriptor
+(which would inherently know if it's active low)....
 
-static void native_machine_power_off(void)
-{
-        if (pm_power_off) {
-                if (!reboot_force)
-                        machine_shutdown();
-                pm_power_off();
-        }
-        /* A fallback in case there is no PM info available */
-        tboot_shutdown(TB_SHUTDOWN_HALT);
-}
+> +
+> +               led_dat->platform_gpio_blink_set(gpio, level, NULL, NULL);
 
-void tboot_shutdown(u32 shutdown_type)
-{
-        void (*shutdown)(void);
+Is it *really* impossible to change all the users of this callback?
 
-        if (!tboot_enabled())
-                return;
+>                 led_dat->blinking = 0;
+>         } else
+> -               gpio_set_value_cansleep(led_dat->gpio, led_dat->new_level);
+> +               gpiod_set_value_cansleep(led_dat->gpiod, led_dat->new_level);
 
-See - x86 can very well just fall straight back out of machine_power_off()
-if there's no pm_power_off() hook and tboot is not enabled.
+(...)
+>         /* Setting GPIOs with I2C/etc requires a task context, and we don't
+>          * seem to have a reliable way to know if we're already in one; so
+>          * let's just assume the worst.
+> @@ -72,11 +73,16 @@ static void gpio_led_set(struct led_clas
+>                 schedule_work(&led_dat->work);
+>         } else {
+>                 if (led_dat->blinking) {
+> -                       led_dat->platform_gpio_blink_set(led_dat->gpio, level,
+> -                                                        NULL, NULL);
+> +                       int gpio = desc_to_gpio(led_dat->gpiod);
+> +
+> +                       if (gpiod_is_active_low(led_dat->gpiod))
+> +                               level = !level;
+> +
+> +                       led_dat->platform_gpio_blink_set(gpio, level, NULL,
+> +                                                        NULL);
 
--- 
-FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
+Same comment.
+
+> @@ -85,9 +91,10 @@ static int gpio_blink_set(struct led_cla
+>  {
+>         struct gpio_led_data *led_dat =
+>                 container_of(led_cdev, struct gpio_led_data, cdev);
+> +       int gpio = desc_to_gpio(led_dat->gpiod);
+>
+>         led_dat->blinking = 1;
+> -       return led_dat->platform_gpio_blink_set(led_dat->gpio, GPIO_LED_BLINK,
+> +       return led_dat->platform_gpio_blink_set(gpio, GPIO_LED_BLINK,
+>                                                 delay_on, delay_off);
+
+Same comment.
+
+> @@ -97,24 +104,33 @@ static int create_gpio_led(const struct
+>  {
+>         int ret, state;
+>
+> -       led_dat->gpio = -1;
+> +       if (!template->gpiod) {
+> +               unsigned long flags = 0;
+>
+> -       /* skip leds that aren't available */
+> -       if (!gpio_is_valid(template->gpio)) {
+> -               dev_info(parent, "Skipping unavailable LED gpio %d (%s)\n",
+> -                               template->gpio, template->name);
+> -               return 0;
+> +               /* skip leds that aren't available */
+> +               if (!gpio_is_valid(template->gpio)) {
+> +                       dev_info(parent, "Skipping unavailable LED gpio %d (%s)\n",
+> +                                       template->gpio, template->name);
+> +                       return 0;
+> +               }
+> +
+> +               if (template->active_low)
+> +                       flags |= GPIOF_ACTIVE_LOW;
+> +
+> +               ret = devm_gpio_request_one(parent, template->gpio, flags,
+> +                                           template->name);
+> +               if (ret < 0)
+> +                       return ret;
+> +
+> +               led_dat->gpiod = gpio_to_desc(template->gpio);
+> +               if (IS_ERR(led_dat->gpiod))
+> +                       return PTR_ERR(led_dat->gpiod);
+>         }
+
+OK so this is the legacy codepath: point it out in a big fat
+comment that this is the legacy codepath.
+
+> Index: linux-pm/include/linux/leds.h
+> ===================================================================
+> --- linux-pm.orig/include/linux/leds.h
+> +++ linux-pm/include/linux/leds.h
+> @@ -251,6 +251,7 @@ struct gpio_led {
+>         unsigned        retain_state_suspended : 1;
+>         unsigned        default_state : 2;
+>         /* default_state should be one of LEDS_GPIO_DEFSTATE_(ON|OFF|KEEP) */
+> +       struct gpio_desc *gpiod;
+
+Put the new struct member right below the current "gpio"
+member, and add comments saying that either needs to be
+specified but "gpio" is deprecated for "gpiod".
+
+Yours,
+Linus Walleij
