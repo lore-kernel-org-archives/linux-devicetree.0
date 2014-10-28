@@ -1,102 +1,72 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH 1/3] powerpc/dts: Factorize the clock control node
-Date: Tue, 28 Oct 2014 18:21:40 -0500
-Message-ID: <1414538500.23458.125.camel@snotra.buserror.net>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 2/3] dt/bindings: qoriq-clock: Add binding for the
+ platform PLL
+Date: Tue, 28 Oct 2014 18:23:47 -0500
+Message-ID: <1414538627.23458.127.camel@snotra.buserror.net>
 References: <1413988937-27885-1-git-send-email-Emilian.Medve@Freescale.com>
+	 <1413988937-27885-2-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1413988937-27885-1-git-send-email-Emilian.Medve@Freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Emil Medve <Emilian.Medve@Freescale.com>
-Cc: yuantian.tang@Freescale.com, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413988937-27885-2-git-send-email-Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Cc: yuantian.tang-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE0LTEwLTIyIGF0IDA5OjQyIC0wNTAwLCBFbWlsIE1lZHZlIHdyb3RlOgo+IFNp
-Z25lZC1vZmYtYnk6IEVtaWwgTWVkdmUgPEVtaWxpYW4uTWVkdmVARnJlZXNjYWxlLmNvbT4KPiBD
-aGFuZ2UtSWQ6IEkyNWNlMjRhMjU4NjJiNGNhNDYwMTY0MTU5ODY3YWJlZmUwMGNjZGQxCgpQbGVh
-c2UgcmVtb3ZlIGdlcnJpdCBzdHVmZiBwcmlvciB0byBzdWJtaXR0aW5nLgoKPiBkaWZmIC0tZ2l0
-IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9xb3JpcS1jbG9ja2dlbjEuZHRzaSBiL2FyY2gv
-cG93ZXJwYy9ib290L2R0cy9mc2wvcW9yaXEtY2xvY2tnZW4xLmR0c2kKPiBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLjQ4NzEwNDgKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIv
-YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9xb3JpcS1jbG9ja2dlbjEuZHRzaQo+IEBAIC0wLDAg
-KzEsNzggQEAKPiArLyoKPiArICogUW9ySVEgY2xvY2sgY29udHJvbCBkZXZpY2UgdHJlZSBzdHVi
-IFsgY29udHJvbGxlciBAIG9mZnNldCAweGUxMDAwIF0KPiArICoKPiArICogQ29weXJpZ2h0IDIw
-MTQgRnJlZXNjYWxlIFNlbWljb25kdWN0b3IgSW5jLgo+ICsgKgo+ICsgKiBSZWRpc3RyaWJ1dGlv
-biBhbmQgdXNlIGluIHNvdXJjZSBhbmQgYmluYXJ5IGZvcm1zLCB3aXRoIG9yIHdpdGhvdXQKPiAr
-ICogbW9kaWZpY2F0aW9uLCBhcmUgcGVybWl0dGVkIHByb3ZpZGVkIHRoYXQgdGhlIGZvbGxvd2lu
-ZyBjb25kaXRpb25zIGFyZSBtZXQ6Cj4gKyAqICAgICAqIFJlZGlzdHJpYnV0aW9ucyBvZiBzb3Vy
-Y2UgY29kZSBtdXN0IHJldGFpbiB0aGUgYWJvdmUgY29weXJpZ2h0Cj4gKyAqCSBub3RpY2UsIHRo
-aXMgbGlzdCBvZiBjb25kaXRpb25zIGFuZCB0aGUgZm9sbG93aW5nIGRpc2NsYWltZXIuCj4gKyAq
-ICAgICAqIFJlZGlzdHJpYnV0aW9ucyBpbiBiaW5hcnkgZm9ybSBtdXN0IHJlcHJvZHVjZSB0aGUg
-YWJvdmUgY29weXJpZ2h0Cj4gKyAqCSBub3RpY2UsIHRoaXMgbGlzdCBvZiBjb25kaXRpb25zIGFu
-ZCB0aGUgZm9sbG93aW5nIGRpc2NsYWltZXIgaW4gdGhlCj4gKyAqCSBkb2N1bWVudGF0aW9uIGFu
-ZC9vciBvdGhlciBtYXRlcmlhbHMgcHJvdmlkZWQgd2l0aCB0aGUgZGlzdHJpYnV0aW9uLgo+ICsg
-KiAgICAgKiBOZWl0aGVyIHRoZSBuYW1lIG9mIEZyZWVzY2FsZSBTZW1pY29uZHVjdG9yIG5vciB0
-aGUKPiArICoJIG5hbWVzIG9mIGl0cyBjb250cmlidXRvcnMgbWF5IGJlIHVzZWQgdG8gZW5kb3Jz
-ZSBvciBwcm9tb3RlIHByb2R1Y3RzCj4gKyAqCSBkZXJpdmVkIGZyb20gdGhpcyBzb2Z0d2FyZSB3
-aXRob3V0IHNwZWNpZmljIHByaW9yIHdyaXR0ZW4gcGVybWlzc2lvbi4KPiArICoKPiArICoKPiAr
-ICogQUxURVJOQVRJVkVMWSwgdGhpcyBzb2Z0d2FyZSBtYXkgYmUgZGlzdHJpYnV0ZWQgdW5kZXIg
-dGhlIHRlcm1zIG9mIHRoZQo+ICsgKiBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSAoIkdQTCIp
-IGFzIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZQo+ICsgKiBGb3VuZGF0aW9uLCBlaXRo
-ZXIgdmVyc2lvbiAyIG9mIHRoYXQgTGljZW5zZSBvciAoYXQgeW91ciBvcHRpb24pIGFueQo+ICsg
-KiBsYXRlciB2ZXJzaW9uLgo+ICsgKgo+ICsgKiBUSElTIFNPRlRXQVJFIElTIFBST1ZJREVEIEJZ
-IEZyZWVzY2FsZSBTZW1pY29uZHVjdG9yIGBgQVMgSVMnJyBBTkQgQU5ZCj4gKyAqIEVYUFJFU1Mg
-T1IgSU1QTElFRCBXQVJSQU5USUVTLCBJTkNMVURJTkcsIEJVVCBOT1QgTElNSVRFRCBUTywgVEhF
-IElNUExJRUQKPiArICogV0FSUkFOVElFUyBPRiBNRVJDSEFOVEFCSUxJVFkgQU5EIEZJVE5FU1Mg
-Rk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFIEFSRQo+ICsgKiBESVNDTEFJTUVELiBJTiBOTyBFVkVO
-VCBTSEFMTCBGcmVlc2NhbGUgU2VtaWNvbmR1Y3RvciBCRSBMSUFCTEUgRk9SIEFOWQo+ICsgKiBE
-SVJFQ1QsIElORElSRUNULCBJTkNJREVOVEFMLCBTUEVDSUFMLCBFWEVNUExBUlksIE9SIENPTlNF
-UVVFTlRJQUwgREFNQUdFUwo+ICsgKiAoSU5DTFVESU5HLCBCVVQgTk9UIExJTUlURUQgVE8sIFBS
-T0NVUkVNRU5UIE9GIFNVQlNUSVRVVEUgR09PRFMgT1IgU0VSVklDRVM7Cj4gKyAqIExPU1MgT0Yg
-VVNFLCBEQVRBLCBPUiBQUk9GSVRTOyBPUiBCVVNJTkVTUyBJTlRFUlJVUFRJT04pIEhPV0VWRVIg
-Q0FVU0VEIEFORAo+ICsgKiBPTiBBTlkgVEhFT1JZIE9GIExJQUJJTElUWSwgV0hFVEhFUiBJTiBD
-T05UUkFDVCwgU1RSSUNUIExJQUJJTElUWSwgT1IgVE9SVAo+ICsgKiAoSU5DTFVESU5HIE5FR0xJ
-R0VOQ0UgT1IgT1RIRVJXSVNFKSBBUklTSU5HIElOIEFOWSBXQVkgT1VUIE9GIFRIRSBVU0UgT0Yg
-VEhJUwo+ICsgKiBTT0ZUV0FSRSwgRVZFTiBJRiBBRFZJU0VEIE9GIFRIRSBQT1NTSUJJTElUWSBP
-RiBTVUNIIERBTUFHRS4KPiArICovCj4gKwo+ICtnbG9iYWwtdXRpbGl0aWVzQGUxMDAwIHsKPiAr
-CWNvbXBhdGlibGUgPSAiZnNsLHFvcmlxLWNsb2NrZ2VuLTEuMCI7Cj4gKwlyYW5nZXMgPSA8MHgw
-IDB4ZTEwMDAgMHgxMDAwPjsKPiArCXJlZyA9IDwweGUxMDAwIDB4MTAwMD47Cj4gKwljbG9jay1m
-cmVxdWVuY3kgPSA8MD47Cj4gKwkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCSNzaXplLWNlbGxz
-ID0gPDE+Owo+ICsKPiArCXN5c2Nsazogc3lzY2xrIHsKPiArCQkjY2xvY2stY2VsbHMgPSA8MD47
-Cj4gKwkJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEtc3lzY2xrLTEuMCIsICJmaXhlZC1jbG9jayI7
-Cj4gKwkJY2xvY2stb3V0cHV0LW5hbWVzID0gInN5c2NsayI7Cj4gKwl9Owo+ICsJcGxsMDogcGxs
-MEA4MDAgewo+ICsJCSNjbG9jay1jZWxscyA9IDwxPjsKPiArCQlyZWcgPSA8MHg4MDAgMHg0PjsK
-PiArCQljb21wYXRpYmxlID0gImZzbCxxb3JpcS1jb3JlLXBsbC0xLjAiOwo+ICsJCWNsb2NrcyA9
-IDwmc3lzY2xrPjsKPiArCQljbG9jay1vdXRwdXQtbmFtZXMgPSAicGxsMCIsICJwbGwwLWRpdjIi
-Owo+ICsJfTsKPiArCXBsbDE6IHBsbDFAODIwIHsKPiArCQkjY2xvY2stY2VsbHMgPSA8MT47Cj4g
-KwkJcmVnID0gPDB4ODIwIDB4ND47Cj4gKwkJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEtY29yZS1w
-bGwtMS4wIjsKPiArCQljbG9ja3MgPSA8JnN5c2Nsaz47Cj4gKwkJY2xvY2stb3V0cHV0LW5hbWVz
-ID0gInBsbDEiLCAicGxsMS1kaXYyIjsKPiArCX07Cj4gKwltdXgwOiBtdXgwQDAgewo+ICsJCSNj
-bG9jay1jZWxscyA9IDwwPjsKPiArCQlyZWcgPSA8MHgwIDB4ND47Cj4gKwkJY29tcGF0aWJsZSA9
-ICJmc2wscW9yaXEtY29yZS1tdXgtMS4wIjsKPiArCQljbG9ja3MgPSA8JnBsbDAgMD4sIDwmcGxs
-MCAxPiwgPCZwbGwxIDA+LCA8JnBsbDEgMT47Cj4gKwkJY2xvY2stbmFtZXMgPSAicGxsMCIsICJw
-bGwwLWRpdjIiLCAicGxsMSIsICJwbGwxLWRpdjIiOwo+ICsJCWNsb2NrLW91dHB1dC1uYW1lcyA9
-ICJjbXV4MCI7Cj4gKwl9Owo+ICsJbXV4MTogbXV4MUAyMCB7Cj4gKwkJI2Nsb2NrLWNlbGxzID0g
-PDA+Owo+ICsJCXJlZyA9IDwweDIwIDB4ND47Cj4gKwkJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEt
-Y29yZS1tdXgtMS4wIjsKPiArCQljbG9ja3MgPSA8JnBsbDAgMD4sIDwmcGxsMCAxPiwgPCZwbGwx
-IDA+LCA8JnBsbDEgMT47Cj4gKwkJY2xvY2stbmFtZXMgPSAicGxsMCIsICJwbGwwLWRpdjIiLCAi
-cGxsMSIsICJwbGwxLWRpdjIiOwo+ICsJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJjbXV4MSI7Cj4g
-Kwl9Owo+ICt9OwoKSSBkb24ndCB0aGluayB0aGUgbXV4IHN0dWZmIGJlbG9uZ3MgaGVyZSwgZ2l2
-ZW4gdGhhdCBjbG9ja2dlbjIuZHRzaQpkb2Vzbid0IGhhdmUgaXQsIGFuZCBJIHNhdyBhdCBsZWFz
-dCBvbmUgY2xvY2tnZW4xIHVzZXIgbmVlZGluZyB0bwpzdXBwbGVtZW50IHRoaXMgd2l0aCBtb3Jl
-IG11eGVzLgoKPiBAQCAtMTA2OCw3ICsxMDQzLDYgQEAKPiAgCQkJY2xvY2tzID0gPCZzeXNjbGs+
-Owo+ICAJCQljbG9jay1vdXRwdXQtbmFtZXMgPSAicGxsMiIsICJwbGwyLWRpdjIiLCAicGxsMi1k
-aXY0IjsKPiAgCQl9Owo+IC0KPiAgCQlwbGwzOiBwbGwzQDg2MCB7Cj4gIAkJCSNjbG9jay1jZWxs
-cyA9IDwxPjsKPiAgCQkJcmVnID0gPDB4ODYwIDB4ND47Cj4gQEAgLTEwNzYsNyArMTA1MCw2IEBA
-Cj4gIAkJCWNsb2NrcyA9IDwmc3lzY2xrPjsKPiAgCQkJY2xvY2stb3V0cHV0LW5hbWVzID0gInBs
-bDMiLCAicGxsMy1kaXYyIiwgInBsbDMtZGl2NCI7Cj4gIAkJfTsKPiAtCj4gIAkJcGxsNDogcGxs
-NEA4ODAgewo+ICAJCQkjY2xvY2stY2VsbHMgPSA8MT47Cj4gIAkJCXJlZyA9IDwweDg4MCAweDQ+
-OwoKV2h5PwoKLVNjb3R0CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3ps
-YWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+On Wed, 2014-10-22 at 09:42 -0500, Emil Medve wrote:
+> Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+> Change-Id: I7950afa9650d15ec7ce2cca89bb2a1e38586d4a5
+> ---
+>  Documentation/devicetree/bindings/clock/qoriq-clock.txt | 17 +++++++++++------
+>  1 file changed, 11 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> index 5666812..407fb01 100644
+> --- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> @@ -62,6 +62,8 @@ Required properties:
+>  		It takes parent's clock-frequency as its clock.
+>  	* "fsl,qoriq-sysclk-2.0": for input system clock (v2.0).
+>  		It takes parent's clock-frequency as its clock.
+> +	* "fsl,qoriq-platform-pll-1.0" for the platform PLL clock (v1.0)
+> +	* "fsl,qoriq-platform-pll-2.0" for the platform PLL clock (v2.0)
+>  - #clock-cells: From common clock binding. The number of cells in a
+>  	clock-specifier. Should be <0> for "fsl,qoriq-sysclk-[1,2].0"
+>  	clocks, or <1> for "fsl,qoriq-core-pll-[1,2].0" clocks.
+> @@ -94,7 +96,6 @@ Example for clock block and clock provider:
+>  			compatible = "fsl,qoriq-sysclk-1.0";
+>  			clock-output-names = "sysclk";
+>  		};
+> -
+>  		pll0: pll0@800 {
+>  			#clock-cells = <1>;
+>  			reg = <0x800 0x4>;
+> @@ -102,7 +103,6 @@ Example for clock block and clock provider:
+>  			clocks = <&sysclk>;
+>  			clock-output-names = "pll0", "pll0-div2";
+>  		};
+> -
+>  		pll1: pll1@820 {
+>  			#clock-cells = <1>;
+>  			reg = <0x820 0x4>;
+> @@ -110,7 +110,6 @@ Example for clock block and clock provider:
+>  			clocks = <&sysclk>;
+>  			clock-output-names = "pll1", "pll1-div2";
+>  		};
+> -
+>  		mux0: mux0@0 {
+>  			#clock-cells = <0>;
+>  			reg = <0x0 0x4>;
+
+Please don't make unrelated whitespace changes, especially when they're
+changing something that's not obviously broken.
+
+-Scott
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
