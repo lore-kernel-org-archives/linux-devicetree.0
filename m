@@ -1,81 +1,141 @@
-From: Scott Branden <sbranden@broadcom.com>
-Subject: [PATCH v9 6/8] ARM: mach-bcm: Consolidate currently supported IPROC SoCs
-Date: Tue, 28 Oct 2014 16:15:09 -0700
-Message-ID: <1414538111-11668-7-git-send-email-sbranden@broadcom.com>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v9 7/8] ARM: mach-bcm: ARCH_BCM_MOBILE: remove one level of menu from Kconfig
+Date: Tue, 28 Oct 2014 16:15:10 -0700
+Message-ID: <1414538111-11668-8-git-send-email-sbranden@broadcom.com>
 References: <Scott Branden <sbranden@broadcom.com>
  <1414538111-11668-1-git-send-email-sbranden@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414538111-11668-1-git-send-email-sbranden@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, Mike Turquette <mturquette@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Antti Palosaari <crope@iki.fi>
-Cc: JD Zheng <jdzheng@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414538111-11668-1-git-send-email-sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>
+Cc: JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Move ARCH_BCM_5301X subarch under ARCH_IPROC architecture.
-Additional IPROC chipsets that share a lot of commonality should be
-added under ARCH_IPROC as well.
+remove menu "Broadcom Mobile SoC Selection"
+This requires:
+- selecting ARCH_BCM_MOBILE based on SoC selections
+- fixup bcm_defconfig and multi_v7_defconfig to work with new menu levels.
 
-Signed-off-by: Scott Branden <sbranden@broadcom.com>
+Signed-off-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/mach-bcm/Kconfig |   37 ++++++++++++++++---------------------
- 1 file changed, 16 insertions(+), 21 deletions(-)
+ arch/arm/configs/bcm_defconfig      |    3 ++-
+ arch/arm/configs/multi_v7_defconfig |    3 ++-
+ arch/arm/mach-bcm/Kconfig           |   26 ++++++++++----------------
+ 3 files changed, 14 insertions(+), 18 deletions(-)
 
+diff --git a/arch/arm/configs/bcm_defconfig b/arch/arm/configs/bcm_defconfig
+index bc614f4..83a87e4 100644
+--- a/arch/arm/configs/bcm_defconfig
++++ b/arch/arm/configs/bcm_defconfig
+@@ -25,7 +25,8 @@ CONFIG_MODULE_UNLOAD=y
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_ARCH_BCM=y
+-CONFIG_ARCH_BCM_MOBILE=y
++CONFIG_ARCH_BCM_21664=y
++CONFIG_ARCH_BCM_281XX=y
+ CONFIG_ARM_THUMBEE=y
+ CONFIG_SMP=y
+ CONFIG_PREEMPT=y
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index f1dc7fc..6e0d7cb 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -17,7 +17,8 @@ CONFIG_MACH_ARMADA_38X=y
+ CONFIG_MACH_ARMADA_XP=y
+ CONFIG_MACH_DOVE=y
+ CONFIG_ARCH_BCM=y
+-CONFIG_ARCH_BCM_MOBILE=y
++CONFIG_ARCH_BCM_21664=y
++CONFIG_ARCH_BCM_281XX=y
+ CONFIG_ARCH_BCM_5301X=y
+ CONFIG_ARCH_BRCMSTB=y
+ CONFIG_ARCH_BERLIN=y
 diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-index 73d95c2..6e79696 100644
+index 6e79696..cceb69f 100644
 --- a/arch/arm/mach-bcm/Kconfig
 +++ b/arch/arm/mach-bcm/Kconfig
-@@ -35,6 +35,22 @@ config ARCH_BCM_CYGNUS
- 	  BCM11300, BCM11320, BCM11350, BCM11360,
- 	  BCM58300, BCM58302, BCM58303, BCM58305.
+@@ -51,8 +51,10 @@ config ARCH_BCM_5301X
+ 	  different SoC or with the older BCM47XX and BCM53XX based
+ 	  network SoC using a MIPS CPU, they are supported by arch/mips/bcm47xx
  
-+config ARCH_BCM_5301X
-+	bool "Broadcom BCM470X / BCM5301X ARM SoC" if ARCH_MULTI_V7
-+	select ARCH_BCM_IPROC
-+	help
-+	  Support for Broadcom BCM470X and BCM5301X SoCs with ARM CPU cores.
-+
-+	  This is a network SoC line mostly used in home routers and
-+	  wifi access points, it's internal name is Northstar.
-+	  This inclused the following SoC: BCM53010, BCM53011, BCM53012,
-+	  BCM53014, BCM53015, BCM53016, BCM53017, BCM53018, BCM4707,
-+	  BCM4708 and BCM4709.
-+
-+	  Do not confuse this with the BCM4760 which is a totally
-+	  different SoC or with the older BCM47XX and BCM53XX based
-+	  network SoC using a MIPS CPU, they are supported by arch/mips/bcm47xx
++comment "KONA architected SoCs"
 +
  config ARCH_BCM_MOBILE
- 	bool "Broadcom Mobile SoC Support" if ARCH_MULTI_V7
+-	bool "Broadcom Mobile SoC Support" if ARCH_MULTI_V7
++	bool
  	select ARCH_REQUIRE_GPIOLIB
-@@ -110,27 +126,6 @@ config ARCH_BCM2835
- 	  This enables support for the Broadcom BCM2835 SoC. This SoC is
- 	  used in the Raspberry Pi and Roku 2 devices.
+ 	select ARM_ERRATA_754322
+ 	select ARM_ERRATA_775420
+@@ -61,16 +63,13 @@ config ARCH_BCM_MOBILE
+ 	select TICK_ONESHOT
+ 	select HAVE_ARM_ARCH_TIMER
+ 	select PINCTRL
++	select ARCH_BCM_MOBILE_SMP if SMP
+ 	help
+ 	  This enables support for systems based on Broadcom mobile SoCs.
  
--config ARCH_BCM_5301X
--	bool "Broadcom BCM470X / BCM5301X ARM SoC" if ARCH_MULTI_V7
--	select ARM_GIC
--	select CACHE_L2X0
--	select HAVE_ARM_SCU if SMP
--	select HAVE_ARM_TWD if SMP
--	select ARM_GLOBAL_TIMER
--	select CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
--	help
--	  Support for Broadcom BCM470X and BCM5301X SoCs with ARM CPU cores.
+-if ARCH_BCM_MOBILE
 -
--	  This is a network SoC line mostly used in home routers and
--	  wifi access points, it's internal name is Northstar.
--	  This inclused the following SoC: BCM53010, BCM53011, BCM53012,
--	  BCM53014, BCM53015, BCM53016, BCM53017, BCM53018, BCM4707,
--	  BCM4708 and BCM4709.
+-menu "Broadcom Mobile SoC Selection"
 -
--	  Do not confuse this with the BCM4760 which is a totally
--	  different SoC or with the older BCM47XX and BCM53XX based
--	  network SoC using a MIPS CPU, they are supported by arch/mips/bcm47xx
+ config ARCH_BCM_281XX
+ 	bool "Broadcom BCM281XX SoC family"
+-	default y
++	select ARCH_BCM_MOBILE
+ 	select HAVE_SMP
+ 	help
+ 	  Enable support for the BCM281XX family, which includes
+@@ -79,7 +78,7 @@ config ARCH_BCM_281XX
+ 
+ config ARCH_BCM_21664
+ 	bool "Broadcom BCM21664 SoC family"
+-	default y
++	select ARCH_BCM_MOBILE
+ 	select HAVE_SMP
+ 	help
+ 	  Enable support for the BCM21664 family, which includes
+@@ -87,19 +86,18 @@ config ARCH_BCM_21664
+ 
+ config ARCH_BCM_MOBILE_L2_CACHE
+ 	bool "Broadcom mobile SoC level 2 cache support"
+-	depends on (ARCH_BCM_281XX || ARCH_BCM_21664)
++	depends on ARCH_BCM_MOBILE
+ 	default y
+ 	select CACHE_L2X0
+ 	select ARCH_BCM_MOBILE_SMC
+ 
+ config ARCH_BCM_MOBILE_SMC
+ 	bool
+-	depends on ARCH_BCM_281XX || ARCH_BCM_21664
++	depends on ARCH_BCM_MOBILE
+ 
+ config ARCH_BCM_MOBILE_SMP
+-	bool "Broadcom mobile SoC SMP support"
+-	depends on (ARCH_BCM_281XX || ARCH_BCM_21664) && SMP
+-	default y
++	bool
++	depends on ARCH_BCM_MOBILE
+ 	select HAVE_ARM_SCU
+ 	select ARM_ERRATA_764369
+ 	help
+@@ -107,10 +105,6 @@ config ARCH_BCM_MOBILE_SMP
+ 	  Provided as an option so SMP support for SoCs of this type
+ 	  can be disabled for an SMP-enabled kernel.
+ 
+-endmenu
 -
- config ARCH_BCM_63XX
- 	bool "Broadcom BCM63xx DSL SoC" if ARCH_MULTI_V7
- 	depends on MMU
+-endif
+-
+ comment "Other Architectures"
+ 
+ config ARCH_BCM2835
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
