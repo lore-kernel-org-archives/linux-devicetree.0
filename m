@@ -1,43 +1,78 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [RFC 4/7] soc: qcom: Add Shared Memory Manager driver
-Date: Mon, 27 Oct 2014 17:34:26 -0700
-Message-ID: <20141028003424.GP28611@sonymobile.com>
-References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1412037291-16880-5-git-send-email-bjorn.andersson@sonymobile.com>
- <5435AD8E.2000109@codeaurora.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v14 2/5] dt-bindings: document Rockchip thermal
+Date: Mon, 27 Oct 2014 17:37:38 -0700
+Message-ID: <4038023.8IINY8khj6@dtor-glaptop>
+References: <1414377588-2237-1-git-send-email-caesar.wang@rock-chips.com> <20141028002915.GJ7594@dtor-ws> <544EE42D.3030208@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5435AD8E.2000109@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Suman Anna <s-anna@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <544EE42D.3030208@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed 08 Oct 14:33 PDT 2014, Jeffrey Hugo wrote:
+On Tuesday, October 28, 2014 08:32:45 AM Caesar Wang wrote:
+> Dmitry,
+>=20
+> =E5=9C=A8 2014=E5=B9=B410=E6=9C=8828=E6=97=A5 08:29, Dmitry Torokhov =
+=E5=86=99=E9=81=93:
+> > On Mon, Oct 27, 2014 at 10:39:45AM +0800, Caesar Wang wrote:
+> >> This add the necessary binding documentation for the thermal
+> >> found on Rockchip SoCs
+> >>=20
+> >> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
+> >> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+> >> ---
+> >>=20
+> >>   .../bindings/thermal/rockchip-thermal.txt          | 53
+> >>   ++++++++++++++++++++++ 1 file changed, 53 insertions(+)
+> >>   create mode 100644
+> >>   Documentation/devicetree/bindings/thermal/rockchip-thermal.txt>>=
+=20
+> >> diff --git
+> >> a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> >> b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt n=
+ew
+> >> file mode 100644
+> >> index 0000000..d5b1401
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.t=
+xt
+> >> @@ -0,0 +1,53 @@
+> >> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
+> >> +
+> >> +Required properties:
+> >> +- compatible : "rockchip,rk3288-tsadc"
+> >> +- reg : physical base address of the controller and length of mem=
+ory
+> >> mapped +	region.
+> >> +- interrupts : The interrupt number to the cpu. The interrupt spe=
+cifier
+> >> format +	       depends on the interrupt controller.
+> >> +- clocks : Must contain an entry for each entry in clock-names.
+> >> +- clock-names : Shall be "tsadc" for the converter-clock, and "ap=
+b_pclk"
+> >> for +		the peripheral clock.
+> >> +- #thermal-sensor-cells : Should be 1. See ./thermal.txt for a
+> >> description.>=20
+> > I think you are missing description of hw-shut-temp, tsadc-tshut-mo=
+de
+> > and tsadc-tshut-mode
+> >=20
+> >   and optional pinctrl settings.
+>=20
+> If it's really need,we just have hw-shut-temp,tsadc-tshut-mode
+> and tsadc-tshut-mode,no need  pinctrl setting,I think.
 
-[..]
-> > + */
-> > +struct smem_header {
-> > +     struct smem_proc_comm proc_comm[4];
-> > +     u32 version[32];
-> > +     u32 smem_initialized;
-> > +     u32 free_offset;
-> > +     u32 available;
-> > +     u32 unused;
-> 
-> I see that you inlined the smem_heap_info struct.  That is slightly
-> problematic since we have some uses of that structure, and without it,
-> accessing id 1 becomes complicated.  I would prefer you reintroduce it.
-> 
+This is more question to DeviceTree guys, but I can see us not document=
+ing
+pinctrl since it is generic property used by every driver out there. We=
+ should
+definitely document driver-specific properties.
 
-Could you help me better understand what you mean here? I've scanned through
-msm-3.4 and msm-3.10 and read your comment numerous times, but I can't find any
-uses that needs it nor figure out why it would be difficult to access item 1.
+Thanks.
 
-> > +     struct smem_entry toc[SMEM_MAX_ITEMS];
-> > +};
-
-Thanks,
-Bjorn
+--=20
+Dmitry
