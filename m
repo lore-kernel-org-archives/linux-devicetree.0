@@ -1,67 +1,54 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: spi: Export single device registration method and
- accessors (v2)
-Date: Wed, 29 Oct 2014 10:14:20 +0000
-Message-ID: <20141029101420.GT18557@sirena.org.uk>
-References: <1414572037-11306-1-git-send-email-pantelis.antoniou@konsulko.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 2/3] ARM: dts: socfpga: fpga bridges bindings docs
+Date: Wed, 29 Oct 2014 10:16:32 +0000
+Message-ID: <20141029101632.GU18557@sirena.org.uk>
+References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com>
+ <1414108267-22058-3-git-send-email-atull@opensource.altera.com>
+ <20141024070042.GL10262@pengutronix.de>
+ <alpine.DEB.2.02.1410281601570.11910@atx-linux-37>
+ <20141029075701.GA10262@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="CLy2MrvMHpW9mjhY"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="+y7rRxfO4bOZsSs1"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1414572037-11306-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Becker <jlbec-aKy9MeLSZ9dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29Tb/PtFMR13I2A@public.gmane.org
+In-Reply-To: <20141029075701.GA10262@pengutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: atull <atull@opensource.altera.com>, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
 
---CLy2MrvMHpW9mjhY
+--+y7rRxfO4bOZsSs1
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 29, 2014 at 10:40:37AM +0200, Pantelis Antoniou wrote:
-> Dynamically inserting spi device nodes requires the use of a single
-> device registration method. Rework and export it.
->=20
-> Methods to lookup a device/master using a device node are added
-> as well, of_find_spi_master_by_node() & of_find_spi_device_by_node().
+On Wed, Oct 29, 2014 at 08:57:01AM +0100, Steffen Trumtrar wrote:
 
-Why do we need to do this - I would expect that adding nodes would
-trigger parsing in the same way we normally do it.  Where is the user
-and how does it know that it's handling a SPI node?
+> So, that shouldn't be a problem though, as I already cooked up a driver for
+> the L3 with all the ranges specified. The only thing I need to figure out
+> before I will post it, is how to nicely handle the WO remap register.
+> I think regmap might be able to handle this itself, but am not sure yet.
 
-This feels like there is an abstraction problem somewhere, whatever code
-is supposed to use this is going to need to be taught about each
-individual bus which is going to be tedious, I would expect that we'd
-have something like the bus being able to provide a callback which will
-get invoked whenever a new node appears on the parent node for the bus.
+It's supposed to be able to, not sure if anyone really tests that or not
+though so it's possible bugs crept in.  Most write only registers can
+physically be read so actually come out as volatile rather than write
+only even if functionally there is no reason to read.
 
-> Changes since v1:
-> * Brown paper bug with parameter on of_register_spi_device().
-
-Don't include noise like this in the changelog, put it after --- like
-SubmittingPatches says.  Please also try to keep your CC list sane,
-CCing random people just means that you're increasing the volume of mail
-they have to process.  I'm surprised kernel.org accepts so many CCs.
-
-I have to say I don't recall ever seeing v1...
-
---CLy2MrvMHpW9mjhY
+--+y7rRxfO4bOZsSs1
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBAgAGBQJUUL37AAoJECTWi3JdVIfQGIYH/A5QRxNF6Y702k1x9f+6i2FM
-3NW97Fh3F8FFzJ4ZkhzIvbJeDifru0aUFzucOku9JHnW5MZhU9bE2IfuOwinsipM
-qvu+fo9yn7MVVk2Xvyq05gkz8Ckq8MuPdXGj94nYtsFPVYhWnAr/egVXqRdb2bem
-pMc/YHfC74P3sv2QaoQF0AhA+tGvh3ZCocZPaKz7piqsrrLkotRG2tHDBDbztVvo
-1t3yMJY4wztURF7DVCWjOw50/CEfwUEDyCER+FKgPTgn2T8DuD7Vn1XLRwDt72Sa
-cua2SG4KOGNtzo//2MinVGYdEnzKOK/FoBsMzaidOWK/CXil3wR0R21F3l/yiBQ=
-=D7UE
+iQEcBAEBAgAGBQJUUL5/AAoJECTWi3JdVIfQ3PsH/0Jx5AuCk0Cw/z2CSfIPgeHC
+Y/J0/C6fpIHtXjYlwGJFiM1rM5WsemQRW+E77GPgMp9anCR0F50n7sSEzMGO/mLk
+5sNBb/9PtIajfS1RVmq5rkiefUaU2bk1D4kAWm/NlcKZsdUEgN/iMA39aem0/JOh
+eT/ZUzr3eEtegrGk18e4Ud548J/rYaVoqYzw7nfdaX3veaYd31RScXRituQwVhYF
+VAnqUZicHAsg9PVx6dMu5Vb/Ld4FCJILAozs3wNe6dgZ6bJ8nJyhsk4FEg+g/uLj
+L6KbequYmCSaHitFyz9aqimj7dHScowQ3sI/G+zEf6tDUWkE6Q0EBPZrZjNgoiI=
+=AoZr
 -----END PGP SIGNATURE-----
 
---CLy2MrvMHpW9mjhY--
+--+y7rRxfO4bOZsSs1--
