@@ -1,37 +1,57 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH 08/11] irqchip: bcm7120-l2: Fix missing nibble in gc->unused mask
-Date: Tue, 28 Oct 2014 20:58:55 -0700
-Message-ID: <1414555138-6500-8-git-send-email-cernekee@gmail.com>
+Subject: [PATCH 05/11] irqchip: bcm7120-l2: Make sure all register accesses use base+offset
+Date: Tue, 28 Oct 2014 20:58:52 -0700
+Message-ID: <1414555138-6500-5-git-send-email-cernekee@gmail.com>
 References: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-This mask should have been 0xffff_ffff, not 0x0fff_ffff.
-
-The change should not have an effect on current users (STB) because bits
-31:27 are unused.
+A couple of accesses to IRQEN (base+0x00) just used "base" directly, so
+they would break if IRQEN ever became nonzero.  Make sure that all
+reads/writes specify the register offset constant.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- drivers/irqchip/irq-bcm7120-l2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/irq-bcm7120-l2.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
-index f041992..e9331f8 100644
+index 49d8f3d..6472b71 100644
 --- a/drivers/irqchip/irq-bcm7120-l2.c
 +++ b/drivers/irqchip/irq-bcm7120-l2.c
-@@ -171,7 +171,7 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
- 	}
+@@ -66,10 +66,10 @@ static void bcm7120_l2_intc_suspend(struct irq_data *d)
  
- 	gc = irq_get_domain_generic_chip(data->domain, 0);
--	gc->unused = 0xfffffff & ~data->irq_map_mask;
-+	gc->unused = 0xffffffff & ~data->irq_map_mask;
- 	gc->reg_base = data->base;
- 	gc->private = data;
- 	ct = gc->chip_types;
+ 	irq_gc_lock(gc);
+ 	/* Save the current mask and the interrupt forward mask */
+-	b->saved_mask = __raw_readl(b->base) | b->irq_fwd_mask;
++	b->saved_mask = __raw_readl(b->base + IRQEN) | b->irq_fwd_mask;
+ 	if (b->can_wake) {
+ 		reg = b->saved_mask | gc->wake_active;
+-		__raw_writel(reg, b->base);
++		__raw_writel(reg, b->base + IRQEN);
+ 	}
+ 	irq_gc_unlock(gc);
+ }
+@@ -81,7 +81,7 @@ static void bcm7120_l2_intc_resume(struct irq_data *d)
+ 
+ 	/* Restore the saved mask */
+ 	irq_gc_lock(gc);
+-	__raw_writel(b->saved_mask, b->base);
++	__raw_writel(b->saved_mask, b->base + IRQEN);
+ 	irq_gc_unlock(gc);
+ }
+ 
 -- 
 2.1.1
