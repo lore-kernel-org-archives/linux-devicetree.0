@@ -1,92 +1,66 @@
-From: NEO-Technologies / Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
-Subject: Re: [PATCH v2] ARM: dts: rockchip: use internal pull-up resistors
- on I2C busses
-Date: Wed, 29 Oct 2014 10:50:37 +0100
-Message-ID: <5450B86D.7060301@neo-technologies.fr>
-References: <1414492597-13566-1-git-send-email-julien.chauveau@neo-technologies.fr>
- <CAD=FV=Vs9NT3hMS_Z0dOuwyBdxCsMddqohWFYOGYbM2ePm9PrQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/3] gpio: Add APM X-Gene standby GPIO controller driver
+Date: Wed, 29 Oct 2014 10:52:47 +0100
+Message-ID: <CACRpkdao2F1NK-3QpqSOLzFdvjWFVU4HqcqZPA2fXHpQN=BUsQ@mail.gmail.com>
+References: <1412779948-28769-1-git-send-email-yvo@apm.com>
+	<1412779948-28769-2-git-send-email-yvo@apm.com>
+	<CACRpkdY3-Y0eA_o2enfxbqWUpwPoo_5oM9t=uU=QSTAw4MPf9Q@mail.gmail.com>
+	<2988580.WvjMBY1UOc@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAD=FV=Vs9NT3hMS_Z0dOuwyBdxCsMddqohWFYOGYbM2ePm9PrQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Addy Ke <addy.ke@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, open list <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <2988580.WvjMBY1UOc@wuerfel>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Y Vo <yvo@apm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Tin Huynh <tnhuynh@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRG91ZywKCkxlIDI5LzEwLzIwMTQgMDU6NDUsIERvdWcgQW5kZXJzb24gYSDDqWNyaXQgOgo+
-IEp1bGllbiwKPgo+IE9uIFR1ZSwgT2N0IDI4LCAyMDE0IGF0IDM6MzYgQU0sIEp1bGllbiBDSEFV
-VkVBVQo+IDxqdWxpZW4uY2hhdXZlYXVAbmVvLXRlY2hub2xvZ2llcy5mcj4gd3JvdGU6Cj4+IEFj
-Y29yZGluZyB0byB0aGUgSTJDIGJ1cyBzcGVjaWZpY2F0aW9uLCBpdCBpcyByZXF1aXJlZCB0byB1
-c2UgcHVsbC11cCByZXNpc3RvcnMKPj4gb24gdGhlIGNsb2NrIGFuZCBkYXRhIGxpbmVzLiBQcm9i
-aW5nIHRoZSBJMkMgYnVzc2VzIHdpdGggaTJjZGV0ZWN0IHJlc3VsdHMgaW4KPj4gYmFkIHJlc3Vs
-dHMgd2hlbiBubyBkZXZpY2VzIGFyZSBjb25uZWN0ZWQgYW5kIG5vIGV4dGVybmFsIHJlc2lzdG9y
-cyBhcmUgdXNlZC4KPj4KPj4gVGhpcyBwYXRjaCBjb25maWd1cmVzIHRoZSBJMkMgYnVzc2VzIHRv
-IHVzZSB0aGUgaW50ZXJuYWwgcHVsbC11cCByZXNpc3RvcnMKPj4gb24gdGhlIFJLMzA2NiwgUksz
-MTg4IGFuZCBSSzMyODggUm9ja2NoaXAgcHJvY2Vzc29ycy4gSXQgc2hvdWxkIGFsc28gYmUgbm90
-ZWQKPj4gdGhhdCB0aGVzZSBkZWZhdWx0IHB1bGwgc2V0dGluZ3MgbWF0Y2ggdGhlIG9yaWdpbmFs
-IGNvbmZpZ3VyYXRpb24gb24gdGhlc2UgU29Dcy4KPj4KPj4gQmVsb3cgaXMgdGhlIHJlc3VsdHMg
-b2YgdXNpbmcgaTJjZGV0ZWN0IG9uIGEgSTJDIGJ1cyB3aXRoIG5vIGRldmljZXMgY29ubmVjdGVk
-Cj4+IGJlZm9yZSAoMSkgYW5kIGFmdGVyICgyKSBhcHBseWluZyB0aGlzIHBhdGNoLgo+Pgo+PiAo
-MSkgcm9vdEBsb2NhbGhvc3Q6fiMgaTJjZGV0ZWN0IC15IDMKPj4gICAgICAgMCAgMSAgMiAgMyAg
-NCAgNSAgNiAgNyAgOCAgOSAgYSAgYiAgYyAgZCAgZSAgZgo+PiAwMDogICAgICAgICAgMDMgMDQg
-MDUgMDYgMDcgMDggMDkgMGEgMGIgMGMgMGQgMGUgMGYKPj4gMTA6IDEwIDExIDEyIDEzIDE0IDE1
-IDE2IDE3IDE4IDE5IDFhIDFiIDFjIDFkIDFlIDFmCj4+IDIwOiAyMCAyMSAyMiAyMyAyNCAyNSAy
-NiAyNyAyOCAyOSAyYSAyYiAyYyAyZCAyZSAyZgo+PiAzMDogLS0gLS0gLS0gLS0gLS0gcmszeC1p
-MmMgMjAwNWEwMDAuaTJjOiB0aW1lb3V0LCBpcGQ6IDB4ODEsIHN0YXRlOiAyCj4+IC0tIHJrM3gt
-aTJjIDIwMDVhMDAwLmkyYzogdGltZW91dCwgaXBkOiAweDgwLCBzdGF0ZTogMgo+PiAtLSByazN4
-LWkyYyAyMDA1YTAwMC5pMmM6IHRpbWVvdXQsIGlwZDogMHg4MCwgc3RhdGU6IDIKPj4gLS0gcmsz
-eC1pMmMgMjAwNWEwMDAuaTJjOiB0aW1lb3V0LCBpcGQ6IDB4ODAsIHN0YXRlOiAzCj4+IC0tIHJr
-M3gtaTJjIDIwMDVhMDAwLmkyYzogdGltZW91dCwgaXBkOiAweDgwLCBzdGF0ZTogMwo+PiAtLSBy
-azN4LWkyYyAyMDA1YTAwMC5pMmM6IHRpbWVvdXQsIGlwZDogMHg4MCwgc3RhdGU6IDMKPj4gLi4u
-Cj4+Cj4+ICgyKSByb290QGxvY2FsaG9zdDp+IyBpMmNkZXRlY3QgLXkgMwo+PiAgICAgICAwICAx
-ICAyICAzICA0ICA1ICA2ICA3ICA4ICA5ICBhICBiICBjICBkICBlICBmCj4+IDAwOiAgICAgICAg
-ICAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLQo+PiAxMDogLS0gLS0gLS0g
-LS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0KPj4gMjA6IC0tIC0tIC0tIC0t
-IC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tCj4+IDMwOiAtLSAtLSAtLSAtLSAt
-LSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLQo+PiA0MDogLS0gLS0gLS0gLS0gLS0g
-LS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0KPj4gNTA6IC0tIC0tIC0tIC0tIC0tIC0t
-IC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tCj4+IDYwOiAtLSAtLSAtLSAtLSAtLSAtLSAt
-LSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLQo+PiA3MDogLS0gLS0gLS0gLS0gLS0gLS0gLS0g
-LS0KPj4KPj4gU2lnbmVkLW9mZi1ieTogSnVsaWVuIENIQVVWRUFVIDxqdWxpZW4uY2hhdXZlYXVA
-bmVvLXRlY2hub2xvZ2llcy5mcj4KPj4gLS0tCj4+IENoYW5nZXMgc2luY2UgdjE6Cj4+IC0gZml4
-IHRoZSByazMwNjZhIHB1bGwgc2V0dGluZ3MgKG9ubHkgYXZhaWxhYmxlIGlzIHB1bGxfbm9uZS9w
-dWxsX2RlZmF1bHQpCj4+IC0gcmVtb3ZlIHRoZSB3YXJuaW5ncyBpbiB0aGUgcmVzdWx0cyBvZiBp
-MmNkZXRlY3QKPj4KPj4gICBhcmNoL2FybS9ib290L2R0cy9yazMwNjZhLmR0c2kgfCAyMCArKysr
-KysrKysrLS0tLS0tLS0tLQo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzE4OC5kdHNpICB8IDIw
-ICsrKysrKysrKystLS0tLS0tLS0tCj4+ICAgYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LmR0c2kg
-IHwgMjQgKysrKysrKysrKysrLS0tLS0tLS0tLS0tCj4+ICAgMyBmaWxlcyBjaGFuZ2VkLCAzMiBp
-bnNlcnRpb25zKCspLCAzMiBkZWxldGlvbnMoLSkKPiBJIHdvbid0IE5BSyB0aGlzIGNoYW5nZSBt
-eXNlbGYsIGJ1dCBJIGhhdmUgdG8gc2F5IEknbSBub3QgYSBodWdlIGZhbi4KPiBPbiBleHlub3Mg
-Ym9hcmRzIHRoZSBpMmMgaGFzIHB1bGxzIGJ5IGRlZmF1bHQsIHNvIHRoZXJlIGlzIHByZWNlZGVu
-dAo+IGZvciB3aGF0IHlvdSdyZSBwcm9wb3NpbmcgYXQgbGVhc3QuCj4KPiAuLi5idXQgSSdsbCBh
-bHNvIHNheSB0aGF0IG1vc3Qgc2FuZSBib2FyZHMgaGF2ZSBleHRlcm5hbCBwdWxscyBvbiBpMmMK
-PiBhbmQgZG9uJ3QgcmVseSBvbiB0aGUgaW50ZXJuYWwgcHVsbHMuICBJZiB5b3UndmUgZ290IGEg
-Ym9hcmQgd2hlcmUgdGhlCj4gaW50ZXJuYWwgcHVsbCB3b3JrcyB3ZWxsIGVub3VnaCAobHVja3kg
-eW91ISkgdGhlbiBJIHRoaW5rIHlvdSBzaG91bGQKPiBvdmVycmlkZSB0aGUgcGluY3RybCBmb3Ig
-anVzdCB0aGF0IGJvYXJkLgoKQXQgdGhlIFNvQyBsZXZlbCwgaXQgaXMgSU1ITyBiZXR0ZXIgdG8g
-ZW5hYmxlIHRoZSBpbnRlcm5hbCBwdWxsLXVwIApyZXNpc3RvcnMuCgpCZWNhdXNlIHRoZSBmaWxl
-cyByazMwNjZhLmR0c2ksIHJrMzE4OC5kdHNpIGFuZCByazMyODguZHRzaSBhcmUgbm90IApib2Fy
-ZC1zcGVjaWZpYywgSSB0aGluayBpdCBpcyB3cm9uZyB0byBwcmVzdW1lIHRoYXQgY29ycmVjdCBw
-dWxsLXVwIApyZXNpc3RvcnMgYXJlIGFwcGxpZWQgdG8gdGhlIEkyQyBsaW5lcyBvbiB0aGUgYm9h
-cmQuCgpGdXJ0aGVybW9yZSwgYXMgSSBleHBsYWluZWQgdG8gQWRkeSBvbiB0aGUgbGludXgtcm9j
-a2NoaXAgbWFpbGluZyBsaXN0LCAKaXQgaXMgaGFybWxlc3MgdG8gZW5hYmxlIHRoZSBpbnRlcm5h
-bCBwdWxsLXVwIHJlc2lzdG9ycyBvbiB0aGUgU29DLCBidXQgCm9mIGNvdXJzZSB5b3UgbmVlZCB0
-byBrZWVwIHRoZSBleHRlcm5hbCBwdWxsLXVwIHJlc2lzdG9ycyBvbiB0aGUgYm9hcmQgCihzbywg
-ZG8gbm90IHJlbW92ZSB0aGVtISkuCgpNb3Jlb3ZlciwgaWYgeW91IGFic29sdXRlbHkgd2FudCB0
-byBkaXNhYmxlIHRoZSBpbnRlcm5hbCBwdWxsLXVwIApyZXNpc3RvcnMgZm9yIG9uZSBvciBhbm90
-aGVyIGJvYXJkLCBpdCBpcyBJTUhPIGJldHRlciB0byBkbyBpdCBhdCB0aGUgCmJvYXJkIGxldmVs
-LCBidXQgbm90IGF0IHRoZSBTb0MgbGV2ZWwuCgpUbyBlYWNoIGlzIG93bi4uLgoKSnVsaWVuLwov
-LwovCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
-eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsCg==
+On Fri, Oct 24, 2014 at 3:46 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Friday 24 October 2014 14:14:43 Linus Walleij wrote:
+>> On Wed, Oct 8, 2014 at 4:52 PM, Y Vo <yvo@apm.com> wrote:
+
+>> > +       apm_gc->irq = devm_kzalloc(&pdev->dev, sizeof(u32) * XGENE_MAX_GPIO_DS,
+>> > +                                  GFP_KERNEL);
+>> > +       if (!apm_gc->irq)
+>> > +               return -ENOMEM;
+>> > +       memset(apm_gc->irq, 0, sizeof(u32) * XGENE_MAX_GPIO_DS);
+>> (...)
+>> > +       for (i = 0; i < apm_gc->nirq; i++) {
+>> > +               apm_gc->irq[default_pins[i]] = platform_get_irq(pdev, i);
+>>
+>> So the IRQs for all the GPIO pins are handled somewhere else instead
+>> of being a cascaded IRQ controller.
+>>
+>> This means that the IRQ lines from each individual GPIO pin is
+>> connected to a unique IRQ line on a secondary interrupt controller,
+>> instead of the GPIO block being a cascaded interrupt controller
+>> in its own right.
+>>
+>> Is this correct?
+>
+> See the discussion I had on this. Yes, each line is connected to a
+> GIC SPI interrupt by itself. I've discussed this with Marc Zyngier
+> and Thomas Gleixner at the conference last week, and we concluded
+> that we will need a new generic interface to get data out of the
+> parent interrupt controller in a proper way. The current implementation
+> just maps the GIC registers and reads them directly, which of course
+> is not a proper way to do it.
+
+Hmmmmmm. OK shall we hold this driver until the infrastructure
+issues are resolved?
+
+The following is a recurring pattern among GPIO controllers:
+the GPIO controller can go offline (asycnhcronous) and while it
+is offline a secondary logic triggers an IRQ that wakes the system
+up, however the GPIO logic cannot really "see" that IRQ since
+it was sleeping when it arrived.
+
+Thus a latent IRQ is pending in the wakeup logic. This concept
+exists in drivers/pinctrl/nomadik/pinctrl-nomadik.c and I strongly
+prefer to call these "latent irqs" as it's a clear unambigous
+terminology.
+
+So is this a case of latent IRQs pending in the GIC?
+
+Yours,
+Linus Walleij
