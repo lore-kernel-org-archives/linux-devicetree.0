@@ -1,54 +1,49 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/3] ARM: dts: socfpga: fpga bridges bindings docs
-Date: Wed, 29 Oct 2014 10:16:32 +0000
-Message-ID: <20141029101632.GU18557@sirena.org.uk>
-References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com>
- <1414108267-22058-3-git-send-email-atull@opensource.altera.com>
- <20141024070042.GL10262@pengutronix.de>
- <alpine.DEB.2.02.1410281601570.11910@atx-linux-37>
- <20141029075701.GA10262@pengutronix.de>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v5 3/4] regulator: max77686: Add suspend disable for some
+ LDOs
+Date: Wed, 29 Oct 2014 11:18:54 +0100
+Message-ID: <1414577934.18868.7.camel@AMDC1943>
+References: <1414411911-5539-1-git-send-email-k.kozlowski@samsung.com>
+ <1414411911-5539-4-git-send-email-k.kozlowski@samsung.com>
+ <20141028223121.GH18557@sirena.org.uk> <1414574413.18868.6.camel@AMDC1943>
+ <20141029100142.GR18557@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+y7rRxfO4bOZsSs1"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141029075701.GA10262@pengutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: atull <atull@opensource.altera.com>, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20141029100142.GR18557@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On =C5=9Bro, 2014-10-29 at 10:01 +0000, Mark Brown wrote:
+> On Wed, Oct 29, 2014 at 10:20:13AM +0100, Krzysztof Kozlowski wrote:
+> > On wto, 2014-10-28 at 22:31 +0000, Mark Brown wrote:
+>=20
+> > > This looks wrong, you're using the regular enable operation as su=
+spend
+> > > enable.  How does that work without disrupting the current runtim=
+e
+> > > state?
+>=20
+> > Currently it shouldn't disrupt state of regulator because during ru=
+ntime
+> > it may only be only: on (0x3) or off (0x0). Suspend enable in max77=
+686
+> > writes 0x3 to the register which means - always on.
+>=20
+> > If regulator was disabled before suspend then it has to be enabled
+> > during suspend_enable() call which is exactly what max77686_enable =
+does.
+> > If it was enabled then nothing happens.
+>=20
+> No, this isn't suspend enable control - this is normal, standard enab=
+le
+> control and the device has no suspend enable control.
 
---+y7rRxfO4bOZsSs1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+You mean that for such regulator the driver shouldn't implement
+suspend_enable()?
 
-On Wed, Oct 29, 2014 at 08:57:01AM +0100, Steffen Trumtrar wrote:
-
-> So, that shouldn't be a problem though, as I already cooked up a driver for
-> the L3 with all the ranges specified. The only thing I need to figure out
-> before I will post it, is how to nicely handle the WO remap register.
-> I think regmap might be able to handle this itself, but am not sure yet.
-
-It's supposed to be able to, not sure if anyone really tests that or not
-though so it's possible bugs crept in.  Most write only registers can
-physically be read so actually come out as volatile rather than write
-only even if functionally there is no reason to read.
-
---+y7rRxfO4bOZsSs1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUUL5/AAoJECTWi3JdVIfQ3PsH/0Jx5AuCk0Cw/z2CSfIPgeHC
-Y/J0/C6fpIHtXjYlwGJFiM1rM5WsemQRW+E77GPgMp9anCR0F50n7sSEzMGO/mLk
-5sNBb/9PtIajfS1RVmq5rkiefUaU2bk1D4kAWm/NlcKZsdUEgN/iMA39aem0/JOh
-eT/ZUzr3eEtegrGk18e4Ud548J/rYaVoqYzw7nfdaX3veaYd31RScXRituQwVhYF
-VAnqUZicHAsg9PVx6dMu5Vb/Ld4FCJILAozs3wNe6dgZ6bJ8nJyhsk4FEg+g/uLj
-L6KbequYmCSaHitFyz9aqimj7dHScowQ3sI/G+zEf6tDUWkE6Q0EBPZrZjNgoiI=
-=AoZr
------END PGP SIGNATURE-----
-
---+y7rRxfO4bOZsSs1--
+Best regards,
+Krzysztof
