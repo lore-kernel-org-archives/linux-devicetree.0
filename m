@@ -1,66 +1,49 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH 06/11] irqchip: bcm7120-l2: Use irq_reg_* accessors
-Date: Tue, 28 Oct 2014 20:58:53 -0700
-Message-ID: <1414555138-6500-6-git-send-email-cernekee@gmail.com>
-References: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
+Subject: Re: [PATCH V3 09/10] tty: serial: of-serial: Allow OF earlycon to
+ default to "on"
+Date: Tue, 28 Oct 2014 21:12:57 -0700
+Message-ID: <CAJiQ=7A8D8SgeRbJMwce=7UD6yLTjhMgQZnPHWysGqFayJrdcg@mail.gmail.com>
+References: <1413930186-23168-1-git-send-email-cernekee@gmail.com>
+ <1413930186-23168-10-git-send-email-cernekee@gmail.com> <CAL_Jsq+AuqTOU7UFdYi28YGjL1QorY=3zOSccN43Vb1a=q6SHw@mail.gmail.com>
+ <CAJiQ=7BrfnyOQYptBCTR8GP8hLq4+q1NQ2H988wHK=8PnkqLkg@mail.gmail.com>
+ <CAL_JsqJbva6i5BwDMf9f0TcuToxzP2u9_oe1t92zQXJyS077oA@mail.gmail.com> <CAJiQ=7DVSavXNYBd4yntRS-LKJMHQyxJx8Uim8Oz24rNfADcXg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <CAJiQ=7DVSavXNYBd4yntRS-LKJMHQyxJx8Uim8Oz24rNfADcXg@mail.gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This keeps things consistent between the "core" bcm7120-l2 driver and the
-helpers in generic-chip.c.
+On Thu, Oct 23, 2014 at 7:31 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
+>> I think we'd just have to add a noearlycon option instead if we made
+>> it the default. It's never been the default before, so I don't think
+>> we should change now. There's also an implicit requirement that the
+>> bootloader has configured the uart already. You could easily hang if
+>> the uart has not been setup.
+>
+> EARLY_PRINTK is enabled by default on MIPS platforms that support it.
+> I have been using this for years and found it very helpful in
+> debugging failures in the kernel boot process (especially intermittent
+> ones).
+>
+> But for a new platform it is better to use earlycon as earlycon
+> provides a clean way of reading the UART information out of DT.  My
+> original bcm3384 (MIPS) port used EARLY_PRINTK but I recently
+> converted it to earlycon.  The last remaining goal is to get it
+> enabled by default again.
 
-Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
----
- drivers/irqchip/irq-bcm7120-l2.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Hi Rob,
 
-diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
-index 6472b71..f041992 100644
---- a/drivers/irqchip/irq-bcm7120-l2.c
-+++ b/drivers/irqchip/irq-bcm7120-l2.c
-@@ -48,7 +48,7 @@ static void bcm7120_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
- 
- 	chained_irq_enter(chip, desc);
- 
--	status = __raw_readl(b->base + IRQSTAT);
-+	status = irq_reg_readl(b->base + IRQSTAT);
- 	do {
- 		irq = ffs(status) - 1;
- 		status &= ~(1 << irq);
-@@ -66,10 +66,10 @@ static void bcm7120_l2_intc_suspend(struct irq_data *d)
- 
- 	irq_gc_lock(gc);
- 	/* Save the current mask and the interrupt forward mask */
--	b->saved_mask = __raw_readl(b->base + IRQEN) | b->irq_fwd_mask;
-+	b->saved_mask = irq_reg_readl(b->base + IRQEN) | b->irq_fwd_mask;
- 	if (b->can_wake) {
- 		reg = b->saved_mask | gc->wake_active;
--		__raw_writel(reg, b->base + IRQEN);
-+		irq_reg_writel(reg, b->base + IRQEN);
- 	}
- 	irq_gc_unlock(gc);
- }
-@@ -81,7 +81,7 @@ static void bcm7120_l2_intc_resume(struct irq_data *d)
- 
- 	/* Restore the saved mask */
- 	irq_gc_lock(gc);
--	__raw_writel(b->saved_mask, b->base + IRQEN);
-+	irq_reg_writel(b->saved_mask, b->base + IRQEN);
- 	irq_gc_unlock(gc);
- }
- 
-@@ -133,7 +133,7 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
- 	/* Enable all interrupt specified in the interrupt forward mask and have
- 	 * the other disabled
- 	 */
--	__raw_writel(data->irq_fwd_mask, data->base + IRQEN);
-+	irq_reg_writel(data->irq_fwd_mask, data->base + IRQEN);
- 
- 	num_parent_irqs = of_irq_count(dn);
- 	if (num_parent_irqs <= 0) {
--- 
-2.1.1
+Do you think we should just drop this patch for now, and use these
+options to append "earlycon" to the bootloader-supplied command line:
+
+CONFIG_CMDLINE_BOOL=y
+CONFIG_CMDLINE="earlycon"
+CONFIG_CMDLINE_OVERRIDE=n
+
+If you have other suggestions on how to enable earlycon by default, I
+would be happy to help implement them.
+
+Thanks!
