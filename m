@@ -1,94 +1,91 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v3] thermal: Add QPNP PMIC temperature alarm driver
-Date: Wed, 29 Oct 2014 17:32:56 +0200
-Message-ID: <1414596776.32383.2.camel@mm-sol.com>
-References: <1412178817-20371-1-git-send-email-iivanov@mm-sol.com>
-	 <20141027201602.GC6088@developer>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 00/20] rtc: omap: fixes and power-off feature
+Date: Wed, 29 Oct 2014 08:36:41 -0700
+Message-ID: <20141029153641.GB20565@roeck-us.net>
+References: <20141024195532.GF19377@localhost>
+ <20141027162251.d7ff2a5f31917c638d4e47f7@linux-foundation.org>
+ <20141028002552.GX12379@n2100.arm.linux.org.uk>
+ <20141028081616.GL2006@localhost>
+ <20141028084745.GY12379@n2100.arm.linux.org.uk>
+ <20141028131257.GS2006@localhost>
+ <20141028151610.GA12379@n2100.arm.linux.org.uk>
+ <20141029123418.GB2265@localhost>
+ <5450E9A8.1060506@roeck-us.net>
+ <20141029133526.GE2265@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20141027201602.GC6088@developer>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, David Collins <collinsd@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141029133526.GE2265@localhost>
+Sender: linux-omap-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Felipe Balbi <balbi@ti.com>, Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Lokesh Vutla <lokeshvutla@ti.com>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-Hi Eduardo, 
-
-On Mon, 2014-10-27 at 16:16 -0400, Eduardo Valentin wrote:
-> Hello Ivan
+On Wed, Oct 29, 2014 at 02:35:26PM +0100, Johan Hovold wrote:
+> On Wed, Oct 29, 2014 at 06:20:40AM -0700, Guenter Roeck wrote:
+> > On 10/29/2014 05:34 AM, Johan Hovold wrote:
+> > > On Tue, Oct 28, 2014 at 03:16:10PM +0000, Russell King - ARM Linux wrote:
+> > >> On Tue, Oct 28, 2014 at 02:12:57PM +0100, Johan Hovold wrote:
+> > >>> That's not what I was trying to refer to. But the patch set explicitly
+> > >>> allows for multiple, prioritised power-off handlers, which can power
+> > >>> off a board in different ways and with various degrees of success.
+> > >>> Specifically, it allows for fallback handlers in case one or more
+> > >>> power-off handlers fail.
+> > >>>
+> > >>> So if we allow for that, what is to prevent the final power-off handler
+> > >>> from failing? And should this not be logged by arch code in the same way
+> > >>> as failure to restart is?
+> > >>
+> > >> And how is that different from having a set of power-off handlers, and
+> > >> reporting when each individual one fails?  Don't you want to know if
+> > >> your primary high priority reboot handler fails, just as much as you
+> > >> want to know if your final last-resort power-off handler fails?
+> > >
+> > > Good point. Failed power-off should probably be logged by the power-off
+> > > call chain implementation (which seems to makes notifier chains a bad
+> > > fit).
+> >
+> > Good that I just replaced notifier chain with an open coded implementation.
 > 
+> Good to hear.
 > 
-
-
-<snip>
-
+> > Sure, that is possible, but I would prefer to do that as a follow-up commit,
+> > and it should be discussed in the context of the power-off handler patch set.
+> 
+> Fine with me.
+> 
+> > > And what about any power-off latencies? Should this always be dealt with
+> > > in the power-off handler?
+> > >
+> > > Again, if it's predictable and high, as in the OMAP RTC case, it should
+> > > go in the handler. But what if it's just normal bus latencies
+> > > (peripheral busses, i2c, or whatever people may come up with)?
+> > >
+> > > Should there always be a short delay before calling the next handler?
 > > 
-> > +
-> > +static int qpnp_tz_set_mode(struct thermal_zone_device *thermal,
-> > +       enum thermal_device_mode mode)
-> > +{
-> > +       struct qpnp_tm_chip *chip = thermal->devdata;
-> > +       int ret;
-> > +
-> > +       if (mode == chip->mode)
-> > +       return 0;
-> > +
-> > +       if (mode == THERMAL_DEVICE_ENABLED)
-> > +       ret = qpnp_tm_shutdown_override(chip, true);
-> > +       else
-> > +       ret = qpnp_tm_shutdown_override(chip, false);
+> > That delay would depend on the individual power-off handler, so I think
+> > the current implementation works just fine (where power-off handlers
+> > implement the delay).
 > 
+> Some don't, and could possibly unknowingly have been relying on the fact
+> that they could return to user space and be powered off at some later
+> time. With systemd that would have caused a panic.
 > 
-> Can you please elaborate a little more why you need to switch these when
-> mode changes?
+Agreed, but there are two cases to consider: What should be the delay
+before the next power-off handler is called, and what should the system
+do if all power-off handlers fail (or if there are none). The current
+behavior isn't exactly well defined. Ok, with systemd that results in
+a crash, but I am not really sure if one can or should blame systemd
+for that. The discussion about systemd and its philosophy should not
+cloud the fact that power-off behavior isn't exactly well defined.
 
-My understanding is that PMIC hardware have predefined shutdown sequence in case 
-of overheat. In non override mode, hardware itself will take care for shunting
-down PMIC, which directly will shutdown also and main CPU's, while when override
-is enabled software running on main CPU's, will take care for system shutdown.
-
+> Also consider generic power-off handlers such as gpio-poweroff. It
+> currently hard-codes a three-second delay but the actual delay would
+> really be board specific.
 > 
-> > +
-> > +       chip->mode = mode;
-> > +
-> > +       return ret;
-> > +}
-> > +
-> > 
+A configurable delay would address that. The actually required delay
+could be provided in platform data or as devicetree property.
 
-<snip>
-
-> > +
-> > +static int qpnp_tm_probe(struct platform_device *pdev)
-> > +{
-> > +       struct qpnp_tm_chip *chip;
-> > +       struct device_node *node;
-> > +       u8 type, subtype;
-> > +       int ret, irq, res[2];
-> > +
-> > 
-
-<snip>
-
-> > +
-> > +       chip->tz_dev = thermal_zone_device_register(node->name, TRIP_NUM, 0,
-> > +       chip, &qpnp_tz_ops, NULL,
-> 
-> Have you considered using of-thermal instead of doing your own specific thermal
-> zone registration? Having a glance look in this driver, most of the
-> operation are covered by of-thermal. Ahy concerns using of-thermal in
-> your case?
-> 
-
-I just followed implementation found in "armada_thermal", "db8500-thermal", 
-"dove_thermal", "imx_thermal", "kirkwood_thermal"...
-
-Will look at of-thermal.
-
-Thank you,
-Ivan
-
-
+Thanks,
+Guenter
