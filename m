@@ -1,101 +1,116 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v2 6/9] ARM: berlin: Add BG2 ethernet DT nodes
-Date: Wed, 29 Oct 2014 19:38:45 +0100
-Message-ID: <54513435.9050803@gmail.com>
-References: <1414002412-13615-1-git-send-email-sebastian.hesselbarth@gmail.com> <1414002412-13615-7-git-send-email-sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH RESEND 10/12] ARM: dts: berlin: Add SDHCI controller nodes
+ to BG2/BG2CD
+Date: Wed, 29 Oct 2014 19:39:23 +0100
+Message-ID: <5451345B.5000703@gmail.com>
+References: <1413883364-681-1-git-send-email-sebastian.hesselbarth@gmail.com> <1413883364-681-11-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414002412-13615-7-git-send-email-sebastian.hesselbarth@gmail.com>
+In-Reply-To: <1413883364-681-11-git-send-email-sebastian.hesselbarth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>, =?UTF-8?B?QW50b2luZSBUw6luYXI=?= =?UTF-8?B?dA==?= <antoine.tenart@free-electrons.com>, Florian Fainelli <f.fainelli@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 22.10.2014 20:26, Sebastian Hesselbarth wrote:
-> Marvell BG2 has two fast ethernet controllers with internal PHY,
-> add the corresponding nodes to SoC dtsi.
+On 21.10.2014 11:22, Sebastian Hesselbarth wrote:
+> Marvell Berlin BG2 has three, BG2CD just one pxav3 compatible
+> sdhci controllers, add them to the corresponding DT SoC
+> includes.
 >
-> Tested-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 > Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com=
 >
 
-Applied the four DT patches to berlin/dt.
+Applied the three DT patches to berlin/dt.
 
 Sebastian
 
 > ---
-> Changelog:
-> v1->v2:
-> - move phy-connection-type to controller node instead of PHY node
->    (Reported by Sergei Shtylyov)
->
-> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Chris Ball <chris@printf.net>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
 > Cc: "Antoine T=C3=A9nart" <antoine.tenart@free-electrons.com>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Eric Miao <eric.y.miao@gmail.com>
-> Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: netdev@vger.kernel.org
+> Cc: linux-mmc@vger.kernel.org
 > Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
 > Cc: linux-kernel@vger.kernel.org
 > ---
->   arch/arm/boot/dts/berlin2.dtsi | 36 +++++++++++++++++++++++++++++++=
+>   arch/arm/boot/dts/berlin2.dtsi   | 34 +++++++++++++++++++++++++++++=
 +++++
->   1 file changed, 36 insertions(+)
+>   arch/arm/boot/dts/berlin2cd.dtsi |  9 +++++++++
+>   2 files changed, 43 insertions(+)
 >
 > diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berli=
 n2.dtsi
-> index 9d7c810ebd0b..dc0227dfc691 100644
+> index 9d7c810ebd0b..504f1add1938 100644
 > --- a/arch/arm/boot/dts/berlin2.dtsi
 > +++ b/arch/arm/boot/dts/berlin2.dtsi
-> @@ -79,11 +79,47 @@
->   			clocks =3D <&chip CLKID_TWD>;
->   		};
+> @@ -53,6 +53,35 @@
 >
-> +		eth1: ethernet@b90000 {
-> +			compatible =3D "marvell,pxa168-eth";
-> +			reg =3D <0xb90000 0x10000>;
-> +			clocks =3D <&chip CLKID_GETH1>;
-> +			interrupts =3D <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-> +			/* set by bootloader */
-> +			local-mac-address =3D [00 00 00 00 00 00];
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +			phy-connection-type =3D "mii";
-> +			phy-handle =3D <&ethphy1>;
+>   		ranges =3D <0 0xf7000000 0x1000000>;
+>
+> +		sdhci0: sdhci@ab0000 {
+> +			compatible =3D "mrvl,pxav3-mmc";
+> +			reg =3D <0xab0000 0x200>;
+> +			clocks =3D <&chip CLKID_SDIO0XIN>, <&chip CLKID_SDIO0>;
+> +			clock-names =3D "io", "core";
+> +			interrupts =3D <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
 > +			status =3D "disabled";
-> +
-> +			ethphy1: ethernet-phy@0 {
-> +				reg =3D <0>;
-> +			};
 > +		};
 > +
->   		cpu-ctrl@dd0000 {
->   			compatible =3D "marvell,berlin-cpu-ctrl";
->   			reg =3D <0xdd0000 0x10000>;
->   		};
->
-> +		eth0: ethernet@e50000 {
-> +			compatible =3D "marvell,pxa168-eth";
-> +			reg =3D <0xe50000 0x10000>;
-> +			clocks =3D <&chip CLKID_GETH0>;
-> +			interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-> +			/* set by bootloader */
-> +			local-mac-address =3D [00 00 00 00 00 00];
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +			phy-connection-type =3D "mii";
-> +			phy-handle =3D <&ethphy0>;
+> +		sdhci1: sdhci@ab0800 {
+> +			compatible =3D "mrvl,pxav3-mmc";
+> +			reg =3D <0xab0800 0x200>;
+> +			clocks =3D <&chip CLKID_SDIO1XIN>, <&chip CLKID_SDIO1>;
+> +			clock-names =3D "io", "core";
+> +			interrupts =3D <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
 > +			status =3D "disabled";
-> +
-> +			ethphy0: ethernet-phy@0 {
-> +				reg =3D <0>;
-> +			};
 > +		};
 > +
->   		apb@e80000 {
->   			compatible =3D "simple-bus";
->   			#address-cells =3D <1>;
+> +		sdhci2: sdhci@ab1000 {
+> +			compatible =3D "mrvl,pxav3-mmc";
+> +			reg =3D <0xab1000 0x200>;
+> +			interrupts =3D <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks =3D <&chip CLKID_NFC_ECC>, <&chip CLKID_NFC>;
+> +			clock-names =3D "io", "core";
+> +			pinctrl-0 =3D <&emmc_pmux>;
+> +			pinctrl-names =3D "default";
+> +			status =3D "disabled";
+> +		};
+> +
+>   		l2: l2-cache-controller@ac0000 {
+>   			compatible =3D "marvell,tauros3-cache", "arm,pl310-cache";
+>   			reg =3D <0xac0000 0x1000>;
+> @@ -252,6 +281,11 @@
+>   			reg =3D <0xea0000 0x400>;
+>   			clocks =3D <&refclk>;
+>   			clock-names =3D "refclk";
+> +
+> +			emmc_pmux: emmc-pmux {
+> +				groups =3D "G26";
+> +				function =3D "emmc";
+> +			};
+>   		};
+>
+>   		apb@fc0000 {
+> diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/ber=
+lin2cd.dtsi
+> index cc1df65da504..5a19017b5d71 100644
+> --- a/arch/arm/boot/dts/berlin2cd.dtsi
+> +++ b/arch/arm/boot/dts/berlin2cd.dtsi
+> @@ -45,6 +45,15 @@
+>
+>   		ranges =3D <0 0xf7000000 0x1000000>;
+>
+> +		sdhci0: sdhci@ab0000 {
+> +			compatible =3D "mrvl,pxav3-mmc";
+> +			reg =3D <0xab0000 0x200>;
+> +			clocks =3D <&chip CLKID_SDIO0XIN>, <&chip CLKID_SDIO0>;
+> +			clock-names =3D "io", "core";
+> +			interrupts =3D <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+> +			status =3D "disabled";
+> +		};
+> +
+>   		l2: l2-cache-controller@ac0000 {
+>   			compatible =3D "arm,pl310-cache";
+>   			reg =3D <0xac0000 0x1000>;
 >
