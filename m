@@ -1,31 +1,63 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH V3 2/4] of: Add binding document for MIPS GIC
-Date: Wed, 29 Oct 2014 10:08:10 -0700
-Message-ID: <CAL1qeaHEE43n6V-y6XECicPaoEAfTBpyfg8bYJZK0e-pSMAJjw@mail.gmail.com>
-References: <1414541562-10076-1-git-send-email-abrestic@chromium.org>
-	<1414541562-10076-3-git-send-email-abrestic@chromium.org>
-	<5450CAF9.3040902@imgtec.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 1/2] mtd: nand: add sunxi NAND flash
+ controller support
+Date: Wed, 29 Oct 2014 10:08:43 -0700
+Message-ID: <20141029170843.GD23619@ld-irv-0074>
+References: <1413896922-11680-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1413896922-11680-2-git-send-email-boris.brezillon@free-electrons.com>
+ <20141028181310.GA23619@ld-irv-0074>
+ <20141029140251.142fed10@bbrezillon>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5450CAF9.3040902@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Qais Yousef <qais.yousef@imgtec.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, John Crispin <blogic@openwrt.org>, David Daney <ddaney.cavm@gmail.com>, Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-sunxi+bncBCZ6PSPVXMNBBH56YSRAKGQEUMAJ3ZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20141029140251.142fed10@bbrezillon>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+Content-Disposition: inline
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yassin Jaffer <yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 29, 2014 at 4:09 AM, Qais Yousef <qais.yousef@imgtec.com> wrote:
-> On 10/29/2014 12:12 AM, Andrew Bresticker wrote:
->>
->> +- reg : Base address and length of the GIC registers.
->>
->
-> Also except for sead3, the base address should be properly reported by the
-> hardware. The size is fixed (for a specific version of GIC at least - which
-> is also reported by the hardware). So it would be nice to make this
-> optional.
+On Wed, Oct 29, 2014 at 02:02:51PM +0100, Boris Brezillon wrote:
+> On Tue, 28 Oct 2014 11:13:11 -0700 Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Tue, Oct 21, 2014 at 03:08:41PM +0200, Boris Brezillon wrote:
+> > > +static int sunxi_nand_hw_ecc_ctrl_init(struct mtd_info *mtd,
+> > > +				       struct nand_ecc_ctrl *ecc,
+> > > +				       struct device_node *np)
+> > > +{
+> > > +	struct nand_ecclayout *layout;
+> > > +	int i, j;
+> > > +	int ret;
+> > > +
+> > > +	ret = sunxi_nand_hw_common_ecc_ctrl_init(mtd, ecc, np);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ecc->read_page = sunxi_nfc_hw_ecc_read_page;
+> > > +	ecc->write_page = sunxi_nfc_hw_ecc_write_page;
+> > > +	layout = ecc->layout;
+> > > +
+> > > +	for (i = 0; i < ecc->steps; i++) {
+> > 
+> > Hmm, did you retest this since changing this to ecc->steps? I think this
+> > won't work, since ecc->steps is only initialized in nand_scan_tail(),
+> > which comes after this. I only recommended the change for the
+> > {read,write}_page() type of functions, not the initialization functions.
+> > 
+> > [snip the rest]
+> > 
+> > So I'd suggest the following additional patch, and otherwise, the series
+> > is fine with me. If you give your ack, I can just squash this in and
+> > apply it to my tree:
+> 
+> It works, you can squash those changes into my first patch.
 
-Even though this is usually probable, I'd prefer to leave this as
-required, or at least "optional, but recommended".  I don't have a
-very strong opinion on it though, but perhaps the device-tree folks
-do?
+OK, pushed both (+ my fixes) to l2-mtd.git. Thanks!
+
+Brian
