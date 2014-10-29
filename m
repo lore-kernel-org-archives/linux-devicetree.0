@@ -1,39 +1,112 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 3/3] ARM: shmobile: koelsch dts: Drop console= bootargs parameter
-Date: Wed, 29 Oct 2014 15:28:38 +0100
-Message-ID: <1414592918-25138-4-git-send-email-geert+renesas@glider.be>
-References: <1414592918-25138-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1414592918-25138-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
+From: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC 5/7] soc: qcom: Add Shared Memory Driver
+Date: Wed, 29 Oct 2014 16:28:29 +0200
+Message-ID: <CADMYwHxLtAZZMUGX3jo0URAezqGuho5XB=hQJp8k+acBiENrhg@mail.gmail.com>
+References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com> <1412037291-16880-6-git-send-email-bjorn.andersson@sonymobile.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1412037291-16880-6-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Since commit 595c6a4bb77f0096 ("ARM: shmobile: koelsch: Remove legacy C
-board code"), koelsch is restricted to booting from DT, so
-chosen/stdout-path is always used, and we can drop the "console="
-parameter from chosen/bootargs.
+[Thanks Kevin for the heads up on this]
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: devicetree@vger.kernel.org
----
- arch/arm/boot/dts/r8a7791-koelsch.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Bjorn,
 
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
-index 191f32bc43ea6dad..523ae4d807b907b2 100644
---- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-+++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-@@ -25,7 +25,7 @@
- 	};
- 
- 	chosen {
--		bootargs = "console=ttySC6,115200 ignore_loglevel rw root=/dev/nfs ip=dhcp";
-+		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
- 		stdout-path = &scif0;
- 	};
- 
--- 
-1.9.1
+On Tue, Sep 30, 2014 at 3:34 AM, Bjorn Andersson
+<bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
+> == Codeaurora implementation ==
+> The codeaurora implementation originates from an implementation that was based purely on initcall and global state
 
+Do you refer to the in-tree arch/arm/mach-msm/smd.c ? it seems similar
+in some ways to the newly proposed smd driver.
+
+> == RPMSG ==
+>
+> The rpmsg_driver fits nicely into what I want to do, so that could be used
+> straight off. Data is transmitted by calling rpmsg_send() and incoming data is
+> delivered through the registered callback on a channel.  It's possible to
+> request additional channels for a rpmsg device, although this is probably never
+> tested as there is no way to send data on this additional endpoint.
+
+This is inaccurate - rpmsg does have offchannel sending API, some of
+which are being used by the rpmsg core itself. Please check out
+rpmsg_sendto() and rpmsg_send_offchannel().
+
+> Endpoints are sort of equivalent of a smd channel although the life cycle is
+> slightly different, but a major issue with the rpmsg interface is that channels
+> are identified by a single u32, while SMD channels are identified by a u32 and
+> the channel name.
+
+Honestly this sounds like a small technical difference that can
+probably be fixed with some effort. Rpmsg is designed to satisfy the
+requirements of its current users, and is not set in stone. Not even
+the wire protocol is.
+
+If another requirement shows up, we can adopt rpmsg so new users could
+use it instead of merging additional frameworks that basically do the
+same thing.
+
+But new requirements must be well described so we can technically be
+convinced a core change is indeed needed.
+
+> So to be able to use the rpmsg api we would need to create additional apis that
+> handles the custom address format of the smd channels. Furthermore all the "off
+> channel" functions would be invalid.
+> Furthermore most of the channel and endpoint structures would be "invalid".
+
+Not sure I'm following this one. Can you please explain the smd
+addressing? what part of it is set in stone and what part of it can
+still be changed?
+
+> But these are the problems with the actual api, rpmsg is not only the api. It's
+> a direct implementation of these functions, defining how services are
+> discovered, how channels are represented as well as the actual "wire" protocol.
+>
+> Or to put it in another way: rpmsg is an implementation of a packet protocol
+> on-top of virtio, it is not a framework or api for abstracting packet transport
+> logic.
+
+This is inaccurate. If there's justification for another wire
+protocol, it can be added. Even virtio itself was once only an
+abstraction over the virtqueue wire protocol:
+
+commit 7c5e9ed0c84e7d70d887878574590638d5572659
+Author: Michael S. Tsirkin <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Date:   Mon Apr 12 16:19:07 2010 +0300
+
+    virtio_ring: remove a level of indirection
+
+    We have a single virtqueue_ops implementation,
+    and it seems unlikely we'll get another one
+    at this point. So let's remove an unnecessary
+    level of indirection: it would be very easy to
+    re-add it if another implementation surfaces.
+
+    Signed-off-by: Michael S. Tsirkin <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+    Signed-off-by: Rusty Russell <rusty-8n+1lVoiYb80n/F98K4Iww@public.gmane.org>
+
+> As there are discussions regarding replacing SMD with a new wire protocol, it
+> would probably be convenient to create a generic version of my proposed "api"
+> that can be re-used between different implementations and hopefully provide
+> re-use of parts of the code. Maybe we can make rpmsg an implementation under
+> such a generic api.
+
+If the SMD wire protocol can still be changed that's great. Why don't
+you pick up the vrings structures and play with it? You then get rpmsg
+for free. If some of the APIs aren't exactly what you need, please
+explain and we could change it to fit your requirements.
+
+It's always easier to merge new code rather than understand the
+existing one and change it to fit all users, but usually it just means
+more work later.
+
+Thanks,
+Ohad.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
