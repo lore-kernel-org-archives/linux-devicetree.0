@@ -1,74 +1,153 @@
 From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v6 0/7] This is the 1st version of suspend for RK3288.
-Date: Wed, 29 Oct 2014 19:51:58 +0800
-Message-ID: <1414583525-17395-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
+Subject: [PATCH v6 7/7] ARM: dts: add suspend voltage setting for RK808
+Date: Wed, 29 Oct 2014 19:52:05 +0800
+Message-ID: <1414583525-17395-8-git-send-email-zyw@rock-chips.com>
+References: <1414583525-17395-1-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414583525-17395-1-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de, dianders@chromium.org
-Cc: mturquette@linaro.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, khilman@kernel.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Tony Xie <xxx@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Cc: mturquette@linaro.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, khilman@kernel.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RK3288 can shut down the cpu, gpu and other device controllers in suspend,
-and it will pull the GLOBAL_PWROFF pin to high in the final stage of the
-process of suspend, pull the pin to low again when resume.
+global_pwroff would be pull to high when RK3288 entering suspend,
+this pin is a sleep signal for RK808, so RK808 could goto sleep
+mode, and some regulators would be disable.
 
-Changes in v6:
-- modify comments
-- get rid of the save/restore of SRAM
-- doing the copy of resume code once at init time
-- remove ROCKCHIP_ARM_OFF_LOGIC_DEEP from rk3288_fill_in_bootram
-- add of_platform_populate in rockchip_dt_init
-- change pmu_intmem@ff720000 to sram@ff720000
-- change pmu_intmem@ff720000 to sram@ff720000
+Signed-off-by: Chris Zhong <zyw@rock-chips.com>
 
-Changes in v5:
-- reset-author
-- use "__maybe_unused" annotation
-- add pinctrl_force_default() in the error case
-- modify comments
-- use rk3288_bootram_sz for memcpy size
-- fixed error of sram save and restore
-- change the size of sram in example
-- change size to 4k
+---
 
-Changes in v4:
-- use SIMPLE_DEV_PM_OPS for suspend/resume struct
-- remove grf regmap
+Changes in v6: None
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
 
-Changes in v3:
-- move the pinmux of gpio6_c6 save and restore to pinctrl-rockchip
+ arch/arm/boot/dts/rk3288-evb-rk808.dts |   16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-Changes in v2:
-- __raw_readl/__raw_writel replaced by readl_relaxed/writel_relaxed
-- add the regulator calls in prepare and finish.
-- add the pinmux of gpio6_c6 save and restore
-- put "rockchip,rk3288-pmu-sram" to first
-
-Chris Zhong (7):
-  pinctrl: rockchip: add suspend/resume functions
-  pinctrl: rockchip: save and restore gpio6_c6 pinmux in suspend/resume
-  clk: rockchip: RK3288: add suspend and resume
-  ARM: rockchip: add suspend and resume for RK3288
-  ARM: rockchip: Add pmu-sram binding
-  ARM: dts: add RK3288 suspend support
-  ARM: dts: add suspend voltage setting for RK808
-
- .../devicetree/bindings/arm/rockchip/pmu-sram.txt  |   16 ++
- arch/arm/boot/dts/rk3288-evb-rk808.dts             |   16 +-
- arch/arm/boot/dts/rk3288.dtsi                      |   11 +
- arch/arm/mach-rockchip/Makefile                    |    1 +
- arch/arm/mach-rockchip/pm.c                        |  278 ++++++++++++++++++++
- arch/arm/mach-rockchip/pm.h                        |  103 ++++++++
- arch/arm/mach-rockchip/rockchip.c                  |    8 +
- arch/arm/mach-rockchip/sleep.S                     |   90 +++++++
- drivers/clk/rockchip/clk-rk3288.c                  |   60 +++++
- drivers/pinctrl/pinctrl-rockchip.c                 |   46 ++++
- 10 files changed, 628 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt
- create mode 100644 arch/arm/mach-rockchip/pm.c
- create mode 100644 arch/arm/mach-rockchip/pm.h
- create mode 100644 arch/arm/mach-rockchip/sleep.S
-
+diff --git a/arch/arm/boot/dts/rk3288-evb-rk808.dts b/arch/arm/boot/dts/rk3288-evb-rk808.dts
+index ff522f8..319fcb6 100644
+--- a/arch/arm/boot/dts/rk3288-evb-rk808.dts
++++ b/arch/arm/boot/dts/rk3288-evb-rk808.dts
+@@ -27,7 +27,7 @@
+ 		interrupt-parent = <&gpio0>;
+ 		interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&pmic_int>;
++		pinctrl-0 = <&pmic_int &global_pwroff>;
+ 		rockchip,system-power-controller;
+ 		wakeup-source;
+ 		#clock-cells = <1>;
+@@ -46,6 +46,7 @@
+ 				regulator-min-microvolt = <750000>;
+ 				regulator-max-microvolt = <1300000>;
+ 				regulator-name = "vdd_arm";
++				regulator-suspend-mem-disabled;
+ 			};
+ 
+ 			vdd_gpu: DCDC_REG2 {
+@@ -54,12 +55,14 @@
+ 				regulator-min-microvolt = <850000>;
+ 				regulator-max-microvolt = <1250000>;
+ 				regulator-name = "vdd_gpu";
++				regulator-suspend-mem-disabled;
+ 			};
+ 
+ 			vcc_ddr: DCDC_REG3 {
+ 				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-name = "vcc_ddr";
++				regulator-suspend-mem-enabled;
+ 			};
+ 
+ 			vcc_io: DCDC_REG4 {
+@@ -68,6 +71,7 @@
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-name = "vcc_io";
++				regulator-suspend-mem-microvolt = <3300000>;
+ 			};
+ 
+ 			vccio_pmu: LDO_REG1 {
+@@ -76,6 +80,7 @@
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-name = "vccio_pmu";
++				regulator-suspend-mem-microvolt = <3300000>;
+ 			};
+ 
+ 			vcc_tp: LDO_REG2 {
+@@ -84,6 +89,7 @@
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-name = "vcc_tp";
++				regulator-suspend-mem-disabled;
+ 			};
+ 
+ 			vdd_10: LDO_REG3 {
+@@ -92,6 +98,7 @@
+ 				regulator-min-microvolt = <1000000>;
+ 				regulator-max-microvolt = <1000000>;
+ 				regulator-name = "vdd_10";
++				regulator-suspend-mem-microvolt = <1000000>;
+ 			};
+ 
+ 			vcc18_lcd: LDO_REG4 {
+@@ -100,6 +107,7 @@
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
+ 				regulator-name = "vcc18_lcd";
++				regulator-suspend-mem-disabled;
+ 			};
+ 
+ 			vccio_sd: LDO_REG5 {
+@@ -108,6 +116,7 @@
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-name = "vccio_sd";
++				regulator-suspend-mem-disabled;
+ 			};
+ 
+ 			vdd10_lcd: LDO_REG6 {
+@@ -116,6 +125,7 @@
+ 				regulator-min-microvolt = <1000000>;
+ 				regulator-max-microvolt = <1000000>;
+ 				regulator-name = "vdd10_lcd";
++				regulator-suspend-mem-disabled;
+ 			};
+ 
+ 			vcc_18: LDO_REG7 {
+@@ -124,6 +134,7 @@
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
+ 				regulator-name = "vcc_18";
++				regulator-suspend-mem-microvolt = <1800000>;
+ 			};
+ 
+ 			vcca_codec: LDO_REG8 {
+@@ -132,18 +143,21 @@
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-name = "vcca_codec";
++				regulator-suspend-mem-disabled;
+ 			};
+ 
+ 			vcc_wl: SWITCH_REG1 {
+ 				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-name = "vcc_wl";
++				regulator-suspend-mem-enabled;
+ 			};
+ 
+ 			vcc_lcd: SWITCH_REG2 {
+ 				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-name = "vcc_lcd";
++				regulator-suspend-mem-disabled;
+ 			};
+ 		};
+ 	};
 -- 
 1.7.9.5
-
