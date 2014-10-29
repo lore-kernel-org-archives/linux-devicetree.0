@@ -1,79 +1,63 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH 11/11] irqchip: Decouple bcm7120-l2 from brcmstb-l2
-Date: Tue, 28 Oct 2014 20:58:58 -0700
-Message-ID: <1414555138-6500-11-git-send-email-cernekee@gmail.com>
+Subject: [PATCH 02/11] irqchip: brcmstb-l2: Eliminate dependency on ARM code
+Date: Tue, 28 Oct 2014 20:58:49 -0700
+Message-ID: <1414555138-6500-2-git-send-email-cernekee@gmail.com>
 References: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-Some chips, such as BCM6328, only require the former driver.  Some
-BCM7xxx STB configurations only require the latter driver.  Treat them
-as two separate entities, and update the mach-bcm dependencies to
-reflect the change.
+The irq-brcmstb-l2 driver has a single dependency on the ARM code, the
+do_bad_IRQ macro.  Expand this macro in-place so that the driver can be
+built on non-ARM platforms.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- arch/arm/mach-bcm/Kconfig        | 1 +
- drivers/irqchip/Kconfig          | 5 +++++
- drivers/irqchip/Makefile         | 4 ++--
- drivers/irqchip/irq-bcm7120-l2.c | 2 +-
- 4 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/irqchip/irq-brcmstb-l2.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-index 2abad74..bf47eb0 100644
---- a/arch/arm/mach-bcm/Kconfig
-+++ b/arch/arm/mach-bcm/Kconfig
-@@ -125,6 +125,7 @@ config ARCH_BRCMSTB
- 	select HAVE_ARM_ARCH_TIMER
- 	select BRCMSTB_GISB_ARB
- 	select BRCMSTB_L2_IRQ
-+	select BCM7120_L2_IRQ
- 	help
- 	  Say Y if you intend to run the kernel on a Broadcom ARM-based STB
- 	  chipset.
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 6a03c65..2d52b07 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -51,6 +51,11 @@ config ATMEL_AIC5_IRQ
- 	select MULTI_IRQ_HANDLER
- 	select SPARSE_IRQ
+diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
+index c15c840..c9bdf20 100644
+--- a/drivers/irqchip/irq-brcmstb-l2.c
++++ b/drivers/irqchip/irq-brcmstb-l2.c
+@@ -19,6 +19,7 @@
+ #include <linux/slab.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/spinlock.h>
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_address.h>
+@@ -30,8 +31,6 @@
+ #include <linux/irqchip.h>
+ #include <linux/irqchip/chained_irq.h>
  
-+config BCM7120_L2_IRQ
-+	bool
-+	select GENERIC_IRQ_CHIP
-+	select IRQ_DOMAIN
-+
- config BRCMSTB_L2_IRQ
- 	bool
- 	select GENERIC_IRQ_CHIP
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 173bb5f..f0909d0 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -35,6 +35,6 @@ obj-$(CONFIG_TB10X_IRQC)		+= irq-tb10x.o
- obj-$(CONFIG_XTENSA)			+= irq-xtensa-pic.o
- obj-$(CONFIG_XTENSA_MX)			+= irq-xtensa-mx.o
- obj-$(CONFIG_IRQ_CROSSBAR)		+= irq-crossbar.o
--obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o \
--					   irq-bcm7120-l2.o
-+obj-$(CONFIG_BCM7120_L2_IRQ)		+= irq-bcm7120-l2.o
-+obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
- obj-$(CONFIG_KEYSTONE_IRQ)		+= irq-keystone.o
-diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
-index 734fece..91065b9 100644
---- a/drivers/irqchip/irq-bcm7120-l2.c
-+++ b/drivers/irqchip/irq-bcm7120-l2.c
-@@ -247,5 +247,5 @@ out_unmap:
- 	kfree(data);
- 	return ret;
- }
--IRQCHIP_DECLARE(brcmstb_l2_intc, "brcm,bcm7120-l2-intc",
-+IRQCHIP_DECLARE(bcm7120_l2_intc, "brcm,bcm7120-l2-intc",
- 		bcm7120_l2_intc_of_init);
+-#include <asm/mach/irq.h>
+-
+ #include "irqchip.h"
+ 
+ /* Register offsets in the L2 interrupt controller */
+@@ -63,7 +62,9 @@ static void brcmstb_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
+ 		~(__raw_readl(b->base + CPU_MASK_STATUS));
+ 
+ 	if (status == 0) {
+-		do_bad_IRQ(irq, desc);
++		raw_spin_lock(&desc->lock);
++		handle_bad_irq(irq, desc);
++		raw_spin_unlock(&desc->lock);
+ 		goto out;
+ 	}
+ 
 -- 
 2.1.1
