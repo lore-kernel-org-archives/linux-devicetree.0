@@ -1,56 +1,52 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 3/6] ARM: shmobile: r8a7779 dtsi: Change to using clock-indices
-Date: Wed, 29 Oct 2014 15:19:10 +0100
-Message-ID: <1414592353-24044-4-git-send-email-geert+renesas@glider.be>
-References: <1414592353-24044-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 0/6] ARM: shmobile: Change to using clock-indices
+Date: Wed, 29 Oct 2014 15:19:07 +0100
+Message-ID: <1414592353-24044-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1414592353-24044-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
 To: Mike Turquette <mturquette@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-With the addition of clock-indices in commit 8e33f91a0b84ae19 ("clk:
-shmobile: clk-mstp: change to using clock-indices"), we can change the
-DTSes to use the generic property instead of the deprecated
-vendor-specific property.
+	Hi Mike, Simon, Magnus,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm/boot/dts/r8a7779.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+This patch series finalizes the conversion from the vendor-specific
+"renesas,clock-indices" to the generic "clock-indices", started by Ben Dooks.
 
-diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-index ede9a29e4bc601ae..e3846af833e1d532 100644
---- a/arch/arm/boot/dts/r8a7779.dtsi
-+++ b/arch/arm/boot/dts/r8a7779.dtsi
-@@ -475,7 +475,7 @@
- 				 <&cpg_clocks R8A7779_CLK_P>,
- 				 <&cpg_clocks R8A7779_CLK_P>;
- 			#clock-cells = <1>;
--			renesas,clock-indices = <
-+			clock-indices = <
- 				R8A7779_CLK_HSPI R8A7779_CLK_TMU2
- 				R8A7779_CLK_TMU1 R8A7779_CLK_TMU0
- 				R8A7779_CLK_HSCIF1 R8A7779_CLK_HSCIF0
-@@ -506,7 +506,7 @@
- 				 <&cpg_clocks R8A7779_CLK_P>,
- 				 <&cpg_clocks R8A7779_CLK_S>;
- 			#clock-cells = <1>;
--			renesas,clock-indices = <
-+			clock-indices = <
- 				R8A7779_CLK_USB01 R8A7779_CLK_USB2
- 				R8A7779_CLK_DU R8A7779_CLK_VIN2
- 				R8A7779_CLK_VIN1 R8A7779_CLK_VIN0
-@@ -527,7 +527,7 @@
- 			clocks = <&s4_clk>, <&s4_clk>, <&s4_clk>, <&s4_clk>,
- 				 <&s4_clk>, <&s4_clk>;
- 			#clock-cells = <1>;
--			renesas,clock-indices = <
-+			clock-indices = <
- 				R8A7779_CLK_SDHI3 R8A7779_CLK_SDHI2
- 				R8A7779_CLK_SDHI1 R8A7779_CLK_SDHI0
- 				R8A7779_CLK_MMC1 R8A7779_CLK_MMC0
+The patches for r8a7790 and r8a7791 were extracted from a patch that Ben sent
+before ("[PATCH 2/3] renesas: change to using clock-indices"), but it was never
+split/updated.
+
+Thanks for applying!
+
+Ben Dooks (2):
+  ARM: shmobile: r8a7790 dtsi: Change to using clock-indices
+  ARM: shmobile: r8a7791 dtsi: Change to using clock-indices
+
+Geert Uytterhoeven (4):
+  clk: shmobile: Deprecate renesas,clock-indices
+  ARM: shmobile: r8a7740 dtsi: Change to using clock-indices
+  ARM: shmobile: r8a7779 dtsi: Change to using clock-indices
+  ARM: shmobile: r8a7794 dtsi: Change to using clock-indices
+
+ .../bindings/clock/renesas,cpg-mstp-clocks.txt         |  9 +++++----
+ arch/arm/boot/dts/r8a7740.dtsi                         | 10 +++++-----
+ arch/arm/boot/dts/r8a7779.dtsi                         |  6 +++---
+ arch/arm/boot/dts/r8a7790.dtsi                         | 16 ++++++++--------
+ arch/arm/boot/dts/r8a7791.dtsi                         | 18 +++++++++---------
+ arch/arm/boot/dts/r8a7794.dtsi                         | 14 +++++++-------
+ 6 files changed, 37 insertions(+), 36 deletions(-)
+
 -- 
 1.9.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
