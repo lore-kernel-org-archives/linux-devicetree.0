@@ -1,105 +1,53 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v15 2/5] dt-bindings: document Rockchip thermal
-Date: Tue, 28 Oct 2014 16:46:24 -0700
-Message-ID: <20141028234624.GD19675@dtor-ws>
-References: <1414486287-25498-1-git-send-email-caesar.wang@rock-chips.com>
- <1414486287-25498-3-git-send-email-caesar.wang@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: [PATCH V3 0/4] MIPS: GIC device-tree support
+Date: Tue, 28 Oct 2014 17:12:38 -0700
+Message-ID: <1414541562-10076-1-git-send-email-abrestic@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1414486287-25498-3-git-send-email-caesar.wang@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Caesar Wang <caesar.wang@rock-chips.com>
-Cc: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com
+To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Andrew Bresticker <abrestic@chromium.org>, John Crispin <blogic@openwrt.org>, David Daney <ddaney.cavm@gmail.com>, Qais Yousef <qais.yousef@imgtec.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 28, 2014 at 04:51:24PM +0800, Caesar Wang wrote:
-> This add the necessary binding documentation for the thermal
-> found on Rockchip SoCs
-> 
-> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
-> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+This series add support for mapping and routing GIC interrupts as well
+as setting up the GIC timer through device-tree.  Patches 1 adds the
+"mti" vendor prefix, patch 2 adds the GIC binding document, and patches
+3 and 4 add device-tree support for the GIC irqchip and clocksource drivers,
+respectively.
 
-Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Based on next-20141028, which includes part 1 [0] and part 2 [1] of my
+GIC cleanup series.
 
-> ---
->  .../bindings/thermal/rockchip-thermal.txt          | 62 ++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> new file mode 100644
-> index 0000000..fc30e1b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> @@ -0,0 +1,62 @@
-> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
-> +
-> +Required properties:
-> +- compatible : "rockchip,rk3288-tsadc"
-> +- reg : physical base address of the controller and length of memory mapped
-> +	region.
-> +- interrupts : The interrupt number to the cpu. The interrupt specifier format
-> +	       depends on the interrupt controller.
-> +- clocks : Must contain an entry for each entry in clock-names.
-> +- clock-names : Shall be "tsadc" for the converter-clock, and "apb_pclk" for
-> +		the peripheral clock.
-> +- #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
-> +- hw-shut-temp : The hardware-controlled shutdown temperature value.
-> +- tsadc-tshut-mode : The hardware-controlled shutdown mode 0:CRU 1:GPIO.
-> +- tsadc-tshut-polarity : The hardware-controlled active polarity 0:LOW 1:HIGH.
-> +
-> +Exiample:
-> +tsadc: tsadc@ff280000 {
-> +	compatible = "rockchip,rk3288-tsadc";
-> +	reg = <0xff280000 0x100>;
-> +	interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
-> +	clock-names = "tsadc", "apb_pclk";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&otp_out>;
-> +	#thermal-sensor-cells = <1>;
-> +	hw-shut-temp = <125000>;
-> +	tsadc-tshut-mode = <0>;
-> +	tsadc-tshut-polarity = <0>;
-> +};
-> +
-> +Example: referring to thermal sensors:
-> +thermal-zones {
-> +	cpu_thermal: cpu_thermal {
-> +		polling-delay-passive = <1000>; /* milliseconds */
-> +		polling-delay = <5000>; /* milliseconds */
-> +
-> +		/* sensor	ID */
-> +		thermal-sensors = <&tsadc	1>;
-> +
-> +		trips {
-> +			cpu_alert0: cpu_alert {
-> +				temperature = <80000>; /* millicelsius */
-> +				hysteresis = <2000>; /* millicelsius */
-> +				type = "passive";
-> +			};
-> +			cpu_crit: cpu_crit {
-> +				temperature = <120000>; /* millicelsius */
-> +				hysteresis = <2000>; /* millicelsius */
-> +				type = "critical";
-> +			};
-> +		};
-> +
-> +		cooling-maps {
-> +			map0 {
-> +				trip = <&cpu_alert0>;
-> +				cooling-device =
-> +					<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
-> 
+Changes from v2:
+ - added back third cell to specifier to differentiate between shared and
+   local interrupts
+ - added timer sub-node and it's properties
+ - changed compatible string to include CPU version
+ - rebased on GIC cleanup series
+
+Changes from v1:
+ - updated bindings to drop third interrupt cell and remove CPU interrupt
+   controller as the parent of the GIC
+ - moved GIC to drivers/irqchip/
+ - other minor fixes/cleanups
+
+[0] https://lkml.org/lkml/2014/9/18/487
+[1] https://lkml.org/lkml/2014/10/20/481
+
+Andrew Bresticker (4):
+  of: Add vendor prefix for MIPS Technologies, Inc.
+  of: Add binding document for MIPS GIC
+  irqchip: mips-gic: Add device-tree support
+  clocksource: mips-gic: Add device-tree support
+
+ .../bindings/interrupt-controller/mips-gic.txt     | 55 +++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ drivers/clocksource/Kconfig                        |  1 +
+ drivers/clocksource/mips-gic-timer.c               | 37 ++++++++---
+ drivers/irqchip/irq-mips-gic.c                     | 71 ++++++++++++++++++++--
+ .../dt-bindings/interrupt-controller/mips-gic.h    |  9 +++
+ 6 files changed, 162 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+ create mode 100644 include/dt-bindings/interrupt-controller/mips-gic.h
 
 -- 
-Dmitry
+2.1.0.rc2.206.gedb03e5
