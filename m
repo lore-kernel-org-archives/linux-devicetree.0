@@ -1,72 +1,94 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 06/11] irqchip: bcm7120-l2: Use irq_reg_* accessors
-Date: Wed, 29 Oct 2014 09:54:09 -0700
-Message-ID: <54511BB1.2070202@gmail.com>
-References: <1414555138-6500-1-git-send-email-cernekee@gmail.com> <1414555138-6500-6-git-send-email-cernekee@gmail.com>
+Subject: Re: [PATCH 07/11] irqchip: brcmstb-l2: Use irq_reg_* accessors
+Date: Wed, 29 Oct 2014 09:54:27 -0700
+Message-ID: <54511BC3.6050305@gmail.com>
+References: <1414555138-6500-1-git-send-email-cernekee@gmail.com> <1414555138-6500-7-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414555138-6500-6-git-send-email-cernekee@gmail.com>
+In-Reply-To: <1414555138-6500-7-git-send-email-cernekee@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Cernekee <cernekee@gmail.com>, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
 On 10/28/2014 08:58 PM, Kevin Cernekee wrote:
-> This keeps things consistent between the "core" bcm7120-l2 driver and the
-> helpers in generic-chip.c.
+> This change was just made on bcm7120-l2, so let's keep things consistent
+> between the two drivers.
 > 
 > Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 
 > ---
->  drivers/irqchip/irq-bcm7120-l2.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+>  drivers/irqchip/irq-brcmstb-l2.c | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
 > 
-> diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
-> index 6472b71..f041992 100644
-> --- a/drivers/irqchip/irq-bcm7120-l2.c
-> +++ b/drivers/irqchip/irq-bcm7120-l2.c
-> @@ -48,7 +48,7 @@ static void bcm7120_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
+> diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
+> index c9bdf20..8b82b86 100644
+> --- a/drivers/irqchip/irq-brcmstb-l2.c
+> +++ b/drivers/irqchip/irq-brcmstb-l2.c
+> @@ -58,8 +58,8 @@ static void brcmstb_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
 >  
 >  	chained_irq_enter(chip, desc);
 >  
-> -	status = __raw_readl(b->base + IRQSTAT);
-> +	status = irq_reg_readl(b->base + IRQSTAT);
+> -	status = __raw_readl(b->base + CPU_STATUS) &
+> -		~(__raw_readl(b->base + CPU_MASK_STATUS));
+> +	status = irq_reg_readl(b->base + CPU_STATUS) &
+> +		~(irq_reg_readl(b->base + CPU_MASK_STATUS));
+>  
+>  	if (status == 0) {
+>  		raw_spin_lock(&desc->lock);
+> @@ -71,7 +71,7 @@ static void brcmstb_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
 >  	do {
 >  		irq = ffs(status) - 1;
+>  		/* ack at our level */
+> -		__raw_writel(1 << irq, b->base + CPU_CLEAR);
+> +		irq_reg_writel(1 << irq, b->base + CPU_CLEAR);
 >  		status &= ~(1 << irq);
-> @@ -66,10 +66,10 @@ static void bcm7120_l2_intc_suspend(struct irq_data *d)
+>  		generic_handle_irq(irq_find_mapping(b->domain, irq));
+>  	} while (status);
+> @@ -86,12 +86,12 @@ static void brcmstb_l2_intc_suspend(struct irq_data *d)
 >  
 >  	irq_gc_lock(gc);
->  	/* Save the current mask and the interrupt forward mask */
-> -	b->saved_mask = __raw_readl(b->base + IRQEN) | b->irq_fwd_mask;
-> +	b->saved_mask = irq_reg_readl(b->base + IRQEN) | b->irq_fwd_mask;
+>  	/* Save the current mask */
+> -	b->saved_mask = __raw_readl(b->base + CPU_MASK_STATUS);
+> +	b->saved_mask = irq_reg_readl(b->base + CPU_MASK_STATUS);
+>  
 >  	if (b->can_wake) {
->  		reg = b->saved_mask | gc->wake_active;
-> -		__raw_writel(reg, b->base + IRQEN);
-> +		irq_reg_writel(reg, b->base + IRQEN);
+>  		/* Program the wakeup mask */
+> -		__raw_writel(~gc->wake_active, b->base + CPU_MASK_SET);
+> -		__raw_writel(gc->wake_active, b->base + CPU_MASK_CLEAR);
+> +		irq_reg_writel(~gc->wake_active, b->base + CPU_MASK_SET);
+> +		irq_reg_writel(gc->wake_active, b->base + CPU_MASK_CLEAR);
 >  	}
 >  	irq_gc_unlock(gc);
 >  }
-> @@ -81,7 +81,7 @@ static void bcm7120_l2_intc_resume(struct irq_data *d)
+> @@ -103,11 +103,11 @@ static void brcmstb_l2_intc_resume(struct irq_data *d)
+>  
+>  	irq_gc_lock(gc);
+>  	/* Clear unmasked non-wakeup interrupts */
+> -	__raw_writel(~b->saved_mask & ~gc->wake_active, b->base + CPU_CLEAR);
+> +	irq_reg_writel(~b->saved_mask & ~gc->wake_active, b->base + CPU_CLEAR);
 >  
 >  	/* Restore the saved mask */
->  	irq_gc_lock(gc);
-> -	__raw_writel(b->saved_mask, b->base + IRQEN);
-> +	irq_reg_writel(b->saved_mask, b->base + IRQEN);
+> -	__raw_writel(b->saved_mask, b->base + CPU_MASK_SET);
+> -	__raw_writel(~b->saved_mask, b->base + CPU_MASK_CLEAR);
+> +	irq_reg_writel(b->saved_mask, b->base + CPU_MASK_SET);
+> +	irq_reg_writel(~b->saved_mask, b->base + CPU_MASK_CLEAR);
 >  	irq_gc_unlock(gc);
 >  }
 >  
-> @@ -133,7 +133,7 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
->  	/* Enable all interrupt specified in the interrupt forward mask and have
->  	 * the other disabled
->  	 */
-> -	__raw_writel(data->irq_fwd_mask, data->base + IRQEN);
-> +	irq_reg_writel(data->irq_fwd_mask, data->base + IRQEN);
+> @@ -132,8 +132,8 @@ int __init brcmstb_l2_intc_of_init(struct device_node *np,
+>  	}
 >  
->  	num_parent_irqs = of_irq_count(dn);
->  	if (num_parent_irqs <= 0) {
+>  	/* Disable all interrupts by default */
+> -	__raw_writel(0xffffffff, data->base + CPU_MASK_SET);
+> -	__raw_writel(0xffffffff, data->base + CPU_CLEAR);
+> +	irq_reg_writel(0xffffffff, data->base + CPU_MASK_SET);
+> +	irq_reg_writel(0xffffffff, data->base + CPU_CLEAR);
+>  
+>  	data->parent_irq = irq_of_parse_and_map(np, 0);
+>  	if (data->parent_irq < 0) {
 > 
