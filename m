@@ -1,39 +1,42 @@
-From: Alexander Sverdlin <alexander.sverdlin@nsn.com>
-Subject: Re: [PATCH] of: spi: Export single device registration method and
- accessors (v2)
-Date: Wed, 29 Oct 2014 10:08:59 +0100
-Message-ID: <5450AEAB.40200@nsn.com>
-References: <1414572037-11306-1-git-send-email-pantelis.antoniou@konsulko.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v5 3/4] regulator: max77686: Add suspend disable for some
+ LDOs
+Date: Wed, 29 Oct 2014 10:20:13 +0100
+Message-ID: <1414574413.18868.6.camel@AMDC1943>
+References: <1414411911-5539-1-git-send-email-k.kozlowski@samsung.com>
+ <1414411911-5539-4-git-send-email-k.kozlowski@samsung.com>
+ <20141028223121.GH18557@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414572037-11306-1-git-send-email-pantelis.antoniou@konsulko.com>
+In-reply-to: <20141028223121.GH18557@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ext Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-ke
+To: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
-
-On 29/10/14 09:40, ext Pantelis Antoniou wrote:
-> Dynamically inserting spi device nodes requires the use of a single
-> device registration method. Rework and export it.
+On wto, 2014-10-28 at 22:31 +0000, Mark Brown wrote:
+> On Mon, Oct 27, 2014 at 01:11:49PM +0100, Krzysztof Kozlowski wrote:
 > 
-> Methods to lookup a device/master using a device node are added
-> as well, of_find_spi_master_by_node() & of_find_spi_device_by_node().
+> > @@ -247,6 +250,8 @@ static struct regulator_ops max77686_ldo_ops = {
+> >  	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
+> >  	.set_voltage_time_sel	= regulator_set_voltage_time_sel,
+> >  	.set_suspend_mode	= max77686_ldo_set_suspend_mode,
+> > +	.set_suspend_disable	= max77686_set_suspend_disable,
+> > +	.set_suspend_enable	= max77686_enable,
 > 
-> Changes since v1:
-> * Brown paper bug with parameter on of_register_spi_device().
-> 
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> This looks wrong, you're using the regular enable operation as suspend
+> enable.  How does that work without disrupting the current runtime
+> state?
 
-Acked-by: Alexander Sverdlin <alexaner.sverdlin@nsn.com>
+Currently it shouldn't disrupt state of regulator because during runtime
+it may only be only: on (0x3) or off (0x0). Suspend enable in max77686
+writes 0x3 to the register which means - always on.
 
-> ---
->  drivers/spi/spi.c | 255 +++++++++++++++++++++++++++++++++---------------------
->  1 file changed, 157 insertions(+), 98 deletions(-)
+If regulator was disabled before suspend then it has to be enabled
+during suspend_enable() call which is exactly what max77686_enable does.
+If it was enabled then nothing happens.
 
--- 
 Best regards,
-Alexander Sverdlin.
+Krzysztof
