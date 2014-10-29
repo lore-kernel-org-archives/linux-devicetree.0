@@ -1,64 +1,41 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH 09/11] irqchip: bcm7120-l2: Use gc->mask_cache to simplify suspend/resume functions
-Date: Tue, 28 Oct 2014 20:58:56 -0700
-Message-ID: <1414555138-6500-9-git-send-email-cernekee@gmail.com>
+Subject: [PATCH 04/11] irqchip: Remove ARM dependency for bcm7120-l2 and brcmstb-l2
+Date: Tue, 28 Oct 2014 20:58:51 -0700
+Message-ID: <1414555138-6500-4-git-send-email-cernekee@gmail.com>
 References: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-The cached value already incorporates irq_fwd_mask, and was saved the
-last time an IRQ was enabled/disabled.
+This can compile for MIPS (or anything else) now.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- drivers/irqchip/irq-bcm7120-l2.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ drivers/irqchip/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
-index e9331f8..c76c9ad 100644
---- a/drivers/irqchip/irq-bcm7120-l2.c
-+++ b/drivers/irqchip/irq-bcm7120-l2.c
-@@ -37,7 +37,6 @@ struct bcm7120_l2_intc_data {
- 	bool can_wake;
- 	u32 irq_fwd_mask;
- 	u32 irq_map_mask;
--	u32 saved_mask;
- };
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 6f0e80b..6a03c65 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -53,7 +53,6 @@ config ATMEL_AIC5_IRQ
  
- static void bcm7120_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
-@@ -62,14 +61,11 @@ static void bcm7120_l2_intc_suspend(struct irq_data *d)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
- 	struct bcm7120_l2_intc_data *b = gc->private;
--	u32 reg;
- 
- 	irq_gc_lock(gc);
--	/* Save the current mask and the interrupt forward mask */
--	b->saved_mask = irq_reg_readl(b->base + IRQEN) | b->irq_fwd_mask;
- 	if (b->can_wake) {
--		reg = b->saved_mask | gc->wake_active;
--		irq_reg_writel(reg, b->base + IRQEN);
-+		irq_reg_writel(gc->mask_cache | gc->wake_active,
-+			       b->base + IRQEN);
- 	}
- 	irq_gc_unlock(gc);
- }
-@@ -77,11 +73,10 @@ static void bcm7120_l2_intc_suspend(struct irq_data *d)
- static void bcm7120_l2_intc_resume(struct irq_data *d)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
--	struct bcm7120_l2_intc_data *b = gc->private;
- 
- 	/* Restore the saved mask */
- 	irq_gc_lock(gc);
--	irq_reg_writel(b->saved_mask, b->base + IRQEN);
-+	irq_reg_writel(gc->mask_cache, b->base + IRQEN);
- 	irq_gc_unlock(gc);
- }
+ config BRCMSTB_L2_IRQ
+ 	bool
+-	depends on ARM
+ 	select GENERIC_IRQ_CHIP
+ 	select IRQ_DOMAIN
  
 -- 
 2.1.1
