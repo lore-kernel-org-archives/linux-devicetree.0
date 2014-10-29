@@ -1,14 +1,14 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 02/11] irqchip: brcmstb-l2: Eliminate dependency on ARM
- code
-Date: Wed, 29 Oct 2014 09:53:13 -0700
-Message-ID: <54511B79.9080005@gmail.com>
-References: <1414555138-6500-1-git-send-email-cernekee@gmail.com> <1414555138-6500-2-git-send-email-cernekee@gmail.com>
+Subject: Re: [PATCH 04/11] irqchip: Remove ARM dependency for bcm7120-l2 and
+ brcmstb-l2
+Date: Wed, 29 Oct 2014 09:53:42 -0700
+Message-ID: <54511B96.4000304@gmail.com>
+References: <1414555138-6500-1-git-send-email-cernekee@gmail.com> <1414555138-6500-4-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1414555138-6500-2-git-send-email-cernekee@gmail.com>
+In-Reply-To: <1414555138-6500-4-git-send-email-cernekee@gmail.com>
 Sender: linux-mips-bounce@linux-mips.org
 Errors-to: linux-mips-bounce@linux-mips.org
 List-help: <mailto:ecartis@linux-mips.org?Subject=help>
@@ -23,48 +23,26 @@ Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr,
 List-Id: devicetree@vger.kernel.org
 
 On 10/28/2014 08:58 PM, Kevin Cernekee wrote:
-> The irq-brcmstb-l2 driver has a single dependency on the ARM code, the
-> do_bad_IRQ macro.  Expand this macro in-place so that the driver can be
-> built on non-ARM platforms.
+> This can compile for MIPS (or anything else) now.
 > 
 > Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 
 > ---
->  drivers/irqchip/irq-brcmstb-l2.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+>  drivers/irqchip/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
-> index c15c840..c9bdf20 100644
-> --- a/drivers/irqchip/irq-brcmstb-l2.c
-> +++ b/drivers/irqchip/irq-brcmstb-l2.c
-> @@ -19,6 +19,7 @@
->  #include <linux/slab.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> +#include <linux/spinlock.h>
->  #include <linux/of.h>
->  #include <linux/of_irq.h>
->  #include <linux/of_address.h>
-> @@ -30,8 +31,6 @@
->  #include <linux/irqchip.h>
->  #include <linux/irqchip/chained_irq.h>
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index 6f0e80b..6a03c65 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -53,7 +53,6 @@ config ATMEL_AIC5_IRQ
 >  
-> -#include <asm/mach/irq.h>
-> -
->  #include "irqchip.h"
->  
->  /* Register offsets in the L2 interrupt controller */
-> @@ -63,7 +62,9 @@ static void brcmstb_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
->  		~(__raw_readl(b->base + CPU_MASK_STATUS));
->  
->  	if (status == 0) {
-> -		do_bad_IRQ(irq, desc);
-> +		raw_spin_lock(&desc->lock);
-> +		handle_bad_irq(irq, desc);
-> +		raw_spin_unlock(&desc->lock);
->  		goto out;
->  	}
+>  config BRCMSTB_L2_IRQ
+>  	bool
+> -	depends on ARM
+>  	select GENERIC_IRQ_CHIP
+>  	select IRQ_DOMAIN
 >  
 > 
