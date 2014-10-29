@@ -1,163 +1,135 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: Re: [RFC Patch] gpio: add GPIO hogging mechanism
-Date: Wed, 29 Oct 2014 14:36:51 -0500
-Message-ID: <20141029193651.GE29965@ti.com>
-References: <1413922198-29373-1-git-send-email-bparrot@ti.com>
- <3D00ADB3-00B3-40A8-8263-444BCADDAC33@gmail.com>
- <20141029163445.GB29965@ti.com>
- <2BA5D07E-B5EF-49E1-BFD2-310A6C5F3FE4@gmail.com>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH RESEND V4 4/9] pinctrl: tegra-xusb: Add USB PHY support
+Date: Wed, 29 Oct 2014 12:43:36 -0700
+Message-ID: <CAL1qeaF53VUEcn6OruxjufEXnPxyoqp4=sLUuhvJcrpGH=707A@mail.gmail.com>
+References: <1414535277-15645-1-git-send-email-abrestic@chromium.org>
+	<1414535277-15645-5-git-send-email-abrestic@chromium.org>
+	<20141029122738.GE28356@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2BA5D07E-B5EF-49E1-BFD2-310A6C5F3FE4@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141029122738.GE28356@ulmo.nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Pantelis Antoniou <pantelis.antoniou@gmail.com> wrote on Wed [2014-Oct-=
-29 18:42:48 +0200]:
-> Hi Benoit,
->=20
-> > On Oct 29, 2014, at 18:34 , Benoit Parrot <bparrot@ti.com> wrote:
-> >=20
-> > Pantelis,
-> >=20
-> > Thanks for the feedback.
-> >=20
-> > Pantelis Antoniou <pantelis.antoniou@gmail.com> wrote on Wed [2014-=
-Oct-29 10:53:44 +0200]:
-> >> Hi Benoit,
-> >>=20
-> >>> On Oct 21, 2014, at 23:09 , Benoit Parrot <bparrot@ti.com> wrote:
-> >>>=20
-> >>> Based on Boris Brezillion work this is a reworked patch
-> >>> of his initial GPIO hogging mechanism.
-> >>> This patch provides a way to initally configure specific GPIO
-> >>> when the gpio controller is probe.
-> >>>=20
-> >>> The actual DT scanning to collect the GPIO specific data is perfo=
-rmed
-> >>> as part of the gpiochip_add().
-> >>>=20
-> >>> The purpose of this is to allows specific GPIOs to be configured
-> >>> without any driver specific code.
-> >>> This particularly usueful because board design are getting
-> >>> increassingly complex and given SoC pins can now have upward
-> >>> of 10 mux values a lot of connections are now dependent on
-> >>> external IO muxes to switch various modes and combination.
-> >>>=20
-> >>> Specific drivers should not necessarily need to be aware of
-> >>> what accounts to a specific board implementation. This board leve=
-l
-> >>> "description" should be best kept as part of the dts file.
-> >>>=20
-> >>=20
-> >> This look like it=E2=80=99s going to the right direction. I have a=
- few general
-> >> comments at first.
-> >>=20
-> >> 1) It relies on dubious DT binding of having sub-nodes of the
-> >> gpio device implicitly defining hogs.
-> >=20
-> > I think in this instance the nodes are explicitly defining hogs.
-> > Please clarify. What would you like to see here?
-> >>=20
->=20
-> Any subnodes are implicitly taken as hog definitions. This is not rig=
-ht because
-> gpio controllers might have subnodes that they use for another purpos=
-e.
+>> diff --git a/drivers/pinctrl/pinctrl-tegra-xusb.c b/drivers/pinctrl/pinctrl-tegra-xusb.c
+> [...]
+>>  struct tegra_xusb_padctl_function {
+>>       const char *name;
+>>       const char * const *groups;
+>> @@ -72,6 +222,16 @@ struct tegra_xusb_padctl_soc {
+>>
+>>       const struct tegra_xusb_padctl_lane *lanes;
+>>       unsigned int num_lanes;
+>> +
+>> +     u32 rx_wander;
+>> +     u32 rx_eq;
+>> +     u32 cdr_cntl;
+>> +     u32 dfe_cntl;
+>> +     u32 hs_slew;
+>> +     u32 ls_rslew[TEGRA_XUSB_UTMI_PHYS];
+>> +     u32 hs_discon_level;
+>> +     u32 spare_in;
+>> +     int hsic_port_offset;
+>
+> unsigned int? Are these values all SoC-specific or can they vary per
+> board?
 
-I think I see what you mean.
-Even though "gpio-hog =3D <&phandle>" guarantee that only those sub-nod=
-e
-are going to be parsed, if a particular gpio-controller has sub-node fo=
-r
-some other reason then the "hog" related sub-node might be in the way.
+Yes, all the members I added to struct tegra_xusb_pactl_soc are SoC-specific.
 
-Do you know of such an example currently in mainline I can take a look =
-at?
+>> +
+>> +     for (i = 0; i < TEGRA_XUSB_USB3_PHYS; i++) {
+>> +             if (phy == padctl->phys[TEGRA_XUSB_PADCTL_USB3_P0 + i])
+>> +                     break;
+>
+> You could simply return i here and then BUG_ON unconditionally.
+>
+>> +     }
+>> +     BUG_ON(i == TEGRA_XUSB_USB3_PHYS);
+>> +
+>> +     return i;
+>> +}
+>
+> Actually, thinking about it some more, perhaps making this a WARN_ON()
+> and returning an error so that we can continue and propagate the error
+> would be more useful. BUG_ON() will completely hang the kernel with no
+> way out but rebooting. WARN_ON() will give a hint about something being
+> wrong and returning an error will allow the kernel to continue to run,
+> which might be the only way to diagnose and fix the problem, even if it
+> means that USB 3.0 support will be disabled.
 
->=20
-> >> 2) There is no way for having hogs inserted dynamically as far as =
-I can tell, and
-> >> no way to remove a hog either.
-> >=20
-> > The original patch was allowing that but, Linus's review comment su=
-ggested this feature be=20
-> > part of the gpio-controller's gpiochip_add() hook only.
-> >=20
->=20
-> If it=E2=80=99s not possible to remove a hog, then it=E2=80=99s no go=
-od for my use case in which
-> the gpios get exported and then removed.
+I felt like BUG_ON is more appropriate here.  Hitting this case means
+there's a bug in the PHY core or a driver has passed a bogus pointer
+and the stack dump produced by the BUG_ON should make it obvious as to
+what the issue is.  I don't feel too strongly about it though.
 
-I guess if we add the export feature then that could be possible.
-But if I am not mistaken the hog concept was to allow gpio setting
-for gpio not belonging to any particular drivers.
-If you have gpio which needs to be released then would they fall in
-the "own" by a driver category and which case use the exixting method?=20
->=20
-> >>=20
-> >> 3) I=E2=80=99m not very fond of having this being part of the gpio=
- controller. This
-> >> configuration conceptually has little to do with the gpio controll=
-er per se,
-> >> it is more of a board specific thing. Why not come up with a gpio-=
-hog driver that
-> >> references GPIOs? That way with a single gpio-hog driver instance =
-you could setup
-> >> all the GPIO-hogging configuration for all GPIOs on the board, eve=
-n one that
-> >> lie on different GPIO controllers.
-> >=20
-> > Again this follows Linus's review comment.
-> > I agree that it prevent a centralize spot where all hog would be de=
-fined but it has the advantages of not relying on PROBE_DEFER.
-> > I mean since all "gpio-hogs" would be defined in a single board dts=
- file it would not be that hard to figure out the big picture anyways.
-> >=20
->=20
-> There won=E2=80=99t be a single board dts file if you=E2=80=99re usin=
-g things like overlays.
-I see, I had not consider that.
+>> +     u32 value, offset;
+>> +
+>> +     padctl->usb3_ports[port].context_saved = true;
+>
+> What's the purpose of saving the context here? This seems to be
+> triggered by a request from XUSB, but it's then restored when the PHY is
+> powered on. How does that even happen? Won't the PHY stay powered all
+> the time? Or shouldn't the context be saved when powering off the PHY?
 
-A generic board level gpio driver would be a different option I guess.
+Right, context is saved when requested by the XUSB controller and
+restored on power on.  This is used during runtime power-gating or LP0
+where the PHYs are powered off and on and this context is lost.
+Neither of these are currently implemented by the host driver,
+however.
 
->=20
-> >>=20
-> >>=20
-> >>> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> >>> ---
-> >>> Documentation/devicetree/bindings/gpio/gpio.txt | 33 +++++++++
-> >>> drivers/gpio/gpiolib-of.c                       | 99 ++++++++++++=
-+++++++++++++
-> >>> drivers/gpio/gpiolib.c                          | 81 ++++++++++++=
-++++++++
-> >>> include/linux/of_gpio.h                         | 11 +++
-> >>> 4 files changed, 224 insertions(+)
-> >>>=20
-> >>=20
-> >> Regards
-> >>=20
-> >> =E2=80=94 Pantelis
-> >>=20
-> >=20
-> > Regards,
-> > Benoit
->=20
-> Regards
->=20
-> =E2=80=94 Pantelis
->=20
+As far as why the context is saved upon request and not at power off,
+I'm not sure.  I've observed that these messages come in when a USB3.0
+device is enumerated.  Perhaps the XUSB controller is doing some sort
+of tuning.
 
-Regards,
-Benoit
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> @@ -936,6 +2098,18 @@ static int tegra_xusb_padctl_probe(struct platform_device *pdev)
+>>               goto unregister;
+>>       }
+>>
+>> +     INIT_WORK(&padctl->mbox_req_work, tegra_xusb_phy_mbox_work);
+>> +     padctl->mbox_client.dev = &pdev->dev;
+>> +     padctl->mbox_client.tx_block = true;
+>> +     padctl->mbox_client.tx_tout = 0;
+>> +     padctl->mbox_client.rx_callback = tegra_xusb_phy_mbox_rx;
+>> +     padctl->mbox_chan = mbox_request_channel(&padctl->mbox_client, 0);
+>> +     if (IS_ERR(padctl->mbox_chan)) {
+>> +             err = PTR_ERR(padctl->mbox_chan);
+>> +             dev_err(&pdev->dev, "failed to request mailbox: %d\n", err);
+>> +             goto unregister;
+>> +     }
+>
+> I think this should be done before the registering the PHY provider so
+> that we don't expose one (even for only a very short time) before we
+> haven't made sure that it can be used.
+>
+> Also, this effectively makes the mailbox mandatory, which means that the
+> above code is going to break on older DTBs. So I think we have no choice
+> but to make mailbox (and hence XUSB) support optional.
+
+I understand the need for binding stability, but it's not like these
+bindings have been around for very long (a release or two?) and this
+series has existed for almost the same amount of time.  Are there
+really any DTBs out there that are going to break because of this?
+
+>> diff --git a/include/soc/tegra/xusb.h b/include/soc/tegra/xusb.h
+>> index cfe211d..149434f 100644
+>> --- a/include/soc/tegra/xusb.h
+>> +++ b/include/soc/tegra/xusb.h
+>> @@ -10,6 +10,13 @@
+>>  #ifndef __SOC_TEGRA_XUSB_H__
+>>  #define __SOC_TEGRA_XUSB_H__
+>>
+>> +#define TEGRA_XUSB_USB3_PHYS 2
+>> +#define TEGRA_XUSB_UTMI_PHYS 3
+>> +#define TEGRA_XUSB_HSIC_PHYS 2
+>> +#define TEGRA_XUSB_NUM_USB_PHYS (TEGRA_XUSB_USB3_PHYS + TEGRA_XUSB_UTMI_PHYS + \
+>> +                              TEGRA_XUSB_HSIC_PHYS)
+>> +#define TEGRA_XUSB_NUM_PHYS (TEGRA_XUSB_NUM_USB_PHYS + 2) /* + SATA & PCIe */
+>
+> These are really XUSB pad controller specific defines, why does anyone
+> else need to know this?
+
+They're not pad controller specific.  They're also used in the xHCI host driver.
