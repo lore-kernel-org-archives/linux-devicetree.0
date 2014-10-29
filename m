@@ -1,88 +1,70 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: Re: [PATCH 01/11] irqchip: Allow irq_reg_{readl,writel} to use __raw_{readl_writel}
-Date: Wed, 29 Oct 2014 16:05:21 -0700
-Message-ID: <CAJiQ=7DWEr9Oej6=+3vqKL_fJd2-wvQjx2Xw4dYwyE3AGDXOUA@mail.gmail.com>
-References: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
- <5338153.4SY4TFtus9@wuerfel> <CAJiQ=7C7SzT2ngQzP=dQqdQz=+ShJ_Jf0z4kwFgvUKg1G3vrAw@mail.gmail.com>
- <22478002.kqKBdeLAKz@wuerfel>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [RFC Patch] gpio: add GPIO hogging mechanism
+Date: Wed, 29 Oct 2014 18:09:12 -0500
+Message-ID: <20141029230912.GF29965@ti.com>
+References: <1413922198-29373-1-git-send-email-bparrot@ti.com>
+ <20141029104559.GC21251@lukather>
+ <20141029164122.GC29965@ti.com>
+ <20141029164746.GD21251@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <22478002.kqKBdeLAKz@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141029164746.GD21251@lukather>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 29, 2014 at 2:13 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wednesday 29 October 2014 13:09:47 Kevin Cernekee wrote:
->> On Wed, Oct 29, 2014 at 12:14 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> >> The host CPU is connected to the peripheral/register interface using a
->> >> 32-bit wide data bus.  A simple 32-bit store originating from the host
->> >> CPU, targeted to an onchip SoC peripheral, will never need endian
->> >> swapping.  i.e. this code works equally well on all supported systems
->> >> regardless of endianness:
->> >>
->> >>     volatile u32 *foo = (void *)MY_REG_VA;
->> >>     *foo = 0x12345678;
->> >>
->> >> 8-bit and 16-bit accesses may be another story, but only appear in a
->> >> few very special peripherals.
->> >
->> > Sorry, but this makes no sense. If you run a little-endian kernel
->> > on one of the MIPS systems that you marked as "always BE", or a
->> > big-endian kernel on the systems that are marked "always LE",
->> > then you have to byte swap.
->>
->> If I ran an LE MIPS kernel on a BE system, it would hang on boot.  I
->> know this through experience.
->
-> What is a "BE system" then? Is the CPU core not capable of running
-> code either way?
+Maxime Ripard <maxime.ripard@free-electrons.com> wrote on Wed [2014-Oct-29 17:47:46 +0100]:
+> On Wed, Oct 29, 2014 at 11:41:22AM -0500, Benoit Parrot wrote:
+> > Maxime Ripard <maxime.ripard@free-electrons.com> wrote on Wed [2014-Oct-29 11:45:59 +0100]:
+> > > Hi,
+> > > 
+> > > On Tue, Oct 21, 2014 at 03:09:58PM -0500, Benoit Parrot wrote:
+> > > > Based on Boris Brezillion work this is a reworked patch
+> > > > of his initial GPIO hogging mechanism.
+> > > > This patch provides a way to initally configure specific GPIO
+> > > > when the gpio controller is probe.
+> > > > 
+> > > > The actual DT scanning to collect the GPIO specific data is performed
+> > > > as part of the gpiochip_add().
+> > > > 
+> > > > The purpose of this is to allows specific GPIOs to be configured
+> > > > without any driver specific code.
+> > > > This particularly usueful because board design are getting
+> > > > increassingly complex and given SoC pins can now have upward
+> > > > of 10 mux values a lot of connections are now dependent on
+> > > > external IO muxes to switch various modes and combination.
+> > > > 
+> > > > Specific drivers should not necessarily need to be aware of
+> > > > what accounts to a specific board implementation. This board level
+> > > > "description" should be best kept as part of the dts file.
+> > > > 
+> > > > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > > 
+> > > I've been thinking about this for quite some time, it's good to see
+> > > some progress on that :)
+> > > 
+> > > However, I have a slightly different use case for it: the Allwinner
+> > > SoCs have a vdd pin coming in for every gpio bank. Nothing out of the
+> > > ordinary so far, except that some of the boards are using a
+> > > GPIO-controlled regulator to feed another bank vdd. That obviously
+> > > causes a chicken-egg issue, since for the gpio-regulator driver to
+> > > probe, it needs to gpio driver, and for the gpio driver to probe, it
+> > > needs the regulator driver.
+> > 
+> > Unless the gpio controlling the vdd pin is from the same bank your
+> > trying to power up I do not see the issue here.
+> 
+> Not the same bank, but the same driver.
 
-On the MIPS BCM7xxx chips, LE/BE support was a design requirement.  So:
+How are you currently working around this issue?
 
- - The chips include a strap pin for LE/BE so it can be configured
-through board jumpers.  This is the only supported method of switching
-endianness.
+> 
+> -- 
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
 
- - Endianness interactions and performance concerns have been analyzed
-for all peripherals, buses, and data flows.
 
- - As Florian mentioned earlier, the LE/BE strap preconfigures several
-hardware blocks at boot time, e.g. telling the SPI controller how to
-arrange the incoming data such that the MSB of each instruction word
-read from flash shows up in the right place.
-
- - The entire software stack (and even the cross toolchain) needs to
-be compiled for either LE or BE.
-
-So in this context a "BE system" is a BCM7xxx MIPS chip strapped for
-BE, or one of the BCM33xx/BCM63xx/BCM68xx MIPS chips that is hardwired
-and verified for BE only.
-
->> Does this actually work on other architectures like ARM?  I still see
->> compile-time checks for CONFIG_CPU_ENDIAN* in a couple of places under
->> arch/arm.
->
-> Yes, it should work on any architecture that supports both modes. It
-> definitely works on all ARM cores I know, and on most PowerPC cores.
-> I always assumed that MIPS was bi-endian as well, but according to
-> what you say I guess it is not.
->
-> ARM and PowerPC can actually switch endianess in the kernel, and this
-> is what they do in the first instruction when you run a different
-> endianess from what the boot loader runs as it calls into the kernel.
-> The ARM boot protocol requires entering the kernel in little-endian
-> mode, while I think on PowerPC the boot loader is supposed to detect
-> the format of the kernel binary and pick the right mode before calling
-> it.
-
-Is it the intention to allow runtime endian switching on any
-ARM/PowerPC platform (even the Samsung products you mentioned)?  Or
-only on the boards that were designed to operate this way?
-
-Our problem becomes much simpler if we assume that the majority of
-systems have a fixed endianness, and only a few special cases need to
-accommodate the different kernel/register endianness permutations
-you've listed.
