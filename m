@@ -1,315 +1,170 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] of: spi: Export single device registration method and accessors (v2)
-Date: Wed, 29 Oct 2014 10:40:37 +0200
-Message-ID: <1414572037-11306-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Becker <jlbec-aKy9MeLSZ9dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ke
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v5 07/12] leds: leds-gpio: Add support for GPIO
+ descriptors
+Date: Wed, 29 Oct 2014 10:53:06 +0200
+Message-ID: <20141029085306.GI1304@lahna.fi.intel.com>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan>
+ <3395005.IveyhHQnye@vostro.rjw.lan>
+ <CACRpkdYR70Az1uLyjsaujQN-q-4+qRD=GpqJaOuvnKZhypL=cA@mail.gmail.com>
+ <17483842.EFni4iQX1H@vostro.rjw.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <17483842.EFni4iQX1H@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Dynamically inserting spi device nodes requires the use of a single
-device registration method. Rework and export it.
+On Tue, Oct 28, 2014 at 10:56:09PM +0100, Rafael J. Wysocki wrote:
+> On Tuesday, October 28, 2014 04:26:25 PM Linus Walleij wrote:
+> > On Fri, Oct 17, 2014 at 2:11 PM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > 
+> > > From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > >
+> > > GPIO descriptors are the preferred way over legacy GPIO numbers
+> > > nowadays. Convert the driver to use GPIO descriptors internally but
+> > > still allow passing legacy GPIO numbers from platform data to support
+> > > existing platforms.
+> > >
+> > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > Acked-by: Alexandre Courbot <acourbot@nvidia.com>
+> > > Acked-by: Bryan Wu <cooloney@gmail.com>
+> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > (...)
+> > 
+> > >         if (led_dat->blinking) {
+> > > -               led_dat->platform_gpio_blink_set(led_dat->gpio,
+> > > -                                                led_dat->new_level,
+> > > -                                                NULL, NULL);
+> > > +               int gpio = desc_to_gpio(led_dat->gpiod);
+> > > +               int level = led_dat->new_level;
+> > 
+> > So this desc_to_gpio() is done only to call the legacy callback below?
+> > 
+> > > +               if (gpiod_is_active_low(led_dat->gpiod))
+> > > +                       level = !level;
+> > 
+> > And that leads to making it necessary to have this helper variable
+> > to invert the level since that callback does not pass a descriptor
+> > (which would inherently know if it's active low)....
+> > 
+> > > +
+> > > +               led_dat->platform_gpio_blink_set(gpio, level, NULL, NULL);
+> > 
+> > Is it *really* impossible to change all the users of this callback?
+> 
+> You said it could be done in a followup patch.  Here:
+> http://marc.info/?l=linux-acpi&m=141154536921643&w=4
+> 
+> And Mika said he would add that to his TODO list:
+> http://marc.info/?l=linux-acpi&m=141155173924101&w=4
+> 
+> I suppose that is still valid.
 
-Methods to lookup a device/master using a device node are added
-as well, of_find_spi_master_by_node() & of_find_spi_device_by_node().
+Yes, I'll just let dust to settle before sending out a patch that
+converts the existing users of platform_gpio_blink_set() callback to
+gpio descriptors.
 
-Changes since v1:
-* Brown paper bug with parameter on of_register_spi_device().
+> 
+> > 
+> > >                 led_dat->blinking = 0;
+> > >         } else
+> > > -               gpio_set_value_cansleep(led_dat->gpio, led_dat->new_level);
+> > > +               gpiod_set_value_cansleep(led_dat->gpiod, led_dat->new_level);
+> > 
+> > (...)
+> > >         /* Setting GPIOs with I2C/etc requires a task context, and we don't
+> > >          * seem to have a reliable way to know if we're already in one; so
+> > >          * let's just assume the worst.
+> > > @@ -72,11 +73,16 @@ static void gpio_led_set(struct led_clas
+> > >                 schedule_work(&led_dat->work);
+> > >         } else {
+> > >                 if (led_dat->blinking) {
+> > > -                       led_dat->platform_gpio_blink_set(led_dat->gpio, level,
+> > > -                                                        NULL, NULL);
+> > > +                       int gpio = desc_to_gpio(led_dat->gpiod);
+> > > +
+> > > +                       if (gpiod_is_active_low(led_dat->gpiod))
+> > > +                               level = !level;
+> > > +
+> > > +                       led_dat->platform_gpio_blink_set(gpio, level, NULL,
+> > > +                                                        NULL);
+> > 
+> > Same comment.
+> > 
+> > > @@ -85,9 +91,10 @@ static int gpio_blink_set(struct led_cla
+> > >  {
+> > >         struct gpio_led_data *led_dat =
+> > >                 container_of(led_cdev, struct gpio_led_data, cdev);
+> > > +       int gpio = desc_to_gpio(led_dat->gpiod);
+> > >
+> > >         led_dat->blinking = 1;
+> > > -       return led_dat->platform_gpio_blink_set(led_dat->gpio, GPIO_LED_BLINK,
+> > > +       return led_dat->platform_gpio_blink_set(gpio, GPIO_LED_BLINK,
+> > >                                                 delay_on, delay_off);
+> > 
+> > Same comment.
+> > 
+> > > @@ -97,24 +104,33 @@ static int create_gpio_led(const struct
+> > >  {
+> > >         int ret, state;
+> > >
+> > > -       led_dat->gpio = -1;
+> > > +       if (!template->gpiod) {
+> > > +               unsigned long flags = 0;
+> > >
+> > > -       /* skip leds that aren't available */
+> > > -       if (!gpio_is_valid(template->gpio)) {
+> > > -               dev_info(parent, "Skipping unavailable LED gpio %d (%s)\n",
+> > > -                               template->gpio, template->name);
+> > > -               return 0;
+> > > +               /* skip leds that aren't available */
+> > > +               if (!gpio_is_valid(template->gpio)) {
+> > > +                       dev_info(parent, "Skipping unavailable LED gpio %d (%s)\n",
+> > > +                                       template->gpio, template->name);
+> > > +                       return 0;
+> > > +               }
+> > > +
+> > > +               if (template->active_low)
+> > > +                       flags |= GPIOF_ACTIVE_LOW;
+> > > +
+> > > +               ret = devm_gpio_request_one(parent, template->gpio, flags,
+> > > +                                           template->name);
+> > > +               if (ret < 0)
+> > > +                       return ret;
+> > > +
+> > > +               led_dat->gpiod = gpio_to_desc(template->gpio);
+> > > +               if (IS_ERR(led_dat->gpiod))
+> > > +                       return PTR_ERR(led_dat->gpiod);
+> > >         }
+> > 
+> > OK so this is the legacy codepath: point it out in a big fat
+> > comment that this is the legacy codepath.
+> 
+> That looks like it could be done in a followup patch too.
+> 
+> Since the series is in my linux-next branch at this point, I really wouldn't
+> like to reshuffle commits in it if that can be avoided.
+> 
+> > > Index: linux-pm/include/linux/leds.h
+> > > ===================================================================
+> > > --- linux-pm.orig/include/linux/leds.h
+> > > +++ linux-pm/include/linux/leds.h
+> > > @@ -251,6 +251,7 @@ struct gpio_led {
+> > >         unsigned        retain_state_suspended : 1;
+> > >         unsigned        default_state : 2;
+> > >         /* default_state should be one of LEDS_GPIO_DEFSTATE_(ON|OFF|KEEP) */
+> > > +       struct gpio_desc *gpiod;
+> > 
+> > Put the new struct member right below the current "gpio"
+> > member,
+> 
+> It was done like that in previous versions, but turned out to cause problems
+> to happen in testing.  Unfortunately, I don't seem to be able to find a pointer
+> to the original report ATM, but perhaps Mika can.  Mika?
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
----
- drivers/spi/spi.c | 255 +++++++++++++++++++++++++++++++++---------------------
- 1 file changed, 157 insertions(+), 98 deletions(-)
+It is burried inside this thread:
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index ebcb33d..4778366 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1220,6 +1220,122 @@ err_init_queue:
- /*-------------------------------------------------------------------------*/
- 
- #if defined(CONFIG_OF)
-+
-+static struct spi_device *
-+of_register_spi_device(struct spi_master *master, struct device_node *nc)
-+{
-+	struct spi_device *spi;
-+	int rc;
-+	u32 value;
-+
-+	/* Alloc an spi_device */
-+	spi = spi_alloc_device(master);
-+	if (!spi) {
-+		dev_err(&master->dev, "spi_device alloc error for %s\n",
-+			nc->full_name);
-+		rc = -ENOMEM;
-+		goto err_out;
-+	}
-+
-+	/* Select device driver */
-+	rc = of_modalias_node(nc, spi->modalias,
-+				sizeof(spi->modalias));
-+	if (rc < 0) {
-+		dev_err(&master->dev, "cannot find modalias for %s\n",
-+			nc->full_name);
-+		goto err_out;
-+	}
-+
-+	/* Device address */
-+	rc = of_property_read_u32(nc, "reg", &value);
-+	if (rc) {
-+		dev_err(&master->dev, "%s has no valid 'reg' property (%d)\n",
-+			nc->full_name, rc);
-+		goto err_out;
-+	}
-+	spi->chip_select = value;
-+
-+	/* Mode (clock phase/polarity/etc.) */
-+	if (of_find_property(nc, "spi-cpha", NULL))
-+		spi->mode |= SPI_CPHA;
-+	if (of_find_property(nc, "spi-cpol", NULL))
-+		spi->mode |= SPI_CPOL;
-+	if (of_find_property(nc, "spi-cs-high", NULL))
-+		spi->mode |= SPI_CS_HIGH;
-+	if (of_find_property(nc, "spi-3wire", NULL))
-+		spi->mode |= SPI_3WIRE;
-+	if (of_find_property(nc, "spi-lsb-first", NULL))
-+		spi->mode |= SPI_LSB_FIRST;
-+
-+	/* Device DUAL/QUAD mode */
-+	if (!of_property_read_u32(nc, "spi-tx-bus-width", &value)) {
-+		switch (value) {
-+		case 1:
-+			break;
-+		case 2:
-+			spi->mode |= SPI_TX_DUAL;
-+			break;
-+		case 4:
-+			spi->mode |= SPI_TX_QUAD;
-+			break;
-+		default:
-+			dev_warn(&master->dev,
-+				"spi-tx-bus-width %d not supported\n",
-+				value);
-+			break;
-+		}
-+	}
-+
-+	if (!of_property_read_u32(nc, "spi-rx-bus-width", &value)) {
-+		switch (value) {
-+		case 1:
-+			break;
-+		case 2:
-+			spi->mode |= SPI_RX_DUAL;
-+			break;
-+		case 4:
-+			spi->mode |= SPI_RX_QUAD;
-+			break;
-+		default:
-+			dev_warn(&master->dev,
-+				"spi-rx-bus-width %d not supported\n",
-+				value);
-+			break;
-+		}
-+	}
-+
-+	/* Device speed */
-+	rc = of_property_read_u32(nc, "spi-max-frequency", &value);
-+	if (rc) {
-+		dev_err(&master->dev, "%s has no valid 'spi-max-frequency' property (%d)\n",
-+			nc->full_name, rc);
-+		goto err_out;
-+	}
-+	spi->max_speed_hz = value;
-+
-+	/* IRQ */
-+	spi->irq = irq_of_parse_and_map(nc, 0);
-+
-+	/* Store a pointer to the node in the device structure */
-+	of_node_get(nc);
-+	spi->dev.of_node = nc;
-+
-+	/* Register the new device */
-+	request_module("%s%s", SPI_MODULE_PREFIX, spi->modalias);
-+	rc = spi_add_device(spi);
-+	if (rc) {
-+		dev_err(&master->dev, "spi_device register error %s\n",
-+			nc->full_name);
-+		goto err_out;
-+	}
-+
-+	return spi;
-+
-+err_out:
-+	spi_dev_put(spi);
-+	return ERR_PTR(rc);
-+}
-+
- /**
-  * of_register_spi_devices() - Register child devices onto the SPI bus
-  * @master:	Pointer to spi_master device
-@@ -1229,120 +1345,63 @@ err_init_queue:
-  */
- static void of_register_spi_devices(struct spi_master *master)
- {
--	struct spi_device *spi;
- 	struct device_node *nc;
--	int rc;
--	u32 value;
-+	struct spi_device *spi;
- 
- 	if (!master->dev.of_node)
- 		return;
- 
- 	for_each_available_child_of_node(master->dev.of_node, nc) {
--		/* Alloc an spi_device */
--		spi = spi_alloc_device(master);
--		if (!spi) {
--			dev_err(&master->dev, "spi_device alloc error for %s\n",
-+		spi = of_register_spi_device(master, nc);
-+		if (IS_ERR(spi))
-+			dev_warn(&master->dev, "Failed to create SPI device for %s\n",
- 				nc->full_name);
--			spi_dev_put(spi);
--			continue;
--		}
-+	}
-+}
- 
--		/* Select device driver */
--		if (of_modalias_node(nc, spi->modalias,
--				     sizeof(spi->modalias)) < 0) {
--			dev_err(&master->dev, "cannot find modalias for %s\n",
--				nc->full_name);
--			spi_dev_put(spi);
--			continue;
--		}
-+static int of_dev_node_match(struct device *dev, void *data)
-+{
-+	return dev->of_node == data;
-+}
- 
--		/* Device address */
--		rc = of_property_read_u32(nc, "reg", &value);
--		if (rc) {
--			dev_err(&master->dev, "%s has no valid 'reg' property (%d)\n",
--				nc->full_name, rc);
--			spi_dev_put(spi);
--			continue;
--		}
--		spi->chip_select = value;
--
--		/* Mode (clock phase/polarity/etc.) */
--		if (of_find_property(nc, "spi-cpha", NULL))
--			spi->mode |= SPI_CPHA;
--		if (of_find_property(nc, "spi-cpol", NULL))
--			spi->mode |= SPI_CPOL;
--		if (of_find_property(nc, "spi-cs-high", NULL))
--			spi->mode |= SPI_CS_HIGH;
--		if (of_find_property(nc, "spi-3wire", NULL))
--			spi->mode |= SPI_3WIRE;
--		if (of_find_property(nc, "spi-lsb-first", NULL))
--			spi->mode |= SPI_LSB_FIRST;
--
--		/* Device DUAL/QUAD mode */
--		if (!of_property_read_u32(nc, "spi-tx-bus-width", &value)) {
--			switch (value) {
--			case 1:
--				break;
--			case 2:
--				spi->mode |= SPI_TX_DUAL;
--				break;
--			case 4:
--				spi->mode |= SPI_TX_QUAD;
--				break;
--			default:
--				dev_warn(&master->dev,
--					 "spi-tx-bus-width %d not supported\n",
--					 value);
--				break;
--			}
--		}
-+/* bah; the match functions differ just by const-ness */
-+static int of_dev_node_match_const(struct device *dev, const void *data)
-+{
-+	return dev->of_node == data;
-+}
- 
--		if (!of_property_read_u32(nc, "spi-rx-bus-width", &value)) {
--			switch (value) {
--			case 1:
--				break;
--			case 2:
--				spi->mode |= SPI_RX_DUAL;
--				break;
--			case 4:
--				spi->mode |= SPI_RX_QUAD;
--				break;
--			default:
--				dev_warn(&master->dev,
--					 "spi-rx-bus-width %d not supported\n",
--					 value);
--				break;
--			}
--		}
-+/* must call put_device() when done with returned spi_device device */
-+struct spi_device *of_find_spi_device_by_node(struct device_node *node)
-+{
-+	struct device *dev;
- 
--		/* Device speed */
--		rc = of_property_read_u32(nc, "spi-max-frequency", &value);
--		if (rc) {
--			dev_err(&master->dev, "%s has no valid 'spi-max-frequency' property (%d)\n",
--				nc->full_name, rc);
--			spi_dev_put(spi);
--			continue;
--		}
--		spi->max_speed_hz = value;
-+	dev = bus_find_device(&spi_bus_type, NULL, node,
-+					 of_dev_node_match);
-+	if (!dev)
-+		return NULL;
- 
--		/* IRQ */
--		spi->irq = irq_of_parse_and_map(nc, 0);
-+	return to_spi_device(dev);
-+}
-+EXPORT_SYMBOL(of_find_spi_device_by_node);
- 
--		/* Store a pointer to the node in the device structure */
--		of_node_get(nc);
--		spi->dev.of_node = nc;
-+/* forward decl */
-+static struct class spi_master_class;
- 
--		/* Register the new device */
--		request_module("%s%s", SPI_MODULE_PREFIX, spi->modalias);
--		rc = spi_add_device(spi);
--		if (rc) {
--			dev_err(&master->dev, "spi_device register error %s\n",
--				nc->full_name);
--			spi_dev_put(spi);
--		}
-+/* the spi masters are not using spi_bus, so we find it with another way */
-+struct spi_master *of_find_spi_master_by_node(struct device_node *node)
-+{
-+	struct device *dev;
- 
--	}
-+	dev = class_find_device(&spi_master_class, NULL, node,
-+				of_dev_node_match_const);
-+	if (!dev)
-+		return NULL;
-+
-+	/* reference got in class_find_device */
-+	return container_of(dev, struct spi_master, dev);
- }
-+EXPORT_SYMBOL(of_find_spi_master_by_node);
-+
- #else
- static void of_register_spi_devices(struct spi_master *master) { }
- #endif
--- 
-1.7.12
+http://www.spinics.net/lists/arm-kernel/msg369522.html
