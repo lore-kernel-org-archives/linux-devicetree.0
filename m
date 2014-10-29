@@ -1,491 +1,67 @@
-From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCH] arm: dts: socfpga: Add a base DTSI for Altera's Arria10 SOC
-Date: Wed, 29 Oct 2014 10:59:07 -0500
-Message-ID: <1414598347-26769-1-git-send-email-dinguyen@opensource.altera.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH 0/2] Qualcomm PM8941 power key driver
+Date: Wed, 29 Oct 2014 18:07:28 +0200
+Message-ID: <1414598848.32383.4.camel@mm-sol.com>
+References: <1412644321-27683-1-git-send-email-bjorn.andersson@sonymobile.com>
+	 <1412672510.1027.57.camel@iivanov-dev>
+	 <20141007184640.GB31125@sonymobile.com>
+	 <1412761807.13569.12.camel@iivanov-dev>
+	 <20141024152350.GD28611@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141024152350.GD28611@sonymobile.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-The Arria 10 is latest SOC+FPGA from the Altera SOCFPGA platform. The Arria10
-SOC shares some similarities with the SOCFPGA Cyclone5 and Arria5, but there
-are enough differences to warrant a new base dtsi.
 
-The differences are:
-* 3 EMAC controllers
-* 5 I2C controllers
-* 3 SPI controllers
-* 1.5 GHZ dual A9s
-* Support for DDR4
+Hi Bjorn,
 
-Besides the usual memory map and IRQ changes, the clock framework will be
-different, so this patch just adds the fixed-clocks.
+On Fri, 2014-10-24 at 08:23 -0700, Bjorn Andersson wrote:
+> On Wed 08 Oct 02:50 PDT 2014, Ivan T. Ivanov wrote:
+> 
+> > On Tue, 2014-10-07 at 11:46 -0700, Bjorn Andersson wrote:
+> > > On Tue 07 Oct 02:01 PDT 2014, Ivan T. Ivanov wrote:
+> > > 
+> > > > Hi Bjorn,
+> > > > 
+> > > > On Mon, 2014-10-06 at 18:11 -0700, Bjorn Andersson wrote:
+> [..]
+> > > > >  create mode 100644 drivers/input/misc/pm8941-pwrkey.c
+> > > > 
+> > > > Any reason why we cannot reuse pm8xxx-pwrkey driver? It have been
+> > > > converted to regmap already.
+> > > > 
+> > > 
+> > > The boilerplate code is the same,
+> > 
+> > The boilerplate code is almost 100% :-)
+> > 
+> > >  but configuration registers have different
+> > > layout and values written in them are different.
+> > 
+> > We talk about 3 registers and 2 bit defines. struct regmap_field
+> > should be able to help here.
+> > 
+> 
+> You're totally right, we could rewrite the driver to use regmap_field and make
+> the rest of the differences conditional. In my eyes we end up with two drivers
+> in one file - but it can be done.
+> 
+> A difference however is that in pm8941 the ps hold behavious (reboot vs power
+> off) is controlled by this same block. So I have an additional patch that adds
+> a restart handler here that sets the pmic in the right state before we pull
+> pshold (but I haven't been able to test it properly).
+> 
+> In pm8xxx this is handled in the pmic misc block and does not belong in this
+> driver.
 
-Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                  |   1 +
- arch/arm/boot/dts/socfpga_arria10.dtsi      | 374 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/socfpga_arria10_socdk.dts |  48 ++++
- 3 files changed, 423 insertions(+)
- create mode 100644 arch/arm/boot/dts/socfpga_arria10.dtsi
- create mode 100755 arch/arm/boot/dts/socfpga_arria10_socdk.dts
+Ok, Your plan is to bring up support for QPNP power-on PMIC sub function into this
+driver. In this case, I agree, it will be cleaner to have separate driver for this.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 38c89ca..b1905a7 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -397,6 +397,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += emev2-kzm9d.dtb \
- 	r8a7779-marzen.dtb \
- 	r8a7794-alt.dtb
- dtb-$(CONFIG_ARCH_SOCFPGA) += socfpga_arria5_socdk.dtb \
-+	socfpga_arria10_socdk.dtb \
- 	socfpga_cyclone5_socdk.dtb \
- 	socfpga_cyclone5_sockit.dtb \
- 	socfpga_cyclone5_socrates.dtb \
-diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-new file mode 100644
-index 0000000..56d5840
---- /dev/null
-+++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -0,0 +1,374 @@
-+/*
-+ * Copyright Altera Corporation (C) 2014. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include "skeleton.dtsi"
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	aliases {
-+		ethernet0 = &gmac0;
-+		ethernet1 = &gmac1;
-+		ethernet2 = &gmac2;
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		timer0 = &timer0;
-+		timer1 = &timer1;
-+		timer2 = &timer2;
-+		timer3 = &timer3;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "arm,cortex-a9";
-+			device_type = "cpu";
-+			reg = <0>;
-+			next-level-cache = <&L2>;
-+		};
-+		cpu@1 {
-+			compatible = "arm,cortex-a9";
-+			device_type = "cpu";
-+			reg = <1>;
-+			next-level-cache = <&L2>;
-+		};
-+	};
-+
-+	intc: intc@ffffd000 {
-+		compatible = "arm,cortex-a9-gic";
-+		#interrupt-cells = <3>;
-+		interrupt-controller;
-+		reg = <0xffffd000 0x1000>,
-+		      <0xffffc100 0x100>;
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		device_type = "soc";
-+		interrupt-parent = <&intc>;
-+		ranges;
-+
-+		amba {
-+			compatible = "arm,amba-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			pdma: pdma@ffda1000 {
-+				compatible = "arm,pl330", "arm,primecell";
-+				reg = <0xffda1000 0x1000>;
-+				interrupts = <0 83 IRQ_TYPE_LEVEL_HIGH>,
-+					     <0 84 IRQ_TYPE_LEVEL_HIGH>,
-+					     <0 85 IRQ_TYPE_LEVEL_HIGH>,
-+					     <0 86 IRQ_TYPE_LEVEL_HIGH>,
-+					     <0 87 IRQ_TYPE_LEVEL_HIGH>,
-+					     <0 88 IRQ_TYPE_LEVEL_HIGH>,
-+					     <0 89 IRQ_TYPE_LEVEL_HIGH>,
-+					     <0 90 IRQ_TYPE_LEVEL_HIGH>;
-+				#dma-cells = <1>;
-+				#dma-channels = <8>;
-+				#dma-requests = <32>;
-+			};
-+		};
-+
-+		clkmgr@ffd04000 {
-+				compatible = "altr,clk-mgr";
-+				reg = <0xffd04000 0x1000>;
-+
-+				clocks {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					osc1: osc1 {
-+						#clock-cells = <0>;
-+						compatible = "fixed-clock";
-+					};
-+
-+					main_pll: main_pll {
-+						#address-cells = <1>;
-+						#size-cells = <0>;
-+						#clock-cells = <0>;
-+						compatible = "altr,socfpga-pll-clock";
-+						clocks = <&osc1>;
-+					};
-+
-+					periph_pll: periph_pll {
-+						#address-cells = <1>;
-+						#size-cells = <0>;
-+						#clock-cells = <0>;
-+						compatible = "altr,socfpga-pll-clock";
-+						clocks = <&osc1>;
-+					};
-+				};
-+		};
-+
-+		gmac0: ethernet@ff800000 {
-+			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.72a", "snps,dwmac";
-+			reg = <0xff800000 0x2000>;
-+			interrupts = <0 92 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "macirq";
-+			/* Filled in by bootloader */
-+			mac-address = [00 00 00 00 00 00];
-+			status = "disabled";
-+		};
-+
-+		gmac1: ethernet@ff802000 {
-+			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.72a", "snps,dwmac";
-+		        reg = <0xff802000 0x2000>;
-+			interrupts = <0 93 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "macirq";
-+			/* Filled in by bootloader */
-+			mac-address = [00 00 00 00 00 00];
-+			status = "disabled";
-+		};
-+
-+		gmac2: ethernet@ff804000 {
-+			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.72a", "snps,dwmac";
-+			reg = <0xff804000 0x2000>;
-+			interrupts = <0 94 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "macirq";
-+			/* Filled in by bootloader */
-+			mac-address = [00 00 00 00 00 00];
-+			status = "disabled";
-+		};
-+
-+		gpio0: gpio@ffc02900 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,dw-apb-gpio";
-+			reg = <0xffc02900 0x100>;
-+			status = "disabled";
-+
-+			porta: gpio-controller@0 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <29>;
-+				reg = <0>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				interrupts = <0 112 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
-+		gpio1: gpio@ffc02a00 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,dw-apb-gpio";
-+			reg = <0xffc02a00 0x100>;
-+			status = "disabled";
-+
-+			portb: gpio-controller@0 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <29>;
-+				reg = <0>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				interrupts = <0 113 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
-+		gpio2: gpio@ffc02b00 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,dw-apb-gpio";
-+			reg = <0xffc02b00 0x100>;
-+			status = "disabled";
-+
-+			portc: gpio-controller@0 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <27>;
-+				reg = <0>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				interrupts = <0 114 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
-+		i2c0: i2c@ffc02200 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,designware-i2c";
-+			reg = <0xffc02200 0x100>;
-+			interrupts = <0 105 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		i2c1: i2c@ffc02300 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,designware-i2c";
-+			reg = <0xffc02300 0x100>;
-+			interrupts = <0 106 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@ffc02400 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,designware-i2c";
-+			reg = <0xffc02400 0x100>;
-+			interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		i2c3: i2c@ffc02500 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,designware-i2c";
-+			reg = <0xffc02500 0x100>;
-+			interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		i2c4: i2c@ffc02600 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,designware-i2c";
-+			reg = <0xffc02600 0x100>;
-+			interrupts = <0 109 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		L2: l2-cache@fffff000 {
-+			compatible = "arm,pl310-cache";
-+			reg = <0xfffff000 0x1000>;
-+			interrupts = <0 18 IRQ_TYPE_LEVEL_HIGH>;
-+			cache-unified;
-+			cache-level = <2>;
-+		};
-+
-+		mmc: dwmmc0@ff808000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "altr,socfpga-dw-mshc";
-+			reg = <0xff808000 0x1000>;
-+			interrupts = <0 98 IRQ_TYPE_LEVEL_HIGH>;
-+			fifo-depth = <0x400>;
-+		};
-+
-+		ocram: sram@ffe00000 {
-+			compatible = "mmio-sram";
-+			reg = <0xffe00000 0x40000>
-+		};
-+
-+		rst: rstmgr@ffd05000 {
-+			#reset-cells = <1>;
-+			compatible = "altr,rst-mgr";
-+			reg = <0xffd05000 0x100>;
-+		};
-+
-+		sysmgr: sysmgr@ffd06000 {
-+			compatible = "altr,sys-mgr", "syscon";
-+			reg = <0xffd06000 0x300>;
-+		};
-+
-+		/* Local timer */
-+		timer@ffffc600 {
-+			compatible = "arm,cortex-a9-twd-timer";
-+			reg = <0xffffc600 0x100>;
-+			interrupts = <1 13 0xf04>;
-+		};
-+
-+		timer0: timer0@ffc02700 {
-+			compatible = "snps,dw-apb-timer";
-+			interrupts = <0 115 IRQ_TYPE_LEVEL_HIGH>;
-+			reg = <0xffc02700 0x100>;
-+		};
-+
-+		timer1: timer1@ffc02800 {
-+			compatible = "snps,dw-apb-timer";
-+			interrupts = <0 116 IRQ_TYPE_LEVEL_HIGH>;
-+			reg = <0xffc02800 0x100>;
-+		};
-+
-+		timer2: timer2@ffd00000 {
-+			compatible = "snps,dw-apb-timer";
-+			interrupts = <0 117 IRQ_TYPE_LEVEL_HIGH>;
-+			reg = <0xffd00000 0x100>;
-+		};
-+
-+		timer3: timer3@ffd00100 {
-+			compatible = "snps,dw-apb-timer";
-+			interrupts = <0 118 IRQ_TYPE_LEVEL_HIGH>;
-+			reg = <0xffd01000 0x100>;
-+		};
-+
-+		uart0: serial0@ffc02000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0xffc02000 0x100>;
-+			interrupts = <0 110 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+		};
-+
-+		uart1: serial1@ffc02100 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0xffc02100 0x100>;
-+			interrupts = <0 111 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+		};
-+
-+		usbphy0: usbphy@0 {
-+			#phy-cells = <0>;
-+			compatible = "usb-nop-xceiv";
-+			status = "okay";
-+		};
-+
-+		usb0: usb@ffb00000 {
-+			compatible = "snps,dwc2";
-+			reg = <0xffb00000 0xffff>;
-+			interrupts = <0 95 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&usbphy0>;
-+			phy-names = "usb2-phy";
-+			status = "disabled";
-+		};
-+
-+		usb1: usb@ffb40000 {
-+			compatible = "snps,dwc2";
-+			reg = <0xffb40000 0xffff>;
-+			interrupts = <0 96 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&usbphy0>;
-+			phy-names = "usb2-phy";
-+			status = "disabled";
-+		};
-+
-+		watchdog0: watchdog@ffd00200 {
-+			compatible = "snps,dw-wdt";
-+			reg = <0xffd00200 0x100>;
-+			interrupts = <0 119 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		watchdog1: watchdog@ffd00300 {
-+			compatible = "snps,dw-wdt";
-+			reg = <0xffd00300 0x100>;
-+			interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dts b/arch/arm/boot/dts/socfpga_arria10_socdk.dts
-new file mode 100755
-index 0000000..3015ce8
---- /dev/null
-+++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dts
-@@ -0,0 +1,48 @@
-+/*
-+ * Copyright (C) 2014 Altera Corporation <www.altera.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+/dts-v1/;
-+#include "socfpga_arria10.dtsi"
-+
-+/ {
-+	model = "Altera SOCFPGA Arria 10";
-+	compatible = "altr,socfpga-arria10", "altr,socfpga";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200 rootwait";
-+	};
-+
-+	memory {
-+		name = "memory";
-+		device_type = "memory";
-+		reg = <0x0 0x40000000>; /* 1GB */
-+	};
-+
-+	soc {
-+		clkmgr@ffd04000 {
-+			clocks {
-+				osc1 {
-+					clock-frequency = <25000000>;
-+				};
-+			};
-+		};
-+
-+		serial0@ffc02000 {
-+			status = "okay";
-+		};
-+	};
-+};
--- 
-2.0.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Ivan
