@@ -1,61 +1,44 @@
-From: Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH 0/4] poweroff-source DT property renaming
-Date: Wed, 29 Oct 2014 15:21:23 +0100
-Message-ID: <CABgxDo+mxFrdFM4aM389pR26hGUfcgLkGZXcPqtWTExfTV46Tw@mail.gmail.com>
-References: <1414568135-8311-1-git-send-email-romain.perier@gmail.com>
+From: Max Filippov <jcmvbkbc@gmail.com>
+Subject: Re: [PATCH] ASoC: add xtensa xtfpga I2S interface and platform
+Date: Wed, 29 Oct 2014 17:23:15 +0300
+Message-ID: <CAMo8BfJfRTo7puxeafyBnaGWhY38o6ktsSBugcSmSaMYUArcyw@mail.gmail.com>
+References: <1414436825-19416-1-git-send-email-jcmvbkbc@gmail.com>
+	<20141027193229.GE18557@sirena.org.uk>
+	<CAMo8Bf+Z9V8mkiC3JOupPQmi1EJUDKrb1qcNncDbsEbhjigbww@mail.gmail.com>
+	<20141028154224.GX18557@sirena.org.uk>
+	<CAMo8BfLpJ0bdmaFt9+gLQ_kEjB68XdjAJUw8f8s=Owv46h_yDQ@mail.gmail.com>
+	<20141028173853.GD18557@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1414568135-8311-1-git-send-email-romain.perier@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141028173853.GD18557@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, LKML <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-+CC Felipe and linux-tegra@vger.k.o , as both were interested by some
-parts of the previous serie (sorry when I tried to reduce the CC list,
-I forgot you)
+On Tue, Oct 28, 2014 at 8:38 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Tue, Oct 28, 2014 at 08:00:45PM +0300, Max Filippov wrote:
+>> On Tue, Oct 28, 2014 at 6:42 PM, Mark Brown <broonie@kernel.org> wrote:
+>> >> > I would also expect to see the data transfer and I2S bits more split
+>> >> > out, presumably this IP can actually be used in designs with a DMA
+>> >> > controller and one would expect that for practical systems this would be
+>> >> > the common case?
+>
+>> >> I don't know of other designs that use this IP block. Can we do it when
+>> >> we get such users?
+>
+>> > It's also about ensuring that the code is cleanly split up so that
+>> > someone can actually go in and add the required support later (and TBH
+>
+>> Can you point me to an example of such split, so that I don't write it in
+>> an unusual way?
+>
+> Essentially all drivers are split this way...
 
-2014-10-29 8:35 GMT+01:00 Romain Perier <romain.perier@gmail.com>:
-> The goal of this serie is to rename the property "poweroff-source" to
-> "system-power-controller" and to fix things incrementally.
->
-> Changes and explanations since v1:
->
->   - The first patch defines "of_is_system_power_controller" which is compatible
->     with both "vendor,system-power-controller" and "system-power-controller"
->     properties. Also, It keeps the old helper function of_system_has_poweroff_source
->     for source compatibility until everything is renamed (in this way, bisections
->     are not broken and change is made "atomically" between each commit)
->
->     Note: the property "poweroff-source" itself is not used in dts files yet.
->     Before this patch tps65910 was broken due to missing backward compatibility
->     with "vendor,system-power-controller". As the old helper uses the new one,
->     it works again.
->
->   - act8865 and tps65910 are ported to the new helper function
->
->   - The last commit removes the olf helper which was only used for source compatibility
->
-> Romain Perier (4):
->   of: Rename "poweroff-source" property to "system-power-controller"
->   regulator: act8865: Convert poweroff-source DT property to
->     system-power-controller
->   mfd: tps65910: Convert poweroff-source DT property to
->     system-power-controller
->   of: Remove of_system_has_poweroff_source helper function
->
->  .../devicetree/bindings/power/power-controller.txt | 18 ++++++++++++
->  .../devicetree/bindings/power/poweroff.txt         | 18 ------------
->  .../bindings/regulator/act8865-regulator.txt       |  4 +--
->  drivers/mfd/tps65910.c                             |  2 +-
->  drivers/of/base.c                                  | 34 ++++++++++++++++++++++
->  drivers/regulator/act8865-regulator.c              |  2 +-
->  include/linux/of.h                                 | 12 ++------
->  7 files changed, 58 insertions(+), 32 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/power-controller.txt
->  delete mode 100644 Documentation/devicetree/bindings/power/poweroff.txt
->
-> --
-> 1.9.1
->
+But all of them have DMA registers and I2S registers completely separated,
+right? How do I share registers between pcm and i2s parts?
+
+-- 
+Thanks.
+-- Max
