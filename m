@@ -1,61 +1,74 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [PATCH] of: spi: Export single device registration method and accessors (v2)
-Date: Wed, 29 Oct 2014 13:48:06 +0200
-Message-ID: <6A3753C0-251A-4645-AD96-CB1D6521175F@antoniou-consulting.com>
-References: <1414572037-11306-1-git-send-email-pantelis.antoniou@konsulko.com> <20141029101420.GT18557@sirena.org.uk>
-Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141029101420.GT18557-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Becker <jlbec-aKy9MeLSZ9dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29Tb/PtFMR13I2A@public.gmane.org
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v6 0/7] This is the 1st version of suspend for RK3288.
+Date: Wed, 29 Oct 2014 19:51:58 +0800
+Message-ID: <1414583525-17395-1-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: heiko@sntech.de, dianders@chromium.org
+Cc: mturquette@linaro.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, khilman@kernel.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Tony Xie <xxx@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+RK3288 can shut down the cpu, gpu and other device controllers in suspend,
+and it will pull the GLOBAL_PWROFF pin to high in the final stage of the
+process of suspend, pull the pin to low again when resume.
 
-> On Oct 29, 2014, at 12:14 , Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->=20
-> On Wed, Oct 29, 2014 at 10:40:37AM +0200, Pantelis Antoniou wrote:
->> Dynamically inserting spi device nodes requires the use of a single
->> device registration method. Rework and export it.
->>=20
->> Methods to lookup a device/master using a device node are added
->> as well, of_find_spi_master_by_node() & of_find_spi_device_by_node()=
-=2E
->=20
-> Why do we need to do this - I would expect that adding nodes would
-> trigger parsing in the same way we normally do it.  Where is the user
-> and how does it know that it's handling a SPI node?
->=20
-> This feels like there is an abstraction problem somewhere, whatever c=
-ode
-> is supposed to use this is going to need to be taught about each
-> individual bus which is going to be tedious, I would expect that we'd
-> have something like the bus being able to provide a callback which wi=
-ll
-> get invoked whenever a new node appears on the parent node for the bu=
-s.
->=20
+Changes in v6:
+- modify comments
+- get rid of the save/restore of SRAM
+- doing the copy of resume code once at init time
+- remove ROCKCHIP_ARM_OFF_LOGIC_DEEP from rk3288_fill_in_bootram
+- add of_platform_populate in rockchip_dt_init
+- change pmu_intmem@ff720000 to sram@ff720000
+- change pmu_intmem@ff720000 to sram@ff720000
 
-There=E2=80=99s a whole patchset that does exactly this.=20
-Look at "OF: spi: Add OF notifier handler=E2=80=9D and you=E2=80=99ll w=
-here this is used.
+Changes in v5:
+- reset-author
+- use "__maybe_unused" annotation
+- add pinctrl_force_default() in the error case
+- modify comments
+- use rk3288_bootram_sz for memcpy size
+- fixed error of sram save and restore
+- change the size of sram in example
+- change size to 4k
 
->> Changes since v1:
->> * Brown paper bug with parameter on of_register_spi_device().
->=20
-> Don't include noise like this in the changelog, put it after --- like
-> SubmittingPatches says.  Please also try to keep your CC list sane,
-> CCing random people just means that you're increasing the volume of m=
-ail
-> they have to process.  I'm surprised kernel.org accepts so many CCs.
->=20
-> I have to say I don't recall ever seeing v1...
+Changes in v4:
+- use SIMPLE_DEV_PM_OPS for suspend/resume struct
+- remove grf regmap
 
-All of them are in the CC list for a reason.=20
+Changes in v3:
+- move the pinmux of gpio6_c6 save and restore to pinctrl-rockchip
 
-Regards
+Changes in v2:
+- __raw_readl/__raw_writel replaced by readl_relaxed/writel_relaxed
+- add the regulator calls in prepare and finish.
+- add the pinmux of gpio6_c6 save and restore
+- put "rockchip,rk3288-pmu-sram" to first
 
-=E2=80=94 Pantelis
+Chris Zhong (7):
+  pinctrl: rockchip: add suspend/resume functions
+  pinctrl: rockchip: save and restore gpio6_c6 pinmux in suspend/resume
+  clk: rockchip: RK3288: add suspend and resume
+  ARM: rockchip: add suspend and resume for RK3288
+  ARM: rockchip: Add pmu-sram binding
+  ARM: dts: add RK3288 suspend support
+  ARM: dts: add suspend voltage setting for RK808
+
+ .../devicetree/bindings/arm/rockchip/pmu-sram.txt  |   16 ++
+ arch/arm/boot/dts/rk3288-evb-rk808.dts             |   16 +-
+ arch/arm/boot/dts/rk3288.dtsi                      |   11 +
+ arch/arm/mach-rockchip/Makefile                    |    1 +
+ arch/arm/mach-rockchip/pm.c                        |  278 ++++++++++++++++++++
+ arch/arm/mach-rockchip/pm.h                        |  103 ++++++++
+ arch/arm/mach-rockchip/rockchip.c                  |    8 +
+ arch/arm/mach-rockchip/sleep.S                     |   90 +++++++
+ drivers/clk/rockchip/clk-rk3288.c                  |   60 +++++
+ drivers/pinctrl/pinctrl-rockchip.c                 |   46 ++++
+ 10 files changed, 628 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt
+ create mode 100644 arch/arm/mach-rockchip/pm.c
+ create mode 100644 arch/arm/mach-rockchip/pm.h
+ create mode 100644 arch/arm/mach-rockchip/sleep.S
+
+-- 
+1.7.9.5
+
