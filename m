@@ -1,137 +1,92 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RESEND V4 5/9] of: Add NVIDIA Tegra xHCI controller
- binding
-Date: Wed, 29 Oct 2014 10:43:40 +0100
-Message-ID: <20141029094338.GA28356@ulmo.nvidia.com>
-References: <1414535277-15645-1-git-send-email-abrestic@chromium.org>
- <1414535277-15645-6-git-send-email-abrestic@chromium.org>
+From: NEO-Technologies / Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
+Subject: Re: [PATCH v2] ARM: dts: rockchip: use internal pull-up resistors
+ on I2C busses
+Date: Wed, 29 Oct 2014 10:50:37 +0100
+Message-ID: <5450B86D.7060301@neo-technologies.fr>
+References: <1414492597-13566-1-git-send-email-julien.chauveau@neo-technologies.fr>
+ <CAD=FV=Vs9NT3hMS_Z0dOuwyBdxCsMddqohWFYOGYbM2ePm9PrQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1414535277-15645-6-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAD=FV=Vs9NT3hMS_Z0dOuwyBdxCsMddqohWFYOGYbM2ePm9PrQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Addy Ke <addy.ke@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, open list <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Oct 28, 2014 at 03:27:50PM -0700, Andrew Bresticker wrote:
-[...]
-> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xu=
-sb-padctl.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-x=
-usb-padctl.txt
-[...]
-> +Optional properties:
-> +-------------------
-> +- vbus-{0,1,2}-supply: VBUS regulator for the corresponding UTMI pad.
-> +- vddio-hsic-supply: VDDIO regulator for the HSIC pads.
-> +- nvidia,usb3-port-{0,1}-lane: PCIe/SATA lane to which the corresponding=
- USB3
-> +  port is mapped.  See <dt-bindings/pinctrl/pinctrl-tegra-xusb.h> for th=
-e list
-> +  of valid values.
-
-I dislike how we now need to provide a list of all pins in the header
-file, where previously we used strings for this. This could become very
-ugly if the set of pins changes in future generations of this IP block.
-
-Could we instead derive this from the pinmux nodes? For example you have
-this in the example below:
-
-	usb3p0 {
-		nvidia,lanes =3D "pcie-0";
-		...
-	};
-
-Perhaps what we need is to either key off the node name or add another
-property, such as:
-
-	nvidia,usb3-port =3D <0>;
-
-This would match the nvidia,usb2-port property that you've added below.
-
->  Lane muxing:
->  ------------
-> @@ -50,6 +62,17 @@ Optional properties:
->    pin or group should be assigned to. Valid values for function names are
->    listed below.
->  - nvidia,iddq: Enables IDDQ mode of the lane. (0: no, 1: yes)
-> +- nvidia,usb2-port-num: USB2 port (0, 1, or 2) to which the lane is mapp=
-ed.
-
-I'd leave away the -num suffix since it is implied that it's a number.
-
-> +- nvidia,hsic-strobe-trim: HSIC strobe trimmer value.
-> +- nvidia,hsic-rx-strobe-trim: HSIC RX strobe trimmer value.
-> +- nvidia,hsic-rx-data-trim: HSIC RX data trimmer value.
-> +- nvidia,hsic-tx-rtune-n: HSIC TX RTUNEN value.
-> +- nvidia,hsic-tx-rtune-p: HSIC TX RTUNEP value.
-> +- nvidia,hsic-tx-slew-n: HSIC TX SLEWN value.
-> +- nvidia,hsic-tx-slew-p: HSIC TX SLEWP value.
-
-It would be useful for these to provide a range of valid values. I also
-see that there are other registers that contain values for tuning. I
-take it that the ones you've included here are the only ones that need
-to be overridden on hardware you've tested this on? That should be fine,
-we can always add new ones if necessary.
-
-> +- nvidia,hsic-auto-term: Enables HSIC AUTO_TERM. (0: no, 1: yes)
-> +- nvidia,otg-hs-curr-level-offset: Offset to be applied to the pad's fus=
-ed
-> +  HS_CURR_LEVEL value.
-> =20
->  Note that not all of these properties are valid for all lanes. Lanes can=
- be
->  divided into three groups:
-> @@ -58,18 +81,21 @@ divided into three groups:
-> =20
->      Valid functions for this group are: "snps", "xusb", "uart", "rsvd".
-> =20
-> -    The nvidia,iddq property does not apply to this group.
-> +    The nvidia,otg-hs-curr-level-offset property only applies.
-
-The wording is confusing here in my opinion. Maybe better: "Only the ...
-property applies."?
-
->    - ulpi-0, hsic-0, hsic-1:
-> =20
->      Valid functions for this group are: "snps", "xusb".
-> =20
-> -    The nvidia,iddq property does not apply to this group.
-> +    The nvidia,hsic-* properties apply only to the pins hsic-{0,1} when
-> +    the function is xusb.
-
-I assume that hsic-* properties also only apply to the hsic-* pins?
-That's not clear from the above sentence.
-
-Thierry
-
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUULbKAAoJEN0jrNd/PrOh3n4QAKhd76oJnVJUt4H0zD0Dmf5T
-WLLg/4LXsTsJZ5TJ1TSq7hniC/Zg7rA8gjEvFiT1K21sxJpOD9GYemFCG/MxkBgY
-5kviYsft0Cvg/5cKP5TMEu+ptRfeykd8pmUBzFTz5eqgI/E02CWRgAvFKhjDoVF/
-nutz4k/48ibBT4wbNjZXdKduBp8JXzcdXVetpMTpZuOKKMtTMl+kCuQh0mR+UY8R
-N+57esfoLWDZAepvD2DWX5FZhwexY4YeoTgDNG8Drxm3JltpbC3xtfFHcaZlGgA+
-vzWYU2HrlGaXO8XFLOmON2qIQ9dMtdiJgOSIHKr2MTp+7VSxZeT6v67i142a/+5l
-eb2dl/VuDrSs85mQNfEx/oFOt18xcJibmnfGMoy4O8bT8R6NH6FuxmyTj3zHR46X
-L8Jbi0s2Ts+1ByDzID3XnpV6KSWZZ8Fs3Q2XB0dZzlF7qrzYCwvbcxQFYLGTipuK
-CMHwJogIPTmXBVTAzQysZiXLxrwrv1IMHW3gnnLP4iYv0YBZIgxNzml27fYQ3e8H
-Nq1maVwwP/BrkwqFMm+sAE1UWjiTrok8TmQesPGZkYAb9qEHSAe5F3os8Iklcjzr
-ndBmPDdUyqfys+ny0T1TqGyswD0juosHYUID1mt+B2RRQDtjqzXjbhI4+j8HoU+N
-mpuSPJ8jVbvRkYlET69M
-=jthM
------END PGP SIGNATURE-----
-
---qMm9M+Fa2AknHoGS--
+SGkgRG91ZywKCkxlIDI5LzEwLzIwMTQgMDU6NDUsIERvdWcgQW5kZXJzb24gYSDDqWNyaXQgOgo+
+IEp1bGllbiwKPgo+IE9uIFR1ZSwgT2N0IDI4LCAyMDE0IGF0IDM6MzYgQU0sIEp1bGllbiBDSEFV
+VkVBVQo+IDxqdWxpZW4uY2hhdXZlYXVAbmVvLXRlY2hub2xvZ2llcy5mcj4gd3JvdGU6Cj4+IEFj
+Y29yZGluZyB0byB0aGUgSTJDIGJ1cyBzcGVjaWZpY2F0aW9uLCBpdCBpcyByZXF1aXJlZCB0byB1
+c2UgcHVsbC11cCByZXNpc3RvcnMKPj4gb24gdGhlIGNsb2NrIGFuZCBkYXRhIGxpbmVzLiBQcm9i
+aW5nIHRoZSBJMkMgYnVzc2VzIHdpdGggaTJjZGV0ZWN0IHJlc3VsdHMgaW4KPj4gYmFkIHJlc3Vs
+dHMgd2hlbiBubyBkZXZpY2VzIGFyZSBjb25uZWN0ZWQgYW5kIG5vIGV4dGVybmFsIHJlc2lzdG9y
+cyBhcmUgdXNlZC4KPj4KPj4gVGhpcyBwYXRjaCBjb25maWd1cmVzIHRoZSBJMkMgYnVzc2VzIHRv
+IHVzZSB0aGUgaW50ZXJuYWwgcHVsbC11cCByZXNpc3RvcnMKPj4gb24gdGhlIFJLMzA2NiwgUksz
+MTg4IGFuZCBSSzMyODggUm9ja2NoaXAgcHJvY2Vzc29ycy4gSXQgc2hvdWxkIGFsc28gYmUgbm90
+ZWQKPj4gdGhhdCB0aGVzZSBkZWZhdWx0IHB1bGwgc2V0dGluZ3MgbWF0Y2ggdGhlIG9yaWdpbmFs
+IGNvbmZpZ3VyYXRpb24gb24gdGhlc2UgU29Dcy4KPj4KPj4gQmVsb3cgaXMgdGhlIHJlc3VsdHMg
+b2YgdXNpbmcgaTJjZGV0ZWN0IG9uIGEgSTJDIGJ1cyB3aXRoIG5vIGRldmljZXMgY29ubmVjdGVk
+Cj4+IGJlZm9yZSAoMSkgYW5kIGFmdGVyICgyKSBhcHBseWluZyB0aGlzIHBhdGNoLgo+Pgo+PiAo
+MSkgcm9vdEBsb2NhbGhvc3Q6fiMgaTJjZGV0ZWN0IC15IDMKPj4gICAgICAgMCAgMSAgMiAgMyAg
+NCAgNSAgNiAgNyAgOCAgOSAgYSAgYiAgYyAgZCAgZSAgZgo+PiAwMDogICAgICAgICAgMDMgMDQg
+MDUgMDYgMDcgMDggMDkgMGEgMGIgMGMgMGQgMGUgMGYKPj4gMTA6IDEwIDExIDEyIDEzIDE0IDE1
+IDE2IDE3IDE4IDE5IDFhIDFiIDFjIDFkIDFlIDFmCj4+IDIwOiAyMCAyMSAyMiAyMyAyNCAyNSAy
+NiAyNyAyOCAyOSAyYSAyYiAyYyAyZCAyZSAyZgo+PiAzMDogLS0gLS0gLS0gLS0gLS0gcmszeC1p
+MmMgMjAwNWEwMDAuaTJjOiB0aW1lb3V0LCBpcGQ6IDB4ODEsIHN0YXRlOiAyCj4+IC0tIHJrM3gt
+aTJjIDIwMDVhMDAwLmkyYzogdGltZW91dCwgaXBkOiAweDgwLCBzdGF0ZTogMgo+PiAtLSByazN4
+LWkyYyAyMDA1YTAwMC5pMmM6IHRpbWVvdXQsIGlwZDogMHg4MCwgc3RhdGU6IDIKPj4gLS0gcmsz
+eC1pMmMgMjAwNWEwMDAuaTJjOiB0aW1lb3V0LCBpcGQ6IDB4ODAsIHN0YXRlOiAzCj4+IC0tIHJr
+M3gtaTJjIDIwMDVhMDAwLmkyYzogdGltZW91dCwgaXBkOiAweDgwLCBzdGF0ZTogMwo+PiAtLSBy
+azN4LWkyYyAyMDA1YTAwMC5pMmM6IHRpbWVvdXQsIGlwZDogMHg4MCwgc3RhdGU6IDMKPj4gLi4u
+Cj4+Cj4+ICgyKSByb290QGxvY2FsaG9zdDp+IyBpMmNkZXRlY3QgLXkgMwo+PiAgICAgICAwICAx
+ICAyICAzICA0ICA1ICA2ICA3ICA4ICA5ICBhICBiICBjICBkICBlICBmCj4+IDAwOiAgICAgICAg
+ICAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLQo+PiAxMDogLS0gLS0gLS0g
+LS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0KPj4gMjA6IC0tIC0tIC0tIC0t
+IC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tCj4+IDMwOiAtLSAtLSAtLSAtLSAt
+LSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLQo+PiA0MDogLS0gLS0gLS0gLS0gLS0g
+LS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0gLS0KPj4gNTA6IC0tIC0tIC0tIC0tIC0tIC0t
+IC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tIC0tCj4+IDYwOiAtLSAtLSAtLSAtLSAtLSAtLSAt
+LSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLSAtLQo+PiA3MDogLS0gLS0gLS0gLS0gLS0gLS0gLS0g
+LS0KPj4KPj4gU2lnbmVkLW9mZi1ieTogSnVsaWVuIENIQVVWRUFVIDxqdWxpZW4uY2hhdXZlYXVA
+bmVvLXRlY2hub2xvZ2llcy5mcj4KPj4gLS0tCj4+IENoYW5nZXMgc2luY2UgdjE6Cj4+IC0gZml4
+IHRoZSByazMwNjZhIHB1bGwgc2V0dGluZ3MgKG9ubHkgYXZhaWxhYmxlIGlzIHB1bGxfbm9uZS9w
+dWxsX2RlZmF1bHQpCj4+IC0gcmVtb3ZlIHRoZSB3YXJuaW5ncyBpbiB0aGUgcmVzdWx0cyBvZiBp
+MmNkZXRlY3QKPj4KPj4gICBhcmNoL2FybS9ib290L2R0cy9yazMwNjZhLmR0c2kgfCAyMCArKysr
+KysrKysrLS0tLS0tLS0tLQo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzE4OC5kdHNpICB8IDIw
+ICsrKysrKysrKystLS0tLS0tLS0tCj4+ICAgYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LmR0c2kg
+IHwgMjQgKysrKysrKysrKysrLS0tLS0tLS0tLS0tCj4+ICAgMyBmaWxlcyBjaGFuZ2VkLCAzMiBp
+bnNlcnRpb25zKCspLCAzMiBkZWxldGlvbnMoLSkKPiBJIHdvbid0IE5BSyB0aGlzIGNoYW5nZSBt
+eXNlbGYsIGJ1dCBJIGhhdmUgdG8gc2F5IEknbSBub3QgYSBodWdlIGZhbi4KPiBPbiBleHlub3Mg
+Ym9hcmRzIHRoZSBpMmMgaGFzIHB1bGxzIGJ5IGRlZmF1bHQsIHNvIHRoZXJlIGlzIHByZWNlZGVu
+dAo+IGZvciB3aGF0IHlvdSdyZSBwcm9wb3NpbmcgYXQgbGVhc3QuCj4KPiAuLi5idXQgSSdsbCBh
+bHNvIHNheSB0aGF0IG1vc3Qgc2FuZSBib2FyZHMgaGF2ZSBleHRlcm5hbCBwdWxscyBvbiBpMmMK
+PiBhbmQgZG9uJ3QgcmVseSBvbiB0aGUgaW50ZXJuYWwgcHVsbHMuICBJZiB5b3UndmUgZ290IGEg
+Ym9hcmQgd2hlcmUgdGhlCj4gaW50ZXJuYWwgcHVsbCB3b3JrcyB3ZWxsIGVub3VnaCAobHVja3kg
+eW91ISkgdGhlbiBJIHRoaW5rIHlvdSBzaG91bGQKPiBvdmVycmlkZSB0aGUgcGluY3RybCBmb3Ig
+anVzdCB0aGF0IGJvYXJkLgoKQXQgdGhlIFNvQyBsZXZlbCwgaXQgaXMgSU1ITyBiZXR0ZXIgdG8g
+ZW5hYmxlIHRoZSBpbnRlcm5hbCBwdWxsLXVwIApyZXNpc3RvcnMuCgpCZWNhdXNlIHRoZSBmaWxl
+cyByazMwNjZhLmR0c2ksIHJrMzE4OC5kdHNpIGFuZCByazMyODguZHRzaSBhcmUgbm90IApib2Fy
+ZC1zcGVjaWZpYywgSSB0aGluayBpdCBpcyB3cm9uZyB0byBwcmVzdW1lIHRoYXQgY29ycmVjdCBw
+dWxsLXVwIApyZXNpc3RvcnMgYXJlIGFwcGxpZWQgdG8gdGhlIEkyQyBsaW5lcyBvbiB0aGUgYm9h
+cmQuCgpGdXJ0aGVybW9yZSwgYXMgSSBleHBsYWluZWQgdG8gQWRkeSBvbiB0aGUgbGludXgtcm9j
+a2NoaXAgbWFpbGluZyBsaXN0LCAKaXQgaXMgaGFybWxlc3MgdG8gZW5hYmxlIHRoZSBpbnRlcm5h
+bCBwdWxsLXVwIHJlc2lzdG9ycyBvbiB0aGUgU29DLCBidXQgCm9mIGNvdXJzZSB5b3UgbmVlZCB0
+byBrZWVwIHRoZSBleHRlcm5hbCBwdWxsLXVwIHJlc2lzdG9ycyBvbiB0aGUgYm9hcmQgCihzbywg
+ZG8gbm90IHJlbW92ZSB0aGVtISkuCgpNb3Jlb3ZlciwgaWYgeW91IGFic29sdXRlbHkgd2FudCB0
+byBkaXNhYmxlIHRoZSBpbnRlcm5hbCBwdWxsLXVwIApyZXNpc3RvcnMgZm9yIG9uZSBvciBhbm90
+aGVyIGJvYXJkLCBpdCBpcyBJTUhPIGJldHRlciB0byBkbyBpdCBhdCB0aGUgCmJvYXJkIGxldmVs
+LCBidXQgbm90IGF0IHRoZSBTb0MgbGV2ZWwuCgpUbyBlYWNoIGlzIG93bi4uLgoKSnVsaWVuLwov
+LwovCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
+eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
+ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
+cm0ta2VybmVsCg==
