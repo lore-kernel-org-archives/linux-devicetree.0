@@ -1,51 +1,137 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH V3 2/4] of: Add binding document for MIPS GIC
-Date: Wed, 29 Oct 2014 09:21:53 +0000
-Message-ID: <5450B1B1.5070301@imgtec.com>
-References: <1414541562-10076-1-git-send-email-abrestic@chromium.org> <1414541562-10076-3-git-send-email-abrestic@chromium.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RESEND V4 5/9] of: Add NVIDIA Tegra xHCI controller
+ binding
+Date: Wed, 29 Oct 2014 10:43:40 +0100
+Message-ID: <20141029094338.GA28356@ulmo.nvidia.com>
+References: <1414535277-15645-1-git-send-email-abrestic@chromium.org>
+ <1414535277-15645-6-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414541562-10076-3-git-send-email-abrestic@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: John Crispin <blogic@openwrt.org>, David Daney <ddaney.cavm@gmail.com>, Qais Yousef <qais.yousef@imgtec.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1414535277-15645-6-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
 
-On 29/10/14 00:12, Andrew Bresticker wrote:
->  - changed compatible string to include CPU version
+--qMm9M+Fa2AknHoGS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +Required properties:
-> +- compatible : Should be "mti,<cpu>-gic".  Supported variants:
-> +  - "mti,interaptiv-gic"
+On Tue, Oct 28, 2014 at 03:27:50PM -0700, Andrew Bresticker wrote:
+[...]
+> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xu=
+sb-padctl.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-x=
+usb-padctl.txt
+[...]
+> +Optional properties:
+> +-------------------
+> +- vbus-{0,1,2}-supply: VBUS regulator for the corresponding UTMI pad.
+> +- vddio-hsic-supply: VDDIO regulator for the HSIC pads.
+> +- nvidia,usb3-port-{0,1}-lane: PCIe/SATA lane to which the corresponding=
+ USB3
+> +  port is mapped.  See <dt-bindings/pinctrl/pinctrl-tegra-xusb.h> for th=
+e list
+> +  of valid values.
 
-> +Required properties for timer sub-node:
-> +- compatible : Should be "mti,<cpu>-gic-timer".  Supported variants:
-> +  - "mti,interaptiv-gic-timer"
+I dislike how we now need to provide a list of all pins in the header
+file, where previously we used strings for this. This could become very
+ugly if the set of pins changes in future generations of this IP block.
 
-Erm, I'm a bit confused...
-Why do you include the core name in the compatible string?
+Could we instead derive this from the pinmux nodes? For example you have
+this in the example below:
 
-You seem to be suggesting that:
+	usb3p0 {
+		nvidia,lanes =3D "pcie-0";
+		...
+	};
 
-1) The GIC/timer drivers need to know what core they're running on.
+Perhaps what we need is to either key off the node name or add another
+property, such as:
 
-Is that really true?
+	nvidia,usb3-port =3D <0>;
 
-2) It isn't possible to probe the core type.
+This would match the nvidia,usb2-port property that you've added below.
 
-But the kernel already knows this, so what's wrong with using
-current_cpu_type() like everything else that needs to know?
+>  Lane muxing:
+>  ------------
+> @@ -50,6 +62,17 @@ Optional properties:
+>    pin or group should be assigned to. Valid values for function names are
+>    listed below.
+>  - nvidia,iddq: Enables IDDQ mode of the lane. (0: no, 1: yes)
+> +- nvidia,usb2-port-num: USB2 port (0, 1, or 2) to which the lane is mapp=
+ed.
 
-3) Every new core should require a new compatible string to be added
-before the GIC will work. You don't even have a generic compatible
-string that DT can specify after the core specific one as a fallback.
+I'd leave away the -num suffix since it is implied that it's a number.
 
-Please lets not do this unless it's actually necessary (which AFAICT it
-really isn't).
+> +- nvidia,hsic-strobe-trim: HSIC strobe trimmer value.
+> +- nvidia,hsic-rx-strobe-trim: HSIC RX strobe trimmer value.
+> +- nvidia,hsic-rx-data-trim: HSIC RX data trimmer value.
+> +- nvidia,hsic-tx-rtune-n: HSIC TX RTUNEN value.
+> +- nvidia,hsic-tx-rtune-p: HSIC TX RTUNEP value.
+> +- nvidia,hsic-tx-slew-n: HSIC TX SLEWN value.
+> +- nvidia,hsic-tx-slew-p: HSIC TX SLEWP value.
 
-Thanks
-James
+It would be useful for these to provide a range of valid values. I also
+see that there are other registers that contain values for tuning. I
+take it that the ones you've included here are the only ones that need
+to be overridden on hardware you've tested this on? That should be fine,
+we can always add new ones if necessary.
+
+> +- nvidia,hsic-auto-term: Enables HSIC AUTO_TERM. (0: no, 1: yes)
+> +- nvidia,otg-hs-curr-level-offset: Offset to be applied to the pad's fus=
+ed
+> +  HS_CURR_LEVEL value.
+> =20
+>  Note that not all of these properties are valid for all lanes. Lanes can=
+ be
+>  divided into three groups:
+> @@ -58,18 +81,21 @@ divided into three groups:
+> =20
+>      Valid functions for this group are: "snps", "xusb", "uart", "rsvd".
+> =20
+> -    The nvidia,iddq property does not apply to this group.
+> +    The nvidia,otg-hs-curr-level-offset property only applies.
+
+The wording is confusing here in my opinion. Maybe better: "Only the ...
+property applies."?
+
+>    - ulpi-0, hsic-0, hsic-1:
+> =20
+>      Valid functions for this group are: "snps", "xusb".
+> =20
+> -    The nvidia,iddq property does not apply to this group.
+> +    The nvidia,hsic-* properties apply only to the pins hsic-{0,1} when
+> +    the function is xusb.
+
+I assume that hsic-* properties also only apply to the hsic-* pins?
+That's not clear from the above sentence.
+
+Thierry
+
+--qMm9M+Fa2AknHoGS
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUULbKAAoJEN0jrNd/PrOh3n4QAKhd76oJnVJUt4H0zD0Dmf5T
+WLLg/4LXsTsJZ5TJ1TSq7hniC/Zg7rA8gjEvFiT1K21sxJpOD9GYemFCG/MxkBgY
+5kviYsft0Cvg/5cKP5TMEu+ptRfeykd8pmUBzFTz5eqgI/E02CWRgAvFKhjDoVF/
+nutz4k/48ibBT4wbNjZXdKduBp8JXzcdXVetpMTpZuOKKMtTMl+kCuQh0mR+UY8R
+N+57esfoLWDZAepvD2DWX5FZhwexY4YeoTgDNG8Drxm3JltpbC3xtfFHcaZlGgA+
+vzWYU2HrlGaXO8XFLOmON2qIQ9dMtdiJgOSIHKr2MTp+7VSxZeT6v67i142a/+5l
+eb2dl/VuDrSs85mQNfEx/oFOt18xcJibmnfGMoy4O8bT8R6NH6FuxmyTj3zHR46X
+L8Jbi0s2Ts+1ByDzID3XnpV6KSWZZ8Fs3Q2XB0dZzlF7qrzYCwvbcxQFYLGTipuK
+CMHwJogIPTmXBVTAzQysZiXLxrwrv1IMHW3gnnLP4iYv0YBZIgxNzml27fYQ3e8H
+Nq1maVwwP/BrkwqFMm+sAE1UWjiTrok8TmQesPGZkYAb9qEHSAe5F3os8Iklcjzr
+ndBmPDdUyqfys+ny0T1TqGyswD0juosHYUID1mt+B2RRQDtjqzXjbhI4+j8HoU+N
+mpuSPJ8jVbvRkYlET69M
+=jthM
+-----END PGP SIGNATURE-----
+
+--qMm9M+Fa2AknHoGS--
