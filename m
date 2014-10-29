@@ -1,149 +1,86 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH v5 5/6] ARM: mediatek: Add sysirq in mt6589/mt8135/mt8127 dtsi
-Date: Wed, 29 Oct 2014 18:00:23 +0800
-Message-ID: <1414576824-16143-6-git-send-email-yingjoe.chen@mediatek.com>
-References: <1414576824-16143-1-git-send-email-yingjoe.chen@mediatek.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 01/11] irqchip: Allow irq_reg_{readl,writel} to use
+ __raw_{readl_writel}
+Date: Wed, 29 Oct 2014 11:12:44 +0100 (CET)
+Message-ID: <alpine.DEB.2.11.1410291112120.5308@nanos>
+References: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414576824-16143-1-git-send-email-yingjoe.chen@mediatek.com>
+In-Reply-To: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Marc Zyngier <marc.zyngier@arm.com>, arm@kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Grant Likely <grant.likely@linaro.org>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, yingjoe.chen@gmail.com, hc.yen@mediatek.com, eddie.huang@mediatek.com, nathan.chung@mediatek.com, yh.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
+To: Kevin Cernekee <cernekee@gmail.com>
+Cc: f.fainelli@gmail.com, jason@lakedaemon.net, ralf@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-Add sysirq settings for mt6589/mt8135/mt8127
-This also correct timer interrupt flag. The old setting works
-because boot loader already set polarity for timer interrupt.
-Without intpol support, the setting was not changed so gic
-can get the irq correctly.
+On Tue, 28 Oct 2014, Kevin Cernekee wrote:
 
-Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
----
- arch/arm/boot/dts/mt6589.dtsi | 14 ++++++++++++--
- arch/arm/boot/dts/mt8127.dtsi | 14 ++++++++++++--
- arch/arm/boot/dts/mt8135.dtsi | 14 ++++++++++++--
- 3 files changed, 36 insertions(+), 6 deletions(-)
+> On big-endian systems readl/writel may perform an unwanted endian swap,
+> breaking generic-chip.c.  Let the platform code opt to use the __raw_
+> variants by selecting RAW_IRQ_ACCESSORS.
+> 
+> This is required in order for bcm3384 to use GENERIC_IRQ_CHIP.  Several
+> existing irqchip drivers also use the __raw_ accessors directly, so it
+> is a reasonably common requirement.
 
-diff --git a/arch/arm/boot/dts/mt6589.dtsi b/arch/arm/boot/dts/mt6589.dtsi
-index e3c7600..c91b2a9 100644
---- a/arch/arm/boot/dts/mt6589.dtsi
-+++ b/arch/arm/boot/dts/mt6589.dtsi
-@@ -19,7 +19,7 @@
+How does that work with multi arch kernels?
+
+Thanks,
+
+	tglx
  
- / {
- 	compatible = "mediatek,mt6589";
--	interrupt-parent = <&gic>;
-+	interrupt-parent = <&sysirq>;
- 
- 	cpus {
- 		#address-cells = <1>;
-@@ -76,15 +76,25 @@
- 		timer: timer@10008000 {
- 			compatible = "mediatek,mt6577-timer";
- 			reg = <0x10008000 0x80>;
--			interrupts = <GIC_SPI 113 IRQ_TYPE_EDGE_RISING>;
-+			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
- 			clocks = <&system_clk>, <&rtc_clk>;
- 			clock-names = "system-clk", "rtc-clk";
- 		};
- 
-+		sysirq: interrupt-controller@10200100 {
-+			compatible = "mediatek,mt6589-sysirq",
-+				     "mediatek,mt6577-sysirq";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
-+			reg = <0x10200100 0x1c>;
-+		};
-+
- 		gic: interrupt-controller@10211000 {
- 			compatible = "arm,cortex-a7-gic";
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
- 			reg = <0x10211000 0x1000>,
- 			      <0x10212000 0x1000>,
- 			      <0x10214000 0x2000>,
-diff --git a/arch/arm/boot/dts/mt8127.dtsi b/arch/arm/boot/dts/mt8127.dtsi
-index 249c218..59efb07 100644
---- a/arch/arm/boot/dts/mt8127.dtsi
-+++ b/arch/arm/boot/dts/mt8127.dtsi
-@@ -18,7 +18,7 @@
- 
- / {
- 	compatible = "mediatek,mt8127";
--	interrupt-parent = <&gic>;
-+	interrupt-parent = <&sysirq>;
- 
- 	cpus {
- 		#address-cells = <1>;
-@@ -81,15 +81,25 @@
- 		timer: timer@10008000 {
- 			compatible = "mediatek,mt8127-timer", "mediatek,mt6577-timer";
- 			reg = <0 0x10008000 0 0x80>;
--			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_LOW>;
- 			clocks = <&system_clk>, <&rtc_clk>;
- 			clock-names = "system-clk", "rtc-clk";
- 		};
- 
-+		sysirq: interrupt-controller@10200100 {
-+			compatible = "mediatek,mt8127-sysirq",
-+				     "mediatek,mt6577-sysirq";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
-+			reg = <0 0x10200100 0 0x1c>;
-+		};
-+
- 		gic: interrupt-controller@10211000 {
- 			compatible = "arm,cortex-a7-gic";
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
- 			reg = <0 0x10211000 0 0x1000>,
- 			      <0 0x10212000 0 0x1000>,
- 			      <0 0x10214000 0 0x2000>,
-diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
-index 683b761..2b6d5c8 100644
---- a/arch/arm/boot/dts/mt8135.dtsi
-+++ b/arch/arm/boot/dts/mt8135.dtsi
-@@ -18,7 +18,7 @@
- 
- / {
- 	compatible = "mediatek,mt8135";
--	interrupt-parent = <&gic>;
-+	interrupt-parent = <&sysirq>;
- 
- 	cpu-map {
- 		cluster0 {
-@@ -104,15 +104,25 @@
- 		timer: timer@10008000 {
- 			compatible = "mediatek,mt8135-timer", "mediatek,mt6577-timer";
- 			reg = <0 0x10008000 0 0x80>;
--			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
- 			clocks = <&system_clk>, <&rtc_clk>;
- 			clock-names = "system-clk", "rtc-clk";
- 		};
- 
-+		sysirq: interrupt-controller@10200030 {
-+			compatible = "mediatek,mt8135-sysirq",
-+				     "mediatek,mt6577-sysirq";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
-+			reg = <0 0x10200030 0 0x1c>;
-+		};
-+
- 		gic: interrupt-controller@10211000 {
- 			compatible = "arm,cortex-a15-gic";
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
- 			reg = <0 0x10211000 0 0x1000>,
- 			      <0 0x10212000 0 0x1000>,
- 			      <0 0x10214000 0 0x2000>,
--- 
-1.8.1.1.dirty
+> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+> ---
+>  drivers/irqchip/Kconfig |  3 +++
+>  include/linux/irq.h     | 13 +++++++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index b21f12f..6f0e80b 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -2,6 +2,9 @@ config IRQCHIP
+>  	def_bool y
+>  	depends on OF_IRQ
+>  
+> +config RAW_IRQ_ACCESSORS
+> +	bool
+> +
+>  config ARM_GIC
+>  	bool
+>  	select IRQ_DOMAIN
+> diff --git a/include/linux/irq.h b/include/linux/irq.h
+> index 03f48d9..ed1ea8a 100644
+> --- a/include/linux/irq.h
+> +++ b/include/linux/irq.h
+> @@ -639,6 +639,17 @@ void arch_teardown_hwirq(unsigned int irq);
+>  void irq_init_desc(unsigned int irq);
+>  #endif
+>  
+> +#ifdef CONFIG_RAW_IRQ_ACCESSORS
+> +
+> +#ifndef irq_reg_writel
+> +# define irq_reg_writel(val, addr)	__raw_writel(val, addr)
+> +#endif
+> +#ifndef irq_reg_readl
+> +# define irq_reg_readl(addr)		__raw_readl(addr)
+> +#endif
+> +
+> +#else
+> +
+>  #ifndef irq_reg_writel
+>  # define irq_reg_writel(val, addr)	writel(val, addr)
+>  #endif
+> @@ -646,6 +657,8 @@ void irq_init_desc(unsigned int irq);
+>  # define irq_reg_readl(addr)		readl(addr)
+>  #endif
+>  
+> +#endif
+> +
+>  /**
+>   * struct irq_chip_regs - register offsets for struct irq_gci
+>   * @enable:	Enable register offset to reg_base
+> -- 
+> 2.1.1
+> 
+> 
