@@ -1,113 +1,51 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH RESEND V4 2/9] mailbox: Add NVIDIA Tegra XUSB mailbox driver
-Date: Wed, 29 Oct 2014 11:02:36 -0700
-Message-ID: <CAL1qeaG2DFyfsPa2wgDqOkYTbnJ-tXoiV48AF9EaSCf1QCtOyQ@mail.gmail.com>
-References: <1414535277-15645-1-git-send-email-abrestic@chromium.org>
-	<1414535277-15645-3-git-send-email-abrestic@chromium.org>
-	<20141029113415.GD28356@ulmo.nvidia.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] of/fdt: Don't clear initial_boot_params if
+ fdt_check_header() fails
+Date: Wed, 29 Oct 2014 12:15:00 -0600
+Message-ID: <20141029181500.16094.46561.stgit@bhelgaas-glaptop2.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141029113415.GD28356-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->> +     for (i = 0; i < ARRAY_SIZE(mbox->vchan_allocated); i++) {
->> +             if (mbox->vchan_allocated[i])
->> +                     mbox_chan_received_data(&mbox->mbox.chans[i], &msg);
->> +     }
->
-> It seems like the only reason why you need to explicitly check for an
-> allocated channel is that mbox_chan_received_data() would otherwise
-> crash. Are mailbox drivers really supposed to keep track of whether a
-> channel has been requested by a client? Isn't that something that should
-> be done in the core?
+If the device tree pointer is NULL, early_init_dt_verify() fails, leaving
+initial_boot_params unchanged.  If the device tree pointer is non-NULL but
+invalid, early_init_dt_verify() again fails but this time it also clears
+initial_boot_params.
 
-Yeah, I'd agree that this is something that should be handled by the core.
+Leave initial_boot_params unchanged if the device tree pointer is invalid.
+This doesn't fix a bug, but it makes the behavior more consistent and
+easier to analyze.
 
->> +static int tegra_xusb_mbox_probe(struct platform_device *pdev)
->> +{
->> +     struct tegra_xusb_mbox *mbox;
->> +     struct resource *res;
->> +     int ret;
->> +
->> +     mbox = devm_kzalloc(&pdev->dev, sizeof(*mbox), GFP_KERNEL);
->> +     if (!mbox)
->> +             return -ENOMEM;
->> +     platform_set_drvdata(pdev, mbox);
->> +     spin_lock_init(&mbox->lock);
->> +
->> +     mbox->mbox.dev = &pdev->dev;
->> +     mbox->mbox.chans = devm_kcalloc(&pdev->dev, TEGRA_XUSB_MBOX_NUM_CHANS,
->> +                                     sizeof(*mbox->mbox.chans), GFP_KERNEL);
->> +     if (!mbox->mbox.chans)
->> +             return -ENOMEM;
->> +     mbox->mbox.num_chans = TEGRA_XUSB_MBOX_NUM_CHANS;
->> +     mbox->mbox.ops = &tegra_xusb_mbox_chan_ops;
->> +     mbox->mbox.txdone_poll = true;
->> +     mbox->mbox.txpoll_period = 0; /* no need to actually poll */
->
-> Does the core perhaps need special handling for this? It seems like
-> poll_txdone() will always rearm the timer used to do the polling,
-> irrespective of whether the transfer is actually done or not.
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/of/fdt.c |    9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-Yeah, that doesn't seem quite right...
-
-> Maybe something like this patch would be more correct in handling
-> this:
->
-> diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-> index afcb430508ec..85691a7d8ca6 100644
-> --- a/drivers/mailbox/mailbox.c
-> +++ b/drivers/mailbox/mailbox.c
-> @@ -117,10 +117,11 @@ static void poll_txdone(unsigned long data)
->                 struct mbox_chan *chan = &mbox->chans[i];
->
->                 if (chan->active_req && chan->cl) {
-> -                       resched = true;
->                         txdone = chan->mbox->ops->last_tx_done(chan);
->                         if (txdone)
->                                 tx_tick(chan, 0);
-> +                       else
-> +                               resched = true;
->                 }
->         }
-
-... but we still need to re-arm the timer if tx_tick() submits another
-message.  Perhaps the better thing to do is to have msg_submit() arm
-the timer.
-
->> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +     if (!res)
->> +             return -ENODEV;
->> +     mbox->regs = devm_ioremap(&pdev->dev, res->start, resource_size(res));
->> +     if (!mbox->regs)
->> +             return -ENOMEM;
->
-> This doesn't look right. Upon closer inspection, the reason why you
-> don't use devm_request_resource() is because these registers are shared
-> with the XHCI controller.
->
-> Perhaps a better design would be for the XHCI driver to expose the
-> mailbox rather than split it off into a separate driver.
-
-Well that's what I had originally, but then it was suggested I make it
-a separate driver.
-
-Stephen also brought this up during review and suggested that some
-sort of MFD would be the best way to structure this, but was fine with
-the way I have it now.  I can move this driver around (again) if you
-feel that strongly about it...
-
->> diff --git a/include/soc/tegra/xusb.h b/include/soc/tegra/xusb.h
->> new file mode 100644
->> index 0000000..cfe211d
->> --- /dev/null
->> +++ b/include/soc/tegra/xusb.h
->
-> Perhaps this should really be named xusb-mbox.h?
-
-I'd prefer to leave it as xusb.h so that any other XUSB-related
-definitions can be left here.
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index d1ffca8b34ea..55a566a53f36 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -994,15 +994,12 @@ bool __init early_init_dt_verify(void *params)
+ 	if (!params)
+ 		return false;
+ 
+-	/* Setup flat device-tree pointer */
+-	initial_boot_params = params;
+-
+ 	/* check device tree validity */
+-	if (fdt_check_header(params)) {
+-		initial_boot_params = NULL;
++	if (fdt_check_header(params))
+ 		return false;
+-	}
+ 
++	/* Setup flat device-tree pointer */
++	initial_boot_params = params;
+ 	return true;
+ }
+ 
