@@ -1,44 +1,47 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v5 3/4] regulator: max77686: Add suspend disable for some
- LDOs
-Date: Wed, 29 Oct 2014 11:44:02 +0100
-Message-ID: <1414579442.18868.13.camel@AMDC1943>
-References: <1414411911-5539-1-git-send-email-k.kozlowski@samsung.com>
- <1414411911-5539-4-git-send-email-k.kozlowski@samsung.com>
- <20141028223121.GH18557@sirena.org.uk> <1414574413.18868.6.camel@AMDC1943>
- <20141029100142.GR18557@sirena.org.uk> <1414577934.18868.7.camel@AMDC1943>
- <20141029103140.GY18557@sirena.org.uk>
+From: Qais Yousef <qais.yousef@imgtec.com>
+Subject: Re: [alsa-devel] [PATCH 00/11] Add AXD Audio Processing IP driver
+Date: Wed, 29 Oct 2014 10:48:39 +0000
+Message-ID: <5450C607.9060603@imgtec.com>
+References: <1414495589-8579-1-git-send-email-qais.yousef@imgtec.com> <544F8439.4080402@ladisch.de> <544F97A4.7080209@imgtec.com> <20141028141348.GD18384@kroah.com> <544FB0AC.4020205@imgtec.com> <20141029025019.GA7568@kroah.com> <20141029052439.GT28745@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20141029103140.GY18557@sirena.org.uk>
+In-Reply-To: <20141029052439.GT28745@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>
+To: Vinod Koul <vinod.koul@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, Neil Jones <neil.jones@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, Clemens Ladisch <clemens@ladisch.de>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On =C5=9Bro, 2014-10-29 at 10:31 +0000, Mark Brown wrote:
-> On Wed, Oct 29, 2014 at 11:18:54AM +0100, Krzysztof Kozlowski wrote:
-> > On =C5=9Bro, 2014-10-29 at 10:01 +0000, Mark Brown wrote:
->=20
-> > > No, this isn't suspend enable control - this is normal, standard =
-enable
-> > > control and the device has no suspend enable control.
->=20
-> > You mean that for such regulator the driver shouldn't implement
-> > suspend_enable()?
->=20
-> Yes, if there is no separate control of suspend mode in hardware then=
- of
-> course the driver shouldn't implement operations for things it doesn'=
-t
-> have.
+On 10/29/2014 05:24 AM, Vinod Koul wrote:
+> On Wed, Oct 29, 2014 at 10:50:19AM +0800, Greg Kroah-Hartman wrote:
+>> cepted into staging until this is resolved?
+>> If you are willing to abide by the staging rules:
+>> 	- incremental patches only doing one thing at a time
+>> 	- never break the build
+>> 	- constantly moving forward to getting merged (i.e. no new
+>> 	  features being added)
+>>
+>> I think it will be easier for you to do the work outside of the tree as
+>> you are going to be changing the API, which is not going to be easy to
+>> do in an incremental patch series.
+>>
+>> And yes, this isn't going to be a trivial amount of work, sorry.
+> I am not sure if it can fit into staging model. The whole design of driver
+> would need rework and all the infrastructure added here for exposing stuff
+> to usermode will be thrown away, so this driver would simply need an
+> major overhaul.
+>
+> If this was ALSA driver and we would need to plumb it for acceptance then
+> would have made sense in include, but thats not the fact today
+>
+> Thanks
 
-Oh, thanks! I'll send fixed patch.
+Thanks for all the comments Vinod. Looks like I made a bad judgement, 
+clearly I wouldn't want to rewrite the code twice :) I'll take a closer 
+look at using the framework and maybe start with the features that we 
+know will work and build up the rest incrementally and address problems 
+from there.
 
-This means that probably the max77802 ("mirrored" driver) should be
-fixed...
-
-Best regards,
-Krzysztof
+Thanks,
+Qais
