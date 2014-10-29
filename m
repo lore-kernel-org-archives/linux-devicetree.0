@@ -1,61 +1,92 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: Re: [PATCH 10/11] irqchip: bcm7120-l2: Extend driver to support 64+
- bit controllers
-Date: Wed, 29 Oct 2014 16:22:31 -0700
-Message-ID: <CAJiQ=7D+QhFjg7mR49KE2Lu1SC72djBLhbv4sC37tSTga+BVCQ@mail.gmail.com>
-References: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
- <1414555138-6500-10-git-send-email-cernekee@gmail.com> <7518897.LmfE2WsusV@wuerfel>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [RFT v2 2/8] regulator: max77802: Remove support for board files
+Date: Thu, 30 Oct 2014 00:41:43 +0100
+Message-ID: <54517B37.9010305@collabora.co.uk>
+References: <1414595206-1437-1-git-send-email-k.kozlowski@samsung.com> <1414595206-1437-3-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7518897.LmfE2WsusV@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1414595206-1437-3-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 29, 2014 at 12:53 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 28 October 2014 20:58:57 Kevin Cernekee wrote:
->> Most implementations of the bcm7120-l2 controller only have a single
->> 32-bit enable word + 32-bit status word.  But some instances have added
->> more enable/status pairs in order to support 64+ IRQs (which are all
->> ORed into one parent IRQ input).  Make the following changes to allow
->> the driver to support this:
->>
->>  - Extend DT bindings so that multiple words can be specified for the
->>    reg property, various masks, etc.
->>
->>  - Add loops to the probe/handle functions to deal with each word
->>    separately
->>
->>  - Allocate 1 generic-chip for every 32 IRQs, so we can still use the
->>    clr/set helper functions
->>
->>  - Update the documentation
->>
->> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
->
-> You should probably specify a 'big-endian' DT property for the driver
-> to check. If you have both LE and BE versions of this device, we
-> must make sure that we use the correct accessors.
->
-> As long as we don't need to build a kernel that supports both (if
-> I understand you correctly, the ARM SoCs use a LE instance of this
-> device, while the MIPS SoCs use a BE version) you can still decide
-> at compile-time which one you want, but please add the runtime check
-> now, so if we ever get a new combination we can handle it at runtime
-> with a more complex driver implementation.
+Hello Krzysztof,
 
-Under discussion in the other thread...
+On 10/29/2014 04:06 PM, Krzysztof Kozlowski wrote:
+>  
+>  static int max77802_pmic_probe(struct platform_device *pdev)
+>  {
+>  	struct max77686_dev *iodev = dev_get_drvdata(pdev->dev.parent);
+> -	struct max77686_platform_data *pdata = dev_get_platdata(iodev->dev);
+>  	struct max77802_regulator_prv *max77802;
+>  	int i, ret = 0, val;
+>  	struct regulator_config config = { };
+> -
+> -	/* This is allocated by the MFD driver */
+> -	if (!pdata) {
+> -		dev_err(&pdev->dev, "no platform data found for regulator\n");
+> -		return -ENODEV;
+> -	}
+> +	struct of_regulator_match *rdata;
+>  
+>  	max77802 = devm_kzalloc(&pdev->dev,
+>  				sizeof(struct max77802_regulator_prv),
+> @@ -586,24 +558,29 @@ static int max77802_pmic_probe(struct platform_device *pdev)
+>  	if (!max77802)
+>  		return -ENOMEM;
+>  
+> -	if (iodev->dev->of_node) {
+> -		ret = max77802_pmic_dt_parse_pdata(pdev, pdata);
+> -		if (ret)
+> -			return ret;
+> -	}
+> -
+>  	config.dev = iodev->dev;
+>  	config.regmap = iodev->regmap;
+>  	config.driver_data = max77802;
+>  	platform_set_drvdata(pdev, max77802);
+>  
+> +	rdata = kzalloc(sizeof(*rdata) * MAX77802_REG_MAX, GFP_KERNEL);
+> +	if (!rdata)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < MAX77802_REG_MAX; i++)
+> +		rdata[i].name = regulators[i].name;
+> +
+> +	ret = max77802_pmic_dt_parse(pdev, rdata);
+> +	if (ret)
+> +		goto out;
+> +
+>  	for (i = 0; i < MAX77802_REG_MAX; i++) {
+>  		struct regulator_dev *rdev;
+> -		int id = pdata->regulators[i].id;
+> +		int id = regulators[i].id;
+>  		int shift = max77802_get_opmode_shift(id);
+>  
+> -		config.init_data = pdata->regulators[i].initdata;
+> -		config.of_node = pdata->regulators[i].of_node;
+> +		config.init_data = rdata[i].init_data;
+> +		config.of_node = rdata[i].of_node;
+>  
+>  		ret = regmap_read(iodev->regmap, regulators[i].enable_reg, &val);
+>  		val = val >> shift & MAX77802_OPMODE_MASK;
+> @@ -621,13 +598,17 @@ static int max77802_pmic_probe(struct platform_device *pdev)
+>  		rdev = devm_regulator_register(&pdev->dev,
+>  					       &regulators[i], &config);
 
-> If I read your code right, you have decided to use one IRQ domain
-> per register set, rather than one domain for all of them. I don't
-> know which of the two ways is better here, but it would be good if
-> you could explain in the patch description why you did it like this.
+Thanks for your patch. It's indeed an improvement over the old code and I can
+test it tomorrow when I've access to my machine with a max77802 PMIC.
 
-This uses one domain per bcm7120-l2 DT node.  If the DT node defines
-multiple enable/status pairs (i.e. >=64 IRQs) then the driver will
-create a single IRQ domain with 2+ generic chips.
+However, I don't think this is the change that Mark asked. AFAIU what he wanted
+is to fill the struct regulator_desc .of_match and .regulators_node fields so
+the init_data is extracted by the core on regulator registration.
 
-Multiple generic chips are required because the generic-chip code can
-only handle one enable/status register pair per instance.
+Look at commits a0c7b164 ("regulator: of: Provide simplified DT parsing method")
+and 93a127b ("regulator: isl9305: Convert to new style DT parsing") to see what
+I'm talking about.
+
+Best regards,
+Javier
