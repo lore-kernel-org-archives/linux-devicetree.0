@@ -1,43 +1,153 @@
 From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [PATCH v3 07/13] ARM: tegra: Add EMC to Tegra124 device tree
-Date: Wed, 29 Oct 2014 17:22:25 +0100
-Message-ID: <1414599796-30597-8-git-send-email-tomeu.vizoso@collabora.com>
+Subject: [PATCH v3 06/13] of: Add Tegra124 EMC bindings
+Date: Wed, 29 Oct 2014 17:22:24 +0100
+Message-ID: <1414599796-30597-7-git-send-email-tomeu.vizoso@collabora.com>
 References: <1414599796-30597-1-git-send-email-tomeu.vizoso@collabora.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1414599796-30597-1-git-send-email-tomeu.vizoso@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-tegra@vger.kernel.org
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Mikko Perttunen <mperttunen@nvidia.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Mikko Perttunen <mperttunen@nvidia.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Mikko Perttunen <mperttunen@nvidia.com>
 
-This adds a node for the EMC memory controller. It is always enabled, but only
-provides read-only functionality without board-specific timing tables.
+Add binding documentation for the nvidia,tegra124-emc device tree node.
 
 Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
 Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
----
- arch/arm/boot/dts/tegra124.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-index 0ee30f6..97c9f8b 100644
---- a/arch/arm/boot/dts/tegra124.dtsi
-+++ b/arch/arm/boot/dts/tegra124.dtsi
-@@ -567,6 +567,13 @@
- 		#iommu-cells = <1>;
- 	};
- 
+---
+
+v2:	* Specify the unit addresses for the timings and timing nodes
+---
+ .../bindings/memory-controllers/tegra-emc.txt      | 118 +++++++++++++++++++++
+ 1 file changed, 118 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt
+
+diff --git a/Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt b/Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt
+new file mode 100644
+index 0000000..fe64d57
+--- /dev/null
++++ b/Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt
+@@ -0,0 +1,118 @@
++NVIDIA Tegra124 SoC EMC (external memory controller)
++====================================================
++
++Required properties :
++- compatible : Should be "nvidia,tegra124-emc".
++- reg : physical base address and length of the controller's registers.
++- nvidia,memory-controller : phandle of the MC driver.
++
++The node should contain a "timings" subnode for each supported RAM type (see
++field RAM_CODE in register PMC_STRAPPING_OPT_A), with its unit address being its
++RAM_CODE.
++
++Required properties for "timings" nodes :
++- nvidia,ram-code : Should contain the value of RAM_CODE this timing set is used
++for.
++
++Each "timings" node should contain a "timing" subnode for every supported EMC
++clock rate. The "timing" subnodes should have the clock rate in Hz as their unit
++address.
++
++Required properties for "timing" nodes :
++- clock-frequency : Should contain the memory clock rate in Hz.
++- The following properties contain EMC timing characterization values (specified
++in the board documentation) :
++  - nvidia,emc-zcal-cnt-long
++  - nvidia,emc-auto-cal-interval
++  - nvidia,emc-ctt-term-ctrl
++  - nvidia,emc-cfg
++  - nvidia,emc-cfg-2
++  - nvidia,emc-sel-dpd-ctrl
++  - nvidia,emc-cfg-dig-dll
++  - nvidia,emc-bgbias-ctl0
++  - nvidia,emc-auto-cal-config
++  - nvidia,emc-auto-cal-config2
++  - nvidia,emc-auto-cal-config3
++  - nvidia,emc-mode-reset
++  - nvidia,emc-mode-1
++  - nvidia,emc-mode-2
++  - nvidia,emc-mode-4
++- nvidia,emc-configuration : EMC timing characterization data to be written to
++the EMC registers, as specified by the board documentation.
++
++Example SoC include file:
++
++/ {
 +	emc@0,7001b000 {
 +		compatible = "nvidia,tegra124-emc";
 +		reg = <0x0 0x7001b000 0x0 0x1000>;
 +
 +		nvidia,memory-controller = <&mc>;
 +	};
++};
 +
- 	sata@0,70020000 {
- 		compatible = "nvidia,tegra124-ahci";
- 
++Example board file:
++
++/ {
++	emc@0,7001b000 {
++		timings@3 {
++			nvidia,ram-code = <3>;
++
++			timing@12750000 {
++				clock-frequency = <12750000>;
++
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008c5>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-cfg-dig-dll = <0x002c0068>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++
++				nvidia,emc-configuration = <
++					0x00000000 /* EMC_RC */
++					0x00000003 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000000 /* EMC_RAS */
++					0x00000000 /* EMC_RP */
++				>;
++			};
++
++			timing@20400000 {
++				clock-frequency = <20400000>;
++
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008c5>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-cfg-dig-dll = <0x002c0068>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-auto-cal-config = <0x00000000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0xa1430000>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++
++				nvidia,emc-configuration = <
++					0x00000000
++					0x00000005
++					0x00000000
++					0x00000000
++					0x00000000
++				>;
++			};
++		};
++	};
++};
 -- 
 1.9.3
