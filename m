@@ -1,87 +1,43 @@
 From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [PATCH v3 04/13] of: document new emc-timings subnode in nvidia,tegra124-car
-Date: Wed, 29 Oct 2014 17:22:22 +0100
-Message-ID: <1414599796-30597-5-git-send-email-tomeu.vizoso@collabora.com>
+Subject: [PATCH v3 07/13] ARM: tegra: Add EMC to Tegra124 device tree
+Date: Wed, 29 Oct 2014 17:22:25 +0100
+Message-ID: <1414599796-30597-8-git-send-email-tomeu.vizoso@collabora.com>
 References: <1414599796-30597-1-git-send-email-tomeu.vizoso@collabora.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1414599796-30597-1-git-send-email-tomeu.vizoso@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-tegra@vger.kernel.org
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Mikko Perttunen <mperttunen@nvidia.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The EMC clock needs some extra information for changing its rate.
+From: Mikko Perttunen <mperttunen@nvidia.com>
 
+This adds a node for the EMC memory controller. It is always enabled, but only
+provides read-only functionality without board-specific timing tables.
+
+Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
 Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
 ---
- .../bindings/clock/nvidia,tegra124-car.txt         | 46 +++++++++++++++++++++-
- 1 file changed, 44 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/tegra124.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
-index ded5d62..42e0588 100644
---- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
-+++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
-@@ -19,12 +19,35 @@ Required properties :
-   In clock consumers, this cell represents the bit number in the CAR's
-   array of CLK_RST_CONTROLLER_RST_DEVICES_* registers.
- 
-+The node should contain a "emc-timings" subnode for each supported RAM type (see
-+field RAM_CODE in register PMC_STRAPPING_OPT_A), with its unit address being its
-+RAM_CODE.
-+
-+Required properties for "emc-timings" nodes :
-+- nvidia,ram-code : Should contain the value of RAM_CODE this timing set
-+  is used for.
-+
-+Each "emc-timings" node should contain a "timing" subnode for every supported
-+EMC clock rate. The "timing" subnodes should have the clock rate in Hz as their
-+unit address.
-+
-+Required properties for "timing" nodes :
-+- clock-frequency : Should contain the memory clock rate to which this timing
-+relates.
-+- nvidia,parent-clock-frequency : Should contain the rate at which the current
-+parent of the EMC clock should be running at this timing.
-+- clocks : Must contain an entry for each entry in clock-names.
-+  See ../clocks/clock-bindings.txt for details.
-+- clock-names : Must include the following entries:
-+  - emc-parent : the clock that should be the parent of the EMC clock at this
-+timing.
-+
- Example SoC include file:
- 
- / {
--	tegra_car: clock {
-+	tegra_car: clock@0,60006000 {
- 		compatible = "nvidia,tegra124-car";
--		reg = <0x60006000 0x1000>;
-+		reg = <0x0 0x60006000 0x0 0x1000>;
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
+diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
+index 0ee30f6..97c9f8b 100644
+--- a/arch/arm/boot/dts/tegra124.dtsi
++++ b/arch/arm/boot/dts/tegra124.dtsi
+@@ -567,6 +567,13 @@
+ 		#iommu-cells = <1>;
  	};
-@@ -60,4 +83,23 @@ Example board file:
- 	&tegra_car {
- 		clocks = <&clk_32k> <&osc>;
- 	};
+ 
++	emc@0,7001b000 {
++		compatible = "nvidia,tegra124-emc";
++		reg = <0x0 0x7001b000 0x0 0x1000>;
 +
-+	clock@0,60006000 {
-+		emc-timings@3 {
-+			nvidia,ram-code = <3>;
-+
-+			timing@12750000 {
-+				clock-frequency = <12750000>;
-+				nvidia,parent-clock-frequency = <408000000>;
-+				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
-+				clock-names = "emc-parent";
-+			};
-+			timing@20400000 {
-+				clock-frequency = <20400000>;
-+				nvidia,parent-clock-frequency = <408000000>;
-+				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
-+				clock-names = "emc-parent";
-+			};
-+		};
++		nvidia,memory-controller = <&mc>;
 +	};
- };
++
+ 	sata@0,70020000 {
+ 		compatible = "nvidia,tegra124-ahci";
+ 
 -- 
 1.9.3
