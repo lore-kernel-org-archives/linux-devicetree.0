@@ -1,86 +1,113 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: Re: [PATCH 01/11] irqchip: Allow irq_reg_{readl,writel} to use __raw_{readl_writel}
-Date: Wed, 29 Oct 2014 13:09:47 -0700
-Message-ID: <CAJiQ=7C7SzT2ngQzP=dQqdQz=+ShJ_Jf0z4kwFgvUKg1G3vrAw@mail.gmail.com>
-References: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
- <11255905.1JsQYcArO7@wuerfel> <CAJiQ=7BcVH52-PCo40dSEoNHjT1Pg8X88uq-KZ6tQPKYWaM94A@mail.gmail.com>
- <5338153.4SY4TFtus9@wuerfel>
+From: Roman Byshko <rbyshko@gmail.com>
+Subject: Re: [PATCH 2/5] ARM: dtsi: sunxi: add common VBUS regulator
+Date: Wed, 29 Oct 2014 21:13:50 +0100
+Message-ID: <CAMXmWBmU0j_tf_fseDP5p527SaO=iLB-=fKp1PCvE9J6FQk6dw@mail.gmail.com>
+References: <cover.1414444953.git.rbyshko@gmail.com> <210cc2a03d43e3d65b08f302b3b32663044ad94f.1414444953.git.rbyshko@gmail.com>
+ <20141028215137.GG9255@lukather>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5338153.4SY4TFtus9@wuerfel>
+In-Reply-To: <20141028215137.GG9255@lukather>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 29, 2014 at 12:14 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> The host CPU is connected to the peripheral/register interface using a
->> 32-bit wide data bus.  A simple 32-bit store originating from the host
->> CPU, targeted to an onchip SoC peripheral, will never need endian
->> swapping.  i.e. this code works equally well on all supported systems
->> regardless of endianness:
+Hi Maxime,
+
+thank you for the review!
+
+On Tue, Oct 28, 2014 at 10:51 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> On Mon, Oct 27, 2014 at 10:43:02PM +0100, Roman Byshko wrote:
+>> Until now the regulator nodes for powering USB VBUS
+>> existed only for the two host controllers. Now the regulator
+>> is added for USB OTG too.
+>> ---
+>>  arch/arm/boot/dts/sunxi-common-regulators.dtsi | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
 >>
->>     volatile u32 *foo = (void *)MY_REG_VA;
->>     *foo = 0x12345678;
+>> diff --git a/arch/arm/boot/dts/sunxi-common-regulators.dtsi b/arch/arm/boot/dts/sunxi-common-regulators.dtsi
+>> index c9c5b10..f521672 100644
+>> --- a/arch/arm/boot/dts/sunxi-common-regulators.dtsi
+>> +++ b/arch/arm/boot/dts/sunxi-common-regulators.dtsi
+>> @@ -21,6 +21,13 @@
+>>                               allwinner,pull = <0>;
+>>                       };
 >>
->> 8-bit and 16-bit accesses may be another story, but only appear in a
->> few very special peripherals.
->
-> Sorry, but this makes no sense. If you run a little-endian kernel
-> on one of the MIPS systems that you marked as "always BE", or a
-> big-endian kernel on the systems that are marked "always LE",
-> then you have to byte swap.
-
-If I ran an LE MIPS kernel on a BE system, it would hang on boot.  I
-know this through experience. ;-)
-
-Setting aside the problem that the instruction words, pointers, and
-bitfields in the image are all in the wrong byte order, there are many
-other endian-specific assumptions baked into the executable.
-
-Does this actually work on other architectures like ARM?  I still see
-compile-time checks for CONFIG_CPU_ENDIAN* in a couple of places under
-arch/arm.
-
->> FWIW, several of the BCM7xxx peripherals default to "native" mode (no
->> swap for either LE/BE), but can be optionally reconfigured as LE in
->> order to preserve compatibility with the standard AHCI/SDHCI/...
->> drivers that use the PCI accessors.
->
-> The reconfigurability is definitely the worst part.
-
-That depends on who is doing the reconfiguring...
-
-If the kernel has to support both options, then it's definitely a
-hassle (and probably quite intrusive for some drivers).
-
-In our case we just enable swapping unconditionally and then use the
-stock driver code, with no changes to the I/O accessors.
-
->> Or, we could add IRQ_GC_NATIVE_IO and/or IRQ_GC_BE_IO to enum irq_gc_flags.
+>> +                     usb0_vbus_pin_a: usb0_vbus_pin@0 {
+>> +                             allwinner,pins = "PB9";
+>> +                             allwinner,function = "gpio_out";
+>> +                             allwinner,drive = <0>;
+>> +                             allwinner,pull = <0>;
+>> +                     };
+>> +
+>>                       usb1_vbus_pin_a: usb1_vbus_pin@0 {
+>>                               allwinner,pins = "PH6";
+>>                               allwinner,function = "gpio_out";
+>> @@ -49,6 +56,18 @@
+>>               status = "disabled";
+>>       };
 >>
->> Would either of these choices satisfy everyone's goals?
+>> +     reg_usb0_vbus: usb0-vbus {
+>> +             compatible = "regulator-fixed";
+>> +             pinctrl-names = "default";
+>> +             pinctrl-0 = <&usb0_vbus_pin_a>;
+>> +             regulator-name = "usb0-vbus";
+>> +             regulator-min-microvolt = <5000000>;
+>> +             regulator-max-microvolt = <5000000>;
+>> +             enable-active-high;
+>> +             gpio = <&pio 1 9 0>;
+>> +             status = "disabled";
+>> +     };
 >
-> This is what I meant with doing extra work in the case where we want to
-> support both in the same kernel. We would only enable the runtime
-> logic if both GENERIC_IRQ_CHIP and GENERIC_IRQ_CHIP_BE are set, and
-> leave it up to the platform to select the right one. For MIPS BCM7xxx,
-> you could use
->
-> config BCM7xxx
->         select GENERIC_IRQ_CHIP if CPU_LITTLE_ENDIAN
->         select GENERIC_IRQ_CHIP_BE if CPU_BIG_ENDIAN
->
-> so you would default to the hardwired big-endian accessor unless
-> some other drivers selects GENERIC_IRQ_CHIP.
+> We're using these regulators because a huuuge majority of the boards
+> out there, regardless of their SoC, are using the same GPIO to drive
+> the same regulator. Is this the case here? What board have you looked
+> at?
 
-generic-chip.c already has a fair amount of indirection, with pointers
-to saved masks, user-specified register offsets, and such.  Is there a
-concern that introducing, say, a pair of readl/writel function
-pointers, would cause an unacceptable performance drop?
+Currently I'm developing and testing for Cubietruck. I also have a few
+other boards (with different SoC), I will add corresponding DT nodes
+for them later.
 
-Backing up a little bit, do we have a consensus that defining
-irq_reg_{readl,writel} at compile time from include/linux/irq.h is a
-bad idea for multiplatform images, and it should be removed one way or
-another?
+As for GPIO which is used to drive the USB0 VBUS pin.
+
+$ git remote show origin
+* remote origin
+  Fetch URL: https://github.com/linux-sunxi/sunxi-boards.git
+  Push  URL: https://github.com/linux-sunxi/sunxi-boards.git
+...
+$ grep -A7 usbc0 -r . | grep usb_drv_vbus_gpio | grep port | sort |
+cut -d: -f2 | cut -d "<" -f1 | sort | uniq -c
+      1 PA16
+      1 PA17
+     67 PB09
+      4 PB10
+      1 PB9
+      1 PC17
+      1 PD25
+      4 PG11
+     21 PG12
+      1 PG13
+      1 PH17
+      4 power4
+
+So PB09 is most often used. PG12 is used on (alsmost always) A13. So
+propose to make PB09 default, then override it in sun5i-a13.dtsi and
+later in board dts file if needed.
+
+Cubietruck uses PH17. That is why I override PB09 in its dts file.
+
+Sounds good?
+
+Best,
+Roman
+
+
+> Thanks,
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
