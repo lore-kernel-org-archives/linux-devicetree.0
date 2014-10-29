@@ -1,113 +1,68 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: [PATCH V3 2/4] of: Add binding document for MIPS GIC
-Date: Tue, 28 Oct 2014 17:12:40 -0700
-Message-ID: <1414541562-10076-3-git-send-email-abrestic@chromium.org>
-References: <1414541562-10076-1-git-send-email-abrestic@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414541562-10076-1-git-send-email-abrestic@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Andrew Bresticker <abrestic@chromium.org>, John Crispin <blogic@openwrt.org>, David Daney <ddaney.cavm@gmail.com>, Qais Yousef <qais.yousef@imgtec.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Hong jinkun <jinkun.hong@rock-chips.com>
+Subject: Re: [PATCH v7 1/3] power-domain: add power domain drivers for Rockchip
+ platform
+Date: Wed, 29 Oct 2014 09:00:09 +0800
+Message-ID: <54503C19.9060607@rock-chips.com>
+References: <1414135761-3406-1-git-send-email-jinkun.hong@rock-chips.com> <1414135761-3406-2-git-send-email-jinkun.hong@rock-chips.com> <20141024164431.GE19933@dtor-ws> <20141027233904.GD7594@dtor-ws>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141027233904.GD7594@dtor-ws>
+Sender: linux-doc-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, Jack Dai <jack.dai@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-The Global Interrupt Controller (GIC) present on certain MIPS systems
-can be used to route external interrupts to individual VPEs and CPU
-interrupt vectors.  It also supports a timer and software-generated
-interrupts.
 
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
----
-Changes from v2:
- - added third cell to specify local vs. shared
- - added documentation for timer sub-node
- - changed compatible string to include CPU version
-Changes from v1:
- - moved from mips/ to interrupt-controller/
- - removed interrupts and interrupt-parent properties
- - added available-cpu-vectors property
- - dropped third cell in interrupt specifier
----
- .../bindings/interrupt-controller/mips-gic.txt     | 55 ++++++++++++++++++++++
- .../dt-bindings/interrupt-controller/mips-gic.h    |  9 ++++
- 2 files changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
- create mode 100644 include/dt-bindings/interrupt-controller/mips-gic.h
+=E5=9C=A8 2014/10/28 7:39, Dmitry Torokhov =E5=86=99=E9=81=93:
+> On Fri, Oct 24, 2014 at 09:44:31AM -0700, Dmitry Torokhov wrote:
+>> Hi Jinkun,
+>>
+>> On Fri, Oct 24, 2014 at 12:29:19AM -0700, jinkun.hong wrote:
+>>> +static int rockchip_pd_power(struct rockchip_domain *pd, bool powe=
+r_on)
+>>> +{
+>>> +	int ret =3D 0;
+>>> +	struct rockchip_dev_entry *de;
+>>> +
+>>> +	mutex_lock(&pd->dev_lock);
+>>> +	/* no clk, set power domain will fail */
+>>> +	if (list_empty(&pd->dev_list)) {
+>>> +		pr_err("%s: no devices in %s power domain\n", __func__,
+>>> +			pd->base.name);
+>>> +		goto out;
+>>> +	}
+>>> +
+>>> +	list_for_each_entry(de, &pd->dev_list, node) {
+>>> +		pm_clk_resume(de->dev);
+>>> +	}
+>>> +
+>>> +	ret =3D rockchip_pmu_set_power_domain(pd, power_on);
+>>> +
+>>> +	list_for_each_entry(de, &pd->dev_list, node) {
+>>> +		pm_clk_suspend(de->dev);
+>>> +	}
+>>> +out:
+>>> +	mutex_unlock(&pd->dev_lock);
+>>> +	return ret;
+>>> +}
+>> For my education, could you please tell me why we need to enable all
+>> clocks of all devices in a power domain when we are talking to the P=
+MU
+>> and then turn them immediately off?
+Sorry for late reply.RK3288 reset circuit are first asynchronous reset=20
+and then sync revoked.
+All reset revocation actions are needed to synchronize the clocks.
+If there is no clock open, power_up reset will cause the corresponding=20
+reset can not be undone, there will be risks.
+>> Would not we want to enable clocks
+>> in start()) callbacks, like Ulf mentioned?
+Can you tell me which one patch it. Thank you!
+> Jinkun, any update on this question?
+>
+> Thanks.
+>
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt b/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-new file mode 100644
-index 0000000..84cbbed
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-@@ -0,0 +1,55 @@
-+MIPS Global Interrupt Controller (GIC)
-+
-+The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
-+It also supports local (per-processor) interrupts and software-generated
-+interrupts which can be used as IPIs.  The GIC also includes a free-running
-+global timer, per-CPU count/compare timers, and a watchdog.
-+
-+Required properties:
-+- compatible : Should be "mti,<cpu>-gic".  Supported variants:
-+  - "mti,interaptiv-gic"
-+- reg : Base address and length of the GIC registers.
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt specifier.  Should be 3.
-+  - The first cell is the type of interrupt, local or shared.
-+    See <include/dt-bindings/interrupt-controller/mips-gic.h>.
-+  - The second cell is the GIC interrupt number.
-+  - The third cell encodes the interrupt flags.
-+    See <include/dt-bindings/interrupt-controller/irq.h> for a list of valid
-+    flags.
-+- mti,available-cpu-vectors : Specifies the list of CPU interrupt vectors
-+  to which the GIC may route interrupts.  May contain up to 6 entries, one
-+  for each of the CPU's hardware interrupt vectors.  Valid values are 2 - 7.
-+  This property is ignored if the CPU is started in EIC mode.
-+
-+Required properties for timer sub-node:
-+- compatible : Should be "mti,<cpu>-gic-timer".  Supported variants:
-+  - "mti,interaptiv-gic-timer"
-+- interrupts : Interrupt for the GIC local timer.
-+- clock-frequency : Clock frequency at which the GIC timers operate.
-+
-+Example:
-+
-+	gic: interrupt-controller@1bdc0000 {
-+		compatible = "mti,interaptiv-gic";
-+		reg = <0x1bdc0000 0x20000>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+
-+		mti,available-cpu-vectors = <2>, <3>, <4>, <5>;
-+
-+		timer {
-+			compatible = "mti,interaptiv-gic-timer";
-+			interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
-+			clock-frequency = <50000000>;
-+		};
-+	};
-+
-+	uart@18101400 {
-+		...
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>;
-+		...
-+	};
-diff --git a/include/dt-bindings/interrupt-controller/mips-gic.h b/include/dt-bindings/interrupt-controller/mips-gic.h
-new file mode 100644
-index 0000000..cf35a57
---- /dev/null
-+++ b/include/dt-bindings/interrupt-controller/mips-gic.h
-@@ -0,0 +1,9 @@
-+#ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_MIPS_GIC_H
-+#define _DT_BINDINGS_INTERRUPT_CONTROLLER_MIPS_GIC_H
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+#define GIC_SHARED 0
-+#define GIC_LOCAL 1
-+
-+#endif
--- 
-2.1.0.rc2.206.gedb03e5
+
