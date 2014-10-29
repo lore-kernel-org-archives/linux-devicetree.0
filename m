@@ -1,71 +1,66 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH 01/11] irqchip: Allow irq_reg_{readl,writel} to use __raw_{readl_writel}
-Date: Tue, 28 Oct 2014 20:58:48 -0700
-Message-ID: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
+Subject: [PATCH 03/11] irqchip: bcm7120-l2: Eliminate bad IRQ check
+Date: Tue, 28 Oct 2014 20:58:50 -0700
+Message-ID: <1414555138-6500-3-git-send-email-cernekee@gmail.com>
+References: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On big-endian systems readl/writel may perform an unwanted endian swap,
-breaking generic-chip.c.  Let the platform code opt to use the __raw_
-variants by selecting RAW_IRQ_ACCESSORS.
+This check may be prone to race conditions, e.g.
 
-This is required in order for bcm3384 to use GENERIC_IRQ_CHIP.  Several
-existing irqchip drivers also use the __raw_ accessors directly, so it
-is a reasonably common requirement.
+1) Some external event (e.g. GPIO level) causes an IRQ to become pending
+2) Peripheral asserts the L2 IRQ
+3) CPU takes an interrupt
+4) The event from #1 goes away
+5) bcm7120_l2_intc_irq_handle() reads back a 0 status
+
+Unlike the hardware supported by brcmstb-l2, the bcm7120-l2 controller
+does not latch the IRQ status.  Bits can change if the inputs to the
+controller change.  Also, do_bad_IRQ() is an ARM-specific macro.
+
+So let's just nuke it.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- drivers/irqchip/Kconfig |  3 +++
- include/linux/irq.h     | 13 +++++++++++++
- 2 files changed, 16 insertions(+)
+ drivers/irqchip/irq-bcm7120-l2.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index b21f12f..6f0e80b 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -2,6 +2,9 @@ config IRQCHIP
- 	def_bool y
- 	depends on OF_IRQ
+diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
+index b9f4fb8..49d8f3d 100644
+--- a/drivers/irqchip/irq-bcm7120-l2.c
++++ b/drivers/irqchip/irq-bcm7120-l2.c
+@@ -27,8 +27,6 @@
  
-+config RAW_IRQ_ACCESSORS
-+	bool
-+
- config ARM_GIC
- 	bool
- 	select IRQ_DOMAIN
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index 03f48d9..ed1ea8a 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -639,6 +639,17 @@ void arch_teardown_hwirq(unsigned int irq);
- void irq_init_desc(unsigned int irq);
- #endif
+ #include "irqchip.h"
  
-+#ifdef CONFIG_RAW_IRQ_ACCESSORS
-+
-+#ifndef irq_reg_writel
-+# define irq_reg_writel(val, addr)	__raw_writel(val, addr)
-+#endif
-+#ifndef irq_reg_readl
-+# define irq_reg_readl(addr)		__raw_readl(addr)
-+#endif
-+
-+#else
-+
- #ifndef irq_reg_writel
- # define irq_reg_writel(val, addr)	writel(val, addr)
- #endif
-@@ -646,6 +657,8 @@ void irq_init_desc(unsigned int irq);
- # define irq_reg_readl(addr)		readl(addr)
- #endif
+-#include <asm/mach/irq.h>
+-
+ /* Register offset in the L2 interrupt controller */
+ #define IRQEN		0x00
+ #define IRQSTAT		0x04
+@@ -51,19 +49,12 @@ static void bcm7120_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
+ 	chained_irq_enter(chip, desc);
  
-+#endif
-+
- /**
-  * struct irq_chip_regs - register offsets for struct irq_gci
-  * @enable:	Enable register offset to reg_base
+ 	status = __raw_readl(b->base + IRQSTAT);
+-
+-	if (status == 0) {
+-		do_bad_IRQ(irq, desc);
+-		goto out;
+-	}
+-
+ 	do {
+ 		irq = ffs(status) - 1;
+ 		status &= ~(1 << irq);
+ 		generic_handle_irq(irq_find_mapping(b->domain, irq));
+ 	} while (status);
+ 
+-out:
+ 	chained_irq_exit(chip, desc);
+ }
+ 
 -- 
 2.1.1
