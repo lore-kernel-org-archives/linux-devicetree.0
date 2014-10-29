@@ -1,83 +1,614 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH v2 2/2] ARM: shmobile: lager: enable USB3.0
-Date: Wed, 29 Oct 2014 20:19:30 +0900
-Message-ID: <5450CD42.9070101@renesas.com>
-References: <1414147307-4584-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>	<1414147307-4584-3-git-send-email-yoshihiro.shimoda.uh@renesas.com> <CANqRtoQTBd23z4uVK-EB7JJuJ_K0GkV6ueVfnywShqe6Dx0T5w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CANqRtoQTBd23z4uVK-EB7JJuJ_K0GkV6ueVfnywShqe6Dx0T5w@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: "Simon Horman [Horms]" <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-USB <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 1/2] ARM: socfpga: Add driver for the L3 interconnect
+Date: Wed, 29 Oct 2014 12:33:55 +0100
+Message-ID: <1414582436-12772-1-git-send-email-s.trumtrar@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus-san,
+The L3 interconnect provides Global Programmer View (GPV) registers for every
+AXI master and slave on the SoC.
+Although this is just a bunch of bits, syscon is not the right approach for
+this IP core.
+The L3 interconnect is configured with a lot of reserved "holes" in its memory
+space. Just mapping this with regmap, what syscon would do, would lead to the
+system completely hanging, if one of those areas would be touched.
+One example for when this might happen is the regmap registers dump in the
+debugfs.
 
-(2014/10/29 15:53), Magnus Damm wrote:
-> On Fri, Oct 24, 2014 at 7:41 PM, Yoshihiro Shimoda
-> <yoshihiro.shimoda.uh@renesas.com> wrote:
->> Since the PHY of USB3.0 and EHCI/OHCI ch2 are the same, the USB3.0
->> driver cannot use the phy driver when the EHCI/OHCI ch2 already used it:
->>
->> phy phy-e6590100.usb-phy.3: phy init failed --> -16
->> xhci-hcd: probe of ee000000.usb failed with error -16
->>
->> If so, we have to unbind the EHCI/OHCI ch2, and then we have to bind
->> the USB3.0 driver as the following:
->>
->>   echo 0000:02:02.0 > /sys/bus/pci/drivers/ehci-pci/unbind
->>   echo 0000:02:01.0 > /sys/bus/pci/drivers/ohci-pci/unbind
->>   echo ee000000.usb > /sys/bus/platform/drivers/xhci-hcd/bind
->>
->> Note that there will be pinctrl-related error messages if both
->> internal PCI and USB3.0 are enabled but they should be just ignored:
->>
->> sh-pfc e6060000.pfc: pin GP_5_22 already requested by ee0d0000.pci; cannot claim for ee000000.usb
->> sh-pfc e6060000.pfc: pin-182 (ee000000.usb) status -22
->> ata1: SATA link down (SStatus 0 SControl 300)
->> sh-pfc e6060000.pfc: could not request pin 182 (GP_5_22) from group usb2  on device sh-pfc
->>
->> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->> ---
->>  arch/arm/boot/dts/r8a7790-lager.dts |    6 ++++++
->>  1 file changed, 6 insertions(+)
-> 
-> Hi Shimoda-san,
-> 
-> Thanks for your patch. I'm fine with this patch as a first step, but
-> I'm wondering what the reason is to prioritize USB 2.0 over USB 3.0?
+This driver specifies also the valid readable and writable ranges of the L3
+interconnect. Other drivers that want to access their GPV registers can do
+so with this driver via socfpga_l3nic_regmap_by_phandle.
 
-I investigated this reason today, and I found the reason is request_firmware().
-I checked the following environments:
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ .../bindings/soc/socfpga/altr,l3-nic.txt           |  15 ++
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/socfpga/Kconfig                        |  11 +
+ drivers/soc/socfpga/Makefile                       |   1 +
+ drivers/soc/socfpga/l3nic.c                        | 221 +++++++++++++++++++++
+ include/soc/socfpga/gpv.h                          |  63 ++++++
+ include/soc/socfpga/l3regs.h                       | 194 ++++++++++++++++++
+ 8 files changed, 507 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/socfpga/altr,l3-nic.txt
+ create mode 100644 drivers/soc/socfpga/Kconfig
+ create mode 100644 drivers/soc/socfpga/Makefile
+ create mode 100644 drivers/soc/socfpga/l3nic.c
+ create mode 100644 include/soc/socfpga/gpv.h
+ create mode 100644 include/soc/socfpga/l3regs.h
 
- Case 1: xHCI and EHCI and OHCI are enabled "=y"
- Case 2: xHCI and EHCI and OHCI are loadable modules "=m"
- Case 3: xHCI and EHCI and OHCI are enabled "=y", and CONFIG_EXTRA_FIRMWARE is enabled
+diff --git a/Documentation/devicetree/bindings/soc/socfpga/altr,l3-nic.txt b/Documentation/devicetree/bindings/soc/socfpga/altr,l3-nic.txt
+new file mode 100644
+index 000000000000..d9491f14eed3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/socfpga/altr,l3-nic.txt
+@@ -0,0 +1,15 @@
++Altera SOCFPGA L3 Network Interconnect
++--------------------------------------
++
++The L3 NIC provides access to Global Programmer View (GPV) registers for all
++AXI slaves and masters on the SoC.
++
++Required properties:
++- compatible : "altr,l3-nic"
++- reg : Should contain 1 register range (address and length)
++
++Example:
++	 gpv@ff800000 {
++		compatible = "altr,l3-nic";
++		reg = <0xff800000 0x100000>;
++	};
+diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+index 76d6bd4da138..11db07da894f 100644
+--- a/drivers/soc/Kconfig
++++ b/drivers/soc/Kconfig
+@@ -1,6 +1,7 @@
+ menu "SOC (System On Chip) specific Drivers"
+ 
+ source "drivers/soc/qcom/Kconfig"
++source "drivers/soc/socfpga/Kconfig"
+ source "drivers/soc/ti/Kconfig"
+ source "drivers/soc/versatile/Kconfig"
+ 
+diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+index 063113d0bd38..0f89173e328a 100644
+--- a/drivers/soc/Makefile
++++ b/drivers/soc/Makefile
+@@ -3,6 +3,7 @@
+ #
+ 
+ obj-$(CONFIG_ARCH_QCOM)		+= qcom/
++obj-$(CONFIG_ARCH_SOCFPGA)	+= socfpga/
+ obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
+ obj-$(CONFIG_SOC_TI)		+= ti/
+ obj-$(CONFIG_PLAT_VERSATILE)	+= versatile/
+diff --git a/drivers/soc/socfpga/Kconfig b/drivers/soc/socfpga/Kconfig
+new file mode 100644
+index 000000000000..0478c959ab2c
+--- /dev/null
++++ b/drivers/soc/socfpga/Kconfig
+@@ -0,0 +1,11 @@
++#
++# SoCFPGA Soc drivers
++#
++
++config SOCFPGA_L3NIC
++	tristate "SoCFPGA L3 NIC-301 driver"
++	depends on ARCH_SOCFPGA
++	select REGMAP_MMIO
++	default y
++	help
++	  Enable configuration support for the SoCFPGA L3 AMBA Network Interconnect.
+diff --git a/drivers/soc/socfpga/Makefile b/drivers/soc/socfpga/Makefile
+new file mode 100644
+index 000000000000..e6616d079226
+--- /dev/null
++++ b/drivers/soc/socfpga/Makefile
+@@ -0,0 +1 @@
++obj-$(CONFIG_SOCFPGA_L3NIC) += l3nic.o
+diff --git a/drivers/soc/socfpga/l3nic.c b/drivers/soc/socfpga/l3nic.c
+new file mode 100644
+index 000000000000..87cae77e5764
+--- /dev/null
++++ b/drivers/soc/socfpga/l3nic.c
+@@ -0,0 +1,221 @@
++/*
++ * Copyright 2014 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/types.h>
++#include <soc/socfpga/gpv.h>
++#include <soc/socfpga/l3regs.h>
++
++static const struct regmap_range l3nic_write_regs_range[] = {
++	regmap_reg_range(L3NIC_REMAP, L3NIC_REMAP),
++	regmap_reg_range(L3NIC_L4MAIN, L3NIC_LWHPS2FPGAREGS),
++	regmap_reg_range(L3NIC_USB1, L3NIC_NANDDATA),
++	regmap_reg_range(L3NIC_USB0, L3NIC_SDRDATA),
++	regmap_reg_range(L3NIC_L4_MAIN_FN_MOD_BM_ISS, L3NIC_L4_MAIN_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_L4_SP_FN_MOD_BM_ISS, L3NIC_L4_SP_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_L4_MP_FN_MOD_BM_ISS, L3NIC_L4_MP_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_L4_OSC1_FN_MOD_BM_ISS, L3NIC_L4_OSC1_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_L4_SPIM_FN_MOD_BM_ISS, L3NIC_L4_SPIM_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_STM_FN_MOD_BM_ISS, L3NIC_STM_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_STM_FN_MOD, L3NIC_STM_FN_MOD),
++	regmap_reg_range(L3NIC_LWHPS2FPGA_FN_MOD_BM_ISS, L3NIC_LWHPS2FPGA_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_LWHPS2FPGA_FN_MOD, L3NIC_LWHPS2FPGA_FN_MOD),
++	regmap_reg_range(L3NIC_USB1_FN_MOD_BM_ISS, L3NIC_USB1_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_USB1_AHB_CNTL, L3NIC_USB1_AHB_CNTL),
++	regmap_reg_range(L3NIC_NANDDATA_FN_MOD_BM_ISS, L3NIC_NANDDATA_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_NANDDATA_FN_MOD, L3NIC_NANDDATA_FN_MOD),
++	regmap_reg_range(L3NIC_USB0_FN_MOD_BM_ISS, L3NIC_USB0_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_USB0_AHB_CNTL, L3NIC_USB0_AHB_CNTL),
++	regmap_reg_range(L3NIC_QSPIDATA_FN_MOD_BM_ISS, L3NIC_QSPIDATA_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_QSPIDATA_AHB_CNTL, L3NIC_QSPIDATA_AHB_CNTL),
++	regmap_reg_range(L3NIC_FPGAMGRDATA_FN_MOD_BM_ISS, L3NIC_FPGAMGRDATA_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_FPGAMGRDATA_WR_TIDEMARK, L3NIC_FPGAMGRDATA_WR_TIDEMARK),
++	regmap_reg_range(L3NIC_FPGAMGRDATA_FN_MOD, L3NIC_FPGAMGRDATA_FN_MOD),
++	regmap_reg_range(L3NIC_HPS2FPGA_FN_MOD_BM_ISS, L3NIC_HPS2FPGA_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_HPS2FPGA_WR_TIDEMARK, L3NIC_HPS2FPGA_WR_TIDEMARK),
++	regmap_reg_range(L3NIC_HPS2FPGA_FN_MOD, L3NIC_HPS2FPGA_FN_MOD),
++	regmap_reg_range(L3NIC_ACP_FN_MOD_BM_ISS, L3NIC_ACP_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_ACP_FN_MOD, L3NIC_ACP_FN_MOD),
++	regmap_reg_range(L3NIC_BOOT_ROM_FN_MOD_BM_ISS, L3NIC_BOOT_ROM_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_BOOT_ROM_FN_MOD, L3NIC_BOOT_ROM_FN_MOD),
++	regmap_reg_range(L3NIC_OCRAM_FN_MOD_BM_ISS, L3NIC_OCRAM_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_OCRAM_WR_TIDEMARK, L3NIC_OCRAM_WR_TIDEMARK),
++	regmap_reg_range(L3NIC_OCRAM_FN_MOD, L3NIC_OCRAM_FN_MOD),
++	regmap_reg_range(L3NIC_DAP_FN_MOD2, L3NIC_DAP_FN_MOD_AHB),
++	regmap_reg_range(L3NIC_DAP_READ_QOS, L3NIC_DAP_FN_MOD),
++	regmap_reg_range(L3NIC_MPU_READ_QOS, L3NIC_MPU_FN_MOD),
++	regmap_reg_range(L3NIC_SDMMC_FN_MOD_AHB, L3NIC_SDMMC_FN_MOD_AHB),
++	regmap_reg_range(L3NIC_SDMMC_READ_QOS, L3NIC_SDMMC_FN_MOD),
++	regmap_reg_range(L3NIC_DMA_READ_QOS, L3NIC_DMA_FN_MOD),
++	regmap_reg_range(L3NIC_FPGA2HPS_WR_TIDEMARK, L3NIC_FPGA2HPS_WR_TIDEMARK),
++	regmap_reg_range(L3NIC_FPGA2HPS_READ_QOS, L3NIC_FPGA2HPS_FN_MOD),
++	regmap_reg_range(L3NIC_ETR_READ_QOS, L3NIC_ETR_FN_MOD),
++	regmap_reg_range(L3NIC_EMAC0_READ_QOS, L3NIC_EMAC0_FN_MOD),
++	regmap_reg_range(L3NIC_EMAC1_READ_QOS, L3NIC_EMAC1_FN_MOD),
++	regmap_reg_range(L3NIC_USB0_FN_MOD_AHB, L3NIC_USB0_FN_MOD_AHB),
++	regmap_reg_range(L3NIC_USB0_READ_QOS, L3NIC_USB0_FN_MOD),
++	regmap_reg_range(L3NIC_NAND_READ_QOS, L3NIC_NAND_FN_MOD),
++	regmap_reg_range(L3NIC_USB1_FN_MOD_AHB, L3NIC_USB1_FN_MOD_AHB),
++	regmap_reg_range(L3NIC_USB1_READ_QOS, L3NIC_USB1_FN_MOD),
++};
++
++static const struct regmap_range l3nic_read_regs_range[] = {
++	regmap_reg_range(L3NIC_REMAP, L3NIC_REMAP),
++
++	regmap_reg_range(L3NIC_PERIPH_ID_4, L3NIC_PERIPH_ID_4),
++	regmap_reg_range(L3NIC_PERIPH_ID_0, L3NIC_COMP_ID_3),
++
++	regmap_reg_range(L3NIC_L4_MAIN_FN_MOD_BM_ISS, L3NIC_L4_MAIN_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_L4_SP_FN_MOD_BM_ISS, L3NIC_L4_SP_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_L4_MP_FN_MOD_BM_ISS, L3NIC_L4_MP_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_L4_OSC1_FN_MOD_BM_ISS, L3NIC_L4_OSC1_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_L4_SPIM_FN_MOD_BM_ISS, L3NIC_L4_SPIM_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_STM_FN_MOD_BM_ISS, L3NIC_STM_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_STM_FN_MOD, L3NIC_STM_FN_MOD),
++	regmap_reg_range(L3NIC_LWHPS2FPGA_FN_MOD_BM_ISS, L3NIC_LWHPS2FPGA_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_LWHPS2FPGA_FN_MOD, L3NIC_LWHPS2FPGA_FN_MOD),
++	regmap_reg_range(L3NIC_USB1_FN_MOD_BM_ISS, L3NIC_USB1_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_USB1_AHB_CNTL, L3NIC_USB1_AHB_CNTL),
++	regmap_reg_range(L3NIC_NANDDATA_FN_MOD_BM_ISS, L3NIC_NANDDATA_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_NANDDATA_FN_MOD, L3NIC_NANDDATA_FN_MOD),
++	regmap_reg_range(L3NIC_USB0_FN_MOD_BM_ISS, L3NIC_USB0_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_USB0_AHB_CNTL, L3NIC_USB0_AHB_CNTL),
++	regmap_reg_range(L3NIC_QSPIDATA_FN_MOD_BM_ISS, L3NIC_QSPIDATA_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_QSPIDATA_AHB_CNTL, L3NIC_QSPIDATA_AHB_CNTL),
++	regmap_reg_range(L3NIC_FPGAMGRDATA_FN_MOD_BM_ISS, L3NIC_FPGAMGRDATA_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_FPGAMGRDATA_WR_TIDEMARK, L3NIC_FPGAMGRDATA_WR_TIDEMARK),
++	regmap_reg_range(L3NIC_FPGAMGRDATA_FN_MOD, L3NIC_FPGAMGRDATA_FN_MOD),
++	regmap_reg_range(L3NIC_HPS2FPGA_FN_MOD_BM_ISS, L3NIC_HPS2FPGA_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_HPS2FPGA_WR_TIDEMARK, L3NIC_HPS2FPGA_WR_TIDEMARK),
++	regmap_reg_range(L3NIC_HPS2FPGA_FN_MOD, L3NIC_HPS2FPGA_FN_MOD),
++	regmap_reg_range(L3NIC_ACP_FN_MOD_BM_ISS, L3NIC_ACP_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_ACP_FN_MOD, L3NIC_ACP_FN_MOD),
++	regmap_reg_range(L3NIC_BOOT_ROM_FN_MOD_BM_ISS, L3NIC_BOOT_ROM_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_BOOT_ROM_FN_MOD, L3NIC_BOOT_ROM_FN_MOD),
++	regmap_reg_range(L3NIC_OCRAM_FN_MOD_BM_ISS, L3NIC_OCRAM_FN_MOD_BM_ISS),
++	regmap_reg_range(L3NIC_OCRAM_WR_TIDEMARK, L3NIC_OCRAM_WR_TIDEMARK),
++	regmap_reg_range(L3NIC_OCRAM_FN_MOD, L3NIC_OCRAM_FN_MOD),
++	regmap_reg_range(L3NIC_DAP_FN_MOD2, L3NIC_DAP_FN_MOD_AHB),
++	regmap_reg_range(L3NIC_DAP_READ_QOS, L3NIC_DAP_FN_MOD),
++	regmap_reg_range(L3NIC_MPU_READ_QOS, L3NIC_MPU_FN_MOD),
++	regmap_reg_range(L3NIC_SDMMC_FN_MOD_AHB, L3NIC_SDMMC_FN_MOD_AHB),
++	regmap_reg_range(L3NIC_SDMMC_READ_QOS, L3NIC_SDMMC_FN_MOD),
++	regmap_reg_range(L3NIC_DMA_READ_QOS, L3NIC_DMA_FN_MOD),
++	regmap_reg_range(L3NIC_FPGA2HPS_WR_TIDEMARK, L3NIC_FPGA2HPS_WR_TIDEMARK),
++	regmap_reg_range(L3NIC_FPGA2HPS_READ_QOS, L3NIC_FPGA2HPS_FN_MOD),
++	regmap_reg_range(L3NIC_ETR_READ_QOS, L3NIC_ETR_FN_MOD),
++	regmap_reg_range(L3NIC_EMAC0_READ_QOS, L3NIC_EMAC0_FN_MOD),
++	regmap_reg_range(L3NIC_EMAC1_READ_QOS, L3NIC_EMAC1_FN_MOD),
++	regmap_reg_range(L3NIC_USB0_FN_MOD_AHB, L3NIC_USB0_FN_MOD_AHB),
++	regmap_reg_range(L3NIC_USB0_READ_QOS, L3NIC_USB0_FN_MOD),
++	regmap_reg_range(L3NIC_NAND_READ_QOS, L3NIC_NAND_FN_MOD),
++	regmap_reg_range(L3NIC_USB1_FN_MOD_AHB, L3NIC_USB1_FN_MOD_AHB),
++	regmap_reg_range(L3NIC_USB1_READ_QOS, L3NIC_USB1_FN_MOD),
++};
++
++static const struct regmap_access_table l3nic_write_regs = {
++	.yes_ranges = l3nic_write_regs_range,
++	.n_yes_ranges = ARRAY_SIZE(l3nic_write_regs_range),
++};
++
++static const struct regmap_access_table l3nic_read_regs = {
++	.yes_ranges = l3nic_read_regs_range,
++	.n_yes_ranges = ARRAY_SIZE(l3nic_read_regs_range),
++};
++
++static struct regmap_config l3nic_regmap_config = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.reg_stride = 4,
++	.rd_table = &l3nic_read_regs,
++	.wr_table = &l3nic_write_regs,
++	.cache_type = REGCACHE_RBTREE,
++};
++
++int socfpga_l3nic_regmap_by_phandle(struct device_node *np,
++				    struct regmap **regmap,
++				    const char *name)
++{
++	struct socfpga_l3nic *l3nic;
++	struct platform_device *pdev;
++
++	pdev = socfpga_gpv_device_by_phandle(np, name);
++	if (!pdev)
++		return PTR_ERR(pdev);
++
++	l3nic = dev_get_drvdata(&pdev->dev);
++	if (!l3nic)
++		return -EINVAL;
++
++	*regmap = l3nic->regmap;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(socfpga_l3nic_regmap_by_phandle);
++
++static int socfpga_l3nic_probe(struct platform_device *pdev)
++{
++	struct socfpga_l3nic *priv;
++	struct resource *res;
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	priv->base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(priv->base))
++		return PTR_ERR(priv->base);
++
++	l3nic_regmap_config.max_register = res->end - res->start - 3;
++	priv->regmap = devm_regmap_init_mmio(&pdev->dev, priv->base,
++					     &l3nic_regmap_config);
++	if (IS_ERR(priv->regmap)) {
++		dev_err(&pdev->dev, "regmap init failed\n");
++		return PTR_ERR(priv->regmap);
++	}
++
++	platform_set_drvdata(pdev, priv);
++
++	dev_info(&pdev->dev, "L3 NIC-301 registered\n");
++
++	return 0;
++}
++
++static int socfpga_l3nic_remove(struct platform_device *pdev)
++{
++	return 0;
++}
++
++static const struct of_device_id socfpga_l3nic_dt_ids[] = {
++	{ .compatible = "altr,l3-nic", },
++	{ /* sentinel */ },
++};
++
++static struct platform_driver socfpga_l3nic_driver = {
++	.probe	= socfpga_l3nic_probe,
++	.remove	= socfpga_l3nic_remove,
++	.driver = {
++		.name		= "socfpga-l3-nic",
++		.owner		= THIS_MODULE,
++		.of_match_table	= socfpga_l3nic_dt_ids,
++	},
++};
++module_platform_driver(socfpga_l3nic_driver);
++
++MODULE_AUTHOR("Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org");
++MODULE_DESCRIPTION("Socfpga L3 NIC-301 Interconnect Driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/soc/socfpga/gpv.h b/include/soc/socfpga/gpv.h
+new file mode 100644
+index 000000000000..31bb555ea2c3
+--- /dev/null
++++ b/include/soc/socfpga/gpv.h
+@@ -0,0 +1,63 @@
++/*
++ * Copyright (c) 2014 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#ifndef __SOC_SOCFPGA_GPV_H__
++#define __SOC_SOCFPGA_GPV_H__
++
++#ifdef CONFIG_ARCH_SOCFPGA
++
++#include <linux/device.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++
++#define GPV_FN_MOD_BM_ISS_WR		BIT(1)
++#define GPV_FN_MOD_BM_ISS_RD		BIT(0)
++#define GPV_AHB_CNTL_FORCE_INCR		BIT(1)
++#define GPV_AHB_CNTL_DECERR_EN		BIT(0)
++#define GPV_WR_TIDEMARK_MASK		0xf
++#define GPV_FN_MOD_AHB_WR_INCR_OVERRIDE	BIT(1)
++#define GPV_FN_MOD_AHB_RD_INCR_OVERRIDE	BIT(0)
++#define GPV_FN_MOD_WR			BIT(1)
++#define GPV_FN_MOD_RD			BIT(0)
++#define GPV_FN_MOD_BYPASS_MERGE		BIT(0)
++#define GPV_READ_QOS_MASK		0xf
++#define GPV_WRITE_QOS_MASK		0xf
++
++static inline struct platform_device *socfpga_gpv_device_by_phandle(
++							struct device_node *np,
++							const char *name)
++{
++	struct device_node *gpv_np;
++	struct platform_device *pdev;
++
++	gpv_np = of_parse_phandle(np, name, 0);
++	if (!gpv_np)
++		return ERR_PTR(-EINVAL);
++
++	pdev = of_find_device_by_node(gpv_np);
++
++	of_node_put(gpv_np);
++
++	if (!pdev)
++		return ERR_PTR(-EPROBE_DEFER);
++
++	return pdev;
++}
++
++#else
++
++static struct platform_device *socfpga_gpv_device_by_phandle(
++							struct device_node *np,
++							const char *name)
++{
++	return ERR_PTR(-ENOSYS);
++}
++
++#endif
++#endif
+diff --git a/include/soc/socfpga/l3regs.h b/include/soc/socfpga/l3regs.h
+new file mode 100644
+index 000000000000..90fc67af6315
+--- /dev/null
++++ b/include/soc/socfpga/l3regs.h
+@@ -0,0 +1,194 @@
++/*
++ * Copyright (c) 2014 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#ifndef __SOC_SOCFPGA_L3NIC_H__
++#define __SOC_SOCFPGA_L3NIC_H__
++
++#ifdef CONFIG_ARCH_SOCFPGA
++
++#define L3NIC_REMAP			0x0
++
++/* Security Registers */
++
++#define L3NIC_L4MAIN			0x8
++#define L3NIC_L4SP			0xc
++#define L3NIC_L4MP			0x10
++#define L3NIC_L4OSC1			0x14
++#define L3NIC_L4SPIM			0x18
++#define L3NIC_STM			0x1c
++#define L3NIC_LWHPS2FPGAREGS		0x20
++
++#define L3NIC_USB1			0x28
++#define L3NIC_NANDDATA			0x2c
++
++#define L3NIC_USB0			0x80
++#define L3NIC_NANDREGS			0x84
++#define L3NIC_QSPIDATA			0x88
++#define L3NIC_FPGAMGRDATA		0x8c
++#define L3NIC_HPS2FPGAREGS		0x90
++#define L3NIC_ACP			0x94
++#define L3NIC_ROM			0x98
++#define L3NIC_OCRAM			0x9c
++#define L3NIC_SDRDATA			0xa0
++
++/* ID registers */
++
++#define L3NIC_PERIPH_ID_4		0x1fd0
++
++#define L3NIC_PERIPH_ID_0		0x1fe0
++#define L3NIC_PERIPH_ID_1		0x1fe4
++#define L3NIC_PERIPH_ID_2		0x1fe8
++#define L3NIC_PERIPH_ID_3		0x1fec
++#define L3NIC_COMP_ID_0			0x1ff0
++#define L3NIC_COMP_ID_1			0x1ff4
++#define L3NIC_COMP_ID_2			0x1ff8
++#define L3NIC_COMP_ID_3			0x1ffc
++
++/* Master Registers */
++
++#define L3NIC_L4_MAIN_FN_MOD_BM_ISS	0x2008
++
++#define L3NIC_L4_SP_FN_MOD_BM_ISS	0x3008
++
++#define L3NIC_L4_MP_FN_MOD_BM_ISS	0x4008
++
++#define L3NIC_L4_OSC1_FN_MOD_BM_ISS	0x5008
++
++#define L3NIC_L4_SPIM_FN_MOD_BM_ISS	0x6008
++
++#define L3NIC_STM_FN_MOD_BM_ISS		0x7008
++
++#define L3NIC_STM_FN_MOD		0x7108
++
++#define L3NIC_LWHPS2FPGA_FN_MOD_BM_ISS	0x8008
++
++#define L3NIC_LWHPS2FPGA_FN_MOD		0x8108
++
++#define L3NIC_USB1_FN_MOD_BM_ISS	0xa008
++
++#define L3NIC_USB1_AHB_CNTL		0xa044
++
++#define L3NIC_NANDDATA_FN_MOD_BM_ISS	0xb008
++
++#define L3NIC_NANDDATA_FN_MOD		0xb108
++
++#define L3NIC_USB0_FN_MOD_BM_ISS	0x20008
++
++#define L3NIC_USB0_AHB_CNTL		0x20044
++
++#define L3NIC_QSPIDATA_FN_MOD_BM_ISS	0x22008
++
++#define L3NIC_QSPIDATA_AHB_CNTL		0x22044
++
++#define L3NIC_FPGAMGRDATA_FN_MOD_BM_ISS	0x23008
++
++#define L3NIC_FPGAMGRDATA_WR_TIDEMARK	0x23040
++
++#define L3NIC_FPGAMGRDATA_FN_MOD	0x23108
++
++#define L3NIC_HPS2FPGA_FN_MOD_BM_ISS	0x24008
++
++#define L3NIC_HPS2FPGA_WR_TIDEMARK	0x24040
++
++#define L3NIC_HPS2FPGA_FN_MOD		0x24108
++
++#define L3NIC_ACP_FN_MOD_BM_ISS		0x25008
++
++#define L3NIC_ACP_FN_MOD		0x25108
++
++#define L3NIC_BOOT_ROM_FN_MOD_BM_ISS	0x26008
++
++#define L3NIC_BOOT_ROM_FN_MOD		0x26108
++
++#define L3NIC_OCRAM_FN_MOD_BM_ISS	0x27008
++
++#define L3NIC_OCRAM_WR_TIDEMARK		0x27040
++
++#define L3NIC_OCRAM_FN_MOD		0x27108
++
++/* Slave Registers */
++
++#define L3NIC_DAP_FN_MOD2		0x42024
++#define L3NIC_DAP_FN_MOD_AHB		0x42028
++
++#define L3NIC_DAP_READ_QOS		0x42100
++#define L3NIC_DAP_WRITE_QOS		0x42104
++#define L3NIC_DAP_FN_MOD		0x42108
++
++#define L3NIC_MPU_READ_QOS		0x43100
++#define L3NIC_MPU_WRITE_QOS		0x43104
++#define L3NIC_MPU_FN_MOD		0x43108
++
++#define L3NIC_SDMMC_FN_MOD_AHB		0x44028
++
++#define L3NIC_SDMMC_READ_QOS		0x44100
++#define L3NIC_SDMMC_WRITE_QOS		0x44104
++#define L3NIC_SDMMC_FN_MOD		0x44108
++
++#define L3NIC_DMA_READ_QOS		0x45100
++#define L3NIC_DMA_WRITE_QOS		0x45104
++#define L3NIC_DMA_FN_MOD		0x45108
++
++#define L3NIC_FPGA2HPS_WR_TIDEMARK	0x46040
++
++#define L3NIC_FPGA2HPS_READ_QOS		0x46100
++#define L3NIC_FPGA2HPS_WRITE_QOS	0x46104
++#define L3NIC_FPGA2HPS_FN_MOD		0x46108
++
++#define L3NIC_ETR_READ_QOS		0x47100
++#define L3NIC_ETR_WRITE_QOS		0x47104
++#define L3NIC_ETR_FN_MOD		0x47108
++
++#define L3NIC_EMAC0_READ_QOS		0x48100
++#define L3NIC_EMAC0_WRITE_QOS		0x48104
++#define L3NIC_EMAC0_FN_MOD		0x48108
++
++#define L3NIC_EMAC1_READ_QOS		0x49100
++#define L3NIC_EMAC1_WRITE_QOS		0x49104
++#define L3NIC_EMAC1_FN_MOD		0x49108
++
++#define L3NIC_USB0_FN_MOD_AHB		0x4a028
++
++#define L3NIC_USB0_READ_QOS		0x4a100
++#define L3NIC_USB0_WRITE_QOS		0x4a104
++#define L3NIC_USB0_FN_MOD		0x4a108
++
++#define L3NIC_NAND_READ_QOS		0x4b100
++#define L3NIC_NAND_WRITE_QOS		0x4b104
++#define L3NIC_NAND_FN_MOD		0x4b108
++
++#define L3NIC_USB1_FN_MOD_AHB		0x4c028
++
++#define L3NIC_USB1_READ_QOS		0x4c100
++#define L3NIC_USB1_WRITE_QOS		0x4c104
++#define L3NIC_USB1_FN_MOD		0x4c108
++
++#define L3NIC_LWHPS2FPGA_VISIBILITY	BIT(4)
++#define L3NIC_HPS2FPGA_VISIBILITY	BIT(3)
++
++struct socfpga_l3nic {
++	void __iomem		*base;
++	struct regmap		*regmap;
++};
++
++extern int socfpga_l3nic_regmap_by_phandle(struct device_node *np,
++					   struct regmap **regmap,
++					   const char *name);
++
++#else
++
++int socfpga_l3nic_regmap_by_phandle(struct device_node *np,
++				    struct regmap *regmap,
++				    const char *name)
++{
++	return ERR_PTR(-ENOSYS);
++}
++
++#endif
++#endif
+-- 
+2.1.1
 
-The results are:
- - In "Case 1", EHCI and OHCI are probed first because xHCI didn't find the firmware.
- - In "Case 2" and "Case 3", xHCI is probed first.
-
-> Is the current order just based on device init order? In my mind the
-> expected behavior would be to always use USB 3.0 if it happens to be
-> available in the hardware, specified in the DTS, enabled by the kernel
-> configuration and firmware is loadable. Or does some case exist where
-> it is better to use USB 2.0? I suspect no.
-
-I agree with you.
-
-> So I wonder if you have any plans how to make USB 3.0 enabled by
-> default on Lager?
-
-It depends on a kernel config. I'm not sure of the shmobile_defconfig strategy.
-But, in my opinion, one of a solution is kernel modules (this means the "Case 2".)
-
-Best regards,
-Yoshihiro Shimoda
-
-> Thanks,
-> 
-> / magnus
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
