@@ -1,64 +1,26 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v6 0/7] This is the 1st version of suspend for RK3288.
-Date: Wed, 29 Oct 2014 22:50:53 +0100
-Message-ID: <2524690.yVcDsnFz2O@diego>
-References: <1414583525-17395-1-git-send-email-zyw@rock-chips.com> <7hppda7iaa.fsf@deeprootsystems.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 01/11] irqchip: Allow irq_reg_{readl,writel} to use
+ __raw_{readl_writel}
+Date: Wed, 29 Oct 2014 22:50:27 +0100 (CET)
+Message-ID: <alpine.DEB.2.11.1410292250020.5308@nanos>
+References: <1414555138-6500-1-git-send-email-cernekee@gmail.com> <22478002.kqKBdeLAKz@wuerfel> <alpine.DEB.2.11.1410292226050.5308@nanos> <3403771.J3X9ZBogqZ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <7hppda7iaa.fsf@deeprootsystems.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: Chris Zhong <zyw@rock-chips.com>, dianders@chromium.org, mturquette@linaro.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, linux-rockchip@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Tony Xie <xxx@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3403771.J3X9ZBogqZ@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 29. Oktober 2014, 13:06:05 schrieb Kevin Hilman:
-> Hi Chris,
-> 
-> Chris Zhong <zyw@rock-chips.com> writes:
-> > RK3288 can shut down the cpu, gpu and other device controllers in suspend,
-> > and it will pull the GLOBAL_PWROFF pin to high in the final stage of the
-> > process of suspend, pull the pin to low again when resume.
-> 
-> I tried to test this on top of linux-next (next-20141029) and it doesn't
-> wake up from serial port activity.
-> 
-> Can you describe how to test this, as well as describe dependencies on
-> other out-of-tree patches, including pointers to where they've been
-> posted.
-> 
-> Also, please describe how you tested this and on which hardware
-> platforms.  It's a big help to reviewers to know how it's been tested,
-> and for anyone with similar hardware to know what else it's been tested
-> on.
+On Wed, 29 Oct 2014, Arnd Bergmann wrote:
+> Right. The option that I was explaining earlier basically combines #1 and
+> #3: For all kernels on which we know the endianess of all generic-irqchip
+> users at compile time, we hardcode that, and we use indirections of
+> some sort for the cases where we build a kernel that needs both.
 
-When testing this series it did go to sleep with
+Works for me.
 
-/ # echo mem > /sys/power/state 
-PM: Syncing filesystems ... done.
-Freezing user space processes ... (elapsed 0.010 seconds) done.
-Freezing remaining freezable tasks ... (elapsed 0.010 seconds) done.
-PM: suspend of devices complete after 0.001 msecs
-PM: late suspend of devices complete after 0.001 msecs
-PM: noirq suspend of devices complete after 0.001 msecs
-Disabling non-boot CPUs ...
-CPU1: shutdown
-CPU2: shutdown
-CPU3: shutdown
+Thanks,
 
-and the change in pmic-noise lets me assume it's really asleep.
-
-
-But I'm not exactly sure how to wake it up again. I even hard-wired the gpio-
-keys to always enable the irq wake, but so far it didn't wake again when 
-pressing the power-key on the evb.
-
-If anyone wants to peek, the collected patches (Doug's and Chris') can be 
-found on [0].
-
-
-Heiko
-
-
-[0] https://github.com/mmind/linux-rockchip/tree/wip/rk3288-suspend
+	tglx
