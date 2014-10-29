@@ -1,85 +1,40 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 11/11] irqchip: Decouple bcm7120-l2 from brcmstb-l2
-Date: Wed, 29 Oct 2014 09:56:14 -0700
-Message-ID: <54511C2E.50007@gmail.com>
-References: <1414555138-6500-1-git-send-email-cernekee@gmail.com> <1414555138-6500-11-git-send-email-cernekee@gmail.com>
+From: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V3 2/4] of: Add binding document for MIPS GIC
+Date: Wed, 29 Oct 2014 17:05:13 +0000
+Message-ID: <54511E49.6090907@imgtec.com>
+References: <1414541562-10076-1-git-send-email-abrestic@chromium.org>	<1414541562-10076-3-git-send-email-abrestic@chromium.org>	<5450C915.9030600@imgtec.com> <CAL1qeaGm1Ma=B-gJV2ovnLNYFooq6bv12rODq4d8cGtKLeNy-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414555138-6500-11-git-send-email-cernekee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL1qeaGm1Ma=B-gJV2ovnLNYFooq6bv12rODq4d8cGtKLeNy-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/28/2014 08:58 PM, Kevin Cernekee wrote:
-> Some chips, such as BCM6328, only require the former driver.  Some
-> BCM7xxx STB configurations only require the latter driver.  Treat them
-> as two separate entities, and update the mach-bcm dependencies to
-> reflect the change.
-> 
-> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+On 10/29/2014 04:56 PM, Andrew Bresticker wrote:
+> On Wed, Oct 29, 2014 at 4:01 AM, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+>> On 10/29/2014 12:12 AM, Andrew Bresticker wrote:
+>>> +- mti,available-cpu-vectors : Specifies the list of CPU interrupt vectors
+>>> +  to which the GIC may route interrupts.  May contain up to 6 entries,
+>>> one
+>>> +  for each of the CPU's hardware interrupt vectors.  Valid values are 2 -
+>>> 7.
+>>> +  This property is ignored if the CPU is started in EIC mode.
+>>> +
+>>
+>> Wouldn't it be better to have this in the reversed sense ie:
+>> mti,nonavailable-cpu-vectors? I think the assumption that by default they're
+>> all available unless something else is connected to them which is unlikely
+>> in most cases. It can be made optional property then.
+>>
+>> I don't have a strong opinion about it though.
+> Actually, I think I like the reversed sense as well.  Perhaps
+> "mti,reserved-cpu-vectors"?
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-
-> ---
->  arch/arm/mach-bcm/Kconfig        | 1 +
->  drivers/irqchip/Kconfig          | 5 +++++
->  drivers/irqchip/Makefile         | 4 ++--
->  drivers/irqchip/irq-bcm7120-l2.c | 2 +-
->  4 files changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-> index 2abad74..bf47eb0 100644
-> --- a/arch/arm/mach-bcm/Kconfig
-> +++ b/arch/arm/mach-bcm/Kconfig
-> @@ -125,6 +125,7 @@ config ARCH_BRCMSTB
->  	select HAVE_ARM_ARCH_TIMER
->  	select BRCMSTB_GISB_ARB
->  	select BRCMSTB_L2_IRQ
-> +	select BCM7120_L2_IRQ
->  	help
->  	  Say Y if you intend to run the kernel on a Broadcom ARM-based STB
->  	  chipset.
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index 6a03c65..2d52b07 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -51,6 +51,11 @@ config ATMEL_AIC5_IRQ
->  	select MULTI_IRQ_HANDLER
->  	select SPARSE_IRQ
->  
-> +config BCM7120_L2_IRQ
-> +	bool
-> +	select GENERIC_IRQ_CHIP
-> +	select IRQ_DOMAIN
-> +
->  config BRCMSTB_L2_IRQ
->  	bool
->  	select GENERIC_IRQ_CHIP
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index 173bb5f..f0909d0 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -35,6 +35,6 @@ obj-$(CONFIG_TB10X_IRQC)		+= irq-tb10x.o
->  obj-$(CONFIG_XTENSA)			+= irq-xtensa-pic.o
->  obj-$(CONFIG_XTENSA_MX)			+= irq-xtensa-mx.o
->  obj-$(CONFIG_IRQ_CROSSBAR)		+= irq-crossbar.o
-> -obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o \
-> -					   irq-bcm7120-l2.o
-> +obj-$(CONFIG_BCM7120_L2_IRQ)		+= irq-bcm7120-l2.o
-> +obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
->  obj-$(CONFIG_KEYSTONE_IRQ)		+= irq-keystone.o
-> diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
-> index 734fece..91065b9 100644
-> --- a/drivers/irqchip/irq-bcm7120-l2.c
-> +++ b/drivers/irqchip/irq-bcm7120-l2.c
-> @@ -247,5 +247,5 @@ out_unmap:
->  	kfree(data);
->  	return ret;
->  }
-> -IRQCHIP_DECLARE(brcmstb_l2_intc, "brcm,bcm7120-l2-intc",
-> +IRQCHIP_DECLARE(bcm7120_l2_intc, "brcm,bcm7120-l2-intc",
->  		bcm7120_l2_intc_of_init);
-> 
+Yep that's a better wording for sure :)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
