@@ -1,44 +1,39 @@
-From: Max Filippov <jcmvbkbc@gmail.com>
-Subject: Re: [PATCH] ASoC: add xtensa xtfpga I2S interface and platform
-Date: Wed, 29 Oct 2014 17:23:15 +0300
-Message-ID: <CAMo8BfJfRTo7puxeafyBnaGWhY38o6ktsSBugcSmSaMYUArcyw@mail.gmail.com>
-References: <1414436825-19416-1-git-send-email-jcmvbkbc@gmail.com>
-	<20141027193229.GE18557@sirena.org.uk>
-	<CAMo8Bf+Z9V8mkiC3JOupPQmi1EJUDKrb1qcNncDbsEbhjigbww@mail.gmail.com>
-	<20141028154224.GX18557@sirena.org.uk>
-	<CAMo8BfLpJ0bdmaFt9+gLQ_kEjB68XdjAJUw8f8s=Owv46h_yDQ@mail.gmail.com>
-	<20141028173853.GD18557@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141028173853.GD18557@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: alsa-devel@alsa-project.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, LKML <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 3/3] ARM: shmobile: koelsch dts: Drop console= bootargs parameter
+Date: Wed, 29 Oct 2014 15:28:38 +0100
+Message-ID: <1414592918-25138-4-git-send-email-geert+renesas@glider.be>
+References: <1414592918-25138-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1414592918-25138-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 28, 2014 at 8:38 PM, Mark Brown <broonie@kernel.org> wrote:
-> On Tue, Oct 28, 2014 at 08:00:45PM +0300, Max Filippov wrote:
->> On Tue, Oct 28, 2014 at 6:42 PM, Mark Brown <broonie@kernel.org> wrote:
->> >> > I would also expect to see the data transfer and I2S bits more split
->> >> > out, presumably this IP can actually be used in designs with a DMA
->> >> > controller and one would expect that for practical systems this would be
->> >> > the common case?
->
->> >> I don't know of other designs that use this IP block. Can we do it when
->> >> we get such users?
->
->> > It's also about ensuring that the code is cleanly split up so that
->> > someone can actually go in and add the required support later (and TBH
->
->> Can you point me to an example of such split, so that I don't write it in
->> an unusual way?
->
-> Essentially all drivers are split this way...
+Since commit 595c6a4bb77f0096 ("ARM: shmobile: koelsch: Remove legacy C
+board code"), koelsch is restricted to booting from DT, so
+chosen/stdout-path is always used, and we can drop the "console="
+parameter from chosen/bootargs.
 
-But all of them have DMA registers and I2S registers completely separated,
-right? How do I share registers between pcm and i2s parts?
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org
+---
+ arch/arm/boot/dts/r8a7791-koelsch.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
+index 191f32bc43ea6dad..523ae4d807b907b2 100644
+--- a/arch/arm/boot/dts/r8a7791-koelsch.dts
++++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
+@@ -25,7 +25,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "console=ttySC6,115200 ignore_loglevel rw root=/dev/nfs ip=dhcp";
++		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
+ 		stdout-path = &scif0;
+ 	};
+ 
 -- 
-Thanks.
--- Max
+1.9.1
+
