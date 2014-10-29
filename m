@@ -1,49 +1,51 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v5 3/4] regulator: max77686: Add suspend disable for some
- LDOs
-Date: Wed, 29 Oct 2014 11:18:54 +0100
-Message-ID: <1414577934.18868.7.camel@AMDC1943>
-References: <1414411911-5539-1-git-send-email-k.kozlowski@samsung.com>
- <1414411911-5539-4-git-send-email-k.kozlowski@samsung.com>
- <20141028223121.GH18557@sirena.org.uk> <1414574413.18868.6.camel@AMDC1943>
- <20141029100142.GR18557@sirena.org.uk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v1 1/3] gpio: Add APM X-Gene standby GPIO controller driver
+Date: Wed, 29 Oct 2014 11:24:26 +0100
+Message-ID: <2178918.XVCQXOyoGA@wuerfel>
+References: <1412779948-28769-1-git-send-email-yvo@apm.com> <2988580.WvjMBY1UOc@wuerfel> <CACRpkdao2F1NK-3QpqSOLzFdvjWFVU4HqcqZPA2fXHpQN=BUsQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20141029100142.GR18557@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdao2F1NK-3QpqSOLzFdvjWFVU4HqcqZPA2fXHpQN=BUsQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Y Vo <yvo@apm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Tin Huynh <tnhuynh@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On =C5=9Bro, 2014-10-29 at 10:01 +0000, Mark Brown wrote:
-> On Wed, Oct 29, 2014 at 10:20:13AM +0100, Krzysztof Kozlowski wrote:
-> > On wto, 2014-10-28 at 22:31 +0000, Mark Brown wrote:
->=20
-> > > This looks wrong, you're using the regular enable operation as su=
-spend
-> > > enable.  How does that work without disrupting the current runtim=
-e
-> > > state?
->=20
-> > Currently it shouldn't disrupt state of regulator because during ru=
-ntime
-> > it may only be only: on (0x3) or off (0x0). Suspend enable in max77=
-686
-> > writes 0x3 to the register which means - always on.
->=20
-> > If regulator was disabled before suspend then it has to be enabled
-> > during suspend_enable() call which is exactly what max77686_enable =
-does.
-> > If it was enabled then nothing happens.
->=20
-> No, this isn't suspend enable control - this is normal, standard enab=
-le
-> control and the device has no suspend enable control.
+On Wednesday 29 October 2014 10:52:47 Linus Walleij wrote:
+> On Fri, Oct 24, 2014 at 3:46 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Friday 24 October 2014 14:14:43 Linus Walleij wrote:
+> > See the discussion I had on this. Yes, each line is connected to a
+> > GIC SPI interrupt by itself. I've discussed this with Marc Zyngier
+> > and Thomas Gleixner at the conference last week, and we concluded
+> > that we will need a new generic interface to get data out of the
+> > parent interrupt controller in a proper way. The current implementation
+> > just maps the GIC registers and reads them directly, which of course
+> > is not a proper way to do it.
+> 
+> Hmmmmmm. OK shall we hold this driver until the infrastructure
+> issues are resolved?
 
-You mean that for such regulator the driver shouldn't implement
-suspend_enable()?
+Y could send a first version that does not support the IRQ lines
+if he wants to speed up the process.
 
-Best regards,
-Krzysztof
+> The following is a recurring pattern among GPIO controllers:
+> the GPIO controller can go offline (asycnhcronous) and while it
+> is offline a secondary logic triggers an IRQ that wakes the system
+> up, however the GPIO logic cannot really "see" that IRQ since
+> it was sleeping when it arrived.
+> 
+> Thus a latent IRQ is pending in the wakeup logic. This concept
+> exists in drivers/pinctrl/nomadik/pinctrl-nomadik.c and I strongly
+> prefer to call these "latent irqs" as it's a clear unambigous
+> terminology.
+> 
+> So is this a case of latent IRQs pending in the GIC?
+
+I think this case is different, from what I understand, the GPIO
+controller cannot implement gpio_chip->get() for any line that
+is connected to the GIC, and it has to ask the GIC instead.
+This seems independent of the online/offline state of the controller.
+
+	Arnd
