@@ -1,38 +1,103 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v6 2/3] regulator: max77802: Remove suspend_enable
-Date: Wed, 29 Oct 2014 12:34:57 +0100
-Message-ID: <5450D0E1.7040904@collabora.co.uk>
-References: <1414581294-1315-1-git-send-email-k.kozlowski@samsung.com> <1414581294-1315-3-git-send-email-k.kozlowski@samsung.com>
+From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Subject: Re: [PATCH] DT: video: atmel_lcdc: Add example of fixed framebuffer memory
+Date: Wed, 29 Oct 2014 12:38:54 +0100
+Message-ID: <26692054.u1iXJ3GzEA@ws-stein>
+References: <1396333730-10592-1-git-send-email-alexander.stein@systec-electronic.com> <2216878.FzI300VPNh@ws-stein> <534D4DF4.7060301@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1414581294-1315-3-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <534D4DF4.7060301-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+Will someone pick this up? It is laying around for 6 months now.
 
-On 10/29/2014 12:14 PM, Krzysztof Kozlowski wrote:
-> The Maxim 77802 PMIC regulators do not have special enable configuration
-> for suspend. The driver instead enabled them manually which is not a
-> best way to deal with suspend.
+Thanks and best regards,
+Alexander
+
+On Tuesday 15 April 2014 17:19:16, Nicolas Ferre wrote:
+> On 15/04/2014 16:57, Alexander Stein :
+> > Any feedback in this?
 > 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> ---
->  drivers/regulator/max77802.c | 4 ----
->  1 file changed, 4 deletions(-)
+> Actually I didn't notice it previously: thanks for the heads up.
 > 
-> diff --git a/drivers/regulator/max77802.c b/drivers/regulator/max77802.c
-> index 5839c4509e1f..b9958d927297 100644
-> --- a/drivers/regulator/max77802.c
-> +++ b/drivers/regulator/max77802.c
+> > Regards,
+> > Alexander
+> > 
+> > On Tuesday 01 April 2014 08:28:50, Alexander Stein wrote:
+> >> This drivers allows a fixed framebuffer memory to be set by an additional
+> >> IORESOURCE_MEM resource. Thus add an example to the DT documentation.
+> >>
+> >> Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+> 
+> Indeed, it can be useful:
+> 
+> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> 
+> 
+> >> ---
+> >> Actually I stumbled myself over this wondering how can I use this specific
+> >> feature. In the end I found it myself my coincidence. So it's best to add
+> >> this as an example for other people maybe not that experienced on
+> >> device-tree.
+> >>
+> >>  Documentation/devicetree/bindings/video/atmel,lcdc.txt | 12 +++++++++++-
+> >>  1 file changed, 11 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/video/atmel,lcdc.txt b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
+> >> index 1ec175e..92492b7 100644
+> >> --- a/Documentation/devicetree/bindings/video/atmel,lcdc.txt
+> >> +++ b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
+> >> @@ -10,7 +10,9 @@ Required properties:
+> >>  	"atmel,at91sam9g45es-lcdc" ,
+> >>  	"atmel,at91sam9rl-lcdc" ,
+> >>  	"atmel,at32ap-lcdc"
+> >> -- reg : Should contain 1 register ranges(address and length)
+> >> +- reg : Should contain 1 register ranges(address and length).
+> >> +	Can contain an additional register range(address and length)
+> >> +	for fixed framebuffer memory.Usefull for dedicated memories.
+> >>  - interrupts : framebuffer controller interrupt
+> >>  - display: a phandle pointing to the display node
+> >>  
+> >> @@ -35,6 +37,14 @@ Example:
+> >>  
+> >>  	};
+> >>  
+> >> +Example for fixed framebuffer memory:
+> >> +
+> >> +	fb0: fb@0x00500000 {
+> >> +		compatible = "atmel,at91sam9263-lcdc";
+> >> +		reg = <0x00700000 0x1000 0x70000000 0x200000>;
+> >> +		[...]
+> >> +	};
+> >> +
+> >>  Atmel LCDC Display
+> >>  -----------------------------------------------------
+> >>  Required properties (as per of_videomode_helper):
+> >>
+> > 
+> 
+> 
+> 
 
-After what Mark explained, I understand this is the right thing to do.
+-- 
+Dipl.-Inf. Alexander Stein
 
-Acked-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+SYS TEC electronic GmbH
+Am Windrad 2
+08468 Heinsdorfergrund
+Tel.: 03765 38600-1156
+Fax: 03765 38600-4100
+Email: alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org
+Website: www.systec-electronic.com
+ 
+Managing Director: Dipl.-Phys. Siegmar Schmidt
+Commercial registry: Amtsgericht Chemnitz, HRB 28082
 
-Best regards,
-Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
