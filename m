@@ -1,37 +1,87 @@
-From: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+From: Andrew Bresticker <abrestic@chromium.org>
 Subject: Re: [PATCH V3 2/4] of: Add binding document for MIPS GIC
-Date: Wed, 29 Oct 2014 17:23:59 +0000
-Message-ID: <545122AF.303@imgtec.com>
-References: <1414541562-10076-1-git-send-email-abrestic@chromium.org>	<1414541562-10076-3-git-send-email-abrestic@chromium.org>	<5450CAF9.3040902@imgtec.com> <CAL1qeaHEE43n6V-y6XECicPaoEAfTBpyfg8bYJZK0e-pSMAJjw@mail.gmail.com>
+Date: Wed, 29 Oct 2014 10:25:27 -0700
+Message-ID: <CAL1qeaEOifj-R2vcWzzh2i5S3ogBf3eZ4X8PbVa1j_BtsgFCwA@mail.gmail.com>
+References: <1414541562-10076-1-git-send-email-abrestic@chromium.org>
+	<1414541562-10076-3-git-send-email-abrestic@chromium.org>
+	<5450B1B1.5070301@imgtec.com>
+	<CAL1qeaFeoKFbea7eiiXaw87PYUWO1JmP5xxdLLpW2RrFCprtZg@mail.gmail.com>
+	<5451201C.9090106@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaHEE43n6V-y6XECicPaoEAfTBpyfg8bYJZK0e-pSMAJjw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5451201C.9090106@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: James Hogan <james.hogan@imgtec.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, John Crispin <blogic@openwrt.org>, David Daney <ddaney.cavm@gmail.com>, Qais Yousef <qais.yousef@imgtec.com>, Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul <Paul.Burton@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/29/2014 05:08 PM, Andrew Bresticker wrote:
-> On Wed, Oct 29, 2014 at 4:09 AM, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
->> On 10/29/2014 12:12 AM, Andrew Bresticker wrote:
->>> +- reg : Base address and length of the GIC registers.
+On Wed, Oct 29, 2014 at 10:13 AM, James Hogan <james.hogan@imgtec.com> wrote:
+> On 29/10/14 16:55, Andrew Bresticker wrote:
+>> Hi James,
+>>
+>> On Wed, Oct 29, 2014 at 2:21 AM, James Hogan <james.hogan@imgtec.com> wrote:
+>>> Hi Andrew,
 >>>
->> Also except for sead3, the base address should be properly reported by the
->> hardware. The size is fixed (for a specific version of GIC at least - which
->> is also reported by the hardware). So it would be nice to make this
->> optional.
-> Even though this is usually probable, I'd prefer to leave this as
-> required, or at least "optional, but recommended".  I don't have a
-> very strong opinion on it though, but perhaps the device-tree folks
-> do?
-The biggest advantage I can think of is that it can potentially make GIC 
-DT definition more shareable across for instance multiple revisions of 
-an SoC that might have the GIC at different base addresses.
+>>> On 29/10/14 00:12, Andrew Bresticker wrote:
+>>>>  - changed compatible string to include CPU version
+>>>
+>>>> +Required properties:
+>>>> +- compatible : Should be "mti,<cpu>-gic".  Supported variants:
+>>>> +  - "mti,interaptiv-gic"
+>>>
+>>>> +Required properties for timer sub-node:
+>>>> +- compatible : Should be "mti,<cpu>-gic-timer".  Supported variants:
+>>>> +  - "mti,interaptiv-gic-timer"
+>>>
+>>> Erm, I'm a bit confused...
+>>> Why do you include the core name in the compatible string?
+>>>
+>>> You seem to be suggesting that:
+>>>
+>>> 1) The GIC/timer drivers need to know what core they're running on.
+>>>
+>>> Is that really true?
+>>
+>> They don't now, but it's possible that a future CPU has a newer
+>> revision of the GIC which has some differences that need to be
+>> accounted for in the driver.
+>>
+>>> 2) It isn't possible to probe the core type.
+>>>
+>>> But the kernel already knows this, so what's wrong with using
+>>> current_cpu_type() like everything else that needs to know?
+>>>
+>>> 3) Every new core should require a new compatible string to be added
+>>> before the GIC will work. You don't even have a generic compatible
+>>> string that DT can specify after the core specific one as a fallback.
+>>
+>> Yes, adding a generic compatible string would be a good idea.
+>>
+>>> Please lets not do this unless it's actually necessary (which AFAICT it
+>>> really isn't).
+>>
+>> The point of this was to future-proof these bindings and I though that
+>> CPU type was the best way to indicate version in the compatible
+>> string.  This is also how it's done for the ARM GIC and arch timers.
+>> Perhaps the best thing to do is to require both a core-specific
+>> ("mti,interaptiv-gic") and generic ("mti,gic") compatible string and
+>> just match on the generic one for now until there's a need to use the
+>> core-specific one.  Thoughts?
+>
+> FPGA boards like Malta are something else to consider (when it is
+> eventually converted to DT - Paul on CC knows more than me). You might
+> load an interAptiv, or a proAptiv, or a P5600 bitstream, and the gic
+> setup will be pretty much the same I think, since e.g. the address
+> depends on where it is convenient to put it in the address space of the
+> platform.
 
-I won't insist too much though.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ah, I didn't realize that the CPU bitstream could be changed
+independently of the GIC.
+In that case, the CPU revision isn't that useful.
+
+> Any thoughts on the existence of current_cpu_type(), and the GIC
+> revision register? They pretty much make encoding of core in compatible
+> string redundant I think.
+
+Ok, I suppose using the revision register is fine then.
