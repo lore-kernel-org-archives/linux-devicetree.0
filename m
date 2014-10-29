@@ -1,28 +1,52 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 02/11] irqchip: brcmstb-l2: Eliminate dependency on ARM code
-Date: Wed, 29 Oct 2014 08:29:33 +0100
-Message-ID: <4427811.Si9a9OX0zn@wuerfel>
-References: <1414555138-6500-1-git-send-email-cernekee@gmail.com> <1414555138-6500-2-git-send-email-cernekee@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414555138-6500-2-git-send-email-cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+From: Romain Perier <romain.perier@gmail.com>
+Subject: [PATCH 0/4] poweroff-source DT property renaming
+Date: Wed, 29 Oct 2014 07:35:31 +0000
+Message-ID: <1414568135-8311-1-git-send-email-romain.perier@gmail.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, johan@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 28 October 2014 20:58:49 Kevin Cernekee wrote:
-> The irq-brcmstb-l2 driver has a single dependency on the ARM code, the
-> do_bad_IRQ macro.  Expand this macro in-place so that the driver can be
-> built on non-ARM platforms.
-> 
-> Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
+The goal of this serie is to rename the property "poweroff-source" to 
+"system-power-controller" and to fix things incrementally.
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes and explanations since v1:
+
+  - The first patch defines "of_is_system_power_controller" which is compatible
+    with both "vendor,system-power-controller" and "system-power-controller"
+    properties. Also, It keeps the old helper function of_system_has_poweroff_source
+    for source compatibility until everything is renamed (in this way, bisections
+    are not broken and change is made "atomically" between each commit)
+
+    Note: the property "poweroff-source" itself is not used in dts files yet.
+    Before this patch tps65910 was broken due to missing backward compatibility
+    with "vendor,system-power-controller". As the old helper uses the new one,
+    it works again.
+
+  - act8865 and tps65910 are ported to the new helper function
+
+  - The last commit removes the olf helper which was only used for source compatibility
+
+Romain Perier (4):
+  of: Rename "poweroff-source" property to "system-power-controller"
+  regulator: act8865: Convert poweroff-source DT property to
+    system-power-controller
+  mfd: tps65910: Convert poweroff-source DT property to
+    system-power-controller
+  of: Remove of_system_has_poweroff_source helper function
+
+ .../devicetree/bindings/power/power-controller.txt | 18 ++++++++++++
+ .../devicetree/bindings/power/poweroff.txt         | 18 ------------
+ .../bindings/regulator/act8865-regulator.txt       |  4 +--
+ drivers/mfd/tps65910.c                             |  2 +-
+ drivers/of/base.c                                  | 34 ++++++++++++++++++++++
+ drivers/regulator/act8865-regulator.c              |  2 +-
+ include/linux/of.h                                 | 12 ++------
+ 7 files changed, 58 insertions(+), 32 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/power-controller.txt
+ delete mode 100644 Documentation/devicetree/bindings/power/poweroff.txt
+
+-- 
+1.9.1
+
