@@ -1,135 +1,88 @@
-From: Hong jinkun <jinkun.hong@rock-chips.com>
-Subject: Re: [PATCH v5 1/3] power-domain: add power domain drivers for Rockchip
- platform
-Date: Wed, 29 Oct 2014 22:09:56 +0800
-Message-ID: <5450F534.8030501@rock-chips.com>
-References: <1413882808-4669-1-git-send-email-jinkun.hong@rock-chips.com>	<1413882808-4669-2-git-send-email-jinkun.hong@rock-chips.com>	<20141021195854.GE8609@dtor-ws>	<544725C4.4040703@rock-chips.com> <CAPDyKFp+aNJd_FEY6=-ubK0zvVDWh+x5ZsVG+AVpuBzpSqynOQ@mail.gmail.com>
+From: Max Filippov <jcmvbkbc@gmail.com>
+Subject: Re: [PATCH] ASoC: add xtensa xtfpga I2S interface and
+	platform
+Date: Wed, 29 Oct 2014 17:19:05 +0300
+Message-ID: <CAMo8Bf+NT6HrtXzgx=9TBJwLYFJK1VE-fuBBuoUmmzchhOON2Q@mail.gmail.com>
+References: <1414436825-19416-1-git-send-email-jcmvbkbc@gmail.com>
+ <20141027193229.GE18557@sirena.org.uk>
+ <CAMo8Bf+Z9V8mkiC3JOupPQmi1EJUDKrb1qcNncDbsEbhjigbww@mail.gmail.com>
+ <20141028154224.GX18557@sirena.org.uk>
+ <CAMo8BfLpJ0bdmaFt9+gLQ_kEjB68XdjAJUw8f8s=Owv46h_yDQ@mail.gmail.com>
+ <20141028173853.GD18557@sirena.org.uk>
+ <CAMo8BfL+vW7BjC1bQPNjhuBMTcRTkf8_DDS3NO2HmBUnfHYAFQ@mail.gmail.com>
+ <20141028213426.GE18557@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFp+aNJd_FEY6=-ubK0zvVDWh+x5ZsVG+AVpuBzpSqynOQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Jack Dai <jack.dai@rock-chips.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20141028213426.GE18557@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, Takashi Iwai <tiwai@suse.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 29, 2014 at 12:34 AM, Mark Brown <broonie@kernel.org> wrote:
+> On Tue, Oct 28, 2014 at 09:11:34PM +0300, Max Filippov wrote:
+>> On Tue, Oct 28, 2014 at 8:38 PM, Mark Brown <broonie@kernel.org> wrote:
+>
+>> > You *really* need to explain how it's supposed to work - right now it's
+>> > not at all obvious, like I say the fact that this is a rarely used idiom
+>> > is not helping.  For example when we tear down the stream we just assign
+>> > the pointer in _stop() but don't bother with a sync until the stream is
+>> > closed - why?
+>
+>> Because we can't wait in stop and syncing is not time critical, we can
+>> do it any time before the stream becomes invalid.
+>
+> To be clear: the important part is that someone reading the code can
+> understand what's going on.
 
-On 2014/10/22 15:58, Ulf Hansson wrote:
-> [...]
+Ok, I'll change it.
+
+>> >> hw_params callback can change MCLK rate, so it has to disable and
+>> >> enable the clock anyway, and since enable can fail it does not guarantee
+>> >> that the clock will be left in the same state. Or should I adjust MCLK rate
+>> >> w/o disabling the clock?
 >
->>>> +
->>>> +       list_for_each_entry(de, &pd->dev_list, node) {
->>>> +               i += 1;
->>>> +               pm_clk_resume(pd->dev);
->>> Do you really need to call pm_clk_resume() number of times that there
->>> are devices in power domain? Did you want it to be
->>>
->>>                  pm_clk_resume(de->dev);
->>>
->>> by any chance?
-> I was just about to ask the similar question as Dmitry did. :-)
+>> > So yet again: why not just enable the clock only when the device is in
+>> > use?  If it's being configured it stands to reason that the device isn't
+>> > actively in use...
 >
->> You are right.I will modify in the next version.
-> Now, does that also mean you would like to assign the ->start|stop()
-> callbacks in the struct gpd_dev_ops to pm_clk_suspend|resume()? Or do
-> you intend to handle that from each driver instead?
-If it can call dev_ops.start before calling power_on and power_off is 
-the best.But I found dev_ops.start not called.Is not I did add some patch?
->>>> +       }
->>>> +
->>>> +       /* no clk, set power domain will fail */
->>>> +       if (i == 0) {
->>>> +               pr_err("%s: failed to on/off power domain!", __func__);
->>>> +               spin_unlock_irq(&pd->dev_lock);
->>>> +               return ret;
->>>> +       }
->>> Instead of counting I'd do
->>>
->>>          if (list_empty(&pd->dev_list)) {
->>>                  pr_waen("%s: no devices in power domain\n", __func__);
->>>                  goto out;
->>>          }
->>>
->>> in the beginning of the function.
->> This is a good idea.
->>
->>>> +
->>>> +       ret = rockchip_pmu_set_power_domain(pd, power_on);
->>>> +
->>>> +       list_for_each_entry(de, &pd->dev_list, node) {
->>>> +               pm_clk_suspend(pd->dev);
->>> Same here?
->>>
->>>> +       }
->>>> +
->>>> +       spin_unlock_irq(&pd->dev_lock);
->>>> +
->>>> +       return ret;
->>>> +}
->>>> +
->>>> +static int rockchip_pd_power_on(struct generic_pm_domain *domain)
->>>> +{
->>>> +       struct rockchip_domain *pd = to_rockchip_pd(domain);
->>>> +
->>>> +       return rockchip_pd_power(pd, true);
->>>> +}
->>>> +
->>>> +static int rockchip_pd_power_off(struct generic_pm_domain *domain)
->>>> +{
->>>> +       struct rockchip_domain *pd = to_rockchip_pd(domain);
->>>> +
->>>> +       return rockchip_pd_power(pd, false);
->>>> +}
->>>> +
->>>> +void rockchip_pm_domain_attach_dev(struct device *dev)
->>>> +{
->>>> +       int ret;
->>>> +       int i = 0;
->>>> +       struct clk *clk;
->>>> +       struct rockchip_domain *pd;
->>>> +       struct rockchip_dev_entry *de;
->>>> +
->>>> +       pd = (struct rockchip_domain *)dev->pm_domain;
->>>> +       ret = pm_clk_create(dev);
->>>> +       if (ret) {
->>>> +               dev_err(dev, "pm_clk_create failed %d\n", ret);
->>>> +               return;
->>>> +       };
->>> Stray semicolon.
->>>> +
->>>> +       while ((clk = of_clk_get(dev->of_node, i++)) && !IS_ERR(clk)) {
->>>> +               ret = pm_clk_add_clk(dev, clk);
->>>> +               if (ret) {
->>>> +                       dev_err(dev, "pm_clk_add_clk failed %d\n", ret);
->>>> +                       goto clk_err;
->>>> +               };
->>>> +       }
->>>> +
->>>> +       de = devm_kcalloc(pd->dev, 1,
->>>> +                       sizeof(struct rockchip_dev_entry *), GFP_KERNEL);
->>> Why devm_calloc for a single element and not devm_kzalloc? Also, I am a
->>> bit concerned about using devm_* API here. They are better reserved fir
->>> driver's ->probe() paths whereas we are called from
->>> dev_pm_domain_attach() which is more general API (yes, currently it is
->>> used by buses probing code, but that might change in the future).
-> Using the devm_*API is supposed to work from here. I have kept this in
-> mind, while we added the new dev_pm_domain_attach|detach() API. The
-> buses also handles -EPROBE_DEFER.
+>> Mark, I don't get it, sorry ): My clock synthesizer is I2C controlled, so
+>> I can't prepare/unprepare it in the trigger callback. When should I do it?
 >
-> Now, I just realized that while Geert added attach|detach_dev()
-> callbacks for the generic PM domain, those are both "void" callbacks.
-> It means the deferred probe error handling is broken for these
-> callbacks. We should convert the attach_dev() callback into an int, I
-> will cook a patch immediately.
+> Runtime PM is the normal way of doing it.
+
+Ok, thanks.
+
+>> >> The level field in the control register is 4 bit wide, so the allowed range of
+>> >> level is 0..15. FIFO size is 8192 entries, level = 1 corresponds to
+>> >> FIFO size / 2, level = 14 -- to FIFO size of 0. I guess this function
+>> >> won't get period_size of 0?
 >
->>> Also, where is OOM error handling?
->> Ok,I will change the use  devm_kzalloc.
->> Register to pm domain devices, the number is not a lot.
-> [...]
+>> > So if the IP gets changed and the code gets blown up this could well
+>> > explode then...  which doesn't seem entirely unlikely considering this
+>> > is a FPGA platform so presumably this is easy to update.  To repeat this
+>> > is about clarity and the code looking like it's probably hiding bugs as
+>> > much as if the code actually works if you really sit down and study it.
 >
-> Kind regards
-> Uffe
+>> The calculation does not depend on the actual hardware, but on the
+>> constant definitions in the same file. They need to be updated if the
+>> hardware changes. I'll try to rewrite it in a cleaner way.
 >
->
->
+> Right, my point is that if someone changes the hardware they'll just
+> update the constants and then things will break.
+
+Ok, I've rewritten it in a safer manner.
+
+-- 
+Thanks.
+-- Max
