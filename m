@@ -1,113 +1,42 @@
-From: Roman Byshko <rbyshko@gmail.com>
-Subject: Re: [PATCH 2/5] ARM: dtsi: sunxi: add common VBUS regulator
-Date: Wed, 29 Oct 2014 21:13:50 +0100
-Message-ID: <CAMXmWBmU0j_tf_fseDP5p527SaO=iLB-=fKp1PCvE9J6FQk6dw@mail.gmail.com>
-References: <cover.1414444953.git.rbyshko@gmail.com> <210cc2a03d43e3d65b08f302b3b32663044ad94f.1414444953.git.rbyshko@gmail.com>
- <20141028215137.GG9255@lukather>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH v2 0/4] Enable PCI controller for Keystone SoCs
+Date: Wed, 29 Oct 2014 16:28:13 -0400
+Message-ID: <1414614497-4798-1-git-send-email-m-karicheri2@ti.com>
+References: <yes>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141028215137.GG9255@lukather>
+In-Reply-To: <yes>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Murali Karicheri <m-karicheri2@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+v2: Some more minor edits based on comments
+v1: resend with some minor fix up of the commit description and fixing
+    the email ID for Santosh.
 
-thank you for the review!
+CC: Santosh Shilimkar <ssantosh@kernel.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Pawel Moll <pawel.moll@arm.com>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+CC: Kumar Gala <galak@codeaurora.org>
+CC: Russell King <linux@arm.linux.org.uk>
+CC: devicetree@vger.kernel.org
 
-On Tue, Oct 28, 2014 at 10:51 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> On Mon, Oct 27, 2014 at 10:43:02PM +0100, Roman Byshko wrote:
->> Until now the regulator nodes for powering USB VBUS
->> existed only for the two host controllers. Now the regulator
->> is added for USB OTG too.
->> ---
->>  arch/arm/boot/dts/sunxi-common-regulators.dtsi | 19 +++++++++++++++++++
->>  1 file changed, 19 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sunxi-common-regulators.dtsi b/arch/arm/boot/dts/sunxi-common-regulators.dtsi
->> index c9c5b10..f521672 100644
->> --- a/arch/arm/boot/dts/sunxi-common-regulators.dtsi
->> +++ b/arch/arm/boot/dts/sunxi-common-regulators.dtsi
->> @@ -21,6 +21,13 @@
->>                               allwinner,pull = <0>;
->>                       };
->>
->> +                     usb0_vbus_pin_a: usb0_vbus_pin@0 {
->> +                             allwinner,pins = "PB9";
->> +                             allwinner,function = "gpio_out";
->> +                             allwinner,drive = <0>;
->> +                             allwinner,pull = <0>;
->> +                     };
->> +
->>                       usb1_vbus_pin_a: usb1_vbus_pin@0 {
->>                               allwinner,pins = "PH6";
->>                               allwinner,function = "gpio_out";
->> @@ -49,6 +56,18 @@
->>               status = "disabled";
->>       };
->>
->> +     reg_usb0_vbus: usb0-vbus {
->> +             compatible = "regulator-fixed";
->> +             pinctrl-names = "default";
->> +             pinctrl-0 = <&usb0_vbus_pin_a>;
->> +             regulator-name = "usb0-vbus";
->> +             regulator-min-microvolt = <5000000>;
->> +             regulator-max-microvolt = <5000000>;
->> +             enable-active-high;
->> +             gpio = <&pio 1 9 0>;
->> +             status = "disabled";
->> +     };
->
-> We're using these regulators because a huuuge majority of the boards
-> out there, regardless of their SoC, are using the same GPIO to drive
-> the same regulator. Is this the case here? What board have you looked
-> at?
+Murali Karicheri (4):
+  ARM: keystone: add pcie related options
+  ARM: keystone: defconfig: add options to enable PCI controller
+  ARM: dts: keystone: add DT bindings for PCI controller for port 0
+  ARM: dts: keystone-k2e: add DT bindings for PCI controller for port 1
 
-Currently I'm developing and testing for Cubietruck. I also have a few
-other boards (with different SoC), I will add corresponding DT nodes
-for them later.
+ arch/arm/boot/dts/k2e.dtsi          |   45 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/keystone.dtsi     |   45 +++++++++++++++++++++++++++++++++++
+ arch/arm/configs/keystone_defconfig |    3 +++
+ arch/arm/mach-keystone/Kconfig      |    2 ++
+ 4 files changed, 95 insertions(+)
 
-As for GPIO which is used to drive the USB0 VBUS pin.
-
-$ git remote show origin
-* remote origin
-  Fetch URL: https://github.com/linux-sunxi/sunxi-boards.git
-  Push  URL: https://github.com/linux-sunxi/sunxi-boards.git
-...
-$ grep -A7 usbc0 -r . | grep usb_drv_vbus_gpio | grep port | sort |
-cut -d: -f2 | cut -d "<" -f1 | sort | uniq -c
-      1 PA16
-      1 PA17
-     67 PB09
-      4 PB10
-      1 PB9
-      1 PC17
-      1 PD25
-      4 PG11
-     21 PG12
-      1 PG13
-      1 PH17
-      4 power4
-
-So PB09 is most often used. PG12 is used on (alsmost always) A13. So
-propose to make PB09 default, then override it in sun5i-a13.dtsi and
-later in board dts file if needed.
-
-Cubietruck uses PH17. That is why I override PB09 in its dts file.
-
-Sounds good?
-
-Best,
-Roman
-
-
-> Thanks,
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+-- 
+1.7.9.5
