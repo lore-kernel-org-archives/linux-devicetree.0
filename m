@@ -1,125 +1,79 @@
-From: Pantelis Antoniou <pantelis.antoniou@gmail.com>
-Subject: Re: [RFC Patch] gpio: add GPIO hogging mechanism
-Date: Wed, 29 Oct 2014 18:42:48 +0200
-Message-ID: <2BA5D07E-B5EF-49E1-BFD2-310A6C5F3FE4@gmail.com>
-References: <1413922198-29373-1-git-send-email-bparrot@ti.com> <3D00ADB3-00B3-40A8-8263-444BCADDAC33@gmail.com> <20141029163445.GB29965@ti.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141029163445.GB29965@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Parrot <bparrot@ti.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 7/7] ARM: dts: add suspend voltage setting for RK808
+Date: Wed, 29 Oct 2014 09:51:32 -0700
+Message-ID: <CAD=FV=VtKdLH51tDvHsRfMYah9cUNcNRfbVJ1rfroxwsZZLTsA@mail.gmail.com>
+References: <1414583525-17395-1-git-send-email-zyw@rock-chips.com>
+	<1414583525-17395-8-git-send-email-zyw@rock-chips.com>
+	<CAD=FV=XeGj63_MEPL5i1ihUORuHnwD1ktEjJN5x=B-tkHV088w@mail.gmail.com>
+	<545115DF.9070008@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <545115DF.9070008-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
+Javier,
 
-> On Oct 29, 2014, at 18:34 , Benoit Parrot <bparrot@ti.com> wrote:
->=20
-> Pantelis,
->=20
-> Thanks for the feedback.
->=20
-> Pantelis Antoniou <pantelis.antoniou@gmail.com> wrote on Wed [2014-Oc=
-t-29 10:53:44 +0200]:
->> Hi Benoit,
->>=20
->>> On Oct 21, 2014, at 23:09 , Benoit Parrot <bparrot@ti.com> wrote:
->>>=20
->>> Based on Boris Brezillion work this is a reworked patch
->>> of his initial GPIO hogging mechanism.
->>> This patch provides a way to initally configure specific GPIO
->>> when the gpio controller is probe.
->>>=20
->>> The actual DT scanning to collect the GPIO specific data is perform=
-ed
->>> as part of the gpiochip_add().
->>>=20
->>> The purpose of this is to allows specific GPIOs to be configured
->>> without any driver specific code.
->>> This particularly usueful because board design are getting
->>> increassingly complex and given SoC pins can now have upward
->>> of 10 mux values a lot of connections are now dependent on
->>> external IO muxes to switch various modes and combination.
->>>=20
->>> Specific drivers should not necessarily need to be aware of
->>> what accounts to a specific board implementation. This board level
->>> "description" should be best kept as part of the dts file.
->>>=20
->>=20
->> This look like it=E2=80=99s going to the right direction. I have a f=
-ew general
->> comments at first.
->>=20
->> 1) It relies on dubious DT binding of having sub-nodes of the
->> gpio device implicitly defining hogs.
->=20
-> I think in this instance the nodes are explicitly defining hogs.
-> Please clarify. What would you like to see here?
->>=20
+On Wed, Oct 29, 2014 at 9:29 AM, Javier Martinez Canillas
+<javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
+>>> @@ -76,6 +80,7 @@
+>>>                                 regulator-min-microvolt = <3300000>;
+>>>                                 regulator-max-microvolt = <3300000>;
+>>>                                 regulator-name = "vccio_pmu";
+>>> +                               regulator-suspend-mem-microvolt = <3300000>;
+>>
+>> Similarly this property isn't upstream.  You can see Javier's work on
+>> this in <https://patchwork.kernel.org/patch/5106351/> and I think
+>> you'll need an rk808-specific patch just like he needs an max77802
+>> patch.  You probably want to wait for him to spin it first, though,
+>> since Mark had feedback on his last patch.
+>>
+>
+> I'm working on adding support to configure the regulator mode on startup
+> and when the system enters in a suspend state.
+>
+> As Doug said I've to re-spin since Mark wanted things to be more integrated
+> with the core. So I'm doing some refactoring to pass the static regulator
+> descriptor to the function extracting the regulator initial data so drivers
+> should only define a function handler that does the modes translation.
+> I believe this is the more sensible place to add the mapping function since
+> the modes translation should be a non-varying property of the regulator.
+>
+> Having said that, I see a different use case here. You want to set a voltage
+> on system suspend. But the value is the same that is set to your fixed
+> regulator so I wonder if what you want here is to enable the regulator on
+> suspend instead?
+>
+> In other words, do you want the core to call rk808_set_suspend_voltage() or
+> rk808_set_suspend_enable()? If the later then you can use Chanwoo's bindings:
+>
+> regulator-state-mem {
+>    regulator-on-in-suspend;
+> };
 
-Any subnodes are implicitly taken as hog definitions. This is not right=
- because
-gpio controllers might have subnodes that they use for another purpose.
+The rk808 has a separate register for storing the sleep voltage,
+though.  ...so just using "regulator-on-in-suspend" without any
+changes to the rk808 driver won't get us this "for free".  I'd expect
+to need
 
->> 2) There is no way for having hogs inserted dynamically as far as I =
-can tell, and
->> no way to remove a hog either.
->=20
-> The original patch was allowing that but, Linus's review comment sugg=
-ested this feature be=20
-> part of the gpio-controller's gpiochip_add() hook only.
->=20
+ regulator-state-mem {
+    regulator-on-in-suspend;
+    regulator-suspend-microvolts = <3300000>;
+ };
 
-If it=E2=80=99s not possible to remove a hog, then it=E2=80=99s no good=
- for my use case in which
-the gpios get exported and then removed.
+IMHO it wouldn't be insane to say that if someone has
+"regulator-on-in-suspend" but no suspend voltage defined that it
+should carry forward the runtime voltage.  I actually argued for that
+earlier and Mark Brown said "no" at
+<http://marc.info/?l=linux-kernel&m=141277262106368&w=2>.  More at
+<http://marc.info/?l=linux-kernel&m=141279245027919&w=2>.  It's
+entirely possible I wasn't making myself clear, though.
 
->>=20
->> 3) I=E2=80=99m not very fond of having this being part of the gpio c=
-ontroller. This
->> configuration conceptually has little to do with the gpio controller=
- per se,
->> it is more of a board specific thing. Why not come up with a gpio-ho=
-g driver that
->> references GPIOs? That way with a single gpio-hog driver instance yo=
-u could setup
->> all the GPIO-hogging configuration for all GPIOs on the board, even =
-one that
->> lie on different GPIO controllers.
->=20
-> Again this follows Linus's review comment.
-> I agree that it prevent a centralize spot where all hog would be defi=
-ned but it has the advantages of not relying on PROBE_DEFER.
-> I mean since all "gpio-hogs" would be defined in a single board dts f=
-ile it would not be that hard to figure out the big picture anyways.
->=20
-
-There won=E2=80=99t be a single board dts file if you=E2=80=99re using =
-things like overlays.
-
->>=20
->>=20
->>> Signed-off-by: Benoit Parrot <bparrot@ti.com>
->>> ---
->>> Documentation/devicetree/bindings/gpio/gpio.txt | 33 +++++++++
->>> drivers/gpio/gpiolib-of.c                       | 99 ++++++++++++++=
-+++++++++++
->>> drivers/gpio/gpiolib.c                          | 81 ++++++++++++++=
-++++++
->>> include/linux/of_gpio.h                         | 11 +++
->>> 4 files changed, 224 insertions(+)
->>>=20
->>=20
->> Regards
->>=20
->> =E2=80=94 Pantelis
->>=20
->=20
-> Regards,
-> Benoit
-
-Regards
-
-=E2=80=94 Pantelis
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
