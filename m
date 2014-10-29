@@ -1,51 +1,101 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] of/fdt: Don't clear initial_boot_params if
- fdt_check_header() fails
-Date: Wed, 29 Oct 2014 12:15:00 -0600
-Message-ID: <20141029181500.16094.46561.stgit@bhelgaas-glaptop2.roam.corp.google.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v2 6/9] ARM: berlin: Add BG2 ethernet DT nodes
+Date: Wed, 29 Oct 2014 19:38:45 +0100
+Message-ID: <54513435.9050803@gmail.com>
+References: <1414002412-13615-1-git-send-email-sebastian.hesselbarth@gmail.com> <1414002412-13615-7-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414002412-13615-7-git-send-email-sebastian.hesselbarth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>, =?UTF-8?B?QW50b2luZSBUw6luYXI=?= =?UTF-8?B?dA==?= <antoine.tenart@free-electrons.com>, Florian Fainelli <f.fainelli@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-If the device tree pointer is NULL, early_init_dt_verify() fails, leaving
-initial_boot_params unchanged.  If the device tree pointer is non-NULL but
-invalid, early_init_dt_verify() again fails but this time it also clears
-initial_boot_params.
+On 22.10.2014 20:26, Sebastian Hesselbarth wrote:
+> Marvell BG2 has two fast ethernet controllers with internal PHY,
+> add the corresponding nodes to SoC dtsi.
+>
+> Tested-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com=
+>
 
-Leave initial_boot_params unchanged if the device tree pointer is invalid.
-This doesn't fix a bug, but it makes the behavior more consistent and
-easier to analyze.
+Applied the four DT patches to berlin/dt.
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/of/fdt.c |    9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Sebastian
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index d1ffca8b34ea..55a566a53f36 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -994,15 +994,12 @@ bool __init early_init_dt_verify(void *params)
- 	if (!params)
- 		return false;
- 
--	/* Setup flat device-tree pointer */
--	initial_boot_params = params;
--
- 	/* check device tree validity */
--	if (fdt_check_header(params)) {
--		initial_boot_params = NULL;
-+	if (fdt_check_header(params))
- 		return false;
--	}
- 
-+	/* Setup flat device-tree pointer */
-+	initial_boot_params = params;
- 	return true;
- }
- 
+> ---
+> Changelog:
+> v1->v2:
+> - move phy-connection-type to controller node instead of PHY node
+>    (Reported by Sergei Shtylyov)
+>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: "Antoine T=C3=A9nart" <antoine.tenart@free-electrons.com>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Eric Miao <eric.y.miao@gmail.com>
+> Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: netdev@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>   arch/arm/boot/dts/berlin2.dtsi | 36 +++++++++++++++++++++++++++++++=
++++++
+>   1 file changed, 36 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berli=
+n2.dtsi
+> index 9d7c810ebd0b..dc0227dfc691 100644
+> --- a/arch/arm/boot/dts/berlin2.dtsi
+> +++ b/arch/arm/boot/dts/berlin2.dtsi
+> @@ -79,11 +79,47 @@
+>   			clocks =3D <&chip CLKID_TWD>;
+>   		};
+>
+> +		eth1: ethernet@b90000 {
+> +			compatible =3D "marvell,pxa168-eth";
+> +			reg =3D <0xb90000 0x10000>;
+> +			clocks =3D <&chip CLKID_GETH1>;
+> +			interrupts =3D <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+> +			/* set by bootloader */
+> +			local-mac-address =3D [00 00 00 00 00 00];
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +			phy-connection-type =3D "mii";
+> +			phy-handle =3D <&ethphy1>;
+> +			status =3D "disabled";
+> +
+> +			ethphy1: ethernet-phy@0 {
+> +				reg =3D <0>;
+> +			};
+> +		};
+> +
+>   		cpu-ctrl@dd0000 {
+>   			compatible =3D "marvell,berlin-cpu-ctrl";
+>   			reg =3D <0xdd0000 0x10000>;
+>   		};
+>
+> +		eth0: ethernet@e50000 {
+> +			compatible =3D "marvell,pxa168-eth";
+> +			reg =3D <0xe50000 0x10000>;
+> +			clocks =3D <&chip CLKID_GETH0>;
+> +			interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> +			/* set by bootloader */
+> +			local-mac-address =3D [00 00 00 00 00 00];
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +			phy-connection-type =3D "mii";
+> +			phy-handle =3D <&ethphy0>;
+> +			status =3D "disabled";
+> +
+> +			ethphy0: ethernet-phy@0 {
+> +				reg =3D <0>;
+> +			};
+> +		};
+> +
+>   		apb@e80000 {
+>   			compatible =3D "simple-bus";
+>   			#address-cells =3D <1>;
+>
