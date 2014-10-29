@@ -1,58 +1,87 @@
-From: Mark Salter <msalter@redhat.com>
-Subject: Re: [PATCH RESEND 1/7] arm64: dts: Add APM X-Gene USB DTS node
-Date: Wed, 29 Oct 2014 12:23:37 -0400
-Message-ID: <1414599817.1870.15.camel@deneb.redhat.com>
-References: <1414438108-8384-1-git-send-email-fkan@apm.com>
- <1414438108-8384-2-git-send-email-fkan@apm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1414438108-8384-2-git-send-email-fkan@apm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Feng Kan <fkan@apm.com>
-Cc: devicetree@vger.kernel.org, catalin.marinas@arm.com, patches@apm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bao Truong <btruong@apm.com>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: [PATCH v3 04/13] of: document new emc-timings subnode in nvidia,tegra124-car
+Date: Wed, 29 Oct 2014 17:22:22 +0100
+Message-ID: <1414599796-30597-5-git-send-email-tomeu.vizoso@collabora.com>
+References: <1414599796-30597-1-git-send-email-tomeu.vizoso@collabora.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414599796-30597-1-git-send-email-tomeu.vizoso@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-tegra@vger.kernel.org
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-10-27 at 12:28 -0700, Feng Kan wrote:
-> This parch adds the device tree nodes for APM X-Gnene USB host controller.
-> Since X-Gene SOC supports maximum 2 USB ports, 2 dts node are added.
-> 
-> Signed-off-by: Bao Truong <btruong@apm.com>
-> Signed-off-by: Feng Kan <fkan@apm.com>
-> ---
->  arch/arm64/boot/dts/apm-storm.dtsi | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-> index 3eef74b..a80f2fa 100644
-> --- a/arch/arm64/boot/dts/apm-storm.dtsi
-> +++ b/arch/arm64/boot/dts/apm-storm.dtsi
-> @@ -587,6 +587,20 @@
->  			phy-names = "sata-phy";
->  		};
->  
-> +		usb0: dwusb@19000000 {
-> +			status = "disabled";
-> +			compatible = "xhci-platform";
-> +			reg =  <0x0 0x19000000 0x0 0x100000>;
-> +			interrupts = <0x0 0x89 0x4>;
-> +		};
-> +
-> +		usb1: dwusb@19800000 {
-> +			status = "disabled";
-> +			compatible = "xhci-platform";
-> +			reg =  <0x0 0x19800000 0x0 0x100000>;
-> +			interrupts = <0x0 0x8a 0x4>;
-> +		};
-> +
+The EMC clock needs some extra information for changing its rate.
 
-Should these have "dma-coherent" properties?
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+---
+ .../bindings/clock/nvidia,tegra124-car.txt         | 46 +++++++++++++++++++++-
+ 1 file changed, 44 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+index ded5d62..42e0588 100644
+--- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
++++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-car.txt
+@@ -19,12 +19,35 @@ Required properties :
+   In clock consumers, this cell represents the bit number in the CAR's
+   array of CLK_RST_CONTROLLER_RST_DEVICES_* registers.
+ 
++The node should contain a "emc-timings" subnode for each supported RAM type (see
++field RAM_CODE in register PMC_STRAPPING_OPT_A), with its unit address being its
++RAM_CODE.
++
++Required properties for "emc-timings" nodes :
++- nvidia,ram-code : Should contain the value of RAM_CODE this timing set
++  is used for.
++
++Each "emc-timings" node should contain a "timing" subnode for every supported
++EMC clock rate. The "timing" subnodes should have the clock rate in Hz as their
++unit address.
++
++Required properties for "timing" nodes :
++- clock-frequency : Should contain the memory clock rate to which this timing
++relates.
++- nvidia,parent-clock-frequency : Should contain the rate at which the current
++parent of the EMC clock should be running at this timing.
++- clocks : Must contain an entry for each entry in clock-names.
++  See ../clocks/clock-bindings.txt for details.
++- clock-names : Must include the following entries:
++  - emc-parent : the clock that should be the parent of the EMC clock at this
++timing.
++
+ Example SoC include file:
+ 
+ / {
+-	tegra_car: clock {
++	tegra_car: clock@0,60006000 {
+ 		compatible = "nvidia,tegra124-car";
+-		reg = <0x60006000 0x1000>;
++		reg = <0x0 0x60006000 0x0 0x1000>;
+ 		#clock-cells = <1>;
+ 		#reset-cells = <1>;
+ 	};
+@@ -60,4 +83,23 @@ Example board file:
+ 	&tegra_car {
+ 		clocks = <&clk_32k> <&osc>;
+ 	};
++
++	clock@0,60006000 {
++		emc-timings@3 {
++			nvidia,ram-code = <3>;
++
++			timing@12750000 {
++				clock-frequency = <12750000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing@20400000 {
++				clock-frequency = <20400000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++		};
++	};
+ };
+-- 
+1.9.3
