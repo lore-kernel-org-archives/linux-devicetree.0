@@ -1,123 +1,76 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: rockchip: use internal pull-up resistors on
- I2C busses
-Date: Tue, 28 Oct 2014 21:45:15 -0700
-Message-ID: <CAD=FV=Vs9NT3hMS_Z0dOuwyBdxCsMddqohWFYOGYbM2ePm9PrQ@mail.gmail.com>
-References: <1414492597-13566-1-git-send-email-julien.chauveau@neo-technologies.fr>
+From: Xudong Chen <xudong.chen@mediatek.com>
+Subject: [PATCH 1/3] dt-bindings: Add I2C bindings for mt65xx/mt81xx.
+Date: Wed, 29 Oct 2014 13:37:36 +0800
+Message-ID: <1414561058-23803-2-git-send-email-xudong.chen@mediatek.com>
+References: <1414561058-23803-1-git-send-email-xudong.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414492597-13566-1-git-send-email-julien.chauveau-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julien CHAUVEAU <julien.chauveau-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1414561058-23803-1-git-send-email-xudong.chen@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>, arm@kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Wolfram Sang <wsa@the-dreams.de>
+Cc: Xudong Chen <xudong.chen@mediatek.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, YH Chen <yh.chen@mediatek.com>, linux-kernel@vger.kernel.org, Nathan Chung <nathan.chung@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Jean Delvare <jdelvare@suse.de>, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Julien,
+Add devicetree bindings for Mediatek Soc I2C driver.
 
-On Tue, Oct 28, 2014 at 3:36 AM, Julien CHAUVEAU
-<julien.chauveau-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org> wrote:
-> According to the I2C bus specification, it is required to use pull-up resistors
-> on the clock and data lines. Probing the I2C busses with i2cdetect results in
-> bad results when no devices are connected and no external resistors are used.
->
-> This patch configures the I2C busses to use the internal pull-up resistors
-> on the RK3066, RK3188 and RK3288 Rockchip processors. It should also be noted
-> that these default pull settings match the original configuration on these SoCs.
->
-> Below is the results of using i2cdetect on a I2C bus with no devices connected
-> before (1) and after (2) applying this patch.
->
-> (1) root@localhost:~# i2cdetect -y 3
->      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
-> 00:          03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f
-> 10: 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f
-> 20: 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f
-> 30: -- -- -- -- -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x81, state: 2
-> -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 2
-> -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 2
-> -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 3
-> -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 3
-> -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 3
-> ...
->
-> (2) root@localhost:~# i2cdetect -y 3
->      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
-> 00:          -- -- -- -- -- -- -- -- -- -- -- -- --
-> 10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> 20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> 30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> 40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> 50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> 60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> 70: -- -- -- -- -- -- -- --
->
-> Signed-off-by: Julien CHAUVEAU <julien.chauveau-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org>
-> ---
-> Changes since v1:
-> - fix the rk3066a pull settings (only available is pull_none/pull_default)
-> - remove the warnings in the results of i2cdetect
->
->  arch/arm/boot/dts/rk3066a.dtsi | 20 ++++++++++----------
->  arch/arm/boot/dts/rk3188.dtsi  | 20 ++++++++++----------
->  arch/arm/boot/dts/rk3288.dtsi  | 24 ++++++++++++------------
->  3 files changed, 32 insertions(+), 32 deletions(-)
-
-I won't NAK this change myself, but I have to say I'm not a huge fan.
-On exynos boards the i2c has pulls by default, so there is precedent
-for what you're proposing at least.
-
-...but I'll also say that most sane boards have external pulls on i2c
-and don't rely on the internal pulls.  If you've got a board where the
-internal pull works well enough (lucky you!) then I think you should
-override the pinctrl for just that board.
-
-You are arguing that the internal pull "can't hurt".  I have past
-experience that shows that not to be the case.  Here's an old change
-for the Samsung ARM Chromebook:
-
-https://chromium-review.googlesource.com/#/c/26607/
-
-You probably can't dig into the bug link due to permissions, but I can
-paste some of that in:
-
+Signed-off-by: Xudong Chen <xudong.chen@mediatek.com>
 ---
+ .../devicetree/bindings/i2c/i2c-mt6577.txt         | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
 
-On Daisy / Snow we've got a NXP HDMI level converter on i2c2.  That
-part has its own internal pullups.
-
-Ideally it shouldn't hurt for us to also have the exynos's (weak) 400K
-pullups on for the line too.  But according to our EE, we're just
-barely within spec and so turning off the exynos pullups makes sense.
-
-Specifically, the problem is the data line when the external HDMI
-device is driving low.  The NXP chip doesn't manage to drive the data
-line all the way low.  Measured on one board:
-* If exynos has pullup: "low" is 560mV
-* If exynos has no pull: "low" is 518mV
-* If exynos has pulldown: "low" is 490mV
-
-Low should really be 0, but exynos allows .3*VDD (or 540mV).
-
-
-We should disable pullups in both the kernel and in U-Boot.  There's
-even a chance that we'd want to enable pulldowns.
-
-
-Note that to read EDID at all you need to also remove the strong
-external pullups.
-
----
-
-I did put your patch in my rk3288 board and it booted up OK, but I'm
-not setup to test HDMI right now.
-
-In v1 I think Addy said he was having trouble with HDMI and the
-internal pulls on some board, so maybe he had a similar experience to
-mine on snow.
-
--Doug
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt b/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
+new file mode 100644
+index 0000000..b4012c8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
+@@ -0,0 +1,37 @@
++* Mediatek's I2C controller
++
++The Mediatek's I2C controller is used to interface with I2C devices.
++
++Required properties:
++  - compatible: value should be either of the following.
++      (a) "mtk,mt6577-i2c", for i2c compatible with mt6577 i2c.
++      (b) "mtk,mt8127-i2c", for i2c compatible with mt8127 i2c.
++      (c) "mtk,mt8135-i2c", for i2c compatible with mt8135 i2c.
++  - reg: physical base address of the controller and dma base, length of memory mapped
++    region.
++  - interrupts: interrupt number to the cpu.
++  - clock-div: the fixed value for frequency divider of clock source in i2c module.
++    Each IC may be different.
++  - clocks: clock name from clock manager
++  - clock-names: clock name used in i2c driver probe
++
++Optional properties:
++  - clock-frequency: Frequency in Hz of the bus when transfer, the default value is 100000.
++  - mediatek,have-pmic: platform can control i2c form special pmic side.
++  - mediatek,have-dcm: platform has DCM(hardware digital clock manager) property.
++  - mediatek,use-push-pull: IO use push-pull mode.
++
++Example:
++
++	i2c0: i2c@1100d000 {
++			compatible = "mediatek,mt6577-i2c";
++			reg = <0x1100d000 0x70>,
++			      <0x11000300 0x80>;
++			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
++			clock-frequency = <100000>;
++			mediatek,have-pmic;
++			clock-div = <16>;
++			clocks = <&i2c0_ck>, <&ap_dma_ck>;
++			clock-names = "main", "dma";
++	};
++
+-- 
+1.8.1.1.dirty
