@@ -1,45 +1,96 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/6] clk: shmobile: Deprecate renesas,clock-indices
-Date: Wed, 29 Oct 2014 15:19:08 +0100
-Message-ID: <1414592353-24044-2-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 6/6] ARM: shmobile: r8a7794 dtsi: Change to using clock-indices
+Date: Wed, 29 Oct 2014 15:19:13 +0100
+Message-ID: <1414592353-24044-7-git-send-email-geert+renesas@glider.be>
 References: <1414592353-24044-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1414592353-24044-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414592353-24044-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit 8e33f91a0b84ae19 ("clk: shmobile: clk-mstp: change to using
-clock-indices") forgot to mark "renesas,clock-indices" deprecated in
-the driver-specific binding documentation.
+With the addition of clock-indices in commit 8e33f91a0b84ae19 ("clk:
+shmobile: clk-mstp: change to using clock-indices"), we can change the
+DTSes to use the generic property instead of the deprecated
+vendor-specific property.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- .../devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt        | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/r8a7794.dtsi | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-index a5f52238c80d5f9b..26ab9fc499f51113 100644
---- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-+++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-@@ -26,11 +26,12 @@ Required Properties:
-     must appear in the same order as the output clocks.
-   - #clock-cells: Must be 1
-   - clock-output-names: The name of the clocks as free-form strings
--  - renesas,clock-indices: Indices of the gate clocks into the group (0 to 31)
-+  - clock-indices: Indices of the gate clocks into the group (0 to 31)
-+    ("renesas,clock-indices" is deprecated)
- 
--The clocks, clock-output-names and renesas,clock-indices properties contain one
--entry per gate clock. The MSTP groups are sparsely populated. Unimplemented
--gate clocks must not be declared.
-+The clocks, clock-output-names and clock-indices properties contain one entry
-+per gate clock. The MSTP groups are sparsely populated. Unimplemented gate
-+clocks must not be declared.
- 
- 
- Example
+diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
+index 088e79c6551ca4b8..b9539fea92392140 100644
+--- a/arch/arm/boot/dts/r8a7794.dtsi
++++ b/arch/arm/boot/dts/r8a7794.dtsi
+@@ -455,7 +455,7 @@
+ 			reg = <0 0xe6150130 0 4>, <0 0xe6150030 0 4>;
+ 			clocks = <&mp_clk>;
+ 			#clock-cells = <1>;
+-			renesas,clock-indices = <R8A7794_CLK_MSIOF0>;
++			clock-indices = <R8A7794_CLK_MSIOF0>;
+ 			clock-output-names = "msiof0";
+ 		};
+ 		mstp1_clks: mstp1_clks@e6150134 {
+@@ -465,7 +465,7 @@
+ 				 <&cp_clk>,
+ 				 <&zs_clk>, <&zs_clk>, <&zs_clk>;
+ 			#clock-cells = <1>;
+-			renesas,clock-indices = <
++			clock-indices = <
+ 				R8A7794_CLK_TMU1 R8A7794_CLK_TMU3 R8A7794_CLK_TMU2
+ 				R8A7794_CLK_CMT0 R8A7794_CLK_TMU0
+ 			>;
+@@ -478,7 +478,7 @@
+ 			clocks = <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>,
+ 				 <&mp_clk>, <&mp_clk>, <&mp_clk>;
+ 			#clock-cells = <1>;
+-			renesas,clock-indices = <
++			clock-indices = <
+ 				R8A7794_CLK_SCIFA2 R8A7794_CLK_SCIFA1 R8A7794_CLK_SCIFA0
+ 				R8A7794_CLK_MSIOF2 R8A7794_CLK_SCIFB0 R8A7794_CLK_SCIFB1
+ 				R8A7794_CLK_MSIOF1 R8A7794_CLK_SCIFB2
+@@ -492,7 +492,7 @@
+ 			reg = <0 0xe615013c 0 4>, <0 0xe6150048 0 4>;
+ 			clocks = <&rclk_clk>;
+ 			#clock-cells = <1>;
+-			renesas,clock-indices = <
++			clock-indices = <
+ 				R8A7794_CLK_CMT1
+ 			>;
+ 			clock-output-names =
+@@ -504,7 +504,7 @@
+ 			clocks = <&zs_clk>, <&p_clk>, <&p_clk>, <&zs_clk>,
+ 				 <&zs_clk>, <&p_clk>, <&p_clk>, <&p_clk>, <&p_clk>;
+ 			#clock-cells = <1>;
+-			renesas,clock-indices = <
++			clock-indices = <
+ 				R8A7794_CLK_HSCIF2 R8A7794_CLK_SCIF5
+ 				R8A7794_CLK_SCIF4 R8A7794_CLK_HSCIF1 R8A7794_CLK_HSCIF0
+ 				R8A7794_CLK_SCIF3 R8A7794_CLK_SCIF2 R8A7794_CLK_SCIF1
+@@ -519,7 +519,7 @@
+ 			reg = <0 0xe6150990 0 4>, <0 0xe61509a0 0 4>;
+ 			clocks = <&p_clk>;
+ 			#clock-cells = <1>;
+-			renesas,clock-indices = <
++			clock-indices = <
+ 				R8A7794_CLK_ETHER
+ 			>;
+ 			clock-output-names =
+@@ -530,7 +530,7 @@
+ 			reg = <0 0xe615099c 0 4>, <0 0xe61509ac 0 4>;
+ 			clocks = <&mp_clk>, <&mp_clk>, <&mp_clk>;
+ 			#clock-cells = <1>;
+-			renesas,clock-indices = <
++			clock-indices = <
+ 				R8A7794_CLK_SCIFA3 R8A7794_CLK_SCIFA4 R8A7794_CLK_SCIFA5
+ 			>;
+ 			clock-output-names = "scifa3", "scifa4", "scifa5";
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
