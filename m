@@ -1,68 +1,54 @@
-From: Hong jinkun <jinkun.hong@rock-chips.com>
-Subject: Re: [PATCH v7 1/3] power-domain: add power domain drivers for Rockchip
- platform
-Date: Wed, 29 Oct 2014 09:00:09 +0800
-Message-ID: <54503C19.9060607@rock-chips.com>
-References: <1414135761-3406-1-git-send-email-jinkun.hong@rock-chips.com> <1414135761-3406-2-git-send-email-jinkun.hong@rock-chips.com> <20141024164431.GE19933@dtor-ws> <20141027233904.GD7594@dtor-ws>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 1/5] phy: sun4i: add support for USB phy0
+Date: Wed, 29 Oct 2014 10:24:12 +0800
+Message-ID: <CAGb2v65gSq+kMnVZMAvXkF6+ARiFE1qRpQ9SFDThfXCg_kERsQ@mail.gmail.com>
+References: <cover.1414444953.git.rbyshko@gmail.com> <668c1b5541fc0175957573bd5f8d40dd2eaccae1.1414444953.git.rbyshko@gmail.com>
+ <20141028214756.GF9255@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20141027233904.GD7594@dtor-ws>
-Sender: linux-doc-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, dianders@chromium.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Ulf Hansson <ulf.hansson@linaro.org>, Jack Dai <jack.dai@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141028214756.GF9255@lukather>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Roman Byshko <rbyshko@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-=E5=9C=A8 2014/10/28 7:39, Dmitry Torokhov =E5=86=99=E9=81=93:
-> On Fri, Oct 24, 2014 at 09:44:31AM -0700, Dmitry Torokhov wrote:
->> Hi Jinkun,
+On Wed, Oct 29, 2014 at 5:47 AM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> Hi Roman,
+>
+> Thanks for your patches
+>
+> On Mon, Oct 27, 2014 at 10:43:01PM +0100, Roman Byshko wrote:
+>> The driver for sun4i USB phys currently supports
+>> only phy1 and phy2 which are used for USB host
+>> controllers. This patch adds support for USB phy0,
+>> which is used by the musb hdrc USB controller.
+>
+> Like Andreas already pointed out, your signed-off-by is missing from
+> all your patches.
+>
+>> ---
+>>  drivers/phy/phy-sun4i-usb.c | 9 ++++++---
+>>  1 file changed, 6 insertions(+), 3 deletions(-)
 >>
->> On Fri, Oct 24, 2014 at 12:29:19AM -0700, jinkun.hong wrote:
->>> +static int rockchip_pd_power(struct rockchip_domain *pd, bool powe=
-r_on)
->>> +{
->>> +	int ret =3D 0;
->>> +	struct rockchip_dev_entry *de;
->>> +
->>> +	mutex_lock(&pd->dev_lock);
->>> +	/* no clk, set power domain will fail */
->>> +	if (list_empty(&pd->dev_list)) {
->>> +		pr_err("%s: no devices in %s power domain\n", __func__,
->>> +			pd->base.name);
->>> +		goto out;
->>> +	}
->>> +
->>> +	list_for_each_entry(de, &pd->dev_list, node) {
->>> +		pm_clk_resume(de->dev);
->>> +	}
->>> +
->>> +	ret =3D rockchip_pmu_set_power_domain(pd, power_on);
->>> +
->>> +	list_for_each_entry(de, &pd->dev_list, node) {
->>> +		pm_clk_suspend(de->dev);
->>> +	}
->>> +out:
->>> +	mutex_unlock(&pd->dev_lock);
->>> +	return ret;
->>> +}
->> For my education, could you please tell me why we need to enable all
->> clocks of all devices in a power domain when we are talking to the P=
-MU
->> and then turn them immediately off?
-Sorry for late reply.RK3288 reset circuit are first asynchronous reset=20
-and then sync revoked.
-All reset revocation actions are needed to synchronize the clocks.
-If there is no clock open, power_up reset will cause the corresponding=20
-reset can not be undone, there will be risks.
->> Would not we want to enable clocks
->> in start()) callbacks, like Ulf mentioned?
-Can you tell me which one patch it. Thank you!
-> Jinkun, any update on this question?
+>> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+>> index 0baf5ef..a24728b 100644
+>> --- a/drivers/phy/phy-sun4i-usb.c
+>> +++ b/drivers/phy/phy-sun4i-usb.c
+>> @@ -157,6 +157,10 @@ static int sun4i_usb_phy_init(struct phy *_phy)
+>>               return ret;
+>>       }
+>>
+>> +     /* Regulation 45 ohms */
+>> +     if (phy->index == 0)
+>> +             sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
 >
-> Thanks.
+> What is this code supposed to do?
 >
+> Some define for this bit and/or a better comment would be nice.
 
+>From Allwinner's sources: "Enable/Disable USB res45 Calibration"
 
+which I think refers to the internal 45 ohm termination resistors
+for the USB data lines. But I'm not an expert on USB hardware.
