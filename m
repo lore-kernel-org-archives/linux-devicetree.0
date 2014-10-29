@@ -1,86 +1,74 @@
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: [alsa-devel] [PATCH 00/11] Add AXD Audio Processing IP driver
-Date: Wed, 29 Oct 2014 10:06:19 -0500
-Message-ID: <5451026B.9030306@linux.intel.com>
-References: <1414495589-8579-1-git-send-email-qais.yousef@imgtec.com> <544F8439.4080402@ladisch.de> <544F97A4.7080209@imgtec.com>
+From: Y Vo <yvo@apm.com>
+Subject: Re: [PATCH v1 1/3] gpio: Add APM X-Gene standby GPIO controller driver
+Date: Wed, 29 Oct 2014 22:09:00 +0700
+Message-ID: <CAL4ahLeyPgska0AcgS756y1Nh2tEeJ4A4k4bTJrU0pzqgG08PA@mail.gmail.com>
+References: <1412779948-28769-1-git-send-email-yvo@apm.com>
+	<2988580.WvjMBY1UOc@wuerfel>
+	<CACRpkdao2F1NK-3QpqSOLzFdvjWFVU4HqcqZPA2fXHpQN=BUsQ@mail.gmail.com>
+	<2178918.XVCQXOyoGA@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <544F97A4.7080209@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Qais Yousef <qais.yousef@imgtec.com>, Clemens Ladisch <clemens@ladisch.de>, linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, alsa-devel@alsa-project.org, Neil Jones <neil.jones@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <2178918.XVCQXOyoGA@wuerfel>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Tin Huynh <tnhuynh@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/28/14, 8:18 AM, Qais Yousef wrote:
-> On 10/28/2014 11:55 AM, Clemens Ladisch wrote:
->> Qais Yousef wrote:
->>> AXD Audio Processing IP performs audio decoding, encoding, mixing,
->>> equalisation,
->>> synchronisation and playback.
->> What exactly do you mean with "synchronisation" and "playback"?
->
-> Synchronisation refers to accurate audio playout relative to a master
-> clock source including compensation of drift between the master clock
-> source and the playout clock of the audio hardware. Hence allowing
-> synchronised audio playout across multiple independent devices.
->
-> Playback simple refers to the fact that AXD is capable of managing audio
-> playout hardware like I2S and SPDIF interfaces.
->
->
->>> It doesn't fit in alsa subsystem but I Cced them to confirm.
->> ... because those two words sound like something that a sound card
->> could do.
->
-> The problem mainly stems from the fact that we take a variety of
-> compressed audio as input and we could perform audio encoding. The
-> problem with the compressed audio is that the range of decoders and
-> configuration supported in alsa is limited and there's no support for
-> taking raw pcm and producing compressed output. I'm not an expert on
-> alsa but when I looked it looked like there's more infra structure
-> required.
->
-> The following not supported points from
-> Documentation/sound/alsa/compress_offload.txt affect us:
->
-> - Volume control/routing is not handled by this API. Devices exposing a
->    compressed data interface will be considered as regular ALSA devices;
->    volume changes and routing information will be provided with regular
->    ALSA kcontrols.
->
-> - Embedded audio effects. Such effects should be enabled in the same
->    manner, no matter if the input was PCM or compressed.
->
-> - Encoding/decoding acceleration is not supported as mentioned
->    above. It is possible to route the output of a decoder to a capture
->    stream, or even implement transcoding capabilities. This routing
->    would be enabled with ALSA kcontrols.
+Hi Arnd,
 
-Volume control, effects and routing aren't supported directly with the 
-snd_pcm streaming interface either. we didn't add these features either 
-in the compressed API since they could be enabled through existing means 
-(kcontrols and routing).
+Per Linus, shall we hold this driver until the GIC submission complete
+? Or we will send the version without access GIC to read status in
+case the GPIO is configured IRQ ?
 
->
->
->
->>> I added it to drivers/char as this is the best location I could think
->>> of at the
->>> moment.
->> drivers/misc?
->
-> Yeah could do if there's consensus.
->
-> Thanks,
-> Qais
->
++static int xgene_gpio_sb_get(struct gpio_chip *gc, u32 gpio)
++{
++       struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
++       struct xgene_gpio_sb *chip = to_xgene_gpio_sb(mm_gc);
++       u32 data;
++
++       data = ioread32(mm_gc->regs + MPA_GPIO_IN_ADDR);
++
++       return (data &  GPIO_MASK(gpio)) ? 1 : 0;
++}
+
+Regards,
+Y
+
+On Wed, Oct 29, 2014 at 5:24 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wednesday 29 October 2014 10:52:47 Linus Walleij wrote:
+>> On Fri, Oct 24, 2014 at 3:46 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> > On Friday 24 October 2014 14:14:43 Linus Walleij wrote:
+>> > See the discussion I had on this. Yes, each line is connected to a
+>> > GIC SPI interrupt by itself. I've discussed this with Marc Zyngier
+>> > and Thomas Gleixner at the conference last week, and we concluded
+>> > that we will need a new generic interface to get data out of the
+>> > parent interrupt controller in a proper way. The current implementation
+>> > just maps the GIC registers and reads them directly, which of course
+>> > is not a proper way to do it.
 >>
->> Regards,
->> Clemens
+>> Hmmmmmm. OK shall we hold this driver until the infrastructure
+>> issues are resolved?
 >
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+> Y could send a first version that does not support the IRQ lines
+> if he wants to speed up the process.
+>
+>> The following is a recurring pattern among GPIO controllers:
+>> the GPIO controller can go offline (asycnhcronous) and while it
+>> is offline a secondary logic triggers an IRQ that wakes the system
+>> up, however the GPIO logic cannot really "see" that IRQ since
+>> it was sleeping when it arrived.
+>>
+>> Thus a latent IRQ is pending in the wakeup logic. This concept
+>> exists in drivers/pinctrl/nomadik/pinctrl-nomadik.c and I strongly
+>> prefer to call these "latent irqs" as it's a clear unambigous
+>> terminology.
+>>
+>> So is this a case of latent IRQs pending in the GIC?
+>
+> I think this case is different, from what I understand, the GPIO
+> controller cannot implement gpio_chip->get() for any line that
+> is connected to the GIC, and it has to ask the GIC instead.
+> This seems independent of the online/offline state of the controller.
+>
+>         Arnd
