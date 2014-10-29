@@ -1,121 +1,55 @@
 From: Emil Medve <Emilian.Medve@Freescale.com>
-Subject: Re: [PATCH v2 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
-Date: Wed, 29 Oct 2014 16:16:17 -0500
-Message-ID: <54515921.1080804@Freescale.com>
+Subject: Re: [PATCH v2 2/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
+ portal(s)
+Date: Wed, 29 Oct 2014 16:26:38 -0500
+Message-ID: <54515B8E.50100@Freescale.com>
 References: <1414487751-31568-1-git-send-email-Emilian.Medve@Freescale.com>
- <1414487751-31568-2-git-send-email-Emilian.Medve@Freescale.com>
- <5DC63911-AD43-4EDA-8675-8A28EDC3F491__16064.0273978517$1414507192$gmane$org@codeaurora.org>
+ <1414487751-31568-3-git-send-email-Emilian.Medve@Freescale.com>
+ <044D58B4-690A-4CEA-B2DB-8AF4549D4AE2__43711.2007676207$1414507333$gmane$org@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <5DC63911-AD43-4EDA-8675-8A28EDC3F491__16064.0273978517$1414507192$gmane$org@codeaurora.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <044D58B4-690A-4CEA-B2DB-8AF4549D4AE2__43711.2007676207$1414507333$gmane$org@codeaurora.org>
+Sender: linux-doc-owner@vger.kernel.org
 To: Kumar Gala <galak@codeaurora.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, corbet@lwn.net, Geoff.Thorpe@Freescale.com, ijc+devicetree@hellion.org.uk, linux-doc@vger.kernel.org, scottwood@Freescale.com, linuxppc-dev@ozlabs.org, robh+dt@kernel.org, grant.likely@linaro.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Geoff.Thorpe@Freescale.com, corbet@lwn.net, linux-doc@vger.kernel.org, linuxppc-dev@ozlabs.org, grant.likely@linaro.org, robh+dt@kernel.org, scottwood@Freescale.com
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gS3VtYXIsCgoKVGhhbmtzIGZvciB0YWtpbmcgdGhlIHRpbWUgdG8gcmV2aWV3IHRoaXMK
-Ck9uIDEwLzI4LzIwMTQgMDk6MzkgQU0sIEt1bWFyIEdhbGEgd3JvdGU6Cj4gT24gT2N0IDI4LCAy
-MDE0LCBhdCA0OjE1IEFNLCBFbWlsIE1lZHZlIDxFbWlsaWFuLk1lZHZlQGZyZWVzY2FsZS5jb20+
-IHdyb3RlOgo+PiBUaGUgQnVmZmVyIE1hbmFnZXIgaXMgcGFydCBvZiB0aGUgRGF0YS1QYXRoIEFj
-Y2VsZXJhdGlvbiBBcmNoaXRlY3R1cmUgKERQQUEpLgo+PiBCTWFuIHN1cHBvcnRzIGhhcmR3YXJl
-IGFsbG9jYXRpb24gYW5kIGRlYWxsb2NhdGlvbiBvZiBidWZmZXJzIGJlbG9uZ2luZyB0bwo+PiBw
-b29scyBvcmlnaW5hbGx5IGNyZWF0ZWQgYnkgc29mdHdhcmUgd2l0aCBjb25maWd1cmFibGUgZGVw
-bGV0aW9uIHRocmVzaG9sZHMuCj4+IFRoaXMgYmluZGluZyBjb3ZlcnMgdGhlIENDU1Igc3BhY2Ug
-cHJvZ3JhbW1pbmcgbW9kZWwKPj4KPj4gU2lnbmVkLW9mZi1ieTogRW1pbCBNZWR2ZSA8RW1pbGlh
-bi5NZWR2ZUBGcmVlc2NhbGUuY29tPgo+PiBDaGFuZ2UtSWQ6IEkzZWM0NzliZmIzYzkxOTUxZTk2
-OTAyZjA5MWY1ZDdkMmFkYmVmM2IyCj4+IC0tLQo+PiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9w
-b3dlcnBjL2ZzbC9ibWFuLnR4dCAgICAgICB8IDk1ICsrKysrKysrKysrKysrKysrKysrKysKPj4g
-MSBmaWxlIGNoYW5nZWQsIDk1IGluc2VydGlvbnMoKykKPj4gY3JlYXRlIG1vZGUgMTAwNjQ0IERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9ibWFuLnR4dAo+IAo+
-IFNob3VsZCB0aGVzZSByZWFsbHkgYmUgaW4gYmluZGluZ3MvcG93ZXJwYy9mc2wsIGFyZW7igJl0
-IHlvdSBndXlzIHVzaW5nIHRoaXMgb24gQVJNIFNvQ3MgYXMgd2VsbD8KCldlIGRvLCBob3dldmVy
-LCBJIGRpZG4ndCBoYXZlIGFueSBleHBvc3VyZSB5ZXQgdG8gaG93IHRoZSBEUEFBIHdhcwppbnRl
-Z3JhdGVkIHRoZXJlLiBGcm9tIHdoYXQgSSBoZWFyIHRoZSBiaWdnZXN0IGRpZmZlcmVuY2UgaXMg
-aW4gdGhlCklPTU1VIGFyZWEuIFVwc3RyZWFtaW5nIHRoZSBEUEFBIGhhcyBiZWVuIGxvbmcgb3Zl
-cmR1ZSBhbmQgSSdkIGxpa2UgdG8KbWFrZSBzb21lIHByb2dyZXNzIHdpdGggaXQgYXMgaXMgb24g
-dGhlIFBvd2VyUEMgU29DKHMpCgo+IEkgY2Fu4oCZdCByZW1lbWJlciBpZiB0aGUgVEkgZ3V5cyBo
-YWQgYSBIVyBhbGxvY2F0b3IgYXMgcGFydCBvZiB0aGVpcgo+IHNpbWlsYXIgSFcuIElmIHNvLCBw
-b3NzaWJseSB3b3J0aCB3aGlsZSB0byBzZWUgd2hlcmUgdGhleSBoYXZlIHRoZWlyCj4gYmluZGlu
-Zy4KClNlZW1zIHRoZWlyIGRhdGEtcGF0aCBiaW5kaW5ncyBhcmUgaW4KRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy4gSSBjYW4gbW92ZSB0aGUgQi9RTWFuIHRoZXJlIGFuZApp
-dCB3b3VsZCBsZXZlbCB0aGUgd2F5IGZvciB0aGUgQVJNIFNvQyhzKSB3aXRoIHRoZSBEUEFBCgo+
-PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMv
-ZnNsL2JtYW4udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMv
-ZnNsL2JtYW4udHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLmQz
-ZmQxZTMKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvcG93ZXJwYy9mc2wvYm1hbi50eHQKPj4gQEAgLTAsMCArMSw5NSBAQAo+PiArUW9y
-SVEgRFBBQSBCdWZmZXIgTWFuYWdlciBEZXZpY2UgVHJlZSBCaW5kaW5ncwo+PiArCj4+ICtDb3B5
-cmlnaHQgKEMpIDIwMDggLSAyMDE0IEZyZWVzY2FsZSBTZW1pY29uZHVjdG9yIEluYy4KPj4gKwo+
-PiArQ09OVEVOVFMKPj4gKwo+PiArCS0gQk1hbiBOb2RlCj4+ICsJLSBCTWFuIFByaXZhdGUgTWVt
-b3J5IE5vZGUKPj4gKwktIEV4YW1wbGUKPj4gKwo+PiArQk1hbiBOb2RlCj4+ICsKPj4gK1BST1BF
-UlRJRVMKPj4gKwo+PiArLSBjb21wYXRpYmxlCj4+ICsJVXNhZ2U6CQlSZXF1aXJlZAo+PiArCVZh
-bHVlIHR5cGU6CTxzdHJpbmdsaXN0Pgo+PiArCURlZmluaXRpb246CU11c3QgaW5jbHVkZSAiZnNs
-LGJtYW4iCj4+ICsJCQlNYXkgaW5jbHVkZSAiZnNsLDxTb0M+LWJtYW4iCj4+ICsKPj4gKy0gcmVn
-Cj4+ICsJVXNhZ2U6CQlSZXF1aXJlZAo+PiArCVZhbHVlIHR5cGU6CTxwcm9wLWVuY29kZWQtYXJy
-YXk+Cj4+ICsJRGVmaW5pdGlvbjoJUmVnaXN0ZXJzIHJlZ2lvbiB3aXRoaW4gdGhlIENDU1IgYWRk
-cmVzcyBzcGFjZQo+PiArCj4+ICstIGludGVycnVwdHMKPj4gKwlVc2FnZToJCVJlcXVpcmVkCj4+
-ICsJVmFsdWUgdHlwZToJPHByb3AtZW5jb2RlZC1hcnJheT4KPj4gKwlEZWZpbml0aW9uOglTdGFu
-ZGFyZCBwcm9wZXJ0eS4gVGhlIGVycm9yIGludGVycnVwdAo+PiArCj4+ICstIGZzbCxsaW9kbgo+
-PiArCVVzYWdlOgkJU2VlIHBhbXUudHh0Cj4+ICsJVmFsdWUgdHlwZToJPHByb3AtZW5jb2RlZC1h
-cnJheT4KPj4gKwlEZWZpbml0aW9uOglQQU1VIHByb3BlcnR5IHVzZWQgZm9yIHN0YXRpYyBMSU9E
-TiBhc3NpZ25tZW50Cj4+ICsKPj4gKy0gZnNsLGlvbW11LXBhcmVudAo+PiArCVVzYWdlOgkJU2Vl
-IHBhbXUudHh0Cj4+ICsJVmFsdWUgdHlwZToJPHBoYW5kbGU+Cj4+ICsJRGVmaW5pdGlvbjoJUEFN
-VSBwcm9wZXJ0eSB1c2VkIGZvciBkeW5hbWljIExJT0ROIGFzc2lnbm1lbnQKPj4gKwo+PiArCUZv
-ciBhZGRpdGlvbmFsIGRldGFpbHMgYWJvdXQgdGhlIFBBTVUvTElPRE4gYmluZGluZyhzKSBzZWUg
-cGFtdS50eHQKPj4gKwo+PiArQk1hbiBQcml2YXRlIE1lbW9yeSBOb2RlCj4+ICsKPj4gK0JNYW4g
-cmVxdWlyZXMgYSBjb250aWd1b3VzIHJhbmdlIG9mIHBoeXNpY2FsIG1lbW9yeSB1c2VkIGZvciB0
-aGUgYmFja2luZyBzdG9yZQo+PiArZm9yIEJNYW4gRnJlZSBCdWZmZXIgUHJveHkgUmVjb3Jkcy4g
-VGhpcyBtZW1vcnkgaXMgcmVzZXJ2ZWQvYWxsb2NhdGVkIGFzIGEgbm9kZQo+IAo+IOKApiBQcm94
-eSBSZWNvcmRzIChGQlBSKS4gIFRoaXMKPiAKPiBbIHNvIHdlIGdldCBjb250ZXh0IGZvciB0aGUg
-YWNyb255bSB1c2VkIGxhdGVyIF0KCldpbGwgZG8KCj4+ICt1bmRlciB0aGUgL3Jlc2VydmVkLW1l
-bW9yeSBub2RlCj4+ICsKPj4gK1RoZSBCTWFuIEZCUFIgbWVtb3J5IG5vZGUgbXVzdCBiZSBuYW1l
-ZCAiYm1hbi1mYnByIgo+PiArCj4+ICtQUk9QRVJUSUVTCj4+ICsKPj4gKy0gY29tcGF0aWJsZQo+
-PiArCVVzYWdlOgkJcmVxdWlyZWQKPj4gKwlWYWx1ZSB0eXBlOgk8c3RyaW5nbGlzdD4KPj4gKwlE
-ZWZpbml0aW9uOglNdXN0IGluY2xpZGUgImZzbCxibWFuLWZicHIiCj4+ICsKPj4gK1RoZSBmb2xs
-b3dpbmcgY29uc3RyYWludHMgYXJlIHJlbGV2YW50IHRvIHRoZSBGQlBSIHByaXZhdGUgbWVtb3J5
-Ogo+PiArCS0gVGhlIHNpemUgbXVzdCBiZSAyXihzaXplICsgMSksIHdpdGggc2l6ZSA9IDExLi4z
-My4gVGhhdCBpcyA0IEtpQiB0bwo+PiArCSAgMTYgR2lCCj4+ICsJLSBUaGUgYWxpZ25tZW50IG11
-c3QgYmUgYSBtdWxpcHRsZSBvZiB0aGUgbWVtb3J5IHNpemUKPj4gKwo+PiArVGhlIHNpemUgb2Yg
-dGhlIEZCUFIgbXVzdCBiZSBjaG9zZW4gYnkgb2JzZXJ2aW5nIHRoZSBoYXJkd2FyZSBmZWF0dXJl
-cyBjb25maWd1cmVkCj4+ICt2aWEgdGhlIFJDVyBhbmQgdGhhdCBhcmUgcmVsZXZhbnQgdG8gYSBz
-cGVjaWZpYyBib2FyZCAoZS5nLiBudW1iZXIgb2YgTUFDKHMpCj4+ICtwaW5uZWQtb3V0LCBudW1i
-ZXIgb2Ygb2ZmbGluZS9ob3N0IGNvbW1hbmQgRk1hbiBwb3J0cywgZXRjLikuIFRoZSBzaXplIGNv
-bmZpZ3VyZWQKPj4gK2luIHRoZSBEVCBtdXN0IHJlZmxlY3QgdGhlIGhhcmR3YXJlIGNhcGFiaWxp
-dGllcyBhbmQgbm90IHRoZSBzcGVjaWZpYyBuZWVkcyBvZiBhbgo+PiArYXBwbGljYXRpb24KPiAK
-PiBSQ1cgZG9lc27igJl0IGhhdmUgYW55IGNvbnRleHQgaGVyZQoKV2lsbCBleHBhbmQgaXQKCj4+
-ICtGb3IgYWRkaXRpb25hbCBkZXRhaWxzIGFib3V0IHJlc2VydmVkIG1lbW9yeSByZWdpb25zIHNl
-ZSByZXNlcnZlZC1tZW1vcnkudHh0Cj4+ICsKPj4gK0VYQU1QTEUKPj4gKwo+PiArVGhlIGV4YW1w
-bGUgYmVsb3cgc2hvd3MgYSBCTWFuIEZCUFIgZHluYW1pYyBhbGxvY2F0aW9uIG1lbW9yeSBub2Rl
-Cj4+ICsKPj4gKwlyZXNlcnZlZC1tZW1vcnkgewo+PiArCQkjYWRkcmVzcy1jZWxscyA9IDwyPjsK
-Pj4gKwkJI3NpemUtY2VsbHMgPSA8Mj47Cj4+ICsJCXJhbmdlczsKPj4gKwo+PiArCQlibWFuLWZi
-cHIgewo+PiArCQkJY29tcGF0aWJsZSA9ICJmc2wsYm1hbi1mYnByIjsKPj4gKwkJCWFsbG9jLXJh
-bmdlcyA9IDwwIDAgMHhmIDB4ZmZmZmZmZmY+Owo+PiArCQkJc2l6ZSA9IDwwIDB4MTAwMDAwMD47
-Cj4+ICsJCQlhbGlnbm1lbnQgPSA8MCAweDEwMDAwMDA+Owo+PiArCQl9Owo+PiArCX07Cj4+ICsK
-Pj4gK1RoZSBleGFtcGxlIGJlbG93IHNob3dzIGEgKFA0MDgwKSBCTWFuIENDU1Itc3BhY2Ugbm9k
-ZQo+PiArCj4+ICsJYm1hbkAzMWEwMDAgewo+PiArCQljb21wYXRpYmxlID0gImZzbCxibWFuIjsK
-Pj4gKwkJcmVnID0gPDB4MzFhMDAwIDB4MTAwMD47Cj4+ICsJCWludGVycnVwdHMgPSA8MTYgMiAx
-IDI+Owo+PiArCQlmc2wsbGlvZG4gPSA8MHgxNz47Cj4gCj4gbm8gZnNsLGlvbW11LXBhcmVudCBp
-biB0aGUgZXhhbXBsZT8KClVzaW5nIHRoZSBQQU1VL0lPTU1VIHRvcG9sb2d5IChmb3IgZHluYW1p
-YyBMSU9ETiBhbGxvY2F0aW9uKSBpcyBub3QKd29ya2luZyB5ZXQgaW4gdGhlIFBBTVUgZHJpdmVy
-IChub3QgZXZlbiBwcm9ncmFtbWluZyBvbmx5IHRoZSBwYXJlbnQKUEFNVSB3aXRoIHRoZSBzdGF0
-aWMgTElPRE4gZnJvbSB0aGUgbm9kZSkgc28gSSdtIG5vdCBxdWl0ZSBpbiB0aGUgaGFiaXQKb2Yg
-c3ByaW5rbGluZyB0aG9zZSBhcm91bmQuIEknbGwgYWRkIHRoZW0gaW50byB0aGUgZXhhbXBsZXMK
-Cj4+ICsJfTsKPiAKPiBEbyB5b3Ugbm90IG5lZWQgYSBwaGFuZGxlIGJldHdlZW4gdGhlIGJtYW4g
-YW5kIHRoZSBtZW1vcnkgbm9kZT8KCk5vcGUuIEFuZCBJJ20gdGhpbmtpbmcgdHdvIHJlYXNvbnM6
-ICgxKSAoaWYgaXQgZ2V0cyB0byBpdCkgdW5pcXVlCmNvbXBhdGlibGUocykgZm9yIHRoZSByZXNl
-cnZlZC1tZW1vcnkgbm9kZXMgYW5kICgyKQpSRVNFUlZFRE1FTV9PRl9ERUNMQVJFKCkgdGFrZXMg
-Y2FyZSB0byBjb25uZWN0IHRoZSBkb3RzIGJhc2VkIG9uIHNhaWQKY29tcGF0aWJsZShzKQoKCkNo
-ZWVycywKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGlu
-dXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRw
-czovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+Hello Kumar,
+
+
+On 10/28/2014 09:41 AM, Kumar Gala wrote:
+> On Oct 28, 2014, at 4:15 AM, Emil Medve <Emilian.Medve@freescale.com> wrote:
+> 
+>> Portals are memory mapped interfaces to BMan that allow low-latency,
+>> lock-less interaction by software running on processor cores, accelerators
+>> and network interfaces with the BMan
+>>
+>> Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
+>> Change-Id: I6d245ffc14ba3d0e91d403ac7c3b91b75a9e6a95
+>> ---
+>> .../bindings/powerpc/fsl/bman-portals.txt          | 52 ++++++++++++++++++++++
+>> 1 file changed, 52 insertions(+)
+>> create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt b/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
+> 
+> similar comment about location of binding not being PPC specific.
+
+Will move it to Documentation/devicetree/bindings/soc
+
+>> new file mode 100644
+>> index 0000000..02e0231
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/powerpc/fsl/bman-portals.txt
+>> @@ -0,0 +1,52 @@
+>> +QorIQ DPAA Buffer Manager Portals Device Tree Binding
+>> +
+> 
+> Probably worth putting the text from the commit message here as well.
+
+Ok
+
+
+Cheers,
