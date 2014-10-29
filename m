@@ -1,7 +1,7 @@
 From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH v5 6/6] dt-bindings: add bindings for mediatek sysirq
-Date: Wed, 29 Oct 2014 18:00:24 +0800
-Message-ID: <1414576824-16143-7-git-send-email-yingjoe.chen@mediatek.com>
+Subject: [PATCH v5 2/6] genirq: Add more helper functions to support stacked irq_chip
+Date: Wed, 29 Oct 2014 18:00:20 +0800
+Message-ID: <1414576824-16143-3-git-send-email-yingjoe.chen@mediatek.com>
 References: <1414576824-16143-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,45 +12,70 @@ To: Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Grant Likely <grant.likely@linaro.org>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, yingjoe.chen@gmail.com, hc.yen@mediatek.com, eddie.huang@mediatek.com, nathan.chung@mediatek.com, yh.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for Mediatek SoC SYSIRQ.
+Add more helper function for stacked irq_chip to just call parent's
+function.
 
 Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
 ---
- .../bindings/arm/mediatek/mediatek,sysirq.txt      | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+ include/linux/irq.h |  6 ++++++
+ kernel/irq/chip.c   | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-new file mode 100644
-index 0000000..8669536
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-@@ -0,0 +1,26 @@
-+Mediatek 65xx/81xx sysirq
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 0adcbbb..ff0a89c 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -445,6 +445,12 @@ extern void handle_nested_irq(unsigned int irq);
+ 
+ #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+ extern void irq_chip_ack_parent(struct irq_data *data);
++extern void irq_chip_mask_parent(struct irq_data *data);
++extern void irq_chip_unmask_parent(struct irq_data *data);
++extern void irq_chip_eoi_parent(struct irq_data *data);
++extern int irq_chip_set_affinity_parent(struct irq_data *data,
++					const struct cpumask *dest,
++					bool force);
+ extern int irq_chip_retrigger_hierarchy(struct irq_data *data);
+ #endif
+ 
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 12f3e72..fe53575 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -858,6 +858,34 @@ void irq_chip_ack_parent(struct irq_data *data)
+ 	data->chip->irq_ack(data);
+ }
+ 
++void irq_chip_mask_parent(struct irq_data *data)
++{
++	data = data->parent_data;
++	data->chip->irq_mask(data);
++}
 +
-+Mediatek SOCs sysirq support controllable irq inverter for each GIC SPI
-+interrupt.
++void irq_chip_unmask_parent(struct irq_data *data)
++{
++	data = data->parent_data;
++	data->chip->irq_unmask(data);
++}
 +
-+Required properties:
-+- compatible: should be one of:
-+	"mediatek,mt8135-sysirq"
-+	"mediatek,mt8127-sysirq"
-+	"mediatek,mt6589-sysirq"
-+	"mediatek,mt6582-sysirq"
-+	"mediatek,mt6577-sysirq"
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Must use the same cells/format as parent controller.
-+- interrupt-parent: phandle of irq domain parent for sysirq.
-+- reg: Physical base address of the intpol registers and length of memory
-+  mapped region.
++void irq_chip_eoi_parent(struct irq_data *data)
++{
++	data = data->parent_data;
++	data->chip->irq_eoi(data);
++}
 +
-+Example:
-+	sysirq: interrupt-controller@10200100 {
-+		compatible = "mediatek,mt6589-sysirq", "mediatek,mt6577-sysirq";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
-+		reg = <0 0x10200100 0 0x1c>;
-+	};
++int irq_chip_set_affinity_parent(struct irq_data *data,
++				 const struct cpumask *dest, bool force)
++{
++	data = data->parent_data;
++	if (data->chip->irq_set_affinity)
++		return data->chip->irq_set_affinity(data, dest, force);
++
++	return -ENOSYS;
++}
++
+ int irq_chip_retrigger_hierarchy(struct irq_data *data)
+ {
+ 	for (data = data->parent_data; data; data = data->parent_data)
 -- 
 1.8.1.1.dirty
