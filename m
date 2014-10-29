@@ -1,96 +1,61 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 6/6] ARM: shmobile: r8a7794 dtsi: Change to using clock-indices
-Date: Wed, 29 Oct 2014 15:19:13 +0100
-Message-ID: <1414592353-24044-7-git-send-email-geert+renesas@glider.be>
-References: <1414592353-24044-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414592353-24044-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Romain Perier <romain.perier@gmail.com>
+Subject: Re: [PATCH 0/4] poweroff-source DT property renaming
+Date: Wed, 29 Oct 2014 15:21:23 +0100
+Message-ID: <CABgxDo+mxFrdFM4aM389pR26hGUfcgLkGZXcPqtWTExfTV46Tw@mail.gmail.com>
+References: <1414568135-8311-1-git-send-email-romain.perier@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1414568135-8311-1-git-send-email-romain.perier@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-With the addition of clock-indices in commit 8e33f91a0b84ae19 ("clk:
-shmobile: clk-mstp: change to using clock-indices"), we can change the
-DTSes to use the generic property instead of the deprecated
-vendor-specific property.
++CC Felipe and linux-tegra@vger.k.o , as both were interested by some
+parts of the previous serie (sorry when I tried to reduce the CC list,
+I forgot you)
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- arch/arm/boot/dts/r8a7794.dtsi | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
-index 088e79c6551ca4b8..b9539fea92392140 100644
---- a/arch/arm/boot/dts/r8a7794.dtsi
-+++ b/arch/arm/boot/dts/r8a7794.dtsi
-@@ -455,7 +455,7 @@
- 			reg = <0 0xe6150130 0 4>, <0 0xe6150030 0 4>;
- 			clocks = <&mp_clk>;
- 			#clock-cells = <1>;
--			renesas,clock-indices = <R8A7794_CLK_MSIOF0>;
-+			clock-indices = <R8A7794_CLK_MSIOF0>;
- 			clock-output-names = "msiof0";
- 		};
- 		mstp1_clks: mstp1_clks@e6150134 {
-@@ -465,7 +465,7 @@
- 				 <&cp_clk>,
- 				 <&zs_clk>, <&zs_clk>, <&zs_clk>;
- 			#clock-cells = <1>;
--			renesas,clock-indices = <
-+			clock-indices = <
- 				R8A7794_CLK_TMU1 R8A7794_CLK_TMU3 R8A7794_CLK_TMU2
- 				R8A7794_CLK_CMT0 R8A7794_CLK_TMU0
- 			>;
-@@ -478,7 +478,7 @@
- 			clocks = <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>,
- 				 <&mp_clk>, <&mp_clk>, <&mp_clk>;
- 			#clock-cells = <1>;
--			renesas,clock-indices = <
-+			clock-indices = <
- 				R8A7794_CLK_SCIFA2 R8A7794_CLK_SCIFA1 R8A7794_CLK_SCIFA0
- 				R8A7794_CLK_MSIOF2 R8A7794_CLK_SCIFB0 R8A7794_CLK_SCIFB1
- 				R8A7794_CLK_MSIOF1 R8A7794_CLK_SCIFB2
-@@ -492,7 +492,7 @@
- 			reg = <0 0xe615013c 0 4>, <0 0xe6150048 0 4>;
- 			clocks = <&rclk_clk>;
- 			#clock-cells = <1>;
--			renesas,clock-indices = <
-+			clock-indices = <
- 				R8A7794_CLK_CMT1
- 			>;
- 			clock-output-names =
-@@ -504,7 +504,7 @@
- 			clocks = <&zs_clk>, <&p_clk>, <&p_clk>, <&zs_clk>,
- 				 <&zs_clk>, <&p_clk>, <&p_clk>, <&p_clk>, <&p_clk>;
- 			#clock-cells = <1>;
--			renesas,clock-indices = <
-+			clock-indices = <
- 				R8A7794_CLK_HSCIF2 R8A7794_CLK_SCIF5
- 				R8A7794_CLK_SCIF4 R8A7794_CLK_HSCIF1 R8A7794_CLK_HSCIF0
- 				R8A7794_CLK_SCIF3 R8A7794_CLK_SCIF2 R8A7794_CLK_SCIF1
-@@ -519,7 +519,7 @@
- 			reg = <0 0xe6150990 0 4>, <0 0xe61509a0 0 4>;
- 			clocks = <&p_clk>;
- 			#clock-cells = <1>;
--			renesas,clock-indices = <
-+			clock-indices = <
- 				R8A7794_CLK_ETHER
- 			>;
- 			clock-output-names =
-@@ -530,7 +530,7 @@
- 			reg = <0 0xe615099c 0 4>, <0 0xe61509ac 0 4>;
- 			clocks = <&mp_clk>, <&mp_clk>, <&mp_clk>;
- 			#clock-cells = <1>;
--			renesas,clock-indices = <
-+			clock-indices = <
- 				R8A7794_CLK_SCIFA3 R8A7794_CLK_SCIFA4 R8A7794_CLK_SCIFA5
- 			>;
- 			clock-output-names = "scifa3", "scifa4", "scifa5";
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2014-10-29 8:35 GMT+01:00 Romain Perier <romain.perier@gmail.com>:
+> The goal of this serie is to rename the property "poweroff-source" to
+> "system-power-controller" and to fix things incrementally.
+>
+> Changes and explanations since v1:
+>
+>   - The first patch defines "of_is_system_power_controller" which is compatible
+>     with both "vendor,system-power-controller" and "system-power-controller"
+>     properties. Also, It keeps the old helper function of_system_has_poweroff_source
+>     for source compatibility until everything is renamed (in this way, bisections
+>     are not broken and change is made "atomically" between each commit)
+>
+>     Note: the property "poweroff-source" itself is not used in dts files yet.
+>     Before this patch tps65910 was broken due to missing backward compatibility
+>     with "vendor,system-power-controller". As the old helper uses the new one,
+>     it works again.
+>
+>   - act8865 and tps65910 are ported to the new helper function
+>
+>   - The last commit removes the olf helper which was only used for source compatibility
+>
+> Romain Perier (4):
+>   of: Rename "poweroff-source" property to "system-power-controller"
+>   regulator: act8865: Convert poweroff-source DT property to
+>     system-power-controller
+>   mfd: tps65910: Convert poweroff-source DT property to
+>     system-power-controller
+>   of: Remove of_system_has_poweroff_source helper function
+>
+>  .../devicetree/bindings/power/power-controller.txt | 18 ++++++++++++
+>  .../devicetree/bindings/power/poweroff.txt         | 18 ------------
+>  .../bindings/regulator/act8865-regulator.txt       |  4 +--
+>  drivers/mfd/tps65910.c                             |  2 +-
+>  drivers/of/base.c                                  | 34 ++++++++++++++++++++++
+>  drivers/regulator/act8865-regulator.c              |  2 +-
+>  include/linux/of.h                                 | 12 ++------
+>  7 files changed, 58 insertions(+), 32 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/power-controller.txt
+>  delete mode 100644 Documentation/devicetree/bindings/power/poweroff.txt
+>
+> --
+> 1.9.1
+>
