@@ -1,102 +1,38 @@
-From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 10/10] ARM: hisi_defconfig: add driver support for hix5hd2
-Date: Wed, 29 Oct 2014 16:26:05 +0800
-Message-ID: <1414571165-23736-11-git-send-email-zhangfei.gao@linaro.org>
-References: <1414571165-23736-1-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414571165-23736-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2] Documentation: gpio: guidelines for bindings
+Date: Wed, 29 Oct 2014 09:36:11 +0100
+Message-ID: <4218554.VFiN8kJDb1@wuerfel>
+References: <1414570394-11706-1-git-send-email-acourbot@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1414570394-11706-1-git-send-email-acourbot@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, gnurou@gmail.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/configs/hisi_defconfig |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+On Wednesday 29 October 2014 17:13:14 Alexandre Courbot wrote:
+> Now that ACPI supports named GPIO properties, either through ACPI 5.1 or
+> the per-driver ACPI GPIO mappings, we can be more narrow about the way
+> GPIOs should be specified in Device Tree bindings.
+> 
+> This patch updates the GPIO DT bindings documentation to highlight the
+> following rules for new GPIO bindings:
+> 
+> - All new bindings must have a meaningful name (e.g. the "gpios"
+>   property must not be used)
+> - The only suffix allowed is "-gpios", no matter the number of
+>   descriptors in the property
+> - GPIOs can only be grouped under the same property when they serve the
+>   same purpose, a case that should remain exceptional (e.g. bit-banged
+>   data lines).
+> 
+> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+> CC: Linus Walleij <linus.walleij@linaro.org>
+> CC: Arnd Bergmann <arnd@arndb.de>
+> CC: Rafael J. Wysocki <rjw@rjwysocki.net>
+> CC: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-diff --git a/arch/arm/configs/hisi_defconfig b/arch/arm/configs/hisi_defconfig
-index 1772505..1fe3621f 100644
---- a/arch/arm/configs/hisi_defconfig
-+++ b/arch/arm/configs/hisi_defconfig
-@@ -5,6 +5,8 @@ CONFIG_BLK_DEV_INITRD=y
- CONFIG_RD_LZMA=y
- CONFIG_ARCH_HISI=y
- CONFIG_ARCH_HI3xxx=y
-+CONFIG_PARTITION_ADVANCED=y
-+CONFIG_CMDLINE_PARTITION=y
- CONFIG_ARCH_HIX5HD2=y
- CONFIG_ARCH_HIP04=y
- CONFIG_SMP=y
-@@ -14,8 +16,11 @@ CONFIG_AEABI=y
- CONFIG_HIGHMEM=y
- CONFIG_ARM_APPENDED_DTB=y
- CONFIG_ARM_ATAG_DTB_COMPAT=y
-+CONFIG_NEON=y
- CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_FROM_BOOTLOADER=y
-+CONFIG_PM_RUNTIME=y
- CONFIG_NET=y
-+CONFIG_PACKET=y
- CONFIG_UNIX=y
- CONFIG_INET=y
- CONFIG_IP_PNP=y
-@@ -26,6 +31,7 @@ CONFIG_BLK_DEV_SD=y
- CONFIG_ATA=y
- CONFIG_SATA_AHCI_PLATFORM=y
- CONFIG_NETDEVICES=y
-+CONFIG_HIX5HD2_GMAC=y
- CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_DEPRECATED_OPTIONS=y
- CONFIG_SERIAL_8250_CONSOLE=y
-@@ -39,8 +45,13 @@ CONFIG_I2C_DESIGNWARE_PLATFORM=y
- CONFIG_SPI=y
- CONFIG_SPI_PL022=y
- CONFIG_PINCTRL_SINGLE=y
-+CONFIG_DEBUG_GPIO=y
-+CONFIG_GPIO_SYSFS=y
-+CONFIG_GPIOLIB=y
- CONFIG_GPIO_GENERIC_PLATFORM=y
- CONFIG_REGULATOR_GPIO=y
-+CONFIG_MFD_SYSCON=y
-+CONFIG_POWER_RESET_SYSCON=y
- CONFIG_DRM=y
- CONFIG_FB_SIMPLE=y
- CONFIG_USB=y
-@@ -48,15 +59,21 @@ CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_EHCI_HCD=y
- CONFIG_USB_EHCI_MXC=y
- CONFIG_USB_EHCI_HCD_PLATFORM=y
-+CONFIG_USB_OHCI_HCD=y
-+CONFIG_USB_OHCI_HCD_PLATFORM=y
- CONFIG_USB_STORAGE=y
- CONFIG_NOP_USB_XCEIV=y
- CONFIG_MMC=y
- CONFIG_RTC_CLASS=y
-+CONFIG_MMC_DW=y
-+CONFIG_MMC_DW_IDMAC=y
-+CONFIG_MMC_DW_PLTFM=y
- CONFIG_RTC_DRV_PL031=y
- CONFIG_DMADEVICES=y
- CONFIG_DW_DMAC=y
- CONFIG_PL330_DMA=y
- CONFIG_PWM=y
-+CONFIG_PHY_HIX5HD2_SATA=y
- CONFIG_EXT4_FS=y
- CONFIG_TMPFS=y
- CONFIG_NFS_FS=y
-@@ -65,6 +82,8 @@ CONFIG_NFS_V4=y
- CONFIG_ROOT_NFS=y
- CONFIG_PRINTK_TIME=y
- CONFIG_DEBUG_FS=y
-+CONFIG_NLS_CODEPAGE_437=y
-+CONFIG_NLS_ISO8859_1=y
- CONFIG_DEBUG_KERNEL=y
- CONFIG_LOCKUP_DETECTOR=y
- CONFIG_VFP=y
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Arnd Bergmann <arnd@arndb.de>
