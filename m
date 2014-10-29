@@ -1,58 +1,108 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 3/4] regulator: max77686: Add suspend disable for some
- LDOs
-Date: Wed, 29 Oct 2014 10:31:40 +0000
-Message-ID: <20141029103140.GY18557@sirena.org.uk>
-References: <1414411911-5539-1-git-send-email-k.kozlowski@samsung.com>
- <1414411911-5539-4-git-send-email-k.kozlowski@samsung.com>
- <20141028223121.GH18557@sirena.org.uk>
- <1414574413.18868.6.camel@AMDC1943>
- <20141029100142.GR18557@sirena.org.uk>
- <1414577934.18868.7.camel@AMDC1943>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 6/8] regulator: max77686: Add external GPIO control
+Date: Wed, 29 Oct 2014 11:42:42 +0100
+Message-ID: <1414579362.18868.11.camel@AMDC1943>
+References: <1414422226-10948-1-git-send-email-k.kozlowski@samsung.com>
+ <1414422226-10948-7-git-send-email-k.kozlowski@samsung.com>
+ <544EA4FA.6040704@collabora.co.uk> <1414486356.24949.19.camel@AMDC1943>
+ <1414498308.24949.32.camel@AMDC1943>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xsYrt8mWir//dmFZ"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1414577934.18868.7.camel@AMDC1943>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1414498308.24949.32.camel@AMDC1943>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On wto, 2014-10-28 at 13:11 +0100, Krzysztof Kozlowski wrote:
+> On wto, 2014-10-28 at 09:52 +0100, Krzysztof Kozlowski wrote:
+> > On pon, 2014-10-27 at 21:03 +0100, Javier Martinez Canillas wrote:
+> > > Hello Krzysztof,
+> > > 
+> > > On 10/27/2014 04:03 PM, Krzysztof Kozlowski wrote:
+> > > > @@ -85,6 +91,9 @@ struct max77686_data {
+> > > >  	struct max77686_regulator_data *regulators;
+> > > >  	int num_regulators;
+> > > >  
+> > > > +	/* Array of size num_regulators with GPIOs for external control. */
+> > > > +	int *ext_control_gpio;
+> > > > +
+> > > 
+> > > The integer-based GPIO API is deprecated in favor of the descriptor-based GPIO
+> > > interface (Documentation/gpio/consumer.txt). Could you please use the later?
+> > 
+> > Sure, I can. Please have in mind that regulator core still accepts old
+> > GPIO so I will have to use desc_to_gpio(). That should work... and
+> > should be future-ready.
+> 
+> It seems I was too hasty... I think usage of the new gpiod API implies
+> completely different bindings.
+> 
+> The gpiod_get() gets GPIO from a device level, not from given sub-node
+> pointer. This means that you cannot have DTS like this:
+> ldo21_reg: ldo21 {
+> 	regulator-compatible = "LDO21";
+> 	regulator-name = "VTF_2.8V";
+> 	regulator-min-microvolt = <2800000>;
+> 	regulator-max-microvolt = <2800000>;
+> 	ec-gpio = <&gpy2 0 0>;
+> };
+> 
+> ldo22_reg: ldo22 {
+> 	regulator-compatible = "LDO22";
+> 	regulator-name = "VMEM_VDD_2.8V";
+> 	regulator-min-microvolt = <2800000>;
+> 	regulator-max-microvolt = <2800000>;
+> 	ec-gpio = <&gpk0 2 0>;
+> };
+> 
+> 
+> I could put GPIOs in device node:
+> 
+> max77686_pmic@09 {
+> 	compatible = "maxim,max77686";
+> 	interrupt-parent = <&gpx0>;
+> 	interrupts = <7 0>;
+> 	reg = <0x09>;
+> 	#clock-cells = <1>;
+> 	ldo21-gpio = <&gpy2 0 0>;
+> 	ldo22-gpio = <&gpk0 2 0>;
+> 
+> 	ldo21_reg: ldo21 {
+> 		regulator-compatible = "LDO21";
+> 		regulator-name = "VTF_2.8V";
+> 		regulator-min-microvolt = <2800000>;
+> 		regulator-max-microvolt = <2800000>;
+> 	};
+> 
+> 	ldo22_reg: ldo22 {
+> 		regulator-compatible = "LDO22";
+> 		regulator-name = "VMEM_VDD_2.8V";
+> 		regulator-min-microvolt = <2800000>;
+> 		regulator-max-microvolt = <2800000>;
+> 	};
+> 
+> This would work but I don't like it. The properties of a regulator are
+> above the node configuring that regulator.
+> 
+> Any ideas?
+> 
 
---xsYrt8mWir//dmFZ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Continuing talking to myself... I found another problem - GPIO cannot be
+requested more than once (-EBUSY). In case of this driver (and board:
+Trats2) one GPIO is connected to regulators. The legacy GPIO API and
+regulator core handle this.
 
-On Wed, Oct 29, 2014 at 11:18:54AM +0100, Krzysztof Kozlowski wrote:
-> On =C5=9Bro, 2014-10-29 at 10:01 +0000, Mark Brown wrote:
+With new GPIO API I would have to implement some additional steps in
+such case...
 
-> > No, this isn't suspend enable control - this is normal, standard enable
-> > control and the device has no suspend enable control.
+So there are 2 issues:
+1. Cannot put GPIO property in regulator node.
+2. Cannot request some GPIO more than once.
 
-> You mean that for such regulator the driver shouldn't implement
-> suspend_enable()?
+I'm going back to legacy API for now.
 
-Yes, if there is no separate control of suspend mode in hardware then of
-course the driver shouldn't implement operations for things it doesn't
-have.
-
---xsYrt8mWir//dmFZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUUMILAAoJECTWi3JdVIfQl34IAIU09lINYcxSvqRF0ZWXjFp/
-u7O7oIGMAPbZ5KKfuiDXQB2ia0NvKEQUrZMAfDOcs7tt2ZI6y3p3Q3VM6S0Eo6ac
-zqEObwWNS5wo4GtIJslXDiuutFi8ww82HoWnbT6yjpUlun+fSs/Q/Vs4MQTTJVOJ
-ALn1Z82x0DepYtI1l1BHLCIVrVsMvFcTwPWLwAOXt7+TYQj8BfLrU2YvdDf0XhBA
-y8GFcu8EhW4y3ExPFJDiggNHd/i7R+NZc36pDXEbFt2J0uj9/yr0HQXBJY62+uum
-yQkPfRBv6znlPj5hlheHkD90y8ulYZIoEnFeLF+rq3vuI7Z5XFHxM4PRWWySikE=
-=B9Jq
------END PGP SIGNATURE-----
-
---xsYrt8mWir//dmFZ--
+Best regards,
+Krzysztof
