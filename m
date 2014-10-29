@@ -1,41 +1,37 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH 04/11] irqchip: Remove ARM dependency for bcm7120-l2 and brcmstb-l2
-Date: Tue, 28 Oct 2014 20:58:51 -0700
-Message-ID: <1414555138-6500-4-git-send-email-cernekee@gmail.com>
+Subject: [PATCH 08/11] irqchip: bcm7120-l2: Fix missing nibble in gc->unused mask
+Date: Tue, 28 Oct 2014 20:58:55 -0700
+Message-ID: <1414555138-6500-8-git-send-email-cernekee@gmail.com>
 References: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1414555138-6500-1-git-send-email-cernekee@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-kernel-owner@vger.kernel.org
 To: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-This can compile for MIPS (or anything else) now.
+This mask should have been 0xffff_ffff, not 0x0fff_ffff.
+
+The change should not have an effect on current users (STB) because bits
+31:27 are unused.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- drivers/irqchip/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/irqchip/irq-bcm7120-l2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 6f0e80b..6a03c65 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -53,7 +53,6 @@ config ATMEL_AIC5_IRQ
+diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
+index f041992..e9331f8 100644
+--- a/drivers/irqchip/irq-bcm7120-l2.c
++++ b/drivers/irqchip/irq-bcm7120-l2.c
+@@ -171,7 +171,7 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
+ 	}
  
- config BRCMSTB_L2_IRQ
- 	bool
--	depends on ARM
- 	select GENERIC_IRQ_CHIP
- 	select IRQ_DOMAIN
- 
+ 	gc = irq_get_domain_generic_chip(data->domain, 0);
+-	gc->unused = 0xfffffff & ~data->irq_map_mask;
++	gc->unused = 0xffffffff & ~data->irq_map_mask;
+ 	gc->reg_base = data->base;
+ 	gc->private = data;
+ 	ct = gc->chip_types;
 -- 
 2.1.1
