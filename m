@@ -1,67 +1,105 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
-Date: Wed, 29 Oct 2014 17:16:36 -0500
-Message-ID: <1414620996.23458.141.camel@snotra.buserror.net>
-References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
-	 <EA33D307-CCDA-4A30-9386-46FA832FE0CA@codeaurora.org>
-	 <1414519738.23458.84.camel__4795.38602890006$1414521743$gmane$org@snotra.buserror.net>
-	 <54515ECB.70404@Freescale.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v6 0/7] This is the 1st version of suspend for RK3288.
+Date: Wed, 29 Oct 2014 15:26:21 -0700
+Message-ID: <CAD=FV=U-HesWSHdtiNq=5KquuBUR5_EBrL=rfZsAZEn+uuU5gw@mail.gmail.com>
+References: <1414583525-17395-1-git-send-email-zyw@rock-chips.com>
+	<7hppda7iaa.fsf@deeprootsystems.com>
+	<2524690.yVcDsnFz2O@diego>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <54515ECB.70404@Freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Emil Medve <Emilian.Medve@Freescale.com>
-Cc: Kumar Gala <galak@codeaurora.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Geoff.Thorpe@Freescale.com, corbet@lwn.net, linux-doc@vger.kernel.org, linuxppc-dev@ozlabs.org, robh+dt@kernel.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <2524690.yVcDsnFz2O@diego>
+Sender: linux-gpio-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Kevin Hilman <khilman@kernel.org>, Chris Zhong <zyw@rock-chips.com>, Mike Turquette <mturquette@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-gpio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Xie <xxx@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-10-29 at 16:40 -0500, Emil Medve wrote:
-> Hello Scott,
->=20
->=20
-> On 10/28/2014 01:08 PM, Scott Wood wrote:
-> > On Tue, 2014-10-28 at 09:36 -0500, Kumar Gala wrote:
-> >> On Oct 22, 2014, at 9:09 AM, Emil Medve <Emilian.Medve@freescale.c=
-om> wrote:
-> >>
-> >>> The Buffer Manager is part of the Data-Path Acceleration Architec=
-ture (DPAA).
-> >>> BMan supports hardware allocation and deallocation of buffers bel=
-onging to
-> >>> pools originally created by software with configurable depletion =
-thresholds.
-> >>> This binding covers the CCSR space programming model
-> >>>
-> >>> Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
-> >>> Change-Id: I3ec479bfb3c91951e96902f091f5d7d2adbef3b2
-> >>> ---
-> >>> .../devicetree/bindings/powerpc/fsl/bman.txt       | 98 +++++++++=
-+++++++++++++
-> >>> 1 file changed, 98 insertions(+)
-> >>> create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/=
-bman.txt
-> >>
-> >> Should these really be in bindings/powerpc/fsl, aren=E2=80=99t you=
- guys using this on ARM SoCs as well?
-> >=20
-> > The hardware on the ARM SoCs is different enough that I'm not sure =
-the
-> > same binding will cover it.  That said, putting things under <arch>
-> > should be a last resort if nowhere else fits.
->=20
-> OTC started ported the driver to the the ARM SoC and the feedback has
-> been that the driver needed minimal changes. The IOMMU has been the o=
-nly
-> area of concern, and a small change to the binding has been suggested
+Heiko,
 
-Do we need something in the binding to indicate device endianness?
+On Wed, Oct 29, 2014 at 2:50 PM, Heiko St=C3=BCbner <heiko@sntech.de> w=
+rote:
+> Am Mittwoch, 29. Oktober 2014, 13:06:05 schrieb Kevin Hilman:
+>> Hi Chris,
+>>
+>> Chris Zhong <zyw@rock-chips.com> writes:
+>> > RK3288 can shut down the cpu, gpu and other device controllers in =
+suspend,
+>> > and it will pull the GLOBAL_PWROFF pin to high in the final stage =
+of the
+>> > process of suspend, pull the pin to low again when resume.
+>>
+>> I tried to test this on top of linux-next (next-20141029) and it doe=
+sn't
+>> wake up from serial port activity.
+>>
+>> Can you describe how to test this, as well as describe dependencies =
+on
+>> other out-of-tree patches, including pointers to where they've been
+>> posted.
+>>
+>> Also, please describe how you tested this and on which hardware
+>> platforms.  It's a big help to reviewers to know how it's been teste=
+d,
+>> and for anyone with similar hardware to know what else it's been tes=
+ted
+>> on.
+>
+> When testing this series it did go to sleep with
+>
+> / # echo mem > /sys/power/state
+> PM: Syncing filesystems ... done.
+> Freezing user space processes ... (elapsed 0.010 seconds) done.
+> Freezing remaining freezable tasks ... (elapsed 0.010 seconds) done.
+> PM: suspend of devices complete after 0.001 msecs
+> PM: late suspend of devices complete after 0.001 msecs
+> PM: noirq suspend of devices complete after 0.001 msecs
+> Disabling non-boot CPUs ...
+> CPU1: shutdown
+> CPU2: shutdown
+> CPU3: shutdown
+>
+> and the change in pmic-noise lets me assume it's really asleep.
+>
+>
+> But I'm not exactly sure how to wake it up again. I even hard-wired t=
+he gpio-
+> keys to always enable the irq wake, but so far it didn't wake again w=
+hen
+> pressing the power-key on the evb.
+>
+> If anyone wants to peek, the collected patches (Doug's and Chris') ca=
+n be
+> found on [0].
 
-If this binding is going to continue to be relevant to future DPAA
-generations, I think we really ought to deal with the possibility that
-there is more than one datapath instance, by having phandles and/or a
-parent container to connect the related components.
+Unless you get a device tree that sets up regulator states I think
+you're going to be SOL.  In other words one thing that will definitely
+bite you is (7592100 ARM: dts: add suspend voltage setting for RK808).
 
--Scott
+That's referencing the "global_pwroff" which means we'll be telling
+the PMIC when we suspend.  That's good but the PMIC hasn't been
+programmed with any reasonable voltages because all the device tree
+properties are ignored.  That's not good.  You can see my comments
+about this at <https://patchwork.kernel.org/patch/5186951/>
+
+Also: I think that I remember the GPU being pretty unhappy if you
+turned its voltage off but didn't gate its power domain.  At the
+moment I've got all the power domain patches sitting in my tree plus
+<https://chromium-review.googlesource.com/#/c/223464/>.  You might
+also just be able to change the GPU not to be powered off in suspend
+(but then you need to program a good voltage to it).
 
 
+At the moment all of my testing is happening in the chromeos-3.14 tree
+(which has a ton of backports and thus isn't that different than
+mainline as far as Rockchip is concerned).  You could theoretically
+try jamming Chris's stuff into the top of the chromeos-3.14 tree and
+see what happens on EVB.  I may be able to give that a shot
+tomorrow...
+
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
