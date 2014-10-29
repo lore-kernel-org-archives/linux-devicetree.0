@@ -1,45 +1,47 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH v2 1/3] add sysfs document for fpga bridges
-Date: Wed, 29 Oct 2014 09:25:44 +0100
-Message-ID: <20141029082544.GB22891@amd>
-References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com>
- <1414108267-22058-2-git-send-email-atull@opensource.altera.com>
- <20141024105420.GB20775@amd>
- <alpine.DEB.2.02.1410241009010.23446@atx-linux-37>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1410241009010.23446@atx-linux-37>
-Sender: linux-doc-owner@vger.kernel.org
-To: atull <atull@opensource.altera.com>
-Cc: jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 00/10] hix5hd2 add some nodes
+Date: Wed, 29 Oct 2014 16:25:55 +0800
+Message-ID: <1414571165-23736-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 2014-10-24 10:11:26, atull wrote:
-> On Fri, 24 Oct 2014, Pavel Machek wrote:
-> 
-> > On Thu 2014-10-23 18:51:05, atull@opensource.altera.com wrote:
-> > > From: Alan Tull <atull@opensource.altera.com>
-> > > 
-> > > Add sysfs document for fpga bridges.
-> > > 
-> > > --- /dev/null
-> > > +++ b/Documentation/ABI/testing/sysfs-class-fpga-bridge
-> > > @@ -0,0 +1,5 @@
-> > > +What:		/sys/class/fpga-bridge/<bridge>/enable
-> > > +Date:		October 2014
-> > > +KernelVersion:	3.18
-> > > +Contact:	Alan Tull <atull@opensource.altera.com>
-> > > +Description:	Enable bridge.  Write 1 to bring bridge out of reset.
-> > 
-> > Specify, what happens when 0 is written there?
-> 
-> Yes, I will add:  'Write 0 has no effect.'
+v4:
+Rebase on 3.18-rc1
+Update hisi_defconfig, adding some drivers for hix5hd2
+Reuse syscon-reboot for reboot, drivers/power/reset/syscon-reboot.c
 
-Definitely add it, then. The way it is written, I'd expect 0 to put
-bridge into reset.
-									Pavel
+Test hisi_defconfig on hix5hd2, d01 and k3v2
+
+v3: 
+Change node wdt for a watchdog timer as comment from Dinh
+
+v2:
+Add comments of mac-address, suggested by Mark
+
+Zhangfei Gao (10):
+  ARM: dts: hix5hd2: add gmac node
+  ARM: dts: hix5hd2: add mmc node
+  ARM: dts: hix5hd2: add usb node
+  ARM: dts: hix5hd2: add sata node
+  ARM: dts: hix5hd2: add gpio node
+  ARM: dts: hix5hd2: add wdg node
+  ARM: dts: hix5hd2: add ir node
+  ARM: dts: hix5hd2: add i2c node
+  ARM: dts: hix5hd2: add reboot node
+  ARM: hisi_defconfig: add driver support for hix5hd2
+
+ arch/arm/boot/dts/hisi-x5hd2-dkb.dts |   33 +++
+ arch/arm/boot/dts/hisi-x5hd2.dtsi    |  390 +++++++++++++++++++++++++++++++++-
+ arch/arm/configs/hisi_defconfig      |   19 ++
+ 3 files changed, 440 insertions(+), 2 deletions(-)
+
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
