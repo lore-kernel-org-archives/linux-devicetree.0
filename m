@@ -1,42 +1,51 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v5 3/4] regulator: max77686: Add suspend disable for some
- LDOs
-Date: Wed, 29 Oct 2014 10:20:13 +0100
-Message-ID: <1414574413.18868.6.camel@AMDC1943>
-References: <1414411911-5539-1-git-send-email-k.kozlowski@samsung.com>
- <1414411911-5539-4-git-send-email-k.kozlowski@samsung.com>
- <20141028223121.GH18557@sirena.org.uk>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [PATCH V3 2/4] of: Add binding document for MIPS GIC
+Date: Wed, 29 Oct 2014 09:21:53 +0000
+Message-ID: <5450B1B1.5070301@imgtec.com>
+References: <1414541562-10076-1-git-send-email-abrestic@chromium.org> <1414541562-10076-3-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20141028223121.GH18557@sirena.org.uk>
+In-Reply-To: <1414541562-10076-3-git-send-email-abrestic@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>
+To: Andrew Bresticker <abrestic@chromium.org>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: John Crispin <blogic@openwrt.org>, David Daney <ddaney.cavm@gmail.com>, Qais Yousef <qais.yousef@imgtec.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On wto, 2014-10-28 at 22:31 +0000, Mark Brown wrote:
-> On Mon, Oct 27, 2014 at 01:11:49PM +0100, Krzysztof Kozlowski wrote:
-> 
-> > @@ -247,6 +250,8 @@ static struct regulator_ops max77686_ldo_ops = {
-> >  	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-> >  	.set_voltage_time_sel	= regulator_set_voltage_time_sel,
-> >  	.set_suspend_mode	= max77686_ldo_set_suspend_mode,
-> > +	.set_suspend_disable	= max77686_set_suspend_disable,
-> > +	.set_suspend_enable	= max77686_enable,
-> 
-> This looks wrong, you're using the regular enable operation as suspend
-> enable.  How does that work without disrupting the current runtime
-> state?
+Hi Andrew,
 
-Currently it shouldn't disrupt state of regulator because during runtime
-it may only be only: on (0x3) or off (0x0). Suspend enable in max77686
-writes 0x3 to the register which means - always on.
+On 29/10/14 00:12, Andrew Bresticker wrote:
+>  - changed compatible string to include CPU version
 
-If regulator was disabled before suspend then it has to be enabled
-during suspend_enable() call which is exactly what max77686_enable does.
-If it was enabled then nothing happens.
+> +Required properties:
+> +- compatible : Should be "mti,<cpu>-gic".  Supported variants:
+> +  - "mti,interaptiv-gic"
 
-Best regards,
-Krzysztof
+> +Required properties for timer sub-node:
+> +- compatible : Should be "mti,<cpu>-gic-timer".  Supported variants:
+> +  - "mti,interaptiv-gic-timer"
+
+Erm, I'm a bit confused...
+Why do you include the core name in the compatible string?
+
+You seem to be suggesting that:
+
+1) The GIC/timer drivers need to know what core they're running on.
+
+Is that really true?
+
+2) It isn't possible to probe the core type.
+
+But the kernel already knows this, so what's wrong with using
+current_cpu_type() like everything else that needs to know?
+
+3) Every new core should require a new compatible string to be added
+before the GIC will work. You don't even have a generic compatible
+string that DT can specify after the core specific one as a fallback.
+
+Please lets not do this unless it's actually necessary (which AFAICT it
+really isn't).
+
+Thanks
+James
