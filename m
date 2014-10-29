@@ -1,36 +1,35 @@
-From: Roman Byshko <rbyshko@gmail.com>
-Subject: Re: [PATCH 1/5] phy: sun4i: add support for USB phy0
-Date: Wed, 29 Oct 2014 14:46:34 +0100
-Message-ID: <CAMXmWBkrTwHTXi3Unb3dHLWT2AjC=6u8KLj0ZOHduyMAG8YmLg@mail.gmail.com>
-References: <cover.1414444953.git.rbyshko@gmail.com> <668c1b5541fc0175957573bd5f8d40dd2eaccae1.1414444953.git.rbyshko@gmail.com>
- <20141028214756.GF9255@lukather> <CAGb2v65gSq+kMnVZMAvXkF6+ARiFE1qRpQ9SFDThfXCg_kERsQ@mail.gmail.com>
+From: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>
+Subject: [PATCH v5 3/3] ARM: imx_v6_v7_defconfig: enable tlv320aic3x audio codec by default
+Date: Wed, 29 Oct 2014 16:47:04 +0300
+Message-ID: <1414590424-25585-4-git-send-email-d.lavnikevich@sam-solutions.com>
+References: <1414590424-25585-1-git-send-email-d.lavnikevich@sam-solutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v65gSq+kMnVZMAvXkF6+ARiFE1qRpQ9SFDThfXCg_kERsQ@mail.gmail.com>
+In-Reply-To: <1414590424-25585-1-git-send-email-d.lavnikevich@sam-solutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: shawn.guo@freescale.com, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.de
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Used on Phytec PBAB01 board.
 
-sorry for missing Signed-offs, they will be added, of course.
+Signed-off-by: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>
+---
+ arch/arm/configs/imx_v6_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
->>> +     /* Regulation 45 ohms */
->>> +     if (phy->index == 0)
->>> +             sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
->>
->> What is this code supposed to do?
->>
->> Some define for this bit and/or a better comment would be nice.
->
-> From Allwinner's sources: "Enable/Disable USB res45 Calibration"
->
-> which I think refers to the internal 45 ohm termination resistors
-> for the USB data lines. But I'm not an expert on USB hardware.
-
-Same with me. I will however change the comment to make it more informative.
-
-Thanks for your review,
-Roman
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+index 8fca6e276b69..cac07d67b933 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -210,6 +210,7 @@ CONFIG_SND_SOC_IMX_WM8962=y
+ CONFIG_SND_SOC_IMX_SGTL5000=y
+ CONFIG_SND_SOC_IMX_SPDIF=y
+ CONFIG_SND_SOC_IMX_MC13783=y
++CONFIG_SND_SOC_TLV320AIC3X=y
+ CONFIG_SND_SIMPLE_CARD=y
+ CONFIG_USB=y
+ CONFIG_USB_EHCI_HCD=y
+-- 
+2.1.2
