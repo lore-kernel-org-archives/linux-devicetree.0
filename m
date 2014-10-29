@@ -1,46 +1,573 @@
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] of: check for size < 0 after rounding in early_init_dt_add_memory_arch
-Date: Wed, 29 Oct 2014 17:09:32 +0100
-Message-ID: <1414598972-22761-1-git-send-email-ard.biesheuvel@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [RFC Patch] gpio: add GPIO hogging mechanism
+Date: Wed, 29 Oct 2014 11:21:05 -0500
+Message-ID: <20141029162105.GA29965@ti.com>
+References: <1413922198-29373-1-git-send-email-bparrot@ti.com>
+ <CAAVeFuK4PaFbbYjUsvA-oO78P5qmQvyGqG+Ov4GLghoC=yPAoA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAVeFuK4PaFbbYjUsvA-oO78P5qmQvyGqG+Ov4GLghoC=yPAoA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, Jiri Prchal <jiri.prchal@aksignal.cz>
 List-Id: devicetree@vger.kernel.org
 
-Memory regions passed to early_init_dt_add_memory_arch() are rounded to
-PAGE_SIZE by subtracting the size of the leading fractional page from
-the 'size' argument. However, size being a u64 type, if its value is
-sufficiently small, the subtraction wraps around and produces a bogus
-value, potentially leading to crashes.
+Alexandre,
 
-Fix this by ignoring the memory range in such cases.
+Thanks for the feedback.
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/of/fdt.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Alexandre Courbot <gnurou@gmail.com> wrote on Wed [2014-Oct-29 16:09:59=
+ +0900]:
+> Sorry for the delay in reviewing. Adding Jiri and Pantelis who might
+> want to extend over this patch and thus will likely have interesting
+> comments to make.
+>=20
+> On Wed, Oct 22, 2014 at 5:09 AM, Benoit Parrot <bparrot@ti.com> wrote=
+:
+> > Based on Boris Brezillion work this is a reworked patch
+> > of his initial GPIO hogging mechanism.
+> > This patch provides a way to initally configure specific GPIO
+> > when the gpio controller is probe.
+>=20
+> Typo nit: s/probe/probed
+Will fix.
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index d1ffca8b34ea..3b423f5b99c6 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -930,6 +930,11 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
- 	const u64 phys_offset = __pa(PAGE_OFFSET);
- 
- 	if (!PAGE_ALIGNED(base)) {
-+		if (size < PAGE_SIZE - (base & ~PAGE_MASK)) {
-+			pr_warn("Ignoring memory block 0x%llx - 0x%llx\n",
-+				base, base + size);
-+			return;
-+		}
- 		size -= PAGE_SIZE - (base & ~PAGE_MASK);
- 		base = PAGE_ALIGN(base);
- 	}
--- 
-1.8.3.2
+>=20
+> >
+> > The actual DT scanning to collect the GPIO specific data is perform=
+ed
+> > as part of the gpiochip_add().
+> >
+> > The purpose of this is to allows specific GPIOs to be configured
+> > without any driver specific code.
+> > This particularly usueful because board design are getting
+>=20
+> s/suseful/useful
+>=20
+> > increassingly complex and given SoC pins can now have upward
+>=20
+> s/increassingly/increasingly
 
+Will fix.
+
+>=20
+> > of 10 mux values a lot of connections are now dependent on
+> > external IO muxes to switch various modes and combination.
+> >
+> > Specific drivers should not necessarily need to be aware of
+> > what accounts to a specific board implementation. This board level
+> > "description" should be best kept as part of the dts file.
+> >
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  Documentation/devicetree/bindings/gpio/gpio.txt | 33 +++++++++
+> >  drivers/gpio/gpiolib-of.c                       | 99 +++++++++++++=
+++++++++++++
+> >  drivers/gpio/gpiolib.c                          | 81 +++++++++++++=
++++++++
+> >  include/linux/of_gpio.h                         | 11 +++
+> >  4 files changed, 224 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Docu=
+mentation/devicetree/bindings/gpio/gpio.txt
+> > index 3fb8f53..a9700d8 100644
+> > --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> > +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+>=20
+> Note: changes to DT bindings documentation should generally come as a
+> separate patch.
+Ok.
+
+>=20
+> > @@ -103,6 +103,26 @@ Every GPIO controller node must contain both a=
+n empty "gpio-controller"
+> >  property, and a #gpio-cells integer property, which indicates the =
+number of
+> >  cells in a gpio-specifier.
+> >
+> > +It might contain GPIO hog definitions. GPIO hogging is a mechanism=
+ providing
+> > +automatic GPIO request and configuration as part of the gpio-contr=
+oller's
+> > +driver probe function.
+> > +
+> > +Each GPIO hog definition is represented as a child node of the GPI=
+O controller.
+> > +Required properties:
+> > +- gpios: store the gpio information (id, flags, ...). Shall contai=
+n the
+> > +  number of cells specified in its parent node (GPIO controller no=
+de).
+>=20
+> If would be nice to be able to specify several GPIO references to tha=
+t
+> they can be all set to the same configuration in one row instead of
+> requiring one node each.
+>=20
+> > +- input: a property specifying to set the GPIO direction as input.
+> > +- output-high: a property specifying to set the GPIO direction to =
+output with
+> > +  the value high.
+> > +- output-low: a property specifying to set the GPIO direction to o=
+utput with
+> > +  the value low.
+>=20
+> Wouldn't a "direction" property taking one of the values "input",
+> "output-low" or "output-high" be easier to parse and generally
+> clearer?
+
+I guess here you mean something like this:
+	...
+	line_y: line_y {
+		gpios =3D <15 0>;
+		direction =3D <output-low>;
+	};
+
+Not sure about easier to parse, but it would be clearer.
+
+>=20
+> > +
+> > +Optional properties:
+> > +- line-name: the GPIO label name. If not present the node name is =
+used.
+>=20
+> I guess we also could use this for naming the GPIO during its export
+> if we decide to allow this in a near-future patch.
+>=20
+Right.
+
+> > +
+> > +A GPIO controller can request GPIO hogs using the "gpio-hogs" prop=
+erty, which
+> > +encodes a list of requested GPIO hogs.
+> > +
+> >  Example of two SOC GPIO banks defined as gpio-controller nodes:
+> >
+> >         qe_pio_a: gpio-controller@1400 {
+> > @@ -110,6 +130,19 @@ Example of two SOC GPIO banks defined as gpio-=
+controller nodes:
+> >                 reg =3D <0x1400 0x18>;
+> >                 gpio-controller;
+> >                 #gpio-cells =3D <2>;
+> > +               gpio-hogs =3D <&line_b>;
+> > +
+> > +               /* line_a hog is defined but not enabled in this ex=
+ample*/
+> > +               line_a: line_a {
+> > +                       gpios =3D <5 0>;
+> > +                       input;
+> > +               };
+> > +
+> > +               line_b: line_b {
+> > +                       gpios =3D <6 0>;
+> > +                       output-low;
+> > +                       line-name =3D "foo-bar-gpio";
+> > +               };
+>=20
+> I think it might be good to group the hog nodes such as to allow
+> complex configurations to be set in one go, =E0 la pinmux:
+
+See below.
+>=20
+>                 gpio-controller;
+>                 #gpio-cells =3D <2>;
+> +               gpio-hogs =3D <&line_b>;
+> +
+> +               line_a: line_a {
+> +                      line_a {
+> +                               gpios =3D <5 0>;
+> +                               input;
+> +                      };
+> +                      line_c {
+> +                               gpios =3D <7 0>;
+> +                               inputl
+> +                      };
+> +               };
+> +
+> +               line_b: line_b {
+> +                       line_b {
+> +                               gpios =3D <6 0>;
+> +                               output-low;
+> +                               line-name =3D "foo-bar-gpio";
+> +                       };
+> +               };
+>=20
+> Here if you want to enable the first configuration you don't need to
+> specify all the lines one by one, you just need to select the right
+> group.
+>=20
+> I wonder if such usage of child nodes could not interfere with GPIO
+> drivers (existing or to be) that need to use child nodes for other
+> purposes. Right now there is no way to distinguish a hog node from a
+> node that serves another purpose, and that might become a problem in
+> the future. Not sure how that should be addressed though - maybe by
+> enforcing a "-hog" suffix for the group nodes, e.g. line_a-hog?
+> Comments from people more experienced with DT would be nice.
+
+I did consider a "pinmux" flavored format (not sure how hard to parse i=
+t would be).
+It would allow grouping if nothing else.
+
+	/* Line syntax: line_name <gpio# flags> direction-value [export] */
+	gpio-hogs =3D <&group_y>;
+
+	group_y: group_y {
+		gpio-hogs-group =3D <
+			line_x <15 0> output-low
+			line_y <16 0> output-high export
+			line_z <17 0> input
+		>;
+	};
+
+>=20
+> >         };
+> >
+> >         qe_pio_e: gpio-controller@1460 {
+> > diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> > index 604dbe6..7308dfc 100644
+> > --- a/drivers/gpio/gpiolib-of.c
+> > +++ b/drivers/gpio/gpiolib-of.c
+> > @@ -111,6 +111,105 @@ int of_get_named_gpio_flags(struct device_nod=
+e *np, const char *list_name,
+> >  EXPORT_SYMBOL(of_get_named_gpio_flags);
+> >
+> >  /**
+> > + * of_get_gpio_hog() - Get a GPIO hog descriptor, names and flags =
+for GPIO API
+> > + * @np:                device node to get GPIO from
+> > + * @index:     index of the GPIO
+> > + * @name:      GPIO line name
+> > + * @flags:     a flags pointer to fill in
+> > + *
+> > + * Returns GPIO descriptor to use with Linux GPIO API, or one of t=
+he errno
+> > + * value on the error condition.
+> > + */
+> > +struct gpio_desc *of_get_gpio_hog(struct device_node *np, int inde=
+x,
+> > +                                 const char **name, unsigned long =
+*flags)
+> > +{
+> > +       struct device_node *cfg_np, *chip_np;
+> > +       enum of_gpio_flags xlate_flags;
+> > +       unsigned long req_flags =3D 0;
+> > +       struct gpio_desc *desc;
+> > +       struct gg_data gg_data =3D {
+> > +               .flags =3D &xlate_flags,
+> > +               .out_gpio =3D NULL,
+> > +       };
+> > +       u32 tmp;
+> > +       int i;
+> > +       int ret;
+> > +
+> > +       cfg_np =3D of_parse_phandle(np, "gpio-hogs", index);
+> > +       if (!cfg_np)
+> > +               return ERR_PTR(-EINVAL);
+> > +
+> > +       chip_np =3D cfg_np->parent;
+> > +       if (!chip_np) {
+> > +               desc =3D ERR_PTR(-EINVAL);
+> > +               goto out;
+> > +       }
+> > +
+> > +       ret =3D of_property_read_u32(chip_np, "#gpio-cells", &tmp);
+> > +       if (ret) {
+> > +               desc =3D ERR_PTR(ret);
+> > +               goto out;
+> > +       }
+> > +
+> > +       if (tmp > MAX_PHANDLE_ARGS) {
+> > +               desc =3D ERR_PTR(-EINVAL);
+> > +               goto out;
+> > +       }
+> > +
+> > +       gg_data.gpiospec.args_count =3D tmp;
+> > +       gg_data.gpiospec.np =3D chip_np;
+> > +       for (i =3D 0; i < tmp; i++) {
+> > +               ret =3D of_property_read_u32(cfg_np, "gpios",
+> > +                                          &gg_data.gpiospec.args[i=
+]);
+> > +               if (ret) {
+> > +                       desc =3D ERR_PTR(ret);
+> > +                       goto out;
+> > +               }
+> > +       }
+> > +
+> > +       gpiochip_find(&gg_data, of_gpiochip_find_and_xlate);
+> > +       if (!gg_data.out_gpio) {
+> > +               if (cfg_np->parent =3D=3D np)
+> > +                       desc =3D ERR_PTR(-ENXIO);
+> > +               else
+> > +                       desc =3D ERR_PTR(-EPROBE_DEFER);
+> > +
+> > +               goto out;
+> > +       }
+> > +
+> > +       if (xlate_flags & OF_GPIO_ACTIVE_LOW)
+> > +               req_flags |=3D GPIOF_ACTIVE_LOW;
+> > +
+> > +       if (of_property_read_bool(cfg_np, "input")) {
+> > +               req_flags |=3D GPIOF_DIR_IN;
+> > +       } else if (of_property_read_bool(cfg_np, "output-high")) {
+> > +               req_flags |=3D GPIOF_INIT_HIGH;
+> > +       } else if (!of_property_read_bool(cfg_np, "output-low")) {
+> > +               desc =3D ERR_PTR(-EINVAL);
+> > +               goto out;
+> > +       }
+>=20
+> That's why I would prefer a "direction" property instead of these 3
+> ones: because if you have the following node:
+>=20
+> line_foo {
+>         gpios =3D <1 GPIO_ACTIVE_HIGH>;
+>         input;
+>         output-high;
+> };
+>=20
+> Then this code will not trigger an error and will just configure the
+> GPIO as input.
+
+Understood.
+
+>=20
+> > +
+> > +       if (of_property_read_bool(cfg_np, "open-drain-line"))
+> > +               req_flags |=3D GPIOF_OPEN_DRAIN;
+> > +
+> > +       if (of_property_read_bool(cfg_np, "open-source-line"))
+> > +               req_flags |=3D GPIOF_OPEN_DRAIN;
+> > +
+> > +       if (name && of_property_read_string(cfg_np, "line-name", na=
+me))
+> > +               *name =3D cfg_np->name;
+> > +
+> > +       if (flags)
+> > +               *flags =3D req_flags;
+> > +
+> > +       desc =3D gg_data.out_gpio;
+> > +
+> > +out:
+> > +       of_node_put(cfg_np);
+> > +
+> > +       return desc;
+> > +}
+> > +
+> > +/**
+> >   * of_gpio_simple_xlate - translate gpio_spec to the GPIO number a=
+nd flags
+> >   * @gc:                pointer to the gpio_chip structure
+> >   * @np:                device node of the GPIO chip
+> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > index e8e98ca..b6f5bdb 100644
+> > --- a/drivers/gpio/gpiolib.c
+> > +++ b/drivers/gpio/gpiolib.c
+> > @@ -55,6 +55,9 @@ static DEFINE_MUTEX(gpio_lookup_lock);
+> >  static LIST_HEAD(gpio_lookup_list);
+> >  LIST_HEAD(gpio_chips);
+> >
+> > +struct gpio_desc *__must_check gpiod_get_hog_index(struct device *=
+dev,
+> > +                                                  unsigned int idx=
+);
+> > +
+> >  static inline void desc_set_label(struct gpio_desc *d, const char =
+*label)
+> >  {
+> >         d->label =3D label;
+> > @@ -226,6 +229,8 @@ int gpiochip_add(struct gpio_chip *chip)
+> >         int             status =3D 0;
+> >         unsigned        id;
+> >         int             base =3D chip->base;
+> > +       struct gpio_desc        *desc;
+> > +       int             i;
+> >
+> >         if ((!gpio_is_valid(base) || !gpio_is_valid(base + chip->ng=
+pio - 1))
+> >                         && base >=3D 0) {
+> > @@ -275,6 +280,16 @@ int gpiochip_add(struct gpio_chip *chip)
+> >         of_gpiochip_add(chip);
+> >         acpi_gpiochip_add(chip);
+> >
+> > +       /*
+> > +        * Instantiate GPIO hogs
+> > +        * There shouldn't be mores hogs then gpio available on thi=
+s chip
+>=20
+> s/then/than
+
+Will fix.
+
+>=20
+> > +        */
+> > +       for (i =3D 0; i < chip->ngpio; i++) {
+> > +               desc =3D gpiod_get_hog_index(chip->dev, i);
+> > +               if (IS_ERR(desc))
+> > +                       break;
+> > +       }
+>=20
+> chip->ngpio? Isn't there a better way to know the number of phandles
+> in your gpio-hogs property?
+
+Maybe there is. I'll look into it.
+
+>=20
+> Also you may have an error returned either because you reached the en=
+d
+> of the list, or because the hog configuration itself failed. In the
+> latter case don't you want to continue to go through the list?
+Understood.
+
+>=20
+> Finally your desc variable should be declared within this loop since
+> it is not used elsewhere.
+>=20
+Understood.
+
+> > +
+> >         if (status)
+> >                 goto fail;
+> >
+> > @@ -1742,6 +1757,72 @@ struct gpio_desc *__must_check __gpiod_get_i=
+ndex_optional(struct device *dev,
+> >  EXPORT_SYMBOL_GPL(__gpiod_get_index_optional);
+> >
+> >  /**
+> > + * gpiod_get_hog_index - obtain a GPIO from a multi-index GPIO hog
+> > + * @dev:       GPIO consumer
+> > + * @idx:       index of the GPIO to obtain
+> > + *
+> > + * This should only be used by the gpiochip_add to request/set GPI=
+O initial
+> > + * configuration.
+> > + *
+> > + * Return a valid GPIO descriptor, or an IS_ERR() condition in cas=
+e of error.
+> > + */
+> > +struct gpio_desc *__must_check gpiod_get_hog_index(struct device *=
+dev,
+> > +                                                  unsigned int idx=
+)
+> > +{
+> > +       struct gpio_desc *desc =3D NULL;
+> > +       int err;
+> > +       unsigned long flags;
+> > +       const char *name;
+> > +
+> > +       /* Using device tree? */
+> > +       if (IS_ENABLED(CONFIG_OF) && dev && dev->of_node)
+> > +               desc =3D of_get_gpio_hog(dev->of_node, idx, &name, =
+&flags);
+> > +
+> > +       if (!desc)
+> > +               return ERR_PTR(-ENOTSUPP);
+> > +       else if (IS_ERR(desc))
+> > +               return desc;
+> > +
+> > +       dev_dbg(dev, "gpio-hog: GPIO:%d (%s) as %s%s\n",
+> > +               desc_to_gpio(desc), name, (flags&GPIOF_DIR_IN)?"inp=
+ut":"output",
+> > +               (flags&GPIOF_DIR_IN)?"":(flags&GPIOF_INIT_HIGH)?"/h=
+igh":"/low");
+> > +
+>=20
+> ...
+
+I guess this means to remove the dev_dbg code?
+
+>=20
+> > +       err =3D gpiod_request(desc, name);
+> > +       if (err)
+> > +               return ERR_PTR(err);
+> > +
+> > +       if (flags & GPIOF_OPEN_DRAIN)
+> > +               set_bit(FLAG_OPEN_DRAIN, &desc->flags);
+> > +
+> > +       if (flags & GPIOF_OPEN_SOURCE)
+> > +               set_bit(FLAG_OPEN_SOURCE, &desc->flags);
+> > +
+> > +       if (flags & GPIOF_ACTIVE_LOW)
+> > +               set_bit(FLAG_ACTIVE_LOW, &desc->flags);
+> > +
+> > +       if (flags & GPIOF_DIR_IN)
+> > +               err =3D gpiod_direction_input(desc);
+> > +       else
+> > +               err =3D gpiod_direction_output_raw(desc,
+> > +                               (flags & GPIOF_INIT_HIGH) ? 1 : 0);
+> > +
+>=20
+> This part of the code is very similar to what is found in
+> __gpiod_get_index. Could you maybe try to extract the common code int=
+o
+> its own function and call it from both sites instead of duplicating
+> code?
+
+Agreed.
+Originally I was making use of gpio_request_one, but then I noticed it =
+was move to the "_legacy" and would probably dissapear.
+
+>=20
+> > +       if (err)
+> > +               goto free_gpio;
+> > +
+> > +       if (flags & GPIOF_EXPORT) {
+> > +               err =3D gpiod_export(desc, flags & GPIOF_EXPORT_CHA=
+NGEABLE);
+> > +               if (err)
+> > +                       goto free_gpio;
+>=20
+> Right now export is not possible so I don't think you need that block=
+=2E
+
+Unless the export feature is requested along with this pacth.
+
+>=20
+> > +       }
+> > +
+> > +       return desc;
+> > +
+> > +free_gpio:
+> > +       gpiod_free(desc);
+> > +       return ERR_PTR(err);
+> > +}
+> > +
+> > +/**
+> >   * gpiod_put - dispose of a GPIO descriptor
+> >   * @desc:      GPIO descriptor to dispose of
+> >   *
+> > diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
+> > index 38fc050..52d154c 100644
+> > --- a/include/linux/of_gpio.h
+> > +++ b/include/linux/of_gpio.h
+> > @@ -59,6 +59,9 @@ extern int of_gpio_simple_xlate(struct gpio_chip =
+*gc,
+> >                                 const struct of_phandle_args *gpios=
+pec,
+> >                                 u32 *flags);
+> >
+> > +extern struct gpio_desc *of_get_gpio_hog(struct device_node *np, i=
+nt index,
+> > +                                        const char **name,
+> > +                                        unsigned long *flags);
+>=20
+> This function is gpiolib-private, therefore it should be declared in
+> drivers/gpio/gpiolib.h alongside with the declaration of
+> of_get_named_gpiod_flags.
+
+Ah yes would be much better.
+
+>=20
+> If I understood the latest discussions correctly we might want to add
+> an export (and named export) feature on top of this patch. Linus, am =
+I
+> correct to understand that you are not opposed to both features? In
+> this case, we might want to go ahead with the merging of one of the
+> named GPIOs patches, so that Jiri and Pantelis can implement export
+> based on this patch.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
