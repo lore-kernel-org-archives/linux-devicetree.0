@@ -1,66 +1,90 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/3] gpio: Add APM X-Gene standby GPIO controller driver
-Date: Wed, 29 Oct 2014 10:52:47 +0100
-Message-ID: <CACRpkdao2F1NK-3QpqSOLzFdvjWFVU4HqcqZPA2fXHpQN=BUsQ@mail.gmail.com>
-References: <1412779948-28769-1-git-send-email-yvo@apm.com>
-	<1412779948-28769-2-git-send-email-yvo@apm.com>
-	<CACRpkdY3-Y0eA_o2enfxbqWUpwPoo_5oM9t=uU=QSTAw4MPf9Q@mail.gmail.com>
-	<2988580.WvjMBY1UOc@wuerfel>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH RESEND V4 5/9] of: Add NVIDIA Tegra xHCI controller
+ binding
+Date: Wed, 29 Oct 2014 10:58:10 +0100
+Message-ID: <20141029095808.GB28356@ulmo.nvidia.com>
+References: <1414535277-15645-1-git-send-email-abrestic@chromium.org>
+ <1414535277-15645-6-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <2988580.WvjMBY1UOc@wuerfel>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Y Vo <yvo@apm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Tin Huynh <tnhuynh@apm.com>, patches <patches@apm.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/NkBOFFp2J2Af1nK"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414535277-15645-6-git-send-email-abrestic@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, linux-tegra@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 24, 2014 at 3:46 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Friday 24 October 2014 14:14:43 Linus Walleij wrote:
->> On Wed, Oct 8, 2014 at 4:52 PM, Y Vo <yvo@apm.com> wrote:
 
->> > +       apm_gc->irq = devm_kzalloc(&pdev->dev, sizeof(u32) * XGENE_MAX_GPIO_DS,
->> > +                                  GFP_KERNEL);
->> > +       if (!apm_gc->irq)
->> > +               return -ENOMEM;
->> > +       memset(apm_gc->irq, 0, sizeof(u32) * XGENE_MAX_GPIO_DS);
->> (...)
->> > +       for (i = 0; i < apm_gc->nirq; i++) {
->> > +               apm_gc->irq[default_pins[i]] = platform_get_irq(pdev, i);
->>
->> So the IRQs for all the GPIO pins are handled somewhere else instead
->> of being a cascaded IRQ controller.
->>
->> This means that the IRQ lines from each individual GPIO pin is
->> connected to a unique IRQ line on a secondary interrupt controller,
->> instead of the GPIO block being a cascaded interrupt controller
->> in its own right.
->>
->> Is this correct?
->
-> See the discussion I had on this. Yes, each line is connected to a
-> GIC SPI interrupt by itself. I've discussed this with Marc Zyngier
-> and Thomas Gleixner at the conference last week, and we concluded
-> that we will need a new generic interface to get data out of the
-> parent interrupt controller in a proper way. The current implementation
-> just maps the GIC registers and reads them directly, which of course
-> is not a proper way to do it.
+--/NkBOFFp2J2Af1nK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hmmmmmm. OK shall we hold this driver until the infrastructure
-issues are resolved?
+On Tue, Oct 28, 2014 at 03:27:52PM -0700, Andrew Bresticker wrote:
+[...]
+> diff --git a/Documentation/devicetree/bindings/usb/nvidia,tegra124-xhci.txt b/Documentation/devicetree/bindings/usb/nvidia,tegra124-xhci.txt
+[...]
+> +    - pll_u_480m
+> +    - clk_m
+> +    - pll_e
 
-The following is a recurring pattern among GPIO controllers:
-the GPIO controller can go offline (asycnhcronous) and while it
-is offline a secondary logic triggers an IRQ that wakes the system
-up, however the GPIO logic cannot really "see" that IRQ since
-it was sleeping when it arrived.
+What are these used for? I guess I'll see when I get to the driver
+patch.
 
-Thus a latent IRQ is pending in the wakeup logic. This concept
-exists in drivers/pinctrl/nomadik/pinctrl-nomadik.c and I strongly
-prefer to call these "latent irqs" as it's a clear unambigous
-terminology.
+> +Optional properties:
+> +--------------------
+> + - phys: Must contain an entry for each entry in phy-names.
+> +   See ../phy/phy-bindings.txt for details.
+> + - phy-names: Should include an entry for each PHY used by the controller.
+> +   May be a subset of the following:
+> +    - utmi-{0,1,2}
+> +    - hsic-{0,1}
+> +    - usb3-{0,1}
+> + - avddio-pex-supply: PCIe/USB3 analog logic power supply.  Must supply 1.05V.
+> + - dvddio-pex-supply: PCIe/USB3 digital logic power supply.  Must supply 1.05V.
+> + - avdd-usb-supply: USB controller power supply.  Must supply 3.3V.
+> + - avdd-pll-utmip-supply: UTMI PLL power supply.  Must supply 1.8V.
+> + - avdd-pll-erefe-supply: PLLE reference PLL power supply.  Must supply 1.05V.
+> + - avdd-pex-pll-supply: PCIe/USB3 PLL power supply.  Must supply 1.05V.
+> + - hvdd-pex-supply: High-voltage PCIe/USB3 power supply.  Must supply 3.3V.
+> + - hvdd-pex-plle-supply: High-voltage PLLE power supply.  Must supply 3.3V.
 
-So is this a case of latent IRQs pending in the GIC?
+I think the name for this in the documentation is HVDD_PEX_PLL_E, which
+would translate to hvdd-pex-pll-e. At least that's how we named this
+supply for PCIe.
 
-Yours,
-Linus Walleij
+Alternatively it seems like there are aliases for the USB 3.0 related
+supplies:
+
+	avdd-pex-pll -> avdd-usb-ss-pll
+	hvdd-pex -> hvdd-usb-ss
+	hvdd-pex-pll-e -> hvdd-usb-ss-pll-e
+
+So perhaps these could be used for the XHCI driver instead? Also, should
+these supplies not be mandatory?
+
+Thierry
+
+--/NkBOFFp2J2Af1nK
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUULowAAoJEN0jrNd/PrOhqSMP/A0WZ+IQ9+HY4U3HiMecg0T8
+E7rTjP8DAVngvBKDocb7p94tR+yLT6kEPoYlCicOCF7Rw6sAtiqbHCZTiQGWbsZl
+nuwMAOlo0lSBC08tTTcxoRwcqquCIgQQZADz+olX+M7MCZam9fFVLyPBpfR0ZNag
+cJRxcI3842GfAzeavjMcaPCrSPVUgimnFgBR9oMZq74YPstX5E1aaRY+LEW6fn0z
+1SfjU9X5voXFNZzZ0aE62MbAzmWrdxCPoEL6urryphBDlnaRHN9ig4m4xwAz1+8E
+QnpKAQ3T7a2KEyl8fRTMUhKR0odXrywjPD8JikuxzwY3xQp5qunMaT749KH5avj8
+siCbCagu+2e5jFGVi4yFVeQ6XD884nDxqxjF3nu/3Lh7hkBXtlvTGSQQkw7pAmwq
+vAh3jhL7ia0/hiARPLf6KozRTEXDASsqxsDDHZ4EPZCuBSbWsTjxFegdGbGfoWC4
+25xhdgkz3w/3juOmThUXKxm02t9/xA8pU6f9KoVyiJ9dOyQBbDw7nTbpOqU1cezM
+0CTJO95MpFKQlde0AOoMU61WCFOTmZoMQfL8TzpN9+JZjaLzpVDDpb43FPwtuOuP
+0KOxx6ljxlNqW3iGBKvlqYduGD5o2d4EhqG9SBq+2ZXpzJ9vTawJ92po7jGW4NP1
+mYcrQhMVfJzQETqE2olp
+=YV82
+-----END PGP SIGNATURE-----
+
+--/NkBOFFp2J2Af1nK--
