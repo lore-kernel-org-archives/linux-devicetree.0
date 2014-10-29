@@ -1,65 +1,30 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 3/4] regulator: max77686: Add suspend disable for some
- LDOs
-Date: Wed, 29 Oct 2014 11:53:38 +0100
-Message-ID: <1414580018.18868.14.camel@AMDC1943>
-References: <1414411911-5539-1-git-send-email-k.kozlowski@samsung.com>
- <1414411911-5539-4-git-send-email-k.kozlowski@samsung.com>
- <20141028223121.GH18557@sirena.org.uk> <1414574413.18868.6.camel@AMDC1943>
- <20141029100142.GR18557@sirena.org.uk> <1414577934.18868.7.camel@AMDC1943>
- <20141029103140.GY18557@sirena.org.uk> <1414579442.18868.13.camel@AMDC1943>
- <5450C6C2.2050506@collabora.co.uk>
+From: Qais Yousef <qais.yousef@imgtec.com>
+Subject: Re: [PATCH V3 2/4] of: Add binding document for MIPS GIC
+Date: Wed, 29 Oct 2014 11:01:41 +0000
+Message-ID: <5450C915.9030600@imgtec.com>
+References: <1414541562-10076-1-git-send-email-abrestic@chromium.org> <1414541562-10076-3-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <5450C6C2.2050506-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414541562-10076-3-git-send-email-abrestic@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: John Crispin <blogic@openwrt.org>, David Daney <ddaney.cavm@gmail.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On =C5=9Bro, 2014-10-29 at 11:51 +0100, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
->=20
-> On 10/29/2014 11:44 AM, Krzysztof Kozlowski wrote:
-> > On =C5=9Bro, 2014-10-29 at 10:31 +0000, Mark Brown wrote:
-> >> On Wed, Oct 29, 2014 at 11:18:54AM +0100, Krzysztof Kozlowski wrot=
-e:
-> >> > On =C5=9Bro, 2014-10-29 at 10:01 +0000, Mark Brown wrote:
-> >>=20
-> >> > > No, this isn't suspend enable control - this is normal, standa=
-rd enable
-> >> > > control and the device has no suspend enable control.
-> >>=20
-> >> > You mean that for such regulator the driver shouldn't implement
-> >> > suspend_enable()?
-> >>=20
-> >> Yes, if there is no separate control of suspend mode in hardware t=
-hen of
-> >> course the driver shouldn't implement operations for things it doe=
-sn't
-> >> have.
-> >=20
-> > Oh, thanks! I'll send fixed patch.
-> >=20
-> > This means that probably the max77802 ("mirrored" driver) should be
-> > fixed...
-> >=20
->=20
-> Indeed, I had the same confusion that you had. Just to avoid duplicat=
-ing work,
-> do you want me to send a fix or are you going to include one on your =
-series?
+On 10/29/2014 12:12 AM, Andrew Bresticker wrote:
+> +- mti,available-cpu-vectors : Specifies the list of CPU interrupt vectors
+> +  to which the GIC may route interrupts.  May contain up to 6 entries, one
+> +  for each of the CPU's hardware interrupt vectors.  Valid values are 2 - 7.
+> +  This property is ignored if the CPU is started in EIC mode.
+> +
 
-I'll send a patch for max77802 also.
+Wouldn't it be better to have this in the reversed sense ie: 
+mti,nonavailable-cpu-vectors? I think the assumption that by default 
+they're all available unless something else is connected to them which 
+is unlikely in most cases. It can be made optional property then.
 
-Best regards,
-Krzysztof
+I don't have a strong opinion about it though.
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qais
