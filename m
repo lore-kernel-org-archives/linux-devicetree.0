@@ -1,63 +1,80 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 1/2] mtd: nand: add sunxi NAND flash
- controller support
-Date: Wed, 29 Oct 2014 10:08:43 -0700
-Message-ID: <20141029170843.GD23619@ld-irv-0074>
-References: <1413896922-11680-1-git-send-email-boris.brezillon@free-electrons.com>
- <1413896922-11680-2-git-send-email-boris.brezillon@free-electrons.com>
- <20141028181310.GA23619@ld-irv-0074>
- <20141029140251.142fed10@bbrezillon>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [PATCH V3 2/4] of: Add binding document for MIPS GIC
+Date: Wed, 29 Oct 2014 17:13:00 +0000
+Message-ID: <5451201C.9090106@imgtec.com>
+References: <1414541562-10076-1-git-send-email-abrestic@chromium.org>	<1414541562-10076-3-git-send-email-abrestic@chromium.org>	<5450B1B1.5070301@imgtec.com> <CAL1qeaFeoKFbea7eiiXaw87PYUWO1JmP5xxdLLpW2RrFCprtZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZ6PSPVXMNBBH56YSRAKGQEUMAJ3ZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20141029140251.142fed10@bbrezillon>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-Content-Disposition: inline
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yassin Jaffer <yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL1qeaFeoKFbea7eiiXaw87PYUWO1JmP5xxdLLpW2RrFCprtZg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, John Crispin <blogic@openwrt.org>, David Daney <ddaney.cavm@gmail.com>, Qais Yousef <qais.yousef@imgtec.com>, Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul <Paul.Burton@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 29, 2014 at 02:02:51PM +0100, Boris Brezillon wrote:
-> On Tue, 28 Oct 2014 11:13:11 -0700 Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Tue, Oct 21, 2014 at 03:08:41PM +0200, Boris Brezillon wrote:
-> > > +static int sunxi_nand_hw_ecc_ctrl_init(struct mtd_info *mtd,
-> > > +				       struct nand_ecc_ctrl *ecc,
-> > > +				       struct device_node *np)
-> > > +{
-> > > +	struct nand_ecclayout *layout;
-> > > +	int i, j;
-> > > +	int ret;
-> > > +
-> > > +	ret = sunxi_nand_hw_common_ecc_ctrl_init(mtd, ecc, np);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	ecc->read_page = sunxi_nfc_hw_ecc_read_page;
-> > > +	ecc->write_page = sunxi_nfc_hw_ecc_write_page;
-> > > +	layout = ecc->layout;
-> > > +
-> > > +	for (i = 0; i < ecc->steps; i++) {
-> > 
-> > Hmm, did you retest this since changing this to ecc->steps? I think this
-> > won't work, since ecc->steps is only initialized in nand_scan_tail(),
-> > which comes after this. I only recommended the change for the
-> > {read,write}_page() type of functions, not the initialization functions.
-> > 
-> > [snip the rest]
-> > 
-> > So I'd suggest the following additional patch, and otherwise, the series
-> > is fine with me. If you give your ack, I can just squash this in and
-> > apply it to my tree:
+On 29/10/14 16:55, Andrew Bresticker wrote:
+> Hi James,
 > 
-> It works, you can squash those changes into my first patch.
+> On Wed, Oct 29, 2014 at 2:21 AM, James Hogan <james.hogan@imgtec.com> wrote:
+>> Hi Andrew,
+>>
+>> On 29/10/14 00:12, Andrew Bresticker wrote:
+>>>  - changed compatible string to include CPU version
+>>
+>>> +Required properties:
+>>> +- compatible : Should be "mti,<cpu>-gic".  Supported variants:
+>>> +  - "mti,interaptiv-gic"
+>>
+>>> +Required properties for timer sub-node:
+>>> +- compatible : Should be "mti,<cpu>-gic-timer".  Supported variants:
+>>> +  - "mti,interaptiv-gic-timer"
+>>
+>> Erm, I'm a bit confused...
+>> Why do you include the core name in the compatible string?
+>>
+>> You seem to be suggesting that:
+>>
+>> 1) The GIC/timer drivers need to know what core they're running on.
+>>
+>> Is that really true?
+> 
+> They don't now, but it's possible that a future CPU has a newer
+> revision of the GIC which has some differences that need to be
+> accounted for in the driver.
+> 
+>> 2) It isn't possible to probe the core type.
+>>
+>> But the kernel already knows this, so what's wrong with using
+>> current_cpu_type() like everything else that needs to know?
+>>
+>> 3) Every new core should require a new compatible string to be added
+>> before the GIC will work. You don't even have a generic compatible
+>> string that DT can specify after the core specific one as a fallback.
+> 
+> Yes, adding a generic compatible string would be a good idea.
+> 
+>> Please lets not do this unless it's actually necessary (which AFAICT it
+>> really isn't).
+> 
+> The point of this was to future-proof these bindings and I though that
+> CPU type was the best way to indicate version in the compatible
+> string.  This is also how it's done for the ARM GIC and arch timers.
+> Perhaps the best thing to do is to require both a core-specific
+> ("mti,interaptiv-gic") and generic ("mti,gic") compatible string and
+> just match on the generic one for now until there's a need to use the
+> core-specific one.  Thoughts?
 
-OK, pushed both (+ my fixes) to l2-mtd.git. Thanks!
+FPGA boards like Malta are something else to consider (when it is
+eventually converted to DT - Paul on CC knows more than me). You might
+load an interAptiv, or a proAptiv, or a P5600 bitstream, and the gic
+setup will be pretty much the same I think, since e.g. the address
+depends on where it is convenient to put it in the address space of the
+platform.
 
-Brian
+Any thoughts on the existence of current_cpu_type(), and the GIC
+revision register? They pretty much make encoding of core in compatible
+string redundant I think.
+
+Cheers
+James
