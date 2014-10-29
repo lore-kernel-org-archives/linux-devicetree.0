@@ -1,90 +1,60 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH RESEND V4 5/9] of: Add NVIDIA Tegra xHCI controller
- binding
-Date: Wed, 29 Oct 2014 10:58:10 +0100
-Message-ID: <20141029095808.GB28356@ulmo.nvidia.com>
-References: <1414535277-15645-1-git-send-email-abrestic@chromium.org>
- <1414535277-15645-6-git-send-email-abrestic@chromium.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 3/4] regulator: max77686: Add suspend disable for some
+ LDOs
+Date: Wed, 29 Oct 2014 10:01:42 +0000
+Message-ID: <20141029100142.GR18557@sirena.org.uk>
+References: <1414411911-5539-1-git-send-email-k.kozlowski@samsung.com>
+ <1414411911-5539-4-git-send-email-k.kozlowski@samsung.com>
+ <20141028223121.GH18557@sirena.org.uk>
+ <1414574413.18868.6.camel@AMDC1943>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/NkBOFFp2J2Af1nK"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="w0wZBAr4bXcLEtGS"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1414535277-15645-6-git-send-email-abrestic@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, linux-tegra@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+In-Reply-To: <1414574413.18868.6.camel@AMDC1943>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
 
---/NkBOFFp2J2Af1nK
+--w0wZBAr4bXcLEtGS
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Oct 28, 2014 at 03:27:52PM -0700, Andrew Bresticker wrote:
-[...]
-> diff --git a/Documentation/devicetree/bindings/usb/nvidia,tegra124-xhci.txt b/Documentation/devicetree/bindings/usb/nvidia,tegra124-xhci.txt
-[...]
-> +    - pll_u_480m
-> +    - clk_m
-> +    - pll_e
+On Wed, Oct 29, 2014 at 10:20:13AM +0100, Krzysztof Kozlowski wrote:
+> On wto, 2014-10-28 at 22:31 +0000, Mark Brown wrote:
 
-What are these used for? I guess I'll see when I get to the driver
-patch.
+> > This looks wrong, you're using the regular enable operation as suspend
+> > enable.  How does that work without disrupting the current runtime
+> > state?
 
-> +Optional properties:
-> +--------------------
-> + - phys: Must contain an entry for each entry in phy-names.
-> +   See ../phy/phy-bindings.txt for details.
-> + - phy-names: Should include an entry for each PHY used by the controller.
-> +   May be a subset of the following:
-> +    - utmi-{0,1,2}
-> +    - hsic-{0,1}
-> +    - usb3-{0,1}
-> + - avddio-pex-supply: PCIe/USB3 analog logic power supply.  Must supply 1.05V.
-> + - dvddio-pex-supply: PCIe/USB3 digital logic power supply.  Must supply 1.05V.
-> + - avdd-usb-supply: USB controller power supply.  Must supply 3.3V.
-> + - avdd-pll-utmip-supply: UTMI PLL power supply.  Must supply 1.8V.
-> + - avdd-pll-erefe-supply: PLLE reference PLL power supply.  Must supply 1.05V.
-> + - avdd-pex-pll-supply: PCIe/USB3 PLL power supply.  Must supply 1.05V.
-> + - hvdd-pex-supply: High-voltage PCIe/USB3 power supply.  Must supply 3.3V.
-> + - hvdd-pex-plle-supply: High-voltage PLLE power supply.  Must supply 3.3V.
+> Currently it shouldn't disrupt state of regulator because during runtime
+> it may only be only: on (0x3) or off (0x0). Suspend enable in max77686
+> writes 0x3 to the register which means - always on.
 
-I think the name for this in the documentation is HVDD_PEX_PLL_E, which
-would translate to hvdd-pex-pll-e. At least that's how we named this
-supply for PCIe.
+> If regulator was disabled before suspend then it has to be enabled
+> during suspend_enable() call which is exactly what max77686_enable does.
+> If it was enabled then nothing happens.
 
-Alternatively it seems like there are aliases for the USB 3.0 related
-supplies:
+No, this isn't suspend enable control - this is normal, standard enable
+control and the device has no suspend enable control.
 
-	avdd-pex-pll -> avdd-usb-ss-pll
-	hvdd-pex -> hvdd-usb-ss
-	hvdd-pex-pll-e -> hvdd-usb-ss-pll-e
-
-So perhaps these could be used for the XHCI driver instead? Also, should
-these supplies not be mandatory?
-
-Thierry
-
---/NkBOFFp2J2Af1nK
-Content-Type: application/pgp-signature
+--w0wZBAr4bXcLEtGS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJUULowAAoJEN0jrNd/PrOhqSMP/A0WZ+IQ9+HY4U3HiMecg0T8
-E7rTjP8DAVngvBKDocb7p94tR+yLT6kEPoYlCicOCF7Rw6sAtiqbHCZTiQGWbsZl
-nuwMAOlo0lSBC08tTTcxoRwcqquCIgQQZADz+olX+M7MCZam9fFVLyPBpfR0ZNag
-cJRxcI3842GfAzeavjMcaPCrSPVUgimnFgBR9oMZq74YPstX5E1aaRY+LEW6fn0z
-1SfjU9X5voXFNZzZ0aE62MbAzmWrdxCPoEL6urryphBDlnaRHN9ig4m4xwAz1+8E
-QnpKAQ3T7a2KEyl8fRTMUhKR0odXrywjPD8JikuxzwY3xQp5qunMaT749KH5avj8
-siCbCagu+2e5jFGVi4yFVeQ6XD884nDxqxjF3nu/3Lh7hkBXtlvTGSQQkw7pAmwq
-vAh3jhL7ia0/hiARPLf6KozRTEXDASsqxsDDHZ4EPZCuBSbWsTjxFegdGbGfoWC4
-25xhdgkz3w/3juOmThUXKxm02t9/xA8pU6f9KoVyiJ9dOyQBbDw7nTbpOqU1cezM
-0CTJO95MpFKQlde0AOoMU61WCFOTmZoMQfL8TzpN9+JZjaLzpVDDpb43FPwtuOuP
-0KOxx6ljxlNqW3iGBKvlqYduGD5o2d4EhqG9SBq+2ZXpzJ9vTawJ92po7jGW4NP1
-mYcrQhMVfJzQETqE2olp
-=YV82
+iQEcBAEBAgAGBQJUULsFAAoJECTWi3JdVIfQiuYH/iWJKED6NduyTeJ3iAPinvaV
+Up12xpaV2BREaXLUmKREHa9baR916FjDK0llYKsXMc834nPX1OMcQZ0qnE5ntV0h
+UOkzG0HeziKpXS8FPQKrRhTvmjgrD3yazQX7mtExLOFX6Hq1iEOC0IwOogrfeNYH
+HpyXwUUlz1xjH1BCyIF5A6T6XOfZTeC/d/azIKfTilwUOb7IkZnLRPedvQlf+nxG
+nA+70NoeXk5gNUFbywNp+aLkAT80Qva59FMGT/y2xyC/9I24ybLByTkOsQiRw69C
+HrONRFWRSXxqe7JTU6n7262RDd2BetmKeLrC7K+x4F/s067NQ50Y7srCnrkQvDY=
+=huVf
 -----END PGP SIGNATURE-----
 
---/NkBOFFp2J2Af1nK--
+--w0wZBAr4bXcLEtGS--
