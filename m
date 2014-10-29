@@ -1,55 +1,45 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v2 2/3] ARM: dts: socfpga: fpga bridges bindings docs
-Date: Wed, 29 Oct 2014 09:30:36 -0500
-Message-ID: <alpine.DEB.2.02.1410290929320.6507@atx-linux-37>
-References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com> <1414108267-22058-3-git-send-email-atull@opensource.altera.com> <20141024070042.GL10262@pengutronix.de> <alpine.DEB.2.02.1410281601570.11910@atx-linux-37> <20141029075701.GA10262@pengutronix.de>
- <20141029101632.GU18557@sirena.org.uk> <20141029103103.GD10262@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20141029103103.GD10262@pengutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Mark Brown <broonie@kernel.org>, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: [PATCH 0/3] Add support for Tegra Activity Monitor
+Date: Wed, 29 Oct 2014 15:50:10 +0100
+Message-ID: <1414594232-15684-1-git-send-email-tomeu.vizoso@collabora.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 Oct 2014, Steffen Trumtrar wrote:
+Hello,
 
-> On Wed, Oct 29, 2014 at 10:16:32AM +0000, Mark Brown wrote:
-> > On Wed, Oct 29, 2014 at 08:57:01AM +0100, Steffen Trumtrar wrote:
-> > 
-> > > So, that shouldn't be a problem though, as I already cooked up a driver for
-> > > the L3 with all the ranges specified. The only thing I need to figure out
-> > > before I will post it, is how to nicely handle the WO remap register.
-> > > I think regmap might be able to handle this itself, but am not sure yet.
-> > 
-> > It's supposed to be able to, not sure if anyone really tests that or not
-> > though so it's possible bugs crept in.  Most write only registers can
-> > physically be read so actually come out as volatile rather than write
-> > only even if functionally there is no reason to read.
-> 
-> Ah, I think you might be actually right there. IIRC it IS possible to read
-> from that register, but you only get 0s.
+these patches implement support for setting the rate of the EMC clock based on
+stats collected from the ACTMON, a piece of hw in the Tegra124 that counts
+memory accesses (among others).
 
-Yes, you can read and it will be all 0s.  So read-modify-write is not
-something you would want to do for instance.
+It depends on the following in-flight patches:
 
-Alan
+* MC driver: http://thread.gmane.org/gmane.linux.ports.tegra/19623
+* EMC driver: http://thread.gmane.org/gmane.linux.ports.arm.kernel/365125
+* CPUFreq driver: http://thread.gmane.org/gmane.linux.kernel/1812962
 
-> So, I shot myself in the knee with specifying that register as write-only
-> in my driver.
-> 
-> Thanks,
-> Steffen
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
+I have pushed a branch here for testing:
+
+http://cgit.collabora.com/git/user/tomeu/linux.git/log/?h=actmon
+
+Regards,
+
+Tomeu
+
+Tomeu Vizoso (3):
+  of: Add binding for NVIDIA Tegra ACTMON node
+  soc/tegra: add support for Tegra Activity Monitor
+  ARM: tegra: Add Tegra124 ACTMON support
+
+ .../devicetree/bindings/arm/tegra/actmon.txt       |  26 +
+ arch/arm/boot/dts/tegra124.dtsi                    |  11 +
+ drivers/soc/tegra/Makefile                         |   1 +
+ drivers/soc/tegra/actmon.c                         | 523 +++++++++++++++++++++
+ 4 files changed, 561 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/tegra/actmon.txt
+ create mode 100644 drivers/soc/tegra/actmon.c
+
+-- 
+1.9.3
