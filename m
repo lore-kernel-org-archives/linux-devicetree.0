@@ -1,43 +1,31 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [PATCH 3/3] ARM: tegra: Add Tegra124 ACTMON support
-Date: Wed, 29 Oct 2014 15:50:13 +0100
-Message-ID: <1414594232-15684-4-git-send-email-tomeu.vizoso@collabora.com>
-References: <1414594232-15684-1-git-send-email-tomeu.vizoso@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414594232-15684-1-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 0/3] ARM: shmobile: sata_rcar updates
+Date: Wed, 29 Oct 2014 10:51:51 -0400
+Message-ID: <20141029145151.GD25226@htj.dyndns.org>
+References: <1414591131-21771-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414591131-21771-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-ide-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add device node for the ACTMON block to the Tegra124 device tree.
+On Wed, Oct 29, 2014 at 02:58:48PM +0100, Geert Uytterhoeven wrote:
+> 	Hi Tejun, Simon, Magnus,
+> 
+> This patch series improves DT bindings documentation and usage for the
+> sata_rcar driver.
+> 
+> The first patch was sent before by Valentine Barshak a while ago, but never
+> updated according to the review comments.
 
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
----
- arch/arm/boot/dts/tegra124.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+I can route these through libata tree once Simon acks them.  Please
+let me know thorugh which tree these should be routed.
 
-diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-index b1ec35e..8bce1b3 100644
---- a/arch/arm/boot/dts/tegra124.dtsi
-+++ b/arch/arm/boot/dts/tegra124.dtsi
-@@ -213,6 +213,17 @@
- 		reg = <0x0 0x60007000 0x0 0x1000>;
- 	};
- 
-+	actmon@0,6000c800 {
-+		compatible = "nvidia,tegra124-actmon";
-+		reg = <0x0 0x6000c800 0x0 0x400>;
-+		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&tegra_car TEGRA124_CLK_ACTMON>,
-+			 <&tegra_car TEGRA124_CLK_EMC>;
-+		clock-names = "actmon", "emc";
-+		resets = <&tegra_car 119>;
-+		reset-names = "actmon";
-+	};
-+
- 	gpio: gpio@0,6000d000 {
- 		compatible = "nvidia,tegra124-gpio", "nvidia,tegra30-gpio";
- 		reg = <0x0 0x6000d000 0x0 0x1000>;
+Thanks.
+
 -- 
-1.9.3
+tejun
