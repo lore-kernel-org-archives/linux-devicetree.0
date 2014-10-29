@@ -1,65 +1,57 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 01/11] irqchip: Allow irq_reg_{readl,writel} to use __raw_{readl_writel}
-Date: Wed, 29 Oct 2014 22:41:03 +0100
-Message-ID: <3403771.J3X9ZBogqZ@wuerfel>
-References: <1414555138-6500-1-git-send-email-cernekee@gmail.com> <22478002.kqKBdeLAKz@wuerfel> <alpine.DEB.2.11.1410292226050.5308@nanos>
+From: Emil Medve <Emilian.Medve@Freescale.com>
+Subject: Re: [PATCH 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
+Date: Wed, 29 Oct 2014 16:40:27 -0500
+Message-ID: <54515ECB.70404@Freescale.com>
+References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
+ <EA33D307-CCDA-4A30-9386-46FA832FE0CA@codeaurora.org>
+ <1414519738.23458.84.camel__4795.38602890006$1414521743$gmane$org@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <alpine.DEB.2.11.1410292226050.5308@nanos>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1414519738.23458.84.camel__4795.38602890006$1414521743$gmane$org@snotra.buserror.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Scott Wood <scottwood@Freescale.com>, Kumar Gala <galak@codeaurora.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Geoff.Thorpe@Freescale.com, corbet@lwn.net, linux-doc@vger.kernel.org, linuxppc-dev@ozlabs.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 29 October 2014 22:31:06 Thomas Gleixner wrote:
-> On Wed, 29 Oct 2014, Arnd Bergmann wrote:
-> > On Wednesday 29 October 2014 13:09:47 Kevin Cernekee wrote:
-> > > generic-chip.c already has a fair amount of indirection, with pointers
-> > > to saved masks, user-specified register offsets, and such.  Is there a
-> > > concern that introducing, say, a pair of readl/writel function
-> > > pointers, would cause an unacceptable performance drop?
-> > 
-> > I don't know. Thomas' reply suggests that it isn't. Doing byteswap
-> > in software at a register access is usually free in terms of CPU
-> > cycles, but an indirect function call can be noticeable if we do
-> > that a lot.
-> 
-> I did not say that it is free. I merily said that I prefer to have
-> this solved at the core level rather than at the driver level.
+Hello Scott,
 
-Yes, I understood that.
 
-> So you have several options to do so:
-> 
-> 1) Indirections
-> 
-> 2) Different functions for the different access modes
-> 
-> 3) Alternatives
-> 
-> #1 Is the simplest solution, but imposes the overhead of an indirect
->    function call for something trivial
-> 
-> #2 The most efficient and flexible way if you have to provide
->    different access modes for different drivers. But it comes with the
->    price of increasing the text foot print.
-> 
-> #3 Smart and efficient, but requires that on a particular system all
->    drivers use the same access mode.
+On 10/28/2014 01:08 PM, Scott Wood wrote:
+> On Tue, 2014-10-28 at 09:36 -0500, Kumar Gala wrote:
+>> On Oct 22, 2014, at 9:09 AM, Emil Medve <Emilian.Medve@freescale.com=
+> wrote:
+>>
+>>> The Buffer Manager is part of the Data-Path Acceleration Architectu=
+re (DPAA).
+>>> BMan supports hardware allocation and deallocation of buffers belon=
+ging to
+>>> pools originally created by software with configurable depletion th=
+resholds.
+>>> This binding covers the CCSR space programming model
+>>>
+>>> Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
+>>> Change-Id: I3ec479bfb3c91951e96902f091f5d7d2adbef3b2
+>>> ---
+>>> .../devicetree/bindings/powerpc/fsl/bman.txt       | 98 +++++++++++=
++++++++++++
+>>> 1 file changed, 98 insertions(+)
+>>> create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/bm=
+an.txt
+>>
+>> Should these really be in bindings/powerpc/fsl, aren=E2=80=99t you g=
+uys using this on ARM SoCs as well?
+>=20
+> The hardware on the ARM SoCs is different enough that I'm not sure th=
+e
+> same binding will cover it.  That said, putting things under <arch>
+> should be a last resort if nowhere else fits.
 
-Right. The option that I was explaining earlier basically combines #1 and
-#3: For all kernels on which we know the endianess of all generic-irqchip
-users at compile time, we hardcode that, and we use indirections of
-some sort for the cases where we build a kernel that needs both.
+OTC started ported the driver to the the ARM SoC and the feedback has
+been that the driver needed minimal changes. The IOMMU has been the onl=
+y
+area of concern, and a small change to the binding has been suggested
 
-	Arnd
+
+Cheers,
