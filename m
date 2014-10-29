@@ -1,49 +1,123 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: Re: [PATCH V3 09/10] tty: serial: of-serial: Allow OF earlycon to
- default to "on"
-Date: Tue, 28 Oct 2014 21:12:57 -0700
-Message-ID: <CAJiQ=7A8D8SgeRbJMwce=7UD6yLTjhMgQZnPHWysGqFayJrdcg@mail.gmail.com>
-References: <1413930186-23168-1-git-send-email-cernekee@gmail.com>
- <1413930186-23168-10-git-send-email-cernekee@gmail.com> <CAL_Jsq+AuqTOU7UFdYi28YGjL1QorY=3zOSccN43Vb1a=q6SHw@mail.gmail.com>
- <CAJiQ=7BrfnyOQYptBCTR8GP8hLq4+q1NQ2H988wHK=8PnkqLkg@mail.gmail.com>
- <CAL_JsqJbva6i5BwDMf9f0TcuToxzP2u9_oe1t92zQXJyS077oA@mail.gmail.com> <CAJiQ=7DVSavXNYBd4yntRS-LKJMHQyxJx8Uim8Oz24rNfADcXg@mail.gmail.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: rockchip: use internal pull-up resistors on
+ I2C busses
+Date: Tue, 28 Oct 2014 21:45:15 -0700
+Message-ID: <CAD=FV=Vs9NT3hMS_Z0dOuwyBdxCsMddqohWFYOGYbM2ePm9PrQ@mail.gmail.com>
+References: <1414492597-13566-1-git-send-email-julien.chauveau@neo-technologies.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <CAJiQ=7DVSavXNYBd4yntRS-LKJMHQyxJx8Uim8Oz24rNfADcXg@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414492597-13566-1-git-send-email-julien.chauveau-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Julien CHAUVEAU <julien.chauveau-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 23, 2014 at 7:31 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
->> I think we'd just have to add a noearlycon option instead if we made
->> it the default. It's never been the default before, so I don't think
->> we should change now. There's also an implicit requirement that the
->> bootloader has configured the uart already. You could easily hang if
->> the uart has not been setup.
+Julien,
+
+On Tue, Oct 28, 2014 at 3:36 AM, Julien CHAUVEAU
+<julien.chauveau-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org> wrote:
+> According to the I2C bus specification, it is required to use pull-up resistors
+> on the clock and data lines. Probing the I2C busses with i2cdetect results in
+> bad results when no devices are connected and no external resistors are used.
 >
-> EARLY_PRINTK is enabled by default on MIPS platforms that support it.
-> I have been using this for years and found it very helpful in
-> debugging failures in the kernel boot process (especially intermittent
-> ones).
+> This patch configures the I2C busses to use the internal pull-up resistors
+> on the RK3066, RK3188 and RK3288 Rockchip processors. It should also be noted
+> that these default pull settings match the original configuration on these SoCs.
 >
-> But for a new platform it is better to use earlycon as earlycon
-> provides a clean way of reading the UART information out of DT.  My
-> original bcm3384 (MIPS) port used EARLY_PRINTK but I recently
-> converted it to earlycon.  The last remaining goal is to get it
-> enabled by default again.
+> Below is the results of using i2cdetect on a I2C bus with no devices connected
+> before (1) and after (2) applying this patch.
+>
+> (1) root@localhost:~# i2cdetect -y 3
+>      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+> 00:          03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f
+> 10: 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f
+> 20: 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f
+> 30: -- -- -- -- -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x81, state: 2
+> -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 2
+> -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 2
+> -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 3
+> -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 3
+> -- rk3x-i2c 2005a000.i2c: timeout, ipd: 0x80, state: 3
+> ...
+>
+> (2) root@localhost:~# i2cdetect -y 3
+>      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+> 00:          -- -- -- -- -- -- -- -- -- -- -- -- --
+> 10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+> 20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+> 30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+> 40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+> 50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+> 60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+> 70: -- -- -- -- -- -- -- --
+>
+> Signed-off-by: Julien CHAUVEAU <julien.chauveau-MwaZihP3oV2HdZQakrT3ElaPQRlvutdw@public.gmane.org>
+> ---
+> Changes since v1:
+> - fix the rk3066a pull settings (only available is pull_none/pull_default)
+> - remove the warnings in the results of i2cdetect
+>
+>  arch/arm/boot/dts/rk3066a.dtsi | 20 ++++++++++----------
+>  arch/arm/boot/dts/rk3188.dtsi  | 20 ++++++++++----------
+>  arch/arm/boot/dts/rk3288.dtsi  | 24 ++++++++++++------------
+>  3 files changed, 32 insertions(+), 32 deletions(-)
 
-Hi Rob,
+I won't NAK this change myself, but I have to say I'm not a huge fan.
+On exynos boards the i2c has pulls by default, so there is precedent
+for what you're proposing at least.
 
-Do you think we should just drop this patch for now, and use these
-options to append "earlycon" to the bootloader-supplied command line:
+...but I'll also say that most sane boards have external pulls on i2c
+and don't rely on the internal pulls.  If you've got a board where the
+internal pull works well enough (lucky you!) then I think you should
+override the pinctrl for just that board.
 
-CONFIG_CMDLINE_BOOL=y
-CONFIG_CMDLINE="earlycon"
-CONFIG_CMDLINE_OVERRIDE=n
+You are arguing that the internal pull "can't hurt".  I have past
+experience that shows that not to be the case.  Here's an old change
+for the Samsung ARM Chromebook:
 
-If you have other suggestions on how to enable earlycon by default, I
-would be happy to help implement them.
+https://chromium-review.googlesource.com/#/c/26607/
 
-Thanks!
+You probably can't dig into the bug link due to permissions, but I can
+paste some of that in:
+
+---
+
+On Daisy / Snow we've got a NXP HDMI level converter on i2c2.  That
+part has its own internal pullups.
+
+Ideally it shouldn't hurt for us to also have the exynos's (weak) 400K
+pullups on for the line too.  But according to our EE, we're just
+barely within spec and so turning off the exynos pullups makes sense.
+
+Specifically, the problem is the data line when the external HDMI
+device is driving low.  The NXP chip doesn't manage to drive the data
+line all the way low.  Measured on one board:
+* If exynos has pullup: "low" is 560mV
+* If exynos has no pull: "low" is 518mV
+* If exynos has pulldown: "low" is 490mV
+
+Low should really be 0, but exynos allows .3*VDD (or 540mV).
+
+
+We should disable pullups in both the kernel and in U-Boot.  There's
+even a chance that we'd want to enable pulldowns.
+
+
+Note that to read EDID at all you need to also remove the strong
+external pullups.
+
+---
+
+I did put your patch in my rk3288 board and it booted up OK, but I'm
+not setup to test HDMI right now.
+
+In v1 I think Addy said he was having trouble with HDMI and the
+internal pulls on some board, so maybe he had a similar experience to
+mine on snow.
+
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
