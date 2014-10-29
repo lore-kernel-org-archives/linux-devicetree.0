@@ -1,51 +1,46 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v1 1/3] gpio: Add APM X-Gene standby GPIO controller driver
-Date: Wed, 29 Oct 2014 11:24:26 +0100
-Message-ID: <2178918.XVCQXOyoGA@wuerfel>
-References: <1412779948-28769-1-git-send-email-yvo@apm.com> <2988580.WvjMBY1UOc@wuerfel> <CACRpkdao2F1NK-3QpqSOLzFdvjWFVU4HqcqZPA2fXHpQN=BUsQ@mail.gmail.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v2 2/3] ARM: dts: socfpga: fpga bridges bindings docs
+Date: Wed, 29 Oct 2014 11:31:03 +0100
+Message-ID: <20141029103103.GD10262@pengutronix.de>
+References: <1414108267-22058-1-git-send-email-atull@opensource.altera.com>
+ <1414108267-22058-3-git-send-email-atull@opensource.altera.com>
+ <20141024070042.GL10262@pengutronix.de>
+ <alpine.DEB.2.02.1410281601570.11910@atx-linux-37>
+ <20141029075701.GA10262@pengutronix.de>
+ <20141029101632.GU18557@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdao2F1NK-3QpqSOLzFdvjWFVU4HqcqZPA2fXHpQN=BUsQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Y Vo <yvo@apm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Tin Huynh <tnhuynh@apm.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141029101632.GU18557@sirena.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: atull <atull@opensource.altera.com>, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, mgerlach@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 29 October 2014 10:52:47 Linus Walleij wrote:
-> On Fri, Oct 24, 2014 at 3:46 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Friday 24 October 2014 14:14:43 Linus Walleij wrote:
-> > See the discussion I had on this. Yes, each line is connected to a
-> > GIC SPI interrupt by itself. I've discussed this with Marc Zyngier
-> > and Thomas Gleixner at the conference last week, and we concluded
-> > that we will need a new generic interface to get data out of the
-> > parent interrupt controller in a proper way. The current implementation
-> > just maps the GIC registers and reads them directly, which of course
-> > is not a proper way to do it.
+On Wed, Oct 29, 2014 at 10:16:32AM +0000, Mark Brown wrote:
+> On Wed, Oct 29, 2014 at 08:57:01AM +0100, Steffen Trumtrar wrote:
 > 
-> Hmmmmmm. OK shall we hold this driver until the infrastructure
-> issues are resolved?
-
-Y could send a first version that does not support the IRQ lines
-if he wants to speed up the process.
-
-> The following is a recurring pattern among GPIO controllers:
-> the GPIO controller can go offline (asycnhcronous) and while it
-> is offline a secondary logic triggers an IRQ that wakes the system
-> up, however the GPIO logic cannot really "see" that IRQ since
-> it was sleeping when it arrived.
+> > So, that shouldn't be a problem though, as I already cooked up a driver for
+> > the L3 with all the ranges specified. The only thing I need to figure out
+> > before I will post it, is how to nicely handle the WO remap register.
+> > I think regmap might be able to handle this itself, but am not sure yet.
 > 
-> Thus a latent IRQ is pending in the wakeup logic. This concept
-> exists in drivers/pinctrl/nomadik/pinctrl-nomadik.c and I strongly
-> prefer to call these "latent irqs" as it's a clear unambigous
-> terminology.
-> 
-> So is this a case of latent IRQs pending in the GIC?
+> It's supposed to be able to, not sure if anyone really tests that or not
+> though so it's possible bugs crept in.  Most write only registers can
+> physically be read so actually come out as volatile rather than write
+> only even if functionally there is no reason to read.
 
-I think this case is different, from what I understand, the GPIO
-controller cannot implement gpio_chip->get() for any line that
-is connected to the GIC, and it has to ask the GIC instead.
-This seems independent of the online/offline state of the controller.
+Ah, I think you might be actually right there. IIRC it IS possible to read
+from that register, but you only get 0s.
+So, I shot myself in the knee with specifying that register as write-only
+in my driver.
 
-	Arnd
+Thanks,
+Steffen
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
