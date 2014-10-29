@@ -1,43 +1,73 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [RESEND: PATCH v2 0/4] Enable PCI controller for Keystone SoCs
-Date: Wed, 29 Oct 2014 16:30:07 -0400
-Message-ID: <1414614607-4872-1-git-send-email-m-karicheri2@ti.com>
+From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: socfpga: Add driver for the L3 interconnect
+Date: Wed, 29 Oct 2014 15:30:10 -0500
+Message-ID: <alpine.DEB.2.02.1410291521290.29374@atx-linux-37>
+References: <1414582436-12772-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Murali Karicheri <m-karicheri2@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414582436-12772-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now that Keystone PCI driver is merged to v3.18, this patch series
-add build options and DTS bindings to enable the driver for Keystone SoCs.
+On Wed, 29 Oct 2014, Steffen Trumtrar wrote:
 
-v2: Some more minor edits based on comments
-v1: resend with some minor fix up of the commit description and fixing
-    the email ID for Santosh.
+> The L3 interconnect provides Global Programmer View (GPV) registers for every
+> AXI master and slave on the SoC.
+> Although this is just a bunch of bits, syscon is not the right approach for
+> this IP core.
+> The L3 interconnect is configured with a lot of reserved "holes" in its memory
+> space. Just mapping this with regmap, what syscon would do, would lead to the
+> system completely hanging, if one of those areas would be touched.
+> One example for when this might happen is the regmap registers dump in the
+> debugfs.
+> 
+> This driver specifies also the valid readable and writable ranges of the L3
+> interconnect. Other drivers that want to access their GPV registers can do
+> so with this driver via socfpga_l3nic_regmap_by_phandle.
+> 
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  .../bindings/soc/socfpga/altr,l3-nic.txt           |  15 ++
+>  drivers/soc/Kconfig                                |   1 +
+>  drivers/soc/Makefile                               |   1 +
+>  drivers/soc/socfpga/Kconfig                        |  11 +
+>  drivers/soc/socfpga/Makefile                       |   1 +
+>  drivers/soc/socfpga/l3nic.c                        | 221 +++++++++++++++++++++
+>  include/soc/socfpga/gpv.h                          |  63 ++++++
+>  include/soc/socfpga/l3regs.h                       | 194 ++++++++++++++++++
+>  8 files changed, 507 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/socfpga/altr,l3-nic.txt
+>  create mode 100644 drivers/soc/socfpga/Kconfig
+>  create mode 100644 drivers/soc/socfpga/Makefile
+>  create mode 100644 drivers/soc/socfpga/l3nic.c
+>  create mode 100644 include/soc/socfpga/gpv.h
+>  create mode 100644 include/soc/socfpga/l3regs.h
+> 
 
-CC: Santosh Shilimkar <ssantosh@kernel.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Pawel Moll <pawel.moll@arm.com>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
-CC: Kumar Gala <galak@codeaurora.org>
-CC: Russell King <linux@arm.linux.org.uk>
-CC: devicetree@vger.kernel.org
+Hi Steffen,
 
-Murali Karicheri (4):
-  ARM: keystone: add pcie related options
-  ARM: keystone: defconfig: add options to enable PCI controller
-  ARM: dts: keystone: add DT bindings for PCI controller for port 0
-  ARM: dts: keystone-k2e: add DT bindings for PCI controller for port 1
+This looks really nice and useful.
 
- arch/arm/boot/dts/k2e.dtsi          |   45 +++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/keystone.dtsi     |   45 +++++++++++++++++++++++++++++++++++
- arch/arm/configs/keystone_defconfig |    3 +++
- arch/arm/mach-keystone/Kconfig      |    2 ++
- 4 files changed, 95 insertions(+)
+I tried it out with my bridge driver and at least with my superficial
+testing it looked good.
 
--- 
-1.7.9.5
+> +
+> +int socfpga_l3nic_regmap_by_phandle(struct device_node *np,
+> +				    struct regmap **regmap,
+> +				    const char *name)
+> +{
+
+This could return the regmap or ERR_PTR(-ENODEV) and just
+have the np and name parameter, similar to 
+syscon_regmap_lookup_by_phandle.
+
+Thanks!
+
+Alan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
