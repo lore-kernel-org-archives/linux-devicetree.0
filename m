@@ -1,67 +1,46 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH 0/2] Qualcomm PM8941 power key driver
-Date: Wed, 29 Oct 2014 18:07:28 +0200
-Message-ID: <1414598848.32383.4.camel@mm-sol.com>
-References: <1412644321-27683-1-git-send-email-bjorn.andersson@sonymobile.com>
-	 <1412672510.1027.57.camel@iivanov-dev>
-	 <20141007184640.GB31125@sonymobile.com>
-	 <1412761807.13569.12.camel@iivanov-dev>
-	 <20141024152350.GD28611@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141024152350.GD28611@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] of: check for size < 0 after rounding in early_init_dt_add_memory_arch
+Date: Wed, 29 Oct 2014 17:09:32 +0100
+Message-ID: <1414598972-22761-1-git-send-email-ard.biesheuvel@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Memory regions passed to early_init_dt_add_memory_arch() are rounded to
+PAGE_SIZE by subtracting the size of the leading fractional page from
+the 'size' argument. However, size being a u64 type, if its value is
+sufficiently small, the subtraction wraps around and produces a bogus
+value, potentially leading to crashes.
 
+Fix this by ignoring the memory range in such cases.
 
-Hi Bjorn,
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/of/fdt.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-On Fri, 2014-10-24 at 08:23 -0700, Bjorn Andersson wrote:
-> On Wed 08 Oct 02:50 PDT 2014, Ivan T. Ivanov wrote:
-> 
-> > On Tue, 2014-10-07 at 11:46 -0700, Bjorn Andersson wrote:
-> > > On Tue 07 Oct 02:01 PDT 2014, Ivan T. Ivanov wrote:
-> > > 
-> > > > Hi Bjorn,
-> > > > 
-> > > > On Mon, 2014-10-06 at 18:11 -0700, Bjorn Andersson wrote:
-> [..]
-> > > > >  create mode 100644 drivers/input/misc/pm8941-pwrkey.c
-> > > > 
-> > > > Any reason why we cannot reuse pm8xxx-pwrkey driver? It have been
-> > > > converted to regmap already.
-> > > > 
-> > > 
-> > > The boilerplate code is the same,
-> > 
-> > The boilerplate code is almost 100% :-)
-> > 
-> > >  but configuration registers have different
-> > > layout and values written in them are different.
-> > 
-> > We talk about 3 registers and 2 bit defines. struct regmap_field
-> > should be able to help here.
-> > 
-> 
-> You're totally right, we could rewrite the driver to use regmap_field and make
-> the rest of the differences conditional. In my eyes we end up with two drivers
-> in one file - but it can be done.
-> 
-> A difference however is that in pm8941 the ps hold behavious (reboot vs power
-> off) is controlled by this same block. So I have an additional patch that adds
-> a restart handler here that sets the pmic in the right state before we pull
-> pshold (but I haven't been able to test it properly).
-> 
-> In pm8xxx this is handled in the pmic misc block and does not belong in this
-> driver.
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index d1ffca8b34ea..3b423f5b99c6 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -930,6 +930,11 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+ 	const u64 phys_offset = __pa(PAGE_OFFSET);
+ 
+ 	if (!PAGE_ALIGNED(base)) {
++		if (size < PAGE_SIZE - (base & ~PAGE_MASK)) {
++			pr_warn("Ignoring memory block 0x%llx - 0x%llx\n",
++				base, base + size);
++			return;
++		}
+ 		size -= PAGE_SIZE - (base & ~PAGE_MASK);
+ 		base = PAGE_ALIGN(base);
+ 	}
+-- 
+1.8.3.2
 
-Ok, Your plan is to bring up support for QPNP power-on PMIC sub function into this
-driver. In this case, I agree, it will be cleaner to have separate driver for this.
-
-Regards,
-Ivan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
