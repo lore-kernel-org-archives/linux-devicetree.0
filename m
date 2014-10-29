@@ -1,79 +1,42 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: Re: [RFC Patch] gpio: add GPIO hogging mechanism
-Date: Wed, 29 Oct 2014 11:41:22 -0500
-Message-ID: <20141029164122.GC29965@ti.com>
-References: <1413922198-29373-1-git-send-email-bparrot@ti.com>
- <20141029104559.GC21251@lukather>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH v1 0/4] Enable PCI controller for Keystone SoCs
+Date: Wed, 29 Oct 2014 12:45:30 -0400
+Message-ID: <1414601134-31825-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141029104559.GC21251@lukather>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Murali Karicheri <m-karicheri2@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Maxime Ripard <maxime.ripard@free-electrons.com> wrote on Wed [2014-Oct-29 11:45:59 +0100]:
-> Hi,
-> 
-> On Tue, Oct 21, 2014 at 03:09:58PM -0500, Benoit Parrot wrote:
-> > Based on Boris Brezillion work this is a reworked patch
-> > of his initial GPIO hogging mechanism.
-> > This patch provides a way to initally configure specific GPIO
-> > when the gpio controller is probe.
-> > 
-> > The actual DT scanning to collect the GPIO specific data is performed
-> > as part of the gpiochip_add().
-> > 
-> > The purpose of this is to allows specific GPIOs to be configured
-> > without any driver specific code.
-> > This particularly usueful because board design are getting
-> > increassingly complex and given SoC pins can now have upward
-> > of 10 mux values a lot of connections are now dependent on
-> > external IO muxes to switch various modes and combination.
-> > 
-> > Specific drivers should not necessarily need to be aware of
-> > what accounts to a specific board implementation. This board level
-> > "description" should be best kept as part of the dts file.
-> > 
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> 
-> I've been thinking about this for quite some time, it's good to see
-> some progress on that :)
-> 
-> However, I have a slightly different use case for it: the Allwinner
-> SoCs have a vdd pin coming in for every gpio bank. Nothing out of the
-> ordinary so far, except that some of the boards are using a
-> GPIO-controlled regulator to feed another bank vdd. That obviously
-> causes a chicken-egg issue, since for the gpio-regulator driver to
-> probe, it needs to gpio driver, and for the gpio driver to probe, it
-> needs the regulator driver.
+Now that Keystone PCI driver is merged to v3.18, this patch series
+add build options and DTS bindings to enable the driver for Keystone SoCs.
 
-Unless the gpio controlling the vdd pin is from the same bank your trying to power up
-I do not see the issue here.
+v1: resend with some minor fix up of the commit description and fixing
+    the email ID for Santosh.
 
-In this patch the gpio-hogs are setup as part of the gpio-controller probe function.
+CC: Santosh Shilimkar <ssantosh@kernel.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Pawel Moll <pawel.moll@arm.com>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+CC: Kumar Gala <galak@codeaurora.org>
+CC: Russell King <linux@arm.linux.org.uk>
+CC: devicetree@vger.kernel.org
 
-> 
-> I was thinking of solving this by enforcing gpio hogs, in order to
-> have the gpio driver loading, grabing its gpios setting them to the
-> right value to enable the current to flow in, and then let the
-> regulator driver probe later on.
-> 
-> I don't think it's possible with your current code, would it be
-> something worth considering, or would someone have a better solution?
+Murali Karicheri (4):
+  ARM: keystone: add pcie related options
+  ARM: keystone: defconfig: add options to enable PCI controller
+  ARM: dts: keystone: add DT bindings for PCI controller for port 0
+  ARM: dts: keystone-k2e: add DT bindings for PCI controller for port 1
 
-Unless I am missing something, this should work.
+ arch/arm/boot/dts/k2e.dtsi          |   45 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/keystone.dtsi     |   45 +++++++++++++++++++++++++++++++++++
+ arch/arm/configs/keystone_defconfig |    3 +++
+ arch/arm/mach-keystone/Kconfig      |    2 ++
+ 4 files changed, 95 insertions(+)
 
-> 
-> Maxime
-> -- 
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
-
-Regards,
-Benoit
-
-
+-- 
+1.7.9.5
