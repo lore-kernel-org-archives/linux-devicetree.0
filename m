@@ -1,88 +1,151 @@
-From: Emil Medve <Emilian.Medve@Freescale.com>
-Subject: Re: [PATCH 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
-Date: Wed, 29 Oct 2014 23:32:09 -0500
-Message-ID: <5451BF49.6050106@Freescale.com>
-References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
- <EA33D307-CCDA-4A30-9386-46FA832FE0CA@codeaurora.org>
- <1414519738.23458.84.camel__4795.38602890006$1414521743$gmane$org@snotra.buserror.net>
- <54515ECB.70404@Freescale.com>
- <1414620996.23458.141.camel__29590.7804662876$1414621051$gmane$org@snotra.buserror.net>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH] mmc: dw_mmc: add a quirk for the defferent bit of sdio
+ interrupt
+Date: Thu, 30 Oct 2014 13:35:16 +0900
+Message-ID: <5451C004.3050806@samsung.com>
+References: <1414635679-12565-1-git-send-email-addy.ke@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1414620996.23458.141.camel__29590.7804662876$1414621051$gmane$org@snotra.buserror.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Scott Wood <scottwood@Freescale.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Geoff.Thorpe@Freescale.com, corbet@lwn.net, linux-doc@vger.kernel.org, linuxppc-dev@ozlabs.org, robh+dt@kernel.org, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <1414635679-12565-1-git-send-email-addy.ke@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Addy Ke <addy.ke@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Scott,
+Hi, Addy.
+
+On 10/30/2014 11:21 AM, Addy Ke wrote:
+> This patch add a quirk: DW_MCI_QUIRK_SDIO_INT_24BIT.
+> 
+> The bit of sdio interrupt is 16 in designware implementation, but
+> is 24 in RK3288. To support RK3288 mmc controller, we need add
+> a quirk for it.
+> 
+> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+> ---
+>  drivers/mmc/host/dw_mmc.c  | 32 +++++++++++++++++++++++++++-----
+>  drivers/mmc/host/dw_mmc.h  |  1 +
+>  include/linux/mmc/dw_mmc.h |  2 ++
+>  3 files changed, 30 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index 69f0cc6..db29621 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -778,6 +778,12 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>  	u32 div;
+>  	u32 clk_en_a;
+>  	u32 sdmmc_cmd_bits = SDMMC_CMD_UPD_CLK | SDMMC_CMD_PRV_DAT_WAIT;
+> +	u32 sdio_int_bit;
+> +
+> +	if (host->quirks & DW_MCI_QUIRK_SDIO_INT_24BIT)
+
+I want to change the quirk naming.
+If rockchip may use the other bit for sdio_int in future,
+then you need to add the DW_MCI_QUIRK_SDIO_INT_xxBIT.?
+
+How about DW_MCI_BROKEN_SDIO_INT_BIT?
+And Could you consider to control with more general method than now?
 
 
-On 10/29/2014 05:16 PM, Scott Wood wrote:
-> On Wed, 2014-10-29 at 16:40 -0500, Emil Medve wrote:
->> Hello Scott,
->>
->>
->> On 10/28/2014 01:08 PM, Scott Wood wrote:
->>> On Tue, 2014-10-28 at 09:36 -0500, Kumar Gala wrote:
->>>> On Oct 22, 2014, at 9:09 AM, Emil Medve <Emilian.Medve@freescale.c=
-om> wrote:
->>>>
->>>>> The Buffer Manager is part of the Data-Path Acceleration Architec=
-ture (DPAA).
->>>>> BMan supports hardware allocation and deallocation of buffers bel=
-onging to
->>>>> pools originally created by software with configurable depletion =
-thresholds.
->>>>> This binding covers the CCSR space programming model
->>>>>
->>>>> Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
->>>>> Change-Id: I3ec479bfb3c91951e96902f091f5d7d2adbef3b2
->>>>> ---
->>>>> .../devicetree/bindings/powerpc/fsl/bman.txt       | 98 +++++++++=
-+++++++++++++
->>>>> 1 file changed, 98 insertions(+)
->>>>> create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/=
-bman.txt
->>>>
->>>> Should these really be in bindings/powerpc/fsl, aren=E2=80=99t you=
- guys using this on ARM SoCs as well?
->>>
->>> The hardware on the ARM SoCs is different enough that I'm not sure =
-the
->>> same binding will cover it.  That said, putting things under <arch>
->>> should be a last resort if nowhere else fits.
->>
->> OTC started ported the driver to the the ARM SoC and the feedback ha=
-s
->> been that the driver needed minimal changes. The IOMMU has been the =
-only
->> area of concern, and a small change to the binding has been suggeste=
-d
->=20
-> Do we need something in the binding to indicate device endianness?
+Best Regards,
+Jaehoon Chung
 
-As I said, I didn't have enough exposure to the ARM SoC so I can't
-answer that
+> +		sdio_int_bit = SDMMC_INT_SDIO_24BIT(slot->id);
+> +	else
+> +		sdio_int_bit = SDMMC_INT_SDIO(slot->id);
+>  
+>  	/* We must continue to set bit 28 in CMD until the change is complete */
+>  	if (host->state == STATE_WAITING_CMD11_DONE)
+> @@ -819,7 +825,7 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>  
+>  		/* enable clock; only low power if no SDIO */
+>  		clk_en_a = SDMMC_CLKEN_ENABLE << slot->id;
+> -		if (!(mci_readl(host, INTMASK) & SDMMC_INT_SDIO(slot->id)))
+> +		if (!(mci_readl(host, INTMASK) & sdio_int_bit))
+>  			clk_en_a |= SDMMC_CLKEN_LOW_PWR << slot->id;
+>  		mci_writel(host, CLKENA, clk_en_a);
+>  
+> @@ -1167,6 +1173,12 @@ static void dw_mci_enable_sdio_irq(struct mmc_host *mmc, int enb)
+>  	struct dw_mci_slot *slot = mmc_priv(mmc);
+>  	struct dw_mci *host = slot->host;
+>  	u32 int_mask;
+> +	u32 sdio_int_bit;
+> +
+> +	if (host->quirks & DW_MCI_QUIRK_SDIO_INT_24BIT)
+> +		sdio_int_bit = SDMMC_INT_SDIO_24BIT(slot->id);
+> +	else
+> +		sdio_int_bit = SDMMC_INT_SDIO(slot->id);
+>  
+>  	/* Enable/disable Slot Specific SDIO interrupt */
+>  	int_mask = mci_readl(host, INTMASK);
+> @@ -1180,10 +1192,10 @@ static void dw_mci_enable_sdio_irq(struct mmc_host *mmc, int enb)
+>  		dw_mci_disable_low_power(slot);
+>  
+>  		mci_writel(host, INTMASK,
+> -			   (int_mask | SDMMC_INT_SDIO(slot->id)));
+> +			   (int_mask | sdio_int_bit));
+>  	} else {
+>  		mci_writel(host, INTMASK,
+> -			   (int_mask & ~SDMMC_INT_SDIO(slot->id)));
+> +			   (int_mask & ~sdio_int_bit));
+>  	}
+>  }
+>  
+> @@ -2035,8 +2047,15 @@ static irqreturn_t dw_mci_interrupt(int irq, void *dev_id)
+>  		/* Handle SDIO Interrupts */
+>  		for (i = 0; i < host->num_slots; i++) {
+>  			struct dw_mci_slot *slot = host->slot[i];
+> -			if (pending & SDMMC_INT_SDIO(i)) {
+> -				mci_writel(host, RINTSTS, SDMMC_INT_SDIO(i));
+> +			u32 sdio_int_bit;
+> +
+> +			if (host->quirks & DW_MCI_QUIRK_SDIO_INT_24BIT)
+> +				sdio_int_bit = SDMMC_INT_SDIO_24BIT(i);
+> +			else
+> +				sdio_int_bit = SDMMC_INT_SDIO(i);
+> +
+> +			if (pending & sdio_int_bit) {
+> +				mci_writel(host, RINTSTS, sdio_int_bit);
+>  				mmc_signal_sdio_irq(slot->mmc);
+>  			}
+>  		}
+> @@ -2452,6 +2471,9 @@ static struct dw_mci_of_quirks {
+>  	}, {
+>  		.quirk	= "disable-wp",
+>  		.id	= DW_MCI_QUIRK_NO_WRITE_PROTECT,
+> +	}, {
+> +		.quirk	= "sdio-int-24bit",
+> +		.id	= DW_MCI_QUIRK_SDIO_INT_24BIT,
+>  	},
+>  };
+>  
+> diff --git a/drivers/mmc/host/dw_mmc.h b/drivers/mmc/host/dw_mmc.h
+> index 01b99e8..6a48015 100644
+> --- a/drivers/mmc/host/dw_mmc.h
+> +++ b/drivers/mmc/host/dw_mmc.h
+> @@ -92,6 +92,7 @@
+>  #define SDMMC_CTYPE_4BIT		BIT(0)
+>  #define SDMMC_CTYPE_1BIT		0
+>  /* Interrupt status & mask register defines */
+> +#define SDMMC_INT_SDIO_24BIT(n)		BIT(24 + (n))
+>  #define SDMMC_INT_SDIO(n)		BIT(16 + (n))
+>  #define SDMMC_INT_EBE			BIT(15)
+>  #define SDMMC_INT_ACD			BIT(14)
+> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+> index 0013669..6d4669e 100644
+> --- a/include/linux/mmc/dw_mmc.h
+> +++ b/include/linux/mmc/dw_mmc.h
+> @@ -217,6 +217,8 @@ struct dw_mci_dma_ops {
+>  #define DW_MCI_QUIRK_BROKEN_CARD_DETECTION	BIT(3)
+>  /* No write protect */
+>  #define DW_MCI_QUIRK_NO_WRITE_PROTECT		BIT(4)
+> +/* In RK3288, the bit of sdio interrupt is 24 */
+> +#define DW_MCI_QUIRK_SDIO_INT_24BIT		BIT(5)
+>  
+>  /* Slot level quirks */
+>  /* This slot has no write protect */
+> 
 
-> If this binding is going to continue to be relevant to future DPAA
-> generations, I think we really ought to deal with the possibility tha=
-t
-> there is more than one datapath instance
-
-I'm unsure how relevant this will be going forward. In LS2 B/QMan is
-abstracted/hidden away behind the MC (firmware). I wouldn't
-over-engineer this without a clear picture of what multiple data-paths
-per SoC even means at this point
-
-> by having phandles and/or a parent container to connect the related
-> components.
-
-Connecting the related components is beyond the scope of this binding.
-It will soon hit the e-mail list(s) as part of upstreaming the Ethernet
-driver
-
-
-Cheers,
