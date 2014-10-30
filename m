@@ -1,7 +1,7 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V2 03/15] genirq: Generic chip: Move irq_reg_{readl,writel} accessors into generic-chip.c
-Date: Wed, 29 Oct 2014 19:17:56 -0700
-Message-ID: <1414635488-14137-4-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V2 06/15] genirq: Generic chip: Optimize for fixed-endian systems
+Date: Wed, 29 Oct 2014 19:17:59 -0700
+Message-ID: <1414635488-14137-7-git-send-email-cernekee@gmail.com>
 References: <1414635488-14137-1-git-send-email-cernekee@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1414635488-14137-1-git-send-email-cernekee@gmail.com>
@@ -10,53 +10,73 @@ To: arnd@arndb.de, f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.ne
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-This allows us to implement per-irqchip behavior when necessary, instead
-of hardcoding the behavior for all irqchip drivers at compile time.
+Allow the compiler to inline an LE MMIO access if the configuration only
+supports LE registers, or a BE MMIO access if the configuration only
+supports BE registers.  If the configuration supports both (possibly
+a multiplatform kernel) then make the decision at runtime.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- include/linux/irq.h       |  7 -------
- kernel/irq/generic-chip.c | 10 ++++++++++
- 2 files changed, 10 insertions(+), 7 deletions(-)
+ kernel/irq/Kconfig        |  5 +++++
+ kernel/irq/Makefile       |  1 +
+ kernel/irq/generic-chip.c | 10 +++++++++-
+ 3 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index 03f48d9..8049e93 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -639,13 +639,6 @@ void arch_teardown_hwirq(unsigned int irq);
- void irq_init_desc(unsigned int irq);
- #endif
+diff --git a/kernel/irq/Kconfig b/kernel/irq/Kconfig
+index 225086b..6283c8c 100644
+--- a/kernel/irq/Kconfig
++++ b/kernel/irq/Kconfig
+@@ -51,6 +51,11 @@ config GENERIC_IRQ_CHIP
+        bool
+        select IRQ_DOMAIN
  
--#ifndef irq_reg_writel
--# define irq_reg_writel(val, addr)	writel(val, addr)
--#endif
--#ifndef irq_reg_readl
--# define irq_reg_readl(addr)		readl(addr)
--#endif
--
- /**
-  * struct irq_chip_regs - register offsets for struct irq_gci
-  * @enable:	Enable register offset to reg_base
++# Same as above, but use big-endian MMIO accesses
++config GENERIC_IRQ_CHIP_BE
++       bool
++       select IRQ_DOMAIN
++
+ # Generic irq_domain hw <--> linux irq number translation
+ config IRQ_DOMAIN
+ 	bool
+diff --git a/kernel/irq/Makefile b/kernel/irq/Makefile
+index fff1738..34c2b0f 100644
+--- a/kernel/irq/Makefile
++++ b/kernel/irq/Makefile
+@@ -1,6 +1,7 @@
+ 
+ obj-y := irqdesc.o handle.o manage.o spurious.o resend.o chip.o dummychip.o devres.o
+ obj-$(CONFIG_GENERIC_IRQ_CHIP) += generic-chip.o
++obj-$(CONFIG_GENERIC_IRQ_CHIP_BE) += generic-chip.o
+ obj-$(CONFIG_GENERIC_IRQ_PROBE) += autoprobe.o
+ obj-$(CONFIG_IRQ_DOMAIN) += irqdomain.o
+ obj-$(CONFIG_PROC_FS) += proc.o
 diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
-index cf80e7b..380595f 100644
+index c1890bb..457ea48 100644
 --- a/kernel/irq/generic-chip.c
 +++ b/kernel/irq/generic-chip.c
-@@ -17,6 +17,16 @@
- static LIST_HEAD(gc_list);
- static DEFINE_RAW_SPINLOCK(gc_lock);
+@@ -9,6 +9,7 @@
+ #include <linux/export.h>
+ #include <linux/irqdomain.h>
+ #include <linux/interrupt.h>
++#include <linux/kconfig.h>
+ #include <linux/kernel_stat.h>
+ #include <linux/syscore_ops.h>
  
-+static void irq_reg_writel(u32 val, void __iomem *addr)
-+{
-+	writel(val, addr);
-+}
-+
-+static u32 irq_reg_readl(void __iomem *addr)
-+{
-+	return readl(addr);
-+}
-+
- /**
-  * irq_gc_noop - NOOP function
-  * @d: irq_data
+@@ -19,7 +20,14 @@ static DEFINE_RAW_SPINLOCK(gc_lock);
+ 
+ static int is_big_endian(struct irq_chip_generic *gc)
+ {
+-	return !!(gc->domain->gc->gc_flags & IRQ_GC_BE_IO);
++	if (IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP) &&
++	    !IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP_BE))
++		return 0;
++	else if (IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP_BE) &&
++		 !IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP))
++		return 1;
++	else
++		return !!(gc->domain->gc->gc_flags & IRQ_GC_BE_IO);
+ }
+ 
+ static void irq_reg_writel(struct irq_chip_generic *gc,
 -- 
 2.1.1
