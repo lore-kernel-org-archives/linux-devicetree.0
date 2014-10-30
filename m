@@ -1,150 +1,159 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 2/5] ARM: dtsi: sunxi: add common VBUS regulator
-Date: Thu, 30 Oct 2014 17:41:25 +0100
-Message-ID: <20141030164125.GO21251@lukather>
-References: <cover.1414444953.git.rbyshko@gmail.com>
- <210cc2a03d43e3d65b08f302b3b32663044ad94f.1414444953.git.rbyshko@gmail.com>
- <20141028215137.GG9255@lukather>
- <CAMXmWBmU0j_tf_fseDP5p527SaO=iLB-=fKp1PCvE9J6FQk6dw@mail.gmail.com>
+From: Emil Medve <Emilian.Medve@Freescale.com>
+Subject: Re: [PATCH 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
+Date: Thu, 30 Oct 2014 11:45:07 -0500
+Message-ID: <54526B13.3010704@Freescale.com>
+References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
+ <EA33D307-CCDA-4A30-9386-46FA832FE0CA@codeaurora.org>
+ <1414519738.23458.84.camel__4795.38602890006$1414521743$gmane$org@snotra.buserror.net>
+ <54515ECB.70404@Freescale.com>
+ <1414620996.23458.141.camel__29590.7804662876$1414621051$gmane$org@snotra.buserror.net>
+ <5451BF49.6050106@Freescale.com>
+ <1414680683.23458.148.camel__4514.07629666409$1414680744$gmane$org@snotra.buserror.net>
+ <54526521.1090601@Freescale.com>
+ <1414686590.23458.151.camel__44619.4786033176$1414686664$gmane$org@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uGrbifh0UoBBidu/"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMXmWBmU0j_tf_fseDP5p527SaO=iLB-=fKp1PCvE9J6FQk6dw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roman Byshko <rbyshko@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1414686590.23458.151.camel__44619.4786033176$1414686664$gmane$org@snotra.buserror.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Scott Wood <scottwood@Freescale.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Geoff.Thorpe@Freescale.com, corbet@lwn.net, linux-doc@vger.kernel.org, linuxppc-dev@ozlabs.org, robh+dt@kernel.org, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Scott,
 
---uGrbifh0UoBBidu/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Wed, Oct 29, 2014 at 09:13:50PM +0100, Roman Byshko wrote:
-> Hi Maxime,
+On 10/30/2014 11:29 AM, Scott Wood wrote:
+> On Thu, 2014-10-30 at 11:19 -0500, Emil Medve wrote:
+>> Hello Scott,
+>>
+>>
+>> On 10/30/2014 09:51 AM, Scott Wood wrote:
+>>> On Wed, 2014-10-29 at 23:32 -0500, Emil Medve wrote:
+>>>> Hello Scott,
+>>>>
+>>>>
+>>>> On 10/29/2014 05:16 PM, Scott Wood wrote:
+>>>>> On Wed, 2014-10-29 at 16:40 -0500, Emil Medve wrote:
+>>>>>> Hello Scott,
+>>>>>>
+>>>>>>
+>>>>>> On 10/28/2014 01:08 PM, Scott Wood wrote:
+>>>>>>> On Tue, 2014-10-28 at 09:36 -0500, Kumar Gala wrote:
+>>>>>>>> On Oct 22, 2014, at 9:09 AM, Emil Medve <Emilian.Medve@freesca=
+le.com> wrote:
+>>>>>>>>
+>>>>>>>>> The Buffer Manager is part of the Data-Path Acceleration Arch=
+itecture (DPAA).
+>>>>>>>>> BMan supports hardware allocation and deallocation of buffers=
+ belonging to
+>>>>>>>>> pools originally created by software with configurable deplet=
+ion thresholds.
+>>>>>>>>> This binding covers the CCSR space programming model
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
+>>>>>>>>> Change-Id: I3ec479bfb3c91951e96902f091f5d7d2adbef3b2
+>>>>>>>>> ---
+>>>>>>>>> .../devicetree/bindings/powerpc/fsl/bman.txt       | 98 +++++=
++++++++++++++++++
+>>>>>>>>> 1 file changed, 98 insertions(+)
+>>>>>>>>> create mode 100644 Documentation/devicetree/bindings/powerpc/=
+fsl/bman.txt
+>>>>>>>>
+>>>>>>>> Should these really be in bindings/powerpc/fsl, aren=E2=80=99t=
+ you guys using this on ARM SoCs as well?
+>>>>>>>
+>>>>>>> The hardware on the ARM SoCs is different enough that I'm not s=
+ure the
+>>>>>>> same binding will cover it.  That said, putting things under <a=
+rch>
+>>>>>>> should be a last resort if nowhere else fits.
+>>>>>>
+>>>>>> OTC started ported the driver to the the ARM SoC and the feedbac=
+k has
+>>>>>> been that the driver needed minimal changes. The IOMMU has been =
+the only
+>>>>>> area of concern, and a small change to the binding has been sugg=
+ested
+>>>>>
+>>>>> Do we need something in the binding to indicate device endianness=
+?
+>>>>
+>>>> As I said, I didn't have enough exposure to the ARM SoC so I can't
+>>>> answer that
+>>>>
+>>>>> If this binding is going to continue to be relevant to future DPA=
+A
+>>>>> generations, I think we really ought to deal with the possibility=
+ that
+>>>>> there is more than one datapath instance
+>>>>
+>>>> I'm unsure how relevant this will be going forward. In LS2 B/QMan =
+is
+>>>> abstracted/hidden away behind the MC (firmware).
+>>>
+>>> This is why I was wondering whether the binding would be at all the
+>>> same...
+>>>
+>>>>  I wouldn't over-engineer this without a clear picture of what mul=
+tiple
+>>>> data-paths per SoC even means at this point
+>>>
+>>> I don't think it's over-engineering.  Assuming only one instance of
+>>> something is generally sloppy engineering.  Linux doesn't need to
+>>> actually pay attention to it until and unless it becomes necessary,=
+ but
+>>> it's good to have the information in the device tree up front.
+>>
+>> I asked around and the "multiple data-path SoC" seems to be at this
+>> point a speculation. It seems unclear how would it work, what
+>> requirements/problems it would address/solve, what programming inter=
+face
+>> it would have. I'm not sure what do you suggest we do
+>>
+>> In order to reduce the sloppiness of this binding. I'll add a
+>> memory-region phandle to connect each B/QMan node to their
+>> reserved-memory node
 >=20
-> thank you for the review!
->=20
-> On Tue, Oct 28, 2014 at 10:51 PM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > On Mon, Oct 27, 2014 at 10:43:02PM +0100, Roman Byshko wrote:
-> >> Until now the regulator nodes for powering USB VBUS
-> >> existed only for the two host controllers. Now the regulator
-> >> is added for USB OTG too.
-> >> ---
-> >>  arch/arm/boot/dts/sunxi-common-regulators.dtsi | 19 +++++++++++++++++=
-++
-> >>  1 file changed, 19 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/sunxi-common-regulators.dtsi b/arch/arm=
-/boot/dts/sunxi-common-regulators.dtsi
-> >> index c9c5b10..f521672 100644
-> >> --- a/arch/arm/boot/dts/sunxi-common-regulators.dtsi
-> >> +++ b/arch/arm/boot/dts/sunxi-common-regulators.dtsi
-> >> @@ -21,6 +21,13 @@
-> >>                               allwinner,pull =3D <0>;
-> >>                       };
-> >>
-> >> +                     usb0_vbus_pin_a: usb0_vbus_pin@0 {
-> >> +                             allwinner,pins =3D "PB9";
-> >> +                             allwinner,function =3D "gpio_out";
-> >> +                             allwinner,drive =3D <0>;
-> >> +                             allwinner,pull =3D <0>;
-> >> +                     };
-> >> +
-> >>                       usb1_vbus_pin_a: usb1_vbus_pin@0 {
-> >>                               allwinner,pins =3D "PH6";
-> >>                               allwinner,function =3D "gpio_out";
-> >> @@ -49,6 +56,18 @@
-> >>               status =3D "disabled";
-> >>       };
-> >>
-> >> +     reg_usb0_vbus: usb0-vbus {
-> >> +             compatible =3D "regulator-fixed";
-> >> +             pinctrl-names =3D "default";
-> >> +             pinctrl-0 =3D <&usb0_vbus_pin_a>;
-> >> +             regulator-name =3D "usb0-vbus";
-> >> +             regulator-min-microvolt =3D <5000000>;
-> >> +             regulator-max-microvolt =3D <5000000>;
-> >> +             enable-active-high;
-> >> +             gpio =3D <&pio 1 9 0>;
-> >> +             status =3D "disabled";
-> >> +     };
-> >
-> > We're using these regulators because a huuuge majority of the boards
-> > out there, regardless of their SoC, are using the same GPIO to drive
-> > the same regulator. Is this the case here? What board have you looked
-> > at?
->=20
-> Currently I'm developing and testing for Cubietruck. I also have a few
-> other boards (with different SoC), I will add corresponding DT nodes
-> for them later.
->=20
-> As for GPIO which is used to drive the USB0 VBUS pin.
->=20
-> $ git remote show origin
-> * remote origin
->   Fetch URL: https://github.com/linux-sunxi/sunxi-boards.git
->   Push  URL: https://github.com/linux-sunxi/sunxi-boards.git
-> ...
-> $ grep -A7 usbc0 -r . | grep usb_drv_vbus_gpio | grep port | sort |
-> cut -d: -f2 | cut -d "<" -f1 | sort | uniq -c
->       1 PA16
->       1 PA17
->      67 PB09
->       4 PB10
->       1 PB9
->       1 PC17
->       1 PD25
->       4 PG11
->      21 PG12
->       1 PG13
->       1 PH17
->       4 power4
->=20
-> So PB09 is most often used. PG12 is used on (alsmost always) A13. So
-> propose to make PB09 default, then override it in sun5i-a13.dtsi and
-> later in board dts file if needed.
->=20
-> Cubietruck uses PH17. That is why I override PB09 in its dts file.
->=20
-> Sounds good?
+> Thanks, that's the sort of thing I was looking for.  There should als=
+o
+> be a connection from the portals to the relevant bqman node
 
-It does :)
+Nothing in the current programing model requires a portal to know its
+B/QMan "parent". Should I add a phandle of sorts anyway?
 
-Thanks!
-Maxime
+> though we
+> need to deal with the possibility that the bqman node may not be pres=
+ent
+> (e.g. in a vm guest).
+>=20
+>>>>> by having phandles and/or a parent container to connect the relat=
+ed
+>>>>> components.
+>>>>
+>>>> Connecting the related components is beyond the scope of this bind=
+ing.
+>>>> It will soon hit the e-mail list(s) as part of upstreaming the Eth=
+ernet
+>>>> driver
+>>>
+>>> So you want us to merge this binding without being told how this wo=
+rks?
+>>
+>> This binding stands on its own and each block (B/QMan) can be used f=
+or
+>> some useful purpose by itself. All other blocks/applications that us=
+e
+>> the B/QMan use the same basic interface acquire/release a "buffer" a=
+nd
+>> enqueue/dequeue a "packet". I'm not sure what you feel I didn't shar=
+e
+>=20
+> So there's no hardware connection between the bman and qman themselve=
+s?
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Not a single one
 
---uGrbifh0UoBBidu/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUUmo1AAoJEBx+YmzsjxAgPtoQAKADIXEYk73Ie2hr01b7S6Sv
-OzUtqeCZ0wq7mvKVlu0Lw7m4MeneN9o5jOvpBYvv2W9PetAFgHaeOMIDTslATmLo
-3hnzc7QFd30k0i3rvSqoRT8avFMvib7Ggf8WLLiRigoe5gXZJmnsNJCb0EPszshK
-WKgaQOu+2IIK+DyI5+Z7SQIJmYxkGvitZ2cegn6Bch0JLX+92pZJmjSXPlmCT6PU
-Bgkt4YNDmM0Y1AkGLrIhDLQblMvJPBpTFuNGWkQmrTzuuLGkoWuTeC/1rWk51aOF
-y3x+b0dOCQJDZT+oa/n0yBoaPQKnP8zUCKOST4SO2xQTjZIGL9MmSc0u9bgS2oud
-QySBp3Op1sHqnkC2G8IeWfzNM9T+aD9oJTipuPkAjWlWZaRP/6tLLlX3aaLyu8Ew
-kwKXXux7o6xzh/EfCMDHBumnHEeS6XCeVCUYXAyxpHLjX3ZXIcz25rUGnz0gdUMF
-jdKAolml0HhLgwlhNMoH9krTN3vkQCAyn0t9j0OEUGjWkSzJBVkO7NaObuKOZZjm
-Xzpkt0PCiZ5/2Jpx3CCFQBQ2hGQEj4DbNnQGzRHngMJTa82mkSAZLMw69GqQGk/b
-Aczp74jfEMnv2AOchdiOxgN3FzZc+xHCoPwe/EI3LYT1jzVRZM+It4R8UxBifxgp
-Y4BlOyI3Cta4nn5ekGqP
-=PGnK
------END PGP SIGNATURE-----
-
---uGrbifh0UoBBidu/--
+Cheers,
