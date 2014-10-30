@@ -1,179 +1,105 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH] mmc: dw_mmc: add support for the other bit of sdio
- interrupt
-Date: Thu, 30 Oct 2014 20:17:58 +0900
-Message-ID: <54521E66.2080300@samsung.com>
-References: <1414635679-12565-1-git-send-email-addy.ke@rock-chips.com>
- <1414666240-16782-1-git-send-email-addy.ke@rock-chips.com>
- <CAPDyKFqgNmLbbJpATCqwu0R65xuf=TKP0+pjskGj4xZOjXN8Hw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <CAPDyKFqgNmLbbJpATCqwu0R65xuf=TKP0+pjskGj4xZOjXN8Hw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Addy Ke <addy.ke@rock-chips.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Doug Anderson <dianders@chromium.org>, Sonny Rao <sonnyrao@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infradead.org, zhenfu
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v3 00/14] regulator: max77686: Add GPIO control
+Date: Thu, 30 Oct 2014 12:20:39 +0100
+Message-ID: <1414668053-31370-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/30/2014 08:11 PM, Ulf Hansson wrote:
-> On 30 October 2014 11:50, Addy Ke <addy.ke@rock-chips.com> wrote:
->> The bit of sdio interrupt is 16 in designware implementation,
->> but it is 24 in RK3288. This patch add sdio_id0 for the number
->> of slot0 in the SDIO interrupt registers, which can be set in
->> platform DT table, such as:
->> - rockchip,sdio-interrupt-slot0 = <8>;
-> 
-> No, this shouldn't be information in DT.
-> 
-> Instead this can be kept in the driver, depending on what version of
-> the mmc controller that is being used. Right!?
+Hi,
 
-sdio-interrupt slot doesn't depend on IP version.
-maybe it depends on rock-chip board.
 
-Best Regards,
-Jaehoon Chung
+Patches touching max77802 were not tested on hardware.
+I am kindly asking for testing it because I don't have the board
+with Maxim 77802.
 
-> 
-> Kind regards
-> Uffe
-> 
->>
->> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
->> ---
->>  drivers/mmc/host/dw_mmc-rockchip.c | 13 +++++++++++++
->>  drivers/mmc/host/dw_mmc.c          | 12 +++++++-----
->>  drivers/mmc/host/dw_mmc.h          |  2 ++
->>  include/linux/mmc/dw_mmc.h         |  3 +++
->>  4 files changed, 25 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
->> index f0c2cb1..54655e7 100644
->> --- a/drivers/mmc/host/dw_mmc-rockchip.c
->> +++ b/drivers/mmc/host/dw_mmc-rockchip.c
->> @@ -65,6 +65,18 @@ static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
->>         }
->>  }
->>
->> +static int dw_mci_rk3288_parse_dt(struct dw_mci *host)
->> +{
->> +       struct device_node *np = host->dev->of_node;
->> +       int sdio_id0;
->> +
->> +       if (!of_property_read_u32(np, "rockchip,sdio-interrupt-slot0",
->> +                                 &sdio_id0))
->> +               host->sdio_id0 = sdio_id0;
->> +
->> +       return 0;
->> +}
->> +
->>  static const struct dw_mci_drv_data rk2928_drv_data = {
->>         .prepare_command        = dw_mci_rockchip_prepare_command,
->>  };
->> @@ -73,6 +85,7 @@ static const struct dw_mci_drv_data rk3288_drv_data = {
->>         .prepare_command        = dw_mci_rockchip_prepare_command,
->>         .set_ios                = dw_mci_rk3288_set_ios,
->>         .setup_clock    = dw_mci_rk3288_setup_clock,
->> +       .parse_dt       = dw_mci_rk3288_parse_dt,
->>  };
->>
->>  static const struct of_device_id dw_mci_rockchip_match[] = {
->> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
->> index 69f0cc6..2ea7467 100644
->> --- a/drivers/mmc/host/dw_mmc.c
->> +++ b/drivers/mmc/host/dw_mmc.c
->> @@ -819,7 +819,7 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
->>
->>                 /* enable clock; only low power if no SDIO */
->>                 clk_en_a = SDMMC_CLKEN_ENABLE << slot->id;
->> -               if (!(mci_readl(host, INTMASK) & SDMMC_INT_SDIO(slot->id)))
->> +               if (!(mci_readl(host, INTMASK) & SDMMC_INT_SDIO(slot->sdio_id)))
->>                         clk_en_a |= SDMMC_CLKEN_LOW_PWR << slot->id;
->>                 mci_writel(host, CLKENA, clk_en_a);
->>
->> @@ -1180,10 +1180,10 @@ static void dw_mci_enable_sdio_irq(struct mmc_host *mmc, int enb)
->>                 dw_mci_disable_low_power(slot);
->>
->>                 mci_writel(host, INTMASK,
->> -                          (int_mask | SDMMC_INT_SDIO(slot->id)));
->> +                          (int_mask | SDMMC_INT_SDIO(slot->sdio_id)));
->>         } else {
->>                 mci_writel(host, INTMASK,
->> -                          (int_mask & ~SDMMC_INT_SDIO(slot->id)));
->> +                          (int_mask & ~SDMMC_INT_SDIO(slot->sdio_id)));
->>         }
->>  }
->>
->> @@ -2035,8 +2035,9 @@ static irqreturn_t dw_mci_interrupt(int irq, void *dev_id)
->>                 /* Handle SDIO Interrupts */
->>                 for (i = 0; i < host->num_slots; i++) {
->>                         struct dw_mci_slot *slot = host->slot[i];
->> -                       if (pending & SDMMC_INT_SDIO(i)) {
->> -                               mci_writel(host, RINTSTS, SDMMC_INT_SDIO(i));
->> +                       if (pending & SDMMC_INT_SDIO(slot->sdio_id)) {
->> +                               mci_writel(host, RINTSTS,
->> +                                          SDMMC_INT_SDIO(slot->sdio_id));
->>                                 mmc_signal_sdio_irq(slot->mmc);
->>                         }
->>                 }
->> @@ -2206,6 +2207,7 @@ static int dw_mci_init_slot(struct dw_mci *host, unsigned int id)
->>
->>         slot = mmc_priv(mmc);
->>         slot->id = id;
->> +       slot->sdio_id = host->sdio_id0 + id;
->>         slot->mmc = mmc;
->>         slot->host = host;
->>         host->slot[id] = slot;
->> diff --git a/drivers/mmc/host/dw_mmc.h b/drivers/mmc/host/dw_mmc.h
->> index 01b99e8..3e966a9 100644
->> --- a/drivers/mmc/host/dw_mmc.h
->> +++ b/drivers/mmc/host/dw_mmc.h
->> @@ -214,6 +214,7 @@ extern int dw_mci_resume(struct dw_mci *host);
->>   *     with CONFIG_MMC_CLKGATE.
->>   * @flags: Random state bits associated with the slot.
->>   * @id: Number of this slot.
->> + * @sdio_id: Number of this slot in the SDIO interrupt registers.
->>   * @last_detect_state: Most recently observed card detect state.
->>   */
->>  struct dw_mci_slot {
->> @@ -234,6 +235,7 @@ struct dw_mci_slot {
->>  #define DW_MMC_CARD_PRESENT    0
->>  #define DW_MMC_CARD_NEED_INIT  1
->>         int                     id;
->> +       int                     sdio_id;
->>         int                     last_detect_state;
->>  };
->>
->> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
->> index 0013669..4c0d3f2 100644
->> --- a/include/linux/mmc/dw_mmc.h
->> +++ b/include/linux/mmc/dw_mmc.h
->> @@ -96,6 +96,7 @@ struct mmc_data;
->>   * @quirks: Set of quirks that apply to specific versions of the IP.
->>   * @irq_flags: The flags to be passed to request_irq.
->>   * @irq: The irq value to be passed to request_irq.
->> + * @sdio_id0: Number of slot0 in the SDIO interrupt registers.
->>   *
->>   * Locking
->>   * =======
->> @@ -193,6 +194,8 @@ struct dw_mci {
->>         bool                    vqmmc_enabled;
->>         unsigned long           irq_flags; /* IRQ flags */
->>         int                     irq;
->> +
->> +       int                     sdio_id0;
->>  };
->>
->>  /* DMA ops for Internal/External DMAC interface */
->> --
->> 1.8.3.2
->>
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
+Changes since v2
+================
+Re-work the board file support removal after Javier's comments: use
+new DT style parsing. This imposes a lot of changes.
+1. Add "of_compatible" for regulator drivers.
+2. Provide backward compatibility if such "of_compatible" is not present.
+   The driver will search for regulators node and use it as dev->of_node.
+   Everything should be bisect-friendly.
+3. New patches: 1, 2, 3, 5, 13 and 14.
+4. Because of new style DT parsing it is much easier to put "gpio"
+   properties in regulators top node (not in each regulator).
+   This will be also new-gpio-lib friendly.
 
+Changes since v1
+================
+1. Add patch: 1/8 "regulator: max77686: Consistently index opmode
+   array by rdev id".
+2. Remove patch "regulator: max77686: Make regulator_desc array
+   const" (applied).
+3. Re-work patches removing from regulators board file support (2/8
+   and 3/8). Parse regulators with of_regulator_match() at once, remove
+   num_regulators.
+4. Patch 4/8: Add depends on OF to mfd/Kconfig. Add Javier's
+   reviewed-by.
+5. Patch 5/8: Add Javier's reviewed-by.
+6. Patch 6/8: Add depends on GPIOLIB to regulator/Kconfig. Rename
+   "external control" to "GPIO control" and "ext_control_gpios" to
+   simpler "gpios".
+   I tried to use new GPIO API but it ended with more problems
+   https://lkml.org/lkml/2014/10/29/239
+
+
+Description
+===========
+This patch helps in proper description of max77686 regulators in DTS by
+allowing to control them over GPIO. This allows removal of
+fixed regulators from DTS which duplicate the description of hardware.
+
+The first five patches are cleanups, including board support removal.
+
+The whole patchset should be taken at once.
+
+Patchset is rebased on next-20141023 AND:
+1. ARM: EXYNOS: Call regulator suspend prepare/finish
+   https://lkml.org/lkml/2014/10/20/545
+2. regulator: max77686/trats2: Disable some regulators in suspend
+   https://lkml.org/lkml/2014/10/27/280
+
+
+Best regards,
+Krzysztof
+
+*** BLURB HERE ***
+
+Krzysztof Kozlowski (14):
+  mfd: max77686/802: Map regulator driver to its own of_node
+  mfd/regulator: dt-bindings: max77686: Document of_compatible for
+    regulator
+  regulator: dt-bindings: max77802: Document of_compatible for regulator
+  regulator: max77686: Consistently index opmode array by rdev id
+  regulator: max77802: Don't ignore return value of current opmode
+  regulator: max77802: Remove support for board files
+  regulator: max77686: Remove support for board files
+  mfd: max77686/802: Remove support for board files
+  regulator: max77686: Initialize opmode explicitly to normal mode
+  regulator: max77686: Add GPIO control
+  mfd/regulator: dt-bindings: max77686: Document gpio properties
+  ARM: dts: exynos4412-trats: Switch max77686 regulators to GPIO control
+  ARM: dts: exynos5420-peach: Update to new max77802 regulator
+    compatible
+  ARM: dts: exynos5800-peach: Update to new max77802 regulator
+    compatible
+
+ Documentation/devicetree/bindings/mfd/max77686.txt |  16 +-
+ .../devicetree/bindings/regulator/max77802.txt     |   8 +-
+ arch/arm/boot/dts/exynos4412-trats2.dts            |  28 +---
+ arch/arm/boot/dts/exynos5420-peach-pit.dts         |   2 +
+ arch/arm/boot/dts/exynos5800-peach-pi.dts          |   2 +
+ drivers/mfd/Kconfig                                |   1 +
+ drivers/mfd/max77686.c                             |  33 +---
+ drivers/regulator/max77686.c                       | 186 +++++++++++++--------
+ drivers/regulator/max77802.c                       | 116 +++++--------
+ include/linux/mfd/max77686-private.h               |   1 -
+ include/linux/mfd/max77686.h                       |  28 ----
+ 11 files changed, 200 insertions(+), 221 deletions(-)
+
+-- 
+1.9.1
