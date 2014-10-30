@@ -1,7 +1,7 @@
 From: Huang Rui <ray.huang@amd.com>
-Subject: [PATCH v4 20/20] usb: dwc3: make HIRD threshold configurable
-Date: Thu, 30 Oct 2014 18:08:45 +0800
-Message-ID: <1414663725-2195-21-git-send-email-ray.huang@amd.com>
+Subject: [PATCH v4 17/20] PCI: Add support for AMD Nolan USB3 DRD
+Date: Thu, 30 Oct 2014 18:08:42 +0800
+Message-ID: <1414663725-2195-18-git-send-email-ray.huang@amd.com>
 References: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,160 +12,27 @@ To: Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn H
 Cc: Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Huang Rui <ray.huang@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-HIRD threshold should be configurable by different platforms.
+This patch adds PCI id for USB3 Dual-Role Device of AMD Nolan (NL) SoC.
+It will be used for PCI quirks and DWC3 device driver.
 
->From DesignWare databook:
-When HIRD_Threshold[4] is set to 1b1 and HIRD value is greater than or
-equal to the value in HIRD_Threshold[3:0], dwc3 asserts output signals
-utmi_l1_suspend_n to put PHY into Deep Low-Power mode in L1.
-
-When HIRD_Threshold[4] is set to 1b0 or the HIRD value is less than
-HIRD_Threshold[3:0], dwc3 asserts output signals utmi_sleep_n on L1.
-
+Signed-off-by: Jason Chang <jason.chang@amd.com>
 Signed-off-by: Huang Rui <ray.huang@amd.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- Documentation/devicetree/bindings/usb/dwc3.txt |  3 +++
- drivers/usb/dwc3/core.c                        | 17 +++++++++++++++++
- drivers/usb/dwc3/core.h                        |  6 ++++++
- drivers/usb/dwc3/gadget.c                      |  6 +-----
- drivers/usb/dwc3/platform_data.h               |  3 +++
- 5 files changed, 30 insertions(+), 5 deletions(-)
+ include/linux/pci_ids.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index feaf2c8..5b99755 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -34,6 +34,9 @@ Optional properties:
- 			LTSSM during USB3 Compliance mode.
-  - snps,dis_u3_susphy_quirk: when set core will disable USB3 suspend phy.
-  - snps,dis_u2_susphy_quirk: when set core will disable USB2 suspend phy.
-+ - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
-+			utmi_l1_suspend_n, false when asserts utmi_sleep_n
-+ - snps,hird-threshold: HIRD threshold
- 
- This is usually a subnode to DWC3 glue to which it is connected.
- 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index a28ed1c..f4172ab 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -729,6 +729,7 @@ static int dwc3_probe(struct platform_device *pdev)
- 	struct dwc3		*dwc;
- 	u8			lpm_nyet_threshold;
- 	u8			tx_de_emphasis;
-+	u8			hird_threshold;
- 
- 	int			ret;
- 
-@@ -790,12 +791,22 @@ static int dwc3_probe(struct platform_device *pdev)
- 	/* default to -3.5dB de-emphasis */
- 	tx_de_emphasis = 1;
- 
-+	/*
-+	 * defalut to assert utmi_sleep_n and use maximum allowed HIRD
-+	 * threshold value of 0b1100
-+	 */
-+	hird_threshold = 12;
-+
- 	if (node) {
- 		dwc->maximum_speed = of_usb_get_maximum_speed(node);
- 		dwc->has_lpm_erratum = of_property_read_bool(node,
- 				"snps,has-lpm-erratum");
- 		of_property_read_u8(node, "snps,lpm-nyet-threshold",
- 				&lpm_nyet_threshold);
-+		dwc->is_utmi_l1_suspend = of_property_read_bool(node,
-+				"snps,is-utmi-l1-suspend");
-+		of_property_read_u8(node, "snps,hird-threshold",
-+				&hird_threshold);
- 
- 		dwc->needs_fifo_resize = of_property_read_bool(node,
- 				"tx-fifo-resize");
-@@ -831,6 +842,9 @@ static int dwc3_probe(struct platform_device *pdev)
- 		dwc->has_lpm_erratum = pdata->has_lpm_erratum;
- 		if (pdata->lpm_nyet_threshold)
- 			lpm_nyet_threshold = pdata->lpm_nyet_threshold;
-+		dwc->is_utmi_l1_suspend = pdata->is_utmi_l1_suspend;
-+		if (pdata->hird_threshold)
-+			hird_threshold = pdata->hird_threshold;
- 
- 		dwc->needs_fifo_resize = pdata->tx_fifo_resize;
- 		dwc->dr_mode = pdata->dr_mode;
-@@ -858,6 +872,9 @@ static int dwc3_probe(struct platform_device *pdev)
- 	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
- 	dwc->tx_de_emphasis = tx_de_emphasis;
- 
-+	dwc->hird_threshold = hird_threshold
-+		| (dwc->is_utmi_l1_suspend << 4);
-+
- 	ret = dwc3_core_get_phy(dwc);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 8b6c308..2c90139 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -675,12 +675,16 @@ struct dwc3_scratchpad_array {
-  * @test_mode: true when we're entering a USB test mode
-  * @test_mode_nr: test feature selector
-  * @lpm_nyet_threshold: LPM NYET response threshold
-+ * @hird_threshold: HIRD threshold
-  * @delayed_status: true when gadget driver asks for delayed status
-  * @ep0_bounced: true when we used bounce buffer
-  * @ep0_expect_in: true when we expect a DATA IN transfer
-  * @has_hibernation: true when dwc3 was configured with Hibernation
-  * @has_lpm_erratum: true when core was configured with LPM Erratum. Note that
-  *			there's now way for software to detect this in runtime.
-+ * @is_utmi_l1_suspend: the core asserts output signal
-+ * 	0	- utmi_sleep_n
-+ * 	1	- utmi_l1_suspend_n
-  * @is_selfpowered: true when we are selfpowered
-  * @is_fpga: true when we are using the FPGA board
-  * @needs_fifo_resize: not all users might want fifo resizing, flag it
-@@ -797,12 +801,14 @@ struct dwc3 {
- 	u8			test_mode;
- 	u8			test_mode_nr;
- 	u8			lpm_nyet_threshold;
-+	u8			hird_threshold;
- 
- 	unsigned		delayed_status:1;
- 	unsigned		ep0_bounced:1;
- 	unsigned		ep0_expect_in:1;
- 	unsigned		has_hibernation:1;
- 	unsigned		has_lpm_erratum:1;
-+	unsigned		is_utmi_l1_suspend:1;
- 	unsigned		is_selfpowered:1;
- 	unsigned		is_fpga:1;
- 	unsigned		needs_fifo_resize:1;
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 2c0d19a4..303bb67 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2291,11 +2291,7 @@ static void dwc3_gadget_conndone_interrupt(struct dwc3 *dwc)
- 		reg = dwc3_readl(dwc->regs, DWC3_DCTL);
- 		reg &= ~(DWC3_DCTL_HIRD_THRES_MASK | DWC3_DCTL_L1_HIBER_EN);
- 
--		/*
--		 * TODO: This should be configurable. For now using
--		 * maximum allowed HIRD threshold value of 0b1100
--		 */
--		reg |= DWC3_DCTL_HIRD_THRES(12);
-+		reg |= DWC3_DCTL_HIRD_THRES(dwc->hird_threshold);
- 
- 		/*
- 		 * When dwc3 revisions >= 2.40a, LPM Erratum is enabled and
-diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform_data.h
-index 245300b..a3a3b6d 100644
---- a/drivers/usb/dwc3/platform_data.h
-+++ b/drivers/usb/dwc3/platform_data.h
-@@ -25,6 +25,9 @@ struct dwc3_platform_data {
- 	enum usb_dr_mode dr_mode;
- 	bool tx_fifo_resize;
- 
-+	unsigned is_utmi_l1_suspend:1;
-+	u8 hird_threshold;
-+
- 	u8 lpm_nyet_threshold;
- 
- 	unsigned disable_scramble_quirk:1;
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 1fa99a3..5decad7 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -562,6 +562,7 @@
+ #define PCI_DEVICE_ID_AMD_8131_BRIDGE	0x7450
+ #define PCI_DEVICE_ID_AMD_8131_APIC	0x7451
+ #define PCI_DEVICE_ID_AMD_8132_BRIDGE	0x7458
++#define PCI_DEVICE_ID_AMD_NL_USB	0x7912
+ #define PCI_DEVICE_ID_AMD_CS5535_IDE    0x208F
+ #define PCI_DEVICE_ID_AMD_CS5536_ISA    0x2090
+ #define PCI_DEVICE_ID_AMD_CS5536_FLASH  0x2091
 -- 
 1.9.1
