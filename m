@@ -1,180 +1,107 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCHv3 1/5] arm: socfpga: Enable L2 Cache ECC on startup.
-Date: Thu, 30 Oct 2014 10:32:07 -0500
-Message-ID: <1414683131-20786-2-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCHv3 5/5] arm: dts: Add Altera L2 Cache and OCRAM EDAC
+Date: Thu, 30 Oct 2014 10:32:11 -0500
+Message-ID: <1414683131-20786-6-git-send-email-tthayer@opensource.altera.com>
 References: <1414683131-20786-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1414683131-20786-1-git-send-email-tthayer@opensource.altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-doc-owner@vger.kernel.org
 To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@opensource.altera.com>
 
-This patch enables the ECC for L2 cache on machine
-startup.  The ECC has to be enabled before data is
-is stored in memory otherwise the ECC will fail on
-reads.
+Adding the device tree entries and bindings needed to support
+the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
+an earlier patch to declare and setup On-chip RAM properly.
+http://www.spinics.net/lists/devicetree/msg51117.html
 
 Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
-v2: Split OCRAM initialization into separate patch.
+v2: Remove OCRAM declaration and reference prior patch.
 
-v3: No change
+v3: No Change
 ---
- MAINTAINERS                      |    1 +
- arch/arm/mach-socfpga/Makefile   |    1 +
- arch/arm/mach-socfpga/l2_cache.c |   44 ++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-socfpga/l2_cache.h |   28 ++++++++++++++++++++++++
- arch/arm/mach-socfpga/socfpga.c  |    5 ++++-
- 5 files changed, 78 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/mach-socfpga/l2_cache.c
- create mode 100644 arch/arm/mach-socfpga/l2_cache.h
+ .../bindings/arm/altera/socfpga-l2-edac.txt        |   15 +++++++++++++++
+ .../bindings/arm/altera/socfpga-ocram-edac.txt     |   16 ++++++++++++++++
+ arch/arm/boot/dts/socfpga.dtsi                     |   15 ++++++++++++++-
+ 3 files changed, 45 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ee1bc5b..d0c7752 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1407,6 +1407,7 @@ ARM/SOCFPGA EDAC SUPPORT
- M:	Thor Thayer <tthayer@opensource.altera.com>
- S:	Maintained
- F:	drivers/edac/altera_edac.
-+F:	arch/arm/mach-socfpga/l2_cache.*
- 
- ARM/STI ARCHITECTURE
- M:	Srinivas Kandagatla <srinivas.kandagatla@gmail.com>
-diff --git a/arch/arm/mach-socfpga/Makefile b/arch/arm/mach-socfpga/Makefile
-index 6dd7a93..142609e 100644
---- a/arch/arm/mach-socfpga/Makefile
-+++ b/arch/arm/mach-socfpga/Makefile
-@@ -4,3 +4,4 @@
- 
- obj-y					:= socfpga.o
- obj-$(CONFIG_SMP)	+= headsmp.o platsmp.o
-+obj-$(CONFIG_EDAC_ALTERA_L2C) += l2_cache.o
-diff --git a/arch/arm/mach-socfpga/l2_cache.c b/arch/arm/mach-socfpga/l2_cache.c
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
 new file mode 100644
-index 0000000..8e109f3
+index 0000000..35b19e3
 --- /dev/null
-+++ b/arch/arm/mach-socfpga/l2_cache.c
-@@ -0,0 +1,44 @@
-+/*
-+ * Copyright Altera Corporation (C) 2014. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include <linux/clk-provider.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-l2-edac.txt
+@@ -0,0 +1,15 @@
++Altera SoCFPGA L2 cache Error Detection and Correction [EDAC]
 +
-+#include "l2_cache.h"
++Required Properties:
++- compatible : Should be "altr,l2-edac"
++- reg : Address and size for ECC error interrupt clear registers.
++- interrupts : Should be single bit error interrupt, then double bit error
++	interrupt. Note the rising edge type.
 +
-+void socfpga_init_l2_ecc(void)
-+{
-+	struct device_node *np;
-+	void __iomem  *mapped_l2_edac_addr;
++Example:
 +
-+	np = of_find_compatible_node(NULL, NULL, "altr,l2-edac");
-+	if (!np) {
-+		pr_err("SOCFPGA: Unable to find altr,l2-edac in dtb\n");
-+		return;
-+	}
-+
-+	mapped_l2_edac_addr = of_iomap(np, 0);
-+	if (!mapped_l2_edac_addr) {
-+		pr_err("SOCFPGA: Unable to find L2 ECC mapping in dtb\n");
-+		return;
-+	}
-+
-+	/* Enable ECC */
-+	writel(0x01, mapped_l2_edac_addr);
-+
-+	pr_debug("SOCFPGA: Success Initializing L2 cache ECC\n");
-+}
-+
-diff --git a/arch/arm/mach-socfpga/l2_cache.h b/arch/arm/mach-socfpga/l2_cache.h
++	l2edac@ffd08140 {
++		compatible = "altr,l2-edac";
++		reg = <0xffd08140 0x4>;
++		interrupts = <0 36 1>, <0 37 1>;
++	};
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
 new file mode 100644
-index 0000000..58e140d
+index 0000000..31ab205
 --- /dev/null
-+++ b/arch/arm/mach-socfpga/l2_cache.h
-@@ -0,0 +1,28 @@
-+/*
-+ * Copyright Altera Corporation (C) 2014. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-ocram-edac.txt
+@@ -0,0 +1,16 @@
++Altera SoCFPGA On-Chip RAM Error Detection and Correction [EDAC]
 +
-+#ifndef MACH_SOCFPGA_L2_CACHE_H
-+#define MACH_SOCFPGA_L2_CACHE_H
++OCRAM ECC Required Properties:
++- compatible : Should be "altr,ocram-edac"
++- reg : Address and size for ECC error interrupt clear registers.
++- iram : phandle to On-Chip RAM definition.
++- interrupts : Should be single bit error interrupt, then double bit error
++	interrupt. Note the rising edge type.
 +
-+#ifdef CONFIG_EDAC_ALTERA_L2C
-+void socfpga_init_l2_ecc(void);
-+#else
-+inline void socfpga_init_l2_ecc(void)
-+{
-+}
-+#endif
++Example:
++	ocramedac@ffd08144 {
++		compatible = "altr,ocram-edac";
++		reg = <0xffd08144 0x4>;
++		iram = <&ocram>;
++		interrupts = <0 178 1>, <0 179 1>;
++	};
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 6af96ed..32c63a3 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -618,8 +618,21 @@
+ 			interrupts = <0 39 4>;
+ 		};
+ 
++		l2edac@ffd08140 {
++			compatible = "altr,l2-edac";
++			reg = <0xffd08140 0x4>;
++			interrupts = <0 36 1>, <0 37 1>;
++		};
 +
-+#endif /* #ifndef MACH_SOCFPGA_L2_CACHE_H */
-diff --git a/arch/arm/mach-socfpga/socfpga.c b/arch/arm/mach-socfpga/socfpga.c
-index adbf383..af6413a 100644
---- a/arch/arm/mach-socfpga/socfpga.c
-+++ b/arch/arm/mach-socfpga/socfpga.c
-@@ -1,5 +1,5 @@
- /*
-- *  Copyright (C) 2012 Altera Corporation
-+ *  Copyright (C) 2012;2014 Altera Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-@@ -25,6 +25,8 @@
- #include <asm/mach/map.h>
- 
- #include "core.h"
-+#include "l2_cache.h"
-+#include "ocram.h"
- 
- void __iomem *socfpga_scu_base_addr = ((void __iomem *)(SOCFPGA_SCU_VIRT_BASE));
- void __iomem *sys_manager_base_addr;
-@@ -83,6 +85,7 @@ static void __init socfpga_init_irq(void)
- {
- 	irqchip_init();
- 	socfpga_sysmgr_init();
-+	socfpga_init_l2_ecc();
- }
- 
- static void socfpga_cyclone5_restart(enum reboot_mode mode, const char *cmd)
++		ocramedac@ffd08144 {
++			compatible = "altr,ocram-edac";
++			reg = <0xffd08144 0x4>;
++			iram = <&ocram>;
++			interrupts = <0 178 1>, <0 179 1>;
++		};
++
+ 		L2: l2-cache@fffef000 {
+-			compatible = "arm,pl310-cache";
++			compatible = "arm,pl310-cache", "syscon";
+ 			reg = <0xfffef000 0x1000>;
+ 			interrupts = <0 38 0x04>;
+ 			cache-unified;
 -- 
 1.7.9.5
+
