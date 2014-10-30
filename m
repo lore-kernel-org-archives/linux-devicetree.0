@@ -1,90 +1,59 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH V2 05/15] genirq: Generic chip: Add big endian I/O
- accessors
-Date: Thu, 30 Oct 2014 13:30:04 +0100 (CET)
-Message-ID: <alpine.DEB.2.11.1410301233500.5308@nanos>
-References: <1414635488-14137-1-git-send-email-cernekee@gmail.com> <1414635488-14137-6-git-send-email-cernekee@gmail.com> <14243833.KJsSScVrGS@wuerfel>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [RFT v3 06/14] regulator: max77802: Remove support for board files
+Date: Thu, 30 Oct 2014 13:30:35 +0100
+Message-ID: <1414672235.23399.7.camel@AMDC1943>
+References: <1414668053-31370-1-git-send-email-k.kozlowski@samsung.com>
+ <1414668053-31370-7-git-send-email-k.kozlowski@samsung.com>
+ <54522615.7040002@collabora.co.uk> <1414671037.23399.2.camel@AMDC1943>
+ <54522D2C.9050002@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <14243833.KJsSScVrGS@wuerfel>
+In-reply-to: <54522D2C.9050002@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Kevin Cernekee <cernekee@gmail.com>, f.fainelli@gmail.com, jason@lakedaemon.net, ralf@linux-mips.org, lethal@linux-sh.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 30 Oct 2014, Arnd Bergmann wrote:
-> On Wednesday 29 October 2014 19:17:58 Kevin Cernekee wrote:
-> >  static LIST_HEAD(gc_list);
-> >  static DEFINE_RAW_SPINLOCK(gc_lock);
-> >  
-> > +static int is_big_endian(struct irq_chip_generic *gc)
-> > +{
-> > +       return !!(gc->domain->gc->gc_flags & IRQ_GC_BE_IO);
-> > +}
-> > +
-> >  static void irq_reg_writel(struct irq_chip_generic *gc,
-> >                            u32 val, int reg_offset)
-> >  {
-> > -       writel(val, gc->reg_base + reg_offset);
-> > +       if (is_big_endian(gc))
-> > +               iowrite32be(val, gc->reg_base + reg_offset);
-> > +       else
-> > +               writel(val, gc->reg_base + reg_offset);
-> >  }
-> >  
+On czw, 2014-10-30 at 13:21 +0100, Javier Martinez Canillas wrote:
+> Hello Krzysztof,
 > 
-> What I had in mind was to use indirect function calls instead, like
+> On 10/30/2014 01:10 PM, Krzysztof Kozlowski wrote:
+> >> 
+> >> I may be missing something but I don't understand why a compatible string
+> >> for the regulators sub-node is needed. Isn't enough to just fill the
+> >> .regulators_node field in the struct regulator_desc? e.g:
+> >> 
+> >>     .regulators_node = of_match_ptr("regulators") for max77802
+> >>     .regulators_node = of_match_ptr("voltage-regulators") for max77686
+> >> 
+> >> AFAIU this should be enough for the core to extract the init_data and will
+> >> make your change much more simpler and you can drop patches 1-3 and 13-14.
+> >> 
+> >> Or maybe I misread the regulator_of_get_init_data() function?
+> > 
+> > The regulator_of_get_init_data() searches from dev->of_node or its child
+> > node.
+> > 
+> > But dev->of_node is NULL.
+> > 
+> > That's why of_compatible is needed.
 > 
-> #ifndef irq_reg_writel
-> static inline void irq_reg_writel_le(u32 val, void __iomem *addr)
-> {
-> 	return writel(val, addr);
-> }
-> #endif
+> Yes but regulator_register() does dev = config->dev and config->dev is set
+> to config.dev = iodev->dev in the driver probe function which is the
+> pdev->dev.parent (the PMIC struct device) that has an associated of_node.
 > 
-> #ifndef irq_reg_writel_be
-> static inline void irq_reg_writel_be(u32 val, void __iomem *addr)
-> {
-> 	return iowrite32_be(val, addr);
-> }
-> #endif
-> 
-> 
-> static inline void irq_reg_writel(struct irq_chip_generic *gc, u32 val, int reg_offset)
-> {
->        if (IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP) &&
+> So, regulator_of_get_init_data() will call of_get_child_by_name() passing
+> the PMIC of_node and the sub-node name that contains the regulators. That
+> is, whatever was set in desc->regulators_node and that should be enough.
 
-That's inside of the generic irq chip, so CONFIG_GENERIC_IRQ_CHIP is
-always set when this is compiled.
+I missed that one in max77802 (in max77686: config.dev = &pdev->dev).
+Now I wonder if it is proper to attach regulators to driver's parent
+device. Consider regulator_register, around line 3640:
+	rdev->dev.parent = dev;
+The parent of regulators will be equal to parent of regulator driver -
+main MFD driver.
 
->            !IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP_BE))
-> 		return irq_reg_writel_le(val, gc->reg_base + reg_offset);
-> 
->        if (IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP) &&
->            !IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP_BE))
-
-	     s/!// ?
-
-> 		return irq_reg_writel_be(val, gc->reg_base + reg_offset);
-
-I don't think the above will cover all combinations.
-
-..._CHIP_BE	...CHIP_LE
-N		N			; Default behaviour: readl/writel
-Y		N			; ioread/write32be
-N		Y			; Default behaviour: readl/writel
-Y		Y			; Runtime selected
-
-> 	return gc->writel(val, gc->reg_base + reg_offset);
-> }
-> 
-> This would take the condition out of the callers.
-
-So you trade a conditional for an indirect call. Not sure what's more
-expensive. The indirect call is definitely a smaller text footprint,
-so we should opt for this.
-
-Thanks,
-
-	tglx
+Best regards,
+Krzysztof
