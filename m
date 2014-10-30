@@ -1,203 +1,120 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 1/3] ARM: mediatek: Add Reset Controller for MediaTek SoC
-Date: Thu, 30 Oct 2014 13:39:18 +0100
-Message-ID: <CABuKBeLW0n3AM+EwmFxqjj_-Xt4cd0-Vc=qc8bZnWDkvgGoxMw@mail.gmail.com>
-References: <1414638733-10080-1-git-send-email-flora.fu@mediatek.com>
-	<1414638733-10080-2-git-send-email-flora.fu@mediatek.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V2 05/15] genirq: Generic chip: Add big endian I/O accessors
+Date: Thu, 30 Oct 2014 13:40:03 +0100
+Message-ID: <2056740.mEUKBXLZZT@wuerfel>
+References: <1414635488-14137-1-git-send-email-cernekee@gmail.com> <14243833.KJsSScVrGS@wuerfel> <alpine.DEB.2.11.1410301233500.5308@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414638733-10080-2-git-send-email-flora.fu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: flora.fu@mediatek.com
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.11.1410301233500.5308@nanos>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, lethal-M7jkjyW5wf5g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2014-10-30 4:12 GMT+01:00  <flora.fu@mediatek.com>:
-> From: Flora Fu <flora.fu@mediatek.com>
->
-> Add a driver in reset controller.
->
-> Signed-off-by: Flora Fu <flora.fu@mediatek.com>
-> ---
->  drivers/reset/Makefile    |   1 +
->  drivers/reset/reset-mtk.c | 149 ++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 150 insertions(+)
->  create mode 100644 drivers/reset/reset-mtk.c
->
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index 60fed3d..adcebdf 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -2,3 +2,4 @@ obj-$(CONFIG_RESET_CONTROLLER) += core.o
->  obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
->  obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
->  obj-$(CONFIG_ARCH_STI) += sti/
-> +obj-$(CONFIG_ARCH_MEDIATEK) += reset-mtk.o
-> diff --git a/drivers/reset/reset-mtk.c b/drivers/reset/reset-mtk.c
-> new file mode 100644
-> index 0000000..e2211f7
-> --- /dev/null
-> +++ b/drivers/reset/reset-mtk.c
-> @@ -0,0 +1,149 @@
-> +/*
-> + * Copyright (c) 2014 MediaTek Inc.
-> + * Author: Flora.Fu <flora.fu@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/slab.h>
-> +
-> +struct mt_reset_data {
+On Thursday 30 October 2014 13:30:04 Thomas Gleixner wrote:
+> On Thu, 30 Oct 2014, Arnd Bergmann wrote:
+> > On Wednesday 29 October 2014 19:17:58 Kevin Cernekee wrote:
+> > >  static LIST_HEAD(gc_list);
+> > >  static DEFINE_RAW_SPINLOCK(gc_lock);
+> > >  
+> > > +static int is_big_endian(struct irq_chip_generic *gc)
+> > > +{
+> > > +       return !!(gc->domain->gc->gc_flags & IRQ_GC_BE_IO);
+> > > +}
+> > > +
+> > >  static void irq_reg_writel(struct irq_chip_generic *gc,
+> > >                            u32 val, int reg_offset)
+> > >  {
+> > > -       writel(val, gc->reg_base + reg_offset);
+> > > +       if (is_big_endian(gc))
+> > > +               iowrite32be(val, gc->reg_base + reg_offset);
+> > > +       else
+> > > +               writel(val, gc->reg_base + reg_offset);
+> > >  }
+> > >  
+> > 
+> > What I had in mind was to use indirect function calls instead, like
+> > 
+> > #ifndef irq_reg_writel
+> > static inline void irq_reg_writel_le(u32 val, void __iomem *addr)
+> > {
+> > 	return writel(val, addr);
+> > }
+> > #endif
+> > 
+> > #ifndef irq_reg_writel_be
+> > static inline void irq_reg_writel_be(u32 val, void __iomem *addr)
+> > {
+> > 	return iowrite32_be(val, addr);
+> > }
+> > #endif
+> > 
+> > 
+> > static inline void irq_reg_writel(struct irq_chip_generic *gc, u32 val, int reg_offset)
+> > {
+> >        if (IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP) &&
+> 
+> That's inside of the generic irq chip, so CONFIG_GENERIC_IRQ_CHIP is
+> always set when this is compiled.
 
-Please rename mt_ prefixes to the prefix mtk_ to keep consistent
-naming in the kernel.
+The part that I mentioned in the other mail and omitted here is that
+I'd then build the kernel/irq/generic-chip.c file when one or both of
+CONFIG_GENERIC_IRQ_CHIP or CONFIG_GENERIC_IRQ_CHIP_BE is set.
 
-> +       struct regmap *regmap;
-> +       unsigned int resetbase;
-> +       unsigned int size;
-> +       struct reset_controller_dev rcdev;
-> +};
-> +
-> +static int mt_reset_assert(struct reset_controller_dev *rcdev,
-> +                             unsigned long id)
-> +{
-> +       struct regmap *regmap;
-> +       unsigned addr;
-> +       unsigned mask;
-> +       struct mt_reset_data *data = container_of(rcdev,
-> +                                                    struct mt_reset_data,
-> +                                                    rcdev);
-> +       regmap = data->regmap;
-> +       addr = data->resetbase + ((id / 32) << 2);
-> +       mask = BIT(id % 32);
-> +
-> +       return regmap_update_bits(regmap, addr, mask, mask);
-> +}
-> +
-> +static int mt_reset_deassert(struct reset_controller_dev *rcdev,
-> +                               unsigned long id)
-> +{
-> +       struct regmap *regmap;
-> +       unsigned addr;
-> +       unsigned mask;
-> +       struct mt_reset_data *data = container_of(rcdev,
-> +                                                    struct mt_reset_data,
-> +                                                    rcdev);
-> +
-> +       regmap = data->regmap;
-> +       addr = data->resetbase + ((id / 32) << 2);
-> +       mask = BIT(id % 32);
-> +
-> +       return regmap_update_bits(regmap, addr, mask, ~mask);
-> +}
-> +
-> +static struct reset_control_ops mt_reset_ops = {
-> +       .assert = mt_reset_assert,
-> +       .deassert = mt_reset_deassert,
-> +};
-> +
-> +static int mt_reset_probe(struct platform_device *pdev)
-> +{
-> +       struct mt_reset_data *data;
-> +       struct device_node *np = pdev->dev.of_node;
-> +       unsigned int resetbase;
-> +       unsigned int width;
-> +       int ret;
-> +
-> +       data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       data->regmap = syscon_regmap_lookup_by_phandle(np,
-> +               "mediatek,syscon-reset");
-> +       if (IS_ERR(data->regmap)) {
-> +               dev_err(&pdev->dev, "couldn't get syscon-reset regmap\n");
-> +               return PTR_ERR(data->regmap);
-> +       }
-> +
-> +       ret = of_property_read_u32_index(np, "mediatek,syscon-reset", 1,
-> +               &resetbase);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "couldn't read reset base from syscon!\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       ret = of_property_read_u32_index(np, "mediatek,syscon-reset", 2,
-> +               &width);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "couldn't read reset bytes from syscon!\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       data->resetbase = resetbase;
-> +       data->size = width >> 2;
-> +       data->rcdev.owner = THIS_MODULE;
-> +       data->rcdev.nr_resets = data->size * 32;
-> +       data->rcdev.ops = &mt_reset_ops;
-> +       data->rcdev.of_node = pdev->dev.of_node;
-> +
-> +       return reset_controller_register(&data->rcdev);
-> +}
-> +
-> +static int mt_reset_remove(struct platform_device *pdev)
-> +{
-> +       struct mt_reset_data *data = platform_get_drvdata(pdev);
-> +
-> +       reset_controller_unregister(&data->rcdev);
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id mt_reset_dt_ids[] = {
-> +       { .compatible = "mediatek,reset", },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(of, mt_reset_dt_ids);
-> +
-> +static struct platform_driver mt_reset_driver = {
-> +       .probe = mt_reset_probe,
-> +       .remove = mt_reset_remove,
-> +       .driver = {
-> +               .name = "mtk-reset",
-> +               .owner = THIS_MODULE,
-> +               .of_match_table = mt_reset_dt_ids,
-> +       },
-> +};
-> +
-> +static int __init mt_reset_init(void)
-> +{
-> +       return platform_driver_register(&mt_reset_driver);
-> +}
-> +module_init(mt_reset_init);
-> +
-> +static void __exit mt_reset_exit(void)
-> +{
-> +       platform_driver_unregister(&mt_reset_driver);
-> +}
-> +module_exit(mt_reset_exit);
-> +
-> +MODULE_AUTHOR("Flora Fu <flora.fu@mediatek.com>");
-> +MODULE_DESCRIPTION("MediaTek SoC Generic Reset Controller");
-> +MODULE_LICENSE("GPL");
-> --
-> 1.8.1.1.dirty
->
+The alternative would be to introduce CONFIG_GENERIC_IRQ_CHIP_LE along
+with CONFIG_GENERIC_IRQ_CHIP_BE, which might be cleaner, but requires
+all existing 39 'select GENERIC_IRQ_CHIP' statements to be changed to
+'GENERIC_IRQ_CHIP_LE'.
+
+Either way would work.
+
+> >            !IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP_BE))
+> > 		return irq_reg_writel_le(val, gc->reg_base + reg_offset);
+> > 
+> >        if (IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP) &&
+> >            !IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP_BE))
+> 
+> 	     s/!// ?
+
+typo: I put the ! in the wrong line, sorry.
+
+> > 		return irq_reg_writel_be(val, gc->reg_base + reg_offset);
+> 
+> I don't think the above will cover all combinations.
+> 
+> ..._CHIP_BE	...CHIP_LE
+> N		N			; Default behaviour: readl/writel
+
+that would not be allowed with my approach. It should probably cause
+a compile-error if we introduce all three symbols.
+
+> Y		N			; ioread/write32be
+> N		Y			; Default behaviour: readl/writel
+> Y		Y			; Runtime selected
 
 
 
--- 
-motzblog.wordpress.com
+> > 	return gc->writel(val, gc->reg_base + reg_offset);
+> > }
+> > 
+> > This would take the condition out of the callers.
+> 
+> So you trade a conditional for an indirect call. Not sure what's more
+> expensive. The indirect call is definitely a smaller text footprint,
+> so we should opt for this.
+
+It depends on the register pressure in the caller and on the pipeline
+of the CPU. My guess was that indirect call is generally more efficient,
+but you are right that this is not obvious, and I have no reliable data
+to back up my guess.
+
+If we do the conditional, we could also just add an extra byte swap,
+instead of choosing between two function calls.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
