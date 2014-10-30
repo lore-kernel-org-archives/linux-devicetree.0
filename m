@@ -1,154 +1,88 @@
-From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/3] powerpc/dts: Factorize the clock control node
-Date: Thu, 30 Oct 2014 08:58:29 -0500
-Message-ID: <54524405.5090509@Freescale.com>
-References: <1413988937-27885-1-git-send-email-Emilian.Medve@Freescale.com>
- <1414538500.23458.125.camel@snotra.buserror.net>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [RFT v3 06/14] regulator: max77802: Remove support for board
+ files
+Date: Thu, 30 Oct 2014 15:02:41 +0100
+Message-ID: <54524501.8030604@collabora.co.uk>
+References: <1414668053-31370-1-git-send-email-k.kozlowski@samsung.com> <1414668053-31370-7-git-send-email-k.kozlowski@samsung.com> <54522615.7040002@collabora.co.uk> <1414671037.23399.2.camel@AMDC1943> <54522D2C.9050002@collabora.co.uk> <1414672235.23399.7.camel@AMDC1943> <54523224.3010407@collabora.co.uk> <1414673587.23399.13.camel@AMDC1943>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414538500.23458.125.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Cc: yuantian.tang-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1414673587.23399.13.camel@AMDC1943>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Scott,
+Hello Krzysztof,
 
-
-On 10/28/2014 06:21 PM, Scott Wood wrote:
-> On Wed, 2014-10-22 at 09:42 -0500, Emil Medve wrote:
->> Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
->> Change-Id: I25ce24a25862b4ca460164159867abefe00ccdd1
+On 10/30/2014 01:53 PM, Krzysztof Kozlowski wrote:
 > 
-> Please remove gerrit stuff prior to submitting.
-
-I did remove the bulk of it. I wanted to keep the Change-Id so I can
-easily correlate the upstream patches with the sordid internal history.
-Seems the upstream history has enough instances of 'Change-Id' for this
-not to be an issue
-
->> diff --git a/arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi
->> new file mode 100644
->> index 0000000..4871048
->> --- /dev/null
->> +++ b/arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi
->> @@ -0,0 +1,78 @@
->> +/*
->> + * QorIQ clock control device tree stub [ controller @ offset 0xe1000 ]
->> + *
->> + * Copyright 2014 Freescale Semiconductor Inc.
->> + *
->> + * Redistribution and use in source and binary forms, with or without
->> + * modification, are permitted provided that the following conditions are met:
->> + *     * Redistributions of source code must retain the above copyright
->> + *	 notice, this list of conditions and the following disclaimer.
->> + *     * Redistributions in binary form must reproduce the above copyright
->> + *	 notice, this list of conditions and the following disclaimer in the
->> + *	 documentation and/or other materials provided with the distribution.
->> + *     * Neither the name of Freescale Semiconductor nor the
->> + *	 names of its contributors may be used to endorse or promote products
->> + *	 derived from this software without specific prior written permission.
->> + *
->> + *
->> + * ALTERNATIVELY, this software may be distributed under the terms of the
->> + * GNU General Public License ("GPL") as published by the Free Software
->> + * Foundation, either version 2 of that License or (at your option) any
->> + * later version.
->> + *
->> + * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
->> + * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
->> + * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
->> + * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
->> + * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
->> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
->> + * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
->> + * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
->> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
->> + * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
->> + */
->> +
->> +global-utilities@e1000 {
->> +	compatible = "fsl,qoriq-clockgen-1.0";
->> +	ranges = <0x0 0xe1000 0x1000>;
->> +	reg = <0xe1000 0x1000>;
->> +	clock-frequency = <0>;
->> +	#address-cells = <1>;
->> +	#size-cells = <1>;
->> +
->> +	sysclk: sysclk {
->> +		#clock-cells = <0>;
->> +		compatible = "fsl,qoriq-sysclk-1.0", "fixed-clock";
->> +		clock-output-names = "sysclk";
->> +	};
->> +	pll0: pll0@800 {
->> +		#clock-cells = <1>;
->> +		reg = <0x800 0x4>;
->> +		compatible = "fsl,qoriq-core-pll-1.0";
->> +		clocks = <&sysclk>;
->> +		clock-output-names = "pll0", "pll0-div2";
->> +	};
->> +	pll1: pll1@820 {
->> +		#clock-cells = <1>;
->> +		reg = <0x820 0x4>;
->> +		compatible = "fsl,qoriq-core-pll-1.0";
->> +		clocks = <&sysclk>;
->> +		clock-output-names = "pll1", "pll1-div2";
->> +	};
->> +	mux0: mux0@0 {
->> +		#clock-cells = <0>;
->> +		reg = <0x0 0x4>;
->> +		compatible = "fsl,qoriq-core-mux-1.0";
->> +		clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
->> +		clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
->> +		clock-output-names = "cmux0";
->> +	};
->> +	mux1: mux1@20 {
->> +		#clock-cells = <0>;
->> +		reg = <0x20 0x4>;
->> +		compatible = "fsl,qoriq-core-mux-1.0";
->> +		clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
->> +		clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
->> +		clock-output-names = "cmux1";
->> +	};
->> +};
+> To me a intuitive structure would be:
+> MFD device
+>   |
+>   - clock device
+>      |
+>      - clock1
+>      - clock2
+>   - regulator device
+>      |
+>      - LDO1
+>      - LDO2
+> etc.
 > 
-> I don't think the mux stuff belongs here, given that clockgen2.dtsi
-> doesn't have it, and I saw at least one clockgen1 user needing to
-> supplement this with more muxes.
+> This also maps to structure in DTS. dev_err* messages and any
+> allocations should be done on behalf of regulator device, not parent.
+>
+> Various drivers do this differently... The wm8* drivers set it mostly to
+> parent (MFD)...
+>
+> I do not insists, especially because using parent's device would make
+> this driver simpler.
+>
 
-The intent was to put here devices/nodes that are common per chassis
-from the low to high end. Specific SoC would change/augment this as
-appropriate. I could have put each node in its own file as we've done
-elsewhere, but I thought it would be too much
+Another reason to set it to the parent is to lookup the regulator input supply
+node. The regulator_register() function does:
 
-Yes, chassis v1 and v2 have differences, but that's not unexpected
+	if (supply) {
+		struct regulator_dev *r;
 
->> @@ -1068,7 +1043,6 @@
->>  			clocks = <&sysclk>;
->>  			clock-output-names = "pll2", "pll2-div2", "pll2-div4";
->>  		};
->> -
->>  		pll3: pll3@860 {
->>  			#clock-cells = <1>;
->>  			reg = <0x860 0x4>;
->> @@ -1076,7 +1050,6 @@
->>  			clocks = <&sysclk>;
->>  			clock-output-names = "pll3", "pll3-div2", "pll3-div4";
->>  		};
->> -
->>  		pll4: pll4@880 {
->>  			#clock-cells = <1>;
->>  			reg = <0x880 0x4>;
+		r = regulator_dev_lookup(dev, supply, &ret);
+
+where dev = config->dev so that will determine on which device node your
+input supplies have to be defined. For example on the Peach Pit DTS has this:
+
+	max77802: max77802-pmic@9 {
+		...
+		inb1-supply = <&tps65090_dcdc2>;
+		...
+		inb10-supply = <&tps65090_dcdc1>;
+
+		inl1-supply = <&buck5_reg>;
+		...
+		inl10-supply = <&buck7_reg>;
+		...
+
+		regulators {
+		...
+		};
+	};
+
+which is how most (all?) DTS define the input supplies. If you instead
+do config.dev = &pdev->dev, then the input supplies have to be in the
+"regulators" node which is not the standard AFAICT.
+
+This is not a problem for max77686 because I see that DTS don't define
+the input supplies but I guess that is because the power scheme is not
+completely modeled.
+ 
+> Mark, maybe you could shed light on it?
 > 
-> Why?
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
 
-Why what?
-
-
-Cheers,
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Javier
