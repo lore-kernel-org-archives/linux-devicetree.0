@@ -1,69 +1,34 @@
-Return-Path: <arnd@arndb.de>
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 4/4] crypto: Add Allwinner Security System crypto accelerator
-Date: Wed, 22 Oct 2014 11:00:45 +0200
-Message-ID: <2751026.4HEPlZfN7W@wuerfel>
-In-Reply-To: <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com>
-References: <1413728182-13569-1-git-send-email-clabbe.montjoie@gmail.com> <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com>
+Return-Path: <devicetree-owner@vger.kernel.org>
+Received: from [103.239.73.48] ([103.239.73.48]:49237 "EHLO a.1-hour-pay.com"
+	rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+	id S1758728AbaJ3T3Q (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Thu, 30 Oct 2014 15:29:16 -0400
+Received: from ksaip (unknown [14.154.195.238])
+	by a.1-hour-pay.com (Postfix) with ESMTPA id 0C2E16E91
+	for <devicetree@vger.kernel.org>; Fri, 31 Oct 2014 03:29:09 +0800 (CST)
+Date: Fri, 31 Oct 2014 03:30:52 +0800
+From: "LED Light" <hw6@a.1-hour-pay.com>
+Reply-To: shadow@JRS-Tech.net
+Subject: LED LAMPS  PARcans Street lights  Underground Light
+Message-ID: <201410310330527658258@a.1-hour-pay.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-To: linux-arm-kernel@lists.infradead.org
-Cc: LABBE Corentin <clabbe.montjoie@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, herbert@gondor.apana.org.au, davem@davemloft.net, grant.likely@linaro.org, akpm@linux-foundation.org, gregkh@linuxfoundation.org, joe@perches.com, mchehab@osg.samsung.com, crope@iki.fi, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-crypto@vger.kernel.org
+Content-Type: text/plain;
+	charset="GB2312"
+Content-Transfer-Encoding: base64
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Sunday 19 October 2014 16:16:22 LABBE Corentin wrote:
-> Add support for the Security System included in Allwinner SoC A20.
-> The Security System is a hardware cryptographic accelerator that support AES/MD5/SHA1/DES/3DES/PRNG algorithms.
-> 
-> Signed-off-by: LABBE Corentin <clabbe.montjoie@gmail.com>
-
-Please wrap lines in the changelog after about 70 characters.
-
-> --- /dev/null
-> +++ b/drivers/crypto/sunxi-ss/sunxi-ss-cipher.c
-> @@ -0,0 +1,489 @@
-
-> +#include "sunxi-ss.h"
-> +
-> +extern struct sunxi_ss_ctx *ss;
-
-'extern' declarations belong into header files, not .c files. It would
-be even better to avoid this completely and carry the pointer to the
-context in an object that gets passed around. In general we want drivers
-to be written in a way that allows having multiple instances of the
-device, which the global pointer prevents.
-
-> +
-> +	src32 = (u32 *)src_addr;
-> +	dst32 = (u32 *)dst_addr;
-
-
-You appear to be missing '__iomem' annotations for the mmio pointers.
-Please always run your code through the 'sparse' checker using 'make C=1'
-to catch and fix this and other erros.
-
-> +	ileft = areq->nbytes / 4;
-> +	oleft = areq->nbytes / 4;
-> +	i = 0;
-> +	do {
-> +		if (ileft > 0 && rx_cnt > 0) {
-> +			todo = min(rx_cnt, ileft);
-> +			ileft -= todo;
-> +			do {
-> +				writel_relaxed(*src32++,
-> +						ss->base +
-> +						SS_RXFIFO);
-> +				todo--;
-> +			} while (todo > 0);
-> +		}
-
-This looks like it should be using writesl() instead of the 
-writel_relaxed() loop. That should not only be faster but it will
-also change the byte ordering if you are running a big-endian
-kernel.
-
-Since this is a FIFO register, the ordering that writesl uses
-is likely the correct one.
-
-	Arnd
+RGVhciBNci9NcywNCiAgRnJvbSB0aGUgaW50ZXJuZXQgd2UgaGF2ZSBrb253IHRoYXQgeW91IGFy
+ZSBpbnRlcmVzdGVkIGluIG91ciBwcm9kdWN0cyAgDQpXZSBhcmUgYSBsZWFkaW5nIGV4cG9ydGVy
+IG9mIExFRCBsYW1wcyBmb3Igc28gbWFueSB5ZWFycyAuZm9yIGRldGFpbHMgYWJvdXQgb3VyIHBy
+b2R1Y3RzIHdlbGNvbWUgdG8gYnJvd3NlIG91ciB3ZWJzaXRlIHd3dy5KUlMtTEVELm5ldCB3ZSBi
+ZWxpZXZlIHRoYXQgZmxhdm9yYWJsZSBwcmljZSBhbmQgaGlnaCBxdWFsaXR5IHdpbGwgaGVscCB5
+b3UgdG8gZXh0ZW5kIG1hcmtldCBzaGFyZSANCkhlcmUgZW5jbG9zZSBhIGxhdGVzdCBjYXRhbG9n
+dWUgdG8geW91ciByZWZlcmVuY2UNClRoYW5rIHlvdSAgZm9yIHlvdXIgYXR0ZW50aW9uICBhbmQg
+bG9va2luZyBmb3J3YXJkIHRvIHlvdXIgcmVwbHkNCkJlc3QgcmVnYXJkcyANCg0KU2luY2VyZWx5
+DQpKUlMgVGVjaG5vbG9neSBDby4sTHRkDQpTaGFkb3cNCg0KRW1haWyjuiAgc2hhZG93QEpSUy1U
+ZWNoLm5ldA0KU2t5cGWjuiAgdGVjaGpyc2INCk1TTqO6ICAgIHRlY2hqcnNiQG1zbi5jbg0KV2Vi
+c2l0o7ogd3d3Lmpycy1MRUQubmV0DQoNCg0Kd2Ugd291bGQgYmUgZ3JhdGVmdWwgaWYgeW91IHdp
+bGwgYmUgb3VyIGxlZCBsYW1wcyBjYXRhbG9ndWUgcmVzZXJ2ZWQgZm9yIHlvdXIgc3VwZXJ2aXNv
+ci4=
