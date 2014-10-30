@@ -1,132 +1,65 @@
-From: Addy Ke <addy.ke@rock-chips.com>
-Subject: [PATCH] mmc: dw_mmc: add a quirk for the defferent bit of sdio interrupt
-Date: Thu, 30 Oct 2014 10:21:19 +0800
-Message-ID: <1414635679-12565-1-git-send-email-addy.ke@rock-chips.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, Addy Ke <addy.ke@rock-chips.com>
+From: Kevin Cernekee <cernekee@gmail.com>
+Subject: [PATCH V2 07/15] irqchip: brcmstb-l2: Eliminate dependency on ARM code
+Date: Wed, 29 Oct 2014 19:18:00 -0700
+Message-ID: <1414635488-14137-8-git-send-email-cernekee@gmail.com>
+References: <1414635488-14137-1-git-send-email-cernekee@gmail.com>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1414635488-14137-1-git-send-email-cernekee@gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: arnd@arndb.de, f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org, lethal@linux-sh.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add a quirk: DW_MCI_QUIRK_SDIO_INT_24BIT.
+The irq-brcmstb-l2 driver has a single dependency on the ARM code, the
+do_bad_IRQ macro.  Expand this macro in-place so that the driver can be
+built on non-ARM platforms.
 
-The bit of sdio interrupt is 16 in designware implementation, but
-is 24 in RK3288. To support RK3288 mmc controller, we need add
-a quirk for it.
-
-Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/mmc/host/dw_mmc.c  | 32 +++++++++++++++++++++++++++-----
- drivers/mmc/host/dw_mmc.h  |  1 +
- include/linux/mmc/dw_mmc.h |  2 ++
- 3 files changed, 30 insertions(+), 5 deletions(-)
+ drivers/irqchip/irq-brcmstb-l2.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 69f0cc6..db29621 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -778,6 +778,12 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
- 	u32 div;
- 	u32 clk_en_a;
- 	u32 sdmmc_cmd_bits = SDMMC_CMD_UPD_CLK | SDMMC_CMD_PRV_DAT_WAIT;
-+	u32 sdio_int_bit;
-+
-+	if (host->quirks & DW_MCI_QUIRK_SDIO_INT_24BIT)
-+		sdio_int_bit = SDMMC_INT_SDIO_24BIT(slot->id);
-+	else
-+		sdio_int_bit = SDMMC_INT_SDIO(slot->id);
+diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
+index c15c840..c9bdf20 100644
+--- a/drivers/irqchip/irq-brcmstb-l2.c
++++ b/drivers/irqchip/irq-brcmstb-l2.c
+@@ -19,6 +19,7 @@
+ #include <linux/slab.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/spinlock.h>
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_address.h>
+@@ -30,8 +31,6 @@
+ #include <linux/irqchip.h>
+ #include <linux/irqchip/chained_irq.h>
  
- 	/* We must continue to set bit 28 in CMD until the change is complete */
- 	if (host->state == STATE_WAITING_CMD11_DONE)
-@@ -819,7 +825,7 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+-#include <asm/mach/irq.h>
+-
+ #include "irqchip.h"
  
- 		/* enable clock; only low power if no SDIO */
- 		clk_en_a = SDMMC_CLKEN_ENABLE << slot->id;
--		if (!(mci_readl(host, INTMASK) & SDMMC_INT_SDIO(slot->id)))
-+		if (!(mci_readl(host, INTMASK) & sdio_int_bit))
- 			clk_en_a |= SDMMC_CLKEN_LOW_PWR << slot->id;
- 		mci_writel(host, CLKENA, clk_en_a);
+ /* Register offsets in the L2 interrupt controller */
+@@ -63,7 +62,9 @@ static void brcmstb_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
+ 		~(__raw_readl(b->base + CPU_MASK_STATUS));
  
-@@ -1167,6 +1173,12 @@ static void dw_mci_enable_sdio_irq(struct mmc_host *mmc, int enb)
- 	struct dw_mci_slot *slot = mmc_priv(mmc);
- 	struct dw_mci *host = slot->host;
- 	u32 int_mask;
-+	u32 sdio_int_bit;
-+
-+	if (host->quirks & DW_MCI_QUIRK_SDIO_INT_24BIT)
-+		sdio_int_bit = SDMMC_INT_SDIO_24BIT(slot->id);
-+	else
-+		sdio_int_bit = SDMMC_INT_SDIO(slot->id);
- 
- 	/* Enable/disable Slot Specific SDIO interrupt */
- 	int_mask = mci_readl(host, INTMASK);
-@@ -1180,10 +1192,10 @@ static void dw_mci_enable_sdio_irq(struct mmc_host *mmc, int enb)
- 		dw_mci_disable_low_power(slot);
- 
- 		mci_writel(host, INTMASK,
--			   (int_mask | SDMMC_INT_SDIO(slot->id)));
-+			   (int_mask | sdio_int_bit));
- 	} else {
- 		mci_writel(host, INTMASK,
--			   (int_mask & ~SDMMC_INT_SDIO(slot->id)));
-+			   (int_mask & ~sdio_int_bit));
+ 	if (status == 0) {
+-		do_bad_IRQ(irq, desc);
++		raw_spin_lock(&desc->lock);
++		handle_bad_irq(irq, desc);
++		raw_spin_unlock(&desc->lock);
+ 		goto out;
  	}
- }
  
-@@ -2035,8 +2047,15 @@ static irqreturn_t dw_mci_interrupt(int irq, void *dev_id)
- 		/* Handle SDIO Interrupts */
- 		for (i = 0; i < host->num_slots; i++) {
- 			struct dw_mci_slot *slot = host->slot[i];
--			if (pending & SDMMC_INT_SDIO(i)) {
--				mci_writel(host, RINTSTS, SDMMC_INT_SDIO(i));
-+			u32 sdio_int_bit;
-+
-+			if (host->quirks & DW_MCI_QUIRK_SDIO_INT_24BIT)
-+				sdio_int_bit = SDMMC_INT_SDIO_24BIT(i);
-+			else
-+				sdio_int_bit = SDMMC_INT_SDIO(i);
-+
-+			if (pending & sdio_int_bit) {
-+				mci_writel(host, RINTSTS, sdio_int_bit);
- 				mmc_signal_sdio_irq(slot->mmc);
- 			}
- 		}
-@@ -2452,6 +2471,9 @@ static struct dw_mci_of_quirks {
- 	}, {
- 		.quirk	= "disable-wp",
- 		.id	= DW_MCI_QUIRK_NO_WRITE_PROTECT,
-+	}, {
-+		.quirk	= "sdio-int-24bit",
-+		.id	= DW_MCI_QUIRK_SDIO_INT_24BIT,
- 	},
- };
- 
-diff --git a/drivers/mmc/host/dw_mmc.h b/drivers/mmc/host/dw_mmc.h
-index 01b99e8..6a48015 100644
---- a/drivers/mmc/host/dw_mmc.h
-+++ b/drivers/mmc/host/dw_mmc.h
-@@ -92,6 +92,7 @@
- #define SDMMC_CTYPE_4BIT		BIT(0)
- #define SDMMC_CTYPE_1BIT		0
- /* Interrupt status & mask register defines */
-+#define SDMMC_INT_SDIO_24BIT(n)		BIT(24 + (n))
- #define SDMMC_INT_SDIO(n)		BIT(16 + (n))
- #define SDMMC_INT_EBE			BIT(15)
- #define SDMMC_INT_ACD			BIT(14)
-diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
-index 0013669..6d4669e 100644
---- a/include/linux/mmc/dw_mmc.h
-+++ b/include/linux/mmc/dw_mmc.h
-@@ -217,6 +217,8 @@ struct dw_mci_dma_ops {
- #define DW_MCI_QUIRK_BROKEN_CARD_DETECTION	BIT(3)
- /* No write protect */
- #define DW_MCI_QUIRK_NO_WRITE_PROTECT		BIT(4)
-+/* In RK3288, the bit of sdio interrupt is 24 */
-+#define DW_MCI_QUIRK_SDIO_INT_24BIT		BIT(5)
- 
- /* Slot level quirks */
- /* This slot has no write protect */
 -- 
-1.8.3.2
-
-
+2.1.1
