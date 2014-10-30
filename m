@@ -1,60 +1,185 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH RESEND V4 2/9] mailbox: Add NVIDIA Tegra XUSB mailbox driver
-Date: Thu, 30 Oct 2014 09:57:59 -0700
-Message-ID: <CAL1qeaFUKmkRGRr06bWK-yqypHCg_U1qJmUJc9p24xiDLDoaug@mail.gmail.com>
-References: <1414535277-15645-1-git-send-email-abrestic@chromium.org>
-	<1414535277-15645-3-git-send-email-abrestic@chromium.org>
-	<20141029113415.GD28356@ulmo.nvidia.com>
-	<CAL1qeaG2DFyfsPa2wgDqOkYTbnJ-tXoiV48AF9EaSCf1QCtOyQ@mail.gmail.com>
-	<20141030132239.GC19386@ulmo>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] net: smc91x: Fix gpios for device tree based booting
+Date: Thu, 30 Oct 2014 09:59:27 -0700
+Message-ID: <20141030165926.GB31454@atomide.com>
+References: <20141027202556.GT2560@atomide.com>
+ <20141029.145132.1881832564707108447.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141030132239.GC19386@ulmo>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141029.145132.1881832564707108447.davem@davemloft.net>
+Sender: linux-omap-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, khilman@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 30, 2014 at 6:22 AM, Thierry Reding
-<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Oct 29, 2014 at 11:02:36AM -0700, Andrew Bresticker wrote:
-> [...]
->> > Maybe something like this patch would be more correct in handling
->> > this:
->> >
->> > diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
->> > index afcb430508ec..85691a7d8ca6 100644
->> > --- a/drivers/mailbox/mailbox.c
->> > +++ b/drivers/mailbox/mailbox.c
->> > @@ -117,10 +117,11 @@ static void poll_txdone(unsigned long data)
->> >                 struct mbox_chan *chan = &mbox->chans[i];
->> >
->> >                 if (chan->active_req && chan->cl) {
->> > -                       resched = true;
->> >                         txdone = chan->mbox->ops->last_tx_done(chan);
->> >                         if (txdone)
->> >                                 tx_tick(chan, 0);
->> > +                       else
->> > +                               resched = true;
->> >                 }
->> >         }
->>
->> ... but we still need to re-arm the timer if tx_tick() submits another
->> message.  Perhaps the better thing to do is to have msg_submit() arm
->> the timer.
->
-> I think we need both. If the last transmission isn't done yet we still
-> want to keep polling. And we also want to poll if a new message is sent
-> subsequently.
->
-> Perhaps it would be as easy as moving the poll handling code from
-> mbox_send_message() (if (chan->txdone_method == TXDONE_BY_POLL)) into
-> msg_submit()? That has the additional advantage of being able to omit
-> the polling when an error happens during the mbox' .send_data().
+* David Miller <davem@davemloft.net> [141029 11:53]:
+> From: Tony Lindgren <tony@atomide.com>
+> Date: Mon, 27 Oct 2014 13:25:56 -0700
+> 
+> > +/**
+> > + * of_try_set_control_gpio - configure a gpio if it exists
+> > + */
+> > +static int try_toggle_control_gpio(struct device *dev,
+> > +				   struct gpio_desc **desc,
+> > +				   const char *name, int index,
+> > +				   int value, unsigned int nsdelay)
+> 
+> This needs to be under CONFIG_OF cpp protection just like the code that
+> calls it.
 
-Yes, this is exactly what I've done :).
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Oops thanks for catching that, updated patch below. The code
+for try_toggle_control_gpio() is now within the existing
+IS_BUILTIN(CONFIG_OF) block. Compile and boot tested on omap1
+that's not yet booting with device tree.
+
+Regards,
+
+Tony
+
+8< ----------------------
+From: Tony Lindgren <tony@atomide.com>
+Date: Wed, 29 Oct 2014 16:06:11 -0700
+Subject: [PATCH] net: smc91x: Fix gpios for device tree based booting
+
+With legacy booting, the platform init code was taking care of
+the configuring of GPIOs. With device tree based booting, things
+may or may not work depending what bootloader has configured or
+if the legacy platform code gets called.
+
+Let's add support for the pwrdn and reset GPIOs to the smc91x
+driver to fix the issues of smc91x not working properly when
+booted in device tree mode.
+
+And let's change n900 to use these settings as some versions
+of the bootloader do not configure things properly causing
+errors.
+
+Reported-by: Kevin Hilman <khilman@linaro.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+
+--- a/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
++++ b/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
+@@ -11,3 +11,5 @@ Optional properties:
+   are supported on the device.  Valid value for SMSC LAN91c111 are
+   1, 2 or 4.  If it's omitted or invalid, the size would be 2 meaning
+   16-bit access only.
++- power-gpios: GPIO to control the PWRDWN pin
++- reset-gpios: GPIO to control the RESET pin
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -668,6 +668,8 @@
+ 		bank-width = <2>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&ethernet_pins>;
++		power-gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;	/* gpio86 */
++		reset-gpios = <&gpio6 4 GPIO_ACTIVE_HIGH>;	/* gpio164 */
+ 		gpmc,device-width = <2>;
+ 		gpmc,sync-clk-ps = <0>;
+ 		gpmc,cs-on-ns = <0>;
+--- a/arch/arm/mach-omap2/pdata-quirks.c
++++ b/arch/arm/mach-omap2/pdata-quirks.c
+@@ -252,9 +252,6 @@ static void __init nokia_n900_legacy_init(void)
+ 		platform_device_register(&omap3_rom_rng_device);
+ 
+ 	}
+-
+-	/* Only on some development boards */
+-	gpio_request_one(164, GPIOF_OUT_INIT_LOW, "smc91x reset");
+ }
+ 
+ static void __init omap3_tao3530_legacy_init(void)
+--- a/drivers/net/ethernet/smsc/smc91x.c
++++ b/drivers/net/ethernet/smsc/smc91x.c
+@@ -81,6 +81,7 @@ static const char version[] =
+ #include <linux/workqueue.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/of_gpio.h>
+ 
+ #include <linux/netdevice.h>
+ #include <linux/etherdevice.h>
+@@ -2188,6 +2189,41 @@ static const struct of_device_id smc91x_match[] = {
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, smc91x_match);
++
++/**
++ * of_try_set_control_gpio - configure a gpio if it exists
++ */
++static int try_toggle_control_gpio(struct device *dev,
++				   struct gpio_desc **desc,
++				   const char *name, int index,
++				   int value, unsigned int nsdelay)
++{
++	struct gpio_desc *gpio = *desc;
++	int res;
++
++	gpio = devm_gpiod_get_index(dev, name, index);
++	if (IS_ERR(gpio)) {
++		if (PTR_ERR(gpio) == -ENOENT) {
++			*desc = NULL;
++			return 0;
++		}
++
++		return PTR_ERR(gpio);
++	}
++	res = gpiod_direction_output(gpio, !value);
++	if (res) {
++		dev_err(dev, "unable to toggle gpio %s: %i\n", name, res);
++		devm_gpiod_put(dev, gpio);
++		gpio = NULL;
++		return res;
++	}
++	if (nsdelay)
++		usleep_range(nsdelay, 2 * nsdelay);
++	gpiod_set_value_cansleep(gpio, value);
++	*desc = gpio;
++
++	return 0;
++}
+ #endif
+ 
+ /*
+@@ -2237,6 +2273,28 @@ static int smc_drv_probe(struct platform_device *pdev)
+ 		struct device_node *np = pdev->dev.of_node;
+ 		u32 val;
+ 
++		/* Optional pwrdwn GPIO configured? */
++		ret = try_toggle_control_gpio(&pdev->dev, &lp->power_gpio,
++					      "power", 0, 0, 100);
++		if (ret)
++			return ret;
++
++		/*
++		 * Optional reset GPIO configured? Minimum 100 ns reset needed
++		 * according to LAN91C96 datasheet page 14.
++		 */
++		ret = try_toggle_control_gpio(&pdev->dev, &lp->reset_gpio,
++					      "reset", 0, 0, 100);
++		if (ret)
++			return ret;
++
++		/*
++		 * Need to wait for optional EEPROM to load, max 750 us according
++		 * to LAN91C96 datasheet page 55.
++		 */
++		if (lp->reset_gpio)
++			usleep_range(750, 1000);
++
+ 		/* Combination of IO widths supported, default to 16-bit */
+ 		if (!of_property_read_u32(np, "reg-io-width", &val)) {
+ 			if (val & 1)
+--- a/drivers/net/ethernet/smsc/smc91x.h
++++ b/drivers/net/ethernet/smsc/smc91x.h
+@@ -298,6 +298,9 @@ struct smc_local {
+ 	struct sk_buff *pending_tx_skb;
+ 	struct tasklet_struct tx_task;
+ 
++	struct gpio_desc *power_gpio;
++	struct gpio_desc *reset_gpio;
++
+ 	/* version/revision of the SMC91x chip */
+ 	int	version;
+ 
