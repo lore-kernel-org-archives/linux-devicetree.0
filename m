@@ -1,47 +1,81 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH 6/7] arm: mediatek: enable gpt6 on boot up to make arch
- timer working
-Date: Thu, 30 Oct 2014 11:23:20 +0800
-Message-ID: <1414639400.5833.11.camel@mtksdaap41>
-References: <1406824943-24052-1-git-send-email-matthias.bgg@gmail.com>
-	 <1406824943-24052-7-git-send-email-matthias.bgg@gmail.com>
-	 <CACRpkdbRhGE8tcKj+W_4F9-xmcm-fxcYuCmLOqX-ESC+3PAmyA@mail.gmail.com>
-	 <CABuKBe+Q3tnN0s22EMY-dK_6FeN_xN9SmrsW3dPONR6QDJ+V_w@mail.gmail.com>
-	 <CACRpkdZOB=9wQ3R3sfcBEiNXLVRtgob4iLZ9QWXyVrgjqyvGXQ@mail.gmail.com>
-	 <CABuKBeJOgkDZ8drPf3LnT2jPH7PEWX2__HDM7_jZbg2BhDRy3g@mail.gmail.com>
-	 <1414158814.14830.610.camel@mtksdaap41>
-	 <CABuKBe++mqhMCPxci9_4KKgq9vdoLLwZQkdb2xAGMud+=YVhkw@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC] pinctrl: Provide a generic device tree binding for per-pin
+ pin controllers
+Date: Wed, 29 Oct 2014 22:05:40 -0600
+Message-ID: <5451B914.6020300@wwwdotorg.org>
+References: <20141023132305.GG14443@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABuKBe++mqhMCPxci9_4KKgq9vdoLLwZQkdb2xAGMud+=YVhkw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Mike Turquette <mturquette@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbart>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141023132305.GG14443-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-
-On Mon, 2014-10-27 at 11:28 +0100, Matthias Brugger wrote:
-> Hi Joe,
+On 10/23/2014 07:23 AM, Sascha Hauer wrote:
+> Most iomux controllers allow a configuration per pin. These currently
+> have no common device tree binding. There are many different SoC
+> specific bindings for this class of iomux controllers. Some controllers
+> artificially group pins together where in hardware no groups exist (for
+> example lantiq). Other controllers just put each pin into a separate
+> group which explodes to many many strings to parse (Tegra30).
 > 
-> 2014-10-24 15:53 GMT+02:00 Yingjoe Chen <srv_yingjoe.chen@mediatek.com>:
-> >
-> > Hi Matthias,
-> >
-> > I didn't saw this in v3.18-rc1, are you working on version 2 of this?
-> > mt8135 and m8127 also need this fixup and we need this to have SMP
-> > working.
 > 
-> I had a discussion with Mark Rutland from ARM on this [0].
-> At that point he convinced me that this was not critical.
+> A pin controller has n pins, each muxable to m different positions.
+
+I assume that sentence is meant to say something more specific:
+
+This binding is intended to apply to pin controllers where each pin has
+an independently selectable mux function.
+
+"A pin controller ..." sounds like a general statement that is intended
+to apply to any pin controller. If that were intended, the statement you
+made certainly wouldn't be true.
+
+> There exists a logical numbering for all pins, for most SoCs this will
+> be defined by the register ordering so that the pin number can directly
+> be translated to a register offset without the need of tables in the
+> driver. The register usually takes m different numbers to specify the
+> function the pin should have. Both the pin and its function can be
+> described as a single 32bit number:
 > 
-> If we need this for SMP, things really change here I think.
+> #define PINMUX_PIN(no, fn) (((no) & 0xffffff) << 8) | (fn) & 0xff)
+> 
+> This allows to put multiple pins into a single device tree property
+> which is very efficiently parsable by the driver (or the pinmux core).
+> We suggest to name this property 'pins' and to put it next to the
+> generic pinconf binding.  This allows to describe multiple pins with the
+> same pinconf settings in a single device tree node. Multiple of these
+> nodes can be grouped under a pinctrl state node. This allows to put pins
+> with different pinconf settings to a single state.
+> 
+> Example:
+> 
+> 	uart2 {
+> 		uart2_default_mode: uart2_default {
+> 			pins1 {
+> 				pins = <PINMUX_PIN(127, 3), PINMUX_PIN(128, 3)>;
 
-We have some driver now, and we started to implement SMP enable method
-internally. I think it is reasonable to discuss this now.
-We could include this patch in our SMP patch series. Do you prefer we do
-this?
+Within each of the nodes, the binding for pinmux is defined
+independently by each pin controller. I don't have any /strong/
+objection to any particular pin controller using this binding, or even
+it being re-used across many similar pin controllers, or even being
+the/a default binding style for new pin controllers.
 
-Joe.C
+I'm not totally sure whether blending the pin ID and mux function ID
+into the same value is a good idea. That said, it does have advantages
+as you state, and shouldn't cause any significant issues. In any case
+where it would be a bad idea, the binding for the pin controller in
+question can still choose to use some more appropriate binding, so
+allowing this binding for some controllers won't force issues onto other
+controllers. So, it seems fine.
+
+Note however that we can't change existing bindings. Well, I suppose
+certain bindings could be enhanced to support either a string-based or
+an integer-base binding, but I don't think that'd be a good idea.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
