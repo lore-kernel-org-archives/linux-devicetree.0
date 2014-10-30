@@ -1,51 +1,41 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 3/3] ARM: shmobile: koelsch dts: Drop console= bootargs parameter
-Date: Thu, 30 Oct 2014 12:44:41 +0200
-Message-ID: <42870768.kOpZNjp1qs@avalon>
-References: <1414592918-25138-1-git-send-email-geert+renesas@glider.be> <1414592918-25138-4-git-send-email-geert+renesas@glider.be>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V2 02/15] sh: Eliminate unused irq_reg_{readl,writel} accessors
+Date: Thu, 30 Oct 2014 11:48:18 +0100
+Message-ID: <1879572.mbc2eHiUuo@wuerfel>
+References: <1414635488-14137-1-git-send-email-cernekee@gmail.com> <2294092.AHz8W66sEP@wuerfel> <alpine.DEB.2.11.1410301142010.5308@nanos>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1414592918-25138-4-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.11.1410301142010.5308@nanos>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, lethal-M7jkjyW5wf5g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-On Wednesday 29 October 2014 15:28:38 Geert Uytterhoeven wrote:
-> Since commit 595c6a4bb77f0096 ("ARM: shmobile: koelsch: Remove legacy C
-> board code"), koelsch is restricted to booting from DT, so
-> chosen/stdout-path is always used, and we can drop the "console="
-> parameter from chosen/bootargs.
-
-I'm curious, how is the baud rate now selected ?
-
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: devicetree@vger.kernel.org
-> ---
->  arch/arm/boot/dts/r8a7791-koelsch.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Thursday 30 October 2014 11:43:00 Thomas Gleixner wrote:
+> On Thu, 30 Oct 2014, Arnd Bergmann wrote:
 > 
-> diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts
-> b/arch/arm/boot/dts/r8a7791-koelsch.dts index
-> 191f32bc43ea6dad..523ae4d807b907b2 100644
-> --- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-> +++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-> @@ -25,7 +25,7 @@
->  	};
+> > On Wednesday 29 October 2014 19:17:55 Kevin Cernekee wrote:
+> > > Defining these macros way down in arch/sh/.../irq.c doesn't cause
+> > > kernel/irq/generic-chip.c to use them.  As far as I can tell this code
+> > > has no effect.
+> > > 
+> > > Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > 
+> > Actually it overrides the 32-bit accessors with 16-bit accessors,
+> > which does seem intentional and certainly has an effect.
 > 
->  	chosen {
-> -		bootargs = "console=ttySC6,115200 ignore_loglevel rw root=/dev/nfs
-> ip=dhcp";
-> +		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
->  		stdout-path = &scif0;
->  	};
+> Not really. Neither arch/sh/boards/mach-se/7343/irq.c nor
+> arch/sh/boards/mach-se/7722/irq.c actually use
+> irq_reg_readl/writel. They simply define it.
 
--- 
-Regards,
+Ah, that makes things easier. I looked at the commits that introduced
+them, and even then they were unused. Probably an artifact from an
+earlier version of the patch which did not get merged.
 
-Laurent Pinchart
-
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
