@@ -1,88 +1,69 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [RFT v3 06/14] regulator: max77802: Remove support for board
- files
-Date: Thu, 30 Oct 2014 15:02:41 +0100
-Message-ID: <54524501.8030604@collabora.co.uk>
-References: <1414668053-31370-1-git-send-email-k.kozlowski@samsung.com> <1414668053-31370-7-git-send-email-k.kozlowski@samsung.com> <54522615.7040002@collabora.co.uk> <1414671037.23399.2.camel@AMDC1943> <54522D2C.9050002@collabora.co.uk> <1414672235.23399.7.camel@AMDC1943> <54523224.3010407@collabora.co.uk> <1414673587.23399.13.camel@AMDC1943>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v4 01/20] usb: dwc3: enable hibernation if to be supported
+Date: Thu, 30 Oct 2014 09:08:32 -0500
+Message-ID: <20141030140832.GH6482@saruman>
+References: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
+ <1414663725-2195-2-git-send-email-ray.huang@amd.com>
+ <4077930.b7qzaS4pBb@wuerfel>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1414673587.23399.13.camel@AMDC1943>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="X1xGqyAVbSpAWs5A"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4077930.b7qzaS4pBb@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Huang Rui <ray.huang@amd.com>, Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+--X1xGqyAVbSpAWs5A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 10/30/2014 01:53 PM, Krzysztof Kozlowski wrote:
-> 
-> To me a intuitive structure would be:
-> MFD device
->   |
->   - clock device
->      |
->      - clock1
->      - clock2
->   - regulator device
->      |
->      - LDO1
->      - LDO2
-> etc.
-> 
-> This also maps to structure in DTS. dev_err* messages and any
-> allocations should be done on behalf of regulator device, not parent.
->
-> Various drivers do this differently... The wm8* drivers set it mostly to
-> parent (MFD)...
->
-> I do not insists, especially because using parent's device would make
-> this driver simpler.
->
+On Thu, Oct 30, 2014 at 12:35:56PM +0100, Arnd Bergmann wrote:
+> On Thursday 30 October 2014 18:08:26 Huang Rui wrote:
+> > It enables hibernation if the function is set in coreConsultant.
+> >=20
+> > Suggested-by: Felipe Balbi <balbi@ti.com>
+> > Signed-off-by: Huang Rui <ray.huang@amd.com>
+> > Signed-off-by: Felipe Balbi <balbi@ti.com>
+> >=20
+>=20
+> Something went wrong with the Signed-off-by lines here.=20
+> You should never add someone else's Signed-off-by below yours.
+>=20
+> I took a brief look at the entire series and the patches all look good
+> to me, but you have made the same mistake with the Signed-off-by
+> multiple times.
 
-Another reason to set it to the parent is to lookup the regulator input supply
-node. The regulator_register() function does:
+there are no mistakes, I just asked Huang to resend what I had on my
+testing/next because it had not been sent to devicetree mailing list.
 
-	if (supply) {
-		struct regulator_dev *r;
+--=20
+balbi
 
-		r = regulator_dev_lookup(dev, supply, &ret);
+--X1xGqyAVbSpAWs5A
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-where dev = config->dev so that will determine on which device node your
-input supplies have to be defined. For example on the Peach Pit DTS has this:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-	max77802: max77802-pmic@9 {
-		...
-		inb1-supply = <&tps65090_dcdc2>;
-		...
-		inb10-supply = <&tps65090_dcdc1>;
+iQIcBAEBAgAGBQJUUkZgAAoJEIaOsuA1yqREgMMQAKMXQfr0PWErwr7WmC0dOSOi
+9UauOEaMI/MzTxBDSVqsjdKjmtyk41QUFucSWxaRcQELyCmgLef5//wj0zS0ucqP
+X0Bu7rL/NAuQSRfXq+ZYfBjjWDtCdTMijlELjoMKhQqyaydZkHFuiHsModh3XjJb
+GJ65WigMBLdKXBOVZp9si1FpwkcdOPFnMrPwyiUrVEoDlG1yTyiXUl+QfZFagfjw
+a/osgH0HJ4lgq53D19VPTj5Ybz7Cxv0ba0crdIcebKFN9yoRu8jSLf/u8y9uRSnk
+GdlIYWOivrIx/HtT64B5mjWhXtaS+9eQTKs4Xm9A1Rj4ZvvgTknwtYlPp8FKzXqs
+gjaaMTKESVRn3V5o7pgtj2jg7AORvQs0eE8gDBMqoMAxyHjn7Sf3xHNIum+Kscau
+fvV+XBK123eX64P7Rzky60fZZXwtp7MTd0m1eAVUsGbz3JuCzGvJOe6z1+EVc/n4
+hSPf6BQQDxzwkSrZLXz6Ey//fAqgNoLzQ6smYQBNYIoqfGLgmDW3a8PfkERda/qJ
+bc9dvjA7iFNB/xMUx3/fTRlq8cMMaFE50s0tkh17vA7K9w2KFQP8+a8mGwlpoJ4I
+x158x/QWVYNESdrrnA4P08T5fWo31BDTI/jwDmyNeZtAi+Dg99Zm97ViwidIBsZK
+J6sE8O4FvE4PF2ZR69EY
+=hiSZ
+-----END PGP SIGNATURE-----
 
-		inl1-supply = <&buck5_reg>;
-		...
-		inl10-supply = <&buck7_reg>;
-		...
-
-		regulators {
-		...
-		};
-	};
-
-which is how most (all?) DTS define the input supplies. If you instead
-do config.dev = &pdev->dev, then the input supplies have to be in the
-"regulators" node which is not the standard AFAICT.
-
-This is not a problem for max77686 because I see that DTS don't define
-the input supplies but I guess that is because the power scheme is not
-completely modeled.
- 
-> Mark, maybe you could shed light on it?
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
-
-Best regards,
-Javier
+--X1xGqyAVbSpAWs5A--
