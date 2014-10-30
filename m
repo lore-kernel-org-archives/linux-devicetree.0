@@ -1,129 +1,61 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH] ACPI / GPIO: Driver GPIO mappings for ACPI GPIOs
-Date: Thu, 30 Oct 2014 01:45:09 +0100
-Message-ID: <13007048.sH0aJYjMUX@vostro.rjw.lan>
-References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com> <3242497.urQmuvpeyA@vostro.rjw.lan> <CAAVeFuKStrzzwW7s37y7-a8y+j1gD-EzAYfc1h2KTo8uyd+dSA@mail.gmail.com>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [RFC Patch] gpio: add GPIO hogging mechanism
+Date: Thu, 30 Oct 2014 09:29:03 +0900
+Message-ID: <CAAVeFu+ZMdMH4YQxUrzRaCRndxff_REOZHi3jVHyOTKGUMqTEQ@mail.gmail.com>
+References: <1413922198-29373-1-git-send-email-bparrot@ti.com>
+ <CAAVeFuK4PaFbbYjUsvA-oO78P5qmQvyGqG+Ov4GLghoC=yPAoA@mail.gmail.com> <20141029162105.GA29965@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAAVeFuKStrzzwW7s37y7-a8y+j1gD-EzAYfc1h2KTo8uyd+dSA@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20141029162105.GA29965@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, Jiri Prchal <jiri.prchal@aksignal.cz>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, October 28, 2014 01:11:50 PM Alexandre Courbot wrote:
-> On Tue, Oct 28, 2014 at 7:34 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > On Monday, October 27, 2014 02:21:23 PM Alexandre Courbot wrote:
+On Thu, Oct 30, 2014 at 1:21 AM, Benoit Parrot <bparrot@ti.com> wrote:
+>> > +
+>> >         if (status)
+>> >                 goto fail;
+>> >
+>> > @@ -1742,6 +1757,72 @@ struct gpio_desc *__must_check __gpiod_get_index_optional(struct device *dev,
+>> >  EXPORT_SYMBOL_GPL(__gpiod_get_index_optional);
+>> >
+>> >  /**
+>> > + * gpiod_get_hog_index - obtain a GPIO from a multi-index GPIO hog
+>> > + * @dev:       GPIO consumer
+>> > + * @idx:       index of the GPIO to obtain
+>> > + *
+>> > + * This should only be used by the gpiochip_add to request/set GPIO initial
+>> > + * configuration.
+>> > + *
+>> > + * Return a valid GPIO descriptor, or an IS_ERR() condition in case of error.
+>> > + */
+>> > +struct gpio_desc *__must_check gpiod_get_hog_index(struct device *dev,
+>> > +                                                  unsigned int idx)
+>> > +{
+>> > +       struct gpio_desc *desc = NULL;
+>> > +       int err;
+>> > +       unsigned long flags;
+>> > +       const char *name;
+>> > +
+>> > +       /* Using device tree? */
+>> > +       if (IS_ENABLED(CONFIG_OF) && dev && dev->of_node)
+>> > +               desc = of_get_gpio_hog(dev->of_node, idx, &name, &flags);
+>> > +
+>> > +       if (!desc)
+>> > +               return ERR_PTR(-ENOTSUPP);
+>> > +       else if (IS_ERR(desc))
+>> > +               return desc;
+>> > +
+>> > +       dev_dbg(dev, "gpio-hog: GPIO:%d (%s) as %s%s\n",
+>> > +               desc_to_gpio(desc), name, (flags&GPIOF_DIR_IN)?"input":"output",
+>> > +               (flags&GPIOF_DIR_IN)?"":(flags&GPIOF_INIT_HIGH)?"/high":"/low");
+>> > +
+>>
+>> ...
+>
+> I guess this means to remove the dev_dbg code?
 
-[cut]
-
-> > Yes, I'm going to provide documentation.
-> >
-> > One question, though.  We're already adding gpio-properties.txt under
-> > Documentation/acpi/ containing analogous information for _DSD-based
-> > mappings.  I thought I'd add a section to that file and a short paragraph
-> > pointing to it into consumer.txt, would that work?
-> 
-> Definitely yes, since this is ACPI-specific. Thanks!
-
-OK, so what about this (on top of the device-properties branch at
-http://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git/log/?h=device-properties):
-
----
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Subject: ACPI / GPIO: Document ACPI GPIO mappings API
-
-Document the previously introduced method that can be used by device
-drivers to provide the GPIO subsystem with mappings between GPIO names
-(connection IDs) and GpioIo()/GpioInt() resources in _CRS.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- Documentation/acpi/gpio-properties.txt |   44 +++++++++++++++++++++++++++++++++
- Documentation/gpio/consumer.txt        |   18 +++++++++++++
- 2 files changed, 62 insertions(+)
-
-Index: linux-pm/Documentation/acpi/gpio-properties.txt
-===================================================================
---- linux-pm.orig/Documentation/acpi/gpio-properties.txt
-+++ linux-pm/Documentation/acpi/gpio-properties.txt
-@@ -50,3 +50,47 @@ it to 1 marks the GPIO as active low.
- 
- In our Bluetooth example the "reset-gpio" refers to the second GpioIo()
- resource, second pin in that resource with the GPIO number of 31.
-+
-+ACPI GPIO Mappings Provided by Drivers
-+--------------------------------------
-+
-+There are systems in which the ACPI tables do not contain _DSD but provide _CRS
-+with GpioIo()/GpioInt() resources and device drivers still need to work with
-+them.
-+
-+In those cases ACPI device identification objects, _HID, _CID, _CLS, _SUB, _HRV,
-+available to the driver can be used to identify the device and that is supposed
-+to be sufficient to determine the meaning and purpose of all of the GPIO pins
-+listed by the GpioIo()/GpioInt() resources returned by _CRS.  In other words,
-+the driver is supposed to know what to use the GpioIo()/GpioInt() resources for
-+once it has identified the device.  Having done that, it can simply assign names
-+to the GPIO pins it is going to use and provide the GPIO subsystem with a
-+mapping between those names and the ACPI GPIO resources corresponding to them.
-+
-+To do that, the driver needs to define a mapping table as a NULL-terminated
-+array of struct acpi_gpio_mapping objects that each contain a name, a pointer
-+to an array of pin data (struct acpi_gpio_params) objects and the size of that
-+array.  Each struct acpi_gpio_params object consists of three fields,
-+crs_entry_index, pin_index, active_low, representing the index of the target
-+GpioIo()/GpioInt() resource in _CRS starting from zero, the index of the target
-+pin in that resource starting from zero, and the active-low flag for that pin,
-+respectively, in analogy with the _DSD GPIO property format specified above.
-+
-+For the example Bluetooth device discussed previously the data structures in
-+question would look like this:
-+
-+static const struct acpi_gpio_params reset_gpio = { 1, 1, false };
-+static const struct acpi_gpio_params shutdown_gpio = { 0, 0, false };
-+
-+static const struct acpi_gpio_mapping bluetooth_acpi_gpios[] = {
-+  { "reset-gpio", &reset_gpio, 1 },
-+  { "shutdown-gpio", &shutdown_gpio, 1 },
-+  { },
-+};
-+
-+Next, the mapping table needs to be passed as the second argument to
-+acpi_dev_add_driver_gpios() that will register it with the ACPI device object
-+pointed to by its first argument.  That should be done in the driver's .probe()
-+routine.  On removal, the driver should unregister its GPIO mapping table by
-+calling acpi_dev_remove_driver_gpios() on the ACPI device object where that
-+table was previously registered.
-Index: linux-pm/Documentation/gpio/consumer.txt
-===================================================================
---- linux-pm.orig/Documentation/gpio/consumer.txt
-+++ linux-pm/Documentation/gpio/consumer.txt
-@@ -219,6 +219,24 @@ part of the IRQ interface, e.g. IRQF_TRI
- capabilities.
- 
- 
-+GPIOs and ACPI
-+==============
-+
-+On ACPI systems, GPIOs are described by GpioIo()/GpioInt() resources listed by
-+the _CRS configuration objects of devices.  Those resources do not provide
-+connection IDs (names) for GPIOs, so it is necessary to use an additional
-+mechanism for this purpose.
-+
-+Systems compliant with ACPI 5.1 or newer may provide a _DSD configuration object
-+which, among other things, may be used to provide connection IDs for specific
-+GPIOs described by the GpioIo()/GpioInt() resources in _CRS.  If that is the
-+case, it will be handled by the GPIO subsystem automatically.  However, if the
-+_DSD is not present, the mappings between GpioIo()/GpioInt() resources and GPIO
-+connection IDs need to be provided by device drivers.
-+
-+For details refer to Documentation/acpi/gpio-properties.txt
-+
-+
- Interacting With the Legacy GPIO Subsystem
- ==========================================
- Many kernel subsystems still handle GPIOs using the legacy integer-based
-
+No, it was just to delimitate the code which I suggested to factorize
+into its own function below. :) This dev_dbg  is fine IMHO.
