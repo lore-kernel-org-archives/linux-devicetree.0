@@ -1,51 +1,34 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 0/4] ARM: dts: dra72-evm: NAND and USB support
-Date: Thu, 30 Oct 2014 16:36:05 +0200
-Message-ID: <54524CD5.5060103@ti.com>
-References: <1413888080-2669-1-git-send-email-rogerq@ti.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH 3/3] I2C: mediatek: Add driver for MediaTek I2C
+ controller
+Date: Thu, 30 Oct 2014 22:49:05 +0800
+Message-ID: <1414680545.5833.21.camel@mtksdaap41>
+References: <1414561058-23803-1-git-send-email-xudong.chen@mediatek.com>
+	 <1414561058-23803-4-git-send-email-xudong.chen@mediatek.com>
+	 <CABuKBe+RXboBEZD7Bu_kSbVwiapJJcAuuw_wo=xw67osJWJ20w@mail.gmail.com>
+	 <20141030132537.GB23852@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1413888080-2669-1-git-send-email-rogerq@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: balbi@ti.com, nsekhar@ti.com, george.cherian@ti.com, nm@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141030132537.GB23852@katana>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Xudong Chen <xudong.chen@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, arm@kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Jean Delvare <jdelvare@suse.de>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-i2c@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Nathan Chung <nathan.chung@mediatek.com>, YH Chen <yh.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+On Thu, 2014-10-30 at 14:25 +0100, Wolfram Sang wrote:
+> > > +obj-$(CONFIG_I2C_MT65XX)       += i2c-mt65xx.o
+> > 
+> > As it works for mt65xx and mt81xx series, better rename it to i2c-mtk.c
+> 
+> That is a bit too generic IMO. It is likely that we will see some
+> totally different I2C core from MTK in the future. Plus, it is not
+> uncommon that a driver initially for SoC-X supports SoC-Y, too.
 
-On 10/21/2014 01:41 PM, Roger Quadros wrote:
-> Hi Tony,
-> 
-> These patches add NAND and USB support for DRA72-evm.
-> Patches are for v3.19 and based on v3.18-rc1.
-> 
-> I've tested that NAND and USB host works fine on DRA72-evm.
-> 
-> I couldn't get USB gadget mode to work. It doesn't work on DRA7-evm either.
-> There seems to be some issue at the driver level. The dts entries are correct though.
+Hi,
 
-Any further comments on this? Can we please queue this for -next? Thanks.
+Yes, MTK TV SoCs(MT53xx) do use a different/incompatible I2C IP. So we
+preferred to keep original file name.
 
-cheers,
--roger
-
-> 
-> cheers,
-> -roger
-> 
-> George Cherian (1):
->   ARM: dts: dra72-evm: Enable USB support for dra72-evm.
-> 
-> Roger Quadros (3):
->   ARM: dts: dra72-evm: Add NAND support
->   ARM: dts: DRA7: Move USB_OTG 4 to dra74x.dtsi
->   ARM: dts: dra72-evm: Add regulator information to USB2 PHYs
-> 
->  arch/arm/boot/dts/dra7.dtsi     |  20 ------
->  arch/arm/boot/dts/dra72-evm.dts | 147 ++++++++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/dra74x.dtsi   |  22 ++++++
->  3 files changed, 169 insertions(+), 20 deletions(-)
-> 
-
+Joe.C 
