@@ -1,83 +1,43 @@
-From: Zhou Wang <wangzhou.bry@gmail.com>
-Subject: Re: [PATCH v3 1/2] mtd: hisilicon: add a new NAND controller driver
- for hisilicon hip04 Soc
-Date: Thu, 30 Oct 2014 10:28:25 +0800
-Message-ID: <5451A249.3040909@gmail.com>
-References: <1414493629-12570-1-git-send-email-wangzhou.bry@gmail.com> <1414493629-12570-2-git-send-email-wangzhou.bry@gmail.com> <CAH6sp9MuL+AAvMi1VrmOhq5Y-ri2DKO3g0h1hw040h5=CRu6UQ@mail.gmail.com>
+From: <flora.fu@mediatek.com>
+Subject: [PATCH 0/3] Add Reset Controller for MediaTek SoC
+Date: Thu, 30 Oct 2014 11:12:10 +0800
+Message-ID: <1414638733-10080-1-git-send-email-flora.fu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAH6sp9MuL+AAvMi1VrmOhq5Y-ri2DKO3g0h1hw040h5=CRu6UQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frans Klaver <fransklaver@gmail.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, haojian.zhuang@gmail.com, wangzhou1@hisilicon.com, Rob Herring <robh+dt@kernel.org>, xuwei5@hisilicon.com, Kumar Gala <galak@codeaurora.org>, caizhiyong@huawei.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2014=E5=B9=B410=E6=9C=8828=E6=97=A5 22:22, Frans Klaver wrote:
-> On Tue, Oct 28, 2014 at 11:53 AM, Zhou Wang <wangzhou.bry@gmail.com> =
-wrote:
->> +
->> +static int hisi_nfc_probe(struct platform_device *pdev)
->> +{
->> +       int ret =3D 0, irq, buswidth, flag, max_chips =3D HINFC504_M=
-AX_CHIP;
->> +       struct device *dev =3D &pdev->dev;
->> +       struct hinfc_host *host;
->> +       struct nand_chip  *chip;
->> +       struct mtd_info   *mtd;
->> +       struct resource   *res;
->> +       struct device_node *np =3D dev->of_node;
->> +       struct mtd_part_parser_data ppdata;
->> +
->> +       host =3D devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
->> +       if (!host)
->> +               return -ENOMEM;
->> +       host->dev =3D dev;
->> +
->> +       platform_set_drvdata(pdev, host);
->> +       chip =3D &host->chip;
->> +       mtd  =3D &host->mtd;
->> +
->> +       irq =3D platform_get_irq(pdev, 0);
->> +       if (irq < 0) {
->> +               dev_err(dev, "no IRQ resource defined\n");
->> +               ret =3D -ENXIO;
->> +               goto err_res;
->> +       }
->> +
->> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +       host->iobase =3D devm_ioremap_resource(dev, res);
->> +       if (IS_ERR(host->iobase)) {
->> +               ret =3D PTR_ERR(host->iobase);
->> +               dev_err(dev, "devm_ioremap_resource[0] fail\n");
->> +               goto err_res;
->> +       }
->> +
->> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
->> +       chip->IO_ADDR_R =3D chip->IO_ADDR_W =3D devm_ioremap_resourc=
-e(dev, res);
->> +       if (IS_ERR(chip->IO_ADDR_R)) {
->> +               ret =3D PTR_ERR(chip->IO_ADDR_R);
->> +               dev_err(dev, "devm_ioremap_resource[1] fail\n");
->> +               goto err_res;
->> +       }
->> +
->> +       mtd->priv               =3D chip;
->> +       mtd->owner              =3D THIS_MODULE;
->> +       mtd->name               =3D "hisi_nand";
->
-> + mtd->dev.parent =3D &pdev->dev;
->
-> This is a bug that lives in a bunch of other nand drivers as well.
-> add_mtd_device (called by mtd_device_parse_register()) expects
-> dev.parent to be set for properly adding a device reference to the
-> sysfs node.
->
-> Frans
->
-My mistake, I will add this line. Thanks a lot for your reminding.
+This driver is based on 3.18-rc1. . 
+This series adds support generic reset controller for MediaTek SoC.
+Reset registers contain several bytes and each bit is able to reset individual module in SoC.
+ - Patch 1/3: Add a driver in reset controller
+ - Patch 2/3: Add device tree bindings
+ - Patch 3/3: Add reset controller to MT8135 board dts
+   
+ Flora Fu (3):
+  ARM: mediatek: Add Reset Controller for MediaTek SoC
+  dt-bindings: Add Reset Controller for MediaTek SoC
+  ARM: dts: mt8135: Add Reset Controller for MediaTek SoC
 
-Kind regards,
-Zhou Wang
+ .../devicetree/bindings/reset/mediatek,reset.txt   |  37 +++++
+ arch/arm/boot/dts/mt8135.dtsi                      |  22 +++
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-mtk.c                          | 149 +++++++++++++++++++++
+ 4 files changed, 209 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/mediatek,reset.txt
+ create mode 100644 drivers/reset/reset-mtk.c
+
+--
+1.8.1.1.dirty
