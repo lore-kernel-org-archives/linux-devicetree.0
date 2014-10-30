@@ -1,69 +1,33 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v16 2/5] dt-bindings: document Rockchip thermal
-Date: Thu, 30 Oct 2014 21:17:19 +0100
-Message-ID: <1823150.6k52MgLRcZ@phil>
-References: <1414549959-13699-1-git-send-email-caesar.wang@rock-chips.com> <1414549959-13699-3-git-send-email-caesar.wang@rock-chips.com>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH 0/6] ARM: shmobile: Change to using clock-indices
+Date: Thu, 30 Oct 2014 20:40:16 +0000
+Message-ID: <5452A230.30605@codethink.co.uk>
+References: <1414592353-24044-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1414549959-13699-3-git-send-email-caesar.wang@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Caesar Wang <caesar.wang@rock-chips.com>
-Cc: rui.zhang@intel.com, edubezval@gmail.com, zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dmitry.torokhov@gmail.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1414592353-24044-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Mike Turquette <mturquette@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 29. Oktober 2014, 10:32:36 schrieb Caesar Wang:
-> This add the necessary binding documentation for the thermal
-> found on Rockchip SoCs
+On 29/10/14 14:19, Geert Uytterhoeven wrote:
+> 	Hi Mike, Simon, Magnus,
 > 
-> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
-> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
-> Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  .../bindings/thermal/rockchip-thermal.txt          | 62
-> ++++++++++++++++++++++ 1 file changed, 62 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> This patch series finalizes the conversion from the vendor-specific
+> "renesas,clock-indices" to the generic "clock-indices", started by Ben Dooks.
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt new file
-> mode 100644
-> index 0000000..3061982
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> @@ -0,0 +1,62 @@
-> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
-> +
-> +Required properties:
-> +- compatible : "rockchip,rk3288-tsadc"
-> +- reg : physical base address of the controller and length of memory mapped
-> +	region.
-> +- interrupts : The interrupt number to the cpu. The interrupt specifier
-> format +	       depends on the interrupt controller.
-> +- clocks : Must contain an entry for each entry in clock-names.
-> +- clock-names : Shall be "tsadc" for the converter-clock, and "apb_pclk"
-> for +		the peripheral clock.
-> +- #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
-> +- hw-shut-temp : The hardware-controlled shutdown temperature value. +-
-> tsadc-tshut-mode : The hardware-controlled shutdown mode 0:CRU 1:GPIO. +-
-> tsadc-tshut-polarity : The hardware-controlled active polarity 0:LOW
-> 1:HIGH. +
-> +Exiample:
-> +tsadc: tsadc@ff280000 {
-> +	compatible = "rockchip,rk3288-tsadc";
-> +	reg = <0xff280000 0x100>;
-> +	interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
-> +	clock-names = "tsadc", "apb_pclk";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&otp_out>;
-> +	#thermal-sensor-cells = <1>;
-> +	hw-shut-temp = <125000>;
-> +	tsadc-tshut-mode = <0>;
-> +	tsadc-tshut-polarity = <0>;
+> The patches for r8a7790 and r8a7791 were extracted from a patch that Ben sent
+> before ("[PATCH 2/3] renesas: change to using clock-indices"), but it was never
+> split/updated.
+> 
+> Thanks for applying!
 
-these last 3 seem to be specific to this tsadc so should probably have a 
-"rockchip,"-prefix
+Thanks for following this up, i've not had time to look at any of this
+code recently.
 
-
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
