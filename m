@@ -1,144 +1,105 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
-Date: Thu, 30 Oct 2014 11:29:50 -0500
-Message-ID: <1414686590.23458.151.camel@snotra.buserror.net>
-References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
-	 <EA33D307-CCDA-4A30-9386-46FA832FE0CA@codeaurora.org>
-	 <1414519738.23458.84.camel__4795.38602890006$1414521743$gmane$org@snotra.buserror.net>
-	 <54515ECB.70404@Freescale.com>
-	 <1414620996.23458.141.camel__29590.7804662876$1414621051$gmane$org@snotra.buserror.net>
-	 <5451BF49.6050106@Freescale.com>
-	 <1414680683.23458.148.camel__4514.07629666409$1414680744$gmane$org@snotra.buserror.net>
-	 <54526521.1090601@Freescale.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v4 20/20] usb: dwc3: make HIRD threshold configurable
+Date: Thu, 30 Oct 2014 11:37:43 -0500
+Message-ID: <20141030163743.GJ10130@saruman>
+References: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
+ <1414663725-2195-21-git-send-email-ray.huang@amd.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <54526521.1090601@Freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Emil Medve <Emilian.Medve@Freescale.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, corbet@lwn.net, Geoff.Thorpe@Freescale.com, ijc+devicetree@hellion.org.uk, linux-doc@vger.kernel.org, linuxppc-dev@ozlabs.org, robh+dt@kernel.org, Kumar Gala <galak@codeaurora.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="x+RZeZVNR8VILNfK"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414663725-2195-21-git-send-email-ray.huang@amd.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Huang Rui <ray.huang@amd.com>
+Cc: Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-10-30 at 11:19 -0500, Emil Medve wrote:
-> Hello Scott,
+--x+RZeZVNR8VILNfK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Oct 30, 2014 at 06:08:45PM +0800, Huang Rui wrote:
+> HIRD threshold should be configurable by different platforms.
 >=20
+> From DesignWare databook:
+> When HIRD_Threshold[4] is set to 1b1 and HIRD value is greater than or
+> equal to the value in HIRD_Threshold[3:0], dwc3 asserts output signals
+> utmi_l1_suspend_n to put PHY into Deep Low-Power mode in L1.
 >=20
-> On 10/30/2014 09:51 AM, Scott Wood wrote:
-> > On Wed, 2014-10-29 at 23:32 -0500, Emil Medve wrote:
-> >> Hello Scott,
-> >>
-> >>
-> >> On 10/29/2014 05:16 PM, Scott Wood wrote:
-> >>> On Wed, 2014-10-29 at 16:40 -0500, Emil Medve wrote:
-> >>>> Hello Scott,
-> >>>>
-> >>>>
-> >>>> On 10/28/2014 01:08 PM, Scott Wood wrote:
-> >>>>> On Tue, 2014-10-28 at 09:36 -0500, Kumar Gala wrote:
-> >>>>>> On Oct 22, 2014, at 9:09 AM, Emil Medve <Emilian.Medve@freesca=
-le.com> wrote:
-> >>>>>>
-> >>>>>>> The Buffer Manager is part of the Data-Path Acceleration Arch=
-itecture (DPAA).
-> >>>>>>> BMan supports hardware allocation and deallocation of buffers=
- belonging to
-> >>>>>>> pools originally created by software with configurable deplet=
-ion thresholds.
-> >>>>>>> This binding covers the CCSR space programming model
-> >>>>>>>
-> >>>>>>> Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
-> >>>>>>> Change-Id: I3ec479bfb3c91951e96902f091f5d7d2adbef3b2
-> >>>>>>> ---
-> >>>>>>> .../devicetree/bindings/powerpc/fsl/bman.txt       | 98 +++++=
-+++++++++++++++++
-> >>>>>>> 1 file changed, 98 insertions(+)
-> >>>>>>> create mode 100644 Documentation/devicetree/bindings/powerpc/=
-fsl/bman.txt
-> >>>>>>
-> >>>>>> Should these really be in bindings/powerpc/fsl, aren=E2=80=99t=
- you guys using this on ARM SoCs as well?
-> >>>>>
-> >>>>> The hardware on the ARM SoCs is different enough that I'm not s=
-ure the
-> >>>>> same binding will cover it.  That said, putting things under <a=
-rch>
-> >>>>> should be a last resort if nowhere else fits.
-> >>>>
-> >>>> OTC started ported the driver to the the ARM SoC and the feedbac=
-k has
-> >>>> been that the driver needed minimal changes. The IOMMU has been =
-the only
-> >>>> area of concern, and a small change to the binding has been sugg=
-ested
-> >>>
-> >>> Do we need something in the binding to indicate device endianness=
-?
-> >>
-> >> As I said, I didn't have enough exposure to the ARM SoC so I can't
-> >> answer that
-> >>
-> >>> If this binding is going to continue to be relevant to future DPA=
-A
-> >>> generations, I think we really ought to deal with the possibility=
- that
-> >>> there is more than one datapath instance
-> >>
-> >> I'm unsure how relevant this will be going forward. In LS2 B/QMan =
-is
-> >> abstracted/hidden away behind the MC (firmware).
-> >=20
-> > This is why I was wondering whether the binding would be at all the
-> > same...
-> >=20
-> >>  I wouldn't over-engineer this without a clear picture of what mul=
-tiple
-> >> data-paths per SoC even means at this point
-> >=20
-> > I don't think it's over-engineering.  Assuming only one instance of
-> > something is generally sloppy engineering.  Linux doesn't need to
-> > actually pay attention to it until and unless it becomes necessary,=
- but
-> > it's good to have the information in the device tree up front.
+> When HIRD_Threshold[4] is set to 1b0 or the HIRD value is less than
+> HIRD_Threshold[3:0], dwc3 asserts output signals utmi_sleep_n on L1.
 >=20
-> I asked around and the "multiple data-path SoC" seems to be at this
-> point a speculation. It seems unclear how would it work, what
-> requirements/problems it would address/solve, what programming interf=
-ace
-> it would have. I'm not sure what do you suggest we do
+> Signed-off-by: Huang Rui <ray.huang@amd.com>
+> ---
+>  Documentation/devicetree/bindings/usb/dwc3.txt |  3 +++
+>  drivers/usb/dwc3/core.c                        | 17 +++++++++++++++++
+>  drivers/usb/dwc3/core.h                        |  6 ++++++
+>  drivers/usb/dwc3/gadget.c                      |  6 +-----
+>  drivers/usb/dwc3/platform_data.h               |  3 +++
+>  5 files changed, 30 insertions(+), 5 deletions(-)
 >=20
-> In order to reduce the sloppiness of this binding. I'll add a
-> memory-region phandle to connect each B/QMan node to their
-> reserved-memory node
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentati=
+on/devicetree/bindings/usb/dwc3.txt
+> index feaf2c8..5b99755 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> @@ -34,6 +34,9 @@ Optional properties:
+>  			LTSSM during USB3 Compliance mode.
+>   - snps,dis_u3_susphy_quirk: when set core will disable USB3 suspend phy.
+>   - snps,dis_u2_susphy_quirk: when set core will disable USB2 suspend phy.
+> + - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
+> +			utmi_l1_suspend_n, false when asserts utmi_sleep_n
+> + - snps,hird-threshold: HIRD threshold
+> =20
+>  This is usually a subnode to DWC3 glue to which it is connected.
+> =20
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index a28ed1c..f4172ab 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -729,6 +729,7 @@ static int dwc3_probe(struct platform_device *pdev)
+>  	struct dwc3		*dwc;
+>  	u8			lpm_nyet_threshold;
+>  	u8			tx_de_emphasis;
+> +	u8			hird_threshold;
+> =20
+>  	int			ret;
+> =20
+> @@ -790,12 +791,22 @@ static int dwc3_probe(struct platform_device *pdev)
+>  	/* default to -3.5dB de-emphasis */
+>  	tx_de_emphasis =3D 1;
+> =20
+> +	/*
+> +	 * defalut to assert utmi_sleep_n and use maximum allowed HIRD
 
-Thanks, that's the sort of thing I was looking for.  There should also
-be a connection from the portals to the relevant bqman node, though we
-need to deal with the possibility that the bqman node may not be presen=
-t
-(e.g. in a vm guest).
+default
 
-> >>> by having phandles and/or a parent container to connect the relat=
-ed
-> >>> components.
-> >>
-> >> Connecting the related components is beyond the scope of this bind=
-ing.
-> >> It will soon hit the e-mail list(s) as part of upstreaming the Eth=
-ernet
-> >> driver
-> >=20
-> > So you want us to merge this binding without being told how this wo=
-rks?
->=20
-> This binding stands on its own and each block (B/QMan) can be used fo=
-r
-> some useful purpose by itself. All other blocks/applications that use
-> the B/QMan use the same basic interface acquire/release a "buffer" an=
-d
-> enqueue/dequeue a "packet". I'm not sure what you feel I didn't share
+--=20
+balbi
 
-So there's no hardware connection between the bman and qman themselves?
+--x+RZeZVNR8VILNfK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--Scott
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
+iQIcBAEBAgAGBQJUUmlWAAoJEIaOsuA1yqREX38P/0vRdfmp9nEwyb+cLlk4lbLI
+/ShZCybrSc3nyRTuvb9IZQpU64NEXrSjUO8M4jmgpBmfX6phlvYkHpqE0dyroazb
+sqY5ugYu+K10XOvqolOhtnGvEFr44MZ31LSWx+7KY6iTSzZuQWUrcabxGN6Tuekw
+o4Pj6JKtcrC6C+AKG7jHKol0Tu7elBH4wo+SO0Ufz8sJJmtgOPr9CVBe/aeBmACq
+v0ZxDxCQeHpaDous65lCK8gfgQU42A7jodub82GnP5O4CW8xAMR88TWC7tTecrRQ
+quSzPBubYLc9ZGSn/FytoPG3hmU/sHuGhz3Poyz5YzSEIIXnxAioAodGBE0ic9LO
+O6wFzwMT0WzDbivIaNopKc2YgoZcwO1Ewt10QA0jor7rwzbU5uSG8/WvQnXwb8KG
+mwdmYdTIzRXXlb+XgFnYiXoAxkG2l1COhLQr53F6hhIKQ6kwrLuh2JCJngH8mEHc
+MtY8Potf0jHCnCRczeZl1NB6x5o9uTkPgBbI/vE2oSkR8rdSw6ddjeq/IJHIsFkP
+9SM79w4uUXVI6jMNmfpCCAHoJExP/8yDxeuDEpJKEeqS73O1KvWBGISznyXwJzoi
+L0LC2+BrZYggiHofnlS9wrrcImb+H5/+lzi2p3YiZ76a0i0EB42GymGcRXAVIX/M
+itmYQSSKHekYkoos0cNR
+=hbzq
+-----END PGP SIGNATURE-----
 
+--x+RZeZVNR8VILNfK--
