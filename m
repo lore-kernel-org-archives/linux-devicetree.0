@@ -1,7 +1,7 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V2 15/15] irqchip: bcm7120-l2: Enable big endian register accesses on BE kernels
-Date: Wed, 29 Oct 2014 19:18:08 -0700
-Message-ID: <1414635488-14137-16-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V2 10/15] irqchip: bcm7120-l2: Make sure all register accesses use base+offset
+Date: Wed, 29 Oct 2014 19:18:03 -0700
+Message-ID: <1414635488-14137-11-git-send-email-cernekee@gmail.com>
 References: <1414635488-14137-1-git-send-email-cernekee@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1414635488-14137-1-git-send-email-cernekee@gmail.com>
@@ -10,61 +10,41 @@ To: arnd@arndb.de, f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.ne
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On all supported SoCs, the kernel will be built with CONFIG_CPU_BIG_ENDIAN
-iff the CPU is running in BE mode.  Leverage this fact to autodetect
-the MMIO byte ordering to use in generic-chip.c.
+A couple of accesses to IRQEN (base+0x00) just used "base" directly, so
+they would break if IRQEN ever became nonzero.  Make sure that all
+reads/writes specify the register offset constant.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/irqchip/Kconfig          | 2 ++
- drivers/irqchip/irq-bcm7120-l2.c | 9 ++++++---
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ drivers/irqchip/irq-bcm7120-l2.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index afdc1f3..db44694 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -51,11 +51,13 @@ config ATMEL_AIC5_IRQ
- config BCM7120_L2_IRQ
- 	bool
- 	select GENERIC_IRQ_CHIP
-+	select GENERIC_IRQ_CHIP_BE
- 	select IRQ_DOMAIN
- 
- config BRCMSTB_L2_IRQ
- 	bool
- 	select GENERIC_IRQ_CHIP
-+	select GENERIC_IRQ_CHIP_BE
- 	select IRQ_DOMAIN
- 
- config DW_APB_ICTL
 diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
-index e53a3a6..5324249 100644
+index 49d8f3d..6472b71 100644
 --- a/drivers/irqchip/irq-bcm7120-l2.c
 +++ b/drivers/irqchip/irq-bcm7120-l2.c
-@@ -132,7 +132,7 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
- 	const __be32 *map_mask;
- 	int num_parent_irqs;
- 	int ret = 0, len;
--	unsigned int idx, irq;
-+	unsigned int idx, irq, flags;
+@@ -66,10 +66,10 @@ static void bcm7120_l2_intc_suspend(struct irq_data *d)
  
- 	data = kzalloc(sizeof(*data), GFP_KERNEL);
- 	if (!data)
-@@ -195,9 +195,12 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
- 		goto out_unmap;
+ 	irq_gc_lock(gc);
+ 	/* Save the current mask and the interrupt forward mask */
+-	b->saved_mask = __raw_readl(b->base) | b->irq_fwd_mask;
++	b->saved_mask = __raw_readl(b->base + IRQEN) | b->irq_fwd_mask;
+ 	if (b->can_wake) {
+ 		reg = b->saved_mask | gc->wake_active;
+-		__raw_writel(reg, b->base);
++		__raw_writel(reg, b->base + IRQEN);
  	}
+ 	irq_gc_unlock(gc);
+ }
+@@ -81,7 +81,7 @@ static void bcm7120_l2_intc_resume(struct irq_data *d)
  
-+	flags = IRQ_GC_INIT_MASK_CACHE;
-+	if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
-+		flags |= IRQ_GC_BE_IO;
-+
- 	ret = irq_alloc_domain_generic_chips(data->domain, IRQS_PER_WORD, 1,
--				dn->full_name, handle_level_irq, clr, 0,
--				IRQ_GC_INIT_MASK_CACHE);
-+				dn->full_name, handle_level_irq, clr, 0, flags);
- 	if (ret) {
- 		pr_err("failed to allocate generic irq chip\n");
- 		goto out_free_domain;
+ 	/* Restore the saved mask */
+ 	irq_gc_lock(gc);
+-	__raw_writel(b->saved_mask, b->base);
++	__raw_writel(b->saved_mask, b->base + IRQEN);
+ 	irq_gc_unlock(gc);
+ }
+ 
 -- 
 2.1.1
