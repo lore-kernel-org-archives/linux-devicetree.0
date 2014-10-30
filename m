@@ -1,74 +1,69 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v1 4/4] ARM: dts: rockchip: Enable emac node in rk3066a-marsboard
-Date: Thu, 30 Oct 2014 21:01:22 +0100
-Message-ID: <2556111.3QCemWlFX8@phil>
-References: <1414499062-23875-1-git-send-email-romain.perier@gmail.com> <1414499062-23875-4-git-send-email-romain.perier@gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v16 2/5] dt-bindings: document Rockchip thermal
+Date: Thu, 30 Oct 2014 21:17:19 +0100
+Message-ID: <1823150.6k52MgLRcZ@phil>
+References: <1414549959-13699-1-git-send-email-caesar.wang@rock-chips.com> <1414549959-13699-3-git-send-email-caesar.wang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414499062-23875-4-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1414549959-13699-3-git-send-email-caesar.wang@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: rui.zhang@intel.com, edubezval@gmail.com, zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dmitry.torokhov@gmail.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 28. Oktober 2014, 12:24:22 schrieb Romain Perier:
-> This enables EMAC Rockchip and adds initial ethernet support
-> for the MarsBoard RK3066.
+Am Mittwoch, 29. Oktober 2014, 10:32:36 schrieb Caesar Wang:
+> This add the necessary binding documentation for the thermal
+> found on Rockchip SoCs
 > 
-> Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-please reorder your series a bit:
-
-Patch1: ARM: dts: rockchip: Add EMAC Rockchip for RK3066 SoCs
-Patch2: old patches 1,2,4 combined into one single patch
-
-
+> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
+> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+> Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 > ---
->  arch/arm/boot/dts/rk3066a-marsboard.dts | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+>  .../bindings/thermal/rockchip-thermal.txt          | 62
+> ++++++++++++++++++++++ 1 file changed, 62 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
 > 
-> diff --git a/arch/arm/boot/dts/rk3066a-marsboard.dts
-> b/arch/arm/boot/dts/rk3066a-marsboard.dts index 146bd61..560070c 100644
-> --- a/arch/arm/boot/dts/rk3066a-marsboard.dts
-> +++ b/arch/arm/boot/dts/rk3066a-marsboard.dts
-> @@ -122,6 +122,30 @@
->  /* must be included after &tps gets defined */
->  #include "tps65910.dtsi"
-> 
-> +&emac {
-> +	status = "okay";
+> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt new file
+> mode 100644
+> index 0000000..3061982
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> @@ -0,0 +1,62 @@
+> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
 > +
-> +	phy = <&phy0>;
-> +	phy-supply = <&vaux33_reg>;
-
-&vcc_rmii as explained in the other mail
-
-> +
+> +Required properties:
+> +- compatible : "rockchip,rk3288-tsadc"
+> +- reg : physical base address of the controller and length of memory mapped
+> +	region.
+> +- interrupts : The interrupt number to the cpu. The interrupt specifier
+> format +	       depends on the interrupt controller.
+> +- clocks : Must contain an entry for each entry in clock-names.
+> +- clock-names : Shall be "tsadc" for the converter-clock, and "apb_pclk"
+> for +		the peripheral clock.
+> +- #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
+> +- hw-shut-temp : The hardware-controlled shutdown temperature value. +-
+> tsadc-tshut-mode : The hardware-controlled shutdown mode 0:CRU 1:GPIO. +-
+> tsadc-tshut-polarity : The hardware-controlled active polarity 0:LOW
+> 1:HIGH. +
+> +Exiample:
+> +tsadc: tsadc@ff280000 {
+> +	compatible = "rockchip,rk3288-tsadc";
+> +	reg = <0xff280000 0x100>;
+> +	interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+> +	clocks = <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
+> +	clock-names = "tsadc", "apb_pclk";
 > +	pinctrl-names = "default";
-> +	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&phy_int>;
-> +
-> +	phy0: ethernet-phy@0 {
-> +		reg = <0>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
-> +	};
-> +};
-> +
-> +&pinctrl {
-> +	lan8720a {
-> +		phy_int: phy-int {
-> +			rockchip,pins = <RK_GPIO1 26 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +};
-> +
->  &uart0 {
->  	status = "okay";
->  };
+> +	pinctrl-0 = <&otp_out>;
+> +	#thermal-sensor-cells = <1>;
+> +	hw-shut-temp = <125000>;
+> +	tsadc-tshut-mode = <0>;
+> +	tsadc-tshut-polarity = <0>;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+these last 3 seem to be specific to this tsadc so should probably have a 
+"rockchip,"-prefix
+
+
