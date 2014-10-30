@@ -1,103 +1,31 @@
-From: Huang Rui <ray.huang@amd.com>
-Subject: [PATCH v4 16/20] usb: dwc3: add disable usb2 suspend phy quirk
-Date: Thu, 30 Oct 2014 18:08:41 +0800
-Message-ID: <1414663725-2195-17-git-send-email-ray.huang@amd.com>
-References: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v1 1/2] dtb: xgene: fix: Disable 10GbE and SGMII based 1GbE by default
+Date: Thu, 30 Oct 2014 11:13:49 +0100
+Message-ID: <1991367.DGHysZpQVP@wuerfel>
+References: <1414630580-24640-1-git-send-email-isubramanian@apm.com> <1414630580-24640-2-git-send-email-isubramanian@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Huang Rui <ray.huang@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1414630580-24640-2-git-send-email-isubramanian@apm.com>
+Sender: netdev-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Iyappan Subramanian <isubramanian@apm.com>, davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org, kchudgar@apm.com, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds disable usb2 suspend phy quirk, and some special platforms
-can configure that if it is needed.
+On Wednesday 29 October 2014 17:56:19 Iyappan Subramanian wrote:
+> @@ -621,7 +621,7 @@
+>                         };
+>                 };
+>  
+> -               sgenet0: ethernet@1f210000 {
+> +               sgenet0: sgenet@1f210000 {
+>                         compatible = "apm,xgene-enet";
+>                         status = "disabled";
+>                         reg = <0x0 0x1f210000 0x0 0x10000>,
+> 
 
-Signed-off-by: Huang Rui <ray.huang@amd.com>
----
- Documentation/devicetree/bindings/usb/dwc3.txt | 1 +
- drivers/usb/dwc3/core.c                        | 7 +++++++
- drivers/usb/dwc3/core.h                        | 2 ++
- drivers/usb/dwc3/platform_data.h               | 1 +
- 4 files changed, 11 insertions(+)
+This looks like you accidentally reverted a bug fix made earlier.
+Network devices should always have the name 'ethernet@...'.
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 3720fca..feaf2c8 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -33,6 +33,7 @@ Optional properties:
-  - snps,tx_de_emphasis: the value driven to the PHY is controlled by the
- 			LTSSM during USB3 Compliance mode.
-  - snps,dis_u3_susphy_quirk: when set core will disable USB3 suspend phy.
-+ - snps,dis_u2_susphy_quirk: when set core will disable USB2 suspend phy.
- 
- This is usually a subnode to DWC3 glue to which it is connected.
- 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index fdc715a..a28ed1c 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -423,6 +423,10 @@ static void dwc3_phy_setup(struct dwc3 *dwc)
- 	if (dwc->revision > DWC3_REVISION_194A)
- 		reg |= DWC3_GUSB2PHYCFG_SUSPHY;
- 
-+	/* FIXME will move FPGA flag when AMD NL taps out */
-+	if (dwc->dis_u2_susphy_quirk && dwc->is_fpga)
-+		reg &= ~DWC3_GUSB2PHYCFG_SUSPHY;
-+
- 	dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
- 
- 	mdelay(100);
-@@ -815,6 +819,8 @@ static int dwc3_probe(struct platform_device *pdev)
- 				"snps,rx_detect_poll_quirk");
- 		dwc->dis_u3_susphy_quirk = of_property_read_bool(node,
- 				"snps,dis_u3_susphy_quirk");
-+		dwc->dis_u2_susphy_quirk = of_property_read_bool(node,
-+				"snps,dis_u2_susphy_quirk");
- 
- 		dwc->tx_de_emphasis_quirk = of_property_read_bool(node,
- 				"snps,tx_de_emphasis_quirk");
-@@ -838,6 +844,7 @@ static int dwc3_probe(struct platform_device *pdev)
- 		dwc->lfps_filter_quirk = pdata->lfps_filter_quirk;
- 		dwc->rx_detect_poll_quirk = pdata->rx_detect_poll_quirk;
- 		dwc->dis_u3_susphy_quirk = pdata->dis_u3_susphy_quirk;
-+		dwc->dis_u2_susphy_quirk = pdata->dis_u2_susphy_quirk;
- 
- 		dwc->tx_de_emphasis_quirk = pdata->tx_de_emphasis_quirk;
- 		if (pdata->tx_de_emphasis)
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index be793f7..8b6c308 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -698,6 +698,7 @@ struct dwc3_scratchpad_array {
-  * @lfps_filter_quirk: set if we enable LFPS filter quirk
-  * @rx_detect_poll_quirk: set if we enable rx_detect to polling LFPS quirk
-  * @dis_u3_susphy_quirk: set if we disable usb3 suspend phy
-+ * @dis_u2_susphy_quirk: set if we disable usb2 suspend phy
-  * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
-  * @tx_de_emphasis: Tx de-emphasis value
-  * 	0       - -6dB de-emphasis
-@@ -820,6 +821,7 @@ struct dwc3 {
- 	unsigned		lfps_filter_quirk:1;
- 	unsigned		rx_detect_poll_quirk:1;
- 	unsigned		dis_u3_susphy_quirk:1;
-+	unsigned		dis_u2_susphy_quirk:1;
- 
- 	unsigned		tx_de_emphasis_quirk:1;
- 	unsigned		tx_de_emphasis:2;
-diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform_data.h
-index 0f1d5ad..245300b 100644
---- a/drivers/usb/dwc3/platform_data.h
-+++ b/drivers/usb/dwc3/platform_data.h
-@@ -37,6 +37,7 @@ struct dwc3_platform_data {
- 	unsigned lfps_filter_quirk:1;
- 	unsigned rx_detect_poll_quirk:1;
- 	unsigned dis_u3_susphy_quirk:1;
-+	unsigned dis_u2_susphy_quirk:1;
- 
- 	unsigned tx_de_emphasis_quirk:1;
- 	unsigned tx_de_emphasis:2;
--- 
-1.9.1
+	Arnd
