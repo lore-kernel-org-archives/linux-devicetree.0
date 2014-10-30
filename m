@@ -1,58 +1,147 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC] ARM: shmobile: lager: Fix node name of GPIO keys
-Date: Thu, 30 Oct 2014 10:48:33 +0100
-Message-ID: <CAMuHMdXaq+VGBvMzxxaLxwv6x+97o3ZxKHops8pZ8hS1jkG6cg@mail.gmail.com>
-References: <1414648571-30419-1-git-send-email-horms+renesas@verge.net.au>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 01/11] irqchip: Allow irq_reg_{readl,writel} to use __raw_{readl_writel}
+Date: Thu, 30 Oct 2014 10:58:44 +0100
+Message-ID: <7309232.oJGU5dTioF@wuerfel>
+References: <1414555138-6500-1-git-send-email-cernekee@gmail.com> <22478002.kqKBdeLAKz@wuerfel> <CAJiQ=7DWEr9Oej6=+3vqKL_fJd2-wvQjx2Xw4dYwyE3AGDXOUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1414648571-30419-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJiQ=7DWEr9Oej6=+3vqKL_fJd2-wvQjx2Xw4dYwyE3AGDXOUA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Cernekee <cernekee@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 30, 2014 at 6:56 AM, Simon Horman
-<horms+renesas@verge.net.au> wrote:
-> From: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
->
-> gpio_keys appears to be consistent with more dts files than gpio-keys
+On Wednesday 29 October 2014 16:05:21 Kevin Cernekee wrote:
+> On Wed, Oct 29, 2014 at 2:13 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Wednesday 29 October 2014 13:09:47 Kevin Cernekee wrote:
+> >> On Wed, Oct 29, 2014 at 12:14 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> >> >> The host CPU is connected to the peripheral/register interface using a
+> >> >> 32-bit wide data bus.  A simple 32-bit store originating from the host
+> >> >> CPU, targeted to an onchip SoC peripheral, will never need endian
+> >> >> swapping.  i.e. this code works equally well on all supported systems
+> >> >> regardless of endianness:
+> >> >>
+> >> >>     volatile u32 *foo = (void *)MY_REG_VA;
+> >> >>     *foo = 0x12345678;
+> >> >>
+> >> >> 8-bit and 16-bit accesses may be another story, but only appear in a
+> >> >> few very special peripherals.
+> >> >
+> >> > Sorry, but this makes no sense. If you run a little-endian kernel
+> >> > on one of the MIPS systems that you marked as "always BE", or a
+> >> > big-endian kernel on the systems that are marked "always LE",
+> >> > then you have to byte swap.
+> >>
+> >> If I ran an LE MIPS kernel on a BE system, it would hang on boot.  I
+> >> know this through experience.
+> >
+> > What is a "BE system" then? Is the CPU core not capable of running
+> > code either way?
+> 
+> On the MIPS BCM7xxx chips, LE/BE support was a design requirement.  So:
+> 
+>  - The chips include a strap pin for LE/BE so it can be configured
+> through board jumpers.  This is the only supported method of switching
+> endianness.
+> 
+>  - Endianness interactions and performance concerns have been analyzed
+> for all peripherals, buses, and data flows.
+> 
+>  - As Florian mentioned earlier, the LE/BE strap preconfigures several
+> hardware blocks at boot time, e.g. telling the SPI controller how to
+> arrange the incoming data such that the MSB of each instruction word
+> read from flash shows up in the right place.
+> 
+>  - The entire software stack (and even the cross toolchain) needs to
+> be compiled for either LE or BE.
+> 
+> So in this context a "BE system" is a BCM7xxx MIPS chip strapped for
+> BE, or one of the BCM33xx/BCM63xx/BCM68xx MIPS chips that is hardwired
+> and verified for BE only.
 
-The closest match on page 17 of ePAPR is "keyboard".
-Should we use that?
+Ah, I think I understand what you mean now. So this strapping is done
+for legacy operating systems that are not endian-aware and hardwired
+to one or the other.
 
-https://www.power.org/wp-content/uploads/2012/06/Power_ePAPR_APPROVED_v1.1.pdf
+In Linux, we don't care about that, we have the source and we can
+just make it run on any hardware we care about. If you port a kernel
+to such a platform, the best strategy is to ignore what the SoC
+vendor tried to do for the other OSs and set the chip into "never
+translate" in hardware so you can handle it correctly in the kernel.
 
-> Signed-off-by: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
-> [simon: reworded changelog]
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
-> Based on the renesas-devel-20141030-v3.18-rc2 branch of my renesas tree
->
->  arch/arm/boot/dts/r8a7790-lager.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-> index 830f2e8..6c05644 100644
-> --- a/arch/arm/boot/dts/r8a7790-lager.dts
-> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
-> @@ -43,7 +43,7 @@
->                 #size-cells = <1>;
->         };
->
-> -       gpio_keys {
-> +       gpio-keys {
->                 compatible = "gpio-keys";
->
->                 button@1 {
+Presumably you want to keep the boot loader, so unfortunately
+that can mean having to override the setting in early kernel code
+before you touch any hardware. The nasty part is when the hardware
+designers put a byteswap logic in front of the flash, because then
+you have to create an image that stores the bootloader in opposite
+endianess from the kernel, but I'd assume that's still better than
+the hacks from the vendor BSP.
 
-Gr{oetje,eeting}s,
+You have multiple problems if you rely on the byteswaps being
+done in hardware:
 
-                        Geert
+- You can't build a kernel that runs on all SoCs, not even all
+  systems using the same SoC when that strapping pin gives you
+  two incompatible versions
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+- Any MMIO access to device memory storing byte streams (network
+  packets, audio, block, ...) will be swapped the same way that
+  the registers do, which means you now have to do the expensive
+  byte swaps (memcpy_fromio) in software instead of the cheap ones
+  (writel)
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+- If the hardware swap was implemented wrong, all the addresses
+  for 8 or 16 bit MMIO registers are wrong too and you have to
+  fix them up in software, which is much worse than swapping the
+  contents.
+
+- It's impossible to share device drivers with saner hardware
+  platforms that let the CPU access MMIO registers in whichever
+  way the device expects it.
+
+> >> Does this actually work on other architectures like ARM?  I still see
+> >> compile-time checks for CONFIG_CPU_ENDIAN* in a couple of places under
+> >> arch/arm.
+> >
+> > Yes, it should work on any architecture that supports both modes. It
+> > definitely works on all ARM cores I know, and on most PowerPC cores.
+> > I always assumed that MIPS was bi-endian as well, but according to
+> > what you say I guess it is not.
+> >
+> > ARM and PowerPC can actually switch endianess in the kernel, and this
+> > is what they do in the first instruction when you run a different
+> > endianess from what the boot loader runs as it calls into the kernel.
+> > The ARM boot protocol requires entering the kernel in little-endian
+> > mode, while I think on PowerPC the boot loader is supposed to detect
+> > the format of the kernel binary and pick the right mode before calling
+> > it.
+> 
+> Is it the intention to allow runtime endian switching on any
+> ARM/PowerPC platform (even the Samsung products you mentioned)?  Or
+> only on the boards that were designed to operate this way?
+
+Any sane SoC will come without byteswapping on the buses, so that's
+trivial to handle. You just have to build kernel and userspace in the
+same endianess and have to ensure that all drivers use the correct
+accessors that match what the hardware does.
+
+The Samsung platforms get it wrong because they tried to optimize
+out the barriers implied by writel, before we had writel_relaxed.
+When nobody made a mistake like that, you can run a kernel of either
+endianess on any hardware.
+
+> Our problem becomes much simpler if we assume that the majority of
+> systems have a fixed endianness, and only a few special cases need to
+> accommodate the different kernel/register endianness permutations
+> you've listed.
+
+Good point. It seems that there is currently no support for BCM7xxx
+in upstream Linux, and that is the only one that has the crazy
+strapping pin, so I guess you could avoid a lot of the problems by
+changing the MIPS code to assume BE registers, and if anybody wants
+to submit BCM7xxx MIPS support to mainline, they have to make sure
+it's in the right mode.
+
+	Arnd
