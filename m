@@ -1,94 +1,158 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v2 00/20] rtc: omap: fixes and power-off feature
-Date: Thu, 30 Oct 2014 11:01:43 +0100
-Message-ID: <20141030100143.GA7846@localhost>
-References: <20141028002552.GX12379@n2100.arm.linux.org.uk>
- <20141028081616.GL2006@localhost>
- <20141028084745.GY12379@n2100.arm.linux.org.uk>
- <20141028131257.GS2006@localhost>
- <20141028151610.GA12379@n2100.arm.linux.org.uk>
- <20141029123418.GB2265@localhost>
- <20141029131020.GB12379@n2100.arm.linux.org.uk>
- <20141029132244.GD2265@localhost>
- <20141029152502.GA20565@roeck-us.net>
- <20141029155109.GH2265@localhost>
+From: Romain Perier <romain.perier@gmail.com>
+Subject: Re: [PATCH v2 1/4] of: Rename "poweroff-source" property to "system-power-controller"
+Date: Thu, 30 Oct 2014 11:08:40 +0100
+Message-ID: <CABgxDoJkQ_dRd=fkOW1xsGszup7tVETb3aWukpDbafzRUaQcFA@mail.gmail.com>
+References: <1414568135-8311-1-git-send-email-romain.perier@gmail.com>
+	<1414568135-8311-2-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141029155109.GH2265@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Johan Hovold <johan@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Felipe Balbi <balbi@ti.com>, Alessandro Zummo <a.zummo@towertech.it>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Lokesh Vutla <lokeshvutla@ti.com>, nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1414568135-8311-2-git-send-email-romain.perier@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 29, 2014 at 04:51:09PM +0100, Johan Hovold wrote:
-> On Wed, Oct 29, 2014 at 08:25:02AM -0700, Guenter Roeck wrote:
-> > On Wed, Oct 29, 2014 at 02:22:44PM +0100, Johan Hovold wrote:
-> > > On Wed, Oct 29, 2014 at 01:10:20PM +0000, Russell King - ARM Linux wrote:
-> > > > On Wed, Oct 29, 2014 at 01:34:18PM +0100, Johan Hovold wrote:
-> > > > > On Tue, Oct 28, 2014 at 03:16:10PM +0000, Russell King - ARM Linux wrote:
-> > > > > > And how is that different from having a set of power-off handlers, and
-> > > > > > reporting when each individual one fails?  Don't you want to know if
-> > > > > > your primary high priority reboot handler fails, just as much as you
-> > > > > > want to know if your final last-resort power-off handler fails?
-> > > > > 
-> > > > > Good point. Failed power-off should probably be logged by the power-off
-> > > > > call chain implementation (which seems to makes notifier chains a bad
-> > > > > fit).
-> > > > > 
-> > > > > And what about any power-off latencies? Should this always be dealt with
-> > > > > in the power-off handler?
-> > > > > 
-> > > > > Again, if it's predictable and high, as in the OMAP RTC case, it should
-> > > > > go in the handler. But what if it's just normal bus latencies
-> > > > > (peripheral busses, i2c, or whatever people may come up with)?
-> > > > > 
-> > > > > Should there always be a short delay before calling the next handler?
-> > > > 
-> > > > If the handler has determined that it has failed, then why delay before
-> > > > trying the next handler?  At the point it has decided it has failed,
-> > > > surely that's after it has waited sufficient time to determine that
-> > > > failure?
-> > > 
-> > > The current handlers we have are not expecting any other handler to be
-> > > run after they return. My question was whether all these handlers should
-> > > get a short mdelay added to them (e.g. to compensate for bus latencies)
-> > 
-> > Some of them do add a delay.
-> 
-> Yes, but not all.
-> 
-> > > or if this could be done in the power-off handler (e.g. before printing
-> > > the error message).
-> > > 
-> > That might make sense, but it would have to be configurable, since the delay
-> > is platform specific and power-off handler does not know how long to wait
-> > (the longest delay I have seen is 10 seconds).
-> 
-> We've already concluded in this thread that such delays must be encoded
-> in the actual handler (even if it's an argument to the power-off call
-> chain code). The only exception should be generic handlers such as
-> gpio-poweroff, which may need to define different delays depending on
-> board. This could of course just be an argument of the corresponding DT
-> node.
+Johan: as you are one of the people who requested the renaming, any
+suggestions ?
 
-There probably should be a generic device-tree property for this, even
-if some delays would be device specific (e.g. the two second delay for
-omap rtc).
+Romain
 
-But on top of that, external latencies would be quite board specific.
-The PMIC on the Beaglebone black adds a 50ms deglitch time, for
-instance.
-
-> My question above was if it was reasonable to add some generic short
-> delay after calling each power-off handler to handle short power-off
-> latencies (e.g. bus latencies) so that not every handler needs an
-> explicit delay.
-
-I just added a 500ms margin to the OMAP rtc power-off handler. That
-should be more than enough, and perhaps something like that could be a
-default in the power-off call chain. Consider that arch-arm has a 1s
-grace period before reporting failed reboot already today.
-
-Johan
+2014-10-29 8:35 GMT+01:00 Romain Perier <romain.perier@gmail.com>:
+> As discussed on the mailing list, it makes more sense to rename this property
+> to "system-power-controller". Problem being that the word "source" usually tends
+> to be used for inputs and that is out of control of the OS. The poweroff
+> capability is an output which simply turns the system-power off. Also, this
+> property might be used by drivers which power-off the system and power back on
+> subsequent RTC alarms. This seems to suggest to remove "poweroff" from the
+> property name and to choose "system-power-controller" as the more generic name.
+> This patchs adds the required renaming changes and defines an helper function
+> which is compatible with both properties, the old one prefixed by a vendor name
+> and the new one without any prefix.
+>
+> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> ---
+>  .../devicetree/bindings/power/power-controller.txt | 18 ++++++++++++
+>  .../devicetree/bindings/power/poweroff.txt         | 18 ------------
+>  drivers/of/base.c                                  | 34 ++++++++++++++++++++++
+>  include/linux/of.h                                 | 10 ++-----
+>  4 files changed, 55 insertions(+), 25 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/power-controller.txt
+>  delete mode 100644 Documentation/devicetree/bindings/power/poweroff.txt
+>
+> diff --git a/Documentation/devicetree/bindings/power/power-controller.txt b/Documentation/devicetree/bindings/power/power-controller.txt
+> new file mode 100644
+> index 0000000..942f955
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/power-controller.txt
+> @@ -0,0 +1,18 @@
+> +* Generic system power control capability
+> +
+> +Power-management integrated circuits or miscellaneous harware components are
+> +sometimes able to control the system power. The device driver associated to these
+> +components might needs to define this capability, which tells to the kernel how
+> +to switch off the system. The corresponding driver must have the standard
+> +property "system-power-controller" in its device node. This property marks the
+> +device as able to controller the system-power. In order to test if this property
+> +is found programmatically, use the helper function "of_is_system_power_controller"
+> +from of.h .
+> +
+> +Example:
+> +
+> +act8846: act8846@5 {
+> +        compatible = "active-semi,act8846";
+> +        status = "okay";
+> +        system-power-controller;
+> +}
+> diff --git a/Documentation/devicetree/bindings/power/poweroff.txt b/Documentation/devicetree/bindings/power/poweroff.txt
+> deleted file mode 100644
+> index 845868b..0000000
+> --- a/Documentation/devicetree/bindings/power/poweroff.txt
+> +++ /dev/null
+> @@ -1,18 +0,0 @@
+> -* Generic Poweroff capability
+> -
+> -Power-management integrated circuits or miscellaneous harware components are
+> -sometimes able to control the system power. The device driver associated to these
+> -components might needs to define poweroff capability, which tells to the kernel
+> -how to switch off the system. The corresponding driver must have the standard
+> -property "poweroff-source" in its device node. This property marks the device as
+> -able to shutdown the system. In order to test if this property is found
+> -programmatically, use the helper function "of_system_has_poweroff_source" from
+> -of.h .
+> -
+> -Example:
+> -
+> -act8846: act8846@5 {
+> -        compatible = "active-semi,act8846";
+> -        status = "okay";
+> -        poweroff-source;
+> -}
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 74ab1b8..438e405 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -2260,3 +2260,37 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
+>         return of_get_next_parent(np);
+>  }
+>  EXPORT_SYMBOL(of_graph_get_remote_port);
+> +
+> +/**
+> + * of_is_system_power_controller() - Tells if the property for controlling system
+> + * power is found in device_node.
+> + * @np: Pointer to the given device_node
+> + *
+> + * Return: true if present false otherwise
+> + */
+> +bool of_is_system_power_controller(const struct device_node *np)
+> +{
+> +       struct property *pp;
+> +       unsigned long flags;
+> +       char *sep;
+> +       bool found = false;
+> +
+> +       raw_spin_lock_irqsave(&devtree_lock, flags);
+> +       for_each_property_of_node(np, pp) {
+> +               if (of_prop_cmp(pp->name, "system-power-controller") == 0) {
+> +                       found = true;
+> +                       break;
+> +               }
+> +               /* Backward compatibility with previous property "vendor,system-power-controller",
+> +                * we just check that an non-empty vendor-prefix exists here
+> +                */
+> +               sep = strchr(pp->name, ',');
+> +               if (sep && sep - pp->name && of_prop_cmp(sep + 1, "system-power-controller") == 0) {
+> +                       found = true;
+> +                       break;
+> +               }
+> +       }
+> +       raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +       return found;
+> +}
+> +EXPORT_SYMBOL(of_is_system_power_controller);
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 868fdad..e7177b3 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -910,15 +910,11 @@ static inline int of_changeset_update_property(struct of_changeset *ocs,
+>  /* CONFIG_OF_RESOLVE api */
+>  extern int of_resolve_phandles(struct device_node *tree);
+>
+> -/**
+> - * of_system_has_poweroff_source - Tells if poweroff-source is found for device_node
+> - * @np: Pointer to the given device_node
+> - *
+> - * return true if present false otherwise
+> - */
+> +bool of_is_system_power_controller(const struct device_node *np);
+> +
+>  static inline bool of_system_has_poweroff_source(const struct device_node *np)
+>  {
+> -       return of_property_read_bool(np, "poweroff-source");
+> +       return of_is_system_power_controller(np);
+>  }
+>
+>  #endif /* _LINUX_OF_H */
+> --
+> 1.9.1
+>
