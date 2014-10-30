@@ -1,31 +1,54 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 01/20] usb: dwc3: enable hibernation if to be supported
-Date: Thu, 30 Oct 2014 12:35:56 +0100
-Message-ID: <4077930.b7qzaS4pBb@wuerfel>
-References: <1414663725-2195-1-git-send-email-ray.huang@amd.com> <1414663725-2195-2-git-send-email-ray.huang@amd.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 0/9] Renesas R-Car DU HDMI support
+Date: Thu, 30 Oct 2014 13:40:34 +0200
+Message-ID: <2727864.n2TjKgUQyN@avalon>
+References: <1414337068-28664-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <11054192.lJRMYJX3F4@avalon>
+ <CAGv-rZm=0rvvnO1cgBp0ZNdu0PvA-nwh6Nk05LSyTE=0vg0ipA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1414663725-2195-2-git-send-email-ray.huang@amd.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Huang Rui <ray.huang@amd.com>
-Cc: Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAGv-rZm=0rvvnO1cgBp0ZNdu0PvA-nwh6Nk05LSyTE=0vg0ipA@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-sh@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 30 October 2014 18:08:26 Huang Rui wrote:
-> It enables hibernation if the function is set in coreConsultant.
-> 
-> Suggested-by: Felipe Balbi <balbi@ti.com>
-> Signed-off-by: Huang Rui <ray.huang@amd.com>
-> Signed-off-by: Felipe Balbi <balbi@ti.com>
-> 
-
-Something went wrong with the Signed-off-by lines here. 
-You should never add someone else's Signed-off-by below yours.
-
-I took a brief look at the entire series and the patches all look good
-to me, but you have made the same mistake with the Signed-off-by
-multiple times.
-
-	Arnd
+SGkgU2ltb24sCgpPbiBUaHVyc2RheSAzMCBPY3RvYmVyIDIwMTQgMjA6Mjk6MjIgU2ltb24gSG9y
+bWFuIHdyb3RlOgo+IDIwMTQvMTAvMzAgMjA6MDUgIkxhdXJlbnQgUGluY2hhcnQiIDxsYXVyZW50
+LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+Ogo+ID4gT24gVHVlc2RheSAyOCBPY3RvYmVyIDIw
+MTQgMTU6MzA6MDUgRGF2ZSBBaXJsaWUgd3JvdGU6Cj4gPj4+IFRoZSBsYXN0IHBhdGNoIGluc3Rh
+bnRpYXRlcyB0aGUgSERNSSBlbmNvZGVyIGluIHRoZSBLb2Vsc2NoIGJvYXJkIERUCj4gPj4+IGZp
+bGUgYW5kIGNvbm5lY3RzIGl0IHRvIHRoZSBEVSBvdXRwdXQuCj4gPj4+IAo+ID4+PiBUaGUgcGF0
+Y2ggc2VyaWVzIGRlcGVuZHMgb24gS29lbHNjaCBEVSBEVCBlbmFibGVtZW50IChzY2hlZHVsZWQg
+Zm9yCj4gPj4+IG1lcmdlIGluIHYzLjE5LXJjMSkuIERhdmUsIEknZCBsaWtlIHRvIGdldCB0aGlz
+IG1lcmdlZCBpbiB2My4xOS1yYzEsIGhvdwo+ID4+PiB3b3VsZCB5b3UgbGlrZSB0byBwcm9jZWVk
+ID8gQ291bGQgaXQgZ28gdGhyb3VnaCBTaW1vbidzIFJlbmVzYXMgdHJlZSA/Cj4gPj4+IFRoZXJl
+J3MgYSBzbWFsbCByaXNrIG9mIGNvbmZsaWN0IGluIGRyaXZlcnMvZ3B1L2RybS9kcm1fZWRpZC5j
+LAo+ID4+PiBpbmNsdWRlL2RybS9kcm1fZWRpZC5oLCBkcml2ZXJzL2dwdS9kcm0vaTJjL0tjb25m
+aWcgYW5kCj4gPj4+IGRyaXZlcnMvZ3B1L2RybS9pMmMvTWFrZWZpbGUuIFNpbW9uLCBjb3VsZCB5
+b3UgYWx0ZXJuYXRpdmVseSBwcm92aWRlIGEKPiA+Pj4gc3RhYmxlIGJyYW5jaCB3aXRoIHRoZSBy
+ZXF1aXJlZCBkZXBlbmRlbmNpZXMgPwo+ID4+IAo+ID4+IEknZCBwcm9iYWJseSBsaWtlIHRvIHRh
+a2UgdGhlIGRybSBwYXRjaGVzIGludG8gZHJtLW5leHQgZmlyc3QsIHRoZW4KPiA+PiBtYXliZSBn
+ZXQgYSBzdGFibGUgYnJhbmNoIGZyb20gU2ltb24gSSBjb3VsZCB1c2UgdG8gYmFzZSB0aGUgcmVz
+dCBvbi4KPiA+IAo+ID4gU2ltb24sIEkgYmVsaWV2ZSB0aGF0IHdvdWxkIGJlIHRoZSBkdC1kdS1m
+b3ItdjMuMTkgYnJhbmNoIG9mCj4gPiBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4
+L2tlcm5lbC9naXQvaG9ybXMvcmVuZXNhcy5naXQKPiA+IAo+ID4gSXMgaXQgY29ycmVjdCA/Cj4g
+Cj4gU29ycnkgSSBzaHVmZmxlZCB0aGluZ3MgYXJvdW5kIGEgYml0IGFuZCB3aGF0IHlvdSBuZWVk
+IHNob3VsZCBub3cgYmUgaW4gdGhlCj4gZHQtZm9yLXYzLjE5IGJyYW5jaC4gSSBob3BlIHdoYXQg
+aXMgdGhlcmUgbm93IGlzIHN0YWJsZS4gQnV0IEknZCBhcHByZWNpYXRlCj4gaXQgaWYgeW91IGNv
+dWxkIHdhaXQgYSBmZXcgbW9yZSBkYXlzLgoKU3VyZSwgbm8gcHJvYmxlbS4gQ291bGQgeW91IHBs
+ZWFzZSBsZXQgbWUga25vdyB3aGVuIEkgY2FuIHVzZSBpdCA/CgotLSAKUmVnYXJkcywKCkxhdXJl
+bnQgUGluY2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
