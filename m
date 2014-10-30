@@ -1,62 +1,59 @@
-From: Johannes Pointner <johannes.pointner@gmail.com>
-Subject: Re: [PATCH v3 2/2] dt: bindings: tps65217: add compatible property
- for backlight subnode
-Date: Thu, 30 Oct 2014 07:43:02 +0100
-Message-ID: <CAJKbBDDPU5mysMPB78oQtkH8B=2q1pSH0yJBxu_qr3Zo=xhx3Q@mail.gmail.com>
-References: <4202809.cQlU8Tr5kS@lenovobook>
+From: Torsten Fleischer <torfl6749-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] spi: spi-gpio: Add dt support for a single device
+ with no chip select
+Date: Thu, 30 Oct 2014 07:52:08 +0100
+Message-ID: <CANZ4BrT8noz+zueDm2hModbduamnhSZj2F1VamckahoXUjAcGg@mail.gmail.com>
+References: <1414423637-2817-1-git-send-email-torfl6749@gmail.com>
+	<20141027173055.GD4971@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4202809.cQlU8Tr5kS@lenovobook>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141027173055.GD4971@leverpostej>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-ping
+2014-10-27 18:30 GMT+01:00 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
+> On Mon, Oct 27, 2014 at 03:27:17PM +0000, Torsten Fleischer wrote:
+>> From: Torsten Fleischer <torfl6749-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> Use an empty 'cs-gpios' property if a single device is connected which
+>> has no chip select.
+>> This refers to the discussion at https://lkml.org/lkml/2013/11/13/62.
+>>
+>> Signed-off-by: Torsten Fleischer <torfl6749-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/spi/spi-gpio.txt |  6 ++++--
+>>  drivers/spi/spi-gpio.c                             | 10 +++++++---
+>>  2 files changed, 11 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/spi-gpio.txt b/Documentation/devicetree/bindings/spi/spi-gpio.txt
+>> index 8a824be..ad8795f 100644
+>> --- a/Documentation/devicetree/bindings/spi/spi-gpio.txt
+>> +++ b/Documentation/devicetree/bindings/spi/spi-gpio.txt
+>> @@ -8,8 +8,10 @@ Required properties:
+>>   - gpio-sck: GPIO spec for the SCK line to use
+>>   - gpio-miso: GPIO spec for the MISO line to use
+>>   - gpio-mosi: GPIO spec for the MOSI line to use
+>> - - cs-gpios: GPIOs to use for chipselect lines
+>> - - num-chipselects: number of chipselect lines
+>> + - cs-gpios: GPIOs to use for chipselect lines. Leave this property empty if
+>> +             a single device with no chip select is connected.
+>> + - num-chipselects: Number of chipselect lines. Has to be "1" even if a single
+>> +                    device with no chip select is connected.
+>
+> Why not just have num-chipselectes = <0>, and no cs-gpios property?
+>
+> That would match the HW, and is unambigious as the author has to state
+> explicitly that there are no chipselects.
 
-2014-10-08 23:20 GMT+02:00 Johannes Pointner <johannes.pointner@gmail.com>:
-> Add documentation for compatible property of backlight subnode.
->
-> Signed-off-by: Johannes Pointner <johannes.pointner@br-automation.com>
-> ---
-> Changes since v2:
-> 1. Removed the pmic part of the patch.
-> 2. Added newline before subnode in the example.
-> ---
->  .../devicetree/bindings/video/backlight/tps65217-backlight.txt | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/video/backlight/tps65217-backlight.txt b/Documentation/devicetree/bindings/video/backlight/tps65217-backlight.txt
-> index 5fb9279..63ef699 100644
-> --- a/Documentation/devicetree/bindings/video/backlight/tps65217-backlight.txt
-> +++ b/Documentation/devicetree/bindings/video/backlight/tps65217-backlight.txt
-> @@ -6,19 +6,23 @@ used to drive LEDs for use as backlights.
->  Required properties:
->  - compatible: "ti,tps65217"
->  - reg: I2C slave address
-> -- backlight: node for specifying WLED1 and WLED2 lines in TPS65217
-> +- backlight: subnode for specifying WLED1 and WLED2 lines in TPS65217
-> +
-> +Required subnode properties:
-> +- compatible: "ti,tps65217-bl"
->  - isel: selection bit, valid values: 1 for ISEL1 (low-level) and 2 for ISEL2 (high-level)
->  - fdim: PWM dimming frequency, valid values: 100, 200, 500, 1000
->  - default-brightness: valid values: 0-100
->
-> -Each regulator is defined using the standard binding for regulators.
->
->  Example:
->
->         tps: tps@24 {
->                 reg = <0x24>;
->                 compatible = "ti,tps65217";
-> -               backlight {
-> +
-> +               tps_bl: backlight {
-> +                       compatible = "ti,tps65217-bl";
->                         isel = <1>;  /* 1 - ISET1, 2 ISET2 */
->                         fdim = <100>; /* TPS65217_BL_FDIM_100HZ */
->                         default-brightness = <50>;
-> --
-> 2.1.2
+Thanks for the objection. I agree to your proposal. This is a clearer
+way to describe such
+a hardware. I will send an updated patch.
+
+Torsten
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
