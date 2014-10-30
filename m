@@ -1,35 +1,98 @@
-From: addy ke <addy.ke@rock-chips.com>
-Subject: Re: [PATCH] mmc: dw_mmc: add a quirk for the defferent bit of sdio
- interrupt
-Date: Thu, 30 Oct 2014 14:54:06 +0800
-Message-ID: <5451E08E.2050701@rock-chips.com>
-References: <1414635679-12565-1-git-send-email-addy.ke@rock-chips.com>	<CAD=FV=Uo3gcnGFn=gpZhV1r+qyZxJ_tpAEiSsu06P=csHTScug@mail.gmail.com> <CAD=FV=VgCjhO5n5VPo_8QmMPBg1ZDMR8nvmVHS=Le8bxEFmzeA@mail.gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [RFT v2 2/8] regulator: max77802: Remove support for board files
+Date: Thu, 30 Oct 2014 08:49:56 +0100
+Message-ID: <1414655396.5114.10.camel@AMDC1943>
+References: <1414595206-1437-1-git-send-email-k.kozlowski@samsung.com>
+ <1414595206-1437-3-git-send-email-k.kozlowski@samsung.com>
+ <54517B37.9010305@collabora.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=VgCjhO5n5VPo_8QmMPBg1ZDMR8nvmVHS=Le8bxEFmzeA@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: dianders@chromium.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <54517B37.9010305@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Doug,
-
-On 2014/10/30 12:49, Doug Anderson wrote:
-> Addy,
+On czw, 2014-10-30 at 00:41 +0100, Javier Martinez Canillas wrote:
+> Hello Krzysztof,
 > 
-> On Wed, Oct 29, 2014 at 9:41 PM, Doug Anderson <dianders@chromium.org> wrote:
->> You can avoid a lot of "if" tests if you just add a new "sdio->id"
+> On 10/29/2014 04:06 PM, Krzysztof Kozlowski wrote:
+> >  
+> >  static int max77802_pmic_probe(struct platform_device *pdev)
+> >  {
+> >  	struct max77686_dev *iodev = dev_get_drvdata(pdev->dev.parent);
+> > -	struct max77686_platform_data *pdata = dev_get_platdata(iodev->dev);
+> >  	struct max77802_regulator_prv *max77802;
+> >  	int i, ret = 0, val;
+> >  	struct regulator_config config = { };
+> > -
+> > -	/* This is allocated by the MFD driver */
+> > -	if (!pdata) {
+> > -		dev_err(&pdev->dev, "no platform data found for regulator\n");
+> > -		return -ENODEV;
+> > -	}
+> > +	struct of_regulator_match *rdata;
+> >  
+> >  	max77802 = devm_kzalloc(&pdev->dev,
+> >  				sizeof(struct max77802_regulator_prv),
+> > @@ -586,24 +558,29 @@ static int max77802_pmic_probe(struct platform_device *pdev)
+> >  	if (!max77802)
+> >  		return -ENOMEM;
+> >  
+> > -	if (iodev->dev->of_node) {
+> > -		ret = max77802_pmic_dt_parse_pdata(pdev, pdata);
+> > -		if (ret)
+> > -			return ret;
+> > -	}
+> > -
+> >  	config.dev = iodev->dev;
+> >  	config.regmap = iodev->regmap;
+> >  	config.driver_data = max77802;
+> >  	platform_set_drvdata(pdev, max77802);
+> >  
+> > +	rdata = kzalloc(sizeof(*rdata) * MAX77802_REG_MAX, GFP_KERNEL);
+> > +	if (!rdata)
+> > +		return -ENOMEM;
+> > +
+> > +	for (i = 0; i < MAX77802_REG_MAX; i++)
+> > +		rdata[i].name = regulators[i].name;
+> > +
+> > +	ret = max77802_pmic_dt_parse(pdev, rdata);
+> > +	if (ret)
+> > +		goto out;
+> > +
+> >  	for (i = 0; i < MAX77802_REG_MAX; i++) {
+> >  		struct regulator_dev *rdev;
+> > -		int id = pdata->regulators[i].id;
+> > +		int id = regulators[i].id;
+> >  		int shift = max77802_get_opmode_shift(id);
+> >  
+> > -		config.init_data = pdata->regulators[i].initdata;
+> > -		config.of_node = pdata->regulators[i].of_node;
+> > +		config.init_data = rdata[i].init_data;
+> > +		config.of_node = rdata[i].of_node;
+> >  
+> >  		ret = regmap_read(iodev->regmap, regulators[i].enable_reg, &val);
+> >  		val = val >> shift & MAX77802_OPMODE_MASK;
+> > @@ -621,13 +598,17 @@ static int max77802_pmic_probe(struct platform_device *pdev)
+> >  		rdev = devm_regulator_register(&pdev->dev,
+> >  					       &regulators[i], &config);
 > 
-> Whoops, I mean "slot->sdio_id"
+> Thanks for your patch. It's indeed an improvement over the old code and I can
+> test it tomorrow when I've access to my machine with a max77802 PMIC.
 > 
-
-To use "slot->sdio_id", I think the subject must be changed.
-So I will drop this patch ,and send new patch to use "slot->sdio_id" for this difference.
-
-thank you!
-
+> However, I don't think this is the change that Mark asked. AFAIU what he wanted
+> is to fill the struct regulator_desc .of_match and .regulators_node fields so
+> the init_data is extracted by the core on regulator registration.
 > 
-> 
+> Look at commits a0c7b164 ("regulator: of: Provide simplified DT parsing method")
+> and 93a127b ("regulator: isl9305: Convert to new style DT parsing") to see what
+> I'm talking about.
 
+Ooo, I missed these changes. This should simplify the code even more.
+I'll re-spin, so don't hurry with testing :)
+
+Best regards,
+Krzysztof
