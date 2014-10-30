@@ -1,82 +1,26 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: [PATCH v1 2/2] drivers: net: xgene: fix: Use separate resources
-Date: Wed, 29 Oct 2014 17:56:20 -0700
-Message-ID: <1414630580-24640-3-git-send-email-isubramanian@apm.com>
-References: <1414630580-24640-1-git-send-email-isubramanian@apm.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1414630580-24640-1-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, patches@apm.com, kchudgar@apm.com, Iyappan Subramanian <isubramanian@apm.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/3] ARM: shmobile: Remove unnecessary MMC options
+Date: Thu, 30 Oct 2014 10:03:09 +0900
+Message-ID: <20141030010309.GD22052@verge.net.au>
+References: <1414591779-22954-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414591779-22954-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes the following kernel crash during SGMII based 1GbE probe.
+On Wed, Oct 29, 2014 at 03:09:36PM +0100, Geert Uytterhoeven wrote:
+> 	Hi Simon, Magnus,
+> 
+> This patch series, sent before by Morimoto-san, removes unnecessary MMC options
+> from the DTS files that are already set automatically by the driver, based on
+> the compatible property value. Note that these options were never added on
+> r8a7791, which gained SDHI device nodes later than the three affected SoCs.
+> 
+> Thanks for applying!
 
-	BUG: Bad page state in process swapper/0  pfn:40fe6ad
-	page:ffffffbee37a75d8 count:-1 mapcount:0 mapping:          (null) index:0x0
-	flags: 0x0()
-	page dumped because: nonzero _count
-	Modules linked in:
-	CPU: 0 PID: 0 Comm: swapper/0 Not tainted 3.17.0+ #7
-	Call trace:
-	[<ffffffc000087fa0>] dump_backtrace+0x0/0x12c
-	[<ffffffc0000880dc>] show_stack+0x10/0x1c
-	[<ffffffc0004d981c>] dump_stack+0x74/0xc4
-	[<ffffffc00012fe70>] bad_page+0xd8/0x128
-	[<ffffffc000133000>] get_page_from_freelist+0x4b8/0x640
-	[<ffffffc000133260>] __alloc_pages_nodemask+0xd8/0x834
-	[<ffffffc0004194f8>] __netdev_alloc_frag+0x124/0x1b8
-	[<ffffffc00041bfdc>] __netdev_alloc_skb+0x90/0x10c
-	[<ffffffc00039ff30>] xgene_enet_refill_bufpool+0x11c/0x280
-	[<ffffffc0003a11a4>] xgene_enet_process_ring+0x168/0x340
-	[<ffffffc0003a1498>] xgene_enet_napi+0x1c/0x50
-	[<ffffffc00042b454>] net_rx_action+0xc8/0x18c
-	[<ffffffc0000b0880>] __do_softirq+0x114/0x24c
-	[<ffffffc0000b0c34>] irq_exit+0x94/0xc8
-	[<ffffffc0000e68a0>] __handle_domain_irq+0x8c/0xf4
-	[<ffffffc000081288>] gic_handle_irq+0x30/0x7c
-
-This was due to hardware resource sharing conflict with the firmware. This
-patch fixes this crash by using resources (descriptor ring, prefetch buffer)
-that are not shared.
-
-Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-Signed-off-by: Keyur Chudgar <kchudgar@apm.com>
----
- drivers/net/ethernet/apm/xgene/xgene_enet_main.c | 6 +++---
- drivers/net/ethernet/apm/xgene/xgene_enet_main.h | 3 +++
- 2 files changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-index 3c208cc..ac37e26 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-@@ -639,9 +639,9 @@ static int xgene_enet_create_desc_rings(struct net_device *ndev)
- 	struct device *dev = ndev_to_dev(ndev);
- 	struct xgene_enet_desc_ring *rx_ring, *tx_ring, *cp_ring;
- 	struct xgene_enet_desc_ring *buf_pool = NULL;
--	u8 cpu_bufnum = 0, eth_bufnum = 0;
--	u8 bp_bufnum = 0x20;
--	u16 ring_id, ring_num = 0;
-+	u8 cpu_bufnum = 0, eth_bufnum = START_ETH_BUFNUM;
-+	u8 bp_bufnum = START_BP_BUFNUM;
-+	u16 ring_id, ring_num = START_RING_NUM;
- 	int ret;
- 
- 	/* allocate rx descriptor ring */
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_main.h b/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
-index 874e5a0..7d8b6ea 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
-@@ -38,6 +38,9 @@
- #define SKB_BUFFER_SIZE		(XGENE_ENET_MAX_MTU - NET_IP_ALIGN)
- #define NUM_PKT_BUF	64
- #define NUM_BUFPOOL	32
-+#define START_ETH_BUFNUM	2
-+#define START_BP_BUFNUM		0x22
-+#define START_RING_NUM		8
- 
- #define PHY_POLL_LINK_ON	(10 * HZ)
- #define PHY_POLL_LINK_OFF	(PHY_POLL_LINK_ON / 5)
--- 
-1.9.1
+Thanks, I have queued these up.
