@@ -1,38 +1,46 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCHv2 0/4] Add Altera peripheral memories to EDAC framework
-Date: Thu, 30 Oct 2014 16:22:40 +0100
-Message-ID: <20141030152240.GD11178@pd.tnic>
-References: <1413578029-13205-1-git-send-email-tthayer@opensource.altera.com>
- <544E93F0.3030409@opensource.altera.com>
- <20141027204307.GB4741@pd.tnic>
- <544EBA84.7080109@opensource.altera.com>
- <20141027215908.GC4741@pd.tnic>
- <544ECBB1.2040600@opensource.altera.com>
+From: Kevin Cernekee <cernekee@gmail.com>
+Subject: Re: [PATCH V2 02/15] sh: Eliminate unused irq_reg_{readl,writel} accessors
+Date: Thu, 30 Oct 2014 08:25:03 -0700
+Message-ID: <CAJiQ=7BZpDM8fxzJj_bSfHMuWTQ2eFerWkXz0inxJy9O6p4d=A@mail.gmail.com>
+References: <1414635488-14137-1-git-send-email-cernekee@gmail.com>
+ <2294092.AHz8W66sEP@wuerfel> <alpine.DEB.2.11.1410301142010.5308@nanos> <1879572.mbc2eHiUuo@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <544ECBB1.2040600@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thor Thayer <tthayer@opensource.altera.com>
-Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@altera.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1879572.mbc2eHiUuo@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, Paul Mundt <lethal@linux-sh.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 27, 2014 at 05:48:17PM -0500, Thor Thayer wrote:
-> Would the L2 cache and OCRAM specific functions also be in altera_edac.c?
-> Each of these EDAC pieces is independent and can be compiled in without the
-> others. I've read that the use of #ifdef's is discouraged and having
-> separate files in the Makefile solves that.
+On Thu, Oct 30, 2014 at 3:48 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thursday 30 October 2014 11:43:00 Thomas Gleixner wrote:
+>> On Thu, 30 Oct 2014, Arnd Bergmann wrote:
+>>
+>> > On Wednesday 29 October 2014 19:17:55 Kevin Cernekee wrote:
+>> > > Defining these macros way down in arch/sh/.../irq.c doesn't cause
+>> > > kernel/irq/generic-chip.c to use them.  As far as I can tell this code
+>> > > has no effect.
+>> > >
+>> > > Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+>> >
+>> > Actually it overrides the 32-bit accessors with 16-bit accessors,
+>> > which does seem intentional and certainly has an effect.
+>>
+>> Not really. Neither arch/sh/boards/mach-se/7343/irq.c nor
+>> arch/sh/boards/mach-se/7722/irq.c actually use
+>> irq_reg_readl/writel. They simply define it.
+>
+> Ah, that makes things easier. I looked at the commits that introduced
+> them, and even then they were unused. Probably an artifact from an
+> earlier version of the patch which did not get merged.
 
-Let's keep it simple and put all the altera bits in one file for now. If
-we need to split some of the functionality out, we can always do that
-later.
+I suspect that the intention was to put them into the machine's
+<irq.h> so that generic-chip.c would pick them up.  The sh irq.c files
+do call ioread16/iowrite16 themselves, and like bcm7120-l2, they
+utilize irq_gc_mask_{set,clr}_bit from generic-chip.c.
 
-Thanks.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
---
+This may be something for the maintainers (Paul?) to double-check, but
+if the submission worked as-is, maybe overriding the I/O accessors
+wasn't actually needed.  Or maybe there are subtle and unfortunate
+side effects on adjacent registers.
