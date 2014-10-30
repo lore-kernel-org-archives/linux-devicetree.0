@@ -1,54 +1,208 @@
-From: BhuvanChandra DharanikotaVenkata <bhuvanchandradv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: ARM: dts: Passing 'irq' property in SPI child node
-Date: Thu, 30 Oct 2014 13:39:30 +0530
-Message-ID: <CAPRVJ63TGV-XtRXGv8BDivKkxd=u5YLQO8tEQ02FOdC_u_XeDQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: [PATCH v4 1/2] i2c: s3c2410: Handle i2c sys_cfg register in i2c driver
+Date: Thu, 30 Oct 2014 13:34:29 +0530
+Message-ID: <1414656270-8048-2-git-send-email-pankaj.dubey@samsung.com>
+References: <1414656270-8048-1-git-send-email-pankaj.dubey@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1414656270-8048-1-git-send-email-pankaj.dubey@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, linux@arm.linux.org.uk, thomas.ab@samsung.com, Pankaj Dubey <pankaj.dubey@samsung.com>, Rob Herring <robh+dt@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Let's handle i2c interrupt re-configuration in i2c driver. This will
+help us in removing some soc specific checks from machine files and
+will help in removing static iomapping of SYS register in exynos.c
 
-Facing some issues while passing the irq property in child node of SPI node.
-I was trying to enable the SPI based mcp2515 can controller, according
-to the documentation available in the bindings of mcp251x driver,
-added the required properties of the node.
-As per the requirement need to pass an irq of a GPIO, used
-'interrupt-parent' and 'interrupts' properties in the child node
-(mcp251x can node).
-I had a doubt, how exactly the interrupts property was parsed and
-taken in the mcp251x driver?
-In driver the spi->irq holds the irq number, in non dt kernels we are
-passing the irq value directly from platform data.
-How can we pass the irq property required by mcp251x driver from the
-device tree node?
+Since only Exynos5250, and Exynos5420 has i2c nodes in DT, added syscon
+based phandle to i2c device nodes of respective SoC DT files.
 
-http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
-http://lxr.free-electrons.com/source/drivers/net/can/mcp251x.c?v=2.6.33
+Also handle saving and restoring of SYS_I2C_CFG register during
+suspend and resume of i2c driver.
 
-spi dt node:
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Randy Dunlap <rdunlap@infradead.org>
+CC: Wolfram Sang <wsa@the-dreams.de>
+CC: Russell King <linux@arm.linux.org.uk>
+CC: devicetree@vger.kernel.org
+CC: linux-doc@vger.kernel.org
+CC: linux-i2c@vger.kernel.org
+Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+---
+ .../devicetree/bindings/i2c/i2c-s3c2410.txt        |    1 +
+ arch/arm/boot/dts/exynos5250.dtsi                  |    4 +++
+ arch/arm/boot/dts/exynos5420.dtsi                  |    4 +++
+ drivers/i2c/busses/i2c-s3c2410.c                   |   31 ++++++++++++++++++++
+ 4 files changed, 40 insertions(+)
 
->  &dspi1 {
->      status = "okay";
->      spi-max-frequency = <25000000>;
->
->     can2: can@1 {
->         compatible = "microchip,mcp2515";
->         reg = <0>;
->         clocks = <&clk16m>;
->         interrupt-parent = <&gpio2>;
->         interrupts = <43 0x8>;
->         spi-max-frequency = <10000000>;
->     };
->  };
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt b/Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt
+index 278de8e..89b3250 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt
+@@ -32,6 +32,7 @@ Optional properties:
+     specified, default value is 0.
+   - samsung,i2c-max-bus-freq: Desired frequency in Hz of the bus. If not
+     specified, the default value in Hz is 100000.
++  - samsung,sysreg-phandle - handle to syscon used to control the system registers
+ 
+ Example:
+ 
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 012b021..6a32d50 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -293,6 +293,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c0_bus>;
++		samsung,sysreg-phandle = <&sysreg_system_controller>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -306,6 +307,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c1_bus>;
++		samsung,sysreg-phandle = <&sysreg_system_controller>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -319,6 +321,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c2_bus>;
++		samsung,sysreg-phandle = <&sysreg_system_controller>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -332,6 +335,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c3_bus>;
++		samsung,sysreg-phandle = <&sysreg_system_controller>;
+ 		status = "disabled";
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 8617a03..90bf401 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -560,6 +560,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c0_bus>;
++		samsung,sysreg-phandle = <&sysreg_system_controller>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -573,6 +574,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c1_bus>;
++		samsung,sysreg-phandle = <&sysreg_system_controller>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -586,6 +588,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c2_bus>;
++		samsung,sysreg-phandle = <&sysreg_system_controller>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -599,6 +602,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c3_bus>;
++		samsung,sysreg-phandle = <&sysreg_system_controller>;
+ 		status = "disabled";
+ 	};
+ 
+diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2c-s3c2410.c
+index e3b0337..a46435a 100644
+--- a/drivers/i2c/busses/i2c-s3c2410.c
++++ b/drivers/i2c/busses/i2c-s3c2410.c
+@@ -39,6 +39,8 @@
+ #include <linux/of.h>
+ #include <linux/of_gpio.h>
+ #include <linux/pinctrl/consumer.h>
++#include <linux/mfd/syscon.h>
++#include <linux/regmap.h>
+ 
+ #include <asm/irq.h>
+ 
+@@ -91,6 +93,9 @@
+ /* Max time to wait for bus to become idle after a xfer (in us) */
+ #define S3C2410_IDLE_TIMEOUT	5000
+ 
++/* Exynos5 Sysreg offset */
++#define EXYNOS5_SYS_I2C_CFG	0x0234
++
+ /* i2c controller state */
+ enum s3c24xx_i2c_state {
+ 	STATE_IDLE,
+@@ -127,6 +132,8 @@ struct s3c24xx_i2c {
+ #if defined(CONFIG_ARM_S3C24XX_CPUFREQ)
+ 	struct notifier_block	freq_transition;
+ #endif
++	struct regmap		*sysreg;
++	unsigned int		sys_i2c_cfg;
+ };
+ 
+ static struct platform_device_id s3c24xx_driver_ids[] = {
+@@ -1075,6 +1082,7 @@ static void
+ s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
+ {
+ 	struct s3c2410_platform_i2c *pdata = i2c->pdata;
++	int id;
+ 
+ 	if (!np)
+ 		return;
+@@ -1084,6 +1092,23 @@ s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
+ 	of_property_read_u32(np, "samsung,i2c-slave-addr", &pdata->slave_addr);
+ 	of_property_read_u32(np, "samsung,i2c-max-bus-freq",
+ 				(u32 *)&pdata->frequency);
++	/*
++	 * Exynos5's legacy i2c controller and new high speed i2c
++	 * controller have muxed interrupt sources. By default the
++	 * interrupts for 4-channel HS-I2C controller are enabled.
++	 * If node for first four channels of legacy i2c controller
++	 * are available then re-configure the interrupts via the
++	 * system register.
++	 */
++	id = of_alias_get_id(np, "i2c");
++	i2c->sysreg = syscon_regmap_lookup_by_phandle(np,
++			"samsung,sysreg-phandle");
++	if (IS_ERR(i2c->sysreg)) {
++		/* As this is not compulsory do not return error */
++		pr_info("i2c-%d skipping re-configuration of interrutps\n", id);
++		return;
++	}
++	regmap_update_bits(i2c->sysreg, EXYNOS5_SYS_I2C_CFG, BIT(id), 0);
+ }
+ #else
+ static void
+@@ -1264,6 +1289,9 @@ static int s3c24xx_i2c_suspend_noirq(struct device *dev)
+ 
+ 	i2c->suspended = 1;
+ 
++	if (!IS_ERR(i2c->sysreg))
++		regmap_read(i2c->sysreg, EXYNOS5_SYS_I2C_CFG, &i2c->sys_i2c_cfg);
++
+ 	return 0;
+ }
+ 
+@@ -1272,6 +1300,9 @@ static int s3c24xx_i2c_resume_noirq(struct device *dev)
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct s3c24xx_i2c *i2c = platform_get_drvdata(pdev);
+ 
++	if (!IS_ERR(i2c->sysreg))
++		regmap_write(i2c->sysreg, EXYNOS5_SYS_I2C_CFG, i2c->sys_i2c_cfg);
++
+ 	clk_prepare_enable(i2c->clk);
+ 	s3c24xx_i2c_init(i2c);
+ 	clk_disable_unprepare(i2c->clk);
+-- 
+1.7.9.5
 
-
-
-Best Regards,
-Bhuvanchandara DV
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
