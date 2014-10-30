@@ -1,103 +1,49 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH RESEND V4 5/9] of: Add NVIDIA Tegra xHCI controller
- binding
-Date: Thu, 30 Oct 2014 14:55:02 +0100
-Message-ID: <20141030135500.GC19802@ulmo.nvidia.com>
-References: <1414535277-15645-1-git-send-email-abrestic@chromium.org>
- <1414535277-15645-6-git-send-email-abrestic@chromium.org>
- <20141029094338.GA28356@ulmo.nvidia.com>
- <CAL1qeaEf0mTQfMgnY8jHGDBvbQ7ivtzAQRWaE9K24TJ86hWYMg@mail.gmail.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v3] thermal: Add QPNP PMIC temperature alarm driver
+Date: Thu, 30 Oct 2014 15:55:45 +0200
+Message-ID: <1414677345.12674.1.camel@mm-sol.com>
+References: <1412178817-20371-1-git-send-email-iivanov@mm-sol.com>
+	 <20141027201602.GC6088@developer> <1414596776.32383.2.camel@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ABTtc+pdwF7KHXCz"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL1qeaEf0mTQfMgnY8jHGDBvbQ7ivtzAQRWaE9K24TJ86hWYMg@mail.gmail.com>
+In-Reply-To: <1414596776.32383.2.camel@mm-sol.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-usb@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, David Collins <collinsd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 
---ABTtc+pdwF7KHXCz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, 2014-10-29 at 17:32 +0200, Ivan T. Ivanov wrote:
+> 
++
+> > > +       chip->tz_dev = thermal_zone_device_register(node->name, TRIP_NUM, 0,
+> > > +       chip, &qpnp_tz_ops, NULL,
+> > 
+> > Have you considered using of-thermal instead of doing your own specific thermal
+> > zone registration? Having a glance look in this driver, most of the
+> > operation are covered by of-thermal. Ahy concerns using of-thermal in
+> > your case?
+> > 
+> 
+> I just followed implementation found in "armada_thermal", "db8500-thermal",
+> "dove_thermal", "imx_thermal", "kirkwood_thermal"...
+> 
+> Will look at of-thermal.
+> 
 
-On Wed, Oct 29, 2014 at 09:37:14AM -0700, Andrew Bresticker wrote:
-> On Wed, Oct 29, 2014 at 2:43 AM, Thierry Reding
-> <thierry.reding@gmail.com> wrote:
-> > On Tue, Oct 28, 2014 at 03:27:50PM -0700, Andrew Bresticker wrote:
-> > [...]
-> >> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124=
--xusb-padctl.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra12=
-4-xusb-padctl.txt
-> > [...]
-> >> +Optional properties:
-> >> +-------------------
-> >> +- vbus-{0,1,2}-supply: VBUS regulator for the corresponding UTMI pad.
-> >> +- vddio-hsic-supply: VDDIO regulator for the HSIC pads.
-> >> +- nvidia,usb3-port-{0,1}-lane: PCIe/SATA lane to which the correspond=
-ing USB3
-> >> +  port is mapped.  See <dt-bindings/pinctrl/pinctrl-tegra-xusb.h> for=
- the list
-> >> +  of valid values.
-> >
-> > I dislike how we now need to provide a list of all pins in the header
-> > file, where previously we used strings for this. This could become very
-> > ugly if the set of pins changes in future generations of this IP block.
-> >
-> > Could we instead derive this from the pinmux nodes? For example you have
-> > this in the example below:
-> >
-> >         usb3p0 {
-> >                 nvidia,lanes =3D "pcie-0";
-> >                 ...
-> >         };
-> >
-> > Perhaps what we need is to either key off the node name or add another
-> > property, such as:
-> >
-> >         nvidia,usb3-port =3D <0>;
-> >
-> > This would match the nvidia,usb2-port property that you've added below.
->=20
-> That is actually how I described the USB3 port to SS lane mapping
-> originally, but in review of an earlier version of this series,
-> Stephen suggested that I make it a separate, not pinconfig property
-> since it wasn't a value written directly to the hardware.  I'm fine
-> with changing it back as the pinconfig property makes more sense to me
-> as well.
+Hm, the 15 drivers, which register its own thermal zone, against 4, which 
+use of-thermal registration and one of them is OMAP, which have fallback
+to its own zone registration :-). Anyway. I am afraid that if I use just
+thermal_zone_of_sensor_register(), driver will lost ability to switch off 
+hardware controlled shutdown sequence, which make it useless IMHO.
 
-Hmm... I had considered it a mux option of the specific lane. If the
-function is usb3, it'd still need to be muxed to one of the ports. So
-it's additional information associated with the usb3 function.
+I don't see how driver can benefits from nice things provided by of-thermal.
+There is no colling device associated with PMIC chip, pooling delays are of
+no use, device uses interrupt, trip pints are predefined in hardware...
 
-I did look through the driver changes and can't really make out which
-part of the code actually performs this assignment. Can you point me to
-it?
+Please advice.
 
-Thierry
-
---ABTtc+pdwF7KHXCz
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUUkM0AAoJEN0jrNd/PrOhMS8P/i/lGqgEusOrtNYyZhrYikX9
-/3mOb4M3tfpY5A9yt5sWZrnTXRa+Yg0mDg3ct5I9uPcO231miVdCI+X3VmLXtMzx
-7JKA7xfdO530WaEbjJWZQnocm8Ofy2bVmwgy2beWJoMyKOE22+Ibe1pRs/Ew27B/
-QiCAzvJY0AA+GoKbfwUIRblg3vRUc9iqMf8Za6RvHfgM0xzRRz68KgYneDaoW/lV
-DKSXu+pPXxVzCU4EAu+jqA5Vusj96S3dPdZp05Jk3jEyLKswlveb5xZgWzZkssVN
-Cvjjknlde6pPlvtRsm/3eT1XdF719A2+8l5FL1Dixv2ZatsXx3IW210tHrTg0D6Q
-hSpBMGbLBF4TMlbDOaVQplgVDCKIMQSpk8F6rSxFK0kO8qQ4EbMlt+u4Cqi6xQXi
-hAyBc4gdq0NWmq+EU0YvaPgn5B+o4Ohsxaqa4maikEXlbL0hf6TlrIRkLQx/VDGD
-LliNkRszMrRhaPiSr+6VHdREtWWd/YjFzplbNW22R1Bd6iSbPj8E8LBcKHvUzb/T
-MixEf8JmYyaB7xJ9ok+ObSTIytxsedEt1pXXVdKHoA4dZVW7DTSH0cnA4xvHFiuC
-zpkK7P1fpGu+UOIz/KrT05xXt37g/vba0PIfYwe2BB0GS16rtlj77GFBBx35alvi
-TvZ/tempujyTIThhNrOa
-=+NwF
------END PGP SIGNATURE-----
-
---ABTtc+pdwF7KHXCz--
+Regards,
+Ivan
