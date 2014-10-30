@@ -1,81 +1,45 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC] pinctrl: Provide a generic device tree binding for per-pin
- pin controllers
-Date: Wed, 29 Oct 2014 22:05:40 -0600
-Message-ID: <5451B914.6020300@wwwdotorg.org>
-References: <20141023132305.GG14443@pengutronix.de>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH V2 06/15] genirq: Generic chip: Optimize for fixed-endian
+ systems
+Date: Wed, 29 Oct 2014 21:16:58 -0700
+Message-ID: <20141030041658.GB29070@brian-ubuntu>
+References: <1414635488-14137-1-git-send-email-cernekee@gmail.com>
+ <1414635488-14137-7-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141023132305.GG14443-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414635488-14137-7-git-send-email-cernekee@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Cernekee <cernekee@gmail.com>
+Cc: arnd@arndb.de, f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org, lethal@linux-sh.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/23/2014 07:23 AM, Sascha Hauer wrote:
-> Most iomux controllers allow a configuration per pin. These currently
-> have no common device tree binding. There are many different SoC
-> specific bindings for this class of iomux controllers. Some controllers
-> artificially group pins together where in hardware no groups exist (for
-> example lantiq). Other controllers just put each pin into a separate
-> group which explodes to many many strings to parse (Tegra30).
-> 
-> 
-> A pin controller has n pins, each muxable to m different positions.
+On Wed, Oct 29, 2014 at 07:17:59PM -0700, Kevin Cernekee wrote:
+> @@ -19,7 +20,14 @@ static DEFINE_RAW_SPINLOCK(gc_lock);
+>  
+>  static int is_big_endian(struct irq_chip_generic *gc)
+>  {
+> -	return !!(gc->domain->gc->gc_flags & IRQ_GC_BE_IO);
+> +	if (IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP) &&
+> +	    !IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP_BE))
+> +		return 0;
+> +	else if (IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP_BE) &&
+> +		 !IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP))
+> +		return 1;
 
-I assume that sentence is meant to say something more specific:
+Would XOR make this any easier to read? e.g.:
 
-This binding is intended to apply to pin controllers where each pin has
-an independently selectable mux function.
+	if (IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP) ^
+	    IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP_BE))
+		return IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP_BE);
+	else
+		...
 
-"A pin controller ..." sounds like a general statement that is intended
-to apply to any pin controller. If that were intended, the statement you
-made certainly wouldn't be true.
+> +	else
+> +		return !!(gc->domain->gc->gc_flags & IRQ_GC_BE_IO);
+>  }
+>  
+>  static void irq_reg_writel(struct irq_chip_generic *gc,
 
-> There exists a logical numbering for all pins, for most SoCs this will
-> be defined by the register ordering so that the pin number can directly
-> be translated to a register offset without the need of tables in the
-> driver. The register usually takes m different numbers to specify the
-> function the pin should have. Both the pin and its function can be
-> described as a single 32bit number:
-> 
-> #define PINMUX_PIN(no, fn) (((no) & 0xffffff) << 8) | (fn) & 0xff)
-> 
-> This allows to put multiple pins into a single device tree property
-> which is very efficiently parsable by the driver (or the pinmux core).
-> We suggest to name this property 'pins' and to put it next to the
-> generic pinconf binding.  This allows to describe multiple pins with the
-> same pinconf settings in a single device tree node. Multiple of these
-> nodes can be grouped under a pinctrl state node. This allows to put pins
-> with different pinconf settings to a single state.
-> 
-> Example:
-> 
-> 	uart2 {
-> 		uart2_default_mode: uart2_default {
-> 			pins1 {
-> 				pins = <PINMUX_PIN(127, 3), PINMUX_PIN(128, 3)>;
-
-Within each of the nodes, the binding for pinmux is defined
-independently by each pin controller. I don't have any /strong/
-objection to any particular pin controller using this binding, or even
-it being re-used across many similar pin controllers, or even being
-the/a default binding style for new pin controllers.
-
-I'm not totally sure whether blending the pin ID and mux function ID
-into the same value is a good idea. That said, it does have advantages
-as you state, and shouldn't cause any significant issues. In any case
-where it would be a bad idea, the binding for the pin controller in
-question can still choose to use some more appropriate binding, so
-allowing this binding for some controllers won't force issues onto other
-controllers. So, it seems fine.
-
-Note however that we can't change existing bindings. Well, I suppose
-certain bindings could be enhanced to support either a string-based or
-an integer-base binding, but I don't think that'd be a good idea.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Brian
