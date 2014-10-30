@@ -1,78 +1,77 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/2] clk: shmobile: mstp: Update DT bindings to use clock-indices property
-Date: Thu, 30 Oct 2014 12:23:05 +0200
-Message-ID: <1964191.CeLtYiTBia@avalon>
-References: <1414622133-27247-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20141030014708.GK22052@verge.net.au>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH v3 2/5] phy: berlin-sata: Add support for BG2 SATA PHY
+Date: Thu, 30 Oct 2014 11:21:25 +0100
+Message-ID: <1414664488-5911-3-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1413882477-27922-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1414664488-5911-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20141030014708.GK22052@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414664488-5911-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+Berlin BG2 also has a SATA PHY compatible with the current driver
+except different PHY_BASE. Add a new compatible to the driver
+reflecting the different PHY_BASE.
 
-On Thursday 30 October 2014 10:47:08 Simon Horman wrote:
-> On Thu, Oct 30, 2014 at 12:35:32AM +0200, Laurent Pinchart wrote:
-> > The renesas,clock-indices property got standardized, replace it with
-> > clock-indices.
-> > 
-> > The MSTP clock driver supports both the old and new properties.
-> > 
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
-> 
-> This change is fine by me, but it seems to be very similar to a
-> change sent by Geert. My comment with regards to that was:
-> 
-> I'd appreciate it if you could pick this up (or at least indicate that
-> you intend to) so I can pick up the remaining in this series that
-> make use of the new binding.
-> 
-> Acked-by: Simon Horman <horms+renesas@verge.net.au>
-> 
-> I have no particular preference for which version of this patch is accepted.
+Acked-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+---
+Changelog:
+v1->v2:
+- none
+v2->v3:
+- Use of_device_is_compatible for different PHY_BASE (Suggested by
+  Felipe Balbi)
 
-Geert was first, so let's pick his series.
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: "Antoine T=C3=A9nart" <antoine.tenart@free-electrons.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/phy/phy-berlin-sata.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-> > ---
-> > 
-> >  .../devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt         | 8
-> >  ++++---- 1 file changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > Mike, can you please take this in your tree for v3.19 ?
-> > 
-> > diff --git
-> > a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> > b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> > index a5f52238c80d..2e18676bd4b5 100644
-> > --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> > +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> > 
-> > @@ -26,11 +26,11 @@ Required Properties:
-> >      must appear in the same order as the output clocks.
-> >    
-> >    - #clock-cells: Must be 1
-> >    - clock-output-names: The name of the clocks as free-form strings
-> > 
-> > -  - renesas,clock-indices: Indices of the gate clocks into the group (0
-> > to 31) +  - clock-indices: Indices of the gate clocks into the group (0
-> > to 31)
-> > 
-> > -The clocks, clock-output-names and renesas,clock-indices properties
-> > contain one -entry per gate clock. The MSTP groups are sparsely
-> > populated. Unimplemented -gate clocks must not be declared.
-> > +The clocks, clock-output-names and clock-indices properties contain one
-> > entry +per gate clock. The MSTP groups are sparsely populated.
-> > Unimplemented gate +clocks must not be declared.
-> > 
-> >  Example
-
--- 
-Regards,
-
-Laurent Pinchart
-
+diff --git a/drivers/phy/phy-berlin-sata.c b/drivers/phy/phy-berlin-sat=
+a.c
+index cdb46d1203a4..873e7a890fee 100644
+--- a/drivers/phy/phy-berlin-sata.c
++++ b/drivers/phy/phy-berlin-sata.c
+@@ -30,6 +30,7 @@
+ #define MBUS_WRITE_REQUEST_SIZE_128	(BIT(2) << 16)
+ #define MBUS_READ_REQUEST_SIZE_128	(BIT(2) << 19)
+=20
++#define BG2_PHY_BASE		0x080
+ #define BG2Q_PHY_BASE		0x200
+=20
+ /* register 0x01 */
+@@ -222,7 +223,10 @@ static int phy_berlin_sata_probe(struct platform_d=
+evice *pdev)
+ 	if (!priv->phys)
+ 		return -ENOMEM;
+=20
+-	priv->phy_base =3D BG2Q_PHY_BASE;
++	if (of_device_is_compatible(dev->of_node, "marvell,berlin2-sata-phy")=
+)
++		priv->phy_base =3D BG2_PHY_BASE;
++	else
++		priv->phy_base =3D BG2Q_PHY_BASE;
+=20
+ 	dev_set_drvdata(dev, priv);
+ 	spin_lock_init(&priv->lock);
+@@ -271,6 +275,7 @@ static int phy_berlin_sata_probe(struct platform_de=
+vice *pdev)
+ }
+=20
+ static const struct of_device_id phy_berlin_sata_of_match[] =3D {
++	{ .compatible =3D "marvell,berlin2-sata-phy" },
+ 	{ .compatible =3D "marvell,berlin2q-sata-phy" },
+ 	{ },
+ };
+--=20
+2.1.1
