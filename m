@@ -1,98 +1,54 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [RFT v2 2/8] regulator: max77802: Remove support for board files
-Date: Thu, 30 Oct 2014 08:49:56 +0100
-Message-ID: <1414655396.5114.10.camel@AMDC1943>
-References: <1414595206-1437-1-git-send-email-k.kozlowski@samsung.com>
- <1414595206-1437-3-git-send-email-k.kozlowski@samsung.com>
- <54517B37.9010305@collabora.co.uk>
+From: BhuvanChandra DharanikotaVenkata <bhuvanchandradv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: ARM: dts: Passing 'irq' property in SPI child node
+Date: Thu, 30 Oct 2014 13:39:30 +0530
+Message-ID: <CAPRVJ63TGV-XtRXGv8BDivKkxd=u5YLQO8tEQ02FOdC_u_XeDQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <54517B37.9010305@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On czw, 2014-10-30 at 00:41 +0100, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
-> 
-> On 10/29/2014 04:06 PM, Krzysztof Kozlowski wrote:
-> >  
-> >  static int max77802_pmic_probe(struct platform_device *pdev)
-> >  {
-> >  	struct max77686_dev *iodev = dev_get_drvdata(pdev->dev.parent);
-> > -	struct max77686_platform_data *pdata = dev_get_platdata(iodev->dev);
-> >  	struct max77802_regulator_prv *max77802;
-> >  	int i, ret = 0, val;
-> >  	struct regulator_config config = { };
-> > -
-> > -	/* This is allocated by the MFD driver */
-> > -	if (!pdata) {
-> > -		dev_err(&pdev->dev, "no platform data found for regulator\n");
-> > -		return -ENODEV;
-> > -	}
-> > +	struct of_regulator_match *rdata;
-> >  
-> >  	max77802 = devm_kzalloc(&pdev->dev,
-> >  				sizeof(struct max77802_regulator_prv),
-> > @@ -586,24 +558,29 @@ static int max77802_pmic_probe(struct platform_device *pdev)
-> >  	if (!max77802)
-> >  		return -ENOMEM;
-> >  
-> > -	if (iodev->dev->of_node) {
-> > -		ret = max77802_pmic_dt_parse_pdata(pdev, pdata);
-> > -		if (ret)
-> > -			return ret;
-> > -	}
-> > -
-> >  	config.dev = iodev->dev;
-> >  	config.regmap = iodev->regmap;
-> >  	config.driver_data = max77802;
-> >  	platform_set_drvdata(pdev, max77802);
-> >  
-> > +	rdata = kzalloc(sizeof(*rdata) * MAX77802_REG_MAX, GFP_KERNEL);
-> > +	if (!rdata)
-> > +		return -ENOMEM;
-> > +
-> > +	for (i = 0; i < MAX77802_REG_MAX; i++)
-> > +		rdata[i].name = regulators[i].name;
-> > +
-> > +	ret = max77802_pmic_dt_parse(pdev, rdata);
-> > +	if (ret)
-> > +		goto out;
-> > +
-> >  	for (i = 0; i < MAX77802_REG_MAX; i++) {
-> >  		struct regulator_dev *rdev;
-> > -		int id = pdata->regulators[i].id;
-> > +		int id = regulators[i].id;
-> >  		int shift = max77802_get_opmode_shift(id);
-> >  
-> > -		config.init_data = pdata->regulators[i].initdata;
-> > -		config.of_node = pdata->regulators[i].of_node;
-> > +		config.init_data = rdata[i].init_data;
-> > +		config.of_node = rdata[i].of_node;
-> >  
-> >  		ret = regmap_read(iodev->regmap, regulators[i].enable_reg, &val);
-> >  		val = val >> shift & MAX77802_OPMODE_MASK;
-> > @@ -621,13 +598,17 @@ static int max77802_pmic_probe(struct platform_device *pdev)
-> >  		rdev = devm_regulator_register(&pdev->dev,
-> >  					       &regulators[i], &config);
-> 
-> Thanks for your patch. It's indeed an improvement over the old code and I can
-> test it tomorrow when I've access to my machine with a max77802 PMIC.
-> 
-> However, I don't think this is the change that Mark asked. AFAIU what he wanted
-> is to fill the struct regulator_desc .of_match and .regulators_node fields so
-> the init_data is extracted by the core on regulator registration.
-> 
-> Look at commits a0c7b164 ("regulator: of: Provide simplified DT parsing method")
-> and 93a127b ("regulator: isl9305: Convert to new style DT parsing") to see what
-> I'm talking about.
+Hi all,
 
-Ooo, I missed these changes. This should simplify the code even more.
-I'll re-spin, so don't hurry with testing :)
+Facing some issues while passing the irq property in child node of SPI node.
+I was trying to enable the SPI based mcp2515 can controller, according
+to the documentation available in the bindings of mcp251x driver,
+added the required properties of the node.
+As per the requirement need to pass an irq of a GPIO, used
+'interrupt-parent' and 'interrupts' properties in the child node
+(mcp251x can node).
+I had a doubt, how exactly the interrupts property was parsed and
+taken in the mcp251x driver?
+In driver the spi->irq holds the irq number, in non dt kernels we are
+passing the irq value directly from platform data.
+How can we pass the irq property required by mcp251x driver from the
+device tree node?
 
-Best regards,
-Krzysztof
+http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
+http://lxr.free-electrons.com/source/drivers/net/can/mcp251x.c?v=2.6.33
+
+spi dt node:
+
+>  &dspi1 {
+>      status = "okay";
+>      spi-max-frequency = <25000000>;
+>
+>     can2: can@1 {
+>         compatible = "microchip,mcp2515";
+>         reg = <0>;
+>         clocks = <&clk16m>;
+>         interrupt-parent = <&gpio2>;
+>         interrupts = <43 0x8>;
+>         spi-max-frequency = <10000000>;
+>     };
+>  };
+
+
+
+Best Regards,
+Bhuvanchandara DV
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
