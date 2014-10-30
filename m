@@ -1,7 +1,7 @@
 From: Huang Rui <ray.huang@amd.com>
-Subject: [PATCH v4 03/20] usb: dwc3: initialize platform data at pci glue layer
-Date: Thu, 30 Oct 2014 18:08:28 +0800
-Message-ID: <1414663725-2195-4-git-send-email-ray.huang@amd.com>
+Subject: [PATCH v4 05/20] usb: dwc3: add lpm erratum support
+Date: Thu, 30 Oct 2014 18:08:30 +0800
+Message-ID: <1414663725-2195-6-git-send-email-ray.huang@amd.com>
 References: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,49 +12,189 @@ To: Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn H
 Cc: Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Huang Rui <ray.huang@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch initializes platform data at pci glue layer, and SoCs x86-based
-platform vendor is able to define their flags in platform data at bus glue
-layer. Then do some independent behaviors at dwc3 core level.
+When parameter DWC_USB3_LPM_ERRATA_ENABLE is enabled in Advanced
+Configuration of coreConsultant, support of xHCI BESL Errata Dated
+10/19/2011 is enabled in host mode. In device mode it adds the capability
+to send NYET response threshold based on the BESL value received in the LPM
+token, and the threshold is configurable for each SoC platform.
+
+This patch adds an entry that soc platform is able to define the lpm
+capacity with their own device tree or bus glue layer.
+
+[ balbi@ti.com : added devicetree documentation, spelled threshold
+		completely, made sure threshold is only applied to
+		proper core revisions. ]
 
 Signed-off-by: Huang Rui <ray.huang@amd.com>
 Signed-off-by: Felipe Balbi <balbi@ti.com>
 ---
- drivers/usb/dwc3/dwc3-pci.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ Documentation/devicetree/bindings/usb/dwc3.txt |  2 ++
+ drivers/usb/dwc3/core.c                        | 16 +++++++++++++++-
+ drivers/usb/dwc3/core.h                        | 26 +++++++++++++++++---------
+ drivers/usb/dwc3/gadget.c                      | 13 +++++++++++++
+ drivers/usb/dwc3/platform_data.h               |  3 +++
+ 5 files changed, 50 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
-index a36cf66..ada975f 100644
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -25,6 +25,8 @@
- #include <linux/usb/otg.h>
- #include <linux/usb/usb_phy_generic.h>
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 8ec2256..2b0c1f2 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -16,6 +16,8 @@ Optional properties:
+  - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+  - snps,disable_scramble_quirk: true when SW should disable data scrambling.
+ 	Only really useful for FPGA builds.
++ - snps,has-lpm-erratum: true when DWC3 was configured with LPM Erratum enabled
++ - snps,lpm-nyet-threshold: LPM NYET threshold
  
-+#include "platform_data.h"
-+
- /* FIXME define these in <linux/pci_ids.h> */
- #define PCI_VENDOR_ID_SYNOPSYS		0x16c3
- #define PCI_DEVICE_ID_SYNOPSYS_HAPSUSB3	0xabcd
-@@ -102,6 +104,9 @@ static int dwc3_pci_probe(struct pci_dev *pci,
- 	struct dwc3_pci		*glue;
+ This is usually a subnode to DWC3 glue to which it is connected.
+ 
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index fae095f..2ac96e4 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -654,6 +654,7 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	struct device_node	*node = dev->of_node;
+ 	struct resource		*res;
+ 	struct dwc3		*dwc;
++	u8			lpm_nyet_threshold;
+ 
  	int			ret;
- 	struct device		*dev = &pci->dev;
-+	struct dwc3_platform_data dwc3_pdata;
+ 
+@@ -709,16 +710,27 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	 */
+ 	res->start -= DWC3_GLOBALS_REGS_START;
+ 
++	/* default to highest possible threshold */
++	lpm_nyet_threshold = 0xff;
 +
-+	memset(&dwc3_pdata, 0x00, sizeof(dwc3_pdata));
+ 	if (node) {
+ 		dwc->maximum_speed = of_usb_get_maximum_speed(node);
++		dwc->has_lpm_erratum = of_property_read_bool(node,
++				"snps,has-lpm-erratum");
++		of_property_read_u8(node, "snps,lpm-nyet-threshold",
++				&lpm_nyet_threshold);
  
- 	glue = devm_kzalloc(dev, sizeof(*glue), GFP_KERNEL);
- 	if (!glue)
-@@ -148,6 +153,10 @@ static int dwc3_pci_probe(struct pci_dev *pci,
+-		dwc->needs_fifo_resize = of_property_read_bool(node, "tx-fifo-resize");
++		dwc->needs_fifo_resize = of_property_read_bool(node,
++				"tx-fifo-resize");
+ 		dwc->dr_mode = of_usb_get_dr_mode(node);
  
- 	pci_set_drvdata(pci, glue);
+ 		dwc->disable_scramble_quirk = of_property_read_bool(node,
+ 				"snps,disable_scramble_quirk");
+ 	} else if (pdata) {
+ 		dwc->maximum_speed = pdata->maximum_speed;
++		dwc->has_lpm_erratum = pdata->has_lpm_erratum;
++		if (pdata->lpm_nyet_threshold)
++			lpm_nyet_threshold = pdata->lpm_nyet_threshold;
  
-+	ret = platform_device_add_data(dwc3, &dwc3_pdata, sizeof(dwc3_pdata));
-+	if (ret)
-+		goto err3;
+ 		dwc->needs_fifo_resize = pdata->tx_fifo_resize;
+ 		dwc->dr_mode = pdata->dr_mode;
+@@ -730,6 +742,8 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	if (dwc->maximum_speed == USB_SPEED_UNKNOWN)
+ 		dwc->maximum_speed = USB_SPEED_SUPER;
+ 
++	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
 +
- 	dma_set_coherent_mask(&dwc3->dev, dev->coherent_dma_mask);
+ 	ret = dwc3_core_get_phy(dwc);
+ 	if (ret)
+ 		return ret;
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 56bada6..34f1e08 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -246,16 +246,19 @@
+ #define DWC3_DCTL_TRGTULST_SS_INACT	(DWC3_DCTL_TRGTULST(6))
  
- 	dwc3->dev.dma_mask = dev->dma_mask;
+ /* These apply for core versions 1.94a and later */
+-#define DWC3_DCTL_KEEP_CONNECT	(1 << 19)
+-#define DWC3_DCTL_L1_HIBER_EN	(1 << 18)
+-#define DWC3_DCTL_CRS		(1 << 17)
+-#define DWC3_DCTL_CSS		(1 << 16)
++#define DWC3_DCTL_LPM_ERRATA_MASK	DWC3_DCTL_LPM_ERRATA(0xf)
++#define DWC3_DCTL_LPM_ERRATA(n)		((n) << 20)
+ 
+-#define DWC3_DCTL_INITU2ENA	(1 << 12)
+-#define DWC3_DCTL_ACCEPTU2ENA	(1 << 11)
+-#define DWC3_DCTL_INITU1ENA	(1 << 10)
+-#define DWC3_DCTL_ACCEPTU1ENA	(1 << 9)
+-#define DWC3_DCTL_TSTCTRL_MASK	(0xf << 1)
++#define DWC3_DCTL_KEEP_CONNECT		(1 << 19)
++#define DWC3_DCTL_L1_HIBER_EN		(1 << 18)
++#define DWC3_DCTL_CRS			(1 << 17)
++#define DWC3_DCTL_CSS			(1 << 16)
++
++#define DWC3_DCTL_INITU2ENA		(1 << 12)
++#define DWC3_DCTL_ACCEPTU2ENA		(1 << 11)
++#define DWC3_DCTL_INITU1ENA		(1 << 10)
++#define DWC3_DCTL_ACCEPTU1ENA		(1 << 9)
++#define DWC3_DCTL_TSTCTRL_MASK		(0xf << 1)
+ 
+ #define DWC3_DCTL_ULSTCHNGREQ_MASK	(0x0f << 5)
+ #define DWC3_DCTL_ULSTCHNGREQ(n) (((n) << 5) & DWC3_DCTL_ULSTCHNGREQ_MASK)
+@@ -660,10 +663,13 @@ struct dwc3_scratchpad_array {
+  * @regset: debugfs pointer to regdump file
+  * @test_mode: true when we're entering a USB test mode
+  * @test_mode_nr: test feature selector
++ * @lpm_nyet_threshold: LPM NYET response threshold
+  * @delayed_status: true when gadget driver asks for delayed status
+  * @ep0_bounced: true when we used bounce buffer
+  * @ep0_expect_in: true when we expect a DATA IN transfer
+  * @has_hibernation: true when dwc3 was configured with Hibernation
++ * @has_lpm_erratum: true when core was configured with LPM Erratum. Note that
++ *			there's now way for software to detect this in runtime.
+  * @is_selfpowered: true when we are selfpowered
+  * @is_fpga: true when we are using the FPGA board
+  * @needs_fifo_resize: not all users might want fifo resizing, flag it
+@@ -764,11 +770,13 @@ struct dwc3 {
+ 
+ 	u8			test_mode;
+ 	u8			test_mode_nr;
++	u8			lpm_nyet_threshold;
+ 
+ 	unsigned		delayed_status:1;
+ 	unsigned		ep0_bounced:1;
+ 	unsigned		ep0_expect_in:1;
+ 	unsigned		has_hibernation:1;
++	unsigned		has_lpm_erratum:1;
+ 	unsigned		is_selfpowered:1;
+ 	unsigned		is_fpga:1;
+ 	unsigned		needs_fifo_resize:1;
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 7a64c2f..2c0d19a4 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2297,6 +2297,19 @@ static void dwc3_gadget_conndone_interrupt(struct dwc3 *dwc)
+ 		 */
+ 		reg |= DWC3_DCTL_HIRD_THRES(12);
+ 
++		/*
++		 * When dwc3 revisions >= 2.40a, LPM Erratum is enabled and
++		 * DCFG.LPMCap is set, core responses with an ACK and the
++		 * BESL value in the LPM token is less than or equal to LPM
++		 * NYET threshold.
++		 */
++		WARN_ONCE(dwc->revision < DWC3_REVISION_240A
++				&& dwc->has_lpm_erratum,
++				"LPM Erratum not available on dwc3 revisisions < 2.40a\n");
++
++		if (dwc->has_lpm_erratum && dwc->revision >= DWC3_REVISION_240A)
++			reg |= DWC3_DCTL_LPM_ERRATA(dwc->lpm_nyet_threshold);
++
+ 		dwc3_writel(dwc->regs, DWC3_DCTL, reg);
+ 	} else {
+ 		reg = dwc3_readl(dwc->regs, DWC3_DCTL);
+diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform_data.h
+index 9209d02..e128308 100644
+--- a/drivers/usb/dwc3/platform_data.h
++++ b/drivers/usb/dwc3/platform_data.h
+@@ -25,5 +25,8 @@ struct dwc3_platform_data {
+ 	enum usb_dr_mode dr_mode;
+ 	bool tx_fifo_resize;
+ 
++	u8 lpm_nyet_threshold;
++
+ 	unsigned disable_scramble_quirk:1;
++	unsigned has_lpm_erratum:1;
+ };
 -- 
 1.9.1
