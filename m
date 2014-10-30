@@ -1,36 +1,68 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 10/15] irqchip: bcm7120-l2: Make sure all register accesses use base+offset
-Date: Thu, 30 Oct 2014 10:12:30 +0100
-Message-ID: <2226258.WJYuvIUVPE@wuerfel>
-References: <1414635488-14137-1-git-send-email-cernekee@gmail.com> <1414635488-14137-11-git-send-email-cernekee@gmail.com>
+Subject: Re: [PATCH V2 05/15] genirq: Generic chip: Add big endian I/O accessors
+Date: Thu, 30 Oct 2014 10:21:12 +0100
+Message-ID: <14243833.KJsSScVrGS@wuerfel>
+References: <1414635488-14137-1-git-send-email-cernekee@gmail.com> <1414635488-14137-6-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1414635488-14137-11-git-send-email-cernekee@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414635488-14137-6-git-send-email-cernekee@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Cernekee <cernekee@gmail.com>
 Cc: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org, lethal@linux-sh.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 29 October 2014 19:18:03 Kevin Cernekee wrote:
-> A couple of accesses to IRQEN (base+0x00) just used "base" directly, so
-> they would break if IRQEN ever became nonzero.  Make sure that all
-> reads/writes specify the register offset constant.
-> 
-> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> 
+On Wednesday 29 October 2014 19:17:58 Kevin Cernekee wrote:
+>  static LIST_HEAD(gc_list);
+>  static DEFINE_RAW_SPINLOCK(gc_lock);
+>  
+> +static int is_big_endian(struct irq_chip_generic *gc)
+> +{
+> +       return !!(gc->domain->gc->gc_flags & IRQ_GC_BE_IO);
+> +}
+> +
+>  static void irq_reg_writel(struct irq_chip_generic *gc,
+>                            u32 val, int reg_offset)
+>  {
+> -       writel(val, gc->reg_base + reg_offset);
+> +       if (is_big_endian(gc))
+> +               iowrite32be(val, gc->reg_base + reg_offset);
+> +       else
+> +               writel(val, gc->reg_base + reg_offset);
+>  }
+>  
 
-Now you no longer convert them this driver to use irq_reg_{readl,writel}, which
-breaks support for big-endian ARM.
+What I had in mind was to use indirect function calls instead, like
+
+#ifndef irq_reg_writel
+static inline void irq_reg_writel_le(u32 val, void __iomem *addr)
+{
+	return writel(val, addr);
+}
+#endif
+
+#ifndef irq_reg_writel_be
+static inline void irq_reg_writel_be(u32 val, void __iomem *addr)
+{
+	return iowrite32_be(val, addr);
+}
+#endif
+
+
+static inline void irq_reg_writel(struct irq_chip_generic *gc, u32 val, int reg_offset)
+{
+       if (IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP) &&
+           !IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP_BE))
+		return irq_reg_writel_le(val, gc->reg_base + reg_offset);
+
+       if (IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP) &&
+           !IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP_BE))
+		return irq_reg_writel_be(val, gc->reg_base + reg_offset);
+
+	return gc->writel(val, gc->reg_base + reg_offset);
+}
+
+This would take the condition out of the callers.
 
 	Arnd
