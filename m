@@ -1,39 +1,77 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V2 11/15] irqchip: bcm7120-l2: Fix missing nibble in gc->unused mask
-Date: Wed, 29 Oct 2014 19:18:04 -0700
-Message-ID: <1414635488-14137-12-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V2 05/15] genirq: Generic chip: Add big endian I/O accessors
+Date: Wed, 29 Oct 2014 19:17:58 -0700
+Message-ID: <1414635488-14137-6-git-send-email-cernekee@gmail.com>
 References: <1414635488-14137-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1414635488-14137-1-git-send-email-cernekee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: arnd@arndb.de, f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org, lethal@linux-sh.org
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-This mask should have been 0xffff_ffff, not 0x0fff_ffff.
-
-The change should not have an effect on current users (STB) because bits
-31:27 are unused.
+Use io{read,write}32be if the caller specified IRQ_GC_BE_IO when creating
+the irqchip.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/irqchip/irq-bcm7120-l2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/irq.h       |  1 +
+ kernel/irq/generic-chip.c | 15 +++++++++++++--
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
-index 6472b71..e3cfff5 100644
---- a/drivers/irqchip/irq-bcm7120-l2.c
-+++ b/drivers/irqchip/irq-bcm7120-l2.c
-@@ -171,7 +171,7 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
- 	}
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 8049e93..e69b7b2 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -739,6 +739,7 @@ enum irq_gc_flags {
+ 	IRQ_GC_INIT_NESTED_LOCK		= 1 << 1,
+ 	IRQ_GC_MASK_CACHE_PER_TYPE	= 1 << 2,
+ 	IRQ_GC_NO_MASK			= 1 << 3,
++	IRQ_GC_BE_IO			= 1 << 4,
+ };
  
- 	gc = irq_get_domain_generic_chip(data->domain, 0);
--	gc->unused = 0xfffffff & ~data->irq_map_mask;
-+	gc->unused = 0xffffffff & ~data->irq_map_mask;
- 	gc->reg_base = data->base;
- 	gc->private = data;
- 	ct = gc->chip_types;
+ /*
+diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
+index b2ee65d..c1890bb 100644
+--- a/kernel/irq/generic-chip.c
++++ b/kernel/irq/generic-chip.c
+@@ -17,16 +17,27 @@
+ static LIST_HEAD(gc_list);
+ static DEFINE_RAW_SPINLOCK(gc_lock);
+ 
++static int is_big_endian(struct irq_chip_generic *gc)
++{
++	return !!(gc->domain->gc->gc_flags & IRQ_GC_BE_IO);
++}
++
+ static void irq_reg_writel(struct irq_chip_generic *gc,
+ 			   u32 val, int reg_offset)
+ {
+-	writel(val, gc->reg_base + reg_offset);
++	if (is_big_endian(gc))
++		iowrite32be(val, gc->reg_base + reg_offset);
++	else
++		writel(val, gc->reg_base + reg_offset);
+ }
+ 
+ static u32 irq_reg_readl(struct irq_chip_generic *gc,
+ 			 int reg_offset)
+ {
+-	return readl(gc->reg_base + reg_offset);
++	if (is_big_endian(gc))
++		return ioread32be(gc->reg_base + reg_offset);
++	else
++		return readl(gc->reg_base + reg_offset);
+ }
+ 
+ /**
 -- 
 2.1.1
