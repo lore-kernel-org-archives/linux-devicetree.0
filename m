@@ -1,85 +1,90 @@
-From: Huang Rui <ray.huang@amd.com>
-Subject: [PATCH v4 02/20] usb: dwc3: add a flag to check if it is FPGA board
-Date: Thu, 30 Oct 2014 18:08:27 +0800
-Message-ID: <1414663725-2195-3-git-send-email-ray.huang@amd.com>
-References: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH v3 4/5] ARM: berlin: Add AHCI and SATA PHY nodes to BG2
+Date: Thu, 30 Oct 2014 11:21:27 +0100
+Message-ID: <1414664488-5911-5-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1413882477-27922-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1414664488-5911-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
+In-Reply-To: <1414664488-5911-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Huang Rui <ray.huang@amd.com>
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some chip vendor is on pre-silicon phase, which needs to use the simulation
-board. It should have the same product and vendor id with the true SoC, but
-might have some minor different configurations.
+Add DT nodes for the AHCI controller and SATA PHY found on Marvell
+Berlin2 SoCs.
 
-Below thread discussion proposes to find a method to distinguish between
-simulation board and SoC.
-
-http://marc.info/?l=linux-usb&m=141194772206369&w=2
-
-In Advanced Configuration of coreConsultant, there is the parameter of
-DWC_USB_EN_FPGA. This bit has the function we need. And it would response
-as 7 bit of GHWPARAMS6 register. So it's able to check this functional bit
-to confirm if works on FPGA board.
-
-Reported-by: Felipe Balbi <balbi@ti.com>
-Signed-off-by: Huang Rui <ray.huang@amd.com>
-Signed-off-by: Felipe Balbi <balbi@ti.com>
+Acked-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 ---
- drivers/usb/dwc3/core.c | 6 ++++++
- drivers/usb/dwc3/core.h | 5 +++++
- 2 files changed, 11 insertions(+)
+Changelog:
+v1->v2:
+- remove status =3D "disabled" from SATA controller node (Suggested by
+  Antoine)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 5a47482..c8ae098 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -460,6 +460,12 @@ static int dwc3_core_init(struct dwc3 *dwc)
- 		dev_dbg(dwc->dev, "No power optimization available\n");
- 	}
- 
-+	/* check if current dwc3 is on simulation board */
-+	if (dwc->hwparams.hwparams6 & DWC3_GHWPARAMS6_EN_FPGA) {
-+		dev_dbg(dwc->dev, "it is on FPGA board\n");
-+		dwc->is_fpga = true;
-+	}
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: "Antoine T=C3=A9nart" <antoine.tenart@free-electrons.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ arch/arm/boot/dts/berlin2.dtsi | 39 ++++++++++++++++++++++++++++++++++=
++++++
+ 1 file changed, 39 insertions(+)
+
+diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2=
+=2Edtsi
+index 9d7c810ebd0b..f39090491eb2 100644
+--- a/arch/arm/boot/dts/berlin2.dtsi
++++ b/arch/arm/boot/dts/berlin2.dtsi
+@@ -246,6 +246,45 @@
+ 			};
+ 		};
+=20
++		ahci: sata@e90000 {
++			compatible =3D "marvell,berlin2-ahci", "generic-ahci";
++			reg =3D <0xe90000 0x1000>;
++			interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++			clocks =3D <&chip CLKID_SATA>;
++			#address-cells =3D <1>;
++			#size-cells =3D <0>;
 +
- 	/*
- 	 * WORKAROUND: DWC3 revisions <1.90a have a bug
- 	 * where the device can fail to connect at SuperSpeed
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index a715ee1..f6ee623 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -210,6 +210,9 @@
- #define DWC3_GHWPARAMS4_HIBER_SCRATCHBUFS(n)	(((n) & (0x0f << 13)) >> 13)
- #define DWC3_MAX_HIBER_SCRATCHBUFS		15
- 
-+/* Global HWPARAMS6 Register */
-+#define DWC3_GHWPARAMS6_EN_FPGA			(1 << 7)
++			sata0: sata-port@0 {
++				reg =3D <0>;
++				phys =3D <&sata_phy 0>;
++				status =3D "disabled";
++			};
 +
- /* Device Configuration Register */
- #define DWC3_DCFG_DEVADDR(addr)	((addr) << 3)
- #define DWC3_DCFG_DEVADDR_MASK	DWC3_DCFG_DEVADDR(0x7f)
-@@ -662,6 +665,7 @@ struct dwc3_scratchpad_array {
-  * @ep0_expect_in: true when we expect a DATA IN transfer
-  * @has_hibernation: true when dwc3 was configured with Hibernation
-  * @is_selfpowered: true when we are selfpowered
-+ * @is_fpga: true when we are using the FPGA board
-  * @needs_fifo_resize: not all users might want fifo resizing, flag it
-  * @pullups_connected: true when Run/Stop bit is set
-  * @resize_fifos: tells us it's ok to reconfigure our TxFIFO sizes.
-@@ -765,6 +769,7 @@ struct dwc3 {
- 	unsigned		ep0_expect_in:1;
- 	unsigned		has_hibernation:1;
- 	unsigned		is_selfpowered:1;
-+	unsigned		is_fpga:1;
- 	unsigned		needs_fifo_resize:1;
- 	unsigned		pullups_connected:1;
- 	unsigned		resize_fifos:1;
--- 
-1.9.1
++			sata1: sata-port@1 {
++				reg =3D <1>;
++				phys =3D <&sata_phy 1>;
++				status =3D "disabled";
++			};
++		};
++
++		sata_phy: phy@e900a0 {
++			compatible =3D "marvell,berlin2-sata-phy";
++			reg =3D <0xe900a0 0x200>;
++			clocks =3D <&chip CLKID_SATA>;
++			#address-cells =3D <1>;
++			#size-cells =3D <0>;
++			#phy-cells =3D <1>;
++			status =3D "disabled";
++
++			sata-phy@0 {
++				reg =3D <0>;
++			};
++
++			sata-phy@1 {
++				reg =3D <1>;
++			};
++		};
++
+ 		chip: chip-control@ea0000 {
+ 			compatible =3D "marvell,berlin2-chip-ctrl";
+ 			#clock-cells =3D <1>;
+--=20
+2.1.1
