@@ -1,31 +1,78 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH] ACPI / GPIO: Driver GPIO mappings for ACPI GPIOs
-Date: Thu, 30 Oct 2014 12:22:34 +0200
-Message-ID: <20141030102234.GP1304@lahna.fi.intel.com>
-References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com>
- <3242497.urQmuvpeyA@vostro.rjw.lan>
- <CAAVeFuKStrzzwW7s37y7-a8y+j1gD-EzAYfc1h2KTo8uyd+dSA@mail.gmail.com>
- <13007048.sH0aJYjMUX@vostro.rjw.lan>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/2] clk: shmobile: mstp: Update DT bindings to use clock-indices property
+Date: Thu, 30 Oct 2014 12:23:05 +0200
+Message-ID: <1964191.CeLtYiTBia@avalon>
+References: <1414622133-27247-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20141030014708.GK22052@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <13007048.sH0aJYjMUX@vostro.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20141030014708.GK22052@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 30, 2014 at 01:45:09AM +0100, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Subject: ACPI / GPIO: Document ACPI GPIO mappings API
-> 
-> Document the previously introduced method that can be used by device
-> drivers to provide the GPIO subsystem with mappings between GPIO names
-> (connection IDs) and GpioIo()/GpioInt() resources in _CRS.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hi Simon,
 
-Looks really good to me,
+On Thursday 30 October 2014 10:47:08 Simon Horman wrote:
+> On Thu, Oct 30, 2014 at 12:35:32AM +0200, Laurent Pinchart wrote:
+> > The renesas,clock-indices property got standardized, replace it with
+> > clock-indices.
+> > 
+> > The MSTP clock driver supports both the old and new properties.
+> > 
+> > Signed-off-by: Laurent Pinchart
+> > <laurent.pinchart+renesas@ideasonboard.com>
+> 
+> This change is fine by me, but it seems to be very similar to a
+> change sent by Geert. My comment with regards to that was:
+> 
+> I'd appreciate it if you could pick this up (or at least indicate that
+> you intend to) so I can pick up the remaining in this series that
+> make use of the new binding.
+> 
+> Acked-by: Simon Horman <horms+renesas@verge.net.au>
+> 
+> I have no particular preference for which version of this patch is accepted.
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Geert was first, so let's pick his series.
+
+> > ---
+> > 
+> >  .../devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt         | 8
+> >  ++++---- 1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > Mike, can you please take this in your tree for v3.19 ?
+> > 
+> > diff --git
+> > a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> > b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> > index a5f52238c80d..2e18676bd4b5 100644
+> > --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> > +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> > 
+> > @@ -26,11 +26,11 @@ Required Properties:
+> >      must appear in the same order as the output clocks.
+> >    
+> >    - #clock-cells: Must be 1
+> >    - clock-output-names: The name of the clocks as free-form strings
+> > 
+> > -  - renesas,clock-indices: Indices of the gate clocks into the group (0
+> > to 31) +  - clock-indices: Indices of the gate clocks into the group (0
+> > to 31)
+> > 
+> > -The clocks, clock-output-names and renesas,clock-indices properties
+> > contain one -entry per gate clock. The MSTP groups are sparsely
+> > populated. Unimplemented -gate clocks must not be declared.
+> > +The clocks, clock-output-names and clock-indices properties contain one
+> > entry +per gate clock. The MSTP groups are sparsely populated.
+> > Unimplemented gate +clocks must not be declared.
+> > 
+> >  Example
+
+-- 
+Regards,
+
+Laurent Pinchart
+
