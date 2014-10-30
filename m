@@ -1,107 +1,155 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH 1/4] dt/bindings: Introduce the FSL QorIQ DPAA BMan
-Date: Thu, 30 Oct 2014 09:51:23 -0500
-Message-ID: <1414680683.23458.148.camel@snotra.buserror.net>
-References: <1413986972-621-1-git-send-email-Emilian.Medve@Freescale.com>
-	 <EA33D307-CCDA-4A30-9386-46FA832FE0CA@codeaurora.org>
-	 <1414519738.23458.84.camel__4795.38602890006$1414521743$gmane$org@snotra.buserror.net>
-	 <54515ECB.70404@Freescale.com>
-	 <1414620996.23458.141.camel__29590.7804662876$1414621051$gmane$org@snotra.buserror.net>
-	 <5451BF49.6050106@Freescale.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 6/8] regulator: max77686: Add external GPIO control
+Date: Thu, 30 Oct 2014 16:03:06 +0100
+Message-ID: <1414681386.26703.6.camel@AMDC1943>
+References: <1414422226-10948-1-git-send-email-k.kozlowski@samsung.com>
+ <1414422226-10948-7-git-send-email-k.kozlowski@samsung.com>
+ <544EA4FA.6040704@collabora.co.uk> <1414486356.24949.19.camel@AMDC1943>
+ <1414498308.24949.32.camel@AMDC1943> <1414579362.18868.11.camel@AMDC1943>
+ <5450C63B.3000602@collabora.co.uk>
+ <CAAVeFuLncbkNLGxEAj90yMmugRDNjtjeGoV_QYTMDZ7NVMJCmg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5451BF49.6050106@Freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Emil Medve <Emilian.Medve@Freescale.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Geoff.Thorpe@Freescale.com, corbet@lwn.net, linux-doc@vger.kernel.org, linuxppc-dev@ozlabs.org, robh+dt@kernel.org, Kumar Gala <galak@codeaurora.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAAVeFuLncbkNLGxEAj90yMmugRDNjtjeGoV_QYTMDZ7NVMJCmg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-10-29 at 23:32 -0500, Emil Medve wrote:
-> Hello Scott,
->=20
->=20
-> On 10/29/2014 05:16 PM, Scott Wood wrote:
-> > On Wed, 2014-10-29 at 16:40 -0500, Emil Medve wrote:
-> >> Hello Scott,
-> >>
-> >>
-> >> On 10/28/2014 01:08 PM, Scott Wood wrote:
-> >>> On Tue, 2014-10-28 at 09:36 -0500, Kumar Gala wrote:
-> >>>> On Oct 22, 2014, at 9:09 AM, Emil Medve <Emilian.Medve@freescale=
-=2Ecom> wrote:
-> >>>>
-> >>>>> The Buffer Manager is part of the Data-Path Acceleration Archit=
-ecture (DPAA).
-> >>>>> BMan supports hardware allocation and deallocation of buffers b=
-elonging to
-> >>>>> pools originally created by software with configurable depletio=
-n thresholds.
-> >>>>> This binding covers the CCSR space programming model
-> >>>>>
-> >>>>> Signed-off-by: Emil Medve <Emilian.Medve@Freescale.com>
-> >>>>> Change-Id: I3ec479bfb3c91951e96902f091f5d7d2adbef3b2
-> >>>>> ---
-> >>>>> .../devicetree/bindings/powerpc/fsl/bman.txt       | 98 +++++++=
-+++++++++++++++
-> >>>>> 1 file changed, 98 insertions(+)
-> >>>>> create mode 100644 Documentation/devicetree/bindings/powerpc/fs=
-l/bman.txt
-> >>>>
-> >>>> Should these really be in bindings/powerpc/fsl, aren=E2=80=99t y=
-ou guys using this on ARM SoCs as well?
+On czw, 2014-10-30 at 22:56 +0900, Alexandre Courbot wrote:
+> Hi, and thanks for bringing this issue to us!
+> 
+> On Wed, Oct 29, 2014 at 7:49 PM, Javier Martinez Canillas
+> <javier.martinez@collabora.co.uk> wrote:
+> > [adding Linus and Alexandre to the cc list]
+> >
+> > Hello Krzysztof,
+> >
+> > On 10/29/2014 11:42 AM, Krzysztof Kozlowski wrote:
+> >> On wto, 2014-10-28 at 13:11 +0100, Krzysztof Kozlowski wrote:
+> >>> On wto, 2014-10-28 at 09:52 +0100, Krzysztof Kozlowski wrote:
+> >>> > On pon, 2014-10-27 at 21:03 +0100, Javier Martinez Canillas wrote:
+> >>> > > Hello Krzysztof,
+> >>> > >
+> >>> > > On 10/27/2014 04:03 PM, Krzysztof Kozlowski wrote:
+> >>> > > > @@ -85,6 +91,9 @@ struct max77686_data {
+> >>> > > >        struct max77686_regulator_data *regulators;
+> >>> > > >        int num_regulators;
+> >>> > > >
+> >>> > > > +      /* Array of size num_regulators with GPIOs for external control. */
+> >>> > > > +      int *ext_control_gpio;
+> >>> > > > +
+> >>> > >
+> >>> > > The integer-based GPIO API is deprecated in favor of the descriptor-based GPIO
+> >>> > > interface (Documentation/gpio/consumer.txt). Could you please use the later?
+> >>> >
+> >>> > Sure, I can. Please have in mind that regulator core still accepts old
+> >>> > GPIO so I will have to use desc_to_gpio(). That should work... and
+> >>> > should be future-ready.
 > >>>
-> >>> The hardware on the ARM SoCs is different enough that I'm not sur=
-e the
-> >>> same binding will cover it.  That said, putting things under <arc=
-h>
-> >>> should be a last resort if nowhere else fits.
+> >>> It seems I was too hasty... I think usage of the new gpiod API implies
+> >>> completely different bindings.
+> >>>
+> >>> The gpiod_get() gets GPIO from a device level, not from given sub-node
+> >>> pointer. This means that you cannot have DTS like this:
+> >>> ldo21_reg: ldo21 {
+> >>>      regulator-compatible = "LDO21";
+> >>>      regulator-name = "VTF_2.8V";
+> >>>      regulator-min-microvolt = <2800000>;
+> >>>      regulator-max-microvolt = <2800000>;
+> >>>      ec-gpio = <&gpy2 0 0>;
+> >>> };
+> >>>
+> >>> ldo22_reg: ldo22 {
+> >>>      regulator-compatible = "LDO22";
+> >>>      regulator-name = "VMEM_VDD_2.8V";
+> >>>      regulator-min-microvolt = <2800000>;
+> >>>      regulator-max-microvolt = <2800000>;
+> >>>      ec-gpio = <&gpk0 2 0>;
+> >>> };
+> >>>
+> >>>
+> >>> I could put GPIOs in device node:
+> >>>
+> >>> max77686_pmic@09 {
+> >>>      compatible = "maxim,max77686";
+> >>>      interrupt-parent = <&gpx0>;
+> >>>      interrupts = <7 0>;
+> >>>      reg = <0x09>;
+> >>>      #clock-cells = <1>;
+> >>>      ldo21-gpio = <&gpy2 0 0>;
+> >>>      ldo22-gpio = <&gpk0 2 0>;
+> >>>
+> >>>      ldo21_reg: ldo21 {
+> >>>              regulator-compatible = "LDO21";
+> >>>              regulator-name = "VTF_2.8V";
+> >>>              regulator-min-microvolt = <2800000>;
+> >>>              regulator-max-microvolt = <2800000>;
+> >>>      };
+> >>>
+> >>>      ldo22_reg: ldo22 {
+> >>>              regulator-compatible = "LDO22";
+> >>>              regulator-name = "VMEM_VDD_2.8V";
+> >>>              regulator-min-microvolt = <2800000>;
+> >>>              regulator-max-microvolt = <2800000>;
+> >>>      };
+> >>>
+> >>> This would work but I don't like it. The properties of a regulator are
+> >>> above the node configuring that regulator.
+> >>>
+> >>> Any ideas?
+> >>>
 > >>
-> >> OTC started ported the driver to the the ARM SoC and the feedback =
-has
-> >> been that the driver needed minimal changes. The IOMMU has been th=
-e only
-> >> area of concern, and a small change to the binding has been sugges=
-ted
-> >=20
-> > Do we need something in the binding to indicate device endianness?
->=20
-> As I said, I didn't have enough exposure to the ARM SoC so I can't
-> answer that
->=20
-> > If this binding is going to continue to be relevant to future DPAA
-> > generations, I think we really ought to deal with the possibility t=
-hat
-> > there is more than one datapath instance
->=20
-> I'm unsure how relevant this will be going forward. In LS2 B/QMan is
-> abstracted/hidden away behind the MC (firmware).
+> >> Continuing talking to myself... I found another problem - GPIO cannot be
+> >> requested more than once (-EBUSY). In case of this driver (and board:
+> >> Trats2) one GPIO is connected to regulators. The legacy GPIO API and
+> >> regulator core handle this.
+> >>
+> >> With new GPIO API I would have to implement some additional steps in
+> >> such case...
+> >>
+> >> So there are 2 issues:
+> >> 1. Cannot put GPIO property in regulator node.
+> 
+> For this problem you will probably want to use the
+> dev(m)_get_named_gpiod_from_child() function from the following patch:
+> 
+> https://lkml.org/lkml/2014/10/6/529
+> 
+> It should reach -next soon now.
 
-This is why I was wondering whether the binding would be at all the
-same...
+Thanks! Probably I would switch to "top" level gpios property anyway
+(other reasons) but it would be valuable in some cases to specify them
+per child node.
 
->  I wouldn't over-engineer this without a clear picture of what multip=
-le
-> data-paths per SoC even means at this point
+> 
+> >> 2. Cannot request some GPIO more than once.
+> 
+> We have been confronted to this problem with the regulator core as well:
+> 
+> http://marc.info/?l=linux-arm-kernel&m=140417649119733&w=1
+> 
+> I have a draft patch that allows GPIOs to be requested by several
+> clients. What prevented me from submitting it was that I wanted to
+> make sure the different requested configurations were compatible, but
+> maybe I am overthinking this. There are also a couple of other patches
+> that this depends on (like removal of the big descs array), so I don't
+> think it will be available too soon, sadly.
 
-I don't think it's over-engineering.  Assuming only one instance of
-something is generally sloppy engineering.  Linux doesn't need to
-actually pay attention to it until and unless it becomes necessary, but
-it's good to have the information in the device tree up front.
+Shouldn't be the nature of get()/put() interface to allow multiple
+requests? To me it was a kind of intuitive that I could do another
+devm_gpiod_get() for the same gpio. But then it hit me with EBUSY :).
 
-> > by having phandles and/or a parent container to connect the related
-> > components.
->=20
-> Connecting the related components is beyond the scope of this binding=
-=2E
-> It will soon hit the e-mail list(s) as part of upstreaming the Ethern=
-et
-> driver
+> 
+> So maybe your best shot for now is to keep using the integer API, as
+> much as I hate it. Once we become able to request the same GPIO
+> several times, you should be good to switch to descriptors. Sorry this
+> has not been done faster.
 
-So you want us to merge this binding without being told how this works?
-Or by "soon" do you mean before this binding is accepted?
+I'll do it legacy way but I'll try to use bindings gpiolib-safe. This
+way future transition in the driver should not affect bindings.
 
--Scott
-
-
+Best regards,
+Krzysztof
