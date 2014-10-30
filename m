@@ -1,52 +1,58 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv0 0/2] arm: mvebu: non-critical fixes for NETGEAR ReadyNAS
- 102
-Date: Thu, 30 Oct 2014 13:41:01 +0100
-Message-ID: <545231DD.7090500@free-electrons.com>
-References: <cover.1414185031.git.arno@natisbad.org>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [RFT v3 06/14] regulator: max77802: Remove support for board
+ files
+Date: Thu, 30 Oct 2014 13:42:12 +0100
+Message-ID: <54523224.3010407@collabora.co.uk>
+References: <1414668053-31370-1-git-send-email-k.kozlowski@samsung.com> <1414668053-31370-7-git-send-email-k.kozlowski@samsung.com> <54522615.7040002@collabora.co.uk> <1414671037.23399.2.camel@AMDC1943> <54522D2C.9050002@collabora.co.uk> <1414672235.23399.7.camel@AMDC1943>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1414185031.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johan Kristell <johan.kristell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1414672235.23399.7.camel@AMDC1943>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnaud,
+Hello Krzysztof,
 
-On 24/10/2014 23:21, Arnaud Ebalard wrote:
-> Hi,
+On 10/30/2014 01:30 PM, Krzysztof Kozlowski wrote:
+tor_of_get_init_data() function?
+>> > 
+>> > The regulator_of_get_init_data() searches from dev->of_node or its child
+>> > node.
+>> > 
+>> > But dev->of_node is NULL.
+>> > 
+>> > That's why of_compatible is needed.
+>> 
+>> Yes but regulator_register() does dev = config->dev and config->dev is set
+>> to config.dev = iodev->dev in the driver probe function which is the
+>> pdev->dev.parent (the PMIC struct device) that has an associated of_node.
+>> 
+>> So, regulator_of_get_init_data() will call of_get_child_by_name() passing
+>> the PMIC of_node and the sub-node name that contains the regulators. That
+>> is, whatever was set in desc->regulators_node and that should be enough.
 > 
-> This two patches are non-critical and respectively fix the following
-> in RN102 .dts file:
->  - the color for LEDs labels (they are blue, and not green)
->  - eSATA/SATA ports info
-> 
-> Arnaud Ebalard (2):
->   arm: mvebu: fix LED color in NETGEAR ReadyNAS 102 .dts file
->   arm: mvebu: clarify (e)SATA ports info in NETGEAR ReadyNAS 102 .dts file
-> 
->  arch/arm/boot/dts/armada-370-netgear-rn102.dts | 17 +++++++++--------
->  1 file changed, 9 insertions(+), 8 deletions(-)
-> 
+> I missed that one in max77802 (in max77686: config.dev = &pdev->dev).
+> Now I wonder if it is proper to attach regulators to driver's parent
+> device. Consider regulator_register, around line 3640:
+> 	rdev->dev.parent = dev;
+> The parent of regulators will be equal to parent of regulator driver -
+> main MFD driver.
+>
 
-For both patches:
+An early version of the max77802 regulator driver also set config.dev to
+&pdev->dev but then Mark asked me if I was sure that it should not be the
+MFD device instead.
 
-Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+I then read in regulator_register() that the rdev->dev.parent was set
+to the device passed in config.dev as you said so I was convinced that it
+should be the parent device instead.
 
+Please take a look at [0] for that discussion.
 
-Thanks,
+Best regards,
+Javier
 
-Gregory
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[0]: https://lkml.org/lkml/2014/6/17/174
