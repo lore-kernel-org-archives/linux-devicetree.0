@@ -1,185 +1,135 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] net: smc91x: Fix gpios for device tree based booting
-Date: Thu, 30 Oct 2014 09:59:27 -0700
-Message-ID: <20141030165926.GB31454@atomide.com>
-References: <20141027202556.GT2560@atomide.com>
- <20141029.145132.1881832564707108447.davem@davemloft.net>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH RESEND V4 4/9] pinctrl: tegra-xusb: Add USB PHY support
+Date: Thu, 30 Oct 2014 10:10:06 -0700
+Message-ID: <CAL1qeaEgyROk2dHbAOCUBJwCFegXH3_Yhr3reWdOrUXHvJ2cdg@mail.gmail.com>
+References: <1414535277-15645-1-git-send-email-abrestic@chromium.org>
+	<1414535277-15645-5-git-send-email-abrestic@chromium.org>
+	<20141029122738.GE28356@ulmo.nvidia.com>
+	<CAL1qeaF53VUEcn6OruxjufEXnPxyoqp4=sLUuhvJcrpGH=707A@mail.gmail.com>
+	<20141030134517.GB19802@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141029.145132.1881832564707108447.davem@davemloft.net>
-Sender: linux-omap-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, khilman@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141030134517.GB19802-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* David Miller <davem@davemloft.net> [141029 11:53]:
-> From: Tony Lindgren <tony@atomide.com>
-> Date: Mon, 27 Oct 2014 13:25:56 -0700
-> 
-> > +/**
-> > + * of_try_set_control_gpio - configure a gpio if it exists
-> > + */
-> > +static int try_toggle_control_gpio(struct device *dev,
-> > +				   struct gpio_desc **desc,
-> > +				   const char *name, int index,
-> > +				   int value, unsigned int nsdelay)
-> 
-> This needs to be under CONFIG_OF cpp protection just like the code that
-> calls it.
+On Thu, Oct 30, 2014 at 6:45 AM, Thierry Reding
+<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Oct 29, 2014 at 12:43:36PM -0700, Andrew Bresticker wrote:
+>> >> diff --git a/drivers/pinctrl/pinctrl-tegra-xusb.c b/drivers/pinctrl/pinctrl-tegra-xusb.c
+> [...]
+>> >> +
+>> >> +     for (i = 0; i < TEGRA_XUSB_USB3_PHYS; i++) {
+>> >> +             if (phy == padctl->phys[TEGRA_XUSB_PADCTL_USB3_P0 + i])
+>> >> +                     break;
+>> >
+>> > You could simply return i here and then BUG_ON unconditionally.
+>> >
+>> >> +     }
+>> >> +     BUG_ON(i == TEGRA_XUSB_USB3_PHYS);
+>> >> +
+>> >> +     return i;
+>> >> +}
+>> >
+>> > Actually, thinking about it some more, perhaps making this a WARN_ON()
+>> > and returning an error so that we can continue and propagate the error
+>> > would be more useful. BUG_ON() will completely hang the kernel with no
+>> > way out but rebooting. WARN_ON() will give a hint about something being
+>> > wrong and returning an error will allow the kernel to continue to run,
+>> > which might be the only way to diagnose and fix the problem, even if it
+>> > means that USB 3.0 support will be disabled.
+>>
+>> I felt like BUG_ON is more appropriate here.  Hitting this case means
+>> there's a bug in the PHY core or a driver has passed a bogus pointer
+>> and the stack dump produced by the BUG_ON should make it obvious as to
+>> what the issue is.  I don't feel too strongly about it though.
+>
+> The problem with BUG_ON() is that you won't be able to go any further.
+> So if this were to happen on a device with no serial you might not even
+> get to a point where you actually see an error message. Handling this
+> more gracefully by propagating the error code and failing .probe() does
+> not seem overly complicated and the WARN_ON() output will hopefully
+> still be noticed (it probably will be after the user can't get USB to
+> work).
 
-Oops thanks for catching that, updated patch below. The code
-for try_toggle_control_gpio() is now within the existing
-IS_BUILTIN(CONFIG_OF) block. Compile and boot tested on omap1
-that's not yet booting with device tree.
+Ok.
 
-Regards,
+>> >> @@ -936,6 +2098,18 @@ static int tegra_xusb_padctl_probe(struct platform_device *pdev)
+>> >>               goto unregister;
+>> >>       }
+>> >>
+>> >> +     INIT_WORK(&padctl->mbox_req_work, tegra_xusb_phy_mbox_work);
+>> >> +     padctl->mbox_client.dev = &pdev->dev;
+>> >> +     padctl->mbox_client.tx_block = true;
+>> >> +     padctl->mbox_client.tx_tout = 0;
+>> >> +     padctl->mbox_client.rx_callback = tegra_xusb_phy_mbox_rx;
+>> >> +     padctl->mbox_chan = mbox_request_channel(&padctl->mbox_client, 0);
+>> >> +     if (IS_ERR(padctl->mbox_chan)) {
+>> >> +             err = PTR_ERR(padctl->mbox_chan);
+>> >> +             dev_err(&pdev->dev, "failed to request mailbox: %d\n", err);
+>> >> +             goto unregister;
+>> >> +     }
+>> >
+>> > I think this should be done before the registering the PHY provider so
+>> > that we don't expose one (even for only a very short time) before we
+>> > haven't made sure that it can be used.
+>> >
+>> > Also, this effectively makes the mailbox mandatory, which means that the
+>> > above code is going to break on older DTBs. So I think we have no choice
+>> > but to make mailbox (and hence XUSB) support optional.
+>>
+>> I understand the need for binding stability, but it's not like these
+>> bindings have been around for very long (a release or two?) and this
+>> series has existed for almost the same amount of time.  Are there
+>> really any DTBs out there that are going to break because of this?
+>
+> Every DTB created from a kernel version that has the original binding
+> but not the one modified as part of this series is going to break. Last
+> time I checked there weren't any exceptions to this rule. Note, though,
+> that the rule is that existing functionality must not break. That is,
+> SATA and PCIe should remain functional, so it should be fine if you just
+> don't register any of the USB PHYs when the request for a mailbox
+> channel fails. Something along these lines should do it:
+>
+>         padctl->mbox_chan = mbox_request_channel(...);
+>         if (!IS_ERR(padctl->mbox_chan)) {
+>                 err = tegra_xusb_padctl_setup_usb(...);
+>                 ...
+>         }
 
-Tony
+Ok.
 
-8< ----------------------
-From: Tony Lindgren <tony@atomide.com>
-Date: Wed, 29 Oct 2014 16:06:11 -0700
-Subject: [PATCH] net: smc91x: Fix gpios for device tree based booting
+>> >> diff --git a/include/soc/tegra/xusb.h b/include/soc/tegra/xusb.h
+>> >> index cfe211d..149434f 100644
+>> >> --- a/include/soc/tegra/xusb.h
+>> >> +++ b/include/soc/tegra/xusb.h
+>> >> @@ -10,6 +10,13 @@
+>> >>  #ifndef __SOC_TEGRA_XUSB_H__
+>> >>  #define __SOC_TEGRA_XUSB_H__
+>> >>
+>> >> +#define TEGRA_XUSB_USB3_PHYS 2
+>> >> +#define TEGRA_XUSB_UTMI_PHYS 3
+>> >> +#define TEGRA_XUSB_HSIC_PHYS 2
+>> >> +#define TEGRA_XUSB_NUM_USB_PHYS (TEGRA_XUSB_USB3_PHYS + TEGRA_XUSB_UTMI_PHYS + \
+>> >> +                              TEGRA_XUSB_HSIC_PHYS)
+>> >> +#define TEGRA_XUSB_NUM_PHYS (TEGRA_XUSB_NUM_USB_PHYS + 2) /* + SATA & PCIe */
+>> >
+>> > These are really XUSB pad controller specific defines, why does anyone
+>> > else need to know this?
+>>
+>> They're not pad controller specific.  They're also used in the xHCI host driver.
+>
+> I keep thinking that there should be a way around this. Of course if
+> both the XHCI and mailbox drivers were merged, then there'd be no need
+> to expose this publicly at all.
 
-With legacy booting, the platform init code was taking care of
-the configuring of GPIOs. With device tree based booting, things
-may or may not work depending what bootloader has configured or
-if the legacy platform code gets called.
-
-Let's add support for the pwrdn and reset GPIOs to the smc91x
-driver to fix the issues of smc91x not working properly when
-booted in device tree mode.
-
-And let's change n900 to use these settings as some versions
-of the bootloader do not configure things properly causing
-errors.
-
-Reported-by: Kevin Hilman <khilman@linaro.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-
---- a/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
-+++ b/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
-@@ -11,3 +11,5 @@ Optional properties:
-   are supported on the device.  Valid value for SMSC LAN91c111 are
-   1, 2 or 4.  If it's omitted or invalid, the size would be 2 meaning
-   16-bit access only.
-+- power-gpios: GPIO to control the PWRDWN pin
-+- reset-gpios: GPIO to control the RESET pin
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -668,6 +668,8 @@
- 		bank-width = <2>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&ethernet_pins>;
-+		power-gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;	/* gpio86 */
-+		reset-gpios = <&gpio6 4 GPIO_ACTIVE_HIGH>;	/* gpio164 */
- 		gpmc,device-width = <2>;
- 		gpmc,sync-clk-ps = <0>;
- 		gpmc,cs-on-ns = <0>;
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -252,9 +252,6 @@ static void __init nokia_n900_legacy_init(void)
- 		platform_device_register(&omap3_rom_rng_device);
- 
- 	}
--
--	/* Only on some development boards */
--	gpio_request_one(164, GPIOF_OUT_INIT_LOW, "smc91x reset");
- }
- 
- static void __init omap3_tao3530_legacy_init(void)
---- a/drivers/net/ethernet/smsc/smc91x.c
-+++ b/drivers/net/ethernet/smsc/smc91x.c
-@@ -81,6 +81,7 @@ static const char version[] =
- #include <linux/workqueue.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- 
- #include <linux/netdevice.h>
- #include <linux/etherdevice.h>
-@@ -2188,6 +2189,41 @@ static const struct of_device_id smc91x_match[] = {
- 	{},
- };
- MODULE_DEVICE_TABLE(of, smc91x_match);
-+
-+/**
-+ * of_try_set_control_gpio - configure a gpio if it exists
-+ */
-+static int try_toggle_control_gpio(struct device *dev,
-+				   struct gpio_desc **desc,
-+				   const char *name, int index,
-+				   int value, unsigned int nsdelay)
-+{
-+	struct gpio_desc *gpio = *desc;
-+	int res;
-+
-+	gpio = devm_gpiod_get_index(dev, name, index);
-+	if (IS_ERR(gpio)) {
-+		if (PTR_ERR(gpio) == -ENOENT) {
-+			*desc = NULL;
-+			return 0;
-+		}
-+
-+		return PTR_ERR(gpio);
-+	}
-+	res = gpiod_direction_output(gpio, !value);
-+	if (res) {
-+		dev_err(dev, "unable to toggle gpio %s: %i\n", name, res);
-+		devm_gpiod_put(dev, gpio);
-+		gpio = NULL;
-+		return res;
-+	}
-+	if (nsdelay)
-+		usleep_range(nsdelay, 2 * nsdelay);
-+	gpiod_set_value_cansleep(gpio, value);
-+	*desc = gpio;
-+
-+	return 0;
-+}
- #endif
- 
- /*
-@@ -2237,6 +2273,28 @@ static int smc_drv_probe(struct platform_device *pdev)
- 		struct device_node *np = pdev->dev.of_node;
- 		u32 val;
- 
-+		/* Optional pwrdwn GPIO configured? */
-+		ret = try_toggle_control_gpio(&pdev->dev, &lp->power_gpio,
-+					      "power", 0, 0, 100);
-+		if (ret)
-+			return ret;
-+
-+		/*
-+		 * Optional reset GPIO configured? Minimum 100 ns reset needed
-+		 * according to LAN91C96 datasheet page 14.
-+		 */
-+		ret = try_toggle_control_gpio(&pdev->dev, &lp->reset_gpio,
-+					      "reset", 0, 0, 100);
-+		if (ret)
-+			return ret;
-+
-+		/*
-+		 * Need to wait for optional EEPROM to load, max 750 us according
-+		 * to LAN91C96 datasheet page 55.
-+		 */
-+		if (lp->reset_gpio)
-+			usleep_range(750, 1000);
-+
- 		/* Combination of IO widths supported, default to 16-bit */
- 		if (!of_property_read_u32(np, "reg-io-width", &val)) {
- 			if (val & 1)
---- a/drivers/net/ethernet/smsc/smc91x.h
-+++ b/drivers/net/ethernet/smsc/smc91x.h
-@@ -298,6 +298,9 @@ struct smc_local {
- 	struct sk_buff *pending_tx_skb;
- 	struct tasklet_struct tx_task;
- 
-+	struct gpio_desc *power_gpio;
-+	struct gpio_desc *reset_gpio;
-+
- 	/* version/revision of the SMC91x chip */
- 	int	version;
- 
+I'm not sure what you mean.  They're SoC-specific constants that need
+to be shared amongst multiple drivers.  It would make sense to place
+them in a shared header, does it not?
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
