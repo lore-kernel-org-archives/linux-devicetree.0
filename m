@@ -1,53 +1,58 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [RFC 5/7] soc: qcom: Add Shared Memory Driver
-Date: Thu, 30 Oct 2014 08:04:31 -0700
-Message-ID: <20141030150429.GX28611@sonymobile.com>
-References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1412037291-16880-6-git-send-email-bjorn.andersson@sonymobile.com>
- <CADMYwHxLtAZZMUGX3jo0URAezqGuho5XB=hQJp8k+acBiENrhg@mail.gmail.com>
- <20141030003806.GU28611@sonymobile.com>
- <CAK=WgbbP8UQAbFauE80PnF5bj3FTAkB2KfF0kFE8Pt23jQrDhA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: GPIO bindings guidelines (Was: Re: [PATCH v5 10/12] gpio: Support
+ for unified device properties interface)
+Date: Thu, 30 Oct 2014 16:11:13 +0100
+Message-ID: <CACRpkdYfEgC0iZCb=juBewpnCos+wbDVD14veRxXGSyBExAfEQ@mail.gmail.com>
+References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com>
+	<4582579.9WMrIMALsy@wuerfel>
+	<CAAVeFuJzZJdh+Z7hY-Ws3orxyO=PSqCB_eBphbWk3nRb15op2w@mail.gmail.com>
+	<2964475.27LDgQTJ7C@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK=WgbbP8UQAbFauE80PnF5bj3FTAkB2KfF0kFE8Pt23jQrDhA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>
-Cc: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Kevin Hilman <khilman@deeprootsystems.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <2964475.27LDgQTJ7C@wuerfel>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 30 Oct 06:34 PDT 2014, Ohad Ben-Cohen wrote:
+On Thu, Oct 23, 2014 at 2:25 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thursday 23 October 2014 15:02:46 Alexandre Courbot wrote:
+>> On Tue, Oct 21, 2014 at 4:54 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> > On Tuesday 21 October 2014 14:14:02 Alexandre Courbot wrote:
+>
+>> > Drivers that use
+>> > existing bindings with the "foo-gpio" form (or worse, "foo-somethingelse"
+>> > can use the same internal interface as the drivers that use name plus
+>> > index. Do you see a problem using what I suggested for the combined
+>> > API:
+>> >
+>> > __gpiod_get(dev, propname, index); // use property name plus index
+>> > gpiod_get(dev, index); // use "gpios" plus index
+>> > gpiod_get_named(dev, "name"); use "name-gpios" with index 0
+>>
+>> Apart from the loosy naming practices which we sometimes see (and
+>> which should be caught during review), do you have something against
+>> requiring a name for all new GPIO bindings, i.e. for ensuring that all
+>> new properties are "name-gpio" and forbidding "gpios"?
+>
+> Most other subsystems don't require a name, and traditionally we only
+> had anonymous indexed properties for a lot of things (registers,
+> interrupts, ...).
+>
+> I still like the idea of using anonymous references for simple things,
+> but if you and Linus feel that it's better to mandate names from now on,
+> I won't complain.
 
-> Hi Bjorn,
-> 
-> On Thu, Oct 30, 2014 at 2:38 AM, Bjorn Andersson
-> <bjorn.andersson@sonymobile.com> wrote:
-> > My concern is that merging SMD into rpmsg will still give us two different
-> > solutions, except that they will be deeply tangled.
-> 
-> I agree.
-> 
-> It's very clear that SMD and rpmsg are different. But fundamentally,
-> they do exactly the same: new messages are placed in a ring buffer and
-> then an interrupt is triggered.
-> 
-> If Qualcomm wanted to adopt rpmsg I'm confident there would have been
-> no technical barriers to do so.
-> 
+I think names are nice since it appears in <debugfs>/gpio and makes
+device tree using platforms easier to debug.
 
-Their wish list seems long, but I think you're right :)
+Moving things into DT already made information hard to follow at
+times...
 
-> But given that SMD is not going anywhere, I personally hope that you
-> could at least avoid having two different implementations of it merged
-> upstream.
-> 
+In difference from other things like IRQs or DMAs, GPIOs very often
+have a very specific function, does not repeat itself, and thus can
+be given a suitable name.
 
-Looking at the lack of functionality in mach-msm it seems like it's quite a lot
-of work getting to a point where anyone could actually test smd on those devices.
-
-If anyone have any input on how I get a piece of user space that will run with
-mainline and communicate with the modem to test this I'm happily listening.
-
-Regards,
-Bjorn
+Yours,
+Linus Walleij
