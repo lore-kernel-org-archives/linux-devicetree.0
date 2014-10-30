@@ -1,58 +1,38 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 3/3] I2C: mediatek: Add driver for MediaTek I2C controller
-Date: Thu, 30 Oct 2014 14:25:37 +0100
-Message-ID: <20141030132537.GB23852@katana>
-References: <1414561058-23803-1-git-send-email-xudong.chen@mediatek.com>
- <1414561058-23803-4-git-send-email-xudong.chen@mediatek.com>
- <CABuKBe+RXboBEZD7Bu_kSbVwiapJJcAuuw_wo=xw67osJWJ20w@mail.gmail.com>
+From: Ohad Ben-Cohen <ohad@wizery.com>
+Subject: Re: [RFC 5/7] soc: qcom: Add Shared Memory Driver
+Date: Thu, 30 Oct 2014 15:34:12 +0200
+Message-ID: <CAK=WgbbP8UQAbFauE80PnF5bj3FTAkB2KfF0kFE8Pt23jQrDhA@mail.gmail.com>
+References: <1412037291-16880-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1412037291-16880-6-git-send-email-bjorn.andersson@sonymobile.com>
+ <CADMYwHxLtAZZMUGX3jo0URAezqGuho5XB=hQJp8k+acBiENrhg@mail.gmail.com> <20141030003806.GU28611@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="E39vaYmALEf/7YXx"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABuKBe+RXboBEZD7Bu_kSbVwiapJJcAuuw_wo=xw67osJWJ20w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Xudong Chen <xudong.chen@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, arm@kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Jean Delvare <jdelvare@suse.de>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-i2c@vger.kernel.org, Yingjoe Chen <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Nathan Chung <nathan.chung@mediatek.com>, YH Chen <yh.chen@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20141030003806.GU28611@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Kevin Hilman <khilman@deeprootsystems.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Bjorn,
 
---E39vaYmALEf/7YXx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Oct 30, 2014 at 2:38 AM, Bjorn Andersson
+<bjorn.andersson@sonymobile.com> wrote:
+> My concern is that merging SMD into rpmsg will still give us two different
+> solutions, except that they will be deeply tangled.
 
-> > +obj-$(CONFIG_I2C_MT65XX)       +=3D i2c-mt65xx.o
->=20
-> As it works for mt65xx and mt81xx series, better rename it to i2c-mtk.c
+I agree.
 
-That is a bit too generic IMO. It is likely that we will see some
-totally different I2C core from MTK in the future. Plus, it is not
-uncommon that a driver initially for SoC-X supports SoC-Y, too.
+It's very clear that SMD and rpmsg are different. But fundamentally,
+they do exactly the same: new messages are placed in a ring buffer and
+then an interrupt is triggered.
 
-Thanks for pointing out the other remarks.
+If Qualcomm wanted to adopt rpmsg I'm confident there would have been
+no technical barriers to do so.
 
+But given that SMD is not going anywhere, I personally hope that you
+could at least avoid having two different implementations of it merged
+upstream.
 
---E39vaYmALEf/7YXx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUUjxRAAoJEBQN5MwUoCm2qEIP/iyFdvDPmtc3hA2x89c+dEe9
-lJ44z7RbYhP488vZedyRcbCIy1/vcs/YV9PxNEtYKsqKlVlLQYh7qEVhSL1JrZVh
-uOggnxFxBQeC4lBpHWOh5ZyucOGhhKT2433ifTkmrLK3dXVEvqEQKWzIltiPBUZo
-Sd9kG9/9otdPEJt3xGOjezb1oOG8ixSQM0OPQACDZDK/zVIkKsT8SoEkJrRwmj9g
-l6GOM4djaTesHqXtxyPBTTM72eJFIeFW+7SsxOHHlj81zMx/6sQuFTZi8J8amKg+
-F5kyDAOM5LpvVb1aXDE/iCDpdnPidTtNBcv4M73wH84hsDrOR748/nZM+J6JU514
-127KqWwEWtduu1OA60F6jLOXOgdnjqndCDzBn4SLD4DB5ESEbfE8WYEREcM0TN3e
-/+pHa2TCThEaz2HN80zD7ch4w3MSP87hKRApyezkr4tT7g1m++IzJ0Ig83S6hgKU
-m+gBETIbx0MIXCFKTHJoWD21muXs432/OItGA77uMep8dza2PDzhQqMRf2dDCG6B
-CZW4sKkRIDqaPpW01XutwiLf5s5EZI6v9xdyE1Ymyq1m1E0BOjXgG8On8TLUTYWQ
-Ph2cw0xIW6eHwJ0Ysh5bpZ3IJYzdQIXN2AmRRMcsl/YhgudqBO+yBYb+eGk6MaT2
-hTBYkLnwdp9RqNP/FhXV
-=mkvs
------END PGP SIGNATURE-----
-
---E39vaYmALEf/7YXx--
+Good luck,
+Ohad.
