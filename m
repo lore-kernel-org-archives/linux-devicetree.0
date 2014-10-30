@@ -1,63 +1,97 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 6/7] arm: mediatek: enable gpt6 on boot up to make arch
- timer working
-Date: Thu, 30 Oct 2014 10:01:19 +0100
-Message-ID: <CABuKBeLFjQ+B-QVtQf3nBZtBYf9HF=yQWZv17fOdNyZTm9C34A@mail.gmail.com>
-References: <1406824943-24052-1-git-send-email-matthias.bgg@gmail.com>
-	<1406824943-24052-7-git-send-email-matthias.bgg@gmail.com>
-	<CACRpkdbRhGE8tcKj+W_4F9-xmcm-fxcYuCmLOqX-ESC+3PAmyA@mail.gmail.com>
-	<CABuKBe+Q3tnN0s22EMY-dK_6FeN_xN9SmrsW3dPONR6QDJ+V_w@mail.gmail.com>
-	<CACRpkdZOB=9wQ3R3sfcBEiNXLVRtgob4iLZ9QWXyVrgjqyvGXQ@mail.gmail.com>
-	<CABuKBeJOgkDZ8drPf3LnT2jPH7PEWX2__HDM7_jZbg2BhDRy3g@mail.gmail.com>
-	<1414158814.14830.610.camel@mtksdaap41>
-	<CABuKBe++mqhMCPxci9_4KKgq9vdoLLwZQkdb2xAGMud+=YVhkw@mail.gmail.com>
-	<1414639400.5833.11.camel@mtksdaap41>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: mt8135: Add Reset Controller for MediaTek
+ SoC
+Date: Thu, 30 Oct 2014 10:02:25 +0100
+Message-ID: <1414659745.3069.2.camel@pengutronix.de>
+References: <1414638733-10080-1-git-send-email-flora.fu@mediatek.com>
+	 <1414638733-10080-4-git-send-email-flora.fu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414639400.5833.11.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Mike Turquette <mturquette@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbart>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414638733-10080-4-git-send-email-flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-10-30 4:23 GMT+01:00 Yingjoe Chen <yingjoe.chen@mediatek.com>:
-> Hi Matthias,
->
-> On Mon, 2014-10-27 at 11:28 +0100, Matthias Brugger wrote:
->> Hi Joe,
->>
->> 2014-10-24 15:53 GMT+02:00 Yingjoe Chen <srv_yingjoe.chen@mediatek.com>:
->> >
->> > Hi Matthias,
->> >
->> > I didn't saw this in v3.18-rc1, are you working on version 2 of this?
->> > mt8135 and m8127 also need this fixup and we need this to have SMP
->> > working.
->>
->> I had a discussion with Mark Rutland from ARM on this [0].
->> At that point he convinced me that this was not critical.
->>
->> If we need this for SMP, things really change here I think.
->
-> We have some driver now, and we started to implement SMP enable method
-> internally. I think it is reasonable to discuss this now.
-> We could include this patch in our SMP patch series. Do you prefer we do
-> this?
+Hi,
 
-Alright. Please remind that we don't need to set the cntfreq register
-here but define the clock frequency in the dts.
+Am Donnerstag, den 30.10.2014, 11:12 +0800 schrieb
+flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org:
+> From: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> Add reset controller to MT8135 board dts.
+> 
+> Signed-off-by: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/mt8135.dtsi | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
+> index 90a56ad..0b1ddc9 100644
+> --- a/arch/arm/boot/dts/mt8135.dtsi
+> +++ b/arch/arm/boot/dts/mt8135.dtsi
+> @@ -102,6 +102,28 @@
+>  			clock-names = "system-clk", "rtc-clk";
+>  		};
+>  
+> +		infracfg: syscon@10001000 {
+> +			compatible = "mediatek,mt8135-infracfg", "syscon";
+> +			reg = <0 0x10001000 0 0x1000>;
+> +		};
+> +
+> +		pericfg: syscon@10003000 {
+> +			compatible = "mediatek,mt8135-pericfg", "syscon";
+> +			reg = <0 0x10003000 0 0x1000>;
+> +		};
+> +
+> +		infrarst: reset-controller@10001030 {
+> +			#reset-cells = <1>;
+> +			compatible = "mediatek,mt8135-infracfg-reset", "mediatek,reset";
+> +			mediatek,syscon-reset = <&infracfg 0x30 0x8>;
+> +		};
+> +
+> +		perirst: reset-controller@10003000 {
+> +			#reset-cells = <1>;
+> +			compatible = "mediatek,mt8135-pericfg-reset", "mediatek,reset";
+> +			mediatek,syscon-reset = <&pericfg 0x00 0x8>;
+> +		};
+> +
 
-Thanks,
-Matthias
+Since the reset controller driver accesses registers solely through the
+syscon regmap, I'd prefer to keep with the device tree control graph
+concept and make the reset-controller nodes children of the syscon
+nodes. I've brought this up before: https://lkml.org/lkml/2014/5/27/422,
+and I think this is another case where child node support for syscon
+makes sense:
 
->
-> Joe.C
->
->
->
+        infracfg: syscon@10001000 {
+                compatible = "mediatek,mt8135-infracfg", "syscon";
+                reg = <0 0x10001000 0 0x1000>;
+                
+                infrarst: reset-controller@30 {
+                        #reset-cells = <1>;
+                        compatible = "mediatek,mt8135-infracfg-reset", "mediatek,reset";
+                        reg = <0x30 0x8>;
+                };
+        };
 
+        pericfg: syscon@10003000 {
+                compatible = "mediatek,mt8135-pericfg", "syscon";
+                reg = <0 0x10003000 0 0x1000>;
 
+                perirst: reset-controller@00 {                                                                                               
+                        #reset-cells = <1>;
+                        compatible = "mediatek,mt8135-pericfg-reset", "mediatek,reset";
+                        reg = <0x00 0x8>;
+                };
+        };
 
--- 
-motzblog.wordpress.com
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
