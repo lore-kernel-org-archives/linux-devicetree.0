@@ -1,7 +1,7 @@
 From: Huang Rui <ray.huang@amd.com>
-Subject: [PATCH v4 04/20] usb: dwc3: add disable scramble quirk
-Date: Thu, 30 Oct 2014 18:08:29 +0800
-Message-ID: <1414663725-2195-5-git-send-email-ray.huang@amd.com>
+Subject: [PATCH v4 02/20] usb: dwc3: add a flag to check if it is FPGA board
+Date: Thu, 30 Oct 2014 18:08:27 +0800
+Message-ID: <1414663725-2195-3-git-send-email-ray.huang@amd.com>
 References: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,106 +12,74 @@ To: Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn H
 Cc: Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Huang Rui <ray.huang@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds disable scramble quirk, and it only needs to be enabled at
-FPGA board on some vendor platforms.
+Some chip vendor is on pre-silicon phase, which needs to use the simulation
+board. It should have the same product and vendor id with the true SoC, but
+might have some minor different configurations.
 
-[Note] In DesignWare databook, HW designer describes:
-disscramble = disable scramble
+Below thread discussion proposes to find a method to distinguish between
+simulation board and SoC.
 
+http://marc.info/?l=linux-usb&m=141194772206369&w=2
+
+In Advanced Configuration of coreConsultant, there is the parameter of
+DWC_USB_EN_FPGA. This bit has the function we need. And it would response
+as 7 bit of GHWPARAMS6 register. So it's able to check this functional bit
+to confirm if works on FPGA board.
+
+Reported-by: Felipe Balbi <balbi@ti.com>
 Signed-off-by: Huang Rui <ray.huang@amd.com>
 Signed-off-by: Felipe Balbi <balbi@ti.com>
 ---
- Documentation/devicetree/bindings/usb/dwc3.txt |  2 ++
- drivers/usb/dwc3/core.c                        | 11 ++++++++++-
- drivers/usb/dwc3/core.h                        |  3 +++
- drivers/usb/dwc3/platform_data.h               |  2 ++
- 4 files changed, 17 insertions(+), 1 deletion(-)
+ drivers/usb/dwc3/core.c | 6 ++++++
+ drivers/usb/dwc3/core.h | 5 +++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 471366d..8ec2256 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -14,6 +14,8 @@ Optional properties:
-  - phys: from the *Generic PHY* bindings
-  - phy-names: from the *Generic PHY* bindings
-  - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
-+ - snps,disable_scramble_quirk: true when SW should disable data scrambling.
-+	Only really useful for FPGA builds.
- 
- This is usually a subnode to DWC3 glue to which it is connected.
- 
 diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index c8ae098..fae095f 100644
+index 5a47482..c8ae098 100644
 --- a/drivers/usb/dwc3/core.c
 +++ b/drivers/usb/dwc3/core.c
-@@ -422,7 +422,6 @@ static int dwc3_core_init(struct dwc3 *dwc)
- 
- 	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
- 	reg &= ~DWC3_GCTL_SCALEDOWN_MASK;
--	reg &= ~DWC3_GCTL_DISSCRAMBLE;
- 
- 	switch (DWC3_GHWPARAMS1_EN_PWROPT(dwc->hwparams.hwparams1)) {
- 	case DWC3_GHWPARAMS1_EN_PWROPT_CLK:
-@@ -466,6 +465,11 @@ static int dwc3_core_init(struct dwc3 *dwc)
- 		dwc->is_fpga = true;
+@@ -460,6 +460,12 @@ static int dwc3_core_init(struct dwc3 *dwc)
+ 		dev_dbg(dwc->dev, "No power optimization available\n");
  	}
  
-+	if (dwc->disable_scramble_quirk && dwc->is_fpga)
-+		reg |= DWC3_GCTL_DISSCRAMBLE;
-+	else
-+		reg &= ~DWC3_GCTL_DISSCRAMBLE;
++	/* check if current dwc3 is on simulation board */
++	if (dwc->hwparams.hwparams6 & DWC3_GHWPARAMS6_EN_FPGA) {
++		dev_dbg(dwc->dev, "it is on FPGA board\n");
++		dwc->is_fpga = true;
++	}
 +
  	/*
  	 * WORKAROUND: DWC3 revisions <1.90a have a bug
  	 * where the device can fail to connect at SuperSpeed
-@@ -710,11 +714,16 @@ static int dwc3_probe(struct platform_device *pdev)
- 
- 		dwc->needs_fifo_resize = of_property_read_bool(node, "tx-fifo-resize");
- 		dwc->dr_mode = of_usb_get_dr_mode(node);
-+
-+		dwc->disable_scramble_quirk = of_property_read_bool(node,
-+				"snps,disable_scramble_quirk");
- 	} else if (pdata) {
- 		dwc->maximum_speed = pdata->maximum_speed;
- 
- 		dwc->needs_fifo_resize = pdata->tx_fifo_resize;
- 		dwc->dr_mode = pdata->dr_mode;
-+
-+		dwc->disable_scramble_quirk = pdata->disable_scramble_quirk;
- 	}
- 
- 	/* default to superspeed if no maximum_speed passed */
 diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index f6ee623..56bada6 100644
+index a715ee1..f6ee623 100644
 --- a/drivers/usb/dwc3/core.h
 +++ b/drivers/usb/dwc3/core.h
-@@ -672,6 +672,7 @@ struct dwc3_scratchpad_array {
-  * @setup_packet_pending: true when there's a Setup Packet in FIFO. Workaround
-  * @start_config_issued: true when StartConfig command has been issued
-  * @three_stage_setup: set if we perform a three phase setup
-+ * @disable_scramble_quirk: set if we enable the disable scramble quirk
-  */
- struct dwc3 {
- 	struct usb_ctrlrequest	*ctrl_req;
-@@ -776,6 +777,8 @@ struct dwc3 {
- 	unsigned		setup_packet_pending:1;
- 	unsigned		start_config_issued:1;
- 	unsigned		three_stage_setup:1;
-+
-+	unsigned		disable_scramble_quirk:1;
- };
+@@ -210,6 +210,9 @@
+ #define DWC3_GHWPARAMS4_HIBER_SCRATCHBUFS(n)	(((n) & (0x0f << 13)) >> 13)
+ #define DWC3_MAX_HIBER_SCRATCHBUFS		15
  
- /* -------------------------------------------------------------------------- */
-diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform_data.h
-index 7db34f0..9209d02 100644
---- a/drivers/usb/dwc3/platform_data.h
-+++ b/drivers/usb/dwc3/platform_data.h
-@@ -24,4 +24,6 @@ struct dwc3_platform_data {
- 	enum usb_device_speed maximum_speed;
- 	enum usb_dr_mode dr_mode;
- 	bool tx_fifo_resize;
++/* Global HWPARAMS6 Register */
++#define DWC3_GHWPARAMS6_EN_FPGA			(1 << 7)
 +
-+	unsigned disable_scramble_quirk:1;
- };
+ /* Device Configuration Register */
+ #define DWC3_DCFG_DEVADDR(addr)	((addr) << 3)
+ #define DWC3_DCFG_DEVADDR_MASK	DWC3_DCFG_DEVADDR(0x7f)
+@@ -662,6 +665,7 @@ struct dwc3_scratchpad_array {
+  * @ep0_expect_in: true when we expect a DATA IN transfer
+  * @has_hibernation: true when dwc3 was configured with Hibernation
+  * @is_selfpowered: true when we are selfpowered
++ * @is_fpga: true when we are using the FPGA board
+  * @needs_fifo_resize: not all users might want fifo resizing, flag it
+  * @pullups_connected: true when Run/Stop bit is set
+  * @resize_fifos: tells us it's ok to reconfigure our TxFIFO sizes.
+@@ -765,6 +769,7 @@ struct dwc3 {
+ 	unsigned		ep0_expect_in:1;
+ 	unsigned		has_hibernation:1;
+ 	unsigned		is_selfpowered:1;
++	unsigned		is_fpga:1;
+ 	unsigned		needs_fifo_resize:1;
+ 	unsigned		pullups_connected:1;
+ 	unsigned		resize_fifos:1;
 -- 
 1.9.1
