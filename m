@@ -1,7 +1,7 @@
 From: Huang Rui <ray.huang@amd.com>
-Subject: [PATCH v4 18/20] PCI: Prevent xHCI driver from claiming AMD Nolan USB3 DRD device
-Date: Thu, 30 Oct 2014 18:08:43 +0800
-Message-ID: <1414663725-2195-19-git-send-email-ray.huang@amd.com>
+Subject: [PATCH v4 16/20] usb: dwc3: add disable usb2 suspend phy quirk
+Date: Thu, 30 Oct 2014 18:08:41 +0800
+Message-ID: <1414663725-2195-17-git-send-email-ray.huang@amd.com>
 References: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,55 +12,92 @@ To: Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn H
 Cc: Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Huang Rui <ray.huang@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-The AMD Nolan (NL) SoC contains a DesignWare USB3 Dual-Role Device that can
-be operated either as a USB Host or a USB Device.  In the AMD NL platform,
-this device ([1022:7912]) has a class code of PCI_CLASS_SERIAL_USB_XHCI
-(0x0c0330), which means the xhci driver will claim it.
+This patch adds disable usb2 suspend phy quirk, and some special platforms
+can configure that if it is needed.
 
-But the dwc3 driver is a more specific driver for this device, and we'd
-prefer to use it instead of xhci.  To prevent xhci from claiming the
-device, change the class code to 0x0c03fe, which the PCI r3.0 spec defines
-as "USB device (not host controller)".  The dwc3 driver can then claim it
-based on its Vendor and Device ID.
-
-Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Jason Chang <jason.chang@amd.com>
 Signed-off-by: Huang Rui <ray.huang@amd.com>
 ---
- drivers/pci/quirks.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ Documentation/devicetree/bindings/usb/dwc3.txt | 1 +
+ drivers/usb/dwc3/core.c                        | 7 +++++++
+ drivers/usb/dwc3/core.h                        | 2 ++
+ drivers/usb/dwc3/platform_data.h               | 1 +
+ 4 files changed, 11 insertions(+)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 90acb32..ed6f89b 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -379,6 +379,26 @@ static void quirk_ati_exploding_mce(struct pci_dev *dev)
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI,	PCI_DEVICE_ID_ATI_RS100,   quirk_ati_exploding_mce);
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 3720fca..feaf2c8 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -33,6 +33,7 @@ Optional properties:
+  - snps,tx_de_emphasis: the value driven to the PHY is controlled by the
+ 			LTSSM during USB3 Compliance mode.
+  - snps,dis_u3_susphy_quirk: when set core will disable USB3 suspend phy.
++ - snps,dis_u2_susphy_quirk: when set core will disable USB2 suspend phy.
  
- /*
-+ * In the AMD NL platform, this device ([1022:7912]) has a class code of
-+ * PCI_CLASS_SERIAL_USB_XHCI (0x0c0330), which means the xhci driver will
-+ * claim it.
-+ * But the dwc3 driver is a more specific driver for this device, and we'd
-+ * prefer to use it instead of xhci. To prevent xhci from claiming the
-+ * device, change the class code to 0x0c03fe, which the PCI r3.0 spec
-+ * defines as "USB device (not host controller)". The dwc3 driver can then
-+ * claim it based on its Vendor and Device ID.
-+ */
-+static void quirk_amd_nl_class(struct pci_dev *pdev)
-+{
-+	/*
-+	 * Use 'USB Device' (0x0c03fe) instead of PCI header provided
-+	 */
-+	pdev->class = 0x0c03fe;
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_NL_USB,
-+		quirk_amd_nl_class);
+ This is usually a subnode to DWC3 glue to which it is connected.
+ 
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index fdc715a..a28ed1c 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -423,6 +423,10 @@ static void dwc3_phy_setup(struct dwc3 *dwc)
+ 	if (dwc->revision > DWC3_REVISION_194A)
+ 		reg |= DWC3_GUSB2PHYCFG_SUSPHY;
+ 
++	/* FIXME will move FPGA flag when AMD NL taps out */
++	if (dwc->dis_u2_susphy_quirk && dwc->is_fpga)
++		reg &= ~DWC3_GUSB2PHYCFG_SUSPHY;
 +
-+/*
-  * Let's make the southbridge information explicit instead
-  * of having to worry about people probing the ACPI areas,
-  * for example.. (Yes, it happens, and if you read the wrong
+ 	dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
+ 
+ 	mdelay(100);
+@@ -815,6 +819,8 @@ static int dwc3_probe(struct platform_device *pdev)
+ 				"snps,rx_detect_poll_quirk");
+ 		dwc->dis_u3_susphy_quirk = of_property_read_bool(node,
+ 				"snps,dis_u3_susphy_quirk");
++		dwc->dis_u2_susphy_quirk = of_property_read_bool(node,
++				"snps,dis_u2_susphy_quirk");
+ 
+ 		dwc->tx_de_emphasis_quirk = of_property_read_bool(node,
+ 				"snps,tx_de_emphasis_quirk");
+@@ -838,6 +844,7 @@ static int dwc3_probe(struct platform_device *pdev)
+ 		dwc->lfps_filter_quirk = pdata->lfps_filter_quirk;
+ 		dwc->rx_detect_poll_quirk = pdata->rx_detect_poll_quirk;
+ 		dwc->dis_u3_susphy_quirk = pdata->dis_u3_susphy_quirk;
++		dwc->dis_u2_susphy_quirk = pdata->dis_u2_susphy_quirk;
+ 
+ 		dwc->tx_de_emphasis_quirk = pdata->tx_de_emphasis_quirk;
+ 		if (pdata->tx_de_emphasis)
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index be793f7..8b6c308 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -698,6 +698,7 @@ struct dwc3_scratchpad_array {
+  * @lfps_filter_quirk: set if we enable LFPS filter quirk
+  * @rx_detect_poll_quirk: set if we enable rx_detect to polling LFPS quirk
+  * @dis_u3_susphy_quirk: set if we disable usb3 suspend phy
++ * @dis_u2_susphy_quirk: set if we disable usb2 suspend phy
+  * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
+  * @tx_de_emphasis: Tx de-emphasis value
+  * 	0       - -6dB de-emphasis
+@@ -820,6 +821,7 @@ struct dwc3 {
+ 	unsigned		lfps_filter_quirk:1;
+ 	unsigned		rx_detect_poll_quirk:1;
+ 	unsigned		dis_u3_susphy_quirk:1;
++	unsigned		dis_u2_susphy_quirk:1;
+ 
+ 	unsigned		tx_de_emphasis_quirk:1;
+ 	unsigned		tx_de_emphasis:2;
+diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform_data.h
+index 0f1d5ad..245300b 100644
+--- a/drivers/usb/dwc3/platform_data.h
++++ b/drivers/usb/dwc3/platform_data.h
+@@ -37,6 +37,7 @@ struct dwc3_platform_data {
+ 	unsigned lfps_filter_quirk:1;
+ 	unsigned rx_detect_poll_quirk:1;
+ 	unsigned dis_u3_susphy_quirk:1;
++	unsigned dis_u2_susphy_quirk:1;
+ 
+ 	unsigned tx_de_emphasis_quirk:1;
+ 	unsigned tx_de_emphasis:2;
 -- 
 1.9.1
