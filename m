@@ -1,103 +1,70 @@
-From: Huang Rui <ray.huang@amd.com>
-Subject: [PATCH v4 15/20] usb: dwc3: add disable usb3 suspend phy quirk
-Date: Thu, 30 Oct 2014 18:08:40 +0800
-Message-ID: <1414663725-2195-16-git-send-email-ray.huang@amd.com>
+From: Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>
+Subject: [PATCH v4 19/20] usb: dwc3: add support for AMD Nolan platform
+Date: Thu, 30 Oct 2014 18:08:44 +0800
+Message-ID: <1414663725-2195-20-git-send-email-ray.huang@amd.com>
 References: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Huang Rui <ray.huang@amd.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414663725-2195-1-git-send-email-ray.huang-5C7GfCeVMHo@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Jason Chang <jason.chang-5C7GfCeVMHo@public.gmane.org>, Vincent Wan <vincent.wan-5C7GfCeVMHo@public.gmane.org>, Tony Li <tony.li-5C7GfCeVMHo@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds disable usb3 suspend phy quirk, and some special platforms
-can configure that if it is needed.
+This patch adds support for AMD Nolan (NL) FPGA and SoC platform.
 
-Signed-off-by: Huang Rui <ray.huang@amd.com>
+Cc: Jason Chang <jason.chang-5C7GfCeVMHo@public.gmane.org>
+Signed-off-by: Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>
 ---
- Documentation/devicetree/bindings/usb/dwc3.txt | 1 +
- drivers/usb/dwc3/core.c                        | 7 +++++++
- drivers/usb/dwc3/core.h                        | 2 ++
- drivers/usb/dwc3/platform_data.h               | 1 +
- 4 files changed, 11 insertions(+)
+ drivers/usb/dwc3/dwc3-pci.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index a9e54ae..3720fca 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -32,6 +32,7 @@ Optional properties:
-  - snps,tx_de_emphasis_quirk: when set core will set Tx de-emphasis value.
-  - snps,tx_de_emphasis: the value driven to the PHY is controlled by the
- 			LTSSM during USB3 Compliance mode.
-+ - snps,dis_u3_susphy_quirk: when set core will disable USB3 suspend phy.
+diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
+index ada975f..257fb3f9e 100644
+--- a/drivers/usb/dwc3/dwc3-pci.c
++++ b/drivers/usb/dwc3/dwc3-pci.c
+@@ -145,6 +145,28 @@ static int dwc3_pci_probe(struct pci_dev *pci,
+ 	res[1].name	= "dwc_usb3";
+ 	res[1].flags	= IORESOURCE_IRQ;
  
- This is usually a subnode to DWC3 glue to which it is connected.
- 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index b55fa5b..fdc715a 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -404,6 +404,10 @@ static void dwc3_phy_setup(struct dwc3 *dwc)
- 	if (dwc->tx_de_emphasis_quirk)
- 		reg |= DWC3_GUSB3PIPECTL_TX_DEEPH(dwc->tx_de_emphasis);
- 
-+	/* FIXME will move FPGA flag when AMD NL taps out */
-+	if (dwc->dis_u3_susphy_quirk && dwc->is_fpga)
-+		reg &= ~DWC3_GUSB3PIPECTL_SUSPHY;
++	if (pci->vendor == PCI_VENDOR_ID_AMD &&
++			pci->device == PCI_DEVICE_ID_AMD_NL_USB) {
++		dwc3_pdata.has_lpm_erratum = true;
++		dwc3_pdata.lpm_nyet_threshold = 0xf;
 +
- 	dwc3_writel(dwc->regs, DWC3_GUSB3PIPECTL(0), reg);
- 
- 	mdelay(100);
-@@ -809,6 +813,8 @@ static int dwc3_probe(struct platform_device *pdev)
- 				"snps,lfps_filter_quirk");
- 		dwc->rx_detect_poll_quirk = of_property_read_bool(node,
- 				"snps,rx_detect_poll_quirk");
-+		dwc->dis_u3_susphy_quirk = of_property_read_bool(node,
-+				"snps,dis_u3_susphy_quirk");
- 
- 		dwc->tx_de_emphasis_quirk = of_property_read_bool(node,
- 				"snps,tx_de_emphasis_quirk");
-@@ -831,6 +837,7 @@ static int dwc3_probe(struct platform_device *pdev)
- 		dwc->del_phy_power_chg_quirk = pdata->del_phy_power_chg_quirk;
- 		dwc->lfps_filter_quirk = pdata->lfps_filter_quirk;
- 		dwc->rx_detect_poll_quirk = pdata->rx_detect_poll_quirk;
-+		dwc->dis_u3_susphy_quirk = pdata->dis_u3_susphy_quirk;
- 
- 		dwc->tx_de_emphasis_quirk = pdata->tx_de_emphasis_quirk;
- 		if (pdata->tx_de_emphasis)
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 469ee13..be793f7 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -697,6 +697,7 @@ struct dwc3_scratchpad_array {
-  * @del_phy_power_chg_quirk: set if we enable delay phy power change quirk
-  * @lfps_filter_quirk: set if we enable LFPS filter quirk
-  * @rx_detect_poll_quirk: set if we enable rx_detect to polling LFPS quirk
-+ * @dis_u3_susphy_quirk: set if we disable usb3 suspend phy
-  * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
-  * @tx_de_emphasis: Tx de-emphasis value
-  * 	0       - -6dB de-emphasis
-@@ -818,6 +819,7 @@ struct dwc3 {
- 	unsigned		del_phy_power_chg_quirk:1;
- 	unsigned		lfps_filter_quirk:1;
- 	unsigned		rx_detect_poll_quirk:1;
-+	unsigned		dis_u3_susphy_quirk:1;
- 
- 	unsigned		tx_de_emphasis_quirk:1;
- 	unsigned		tx_de_emphasis:2;
-diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform_data.h
-index e1ab900..0f1d5ad 100644
---- a/drivers/usb/dwc3/platform_data.h
-+++ b/drivers/usb/dwc3/platform_data.h
-@@ -36,6 +36,7 @@ struct dwc3_platform_data {
- 	unsigned del_phy_power_chg_quirk:1;
- 	unsigned lfps_filter_quirk:1;
- 	unsigned rx_detect_poll_quirk:1;
-+	unsigned dis_u3_susphy_quirk:1;
- 
- 	unsigned tx_de_emphasis_quirk:1;
- 	unsigned tx_de_emphasis:2;
++		dwc3_pdata.u2exit_lfps_quirk = true;
++		dwc3_pdata.u2ss_inp3_quirk = true;
++		dwc3_pdata.req_p1p2p3_quirk = true;
++		dwc3_pdata.del_p1p2p3_quirk = true;
++		dwc3_pdata.del_phy_power_chg_quirk = true;
++		dwc3_pdata.lfps_filter_quirk = true;
++		dwc3_pdata.rx_detect_poll_quirk = true;
++
++		dwc3_pdata.tx_de_emphasis_quirk = true;
++		dwc3_pdata.tx_de_emphasis = 1;
++
++		/* FIXME these quirks should move when AMD NL taps out */
++		dwc3_pdata.disable_scramble_quirk = true;
++		dwc3_pdata.dis_u3_susphy_quirk = true;
++		dwc3_pdata.dis_u2_susphy_quirk = true;
++	}
++
+ 	ret = platform_device_add_resources(dwc3, res, ARRAY_SIZE(res));
+ 	if (ret) {
+ 		dev_err(dev, "couldn't add resources to dwc3 device\n");
+@@ -194,6 +216,7 @@ static const struct pci_device_id dwc3_pci_id_table[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_BSW), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_BYT), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_MRFLD), },
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_NL_USB), },
+ 	{  }	/* Terminating Entry */
+ };
+ MODULE_DEVICE_TABLE(pci, dwc3_pci_id_table);
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
