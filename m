@@ -1,171 +1,259 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 01/11] irqchip: Allow irq_reg_{readl,writel} to use __raw_{readl_writel}
-Date: Thu, 30 Oct 2014 20:52:42 +0100
-Message-ID: <7275578.mKZ88H670E@wuerfel>
-References: <1414555138-6500-1-git-send-email-cernekee@gmail.com> <7309232.oJGU5dTioF@wuerfel> <CAJiQ=7DD_ivNyJpZnQFKfaFBM5nk0Gb-S-5wfXuF9fxZ_FWHvA@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] ARM: dts: rockchip: Add devicetree source for MarsBoard RK3066
+Date: Thu, 30 Oct 2014 20:54:48 +0100
+Message-ID: <1681303.PdXozBkPrp@phil>
+References: <1414499062-23875-1-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <CAJiQ=7DD_ivNyJpZnQFKfaFBM5nk0Gb-S-5wfXuF9fxZ_FWHvA@mail.gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414499062-23875-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 30 October 2014 12:03:38 Kevin Cernekee wrote:
-> On Thu, Oct 30, 2014 at 2:58 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> On the MIPS BCM7xxx chips, LE/BE support was a design requirement.  So:
-> >>
-> >>  - The chips include a strap pin for LE/BE so it can be configured
-> >> through board jumpers.  This is the only supported method of switching
-> >> endianness.
-> >>
-> >>  - Endianness interactions and performance concerns have been analyzed
-> >> for all peripherals, buses, and data flows.
-> >>
-> >>  - As Florian mentioned earlier, the LE/BE strap preconfigures several
-> >> hardware blocks at boot time, e.g. telling the SPI controller how to
-> >> arrange the incoming data such that the MSB of each instruction word
-> >> read from flash shows up in the right place.
-> >>
-> >>  - The entire software stack (and even the cross toolchain) needs to
-> >> be compiled for either LE or BE.
-> >>
-> >> So in this context a "BE system" is a BCM7xxx MIPS chip strapped for
-> >> BE, or one of the BCM33xx/BCM63xx/BCM68xx MIPS chips that is hardwired
-> >> and verified for BE only.
-> >
-> > Ah, I think I understand what you mean now. So this strapping is done
-> > for legacy operating systems that are not endian-aware and hardwired
-> > to one or the other.
+Am Dienstag, 28. Oktober 2014, 12:24:19 schrieb Romain Perier:
+> Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> Changes since v1:
+>   - Replaced hoayuelectronics by hoayu as suggested by the vendor-prefix doc
+> in dt-bindings
 > 
-> Hmm, maybe, but this wasn't done for legacy reasons.  The system was
-> designed to run in either endianness, with the understanding that all
-> software would be built for either LE or BE and that the hardware
-> would be strapped for one or the other.
+>  arch/arm/boot/dts/Makefile              |   1 +
+>  arch/arm/boot/dts/rk3066a-marsboard.dts | 143
+> ++++++++++++++++++++++++++++++++ 2 files changed, 144 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/rk3066a-marsboard.dts
 > 
-> On dev boards this is a jumper on the board, but on production boards
-> it is often immutable.
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 742ffa2..af527a2 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -365,6 +365,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+>  	qcom-msm8960-cdp.dtb \
+>  	qcom-msm8974-sony-xperia-honami.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+> +	rk3066a-marsboard.dtb \
+>  	rk3066a-bqcurie2.dtb \
+>  	rk3188-radxarock.dtb \
+>  	rk3288-evb-act8846.dtb \
+> diff --git a/arch/arm/boot/dts/rk3066a-marsboard.dts
+> b/arch/arm/boot/dts/rk3066a-marsboard.dts new file mode 100644
+> index 0000000..146bd61
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/rk3066a-marsboard.dts
+> @@ -0,0 +1,143 @@
+> +/*
+> + * Copyright (c) 2014 Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
 
-But only legacy OSs would need the jumper or the pin. Any modern OS
-like Linux should just work in either endianess independent of how
-the registers are done.
+Please license the file under both GPLv2 and X11 like
 
-> > In Linux, we don't care about that, we have the source and we can
-> > just make it run on any hardware we care about. If you port a kernel
-> > to such a platform, the best strategy is to ignore what the SoC
-> > vendor tried to do for the other OSs and set the chip into "never
-> > translate" in hardware so you can handle it correctly in the kernel.
-> 
-> Right, the intention was to remain source-compatible between LE/BE,
-> but not binary-compatible.
+/*
+ * Copyright (c) 2014 Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ *
+ * This file is dual-licensed: you can use it either under the terms
+ * of the GPL or the X11 license, at your option. Note that this dual
+ * licensing only applies to this file, and not this project as a
+ * whole.
+ *
+ *  a) This file is free software; you can redistribute it and/or
+ *     modify it under the terms of the GNU General Public License as
+ *     published by the Free Software Foundation; either version 2 of the
+ *     License, or (at your option) any later version.
+ *
+ *     This file is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public
+ *     License along with this file; if not, write to the Free
+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+ *     MA 02110-1301 USA
+ *
+ * Or, alternatively,
+ *
+ *  b) Permission is hereby granted, free of charge, to any person
+ *     obtaining a copy of this software and associated documentation
+ *     files (the "Software"), to deal in the Software without
+ *     restriction, including without limitation the rights to use,
+ *     copy, modify, merge, publish, distribute, sublicense, and/or
+ *     sell copies of the Software, and to permit persons to whom the
+ *     Software is furnished to do so, subject to the following
+ *     conditions:
+ *
+ *     The above copyright notice and this permission notice shall be
+ *     included in all copies or substantial portions of the Software.
+ *
+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ *     OTHER DEALINGS IN THE SOFTWARE.
+ */
 
-Well, I guess they failed on the "source-compatible" part ;-)
+For context see
+https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?id=b0946ca329eaaa42ecd36207c55aa2bd4925f133
 
-> Either the __raw_ accessors, or dynamically choosing between
-> readl/ioread32be based on CONFIG_CPU_BIG_ENDIAN (or DT properties, if
-> absolutely necessary), would work. 
 
-No, this is just wrong. Don't ever assume that the endianess of the
-kernel has anything to do with how the hardware is built. You can
-make it a separate Kconfig option, and you can make it default
-to CPU_BIG_ENDIAN, but the two things are fundamentally different,
-whatever the hardware designers try to tell you.
+I'll try to get the existing files relicensed in the next time, but would like 
+new files to use a better licensing from the start.
 
-> > You have multiple problems if you rely on the byteswaps being
-> > done in hardware:
-> >
-> > - You can't build a kernel that runs on all SoCs, not even all
-> >   systems using the same SoC when that strapping pin gives you
-> >   two incompatible versions
-> 
-> Correct.  It was never a requirement to use a single image for both LE and BE.
 
-I didn't mean one kernel image that runs in both BE and LE mode, that
-would be crazy. What I mean is one image that can run on the SoC
-in either strapping mode but with the CPU endianess set the way that
-matches how the kernel is built.
+> +
+> +/dts-v1/;
+> +#include "rk3066a.dtsi"
+> +
+> +/ {
+> +	model = "MarsBoard RK3066";
+> +	compatible = "haoyu,marsboard-rk3066", "rockchip,rk3066a";
+> +
+> +	memory {
+> +		reg = <0x60000000 0x40000000>;
+> +	};
+> +
+> +	vcc_sd0: fixed-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "sdmmc-supply";
+> +		regulator-min-microvolt = <3000000>;
+> +		regulator-max-microvolt = <3000000>;
+> +		gpio = <&gpio3 7 GPIO_ACTIVE_LOW>;
+> +		startup-delay-us = <100000>;
+> +		vin-supply = <&vcc_io>;
+> +	};
+> +};
+> +
+> +
+> +
 
-> > - Any MMIO access to device memory storing byte streams (network
-> >   packets, audio, block, ...) will be swapped the same way that
-> >   the registers do, which means you now have to do the expensive
-> >   byte swaps (memcpy_fromio) in software instead of the cheap ones
-> >   (writel)
-> 
-> The various endianness settings also affect our CPU's "view" of DRAM.
-> All current BCM7xxx SoCs have extra logic to make sure that packet
-> data, disk sectors from SATA, and other "bulky" transfers all arrive
-> in a suitable byte order.
+unnecessary blank lines - only one please
 
-Wow, that seems like a lot of hardware effort to gain basically
-nothing. If they managed to get this right, at least it won't
-make it harder to support the hardware properly.
 
-So the byte stream data is never swapped, or always swapped an even
-number of times, regardless of the strapping pin, right?
+> +&i2c1 {
+> +	status = "okay";
+> +	clock-frequency = <400000>;
+> +
+> +	tps: tps@2d {
+> +		reg = <0x2d>;
+> +
+> +		interrupt-parent = <&gpio6>;
+> +		interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
+> +
+> +		vcc5-supply = <&vcc_io>;
+> +		vcc6-supply = <&vcc_io>;
+> +
+> +		regulators {
+> +			vcc_rtc: regulator@0 {
+> +				regulator-name = "vcc_rtc";
+> +				regulator-always-on;
+> +			};
+> +
+> +			vcc_io: regulator@1 {
+> +				regulator-name = "vcc_io";
+> +				regulator-always-on;
+> +			};
+> +
+> +			vdd_arm: regulator@2 {
+> +				regulator-name = "vdd_arm";
+> +				regulator-min-microvolt = <600000>;
+> +				regulator-max-microvolt = <1500000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vcc_ddr: regulator@3 {
+> +				regulator-name = "vcc_ddr";
+> +				regulator-min-microvolt = <600000>;
+> +				regulator-max-microvolt = <1500000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vcc18_cif: regulator@5 {
+> +				regulator-name = "vcc18_cif";
+> +				regulator-always-on;
+> +			};
+> +
+> +			vdd_11: regulator@6 {
+> +				regulator-name = "vdd_11";
+> +				regulator-always-on;
+> +			};
+> +
+> +			vcc_25: regulator@7 {
+> +				regulator-name = "vcc_25";
+> +				regulator-always-on;
+> +			};
+> +
+> +			vcc_18: regulator@8 {
+> +				regulator-name = "vcc_18";
+> +				regulator-always-on;
+> +			};
+> +
+> +			vcc25_hdmi: regulator@9 {
+> +				regulator-name = "vcc25_hdmi";
+> +				regulator-always-on;
+> +			};
+> +
+> +			vcca_33: regulator@10 {
+> +				regulator-name = "vcca_33";
+> +				regulator-always-on;
+> +			};
+> +
+> +			vcc_tp: regulator@11 {
+> +				regulator-name = "vcc_tp";
+> +				regulator-always-on;
+> +			};
 
-> > - If the hardware swap was implemented wrong, all the addresses
-> >   for 8 or 16 bit MMIO registers are wrong too and you have to
-> >   fix them up in software, which is much worse than swapping the
-> >   contents.
-> 
-> We have this mode available on some of the peripherals, but chose not to use it.
-> 
-> One situation where it can prove useful: for PCIe enable the HW
-> byteswap, so readl() can be implemented as a straight 32-bit load with
-> no swap.  The lesser-used 8-bit and 16-bit accessors would then
-> implement address swizzling.  Other memory-mapped SoC peripherals that
-> Linux wants to treat as PCIe devices (accessing via readl/writel) can
-> then be configured for no HW byteswap.
+this is the rmii regulator and the schematics for the marsboard name it 
+"vcc_rmii" so both the phandle and the regulator-name should reflect that.
 
-This is the part where it gets really crazy and the only sane way to
-deal with it is to turn off the entire swizzling in hardware.
+> +
+> +			vcc28_cif: regulator@12 {
+> +				regulator-name = "vcc28_cif";
+> +				regulator-always-on;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +/* must be included after &tps gets defined */
+> +#include "tps65910.dtsi"
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
+> +
+> +&uart3 {
+> +	status = "okay";
+> +};
+> +
+> +&wdt {
+> +	status = "okay";
+> +};
 
-> > - It's impossible to share device drivers with saner hardware
-> >   platforms that let the CPU access MMIO registers in whichever
-> >   way the device expects it.
-> 
-> That depends somewhat on whether we're talking about binary-level
-> compatibility, or source-level compatibility.  For the latter case, we
-> can always redefine readl() to match the hardware at compile time.  On
-> MIPS this can be done through CONFIG_SWAP_IO_SPACE.
-
-That option seems to be incompatible with running one kernel across
-multiple SoC families, if each of them does it differently.
-
-The comment in arch/mips/include/asm/mach-generic/mangle-port.h
-suggests that it was originally meant only for PIO access, not
-for MMIO, but asm/io.h uses it for both.
-
-> >> Our problem becomes much simpler if we assume that the majority of
-> >> systems have a fixed endianness, and only a few special cases need to
-> >> accommodate the different kernel/register endianness permutations
-> >> you've listed.
-> >
-> > Good point. It seems that there is currently no support for BCM7xxx
-> > in upstream Linux, and that is the only one that has the crazy
-> > strapping pin, so I guess you could avoid a lot of the problems by
-> > changing the MIPS code to assume BE registers, and if anybody wants
-> > to submit BCM7xxx MIPS support to mainline, they have to make sure
-> > it's in the right mode.
-> 
-> One catch is that almost all BCM7xxx MIPS systems are actually LE, and
-> BE gets less test coverage.  Some boards cannot even be configured for
-> BE.  BE has mostly been kept around to accommodate a few customers
-> with legacy code, not out of a burning desire to support both modes of
-> operation...
-
-If all the boards can be configured for LE, then you can just make this
-mode required when upstreaming the kernel port, independent of how the
-kernel runs.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
