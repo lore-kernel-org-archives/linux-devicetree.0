@@ -1,158 +1,284 @@
-From: Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH v2 1/4] of: Rename "poweroff-source" property to "system-power-controller"
-Date: Thu, 30 Oct 2014 11:08:40 +0100
-Message-ID: <CABgxDoJkQ_dRd=fkOW1xsGszup7tVETb3aWukpDbafzRUaQcFA@mail.gmail.com>
-References: <1414568135-8311-1-git-send-email-romain.perier@gmail.com>
-	<1414568135-8311-2-git-send-email-romain.perier@gmail.com>
+From: Huang Rui <ray.huang@amd.com>
+Subject: [PATCH v4 00/20] usb: dwc3: add support for AMD Nolan SoC
+Date: Thu, 30 Oct 2014 18:08:25 +0800
+Message-ID: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1414568135-8311-2-git-send-email-romain.perier@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset=yes
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Huang Rui <ray.huang@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-Johan: as you are one of the people who requested the renaming, any
-suggestions ?
+Hi,
 
-Romain
+The series of patches add AMD Nolan (NL) SoC support for DesignWare USB=
+3
+OTG IP with PCI bus glue layer. This controller supported hibernation, =
+LPM
+erratum and used the 2.80a IP version and amd own phy. Current
+implementation support both simulation and SoC platform. And already te=
+sted
+with gadget zero and msc tool. It works well on file storage gadget.
 
-2014-10-29 8:35 GMT+01:00 Romain Perier <romain.perier@gmail.com>:
-> As discussed on the mailing list, it makes more sense to rename this property
-> to "system-power-controller". Problem being that the word "source" usually tends
-> to be used for inputs and that is out of control of the OS. The poweroff
-> capability is an output which simply turns the system-power off. Also, this
-> property might be used by drivers which power-off the system and power back on
-> subsequent RTC alarms. This seems to suggest to remove "poweroff" from the
-> property name and to choose "system-power-controller" as the more generic name.
-> This patchs adds the required renaming changes and defines an helper function
-> which is compatible with both properties, the old one prefixed by a vendor name
-> and the new one without any prefix.
->
-> Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> ---
->  .../devicetree/bindings/power/power-controller.txt | 18 ++++++++++++
->  .../devicetree/bindings/power/poweroff.txt         | 18 ------------
->  drivers/of/base.c                                  | 34 ++++++++++++++++++++++
->  include/linux/of.h                                 | 10 ++-----
->  4 files changed, 55 insertions(+), 25 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/power-controller.txt
->  delete mode 100644 Documentation/devicetree/bindings/power/poweroff.txt
->
-> diff --git a/Documentation/devicetree/bindings/power/power-controller.txt b/Documentation/devicetree/bindings/power/power-controller.txt
-> new file mode 100644
-> index 0000000..942f955
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/power-controller.txt
-> @@ -0,0 +1,18 @@
-> +* Generic system power control capability
-> +
-> +Power-management integrated circuits or miscellaneous harware components are
-> +sometimes able to control the system power. The device driver associated to these
-> +components might needs to define this capability, which tells to the kernel how
-> +to switch off the system. The corresponding driver must have the standard
-> +property "system-power-controller" in its device node. This property marks the
-> +device as able to controller the system-power. In order to test if this property
-> +is found programmatically, use the helper function "of_is_system_power_controller"
-> +from of.h .
-> +
-> +Example:
-> +
-> +act8846: act8846@5 {
-> +        compatible = "active-semi,act8846";
-> +        status = "okay";
-> +        system-power-controller;
-> +}
-> diff --git a/Documentation/devicetree/bindings/power/poweroff.txt b/Documentation/devicetree/bindings/power/poweroff.txt
-> deleted file mode 100644
-> index 845868b..0000000
-> --- a/Documentation/devicetree/bindings/power/poweroff.txt
-> +++ /dev/null
-> @@ -1,18 +0,0 @@
-> -* Generic Poweroff capability
-> -
-> -Power-management integrated circuits or miscellaneous harware components are
-> -sometimes able to control the system power. The device driver associated to these
-> -components might needs to define poweroff capability, which tells to the kernel
-> -how to switch off the system. The corresponding driver must have the standard
-> -property "poweroff-source" in its device node. This property marks the device as
-> -able to shutdown the system. In order to test if this property is found
-> -programmatically, use the helper function "of_system_has_poweroff_source" from
-> -of.h .
-> -
-> -Example:
-> -
-> -act8846: act8846@5 {
-> -        compatible = "active-semi,act8846";
-> -        status = "okay";
-> -        poweroff-source;
-> -}
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 74ab1b8..438e405 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -2260,3 +2260,37 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
->         return of_get_next_parent(np);
->  }
->  EXPORT_SYMBOL(of_graph_get_remote_port);
-> +
-> +/**
-> + * of_is_system_power_controller() - Tells if the property for controlling system
-> + * power is found in device_node.
-> + * @np: Pointer to the given device_node
-> + *
-> + * Return: true if present false otherwise
-> + */
-> +bool of_is_system_power_controller(const struct device_node *np)
-> +{
-> +       struct property *pp;
-> +       unsigned long flags;
-> +       char *sep;
-> +       bool found = false;
-> +
-> +       raw_spin_lock_irqsave(&devtree_lock, flags);
-> +       for_each_property_of_node(np, pp) {
-> +               if (of_prop_cmp(pp->name, "system-power-controller") == 0) {
-> +                       found = true;
-> +                       break;
-> +               }
-> +               /* Backward compatibility with previous property "vendor,system-power-controller",
-> +                * we just check that an non-empty vendor-prefix exists here
-> +                */
-> +               sep = strchr(pp->name, ',');
-> +               if (sep && sep - pp->name && of_prop_cmp(sep + 1, "system-power-controller") == 0) {
-> +                       found = true;
-> +                       break;
-> +               }
-> +       }
-> +       raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +       return found;
-> +}
-> +EXPORT_SYMBOL(of_is_system_power_controller);
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 868fdad..e7177b3 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -910,15 +910,11 @@ static inline int of_changeset_update_property(struct of_changeset *ocs,
->  /* CONFIG_OF_RESOLVE api */
->  extern int of_resolve_phandles(struct device_node *tree);
->
-> -/**
-> - * of_system_has_poweroff_source - Tells if poweroff-source is found for device_node
-> - * @np: Pointer to the given device_node
-> - *
-> - * return true if present false otherwise
-> - */
-> +bool of_is_system_power_controller(const struct device_node *np);
-> +
->  static inline bool of_system_has_poweroff_source(const struct device_node *np)
->  {
-> -       return of_property_read_bool(np, "poweroff-source");
-> +       return of_is_system_power_controller(np);
->  }
->
->  #endif /* _LINUX_OF_H */
-> --
-> 1.9.1
->
+
+These patches are generated on balbi/testing/next
+
+Changes from v3 -> v4
+- Add comment on hibernation patch
+- Fix typos of commit log and comments
+- Remove WARN_ON for temporary solution of FPGA board
+- Rename tx deemph to tx de-emphasis
+- Add documentation under Documentation/devicetree/bindings/usb/dwc3.tx=
+t
+- Check FPGA flag on usb3 and usb2 suspend phy quirk
+- Refine description of PCI quirk patch
+- Remove amd_nl_plat flag at dwc3 structure
+- Make HIRD threshold configurable
+
+Changes from v2 -> v3
+- Confirmed these quirks will be needed in product level
+- Move AMD configuration patch to the last one with all quirk flags
+- Make all quirks as 1-bit field instead of single-bits on a 32-bit
+  variable
+- Add all quirks DeviceTree counterparts
+- Make LPM erratum configurable
+- Add PCI ID into pci_ids.h because it will be used both on PCI and DWC=
+3
+  device driver.
+
+Changes from v1 -> v2
+- Remove dual role function temporarily
+- Add pci quirk to avoid to bind with xhci driver
+- Distinguish between simulation board and soc
+- Break down all the special quirks
+
+
+Patch 1:
+- Enable hibernation
+
+Patch 2:
+- Distinguish between simulation board and SoC
+
+Patch 3:
+- Initialize platform data at pci glue layer
+
+Patch 4 - 16:
+- Break down all the special quirks
+
+Patch 17:
+- Add PCI device ID of AMD NL USB3 DRD
+
+Patch 18:
+- Prevent xHCI driver from claiming AMD NL USB3 DRD device
+
+Patch 19:
+- Add support AMD NL USB3 DRD for dwc3 driver
+
+Patch 20:
+- Make HIRD threshold configurable
+
+Patch set already passed all the MSC testing on simulation board with l=
+ow
+clock frequency, so the speed will slower than true SoC. Detailed resul=
+t
+without verbose debug option is below:
+
+root@hr-bak:/home/ray/felipe/usb-tools# ./msc.sh -o /dev/sdb1
+Starting test suite: 2014=E5=B9=B4 10=E6=9C=88 30=E6=97=A5 =E6=98=9F=E6=
+=9C=9F=E5=9B=9B 15:42:32 CST
+test 0a: simple 4k read/write
+test  0: sent       3.91 MB read       7.43 MB/s write       6.45 MB/s =
+=2E.. success
+test 0b: simple 8k read/write
+test  0: sent       7.81 MB read      10.10 MB/s write       8.92 MB/s =
+=2E.. success
+test 0c: simple 16k read/write
+test  0: sent      15.62 MB read      15.22 MB/s write      12.02 MB/s =
+=2E.. success
+test 0d: simple 32k read/write
+test  0: sent      31.25 MB read      19.30 MB/s write      16.65 MB/s =
+=2E.. success
+test 0e: simple 64k read/write
+test  0: sent      62.50 MB read      22.43 MB/s write      16.04 MB/s =
+=2E.. success
+test 1: simple 1-sector read/write
+test  1: sent     500.00 kB read       1.27 MB/s write       1.04 MB/s =
+=2E.. success
+test 2: simple 8-sectors read/write
+test  2: sent       3.91 MB read       7.39 MB/s write       6.35 MB/s =
+=2E.. success
+test 3: simple 32-sectors read/write
+test  3: sent      15.62 MB read      15.26 MB/s write      12.42 MB/s =
+=2E.. success
+test 4: simple 64-sectors read/write
+test  4: sent      31.25 MB read      19.56 MB/s write      16.83 MB/s =
+=2E.. success
+test 5a: scatter/gather for 2-sectors buflen 4k
+test  5: sent    1000.00 kB read       2.53 MB/s write       1.89 MB/s =
+=2E.. success
+test 5b: scatter/gather for 2-sectors buflen 8k
+test  5: sent    1000.00 kB read       2.52 MB/s write       1.87 MB/s =
+=2E.. success
+test 5c: scatter/gather for 2-sectors buflen 16k
+test  5: sent    1000.00 kB read       2.53 MB/s write       1.85 MB/s =
+=2E.. success
+test 5d: scatter/gather for 2-sectors buflen 32k
+test  5: sent    1000.00 kB read       2.47 MB/s write       2.08 MB/s =
+=2E.. success
+test 5e: scatter/gather for 2-sectors buflen 64k
+test  5: sent    1000.00 kB read       2.48 MB/s write       2.09 MB/s =
+=2E.. success
+test 6a: scatter/gather for 8-sectors buflen 4k
+test  6: sent       3.91 MB read       7.05 MB/s write       6.31 MB/s =
+=2E.. success
+test 6b: scatter/gather for 8-sectors buflen 8k
+test  6: sent       3.91 MB read       7.43 MB/s write       6.39 MB/s =
+=2E.. success
+test 6c: scatter/gather for 8-sectors buflen 16k
+test  6: sent       3.91 MB read       7.66 MB/s write       6.27 MB/s =
+=2E.. success
+test 6d: scatter/gather for 8-sectors buflen 32k
+test  6: sent       3.91 MB read       7.71 MB/s write       6.30 MB/s =
+=2E.. success
+test 6e: scatter/gather for 8-sectors buflen 64k
+test  6: sent       3.91 MB read       7.38 MB/s write       6.46 MB/s =
+=2E.. success
+test 7a: scatter/gather for 32-sectors buflen 16k
+test  7: sent      15.62 MB read      14.56 MB/s write      11.90 MB/s =
+=2E.. success
+test 7b: scatter/gather for 32-sectors buflen 32k
+test  7: sent      15.62 MB read      15.16 MB/s write      12.02 MB/s =
+=2E.. success
+test 7c: scatter/gather for 32-sectors buflen 64k
+test  7: sent      15.62 MB read      15.29 MB/s write      12.03 MB/s =
+=2E.. success
+test 8a: scatter/gather for 64-sectors buflen 32k
+test  8: sent      31.25 MB read      19.48 MB/s write      16.62 MB/s =
+=2E.. success
+test 8b: scatter/gather for 64-sectors buflen 64k
+test  8: sent      31.25 MB read      19.62 MB/s write      16.71 MB/s =
+=2E.. success
+test 9: scatter/gather for 128-sectors buflen 64k
+test  9: sent      62.50 MB read      22.14 MB/s write      16.65 MB/s =
+=2E.. success
+test 10: read over the end of the block device
+test 10: sent      62.01 MB read       0.00 MB/s write       0.00 MB/s =
+=2E.. success
+test 11: lseek past the end of the block device
+test 11: sent       0.00 B read       0.00 MB/s write       0.00 MB/s .=
+=2E. success
+test 12: write over the end of the block device
+test 12: sent       0.00 B read       0.00 MB/s write       0.00 MB/s .=
+=2E. success
+test 13: write 1 sg, read 8 random size sgs
+test 13: sent      62.50 MB read      21.54 MB/s write      16.17 MB/s =
+=2E.. success
+test 14: write 8 random size sgs, read 1 sg
+test 14: sent      62.50 MB read      21.62 MB/s write      15.98 MB/s =
+=2E.. success
+test 15: write and read 8 random size sgs
+test 15: sent      62.50 MB read      22.00 MB/s write      16.53 MB/s =
+=2E.. success
+test 16a: read with heap allocated buffer
+test 16: sent      62.50 MB read      21.10 MB/s write       0.00 MB/s =
+=2E.. success
+test 16b: read with stack allocated buffer
+test 16: sent      62.50 MB read      21.28 MB/s write       0.00 MB/s =
+=2E.. success
+test 17a: write with heap allocated buffer
+test 17: sent       0.00 B read       0.00 MB/s write      20.29 MB/s .=
+=2E. success
+test 17b: write with stack allocated buffer
+test 17: sent       0.00 B read       0.00 MB/s write      20.34 MB/s .=
+=2E. success
+test 18a: write 0x00 and read it back
+test 18: sent      62.50 MB read      21.80 MB/s write      16.02 MB/s =
+=2E.. success
+test 18b: write 0xff and read it back
+test 18: sent      62.50 MB read      20.56 MB/s write      15.06 MB/s =
+=2E.. success
+test 18c: write 0x55 and read it back
+test 18: sent      62.50 MB read      21.68 MB/s write      15.94 MB/s =
+=2E.. success
+test 18d: write 0xaa and read it back
+test 18: sent      62.50 MB read      21.69 MB/s write      15.99 MB/s =
+=2E.. success
+test 18e: write 0x11 and read it back
+test 18: sent      62.50 MB read      21.59 MB/s write      15.97 MB/s =
+=2E.. success
+test 18f: write 0x22 and read it back
+test 18: sent      62.50 MB read      21.62 MB/s write      15.98 MB/s =
+=2E.. success
+test 18g: write 0x44 and read it back
+test 18: sent      62.50 MB read      21.42 MB/s write      16.09 MB/s =
+=2E.. success
+test 18h: write 0x88 and read it back
+test 18: sent      62.50 MB read      21.01 MB/s write      15.83 MB/s =
+=2E.. success
+test 18i: write 0x33 and read it back
+test 18: sent      62.50 MB read      21.42 MB/s write      16.06 MB/s =
+=2E.. success
+test 18j: write 0x66 and read it back
+test 18: sent      62.50 MB read      21.53 MB/s write      16.01 MB/s =
+=2E.. success
+test 18k: write 0x99 and read it back
+test 18: sent      62.50 MB read      21.39 MB/s write      16.03 MB/s =
+=2E.. success
+test 18l: write 0xcc and read it back
+test 18: sent      62.50 MB read      21.77 MB/s write      16.02 MB/s =
+=2E.. success
+test 18m: write 0x77 and read it back
+test 18: sent      62.50 MB read      21.99 MB/s write      16.09 MB/s =
+=2E.. success
+test 18n: write 0xbb and read it back
+test 18: sent      62.50 MB read      21.91 MB/s write      16.02 MB/s =
+=2E.. success
+test 18o: write 0xdd and read it back
+test 18: sent      62.50 MB read      21.17 MB/s write      15.90 MB/s =
+=2E.. success
+test 18p: write 0xee and read it back
+test 18: sent      62.50 MB read      21.93 MB/s write      16.05 MB/s =
+=2E.. success
+Test suite ended: 2014=E5=B9=B4 10=E6=9C=88 30=E6=97=A5 =E6=98=9F=E6=9C=
+=9F=E5=9B=9B 15:46:12 CST
+
+Thanks,
+Rui
+
+Huang Rui (20):
+  usb: dwc3: enable hibernation if to be supported
+  usb: dwc3: add a flag to check if it is FPGA board
+  usb: dwc3: initialize platform data at pci glue layer
+  usb: dwc3: add disable scramble quirk
+  usb: dwc3: add lpm erratum support
+  usb: dwc3: add U2Exit LFPS quirk
+  usb: dwc3: add P3 in U2 SS Inactive quirk
+  usb: dwc3: add request P1/P2/P3 quirk
+  usb: dwc3: add delay P1/P2/P3 quirk
+  usb: dwc3: add delay phy power change quirk
+  usb: dwc3: add LFPS filter quirk
+  usb: dwc3: add rx_detect to polling LFPS quirk
+  usb: dwc3: set SUSPHY bit for all cores
+  usb: dwc3: add Tx de-emphasis quirk
+  usb: dwc3: add disable usb3 suspend phy quirk
+  usb: dwc3: add disable usb2 suspend phy quirk
+  PCI: Add support for AMD Nolan USB3 DRD
+  PCI: Prevent xHCI driver from claiming AMD Nolan USB3 DRD device
+  usb: dwc3: add support for AMD Nolan platform
+  usb: dwc3: make HIRD threshold configurable
+
+ Documentation/devicetree/bindings/usb/dwc3.txt |  23 ++++
+ drivers/pci/quirks.c                           |  20 +++
+ drivers/usb/dwc3/core.c                        | 174 +++++++++++++++++=
++++++++-
+ drivers/usb/dwc3/core.h                        |  78 +++++++++--
+ drivers/usb/dwc3/dwc3-pci.c                    |  32 +++++
+ drivers/usb/dwc3/gadget.c                      |  15 ++-
+ drivers/usb/dwc3/platform_data.h               |  20 +++
+ include/linux/pci_ids.h                        |   1 +
+ 8 files changed, 347 insertions(+), 16 deletions(-)
+
+--=20
+1.9.1
