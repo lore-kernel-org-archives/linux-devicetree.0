@@ -1,194 +1,103 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH RESEND V4 4/9] pinctrl: tegra-xusb: Add USB PHY support
-Date: Thu, 30 Oct 2014 14:45:20 +0100
-Message-ID: <20141030134517.GB19802@ulmo.nvidia.com>
+Subject: Re: [PATCH RESEND V4 5/9] of: Add NVIDIA Tegra xHCI controller
+ binding
+Date: Thu, 30 Oct 2014 14:55:02 +0100
+Message-ID: <20141030135500.GC19802@ulmo.nvidia.com>
 References: <1414535277-15645-1-git-send-email-abrestic@chromium.org>
- <1414535277-15645-5-git-send-email-abrestic@chromium.org>
- <20141029122738.GE28356@ulmo.nvidia.com>
- <CAL1qeaF53VUEcn6OruxjufEXnPxyoqp4=sLUuhvJcrpGH=707A@mail.gmail.com>
+ <1414535277-15645-6-git-send-email-abrestic@chromium.org>
+ <20141029094338.GA28356@ulmo.nvidia.com>
+ <CAL1qeaEf0mTQfMgnY8jHGDBvbQ7ivtzAQRWaE9K24TJ86hWYMg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IiVenqGWf+H9Y6IX"
+	protocol="application/pgp-signature"; boundary="ABTtc+pdwF7KHXCz"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL1qeaF53VUEcn6OruxjufEXnPxyoqp4=sLUuhvJcrpGH=707A@mail.gmail.com>
+In-Reply-To: <CAL1qeaEf0mTQfMgnY8jHGDBvbQ7ivtzAQRWaE9K24TJ86hWYMg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andrew Bresticker <abrestic@chromium.org>
 Cc: Stephen Warren <swarren@wwwdotorg.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---IiVenqGWf+H9Y6IX
+--ABTtc+pdwF7KHXCz
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 29, 2014 at 12:43:36PM -0700, Andrew Bresticker wrote:
-> >> diff --git a/drivers/pinctrl/pinctrl-tegra-xusb.c b/drivers/pinctrl/pi=
-nctrl-tegra-xusb.c
-[...]
-> >> +
-> >> +     for (i =3D 0; i < TEGRA_XUSB_USB3_PHYS; i++) {
-> >> +             if (phy =3D=3D padctl->phys[TEGRA_XUSB_PADCTL_USB3_P0 + =
-i])
-> >> +                     break;
+On Wed, Oct 29, 2014 at 09:37:14AM -0700, Andrew Bresticker wrote:
+> On Wed, Oct 29, 2014 at 2:43 AM, Thierry Reding
+> <thierry.reding@gmail.com> wrote:
+> > On Tue, Oct 28, 2014 at 03:27:50PM -0700, Andrew Bresticker wrote:
+> > [...]
+> >> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124=
+-xusb-padctl.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra12=
+4-xusb-padctl.txt
+> > [...]
+> >> +Optional properties:
+> >> +-------------------
+> >> +- vbus-{0,1,2}-supply: VBUS regulator for the corresponding UTMI pad.
+> >> +- vddio-hsic-supply: VDDIO regulator for the HSIC pads.
+> >> +- nvidia,usb3-port-{0,1}-lane: PCIe/SATA lane to which the correspond=
+ing USB3
+> >> +  port is mapped.  See <dt-bindings/pinctrl/pinctrl-tegra-xusb.h> for=
+ the list
+> >> +  of valid values.
 > >
-> > You could simply return i here and then BUG_ON unconditionally.
+> > I dislike how we now need to provide a list of all pins in the header
+> > file, where previously we used strings for this. This could become very
+> > ugly if the set of pins changes in future generations of this IP block.
 > >
-> >> +     }
-> >> +     BUG_ON(i =3D=3D TEGRA_XUSB_USB3_PHYS);
-> >> +
-> >> +     return i;
-> >> +}
+> > Could we instead derive this from the pinmux nodes? For example you have
+> > this in the example below:
 > >
-> > Actually, thinking about it some more, perhaps making this a WARN_ON()
-> > and returning an error so that we can continue and propagate the error
-> > would be more useful. BUG_ON() will completely hang the kernel with no
-> > way out but rebooting. WARN_ON() will give a hint about something being
-> > wrong and returning an error will allow the kernel to continue to run,
-> > which might be the only way to diagnose and fix the problem, even if it
-> > means that USB 3.0 support will be disabled.
+> >         usb3p0 {
+> >                 nvidia,lanes =3D "pcie-0";
+> >                 ...
+> >         };
+> >
+> > Perhaps what we need is to either key off the node name or add another
+> > property, such as:
+> >
+> >         nvidia,usb3-port =3D <0>;
+> >
+> > This would match the nvidia,usb2-port property that you've added below.
 >=20
-> I felt like BUG_ON is more appropriate here.  Hitting this case means
-> there's a bug in the PHY core or a driver has passed a bogus pointer
-> and the stack dump produced by the BUG_ON should make it obvious as to
-> what the issue is.  I don't feel too strongly about it though.
+> That is actually how I described the USB3 port to SS lane mapping
+> originally, but in review of an earlier version of this series,
+> Stephen suggested that I make it a separate, not pinconfig property
+> since it wasn't a value written directly to the hardware.  I'm fine
+> with changing it back as the pinconfig property makes more sense to me
+> as well.
 
-The problem with BUG_ON() is that you won't be able to go any further.
-So if this were to happen on a device with no serial you might not even
-get to a point where you actually see an error message. Handling this
-more gracefully by propagating the error code and failing .probe() does
-not seem overly complicated and the WARN_ON() output will hopefully
-still be noticed (it probably will be after the user can't get USB to
-work).
+Hmm... I had considered it a mux option of the specific lane. If the
+function is usb3, it'd still need to be muxed to one of the ports. So
+it's additional information associated with the usb3 function.
 
-Consider for example the case where a user has only one device to test
-and report bugs on. If we crash the device using BUG_ON() they may not
-be able to report a bug at all (or recover by reverting to some known
-good kernel version). A WARN_ON() will hopefully be enough to get
-noticed and unless users rely on XUSB for the root filesystem they'd
-still be able to open up a web browser and file a bug report with the
-oops attached.
-
-> >> +     u32 value, offset;
-> >> +
-> >> +     padctl->usb3_ports[port].context_saved =3D true;
-> >
-> > What's the purpose of saving the context here? This seems to be
-> > triggered by a request from XUSB, but it's then restored when the PHY is
-> > powered on. How does that even happen? Won't the PHY stay powered all
-> > the time? Or shouldn't the context be saved when powering off the PHY?
->=20
-> Right, context is saved when requested by the XUSB controller and
-> restored on power on.  This is used during runtime power-gating or LP0
-> where the PHYs are powered off and on and this context is lost.
-> Neither of these are currently implemented by the host driver,
-> however.
->=20
-> As far as why the context is saved upon request and not at power off,
-> I'm not sure.  I've observed that these messages come in when a USB3.0
-> device is enumerated.  Perhaps the XUSB controller is doing some sort
-> of tuning.
-
-I see. Perhaps these values are calibrated by the firmware? In that case
-I guess it could redo the calibration. I'll see if I can find out why it
-is necessary to store this.
-
->=20
-> >> @@ -936,6 +2098,18 @@ static int tegra_xusb_padctl_probe(struct platfo=
-rm_device *pdev)
-> >>               goto unregister;
-> >>       }
-> >>
-> >> +     INIT_WORK(&padctl->mbox_req_work, tegra_xusb_phy_mbox_work);
-> >> +     padctl->mbox_client.dev =3D &pdev->dev;
-> >> +     padctl->mbox_client.tx_block =3D true;
-> >> +     padctl->mbox_client.tx_tout =3D 0;
-> >> +     padctl->mbox_client.rx_callback =3D tegra_xusb_phy_mbox_rx;
-> >> +     padctl->mbox_chan =3D mbox_request_channel(&padctl->mbox_client,=
- 0);
-> >> +     if (IS_ERR(padctl->mbox_chan)) {
-> >> +             err =3D PTR_ERR(padctl->mbox_chan);
-> >> +             dev_err(&pdev->dev, "failed to request mailbox: %d\n", e=
-rr);
-> >> +             goto unregister;
-> >> +     }
-> >
-> > I think this should be done before the registering the PHY provider so
-> > that we don't expose one (even for only a very short time) before we
-> > haven't made sure that it can be used.
-> >
-> > Also, this effectively makes the mailbox mandatory, which means that the
-> > above code is going to break on older DTBs. So I think we have no choice
-> > but to make mailbox (and hence XUSB) support optional.
->=20
-> I understand the need for binding stability, but it's not like these
-> bindings have been around for very long (a release or two?) and this
-> series has existed for almost the same amount of time.  Are there
-> really any DTBs out there that are going to break because of this?
-
-Every DTB created from a kernel version that has the original binding
-but not the one modified as part of this series is going to break. Last
-time I checked there weren't any exceptions to this rule. Note, though,
-that the rule is that existing functionality must not break. That is,
-SATA and PCIe should remain functional, so it should be fine if you just
-don't register any of the USB PHYs when the request for a mailbox
-channel fails. Something along these lines should do it:
-
-	padctl->mbox_chan =3D mbox_request_channel(...);
-	if (!IS_ERR(padctl->mbox_chan)) {
-		err =3D tegra_xusb_padctl_setup_usb(...);
-		...
-	}
-
-> >> diff --git a/include/soc/tegra/xusb.h b/include/soc/tegra/xusb.h
-> >> index cfe211d..149434f 100644
-> >> --- a/include/soc/tegra/xusb.h
-> >> +++ b/include/soc/tegra/xusb.h
-> >> @@ -10,6 +10,13 @@
-> >>  #ifndef __SOC_TEGRA_XUSB_H__
-> >>  #define __SOC_TEGRA_XUSB_H__
-> >>
-> >> +#define TEGRA_XUSB_USB3_PHYS 2
-> >> +#define TEGRA_XUSB_UTMI_PHYS 3
-> >> +#define TEGRA_XUSB_HSIC_PHYS 2
-> >> +#define TEGRA_XUSB_NUM_USB_PHYS (TEGRA_XUSB_USB3_PHYS + TEGRA_XUSB_UT=
-MI_PHYS + \
-> >> +                              TEGRA_XUSB_HSIC_PHYS)
-> >> +#define TEGRA_XUSB_NUM_PHYS (TEGRA_XUSB_NUM_USB_PHYS + 2) /* + SATA &=
- PCIe */
-> >
-> > These are really XUSB pad controller specific defines, why does anyone
-> > else need to know this?
->=20
-> They're not pad controller specific.  They're also used in the xHCI host =
-driver.
-
-I keep thinking that there should be a way around this. Of course if
-both the XHCI and mailbox drivers were merged, then there'd be no need
-to expose this publicly at all.
+I did look through the driver changes and can't really make out which
+part of the code actually performs this assignment. Can you point me to
+it?
 
 Thierry
 
---IiVenqGWf+H9Y6IX
+--ABTtc+pdwF7KHXCz
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJUUkDtAAoJEN0jrNd/PrOhJ2gP/icgXsUatyDuBSNuJji4yt+S
-TvfSgp5LrjTA1fsPvkKULv4UNj82zaNKyTZzKdSkAxcXtpeI5Rr7JzptcLj77vm6
-HuTTIlj/6/tR0XtzRZn5uzgOaAWdnv2ZOK1K8tEPhjdPGSRydWR1YSPP4rUWJjc1
-MgPM2Nzul3uUS7mRzYPtoyEUfXbyUrsumS8lZ056H2qwe/ZCUMBzo9rOlvUz42BH
-YYuNqoSH3/e+fxnpneSJ5bsNaK337kaJMQ2Tg9tif9P5eGbVMvku429tm8mN/5w8
-UKMFssbqjxTJpfNbTpEJAJ1Q27mCeTMJDige4cj9WJpXoMbqX7BJ5E00fklxNilv
-j+GTfLvXoBej+Srf6MZr2ybDTHulXAos2DGT873MEH6vlfsB94mw8mSES9nWVl3r
-KDPvi/hiGjSlF4KfJVujRBjiqTC/6aGfemCx6auptSg/+W+Wsp/IteQVBJ9XjDgZ
-P/dfxQxsavD3lXfSFlDNIxj6pNi7JN0khwS29udrEU2+hzfcm80ChaNVr/ba9a3f
-/MPGGE17sCvKeDj3OwTPc3tcL6JHMV9Oae2b/MqyAuuRuClGhDftrNspUWBh7ajC
-OwQ0SlGLDfplNQzOBYNltnS+IPdNF0uSzd/Qo4rPBI2Rsg9vmKI5YHp1Uou94ENI
-USSD0kjZ7sSISu/UZgph
-=dBmH
+iQIcBAEBAgAGBQJUUkM0AAoJEN0jrNd/PrOhMS8P/i/lGqgEusOrtNYyZhrYikX9
+/3mOb4M3tfpY5A9yt5sWZrnTXRa+Yg0mDg3ct5I9uPcO231miVdCI+X3VmLXtMzx
+7JKA7xfdO530WaEbjJWZQnocm8Ofy2bVmwgy2beWJoMyKOE22+Ibe1pRs/Ew27B/
+QiCAzvJY0AA+GoKbfwUIRblg3vRUc9iqMf8Za6RvHfgM0xzRRz68KgYneDaoW/lV
+DKSXu+pPXxVzCU4EAu+jqA5Vusj96S3dPdZp05Jk3jEyLKswlveb5xZgWzZkssVN
+Cvjjknlde6pPlvtRsm/3eT1XdF719A2+8l5FL1Dixv2ZatsXx3IW210tHrTg0D6Q
+hSpBMGbLBF4TMlbDOaVQplgVDCKIMQSpk8F6rSxFK0kO8qQ4EbMlt+u4Cqi6xQXi
+hAyBc4gdq0NWmq+EU0YvaPgn5B+o4Ohsxaqa4maikEXlbL0hf6TlrIRkLQx/VDGD
+LliNkRszMrRhaPiSr+6VHdREtWWd/YjFzplbNW22R1Bd6iSbPj8E8LBcKHvUzb/T
+MixEf8JmYyaB7xJ9ok+ObSTIytxsedEt1pXXVdKHoA4dZVW7DTSH0cnA4xvHFiuC
+zpkK7P1fpGu+UOIz/KrT05xXt37g/vba0PIfYwe2BB0GS16rtlj77GFBBx35alvi
+TvZ/tempujyTIThhNrOa
+=+NwF
 -----END PGP SIGNATURE-----
 
---IiVenqGWf+H9Y6IX--
+--ABTtc+pdwF7KHXCz--
