@@ -1,58 +1,38 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: GPIO bindings guidelines (Was: Re: [PATCH v5 10/12] gpio: Support
- for unified device properties interface)
-Date: Thu, 30 Oct 2014 16:11:13 +0100
-Message-ID: <CACRpkdYfEgC0iZCb=juBewpnCos+wbDVD14veRxXGSyBExAfEQ@mail.gmail.com>
-References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com>
-	<4582579.9WMrIMALsy@wuerfel>
-	<CAAVeFuJzZJdh+Z7hY-Ws3orxyO=PSqCB_eBphbWk3nRb15op2w@mail.gmail.com>
-	<2964475.27LDgQTJ7C@wuerfel>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCHv2 0/4] Add Altera peripheral memories to EDAC framework
+Date: Thu, 30 Oct 2014 16:22:40 +0100
+Message-ID: <20141030152240.GD11178@pd.tnic>
+References: <1413578029-13205-1-git-send-email-tthayer@opensource.altera.com>
+ <544E93F0.3030409@opensource.altera.com>
+ <20141027204307.GB4741@pd.tnic>
+ <544EBA84.7080109@opensource.altera.com>
+ <20141027215908.GC4741@pd.tnic>
+ <544ECBB1.2040600@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <2964475.27LDgQTJ7C@wuerfel>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <544ECBB1.2040600@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thor Thayer <tthayer@opensource.altera.com>
+Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 23, 2014 at 2:25 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thursday 23 October 2014 15:02:46 Alexandre Courbot wrote:
->> On Tue, Oct 21, 2014 at 4:54 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> > On Tuesday 21 October 2014 14:14:02 Alexandre Courbot wrote:
->
->> > Drivers that use
->> > existing bindings with the "foo-gpio" form (or worse, "foo-somethingelse"
->> > can use the same internal interface as the drivers that use name plus
->> > index. Do you see a problem using what I suggested for the combined
->> > API:
->> >
->> > __gpiod_get(dev, propname, index); // use property name plus index
->> > gpiod_get(dev, index); // use "gpios" plus index
->> > gpiod_get_named(dev, "name"); use "name-gpios" with index 0
->>
->> Apart from the loosy naming practices which we sometimes see (and
->> which should be caught during review), do you have something against
->> requiring a name for all new GPIO bindings, i.e. for ensuring that all
->> new properties are "name-gpio" and forbidding "gpios"?
->
-> Most other subsystems don't require a name, and traditionally we only
-> had anonymous indexed properties for a lot of things (registers,
-> interrupts, ...).
->
-> I still like the idea of using anonymous references for simple things,
-> but if you and Linus feel that it's better to mandate names from now on,
-> I won't complain.
+On Mon, Oct 27, 2014 at 05:48:17PM -0500, Thor Thayer wrote:
+> Would the L2 cache and OCRAM specific functions also be in altera_edac.c?
+> Each of these EDAC pieces is independent and can be compiled in without the
+> others. I've read that the use of #ifdef's is discouraged and having
+> separate files in the Makefile solves that.
 
-I think names are nice since it appears in <debugfs>/gpio and makes
-device tree using platforms easier to debug.
+Let's keep it simple and put all the altera bits in one file for now. If
+we need to split some of the functionality out, we can always do that
+later.
 
-Moving things into DT already made information hard to follow at
-times...
+Thanks.
 
-In difference from other things like IRQs or DMAs, GPIOs very often
-have a very specific function, does not repeat itself, and thus can
-be given a suitable name.
+-- 
+Regards/Gruss,
+    Boris.
 
-Yours,
-Linus Walleij
+Sent from a fat crate under my desk. Formatting is fine.
+--
