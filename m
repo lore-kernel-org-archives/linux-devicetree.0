@@ -1,38 +1,171 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/3] ARM: dts: mt8135: Add Reset Controller for MediaTek SoC
-Date: Thu, 30 Oct 2014 11:11:09 +0100
-Message-ID: <2325869.W8YWKQm70A@wuerfel>
-References: <1414638733-10080-1-git-send-email-flora.fu@mediatek.com> <1414638733-10080-4-git-send-email-flora.fu@mediatek.com> <1414659745.3069.2.camel@pengutronix.de>
+From: Huang Rui <ray.huang@amd.com>
+Subject: [PATCH v4 20/20] usb: dwc3: make HIRD threshold configurable
+Date: Thu, 30 Oct 2014 18:08:45 +0800
+Message-ID: <1414663725-2195-21-git-send-email-ray.huang@amd.com>
+References: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414659745.3069.2.camel@pengutronix.de>
+In-Reply-To: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: flora.fu@mediatek.com, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>
+To: Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Huang Rui <ray.huang@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 30 October 2014 10:02:25 Philipp Zabel wrote:
-> Since the reset controller driver accesses registers solely through the
-> syscon regmap, I'd prefer to keep with the device tree control graph
-> concept and make the reset-controller nodes children of the syscon
-> nodes. I've brought this up before: https://lkml.org/lkml/2014/5/27/422,
-> and I think this is another case where child node support for syscon
-> makes sense:
-> 
->         infracfg: syscon@10001000 {
->                 compatible = "mediatek,mt8135-infracfg", "syscon";
->                 reg = <0 0x10001000 0 0x1000>;
->                 
->                 infrarst: reset-controller@30 {
->                         #reset-cells = <1>;
->                         compatible = "mediatek,mt8135-infracfg-reset", "mediatek,reset";
->                         reg = <0x30 0x8>;
->                 };
->         };
-> 
+HIRD threshold should be configurable by different platforms.
 
-Yes, this looks much better to me too.
+>From DesignWare databook:
+When HIRD_Threshold[4] is set to 1b1 and HIRD value is greater than or
+equal to the value in HIRD_Threshold[3:0], dwc3 asserts output signals
+utmi_l1_suspend_n to put PHY into Deep Low-Power mode in L1.
 
-	Arnd
+When HIRD_Threshold[4] is set to 1b0 or the HIRD value is less than
+HIRD_Threshold[3:0], dwc3 asserts output signals utmi_sleep_n on L1.
+
+Signed-off-by: Huang Rui <ray.huang@amd.com>
+---
+ Documentation/devicetree/bindings/usb/dwc3.txt |  3 +++
+ drivers/usb/dwc3/core.c                        | 17 +++++++++++++++++
+ drivers/usb/dwc3/core.h                        |  6 ++++++
+ drivers/usb/dwc3/gadget.c                      |  6 +-----
+ drivers/usb/dwc3/platform_data.h               |  3 +++
+ 5 files changed, 30 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index feaf2c8..5b99755 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -34,6 +34,9 @@ Optional properties:
+ 			LTSSM during USB3 Compliance mode.
+  - snps,dis_u3_susphy_quirk: when set core will disable USB3 suspend phy.
+  - snps,dis_u2_susphy_quirk: when set core will disable USB2 suspend phy.
++ - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
++			utmi_l1_suspend_n, false when asserts utmi_sleep_n
++ - snps,hird-threshold: HIRD threshold
+ 
+ This is usually a subnode to DWC3 glue to which it is connected.
+ 
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index a28ed1c..f4172ab 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -729,6 +729,7 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	struct dwc3		*dwc;
+ 	u8			lpm_nyet_threshold;
+ 	u8			tx_de_emphasis;
++	u8			hird_threshold;
+ 
+ 	int			ret;
+ 
+@@ -790,12 +791,22 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	/* default to -3.5dB de-emphasis */
+ 	tx_de_emphasis = 1;
+ 
++	/*
++	 * defalut to assert utmi_sleep_n and use maximum allowed HIRD
++	 * threshold value of 0b1100
++	 */
++	hird_threshold = 12;
++
+ 	if (node) {
+ 		dwc->maximum_speed = of_usb_get_maximum_speed(node);
+ 		dwc->has_lpm_erratum = of_property_read_bool(node,
+ 				"snps,has-lpm-erratum");
+ 		of_property_read_u8(node, "snps,lpm-nyet-threshold",
+ 				&lpm_nyet_threshold);
++		dwc->is_utmi_l1_suspend = of_property_read_bool(node,
++				"snps,is-utmi-l1-suspend");
++		of_property_read_u8(node, "snps,hird-threshold",
++				&hird_threshold);
+ 
+ 		dwc->needs_fifo_resize = of_property_read_bool(node,
+ 				"tx-fifo-resize");
+@@ -831,6 +842,9 @@ static int dwc3_probe(struct platform_device *pdev)
+ 		dwc->has_lpm_erratum = pdata->has_lpm_erratum;
+ 		if (pdata->lpm_nyet_threshold)
+ 			lpm_nyet_threshold = pdata->lpm_nyet_threshold;
++		dwc->is_utmi_l1_suspend = pdata->is_utmi_l1_suspend;
++		if (pdata->hird_threshold)
++			hird_threshold = pdata->hird_threshold;
+ 
+ 		dwc->needs_fifo_resize = pdata->tx_fifo_resize;
+ 		dwc->dr_mode = pdata->dr_mode;
+@@ -858,6 +872,9 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
+ 	dwc->tx_de_emphasis = tx_de_emphasis;
+ 
++	dwc->hird_threshold = hird_threshold
++		| (dwc->is_utmi_l1_suspend << 4);
++
+ 	ret = dwc3_core_get_phy(dwc);
+ 	if (ret)
+ 		return ret;
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 8b6c308..2c90139 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -675,12 +675,16 @@ struct dwc3_scratchpad_array {
+  * @test_mode: true when we're entering a USB test mode
+  * @test_mode_nr: test feature selector
+  * @lpm_nyet_threshold: LPM NYET response threshold
++ * @hird_threshold: HIRD threshold
+  * @delayed_status: true when gadget driver asks for delayed status
+  * @ep0_bounced: true when we used bounce buffer
+  * @ep0_expect_in: true when we expect a DATA IN transfer
+  * @has_hibernation: true when dwc3 was configured with Hibernation
+  * @has_lpm_erratum: true when core was configured with LPM Erratum. Note that
+  *			there's now way for software to detect this in runtime.
++ * @is_utmi_l1_suspend: the core asserts output signal
++ * 	0	- utmi_sleep_n
++ * 	1	- utmi_l1_suspend_n
+  * @is_selfpowered: true when we are selfpowered
+  * @is_fpga: true when we are using the FPGA board
+  * @needs_fifo_resize: not all users might want fifo resizing, flag it
+@@ -797,12 +801,14 @@ struct dwc3 {
+ 	u8			test_mode;
+ 	u8			test_mode_nr;
+ 	u8			lpm_nyet_threshold;
++	u8			hird_threshold;
+ 
+ 	unsigned		delayed_status:1;
+ 	unsigned		ep0_bounced:1;
+ 	unsigned		ep0_expect_in:1;
+ 	unsigned		has_hibernation:1;
+ 	unsigned		has_lpm_erratum:1;
++	unsigned		is_utmi_l1_suspend:1;
+ 	unsigned		is_selfpowered:1;
+ 	unsigned		is_fpga:1;
+ 	unsigned		needs_fifo_resize:1;
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 2c0d19a4..303bb67 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2291,11 +2291,7 @@ static void dwc3_gadget_conndone_interrupt(struct dwc3 *dwc)
+ 		reg = dwc3_readl(dwc->regs, DWC3_DCTL);
+ 		reg &= ~(DWC3_DCTL_HIRD_THRES_MASK | DWC3_DCTL_L1_HIBER_EN);
+ 
+-		/*
+-		 * TODO: This should be configurable. For now using
+-		 * maximum allowed HIRD threshold value of 0b1100
+-		 */
+-		reg |= DWC3_DCTL_HIRD_THRES(12);
++		reg |= DWC3_DCTL_HIRD_THRES(dwc->hird_threshold);
+ 
+ 		/*
+ 		 * When dwc3 revisions >= 2.40a, LPM Erratum is enabled and
+diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform_data.h
+index 245300b..a3a3b6d 100644
+--- a/drivers/usb/dwc3/platform_data.h
++++ b/drivers/usb/dwc3/platform_data.h
+@@ -25,6 +25,9 @@ struct dwc3_platform_data {
+ 	enum usb_dr_mode dr_mode;
+ 	bool tx_fifo_resize;
+ 
++	unsigned is_utmi_l1_suspend:1;
++	u8 hird_threshold;
++
+ 	u8 lpm_nyet_threshold;
+ 
+ 	unsigned disable_scramble_quirk:1;
+-- 
+1.9.1
