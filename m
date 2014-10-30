@@ -1,79 +1,100 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v4 14/20] usb: dwc3: add Tx de-emphasis quirk
-Date: Thu, 30 Oct 2014 11:42:10 -0500
-Message-ID: <20141030164210.GM10130@saruman>
-References: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
- <1414663725-2195-15-git-send-email-ray.huang@amd.com>
-Reply-To: <balbi@ti.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 1/5] phy: sun4i: add support for USB phy0
+Date: Thu, 30 Oct 2014 17:40:15 +0100
+Message-ID: <20141030164015.GN21251@lukather>
+References: <cover.1414444953.git.rbyshko@gmail.com>
+ <668c1b5541fc0175957573bd5f8d40dd2eaccae1.1414444953.git.rbyshko@gmail.com>
+ <20141028214756.GF9255@lukather>
+ <CAGb2v65gSq+kMnVZMAvXkF6+ARiFE1qRpQ9SFDThfXCg_kERsQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kK1uqZGE6pgsGNyR"
+	protocol="application/pgp-signature"; boundary="Qa0ccP92Gc0Ko3P8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1414663725-2195-15-git-send-email-ray.huang@amd.com>
+In-Reply-To: <CAGb2v65gSq+kMnVZMAvXkF6+ARiFE1qRpQ9SFDThfXCg_kERsQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Huang Rui <ray.huang@amd.com>
-Cc: Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Roman Byshko <rbyshko@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---kK1uqZGE6pgsGNyR
+
+--Qa0ccP92Gc0Ko3P8
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 30, 2014 at 06:08:39PM +0800, Huang Rui wrote:
-> This patch adds Tx de-emphasis quirk, and the Tx de-emphasis value is
-> configurable according to PIPE3 specification.
->=20
-> Value		Description
-> 0		-6dB de-emphasis
-> 1		-3.5dB de-emphasis
-> 2		No de-emphasis
-> 3		Reserved
->=20
-> It can be configured on DT or platform data.
->=20
-> Signed-off-by: Huang Rui <ray.huang@amd.com>
+Hi,
 
-doesn't apply:
+On Wed, Oct 29, 2014 at 10:24:12AM +0800, Chen-Yu Tsai wrote:
+> On Wed, Oct 29, 2014 at 5:47 AM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> > Hi Roman,
+> >
+> > Thanks for your patches
+> >
+> > On Mon, Oct 27, 2014 at 10:43:01PM +0100, Roman Byshko wrote:
+> >> The driver for sun4i USB phys currently supports
+> >> only phy1 and phy2 which are used for USB host
+> >> controllers. This patch adds support for USB phy0,
+> >> which is used by the musb hdrc USB controller.
+> >
+> > Like Andreas already pointed out, your signed-off-by is missing from
+> > all your patches.
+> >
+> >> ---
+> >>  drivers/phy/phy-sun4i-usb.c | 9 ++++++---
+> >>  1 file changed, 6 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+> >> index 0baf5ef..a24728b 100644
+> >> --- a/drivers/phy/phy-sun4i-usb.c
+> >> +++ b/drivers/phy/phy-sun4i-usb.c
+> >> @@ -157,6 +157,10 @@ static int sun4i_usb_phy_init(struct phy *_phy)
+> >>               return ret;
+> >>       }
+> >>
+> >> +     /* Regulation 45 ohms */
+> >> +     if (phy->index =3D=3D 0)
+> >> +             sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
+> >
+> > What is this code supposed to do?
+> >
+> > Some define for this bit and/or a better comment would be nice.
+>=20
+> From Allwinner's sources: "Enable/Disable USB res45 Calibration"
+>=20
+> which I think refers to the internal 45 ohm termination resistors
+> for the USB data lines. But I'm not an expert on USB hardware.
 
-checking file Documentation/devicetree/bindings/usb/dwc3.txt
-checking file drivers/usb/dwc3/core.c
-Hunk #2 succeeded at 718 (offset -2 lines).
-Hunk #3 succeeded at 777 (offset -2 lines).
-Hunk #4 succeeded at 807 (offset -2 lines).
-Hunk #5 succeeded at 829 (offset -2 lines).
-Hunk #6 succeeded at 840 (offset -2 lines).
-checking file drivers/usb/dwc3/core.h
-Hunk #2 FAILED at 697.
-1 out of 3 hunks FAILED
-checking file drivers/usb/dwc3/platform_data.h
+That would make a great comment ;)
 
-please rebase on testing/next
+Maxime
 
 --=20
-balbi
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
---kK1uqZGE6pgsGNyR
+--Qa0ccP92Gc0Ko3P8
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJUUmpiAAoJEIaOsuA1yqREJQEP/R+XsYU79Wlt3oZgaoBt76uB
-wkfYTqMEwT+Dqks40b0qKBZdCvrKdj9GmqyN2BD2ou2KRuqZkvBwKKDbQIb6BWXz
-5x5ylIgg+3jJu7DmWNyV9afjBPX3pRy/Eex38zSUL9BMDn84m4kZLZFb/oFQQiR6
-aW3W1sJ4pOcW+TzyfUGY+8JaY2yTYd+67p/e1gNtnVIy8/+MTq9824vsUG8fMrqI
-E13zlEmpyFX/mne2iwVrU6Q1PCtYErUTPdRuOCl+EnwLHADMXPtRNBE6ulNKZ8Un
-iVvZTGX4V2ymLuuxJBmRHKE535Gxy3mJ2iKc7kn82DQCNaXGXhxCH/UwhtEprw5X
-BlRldJAqvyYn1I3hPph0ZxkJdrHYt5FuHS3KRQh446CyNBfP5I9EjpTtY6ftszc2
-phBGMUUQnI8TyiABjCp6E7j9+SqFEw7yom2lSJIRCuNICO8KTjm78ZtL8W9Fb1lW
-hLjAYFo0s+r/03WcAsxFWvJNP57ihCu7AN7lQXD9Z13j52izMHGFHQmsg2ejHj8N
-vHW3kneMQ/tyW7XF1QFwkdvi2BonoEfcuXspumQkHs6UVdUUKXZrkp7liMWqS89b
-DmlefY+Y0sPU9aeoJKRoAaj5S8LfbSl2oiPlJo4bALeTTveABbxFYCA3G8PCDZW9
-FC4tAH2hPths+v+iXjdW
-=x5G4
+iQIcBAEBAgAGBQJUUmnvAAoJEBx+YmzsjxAg7B0P/RiC0pJ3lqLrjcltetVFDkAL
+h6wIgkmi4lRi0z5n+zpCMuAR2rW/kMEMTuwDKO6lLEajdq+9ISho/Rh932ih3aLt
+Bf/GE3HWa6McV6eGiGMyDKz9pvsr/HxkSqfq276PGhPE1UDDBp0FIBDDkq/bwwYQ
+w5H+BdjIyGLn7rFIStZz9BEEItNlezS34Niutp9oTulyH0bdF2hLlINaClhWtLY+
+gS2ZerKCpUq7tZShEv6Vv0wr1MyLpGEApRfFLH0lw1lroTLwO1YTFUqROBGfoA8u
+PN0D1eAQ2xrdIjsryp3ioCPN6K5QEX3MMrITICXI+78lPGAqXtjVJU+jYjHuE/gf
+jPaYiTx2Ykbfiuxlf1sMlorypmsBTOa46HX4t3uU/tuY0V9g6uatXRFsSvIWRxWc
+LN5j735Dmb9tFWxW+d9/Wv28vg30NhU0kODuY1pD9CaJkjGC2qTEMDVNWqdM5XLm
+KaMw5vPDx0JO2+PGoWFKSwpauWPdXK2BPVjitUfm4L5k19zqoQjqmWY2mvfWlDsv
+3UFzjmZ6viR2CA8R26HMv1sAA8eNIx/3LIMilXswulWroVsD0CPDzKfSs1x82M5v
+8yRjTJkXCVJ/PkK1REIcnn6SY5yagFhs1yHNmKBMN1wr6tlUnnpTBtYzzHijFsak
+GsaXbCeeDtvmWYU/cEW+
+=O5Zv
 -----END PGP SIGNATURE-----
 
---kK1uqZGE6pgsGNyR--
+--Qa0ccP92Gc0Ko3P8--
