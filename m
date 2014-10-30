@@ -1,70 +1,62 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2 00/15] genirq endian fixes; bcm7120/brcmstb IRQ updates
-Date: Wed, 29 Oct 2014 19:17:53 -0700
-Message-ID: <1414635488-14137-1-git-send-email-cernekee@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, lethal-M7jkjyW5wf5g9hUCZPvPmw@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+From: Kevin Cernekee <cernekee@gmail.com>
+Subject: [PATCH V2 03/15] genirq: Generic chip: Move irq_reg_{readl,writel} accessors into generic-chip.c
+Date: Wed, 29 Oct 2014 19:17:56 -0700
+Message-ID: <1414635488-14137-4-git-send-email-cernekee@gmail.com>
+References: <1414635488-14137-1-git-send-email-cernekee@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414635488-14137-1-git-send-email-cernekee@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arnd@arndb.de, f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org, lethal@linux-sh.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-I don't know if this will make everyone 100% happy but hopefully we're
-inching slightly closer to a solution...
+This allows us to implement per-irqchip behavior when necessary, instead
+of hardcoding the behavior for all irqchip drivers at compile time.
 
-V1->V2:
+Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+---
+ include/linux/irq.h       |  7 -------
+ kernel/irq/generic-chip.c | 10 ++++++++++
+ 2 files changed, 10 insertions(+), 7 deletions(-)
 
- - Rework big endian support per the discussion on the list
- - Get rid of the global compile-time irq_reg_{readl,writel} accessors
-   and make them private to generic-chip.c, so that on multiplatform
-   kernels, different irqchip drivers can specify different MMIO behavior
- - Rebase on Linus's head of tree
-
-Patch 06/15 still feels a bit like premature optimization to me.  Perhaps
-we can drop it if nobody reports a measurable performance advantage in
-any known configuration?
-
-
-Kevin Cernekee (15):
-  irqchip: Replace irq_reg_{readl,writel} with {readl,writel}
-  sh: Eliminate unused irq_reg_{readl,writel} accessors
-  genirq: Generic chip: Move irq_reg_{readl,writel} accessors into
-    generic-chip.c
-  genirq: Generic chip: Change irq_reg_{readl,writel} arguments
-  genirq: Generic chip: Add big endian I/O accessors
-  genirq: Generic chip: Optimize for fixed-endian systems
-  irqchip: brcmstb-l2: Eliminate dependency on ARM code
-  irqchip: bcm7120-l2: Eliminate bad IRQ check
-  irqchip: Remove ARM dependency for bcm7120-l2 and brcmstb-l2
-  irqchip: bcm7120-l2: Make sure all register accesses use base+offset
-  irqchip: bcm7120-l2: Fix missing nibble in gc->unused mask
-  irqchip: bcm7120-l2: Use gc->mask_cache to simplify suspend/resume
-    functions
-  irqchip: bcm7120-l2: Extend driver to support 64+ bit controllers
-  irqchip: Decouple bcm7120-l2 from brcmstb-l2
-  irqchip: bcm7120-l2: Enable big endian register accesses on BE kernels
-
- .../interrupt-controller/brcm,bcm7120-l2-intc.txt  |  26 +++-
- arch/arm/mach-bcm/Kconfig                          |   1 +
- arch/sh/boards/mach-se/7343/irq.c                  |   3 -
- arch/sh/boards/mach-se/7722/irq.c                  |   3 -
- drivers/irqchip/Kconfig                            |   8 +-
- drivers/irqchip/Makefile                           |   4 +-
- drivers/irqchip/irq-atmel-aic.c                    |  40 ++---
- drivers/irqchip/irq-atmel-aic5.c                   |  63 ++++----
- drivers/irqchip/irq-bcm7120-l2.c                   | 169 +++++++++++++--------
- drivers/irqchip/irq-brcmstb-l2.c                   |   7 +-
- drivers/irqchip/irq-sunxi-nmi.c                    |   4 +-
- drivers/irqchip/irq-tb10x.c                        |   4 +-
- include/linux/irq.h                                |   8 +-
- kernel/irq/Kconfig                                 |   5 +
- kernel/irq/Makefile                                |   1 +
- kernel/irq/generic-chip.c                          |  51 +++++--
- 16 files changed, 237 insertions(+), 160 deletions(-)
-
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 03f48d9..8049e93 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -639,13 +639,6 @@ void arch_teardown_hwirq(unsigned int irq);
+ void irq_init_desc(unsigned int irq);
+ #endif
+ 
+-#ifndef irq_reg_writel
+-# define irq_reg_writel(val, addr)	writel(val, addr)
+-#endif
+-#ifndef irq_reg_readl
+-# define irq_reg_readl(addr)		readl(addr)
+-#endif
+-
+ /**
+  * struct irq_chip_regs - register offsets for struct irq_gci
+  * @enable:	Enable register offset to reg_base
+diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
+index cf80e7b..380595f 100644
+--- a/kernel/irq/generic-chip.c
++++ b/kernel/irq/generic-chip.c
+@@ -17,6 +17,16 @@
+ static LIST_HEAD(gc_list);
+ static DEFINE_RAW_SPINLOCK(gc_lock);
+ 
++static void irq_reg_writel(u32 val, void __iomem *addr)
++{
++	writel(val, addr);
++}
++
++static u32 irq_reg_readl(void __iomem *addr)
++{
++	return readl(addr);
++}
++
+ /**
+  * irq_gc_noop - NOOP function
+  * @d: irq_data
 -- 
 2.1.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
