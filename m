@@ -1,31 +1,67 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v1 1/2] dtb: xgene: fix: Disable 10GbE and SGMII based 1GbE by default
-Date: Thu, 30 Oct 2014 11:13:49 +0100
-Message-ID: <1991367.DGHysZpQVP@wuerfel>
-References: <1414630580-24640-1-git-send-email-isubramanian@apm.com> <1414630580-24640-2-git-send-email-isubramanian@apm.com>
+From: Huang Rui <ray.huang@amd.com>
+Subject: [PATCH v4 13/20] usb: dwc3: set SUSPHY bit for all cores
+Date: Thu, 30 Oct 2014 18:08:38 +0800
+Message-ID: <1414663725-2195-14-git-send-email-ray.huang@amd.com>
+References: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1414630580-24640-2-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Iyappan Subramanian <isubramanian@apm.com>, davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org, kchudgar@apm.com, patches@apm.com
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Huang Rui <ray.huang@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 29 October 2014 17:56:19 Iyappan Subramanian wrote:
-> @@ -621,7 +621,7 @@
->                         };
->                 };
->  
-> -               sgenet0: ethernet@1f210000 {
-> +               sgenet0: sgenet@1f210000 {
->                         compatible = "apm,xgene-enet";
->                         status = "disabled";
->                         reg = <0x0 0x1f210000 0x0 0x10000>,
-> 
+It is recommended to set USB3 and USB2 SUSPHY bits to '1' after the core
+initialization is completed above the dwc3 revision 1.94a.
 
-This looks like you accidentally reverted a bug fix made earlier.
-Network devices should always have the name 'ethernet@...'.
+Signed-off-by: Huang Rui <ray.huang@amd.com>
+Signed-off-by: Felipe Balbi <balbi@ti.com>
+---
+ drivers/usb/dwc3/core.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-	Arnd
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 11b0ab08..e02c3b0 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -374,6 +374,15 @@ static void dwc3_phy_setup(struct dwc3 *dwc)
+ 
+ 	reg = dwc3_readl(dwc->regs, DWC3_GUSB3PIPECTL(0));
+ 
++	/*
++	 * Above 1.94a, it is recommended to set DWC3_GUSB3PIPECTL_SUSPHY
++	 * to '0' during coreConsultant configuration. So default value
++	 * will be '0' when the core is reset. Application needs to set it
++	 * to '1' after the core initialization is completed.
++	 */
++	if (dwc->revision > DWC3_REVISION_194A)
++		reg |= DWC3_GUSB3PIPECTL_SUSPHY;
++
+ 	if (dwc->u2ss_inp3_quirk)
+ 		reg |= DWC3_GUSB3PIPECTL_U2SSINP3OK;
+ 
+@@ -395,6 +404,21 @@ static void dwc3_phy_setup(struct dwc3 *dwc)
+ 	dwc3_writel(dwc->regs, DWC3_GUSB3PIPECTL(0), reg);
+ 
+ 	mdelay(100);
++
++	reg = dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
++
++	/*
++	 * Above 1.94a, it is recommended to set DWC3_GUSB2PHYCFG_SUSPHY to
++	 * '0' during coreConsultant configuration. So default value will
++	 * be '0' when the core is reset. Application needs to set it to
++	 * '1' after the core initialization is completed.
++	 */
++	if (dwc->revision > DWC3_REVISION_194A)
++		reg |= DWC3_GUSB2PHYCFG_SUSPHY;
++
++	dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
++
++	mdelay(100);
+ }
+ 
+ /**
+-- 
+1.9.1
