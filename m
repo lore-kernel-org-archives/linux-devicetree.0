@@ -1,115 +1,90 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH v3 1/5] phy: berlin-sata: Move PHY_BASE into private data struct
-Date: Thu, 30 Oct 2014 11:21:24 +0100
-Message-ID: <1414664488-5911-2-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/5] Berlin BG2 AHCI and SATA PHY
+Date: Thu, 30 Oct 2014 11:21:23 +0100
+Message-ID: <1414664488-5911-1-git-send-email-sebastian.hesselbarth@gmail.com>
 References: <1413882477-27922-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1414664488-5911-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414664488-5911-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413882477-27922-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Currently, Berlin SATA PHY driver assumes PHY_BASE address being
-constant. While this PHY_BASE is correct for BG2Q, older BG2 PHY_BASE
-is different. Prepare the driver for BG2 support by moving the phy_base
-into private driver data.
+This patch set is v3 of the catch up with latest Berlin improvements
+provided by Antoine - in particular SATA PHY support and AHCI generic
+for Berlin BG2.
 
-Acked-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Marvell BSP code for BG2 suggests more differences between the two
+PHY revisions found on BG2 and BG2Q, but the only important one seems
+to be the PHY_BASE used in AHCI vendor-specific registers. I also
+confirmed that power_off does indeed power off the PHY on BG2, too
+(It wasn't very clear in BSP code).
+
+Anyway, I have tested this on BG2-based Sony NSZ-GS7 and attached
+SATA HDD is successfully detected and partitions are displayed.
+
+This patch set is based on v3.18-rc1. As usual a branch based on
+v3.18-rc1 can be found at
+
+git://git.infradead.org/users/hesselba/linux-berlin.git devel/bg2-sata-=
+v3
+
+Compared to v1, there is only a minor change that removes an unrequired
+status =3D "disabled" property from BG2 SATA node.
+Compared to v2, BG2 PHY still uses its own compatible but the driver no=
+w
+uses of_device_is_compatible instead of of_device_id.data for setting t=
+he
+base address. This is the outcome of some discussion with Kishon and Fe=
+lipe,
+where we (hopefully) agreed on this approach. It will allow future SoC-
+specific PHY setup routines if required.
+
+Patches 1-3 should go through Kishon's PHY tree, I pick up DT patches 4
+and 5.
+
+Patch 1 prepares phy-berlin-sata to support different PHY_BASE addresse=
+s
+by moving the constant to driver private data.
+
+Patches 2 and 3 add a new compatible to driver and DT documentation tha=
+t
+reflects the differences between BG2Q and BG2 SATA PHY.
+
+Patches 4 and 5 finally add DT nodes to both Berlin2 SoC dtsi and Sony
+NSZ-GS7 board DT file. SATA plug on NSZ-GS7 is unpopulated but can be
+very easily equipped with SATA receptable and some 0402 caps. I decided
+to enable SATA by default although not all users may populate it.
+
+Sebastian Hesselbarth (5):
+  phy: berlin-sata: Move PHY_BASE into private data struct
+  phy: berlin-sata: Add support for BG2 SATA PHY
+  phy: berlin-sata: Document BG2 compatible
+  ARM: berlin: Add AHCI and SATA PHY nodes to BG2
+  ARM: berlin: Enable SATA on Sony NSZ-GS7
+
+ .../devicetree/bindings/phy/berlin-sata-phy.txt    |  4 ++-
+ arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts         |  7 ++++
+ arch/arm/boot/dts/berlin2.dtsi                     | 39 ++++++++++++++=
+++++++++
+ drivers/phy/phy-berlin-sata.c                      | 29 +++++++++++---=
+--
+ 4 files changed, 69 insertions(+), 10 deletions(-)
+
 ---
-Changelog:
-v1->v2:
-- None
-v2->v3:
-- Do not use of_device_id.data for phy_base (Suggested by
-  Kishon Vijay Abraham I)
-
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: "Antoine T=C3=A9nart" <antoine.tenart@free-electrons.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/phy/phy-berlin-sata.c | 24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/phy/phy-berlin-sata.c b/drivers/phy/phy-berlin-sat=
-a.c
-index 69ced52d72aa..cdb46d1203a4 100644
---- a/drivers/phy/phy-berlin-sata.c
-+++ b/drivers/phy/phy-berlin-sata.c
-@@ -30,7 +30,7 @@
- #define MBUS_WRITE_REQUEST_SIZE_128	(BIT(2) << 16)
- #define MBUS_READ_REQUEST_SIZE_128	(BIT(2) << 19)
-=20
--#define PHY_BASE		0x200
-+#define BG2Q_PHY_BASE		0x200
-=20
- /* register 0x01 */
- #define REF_FREF_SEL_25		BIT(0)
-@@ -61,15 +61,16 @@ struct phy_berlin_priv {
- 	struct clk		*clk;
- 	struct phy_berlin_desc	**phys;
- 	unsigned		nphys;
-+	u32			phy_base;
- };
-=20
--static inline void phy_berlin_sata_reg_setbits(void __iomem *ctrl_reg,=
- u32 reg,
--					       u32 mask, u32 val)
-+static inline void phy_berlin_sata_reg_setbits(void __iomem *ctrl_reg,
-+			       u32 phy_base, u32 reg, u32 mask, u32 val)
- {
- 	u32 regval;
-=20
- 	/* select register */
--	writel(PHY_BASE + reg, ctrl_reg + PORT_VSR_ADDR);
-+	writel(phy_base + reg, ctrl_reg + PORT_VSR_ADDR);
-=20
- 	/* set bits */
- 	regval =3D readl(ctrl_reg + PORT_VSR_DATA);
-@@ -103,17 +104,20 @@ static int phy_berlin_sata_power_on(struct phy *p=
-hy)
- 	writel(regval, priv->base + HOST_VSA_DATA);
-=20
- 	/* set PHY mode and ref freq to 25 MHz */
--	phy_berlin_sata_reg_setbits(ctrl_reg, 0x1, 0xff,
--				    REF_FREF_SEL_25 | PHY_MODE_SATA);
-+	phy_berlin_sata_reg_setbits(ctrl_reg, priv->phy_base, 0x01,
-+				    0x00ff, REF_FREF_SEL_25 | PHY_MODE_SATA);
-=20
- 	/* set PHY up to 6 Gbps */
--	phy_berlin_sata_reg_setbits(ctrl_reg, 0x25, 0xc00, PHY_GEN_MAX_6_0);
-+	phy_berlin_sata_reg_setbits(ctrl_reg, priv->phy_base, 0x25,
-+				    0x0c00, PHY_GEN_MAX_6_0);
-=20
- 	/* set 40 bits width */
--	phy_berlin_sata_reg_setbits(ctrl_reg, 0x23,  0xc00, DATA_BIT_WIDTH_40=
-);
-+	phy_berlin_sata_reg_setbits(ctrl_reg, priv->phy_base, 0x23,
-+				    0x0c00, DATA_BIT_WIDTH_40);
-=20
- 	/* use max pll rate */
--	phy_berlin_sata_reg_setbits(ctrl_reg, 0x2, 0x0, USE_MAX_PLL_RATE);
-+	phy_berlin_sata_reg_setbits(ctrl_reg, priv->phy_base, 0x02,
-+				    0x0000, USE_MAX_PLL_RATE);
-=20
- 	/* set Gen3 controller speed */
- 	regval =3D readl(ctrl_reg + PORT_SCR_CTL);
-@@ -218,6 +222,8 @@ static int phy_berlin_sata_probe(struct platform_de=
-vice *pdev)
- 	if (!priv->phys)
- 		return -ENOMEM;
-=20
-+	priv->phy_base =3D BG2Q_PHY_BASE;
-+
- 	dev_set_drvdata(dev, priv);
- 	spin_lock_init(&priv->lock);
-=20
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: "Antoine T=C3=A9nart" <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 --=20
 2.1.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
