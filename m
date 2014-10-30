@@ -1,29 +1,36 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 10/11] irqchip: bcm7120-l2: Extend driver to support 64+ bit controllers
-Date: Thu, 30 Oct 2014 10:10:03 +0100
-Message-ID: <1819614.RKinL4RR5c@wuerfel>
-References: <1414555138-6500-1-git-send-email-cernekee@gmail.com> <7518897.LmfE2WsusV@wuerfel> <CAJiQ=7D+QhFjg7mR49KE2Lu1SC72djBLhbv4sC37tSTga+BVCQ@mail.gmail.com>
+Subject: Re: [PATCH V2 10/15] irqchip: bcm7120-l2: Make sure all register accesses use base+offset
+Date: Thu, 30 Oct 2014 10:12:30 +0100
+Message-ID: <2226258.WJYuvIUVPE@wuerfel>
+References: <1414635488-14137-1-git-send-email-cernekee@gmail.com> <1414635488-14137-11-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJiQ=7D+QhFjg7mR49KE2Lu1SC72djBLhbv4sC37tSTga+BVCQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1414635488-14137-11-git-send-email-cernekee@gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: Kevin Cernekee <cernekee@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>
+Cc: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org, lethal@linux-sh.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 29 October 2014 16:22:31 Kevin Cernekee wrote:
+On Wednesday 29 October 2014 19:18:03 Kevin Cernekee wrote:
+> A couple of accesses to IRQEN (base+0x00) just used "base" directly, so
+> they would break if IRQEN ever became nonzero.  Make sure that all
+> reads/writes specify the register offset constant.
 > 
-> This uses one domain per bcm7120-l2 DT node.  If the DT node defines
-> multiple enable/status pairs (i.e. >=64 IRQs) then the driver will
-> create a single IRQ domain with 2+ generic chips.
-> 
-> Multiple generic chips are required because the generic-chip code can
-> only handle one enable/status register pair per instance.
+> Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 > 
 
-Makes sense. Just make sure you have that explanation in the patch
-description.
+Now you no longer convert them this driver to use irq_reg_{readl,writel}, which
+breaks support for big-endian ARM.
 
 	Arnd
