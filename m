@@ -1,160 +1,63 @@
-From: Huang Rui <ray.huang@amd.com>
-Subject: [PATCH v4 14/20] usb: dwc3: add Tx de-emphasis quirk
-Date: Thu, 30 Oct 2014 18:08:39 +0800
-Message-ID: <1414663725-2195-15-git-send-email-ray.huang@amd.com>
-References: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/3] dt-bindings: Add Reset Controller for MediaTek SoC
+Date: Thu, 30 Oct 2014 11:10:20 +0100
+Message-ID: <2323181.epJX0Uxj7x@wuerfel>
+References: <1414638733-10080-1-git-send-email-flora.fu@mediatek.com>
+ <1414638733-10080-3-git-send-email-flora.fu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Huang Rui <ray.huang@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1414638733-10080-3-git-send-email-flora.fu@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: flora.fu@mediatek.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Tx de-emphasis quirk, and the Tx de-emphasis value is
-configurable according to PIPE3 specification.
+On Thursday 30 October 2014 11:12:12 flora.fu@mediatek.com wrote:
+> +
+> +example:
+> +       infrarst: reset-controller@10001030 {
+> +               #reset-cells = <1>;
+> +               compatible = "mediatek,mt8135-infracfg-reset", "mediatek,reset";
+> +               mediatek,syscon-reset = <&infracfg 0x30 0x8>;
+> +       };
 
-Value		Description
-0		-6dB de-emphasis
-1		-3.5dB de-emphasis
-2		No de-emphasis
-3		Reserved
+I think you need to change the 'unit-address' now, i.e. the @10001030
+value above no longer matches any reg property. You could just
+remove that part.
 
-It can be configured on DT or platform data.
+> +Specifying reset lines connected to IP modules
+> +==============================================
+> +
+> +The reset controller(mtk-reset) manages various reset sources. Those device nodes should
+> +specify the reset line on the rstc in their resets property, containing a phandle to the
+> +rstc device node and a RESET_INDEX specifying which module to reset, as described in 
+> +reset.txt.
+> +
+> +For MediaTek SoC, RESET_INDEX is reset bit defined in INFRACFG or PERICFG registers.
+> +
+> +example:
+> +pwrap: pwrap@1000f000 {
+> +       compatible = "mediatek,mt8135-pwrap";
+> +       reg = <0 0x1000f000 0 0x1000>,
+> +               <0 0x11017000 0 0x1000>;
+> +       reg-names = "pwrap-base",
+> +               "pwrap-bridge-base";
+> +       resets = <&infrarst 7>, <&perirst 34>;
+> +       reset-names = "infrarst", "perirst";
+> +       };
+> +};
+> 
 
-Signed-off-by: Huang Rui <ray.huang@amd.com>
----
- Documentation/devicetree/bindings/usb/dwc3.txt |  3 +++
- drivers/usb/dwc3/core.c                        | 17 +++++++++++++++++
- drivers/usb/dwc3/core.h                        | 11 +++++++++++
- drivers/usb/dwc3/platform_data.h               |  3 +++
- 4 files changed, 34 insertions(+)
+You have an extraneous '};' here.
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 38bac28..a9e54ae 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -29,6 +29,9 @@ Optional properties:
-  - snps,lfps_filter_quirk: when set core will filter LFPS reception.
-  - snps,rx_detect_poll_quirk: when set core will disable a 400us delay to start
- 			Polling LFPS after RX.Detect.
-+ - snps,tx_de_emphasis_quirk: when set core will set Tx de-emphasis value.
-+ - snps,tx_de_emphasis: the value driven to the PHY is controlled by the
-+			LTSSM during USB3 Compliance mode.
- 
- This is usually a subnode to DWC3 glue to which it is connected.
- 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index e02c3b0..b55fa5b 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -401,6 +401,9 @@ static void dwc3_phy_setup(struct dwc3 *dwc)
- 	if (dwc->rx_detect_poll_quirk)
- 		reg |= DWC3_GUSB3PIPECTL_RX_DETOPOLL;
- 
-+	if (dwc->tx_de_emphasis_quirk)
-+		reg |= DWC3_GUSB3PIPECTL_TX_DEEPH(dwc->tx_de_emphasis);
-+
- 	dwc3_writel(dwc->regs, DWC3_GUSB3PIPECTL(0), reg);
- 
- 	mdelay(100);
-@@ -717,6 +720,7 @@ static int dwc3_probe(struct platform_device *pdev)
- 	struct resource		*res;
- 	struct dwc3		*dwc;
- 	u8			lpm_nyet_threshold;
-+	u8			tx_de_emphasis;
- 
- 	int			ret;
- 
-@@ -775,6 +779,9 @@ static int dwc3_probe(struct platform_device *pdev)
- 	/* default to highest possible threshold */
- 	lpm_nyet_threshold = 0xff;
- 
-+	/* default to -3.5dB de-emphasis */
-+	tx_de_emphasis = 1;
-+
- 	if (node) {
- 		dwc->maximum_speed = of_usb_get_maximum_speed(node);
- 		dwc->has_lpm_erratum = of_property_read_bool(node,
-@@ -802,6 +809,11 @@ static int dwc3_probe(struct platform_device *pdev)
- 				"snps,lfps_filter_quirk");
- 		dwc->rx_detect_poll_quirk = of_property_read_bool(node,
- 				"snps,rx_detect_poll_quirk");
-+
-+		dwc->tx_de_emphasis_quirk = of_property_read_bool(node,
-+				"snps,tx_de_emphasis_quirk");
-+		of_property_read_u8(node, "snps,tx_de_emphasis",
-+				&tx_de_emphasis);
- 	} else if (pdata) {
- 		dwc->maximum_speed = pdata->maximum_speed;
- 		dwc->has_lpm_erratum = pdata->has_lpm_erratum;
-@@ -819,6 +831,10 @@ static int dwc3_probe(struct platform_device *pdev)
- 		dwc->del_phy_power_chg_quirk = pdata->del_phy_power_chg_quirk;
- 		dwc->lfps_filter_quirk = pdata->lfps_filter_quirk;
- 		dwc->rx_detect_poll_quirk = pdata->rx_detect_poll_quirk;
-+
-+		dwc->tx_de_emphasis_quirk = pdata->tx_de_emphasis_quirk;
-+		if (pdata->tx_de_emphasis)
-+			tx_de_emphasis = pdata->tx_de_emphasis;
- 	}
- 
- 	/* default to superspeed if no maximum_speed passed */
-@@ -826,6 +842,7 @@ static int dwc3_probe(struct platform_device *pdev)
- 		dwc->maximum_speed = USB_SPEED_SUPER;
- 
- 	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
-+	dwc->tx_de_emphasis = tx_de_emphasis;
- 
- 	ret = dwc3_core_get_phy(dwc);
- 	if (ret)
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index eeef976..469ee13 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -185,6 +185,8 @@
- #define DWC3_GUSB3PIPECTL_SUSPHY	(1 << 17)
- #define DWC3_GUSB3PIPECTL_LFPSFILT	(1 << 9)
- #define DWC3_GUSB3PIPECTL_RX_DETOPOLL	(1 << 8)
-+#define DWC3_GUSB3PIPECTL_TX_DEEPH_MASK	DWC3_GUSB3PIPECTL_TX_DEEPH(3)
-+#define DWC3_GUSB3PIPECTL_TX_DEEPH(n)	((n) << 1)
- 
- /* Global TX Fifo Size Register */
- #define DWC3_GTXFIFOSIZ_TXFDEF(n)	((n) & 0xffff)
-@@ -695,6 +697,12 @@ struct dwc3_scratchpad_array {
-  * @del_phy_power_chg_quirk: set if we enable delay phy power change quirk
-  * @lfps_filter_quirk: set if we enable LFPS filter quirk
-  * @rx_detect_poll_quirk: set if we enable rx_detect to polling LFPS quirk
-+ * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
-+ * @tx_de_emphasis: Tx de-emphasis value
-+ * 	0       - -6dB de-emphasis
-+ * 	1       - -3.5dB de-emphasis
-+ * 	2       - No de-emphasis
-+ * 	3       - Reserved
-  */
- struct dwc3 {
- 	struct usb_ctrlrequest	*ctrl_req;
-@@ -810,6 +818,9 @@ struct dwc3 {
- 	unsigned		del_phy_power_chg_quirk:1;
- 	unsigned		lfps_filter_quirk:1;
- 	unsigned		rx_detect_poll_quirk:1;
-+
-+	unsigned		tx_de_emphasis_quirk:1;
-+	unsigned		tx_de_emphasis:2;
- };
- 
- /* -------------------------------------------------------------------------- */
-diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform_data.h
-index 4a0f06b..e1ab900 100644
---- a/drivers/usb/dwc3/platform_data.h
-+++ b/drivers/usb/dwc3/platform_data.h
-@@ -36,4 +36,7 @@ struct dwc3_platform_data {
- 	unsigned del_phy_power_chg_quirk:1;
- 	unsigned lfps_filter_quirk:1;
- 	unsigned rx_detect_poll_quirk:1;
-+
-+	unsigned tx_de_emphasis_quirk:1;
-+	unsigned tx_de_emphasis:2;
- };
--- 
-1.9.1
+	Arnd
