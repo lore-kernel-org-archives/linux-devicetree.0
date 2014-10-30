@@ -1,44 +1,29 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 03/15] genirq: Generic chip: Move irq_reg_{readl,writel} accessors into generic-chip.c
-Date: Thu, 30 Oct 2014 10:06:51 +0100
-Message-ID: <6552163.gt4ABVyYlA@wuerfel>
-References: <1414635488-14137-1-git-send-email-cernekee@gmail.com> <1414635488-14137-4-git-send-email-cernekee@gmail.com> <alpine.DEB.2.11.1410300941290.5308@nanos>
+Subject: Re: [PATCH 10/11] irqchip: bcm7120-l2: Extend driver to support 64+ bit controllers
+Date: Thu, 30 Oct 2014 10:10:03 +0100
+Message-ID: <1819614.RKinL4RR5c@wuerfel>
+References: <1414555138-6500-1-git-send-email-cernekee@gmail.com> <7518897.LmfE2WsusV@wuerfel> <CAJiQ=7D+QhFjg7mR49KE2Lu1SC72djBLhbv4sC37tSTga+BVCQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.11.1410300941290.5308@nanos>
+In-Reply-To: <CAJiQ=7D+QhFjg7mR49KE2Lu1SC72djBLhbv4sC37tSTga+BVCQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Kevin Cernekee <cernekee@gmail.com>, f.fainelli@gmail.com, jason@lakedaemon.net, ralf@linux-mips.org, lethal@linux-sh.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
+To: Kevin Cernekee <cernekee@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Ralf Baechle <ralf@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 30 October 2014 09:43:02 Thomas Gleixner wrote:
-> > diff --git a/include/linux/irq.h b/include/linux/irq.h
-> > index 03f48d9..8049e93 100644
-> > --- a/include/linux/irq.h
-> > +++ b/include/linux/irq.h
-> > @@ -639,13 +639,6 @@ void arch_teardown_hwirq(unsigned int irq);
-> >  void irq_init_desc(unsigned int irq);
-> >  #endif
-> >  
-> > -#ifndef irq_reg_writel
-> > -# define irq_reg_writel(val, addr)   writel(val, addr)
-> > -#endif
-> > -#ifndef irq_reg_readl
-> > -# define irq_reg_readl(addr)         readl(addr)
-> > -#endif
-> > -
+On Wednesday 29 October 2014 16:22:31 Kevin Cernekee wrote:
 > 
-> Brilliant patch that.
+> This uses one domain per bcm7120-l2 DT node.  If the DT node defines
+> multiple enable/status pairs (i.e. >=64 IRQs) then the driver will
+> create a single IRQ domain with 2+ generic chips.
 > 
-> # git grep -l irq_reg_readl drivers/irqchip/
-> drivers/irqchip/irq-atmel-aic.c
-> drivers/irqchip/irq-atmel-aic5.c
-> drivers/irqchip/irq-sunxi-nmi.c
-> drivers/irqchip/irq-tb10x.c
+> Multiple generic chips are required because the generic-chip code can
+> only handle one enable/status register pair per instance.
+> 
 
-Patch 1/15 changes these all. I think it's still broken because patch 2/15
-is wrong, but it's not /that/ obviously broken.
+Makes sense. Just make sure you have that explanation in the patch
+description.
 
 	Arnd
