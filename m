@@ -1,84 +1,42 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 2/2] ARM: shmobile: lager: enable USB3.0
-Date: Thu, 30 Oct 2014 08:57:49 +0900
-Message-ID: <20141029235748.GD4599@verge.net.au>
-References: <1414147307-4584-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1414147307-4584-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CANqRtoQTBd23z4uVK-EB7JJuJ_K0GkV6ueVfnywShqe6Dx0T5w@mail.gmail.com>
- <5450CD42.9070101@renesas.com>
+Subject: Re: [PATCH 0/3] ARM: shmobile: sata_rcar updates
+Date: Thu, 30 Oct 2014 09:00:02 +0900
+Message-ID: <20141030000002.GE4599@verge.net.au>
+References: <1414591131-21771-1-git-send-email-geert+renesas@glider.be>
+ <20141029145151.GD25226@htj.dyndns.org>
+ <CAMuHMdXN-=6budQ=QViG0p3Cfdz1CSVyG6jUC0sRi+iis1nYMA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5450CD42.9070101@renesas.com>
+In-Reply-To: <CAMuHMdXN-=6budQ=QViG0p3Cfdz1CSVyG6jUC0sRi+iis1nYMA@mail.gmail.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-USB <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Tejun Heo <tj@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 29, 2014 at 08:19:30PM +0900, Yoshihiro Shimoda wrote:
-> Hi Magnus-san,
+On Wed, Oct 29, 2014 at 03:58:11PM +0100, Geert Uytterhoeven wrote:
+> Hi Tejun,
 > 
-> (2014/10/29 15:53), Magnus Damm wrote:
-> > On Fri, Oct 24, 2014 at 7:41 PM, Yoshihiro Shimoda
-> > <yoshihiro.shimoda.uh@renesas.com> wrote:
-> >> Since the PHY of USB3.0 and EHCI/OHCI ch2 are the same, the USB3.0
-> >> driver cannot use the phy driver when the EHCI/OHCI ch2 already used it:
+> On Wed, Oct 29, 2014 at 3:51 PM, Tejun Heo <tj@kernel.org> wrote:
+> > On Wed, Oct 29, 2014 at 02:58:48PM +0100, Geert Uytterhoeven wrote:
+> >> This patch series improves DT bindings documentation and usage for the
+> >> sata_rcar driver.
 > >>
-> >> phy phy-e6590100.usb-phy.3: phy init failed --> -16
-> >> xhci-hcd: probe of ee000000.usb failed with error -16
-> >>
-> >> If so, we have to unbind the EHCI/OHCI ch2, and then we have to bind
-> >> the USB3.0 driver as the following:
-> >>
-> >>   echo 0000:02:02.0 > /sys/bus/pci/drivers/ehci-pci/unbind
-> >>   echo 0000:02:01.0 > /sys/bus/pci/drivers/ohci-pci/unbind
-> >>   echo ee000000.usb > /sys/bus/platform/drivers/xhci-hcd/bind
-> >>
-> >> Note that there will be pinctrl-related error messages if both
-> >> internal PCI and USB3.0 are enabled but they should be just ignored:
-> >>
-> >> sh-pfc e6060000.pfc: pin GP_5_22 already requested by ee0d0000.pci; cannot claim for ee000000.usb
-> >> sh-pfc e6060000.pfc: pin-182 (ee000000.usb) status -22
-> >> ata1: SATA link down (SStatus 0 SControl 300)
-> >> sh-pfc e6060000.pfc: could not request pin 182 (GP_5_22) from group usb2  on device sh-pfc
-> >>
-> >> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> >> ---
-> >>  arch/arm/boot/dts/r8a7790-lager.dts |    6 ++++++
-> >>  1 file changed, 6 insertions(+)
-> > 
-> > Hi Shimoda-san,
-> > 
-> > Thanks for your patch. I'm fine with this patch as a first step, but
-> > I'm wondering what the reason is to prioritize USB 2.0 over USB 3.0?
+> >> The first patch was sent before by Valentine Barshak a while ago, but never
+> >> updated according to the review comments.
+> >
+> > I can route these through libata tree once Simon acks them.  Please
+> > let me know thorugh which tree these should be routed.
 > 
-> I investigated this reason today, and I found the reason is
-> request_firmware().  I checked the following environments:
-> 
->  Case 1: xHCI and EHCI and OHCI are enabled "=y" Case 2: xHCI and EHCI
->  and OHCI are loadable modules "=m" Case 3: xHCI and EHCI and OHCI are
->  enabled "=y", and CONFIG_EXTRA_FIRMWARE is enabled
-> 
-> The results are: - In "Case 1", EHCI and OHCI are probed first because
-> xHCI didn't find the firmware.  - In "Case 2" and "Case 3", xHCI is
-> probed first.
-> 
-> > Is the current order just based on device init order? In my mind the
-> > expected behavior would be to always use USB 3.0 if it happens to be
-> > available in the hardware, specified in the DTS, enabled by the kernel
-> > configuration and firmware is loadable. Or does some case exist where
-> > it is better to use USB 2.0? I suspect no.
-> 
-> I agree with you.
-> 
-> > So I wonder if you have any plans how to make USB 3.0 enabled by
-> > default on Lager?
-> 
-> It depends on a kernel config. I'm not sure of the shmobile_defconfig
-> strategy.  But, in my opinion, one of a solution is kernel modules (this
-> means the "Case 2".)
+> I think the first two, tagged "sata_rcar", should go through your tree.
+> The third one, tagged "ARM: shmobile", should go through Simon's tree.
 
-It sounds like we should enable CONFIG_EXTRA_FIRMWARE in
-shmobile_defconfig. I wonder what if any fallout we can foresee occurring
-if we do that.
+Yes, I think so too.
+
+For the first two patches:
+
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
+
+I'll pick up the last patch myself.
+
