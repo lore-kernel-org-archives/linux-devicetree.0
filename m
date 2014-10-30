@@ -1,39 +1,44 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 06/15] genirq: Generic chip: Optimize for fixed-endian systems
-Date: Thu, 30 Oct 2014 10:04:24 +0100
-Message-ID: <2089348.fa41ONzNz9@wuerfel>
-References: <1414635488-14137-1-git-send-email-cernekee@gmail.com> <1414635488-14137-7-git-send-email-cernekee@gmail.com> <20141030041658.GB29070@brian-ubuntu>
+Subject: Re: [PATCH V2 03/15] genirq: Generic chip: Move irq_reg_{readl,writel} accessors into generic-chip.c
+Date: Thu, 30 Oct 2014 10:06:51 +0100
+Message-ID: <6552163.gt4ABVyYlA@wuerfel>
+References: <1414635488-14137-1-git-send-email-cernekee@gmail.com> <1414635488-14137-4-git-send-email-cernekee@gmail.com> <alpine.DEB.2.11.1410300941290.5308@nanos>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141030041658.GB29070@brian-ubuntu>
+In-Reply-To: <alpine.DEB.2.11.1410300941290.5308@nanos>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Kevin Cernekee <cernekee@gmail.com>, f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org, lethal@linux-sh.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Kevin Cernekee <cernekee@gmail.com>, f.fainelli@gmail.com, jason@lakedaemon.net, ralf@linux-mips.org, lethal@linux-sh.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 29 October 2014 21:16:58 Brian Norris wrote:
-> >  static int is_big_endian(struct irq_chip_generic *gc)
-> >  {
-> > -     return !!(gc->domain->gc->gc_flags & IRQ_GC_BE_IO);
-> > +     if (IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP) &&
-> > +         !IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP_BE))
-> > +             return 0;
-> > +     else if (IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP_BE) &&
-> > +              !IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP))
-> > +             return 1;
+On Thursday 30 October 2014 09:43:02 Thomas Gleixner wrote:
+> > diff --git a/include/linux/irq.h b/include/linux/irq.h
+> > index 03f48d9..8049e93 100644
+> > --- a/include/linux/irq.h
+> > +++ b/include/linux/irq.h
+> > @@ -639,13 +639,6 @@ void arch_teardown_hwirq(unsigned int irq);
+> >  void irq_init_desc(unsigned int irq);
+> >  #endif
+> >  
+> > -#ifndef irq_reg_writel
+> > -# define irq_reg_writel(val, addr)   writel(val, addr)
+> > -#endif
+> > -#ifndef irq_reg_readl
+> > -# define irq_reg_readl(addr)         readl(addr)
+> > -#endif
+> > -
 > 
-> Would XOR make this any easier to read? e.g.:
+> Brilliant patch that.
 > 
->         if (IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP) ^
->             IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP_BE))
->                 return IS_ENABLED(CONFIG_GENERIC_IRQ_CHIP_BE);
->         else
->                 ...
-> 
+> # git grep -l irq_reg_readl drivers/irqchip/
+> drivers/irqchip/irq-atmel-aic.c
+> drivers/irqchip/irq-atmel-aic5.c
+> drivers/irqchip/irq-sunxi-nmi.c
+> drivers/irqchip/irq-tb10x.c
 
-I think that would only be easier to read for the compiler, not for
-for a human. ;-)
+Patch 1/15 changes these all. I think it's still broken because patch 2/15
+is wrong, but it's not /that/ obviously broken.
 
 	Arnd
