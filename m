@@ -1,41 +1,37 @@
-From: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Subject: Re: [PATCH v5 4/4] crypto: Add Allwinner Security System crypto
- accelerator
-Date: Fri, 31 Oct 2014 15:20:30 +0800
-Message-ID: <20141031072030.GA7563@gondor.apana.org.au>
-References: <1413728182-13569-1-git-send-email-clabbe.montjoie@gmail.com>
- <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com>
- <20141021191149.GQ21108@lukather>
- <544A9FEA.6020304@gmail.com>
- <20141030171933.GR21251@lukather>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH 0/3] Add support for ADC on am437x-gp and am43x-epos-evm
+Date: Fri, 31 Oct 2014 13:16:40 +0530
+Message-ID: <1414741603-18233-1-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141030171933.GR21251@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Vignesh R <vigneshr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 30, 2014 at 06:19:33PM +0100, Maxime Ripard wrote:
->
-> > With AF_ALG and cryptodev, the SG is in highmem. Verified with some
-> > PageHighMem().
-> 
-> Then fix AF_ALG and cryptodev, because all of the other drivers might
-> be affected.
+This series of patches enable ADC on am437x-gp-evm and am43x-epos-evm.
+The ADC clock hwmod data of am33xx has been moved to commom place so that
+both am43xx and am33xx can reuse them.
+tscadc DT node has been adided to am437x-gp and am43x-epos dt files.
+With these patches, ADC functionalities are now available on am43xx.
 
-No it's the driver that needs to be fixed.  Of course if there
-are enough drivers it may be worthwhile adding either copying or
-a software fallback for highmem requests.
+Vignesh R (3):
+  arm: mach-omap2: omap_hwmod_33xx_43xx_ipblock_data: Move
+    am33xx_l4_hs_hwmod to ipblock_data
+  arm: mach-omap2: omap_hwmod_43xx_data: add hwmod support for tscadc on
+    am43x-evm
+  arm: boot: dts: am4372: add tscadc DT entries for am437x-evm and
+    am43x-epos-evm
 
-Cheers,
+ arch/arm/boot/dts/am4372.dtsi                      | 20 ++++++
+ arch/arm/boot/dts/am437x-gp-evm.dts                |  8 +++
+ arch/arm/boot/dts/am43x-epos-evm.dts               |  8 +++
+ .../mach-omap2/omap_hwmod_33xx_43xx_common_data.h  |  2 +
+ .../mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 79 ++++++++++++++++++++++
+ arch/arm/mach-omap2/omap_hwmod_33xx_data.c         | 64 ------------------
+ arch/arm/mach-omap2/omap_hwmod_43xx_data.c         |  1 +
+ 7 files changed, 118 insertions(+), 64 deletions(-)
+
 -- 
-Email: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
