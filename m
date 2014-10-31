@@ -1,7 +1,7 @@
 From: gyungoh@gmail.com
-Subject: [RESUBMIT PATCH v6 3/8] devicetree: mfd: Add new SKY81452 mfd binding
-Date: Fri, 31 Oct 2014 16:08:37 +0900
-Message-ID: <1414739322-12487-4-git-send-email-jack.yoo@skyworksinc.com>
+Subject: [RESUBMIT PATCH v6 5/8] devicetree: Add vendor prefix for Skyworks Solutions, Inc.
+Date: Fri, 31 Oct 2014 16:08:39 +0900
+Message-ID: <1414739322-12487-6-git-send-email-jack.yoo@skyworksinc.com>
 References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
  <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -19,8 +19,7 @@ Changes v6:
 Nothing
 
 Changes v5:
-Changed DT for regulator : 'lout' node should be defined under 'regulator'
-Removed compatible string from sky81452-regulator driver
+Nothing
 
 Changes v4:
 Nothing
@@ -29,50 +28,22 @@ Changes v3:
 Nothing
 
 Changes v2:
-Added reg attribute for I2C slave address
+Added vendor prefix for Skyworks Solutions, Inc.
 
- Documentation/devicetree/bindings/mfd/sky81452.txt | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/sky81452.txt
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/sky81452.txt b/Documentation/devicetree/bindings/mfd/sky81452.txt
-new file mode 100644
-index 0000000..4b82a73
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/sky81452.txt
-@@ -0,0 +1,33 @@
-+SKY81452 bindings
-+
-+Required properties:
-+- compatible	: Must be "skyworks,sky81452"
-+- reg		: I2C slave address
-+
-+Required child nodes:
-+- backlight	: container node for backlight following the binding
-+		in video/backlight/sky81452-backlight.txt
-+- regulator	: container node for regulators following the binding
-+		in regulator/sky81452-regulator.txt
-+
-+Example:
-+
-+	sky81452@2c {
-+		compatible = "skyworks,sky81452";
-+		reg = <0x2c>;
-+
-+		backlight {
-+			compatible = "skyworks,sky81452-backlight";
-+			name = "pwm-backlight";
-+			enable = <0x3F>;
-+			ignore-pwm;
-+		};
-+
-+		regulator {
-+			lout {
-+				regulator-name = "sky81452-lout";
-+				regulator-min-microvolt = <4500000>;
-+				regulator-max-microvolt = <8000000>;
-+			};
-+		};
-+	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 723999d..03e7730 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -137,6 +137,7 @@ sii	Seiko Instruments, Inc.
+ silergy	Silergy Corp.
+ sirf	SiRF Technology, Inc.
+ sitronix	Sitronix Technology Corporation
++skyworks	Skyworks Solutions, Inc.
+ smsc	Standard Microsystems Corporation
+ snps 	Synopsys, Inc.
+ solidrun	SolidRun
 -- 
 1.9.1
