@@ -1,37 +1,49 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: Add Juno SoC device tree.
-Date: Fri, 31 Oct 2014 17:29:18 +0100
-Message-ID: <20141031162918.GG32139@lunn.ch>
-References: <1414771460-7340-1-git-send-email-Liviu.Dudau@arm.com>
- <1414771460-7340-4-git-send-email-Liviu.Dudau@arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RESUBMIT PATCH v6 3/8] devicetree: mfd: Add new SKY81452 mfd
+ binding
+Date: Fri, 31 Oct 2014 16:36:09 +0000
+Message-ID: <20141031163609.GB18557@sirena.org.uk>
+References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1414739322-12487-4-git-send-email-jack.yoo@skyworksinc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="m8pCv11XKdWQJ6wE"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1414771460-7340-4-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, device tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <1414739322-12487-4-git-send-email-jack.yoo@skyworksinc.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gyungoh@gmail.com
+Cc: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 31, 2014 at 04:04:20PM +0000, Liviu Dudau wrote:
-> This adds support for USB, 100MB Ethernet port, timers, I2C,
-> and watchdog timer. Missing for now are the SMMU nodes, HDLCD
-> and PCIe.
 
-Hi Liviu
+--m8pCv11XKdWQJ6wE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I know nothing about Juno, but i do help maintain the Marvell SoC
-device tree files.
+On Fri, Oct 31, 2014 at 04:08:37PM +0900, gyungoh@gmail.com wrote:
+> From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
+>=20
+> Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
 
-It seems pretty normal to split device tree descriptions into a
-generic .dtsi SoC part and a number of .dts board files, one per
-board, and including the SoC .dtsi file.
+Reviwed-by: Mark Brown <broonie@kernel.org>
 
-Is it likely another board will be designed using the same SoC?
+--m8pCv11XKdWQJ6wE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-   Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUU7p4AAoJECTWi3JdVIfQOu8H/igzGE2/3K53WJK+AehqgLrY
+CFXPTrhZqGbIrWazN4iV8TMtp0VghBiiZblWeiRGU/bHO6ypAvhTshjy4uSfvsSn
+JWCpdLhuM9SaFIs45Qxr6cKieDpb3M9LHggGQhj9MU7mFpVyd+Yss5n/myl1lBCv
+XyVXtkLhWQ+PC1A93nZm5dtpW9qYMYm1dcnyoScgTYV+GpTodf/m4WZutmymqk8l
+F/2z2JaMgW5WMoxIyfZSuO3CPUtGAteyzvCnJasKmtnmXW07P4p0bJz0dTPA5Mz4
+T7265EqnnbKIten2bqtfokAPEw5itY2Al3MvM1x4gJ75LzIbddEQQVHl+V2Dcxo=
+=/Yol
+-----END PGP SIGNATURE-----
+
+--m8pCv11XKdWQJ6wE--
