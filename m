@@ -1,11 +1,13 @@
 From: Chao Xie <chao.xie@marvell.com>
-Subject: [PATCH V2 00/13] clk: mmp: clock device tree support
-Date: Fri, 31 Oct 2014 10:13:40 +0800
-Message-ID: <1414721633-29508-1-git-send-email-chao.xie@marvell.com>
+Subject: [PATCH V2 04/13] clk: mmp: move definiton of mmp_clk_frac to clk.h
+Date: Fri, 31 Oct 2014 10:13:44 +0800
+Message-ID: <1414721633-29508-5-git-send-email-chao.xie@marvell.com>
+References: <1414721633-29508-1-git-send-email-chao.xie@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1414721633-29508-1-git-send-email-chao.xie@marvell.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,89 +22,90 @@ List-Id: devicetree@vger.kernel.org
 
 From: Chao Xie <chao.xie@marvell.com>
 
-The patch set focuses at support device tree for clock.
+Move the definition of structure of mmp_clk_frac to
+clk.h.
+So device tree support can use this structure.
 
-The first part of the patches
-  clk: mmp: add prefix "mmp" for structures defined for clk-frac
-  clk: mmp: add spin lock for clk-frac
-  clk: mmp: add init callback for clk-frac
-  clk: mmp: move definiton of mmp_clk_frac to clk.h It enhances the clk-frac.
+Signed-off-by: Chao Xie <chao.xie@marvell.com>
+---
+ drivers/clk/mmp/clk-frac.c |  8 --------
+ drivers/clk/mmp/clk.h      | 32 ++++++++++++++++++++++----------
+ 2 files changed, 22 insertions(+), 18 deletions(-)
 
-The second part of the patches
-  clk: mmp: add clock type mix
-  clk: mmp: add mmp private gate clock
-
-The third part of the patches
-  clk: mmp: add basic support functions for DT support
-  clk: mmp: add reset support
-  clk: mmp: add pxa168 DT support for clock driver
-  clk: mmp: add pxa910 DT support for clock driver
-  clk: mmp: add mmp2 DT support for clock driver
-It add the device tree support for pxa168, pxa910 and mmp2.
-
-V1 -> V2:
-  Add reset support for the clocks that have reset bit.
-
-Chao Xie (13):
-  clk: mmp: add prefix "mmp" for structures defined for clk-frac
-  clk: mmp: add spin lock for clk-frac
-  clk: mmp: add init callback for clk-frac
-  clk: mmp: move definiton of mmp_clk_frac to clk.h
-  clk: mmp: add clock type mix
-  clk: mmp: add mmp private gate clock
-  clk: mmp: add basic support functions for DT support
-  clk: mmp: add reset support
-  clk: mmp: add pxa168 DT support for clock driver
-  clk: mmp: add pxa910 DT support for clock driver
-  clk: mmp: add mmp2 DT support for clock driver
-  arm: mmp: Make all the dts file to be compiled by Makefile
-  arm: mmp: Make use of the DT supported clock
-
- .../devicetree/bindings/clock/marvell,mmp2.txt     |  21 +
- .../devicetree/bindings/clock/marvell,pxa168.txt   |  21 +
- .../devicetree/bindings/clock/marvell,pxa910.txt   |  21 +
- arch/arm/boot/dts/Makefile                         |   3 +
- arch/arm/boot/dts/mmp2-brownstone.dts              |   2 +-
- arch/arm/boot/dts/mmp2.dtsi                        |  29 +-
- arch/arm/boot/dts/pxa168-aspenite.dts              |   2 +-
- arch/arm/boot/dts/pxa168.dtsi                      |  27 +-
- arch/arm/boot/dts/pxa910-dkb.dts                   |   2 +-
- arch/arm/boot/dts/pxa910.dtsi                      |  28 +-
- arch/arm/mach-mmp/Kconfig                          |  12 +-
- arch/arm/mach-mmp/mmp-dt.c                         |  57 +--
- arch/arm/mach-mmp/mmp2-dt.c                        |  26 +-
- drivers/clk/mmp/Makefile                           |   7 +-
- drivers/clk/mmp/clk-frac.c                         |  74 ++-
- drivers/clk/mmp/clk-gate.c                         | 133 ++++++
- drivers/clk/mmp/clk-mix.c                          | 513 +++++++++++++++++++++
- drivers/clk/mmp/clk-mmp2.c                         |   6 +-
- drivers/clk/mmp/clk-of-mmp2.c                      | 334 ++++++++++++++
- drivers/clk/mmp/clk-of-pxa168.c                    | 279 +++++++++++
- drivers/clk/mmp/clk-of-pxa910.c                    | 301 ++++++++++++
- drivers/clk/mmp/clk-pxa168.c                       |   6 +-
- drivers/clk/mmp/clk-pxa910.c                       |   6 +-
- drivers/clk/mmp/clk.c                              | 192 ++++++++
- drivers/clk/mmp/clk.h                              | 226 ++++++++-
- drivers/clk/mmp/reset.c                            |  99 ++++
- drivers/clk/mmp/reset.h                            |  31 ++
- include/dt-bindings/clock/marvell,mmp2.h           |  74 +++
- include/dt-bindings/clock/marvell,pxa168.h         |  57 +++
- include/dt-bindings/clock/marvell,pxa910.h         |  54 +++
- 30 files changed, 2538 insertions(+), 105 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/marvell,mmp2.txt
- create mode 100644 Documentation/devicetree/bindings/clock/marvell,pxa168.txt
- create mode 100644 Documentation/devicetree/bindings/clock/marvell,pxa910.txt
- create mode 100644 drivers/clk/mmp/clk-gate.c
- create mode 100644 drivers/clk/mmp/clk-mix.c
- create mode 100644 drivers/clk/mmp/clk-of-mmp2.c
- create mode 100644 drivers/clk/mmp/clk-of-pxa168.c
- create mode 100644 drivers/clk/mmp/clk-of-pxa910.c
- create mode 100644 drivers/clk/mmp/clk.c
- create mode 100644 drivers/clk/mmp/reset.c
- create mode 100644 drivers/clk/mmp/reset.h
- create mode 100644 include/dt-bindings/clock/marvell,mmp2.h
- create mode 100644 include/dt-bindings/clock/marvell,pxa168.h
- create mode 100644 include/dt-bindings/clock/marvell,pxa910.h
-
+diff --git a/drivers/clk/mmp/clk-frac.c b/drivers/clk/mmp/clk-frac.c
+index 1876d2c..eeba52c 100644
+--- a/drivers/clk/mmp/clk-frac.c
++++ b/drivers/clk/mmp/clk-frac.c
+@@ -23,14 +23,6 @@
+  */
+ 
+ #define to_clk_factor(hw) container_of(hw, struct mmp_clk_factor, hw)
+-struct mmp_clk_factor {
+-	struct clk_hw		hw;
+-	void __iomem		*base;
+-	struct mmp_clk_factor_masks	*masks;
+-	struct mmp_clk_factor_tbl	*ftbl;
+-	unsigned int		ftbl_cnt;
+-	spinlock_t *lock;
+-};
+ 
+ static long clk_factor_round_rate(struct clk_hw *hw, unsigned long drate,
+ 		unsigned long *prate)
+diff --git a/drivers/clk/mmp/clk.h b/drivers/clk/mmp/clk.h
+index b71b717..d267639 100644
+--- a/drivers/clk/mmp/clk.h
++++ b/drivers/clk/mmp/clk.h
+@@ -7,12 +7,14 @@
+ #define APBC_NO_BUS_CTRL	BIT(0)
+ #define APBC_POWER_CTRL		BIT(1)
+ 
++
++/* Clock type "factor" */
+ struct mmp_clk_factor_masks {
+-	unsigned int	factor;
+-	unsigned int	num_mask;
+-	unsigned int	den_mask;
+-	unsigned int	num_shift;
+-	unsigned int	den_shift;
++	unsigned int factor;
++	unsigned int num_mask;
++	unsigned int den_mask;
++	unsigned int num_shift;
++	unsigned int den_shift;
+ };
+ 
+ struct mmp_clk_factor_tbl {
+@@ -20,6 +22,21 @@ struct mmp_clk_factor_tbl {
+ 	unsigned int den;
+ };
+ 
++struct mmp_clk_factor {
++	struct clk_hw hw;
++	void __iomem *base;
++	struct mmp_clk_factor_masks *masks;
++	struct mmp_clk_factor_tbl *ftbl;
++	unsigned int ftbl_cnt;
++	spinlock_t *lock;
++};
++
++extern struct clk *mmp_clk_register_factor(const char *name,
++		const char *parent_name, unsigned long flags,
++		void __iomem *base, struct mmp_clk_factor_masks *masks,
++		struct mmp_clk_factor_tbl *ftbl, unsigned int ftbl_cnt,
++		spinlock_t *lock);
++
+ extern struct clk *mmp_clk_register_pll2(const char *name,
+ 		const char *parent_name, unsigned long flags);
+ extern struct clk *mmp_clk_register_apbc(const char *name,
+@@ -28,9 +45,4 @@ extern struct clk *mmp_clk_register_apbc(const char *name,
+ extern struct clk *mmp_clk_register_apmu(const char *name,
+ 		const char *parent_name, void __iomem *base, u32 enable_mask,
+ 		spinlock_t *lock);
+-extern struct clk *mmp_clk_register_factor(const char *name,
+-		const char *parent_name, unsigned long flags,
+-		void __iomem *base, struct mmp_clk_factor_masks *masks,
+-		struct mmp_clk_factor_tbl *ftbl, unsigned int ftbl_cnt,
+-		spinlock_t *lock);
+ #endif
 -- 
 1.8.3.2
