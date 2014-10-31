@@ -1,60 +1,167 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 6/8] regulator: max77686: Add external GPIO control
-Date: Fri, 31 Oct 2014 10:32:17 +0000
-Message-ID: <20141031103217.GJ18557@sirena.org.uk>
-References: <1414422226-10948-7-git-send-email-k.kozlowski@samsung.com>
- <544EA4FA.6040704@collabora.co.uk>
- <1414486356.24949.19.camel@AMDC1943>
- <1414498308.24949.32.camel@AMDC1943>
- <1414579362.18868.11.camel@AMDC1943>
- <5450C63B.3000602@collabora.co.uk>
- <CAAVeFuLncbkNLGxEAj90yMmugRDNjtjeGoV_QYTMDZ7NVMJCmg@mail.gmail.com>
- <1414681386.26703.6.camel@AMDC1943>
- <CAAVeFuJo1wTyxOo4FEZM3=GTejuSHi+mnr=QV6HUeV5mAOCmqg@mail.gmail.com>
- <1414741898.20071.8.camel@AMDC1943>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v2] mmc: dw_mmc: add support for the other bit of sdio interrupt
+Date: Fri, 31 Oct 2014 11:43:40 +0100
+Message-ID: <13873303.38xWyoP4kJ@diego>
+References: <1414666240-16782-1-git-send-email-addy.ke@rock-chips.com> <1414727409-6765-1-git-send-email-addy.ke@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rTCTeMwohXf/yKXV"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1414741898.20071.8.camel@AMDC1943>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1414727409-6765-1-git-send-email-addy.ke@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Addy Ke <addy.ke@rock-chips.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
+Am Freitag, 31. Oktober 2014, 11:50:09 schrieb Addy Ke:
+> The bit of sdio interrupt is 16 in designware implementation,
+> but it is 24 in RK3288. This patch add sdio_id0 for the number
+> of slot0 in the SDIO interrupt registers, which can be set in
+> platform DT table, such as:
+> - rockchip,sdio-interrupt-slot0 = <8>;
 
---rTCTeMwohXf/yKXV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I just checked the manuals of rk3066 and rk3188 - and it seems the sdio 
+interrupt is in bit 24 on all of them.
 
-On Fri, Oct 31, 2014 at 08:51:38AM +0100, Krzysztof Kozlowski wrote:
+Addy, could you check this and maybe enable this for all two variants we 
+currently support?
 
-> However new DT style parsing (regulator_of_get_init_data()) does the
-> basic parsing stuff and this removes a lot of code from driver. The
-> driver no longer parses all regulaotrs but the regulator core does it.
-> Unfortunately regulator core does not parse custom bindings (like such
-> GPIOs) so I would have to iterate once again through all regulators just
-> to find "gpios" property.
 
-We could always add a callback for the driver to handle any custom
-properties...  one of the advantages of an OS like Linux is that we can
-improve the core code.
+Thanks
+Heiko
 
---rTCTeMwohXf/yKXV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> 
+> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+> ---
+> Changes in v2:
+> - rebase on http://git.linaro.org/git/people/ulf.hansson/mmc.git, next
+> branch
+> 
+>  drivers/mmc/host/dw_mmc-rockchip.c | 13 +++++++++++++
+>  drivers/mmc/host/dw_mmc.c          | 12 +++++++-----
+>  drivers/mmc/host/dw_mmc.h          |  2 ++
+>  include/linux/mmc/dw_mmc.h         |  3 +++
+>  4 files changed, 25 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/dw_mmc-rockchip.c
+> b/drivers/mmc/host/dw_mmc-rockchip.c index bbb4ec3..1cb3bc6 100644
+> --- a/drivers/mmc/host/dw_mmc-rockchip.c
+> +++ b/drivers/mmc/host/dw_mmc-rockchip.c
+> @@ -68,6 +68,18 @@ static void dw_mci_rk3288_set_ios(struct dw_mci *host,
+> struct mmc_ios *ios) }
+>  }
+> 
+> +static int dw_mci_rk3288_parse_dt(struct dw_mci *host)
+> +{
+> +	struct device_node *np = host->dev->of_node;
+> +	int sdio_id0;
+> +
+> +	if (!of_property_read_u32(np, "rockchip,sdio-interrupt-slot0",
+> +				  &sdio_id0))
+> +		host->sdio_id0 = sdio_id0;
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct dw_mci_drv_data rk2928_drv_data = {
+>  	.prepare_command        = dw_mci_rockchip_prepare_command,
+>  };
+> @@ -76,6 +88,7 @@ static const struct dw_mci_drv_data rk3288_drv_data = {
+>  	.prepare_command        = dw_mci_rockchip_prepare_command,
+>  	.set_ios		= dw_mci_rk3288_set_ios,
+>  	.setup_clock    = dw_mci_rk3288_setup_clock,
+> +	.parse_dt	= dw_mci_rk3288_parse_dt,
+>  };
+> 
+>  static const struct of_device_id dw_mci_rockchip_match[] = {
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index bb46b1b..a633b58 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -823,7 +823,7 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot,
+> bool force_clkinit)
+> 
+>  		/* enable clock; only low power if no SDIO */
+>  		clk_en_a = SDMMC_CLKEN_ENABLE << slot->id;
+> -		if (!(mci_readl(host, INTMASK) & SDMMC_INT_SDIO(slot->id)))
+> +		if (!(mci_readl(host, INTMASK) & SDMMC_INT_SDIO(slot->sdio_id)))
+>  			clk_en_a |= SDMMC_CLKEN_LOW_PWR << slot->id;
+>  		mci_writel(host, CLKENA, clk_en_a);
+> 
+> @@ -1184,10 +1184,10 @@ static void dw_mci_enable_sdio_irq(struct mmc_host
+> *mmc, int enb) dw_mci_disable_low_power(slot);
+> 
+>  		mci_writel(host, INTMASK,
+> -			   (int_mask | SDMMC_INT_SDIO(slot->id)));
+> +			   (int_mask | SDMMC_INT_SDIO(slot->sdio_id)));
+>  	} else {
+>  		mci_writel(host, INTMASK,
+> -			   (int_mask & ~SDMMC_INT_SDIO(slot->id)));
+> +			   (int_mask & ~SDMMC_INT_SDIO(slot->sdio_id)));
+>  	}
+>  }
+> 
+> @@ -2056,8 +2056,9 @@ static irqreturn_t dw_mci_interrupt(int irq, void
+> *dev_id) /* Handle SDIO Interrupts */
+>  		for (i = 0; i < host->num_slots; i++) {
+>  			struct dw_mci_slot *slot = host->slot[i];
+> -			if (pending & SDMMC_INT_SDIO(i)) {
+> -				mci_writel(host, RINTSTS, SDMMC_INT_SDIO(i));
+> +			if (pending & SDMMC_INT_SDIO(slot->sdio_id)) {
+> +				mci_writel(host, RINTSTS,
+> +					   SDMMC_INT_SDIO(slot->sdio_id));
+>  				mmc_signal_sdio_irq(slot->mmc);
+>  			}
+>  		}
+> @@ -2145,6 +2146,7 @@ static int dw_mci_init_slot(struct dw_mci *host,
+> unsigned int id)
+> 
+>  	slot = mmc_priv(mmc);
+>  	slot->id = id;
+> +	slot->sdio_id = host->sdio_id0 + id;
+>  	slot->mmc = mmc;
+>  	slot->host = host;
+>  	host->slot[id] = slot;
+> diff --git a/drivers/mmc/host/dw_mmc.h b/drivers/mmc/host/dw_mmc.h
+> index 71d4995..0562f10 100644
+> --- a/drivers/mmc/host/dw_mmc.h
+> +++ b/drivers/mmc/host/dw_mmc.h
+> @@ -214,6 +214,7 @@ extern int dw_mci_resume(struct dw_mci *host);
+>   *	with CONFIG_MMC_CLKGATE.
+>   * @flags: Random state bits associated with the slot.
+>   * @id: Number of this slot.
+> + * @sdio_id: Number of this slot in the SDIO interrupt registers.
+>   */
+>  struct dw_mci_slot {
+>  	struct mmc_host		*mmc;
+> @@ -233,6 +234,7 @@ struct dw_mci_slot {
+>  #define DW_MMC_CARD_PRESENT	0
+>  #define DW_MMC_CARD_NEED_INIT	1
+>  	int			id;
+> +	int			sdio_id;
+>  };
+> 
+>  struct dw_mci_tuning_data {
+> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+> index 69d0814..72c319f 100644
+> --- a/include/linux/mmc/dw_mmc.h
+> +++ b/include/linux/mmc/dw_mmc.h
+> @@ -96,6 +96,7 @@ struct mmc_data;
+>   * @quirks: Set of quirks that apply to specific versions of the IP.
+>   * @irq_flags: The flags to be passed to request_irq.
+>   * @irq: The irq value to be passed to request_irq.
+> + * @sdio_id0: Number of slot0 in the SDIO interrupt registers.
+>   *
+>   * Locking
+>   * =======
+> @@ -191,6 +192,8 @@ struct dw_mci {
+>  	bool			vqmmc_enabled;
+>  	unsigned long		irq_flags; /* IRQ flags */
+>  	int			irq;
+> +
+> +	int			sdio_id0;
+>  };
+> 
+>  /* DMA ops for Internal/External DMAC interface */
 
-iQEcBAEBAgAGBQJUU2UwAAoJECTWi3JdVIfQFH0H/1FXhxlLWI8pqm2smRVjdult
-BU0XHEiL53GtgfFsbKrCZoYq6KIZwLt+1PfkicbNLiBaqpAVfcwiTp9FAIj2yNwF
-1SkvKr8L3Ek0F/12CCuz8wFdV2GO3jqcLfsL8LZKObf1YQgTKwW3Zjs0G/Cqvbz0
-HbcPPpBeerpX1W9herPt8jNUry1eXL0kL0xrPvXfQ8W+8QLkfuPH1W5epr6yvuU2
-KlSW+oPWVsZZMcRKHVNC8epFJnnnZrMcpe1uX+SP1zPllXS+212rcq1bRrvkn3A4
-wp/CA0WU54GCCqiIR8CrEdfKZJfkgZQnhXGLasIaEBBKnF7dhF/u9O4+pHEACSY=
-=j6J+
------END PGP SIGNATURE-----
-
---rTCTeMwohXf/yKXV--
