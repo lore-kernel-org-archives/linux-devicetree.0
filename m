@@ -1,149 +1,180 @@
-From: Addy Ke <addy.ke@rock-chips.com>
-Subject: [PATCH v2] mmc: dw_mmc: add support for the other bit of sdio interrupt
-Date: Fri, 31 Oct 2014 11:50:09 +0800
-Message-ID: <1414727409-6765-1-git-send-email-addy.ke@rock-chips.com>
-References: <1414666240-16782-1-git-send-email-addy.ke@rock-chips.com>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH 5/5] ARM: imx: ventana: enable LDO bypass mode for GW54xx
+Date: Thu, 30 Oct 2014 21:27:11 -0700
+Message-ID: <1414729631-11005-6-git-send-email-tharvey@gateworks.com>
+References: <1414729631-11005-1-git-send-email-tharvey@gateworks.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414666240-16782-1-git-send-email-addy.ke@rock-chips.com>
+In-Reply-To: <1414729631-11005-1-git-send-email-tharvey@gateworks.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, Addy Ke <addy.ke@rock-chips.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Philipp Zabel <p.zabel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawn.guo@freescale.com>, Lucas Stach <l.stach@pengutronix.de>, Silvio F <silvio.fricke@gmail.com>, Christian Hemp <c.hemp@phytec.de>, Russell King <rmk+kernel@arm.linux.org.uk>, Iain Paton <ipaton0@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The bit of sdio interrupt is 16 in designware implementation,
-but it is 24 in RK3288. This patch add sdio_id0 for the number
-of slot0 in the SDIO interrupt registers, which can be set in
-platform DT table, such as:
-- rockchip,sdio-interrupt-slot0 = <8>;
+The GW54xx baseboard has a PFUZE100 PMIC capable of regulating the
+core voltages (VDD_ARM, VDD_SOC) externally such that the internal IMX6
+anatop LDO regulators are not needed. This provides a power reduction
+(as the PMIC is more efficient than the LDO's) as well as moves some
+of the power/thermal burden from the IMX to the PMIC.
 
-Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+Cc: devicetree@vger.kernel.org
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Shawn Guo <shawn.guo@freescale.com>
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 ---
-Changes in v2:
-- rebase on http://git.linaro.org/git/people/ulf.hansson/mmc.git, next branch
+ arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 55 +++++++++++++++++++++++++----------
+ 1 file changed, 39 insertions(+), 16 deletions(-)
 
- drivers/mmc/host/dw_mmc-rockchip.c | 13 +++++++++++++
- drivers/mmc/host/dw_mmc.c          | 12 +++++++-----
- drivers/mmc/host/dw_mmc.h          |  2 ++
- include/linux/mmc/dw_mmc.h         |  3 +++
- 4 files changed, 25 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
-index bbb4ec3..1cb3bc6 100644
---- a/drivers/mmc/host/dw_mmc-rockchip.c
-+++ b/drivers/mmc/host/dw_mmc-rockchip.c
-@@ -68,6 +68,18 @@ static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
- 	}
- }
- 
-+static int dw_mci_rk3288_parse_dt(struct dw_mci *host)
-+{
-+	struct device_node *np = host->dev->of_node;
-+	int sdio_id0;
-+
-+	if (!of_property_read_u32(np, "rockchip,sdio-interrupt-slot0",
-+				  &sdio_id0))
-+		host->sdio_id0 = sdio_id0;
-+
-+	return 0;
-+}
-+
- static const struct dw_mci_drv_data rk2928_drv_data = {
- 	.prepare_command        = dw_mci_rockchip_prepare_command,
- };
-@@ -76,6 +88,7 @@ static const struct dw_mci_drv_data rk3288_drv_data = {
- 	.prepare_command        = dw_mci_rockchip_prepare_command,
- 	.set_ios		= dw_mci_rk3288_set_ios,
- 	.setup_clock    = dw_mci_rk3288_setup_clock,
-+	.parse_dt	= dw_mci_rk3288_parse_dt,
+diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+index cf13239..3ab0872 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+@@ -142,6 +142,11 @@
+ 	status = "okay";
  };
  
- static const struct of_device_id dw_mci_rockchip_match[] = {
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index bb46b1b..a633b58 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -823,7 +823,7 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
- 
- 		/* enable clock; only low power if no SDIO */
- 		clk_en_a = SDMMC_CLKEN_ENABLE << slot->id;
--		if (!(mci_readl(host, INTMASK) & SDMMC_INT_SDIO(slot->id)))
-+		if (!(mci_readl(host, INTMASK) & SDMMC_INT_SDIO(slot->sdio_id)))
- 			clk_en_a |= SDMMC_CLKEN_LOW_PWR << slot->id;
- 		mci_writel(host, CLKENA, clk_en_a);
- 
-@@ -1184,10 +1184,10 @@ static void dw_mci_enable_sdio_irq(struct mmc_host *mmc, int enb)
- 		dw_mci_disable_low_power(slot);
- 
- 		mci_writel(host, INTMASK,
--			   (int_mask | SDMMC_INT_SDIO(slot->id)));
-+			   (int_mask | SDMMC_INT_SDIO(slot->sdio_id)));
- 	} else {
- 		mci_writel(host, INTMASK,
--			   (int_mask & ~SDMMC_INT_SDIO(slot->id)));
-+			   (int_mask & ~SDMMC_INT_SDIO(slot->sdio_id)));
- 	}
- }
- 
-@@ -2056,8 +2056,9 @@ static irqreturn_t dw_mci_interrupt(int irq, void *dev_id)
- 		/* Handle SDIO Interrupts */
- 		for (i = 0; i < host->num_slots; i++) {
- 			struct dw_mci_slot *slot = host->slot[i];
--			if (pending & SDMMC_INT_SDIO(i)) {
--				mci_writel(host, RINTSTS, SDMMC_INT_SDIO(i));
-+			if (pending & SDMMC_INT_SDIO(slot->sdio_id)) {
-+				mci_writel(host, RINTSTS,
-+					   SDMMC_INT_SDIO(slot->sdio_id));
- 				mmc_signal_sdio_irq(slot->mmc);
- 			}
- 		}
-@@ -2145,6 +2146,7 @@ static int dw_mci_init_slot(struct dw_mci *host, unsigned int id)
- 
- 	slot = mmc_priv(mmc);
- 	slot->id = id;
-+	slot->sdio_id = host->sdio_id0 + id;
- 	slot->mmc = mmc;
- 	slot->host = host;
- 	host->slot[id] = slot;
-diff --git a/drivers/mmc/host/dw_mmc.h b/drivers/mmc/host/dw_mmc.h
-index 71d4995..0562f10 100644
---- a/drivers/mmc/host/dw_mmc.h
-+++ b/drivers/mmc/host/dw_mmc.h
-@@ -214,6 +214,7 @@ extern int dw_mci_resume(struct dw_mci *host);
-  *	with CONFIG_MMC_CLKGATE.
-  * @flags: Random state bits associated with the slot.
-  * @id: Number of this slot.
-+ * @sdio_id: Number of this slot in the SDIO interrupt registers.
-  */
- struct dw_mci_slot {
- 	struct mmc_host		*mmc;
-@@ -233,6 +234,7 @@ struct dw_mci_slot {
- #define DW_MMC_CARD_PRESENT	0
- #define DW_MMC_CARD_NEED_INIT	1
- 	int			id;
-+	int			sdio_id;
- };
- 
- struct dw_mci_tuning_data {
-diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
-index 69d0814..72c319f 100644
---- a/include/linux/mmc/dw_mmc.h
-+++ b/include/linux/mmc/dw_mmc.h
-@@ -96,6 +96,7 @@ struct mmc_data;
-  * @quirks: Set of quirks that apply to specific versions of the IP.
-  * @irq_flags: The flags to be passed to request_irq.
-  * @irq: The irq value to be passed to request_irq.
-+ * @sdio_id0: Number of slot0 in the SDIO interrupt registers.
-  *
-  * Locking
-  * =======
-@@ -191,6 +192,8 @@ struct dw_mci {
- 	bool			vqmmc_enabled;
- 	unsigned long		irq_flags; /* IRQ flags */
- 	int			irq;
++&cpu0 {
++	arm-supply = <&reg_vdd_arm>;
++	soc-supply = <&reg_vdd_soc>;
++};
 +
-+	int			sdio_id0;
- };
+ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+@@ -215,7 +220,8 @@
+ 		reg = <0x08>;
  
- /* DMA ops for Internal/External DMAC interface */
+ 		regulators {
+-			sw1a_reg: sw1ab {
++			/* VDD_ARM */
++			reg_vdd_arm: sw1ab {
+ 				regulator-min-microvolt = <300000>;
+ 				regulator-max-microvolt = <1875000>;
+ 				regulator-boot-on;
+@@ -223,7 +229,8 @@
+ 				regulator-ramp-delay = <6250>;
+ 			};
+ 
+-			sw1c_reg: sw1c {
++			/* VDD_SOC */
++			reg_vdd_soc: sw1c {
+ 				regulator-min-microvolt = <300000>;
+ 				regulator-max-microvolt = <1875000>;
+ 				regulator-boot-on;
+@@ -231,77 +238,93 @@
+ 				regulator-ramp-delay = <6250>;
+ 			};
+ 
+-			sw2_reg: sw2 {
++			/* VDD_HIGH */
++			reg_3p0v: sw2 {
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <3950000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			sw3a_reg: sw3a {
++			/* VDD_DDR */
++			reg_ddra: sw3a {
+ 				regulator-min-microvolt = <400000>;
+ 				regulator-max-microvolt = <1975000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			sw3b_reg: sw3b {
++			/* VDD_DDR */
++			reg_ddrb: sw3b {
+ 				regulator-min-microvolt = <400000>;
+ 				regulator-max-microvolt = <1975000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			sw4_reg: sw4 {
++			/* VDD_1P8 */
++			reg_1p8v: sw4 {
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			swbst_reg: swbst {
++			/* VDD_5P0 */
++			reg_swbst: swbst {
+ 				regulator-min-microvolt = <5000000>;
+ 				regulator-max-microvolt = <5150000>;
+ 			};
+ 
+-			snvs_reg: vsnvs {
++			reg_snvs: vsnvs {
+ 				regulator-min-microvolt = <1000000>;
+ 				regulator-max-microvolt = <3000000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			vref_reg: vrefddr {
++			/* VDD_VREF */
++			reg_vref: vrefddr {
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			vgen1_reg: vgen1 {
++			/* VDD_PCI_1P5_1 */
++			reg_1p5va: vgen1 {
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <1550000>;
++				regulator-boot-on;
++				regulator-always-on;
+ 			};
+ 
+-			vgen2_reg: vgen2 {
++			/* VDD_PCI_1P5_2 */
++			reg_1p5vb: vgen2 {
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <1550000>;
++				regulator-boot-on;
++				regulator-always-on;
+ 			};
+ 
+-			vgen3_reg: vgen3 {
++			/* unused */
++			reg_vgen3: vgen3 {
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			vgen4_reg: vgen4 {
++			/* VDD_AUD_1P8 */
++			reg_aud_1p8v: vgen4 {
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 			};
+ 
+-			vgen5_reg: vgen5 {
++			/* VDD_2P5 */
++			reg_2p5v: vgen5 {
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 			};
+ 
+-			vgen6_reg: vgen6 {
++			/* unused */
++			reg_vgen6: vgen6 {
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+@@ -320,7 +343,7 @@
+ 		compatible = "fsl,sgtl5000";
+ 		reg = <0x0a>;
+ 		clocks = <&clks 201>;
+-		VDDA-supply = <&sw4_reg>;
++		VDDA-supply = <&reg_1p8v>;
+ 		VDDIO-supply = <&reg_3p3v>;
+ 	};
+ 
 -- 
 1.8.3.2
