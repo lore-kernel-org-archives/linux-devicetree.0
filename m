@@ -1,63 +1,43 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 07/12] leds: leds-gpio: Add support for GPIO descriptors
-Date: Fri, 31 Oct 2014 10:41:38 +0100
-Message-ID: <CACRpkdYQwzwLJOCx76uONCpTsUtxhePaByyYPz-52Xw9L+DYQQ@mail.gmail.com>
-References: <2660541.BycO7TFnA2@vostro.rjw.lan>
-	<3395005.IveyhHQnye@vostro.rjw.lan>
-	<CACRpkdYR70Az1uLyjsaujQN-q-4+qRD=GpqJaOuvnKZhypL=cA@mail.gmail.com>
-	<17483842.EFni4iQX1H@vostro.rjw.lan>
-	<20141029085306.GI1304@lahna.fi.intel.com>
-	<CACRpkdaKiz4wODUnH+2+ELY3XGSYYsQ_iFMm+iY=o6rmVcxmSw@mail.gmail.com>
-	<20141030161528.GS1304@lahna.fi.intel.com>
+Subject: Re: [PATCH RESEND V4 3/9] of: Update Tegra XUSB pad controller
+ binding for USB
+Date: Fri, 31 Oct 2014 10:44:41 +0100
+Message-ID: <CACRpkdbERA6rxrMTJQPGaNhAb=B3+KyQ1YBKNy2AqsLZD2eHDA@mail.gmail.com>
+References: <1414535277-15645-1-git-send-email-abrestic@chromium.org>
+	<1414535277-15645-4-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141030161528.GS1304@lahna.fi.intel.com>
+In-Reply-To: <1414535277-15645-4-git-send-email-abrestic@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 30, 2014 at 5:15 PM, Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
-> On Thu, Oct 30, 2014 at 04:40:05PM +0100, Linus Walleij wrote:
->> > Yes, I'll just let dust to settle before sending out a patch that
->> > converts the existing users of platform_gpio_blink_set() callback to
->> > gpio descriptors.
->>
->> Dust settle = 2 weeks, 18 months, 5 years?
->
-> I started to do the conversion already but then noticed that it is not
-> that trivial after all.
+On Tue, Oct 28, 2014 at 11:27 PM, Andrew Bresticker
+<abrestic@chromium.org> wrote:
 
-Thanks for looking into this.
-
-> For example we have one user in arch/arm/mach-orion5x/dns323-setup.c:
+> Add new bindings used for USB support by the Tegra XUSB pad controller.
+> This includes additional PHY types, USB-specific pinconfig properties, etc.
 >
-> static struct gpio_led_platform_data dns323ab_led_data = {
->         .num_leds       = ARRAY_SIZE(dns323ab_leds),
->         .leds           = dns323ab_leds,
->         .gpio_blink_set = orion_gpio_led_blink_set,
-> };
->
-> orion_gpio_led_blink_set() is part of orion specific custom GPIO
-> "driver" defined in arch/arm/plat-orion/gpio.c and as far as I can tell
-> cannot use GPIO descriptors as it directly programs these numbers to the
-> hardware.
->
-> We can convert the descriptor to a number in the beginning of
-> orion_gpio_led_blink_set() if that helps.
->
-> Other two users: rx1950_led_blink_set() and h1940_led_blink_set() seem
-> to have similar needs for the numeric value.
+> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+> Reviewed-by: Stephen Warren <swarren@nvidia.com>
+> ---
+> Changes from v2:
+>  - Added nvidia,otg-hs-curr-level-offset property.
+>  - Dropped "-otg" from VBUS supplies.
+>  - Added mbox-names property.
+>  - Removed extra whitespace.
+> Changes from v1:
+>  - Updated to use common mailbox bindings.
+>  - Made USB3 port-to-lane mappins a top-level binding rather than a pinconfig
+>    binding.
+>  - Add #defines for the padctl lanes.
 
-Doing the conversion from descriptor to gpio number in the
-platforms is *much desired*, because it is a nice divide-and-conquer
-approach.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-For example mach-orion is going to be deleted and replaced
-with mach-mvebu at some time, so then part of the problem
-goes away entirely.
+I guess you will take this patch along with the rest through ARM SoC
+or so?
 
-Yours,
+Yours.
 Linus Walleij
