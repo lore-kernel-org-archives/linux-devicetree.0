@@ -1,61 +1,51 @@
-From: Huang Rui <ray.huang@amd.com>
-Subject: Re: [PATCH v4 14/20] usb: dwc3: add Tx de-emphasis quirk
-Date: Fri, 31 Oct 2014 09:29:55 +0800
-Message-ID: <20141031012954.GA20367@hr-slim.amd.com>
-References: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
- <1414663725-2195-15-git-send-email-ray.huang@amd.com>
- <20141030164210.GM10130@saruman>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v4 8/8] ARM: mediatek: Fix description for mediatek SoCs
+Date: Fri, 31 Oct 2014 09:37:19 +0800
+Message-ID: <1414719439.5833.25.camel@mtksdaap41>
+References: <1413973797-17619-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <1413973797-17619-9-git-send-email-yingjoe.chen@mediatek.com>
+	 <CABuKBe+Ew6R2Kb90-gDHBQ4HuydfFxJdYmr+v9-KNC-b0K4Tkw@mail.gmail.com>
+	 <1413984696.19686.72.camel@mtksdaap41>
+	 <CABuKBeLJuaDnCYuvvS6csNzvbTeEdgEUdZ4tBQeVPuw37JK11Q@mail.gmail.com>
+	 <1414129026.14830.588.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141030164210.GM10130@saruman>
+In-Reply-To: <1414129026.14830.588.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hsien-Chun Yen <hc.yen@mediatek.com>, Yuhau Chen <yh.chen@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Nathan Chung <nathan.chung@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, huang eddie <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 30, 2014 at 11:42:10AM -0500, Felipe Balbi wrote:
-> On Thu, Oct 30, 2014 at 06:08:39PM +0800, Huang Rui wrote:
-> > This patch adds Tx de-emphasis quirk, and the Tx de-emphasis value is
-> > configurable according to PIPE3 specification.
-> > 
-> > Value		Description
-> > 0		-6dB de-emphasis
-> > 1		-3.5dB de-emphasis
-> > 2		No de-emphasis
-> > 3		Reserved
-> > 
-> > It can be configured on DT or platform data.
-> > 
-> > Signed-off-by: Huang Rui <ray.huang@amd.com>
-> 
-> doesn't apply:
-> 
-> checking file Documentation/devicetree/bindings/usb/dwc3.txt
-> checking file drivers/usb/dwc3/core.c
-> Hunk #2 succeeded at 718 (offset -2 lines).
-> Hunk #3 succeeded at 777 (offset -2 lines).
-> Hunk #4 succeeded at 807 (offset -2 lines).
-> Hunk #5 succeeded at 829 (offset -2 lines).
-> Hunk #6 succeeded at 840 (offset -2 lines).
-> checking file drivers/usb/dwc3/core.h
-> Hunk #2 FAILED at 697.
-> 1 out of 3 hunks FAILED
-> checking file drivers/usb/dwc3/platform_data.h
-> 
-> please rebase on testing/next
-> 
+Hi Matthias,
 
-That's because in patch 12 and other ones you applied, I changed
-addreviations to uppercase such as "lfps" -> "LFPS", "fpga" -> "FPGA".
+Is this series + this new 8/8 patch OK?
+Anything else that I should change?
 
-Previous 13 patches are already applied. Do you mean, I send the other
-patches since "Tx de-emphasis" (patch 14) after rebased current
-branch.
+Joe.C
 
-If yes, at patch 1, "Enabling this bit ... hibernation .. yet", should
-it be updated in extra patch?
-
-Thanks,
-Rui
+On Fri, 2014-10-24 at 13:37 +0800, Yingjoe Chen wrote:
+> From: "Joe.C" <yingjoe.chen@mediatek.com>
+> 
+> We support more MediaTek SoCs now, update the description.
+> 
+> Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
+> ---
+>  arch/arm/mach-mediatek/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/mach-mediatek/Kconfig
+> b/arch/arm/mach-mediatek/Kconfig
+> index 2c043a2..f73f588 100644
+> --- a/arch/arm/mach-mediatek/Kconfig
+> +++ b/arch/arm/mach-mediatek/Kconfig
+> @@ -1,6 +1,6 @@
+>  config ARCH_MEDIATEK
+> -	bool "Mediatek MT6589 SoC" if ARCH_MULTI_V7
+> +	bool "Mediatek MT65xx & MT81xx SoC" if ARCH_MULTI_V7
+>  	select ARM_GIC
+>  	select MTK_TIMER
+>  	help
+> -	  Support for Mediatek Cortex-A7 Quad-Core-SoC MT6589.
+> +	  Support for Mediatek MT65xx & MT81xx SoCs
