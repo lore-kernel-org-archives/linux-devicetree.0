@@ -1,64 +1,41 @@
-From: gyungoh@gmail.com
-Subject: [RESUBMIT PATCH v6 8/8] devicetree: regulator: sky81452: Add compatible string for device binding
-Date: Fri, 31 Oct 2014 16:08:42 +0900
-Message-ID: <1414739322-12487-9-git-send-email-jack.yoo@skyworksinc.com>
-References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
- <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, broonie@kernel.org, lgirdwood@gmail.com
-Cc: jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
+From: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Subject: Re: [PATCH v5 4/4] crypto: Add Allwinner Security System crypto
+ accelerator
+Date: Fri, 31 Oct 2014 15:20:30 +0800
+Message-ID: <20141031072030.GA7563@gondor.apana.org.au>
+References: <1413728182-13569-1-git-send-email-clabbe.montjoie@gmail.com>
+ <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com>
+ <20141021191149.GQ21108@lukather>
+ <544A9FEA.6020304@gmail.com>
+ <20141030171933.GR21251@lukather>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141030171933.GR21251@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
+On Thu, Oct 30, 2014 at 06:19:33PM +0100, Maxime Ripard wrote:
+>
+> > With AF_ALG and cryptodev, the SG is in highmem. Verified with some
+> > PageHighMem().
+> 
+> Then fix AF_ALG and cryptodev, because all of the other drivers might
+> be affected.
 
-Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
----
-Changes v6:
-Nothing
+No it's the driver that needs to be fixed.  Of course if there
+are enough drivers it may be worthwhile adding either copying or
+a software fallback for highmem requests.
 
-Changes v5:
-Changed DT for regulator : 'lout' node should be defined under 'regulator'
-Removed compatible string from sky81452-regulator driver
-
-Changes v4:
-Nothing
-
-Changes v3:
-Nothing
-
-Changes v2:
-Added 'compatible' attribute in the driver
-
- .../devicetree/bindings/regulator/sky81452-regulator.txt       | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt b/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
-index 882455e..f9acbc1 100644
---- a/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
-@@ -1,6 +1,7 @@
- SKY81452 voltage regulator
- 
- Required properties:
-+- regulator node named lout.
- - any required generic properties defined in regulator.txt
- 
- Optional properties:
-@@ -9,8 +10,9 @@ Optional properties:
- Example:
- 
- 	regulator {
--		/* generic regulator properties */
--		regulator-name = "touch_en";
--		regulator-min-microvolt = <4500000>;
--		regulator-max-microvolt = <8000000>;
-+		lout {
-+			regulator-name = "sky81452-lout";
-+			regulator-min-microvolt = <4500000>;
-+			regulator-max-microvolt = <8000000>;
-+		};
- 	};
+Cheers,
 -- 
-1.9.1
+Email: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
