@@ -1,75 +1,229 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 8/8] ARM: mediatek: Fix description for mediatek SoCs
-Date: Fri, 31 Oct 2014 15:53:39 +0100
-Message-ID: <CABuKBeKFZQAHPR4xjCnM+nz67zE79rWPTHbc=m3VKcCX54Q8rQ@mail.gmail.com>
-References: <1413973797-17619-1-git-send-email-yingjoe.chen@mediatek.com>
-	<1413973797-17619-9-git-send-email-yingjoe.chen@mediatek.com>
-	<CABuKBe+Ew6R2Kb90-gDHBQ4HuydfFxJdYmr+v9-KNC-b0K4Tkw@mail.gmail.com>
-	<1413984696.19686.72.camel@mtksdaap41>
-	<CABuKBeLJuaDnCYuvvS6csNzvbTeEdgEUdZ4tBQeVPuw37JK11Q@mail.gmail.com>
-	<1414129026.14830.588.camel@mtksdaap41>
-	<1414719439.5833.25.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414719439.5833.25.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hsien-Chun Yen <hc.yen@mediatek.com>, Yuhau Chen <yh.chen@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Nathan Chung <nathan.chung@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, huang eddie <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Subject: [PATCH 1/2] clk: shmobile: div6: support selectable-input clocks
+Date: Fri, 31 Oct 2014 16:01:35 +0100
+Message-ID: <1414767696-23211-2-git-send-email-ulrich.hecht+renesas@gmail.com>
+References: <1414767696-23211-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1414767696-23211-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, mturquette@linaro.org, laurent.pinchart+renesas@ideasonboard.com
+Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, geert@linux-m68k.org, devicetree@vger.kernel.org, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joe,
+Support for setting the parent at initialization time based on the current
+hardware configuration in DIV6 clocks with selectable parents as found in
+the r8a73a4, r8a7740, sh73a0, and other SoCs.
 
-2014-10-31 2:37 GMT+01:00 Yingjoe Chen <yingjoe.chen@mediatek.com>:
-> Hi Matthias,
->
-> Is this series + this new 8/8 patch OK?
-> Anything else that I should change?
->
+Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+---
+ drivers/clk/shmobile/clk-div6.c | 117 +++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 105 insertions(+), 12 deletions(-)
 
-I checked the patches on my mt8135 board and they work for me. So from
-my site everything fine.
-
-I added the patches to my tree [0] branches v3.19-next/soc and v3.19-next/dts
-I made a small change to the commit message of patch 8 and I will try
-to send the pull request asap.
-
-Thanks,
-Matthias
-
-[0] https://github.com/mbgg/linux-mediatek
-
-> Joe.C
->
-> On Fri, 2014-10-24 at 13:37 +0800, Yingjoe Chen wrote:
->> From: "Joe.C" <yingjoe.chen@mediatek.com>
->>
->> We support more MediaTek SoCs now, update the description.
->>
->> Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
->> ---
->>  arch/arm/mach-mediatek/Kconfig | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm/mach-mediatek/Kconfig
->> b/arch/arm/mach-mediatek/Kconfig
->> index 2c043a2..f73f588 100644
->> --- a/arch/arm/mach-mediatek/Kconfig
->> +++ b/arch/arm/mach-mediatek/Kconfig
->> @@ -1,6 +1,6 @@
->>  config ARCH_MEDIATEK
->> -     bool "Mediatek MT6589 SoC" if ARCH_MULTI_V7
->> +     bool "Mediatek MT65xx & MT81xx SoC" if ARCH_MULTI_V7
->>       select ARM_GIC
->>       select MTK_TIMER
->>       help
->> -       Support for Mediatek Cortex-A7 Quad-Core-SoC MT6589.
->> +       Support for Mediatek MT65xx & MT81xx SoCs
->
->
->
-
-
-
+diff --git a/drivers/clk/shmobile/clk-div6.c b/drivers/clk/shmobile/clk-div6.c
+index f065f69..ea44988 100644
+--- a/drivers/clk/shmobile/clk-div6.c
++++ b/drivers/clk/shmobile/clk-div6.c
+@@ -32,6 +32,9 @@ struct div6_clock {
+ 	struct clk_hw hw;
+ 	void __iomem *reg;
+ 	unsigned int div;
++	int src_shift;
++	int src_width;
++	u8 *parents;
+ };
+ 
+ #define to_div6_clock(_hw) container_of(_hw, struct div6_clock, hw)
+@@ -39,8 +42,11 @@ struct div6_clock {
+ static int cpg_div6_clock_enable(struct clk_hw *hw)
+ {
+ 	struct div6_clock *clock = to_div6_clock(hw);
++	u32 val;
+ 
+-	clk_writel(CPG_DIV6_DIV(clock->div - 1), clock->reg);
++	val = (clk_readl(clock->reg) & ~(CPG_DIV6_DIV_MASK | CPG_DIV6_CKSTP))
++	    | CPG_DIV6_DIV(clock->div - 1);
++	clk_writel(val, clock->reg);
+ 
+ 	return 0;
+ }
+@@ -52,7 +58,7 @@ static void cpg_div6_clock_disable(struct clk_hw *hw)
+ 	/* DIV6 clocks require the divisor field to be non-zero when stopping
+ 	 * the clock.
+ 	 */
+-	clk_writel(CPG_DIV6_CKSTP | CPG_DIV6_DIV(CPG_DIV6_DIV_MASK),
++	clk_writel(clk_readl(clock->reg) | CPG_DIV6_CKSTP | CPG_DIV6_DIV_MASK,
+ 		   clock->reg);
+ }
+ 
+@@ -94,12 +100,53 @@ static int cpg_div6_clock_set_rate(struct clk_hw *hw, unsigned long rate,
+ {
+ 	struct div6_clock *clock = to_div6_clock(hw);
+ 	unsigned int div = cpg_div6_clock_calc_div(rate, parent_rate);
++	u32 val;
+ 
+ 	clock->div = div;
+ 
++	val = clk_readl(clock->reg) & ~CPG_DIV6_DIV_MASK;
+ 	/* Only program the new divisor if the clock isn't stopped. */
+-	if (!(clk_readl(clock->reg) & CPG_DIV6_CKSTP))
+-		clk_writel(CPG_DIV6_DIV(clock->div - 1), clock->reg);
++	if (!(val & CPG_DIV6_CKSTP))
++		clk_writel(val | CPG_DIV6_DIV(clock->div - 1), clock->reg);
++
++	return 0;
++}
++
++static unsigned char cpg_div6_clock_get_parent(struct clk_hw *hw)
++{
++	struct div6_clock *clock = to_div6_clock(hw);
++	u8 hw_index;
++	int i;
++
++	if (clock->src_width == 0)
++		return 0;
++
++	hw_index = (clk_readl(clock->reg) >> clock->src_shift) &
++		   (BIT(clock->src_width) - 1);
++	for (i = 0; i < hw->init->num_parents; i++) {
++		if (clock->parents[i] == hw_index)
++			return i;
++	}
++
++	pr_err("%s: %s DIV6 clock set to invalid parent %d\n",
++	       __func__, hw->init->name, hw_index);
++	return 0;
++}
++
++static int cpg_div6_clock_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct div6_clock *clock = to_div6_clock(hw);
++	u8 hw_index;
++	u32 mask;
++
++	if (index >= hw->init->num_parents)
++		return -EINVAL;
++
++	mask = ~((BIT(clock->src_width) - 1) << clock->src_shift);
++	hw_index = clock->parents[index];
++
++	clk_writel((clk_readl(clock->reg) & mask) |
++		(hw_index << clock->src_shift), clock->reg);
+ 
+ 	return 0;
+ }
+@@ -108,6 +155,8 @@ static const struct clk_ops cpg_div6_clock_ops = {
+ 	.enable = cpg_div6_clock_enable,
+ 	.disable = cpg_div6_clock_disable,
+ 	.is_enabled = cpg_div6_clock_is_enabled,
++	.get_parent = cpg_div6_clock_get_parent,
++	.set_parent = cpg_div6_clock_set_parent,
+ 	.recalc_rate = cpg_div6_clock_recalc_rate,
+ 	.round_rate = cpg_div6_clock_round_rate,
+ 	.set_rate = cpg_div6_clock_set_rate,
+@@ -115,12 +164,17 @@ static const struct clk_ops cpg_div6_clock_ops = {
+ 
+ static void __init cpg_div6_clock_init(struct device_node *np)
+ {
++	const char **parent_names;
+ 	struct clk_init_data init;
+ 	struct div6_clock *clock;
+-	const char *parent_name;
+ 	const char *name;
+ 	struct clk *clk;
++	int valid_parents;
++	int num_parents;
++	u32 src_shift;
++	u32 src_width;
+ 	int ret;
++	int i;
+ 
+ 	clock = kzalloc(sizeof(*clock), GFP_KERNEL);
+ 	if (!clock) {
+@@ -129,6 +183,24 @@ static void __init cpg_div6_clock_init(struct device_node *np)
+ 		return;
+ 	}
+ 
++	num_parents = of_clk_get_parent_count(np);
++	if (num_parents < 1) {
++		pr_err("%s: no parent found for %s DIV6 clock\n",
++		       __func__, np->name);
++		return;
++	}
++
++	clock->parents = kmalloc_array(num_parents, sizeof(*clock->parents),
++		GFP_KERNEL);
++	parent_names = kmalloc_array(num_parents, sizeof(*parent_names),
++				GFP_KERNEL);
++
++	if (!parent_names) {
++		pr_err("%s: failed to allocate %s parent name list\n",
++		       __func__, np->name);
++		return;
++	}
++
+ 	/* Remap the clock register and read the divisor. Disabling the
+ 	 * clock overwrites the divisor, so we need to cache its value for the
+ 	 * enable operation.
+@@ -150,19 +222,38 @@ static void __init cpg_div6_clock_init(struct device_node *np)
+ 		goto error;
+ 	}
+ 
+-	parent_name = of_clk_get_parent_name(np, 0);
+-	if (parent_name == NULL) {
+-		pr_err("%s: failed to get %s DIV6 clock parent name\n",
+-		       __func__, np->name);
+-		goto error;
++
++	for (i = 0, valid_parents = 0; i < num_parents; i++) {
++		const char *name = of_clk_get_parent_name(np, i);
++
++		if (name) {
++			parent_names[valid_parents] = name;
++			clock->parents[valid_parents] = i;
++			valid_parents++;
++		}
++	}
++
++	if (!of_property_read_u32(np, "renesas,src-shift", &src_shift)) {
++		if (!of_property_read_u32(np, "renesas,src-width",
++					&src_width)) {
++			clock->src_shift = src_shift;
++			clock->src_width = src_width;
++		} else {
++			pr_err("%s: renesas,src-shift without renesas,src-width in %s\n",
++			       __func__, np->name);
++			goto error;
++		}
++	} else {
++		clock->src_shift = clock->src_width = 0;
+ 	}
+ 
++
+ 	/* Register the clock. */
+ 	init.name = name;
+ 	init.ops = &cpg_div6_clock_ops;
+ 	init.flags = CLK_IS_BASIC;
+-	init.parent_names = &parent_name;
+-	init.num_parents = 1;
++	init.parent_names = parent_names;
++	init.num_parents = valid_parents;
+ 
+ 	clock->hw.init = &init;
+ 
+@@ -175,11 +266,13 @@ static void __init cpg_div6_clock_init(struct device_node *np)
+ 
+ 	of_clk_add_provider(np, of_clk_src_simple_get, clk);
+ 
++	kfree(parent_names);
+ 	return;
+ 
+ error:
+ 	if (clock->reg)
+ 		iounmap(clock->reg);
++	kfree(parent_names);
+ 	kfree(clock);
+ }
+ CLK_OF_DECLARE(cpg_div6_clk, "renesas,cpg-div6-clock", cpg_div6_clock_init);
 -- 
-motzblog.wordpress.com
+1.8.4.5
+
