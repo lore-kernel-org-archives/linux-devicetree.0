@@ -1,21 +1,15 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 4/4] crypto: Add Allwinner Security
- System crypto accelerator
-Date: Fri, 31 Oct 2014 09:13:23 +0100
-Message-ID: <20141031081323.GS21251@lukather>
-References: <1413728182-13569-1-git-send-email-clabbe.montjoie@gmail.com>
- <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com>
- <20141021191149.GQ21108@lukather>
- <544A9FEA.6020304@gmail.com>
- <20141030171933.GR21251@lukather>
- <20141031072030.GA7563@gondor.apana.org.au>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 0/5] simplefb: add clock handling code
+Date: Fri, 31 Oct 2014 10:15:31 +0200
+Message-ID: <54534523.8080801@ti.com>
+References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="owPIoVL9FiqC4k42"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBB4KZWRAKGQEPAGPJDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141031072030.GA7563-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+	protocol="application/pgp-signature";
+	boundary="ER492xxKe18xpMuW2luQFtQPIs7CSwEuS"
+Return-path: <linux-sunxi+bncBCGMHFOOT4LBBLUKZWRAKGQEU4TC64A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1413996311-4287-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -23,64 +17,57 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Cc: Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---owPIoVL9FiqC4k42
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--ER492xxKe18xpMuW2luQFtQPIs7CSwEuS
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 31, 2014 at 03:20:30PM +0800, Herbert Xu wrote:
-> On Thu, Oct 30, 2014 at 06:19:33PM +0100, Maxime Ripard wrote:
-> >
-> > > With AF_ALG and cryptodev, the SG is in highmem. Verified with some
-> > > PageHighMem().
-> >=20
-> > Then fix AF_ALG and cryptodev, because all of the other drivers might
-> > be affected.
->=20
-> No it's the driver that needs to be fixed.  Of course if there
-> are enough drivers it may be worthwhile adding either copying or
-> a software fallback for highmem requests.
+Hi Hans,
 
-I don't understand here. Why would other drivers *not* being affected?
+On 22/10/14 19:45, Hans de Goede wrote:
 
-If the scatter list passed by AF_ALG can be in highmem, I guess it's
-the case for every driver out there. Almost every kernel code I've
-seen so far makes the assumption that the memory it has is mapped and
-accessible.
+> -We will add a clocks property to the simplefb devicetree bindings, so
+>  that u-boot setup framebuffers passed to the kernel (for early console=
 
-Somehow, it's the driver's fault now, and not the part of kernel that
-actually does the allocation?
+>  support) can properly list the clocks used, and simplefb can claim the=
+m to
+>  avoid them getting turned off, thereby breaking the early console
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Perhaps this has been discussed earlier, but I started to wonder if
+managing clocks is enough.
 
---owPIoVL9FiqC4k42
+What about regulators (to power the LCD), gpios (to keep the LCD
+enabled) and pinctrl (for video signals)? I guess any those could be
+reset by the kernel if no driver uses them.
+
+ Tomi
+
+
+
+--ER492xxKe18xpMuW2luQFtQPIs7CSwEuS
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJUU0SjAAoJEBx+YmzsjxAgc0oP/Akx+HiU2vyi+QPmjZdlLPb0
-o/iaSamNfISpdhFlFa6yYebY/r6g2IOhMkXuAB9h8SBHCLkgR8PnUw9P1F/Xj3rW
-RlLAH9T8uC9ldl2paP2YOGzhQCDAkkxHJdmkakcyKu8CnQ2bfFOqtuayDl3otC3h
-mq+kYiSB/i5bQsGG8gwMlys0TO61xFhvoElOVWr0IhuhQ3oAL8taCGvs5XHCxew+
-Okfm/E1mJ1/3rfIZ5NyTQU8SrwRfppoS9FtK0D08dCpxez+d5313USyw26HwySRR
-LYSSpMbFWfuz95ZbXE1hpZbbCW8fjYezzG6EzIfXScvWRC9NRTfHlBWqfgyfC5fg
-zvW9XwshH0sx59uQ6q8c5nZNugPmqymbwhX6ARqk9EEbEUGUg0CbdAHegxaC+dt3
-sq3xymGRl7lek/BD3R5Xoumc4JP9fSuyEzlaNlEMJ7BmpXe46+hv8/BCYx7dpbUT
-oCdsLTw7Ob/8np28d1V6MTZ987gjnIhtzctWJqsnRBK0TnnF+Awe9JwnRqhO3VW8
-H0CnLUVPbZO9dsLp6QiXSnXhKLS91B8cJj2deO1pChoajU89zU5KdO/9JYb4+7GU
-qae9b587nHwaPJumAv/rtM185y3inqJphf9BmYFK/tHdhiWk61z89NC+zTfv1M6+
-JNPb0/Mqbiy4KzzTyNR4
-=NRk6
+iQIcBAEBAgAGBQJUU0UjAAoJEPo9qoy8lh71Rq4P/iBMueYx1qH1hmpij6KbM3zy
+xv920ZWRO6ZmV+lvcZRE+rFJJHkjqOySvcZZxrM35Kfdmu3DgtPKAZmVlr296bhK
+Ler9dTX7oXjDJ1liOD+C+5GRLqpr74wWX2bDtjfhdjsQBtHIOkFVyv0/hO0G+wee
+X+6aiYlBBbRLizzYTPEyBLTXkI57WmfnPtLfs+11rS7FrFk+LwZ1trdGJjwY3/C3
+P+kJkYrd8b5s73giOXsfgsKK4j9rMnfP3eNlEABjBPY+JRN0kQbC3PGoNKJE+CXA
+kkJFvxc1WdkZMFoVo32wQm2dQYEz6qPQxg4gWYJGiJrIJ3LRlep3yVPSvOafAOpu
+y+7KK98JgzG2wx18y2dPqbJSuTZiF/ndeiysXtHftnjDvJJaVr+OIJrPKpLrSyj/
+oqUOIjB7Qs1JWFZ512u67gGzm+cN2oagnGDAW3pCOVmvMXmPCcJk2X0dSDSd23cd
+t6ewYybrZP5ip95vAyhFk2m9C3PbnFWWV6NKflG9vEklC9fZFKHTrXMd4O8UTBgO
+0T0IXt8KLfvLCY9jWzU6Ve9mYjttUxrAaI8hjqHLb8L/BgJc9NhZ26QX1YVoYmqt
+6Pk0Dyry/4vgSvKMzew3eXOe4vwqMW/G4I7NWnqf+R8yHitjHKHlzJWSiqNAczv1
+0VdACYy3HLfIbv2oryev
+=m8dE
 -----END PGP SIGNATURE-----
 
---owPIoVL9FiqC4k42--
+--ER492xxKe18xpMuW2luQFtQPIs7CSwEuS--
