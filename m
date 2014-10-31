@@ -1,102 +1,63 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [V9 PATCH 2/2] irqchip: gicv2m: Add supports for ARM GICv2m
- MSI(-X)
-Date: Fri, 31 Oct 2014 10:40:27 +0100 (CET)
-Message-ID: <alpine.DEB.2.11.1410311014050.5308@nanos>
-References: <1414743990-28421-1-git-send-email-suravee.suthikulpanit@amd.com> <1414743990-28421-3-git-send-email-suravee.suthikulpanit@amd.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 07/12] leds: leds-gpio: Add support for GPIO descriptors
+Date: Fri, 31 Oct 2014 10:41:38 +0100
+Message-ID: <CACRpkdYQwzwLJOCx76uONCpTsUtxhePaByyYPz-52Xw9L+DYQQ@mail.gmail.com>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan>
+	<3395005.IveyhHQnye@vostro.rjw.lan>
+	<CACRpkdYR70Az1uLyjsaujQN-q-4+qRD=GpqJaOuvnKZhypL=cA@mail.gmail.com>
+	<17483842.EFni4iQX1H@vostro.rjw.lan>
+	<20141029085306.GI1304@lahna.fi.intel.com>
+	<CACRpkdaKiz4wODUnH+2+ELY3XGSYYsQ_iFMm+iY=o6rmVcxmSw@mail.gmail.com>
+	<20141030161528.GS1304@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1414743990-28421-3-git-send-email-suravee.suthikulpanit@amd.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, jason@lakedaemon.net, Catalin.Marinas@arm.com, Will.Deacon@arm.com, liviu.dudau@arm.com, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141030161528.GS1304@lahna.fi.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 31 Oct 2014, suravee.suthikulpanit@amd.com wrote:
-> +/*
-> + * alloc_msi_irq - Allocate MSIs from available MSI bitmap.
-> + * @data: Pointer to v2m_data
-> + * @nvec: Number of interrupts to allocate
-> + * @irq: Pointer to the allocated irq
-> + *
-> + * Allocates interrupts only if the contiguous range of MSIs
-> + * with specified nvec are available. Otherwise return the number
-> + * of available interrupts. If none are available, then returns -ENOENT.
+On Thu, Oct 30, 2014 at 5:15 PM, Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> On Thu, Oct 30, 2014 at 04:40:05PM +0100, Linus Walleij wrote:
+>> > Yes, I'll just let dust to settle before sending out a patch that
+>> > converts the existing users of platform_gpio_blink_set() callback to
+>> > gpio descriptors.
+>>
+>> Dust settle = 2 weeks, 18 months, 5 years?
+>
+> I started to do the conversion already but then noticed that it is not
+> that trivial after all.
 
-And the exact purpose of returning the number of available interrupts
-is?
+Thanks for looking into this.
 
-> + */
-> +static int alloc_msi_irq(struct v2m_data *data, int nvec, int *irq)
-> +{
-> +	int size = data->nr_spis;
-> +	int next = size, i = nvec, ret;
-> +
-> +	/* We should never allocate more than available nr_spis */
-> +	if (i >= size)
-> +		i = size;
-> +
-> +	spin_lock(&data->msi_cnt_lock);
-> +
-> +	for (; i > 0; i--) {
-> +		next = bitmap_find_next_zero_area(data->bm,
-> +					size, 0, i, 0);
-> +		if (next < size)
-> +			break;
-> +	}
+> For example we have one user in arch/arm/mach-orion5x/dns323-setup.c:
+>
+> static struct gpio_led_platform_data dns323ab_led_data = {
+>         .num_leds       = ARRAY_SIZE(dns323ab_leds),
+>         .leds           = dns323ab_leds,
+>         .gpio_blink_set = orion_gpio_led_blink_set,
+> };
+>
+> orion_gpio_led_blink_set() is part of orion specific custom GPIO
+> "driver" defined in arch/arm/plat-orion/gpio.c and as far as I can tell
+> cannot use GPIO descriptors as it directly programs these numbers to the
+> hardware.
+>
+> We can convert the descriptor to a number in the beginning of
+> orion_gpio_led_blink_set() if that helps.
+>
+> Other two users: rx1950_led_blink_set() and h1940_led_blink_set() seem
+> to have similar needs for the numeric value.
 
-That we need a pointless loop here.
+Doing the conversion from descriptor to gpio number in the
+platforms is *much desired*, because it is a nice divide-and-conquer
+approach.
 
-> +static int gicv2m_setup_msi_irq(struct msi_chip *chip, struct pci_dev *pdev,
-> +				struct msi_desc *desc)
-> +{
-> +	int hwirq = 0, virq, avail;
-> +	struct v2m_data *v2m = container_of(chip, struct v2m_data, msi_chip);
-> +
-> +	if (!desc) {
-> +		dev_err(&pdev->dev,
-> +			"MSI setup failed. Invalid msi descriptor\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	avail = alloc_msi_irq(v2m, 1, &hwirq);
-> +	if (avail != 0) {
+For example mach-orion is going to be deleted and replaced
+with mach-mvebu at some time, so then part of the problem
+goes away entirely.
 
-So that the caller can turn any non zero return value into -ENOSPC.
-
-> +		dev_err(&pdev->dev,
-> +			"MSI setup failed. Cannnot allocate IRQ\n");
-> +		return -ENOSPC;
-> +	}
-
-Brilliant design.
-
-> +	virq = __irq_domain_alloc_irqs(v2m->domain, hwirq,
-> +				       1, NUMA_NO_NODE, v2m, true);
-
-And surely the ability of alloc_msi_irq() to allocate a contiguous
-vector space is required to satisfy an hardcoded allocation of ONE
-interrupt.
-
-What is guaranteeing that the caller only requests a single interrupt?
-
-> +err_out:
-
-Single error exit which undoes the stuff in the same order it got
-initialized is just plain wrong. Ever looked at proper error exits in
-other kernel files?
-
-> +	of_pci_msi_chip_remove(&v2m->msi_chip);
-> +	if (v2m->base)
-> +		iounmap(v2m->base);
-> +	if (v2m->bm)
-> +		kzfree(v2m->bm);
-
-Of course you need to zero out the kzalloced bitmap before freeing it
-in order not to leak the secrets of a zeroed buffer to the sneaky
-black hats, right?
-
-Oh well...
-
-      tglx
+Yours,
+Linus Walleij
