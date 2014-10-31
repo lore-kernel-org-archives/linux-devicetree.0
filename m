@@ -1,65 +1,74 @@
-From: Huang Rui <ray.huang@amd.com>
-Subject: Re: [PATCH v4 19/20] usb: dwc3: add support for AMD Nolan platform
-Date: Fri, 31 Oct 2014 09:35:51 +0800
-Message-ID: <20141031013550.GC20367@hr-slim.amd.com>
-References: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
- <1414663725-2195-20-git-send-email-ray.huang@amd.com>
- <20141030163840.GK10130@saruman>
+From: yoshihiro shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v2 2/2] ARM: shmobile: lager: enable USB3.0
+Date: Fri, 31 Oct 2014 02:06:14 +0000
+Message-ID: <2b89f66c72894bdf8bdce7aab7c69281@HKNPR06MB322.apcprd06.prod.outlook.com>
+References: <1414147307-4584-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1414147307-4584-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CANqRtoQTBd23z4uVK-EB7JJuJ_K0GkV6ueVfnywShqe6Dx0T5w@mail.gmail.com>
+ <5450CD42.9070101@renesas.com> <20141029235748.GD4599@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141030163840.GK10130@saruman>
-Sender: linux-pci-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20141029235748.GD4599@verge.net.au>
+Content-Language: ja-JP
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-USB <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 30, 2014 at 11:38:40AM -0500, Felipe Balbi wrote:
-> On Thu, Oct 30, 2014 at 06:08:44PM +0800, Huang Rui wrote:
-> > This patch adds support for AMD Nolan (NL) FPGA and SoC platform.
-> > 
-> > Cc: Jason Chang <jason.chang@amd.com>
-> > Signed-off-by: Huang Rui <ray.huang@amd.com>
-> > ---
-> >  drivers/usb/dwc3/dwc3-pci.c | 23 +++++++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> > 
-> > diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
-> > index ada975f..257fb3f9e 100644
-> > --- a/drivers/usb/dwc3/dwc3-pci.c
-> > +++ b/drivers/usb/dwc3/dwc3-pci.c
-> > @@ -145,6 +145,28 @@ static int dwc3_pci_probe(struct pci_dev *pci,
-> >  	res[1].name	= "dwc_usb3";
-> >  	res[1].flags	= IORESOURCE_IRQ;
-> >  
-> > +	if (pci->vendor == PCI_VENDOR_ID_AMD &&
-> > +			pci->device == PCI_DEVICE_ID_AMD_NL_USB) {
-> > +		dwc3_pdata.has_lpm_erratum = true;
-> > +		dwc3_pdata.lpm_nyet_threshold = 0xf;
-> > +
-> > +		dwc3_pdata.u2exit_lfps_quirk = true;
-> > +		dwc3_pdata.u2ss_inp3_quirk = true;
-> > +		dwc3_pdata.req_p1p2p3_quirk = true;
-> > +		dwc3_pdata.del_p1p2p3_quirk = true;
-> > +		dwc3_pdata.del_phy_power_chg_quirk = true;
-> > +		dwc3_pdata.lfps_filter_quirk = true;
-> > +		dwc3_pdata.rx_detect_poll_quirk = true;
-> > +
-> > +		dwc3_pdata.tx_de_emphasis_quirk = true;
-> > +		dwc3_pdata.tx_de_emphasis = 1;
-> > +
-> > +		/* FIXME these quirks should move when AMD NL taps out */
-> 
-> do you mean ?
-> 
-> 		/*
-> 		 * FIXME these quirks should be removed when AMD NL
-> 		 * tapes out
-> 		 */
-> 
+Hi Simon-san,
 
-That's right, will update.
+> On Wed, Oct 29, 2014 at 08:19:30PM +0900, Yoshihiro Shimoda wrote:
+> > Hi Magnus-san,
+> >
+> > (2014/10/29 15:53), Magnus Damm wrote:
+< snip >
+> > >
+> > > Hi Shimoda-san,
+> > >
+> > > Thanks for your patch. I'm fine with this patch as a first step, but
+> > > I'm wondering what the reason is to prioritize USB 2.0 over USB 3.0?
+> >
+> > I investigated this reason today, and I found the reason is
+> > request_firmware().  I checked the following environments:
+> >
+> >  Case 1: xHCI and EHCI and OHCI are enabled "=y" Case 2: xHCI and EHCI
+> > and OHCI are loadable modules "=m" Case 3: xHCI and EHCI and OHCI are
+> > enabled "=y", and CONFIG_EXTRA_FIRMWARE is enabled
+> >
+> > The results are: - In "Case 1", EHCI and OHCI are probed first because
+> > xHCI didn't find the firmware.  - In "Case 2" and "Case 3", xHCI is
+> > probed first.
+> >
+> > > Is the current order just based on device init order? In my mind the
+> > > expected behavior would be to always use USB 3.0 if it happens to be
+> > > available in the hardware, specified in the DTS, enabled by the
+> > > kernel configuration and firmware is loadable. Or does some case
+> > > exist where it is better to use USB 2.0? I suspect no.
+> >
+> > I agree with you.
+> >
+> > > So I wonder if you have any plans how to make USB 3.0 enabled by
+> > > default on Lager?
+> >
+> > It depends on a kernel config. I'm not sure of the shmobile_defconfig
+> > strategy.  But, in my opinion, one of a solution is kernel modules
+> > (this means the "Case 2".)
+> 
+> It sounds like we should enable CONFIG_EXTRA_FIRMWARE in shmobile_defconfig. I wonder what if any fallout we can foresee
+> occurring if we do that.
 
-Thanks,
-Rui
+According to the firmware/README.AddingFirmware, we are unable to add a new firmware image to the firmware directory now.
+So, if we enable CONFIG_EXTRA_FIRMWARE with the xHCI firmware, we will not build kernel because the xHCI firmware doesn't exist in the linux.git.
+
+=== from  firmware/README.AddingFirmware =====================================
+This directory is _NOT_ for adding arbitrary new firmware images. The
+place to add those is the separate linux-firmware repository:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
+==============================================================================
+
+Best regards,
+Yoshihiro Shimoda
+
