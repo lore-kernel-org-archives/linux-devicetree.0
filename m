@@ -1,136 +1,34 @@
-From: Ankit Jindal <ankit.jindal@linaro.org>
-Subject: Re: [PATCH v3 2/6] uio: Add new UIO_MEM_PHYS_CACHE type for mem regions
-Date: Fri, 31 Oct 2014 15:00:41 +0530
-Message-ID: <CAPTm99W0J-Q6CwCDVaYe4eyEWrruWuY5pzpHoESyVu9N3cFA=g@mail.gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v3 2/6] uio: Add new UIO_MEM_PHYS_CACHE type for mem
+ regions
+Date: Fri, 31 Oct 2014 09:35:57 +0000
+Message-ID: <20141031093557.GT27405@n2100.arm.linux.org.uk>
 References: <1413871011-4101-1-git-send-email-ankit.jindal@linaro.org>
- <1413871011-4101-3-git-send-email-ankit.jindal@linaro.org> <6D33D50E-2DD1-482C-B05E-45B237F3B779@codeaurora.org>
+ <1413871011-4101-3-git-send-email-ankit.jindal@linaro.org>
+ <6D33D50E-2DD1-482C-B05E-45B237F3B779@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <6D33D50E-2DD1-482C-B05E-45B237F3B779@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kumar Gala <galak@codeaurora.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Hans J. Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "patches@apm.com" <patches@apm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Tushar Jagad <tushar.jagad@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Varka Bhadram <varkabhadram@gmail.com>
+Cc: Ankit Jindal <ankit.jindal@linaro.org>, linux-kernel@vger.kernel.org, "Hans J. Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, patches@apm.com, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Tushar Jagad <tushar.jagad@linaro.org>, devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Varka Bhadram <varkabhadram@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kumar,
+On Tue, Oct 21, 2014 at 08:38:23AM +0200, Kumar Gala wrote:
+> Rather than adding a new type, why not allow the driver to set the
 
-On 21 October 2014 12:08, Kumar Gala <galak@codeaurora.org> wrote:
->
-> On Oct 21, 2014, at 7:56 AM, Ankit Jindal <ankit.jindal@linaro.org> w=
-rote:
->
->> Currently, three types of mem regions are supported: UIO_MEM_PHYS,
->> UIO_MEM_LOGICAL and UIO_MEM_VIRTUAL. Among these UIO_MEM_PHYS helps
->> UIO driver export physcial memory to user space as non-cacheable
->> user memory. Typcially memory-mapped registers of a device are expor=
-ted
->> to user space as UIO_MEM_PHYS type mem region. The UIO_MEM_PHYS type
->> is not efficient if dma-capable devices are capable of maintaining c=
-oherency
->> with CPU caches.
->>
->> This patch adds new type UIO_MEM_PHYS_CACHE for mem regions to enabl=
-e
->> cacheable access to physical memory from user space.
->>
->> Signed-off-by: Ankit Jindal <ankit.jindal@linaro.org>
->> Signed-off-by: Tushar Jagad <tushar.jagad@linaro.org>
->> ---
->> drivers/uio/uio.c          |   11 ++++++++---
->> include/linux/uio_driver.h |    1 +
->> 2 files changed, 9 insertions(+), 3 deletions(-)
->
-> Rather than adding a new type, why not allow the driver to set the pg=
-prot value, this way one has full control and we don=E2=80=99t need to =
-keep adding types for various different cache attributions in the futur=
-e.
+Please wrap your message.
 
-Do you mean to add a new field pgprot_t in the memtype structure and
-uio_mmap_physical will set vma->vm_page_prot to this value provided by
-driver ? If this is the case then we will need to change all the
-current uio based drivers which was the reason I preferred to have a
-new mem type.
+That doesn't work.  A pgprot_t contains more than just memory type
+information.  It also contains access permissions.  In other words,
+if the user requested read-only or a read-write mapping, the
+permissions will be different.
 
-Please let me know if I have misunderstood anything.
+If you always use your stored pgprot_t, then you will override the
+users requested permissions.
 
-Thanks,
-Ankit
-
->
-> - k
->
->>
->> diff --git a/drivers/uio/uio.c b/drivers/uio/uio.c
->> index 97e6444..120a84b 100644
->> --- a/drivers/uio/uio.c
->> +++ b/drivers/uio/uio.c
->> @@ -644,7 +644,7 @@ static const struct vm_operations_struct uio_phy=
-sical_vm_ops =3D {
->> #endif
->> };
->>
->> -static int uio_mmap_physical(struct vm_area_struct *vma)
->> +static int uio_mmap_physical(struct vm_area_struct *vma, bool cache=
-able)
->> {
->>       struct uio_device *idev =3D vma->vm_private_data;
->>       int mi =3D uio_find_mem_index(vma);
->> @@ -659,7 +659,9 @@ static int uio_mmap_physical(struct vm_area_stru=
-ct *vma)
->>               return -EINVAL;
->>
->>       vma->vm_ops =3D &uio_physical_vm_ops;
->> -     vma->vm_page_prot =3D pgprot_noncached(vma->vm_page_prot);
->> +
->> +     if (!cacheable)
->> +             vma->vm_page_prot =3D pgprot_noncached(vma->vm_page_pr=
-ot);
->>
->>       /*
->>        * We cannot use the vm_iomap_memory() helper here,
->> @@ -707,10 +709,13 @@ static int uio_mmap(struct file *filep, struct=
- vm_area_struct *vma)
->>
->>       switch (idev->info->mem[mi].memtype) {
->>       case UIO_MEM_PHYS:
->> -             return uio_mmap_physical(vma);
->> +             return uio_mmap_physical(vma, false);
->>       case UIO_MEM_LOGICAL:
->>       case UIO_MEM_VIRTUAL:
->>               return uio_mmap_logical(vma);
->> +     case UIO_MEM_PHYS_CACHE:
->> +             return uio_mmap_physical(vma, true);
->> +
->>       default:
->>               return -EINVAL;
->>       }
->> diff --git a/include/linux/uio_driver.h b/include/linux/uio_driver.h
->> index 1ad4724..40ca3f3 100644
->> --- a/include/linux/uio_driver.h
->> +++ b/include/linux/uio_driver.h
->> @@ -118,6 +118,7 @@ extern void uio_event_notify(struct uio_info *in=
-fo);
->> #define UIO_MEM_PHYS  1
->> #define UIO_MEM_LOGICAL       2
->> #define UIO_MEM_VIRTUAL 3
->> +#define UIO_MEM_PHYS_CACHE   4
->>
->> /* defines for uio_port->porttype */
->> #define UIO_PORT_NONE 0
->> --
->> 1.7.9.5
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree=
-" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-> --
-> Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora F=
-orum,
-> a Linux Foundation Collaborative Project
->
+-- 
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
