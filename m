@@ -1,7 +1,7 @@
 From: Huang Rui <ray.huang@amd.com>
-Subject: [PATCH v5 3/8] usb: dwc3: add disable usb2 suspend phy quirk
-Date: Fri, 31 Oct 2014 11:11:14 +0800
-Message-ID: <1414725079-11490-4-git-send-email-ray.huang@amd.com>
+Subject: [PATCH v5 2/8] usb: dwc3: add disable usb3 suspend phy quirk
+Date: Fri, 31 Oct 2014 11:11:13 +0800
+Message-ID: <1414725079-11490-3-git-send-email-ray.huang@amd.com>
 References: <1414725079-11490-1-git-send-email-ray.huang@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,7 +12,7 @@ To: Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn H
 Cc: Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Huang Rui <ray.huang@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds disable usb2 suspend phy quirk, and some special platforms
+This patch adds disable usb3 suspend phy quirk, and some special platforms
 can configure that if it is needed.
 
 Signed-off-by: Huang Rui <ray.huang@amd.com>
@@ -24,77 +24,77 @@ Signed-off-by: Huang Rui <ray.huang@amd.com>
  4 files changed, 10 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 08b394e..f200ecc 100644
+index b724b2e..08b394e 100644
 --- a/Documentation/devicetree/bindings/usb/dwc3.txt
 +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -33,6 +33,7 @@ Optional properties:
+@@ -32,6 +32,7 @@ Optional properties:
+  - snps,tx_de_emphasis_quirk: when set core will set Tx de-emphasis value.
   - snps,tx_de_emphasis: the value driven to the PHY is controlled by the
  			LTSSM during USB3 Compliance mode.
-  - snps,dis_u3_susphy_quirk: when set core will disable USB3 suspend phy.
-+ - snps,dis_u2_susphy_quirk: when set core will disable USB2 suspend phy.
++ - snps,dis_u3_susphy_quirk: when set core will disable USB3 suspend phy.
  
  This is usually a subnode to DWC3 glue to which it is connected.
  
 diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 6ec4176..25f1446 100644
+index e7e877a..6ec4176 100644
 --- a/drivers/usb/dwc3/core.c
 +++ b/drivers/usb/dwc3/core.c
-@@ -422,6 +422,9 @@ static void dwc3_phy_setup(struct dwc3 *dwc)
- 	if (dwc->revision > DWC3_REVISION_194A)
- 		reg |= DWC3_GUSB2PHYCFG_SUSPHY;
+@@ -404,6 +404,9 @@ static void dwc3_phy_setup(struct dwc3 *dwc)
+ 	if (dwc->tx_de_emphasis_quirk)
+ 		reg |= DWC3_GUSB3PIPECTL_TX_DEEPH(dwc->tx_de_emphasis);
  
-+	if (dwc->dis_u2_susphy_quirk && dwc->is_fpga)
-+		reg &= ~DWC3_GUSB2PHYCFG_SUSPHY;
++	if (dwc->dis_u3_susphy_quirk && dwc->is_fpga)
++		reg &= ~DWC3_GUSB3PIPECTL_SUSPHY;
 +
- 	dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
+ 	dwc3_writel(dwc->regs, DWC3_GUSB3PIPECTL(0), reg);
  
  	mdelay(100);
-@@ -812,6 +815,8 @@ static int dwc3_probe(struct platform_device *pdev)
+@@ -807,6 +810,8 @@ static int dwc3_probe(struct platform_device *pdev)
+ 				"snps,lfps_filter_quirk");
+ 		dwc->rx_detect_poll_quirk = of_property_read_bool(node,
  				"snps,rx_detect_poll_quirk");
- 		dwc->dis_u3_susphy_quirk = of_property_read_bool(node,
- 				"snps,dis_u3_susphy_quirk");
-+		dwc->dis_u2_susphy_quirk = of_property_read_bool(node,
-+				"snps,dis_u2_susphy_quirk");
++		dwc->dis_u3_susphy_quirk = of_property_read_bool(node,
++				"snps,dis_u3_susphy_quirk");
  
  		dwc->tx_de_emphasis_quirk = of_property_read_bool(node,
  				"snps,tx_de_emphasis_quirk");
-@@ -835,6 +840,7 @@ static int dwc3_probe(struct platform_device *pdev)
+@@ -829,6 +834,7 @@ static int dwc3_probe(struct platform_device *pdev)
+ 		dwc->del_phy_power_chg_quirk = pdata->del_phy_power_chg_quirk;
  		dwc->lfps_filter_quirk = pdata->lfps_filter_quirk;
  		dwc->rx_detect_poll_quirk = pdata->rx_detect_poll_quirk;
- 		dwc->dis_u3_susphy_quirk = pdata->dis_u3_susphy_quirk;
-+		dwc->dis_u2_susphy_quirk = pdata->dis_u2_susphy_quirk;
++		dwc->dis_u3_susphy_quirk = pdata->dis_u3_susphy_quirk;
  
  		dwc->tx_de_emphasis_quirk = pdata->tx_de_emphasis_quirk;
  		if (pdata->tx_de_emphasis)
 diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index fa778b0..cf86d30 100644
+index cf9aaca..fa778b0 100644
 --- a/drivers/usb/dwc3/core.h
 +++ b/drivers/usb/dwc3/core.h
-@@ -698,6 +698,7 @@ struct dwc3_scratchpad_array {
+@@ -697,6 +697,7 @@ struct dwc3_scratchpad_array {
+  * @del_phy_power_chg_quirk: set if we enable delay phy power change quirk
   * @lfps_filter_quirk: set if we enable LFPS filter quirk
   * @rx_detect_poll_quirk: set if we enable rx_detect to polling lfps quirk
-  * @dis_u3_susphy_quirk: set if we disable usb3 suspend phy
-+ * @dis_u2_susphy_quirk: set if we disable usb2 suspend phy
++ * @dis_u3_susphy_quirk: set if we disable usb3 suspend phy
   * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
   * @tx_de_emphasis: Tx de-emphasis value
   * 	0	- -6dB de-emphasis
-@@ -820,6 +821,7 @@ struct dwc3 {
+@@ -818,6 +819,7 @@ struct dwc3 {
+ 	unsigned		del_phy_power_chg_quirk:1;
  	unsigned		lfps_filter_quirk:1;
  	unsigned		rx_detect_poll_quirk:1;
- 	unsigned		dis_u3_susphy_quirk:1;
-+	unsigned		dis_u2_susphy_quirk:1;
++	unsigned		dis_u3_susphy_quirk:1;
  
  	unsigned		tx_de_emphasis_quirk:1;
  	unsigned		tx_de_emphasis:2;
 diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform_data.h
-index 0f1d5ad..245300b 100644
+index e1ab900..0f1d5ad 100644
 --- a/drivers/usb/dwc3/platform_data.h
 +++ b/drivers/usb/dwc3/platform_data.h
-@@ -37,6 +37,7 @@ struct dwc3_platform_data {
+@@ -36,6 +36,7 @@ struct dwc3_platform_data {
+ 	unsigned del_phy_power_chg_quirk:1;
  	unsigned lfps_filter_quirk:1;
  	unsigned rx_detect_poll_quirk:1;
- 	unsigned dis_u3_susphy_quirk:1;
-+	unsigned dis_u2_susphy_quirk:1;
++	unsigned dis_u3_susphy_quirk:1;
  
  	unsigned tx_de_emphasis_quirk:1;
  	unsigned tx_de_emphasis:2;
