@@ -1,167 +1,121 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v2] mmc: dw_mmc: add support for the other bit of sdio interrupt
-Date: Fri, 31 Oct 2014 11:43:40 +0100
-Message-ID: <13873303.38xWyoP4kJ@diego>
-References: <1414666240-16782-1-git-send-email-addy.ke@rock-chips.com> <1414727409-6765-1-git-send-email-addy.ke@rock-chips.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] I2C: mediatek: Add driver for MediaTek I2C controller
+Date: Fri, 31 Oct 2014 11:48:08 +0100
+Message-ID: <CABuKBeK1O2q37RMVE0Yjp2=QgkzXZfh=vxXiZrw-JMiYMxb-QQ@mail.gmail.com>
+References: <1414561058-23803-1-git-send-email-xudong.chen@mediatek.com>
+	<1414561058-23803-4-git-send-email-xudong.chen@mediatek.com>
+	<CABuKBe+RXboBEZD7Bu_kSbVwiapJJcAuuw_wo=xw67osJWJ20w@mail.gmail.com>
+	<1414737101.32208.18.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1414727409-6765-1-git-send-email-addy.ke@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Addy Ke <addy.ke@rock-chips.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414737101.32208.18.camel@mhfsdcap03>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: xudong chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nathan Chung <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YH Chen <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 31. Oktober 2014, 11:50:09 schrieb Addy Ke:
-> The bit of sdio interrupt is 16 in designware implementation,
-> but it is 24 in RK3288. This patch add sdio_id0 for the number
-> of slot0 in the SDIO interrupt registers, which can be set in
-> platform DT table, such as:
-> - rockchip,sdio-interrupt-slot0 = <8>;
+2014-10-31 7:31 GMT+01:00 xudong chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> On Thu, 2014-10-30 at 14:16 +0100, Matthias Brugger wrote:
+>> 2014-10-29 6:37 GMT+01:00 Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+>> > The mediatek SoCs have I2C controller that handle I2C transfer.
+>> > This patch include common I2C bus driver.
+>> > This driver is compatible with I2C controller on mt65xx/mt81xx.
+>> >
+>> > Signed-off-by: Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>> > Change-Id: Icc17e326b9df46a226d536956e103f17b0382b6e
+>> > ---
+>> >  drivers/i2c/busses/Kconfig      |   9 +
+>> >  drivers/i2c/busses/Makefile     |   1 +
+>> >  drivers/i2c/busses/i2c-mt65xx.c | 728 ++++++++++++++++++++++++++++++++++++++++
+>> >  3 files changed, 738 insertions(+)
+>> >  create mode 100644 drivers/i2c/busses/i2c-mt65xx.c
+>> >
+>> > diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+>> > index 917c358..0d7d0a4 100644
+>> > --- a/drivers/i2c/busses/Kconfig
+>> > +++ b/drivers/i2c/busses/Kconfig
+>> > @@ -564,6 +564,15 @@ config I2C_MPC
+>> >           This driver can also be built as a module.  If so, the module
+>> >           will be called i2c-mpc.
+>> >
+>> > +config I2C_MT65XX
+>> > +       tristate "MediaTek I2C adapter"
+>> > +       depends on ARCH_MEDIATEK
+>> > +       help
+>> > +         This selects the MediaTek(R) Integrated Inter Circuit bus driver
+>> > +         for MT65xx and MT81xx.
+>> > +         If you want to use MediaTek(R) I2C interface, say Y or M here.
+>> > +         If unsure, say N.
+>> > +
+>> >  config I2C_MV64XXX
+>> >         tristate "Marvell mv64xxx I2C Controller"
+>> >         depends on MV64X60 || PLAT_ORION || ARCH_SUNXI
+>> > diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
+>> > index 78d56c5..7a9f0f3 100644
+>> > --- a/drivers/i2c/busses/Makefile
+>> > +++ b/drivers/i2c/busses/Makefile
+>> > @@ -54,6 +54,7 @@ obj-$(CONFIG_I2C_IMX)         += i2c-imx.o
+>> >  obj-$(CONFIG_I2C_IOP3XX)       += i2c-iop3xx.o
+>> >  obj-$(CONFIG_I2C_KEMPLD)       += i2c-kempld.o
+>> >  obj-$(CONFIG_I2C_MPC)          += i2c-mpc.o
+>> > +obj-$(CONFIG_I2C_MT65XX)       += i2c-mt65xx.o
+>> > +
+>> > +static int mt_i2c_do_transfer(struct mt_i2c *i2c)
+>> > +{
+>> > +       u16 addr_reg;
+>> > +       u16 control_reg;
+>> > +       int tmo = i2c->adap.timeout;
+>> > +
+>> > +       i2c->trans_stop = false;
+>> > +       i2c->irq_stat = 0;
+>> > +
+>> > +       /* If use i2c pin from PMIC mt6397 side, need set PATH_DIR first */
+>> > +       if (i2c->have_pmic)
+>> > +               i2c_writew(I2C_CONTROL_WRAPPER, i2c, OFFSET_PATH_DIR);
+>>
+>> So this is some sort of multiplexer bit, right?
+>> I think in this case we need to build a multi function device (mfd)
+>> where the pmic driver will set this bit.
+>>
+> Hi,
+>
+> This feature means the chip can use I2C pins from PMIC(mt6397).
+> In this case,
+> 1. We actually control the register on mt8135 and the DMA/Control Logic
+> is on mt8135, only use pins from mt6397. If set register OFFSET_PATH_DIR
+> bit0 to 1, the I2C data will go/from PMIC pins.
 
-I just checked the manuals of rk3066 and rk3188 - and it seems the sdio 
-interrupt is in bit 24 on all of them.
+Sorry but I'm a bit puzzled. mt6397 is the PMIC, right?
+So from the mt6589 datasheet it says:
+"PATH_DIR Decides transmission direction
+If set, the I2C data will go/from PMIC; otherwise, the I2C data will
+go/from main die."
 
-Addy, could you check this and maybe enable this for all two variants we 
-currently support?
+>From my understanding the I2C bus will be multiplexed depending on
+this bit. The bit decides if it the data will be send to the PMIC or
+to some other I2C peripheral.
+
+So we need a mfd and the PMIC device driver sets/unsets the PATH_DIR register.
+
+> 2. We also need mt6397 pinctrl and clk manager driver to make it
+> actually work.
+>
+> After looking up datasheets, the mt6589 and mt8135 support PMIC I2C, the
+> other chips mt6577/mt6582/mt6582/mt8127 do not.
+
+Great, so please fix the dts bindings for the next patch version.
+
+Cheers,
+Matthias
+
+>
+> Thanks!
+>     Xudong.chen
+>
+>
 
 
-Thanks
-Heiko
 
-
-> 
-> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
-> ---
-> Changes in v2:
-> - rebase on http://git.linaro.org/git/people/ulf.hansson/mmc.git, next
-> branch
-> 
->  drivers/mmc/host/dw_mmc-rockchip.c | 13 +++++++++++++
->  drivers/mmc/host/dw_mmc.c          | 12 +++++++-----
->  drivers/mmc/host/dw_mmc.h          |  2 ++
->  include/linux/mmc/dw_mmc.h         |  3 +++
->  4 files changed, 25 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/dw_mmc-rockchip.c
-> b/drivers/mmc/host/dw_mmc-rockchip.c index bbb4ec3..1cb3bc6 100644
-> --- a/drivers/mmc/host/dw_mmc-rockchip.c
-> +++ b/drivers/mmc/host/dw_mmc-rockchip.c
-> @@ -68,6 +68,18 @@ static void dw_mci_rk3288_set_ios(struct dw_mci *host,
-> struct mmc_ios *ios) }
->  }
-> 
-> +static int dw_mci_rk3288_parse_dt(struct dw_mci *host)
-> +{
-> +	struct device_node *np = host->dev->of_node;
-> +	int sdio_id0;
-> +
-> +	if (!of_property_read_u32(np, "rockchip,sdio-interrupt-slot0",
-> +				  &sdio_id0))
-> +		host->sdio_id0 = sdio_id0;
-> +
-> +	return 0;
-> +}
-> +
->  static const struct dw_mci_drv_data rk2928_drv_data = {
->  	.prepare_command        = dw_mci_rockchip_prepare_command,
->  };
-> @@ -76,6 +88,7 @@ static const struct dw_mci_drv_data rk3288_drv_data = {
->  	.prepare_command        = dw_mci_rockchip_prepare_command,
->  	.set_ios		= dw_mci_rk3288_set_ios,
->  	.setup_clock    = dw_mci_rk3288_setup_clock,
-> +	.parse_dt	= dw_mci_rk3288_parse_dt,
->  };
-> 
->  static const struct of_device_id dw_mci_rockchip_match[] = {
-> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-> index bb46b1b..a633b58 100644
-> --- a/drivers/mmc/host/dw_mmc.c
-> +++ b/drivers/mmc/host/dw_mmc.c
-> @@ -823,7 +823,7 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot,
-> bool force_clkinit)
-> 
->  		/* enable clock; only low power if no SDIO */
->  		clk_en_a = SDMMC_CLKEN_ENABLE << slot->id;
-> -		if (!(mci_readl(host, INTMASK) & SDMMC_INT_SDIO(slot->id)))
-> +		if (!(mci_readl(host, INTMASK) & SDMMC_INT_SDIO(slot->sdio_id)))
->  			clk_en_a |= SDMMC_CLKEN_LOW_PWR << slot->id;
->  		mci_writel(host, CLKENA, clk_en_a);
-> 
-> @@ -1184,10 +1184,10 @@ static void dw_mci_enable_sdio_irq(struct mmc_host
-> *mmc, int enb) dw_mci_disable_low_power(slot);
-> 
->  		mci_writel(host, INTMASK,
-> -			   (int_mask | SDMMC_INT_SDIO(slot->id)));
-> +			   (int_mask | SDMMC_INT_SDIO(slot->sdio_id)));
->  	} else {
->  		mci_writel(host, INTMASK,
-> -			   (int_mask & ~SDMMC_INT_SDIO(slot->id)));
-> +			   (int_mask & ~SDMMC_INT_SDIO(slot->sdio_id)));
->  	}
->  }
-> 
-> @@ -2056,8 +2056,9 @@ static irqreturn_t dw_mci_interrupt(int irq, void
-> *dev_id) /* Handle SDIO Interrupts */
->  		for (i = 0; i < host->num_slots; i++) {
->  			struct dw_mci_slot *slot = host->slot[i];
-> -			if (pending & SDMMC_INT_SDIO(i)) {
-> -				mci_writel(host, RINTSTS, SDMMC_INT_SDIO(i));
-> +			if (pending & SDMMC_INT_SDIO(slot->sdio_id)) {
-> +				mci_writel(host, RINTSTS,
-> +					   SDMMC_INT_SDIO(slot->sdio_id));
->  				mmc_signal_sdio_irq(slot->mmc);
->  			}
->  		}
-> @@ -2145,6 +2146,7 @@ static int dw_mci_init_slot(struct dw_mci *host,
-> unsigned int id)
-> 
->  	slot = mmc_priv(mmc);
->  	slot->id = id;
-> +	slot->sdio_id = host->sdio_id0 + id;
->  	slot->mmc = mmc;
->  	slot->host = host;
->  	host->slot[id] = slot;
-> diff --git a/drivers/mmc/host/dw_mmc.h b/drivers/mmc/host/dw_mmc.h
-> index 71d4995..0562f10 100644
-> --- a/drivers/mmc/host/dw_mmc.h
-> +++ b/drivers/mmc/host/dw_mmc.h
-> @@ -214,6 +214,7 @@ extern int dw_mci_resume(struct dw_mci *host);
->   *	with CONFIG_MMC_CLKGATE.
->   * @flags: Random state bits associated with the slot.
->   * @id: Number of this slot.
-> + * @sdio_id: Number of this slot in the SDIO interrupt registers.
->   */
->  struct dw_mci_slot {
->  	struct mmc_host		*mmc;
-> @@ -233,6 +234,7 @@ struct dw_mci_slot {
->  #define DW_MMC_CARD_PRESENT	0
->  #define DW_MMC_CARD_NEED_INIT	1
->  	int			id;
-> +	int			sdio_id;
->  };
-> 
->  struct dw_mci_tuning_data {
-> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
-> index 69d0814..72c319f 100644
-> --- a/include/linux/mmc/dw_mmc.h
-> +++ b/include/linux/mmc/dw_mmc.h
-> @@ -96,6 +96,7 @@ struct mmc_data;
->   * @quirks: Set of quirks that apply to specific versions of the IP.
->   * @irq_flags: The flags to be passed to request_irq.
->   * @irq: The irq value to be passed to request_irq.
-> + * @sdio_id0: Number of slot0 in the SDIO interrupt registers.
->   *
->   * Locking
->   * =======
-> @@ -191,6 +192,8 @@ struct dw_mci {
->  	bool			vqmmc_enabled;
->  	unsigned long		irq_flags; /* IRQ flags */
->  	int			irq;
-> +
-> +	int			sdio_id0;
->  };
-> 
->  /* DMA ops for Internal/External DMAC interface */
-
+-- 
+motzblog.wordpress.com
