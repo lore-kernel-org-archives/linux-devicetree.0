@@ -1,96 +1,60 @@
-From: xudong chen <xudong.chen@mediatek.com>
-Subject: Re: [PATCH 1/3] dt-bindings: Add I2C bindings for mt65xx/mt81xx.
-Date: Fri, 31 Oct 2014 09:38:29 +0800
-Message-ID: <1414719509.32208.9.camel@mhfsdcap03>
-References: <1414561058-23803-1-git-send-email-xudong.chen@mediatek.com>
-	 <1414561058-23803-2-git-send-email-xudong.chen@mediatek.com>
-	 <CABuKBeKp211c87TRdFb2kB+Qs8WoSAsg+5h-CF7sy7k2gj8O2g@mail.gmail.com>
+From: Huang Rui <ray.huang@amd.com>
+Subject: Re: [PATCH v4 16/20] usb: dwc3: add disable usb2 suspend phy quirk
+Date: Fri, 31 Oct 2014 09:34:59 +0800
+Message-ID: <20141031013459.GB20367@hr-slim.amd.com>
+References: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
+ <1414663725-2195-17-git-send-email-ray.huang@amd.com>
+ <20141030163943.GL10130@saruman>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABuKBeKp211c87TRdFb2kB+Qs8WoSAsg+5h-CF7sy7k2gj8O2g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, arm@kernel.org, Wolfram Sang <wsa@the-dreams.de>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Jean Delvare <jdelvare@suse.de>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-i2c@vger.kernel.org, Yingjoe Chen <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Nathan Chung <nathan.chung@mediatek.com>, YH Chen <yh.chen@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141030163943.GL10130@saruman>
+Sender: linux-pci-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-10-30 at 13:38 +0100, Matthias Brugger wrote:
-> 2014-10-29 6:37 GMT+01:00 Xudong Chen <xudong.chen@mediatek.com>:
-> > Add devicetree bindings for Mediatek Soc I2C driver.
-> >
-> > Signed-off-by: Xudong Chen <xudong.chen@mediatek.com>
+On Thu, Oct 30, 2014 at 11:39:43AM -0500, Felipe Balbi wrote:
+> On Thu, Oct 30, 2014 at 06:08:41PM +0800, Huang Rui wrote:
+> > This patch adds disable usb2 suspend phy quirk, and some special platforms
+> > can configure that if it is needed.
+> > 
+> > Signed-off-by: Huang Rui <ray.huang@amd.com>
 > > ---
-> >  .../devicetree/bindings/i2c/i2c-mt6577.txt         | 37 ++++++++++++++++++++++
-> >  1 file changed, 37 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt b/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
-> > new file mode 100644
-> > index 0000000..b4012c8
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/i2c/i2c-mt6577.txt
-> > @@ -0,0 +1,37 @@
-> > +* Mediatek's I2C controller
-> > +
-> > +The Mediatek's I2C controller is used to interface with I2C devices.
-> > +
-> > +Required properties:
-> > +  - compatible: value should be either of the following.
-> > +      (a) "mtk,mt6577-i2c", for i2c compatible with mt6577 i2c.
+> >  Documentation/devicetree/bindings/usb/dwc3.txt | 1 +
+> >  drivers/usb/dwc3/core.c                        | 7 +++++++
+> >  drivers/usb/dwc3/core.h                        | 2 ++
+> >  drivers/usb/dwc3/platform_data.h               | 1 +
+> >  4 files changed, 11 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > index 3720fca..feaf2c8 100644
+> > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > @@ -33,6 +33,7 @@ Optional properties:
+> >   - snps,tx_de_emphasis: the value driven to the PHY is controlled by the
+> >  			LTSSM during USB3 Compliance mode.
+> >   - snps,dis_u3_susphy_quirk: when set core will disable USB3 suspend phy.
+> > + - snps,dis_u2_susphy_quirk: when set core will disable USB2 suspend phy.
+> >  
+> >  This is usually a subnode to DWC3 glue to which it is connected.
+> >  
+> > diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> > index fdc715a..a28ed1c 100644
+> > --- a/drivers/usb/dwc3/core.c
+> > +++ b/drivers/usb/dwc3/core.c
+> > @@ -423,6 +423,10 @@ static void dwc3_phy_setup(struct dwc3 *dwc)
+> >  	if (dwc->revision > DWC3_REVISION_194A)
+> >  		reg |= DWC3_GUSB2PHYCFG_SUSPHY;
+> >  
+> > +	/* FIXME will move FPGA flag when AMD NL taps out */
 > 
-> Looking on the datasheet of mt6577 it does not seem that this driver
-> is really compatible.
-> I was not able to find the PATH_DIR register neither in the datasheet
-> nor in the source code.
+> no need to mention AMD NL here. We still want to have is_fpga flag, just
+> dwc3-pci will be patches once AMD NL tapes out.
 > 
-Hi, 
 
-The PATH_DIR register named OFFSET_PATH_DIR(0x60) in the source code.
-Only MT8135 supports this feature, so it does not contained in mt6577
-datasheet.
-I will modify the comment.
+OK, will move it.
 
-> > +      (b) "mtk,mt8127-i2c", for i2c compatible with mt8127 i2c.
-> > +      (c) "mtk,mt8135-i2c", for i2c compatible with mt8135 i2c.
-> > +  - reg: physical base address of the controller and dma base, length of memory mapped
-> > +    region.
-> > +  - interrupts: interrupt number to the cpu.
-> > +  - clock-div: the fixed value for frequency divider of clock source in i2c module.
-> > +    Each IC may be different.
-> > +  - clocks: clock name from clock manager
-> > +  - clock-names: clock name used in i2c driver probe
-> > +
-> > +Optional properties:
-> > +  - clock-frequency: Frequency in Hz of the bus when transfer, the default value is 100000.
-> > +  - mediatek,have-pmic: platform can control i2c form special pmic side.
-
-I will change this to: 
- - mediatek,have-pmic: platform can control i2c form special pmic side,
-only MT8135 supports this.
-
-Is this OK?
- 
-> > +  - mediatek,have-dcm: platform has DCM(hardware digital clock manager) property.
-> > +  - mediatek,use-push-pull: IO use push-pull mode.
-> > +
-> > +Example:
-> > +
-> > +       i2c0: i2c@1100d000 {
-> > +                       compatible = "mediatek,mt6577-i2c";
-> > +                       reg = <0x1100d000 0x70>,
-> > +                             <0x11000300 0x80>;
-> > +                       interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
-> > +                       clock-frequency = <100000>;
-> > +                       mediatek,have-pmic;
-> > +                       clock-div = <16>;
-> > +                       clocks = <&i2c0_ck>, <&ap_dma_ck>;
-> > +                       clock-names = "main", "dma";
-> > +       };
-> > +
-> > --
-> > 1.8.1.1.dirty
-> >
-> 
-> 
-> 
+Thanks,
+Rui
