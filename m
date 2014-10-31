@@ -1,39 +1,44 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2] mmc: dw_mmc: add support for the other bit of sdio interrupt
-Date: Fri, 31 Oct 2014 08:55:12 -0700
-Message-ID: <CAD=FV=Wmb0ZhB1WmK9SPg28LWB3zv9oNj0peTx3Ybt_KMSv7bw@mail.gmail.com>
-References: <1414666240-16782-1-git-send-email-addy.ke@rock-chips.com>
-	<1414727409-6765-1-git-send-email-addy.ke@rock-chips.com>
-	<54534C17.7050703@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54534C17.7050703@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: Addy Ke <addy.ke@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Seungwon Jeon <tgih.jun@samsung.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockc>
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 1/3] arm64: defconfig: Enable support for generic EHCI and OHCI platforms
+Date: Fri, 31 Oct 2014 16:04:18 +0000
+Message-ID: <1414771460-7340-2-git-send-email-Liviu.Dudau@arm.com>
+References: <1414771460-7340-1-git-send-email-Liviu.Dudau@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414771460-7340-1-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, device tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Jaehoon,
+Now that real arm64 platforms exists and they have standard EHCI and
+OHCI USB controllers, enable support for them.
 
-On Fri, Oct 31, 2014 at 1:45 AM, Jaehoon Chung <jh80.chung@samsung.com> wrote:
-> Hi, Addy.
->
-> On 10/31/2014 12:50 PM, Addy Ke wrote:
->> The bit of sdio interrupt is 16 in designware implementation,
->> but it is 24 in RK3288. This patch add sdio_id0 for the number
->> of slot0 in the SDIO interrupt registers, which can be set in
->> platform DT table, such as:
->> - rockchip,sdio-interrupt-slot0 = <8>;
->
-> I have a question. (It's not important question)
-> You mentioned the sdio-irq bit used from 24 to 31, right?
-> Then what interrupts are used from 16 to 23 at RK3288? Just reserved?
+Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm64/configs/defconfig | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-In my TRM 16 shows as "data_nobusy".  A quick search doesn't show any
-documentation for what this means.  17-23 and 25-31 are reserved.
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 4ce602c..8643e58 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -97,8 +97,13 @@ CONFIG_LOGO=y
+ # CONFIG_LOGO_LINUX_MONO is not set
+ # CONFIG_LOGO_LINUX_VGA16 is not set
+ CONFIG_USB=y
++CONFIG_USB_EHCI_HCD=y
++CONFIG_USB_EHCI_HCD_PLATFORM=y
+ CONFIG_USB_ISP1760_HCD=y
++CONFIG_USB_OHCI_HCD=y
++CONFIG_USB_OHCI_HCD_PLATFORM=y
+ CONFIG_USB_STORAGE=y
++CONFIG_USB_ULPI=y
+ CONFIG_MMC=y
+ CONFIG_MMC_ARMMMCI=y
+ CONFIG_VIRTIO_BALLOON=y
+-- 
+2.1.2
 
-Note that (of course) there's no actual support for more than one slot
-on rk3288, so claiming that "24-31" is SDIO INT is a little silly, but
-I agree that it's probably is the best way to fit into the existing
-code until someone gets around to removing the whole multi-slot cruft.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
