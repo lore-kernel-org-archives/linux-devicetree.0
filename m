@@ -1,44 +1,55 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH RESEND V4 3/9] of: Update Tegra XUSB pad controller
- binding for USB
-Date: Fri, 31 Oct 2014 09:42:00 -0700
-Message-ID: <CAL1qeaGkTY9kOfLu6qXFQ=RFKzycknLbOUixv4Y+cVf5oY6jkg@mail.gmail.com>
-References: <1414535277-15645-1-git-send-email-abrestic@chromium.org>
-	<1414535277-15645-4-git-send-email-abrestic@chromium.org>
-	<CACRpkdbERA6rxrMTJQPGaNhAb=B3+KyQ1YBKNy2AqsLZD2eHDA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RESUBMIT PATCH v6 7/8] regulator: sky81452: Add compatible
+ string for device binding
+Date: Fri, 31 Oct 2014 16:44:18 +0000
+Message-ID: <20141031164418.GC18557@sirena.org.uk>
+References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1414739322-12487-8-git-send-email-jack.yoo@skyworksinc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="aoTbOZUmF9JI49gR"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbERA6rxrMTJQPGaNhAb=B3+KyQ1YBKNy2AqsLZD2eHDA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1414739322-12487-8-git-send-email-jack.yoo@skyworksinc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-usb@vger.kernel.org
+To: gyungoh@gmail.com
+Cc: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 31, 2014 at 2:44 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Tue, Oct 28, 2014 at 11:27 PM, Andrew Bresticker
-> <abrestic@chromium.org> wrote:
->
->> Add new bindings used for USB support by the Tegra XUSB pad controller.
->> This includes additional PHY types, USB-specific pinconfig properties, etc.
->>
->> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
->> Reviewed-by: Stephen Warren <swarren@nvidia.com>
->> ---
->> Changes from v2:
->>  - Added nvidia,otg-hs-curr-level-offset property.
->>  - Dropped "-otg" from VBUS supplies.
->>  - Added mbox-names property.
->>  - Removed extra whitespace.
->> Changes from v1:
->>  - Updated to use common mailbox bindings.
->>  - Made USB3 port-to-lane mappins a top-level binding rather than a pinconfig
->>    binding.
->>  - Add #defines for the padctl lanes.
->
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->
-> I guess you will take this patch along with the rest through ARM SoC
-> or so?
 
-Yes, that's the plan.
+--aoTbOZUmF9JI49gR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Oct 31, 2014 at 04:08:41PM +0900, gyungoh@gmail.com wrote:
+> From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
+>=20
+> Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
+
+This doesn't apply against current code and depends on the MFD symbol
+rename - can you please check what's going on here?
+
+It would make sense to split the Kconfig symbol rename into a separate
+patch to ease merging, it doesn't seem obviously related to the driver
+change and should probably be in the same patch as the MFD symbol rename
+for bisetion.
+
+--aoTbOZUmF9JI49gR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUU7xhAAoJECTWi3JdVIfQey8H/3Y7D4bgU+PfhoOc9N+hRzgz
+9Z9jKyevGFTBp/79i5QZGfUIAsylcp+Pu8hrlIQCMcn1L3lvHggB0fXYqnxowIQK
+SCveryid4DiA6A1FmJuLuQZyte8gyhkJYP/Z4MKd/LNIeEz989EmdyVOHzoHmxx3
+Xg/DK2YZFkII7jFgkmrPtMGzb9umkiyoKB1Y97K2MW3kYtWN6fsKdbe8c2ESxsvz
+hZmeULqZztOdBujRjPpymDKSuNzG4lC2zW0xoGrFSEhZOl5wXo3qp9EY3ymtQVLM
+s5MbJqj6qSu5v+EZis8BJ7vwOZrYyMtBLu+HdEbHQrA86c1wu1qK2KNvXqPkdZs=
+=yXQ/
+-----END PGP SIGNATURE-----
+
+--aoTbOZUmF9JI49gR--
