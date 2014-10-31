@@ -1,50 +1,51 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 0/9] Renesas R-Car DU HDMI support
-Date: Fri, 31 Oct 2014 17:18:07 +0900
-Message-ID: <20141031081803.GA23848@verge.net.au>
-References: <1414337068-28664-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <11054192.lJRMYJX3F4@avalon>
- <CAGv-rZm=0rvvnO1cgBp0ZNdu0PvA-nwh6Nk05LSyTE=0vg0ipA@mail.gmail.com>
- <2727864.n2TjKgUQyN@avalon>
+From: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Subject: Re: [PATCH v5 4/4] crypto: Add Allwinner Security System crypto
+ accelerator
+Date: Fri, 31 Oct 2014 16:18:03 +0800
+Message-ID: <20141031081803.GA8012@gondor.apana.org.au>
+References: <1413728182-13569-1-git-send-email-clabbe.montjoie@gmail.com>
+ <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com>
+ <20141021191149.GQ21108@lukather>
+ <544A9FEA.6020304@gmail.com>
+ <20141030171933.GR21251@lukather>
+ <20141031072030.GA7563@gondor.apana.org.au>
+ <20141031081323.GS21251@lukather>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <2727864.n2TjKgUQyN@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Dave Airlie <airlied@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-sh@vger.kernel.org
+In-Reply-To: <20141031081323.GS21251@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 30, 2014 at 01:40:34PM +0200, Laurent Pinchart wrote:
-> Hi Simon,
+On Fri, Oct 31, 2014 at 09:13:23AM +0100, Maxime Ripard wrote:
+>
+> I don't understand here. Why would other drivers *not* being affected?
 > 
-> On Thursday 30 October 2014 20:29:22 Simon Horman wrote:
-> > 2014/10/30 20:05 "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>:
-> > > On Tuesday 28 October 2014 15:30:05 Dave Airlie wrote:
-> > >>> The last patch instantiates the HDMI encoder in the Koelsch board DT
-> > >>> file and connects it to the DU output.
-> > >>> 
-> > >>> The patch series depends on Koelsch DU DT enablement (scheduled for
-> > >>> merge in v3.19-rc1). Dave, I'd like to get this merged in v3.19-rc1, how
-> > >>> would you like to proceed ? Could it go through Simon's Renesas tree ?
-> > >>> There's a small risk of conflict in drivers/gpu/drm/drm_edid.c,
-> > >>> include/drm/drm_edid.h, drivers/gpu/drm/i2c/Kconfig and
-> > >>> drivers/gpu/drm/i2c/Makefile. Simon, could you alternatively provide a
-> > >>> stable branch with the required dependencies ?
-> > >> 
-> > >> I'd probably like to take the drm patches into drm-next first, then
-> > >> maybe get a stable branch from Simon I could use to base the rest on.
-> > > 
-> > > Simon, I believe that would be the dt-du-for-v3.19 branch of
-> > > git://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas.git
-> > > 
-> > > Is it correct ?
-> > 
-> > Sorry I shuffled things around a bit and what you need should now be in the
-> > dt-for-v3.19 branch. I hope what is there now is stable. But I'd appreciate
-> > it if you could wait a few more days.
+> If the scatter list passed by AF_ALG can be in highmem, I guess it's
+> the case for every driver out there. Almost every kernel code I've
+> seen so far makes the assumption that the memory it has is mapped and
+> accessible.
 > 
-> Sure, no problem. Could you please let me know when I can use it ?
+> Somehow, it's the driver's fault now, and not the part of kernel that
+> actually does the allocation?
 
-Of course, will do.
+If you are implementing a crypto driver that is meant to handle
+requests from the crypto API then yes you need to handle highmem.
+
+As I said if enough drivers are unable to address highmem and
+require copying/software fallbacks then we could provide this
+through the API and the driver would then only need to declare
+its lack of highmem support or use a helper.
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
