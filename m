@@ -1,58 +1,95 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 01/14] mfd: max77686/802: Map regulator driver to its
- own of_node
-Date: Fri, 31 Oct 2014 18:06:32 +0000
-Message-ID: <20141031180632.GO18557@sirena.org.uk>
-References: <1414668053-31370-1-git-send-email-k.kozlowski@samsung.com>
- <1414668053-31370-2-git-send-email-k.kozlowski@samsung.com>
- <20141031122330.GP18557@sirena.org.uk>
- <1414760874.7318.15.camel@AMDC1943>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 1/3] of/irq: Export of_irq_get()
+Date: Fri, 31 Oct 2014 19:20:37 +0100
+Message-ID: <20141031182037.GA2680@katana>
+References: <1414677578-27412-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1414677578-27412-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <20141030141644.GE23852@katana>
+ <2139081.L8ZrMAojpq@avalon>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lv1RQUI4Uowj5McI"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1414760874.7318.15.camel@AMDC1943>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>
+In-Reply-To: <2139081.L8ZrMAojpq@avalon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 
---lv1RQUI4Uowj5McI
-Content-Type: text/plain; charset=utf-8
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 31, 2014 at 02:07:54PM +0100, Krzysztof Kozlowski wrote:
-> On pi=C4=85, 2014-10-31 at 12:23 +0000, Mark Brown wrote:
+On Thu, Oct 30, 2014 at 04:17:19PM +0200, Laurent Pinchart wrote:
+> On Thursday 30 October 2014 15:16:44 Wolfram Sang wrote:
+> > On Thu, Oct 30, 2014 at 03:59:36PM +0200, Laurent Pinchart wrote:
+> > > The function will be used by the I2C core which can be compiled as a
+> > > module.
+> > >=20
+> > > Signed-off-by: Laurent Pinchart
+> > > <laurent.pinchart+renesas@ideasonboard.com>
+> >=20
+> > I think it makes sense if I take this via I2C to get the dependencies
+> > for the later patches right?
+>=20
+> It would be easier, yes.
 
-> > I'm getting very frustrated with what's going on with these drivers,
-> > there seem to be a lot of rather large sets of patches spawning lots of
-> > discussion but also frequent review problems and very little actually
-> > getting merged (look at the set of changes in the past few merge windows
-> > for example).  There's something going wrong here.
+Oh, DT maintainers are not on CC. Then I can wait pretty long for an
+ack ;) Fixing that.
 
-> If I over-spammed you, then I am deeply sorry.
+>=20
+> > > ---
+> > >=20
+> > >  drivers/of/irq.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >=20
+> > > diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> > > index 1471e0a223a5..0d7765807f49 100644
+> > > --- a/drivers/of/irq.c
+> > > +++ b/drivers/of/irq.c
+> > > @@ -405,6 +405,7 @@ int of_irq_get(struct device_node *dev, int index)
+> > >=20
+> > >  	return irq_create_of_mapping(&oirq);
+> > > =20
+> > >  }
+> > >=20
+> > > +EXPORT_SYMBOL_GPL(of_irq_get);
+> > >=20
+> > >  /**
+> > > =20
+> > >   * of_irq_get_byname - Decode a node's IRQ and return it as a Linux =
+irq
+> > >   number
+>=20
+> --=20
+> Regards,
+>=20
+> Laurent Pinchart
+>=20
 
-It's not just about volume, it's also about the fact that so little of
-the mail around these drivers (not just from you) is translating into
-code that gets merged.
-
---lv1RQUI4Uowj5McI
+--vtzGhvizbBRQ85DL
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Version: GnuPG v1
 
-iQEcBAEBAgAGBQJUU8+nAAoJECTWi3JdVIfQYSkH/0fJk94SBzZ0eQUotAuideUC
-NDZ+HO0+tR+HPMFuxeAAE1ZsSbWmoopM/v2SZb14ep+0kpyUJes5DuRhUqiq30Dh
-KwN3vouzaiBs13U8Tna0LxIbFR0xUVC8HWCyUASkkXrU3vOPRjKxwg0DkejrzayY
-r8/OJ7k5/dhAEiW4gp5yrgUVyzwVH/DbxaFTZnm8yv7FJAQPXEsL8ZdBm4B/h8GT
-iaMY67RV6luiGgEebXoiCdGbH4fft564obIbTkAbBVGwB68d3cshVJe49Lq7WCrO
-bEiyhk8uw21xQrihWUFwJKHSgxE6Xwa3n3e8DyDGi4422cqQf+mWu+MEbGsooc4=
-=SmBY
+iQIcBAEBAgAGBQJUU9L1AAoJEBQN5MwUoCm29PMQAJJWECr0ojCaJbmIa9Ow+rrf
+9OPT4nOA2aq43w97OPkFK1RofWpt5XLed2X2KHsouUrNjWj+QuIzGzzwsbV0wQap
+UMo+Vrt++dUicYqE4AYkgJz4Qi3aeRXdcJEqviCHT10FlLvedrif9vb218Kq8xE/
+jzCLvF79LtpnlGbgDsecd3/lJX0m5Y9z3/hhwrvXD8YLq10WDsqj6GyDdB1BEdRR
+9oSWuqbY0prB2UY7Ivk+xR183Fwi/H/l9Q0pFXPYtzy40XbOmAOsXOkByIiMbgQ1
+Y19akE1/tp3EqBC3GpVPznVUVIq3ee3wYhBJl6Q7PgsQOMGXvbfJMSuve2iIYoas
++t+BxiDa1UksD7+VmJEajtIKleQ1KyX51OeC3DM7XprLcI7LmIQ9+P4DKtXUvccU
+kW2fhiHtajdhp2iIyy6fNQdPkBEdZ8vLLUfzoMsgqKsrgoRBsR/cttv94bg+Mw5b
+K/QzeuaEEd164pOZzGO8Fl4rtR4We2dXKSbf2aRF/KPyi/Ibc4ghaz19j28E9HZG
+v66YTC2M0bJDY9u3+mnRl3xxn+e8TK5Dl3O6THWXcJ/QAfl42qddqDkMfwG2XQiP
+MBERcqWl4hxU28OEAy6Ib5whPhBRd009CCf25EqBobJCFp2+eh54D8TUCUwSvkbl
+8DzbyAzTukQQHPr7tCdv
+=BkhY
 -----END PGP SIGNATURE-----
 
---lv1RQUI4Uowj5McI--
+--vtzGhvizbBRQ85DL--
