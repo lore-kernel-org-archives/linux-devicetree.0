@@ -1,99 +1,87 @@
-From: yoshihiro shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH v2 2/2] ARM: shmobile: lager: enable USB3.0
-Date: Fri, 31 Oct 2014 13:22:22 +0000
-Message-ID: <9cedf0445a5a4f67abf5e6e1b8aac631@HKNPR06MB322.apcprd06.prod.outlook.com>
-References: <1414147307-4584-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1414147307-4584-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CANqRtoQTBd23z4uVK-EB7JJuJ_K0GkV6ueVfnywShqe6Dx0T5w@mail.gmail.com>
- <5450CD42.9070101@renesas.com> <20141029235748.GD4599@verge.net.au>
- <2b89f66c72894bdf8bdce7aab7c69281@HKNPR06MB322.apcprd06.prod.outlook.com>
- <20141031050422.GC10619@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20141031050422.GC10619@verge.net.au>
-Content-Language: ja-JP
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-USB <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/6] uio: Add new UIO_MEM_PHYS_CACHE type for mem regions
+Date: Fri, 31 Oct 2014 08:39:29 -0500
+Message-ID: <4B098F57-E202-412C-B54D-085A46792EDC@codeaurora.org>
+References: <1413871011-4101-1-git-send-email-ankit.jindal@linaro.org> <1413871011-4101-3-git-send-email-ankit.jindal@linaro.org> <6D33D50E-2DD1-482C-B05E-45B237F3B779@codeaurora.org> <CAPTm99W0J-Q6CwCDVaYe4eyEWrruWuY5pzpHoESyVu9N3cFA=g@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPTm99W0J-Q6CwCDVaYe4eyEWrruWuY5pzpHoESyVu9N3cFA=g@mail.gmail.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon-san,
 
-> On Fri, Oct 31, 2014 at 02:06:14AM +0000, yoshihiro shimoda wrote:
-> > Hi Simon-san,
-> >
-> > > On Wed, Oct 29, 2014 at 08:19:30PM +0900, Yoshihiro Shimoda wrote:
-> > > > Hi Magnus-san,
-> > > >
-> > > > (2014/10/29 15:53), Magnus Damm wrote:
-> > < snip >
-> > > > >
-> > > > > Hi Shimoda-san,
-> > > > >
-> > > > > Thanks for your patch. I'm fine with this patch as a first step,
-> > > > > but I'm wondering what the reason is to prioritize USB 2.0 over USB 3.0?
-> > > >
-> > > > I investigated this reason today, and I found the reason is
-> > > > request_firmware().  I checked the following environments:
-> > > >
-> > > > Case 1: xHCI and EHCI and OHCI are enabled "=y"
-> > > > Case 2: xHCI and EHCI and OHCI are loadable modules "=m"
-> > > > Case 3: xHCI and EHCI and OHCI are enabled "=y",
-> > > >         and CONFIG_EXTRA_FIRMWARE is enabled
-> > > >
-> > > > The results are:
-> > > > - In "Case 1", EHCI and OHCI are probed first because xHCI didn't find the firmware.
-> > > > - In "Case 2" and "Case 3", xHCI is probed first.
-> > > >
-> > > > > Is the current order just based on device init order? In my mind
-> > > > > the expected behavior would be to always use USB 3.0 if it
-> > > > > happens to be available in the hardware, specified in the DTS,
-> > > > > enabled by the kernel configuration and firmware is loadable. Or
-> > > > > does some case exist where it is better to use USB 2.0? I suspect no.
-> > > >
-> > > > I agree with you.
-> > > >
-> > > > > So I wonder if you have any plans how to make USB 3.0 enabled by
-> > > > > default on Lager?
-> > > >
-> > > > It depends on a kernel config. I'm not sure of the
-> > > > shmobile_defconfig strategy.  But, in my opinion, one of a
-> > > > solution is kernel modules (this means the "Case 2".)
-> > >
-> > > It sounds like we should enable CONFIG_EXTRA_FIRMWARE in
-> > > shmobile_defconfig. I wonder what if any fallout we can foresee occurring if we do that.
-> >
-> > According to the firmware/README.AddingFirmware, we are unable to add a new firmware image to the firmware directory
-> now.
-> > So, if we enable CONFIG_EXTRA_FIRMWARE with the xHCI firmware, we will not build kernel because the xHCI firmware doesn't
-> exist in the linux.git.
-> >
-> > === from  firmware/README.AddingFirmware
-> > =====================================
-> > This directory is _NOT_ for adding arbitrary new firmware images. The
-> > place to add those is the separate linux-firmware repository:
-> >
-> >
-> > git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.
-> > git
-> > ======================================================================
-> > ========
-> 
-> Thanks. It seems that EXTRA_FIRMWARE is not an option from a mainline point of view after all.
-> 
-> Is the problem in case 1 that the firmware can't be found because userspace does exist yet and thus can't be loaded from
-> there?
+On Oct 31, 2014, at 4:30 AM, Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wro=
+te:
 
-That's correct.
-If EXTRA_FIRMWARE is not set, the following error happens:
+> Hi Kumar,
+>=20
+> On 21 October 2014 12:08, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>>=20
+>> On Oct 21, 2014, at 7:56 AM, Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> =
+wrote:
+>>=20
+>>> Currently, three types of mem regions are supported: UIO_MEM_PHYS,
+>>> UIO_MEM_LOGICAL and UIO_MEM_VIRTUAL. Among these UIO_MEM_PHYS helps
+>>> UIO driver export physcial memory to user space as non-cacheable
+>>> user memory. Typcially memory-mapped registers of a device are expo=
+rted
+>>> to user space as UIO_MEM_PHYS type mem region. The UIO_MEM_PHYS typ=
+e
+>>> is not efficient if dma-capable devices are capable of maintaining =
+coherency
+>>> with CPU caches.
+>>>=20
+>>> This patch adds new type UIO_MEM_PHYS_CACHE for mem regions to enab=
+le
+>>> cacheable access to physical memory from user space.
+>>>=20
+>>> Signed-off-by: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> Signed-off-by: Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> ---
+>>> drivers/uio/uio.c          |   11 ++++++++---
+>>> include/linux/uio_driver.h |    1 +
+>>> 2 files changed, 9 insertions(+), 3 deletions(-)
+>>=20
+>> Rather than adding a new type, why not allow the driver to set the p=
+gprot value, this way one has full control and we don=92t need to keep =
+adding types for various different cache attributions in the future.
+>=20
+> Do you mean to add a new field pgprot_t in the memtype structure and
+> uio_mmap_physical will set vma->vm_page_prot to this value provided b=
+y
+> driver ? If this is the case then we will need to change all the
+> current uio based drivers which was the reason I preferred to have a
+> new mem type.
+>=20
+> Please let me know if I have misunderstood anything.
 
-xhci-hcd ee000000.usb: Direct firmware load for r8a779x_usb3_v1.dlmem failed with error -2
-xhci-hcd ee000000.usb: can't setup: -2
-xhci-hcd ee000000.usb: USB bus 1 deregistered
-xhci-hcd: probe of ee000000.usb failed with error -2
+I=92m suggeting in uio_mmap_physical to do something like:
 
-Best regards,
-Yoshihiro Shimoda
+if (idev->info->set_pgprot)
+	idev->info->set_pgprot(vma->vm_page_prot)
+else
+	vma->vm_page_prot =3D pgprot_noncached(vma->vm_page_prot);
 
+And add a set_prprot callback to 'struct uio_info=92.
+
+Here=92s patch from several years ago:
+
+http://patchwork.ozlabs.org/patch/119224/
+
+- k
+
+--=20
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
+um,
+a Linux Foundation Collaborative Project
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
