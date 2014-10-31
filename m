@@ -1,55 +1,74 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RESUBMIT PATCH v6 7/8] regulator: sky81452: Add compatible
- string for device binding
-Date: Fri, 31 Oct 2014 16:44:18 +0000
-Message-ID: <20141031164418.GC18557@sirena.org.uk>
-References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
- <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
- <1414739322-12487-8-git-send-email-jack.yoo@skyworksinc.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH 3/3] arm64: Add Juno SoC device tree.
+Date: Fri, 31 Oct 2014 17:16:58 +0000
+Message-ID: <20141031171658.GK1069@e106497-lin.cambridge.arm.com>
+References: <1414771460-7340-1-git-send-email-Liviu.Dudau@arm.com>
+ <1414771460-7340-4-git-send-email-Liviu.Dudau@arm.com>
+ <20141031162918.GG32139@lunn.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="aoTbOZUmF9JI49gR"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141031162918.GG32139@lunn.ch>
 Content-Disposition: inline
-In-Reply-To: <1414739322-12487-8-git-send-email-jack.yoo@skyworksinc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gyungoh@gmail.com
-Cc: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, device tree <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---aoTbOZUmF9JI49gR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Oct 31, 2014 at 04:08:41PM +0900, gyungoh@gmail.com wrote:
-> From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
+On Fri, Oct 31, 2014 at 04:29:18PM +0000, Andrew Lunn wrote:
+> On Fri, Oct 31, 2014 at 04:04:20PM +0000, Liviu Dudau wrote:
+> > This adds support for USB, 100MB Ethernet port, timers, I2C,
+> > and watchdog timer. Missing for now are the SMMU nodes, HDLCD
+> > and PCIe.
 >=20
-> Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
+> Hi Liviu
 
-This doesn't apply against current code and depends on the MFD symbol
-rename - can you please check what's going on here?
+Hi Andrew,
 
-It would make sense to split the Kconfig symbol rename into a separate
-patch to ease merging, it doesn't seem obviously related to the driver
-change and should probably be in the same patch as the MFD symbol rename
-for bisetion.
+>=20
+> I know nothing about Juno, but i do help maintain the Marvell SoC
+> device tree files.
+>=20
+> It seems pretty normal to split device tree descriptions into a
+> generic .dtsi SoC part and a number of .dts board files, one per
+> board, and including the SoC .dtsi file.
 
---aoTbOZUmF9JI49gR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Agree.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+>=20
+> Is it likely another board will be designed using the same SoC?
 
-iQEcBAEBAgAGBQJUU7xhAAoJECTWi3JdVIfQey8H/3Y7D4bgU+PfhoOc9N+hRzgz
-9Z9jKyevGFTBp/79i5QZGfUIAsylcp+Pu8hrlIQCMcn1L3lvHggB0fXYqnxowIQK
-SCveryid4DiA6A1FmJuLuQZyte8gyhkJYP/Z4MKd/LNIeEz989EmdyVOHzoHmxx3
-Xg/DK2YZFkII7jFgkmrPtMGzb9umkiyoKB1Y97K2MW3kYtWN6fsKdbe8c2ESxsvz
-hZmeULqZztOdBujRjPpymDKSuNzG4lC2zW0xoGrFSEhZOl5wXo3qp9EY3ymtQVLM
-s5MbJqj6qSu5v+EZis8BJ7vwOZrYyMtBLu+HdEbHQrA86c1wu1qK2KNvXqPkdZs=
-=yXQ/
------END PGP SIGNATURE-----
+There is at least one revision of the SoC happening, but hopefully
+it should be compatible with the current DT. ARM usually creates
+CoreTiles for the CPUs and uses the VExpress motherboard as the
+"expansion board" sort of setup.
 
---aoTbOZUmF9JI49gR--
+Juno is new in this area in that is an 'all-in-one' board. I don't
+think we will ever see another board with the Juno chip because
+ARM doesn't sell chips, but there might be future ARM boards that
+will share features with Juno, so refactoring will be necessary.
+Unfortunately, I don't have any insights into the future so I
+cannot properly prepare for such case, hence the one file submission.
+
+Best regards,
+Liviu
+
+>=20
+>    Andrew
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
