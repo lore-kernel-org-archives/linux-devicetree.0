@@ -1,55 +1,99 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v3 01/14] mfd: max77686/802: Map regulator driver to its
- own of_node
-Date: Fri, 31 Oct 2014 14:07:54 +0100
-Message-ID: <1414760874.7318.15.camel@AMDC1943>
-References: <1414668053-31370-1-git-send-email-k.kozlowski@samsung.com>
- <1414668053-31370-2-git-send-email-k.kozlowski@samsung.com>
- <20141031122330.GP18557@sirena.org.uk>
+From: yoshihiro shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v2 2/2] ARM: shmobile: lager: enable USB3.0
+Date: Fri, 31 Oct 2014 13:22:22 +0000
+Message-ID: <9cedf0445a5a4f67abf5e6e1b8aac631@HKNPR06MB322.apcprd06.prod.outlook.com>
+References: <1414147307-4584-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1414147307-4584-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CANqRtoQTBd23z4uVK-EB7JJuJ_K0GkV6ueVfnywShqe6Dx0T5w@mail.gmail.com>
+ <5450CD42.9070101@renesas.com> <20141029235748.GD4599@verge.net.au>
+ <2b89f66c72894bdf8bdce7aab7c69281@HKNPR06MB322.apcprd06.prod.outlook.com>
+ <20141031050422.GC10619@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20141031122330.GP18557@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20141031050422.GC10619@verge.net.au>
+Content-Language: ja-JP
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-USB <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On pi=C4=85, 2014-10-31 at 12:23 +0000, Mark Brown wrote:
-> On Thu, Oct 30, 2014 at 12:20:40PM +0100, Krzysztof Kozlowski wrote:
-> > Add of_compatible fields for max77686 and max77802 regulator driver=
-s.
-> > The driver's node should be the same as voltage-regulators node. Th=
-is
-> > simplifies parsing of regulators init data from DTS.
->=20
-> No, this is broken.  You're introducing an ABI break that conveys no
-> additional information, I can't see any reason why this should make i=
-t
-> simpler to parse init data (you've certainly not articulated one in t=
-he
-> changelog here) but even if it did you are changing the ABI incompati=
-bly
-> and convenience isn't a good reason to do that.
+Hi Simon-san,
 
-The ABI won't be broken - both drivers would work fine with old and new
-DTB. However I agree that I should justify this more...
+> On Fri, Oct 31, 2014 at 02:06:14AM +0000, yoshihiro shimoda wrote:
+> > Hi Simon-san,
+> >
+> > > On Wed, Oct 29, 2014 at 08:19:30PM +0900, Yoshihiro Shimoda wrote:
+> > > > Hi Magnus-san,
+> > > >
+> > > > (2014/10/29 15:53), Magnus Damm wrote:
+> > < snip >
+> > > > >
+> > > > > Hi Shimoda-san,
+> > > > >
+> > > > > Thanks for your patch. I'm fine with this patch as a first step,
+> > > > > but I'm wondering what the reason is to prioritize USB 2.0 over USB 3.0?
+> > > >
+> > > > I investigated this reason today, and I found the reason is
+> > > > request_firmware().  I checked the following environments:
+> > > >
+> > > > Case 1: xHCI and EHCI and OHCI are enabled "=y"
+> > > > Case 2: xHCI and EHCI and OHCI are loadable modules "=m"
+> > > > Case 3: xHCI and EHCI and OHCI are enabled "=y",
+> > > >         and CONFIG_EXTRA_FIRMWARE is enabled
+> > > >
+> > > > The results are:
+> > > > - In "Case 1", EHCI and OHCI are probed first because xHCI didn't find the firmware.
+> > > > - In "Case 2" and "Case 3", xHCI is probed first.
+> > > >
+> > > > > Is the current order just based on device init order? In my mind
+> > > > > the expected behavior would be to always use USB 3.0 if it
+> > > > > happens to be available in the hardware, specified in the DTS,
+> > > > > enabled by the kernel configuration and firmware is loadable. Or
+> > > > > does some case exist where it is better to use USB 2.0? I suspect no.
+> > > >
+> > > > I agree with you.
+> > > >
+> > > > > So I wonder if you have any plans how to make USB 3.0 enabled by
+> > > > > default on Lager?
+> > > >
+> > > > It depends on a kernel config. I'm not sure of the
+> > > > shmobile_defconfig strategy.  But, in my opinion, one of a
+> > > > solution is kernel modules (this means the "Case 2".)
+> > >
+> > > It sounds like we should enable CONFIG_EXTRA_FIRMWARE in
+> > > shmobile_defconfig. I wonder what if any fallout we can foresee occurring if we do that.
+> >
+> > According to the firmware/README.AddingFirmware, we are unable to add a new firmware image to the firmware directory
+> now.
+> > So, if we enable CONFIG_EXTRA_FIRMWARE with the xHCI firmware, we will not build kernel because the xHCI firmware doesn't
+> exist in the linux.git.
+> >
+> > === from  firmware/README.AddingFirmware
+> > =====================================
+> > This directory is _NOT_ for adding arbitrary new firmware images. The
+> > place to add those is the separate linux-firmware repository:
+> >
+> >
+> > git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.
+> > git
+> > ======================================================================
+> > ========
+> 
+> Thanks. It seems that EXTRA_FIRMWARE is not an option from a mainline point of view after all.
+> 
+> Is the problem in case 1 that the firmware can't be found because userspace does exist yet and thus can't be loaded from
+> there?
 
-Javier and you explained me using parent's device for rdev->dev so I
-think this change won't be needed and I'll just drop it.
+That's correct.
+If EXTRA_FIRMWARE is not set, the following error happens:
 
-Thank you for feedback.
-
-> I'm getting very frustrated with what's going on with these drivers,
-> there seem to be a lot of rather large sets of patches spawning lots =
-of
-> discussion but also frequent review problems and very little actually
-> getting merged (look at the set of changes in the past few merge wind=
-ows
-> for example).  There's something going wrong here.
-
-If I over-spammed you, then I am deeply sorry.
+xhci-hcd ee000000.usb: Direct firmware load for r8a779x_usb3_v1.dlmem failed with error -2
+xhci-hcd ee000000.usb: can't setup: -2
+xhci-hcd ee000000.usb: USB bus 1 deregistered
+xhci-hcd: probe of ee000000.usb failed with error -2
 
 Best regards,
-Krzysztof
+Yoshihiro Shimoda
+
