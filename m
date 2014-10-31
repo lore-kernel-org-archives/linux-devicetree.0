@@ -1,51 +1,54 @@
-From: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Subject: Re: [PATCH v5 4/4] crypto: Add Allwinner Security System crypto
- accelerator
-Date: Fri, 31 Oct 2014 16:18:03 +0800
-Message-ID: <20141031081803.GA8012@gondor.apana.org.au>
-References: <1413728182-13569-1-git-send-email-clabbe.montjoie@gmail.com>
- <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com>
- <20141021191149.GQ21108@lukather>
- <544A9FEA.6020304@gmail.com>
- <20141030171933.GR21251@lukather>
- <20141031072030.GA7563@gondor.apana.org.au>
- <20141031081323.GS21251@lukather>
+From: <suravee.suthikulpanit@amd.com>
+Subject: [V9 PATCH 0/2] irqchip: gic: Introduce ARM GICv2m MSI(-X) support
+Date: Fri, 31 Oct 2014 03:26:28 -0500
+Message-ID: <1414743990-28421-1-git-send-email-suravee.suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141031081323.GS21251@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net, tglx@linutronix.de
+Cc: Catalin.Marinas@arm.com, Will.Deacon@arm.com, liviu.dudau@arm.com, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 31, 2014 at 09:13:23AM +0100, Maxime Ripard wrote:
->
-> I don't understand here. Why would other drivers *not* being affected?
-> 
-> If the scatter list passed by AF_ALG can be in highmem, I guess it's
-> the case for every driver out there. Almost every kernel code I've
-> seen so far makes the assumption that the memory it has is mapped and
-> accessible.
-> 
-> Somehow, it's the driver's fault now, and not the part of kernel that
-> actually does the allocation?
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 
-If you are implementing a crypto driver that is meant to handle
-requests from the crypto API then yes you need to handle highmem.
+This patch set introduces support for MSI(-X) in GICv2m specification,
+which is implemented in some variation of GIC400.
 
-As I said if enough drivers are unable to address highmem and
-require copying/software fallbacks then we could provide this
-through the API and the driver would then only need to declare
-its lack of highmem support or use a helper.
+This patch set is rebased from: 
+    Git tree   : git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git
+    Git branch : domain_hierarchy
+    Last commit: 97d4ea1f0922fb47dd1b09cd2694b7fa5b519db9
 
-Cheers,
+Changes in V9 includes:
+  * GICv2m is now adopting the new domain hierarchy, which requires
+    GICv2m to implements its own irq_chip and irq_domain, as a child of GIC. 
+    GICv2m domain is intialized using the SPI base and the number of SPIs from
+    V2M_MSI_TYPER registers (or the override value from DT).
+
+  * Simplified GIC logic that was used to handle MSI stuff. Now the v2m
+    stuff is cleanly separated.
+
+History:
+    V8: https://lkml.org/lkml/2014/9/20/111
+    V7: https://lkml.org/lkml/2014/9/17/751
+
+Suravee Suthikulpanit (2):
+  genirq: Add irq_chip_set_type_parent function
+  irqchip: gicv2m: Add supports for ARM GICv2m MSI(-X)
+
+ Documentation/devicetree/bindings/arm/gic.txt |  53 ++++
+ arch/arm64/Kconfig                            |   1 +
+ drivers/irqchip/Kconfig                       |   5 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-gic-v2m.c                 | 395 ++++++++++++++++++++++++++
+ drivers/irqchip/irq-gic-v2m.h                 |   7 +
+ drivers/irqchip/irq-gic.c                     |  21 +-
+ include/linux/irq.h                           |   1 +
+ kernel/irq/chip.c                             |  10 +
+ 9 files changed, 490 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/irqchip/irq-gic-v2m.c
+ create mode 100644 drivers/irqchip/irq-gic-v2m.h
+
 -- 
-Email: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.3
