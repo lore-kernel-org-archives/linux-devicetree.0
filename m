@@ -1,54 +1,116 @@
-From: gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [RESUBMIT PATCH v6 6/8] devicetree: i2c: Add SKY81452 to the Trivial Devices list
-Date: Fri, 31 Oct 2014 16:08:40 +0900
-Message-ID: <1414739322-12487-7-git-send-email-jack.yoo@skyworksinc.com>
+From: gyungoh@gmail.com
+Subject: [RESUBMIT PATCH v6 7/8] regulator: sky81452: Add compatible string for device binding
+Date: Fri, 31 Oct 2014 16:08:41 +0900
+Message-ID: <1414739322-12487-8-git-send-email-jack.yoo@skyworksinc.com>
 References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
  <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414739322-12487-1-git-send-email-jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, broonie@kernel.org, lgirdwood@gmail.com
+Cc: jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
+From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
 
-Signed-off-by: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
+Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
 ---
 Changes v6:
-Nothing
+Added new line character at the end of line of dev_err()
 
 Changes v5:
-Nothing
+Changed DT for regulator : 'lout' node should be defined under 'regulator'
+Removed compatible string
+Modified to return EINVAL when of_node is NULL
 
 Changes v4:
-Nothing
+Removed MODULE_VERSION()
+Modified license to GPLv2
 
 Changes v3:
-Nothing
+Modified to return ENODATA when of_node is NULL
+Modified the messages in error cases
 
 Changes v2:
-Add SKY81452 to the Trivial Devices list
+Added 'compatible' attribute in the driver
+Added message for exception or errors.
 
- Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/regulator/Kconfig              |  2 +-
+ drivers/regulator/sky81452-regulator.c | 29 +++++++++++++++++++----------
+ 2 files changed, 20 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index fbde415..122fa1e 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -77,6 +77,7 @@ ramtron,24c64		i2c serial eeprom  (24cxx)
- ricoh,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
- samsung,24ad0xd1	S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Power)
- sii,s35390a		2-wire CMOS real-time clock
-+skyworks,sky81452	Skyworks SKY81452: Six-Channel White LED Driver with Touch Panel Bias Supply
- st-micro,24c256		i2c serial eeprom  (24cxx)
- stm,m41t00		Serial Access TIMEKEEPER
- stm,m41t62		Serial real-time clock (RTC) with alarm
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 55d7b7b..fe84bd4 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -547,7 +547,7 @@ config REGULATOR_S5M8767
+ 
+ config REGULATOR_SKY81452
+ 	tristate "Skyworks Solutions SKY81452 voltage regulator"
+-	depends on SKY81452
++	depends on MFD_SKY81452
+ 	help
+ 	  This driver supports Skyworks SKY81452 voltage output regulator
+ 	  via I2C bus. SKY81452 has one voltage linear regulator can be
+diff --git a/drivers/regulator/sky81452-regulator.c b/drivers/regulator/sky81452-regulator.c
+index 97aff0c..23a3bd6 100644
+--- a/drivers/regulator/sky81452-regulator.c
++++ b/drivers/regulator/sky81452-regulator.c
+@@ -65,21 +65,29 @@ static const struct regulator_desc sky81452_reg = {
+ };
+ 
+ #ifdef CONFIG_OF
++static struct of_regulator_match sky81452_match = {
++	.name = "lout"
++};
++
+ static struct regulator_init_data *sky81452_reg_parse_dt(struct device *dev)
+ {
+-	struct regulator_init_data *init_data;
+ 	struct device_node *np;
++	int ret;
+ 
+ 	np = of_get_child_by_name(dev->parent->of_node, "regulator");
+-	if (unlikely(!np)) {
+-		dev_err(dev, "regulator node not found");
+-		return NULL;
++	if (!np) {
++		dev_err(dev, "regulator node not found.\n");
++		return ERR_PTR(-EINVAL);
+ 	}
+ 
+-	init_data = of_get_regulator_init_data(dev, np);
+-
++	ret = of_regulator_match(dev, np, &sky81452_match, 1);
+ 	of_node_put(np);
+-	return init_data;
++	if (IS_ERR_VALUE(ret)) {
++		dev_err(dev, "Error parsing init data. err=%d\n", ret);
++		return ERR_PTR(ret);
++	}
++
++	return &sky81452_match.init_data;
+ }
+ #else
+ static struct regulator_init_data *sky81452_reg_parse_dt(struct device *dev)
+@@ -107,8 +115,10 @@ static int sky81452_reg_probe(struct platform_device *pdev)
+ 	config.regmap = dev_get_drvdata(dev->parent);
+ 
+ 	rdev = devm_regulator_register(dev, &sky81452_reg, &config);
+-	if (IS_ERR(rdev))
++	if (IS_ERR(rdev)) {
++		dev_err(dev, "failed to register. err=%ld\n", PTR_ERR(rdev));
+ 		return PTR_ERR(rdev);
++	}
+ 
+ 	platform_set_drvdata(pdev, rdev);
+ 
+@@ -126,5 +136,4 @@ module_platform_driver(sky81452_reg_driver);
+ 
+ MODULE_DESCRIPTION("Skyworks SKY81452 Regulator driver");
+ MODULE_AUTHOR("Gyungoh Yoo <jack.yoo@skyworksinc.com>");
+-MODULE_LICENSE("GPL");
+-MODULE_VERSION("1.0");
++MODULE_LICENSE("GPL v2");
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
