@@ -1,7 +1,7 @@
 From: Huang Rui <ray.huang@amd.com>
-Subject: [PATCH v5 2/8] usb: dwc3: add disable usb3 suspend phy quirk
-Date: Fri, 31 Oct 2014 11:11:13 +0800
-Message-ID: <1414725079-11490-3-git-send-email-ray.huang@amd.com>
+Subject: [PATCH v5 6/8] usb: dwc3: add support for AMD Nolan platform
+Date: Fri, 31 Oct 2014 11:11:17 +0800
+Message-ID: <1414725079-11490-7-git-send-email-ray.huang@amd.com>
 References: <1414725079-11490-1-git-send-email-ray.huang@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,91 +12,57 @@ To: Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn H
 Cc: Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Huang Rui <ray.huang@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds disable usb3 suspend phy quirk, and some special platforms
-can configure that if it is needed.
+This patch adds support for AMD Nolan (NL) FPGA and SoC platform.
 
+Cc: Jason Chang <jason.chang@amd.com>
 Signed-off-by: Huang Rui <ray.huang@amd.com>
 ---
- Documentation/devicetree/bindings/usb/dwc3.txt | 1 +
- drivers/usb/dwc3/core.c                        | 6 ++++++
- drivers/usb/dwc3/core.h                        | 2 ++
- drivers/usb/dwc3/platform_data.h               | 1 +
- 4 files changed, 10 insertions(+)
+ drivers/usb/dwc3/dwc3-pci.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index b724b2e..08b394e 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -32,6 +32,7 @@ Optional properties:
-  - snps,tx_de_emphasis_quirk: when set core will set Tx de-emphasis value.
-  - snps,tx_de_emphasis: the value driven to the PHY is controlled by the
- 			LTSSM during USB3 Compliance mode.
-+ - snps,dis_u3_susphy_quirk: when set core will disable USB3 suspend phy.
+diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
+index ada975f..7c4faf7 100644
+--- a/drivers/usb/dwc3/dwc3-pci.c
++++ b/drivers/usb/dwc3/dwc3-pci.c
+@@ -145,6 +145,31 @@ static int dwc3_pci_probe(struct pci_dev *pci,
+ 	res[1].name	= "dwc_usb3";
+ 	res[1].flags	= IORESOURCE_IRQ;
  
- This is usually a subnode to DWC3 glue to which it is connected.
- 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index e7e877a..6ec4176 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -404,6 +404,9 @@ static void dwc3_phy_setup(struct dwc3 *dwc)
- 	if (dwc->tx_de_emphasis_quirk)
- 		reg |= DWC3_GUSB3PIPECTL_TX_DEEPH(dwc->tx_de_emphasis);
- 
-+	if (dwc->dis_u3_susphy_quirk && dwc->is_fpga)
-+		reg &= ~DWC3_GUSB3PIPECTL_SUSPHY;
++	if (pci->vendor == PCI_VENDOR_ID_AMD &&
++			pci->device == PCI_DEVICE_ID_AMD_NL_USB) {
++		dwc3_pdata.has_lpm_erratum = true;
++		dwc3_pdata.lpm_nyet_threshold = 0xf;
 +
- 	dwc3_writel(dwc->regs, DWC3_GUSB3PIPECTL(0), reg);
- 
- 	mdelay(100);
-@@ -807,6 +810,8 @@ static int dwc3_probe(struct platform_device *pdev)
- 				"snps,lfps_filter_quirk");
- 		dwc->rx_detect_poll_quirk = of_property_read_bool(node,
- 				"snps,rx_detect_poll_quirk");
-+		dwc->dis_u3_susphy_quirk = of_property_read_bool(node,
-+				"snps,dis_u3_susphy_quirk");
- 
- 		dwc->tx_de_emphasis_quirk = of_property_read_bool(node,
- 				"snps,tx_de_emphasis_quirk");
-@@ -829,6 +834,7 @@ static int dwc3_probe(struct platform_device *pdev)
- 		dwc->del_phy_power_chg_quirk = pdata->del_phy_power_chg_quirk;
- 		dwc->lfps_filter_quirk = pdata->lfps_filter_quirk;
- 		dwc->rx_detect_poll_quirk = pdata->rx_detect_poll_quirk;
-+		dwc->dis_u3_susphy_quirk = pdata->dis_u3_susphy_quirk;
- 
- 		dwc->tx_de_emphasis_quirk = pdata->tx_de_emphasis_quirk;
- 		if (pdata->tx_de_emphasis)
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index cf9aaca..fa778b0 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -697,6 +697,7 @@ struct dwc3_scratchpad_array {
-  * @del_phy_power_chg_quirk: set if we enable delay phy power change quirk
-  * @lfps_filter_quirk: set if we enable LFPS filter quirk
-  * @rx_detect_poll_quirk: set if we enable rx_detect to polling lfps quirk
-+ * @dis_u3_susphy_quirk: set if we disable usb3 suspend phy
-  * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
-  * @tx_de_emphasis: Tx de-emphasis value
-  * 	0	- -6dB de-emphasis
-@@ -818,6 +819,7 @@ struct dwc3 {
- 	unsigned		del_phy_power_chg_quirk:1;
- 	unsigned		lfps_filter_quirk:1;
- 	unsigned		rx_detect_poll_quirk:1;
-+	unsigned		dis_u3_susphy_quirk:1;
- 
- 	unsigned		tx_de_emphasis_quirk:1;
- 	unsigned		tx_de_emphasis:2;
-diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform_data.h
-index e1ab900..0f1d5ad 100644
---- a/drivers/usb/dwc3/platform_data.h
-+++ b/drivers/usb/dwc3/platform_data.h
-@@ -36,6 +36,7 @@ struct dwc3_platform_data {
- 	unsigned del_phy_power_chg_quirk:1;
- 	unsigned lfps_filter_quirk:1;
- 	unsigned rx_detect_poll_quirk:1;
-+	unsigned dis_u3_susphy_quirk:1;
- 
- 	unsigned tx_de_emphasis_quirk:1;
- 	unsigned tx_de_emphasis:2;
++		dwc3_pdata.u2exit_lfps_quirk = true;
++		dwc3_pdata.u2ss_inp3_quirk = true;
++		dwc3_pdata.req_p1p2p3_quirk = true;
++		dwc3_pdata.del_p1p2p3_quirk = true;
++		dwc3_pdata.del_phy_power_chg_quirk = true;
++		dwc3_pdata.lfps_filter_quirk = true;
++		dwc3_pdata.rx_detect_poll_quirk = true;
++
++		dwc3_pdata.tx_de_emphasis_quirk = true;
++		dwc3_pdata.tx_de_emphasis = 1;
++
++		/*
++		 * FIXME these quirks should be removed when AMD NL
++		 * taps out
++		 */
++		dwc3_pdata.disable_scramble_quirk = true;
++		dwc3_pdata.dis_u3_susphy_quirk = true;
++		dwc3_pdata.dis_u2_susphy_quirk = true;
++	}
++
+ 	ret = platform_device_add_resources(dwc3, res, ARRAY_SIZE(res));
+ 	if (ret) {
+ 		dev_err(dev, "couldn't add resources to dwc3 device\n");
+@@ -194,6 +219,7 @@ static const struct pci_device_id dwc3_pci_id_table[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_BSW), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_BYT), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_MRFLD), },
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_NL_USB), },
+ 	{  }	/* Terminating Entry */
+ };
+ MODULE_DEVICE_TABLE(pci, dwc3_pci_id_table);
 -- 
 1.9.1
