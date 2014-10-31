@@ -1,78 +1,34 @@
-From: Ankit Jindal <ankit.jindal@linaro.org>
-Subject: Re: [PATCH v3 5/6] Documentation: dt-bindings: Add binding info for
- X-Gene QMTM UIO driver
-Date: Fri, 31 Oct 2014 15:45:25 +0530
-Message-ID: <CAPTm99V1m4QQReQTBJfN5biBtvg1KTSpW_vF67mPnCt30szSuA@mail.gmail.com>
-References: <1413871011-4101-1-git-send-email-ankit.jindal@linaro.org>
- <1413871011-4101-6-git-send-email-ankit.jindal@linaro.org>
- <20141021091412.GB15293@leverpostej> <CAPTm99X9k+cfELMLL8_PmYN6RNn7CL7KugnV5JKcW6Jqhs8idg@mail.gmail.com>
- <20141031100925.GA798@leverpostej>
+From: Max Filippov <jcmvbkbc@gmail.com>
+Subject: Re: [PATCH] clk: TI CDCE706 clock synthesizer driver
+Date: Fri, 31 Oct 2014 13:16:33 +0300
+Message-ID: <CAMo8BfLbn-gMNtPYKP-9VvJUgyhoSp6d06a0vdw=SgOCS9CNWw@mail.gmail.com>
+References: <1414171020-15706-1-git-send-email-jcmvbkbc@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141031100925.GA798@leverpostej>
+In-Reply-To: <1414171020-15706-1-git-send-email-jcmvbkbc@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Hans J. Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "patches@apm.com" <patches@apm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Tushar Jagad <tushar.jagad@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Varka Bhadram <varkabhadram@gmail.com>
+To: LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Mike Turquette <mturquette@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Max Filippov <jcmvbkbc@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 31 October 2014 15:39, Mark Rutland <mark.rutland@arm.com> wrote:
->> >> +Required properties:
->> >> +- compatible: Should be "apm,xgene-qmtm"
->> >> +- reg: Address and length of the register set for the device. It contains the
->> >> +  information of registers in the same order as described by reg-names.
->> >> +- reg-names: Should contain the register set names
->> >> +  - "csr": QMTM control and status register address space.
->> >> +  - "fabric": QMTM memory mapped access to queue states.
->> >> +- qpool: Points to the phandle of the node defining memory location for
->> >> +      creating QMTM queues. This could point either to the reserved-memory
->> >> +      node (as-per reserved memory bindings) or to the node of on-chip
->> >> +      SRAM etc. It is expected that size and location of qpool memory will
->> >> +      be configurable via bootloader.
->> >
->> > Is that on-chip SRAM part of the QMTM, or is that a shared part of the
->> > SoC?
->> Its not part of QMTM.
->>
->> >
->> > It feels odd to have a phandle that can go to completely different
->> > classes of node, especially as you will need to use a different API to
->> > acquire the memory region within Linux.
->> It is expected that phandle will point to a node whose first reg
->> property will be only for qpool memory.
+On Fri, Oct 24, 2014 at 8:17 PM, Max Filippov <jcmvbkbc@gmail.com> wrote:
+> The driver allows using CDCE706 in its default configuration recorded in
+> EEPROM and adjusting of synthesized clocks by consumers.
 >
-> Even if that's true you will need to use completely different APIs for
-> accessing that memory (so that the kernel can account the use of
-> reserved-memory correctly), so this might not be the best design. It
-> might be better to have qpool-sram and qpool-memory properties that
-> point at an sram node or a reserved-memory node respectively.
-Thanks, I will go as per your suggestion. I will add two properties
-qpool-sram and qpool-memory to tackle this.
->
->> >
->> >> +- clocks: Reference to the clock entry.
->> >
->> > Just the one clock? Does the clock input to the QMTM have a name?
->> Just one input clock. There is no specific name of it.
->
-> Ok.
->
->>
->> >
->> >> +- num-queues: Number of queues under this QMTM device.
->> >> +- devid: QMTM identification number for the system having multiple QMTM devices.
->> >> +      This is used to form a unique id (a tuple of queue number and
->> >> +      device id) for the queues belonging to this device.
->> >
->> > Is this just an arbitrary unique ID, or is this a non-probeable property
->> > of the HW? If the former, isn't the base address sufficient as a unique
->> > identifier?
->> Its a non-probeable property of the HW.
->
-> Ok. That sounds fine then.
->
+> Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+> ---
+>  .../devicetree/bindings/clock/ti,cdce706.txt       |  16 +
+>  MAINTAINERS                                        |   5 +
+>  drivers/clk/Kconfig                                |   8 +
+>  drivers/clk/Makefile                               |   1 +
+>  drivers/clk/clk-cdce706.c                          | 700 +++++++++++++++++++++
+>  5 files changed, 730 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/ti,cdce706.txt
+>  create mode 100644 drivers/clk/clk-cdce706.c
 
-Thanks,
-Ankit
-> Thanks,
-> Mark.
+Ping?
+
+-- 
+Thanks.
+-- Max
