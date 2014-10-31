@@ -1,118 +1,67 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [RESENDv6 6/6] ARM: imx: Add Freescale LS1021A SMP support
-Date: Fri, 31 Oct 2014 17:01:13 +0800
-Message-ID: <1414746073-12394-7-git-send-email-jingchang.lu@freescale.com>
-References: <1414746073-12394-1-git-send-email-jingchang.lu@freescale.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v5 07/12] leds: leds-gpio: Add support for GPIO
+ descriptors
+Date: Fri, 31 Oct 2014 11:55:35 +0200
+Message-ID: <20141031095535.GV1304@lahna.fi.intel.com>
+References: <2660541.BycO7TFnA2@vostro.rjw.lan>
+ <3395005.IveyhHQnye@vostro.rjw.lan>
+ <CACRpkdYR70Az1uLyjsaujQN-q-4+qRD=GpqJaOuvnKZhypL=cA@mail.gmail.com>
+ <17483842.EFni4iQX1H@vostro.rjw.lan>
+ <20141029085306.GI1304@lahna.fi.intel.com>
+ <CACRpkdaKiz4wODUnH+2+ELY3XGSYYsQ_iFMm+iY=o6rmVcxmSw@mail.gmail.com>
+ <20141030161528.GS1304@lahna.fi.intel.com>
+ <CACRpkdYQwzwLJOCx76uONCpTsUtxhePaByyYPz-52Xw9L+DYQQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414746073-12394-1-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYQwzwLJOCx76uONCpTsUtxhePaByyYPz-52Xw9L+DYQQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Fri, Oct 31, 2014 at 10:41:38AM +0100, Linus Walleij wrote:
+> On Thu, Oct 30, 2014 at 5:15 PM, Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> > On Thu, Oct 30, 2014 at 04:40:05PM +0100, Linus Walleij wrote:
+> >> > Yes, I'll just let dust to settle before sending out a patch that
+> >> > converts the existing users of platform_gpio_blink_set() callback to
+> >> > gpio descriptors.
+> >>
+> >> Dust settle = 2 weeks, 18 months, 5 years?
+> >
+> > I started to do the conversion already but then noticed that it is not
+> > that trivial after all.
+> 
+> Thanks for looking into this.
+> 
+> > For example we have one user in arch/arm/mach-orion5x/dns323-setup.c:
+> >
+> > static struct gpio_led_platform_data dns323ab_led_data = {
+> >         .num_leds       = ARRAY_SIZE(dns323ab_leds),
+> >         .leds           = dns323ab_leds,
+> >         .gpio_blink_set = orion_gpio_led_blink_set,
+> > };
+> >
+> > orion_gpio_led_blink_set() is part of orion specific custom GPIO
+> > "driver" defined in arch/arm/plat-orion/gpio.c and as far as I can tell
+> > cannot use GPIO descriptors as it directly programs these numbers to the
+> > hardware.
+> >
+> > We can convert the descriptor to a number in the beginning of
+> > orion_gpio_led_blink_set() if that helps.
+> >
+> > Other two users: rx1950_led_blink_set() and h1940_led_blink_set() seem
+> > to have similar needs for the numeric value.
+> 
+> Doing the conversion from descriptor to gpio number in the
+> platforms is *much desired*, because it is a nice divide-and-conquer
+> approach.
+> 
+> For example mach-orion is going to be deleted and replaced
+> with mach-mvebu at some time, so then part of the problem
+> goes away entirely.
 
-Freescale LS1021A SoCs deploy two cortex-A7 processors,
-this adds bring-up support for the secondary core.
-
-Signed-off-by: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/arm/mach-imx/Makefile       |  2 +-
- arch/arm/mach-imx/common.h       |  1 +
- arch/arm/mach-imx/mach-ls1021a.c |  1 +
- arch/arm/mach-imx/platsmp.c      | 33 +++++++++++++++++++++++++++++++++
- 4 files changed, 36 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
-index 19dc7bf..f5ac685 100644
---- a/arch/arm/mach-imx/Makefile
-+++ b/arch/arm/mach-imx/Makefile
-@@ -89,7 +89,7 @@ obj-$(CONFIG_HAVE_IMX_ANATOP) += anatop.o
- obj-$(CONFIG_HAVE_IMX_GPC) += gpc.o
- obj-$(CONFIG_HAVE_IMX_MMDC) += mmdc.o
- obj-$(CONFIG_HAVE_IMX_SRC) += src.o
--ifdef CONFIG_SOC_IMX6
-+ifneq ($(CONFIG_SOC_IMX6)$(CONFIG_SOC_LS1021A),)
- AFLAGS_headsmp.o :=-Wa,-march=armv7-a
- obj-$(CONFIG_SMP) += headsmp.o platsmp.o
- obj-$(CONFIG_HOTPLUG_CPU) += hotplug.o
-diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
-index 23c84e6..fe9a908 100644
---- a/arch/arm/mach-imx/common.h
-+++ b/arch/arm/mach-imx/common.h
-@@ -158,5 +158,6 @@ static inline void imx_init_l2cache(void) {}
- #endif
- 
- extern struct smp_operations imx_smp_ops;
-+extern struct smp_operations ls1021a_smp_ops;
- 
- #endif
-diff --git a/arch/arm/mach-imx/mach-ls1021a.c b/arch/arm/mach-imx/mach-ls1021a.c
-index 9d2034b..b89c858 100644
---- a/arch/arm/mach-imx/mach-ls1021a.c
-+++ b/arch/arm/mach-imx/mach-ls1021a.c
-@@ -17,5 +17,6 @@ static const char * const ls1021a_dt_compat[] __initconst = {
- };
- 
- DT_MACHINE_START(LS1021A, "Freescale LS1021A")
-+	.smp		= smp_ops(ls1021a_smp_ops),
- 	.dt_compat	= ls1021a_dt_compat,
- MACHINE_END
-diff --git a/arch/arm/mach-imx/platsmp.c b/arch/arm/mach-imx/platsmp.c
-index 771bd25..7f27001 100644
---- a/arch/arm/mach-imx/platsmp.c
-+++ b/arch/arm/mach-imx/platsmp.c
-@@ -11,7 +11,10 @@
-  */
- 
- #include <linux/init.h>
-+#include <linux/of_address.h>
-+#include <linux/of.h>
- #include <linux/smp.h>
-+
- #include <asm/cacheflush.h>
- #include <asm/page.h>
- #include <asm/smp_scu.h>
-@@ -94,3 +97,33 @@ struct smp_operations  imx_smp_ops __initdata = {
- 	.cpu_kill		= imx_cpu_kill,
- #endif
- };
-+
-+#define DCFG_CCSR_SCRATCHRW1	0x200
-+
-+static int ls1021a_boot_secondary(unsigned int cpu, struct task_struct *idle)
-+{
-+	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
-+
-+	return 0;
-+}
-+
-+static void __init ls1021a_smp_prepare_cpus(unsigned int max_cpus)
-+{
-+	struct device_node *np;
-+	void __iomem *dcfg_base;
-+	unsigned long paddr;
-+
-+	np = of_find_compatible_node(NULL, NULL, "fsl,ls1021a-dcfg");
-+	dcfg_base = of_iomap(np, 0);
-+	BUG_ON(!dcfg_base);
-+
-+	paddr = virt_to_phys(secondary_startup);
-+	writel_relaxed(cpu_to_be32(paddr), dcfg_base + DCFG_CCSR_SCRATCHRW1);
-+
-+	iounmap(dcfg_base);
-+}
-+
-+struct smp_operations  ls1021a_smp_ops __initdata = {
-+	.smp_prepare_cpus	= ls1021a_smp_prepare_cpus,
-+	.smp_boot_secondary	= ls1021a_boot_secondary,
-+};
--- 
-1.8.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+OK, thanks. I'll do the GPIO descriptor -> number conversions in the
+platform code then.
