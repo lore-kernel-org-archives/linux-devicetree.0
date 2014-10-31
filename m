@@ -1,67 +1,107 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v5 07/12] leds: leds-gpio: Add support for GPIO
- descriptors
-Date: Fri, 31 Oct 2014 11:55:35 +0200
-Message-ID: <20141031095535.GV1304@lahna.fi.intel.com>
-References: <2660541.BycO7TFnA2@vostro.rjw.lan>
- <3395005.IveyhHQnye@vostro.rjw.lan>
- <CACRpkdYR70Az1uLyjsaujQN-q-4+qRD=GpqJaOuvnKZhypL=cA@mail.gmail.com>
- <17483842.EFni4iQX1H@vostro.rjw.lan>
- <20141029085306.GI1304@lahna.fi.intel.com>
- <CACRpkdaKiz4wODUnH+2+ELY3XGSYYsQ_iFMm+iY=o6rmVcxmSw@mail.gmail.com>
- <20141030161528.GS1304@lahna.fi.intel.com>
- <CACRpkdYQwzwLJOCx76uONCpTsUtxhePaByyYPz-52Xw9L+DYQQ@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 4/4] crypto: Add Allwinner Security
+ System crypto accelerator
+Date: Fri, 31 Oct 2014 10:57:06 +0100
+Message-ID: <20141031095706.GA8054@lukather>
+References: <1413728182-13569-1-git-send-email-clabbe.montjoie@gmail.com>
+ <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com>
+ <20141021191149.GQ21108@lukather>
+ <544A9FEA.6020304@gmail.com>
+ <20141030171933.GR21251@lukather>
+ <20141031072030.GA7563@gondor.apana.org.au>
+ <20141031081323.GS21251@lukather>
+ <20141031081803.GA8012@gondor.apana.org.au>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBIV3ZWRAKGQESBEONDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYQwzwLJOCx76uONCpTsUtxhePaByyYPz-52Xw9L+DYQQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <20141031081803.GA8012-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Cc: Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 31, 2014 at 10:41:38AM +0100, Linus Walleij wrote:
-> On Thu, Oct 30, 2014 at 5:15 PM, Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> > On Thu, Oct 30, 2014 at 04:40:05PM +0100, Linus Walleij wrote:
-> >> > Yes, I'll just let dust to settle before sending out a patch that
-> >> > converts the existing users of platform_gpio_blink_set() callback to
-> >> > gpio descriptors.
-> >>
-> >> Dust settle = 2 weeks, 18 months, 5 years?
-> >
-> > I started to do the conversion already but then noticed that it is not
-> > that trivial after all.
-> 
-> Thanks for looking into this.
-> 
-> > For example we have one user in arch/arm/mach-orion5x/dns323-setup.c:
-> >
-> > static struct gpio_led_platform_data dns323ab_led_data = {
-> >         .num_leds       = ARRAY_SIZE(dns323ab_leds),
-> >         .leds           = dns323ab_leds,
-> >         .gpio_blink_set = orion_gpio_led_blink_set,
-> > };
-> >
-> > orion_gpio_led_blink_set() is part of orion specific custom GPIO
-> > "driver" defined in arch/arm/plat-orion/gpio.c and as far as I can tell
-> > cannot use GPIO descriptors as it directly programs these numbers to the
-> > hardware.
-> >
-> > We can convert the descriptor to a number in the beginning of
-> > orion_gpio_led_blink_set() if that helps.
-> >
-> > Other two users: rx1950_led_blink_set() and h1940_led_blink_set() seem
-> > to have similar needs for the numeric value.
-> 
-> Doing the conversion from descriptor to gpio number in the
-> platforms is *much desired*, because it is a nice divide-and-conquer
-> approach.
-> 
-> For example mach-orion is going to be deleted and replaced
-> with mach-mvebu at some time, so then part of the problem
-> goes away entirely.
 
-OK, thanks. I'll do the GPIO descriptor -> number conversions in the
-platform code then.
+--LZvS9be/3tNcYl/X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Oct 31, 2014 at 04:18:03PM +0800, Herbert Xu wrote:
+> On Fri, Oct 31, 2014 at 09:13:23AM +0100, Maxime Ripard wrote:
+> >
+> > I don't understand here. Why would other drivers *not* being affected?
+> >=20
+> > If the scatter list passed by AF_ALG can be in highmem, I guess it's
+> > the case for every driver out there. Almost every kernel code I've
+> > seen so far makes the assumption that the memory it has is mapped and
+> > accessible.
+> >=20
+> > Somehow, it's the driver's fault now, and not the part of kernel that
+> > actually does the allocation?
+>=20
+> If you are implementing a crypto driver that is meant to handle
+> requests from the crypto API then yes you need to handle highmem.
+
+Is that documented somewhere?
+
+> As I said if enough drivers are unable to address highmem and
+> require copying/software fallbacks then we could provide this
+> through the API and the driver would then only need to declare
+> its lack of highmem support or use a helper.
+
+On a 3.18-rc2 kernel:
+
+$ git grep kmap -- crypto/
+crypto/ahash.c:                         walk->data =3D kmap(walk->pg);
+crypto/ahash.c:                         walk->data =3D kmap_atomic(walk->pg=
+);
+crypto/async_tx/async_memcpy.c:         dest_buf =3D kmap_atomic(dest) + de=
+st_offset;
+crypto/async_tx/async_memcpy.c:         src_buf =3D kmap_atomic(src) + src_=
+offset;
+crypto/scatterwalk.c:                   return kmap_atomic(scatterwalk_page=
+(walk)) +
+crypto/shash.c:                         data =3D kmap_atomic(sg_page(sg));
+crypto/shash.c:                         data =3D kmap_atomic(sg_page(sg));
+
+None of the drivers are.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--LZvS9be/3tNcYl/X
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUU1zyAAoJEBx+YmzsjxAgSSgQAIZXxg1D8HkY10+VlsBYBuQw
+htcdf6kd8lNh5VbUzBQ8MrFBJZ0a3mO/LPyF/A0seq6woYHxr65RM/BrnHwdj27j
+DMy8+rEhWLljmyRbHKN868Q5SeMHXS3ASNyd7yrJSvWVztYUPN1jguNN7mdH+gK3
+c5eylJeha8zHsjoi8u15Nyyfg8770l1yO7NUnT/QJNto+E314XLQGYLc1+1cec0t
+VeeiDZqaAOkdNytqIB1Dlth7WBSiCId4Qmb0HRNU4htv2wyxr1Kdk6+61HTkT08z
+h884R79SbbZ26Ox5jGHnn4RKnvUqY2nw1/k3D3l/dabGJ+ppLqZoUx1Z7iOHITj/
+SW1yg5sE7sueYTaT0EMsUXhgvjadu9XDHQgPxsbCtS4N0jscQHfwWIt1iwLqyL8i
+Sb7m4tzE8p1gMrpALnXC0sH/Tn/f48bPIhuysXi5OoQxqQp0/EUZ42HsvLiW4mVG
+gli4I+Sv8tRfLkafqWLs7txq/BXh/W2v3KhqqDHCrEZGSaE9UVA1e9vuqNQah6/X
+xcDlMMdKuKeM/VGuCY5OMsK3Lwh43ydWV6lL6GBlij8SV49aYIUAjOCnNHVZmfQA
+B9zQ/Ga70uEGIhWJ/+bLA9mVKumHPLhNLMPGb4LGolBFlv2K5hcTehELPyBJFtlo
+O9vtMX+R55Bs/o8iR+PK
+=wXO4
+-----END PGP SIGNATURE-----
+
+--LZvS9be/3tNcYl/X--
