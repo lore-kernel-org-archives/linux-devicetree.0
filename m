@@ -1,87 +1,249 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/6] uio: Add new UIO_MEM_PHYS_CACHE type for mem regions
-Date: Fri, 31 Oct 2014 08:39:29 -0500
-Message-ID: <4B098F57-E202-412C-B54D-085A46792EDC@codeaurora.org>
-References: <1413871011-4101-1-git-send-email-ankit.jindal@linaro.org> <1413871011-4101-3-git-send-email-ankit.jindal@linaro.org> <6D33D50E-2DD1-482C-B05E-45B237F3B779@codeaurora.org> <CAPTm99W0J-Q6CwCDVaYe4eyEWrruWuY5pzpHoESyVu9N3cFA=g@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPTm99W0J-Q6CwCDVaYe4eyEWrruWuY5pzpHoESyVu9N3cFA=g@mail.gmail.com>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 2/3] arm: mach-omap2: omap_hwmod_43xx_data: add hwmod
+ support for tscadc on am43x-evm
+Date: Fri, 31 Oct 2014 08:44:59 -0500
+Message-ID: <20141031134459.GB24708@kahuna>
+References: <1414741603-18233-1-git-send-email-vigneshr@ti.com>
+ <1414741603-18233-3-git-send-email-vigneshr@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414741603-18233-3-git-send-email-vigneshr@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 13:16-20141031, Vignesh R wrote:
+> This patch adds hwmod support for tscadc to work on am43xx-evm. The am33xx
+> hwmod structures of tscadc has been moved to ipblock_data so that it can
+> be reused in am43xx. The clock domain names are separately set for am33xx
+> and am43xx. Thus tscadc dt entries can now be added to am43xx board
+> dt files.
+> 
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> ---
+>  .../mach-omap2/omap_hwmod_33xx_43xx_common_data.h  |  1 +
+>  .../mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 64 ++++++++++++++++++++++
+>  arch/arm/mach-omap2/omap_hwmod_33xx_data.c         | 49 -----------------
+>  arch/arm/mach-omap2/omap_hwmod_43xx_data.c         |  1 +
+>  4 files changed, 66 insertions(+), 49 deletions(-)
+> 
+> diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
+> index 6e57b8ad0db5..b92a7c7825fa 100644
+> --- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
+> +++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
+> @@ -65,6 +65,7 @@ extern struct omap_hwmod_ocp_if am33xx_l4_ls__timer4;
+>  extern struct omap_hwmod_ocp_if am33xx_l4_ls__timer5;
+>  extern struct omap_hwmod_ocp_if am33xx_l4_ls__timer6;
+>  extern struct omap_hwmod_ocp_if am33xx_l4_ls__timer7;
+> +extern struct omap_hwmod_ocp_if am33xx_l4_wkup__adc_tsc;
+>  extern struct omap_hwmod_ocp_if am33xx_l3_main__tpcc;
+>  extern struct omap_hwmod_ocp_if am33xx_l3_main__tptc0;
+>  extern struct omap_hwmod_ocp_if am33xx_l3_main__tptc1;
+> diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
+> index 7f44922ab540..ef14e56a3968 100644
+> --- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
+> +++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
+> @@ -151,6 +151,54 @@ struct omap_hwmod_class am33xx_wkup_m3_hwmod_class = {
+>  };
+>  
+>  /*
+> + * 'adc/tsc' class
+> + * TouchScreen Controller (Anolog-To-Digital Converter)
+> + */
+> +static struct omap_hwmod_class_sysconfig am33xx_adc_tsc_sysc = {
+> +	.rev_offs	= 0x00,
+> +	.sysc_offs	= 0x10,
+> +	.sysc_flags	= SYSC_HAS_SIDLEMODE,
+> +	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
+> +			SIDLE_SMART_WKUP),
+> +	.sysc_fields	= &omap_hwmod_sysc_type2,
+> +};
+> +
+> +static struct omap_hwmod_class am33xx_adc_tsc_hwmod_class = {
+> +	.name		= "adc_tsc",
+> +	.sysc		= &am33xx_adc_tsc_sysc,
+> +};
+> +
+> +struct omap_hwmod am33xx_adc_tsc_hwmod = {
+> +	.name		= "adc_tsc",
+> +	.class		= &am33xx_adc_tsc_hwmod_class,
+> +	.clkdm_name	= "l4_wkup_clkdm",
+> +	.main_clk	= "adc_tsc_fck",
+> +	.prcm		= {
+> +		.omap4  = {
+> +			.modulemode     = MODULEMODE_SWCTRL,
+> +		},
+> +	},
+> +};
+> +
+> +/* L4 WKUP -> ADC_TSC */
+> +static struct omap_hwmod_addr_space am33xx_adc_tsc_addrs[] = {
+> +	{
+> +		.pa_start	= 0x44E0D000,
+> +		.pa_end		= 0x44E0D000 + SZ_8K - 1,
+> +		.flags		= ADDR_TYPE_RT
+> +	},
+> +	{ }
+> +};
 
-On Oct 31, 2014, at 4:30 AM, Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wro=
-te:
+NAK. we dont want to see phy addresses in hwmod anymore. please add that
+to DT. I suggest doing that clean up prior to this patch.
 
-> Hi Kumar,
->=20
-> On 21 October 2014 12:08, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>=20
->> On Oct 21, 2014, at 7:56 AM, Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> =
-wrote:
->>=20
->>> Currently, three types of mem regions are supported: UIO_MEM_PHYS,
->>> UIO_MEM_LOGICAL and UIO_MEM_VIRTUAL. Among these UIO_MEM_PHYS helps
->>> UIO driver export physcial memory to user space as non-cacheable
->>> user memory. Typcially memory-mapped registers of a device are expo=
-rted
->>> to user space as UIO_MEM_PHYS type mem region. The UIO_MEM_PHYS typ=
-e
->>> is not efficient if dma-capable devices are capable of maintaining =
-coherency
->>> with CPU caches.
->>>=20
->>> This patch adds new type UIO_MEM_PHYS_CACHE for mem regions to enab=
-le
->>> cacheable access to physical memory from user space.
->>>=20
->>> Signed-off-by: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Signed-off-by: Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> ---
->>> drivers/uio/uio.c          |   11 ++++++++---
->>> include/linux/uio_driver.h |    1 +
->>> 2 files changed, 9 insertions(+), 3 deletions(-)
->>=20
->> Rather than adding a new type, why not allow the driver to set the p=
-gprot value, this way one has full control and we don=92t need to keep =
-adding types for various different cache attributions in the future.
->=20
-> Do you mean to add a new field pgprot_t in the memtype structure and
-> uio_mmap_physical will set vma->vm_page_prot to this value provided b=
-y
-> driver ? If this is the case then we will need to change all the
-> current uio based drivers which was the reason I preferred to have a
-> new mem type.
->=20
-> Please let me know if I have misunderstood anything.
+> +
+> +struct omap_hwmod_ocp_if am33xx_l4_wkup__adc_tsc = {
+> +	.master		= &am33xx_l4_wkup_hwmod,
+> +	.slave		= &am33xx_adc_tsc_hwmod,
+> +	.clk		= "dpll_core_m4_div2_ck",
+> +	.addr		= am33xx_adc_tsc_addrs,
+> +	.user		= OCP_USER_MPU,
+> +};
+> +
+> +/*
+>   * 'pru-icss' class
+>   * Programmable Real-Time Unit and Industrial Communication Subsystem
+>   */
+> @@ -1370,6 +1418,7 @@ static void omap_hwmod_am33xx_clkctrl(void)
+>  	CLKCTRL(am33xx_timer5_hwmod, AM33XX_CM_PER_TIMER5_CLKCTRL_OFFSET);
+>  	CLKCTRL(am33xx_timer6_hwmod, AM33XX_CM_PER_TIMER6_CLKCTRL_OFFSET);
+>  	CLKCTRL(am33xx_timer7_hwmod, AM33XX_CM_PER_TIMER7_CLKCTRL_OFFSET);
+> +	CLKCTRL(am33xx_adc_tsc_hwmod, AM33XX_CM_WKUP_ADC_TSC_CLKCTRL_OFFSET);
+>  	CLKCTRL(am33xx_smartreflex0_hwmod,
+>  		AM33XX_CM_WKUP_SMARTREFLEX0_CLKCTRL_OFFSET);
+>  	CLKCTRL(am33xx_smartreflex1_hwmod,
+> @@ -1398,6 +1447,18 @@ static void omap_hwmod_am33xx_clkctrl(void)
+>  	CLKCTRL(am33xx_aes0_hwmod , AM33XX_CM_PER_AES0_CLKCTRL_OFFSET);
+>  }
+>  
+> +static void am33xx_hwmod_clockdomain(void)
+> +{
+> +	am33xx_l4_hs_hwmod.clkdm_name = "l4hs_clkdm";
+> +	am33xx_adc_tsc_hwmod.clkdm_name = "l4_wkup_clkdm";
+> +}
+> +
+> +static void am43xx_hwmod_clockdomain(void)
+> +{
+> +	am33xx_l4_hs_hwmod.clkdm_name = "l3_clkdm";
+> +	am33xx_adc_tsc_hwmod.clkdm_name = "l3s_tsc_clkdm";
+> +}
+> +
 
-I=92m suggeting in uio_mmap_physical to do something like:
+maybe do something similar to CLKCTRL macro?
 
-if (idev->info->set_pgprot)
-	idev->info->set_pgprot(vma->vm_page_prot)
-else
-	vma->vm_page_prot =3D pgprot_noncached(vma->vm_page_prot);
+>  static void omap_hwmod_am33xx_rst(void)
+>  {
+>  	RSTCTRL(am33xx_pruss_hwmod, AM33XX_RM_PER_RSTCTRL_OFFSET);
+> @@ -1409,6 +1470,7 @@ void omap_hwmod_am33xx_reg(void)
+>  {
+>  	omap_hwmod_am33xx_clkctrl();
+>  	omap_hwmod_am33xx_rst();
+> +	am33xx_hwmod_clockdomain();
+>  }
+>  
+>  static void omap_hwmod_am43xx_clkctrl(void)
+> @@ -1443,6 +1505,7 @@ static void omap_hwmod_am43xx_clkctrl(void)
+>  	CLKCTRL(am33xx_timer5_hwmod, AM43XX_CM_PER_TIMER5_CLKCTRL_OFFSET);
+>  	CLKCTRL(am33xx_timer6_hwmod, AM43XX_CM_PER_TIMER6_CLKCTRL_OFFSET);
+>  	CLKCTRL(am33xx_timer7_hwmod, AM43XX_CM_PER_TIMER7_CLKCTRL_OFFSET);
+> +	CLKCTRL(am33xx_adc_tsc_hwmod, AM43XX_CM_WKUP_ADC_TSC_CLKCTRL_OFFSET);
+>  	CLKCTRL(am33xx_smartreflex0_hwmod,
+>  		AM43XX_CM_WKUP_SMARTREFLEX0_CLKCTRL_OFFSET);
+>  	CLKCTRL(am33xx_smartreflex1_hwmod,
+> @@ -1482,4 +1545,5 @@ void omap_hwmod_am43xx_reg(void)
+>  {
+>  	omap_hwmod_am43xx_clkctrl();
+>  	omap_hwmod_am43xx_rst();
+> +	am43xx_hwmod_clockdomain();
+>  }
+> diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+> index ce7d260495cb..c3ff14828850 100644
+> --- a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+> +++ b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+> @@ -88,37 +88,6 @@ static struct omap_hwmod am33xx_wkup_m3_hwmod = {
+>  };
+>  
+>  /*
+> - * 'adc/tsc' class
+> - * TouchScreen Controller (Anolog-To-Digital Converter)
+> - */
+> -static struct omap_hwmod_class_sysconfig am33xx_adc_tsc_sysc = {
+> -	.rev_offs	= 0x00,
+> -	.sysc_offs	= 0x10,
+> -	.sysc_flags	= SYSC_HAS_SIDLEMODE,
+> -	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
+> -			SIDLE_SMART_WKUP),
+> -	.sysc_fields	= &omap_hwmod_sysc_type2,
+> -};
+> -
+> -static struct omap_hwmod_class am33xx_adc_tsc_hwmod_class = {
+> -	.name		= "adc_tsc",
+> -	.sysc		= &am33xx_adc_tsc_sysc,
+> -};
+> -
+> -static struct omap_hwmod am33xx_adc_tsc_hwmod = {
+> -	.name		= "adc_tsc",
+> -	.class		= &am33xx_adc_tsc_hwmod_class,
+> -	.clkdm_name	= "l4_wkup_clkdm",
+> -	.main_clk	= "adc_tsc_fck",
+> -	.prcm		= {
+> -		.omap4	= {
+> -			.clkctrl_offs	= AM33XX_CM_WKUP_ADC_TSC_CLKCTRL_OFFSET,
+> -			.modulemode	= MODULEMODE_SWCTRL,
+> -		},
+> -	},
+> -};
+> -
+> -/*
+>   * Modules omap_hwmod structures
+>   *
+>   * The following IPs are excluded for the moment because:
+> @@ -426,24 +395,6 @@ static struct omap_hwmod_ocp_if am33xx_l4_wkup__gpio0 = {
+>  	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>  };
+>  
+> -/* L4 WKUP -> ADC_TSC */
+> -static struct omap_hwmod_addr_space am33xx_adc_tsc_addrs[] = {
+> -	{
+> -		.pa_start	= 0x44E0D000,
+> -		.pa_end		= 0x44E0D000 + SZ_8K - 1,
+> -		.flags		= ADDR_TYPE_RT
+> -	},
+> -	{ }
+> -};
+> -
+> -static struct omap_hwmod_ocp_if am33xx_l4_wkup__adc_tsc = {
+> -	.master		= &am33xx_l4_wkup_hwmod,
+> -	.slave		= &am33xx_adc_tsc_hwmod,
+> -	.clk		= "dpll_core_m4_div2_ck",
+> -	.addr		= am33xx_adc_tsc_addrs,
+> -	.user		= OCP_USER_MPU,
+> -};
+> -
+>  static struct omap_hwmod_ocp_if am33xx_l4_hs__cpgmac0 = {
+>  	.master		= &am33xx_l4_hs_hwmod,
+>  	.slave		= &am33xx_cpgmac0_hwmod,
+> diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+> index fea01aa3ef42..3ce8d28c0f9a 100644
+> --- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+> +++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+> @@ -809,6 +809,7 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
+>  	&am33xx_l4_ls__timer5,
+>  	&am33xx_l4_ls__timer6,
+>  	&am33xx_l4_ls__timer7,
+> +	&am33xx_l4_wkup__adc_tsc,
+>  	&am33xx_l3_main__tpcc,
+>  	&am33xx_l4_ls__uart2,
+>  	&am33xx_l4_ls__uart3,
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-And add a set_prprot callback to 'struct uio_info=92.
-
-Here=92s patch from several years ago:
-
-http://patchwork.ozlabs.org/patch/119224/
-
-- k
-
---=20
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora For=
-um,
-a Linux Foundation Collaborative Project
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Nishanth Menon
