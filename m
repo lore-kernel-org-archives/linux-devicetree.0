@@ -1,80 +1,106 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/3] powerpc/dts: Factorize the clock control node
-Date: Thu, 30 Oct 2014 18:21:37 -0500
-Message-ID: <1414711297.23458.173.camel@snotra.buserror.net>
-References: <1413988937-27885-1-git-send-email-Emilian.Medve@Freescale.com>
-	 <1414538500.23458.125.camel@snotra.buserror.net>
-	 <54524405.5090509@Freescale.com>
+From: Caesar Wang <caesar.wang@rock-chips.com>
+Subject: Re: [PATCH v16 2/5] dt-bindings: document Rockchip thermal
+Date: Fri, 31 Oct 2014 08:44:25 +0800
+Message-ID: <5452DB69.8030208@rock-chips.com>
+References: <1414549959-13699-1-git-send-email-caesar.wang@rock-chips.com> <1414549959-13699-3-git-send-email-caesar.wang@rock-chips.com> <1823150.6k52MgLRcZ@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54524405.5090509-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Cc: yuantian.tang-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1823150.6k52MgLRcZ@phil>
+Sender: linux-pm-owner@vger.kernel.org
+To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
+Cc: rui.zhang@intel.com, edubezval@gmail.com, zyf@rock-chips.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, cf@rock-chips.com, dmitry.torokhov@gmail.com, dbasehore@chromium.org, huangtao@rock-chips.com, cjf@rock-chips.com, zhengsq@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-10-30 at 08:58 -0500, Emil Medve wrote:
-> Hello Scott,
-> 
-> 
-> On 10/28/2014 06:21 PM, Scott Wood wrote:
-> > On Wed, 2014-10-22 at 09:42 -0500, Emil Medve wrote:
-> >> Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-> >> Change-Id: I25ce24a25862b4ca460164159867abefe00ccdd1
-> > 
-> > Please remove gerrit stuff prior to submitting.
-> 
-> I did remove the bulk of it. I wanted to keep the Change-Id so I can
-> easily correlate the upstream patches with the sordid internal history.
-> Seems the upstream history has enough instances of 'Change-Id' for this
-> not to be an issue
+Heiko,
 
-OK...
+=E5=9C=A8 2014=E5=B9=B410=E6=9C=8831=E6=97=A5 04:17, Heiko St=C3=BCbner=
+ =E5=86=99=E9=81=93:
+> Am Mittwoch, 29. Oktober 2014, 10:32:36 schrieb Caesar Wang:
+>> This add the necessary binding documentation for the thermal
+>> found on Rockchip SoCs
+>>
+>> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
+>> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+>> Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> ---
+>>   .../bindings/thermal/rockchip-thermal.txt          | 62
+>> ++++++++++++++++++++++ 1 file changed, 62 insertions(+)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-ther=
+mal.txt
+>> b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt new=
+ file
+>> mode 100644
+>> index 0000000..3061982
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+>> @@ -0,0 +1,62 @@
+>> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
+>> +
+>> +Required properties:
+>> +- compatible : "rockchip,rk3288-tsadc"
+>> +- reg : physical base address of the controller and length of memor=
+y mapped
+>> +	region.
+>> +- interrupts : The interrupt number to the cpu. The interrupt speci=
+fier
+>> format +	       depends on the interrupt controller.
+>> +- clocks : Must contain an entry for each entry in clock-names.
+>> +- clock-names : Shall be "tsadc" for the converter-clock, and "apb_=
+pclk"
+>> for +		the peripheral clock.
+>> +- #thermal-sensor-cells : Should be 1. See ./thermal.txt for a desc=
+ription.
+>> +- hw-shut-temp : The hardware-controlled shutdown temperature value=
+=2E +-
+>> tsadc-tshut-mode : The hardware-controlled shutdown mode 0:CRU 1:GPI=
+O. +-
+>> tsadc-tshut-polarity : The hardware-controlled active polarity 0:LOW
+>> 1:HIGH. +
+>> +Exiample:
+>> +tsadc: tsadc@ff280000 {
+>> +	compatible =3D "rockchip,rk3288-tsadc";
+>> +	reg =3D <0xff280000 0x100>;
+>> +	interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+>> +	clocks =3D <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
+>> +	clock-names =3D "tsadc", "apb_pclk";
+>> +	pinctrl-names =3D "default";
+>> +	pinctrl-0 =3D <&otp_out>;
+>> +	#thermal-sensor-cells =3D <1>;
+>> +	hw-shut-temp =3D <125000>;
+>> +	tsadc-tshut-mode =3D <0>;
+>> +	tsadc-tshut-polarity =3D <0>;
+> these last 3 seem to be specific to this tsadc so should probably hav=
+e a
+> "rockchip,"-prefix
 
-> > I don't think the mux stuff belongs here, given that clockgen2.dtsi
-> > doesn't have it, and I saw at least one clockgen1 user needing to
-> > supplement this with more muxes.
-> 
-> The intent was to put here devices/nodes that are common per chassis
-> from the low to high end. Specific SoC would change/augment this as
-> appropriate. I could have put each node in its own file as we've done
-> elsewhere, but I thought it would be too much
-> 
-> Yes, chassis v1 and v2 have differences, but that's not unexpected
+=46ixed.
 
-It just strikes me as being an awkward split of where each mux node
-goes.  Is it guaranteed by the chassis that all v1 will have at least
-the first two muxes?
+e.g  sync to driver
 
-> >> @@ -1068,7 +1043,6 @@
-> >>  			clocks = <&sysclk>;
-> >>  			clock-output-names = "pll2", "pll2-div2", "pll2-div4";
-> >>  		};
-> >> -
-> >>  		pll3: pll3@860 {
-> >>  			#clock-cells = <1>;
-> >>  			reg = <0x860 0x4>;
-> >> @@ -1076,7 +1050,6 @@
-> >>  			clocks = <&sysclk>;
-> >>  			clock-output-names = "pll3", "pll3-div2", "pll3-div4";
-> >>  		};
-> >> -
-> >>  		pll4: pll4@880 {
-> >>  			#clock-cells = <1>;
-> >>  			reg = <0x880 0x4>;
-> > 
-> > Why?
-> 
-> Why what?
-
-Why are you removing all these blank lines?
-
--Scott
+rockchip,hw-shut-temp =3D <125000>;
+rockchip,tsadc-tshut-mode =3D <0>;
+rockchip,tsadc-tshut-polarity =3D <0>;
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+I will sent next patch  v17 in 1-2 days if this series patchs haven't=20
+any problems.
+
+Thanks.
+
+>
+>
+>
+>
+
+--=20
+Best regards,
+Caesar
+
+
