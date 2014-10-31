@@ -1,230 +1,240 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH 2/3] arm: mach-omap2: omap_hwmod_43xx_data: add hwmod support for tscadc on am43x-evm
-Date: Fri, 31 Oct 2014 13:16:42 +0530
-Message-ID: <1414741603-18233-3-git-send-email-vigneshr@ti.com>
-References: <1414741603-18233-1-git-send-email-vigneshr@ti.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 6/8] regulator: max77686: Add external GPIO control
+Date: Fri, 31 Oct 2014 08:51:38 +0100
+Message-ID: <1414741898.20071.8.camel@AMDC1943>
+References: <1414422226-10948-1-git-send-email-k.kozlowski@samsung.com>
+ <1414422226-10948-7-git-send-email-k.kozlowski@samsung.com>
+ <544EA4FA.6040704@collabora.co.uk> <1414486356.24949.19.camel@AMDC1943>
+ <1414498308.24949.32.camel@AMDC1943> <1414579362.18868.11.camel@AMDC1943>
+ <5450C63B.3000602@collabora.co.uk>
+ <CAAVeFuLncbkNLGxEAj90yMmugRDNjtjeGoV_QYTMDZ7NVMJCmg@mail.gmail.com>
+ <1414681386.26703.6.camel@AMDC1943>
+ <CAAVeFuJo1wTyxOo4FEZM3=GTejuSHi+mnr=QV6HUeV5mAOCmqg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1414741603-18233-1-git-send-email-vigneshr@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Vignesh R <vigneshr@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <CAAVeFuJo1wTyxOo4FEZM3=GTejuSHi+mnr=QV6HUeV5mAOCmqg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds hwmod support for tscadc to work on am43xx-evm. The am33xx
-hwmod structures of tscadc has been moved to ipblock_data so that it can
-be reused in am43xx. The clock domain names are separately set for am33xx
-and am43xx. Thus tscadc dt entries can now be added to am43xx board
-dt files.
+On pi=C4=85, 2014-10-31 at 12:31 +0900, Alexandre Courbot wrote:
+> On Fri, Oct 31, 2014 at 12:03 AM, Krzysztof Kozlowski
+> <k.kozlowski@samsung.com> wrote:
+> > On czw, 2014-10-30 at 22:56 +0900, Alexandre Courbot wrote:
+> >> Hi, and thanks for bringing this issue to us!
+> >>
+> >> On Wed, Oct 29, 2014 at 7:49 PM, Javier Martinez Canillas
+> >> <javier.martinez@collabora.co.uk> wrote:
+> >> > [adding Linus and Alexandre to the cc list]
+> >> >
+> >> > Hello Krzysztof,
+> >> >
+> >> > On 10/29/2014 11:42 AM, Krzysztof Kozlowski wrote:
+> >> >> On wto, 2014-10-28 at 13:11 +0100, Krzysztof Kozlowski wrote:
+> >> >>> On wto, 2014-10-28 at 09:52 +0100, Krzysztof Kozlowski wrote:
+> >> >>> > On pon, 2014-10-27 at 21:03 +0100, Javier Martinez Canillas =
+wrote:
+> >> >>> > > Hello Krzysztof,
+> >> >>> > >
+> >> >>> > > On 10/27/2014 04:03 PM, Krzysztof Kozlowski wrote:
+> >> >>> > > > @@ -85,6 +91,9 @@ struct max77686_data {
+> >> >>> > > >        struct max77686_regulator_data *regulators;
+> >> >>> > > >        int num_regulators;
+> >> >>> > > >
+> >> >>> > > > +      /* Array of size num_regulators with GPIOs for ex=
+ternal control. */
+> >> >>> > > > +      int *ext_control_gpio;
+> >> >>> > > > +
+> >> >>> > >
+> >> >>> > > The integer-based GPIO API is deprecated in favor of the d=
+escriptor-based GPIO
+> >> >>> > > interface (Documentation/gpio/consumer.txt). Could you ple=
+ase use the later?
+> >> >>> >
+> >> >>> > Sure, I can. Please have in mind that regulator core still a=
+ccepts old
+> >> >>> > GPIO so I will have to use desc_to_gpio(). That should work.=
+=2E. and
+> >> >>> > should be future-ready.
+> >> >>>
+> >> >>> It seems I was too hasty... I think usage of the new gpiod API=
+ implies
+> >> >>> completely different bindings.
+> >> >>>
+> >> >>> The gpiod_get() gets GPIO from a device level, not from given =
+sub-node
+> >> >>> pointer. This means that you cannot have DTS like this:
+> >> >>> ldo21_reg: ldo21 {
+> >> >>>      regulator-compatible =3D "LDO21";
+> >> >>>      regulator-name =3D "VTF_2.8V";
+> >> >>>      regulator-min-microvolt =3D <2800000>;
+> >> >>>      regulator-max-microvolt =3D <2800000>;
+> >> >>>      ec-gpio =3D <&gpy2 0 0>;
+> >> >>> };
+> >> >>>
+> >> >>> ldo22_reg: ldo22 {
+> >> >>>      regulator-compatible =3D "LDO22";
+> >> >>>      regulator-name =3D "VMEM_VDD_2.8V";
+> >> >>>      regulator-min-microvolt =3D <2800000>;
+> >> >>>      regulator-max-microvolt =3D <2800000>;
+> >> >>>      ec-gpio =3D <&gpk0 2 0>;
+> >> >>> };
+> >> >>>
+> >> >>>
+> >> >>> I could put GPIOs in device node:
+> >> >>>
+> >> >>> max77686_pmic@09 {
+> >> >>>      compatible =3D "maxim,max77686";
+> >> >>>      interrupt-parent =3D <&gpx0>;
+> >> >>>      interrupts =3D <7 0>;
+> >> >>>      reg =3D <0x09>;
+> >> >>>      #clock-cells =3D <1>;
+> >> >>>      ldo21-gpio =3D <&gpy2 0 0>;
+> >> >>>      ldo22-gpio =3D <&gpk0 2 0>;
+> >> >>>
+> >> >>>      ldo21_reg: ldo21 {
+> >> >>>              regulator-compatible =3D "LDO21";
+> >> >>>              regulator-name =3D "VTF_2.8V";
+> >> >>>              regulator-min-microvolt =3D <2800000>;
+> >> >>>              regulator-max-microvolt =3D <2800000>;
+> >> >>>      };
+> >> >>>
+> >> >>>      ldo22_reg: ldo22 {
+> >> >>>              regulator-compatible =3D "LDO22";
+> >> >>>              regulator-name =3D "VMEM_VDD_2.8V";
+> >> >>>              regulator-min-microvolt =3D <2800000>;
+> >> >>>              regulator-max-microvolt =3D <2800000>;
+> >> >>>      };
+> >> >>>
+> >> >>> This would work but I don't like it. The properties of a regul=
+ator are
+> >> >>> above the node configuring that regulator.
+> >> >>>
+> >> >>> Any ideas?
+> >> >>>
+> >> >>
+> >> >> Continuing talking to myself... I found another problem - GPIO =
+cannot be
+> >> >> requested more than once (-EBUSY). In case of this driver (and =
+board:
+> >> >> Trats2) one GPIO is connected to regulators. The legacy GPIO AP=
+I and
+> >> >> regulator core handle this.
+> >> >>
+> >> >> With new GPIO API I would have to implement some additional ste=
+ps in
+> >> >> such case...
+> >> >>
+> >> >> So there are 2 issues:
+> >> >> 1. Cannot put GPIO property in regulator node.
+> >>
+> >> For this problem you will probably want to use the
+> >> dev(m)_get_named_gpiod_from_child() function from the following pa=
+tch:
+> >>
+> >> https://lkml.org/lkml/2014/10/6/529
+> >>
+> >> It should reach -next soon now.
+> >
+> > Thanks! Probably I would switch to "top" level gpios property anywa=
+y
+> > (other reasons) but it would be valuable in some cases to specify t=
+hem
+> > per child node.
+>=20
+> Mmm, but doesn't it make more sense to have them in the child nodes?
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
- .../mach-omap2/omap_hwmod_33xx_43xx_common_data.h  |  1 +
- .../mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 64 ++++++++++++++++++++++
- arch/arm/mach-omap2/omap_hwmod_33xx_data.c         | 49 -----------------
- arch/arm/mach-omap2/omap_hwmod_43xx_data.c         |  1 +
- 4 files changed, 66 insertions(+), 49 deletions(-)
+Yes, it makes more sense. Using old way of parsing regulators from DT i=
+t
+was straightforward.
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
-index 6e57b8ad0db5..b92a7c7825fa 100644
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
-@@ -65,6 +65,7 @@ extern struct omap_hwmod_ocp_if am33xx_l4_ls__timer4;
- extern struct omap_hwmod_ocp_if am33xx_l4_ls__timer5;
- extern struct omap_hwmod_ocp_if am33xx_l4_ls__timer6;
- extern struct omap_hwmod_ocp_if am33xx_l4_ls__timer7;
-+extern struct omap_hwmod_ocp_if am33xx_l4_wkup__adc_tsc;
- extern struct omap_hwmod_ocp_if am33xx_l3_main__tpcc;
- extern struct omap_hwmod_ocp_if am33xx_l3_main__tptc0;
- extern struct omap_hwmod_ocp_if am33xx_l3_main__tptc1;
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-index 7f44922ab540..ef14e56a3968 100644
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-@@ -151,6 +151,54 @@ struct omap_hwmod_class am33xx_wkup_m3_hwmod_class = {
- };
- 
- /*
-+ * 'adc/tsc' class
-+ * TouchScreen Controller (Anolog-To-Digital Converter)
-+ */
-+static struct omap_hwmod_class_sysconfig am33xx_adc_tsc_sysc = {
-+	.rev_offs	= 0x00,
-+	.sysc_offs	= 0x10,
-+	.sysc_flags	= SYSC_HAS_SIDLEMODE,
-+	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
-+			SIDLE_SMART_WKUP),
-+	.sysc_fields	= &omap_hwmod_sysc_type2,
-+};
-+
-+static struct omap_hwmod_class am33xx_adc_tsc_hwmod_class = {
-+	.name		= "adc_tsc",
-+	.sysc		= &am33xx_adc_tsc_sysc,
-+};
-+
-+struct omap_hwmod am33xx_adc_tsc_hwmod = {
-+	.name		= "adc_tsc",
-+	.class		= &am33xx_adc_tsc_hwmod_class,
-+	.clkdm_name	= "l4_wkup_clkdm",
-+	.main_clk	= "adc_tsc_fck",
-+	.prcm		= {
-+		.omap4  = {
-+			.modulemode     = MODULEMODE_SWCTRL,
-+		},
-+	},
-+};
-+
-+/* L4 WKUP -> ADC_TSC */
-+static struct omap_hwmod_addr_space am33xx_adc_tsc_addrs[] = {
-+	{
-+		.pa_start	= 0x44E0D000,
-+		.pa_end		= 0x44E0D000 + SZ_8K - 1,
-+		.flags		= ADDR_TYPE_RT
-+	},
-+	{ }
-+};
-+
-+struct omap_hwmod_ocp_if am33xx_l4_wkup__adc_tsc = {
-+	.master		= &am33xx_l4_wkup_hwmod,
-+	.slave		= &am33xx_adc_tsc_hwmod,
-+	.clk		= "dpll_core_m4_div2_ck",
-+	.addr		= am33xx_adc_tsc_addrs,
-+	.user		= OCP_USER_MPU,
-+};
-+
-+/*
-  * 'pru-icss' class
-  * Programmable Real-Time Unit and Industrial Communication Subsystem
-  */
-@@ -1370,6 +1418,7 @@ static void omap_hwmod_am33xx_clkctrl(void)
- 	CLKCTRL(am33xx_timer5_hwmod, AM33XX_CM_PER_TIMER5_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_timer6_hwmod, AM33XX_CM_PER_TIMER6_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_timer7_hwmod, AM33XX_CM_PER_TIMER7_CLKCTRL_OFFSET);
-+	CLKCTRL(am33xx_adc_tsc_hwmod, AM33XX_CM_WKUP_ADC_TSC_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_smartreflex0_hwmod,
- 		AM33XX_CM_WKUP_SMARTREFLEX0_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_smartreflex1_hwmod,
-@@ -1398,6 +1447,18 @@ static void omap_hwmod_am33xx_clkctrl(void)
- 	CLKCTRL(am33xx_aes0_hwmod , AM33XX_CM_PER_AES0_CLKCTRL_OFFSET);
- }
- 
-+static void am33xx_hwmod_clockdomain(void)
-+{
-+	am33xx_l4_hs_hwmod.clkdm_name = "l4hs_clkdm";
-+	am33xx_adc_tsc_hwmod.clkdm_name = "l4_wkup_clkdm";
-+}
-+
-+static void am43xx_hwmod_clockdomain(void)
-+{
-+	am33xx_l4_hs_hwmod.clkdm_name = "l3_clkdm";
-+	am33xx_adc_tsc_hwmod.clkdm_name = "l3s_tsc_clkdm";
-+}
-+
- static void omap_hwmod_am33xx_rst(void)
- {
- 	RSTCTRL(am33xx_pruss_hwmod, AM33XX_RM_PER_RSTCTRL_OFFSET);
-@@ -1409,6 +1470,7 @@ void omap_hwmod_am33xx_reg(void)
- {
- 	omap_hwmod_am33xx_clkctrl();
- 	omap_hwmod_am33xx_rst();
-+	am33xx_hwmod_clockdomain();
- }
- 
- static void omap_hwmod_am43xx_clkctrl(void)
-@@ -1443,6 +1505,7 @@ static void omap_hwmod_am43xx_clkctrl(void)
- 	CLKCTRL(am33xx_timer5_hwmod, AM43XX_CM_PER_TIMER5_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_timer6_hwmod, AM43XX_CM_PER_TIMER6_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_timer7_hwmod, AM43XX_CM_PER_TIMER7_CLKCTRL_OFFSET);
-+	CLKCTRL(am33xx_adc_tsc_hwmod, AM43XX_CM_WKUP_ADC_TSC_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_smartreflex0_hwmod,
- 		AM43XX_CM_WKUP_SMARTREFLEX0_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_smartreflex1_hwmod,
-@@ -1482,4 +1545,5 @@ void omap_hwmod_am43xx_reg(void)
- {
- 	omap_hwmod_am43xx_clkctrl();
- 	omap_hwmod_am43xx_rst();
-+	am43xx_hwmod_clockdomain();
- }
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-index ce7d260495cb..c3ff14828850 100644
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-@@ -88,37 +88,6 @@ static struct omap_hwmod am33xx_wkup_m3_hwmod = {
- };
- 
- /*
-- * 'adc/tsc' class
-- * TouchScreen Controller (Anolog-To-Digital Converter)
-- */
--static struct omap_hwmod_class_sysconfig am33xx_adc_tsc_sysc = {
--	.rev_offs	= 0x00,
--	.sysc_offs	= 0x10,
--	.sysc_flags	= SYSC_HAS_SIDLEMODE,
--	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
--			SIDLE_SMART_WKUP),
--	.sysc_fields	= &omap_hwmod_sysc_type2,
--};
--
--static struct omap_hwmod_class am33xx_adc_tsc_hwmod_class = {
--	.name		= "adc_tsc",
--	.sysc		= &am33xx_adc_tsc_sysc,
--};
--
--static struct omap_hwmod am33xx_adc_tsc_hwmod = {
--	.name		= "adc_tsc",
--	.class		= &am33xx_adc_tsc_hwmod_class,
--	.clkdm_name	= "l4_wkup_clkdm",
--	.main_clk	= "adc_tsc_fck",
--	.prcm		= {
--		.omap4	= {
--			.clkctrl_offs	= AM33XX_CM_WKUP_ADC_TSC_CLKCTRL_OFFSET,
--			.modulemode	= MODULEMODE_SWCTRL,
--		},
--	},
--};
--
--/*
-  * Modules omap_hwmod structures
-  *
-  * The following IPs are excluded for the moment because:
-@@ -426,24 +395,6 @@ static struct omap_hwmod_ocp_if am33xx_l4_wkup__gpio0 = {
- 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
- };
- 
--/* L4 WKUP -> ADC_TSC */
--static struct omap_hwmod_addr_space am33xx_adc_tsc_addrs[] = {
--	{
--		.pa_start	= 0x44E0D000,
--		.pa_end		= 0x44E0D000 + SZ_8K - 1,
--		.flags		= ADDR_TYPE_RT
--	},
--	{ }
--};
--
--static struct omap_hwmod_ocp_if am33xx_l4_wkup__adc_tsc = {
--	.master		= &am33xx_l4_wkup_hwmod,
--	.slave		= &am33xx_adc_tsc_hwmod,
--	.clk		= "dpll_core_m4_div2_ck",
--	.addr		= am33xx_adc_tsc_addrs,
--	.user		= OCP_USER_MPU,
--};
--
- static struct omap_hwmod_ocp_if am33xx_l4_hs__cpgmac0 = {
- 	.master		= &am33xx_l4_hs_hwmod,
- 	.slave		= &am33xx_cpgmac0_hwmod,
-diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-index fea01aa3ef42..3ce8d28c0f9a 100644
---- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-@@ -809,6 +809,7 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
- 	&am33xx_l4_ls__timer5,
- 	&am33xx_l4_ls__timer6,
- 	&am33xx_l4_ls__timer7,
-+	&am33xx_l4_wkup__adc_tsc,
- 	&am33xx_l3_main__tpcc,
- 	&am33xx_l4_ls__uart2,
- 	&am33xx_l4_ls__uart3,
--- 
-1.9.1
+However new DT style parsing (regulator_of_get_init_data()) does the
+basic parsing stuff and this removes a lot of code from driver. The
+driver no longer parses all regulaotrs but the regulator core does it.
+Unfortunately regulator core does not parse custom bindings (like such
+GPIOs) so I would have to iterate once again through all regulators jus=
+t
+to find "gpios" property.
 
+It is simpler just to do something like (5 regulators can be controlled
+by GPIO):
+
+max77686_pmic_dt_parse_gpio_control(struct platform_device *pdev, *gpio=
+)
+{
+  gpio[MAX77686_LDO20] =3D of_get_named_gpio(np, "ldo20-gpios", 0);
+  gpio[MAX77686_LDO21] =3D of_get_named_gpio(np, "ldo21-gpios", 0);
+  gpio[MAX77686_LDO22] =3D of_get_named_gpio(np, "ldo22-gpios", 0);
+  gpio[MAX77686_BUCK8] =3D of_get_named_gpio(np, "buck8-gpios", 0);
+  gpio[MAX77686_BUCK9] =3D of_get_named_gpio(np, "buck9-gpios", 0);
+}
+
+> Besides if the bindings of this driver have already been published,
+> I'm afraid you will have to maintain backward compability.
+
+These are new bindings. Driver exists but I am adding new functionality=
+:
+the "GPIO enable control".
+
+> >>
+> >> >> 2. Cannot request some GPIO more than once.
+> >>
+> >> We have been confronted to this problem with the regulator core as=
+ well:
+> >>
+> >> http://marc.info/?l=3Dlinux-arm-kernel&m=3D140417649119733&w=3D1
+> >>
+> >> I have a draft patch that allows GPIOs to be requested by several
+> >> clients. What prevented me from submitting it was that I wanted to
+> >> make sure the different requested configurations were compatible, =
+but
+> >> maybe I am overthinking this. There are also a couple of other pat=
+ches
+> >> that this depends on (like removal of the big descs array), so I d=
+on't
+> >> think it will be available too soon, sadly.
+> >
+> > Shouldn't be the nature of get()/put() interface to allow multiple
+> > requests?
+>=20
+> Only if it makes sense for the resource to be requested multiple
+> times. GPIOs are kind of a difficult case here. Consumers could ask
+> for e.g. conflicting directions.
+
+Right, I haven't thought about conflicts.
+
+> But for cases where it should work I
+> agree that multiple consumers would be welcome.
+>=20
+> > To me it was a kind of intuitive that I could do another
+> > devm_gpiod_get() for the same gpio. But then it hit me with EBUSY :=
+).
+> >
+> >>
+> >> So maybe your best shot for now is to keep using the integer API, =
+as
+> >> much as I hate it. Once we become able to request the same GPIO
+> >> several times, you should be good to switch to descriptors. Sorry =
+this
+> >> has not been done faster.
+> >
+> > I'll do it legacy way but I'll try to use bindings gpiolib-safe. Th=
+is
+> > way future transition in the driver should not affect bindings.
+>=20
+> For DT bindings, please refer to these brand-new instructions:
+>=20
+> https://lkml.org/lkml/2014/10/29/98
+>=20
+> Personally I think having the GPIO phandle in the child node would
+> be the most intuitive. You will also have to use the "-gpios" suffix,=
+ no
+> "-gpio", if you can still change the bindings.
+
+Thanks! I'll adjust to new style.
+
+Best regards,
+Krzysztof
