@@ -1,124 +1,226 @@
 From: Chao Xie <chao.xie@marvell.com>
-Subject: [PATCH V2 12/13] arm: mmp: Make all the dts file to be compiled by Makefile
-Date: Fri, 31 Oct 2014 10:13:52 +0800
-Message-ID: <1414721633-29508-13-git-send-email-chao.xie@marvell.com>
+Subject: [PATCH V2 06/13] clk: mmp: add mmp private gate clock
+Date: Fri, 31 Oct 2014 10:13:46 +0800
+Message-ID: <1414721633-29508-7-git-send-email-chao.xie@marvell.com>
 References: <1414721633-29508-1-git-send-email-chao.xie@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1414721633-29508-1-git-send-email-chao.xie@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: haojian.zhuang@gmail.com, haojian.zhuang@linaro.org, mturquette@linaro.org, chao.xie@marvell.com, xiechao_mail@163.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Chao Xie <chao.xie@marvell.com>
 
-Add items in arch/arm/boot/dt/Makefile to compile the dtb
-for mach-mmp.
-Change the dts and dtsi file to use #include instead of \include\
+Some SOCes have this kind of the gate clock
+1. There are some bits to control the gate not only one bit.
+2. It is not always that "1" is to enable while "0" is to disable
+   when write register.
+
+So we have to define the "mask", "enable_val", "disable_val" for
+this kind of gate clock.
 
 Signed-off-by: Chao Xie <chao.xie@marvell.com>
 ---
- arch/arm/boot/dts/Makefile            | 3 +++
- arch/arm/boot/dts/mmp2-brownstone.dts | 2 +-
- arch/arm/boot/dts/mmp2.dtsi           | 2 +-
- arch/arm/boot/dts/pxa168-aspenite.dts | 2 +-
- arch/arm/boot/dts/pxa168.dtsi         | 2 +-
- arch/arm/boot/dts/pxa910-dkb.dts      | 2 +-
- arch/arm/boot/dts/pxa910.dtsi         | 2 +-
- 7 files changed, 9 insertions(+), 6 deletions(-)
+ drivers/clk/mmp/Makefile   |   2 +-
+ drivers/clk/mmp/clk-gate.c | 133 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/mmp/clk.h      |  21 +++++++
+ 3 files changed, 155 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/mmp/clk-gate.c
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b8c5cd3..f8f7613 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -159,6 +159,9 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += kirkwood-b3.dtb \
- 	kirkwood-ts419-6282.dtb
- dtb-$(CONFIG_ARCH_LPC32XX) += ea3250.dtb phy3250.dtb
- dtb-$(CONFIG_ARCH_MARCO) += marco-evb.dtb
-+dtb-$(CONFIG_ARCH_MMP) += pxa168-aspenite.dtb \
-+	pxa910-dkb.dtb \
-+	mmp2-brownstone.dtb
- dtb-$(CONFIG_ARCH_MOXART) += moxart-uc7112lx.dtb
- dtb-$(CONFIG_ARCH_MXC) += \
- 	imx25-eukrea-mbimxsd25-baseboard.dtb \
-diff --git a/arch/arm/boot/dts/mmp2-brownstone.dts b/arch/arm/boot/dts/mmp2-brownstone.dts
-index 7f70a39..350208c 100644
---- a/arch/arm/boot/dts/mmp2-brownstone.dts
-+++ b/arch/arm/boot/dts/mmp2-brownstone.dts
-@@ -8,7 +8,7 @@
-  */
+diff --git a/drivers/clk/mmp/Makefile b/drivers/clk/mmp/Makefile
+index 8bfee860..2855f7b 100644
+--- a/drivers/clk/mmp/Makefile
++++ b/drivers/clk/mmp/Makefile
+@@ -2,7 +2,7 @@
+ # Makefile for mmp specific clk
+ #
  
- /dts-v1/;
--/include/ "mmp2.dtsi"
-+#include "mmp2.dtsi"
+-obj-y += clk-apbc.o clk-apmu.o clk-frac.o clk-mix.o
++obj-y += clk-apbc.o clk-apmu.o clk-frac.o clk-mix.o clk-gate.o
  
- / {
- 	model = "Marvell MMP2 Brownstone Development Board";
-diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
-index 4e8b08c..e44f996 100644
---- a/arch/arm/boot/dts/mmp2.dtsi
-+++ b/arch/arm/boot/dts/mmp2.dtsi
-@@ -7,7 +7,7 @@
-  *  publishhed by the Free Software Foundation.
-  */
+ obj-$(CONFIG_CPU_PXA168) += clk-pxa168.o
+ obj-$(CONFIG_CPU_PXA910) += clk-pxa910.o
+diff --git a/drivers/clk/mmp/clk-gate.c b/drivers/clk/mmp/clk-gate.c
+new file mode 100644
+index 0000000..adbd9d6
+--- /dev/null
++++ b/drivers/clk/mmp/clk-gate.c
+@@ -0,0 +1,133 @@
++/*
++ * mmp gate clock operation source file
++ *
++ * Copyright (C) 2014 Marvell
++ * Chao Xie <chao.xie@marvell.com>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2. This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/slab.h>
++#include <linux/io.h>
++#include <linux/err.h>
++#include <linux/delay.h>
++
++#include "clk.h"
++
++/*
++ * Some clocks will have mutiple bits to enable the clocks, and
++ * the bits to disable the clock is not same as enabling bits.
++ */
++
++#define to_clk_mmp_gate(hw)	container_of(hw, struct mmp_clk_gate, hw)
++
++static int mmp_clk_gate_enable(struct clk_hw *hw)
++{
++	struct mmp_clk_gate *gate = to_clk_mmp_gate(hw);
++	struct clk *clk = hw->clk;
++	unsigned long flags = 0;
++	unsigned long rate;
++	u32 tmp;
++
++	if (gate->lock)
++		spin_lock_irqsave(gate->lock, flags);
++
++	tmp = readl(gate->reg);
++	tmp &= ~gate->mask;
++	tmp |= gate->val_enable;
++	writel(tmp, gate->reg);
++
++	if (gate->lock)
++		spin_unlock_irqrestore(gate->lock, flags);
++
++	if (gate->flags & MMP_CLK_GATE_NEED_DELAY) {
++		rate = __clk_get_rate(clk);
++		/* Need delay 2 cycles. */
++		udelay(2000000/rate);
++	}
++
++	return 0;
++}
++
++static void mmp_clk_gate_disable(struct clk_hw *hw)
++{
++	struct mmp_clk_gate *gate = to_clk_mmp_gate(hw);
++	unsigned long flags = 0;
++	u32 tmp;
++
++	if (gate->lock)
++		spin_lock_irqsave(gate->lock, flags);
++
++	tmp = readl(gate->reg);
++	tmp &= ~gate->mask;
++	tmp |= gate->val_disable;
++	writel(tmp, gate->reg);
++
++	if (gate->lock)
++		spin_unlock_irqrestore(gate->lock, flags);
++}
++
++static int mmp_clk_gate_is_enabled(struct clk_hw *hw)
++{
++	struct mmp_clk_gate *gate = to_clk_mmp_gate(hw);
++	unsigned long flags = 0;
++	u32 tmp;
++
++	if (gate->lock)
++		spin_lock_irqsave(gate->lock, flags);
++
++	tmp = readl(gate->reg);
++
++	if (gate->lock)
++		spin_unlock_irqrestore(gate->lock, flags);
++
++	return (tmp & gate->mask) == gate->val_enable;
++}
++
++const struct clk_ops mmp_clk_gate_ops = {
++	.enable = mmp_clk_gate_enable,
++	.disable = mmp_clk_gate_disable,
++	.is_enabled = mmp_clk_gate_is_enabled,
++};
++
++struct clk *mmp_clk_register_gate(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		void __iomem *reg, u32 mask, u32 val_enable, u32 val_disable,
++		unsigned int gate_flags, spinlock_t *lock)
++{
++	struct mmp_clk_gate *gate;
++	struct clk *clk;
++	struct clk_init_data init;
++
++	/* allocate the gate */
++	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
++	if (!gate) {
++		pr_err("%s:%s could not allocate gate clk\n", __func__, name);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	init.name = name;
++	init.ops = &mmp_clk_gate_ops;
++	init.flags = flags | CLK_IS_BASIC;
++	init.parent_names = (parent_name ? &parent_name : NULL);
++	init.num_parents = (parent_name ? 1 : 0);
++
++	/* struct clk_gate assignments */
++	gate->reg = reg;
++	gate->mask = mask;
++	gate->val_enable = val_enable;
++	gate->val_disable = val_disable;
++	gate->flags = gate_flags;
++	gate->lock = lock;
++	gate->hw.init = &init;
++
++	clk = clk_register(dev, &gate->hw);
++
++	if (IS_ERR(clk))
++		kfree(gate);
++
++	return clk;
++}
+diff --git a/drivers/clk/mmp/clk.h b/drivers/clk/mmp/clk.h
+index 26b2469..2337106 100644
+--- a/drivers/clk/mmp/clk.h
++++ b/drivers/clk/mmp/clk.h
+@@ -103,6 +103,27 @@ extern struct clk *mmp_clk_register_mix(struct device *dev,
+ 					spinlock_t *lock);
  
--/include/ "skeleton.dtsi"
-+#include "skeleton.dtsi"
  
- / {
- 	aliases {
-diff --git a/arch/arm/boot/dts/pxa168-aspenite.dts b/arch/arm/boot/dts/pxa168-aspenite.dts
-index e762fac..0a988b3 100644
---- a/arch/arm/boot/dts/pxa168-aspenite.dts
-+++ b/arch/arm/boot/dts/pxa168-aspenite.dts
-@@ -8,7 +8,7 @@
-  */
- 
- /dts-v1/;
--/include/ "pxa168.dtsi"
-+#include "pxa168.dtsi"
- 
- / {
- 	model = "Marvell PXA168 Aspenite Development Board";
-diff --git a/arch/arm/boot/dts/pxa168.dtsi b/arch/arm/boot/dts/pxa168.dtsi
-index 975dad2..bfcbdef 100644
---- a/arch/arm/boot/dts/pxa168.dtsi
-+++ b/arch/arm/boot/dts/pxa168.dtsi
-@@ -7,7 +7,7 @@
-  *  publishhed by the Free Software Foundation.
-  */
- 
--/include/ "skeleton.dtsi"
-+#include "skeleton.dtsi"
- 
- / {
- 	aliases {
-diff --git a/arch/arm/boot/dts/pxa910-dkb.dts b/arch/arm/boot/dts/pxa910-dkb.dts
-index 595492a..c82f281 100644
---- a/arch/arm/boot/dts/pxa910-dkb.dts
-+++ b/arch/arm/boot/dts/pxa910-dkb.dts
-@@ -8,7 +8,7 @@
-  */
- 
- /dts-v1/;
--/include/ "pxa910.dtsi"
-+#include "pxa910.dtsi"
- 
- / {
- 	model = "Marvell PXA910 DKB Development Board";
-diff --git a/arch/arm/boot/dts/pxa910.dtsi b/arch/arm/boot/dts/pxa910.dtsi
-index 0247c62..884c6e8 100644
---- a/arch/arm/boot/dts/pxa910.dtsi
-+++ b/arch/arm/boot/dts/pxa910.dtsi
-@@ -7,7 +7,7 @@
-  *  publishhed by the Free Software Foundation.
-  */
- 
--/include/ "skeleton.dtsi"
-+#include "skeleton.dtsi"
- 
- / {
- 	aliases {
++/* Clock type "gate". MMP private gate */
++#define MMP_CLK_GATE_NEED_DELAY		BIT(0)
++
++struct mmp_clk_gate {
++	struct clk_hw hw;
++	void __iomem *reg;
++	u32 mask;
++	u32 val_enable;
++	u32 val_disable;
++	unsigned int flags;
++	spinlock_t *lock;
++};
++
++extern const struct clk_ops mmp_clk_gate_ops;
++extern struct clk *mmp_clk_register_gate(struct device *dev, const char *name,
++			const char *parent_name, unsigned long flags,
++			void __iomem *reg, u32 mask, u32 val_enable,
++			u32 val_disable, unsigned int gate_flags,
++			spinlock_t *lock);
++
++
+ extern struct clk *mmp_clk_register_pll2(const char *name,
+ 		const char *parent_name, unsigned long flags);
+ extern struct clk *mmp_clk_register_apbc(const char *name,
 -- 
 1.8.3.2
