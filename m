@@ -1,7 +1,7 @@
 From: Chao Xie <chao.xie@marvell.com>
-Subject: [PATCH V2 07/13] clk: mmp: add basic support functions for DT support
-Date: Fri, 31 Oct 2014 10:13:47 +0800
-Message-ID: <1414721633-29508-8-git-send-email-chao.xie@marvell.com>
+Subject: [PATCH V2 08/13] clk: mmp: add reset support
+Date: Fri, 31 Oct 2014 10:13:48 +0800
+Message-ID: <1414721633-29508-9-git-send-email-chao.xie@marvell.com>
 References: <1414721633-29508-1-git-send-email-chao.xie@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,351 +22,174 @@ List-Id: devicetree@vger.kernel.org
 
 From: Chao Xie <chao.xie@marvell.com>
 
-In order to support DT for mmp SOC clocks, it defines
-some basic APIs which are shared by all mmp SOC clock
-units.
+Some clock control regsiter has bit to reset the cotroller.
+So before enable the clock, we need deassert the reset pin.
+Make use of reset controller framework to export reset interface
+for device drivers, then device driver can control the reset action.
 
 Signed-off-by: Chao Xie <chao.xie@marvell.com>
 ---
- drivers/clk/mmp/Makefile |   2 +-
- drivers/clk/mmp/clk.c    | 192 +++++++++++++++++++++++++++++++++++++++++++++++
- drivers/clk/mmp/clk.h    | 106 +++++++++++++++++++++++++-
- 3 files changed, 298 insertions(+), 2 deletions(-)
- create mode 100644 drivers/clk/mmp/clk.c
+ drivers/clk/mmp/Makefile |  2 +
+ drivers/clk/mmp/reset.c  | 99 ++++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/mmp/reset.h  | 31 +++++++++++++++
+ 3 files changed, 132 insertions(+)
+ create mode 100644 drivers/clk/mmp/reset.c
+ create mode 100644 drivers/clk/mmp/reset.h
 
 diff --git a/drivers/clk/mmp/Makefile b/drivers/clk/mmp/Makefile
-index 2855f7b..32b5b90 100644
+index 32b5b90..2573d7c 100644
 --- a/drivers/clk/mmp/Makefile
 +++ b/drivers/clk/mmp/Makefile
-@@ -2,7 +2,7 @@
- # Makefile for mmp specific clk
- #
+@@ -4,6 +4,8 @@
  
--obj-y += clk-apbc.o clk-apmu.o clk-frac.o clk-mix.o clk-gate.o
-+obj-y += clk-apbc.o clk-apmu.o clk-frac.o clk-mix.o clk-gate.o clk.o
+ obj-y += clk-apbc.o clk-apmu.o clk-frac.o clk-mix.o clk-gate.o clk.o
  
++obj-$(CONFIG_RESET_CONTROLLER) += reset.o
++
  obj-$(CONFIG_CPU_PXA168) += clk-pxa168.o
  obj-$(CONFIG_CPU_PXA910) += clk-pxa910.o
-diff --git a/drivers/clk/mmp/clk.c b/drivers/clk/mmp/clk.c
+ obj-$(CONFIG_CPU_MMP2) += clk-mmp2.o
+diff --git a/drivers/clk/mmp/reset.c b/drivers/clk/mmp/reset.c
 new file mode 100644
-index 0000000..cf038ef
+index 0000000..b54da1f
 --- /dev/null
-+++ b/drivers/clk/mmp/clk.c
-@@ -0,0 +1,192 @@
++++ b/drivers/clk/mmp/reset.c
+@@ -0,0 +1,99 @@
++#include <linux/slab.h>
 +#include <linux/io.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
 +#include <linux/of.h>
 +#include <linux/of_address.h>
++#include <linux/reset-controller.h>
 +
-+#include "clk.h"
++#include "reset.h"
 +
-+void mmp_clk_init(struct device_node *np, struct mmp_clk_unit *unit,
-+		int nr_clks)
++#define rcdev_to_unit(rcdev) container_of(rcdev, struct mmp_clk_reset_unit, rcdev)
++
++static int mmp_of_reset_xlate(struct reset_controller_dev *rcdev,
++			  const struct of_phandle_args *reset_spec)
 +{
-+	static struct clk **clk_table;
++	struct mmp_clk_reset_unit *unit = rcdev_to_unit(rcdev);
++	struct mmp_clk_reset_cell *cell;
++	int i;
 +
-+	clk_table = kcalloc(nr_clks, sizeof(struct clk *), GFP_KERNEL);
-+	if (!clk_table)
++	if (WARN_ON(reset_spec->args_count != rcdev->of_reset_n_cells))
++		return -EINVAL;
++
++	for (i = 0; i < rcdev->nr_resets; i++) {
++		cell = &unit->cells[i];
++		if (cell->clk_id == reset_spec->args[0])
++			break;
++	}
++
++	if (i == rcdev->nr_resets)
++		return -EINVAL;
++
++	return i;
++}
++
++static int mmp_clk_reset_assert(struct reset_controller_dev *rcdev,
++				unsigned long id)
++{
++	struct mmp_clk_reset_unit *unit = rcdev_to_unit(rcdev);
++	struct mmp_clk_reset_cell *cell;
++	unsigned long flags = 0;
++	u32 val;
++
++	cell = &unit->cells[id];
++	if (cell->lock)
++		spin_lock_irqsave(cell->lock, flags);
++
++	val = readl(cell->reg);
++	val |= cell->bits;
++	writel(val, cell->reg);
++
++	if (cell->lock)
++		spin_unlock_irqrestore(cell->lock, flags);
++
++	return 0;
++}
++
++static int mmp_clk_reset_deassert(struct reset_controller_dev *rcdev,
++				unsigned long id)
++{
++	struct mmp_clk_reset_unit *unit = rcdev_to_unit(rcdev);
++	struct mmp_clk_reset_cell *cell;
++	unsigned long flags = 0;
++	u32 val;
++
++	cell = &unit->cells[id];
++	if (cell->lock)
++		spin_lock_irqsave(cell->lock, flags);
++
++	val = readl(cell->reg);
++	val &= ~cell->bits;
++	writel(val, cell->reg);
++
++	if (cell->lock)
++		spin_unlock_irqrestore(cell->lock, flags);
++
++	return 0;
++}
++
++static struct reset_control_ops mmp_clk_reset_ops = {
++	.assert		= mmp_clk_reset_assert,
++	.deassert	= mmp_clk_reset_deassert,
++};
++
++void mmp_clk_reset_register(struct device_node *np,
++			struct mmp_clk_reset_cell *cells, int nr_resets)
++{
++	struct mmp_clk_reset_unit *unit;
++
++	unit = kzalloc(sizeof(*unit), GFP_KERNEL);
++	if (!unit)
 +		return;
 +
-+	unit->clk_table = clk_table;
-+	unit->nr_clks = nr_clks;
-+	unit->clk_data.clks = clk_table;
-+	unit->clk_data.clk_num = nr_clks;
-+	of_clk_add_provider(np, of_clk_src_onecell_get, &unit->clk_data);
++	unit->cells = cells;
++	unit->rcdev.of_reset_n_cells = 1;
++	unit->rcdev.nr_resets = nr_resets;
++	unit->rcdev.ops = &mmp_clk_reset_ops;
++	unit->rcdev.of_node = np;
++	unit->rcdev.of_xlate = mmp_of_reset_xlate;
++
++	reset_controller_register(&unit->rcdev);
 +}
+diff --git a/drivers/clk/mmp/reset.h b/drivers/clk/mmp/reset.h
+new file mode 100644
+index 0000000..be8b1a7
+--- /dev/null
++++ b/drivers/clk/mmp/reset.h
+@@ -0,0 +1,31 @@
++#ifndef __MACH_MMP_CLK_RESET_H
++#define __MACH_MMP_CLK_RESET_H
 +
-+void mmp_register_fixed_rate_clks(struct mmp_clk_unit *unit,
-+				struct mmp_param_fixed_rate_clk *clks,
-+				int size)
-+{
-+	int i;
-+	struct clk *clk;
++#include <linux/reset-controller.h>
 +
-+	for (i = 0; i < size; i++) {
-+		clk = clk_register_fixed_rate(NULL, clks[i].name,
-+					clks[i].parent_name,
-+					clks[i].flags,
-+					clks[i].fixed_rate);
-+		if (IS_ERR(clk)) {
-+			pr_err("%s: failed to register clock %s\n",
-+			       __func__, clks[i].name);
-+			continue;
-+		}
-+		if (clks[i].id)
-+			unit->clk_table[clks[i].id] = clk;
-+	}
-+}
++#define MMP_RESET_INVERT	1
 +
-+void mmp_register_fixed_factor_clks(struct mmp_clk_unit *unit,
-+				struct mmp_param_fixed_factor_clk *clks,
-+				int size)
-+{
-+	struct clk *clk;
-+	int i;
-+
-+	for (i = 0; i < size; i++) {
-+		clk = clk_register_fixed_factor(NULL, clks[i].name,
-+						clks[i].parent_name,
-+						clks[i].flags, clks[i].mult,
-+						clks[i].div);
-+		if (IS_ERR(clk)) {
-+			pr_err("%s: failed to register clock %s\n",
-+			       __func__, clks[i].name);
-+			continue;
-+		}
-+		if (clks[i].id)
-+			unit->clk_table[clks[i].id] = clk;
-+	}
-+}
-+
-+void mmp_register_general_gate_clks(struct mmp_clk_unit *unit,
-+				struct mmp_param_general_gate_clk *clks,
-+				void __iomem *base, int size)
-+{
-+	struct clk *clk;
-+	int i;
-+
-+	for (i = 0; i < size; i++) {
-+		clk = clk_register_gate(NULL, clks[i].name,
-+					clks[i].parent_name,
-+					clks[i].flags,
-+					base + clks[i].offset,
-+					clks[i].bit_idx,
-+					clks[i].gate_flags,
-+					clks[i].lock);
-+
-+		if (IS_ERR(clk)) {
-+			pr_err("%s: failed to register clock %s\n",
-+			       __func__, clks[i].name);
-+			continue;
-+		}
-+		if (clks[i].id)
-+			unit->clk_table[clks[i].id] = clk;
-+	}
-+}
-+
-+void mmp_register_gate_clks(struct mmp_clk_unit *unit,
-+			struct mmp_param_gate_clk *clks,
-+			void __iomem *base, int size)
-+{
-+	struct clk *clk;
-+	int i;
-+
-+	for (i = 0; i < size; i++) {
-+		clk = mmp_clk_register_gate(NULL, clks[i].name,
-+					clks[i].parent_name,
-+					clks[i].flags,
-+					base + clks[i].offset,
-+					clks[i].mask,
-+					clks[i].val_enable,
-+					clks[i].val_disable,
-+					clks[i].gate_flags,
-+					clks[i].lock);
-+
-+		if (IS_ERR(clk)) {
-+			pr_err("%s: failed to register clock %s\n",
-+			       __func__, clks[i].name);
-+			continue;
-+		}
-+		if (clks[i].id)
-+			unit->clk_table[clks[i].id] = clk;
-+	}
-+}
-+
-+void mmp_register_mux_clks(struct mmp_clk_unit *unit,
-+			struct mmp_param_mux_clk *clks,
-+			void __iomem *base, int size)
-+{
-+	struct clk *clk;
-+	int i;
-+
-+	for (i = 0; i < size; i++) {
-+		clk = clk_register_mux(NULL, clks[i].name,
-+					clks[i].parent_name,
-+					clks[i].num_parents,
-+					clks[i].flags,
-+					base + clks[i].offset,
-+					clks[i].shift,
-+					clks[i].width,
-+					clks[i].mux_flags,
-+					clks[i].lock);
-+
-+		if (IS_ERR(clk)) {
-+			pr_err("%s: failed to register clock %s\n",
-+			       __func__, clks[i].name);
-+			continue;
-+		}
-+		if (clks[i].id)
-+			unit->clk_table[clks[i].id] = clk;
-+	}
-+}
-+
-+void mmp_register_div_clks(struct mmp_clk_unit *unit,
-+			struct mmp_param_div_clk *clks,
-+			void __iomem *base, int size)
-+{
-+	struct clk *clk;
-+	int i;
-+
-+	for (i = 0; i < size; i++) {
-+		clk = clk_register_divider(NULL, clks[i].name,
-+					clks[i].parent_name,
-+					clks[i].flags,
-+					base + clks[i].offset,
-+					clks[i].shift,
-+					clks[i].width,
-+					clks[i].div_flags,
-+					clks[i].lock);
-+
-+		if (IS_ERR(clk)) {
-+			pr_err("%s: failed to register clock %s\n",
-+			       __func__, clks[i].name);
-+			continue;
-+		}
-+		if (clks[i].id)
-+			unit->clk_table[clks[i].id] = clk;
-+	}
-+}
-+
-+void mmp_clk_add(struct mmp_clk_unit *unit, unsigned int id,
-+			struct clk *clk)
-+{
-+	if (IS_ERR_OR_NULL(clk)) {
-+		pr_err("CLK %d has invalid pointer %p\n", id, clk);
-+		return;
-+	}
-+	if (id > unit->nr_clks) {
-+		pr_err("CLK %d is invalid\n", id);
-+		return;
-+	}
-+
-+	unit->clk_table[id] = clk;
-+}
-diff --git a/drivers/clk/mmp/clk.h b/drivers/clk/mmp/clk.h
-index 2337106..adf9b71 100644
---- a/drivers/clk/mmp/clk.h
-+++ b/drivers/clk/mmp/clk.h
-@@ -96,8 +96,8 @@ struct mmp_clk_mix {
- extern const struct clk_ops mmp_clk_mix_ops;
- extern struct clk *mmp_clk_register_mix(struct device *dev,
- 					const char *name,
--					u8 num_parents,
- 					const char **parent_names,
-+					u8 num_parents,
- 					unsigned long flags,
- 					struct mmp_clk_mix_config *config,
- 					spinlock_t *lock);
-@@ -132,4 +132,108 @@ extern struct clk *mmp_clk_register_apbc(const char *name,
- extern struct clk *mmp_clk_register_apmu(const char *name,
- 		const char *parent_name, void __iomem *base, u32 enable_mask,
- 		spinlock_t *lock);
-+
-+struct mmp_clk_unit {
-+	unsigned int nr_clks;
-+	struct clk **clk_table;
-+	struct clk_onecell_data clk_data;
-+};
-+
-+struct mmp_param_fixed_rate_clk {
-+	unsigned int id;
-+	char *name;
-+	const char *parent_name;
-+	unsigned long flags;
-+	unsigned long fixed_rate;
-+};
-+void mmp_register_fixed_rate_clks(struct mmp_clk_unit *unit,
-+				struct mmp_param_fixed_rate_clk *clks,
-+				int size);
-+
-+struct mmp_param_fixed_factor_clk {
-+	unsigned int id;
-+	char *name;
-+	const char *parent_name;
-+	unsigned long mult;
-+	unsigned long div;
-+	unsigned long flags;
-+};
-+void mmp_register_fixed_factor_clks(struct mmp_clk_unit *unit,
-+				struct mmp_param_fixed_factor_clk *clks,
-+				int size);
-+
-+struct mmp_param_general_gate_clk {
-+	unsigned int id;
-+	const char *name;
-+	const char *parent_name;
-+	unsigned long flags;
-+	unsigned long offset;
-+	u8 bit_idx;
-+	u8 gate_flags;
++struct mmp_clk_reset_cell {
++	unsigned int clk_id;
++	void __iomem *reg;
++	u32 bits;
++	unsigned int flags;
 +	spinlock_t *lock;
 +};
-+void mmp_register_general_gate_clks(struct mmp_clk_unit *unit,
-+				struct mmp_param_general_gate_clk *clks,
-+				void __iomem *base, int size);
 +
-+struct mmp_param_gate_clk {
-+	unsigned int id;
-+	char *name;
-+	const char *parent_name;
-+	unsigned long flags;
-+	unsigned long offset;
-+	u32 mask;
-+	u32 val_enable;
-+	u32 val_disable;
-+	unsigned int gate_flags;
-+	spinlock_t *lock;
++struct mmp_clk_reset_unit {
++	struct reset_controller_dev rcdev;
++	struct mmp_clk_reset_cell *cells;
 +};
-+void mmp_register_gate_clks(struct mmp_clk_unit *unit,
-+			struct mmp_param_gate_clk *clks,
-+			void __iomem *base, int size);
 +
-+struct mmp_param_mux_clk {
-+	unsigned int id;
-+	char *name;
-+	const char **parent_name;
-+	u8 num_parents;
-+	unsigned long flags;
-+	unsigned long offset;
-+	u8 shift;
-+	u8 width;
-+	u8 mux_flags;
-+	spinlock_t *lock;
-+};
-+void mmp_register_mux_clks(struct mmp_clk_unit *unit,
-+			struct mmp_param_mux_clk *clks,
-+			void __iomem *base, int size);
-+
-+struct mmp_param_div_clk {
-+	unsigned int id;
-+	char *name;
-+	const char *parent_name;
-+	unsigned long flags;
-+	unsigned long offset;
-+	u8 shift;
-+	u8 width;
-+	u8 div_flags;
-+	spinlock_t *lock;
-+};
-+void mmp_register_div_clks(struct mmp_clk_unit *unit,
-+			struct mmp_param_div_clk *clks,
-+			void __iomem *base, int size);
-+
-+#define DEFINE_MIX_REG_INFO(w_d, s_d, w_m, s_m, fc)	\
-+{							\
-+	.width_div = (w_d),				\
-+	.shift_div = (s_d),				\
-+	.width_mux = (w_m),				\
-+	.shift_mux = (s_m),				\
-+	.bit_fc = (fc),					\
++#ifdef CONFIG_RESET_CONTROLLER
++void mmp_clk_reset_register(struct device_node *np,
++			struct mmp_clk_reset_cell *cells, int nr_resets);
++#else
++static inline void mmp_clk_reset_register(struct device_node *np,
++			struct mmp_clk_reset_cell *cells, int nr_resets)
++{
 +}
++#endif
 +
-+void mmp_clk_init(struct device_node *np, struct mmp_clk_unit *unit,
-+		int nr_clks);
-+void mmp_clk_add(struct mmp_clk_unit *unit, unsigned int id,
-+		struct clk *clk);
- #endif
++#endif
 -- 
 1.8.3.2
