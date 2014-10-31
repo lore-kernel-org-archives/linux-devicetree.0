@@ -1,137 +1,78 @@
 From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] I2C: mediatek: Add driver for MediaTek I2C controller
-Date: Fri, 31 Oct 2014 17:10:55 +0100
-Message-ID: <CABuKBeJ2NxcVn=yapcvNs1xLU+eye4JWESBwdcWoeqO=-vMBKw@mail.gmail.com>
-References: <1414561058-23803-1-git-send-email-xudong.chen@mediatek.com>
-	<1414561058-23803-4-git-send-email-xudong.chen@mediatek.com>
-	<CABuKBe+RXboBEZD7Bu_kSbVwiapJJcAuuw_wo=xw67osJWJ20w@mail.gmail.com>
-	<1414737101.32208.18.camel@mhfsdcap03>
-	<CABuKBeK1O2q37RMVE0Yjp2=QgkzXZfh=vxXiZrw-JMiYMxb-QQ@mail.gmail.com>
-	<1414766288.5833.46.camel@mtksdaap41>
+Subject: Re: [PATCH] of: Request and map make argument name constant
+Date: Fri, 31 Oct 2014 17:21:26 +0100
+Message-ID: <CABuKBeJNqTvf=t7tN4CWN4RLKvqQihxC9Ysk3OD6Ow6+2A+Q1w@mail.gmail.com>
+References: <1413908845-11526-1-git-send-email-matthias.bgg@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414766288.5833.46.camel@mtksdaap41>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: xudong chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nathan Chung <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YH Chen <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413908845-11526-1-git-send-email-matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-10-31 15:38 GMT+01:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
-> On Fri, 2014-10-31 at 11:48 +0100, Matthias Brugger wrote:
->> 2014-10-31 7:31 GMT+01:00 xudong chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
->> > On Thu, 2014-10-30 at 14:16 +0100, Matthias Brugger wrote:
->> >> 2014-10-29 6:37 GMT+01:00 Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
->> >> > The mediatek SoCs have I2C controller that handle I2C transfer.
->> >> > This patch include common I2C bus driver.
->> >> > This driver is compatible with I2C controller on mt65xx/mt81xx.
->> >> >
->> >> > Signed-off-by: Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> >> > Change-Id: Icc17e326b9df46a226d536956e103f17b0382b6e
->> >> > ---
->> >> >  drivers/i2c/busses/Kconfig      |   9 +
->> >> >  drivers/i2c/busses/Makefile     |   1 +
->> >> >  drivers/i2c/busses/i2c-mt65xx.c | 728 ++++++++++++++++++++++++++++++++++++++++
->> >> >  3 files changed, 738 insertions(+)
->> >> >  create mode 100644 drivers/i2c/busses/i2c-mt65xx.c
->> >> >
->> >> > diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
->> >> > index 917c358..0d7d0a4 100644
->> >> > --- a/drivers/i2c/busses/Kconfig
->> >> > +++ b/drivers/i2c/busses/Kconfig
->> >> > @@ -564,6 +564,15 @@ config I2C_MPC
->> >> >           This driver can also be built as a module.  If so, the module
->> >> >           will be called i2c-mpc.
->> >> >
->> >> > +config I2C_MT65XX
->> >> > +       tristate "MediaTek I2C adapter"
->> >> > +       depends on ARCH_MEDIATEK
->> >> > +       help
->> >> > +         This selects the MediaTek(R) Integrated Inter Circuit bus driver
->> >> > +         for MT65xx and MT81xx.
->> >> > +         If you want to use MediaTek(R) I2C interface, say Y or M here.
->> >> > +         If unsure, say N.
->> >> > +
->> >> >  config I2C_MV64XXX
->> >> >         tristate "Marvell mv64xxx I2C Controller"
->> >> >         depends on MV64X60 || PLAT_ORION || ARCH_SUNXI
->> >> > diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
->> >> > index 78d56c5..7a9f0f3 100644
->> >> > --- a/drivers/i2c/busses/Makefile
->> >> > +++ b/drivers/i2c/busses/Makefile
->> >> > @@ -54,6 +54,7 @@ obj-$(CONFIG_I2C_IMX)         += i2c-imx.o
->> >> >  obj-$(CONFIG_I2C_IOP3XX)       += i2c-iop3xx.o
->> >> >  obj-$(CONFIG_I2C_KEMPLD)       += i2c-kempld.o
->> >> >  obj-$(CONFIG_I2C_MPC)          += i2c-mpc.o
->> >> > +obj-$(CONFIG_I2C_MT65XX)       += i2c-mt65xx.o
->> >> > +
->> >> > +static int mt_i2c_do_transfer(struct mt_i2c *i2c)
->> >> > +{
->> >> > +       u16 addr_reg;
->> >> > +       u16 control_reg;
->> >> > +       int tmo = i2c->adap.timeout;
->> >> > +
->> >> > +       i2c->trans_stop = false;
->> >> > +       i2c->irq_stat = 0;
->> >> > +
->> >> > +       /* If use i2c pin from PMIC mt6397 side, need set PATH_DIR first */
->> >> > +       if (i2c->have_pmic)
->> >> > +               i2c_writew(I2C_CONTROL_WRAPPER, i2c, OFFSET_PATH_DIR);
->> >>
->> >> So this is some sort of multiplexer bit, right?
->> >> I think in this case we need to build a multi function device (mfd)
->> >> where the pmic driver will set this bit.
->> >>
->> > Hi,
->> >
->> > This feature means the chip can use I2C pins from PMIC(mt6397).
->> > In this case,
->> > 1. We actually control the register on mt8135 and the DMA/Control Logic
->> > is on mt8135, only use pins from mt6397. If set register OFFSET_PATH_DIR
->> > bit0 to 1, the I2C data will go/from PMIC pins.
->>
->> Sorry but I'm a bit puzzled. mt6397 is the PMIC, right?
->> So from the mt6589 datasheet it says:
->> "PATH_DIR Decides transmission direction
->> If set, the I2C data will go/from PMIC; otherwise, the I2C data will
->> go/from main die."
->>
->> From my understanding the I2C bus will be multiplexed depending on
->> this bit. The bit decides if it the data will be send to the PMIC or
->> to some other I2C peripheral.
->>
->> So we need a mfd and the PMIC device driver sets/unsets the PATH_DIR register.
->
-> Yes, mt6397 is the PMIC work with mt8135 or mt8127.
->
-> I think the datasheet is a little misleading here. AFAIK, on 8135 even
-> if your clear the bit for I2C4, there are no corresponding pins for this
-> i2c port on 8135. So it is not really multiplexed. Base on my
-> understanding this is more like "Set this bit if this a PMIC I2C port".
+Hi all,
 
-I had a look at mt6589. The SoC has seven i2c controller. Looking at
-the source code all controller with an ID bigger then 3 can be set to
-pmic wrapper state.
-So I would say that the PATH_DIR bit is not always bound to i2c4. We
-should implement a driver which will work on all possible
-configurations. We don't know if apart from mt6589 and mt8135 some
-other SoC in the future will use this i2c controller.
+2014-10-21 18:27 GMT+02:00 Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> This patch makes the name argument from of_io_request_and_map constant.
 
-Maybe you can check with the HW guys how this is implemented to shed
-some light on the issue.
+Any comments on this patch?
+
+Thanks,
+Matthias
 
 >
-> In order to use i2c4, we do need a PMIC pinmux driver to set pinmux
-> function for this i2c port. Since all the i2c control logic and
-> registers are on mt8135, it is strange to have PMIC device driver set
-> this bit on mt8135. Also, since mt8127 doesn't support this, it will be
-> even stranger when using this pmic and driver with mt8127.
+> Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/of/address.c       | 2 +-
+>  include/linux/of_address.h | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 >
-> Joe.C
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index afdb782..e02828f 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -871,7 +871,7 @@ EXPORT_SYMBOL(of_iomap);
+>   *             return PTR_ERR(base);
+>   */
+>  void __iomem *of_io_request_and_map(struct device_node *np, int index,
+> -                                       char *name)
+> +                                       const char *name)
+>  {
+>         struct resource res;
+>         void __iomem *mem;
+> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+> index 8cb14eb..d88e81b 100644
+> --- a/include/linux/of_address.h
+> +++ b/include/linux/of_address.h
+> @@ -106,7 +106,7 @@ extern int of_address_to_resource(struct device_node *dev, int index,
+>                                   struct resource *r);
+>  void __iomem *of_iomap(struct device_node *node, int index);
+>  void __iomem *of_io_request_and_map(struct device_node *device,
+> -                                       int index, char *name);
+> +                                       int index, const char *name);
+>  #else
 >
+>  #include <linux/io.h>
+> @@ -123,7 +123,7 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
+>  }
+>
+>  static inline void __iomem *of_io_request_and_map(struct device_node *device,
+> -                                       int index, char *name)
+> +                                       int index, const char *name)
+>  {
+>         return IOMEM_ERR_PTR(-EINVAL);
+>  }
+> --
+> 1.9.1
 >
 
 
 
 -- 
 motzblog.wordpress.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
