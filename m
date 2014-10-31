@@ -1,226 +1,104 @@
-From: Chao Xie <chao.xie@marvell.com>
-Subject: [PATCH V2 06/13] clk: mmp: add mmp private gate clock
-Date: Fri, 31 Oct 2014 10:13:46 +0800
-Message-ID: <1414721633-29508-7-git-send-email-chao.xie@marvell.com>
-References: <1414721633-29508-1-git-send-email-chao.xie@marvell.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 14/20] usb: dwc3: add Tx de-emphasis quirk
+Date: Thu, 30 Oct 2014 22:00:10 -0500
+Message-ID: <20141031030010.GB1080@saruman>
+References: <1414663725-2195-1-git-send-email-ray.huang@amd.com>
+ <1414663725-2195-15-git-send-email-ray.huang@amd.com>
+ <20141030164210.GM10130@saruman>
+ <20141031012954.GA20367@hr-slim.amd.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1414721633-29508-1-git-send-email-chao.xie@marvell.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: haojian.zhuang@gmail.com, haojian.zhuang@linaro.org, mturquette@linaro.org, chao.xie@marvell.com, xiechao_mail@163.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jq0ap7NbKX2Kqbes"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141031012954.GA20367-066jutd8Y+7kLsZ8J5Uweg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Jason Chang <jason.chang-5C7GfCeVMHo@public.gmane.org>, Vincent Wan <vincent.wan-5C7GfCeVMHo@public.gmane.org>, Tony Li <tony.li-5C7GfCeVMHo@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Chao Xie <chao.xie@marvell.com>
+--jq0ap7NbKX2Kqbes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Some SOCes have this kind of the gate clock
-1. There are some bits to control the gate not only one bit.
-2. It is not always that "1" is to enable while "0" is to disable
-   when write register.
+Hi,
 
-So we have to define the "mask", "enable_val", "disable_val" for
-this kind of gate clock.
+On Fri, Oct 31, 2014 at 09:29:55AM +0800, Huang Rui wrote:
+> On Thu, Oct 30, 2014 at 11:42:10AM -0500, Felipe Balbi wrote:
+> > On Thu, Oct 30, 2014 at 06:08:39PM +0800, Huang Rui wrote:
+> > > This patch adds Tx de-emphasis quirk, and the Tx de-emphasis value is
+> > > configurable according to PIPE3 specification.
+> > >=20
+> > > Value		Description
+> > > 0		-6dB de-emphasis
+> > > 1		-3.5dB de-emphasis
+> > > 2		No de-emphasis
+> > > 3		Reserved
+> > >=20
+> > > It can be configured on DT or platform data.
+> > >=20
+> > > Signed-off-by: Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>
+> >=20
+> > doesn't apply:
+> >=20
+> > checking file Documentation/devicetree/bindings/usb/dwc3.txt
+> > checking file drivers/usb/dwc3/core.c
+> > Hunk #2 succeeded at 718 (offset -2 lines).
+> > Hunk #3 succeeded at 777 (offset -2 lines).
+> > Hunk #4 succeeded at 807 (offset -2 lines).
+> > Hunk #5 succeeded at 829 (offset -2 lines).
+> > Hunk #6 succeeded at 840 (offset -2 lines).
+> > checking file drivers/usb/dwc3/core.h
+> > Hunk #2 FAILED at 697.
+> > 1 out of 3 hunks FAILED
+> > checking file drivers/usb/dwc3/platform_data.h
+> >=20
+> > please rebase on testing/next
+> >=20
+>=20
+> That's because in patch 12 and other ones you applied, I changed
+> addreviations to uppercase such as "lfps" -> "LFPS", "fpga" -> "FPGA".
 
-Signed-off-by: Chao Xie <chao.xie@marvell.com>
----
- drivers/clk/mmp/Makefile   |   2 +-
- drivers/clk/mmp/clk-gate.c | 133 +++++++++++++++++++++++++++++++++++++++++++++
- drivers/clk/mmp/clk.h      |  21 +++++++
- 3 files changed, 155 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/mmp/clk-gate.c
+didn't notice that. I'll just reapply the entire series.
 
-diff --git a/drivers/clk/mmp/Makefile b/drivers/clk/mmp/Makefile
-index 8bfee860..2855f7b 100644
---- a/drivers/clk/mmp/Makefile
-+++ b/drivers/clk/mmp/Makefile
-@@ -2,7 +2,7 @@
- # Makefile for mmp specific clk
- #
- 
--obj-y += clk-apbc.o clk-apmu.o clk-frac.o clk-mix.o
-+obj-y += clk-apbc.o clk-apmu.o clk-frac.o clk-mix.o clk-gate.o
- 
- obj-$(CONFIG_CPU_PXA168) += clk-pxa168.o
- obj-$(CONFIG_CPU_PXA910) += clk-pxa910.o
-diff --git a/drivers/clk/mmp/clk-gate.c b/drivers/clk/mmp/clk-gate.c
-new file mode 100644
-index 0000000..adbd9d6
---- /dev/null
-+++ b/drivers/clk/mmp/clk-gate.c
-@@ -0,0 +1,133 @@
-+/*
-+ * mmp gate clock operation source file
-+ *
-+ * Copyright (C) 2014 Marvell
-+ * Chao Xie <chao.xie@marvell.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/slab.h>
-+#include <linux/io.h>
-+#include <linux/err.h>
-+#include <linux/delay.h>
-+
-+#include "clk.h"
-+
-+/*
-+ * Some clocks will have mutiple bits to enable the clocks, and
-+ * the bits to disable the clock is not same as enabling bits.
-+ */
-+
-+#define to_clk_mmp_gate(hw)	container_of(hw, struct mmp_clk_gate, hw)
-+
-+static int mmp_clk_gate_enable(struct clk_hw *hw)
-+{
-+	struct mmp_clk_gate *gate = to_clk_mmp_gate(hw);
-+	struct clk *clk = hw->clk;
-+	unsigned long flags = 0;
-+	unsigned long rate;
-+	u32 tmp;
-+
-+	if (gate->lock)
-+		spin_lock_irqsave(gate->lock, flags);
-+
-+	tmp = readl(gate->reg);
-+	tmp &= ~gate->mask;
-+	tmp |= gate->val_enable;
-+	writel(tmp, gate->reg);
-+
-+	if (gate->lock)
-+		spin_unlock_irqrestore(gate->lock, flags);
-+
-+	if (gate->flags & MMP_CLK_GATE_NEED_DELAY) {
-+		rate = __clk_get_rate(clk);
-+		/* Need delay 2 cycles. */
-+		udelay(2000000/rate);
-+	}
-+
-+	return 0;
-+}
-+
-+static void mmp_clk_gate_disable(struct clk_hw *hw)
-+{
-+	struct mmp_clk_gate *gate = to_clk_mmp_gate(hw);
-+	unsigned long flags = 0;
-+	u32 tmp;
-+
-+	if (gate->lock)
-+		spin_lock_irqsave(gate->lock, flags);
-+
-+	tmp = readl(gate->reg);
-+	tmp &= ~gate->mask;
-+	tmp |= gate->val_disable;
-+	writel(tmp, gate->reg);
-+
-+	if (gate->lock)
-+		spin_unlock_irqrestore(gate->lock, flags);
-+}
-+
-+static int mmp_clk_gate_is_enabled(struct clk_hw *hw)
-+{
-+	struct mmp_clk_gate *gate = to_clk_mmp_gate(hw);
-+	unsigned long flags = 0;
-+	u32 tmp;
-+
-+	if (gate->lock)
-+		spin_lock_irqsave(gate->lock, flags);
-+
-+	tmp = readl(gate->reg);
-+
-+	if (gate->lock)
-+		spin_unlock_irqrestore(gate->lock, flags);
-+
-+	return (tmp & gate->mask) == gate->val_enable;
-+}
-+
-+const struct clk_ops mmp_clk_gate_ops = {
-+	.enable = mmp_clk_gate_enable,
-+	.disable = mmp_clk_gate_disable,
-+	.is_enabled = mmp_clk_gate_is_enabled,
-+};
-+
-+struct clk *mmp_clk_register_gate(struct device *dev, const char *name,
-+		const char *parent_name, unsigned long flags,
-+		void __iomem *reg, u32 mask, u32 val_enable, u32 val_disable,
-+		unsigned int gate_flags, spinlock_t *lock)
-+{
-+	struct mmp_clk_gate *gate;
-+	struct clk *clk;
-+	struct clk_init_data init;
-+
-+	/* allocate the gate */
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate) {
-+		pr_err("%s:%s could not allocate gate clk\n", __func__, name);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	init.name = name;
-+	init.ops = &mmp_clk_gate_ops;
-+	init.flags = flags | CLK_IS_BASIC;
-+	init.parent_names = (parent_name ? &parent_name : NULL);
-+	init.num_parents = (parent_name ? 1 : 0);
-+
-+	/* struct clk_gate assignments */
-+	gate->reg = reg;
-+	gate->mask = mask;
-+	gate->val_enable = val_enable;
-+	gate->val_disable = val_disable;
-+	gate->flags = gate_flags;
-+	gate->lock = lock;
-+	gate->hw.init = &init;
-+
-+	clk = clk_register(dev, &gate->hw);
-+
-+	if (IS_ERR(clk))
-+		kfree(gate);
-+
-+	return clk;
-+}
-diff --git a/drivers/clk/mmp/clk.h b/drivers/clk/mmp/clk.h
-index 26b2469..2337106 100644
---- a/drivers/clk/mmp/clk.h
-+++ b/drivers/clk/mmp/clk.h
-@@ -103,6 +103,27 @@ extern struct clk *mmp_clk_register_mix(struct device *dev,
- 					spinlock_t *lock);
- 
- 
-+/* Clock type "gate". MMP private gate */
-+#define MMP_CLK_GATE_NEED_DELAY		BIT(0)
-+
-+struct mmp_clk_gate {
-+	struct clk_hw hw;
-+	void __iomem *reg;
-+	u32 mask;
-+	u32 val_enable;
-+	u32 val_disable;
-+	unsigned int flags;
-+	spinlock_t *lock;
-+};
-+
-+extern const struct clk_ops mmp_clk_gate_ops;
-+extern struct clk *mmp_clk_register_gate(struct device *dev, const char *name,
-+			const char *parent_name, unsigned long flags,
-+			void __iomem *reg, u32 mask, u32 val_enable,
-+			u32 val_disable, unsigned int gate_flags,
-+			spinlock_t *lock);
-+
-+
- extern struct clk *mmp_clk_register_pll2(const char *name,
- 		const char *parent_name, unsigned long flags);
- extern struct clk *mmp_clk_register_apbc(const char *name,
--- 
-1.8.3.2
+> Previous 13 patches are already applied. Do you mean, I send the other
+> patches since "Tx de-emphasis" (patch 14) after rebased current
+> branch.
+>=20
+> If yes, at patch 1, "Enabling this bit ... hibernation .. yet", should
+> it be updated in extra patch?
+
+don't worry, I'll reapply the whole series, thanks :-)
+
+--=20
+balbi
+
+--jq0ap7NbKX2Kqbes
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUUvs6AAoJEIaOsuA1yqREZ5gP/0O2Awqolw+xdH0HB0yJ2Ys1
+EKNq8PEYrXazHL65nCQYeTlHm2yjqQoVk9fs6sFcBHuda5TUQqr5VS4MiDepNvge
+YD0KDRD27fwjaWvZ317R7uoPu3T8ovDZSsRTrUtmfhmgJ+J6BDTsKbgWLaIS2NYf
+NNuU5kxr2GS1hHp3egR54tK9AK5JptmsI7wNg7Nex5Pzsy1MpDCdHeoT40leg5N5
+F9Li4m+0EBapmxjZMfTRPIVFkF8JvpRhq5GeQsM/0P6vkvf3jsrhXKqQQ4+UjjMA
+0FCUuHbyXKYiZ0hBQOYPfQGJ3AJqEcnB0K/kZMTpU7WkjUQPtCtAxTl545nisT3X
+XiJviKKsVMzw1GD6FEZmuy8M4NfzDHrxpenzi3hHsi5aEaTnsCGdzmVRXfrClY3S
+X6uHT4ZROWPA1lpyvR8O5kLqQC/fSqj2UA/mTJdovdUTBwXApEQ7pC14E0Nvjvof
+uyk9H2IN9tC2vBB0/8eRJCN5Ni5E8cKxm+ZbF23VDv2pjPKNDAZVAzqTC/ms4iZF
+O07XbTam3nvh0tj/g7szQ5k6eo277CzK1ULOCQFD9x4PnUDNCcNCP4eHW9Veag4/
+WYDG/pN1JgUK7thIM2x1yJAGyUzMWpLh8oUx1WrER1PZ/+bBTy78FLha2IUZY7zb
+dMhny++MnxkXrTmTbJHz
+=U9H7
+-----END PGP SIGNATURE-----
+
+--jq0ap7NbKX2Kqbes--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
