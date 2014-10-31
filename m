@@ -1,82 +1,160 @@
 From: Huang Rui <ray.huang@amd.com>
-Subject: [PATCH v5 0/8] usb: dwc3: add support for AMD Nolan SoC
-Date: Fri, 31 Oct 2014 11:11:11 +0800
-Message-ID: <1414725079-11490-1-git-send-email-ray.huang@amd.com>
+Subject: [PATCH v5 1/8] usb: dwc3: add Tx de-emphasis quirk
+Date: Fri, 31 Oct 2014 11:11:12 +0800
+Message-ID: <1414725079-11490-2-git-send-email-ray.huang@amd.com>
+References: <1414725079-11490-1-git-send-email-ray.huang@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414725079-11490-1-git-send-email-ray.huang@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Felipe Balbi <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Jason Chang <jason.chang@amd.com>, Vincent Wan <vincent.wan@amd.com>, Tony Li <tony.li@amd.com>, linux-usb@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Huang Rui <ray.huang@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch adds Tx de-emphasis quirk, and the Tx de-emphasis value is
+configurable according to PIPE3 specification.
 
-The series of patches add AMD Nolan (NL) SoC support for DesignWare USB3
-OTG IP with PCI bus glue layer. This controller supported hibernation, LPM
-erratum and used the 2.80a IP version and amd own phy. Current
-implementation support both simulation and SoC platform. And already tested
-with gadget zero and msc tool. It works well on file storage gadget.
+Value		Description
+0		-6dB de-emphasis
+1		-3.5dB de-emphasis
+2		No de-emphasis
+3		Reserved
 
+It can be configured on DT or platform data.
 
-These patches are rebased on balbi/testing/next, and only send the rest
-ones which are not applied.
+Signed-off-by: Huang Rui <ray.huang@amd.com>
+---
+ Documentation/devicetree/bindings/usb/dwc3.txt |  3 +++
+ drivers/usb/dwc3/core.c                        | 17 +++++++++++++++++
+ drivers/usb/dwc3/core.h                        | 11 +++++++++++
+ drivers/usb/dwc3/platform_data.h               |  3 +++
+ 4 files changed, 34 insertions(+)
 
-Changes from v4 -> v5
-- Rebase rest ones which are not applied on testing/next.
-- Fix some typos.
-- Add comments of hibernation patch.
-
-Changes from v3 -> v4
-- Add comment on hibernation patch
-- Fix typos of commit log and comments
-- Remove WARN_ON for temporary solution of FPGA board
-- Rename tx deemph to tx de-emphasis
-- Add documentation under Documentation/devicetree/bindings/usb/dwc3.txt
-- Check FPGA flag on usb3 and usb2 suspend phy quirk
-- Refine description of PCI quirk patch
-- Remove amd_nl_plat flag at dwc3 structure
-- Make HIRD threshold configurable
-
-Changes from v2 -> v3
-- Confirmed these quirks will be needed in product level
-- Move AMD configuration patch to the last one with all quirk flags
-- Make all quirks as 1-bit field instead of single-bits on a 32-bit
-  variable
-- Add all quirks DeviceTree counterparts
-- Make LPM erratum configurable
-- Add PCI ID into pci_ids.h because it will be used both on PCI and DWC3
-  device driver.
-
-Changes from v1 -> v2
-- Remove dual role function temporarily
-- Add pci quirk to avoid to bind with xhci driver
-- Distinguish between simulation board and soc
-- Break down all the special quirks
-
-
-Thanks,
-Rui
-
-Huang Rui (8):
-  usb: dwc3: add Tx de-emphasis quirk
-  usb: dwc3: add disable usb3 suspend phy quirk
-  usb: dwc3: add disable usb2 suspend phy quirk
-  PCI: Add support for AMD Nolan USB3 DRD
-  PCI: Prevent xHCI driver from claiming AMD Nolan USB3 DRD device
-  usb: dwc3: add support for AMD Nolan platform
-  usb: dwc3: make HIRD threshold configurable
-  usb: dwc3: point host-mode hibernation enablement not device-mode
-
- Documentation/devicetree/bindings/usb/dwc3.txt |  8 ++++
- drivers/pci/quirks.c                           | 20 ++++++++++
- drivers/usb/dwc3/core.c                        | 53 +++++++++++++++++++++++++-
- drivers/usb/dwc3/core.h                        | 21 ++++++++++
- drivers/usb/dwc3/dwc3-pci.c                    | 26 +++++++++++++
- drivers/usb/dwc3/gadget.c                      |  8 +---
- drivers/usb/dwc3/platform_data.h               |  8 ++++
- include/linux/pci_ids.h                        |  1 +
- 8 files changed, 138 insertions(+), 7 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 1ecc333..b724b2e 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -29,6 +29,9 @@ Optional properties:
+  - snps,lfps_filter_quirk: when set core will filter LFPS reception.
+  - snps,rx_detect_poll_quirk: when set core will disable a 400us delay to start
+ 			Polling LFPS after RX.Detect.
++ - snps,tx_de_emphasis_quirk: when set core will set Tx de-emphasis value.
++ - snps,tx_de_emphasis: the value driven to the PHY is controlled by the
++			LTSSM during USB3 Compliance mode.
+ 
+ This is usually a subnode to DWC3 glue to which it is connected.
+ 
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index e9b961c..e7e877a 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -401,6 +401,9 @@ static void dwc3_phy_setup(struct dwc3 *dwc)
+ 	if (dwc->rx_detect_poll_quirk)
+ 		reg |= DWC3_GUSB3PIPECTL_RX_DETOPOLL;
+ 
++	if (dwc->tx_de_emphasis_quirk)
++		reg |= DWC3_GUSB3PIPECTL_TX_DEEPH(dwc->tx_de_emphasis);
++
+ 	dwc3_writel(dwc->regs, DWC3_GUSB3PIPECTL(0), reg);
+ 
+ 	mdelay(100);
+@@ -715,6 +718,7 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	struct resource		*res;
+ 	struct dwc3		*dwc;
+ 	u8			lpm_nyet_threshold;
++	u8			tx_de_emphasis;
+ 
+ 	int			ret;
+ 
+@@ -773,6 +777,9 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	/* default to highest possible threshold */
+ 	lpm_nyet_threshold = 0xff;
+ 
++	/* default to -3.5dB de-emphasis */
++	tx_de_emphasis = 1;
++
+ 	if (node) {
+ 		dwc->maximum_speed = of_usb_get_maximum_speed(node);
+ 		dwc->has_lpm_erratum = of_property_read_bool(node,
+@@ -800,6 +807,11 @@ static int dwc3_probe(struct platform_device *pdev)
+ 				"snps,lfps_filter_quirk");
+ 		dwc->rx_detect_poll_quirk = of_property_read_bool(node,
+ 				"snps,rx_detect_poll_quirk");
++
++		dwc->tx_de_emphasis_quirk = of_property_read_bool(node,
++				"snps,tx_de_emphasis_quirk");
++		of_property_read_u8(node, "snps,tx_de_emphasis",
++				&tx_de_emphasis);
+ 	} else if (pdata) {
+ 		dwc->maximum_speed = pdata->maximum_speed;
+ 		dwc->has_lpm_erratum = pdata->has_lpm_erratum;
+@@ -817,6 +829,10 @@ static int dwc3_probe(struct platform_device *pdev)
+ 		dwc->del_phy_power_chg_quirk = pdata->del_phy_power_chg_quirk;
+ 		dwc->lfps_filter_quirk = pdata->lfps_filter_quirk;
+ 		dwc->rx_detect_poll_quirk = pdata->rx_detect_poll_quirk;
++
++		dwc->tx_de_emphasis_quirk = pdata->tx_de_emphasis_quirk;
++		if (pdata->tx_de_emphasis)
++			tx_de_emphasis = pdata->tx_de_emphasis;
+ 	}
+ 
+ 	/* default to superspeed if no maximum_speed passed */
+@@ -824,6 +840,7 @@ static int dwc3_probe(struct platform_device *pdev)
+ 		dwc->maximum_speed = USB_SPEED_SUPER;
+ 
+ 	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
++	dwc->tx_de_emphasis = tx_de_emphasis;
+ 
+ 	ret = dwc3_core_get_phy(dwc);
+ 	if (ret)
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 8953d73..cf9aaca 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -185,6 +185,8 @@
+ #define DWC3_GUSB3PIPECTL_SUSPHY	(1 << 17)
+ #define DWC3_GUSB3PIPECTL_LFPSFILT	(1 << 9)
+ #define DWC3_GUSB3PIPECTL_RX_DETOPOLL	(1 << 8)
++#define DWC3_GUSB3PIPECTL_TX_DEEPH_MASK	DWC3_GUSB3PIPECTL_TX_DEEPH(3)
++#define DWC3_GUSB3PIPECTL_TX_DEEPH(n)	((n) << 1)
+ 
+ /* Global TX Fifo Size Register */
+ #define DWC3_GTXFIFOSIZ_TXFDEF(n)	((n) & 0xffff)
+@@ -695,6 +697,12 @@ struct dwc3_scratchpad_array {
+  * @del_phy_power_chg_quirk: set if we enable delay phy power change quirk
+  * @lfps_filter_quirk: set if we enable LFPS filter quirk
+  * @rx_detect_poll_quirk: set if we enable rx_detect to polling lfps quirk
++ * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
++ * @tx_de_emphasis: Tx de-emphasis value
++ * 	0	- -6dB de-emphasis
++ * 	1	- -3.5dB de-emphasis
++ * 	2	- No de-emphasis
++ * 	3	- Reserved
+  */
+ struct dwc3 {
+ 	struct usb_ctrlrequest	*ctrl_req;
+@@ -810,6 +818,9 @@ struct dwc3 {
+ 	unsigned		del_phy_power_chg_quirk:1;
+ 	unsigned		lfps_filter_quirk:1;
+ 	unsigned		rx_detect_poll_quirk:1;
++
++	unsigned		tx_de_emphasis_quirk:1;
++	unsigned		tx_de_emphasis:2;
+ };
+ 
+ /* -------------------------------------------------------------------------- */
+diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform_data.h
+index 4a0f06b..e1ab900 100644
+--- a/drivers/usb/dwc3/platform_data.h
++++ b/drivers/usb/dwc3/platform_data.h
+@@ -36,4 +36,7 @@ struct dwc3_platform_data {
+ 	unsigned del_phy_power_chg_quirk:1;
+ 	unsigned lfps_filter_quirk:1;
+ 	unsigned rx_detect_poll_quirk:1;
++
++	unsigned tx_de_emphasis_quirk:1;
++	unsigned tx_de_emphasis:2;
+ };
 -- 
 1.9.1
