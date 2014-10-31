@@ -1,52 +1,136 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH v4 0/5] simplefb: add clock handling code
-Date: Fri, 31 Oct 2014 10:00:30 +0100
-Message-ID: <54534FAE.1060401@redhat.com>
-References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com> <54534523.8080801@ti.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Ankit Jindal <ankit.jindal@linaro.org>
+Subject: Re: [PATCH v3 2/6] uio: Add new UIO_MEM_PHYS_CACHE type for mem regions
+Date: Fri, 31 Oct 2014 15:00:41 +0530
+Message-ID: <CAPTm99W0J-Q6CwCDVaYe4eyEWrruWuY5pzpHoESyVu9N3cFA=g@mail.gmail.com>
+References: <1413871011-4101-1-git-send-email-ankit.jindal@linaro.org>
+ <1413871011-4101-3-git-send-email-ankit.jindal@linaro.org> <6D33D50E-2DD1-482C-B05E-45B237F3B779@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBOU7ZWRAKGQEVVKE3QA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <54534523.8080801-l0cyMroinI0@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6D33D50E-2DD1-482C-B05E-45B237F3B779@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Hans J. Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "patches@apm.com" <patches@apm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Tushar Jagad <tushar.jagad@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Varka Bhadram <varkabhadram@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi,
+Hi Kumar,
 
-On 10/31/2014 09:15 AM, Tomi Valkeinen wrote:
-> Hi Hans,
-> 
-> On 22/10/14 19:45, Hans de Goede wrote:
-> 
->> -We will add a clocks property to the simplefb devicetree bindings, so
->>  that u-boot setup framebuffers passed to the kernel (for early console
->>  support) can properly list the clocks used, and simplefb can claim them to
->>  avoid them getting turned off, thereby breaking the early console
-> 
-> Perhaps this has been discussed earlier, but I started to wonder if
-> managing clocks is enough.
-> 
-> What about regulators (to power the LCD), gpios (to keep the LCD
-> enabled) and pinctrl (for video signals)? I guess any those could be
-> reset by the kernel if no driver uses them.
+On 21 October 2014 12:08, Kumar Gala <galak@codeaurora.org> wrote:
+>
+> On Oct 21, 2014, at 7:56 AM, Ankit Jindal <ankit.jindal@linaro.org> w=
+rote:
+>
+>> Currently, three types of mem regions are supported: UIO_MEM_PHYS,
+>> UIO_MEM_LOGICAL and UIO_MEM_VIRTUAL. Among these UIO_MEM_PHYS helps
+>> UIO driver export physcial memory to user space as non-cacheable
+>> user memory. Typcially memory-mapped registers of a device are expor=
+ted
+>> to user space as UIO_MEM_PHYS type mem region. The UIO_MEM_PHYS type
+>> is not efficient if dma-capable devices are capable of maintaining c=
+oherency
+>> with CPU caches.
+>>
+>> This patch adds new type UIO_MEM_PHYS_CACHE for mem regions to enabl=
+e
+>> cacheable access to physical memory from user space.
+>>
+>> Signed-off-by: Ankit Jindal <ankit.jindal@linaro.org>
+>> Signed-off-by: Tushar Jagad <tushar.jagad@linaro.org>
+>> ---
+>> drivers/uio/uio.c          |   11 ++++++++---
+>> include/linux/uio_driver.h |    1 +
+>> 2 files changed, 9 insertions(+), 3 deletions(-)
+>
+> Rather than adding a new type, why not allow the driver to set the pg=
+prot value, this way one has full control and we don=E2=80=99t need to =
+keep adding types for various different cache attributions in the futur=
+e.
 
-Yes this has been discussed before, AFAIK gpio / pinctrls should not be
-spontaneously reset by the kernels. Regulators will be a problem, but there
-we can pretty much follow whatever solution we end up with for clocks, since
-they work very much alike (e.g. we could add a supply property to the
-simplefb node).
+Do you mean to add a new field pgprot_t in the memtype structure and
+uio_mmap_physical will set vma->vm_page_prot to this value provided by
+driver ? If this is the case then we will need to change all the
+current uio based drivers which was the reason I preferred to have a
+new mem type.
 
-Note I've no intention to add regulator support atm, we can do that when the
-need arises, so that we can actually test the code.
+Please let me know if I have misunderstood anything.
 
-Regards,
+Thanks,
+Ankit
 
-Hans
+>
+> - k
+>
+>>
+>> diff --git a/drivers/uio/uio.c b/drivers/uio/uio.c
+>> index 97e6444..120a84b 100644
+>> --- a/drivers/uio/uio.c
+>> +++ b/drivers/uio/uio.c
+>> @@ -644,7 +644,7 @@ static const struct vm_operations_struct uio_phy=
+sical_vm_ops =3D {
+>> #endif
+>> };
+>>
+>> -static int uio_mmap_physical(struct vm_area_struct *vma)
+>> +static int uio_mmap_physical(struct vm_area_struct *vma, bool cache=
+able)
+>> {
+>>       struct uio_device *idev =3D vma->vm_private_data;
+>>       int mi =3D uio_find_mem_index(vma);
+>> @@ -659,7 +659,9 @@ static int uio_mmap_physical(struct vm_area_stru=
+ct *vma)
+>>               return -EINVAL;
+>>
+>>       vma->vm_ops =3D &uio_physical_vm_ops;
+>> -     vma->vm_page_prot =3D pgprot_noncached(vma->vm_page_prot);
+>> +
+>> +     if (!cacheable)
+>> +             vma->vm_page_prot =3D pgprot_noncached(vma->vm_page_pr=
+ot);
+>>
+>>       /*
+>>        * We cannot use the vm_iomap_memory() helper here,
+>> @@ -707,10 +709,13 @@ static int uio_mmap(struct file *filep, struct=
+ vm_area_struct *vma)
+>>
+>>       switch (idev->info->mem[mi].memtype) {
+>>       case UIO_MEM_PHYS:
+>> -             return uio_mmap_physical(vma);
+>> +             return uio_mmap_physical(vma, false);
+>>       case UIO_MEM_LOGICAL:
+>>       case UIO_MEM_VIRTUAL:
+>>               return uio_mmap_logical(vma);
+>> +     case UIO_MEM_PHYS_CACHE:
+>> +             return uio_mmap_physical(vma, true);
+>> +
+>>       default:
+>>               return -EINVAL;
+>>       }
+>> diff --git a/include/linux/uio_driver.h b/include/linux/uio_driver.h
+>> index 1ad4724..40ca3f3 100644
+>> --- a/include/linux/uio_driver.h
+>> +++ b/include/linux/uio_driver.h
+>> @@ -118,6 +118,7 @@ extern void uio_event_notify(struct uio_info *in=
+fo);
+>> #define UIO_MEM_PHYS  1
+>> #define UIO_MEM_LOGICAL       2
+>> #define UIO_MEM_VIRTUAL 3
+>> +#define UIO_MEM_PHYS_CACHE   4
+>>
+>> /* defines for uio_port->porttype */
+>> #define UIO_PORT_NONE 0
+>> --
+>> 1.7.9.5
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree=
+" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> --
+> Qualcomm Innovation Center, Inc.
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora F=
+orum,
+> a Linux Foundation Collaborative Project
+>
