@@ -1,35 +1,32 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v4] iio: iadc: Qualcomm SPMI PMIC current ADC driver
-Date: Sat, 01 Nov 2014 18:39:05 +0200
-Message-ID: <1414859945.2207.1.camel@mm-sol.com>
-References: <1413987213-22218-1-git-send-email-iivanov@mm-sol.com>
-	 <5453ED55.2000003@gmx.de>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 33/44] avr32: atngw100: Register with kernel poweroff
+ handler
+Date: Sat, 01 Nov 2014 10:02:58 -0700
+Message-ID: <54551242.2020604@roeck-us.net>
+References: <1412659726-29957-1-git-send-email-linux@roeck-us.net> <1412659726-29957-34-git-send-email-linux@roeck-us.net> <20141101101637.GA5765@samfundet.no>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <5453ED55.2000003@gmx.de>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Hartmut Knaack <knaack.h@gmx.de>
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20141101101637.GA5765@samfundet.no>
+Sender: linux-sh-owner@vger.kernel.org
+To: Hans-Christian Egtvedt <egtvedt@samfundet.no>
+Cc: linux-kernel@vger.kernel.org, adi-buildroot-devel@lists.sourceforge.net, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lguest@lists.ozlabs.org, linux-acpi@vger.kernel.org, linux-alpha@vger.kernel.org, linux-am33-list@redhat.com, linux-cris-kernel@axis.com, linux-efi@vger.kernel.org, linux-hexagon@vger.kernel.org, linux-m32r-ja@ml.linux-m32r.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org, linux-xtensa@linux-xtensa.org, openipmi-developer@lists.sourceforge.net, user-mode-linux-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-metag@vger.kernel.org, linux-mips@linux-mips.org, linux-parisc@vger.kernel.org, linux-pm@vger.kernel.org, linux-sh@vger.kernel.org, xen-devel@lists.xenproject.org, Haavard
 List-Id: devicetree@vger.kernel.org
 
+On 11/01/2014 03:16 AM, Hans-Christian Egtvedt wrote:
+> Around Mon 06 Oct 2014 22:28:35 -0700 or thereabout, Guenter Roeck wrote:
+>> Register with kernel poweroff handler instead of setting pm_power_off
+>> directly.
+>>
+>> Cc: Haavard Skinnemoen <hskinnemoen@gmail.com>
+>> Cc: Hans-Christian Egtvedt <egtvedt@samfundet.no>
+>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+>
+> Acked-by: Hans-Christian Egtvedt <egtvedt@samfundet.no>
+>
 
-On Fri, 2014-10-31 at 21:13 +0100, Hartmut Knaack wrote:
-> Ivan T. Ivanov schrieb am 22.10.2014 16:13:
-> > The current ADC is peripheral of Qualcomm SPMI PMIC chips. It has
-> > 16 bits resolution and register space inside PMIC accessible across
-> > SPMI bus.
-> > 
-> > The driver registers itself through IIO interface.
-> Pretty much there, just one question I would like to double-check: 
-> The CPU of these chips is Little Endian, right?
+Thanks!
 
-Yes, it is Little Endian.
+Guenter
 
-> Annoyingly, you introduced a small typo in this revision, 
-
-No it is not a typo. Calculation is really in nano Ohms.
-
-Regards,
-Ivan
