@@ -1,55 +1,46 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
-Date: Sat, 1 Nov 2014 18:36:25 -0400
-Message-ID: <20141101223625.GB3698@titan.lakedaemon.net>
-References: <1411157684-6991-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH] ARM: mvebu: Fix the Aurora L2 cache node with the
+ required cache-unified property
+Date: Sat, 1 Nov 2014 18:39:23 -0400
+Message-ID: <20141101223923.GC3698@titan.lakedaemon.net>
+References: <1412588276-4514-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1411157684-6991-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1412588276-4514-1-git-send-email-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Sebastian,
+On Mon, Oct 06, 2014 at 11:37:56AM +0200, Gregory CLEMENT wrote:
+> The L2 cache controller on the Armada 370 and Armada XP SoCs is a
+> unified cache. Moreover, the Aurora cache controller is compatible
+> with the L2x0 cache controller: the "cache-unified" property is
+> required by its binding.
+> 
+> This patch fixes the Aurora L2 cache node for the Armada 370 and
+> Armada XP SoCs by adding this property.
+> 
+> Reported-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>  arch/arm/boot/dts/armada-370.dtsi | 1 +
+>  arch/arm/boot/dts/armada-xp.dtsi  | 1 +
+>  2 files changed, 2 insertions(+)
 
-On Fri, Sep 19, 2014 at 10:14:36PM +0200, Sebastian Hesselbarth wrote:
-> Guys,
-> 
-> this is a patch set preparing barebox support for ix4-300d. As usual,
-> I stumbled upon a few nice-to-haves before actually touching ix4-300d
-> dts. As it is a mach-mvebu thing, I just added the related mailing
-> lists instead of each of the DT maintainers.
-> 
-> First 5 patches consolidate SoC-specific pinctrl nodes to one common
-> node in armada-xp.dtsi, compatible overwrites for each SoC, and node
-> alias usage for each board. Also, ge{0,1} pinctrl settings are moved
-> to the common node from one board specific node.
-> 
-> Last 3 patches then use that ge{0,1} pinctrl settings on ix4-300d which
-> is vital for bootloader init. During exploration of ix4-300d, I also
-> found a i2c eeprom that has not been added to the dts, yet. Finally,
-> there is only one 74hc595 on ix4 mainboard while dts property is set
-> for two.
-> 
-> I cannot recall in detail what is on that eeprom, but IIRC it is nothing
-> important. Some reg,addr pairs for some init stuff that should have
-> already been done by stock u-boot. Anyway, adding the node will do no
-> harm.
-> 
-> Patches are based on v3.17-rc1 and intended for v3.18 but I am not in
-> a hurry. I only compile tested this, so a formal Tested-by from Benoit
-> for the ix4 and any other Armada XP board would be great.
-
-I lost track of this thread, are you resending?  Did Benoit get a
-successful test run?
+Applied to mvebu/dt with Sebastian's Ack.
 
 thx,
 
 Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
