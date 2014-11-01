@@ -1,14 +1,15 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
-Date: Sat, 01 Nov 2014 23:48:33 +0100
-Message-ID: <54556341.6040506@gmail.com>
-References: <1411157684-6991-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <20141101223625.GB3698@titan.lakedaemon.net>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCHv0 0/2] arm: mvebu: non-critical fixes for NETGEAR
+ ReadyNAS 102
+Date: Sat, 1 Nov 2014 18:52:53 -0400
+Message-ID: <20141101225253.GE3698@titan.lakedaemon.net>
+References: <cover.1414185031.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20141101223625.GB3698@titan.lakedaemon.net>
+Content-Disposition: inline
+In-Reply-To: <cover.1414185031.git.arno@natisbad.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,47 +19,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Benoit Masson <yahoo@perenite.com>, linux-arm-kernel@lists.infradead.org
+To: Arnaud Ebalard <arno@natisbad.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, Johan Kristell <johan.kristell@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01.11.2014 23:36, Jason Cooper wrote:
-> On Fri, Sep 19, 2014 at 10:14:36PM +0200, Sebastian Hesselbarth wrote:
->> this is a patch set preparing barebox support for ix4-300d. As usual,
->> I stumbled upon a few nice-to-haves before actually touching ix4-300d
->> dts. As it is a mach-mvebu thing, I just added the related mailing
->> lists instead of each of the DT maintainers.
->>
->> First 5 patches consolidate SoC-specific pinctrl nodes to one common
->> node in armada-xp.dtsi, compatible overwrites for each SoC, and node
->> alias usage for each board. Also, ge{0,1} pinctrl settings are moved
->> to the common node from one board specific node.
->>
->> Last 3 patches then use that ge{0,1} pinctrl settings on ix4-300d which
->> is vital for bootloader init. During exploration of ix4-300d, I also
->> found a i2c eeprom that has not been added to the dts, yet. Finally,
->> there is only one 74hc595 on ix4 mainboard while dts property is set
->> for two.
->>
->> I cannot recall in detail what is on that eeprom, but IIRC it is nothing
->> important. Some reg,addr pairs for some init stuff that should have
->> already been done by stock u-boot. Anyway, adding the node will do no
->> harm.
->>
->> Patches are based on v3.17-rc1 and intended for v3.18 but I am not in
->> a hurry. I only compile tested this, so a formal Tested-by from Benoit
->> for the ix4 and any other Armada XP board would be great.
->
-> I lost track of this thread, are you resending?  Did Benoit get a
-> successful test run?
+On Fri, Oct 24, 2014 at 11:21:52PM +0200, Arnaud Ebalard wrote:
+> Hi,
+> 
+> This two patches are non-critical and respectively fix the following
+> in RN102 .dts file:
+>  - the color for LEDs labels (they are blue, and not green)
+>  - eSATA/SATA ports info
+> 
+> Arnaud Ebalard (2):
+>   arm: mvebu: fix LED color in NETGEAR ReadyNAS 102 .dts file
+>   arm: mvebu: clarify (e)SATA ports info in NETGEAR ReadyNAS 102 .dts file
+> 
+>  arch/arm/boot/dts/armada-370-netgear-rn102.dts | 17 +++++++++--------
+>  1 file changed, 9 insertions(+), 8 deletions(-)
 
-Looks like there was this A0 stepping thing, but basically yes
+Both applied to mvebu/dt with Gregory and Andrew's Acks.  Also fixed the
+commit typo in the second patch.
 
-http://www.spinics.net/lists/devicetree/msg53364.html
+thx,
 
-I have just rebased it on top of v3.18-rc1, feel free to pick them
-up from
-
-git://git.infradead.org/users/hesselba/linux-berlin.git devel/mvebu/ix4-300d
-git://git.infradead.org/users/hesselba/linux-berlin.git
-Sebastian
+Jason.
