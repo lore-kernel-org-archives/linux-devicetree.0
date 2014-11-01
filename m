@@ -1,100 +1,40 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
-Date: Sat, 1 Nov 2014 18:59:53 -0400
-Message-ID: <20141101225953.GF3698@titan.lakedaemon.net>
-References: <1411157684-6991-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <-7443282711873112734@unknownmsgid>
- <20141003141102.GJ3895@titan.lakedaemon.net>
- <542EBB93.108@gmail.com>
- <A9781A2E-F3CA-4E8A-833C-D167B456D9F7@perenite.com>
- <542EC3A3.1060605@gmail.com>
- <1ACB5318-863E-40D8-8B27-41F1C0D0A4B8@perenite.com>
- <5432BFB1.2060300@gmail.com>
- <CE7A9795-C2AF-451A-8018-3A0B8788BF60@perenite.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCHv0] arm: mvebu: enable rear eSATA ports of NETGEAR
+ ReadyNAS 2120
+Date: Sat, 1 Nov 2014 19:15:18 -0400
+Message-ID: <20141101231518.GL3698@titan.lakedaemon.net>
+References: <f3876c7a9ef11eb758b9df18c671ee740b8be614.1414250947.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CE7A9795-C2AF-451A-8018-3A0B8788BF60@perenite.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Masson <benoitm@perenite.com>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Benoit Masson <yahoo@perenite.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <f3876c7a9ef11eb758b9df18c671ee740b8be614.1414250947.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 15, 2014 at 02:53:02AM +0200, Benoit Masson wrote:
->=20
-> Le 6 oct. 2014 =E0 18:13, Sebastian Hesselbarth <sebastian.hesselbart=
-h@gmail.com> a =E9crit :
->=20
-> > On 10/06/2014 01:11 AM, Benoit Masson wrote:
-> >> Le 3 oct. 2014 =E0 17:41, Sebastian Hesselbarth <sebastian.hesselb=
-arth@gmail.com> a =E9crit :
-> >>> On 10/03/2014 05:29 PM, Benoit Masson wrote:
-> >>>> Le 3 oct. 2014 =E0 17:06, Sebastian Hesselbarth <sebastian.hesse=
-lbarth@gmail.com> a =E9crit :
-> >>>>> On 10/03/2014 04:11 PM, Jason Cooper wrote:
-> >>>>>> On Sun, Sep 21, 2014 at 04:11:23PM +0200, Benoit Masson wrote:
-> >>>>>>>> Le 19 sept. 2014 =E0 22:14, Sebastian Hesselbarth <sebastian=
-=2Ehesselbarth@gmail.com> a =E9crit :
-> >>> [...]
-> >>>>>>>> Patches are based on v3.17-rc1 and intended for v3.18 but I =
-am not in
-> >>>>>>>> a hurry. I only compile tested this, so a formal Tested-by f=
-rom Benoit
-> >>>>>>>> for the ix4 and any other Armada XP board would be great.
-> >>>>>>>=20
-> >>>>>>> I'm not sure what to test since I only receive some patch fro=
-m the
-> >>>>>>> series of 8. Should I get all 8 or only those you sent me. I'=
-ll be
-> >>>>>>> able to test during next week.
-> >>>>>>=20
-> >>>>>> Did you ever get a chance to test this series?
-> >>>>>=20
-> >>>>> Uhm, I never prepared a branch for Benoit to test. I have pushe=
-d the
-> >>>>> patches with Thomas Acked-by's and renamed eeprom node based on
-> >>>>> v3.17-rc1 to
-> >>>>>=20
-> >>>>> https://github.com/shesselba/linux-dove.git devel/mvebu-ix4
-> >>>>>=20
-> >>> [...]
-> >> Maybe I missed something ? is this branch you sent me a bare fork
-> >> from mainline 3.17 ? does it includes the armada XP step A0 patch =
-?
-> >=20
-> > Benoit,
-> >=20
-> Hi,
-> > I prepared more branches with the series
-> > - on top of v3.17 release:
-> > https://github.com/shesselba/linux-dove.git devel/mvebu-ix4_v3.17
-> >=20
-> > - on top of next-20141003 (i.e. what will become v3.18-rc1):
-> > https://github.com/shesselba/linux-dove.git devel/mvebu-ix4_next-20=
-141003
-> >=20
-> > It would be great, if you can test in this order:
-> > - vanilla v3.17
-> > - mvebu-ix4_v3.17
-> > - mvebu-ix4_next-20141003
-> >=20
-> All the 3 branch works WHEN APPLYING A0 patch (below), with both my
-> custom kernel config and the arch/arm/configs/mvebu_v7_defconfig
+On Sat, Oct 25, 2014 at 05:32:42PM +0200, Arnaud Ebalard wrote:
+> 
+> NETGEAR ReadyNAS 2120 supports its four main SATA disks via 2
+> Marvell 88SE9170 SATA controllers connected on the PCIe bus
+> of the the SoC. The two eSATA ports available at the rear of
+> the device are handled by the native SATA controller of the
+> Armada XP SoC powering the NAS. This patch enables the SoC
+> SATA controller in the .dts file to make those two rear ports
+> available.
+> 
+> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-Can I count this as a Tested-by?
-
-> The reason why it didn't worked last time was that apparently the A0
-> patch (copied) below was not merged into 3.17 :(
-
-Yep, sorry.  Life got the best of me.  The pull request is now sent.
-
-> This means that ix4-300d support is broken on 3.17 because of the A0
-> stepping patch not merged.
-
-Not a problem.  It's flagged for stable v3.12 and up.
+Applied to mvebu/dt with Andrew's Ack and a minor subject line tweak.
 
 thx,
 
 Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
