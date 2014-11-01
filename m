@@ -1,236 +1,139 @@
-Return-Path: <eddie.cai8848@gmail.com>
-MIME-Version: 1.0
-Reply-To: eddie.cai@rock-chips.com
-In-Reply-To: <54503C19.9060607@rock-chips.com>
-References: <1414135761-3406-1-git-send-email-jinkun.hong@rock-chips.com>
-	<1414135761-3406-2-git-send-email-jinkun.hong@rock-chips.com>
-	<20141024164431.GE19933@dtor-ws>
-	<20141027233904.GD7594@dtor-ws>
-	<54503C19.9060607@rock-chips.com>
-Date: Wed, 29 Oct 2014 18:26:26 +0800
-Message-ID: <CAO3aYco7R+hip-=SGdxwCfJsEoLtmXuCboZonPbqz9w902LJTA@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] power-domain: add power domain drivers for
- Rockchip platform
-From: =?UTF-8?B?RWRkaWUgQ2FpKOiUoeaeqyk=?= <eddie.cai8848@gmail.com>
-Content-Type: multipart/alternative; boundary=001a11394eac383bb105068d32fd
-To: Hong jinkun <jinkun.hong@rock-chips.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Russell King <linux@arm.linux.org.uk>, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Jack Dai <jack.dai@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-List-ID: <devicetree@vger.kernel.org>
+From: Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v17 0/5] Rockchip soc thermal driver
+Date: Sat,  1 Nov 2014 10:44:28 +0800
+Message-ID: <1414809873-32227-1-git-send-email-caesar.wang@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: zyf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cjf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, fzf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Id: devicetree@vger.kernel.org
 
---001a11394eac383bb105068d32fd
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+This series patchs tested on rk3288 SDK board and pinky-v1,v2 board.
+I believe the driver can be used on the rk3288-evb board.
 
-Hi Jinkun
+Add this driver, The system will shutdown when
+the thermal temperture over 100C.If for some reason we are unable to
+shut it down in orderly fashion (kernel is stuck holding a lock or similar)
+then hardware will reset it.
 
-Please refer to https://lkml.org/lkml/2014/10/22/95
+Changes in v17:
+	* address comments from Heiko Stubner and .
+	- rename the tshut property
+	- the critiacal temperature only indeed 100C when add the cooling map,
+	  it's for the more secure,fix the temperature from 120C to 100C.
 
-2014-10-29 9:00 GMT+08:00 Hong jinkun <jinkun.hong@rock-chips.com>:
+Changes in v16:
+	* address comments from Dmitry Torokhov.
+	- add thermal->chip->control(thermal->regs, false) in remove()
+	- adjust TSHUT in resume().
 
->
-> =E5=9C=A8 2014/10/28 7:39, Dmitry Torokhov =E5=86=99=E9=81=93:
->
->  On Fri, Oct 24, 2014 at 09:44:31AM -0700, Dmitry Torokhov wrote:
->>
->>> Hi Jinkun,
->>>
->>> On Fri, Oct 24, 2014 at 12:29:19AM -0700, jinkun.hong wrote:
->>>
->>>> +static int rockchip_pd_power(struct rockchip_domain *pd, bool power_o=
-n)
->>>> +{
->>>> +       int ret =3D 0;
->>>> +       struct rockchip_dev_entry *de;
->>>> +
->>>> +       mutex_lock(&pd->dev_lock);
->>>> +       /* no clk, set power domain will fail */
->>>> +       if (list_empty(&pd->dev_list)) {
->>>> +               pr_err("%s: no devices in %s power domain\n", __func__=
-,
->>>> +                       pd->base.name);
->>>> +               goto out;
->>>> +       }
->>>> +
->>>> +       list_for_each_entry(de, &pd->dev_list, node) {
->>>> +               pm_clk_resume(de->dev);
->>>> +       }
->>>> +
->>>> +       ret =3D rockchip_pmu_set_power_domain(pd, power_on);
->>>> +
->>>> +       list_for_each_entry(de, &pd->dev_list, node) {
->>>> +               pm_clk_suspend(de->dev);
->>>> +       }
->>>> +out:
->>>> +       mutex_unlock(&pd->dev_lock);
->>>> +       return ret;
->>>> +}
->>>>
->>> For my education, could you please tell me why we need to enable all
->>> clocks of all devices in a power domain when we are talking to the PMU
->>> and then turn them immediately off?
->>>
->> Sorry for late reply.RK3288 reset circuit are first asynchronous reset
-> and then sync revoked.
-> All reset revocation actions are needed to synchronize the clocks.
-> If there is no clock open, power_up reset will cause the corresponding
-> reset can not be undone, there will be risks.
->
->> Would not we want to enable clocks
->>> in start()) callbacks, like Ulf mentioned?
->>>
->> Can you tell me which one patch it. Thank you!
->
->> Jinkun, any update on this question?
->>
->> Thanks.
->>
->>
->
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
->
+Changes in v15:
+	* address comments from Dmitry Torokhov.
+	- enable TSHUT move into rk_tsadcv2_tshut_temp().
+	- drop the id argument in rk_tsadcv2_control().
+
+Changes in v14:
+	* address comments from Dmitry Torokhov.
+	- adjust-alarm-rate-depending-on-clock.
+	- 0001-rockchip-thermal-do-not-register-cpufreq-cooling-dev.
+
+Changes in v13:
+	- add cooling-maps for cpu-thermal.
+	- put tshut polarity in device tree.
+
+Changes in v12:
+	* address comments from Dmitry Torokhov and Vladimir Zapolskiy.
+	- split-sensor-handling.
+	- rename-rockchip_tsadc_platform_data.
+
+Changes in v11:
+	* address comments from Vladimir Zapolskiy.
+	- fix cpufreq_cooling_unregister() to put in correct position.
+	- fix "data->chn",at least can get valid Tsensor temp.
+
+Changes in v10:
+	* address comments from Doug Anderson.
+	- fix TSHUT polarity,ensure support TSHUT.
+	- add the decription for rk_tsadcv2_initialize().
+
+Changes in v9:
+	* address comments from Dmitry Torokhov.
+	- fix some style be defined
+	- remove some unused code.
+	- clk_disable_unprepare->clk_disable in suspend()
+
+Changes in v8:
+	* address comments from Dmitry Torokhov and Doug Anderson.
+	- add three Teperture Sensors.
+	- support CRU and GPIO reset chip.
+	- rename rk3xxx-cpu-thermal.dtsi as rk3288-thermal.dtsi
+	- alarm-temp via set_trips() callback
+	- remove "reset-gpios"
+
+Changes in v7:
+	- fix get data->clk=0 when in probe() function.
+	- fix some style code.
+	- modify dts,main add rk3xxx-cpu-thermal.dtsi
+
+Changes in v6:
+	* address comments from Tomeu Vizoso.
+	- use thermal's generic framework.
+
+Changes in v5:
+	* address comments from Eduardo Valentin,rui.zhang and Heiko Stubner:
+	- with BIT() macro
+	- manage clocks in suspend/resume.
+	- license is fixed as GPLv2.
+	- #include "thermal_core.h"->#include <linux/thermal.h>
+	- use the generic trip-points.the hw-shut-temp isn't generic trip-points.
+	- The method of binding and unbinding be fixed.
+	- The pin-name tsadc->otp_out
+
+Changes in v4:
+	* address comments from Jonathan Cameron,huangtao and zhaoyifeng:
+	- this series thermal driver still be put in driver/thermal/
+	- modify the thermal driver description.
+
+Changes in v3:(add dts configure)
+	* address comments from Dmitry Torokhov and Arnd Bergmann:
+	- fix clock-names in rockchip-thermal.txt
+	- remove rockchip_thermal_control() in rockchip_set_mode()
+	- fix some code style.
+	- add dts configure.
+
+Changes in v2:
+	* address comments from Heiko Stubner:
+	- fix dt-bindings in rockchip-thermal.txt
+	- remove Author mark
+	- rename TSADC_XXX->TSADCV2_XXX,it eill ready to merge compatible other SoCs.
+	- fix a identation
+	- remove clk_set_rate(),it's no necessary.
+	- fix the SIMPLE_DEV_PM_OPS() function  style.
+
+Caesar Wang (5):
+  thermal: rockchip: add driver for thermal
+  dt-bindings: document Rockchip thermal
+  ARM: dts: add RK3288 Thermal data
+  ARM: dts: add main Thermal info to rk3288
+  ARM: dts: enable Thermal on rk3288-evb board
+
+ .../bindings/thermal/rockchip-thermal.txt          |  45 ++
+ arch/arm/boot/dts/rk3288-evb.dtsi                  |   5 +
+ arch/arm/boot/dts/rk3288-thermal.dtsi              |  58 ++
+ arch/arm/boot/dts/rk3288.dtsi                      |  23 +
+ drivers/thermal/Kconfig                            |   9 +
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/rockchip_thermal.c                 | 628 +++++++++++++++++++++
+ 7 files changed, 769 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+ create mode 100644 arch/arm/boot/dts/rk3288-thermal.dtsi
+ create mode 100644 drivers/thermal/rockchip_thermal.c
+
+-- 
+1.9.1
 
 
-
---=20
-
-Eddie.Cai
-=E8=94=A1=E6=9E=AB
-Fuzhou Rockchip Electronics Co.Ltd
-=E7=A6=8F=E5=B7=9E=E7=91=9E=E8=8A=AF=E5=BE=AE=E7=94=B5=E5=AD=90=E6=9C=89=E9=
-=99=90=E5=85=AC=E5=8F=B8
-No. 18 Building, A District, No.89,software Boulevard Fuzhou,Fujian,PR
-China(350003)
-=E7=A6=8F=E5=BB=BA=E7=9C=81=E7=A6=8F=E5=B7=9E=E5=B8=82=E9=93=9C=E7=9B=98=E8=
-=B7=AF=E8=BD=AF=E4=BB=B6=E5=A4=A7=E9=81=93 89 =E5=8F=B7=E8=BD=AF=E4=BB=B6=
-=E5=9B=AD A =E5=8C=BA 18 =E5=8F=B7=E6=A5=BC (350003)
-cell phone:+86 13459443244
-phone of Fuzhou =EF=BC=9A 0591 =EF=BC=8D 83991906/07 -8108
-21th Floor, Malata Building, Ke ji zhong yi Avenue, Nanshan District,
-Shenzheng, Guangdong, PR China (518000)
-=E6=B7=B1=E5=9C=B3=E5=8A=9E=E5=85=AC=E5=AE=A4=E5=9C=B0=E5=9D=80=EF=BC=9A=E6=
-=B7=B1=E5=9C=B3=E5=B8=82=E5=8D=97=E5=B1=B1=E5=8C=BA=E7=A7=91=E6=8A=80=E4=B8=
-=AD=E4=B8=80=E8=B7=AF=E4=B8=87=E5=88=A9=E8=BE=BE=E5=A4=A7=E5=8E=A621=E5=B1=
-=82  (518000)
-phone of Shenzhen =EF=BC=9A 0755 =EF=BC=8D 86690899
-mail: cf@rock-chips.com
-
---001a11394eac383bb105068d32fd
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><span style=3D"font-family:arial,sans-serif;font-size:14px=
-">Hi Jinkun</span><div style=3D"font-family:arial,sans-serif;font-size:14px=
-"><br></div><div style=3D"font-family:arial,sans-serif;font-size:14px">Plea=
-se refer to=C2=A0<a href=3D"https://lkml.org/lkml/2014/10/22/95" target=3D"=
-_blank">https://lkml.org/lkml/2014/10/22/95</a></div></div><div class=3D"gm=
-ail_extra"><br><div class=3D"gmail_quote">2014-10-29 9:00 GMT+08:00 Hong ji=
-nkun <span dir=3D"ltr">&lt;<a href=3D"mailto:jinkun.hong@rock-chips.com" ta=
-rget=3D"_blank">jinkun.hong@rock-chips.com</a>&gt;</span>:<br><blockquote c=
-lass=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;=
-padding-left:1ex"><br>
-=E5=9C=A8 2014/10/28 7:39, Dmitry Torokhov =E5=86=99=E9=81=93:<div><div cla=
-ss=3D"h5"><br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-On Fri, Oct 24, 2014 at 09:44:31AM -0700, Dmitry Torokhov wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-Hi Jinkun,<br>
-<br>
-On Fri, Oct 24, 2014 at 12:29:19AM -0700, jinkun.hong wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-+static int rockchip_pd_power(struct rockchip_domain *pd, bool power_on)<br=
->
-+{<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0int ret =3D 0;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct rockchip_dev_entry *de;<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0mutex_lock(&amp;pd-&gt;dev_lock);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0/* no clk, set power domain will fail */<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0if (list_empty(&amp;pd-&gt;dev_list)) {<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pr_err(&quot;%s: no=
- devices in %s power domain\n&quot;, __func__,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0pd-&gt;<a href=3D"http://base.name" target=3D"_blank">base.name</=
-a>);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto out;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0list_for_each_entry(de, &amp;pd-&gt;dev_list, n=
-ode) {<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pm_clk_resume(de-&g=
-t;dev);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D rockchip_pmu_set_power_domain(<u></u>pd=
-, power_on);<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0list_for_each_entry(de, &amp;pd-&gt;dev_list, n=
-ode) {<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pm_clk_suspend(de-&=
-gt;dev);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
-+out:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0mutex_unlock(&amp;pd-&gt;dev_lock);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
-+}<br>
-</blockquote>
-For my education, could you please tell me why we need to enable all<br>
-clocks of all devices in a power domain when we are talking to the PMU<br>
-and then turn them immediately off?<br>
-</blockquote></blockquote></div></div>
-Sorry for late reply.RK3288 reset circuit are first asynchronous reset and =
-then sync revoked.<br>
-All reset revocation actions are needed to synchronize the clocks.<br>
-If there is no clock open, power_up reset will cause the corresponding rese=
-t can not be undone, there will be risks.<span class=3D""><br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><blockquote class=3D"gmail_quote" style=3D"m=
-argin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-Would not we want to enable clocks<br>
-in start()) callbacks, like Ulf mentioned?<br>
-</blockquote></blockquote></span>
-Can you tell me which one patch it. Thank you!<span class=3D"im HOEnZb"><br=
->
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-Jinkun, any update on this question?<br>
-<br>
-Thanks.<br>
-<br>
-</blockquote>
-<br>
-<br>
-<br></span><div class=3D"HOEnZb"><div class=3D"h5">
-______________________________<u></u>_________________<br>
-Linux-rockchip mailing list<br>
-<a href=3D"mailto:Linux-rockchip@lists.infradead.org" target=3D"_blank">Lin=
-ux-rockchip@lists.<u></u>infradead.org</a><br>
-<a href=3D"http://lists.infradead.org/mailman/listinfo/linux-rockchip" targ=
-et=3D"_blank">http://lists.infradead.org/<u></u>mailman/listinfo/linux-<u><=
-/u>rockchip</a><br>
-</div></div></blockquote></div><br><br clear=3D"all"><div><br></div>-- <br>=
-<div dir=3D"ltr"><div><br></div>Eddie.Cai=C2=A0<br>=E8=94=A1=E6=9E=AB=C2=A0=
-<br>Fuzhou Rockchip Electronics Co.Ltd=C2=A0<br>=E7=A6=8F=E5=B7=9E=E7=91=9E=
-=E8=8A=AF=E5=BE=AE=E7=94=B5=E5=AD=90=E6=9C=89=E9=99=90=E5=85=AC=E5=8F=B8=C2=
-=A0<br>No. 18 Building, A District, No.89,software Boulevard Fuzhou,Fujian,=
-PR China(350003)<br>=E7=A6=8F=E5=BB=BA=E7=9C=81=E7=A6=8F=E5=B7=9E=E5=B8=82=
-=E9=93=9C=E7=9B=98=E8=B7=AF=E8=BD=AF=E4=BB=B6=E5=A4=A7=E9=81=93 89 =E5=8F=
-=B7=E8=BD=AF=E4=BB=B6=E5=9B=AD A =E5=8C=BA 18 =E5=8F=B7=E6=A5=BC (350003)=
-=C2=A0<br>cell phone:+86 13459443244<div>phone of Fuzhou =EF=BC=9A 0591 =EF=
-=BC=8D 83991906/07 -8108=C2=A0<div>21th Floor, Malata Building, Ke ji zhong=
- yi Avenue, Nanshan District, Shenzheng, Guangdong, PR China (518000)<br>=
-=E6=B7=B1=E5=9C=B3=E5=8A=9E=E5=85=AC=E5=AE=A4=E5=9C=B0=E5=9D=80=EF=BC=9A=E6=
-=B7=B1=E5=9C=B3=E5=B8=82=E5=8D=97=E5=B1=B1=E5=8C=BA=E7=A7=91=E6=8A=80=E4=B8=
-=AD=E4=B8=80=E8=B7=AF=E4=B8=87=E5=88=A9=E8=BE=BE=E5=A4=A7=E5=8E=A621=E5=B1=
-=82=C2=A0=C2=A0(518000)<br>phone of Shenzhen =EF=BC=9A 0755 =EF=BC=8D 86690=
-899=C2=A0<br>mail:=C2=A0<a href=3D"mailto:cf@rock-chips.com" target=3D"_bla=
-nk">cf@rock-chips.com</a>=C2=A0</div></div></div>
-</div>
-
---001a11394eac383bb105068d32fd--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
