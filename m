@@ -1,43 +1,20 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/2] ARM: dts: rockchip: EMAC Rockchip for RK3066 SoCs and MarsBoard RK3066
-Date: Sun, 02 Nov 2014 13:31:05 +0100
-Message-ID: <1789689.o50HfIjl2u@diego>
-References: <1414923601-29504-1-git-send-email-romain.perier@gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v5 0/6] add basic rk3288 smp support
+Date: Sun, 02 Nov 2014 15:04:21 +0100
+Message-ID: <6493696.z55k4mHJn7@diego>
+References: <1413393785-26783-1-git-send-email-kever.yang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414923601-29504-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413393785-26783-1-git-send-email-kever.yang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kever Yang <kever.yang@rock-chips.com>
+Cc: dianders@chromium.org, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, linux-rockchip@lists.infradead.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Rohit Vaswani <rvaswani@codeaurora.org>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, Marc Carino <marc.ceeeee@gmail.com>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Sonntag, 2. November 2014, 10:19:59 schrieb Romain Perier:
-> This patches serie adds EMAC Rockchip support for RK3066 SoCs and defines an
-> initial devicetree source for MarsBoard RK3066.
-> 
-> changes since v2:
-> 	- Squashed patch 1,2 and 4 together (this is the the second patch)
-> 	- Add dual-licensing for rk3066a-marsboard.dts
-> 	- Renamed regulator "vaux33_reg" to "vcc_rmii" as it is written in the
-> 	  schematic
-> 
-> changes since v1:
-> 	- Replaced hoayuelectronics by hoayu as suggested by the vendor-prefix doc
-> in dt-bindings
-> 
-> Romain Perier (2):
->   ARM: dts: rockchip: Add EMAC Rockchip for RK3066 SoCs
->   ARM: dts: rockchip: Add devicetree source for MarsBoard RK3066
+Am Mittwoch, 15. Oktober 2014, 10:22:59 schrieb Kever Yang:
+> rk3288 is qual-core CPU Soc, we enable the smp in this patch.
 
-applied to my dts branch for 3.19, with two small changes:
-
-- remove FSF address in license header, per checkpatch warning
-[I guess the sunxi header I copied it from also contained the address]
-- rename vcc_sd0: fixed-regulator to vcc_sd0: sdmmc-regulator to prevent future 
-naming conflicts with more fixed regulators
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+applied this series with Kevin's test-tag split to dts and soc branches for 
+3.19.
