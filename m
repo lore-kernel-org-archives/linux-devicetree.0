@@ -1,7 +1,7 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V3 09/14] irqchip: bcm7120-l2: Fix missing nibble in gc->unused mask
-Date: Sat,  1 Nov 2014 18:03:56 -0700
-Message-ID: <1414890241-9938-10-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V3 06/14] irqchip: bcm7120-l2: Eliminate bad IRQ check
+Date: Sat,  1 Nov 2014 18:03:53 -0700
+Message-ID: <1414890241-9938-7-git-send-email-cernekee@gmail.com>
 References: <1414890241-9938-1-git-send-email-cernekee@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1414890241-9938-1-git-send-email-cernekee@gmail.com>
@@ -10,30 +10,60 @@ To: arnd@arndb.de, f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.ne
 Cc: linux-sh@vger.kernel.org, sergei.shtylyov@cogentembedded.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-This mask should have been 0xffff_ffff, not 0x0fff_ffff.
+This check may be prone to race conditions, e.g.
 
-The change should not have an effect on current users (STB) because bits
-31:27 are unused.
+1) Some external event (e.g. GPIO level) causes an IRQ to become pending
+2) Peripheral asserts the L2 IRQ
+3) CPU takes an interrupt
+4) The event from #1 goes away
+5) bcm7120_l2_intc_irq_handle() reads back a 0 status
+
+Unlike the hardware supported by brcmstb-l2, the bcm7120-l2 controller
+does not latch the IRQ status.  Bits can change if the inputs to the
+controller change.  Also, do_bad_IRQ() is an ARM-specific macro.
+
+So let's just nuke it.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/irqchip/irq-bcm7120-l2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/irq-bcm7120-l2.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
-index 22d3fa1..b70679f8 100644
+index b9f4fb8..7086fe0 100644
 --- a/drivers/irqchip/irq-bcm7120-l2.c
 +++ b/drivers/irqchip/irq-bcm7120-l2.c
-@@ -171,7 +171,7 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
- 	}
+@@ -27,8 +27,6 @@
  
- 	gc = irq_get_domain_generic_chip(data->domain, 0);
--	gc->unused = 0xfffffff & ~data->irq_map_mask;
-+	gc->unused = 0xffffffff & ~data->irq_map_mask;
- 	gc->reg_base = data->base;
- 	gc->private = data;
- 	ct = gc->chip_types;
+ #include "irqchip.h"
+ 
+-#include <asm/mach/irq.h>
+-
+ /* Register offset in the L2 interrupt controller */
+ #define IRQEN		0x00
+ #define IRQSTAT		0x04
+@@ -51,19 +49,12 @@ static void bcm7120_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
+ 	chained_irq_enter(chip, desc);
+ 
+ 	status = __raw_readl(b->base + IRQSTAT);
+-
+-	if (status == 0) {
+-		do_bad_IRQ(irq, desc);
+-		goto out;
+-	}
+-
+-	do {
++	while (status) {
+ 		irq = ffs(status) - 1;
+ 		status &= ~(1 << irq);
+ 		generic_handle_irq(irq_find_mapping(b->domain, irq));
+-	} while (status);
++	}
+ 
+-out:
+ 	chained_irq_exit(chip, desc);
+ }
+ 
 -- 
 2.1.1
