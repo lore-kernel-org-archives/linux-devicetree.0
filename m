@@ -1,134 +1,123 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH v4 0/5] simplefb: add clock handling code
-Date: Sun, 02 Nov 2014 15:39:34 +0100
-Message-ID: <54564226.5030409@redhat.com>
-References: <1413996311-4287-1-git-send-email-hdegoede@redhat.com> <544F737A.7000109@ti.com> <CAL_JsqJ2JRg7k21CEVe4-At7enD+y3TN_7wfqhY0OHZm-_j17w@mail.gmail.com> <544F7E5D.60104@redhat.com> <5450CAA5.5020205@ti.com> <CAL_JsqKWqq+H5ymUW3n8tkmLJHEUGaKDLX5+orJmGUQ3ECQwUQ@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBNUE3GRAKGQEXCJ3O4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAL_JsqKWqq+H5ymUW3n8tkmLJHEUGaKDLX5+orJmGUQ3ECQwUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v2 00/13] Xilinx Video IP Core support
+Date: Sun,  2 Nov 2014 16:53:25 +0200
+Message-ID: <1414940018-3016-1-git-send-email-laurent.pinchart@ideasonboard.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Michal Simek <michal.simek@xilinx.com>, Chris Kohn <christian.kohn@xilinx.com>, Hyun Kwon <hyun.kwon@xilinx.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello,
 
-On 10/31/2014 09:47 PM, Rob Herring wrote:
-> On Wed, Oct 29, 2014 at 7:08 PM, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
->> Hi Hans, Rob,
->>
->> On 28/10/14 13:30, Hans de Goede wrote:
->>> Hi,
->>>
->>> On 10/28/2014 12:11 PM, Rob Herring wrote:
->>
->>>> Yes, I object to the binding still as it has not changed from what was
->>>> previously posted.
->>>
->>> It would be helpful if you could explain why you object. Last time you
->>> said: " You are mixing in a hardware description that is simply inaccurate."
->>>
->>> I then explained that this is not hardware description, but runtime state
->>> information, as it tells the kernel which clocks were chosen to drive the
->>> display (out of typically a list of possible options, depending on which
->>> output is used, etc.). Just like which memory address the bootloader has
->>> chosen to scan out the video image from.
->>>
->>> Then you got quiet, so sorry, but this time your objection really is too
->>> late. You cannot simply go quiet halfway through a discussion and then pop
->>> up again when a new version is posted to say "I object" yet another time,
->>> you've had your chance to make your arguments last time, and chose to stay
->>> quiet after I explained in detail that this is not hardware description but
->>> state information, so now it is simply too late.
->>>
->>> These bindings have been discussed at Plumbers with various interested people
->>> present, and the conclusion was that this really is the best way to handle this,
->>> so this patch is:
->>>
->>>     Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>     Reviewed-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>     Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
->>>     Reviewed-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>>
->>> And David Herrman who is working on simpledrm, which will be merged soon, which
->>> will also use the simplefb bindings also agrees. So we have the simplefb maintainer,
->>> simpledrm maintainer, and the clk subsystem maintainer + 2 other maintainers all
->>> agreeing on a way forward, the time for bikeshedding now really really really is
->>> over.
->>>
->>> Tomi, can you please let us know how you plan to proceed with this ?
->>
->> I won't merge DT bindings via fbdev tree, if a DT maintainer says no.
->>
->> I took Rob's silence to the earlier series as a silent ack for your
->> explanation. Obviously that was not the case.
->>
->> Rob, please advice asap what should be done to the bindings to get your
->> ack. As Hans explained above, this discussion has been going on for a
->> long time, and afaik this series is the best way forward of all the
->> options discussed.
-> 
-> I still think for the most part this is a kernel problem. It is a
-> kernel policy to turn off unused clocks. The clock framework could
-> just as easily decide that any clocks enabled at boot and left
-> un-managed (i.e. w/o a driver) are kept on until they are managed.
+Here's the second version of the Xilinx FPGA Video IP Cores kernel drivers.
 
-This is not just about being unmanaged, clocks can be shared, and another
-driver can actively claim the clock and turn it off, we need to protect
-against this too.
+I won't detail in great lengths the Xilinx Video IP architecture here, as that
+would result in dozens of pages of documentation. The interested reader can
+refer to the Zynq ZC702 Base TRD (Targeted Reference Design) User Guide
+(http://www.xilinx.com/support/documentation/boards_and_kits/zc702_zvik/2014_2/ug925-zynq-zc702-base-trd.pdf).
 
-> I'm not saying this can't be in DT, only that DT is not the only solution
-> here.
+In a nutshell, the Xilinx Video IP Cores architecture specifies how
+video-related IP cores need to be designed to interoperate and how to assemble
+them in pipelines of various complexities. The concepts map neatly to the
+media controller architecture, which this patch set uses extensively.
 
-Basically the problem is that we must keep the clock enabled for the lifetime
-of the simplefb device. We've been over this in 2 very long threads already,
-and many alternatives have been evaluated and found wanting.
+The series starts with various new V4L2 core features, bug fixes or cleanups,
+with a small documentation enhancement (01/13), the addition of new media bus
+formats needed by the new drivers (02/13 to 04/13) and a new V4L2 OF link
+parsing function (05/13).
 
-The only 100% safe way to ensure clocks are not turned off is to tie there
-lifetime to that of the simplefb device, and the only reliable way to do
-that is through a clocks property.
+The next two patches (06/13 and 07/13) fix two race conditions in videobuf2.
+They could be applied seperately from this series as they're not specific to
+Xilinx drivers.
 
-It really is that simple, and I don't understand why people keep insisting
-there must be another way, while they fail to offer a (reliable, working)
-other way.
+The next three patches (08/13 to 10/13) fix bugs in the Xilinx Video DMA
+driver. They are required as a runtime dependency but will not break
+compilation. I will submit a separate pull request for them through the DMA
+engine tree.
 
-> This problem is not unique to simplefb. A serial console could
-> stop working if no serial driver is loaded before unused clocks are
-> disabled. CPU core clocks have a similar issue as well (often enabled
-> in platform code). I want to see this solved in a generic way for any
-> clock.
-> 
-> As regulators were also mentioned, they already have a
-> "regulator-boot-on" property defined. Perhaps this is suitable to be
-> mirrored for clocks. If it is not, then I'm wondering why we have it.
-> A key difference here is that the property is part of the provider and
-> can be dealt with in the clock driver rather than requiring a
-> temporary driver.
+The last three patches are the core of this series.
 
-"regulator-boot-on" tells the regulator framework to enable a regulator
-at boot, but it does not protect it from getting turned of by another
-driver later (it does not increase use_count).
+Patch 11/13 adds support for the Xilinx Video IP architecture core in the form
+of a base object to model video IP cores (xilinx-vip.c - Video IP), a
+framework that parses a DT representation of a video pipeline and connects the
+corresponding V4L2 subdevices together (xilinx-vipp.c - Video IP Pipeline) and
+a glue between the Video DMA engine driver and the V4L2 API (xilinx-dma.c).
 
-So this is the same none solution as not turning off unmanaged clocks,
-what if another driver who shares the clock, enables it during probe,
-then disables it while done probing (to put things in low power state
-until userspace uses the device).
+Patch 12/13 adds a driver for the Video Timing Controller (VTC) IP core. While
+not strictly a video processing IP core, the VTC is required by other video IP
+core drivers.
 
-This is not about not turning the clock off, this is about keeping
-the clock on for the lifetime of the simplefb device, which is a different
-problem, cause we must not remove a single calling point of clock_off,
-put we must block all attempts to turn the clock off, which is done
-by increasing its use-count, which is done by claiming + enabling it,
-which needs a phandle to the clock ...
+Finally, patch 13/13 adds a first video IP core driver for the Test Pattern
+Generator (TPG). Drivers for other IP cores will be added in the future.
 
+Cc: devicetree@vger.kernel.org
+
+Hyun Kwon (2):
+  v4l: Sort YUV formats of v4l2_mbus_pixelcode
+  v4l: Add VUY8 24 bits bus format
+
+Laurent Pinchart (8):
+  media: entity: Document the media_entity_ops structure
+  v4l: Add RBG and RGB 8:8:8 media bus formats on 24 and 32 bit busses
+  v4l: of: Add v4l2_of_parse_link() function
+  v4l: vb2: Fix race condition in vb2_fop_poll
+  v4l: vb2: Fix race condition in _vb2_fop_release
+  v4l: xilinx: Add Xilinx Video IP core
+  v4l: xilinx: Add Video Timing Controller driver
+  v4l: xilinx: Add Test Pattern Generator driver
+
+Srikanth Thokala (3):
+  dma: xilinx: vdma: Check if the segment list is empty in a descriptor
+  dma: xilinx: vdma: Allow only one chunk in a line
+  dma: xilinx: vdma: icg should be difference of stride and hsize
+
+ Documentation/DocBook/media/v4l/subdev-formats.xml | 719 +++++++++-------
+ .../devicetree/bindings/media/xilinx/video.txt     |  52 ++
+ .../devicetree/bindings/media/xilinx/xlnx,v-tc.txt |  33 +
+ .../bindings/media/xilinx/xlnx,v-tpg.txt           |  68 ++
+ .../bindings/media/xilinx/xlnx,video.txt           |  55 ++
+ MAINTAINERS                                        |  10 +
+ drivers/dma/xilinx/xilinx_vdma.c                   |  13 +-
+ drivers/media/platform/Kconfig                     |   1 +
+ drivers/media/platform/Makefile                    |   2 +
+ drivers/media/platform/xilinx/Kconfig              |  23 +
+ drivers/media/platform/xilinx/Makefile             |   5 +
+ drivers/media/platform/xilinx/xilinx-dma.c         | 770 +++++++++++++++++
+ drivers/media/platform/xilinx/xilinx-dma.h         | 109 +++
+ drivers/media/platform/xilinx/xilinx-tpg.c         | 921 +++++++++++++++++++++
+ drivers/media/platform/xilinx/xilinx-vip.c         | 269 ++++++
+ drivers/media/platform/xilinx/xilinx-vip.h         | 227 +++++
+ drivers/media/platform/xilinx/xilinx-vipp.c        | 669 +++++++++++++++
+ drivers/media/platform/xilinx/xilinx-vipp.h        |  49 ++
+ drivers/media/platform/xilinx/xilinx-vtc.c         | 386 +++++++++
+ drivers/media/platform/xilinx/xilinx-vtc.h         |  42 +
+ drivers/media/v4l2-core/v4l2-of.c                  |  61 ++
+ drivers/media/v4l2-core/videobuf2-core.c           |  35 +-
+ include/media/media-entity.h                       |   9 +
+ include/media/v4l2-of.h                            |  27 +
+ include/uapi/linux/Kbuild                          |   1 +
+ include/uapi/linux/v4l2-mediabus.h                 |  19 +-
+ include/uapi/linux/xilinx-v4l2-controls.h          |  73 ++
+ 27 files changed, 4302 insertions(+), 346 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/video.txt
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,v-tc.txt
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,v-tpg.txt
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt
+ create mode 100644 drivers/media/platform/xilinx/Kconfig
+ create mode 100644 drivers/media/platform/xilinx/Makefile
+ create mode 100644 drivers/media/platform/xilinx/xilinx-dma.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-dma.h
+ create mode 100644 drivers/media/platform/xilinx/xilinx-tpg.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vip.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vip.h
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.h
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vtc.c
+ create mode 100644 drivers/media/platform/xilinx/xilinx-vtc.h
+ create mode 100644 include/uapi/linux/xilinx-v4l2-controls.h
+
+-- 
 Regards,
 
-Hans
+Laurent Pinchart
