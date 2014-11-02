@@ -1,7 +1,7 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V3 04/14] genirq: Generic chip: Add big endian I/O accessors
-Date: Sat,  1 Nov 2014 18:03:51 -0700
-Message-ID: <1414890241-9938-5-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V3 09/14] irqchip: bcm7120-l2: Fix missing nibble in gc->unused mask
+Date: Sat,  1 Nov 2014 18:03:56 -0700
+Message-ID: <1414890241-9938-10-git-send-email-cernekee@gmail.com>
 References: <1414890241-9938-1-git-send-email-cernekee@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1414890241-9938-1-git-send-email-cernekee@gmail.com>
@@ -10,61 +10,30 @@ To: arnd@arndb.de, f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.ne
 Cc: linux-sh@vger.kernel.org, sergei.shtylyov@cogentembedded.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-Use io{read,write}32be if the caller specified IRQ_GC_BE_IO when creating
-the irqchip.
+This mask should have been 0xffff_ffff, not 0x0fff_ffff.
+
+The change should not have an effect on current users (STB) because bits
+31:27 are unused.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- include/linux/irq.h       |  1 +
- kernel/irq/generic-chip.c | 16 ++++++++++++++++
- 2 files changed, 17 insertions(+)
+ drivers/irqchip/irq-bcm7120-l2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index a514ef7..48b364e 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -742,6 +742,7 @@ enum irq_gc_flags {
- 	IRQ_GC_INIT_NESTED_LOCK		= 1 << 1,
- 	IRQ_GC_MASK_CACHE_PER_TYPE	= 1 << 2,
- 	IRQ_GC_NO_MASK			= 1 << 3,
-+	IRQ_GC_BE_IO			= 1 << 4,
- };
+diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
+index 22d3fa1..b70679f8 100644
+--- a/drivers/irqchip/irq-bcm7120-l2.c
++++ b/drivers/irqchip/irq-bcm7120-l2.c
+@@ -171,7 +171,7 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
+ 	}
  
- /*
-diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
-index db458c6..61024e8 100644
---- a/kernel/irq/generic-chip.c
-+++ b/kernel/irq/generic-chip.c
-@@ -191,6 +191,16 @@ int irq_gc_set_wake(struct irq_data *d, unsigned int on)
- 	return 0;
- }
- 
-+static u32 irq_readl_be(void __iomem *addr)
-+{
-+	return ioread32be(addr);
-+}
-+
-+static void irq_writel_be(u32 val, void __iomem *addr)
-+{
-+	iowrite32be(val, addr);
-+}
-+
- static void
- irq_init_generic_chip(struct irq_chip_generic *gc, const char *name,
- 		      int num_ct, unsigned int irq_base,
-@@ -300,7 +310,13 @@ int irq_alloc_domain_generic_chips(struct irq_domain *d, int irqs_per_chip,
- 		dgc->gc[i] = gc = tmp;
- 		irq_init_generic_chip(gc, name, num_ct, i * irqs_per_chip,
- 				      NULL, handler);
-+
- 		gc->domain = d;
-+		if (gcflags & IRQ_GC_BE_IO) {
-+			gc->reg_readl = &irq_readl_be;
-+			gc->reg_writel = &irq_writel_be;
-+		}
-+
- 		raw_spin_lock_irqsave(&gc_lock, flags);
- 		list_add_tail(&gc->list, &gc_list);
- 		raw_spin_unlock_irqrestore(&gc_lock, flags);
+ 	gc = irq_get_domain_generic_chip(data->domain, 0);
+-	gc->unused = 0xfffffff & ~data->irq_map_mask;
++	gc->unused = 0xffffffff & ~data->irq_map_mask;
+ 	gc->reg_base = data->base;
+ 	gc->private = data;
+ 	ct = gc->chip_types;
 -- 
 2.1.1
