@@ -1,26 +1,23 @@
-From: Igor Grinberg <grinberg@compulab.co.il>
-Subject: Re: [PATCH v2] ARM: dts: sbc-t3x: add DVI display data
-Date: Sun, 02 Nov 2014 14:06:29 +0200
-Message-ID: <54561E45.7000404@compulab.co.il>
-References: <1413364186-23752-1-git-send-email-lifshitz@compulab.co.il> <1414927198-7127-1-git-send-email-lifshitz@compulab.co.il>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH] ARM: dts: rockchip: add serial aliases for rk3066 and rk3188
+Date: Sun, 02 Nov 2014 13:27:44 +0100
+Message-ID: <1556322.3CdNOEchaI@diego>
+References: <1414684277-17248-1-git-send-email-julien.chauveau@neo-technologies.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1414927198-7127-1-git-send-email-lifshitz@compulab.co.il>
-Sender: linux-omap-owner@vger.kernel.org
-To: Dmitry Lifshitz <lifshitz@compulab.co.il>, =?ISO-8859-1?Q?Beno=EEt_?= =?ISO-8859-1?Q?Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414684277-17248-1-git-send-email-julien.chauveau@neo-technologies.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Rockchip SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/02/14 13:19, Dmitry Lifshitz wrote:
-> Add DSS related pinmux and display data nodes required to support
-> DVI video out on SBC-T3530, SBC-T3730 and SBC-T3517.
+Am Donnerstag, 30. Oktober 2014, 16:51:17 schrieb Julien CHAUVEAU:
+> Add aliases for UARTs on rk3066 and rk3188 in order to fix the numbering
+> scheme. This will keep the debug console on ttyS2 when UART 1 is disabled,
+> for example.
 > 
-> Signed-off-by: Dmitry Lifshitz <lifshitz@compulab.co.il>
+> Signed-off-by: Julien CHAUVEAU <julien.chauveau@neo-technologies.fr>
 
-Acked-by: Igor Grinberg <grinberg@compulab.co.il>
-
-
--- 
-Regards,
-Igor.
+applied to my dts branch for 3.19
