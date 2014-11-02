@@ -1,43 +1,100 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V3 07/14] irqchip: bcm7120-l2, brcmstb-l2: Remove ARM Kconfig dependency
-Date: Sat,  1 Nov 2014 18:03:54 -0700
-Message-ID: <1414890241-9938-8-git-send-email-cernekee@gmail.com>
-References: <1414890241-9938-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1414890241-9938-1-git-send-email-cernekee@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: arnd@arndb.de, f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org
-Cc: linux-sh@vger.kernel.org, sergei.shtylyov@cogentembedded.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2 3/3] ARM: dts: qcom: Add SDHC nodes for APQ8084 platform
+Date: Sun, 02 Nov 2014 08:08:34 +0000
+Message-ID: <5455E682.1040306@linaro.org>
+References: <1409672443-4289-1-git-send-email-gdjakov@mm-sol.com>	<1409672443-4289-4-git-send-email-gdjakov@mm-sol.com> <CAJAp7OhV82HyDQSRW4F2z6UD6WZzuopBoUZMeT2pYBdGq-Dqcg@mail.gmail.com> <543D4C87.9050703@mm-sol.com> <5454FFAC.2040500@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <5454FFAC.2040500@suse.de>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Georgi Djakov <gdjakov@mm-sol.com>
+Cc: Bjorn Andersson <bjorn@kryo.se>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-This can compile for MIPS (or anything else) now.
+Hi Andreas,
 
-Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/irqchip/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+On 01/11/14 15:43, Andreas F=C3=A4rber wrote:
+> Hi Georgi,
+>
+> Am 14.10.2014 um 18:17 schrieb Georgi Djakov:
+>> On 10/10/2014 08:14 PM, Bjorn Andersson wrote:
+>>> On Tue, Sep 2, 2014 at 8:40 AM, Georgi Djakov <gdjakov@mm-sol.com> =
+wrote:
+>>>> Enable support for the two SD host controllers on the APQ8084 plat=
+form
+>>>> by adding the required nodes to the DT files.
+>>>> On the IFC6540 board, the first controller is connected to the onb=
+oard
+>>>> eMMC and the second is connected to a micro-SD card slot.
+>>>>
+>>>> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+> [...]
+>>>> ---
+>>>>   arch/arm/boot/dts/qcom-apq8084-ifc6540.dts |   11 +++++++++++
+>>>>   arch/arm/boot/dts/qcom-apq8084.dtsi        |   23 ++++++++++++++=
++++++++++
+>>>>   2 files changed, 34 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts b/arch/arm=
+/boot/dts/qcom-apq8084-ifc6540.dts
+>>>> index e41cb8a..c9ff108 100644
+>>>> --- a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+>>>> +++ b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+>>> [..]
+>>>> +               sdhci@f98a4900 {
+>>>> +                       cd-gpios =3D <&tlmm 122 GPIO_ACTIVE_LOW>;
+>>>> +                       bus-width =3D <4>;
+>>>
+>>> ...why do you add this node and leave it disabled in the dts?
+>>>
+>>
+>> Hi Bjorn,
+>> Currently only the eMMC is functional on this board, so now we
+>> have just the board specific configuration under this node.
+>> More patches are forthcoming.
+>
+> Any update on this? This still seems to be the latest IFC6540 commit:
+>
+> https://git.linaro.org/landing-teams/working/qualcomm/kernel.git/comm=
+it/66c04e30f4a6e6ed998a6c154a6c45b3cd5b3fde
+>
+> Following the instructions in https://wiki.linaro.org/Boards/IFC6540
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index b21f12f..09c79d1 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -50,7 +50,6 @@ config ATMEL_AIC5_IRQ
- 
- config BRCMSTB_L2_IRQ
- 	bool
--	depends on ARM
- 	select GENERIC_IRQ_CHIP
- 	select IRQ_DOMAIN
- 
--- 
-2.1.1
+I did update the wiki with more instructions to flash rootfs on to eMMC=
+=2E
+
+> I've tried to pass a full rootfs as ramdisk parameter (fastboot boot =
+-c
+> "console=3DttyMSM0,115200,n8 rw rootwait" -b 0x0 zImage-ifc6540
+> initrd.cpio.gz), but I then get:
+There is a typo here, I fixed it as well.
+#sudo fastboot boot -c "console=3DttyMSM0,115200,n8 root=3D/dev/mmcblk0=
+p25=20
+rootwait rw" -b 0x80200000 zImage-dtb
+
+Could you give this a try?
+
+>
+> [258660] fastboot: download:12738800
+> [268150] fastboot: boot
+> [268150] kernel/ramdisk addresses overlap with aboot addresses.
+>
+> Booting without ramdisk specified works, but for lack of SD, USB and
+> network support I then have no root.
+>
+Now you can flash the rootfs into the eMMC partition.
+> So, do you have any new insights on why 'status =3D "okay";' doesn't =
+work
+> for the above sdhci node? Or do you have a working config you can sha=
+re
+> for creating a non-overlapping abootimg?
+
+thanks,
+sirni
+>
+> Regards,
+> Andreas
+>
