@@ -1,99 +1,78 @@
-From: Marek Belisko <marek@goldelico.com>
-Subject: [PATCH 3/4] arm: dts: omap3-gta04: Add handling for tv output
-Date: Mon,  3 Nov 2014 22:59:27 +0100
-Message-ID: <1415051968-4878-4-git-send-email-marek@goldelico.com>
-References: <1415051968-4878-1-git-send-email-marek@goldelico.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESUBMIT PATCH v6 1/8] mfd: Add support for Skyworks SKY81452
+ driver
+Date: Mon, 3 Nov 2014 22:30:22 +0000
+Message-ID: <20141103223022.GE13359@x1>
+References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1414739322-12487-2-git-send-email-jack.yoo@skyworksinc.com>
+ <20141103171451.GG12011@x1>
+ <1415050088.20372.72.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1415051968-4878-1-git-send-email-marek@goldelico.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, tomi.valkeinen@ti.com, plagnioj@jcrosoft.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, hns@goldelico.com, linux-kernel@vger.kernel.org, Marek Belisko <marek@goldelico.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1415050088.20372.72.camel@x220>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Cc: gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add handling for gta04 tv out chain:
-venc -> opa362 -> svideo
+On Mon, 03 Nov 2014, Paul Bolle wrote:
 
-Signed-off-by: Marek Belisko <marek@goldelico.com>
----
- arch/arm/boot/dts/omap3-gta04.dtsi | 48 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+> On Mon, 2014-11-03 at 17:14 +0000, Lee Jones wrote:
+> >On Fri, 31 Oct 2014, gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> > Code looks fine, but what are its dependencies.  I'm assuming nothi=
+ng;
+> > however, did Mark say that something depends on it?
+>=20
+> That would be REGULATOR_SKY81452. That is currently dangling (since
+> v3.18-rc1) as it depends on the non-existent symbol SKY81452.
+>=20
+> > If so, what and what are you going to do about it?
+>=20
+> See 7/8. That patch makes REGULATOR_SKY81452 depend on MFD_SKY81452,
+> making it buildable.
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index fd34f91..e4d05f0 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -83,6 +83,41 @@
- 		compatible = "usb-nop-xceiv";
- 		reset-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;
- 	};
-+
-+	tv0: connector@1 {
-+		compatible = "svideo-connector";
-+		label = "tv";
-+
-+		port {
-+			tv_connector_in: endpoint {
-+				remote-endpoint = <&opa_out>;
-+			};
-+		};
-+	};
-+
-+	tv_amp: opa362 {
-+		compatible = "ti,opa362";
-+		gpios = <&gpio1 23 0>;
-+
-+		label = "opa362";
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				reg = <0>;
-+				opa_in: endpoint@0 {
-+					remote-endpoint = <&venc_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				opa_out: endpoint@0 {
-+					remote-endpoint = <&tv_connector_in>;
-+				};
-+			};
-+		};
-+	};
- };
- 
- &omap3_pmx_core {
-@@ -396,6 +431,19 @@
- 	};
- };
- 
-+&venc {
-+	status = "okay";
-+
-+	vdda-supply = <&vdac>;
-+
-+	port {
-+		venc_out: endpoint {
-+			remote-endpoint = <&opa_in>;
-+			ti,channels = <2>;
-+		};
-+	};
-+};
-+
- &gpmc {
- 	ranges = <0 0 0x30000000 0x04>; /* CS0: NAND */
- 
--- 
-1.9.1
+Okay, so I can take this patch with no fall-out then.
+
+> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > index 1456ea7..a54244c 100644
+> > > --- a/drivers/mfd/Kconfig
+> > > +++ b/drivers/mfd/Kconfig
+> > > @@ -693,6 +693,18 @@ config MFD_SM501_GPIO
+> > >  	 lines on the SM501. The platform data is used to supply the
+> > >  	 base number for the first GPIO line to register.
+> > > =20
+> > > +config MFD_SKY81452
+> > > +	tristate "Skyworks Solutions SKY81452"
+> > > +	select MFD_CORE
+> > > +	select REGMAP_I2C
+> > > +	depends on I2C
+> > > +	help
+> > > +	  This is the core driver for the Skyworks SKY81452 backlight a=
+nd
+> > > +	  voltage regulator device.
+> > > +
+> > > +	  This driver can also be built as a module.  If so, the module
+> > > +	  will be called sky81452.
+> > > +
+> > >  config MFD_SMSC
+> > >         bool "SMSC ECE1099 series chips"
+> > >         depends on I2C=3Dy
+>=20
+>=20
+> Paul Bolle
+>=20
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
