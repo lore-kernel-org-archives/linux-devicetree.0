@@ -1,76 +1,97 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/2] clk: shmobile: document DIV6 clock parent bindings
-Date: Mon, 3 Nov 2014 10:35:25 +0100
-Message-ID: <CAMuHMdWMyTBEw+jRg9+Ku9RvtkB_Cnj9GuU93Mub4rCPhjBMCQ@mail.gmail.com>
-References: <1414767696-23211-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-	<1414767696-23211-3-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2 2/3] dt-bindings: Add Reset Controller for MediaTek
+ SoC
+Date: Mon, 03 Nov 2014 10:39:52 +0100
+Message-ID: <1415007592.3060.5.camel@pengutronix.de>
+References: <1415005371-4323-1-git-send-email-flora.fu@mediatek.com>
+	 <1415005371-4323-3-git-send-email-flora.fu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1414767696-23211-3-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: Simon Horman <horms@verge.net.au>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415005371-4323-3-git-send-email-flora.fu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Flora Fu <flora.fu@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulrich,
+Hi Flora,
 
-On Fri, Oct 31, 2014 at 4:01 PM, Ulrich Hecht
-<ulrich.hecht+renesas@gmail.com> wrote:
-> Adds properties renesas,src-shift and renesas,src-width, and describes
-> how to specify the available parent clocks.
-
-Thanks for your patch!
-
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Am Montag, den 03.11.2014, 17:02 +0800 schrieb Flora Fu:
+> Add device tree bindings.
+> 
+> Signed-off-by: Flora Fu <flora.fu@mediatek.com>
 > ---
->  .../bindings/clock/renesas,cpg-div6-clocks.txt     | 28 +++++++++++++++++-----
->  1 file changed, 22 insertions(+), 6 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-> index 952e373..348954b 100644
-> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-> @@ -7,22 +7,38 @@ to 64.
->  Required Properties:
->
->    - compatible: Must be one of the following
-> +    - "renesas,r8a73a4-div6-clock" for R8A73A4 (R-Mobile APE6) DIV6 clocks
-> +    - "renesas,r8a7740-div6-clock" for R8A7740 (R-Mobile A1) DIV6 clocks
->      - "renesas,r8a7790-div6-clock" for R8A7790 (R-Car H2) DIV6 clocks
->      - "renesas,r8a7791-div6-clock" for R8A7791 (R-Car M2) DIV6 clocks
-> +    - "renesas,sh73a0-div6-clock" for SH73A0 (SH-MobileAG5) DIV6 clocks
-
-Missing space between "SH-Mobile" and "AG5".
-
->      - "renesas,cpg-div6-clock" for generic DIV6 clocks
->    - reg: Base address and length of the memory resource used by the DIV6 clock
-> -  - clocks: Reference to the parent clock
-> +  - clocks: Reference to the parent clock(s); if there are multiple parent
-> +    clocks, one must be specified for each possible parent clock setting
-> +    in the clock register. Invalid settings must be specified as "<0>".
-> +    Trailing invalid settings may be omitted.
-
-Perhaps it's good to mention "if there are multiple parent clocks, up to
-1 << renesas,src-width parent clocks"?
-
->    - #clock-cells: Must be 0
->    - clock-output-names: The name of the clock as a free-form string
->
-> +Optional Properties:
+>  .../devicetree/bindings/reset/mediatek,reset.txt   | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/mediatek,reset.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/mediatek,reset.txt b/Documentation/devicetree/bindings/reset/mediatek,reset.txt
+> new file mode 100644
+> index 0000000..3c5687b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/mediatek,reset.txt
+> @@ -0,0 +1,45 @@
+> +MediaTek SoC Reset Controller
+> +======================================
+> +The reset controller driver accesses registers through the syscon regmap. It
+> +is a child node of syscon.
 > +
-> +  - renesas,src-shift: Bit position of the input clock selector (default:
-> +    fixed input clock; requires renesas,src-width)
-> +  - renesas,src-width: Bit width of the input clock selector (default: fixed
-> +    input clock; requires renesas,src-shift)
+> +Required properties:
+> +- compatible : "mediatek,reset"
+> +- #reset-cells: 1
+> +- reg: The register region can be accessed from syscon. The first parameter is
+> +  reset base address offset. The second parameter is byte width of reset registers.
+> +
+> +example:
+> +infracfg: syscon@10001000 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
 
-Gr{oetje,eeting}s,
+Since we use reg = <0x30 0x8> below, #size-cells should be set to <1>.
 
-                        Geert
+I have updated the syscon child support patch and fixed the binding
+documentation to allow this. Previously I had only thought about
+children that use a single register or just a bitfield in a single
+register.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+With that change, feel free to consider this patch
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> +	compatible = "mediatek,mt8135-infracfg", "syscon";
+> +	reg = <0 0x10001000 0 0x1000>;
+> +
+> +	infrarst: reset-controller@30 {
+> +		#reset-cells = <1>;
+> +		compatible = "mediatek,mt8135-infracfg-reset", "mediatek,reset";
+> +		reg = <0x30 0x8>;
+> +	};
+> +};
+> +
+> +Specifying reset lines connected to IP modules
+> +==============================================
+> +
+> +The reset controller(mtk-reset) manages various reset sources. Those device nodes should
+> +specify the reset line on the rstc in their resets property, containing a phandle to the
+> +rstc device node and a RESET_INDEX specifying which module to reset, as described in
+> +reset.txt.
+> +
+> +For MediaTek SoC, RESET_INDEX is reset bit defined in INFRACFG or PERICFG registers.
+> +
+> +example:
+> +pwrap: pwrap@1000f000 {
+> +	compatible = "mediatek,mt8135-pwrap";
+> +	reg = <0 0x1000f000 0 0x1000>,
+> +		<0 0x11017000 0 0x1000>;
+> +	reg-names = "pwrap-base",
+> +		"pwrap-bridge-base";
+> +	resets = <&infrarst 7>, <&perirst 34>;
+
+Maybe it would be useful to add a header with #defines for these reset
+bit indices?
+
+> +	reset-names = "infrarst", "perirst";
+> +};
+
+regards
+Philipp
