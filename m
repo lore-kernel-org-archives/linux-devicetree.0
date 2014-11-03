@@ -1,43 +1,50 @@
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH 0/4] Touchscreen performance related fixes
-Date: Mon, 03 Nov 2014 13:17:28 +0100
-Message-ID: <54577258.9080508@linutronix.de>
-References: <1414408111-2631-1-git-send-email-vigneshr@ti.com> <544E821D.5040004@linutronix.de> <912A29987EAE174BA6CF187D7CDFA9CE26F46B2B@DLEE08.ent.ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] regulator: Document binding for regulator suspend
+ voltage
+Date: Mon, 3 Nov 2014 12:29:57 +0000
+Message-ID: <20141103122957.GJ3815@sirena.org.uk>
+References: <1414813978-32233-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <912A29987EAE174BA6CF187D7CDFA9CE26F46B2B@DLEE08.ent.ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "Griffis, Brad" <bgriffis@ti.com>, "R, Vignesh" <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, "Balbi, Felipe" <balbi@ti.com>, Jan Kardell <jan.kardell@telliq.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lYetfuAxy9ic4HK3"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1414813978-32233-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, carlos-FEoyFZUZMvJAfugRpC6u6w@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, jkosina-AlSwsSmVLrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/27/2014 08:02 PM, Griffis, Brad wrote:
-> On 10/27/2014 12:34 PM, Sebastian Andrzej Siewior wrote:
->> Do we really need #3 (and then #4)? Given the complexity we have already, is there any benefit by decreasing this value? 
-> 
-> I specifically requested we add ti,charge-delay to the device tree because it is THE critical value to tune for a given design.  Although I think the current value of 0xB000 will be suitable for a great many designs, I expect that many users will need to adjust this value for their hardware.  Details such as which touchscreen vendor is being used and how the touchscreen is connected (header vs cable) have an effect on what's appropriate here.
 
-Oh. That is one knob I hoped we could avoid since I haven't seen it
-before on other TSCs. But okay. Please make sure that there is a
-message printed if the default value is used. And lets hope the user
-will do something about his.
+--lYetfuAxy9ic4HK3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->> Would  someone want to increase it? Can we safely determine a value which works for everyone?
-> 
-> This value represents a hardware delay before checking for the pen-up event.  So in the scenario where someone is seeing excessive false pen-up events they will want to increase this parameter.  The downsize of making this larger is that it decreases the overall sampling speed of both the touchscreen as well as the standalone ADC samples.  At one point I tried making it huge, but that made the touchscreen overly sluggish because the sampling became too slow.  So there is a definite trade-off that if you make it too large the touchscreen becomes sluggish, and if you make it too small then you may see false pen-up events.  The optimal value will need to be tuned for a given design.
+On Fri, Oct 31, 2014 at 08:52:57PM -0700, Doug Anderson wrote:
+> This patch builds upon (291d761 regulator: Document binding for
+> regulator suspend state for PM state) to allow setting the uV in
+> addition to the state at suspend time.
 
-I applied the patches from this series and did the following test on my
-am335x-evm: A mug on the touchscreen (to make sure the events are
-coming), evtest on the event node to see that the events and loop of
+Applied both, thanks.
 
-	cat /sys/bus/iio/devices/iio\:device0/in_voltage4_raw
+--lYetfuAxy9ic4HK3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-In the past I was able lock up the TSC/ADC HW that way (see commit
-7ca6740cd1 ("mfd: input: iio: ti_amm335x: Rework TSC/ADC
-synchronization")) for details.
-With this patches applied I don't seen any TSC events once the IIO
-interface is (heavily) used. Can this be fixed?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Sebastian
+iQEcBAEBAgAGBQJUV3VEAAoJECTWi3JdVIfQYAYH/0pBS5oz7SQWYh8FLZTdcMVY
+CWyToAQVxKC/a9KGYyFOR6cKYg7sxhN+H9tCXSdAarPfYDDuOl+XALgah7d55phT
+IUMFgUf1AzTEm3T+yeDlV73ojhoELC40Nc7TAk+/P/JVsJiq/sPtYUU9R/rapT+/
+ZGf/Acs8Kli9HyjG2xHCCI0EVUze78gajzt0XSAScCMURj8gkrFeG3glwAVpKgoN
+ks5b4jdwMvKYxHrDBuFbcv6eGt8etvyG7byBNkWllQMcWxCgT/s7Hn9Smf4RJgof
+qOHqB3qdQeK+VxyQZEXEAQpU8paGTwqqnUl3824IUxyeFWrXvndaaN16tl1JYfI=
+=cO7n
+-----END PGP SIGNATURE-----
+
+--lYetfuAxy9ic4HK3--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
