@@ -1,73 +1,40 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 6/8] regulator: max77686: Add external GPIO control
-Date: Mon, 3 Nov 2014 13:23:52 +0000
-Message-ID: <20141103132352.GN3815@sirena.org.uk>
-References: <1414486356.24949.19.camel@AMDC1943>
- <1414498308.24949.32.camel@AMDC1943>
- <1414579362.18868.11.camel@AMDC1943>
- <5450C63B.3000602@collabora.co.uk>
- <CAAVeFuLncbkNLGxEAj90yMmugRDNjtjeGoV_QYTMDZ7NVMJCmg@mail.gmail.com>
- <1414681386.26703.6.camel@AMDC1943>
- <CAAVeFuJo1wTyxOo4FEZM3=GTejuSHi+mnr=QV6HUeV5mAOCmqg@mail.gmail.com>
- <1414741898.20071.8.camel@AMDC1943>
- <20141031103217.GJ18557@sirena.org.uk>
- <1415016422.4241.28.camel@AMDC1943>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 06/17] gpio: mvebu: add suspend/resume support
+Date: Mon, 3 Nov 2014 14:26:59 +0100
+Message-ID: <CACRpkdaMrLBejKShTZoHW8BZb9AJguGJ96eEMp+eo3kmH=yDwA@mail.gmail.com>
+References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1414151970-6626-7-git-send-email-thomas.petazzoni@free-electrons.com>
+	<CACRpkda-8p=e_12vpUNt3_Y0EVPDArEKJUi63B8CGemNwVuQ0w@mail.gmail.com>
+	<54533FAF.7010505@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Ie5iOtK4e9kgqh2F"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415016422.4241.28.camel@AMDC1943>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <54533FAF.7010505@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Oct 31, 2014 at 8:52 AM, Gregory CLEMENT
+<gregory.clement@free-electrons.com> wrote:
+> Hi Linus,
+>>> +       switch (mvchip->soc_variant) {
+>>> +       case MVEBU_GPIO_SOC_VARIANT_ORION:
+>>> +               mvchip->edge_mask_regs[0] =
+>>> +                       readl(mvchip->membase + GPIO_EDGE_MASK_OFF);
+>>> +               mvchip->level_mask_regs[0] =
+>>> +                       readl(mvchip->membase + GPIO_LEVEL_MASK_OFF);
+>>> +               break;
+>>
+>> You are assigning index [0] twice, why? There must be some
+>> reason, and it should be stated in a comment. If the first read
+>> is necessary for hardware reasons, don't assign it but
+>> discard the result.
+>
+> Maybe I missed something but for me these 2 registers are different:
+> one is the _EDGE_ mask and the other the _LEVEL_ mask.
 
---Ie5iOtK4e9kgqh2F
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yeah haha I must have had a bad perception day :D
 
-On Mon, Nov 03, 2014 at 01:07:02PM +0100, Krzysztof Kozlowski wrote:
-> On pi=C4=85, 2014-10-31 at 10:32 +0000, Mark Brown wrote:
-
-> > We could always add a callback for the driver to handle any custom
-> > properties...  one of the advantages of an OS like Linux is that we can
-> > improve the core code.
-
-> I thought about this - adding a callback, called on each child in
-> regulator_of_get_init_data(). However the reason behind this callback is
-> to parse GPIO and set config.ena_gpio. However in that context the
-> regulator_config is const so the callback cannot change it. Unless it
-> casts it to non-const... which isn't what we want I think.
-
-> So now I wonder whether adding generic bindings for ena_gpio make sense.
-> These would look like bindings for fixed-regulator (with "ena-" prefix).
-> Unfortunately this would duplicate a little the ena_gpio in
-> regulator_config... but to me it seems more appropriate.
-
-> What do you think about adding generic bindings for ena_gpio?
-
-Well, if you only want this for enable GPIO control (sorry, I'm really
-not reading a lot of these long threads when it looks like there'll be a
-resubmit anyway) we can always add a way for drivers to specify the name
-of a property to look at easily enough.
-
---Ie5iOtK4e9kgqh2F
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUV4HnAAoJECTWi3JdVIfQeJ4H/iHv+IReYh2qELgYqwBgn4At
-1IBM1/+RC0Kwrr6ZC0Lgtk3ooAzMMnc+I0zaKECKKqq8C0S2N1Jy+K3p9eu7vCFQ
-OFzpcYnhsadjtnnAfrUZQ1l7atTmEUXvk8Wp7gZwoOcpD9ijNmDHYxZyqyOwDMBF
-3pRnwx5vkSWv9mvuMd05Gdc855NCOwTVYdYJELwSgpJO9AQd8czltzkdctoaAh3l
-eDyEG+kObWU5Zq9EAL9i4HhDKqi7Isjl3fQIMj1IBMuWRaGh51BtKGcExfn93OSa
-vMSq1GDVDeNKl6XKfo/NeDNSt4xICWpnm+P8fjUzqBM5DWmGLLmf85uQkmbZWxQ=
-=RRTU
------END PGP SIGNATURE-----
-
---Ie5iOtK4e9kgqh2F--
+Yours,
+Linus Walleij
