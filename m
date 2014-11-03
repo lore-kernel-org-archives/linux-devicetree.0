@@ -1,28 +1,45 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v4] iio: iadc: Qualcomm SPMI PMIC current ADC driver
-Date: Mon, 03 Nov 2014 10:41:36 +0200
-Message-ID: <1415004096.407.9.camel@mm-sol.com>
-References: <1413987213-22218-1-git-send-email-iivanov@mm-sol.com>
-		 <5453ED55.2000003@gmx.de> <1414859945.2207.1.camel@mm-sol.com>
-	 <545538A2.7080403@gmx.de>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 2/6] pinctrl: Introduce pinctrl driver for Qualcomm
+ SSBI PMIC's
+Date: Mon, 03 Nov 2014 08:48:55 +0000
+Message-ID: <54574177.5030906@linaro.org>
+References: <1407771634-14946-1-git-send-email-iivanov@mm-sol.com>	<1407771634-14946-3-git-send-email-iivanov@mm-sol.com>	<53F456F3.3000309@linaro.org>	<20140820212843.GB16274@sonymobile.com> <CAJAp7Ojt=PCCDhoR+nhEtQbPHzsp+=uTLx-XMM7-W78bfnQytA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <545538A2.7080403@gmx.de>
+In-Reply-To: <CAJAp7Ojt=PCCDhoR+nhEtQbPHzsp+=uTLx-XMM7-W78bfnQytA@mail.gmail.com>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Hartmut Knaack <knaack.h@gmx.de>
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Bjorn,
 
-On Sat, 2014-11-01 at 20:46 +0100, Hartmut Knaack wrote:
-> 
+On 20/08/14 23:13, Bjorn Andersson wrote:
+> On Wed, Aug 20, 2014 at 2:28 PM, Bjorn Andersson
+> <bjorn.andersson@sonymobile.com> wrote:
+>> On Wed 20 Aug 01:06 PDT 2014, Srinivas Kandagatla wrote:
+>>> 2> Looking back at v3.4 kernel, for gpio modes, BIT(0) of bank 0 is set
+>>> to enable gpio mode. without this bit driver does not work for output pins.
+>>>
+>>
+>> Thanks, I missed that.
+>>
+>> Unfortunately, setting that bit results in input not working - the interrupt
+>> bits are never set for gpios that have that bit set. I'm trying to figure out
+>> why this is the case before sending out the new version...
+>
+> With help from Andy Gross this is now corrected as well, turned out
+> that BIT(0) in bank0 controls if the "direction" is considered. As I
+> was tricked by the multiple levels of indirection in the codeaurora
+> version I got these wrong.
+>
+> Will send out an updated version shortly.
+Did you get a chance to spin a new version of this patcheset?
 
-
-> > No it is not a typo. Calculation is really in nano Ohms.
-> Right, but the typo is, that you wrote "nono" instead of "nano".
-
-Oops. :-) Thanks.
-
-Ivan
+--srini
+>
+> Regards,
+> Bjorn
+>
