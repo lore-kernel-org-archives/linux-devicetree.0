@@ -1,157 +1,102 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/8] ARM: mediatek: Add basic support for mt8127
-Date: Mon, 3 Nov 2014 18:53:14 +0100
-Message-ID: <CABuKBeLYMbD-dV_25FJd_NE1RgfVkgF+SoCiAx9O9jKUUAcexA@mail.gmail.com>
-References: <1413973797-17619-1-git-send-email-yingjoe.chen@mediatek.com>
-	<1413973797-17619-2-git-send-email-yingjoe.chen@mediatek.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 06/17] gpio: mvebu: add suspend/resume support
+Date: Mon, 03 Nov 2014 18:53:29 +0100
+Message-ID: <5457C119.90809@free-electrons.com>
+References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com> <1414151970-6626-7-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1413973797-17619-2-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hsien-Chun Yen <hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, huang eddie <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nathan Chung <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yuhau Chen <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1414151970-6626-7-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2014-10-22 12:29 GMT+02:00 Joe.C <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
-> From: "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->
-> This adds a basic dtsi for MT8127 SoC.
->
-> Signed-off-by: Joe.C <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On 24/10/2014 13:59, Thomas Petazzoni wrote:
+> This commit adds the implementation of ->suspend() and ->resume()
+> platform_driver hooks in order to save and restore the state of the
+> GPIO configuration. In order to achieve that, additional fields are
+> added to the mvebu_gpio_chip structure.
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Alexandre Courbot <gnurou@gmail.com>
+> Cc: linux-gpio@vger.kernel.org
 > ---
->  arch/arm/boot/dts/mt8127.dtsi     | 93 +++++++++++++++++++++++++++++++++++++++
->  arch/arm/mach-mediatek/mediatek.c |  1 +
->  2 files changed, 94 insertions(+)
->  create mode 100644 arch/arm/boot/dts/mt8127.dtsi
->
-> diff --git a/arch/arm/boot/dts/mt8127.dtsi b/arch/arm/boot/dts/mt8127.dtsi
-> new file mode 100644
-> index 0000000..25c9f69
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mt8127.dtsi
-> @@ -0,0 +1,93 @@
-> +/*
-> + * Copyright (c) 2014 MediaTek Inc.
-> + * Author: Joe.C <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
+>  drivers/gpio/gpio-mvebu.c | 99 +++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 99 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+> index 418e386..dd5545c 100644
+> --- a/drivers/gpio/gpio-mvebu.c
+> +++ b/drivers/gpio/gpio-mvebu.c
+> @@ -83,6 +83,14 @@ struct mvebu_gpio_chip {
+>  	int		   irqbase;
+>  	struct irq_domain *domain;
+>  	int                soc_variant;
 > +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include "skeleton64.dtsi"
+> +	/* Used to preserve GPIO registers accross suspend/resume */
+                                           across
 
-Cortex a7 is 32 bits, right? So why do you use skeleton64.dtsi?
-
-> +
-> +/ {
-> +       compatible = "mediatek,mt8127";
-> +       interrupt-parent = <&gic>;
-> +
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               cpu@0 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a7";
-> +                       reg = <0x0>;
-> +               };
-> +               cpu@1 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a7";
-> +                       reg = <0x1>;
-> +               };
-> +               cpu@2 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a7";
-> +                       reg = <0x2>;
-> +               };
-> +               cpu@3 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a7";
-> +                       reg = <0x3>;
-> +               };
-> +
-> +       };
-> +
-> +       clocks {
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               compatible = "simple-bus";
-> +               ranges;
-> +
-> +               system_clk: dummy13m {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <13000000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +
-> +               rtc_clk: dummy32k {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <32000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +       };
-> +
-> +       soc {
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               compatible = "simple-bus";
-> +               ranges;
-> +
-> +               timer: timer@10008000 {
-> +                       compatible = "mediatek,mt8127-timer", "mediatek,mt6577-timer";
-> +                       reg = <0 0x10008000 0 0x80>;
-
-This should be "reg = <0x10008000 0x80>;" right?
-Same in mt8135.dtsi
-
-> +                       interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&system_clk>, <&rtc_clk>;
-> +                       clock-names = "system-clk", "rtc-clk";
-> +               };
-> +
-> +               gic: interrupt-controller@10211000 {
-> +                       compatible = "arm,cortex-a7-gic";
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <3>;
-> +                       reg = <0 0x10211000 0 0x1000>,
-> +                             <0 0x10212000 0 0x1000>,
-> +                             <0 0x10214000 0 0x2000>,
-> +                             <0 0x10216000 0 0x2000>;
-> +               };
-> +       };
-> +};
-> diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
-> index f2acf07..7f478ce 100644
-> --- a/arch/arm/mach-mediatek/mediatek.c
-> +++ b/arch/arm/mach-mediatek/mediatek.c
-> @@ -19,6 +19,7 @@
->
->  static const char * const mediatek_board_dt_compat[] = {
->         "mediatek,mt6589",
-> +       "mediatek,mt8127",
->         NULL,
+> +	u32                out_reg;
+> +	u32                io_conf_reg;
+> +	u32                blink_en_reg;
+> +	u32                in_pol_reg;
+> +	u32                edge_mask_regs[4];
+> +	u32                level_mask_regs[4];
 >  };
->
-> --
-> 1.8.1.1.dirty
->
+>  
+>  /*
+> @@ -554,6 +562,93 @@ static const struct of_device_id mvebu_gpio_of_match[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, mvebu_gpio_of_match);
+>  
+> +static int mvebu_gpio_suspend(struct platform_device *pdev, pm_message_t state)
+> +{
+> +	struct mvebu_gpio_chip *mvchip = platform_get_drvdata(pdev);
+> +	int i;
+> +
+> +	mvchip->out_reg = readl(mvebu_gpioreg_out(mvchip));
+> +	mvchip->io_conf_reg = readl(mvebu_gpioreg_io_conf(mvchip));
+> +	mvchip->blink_en_reg = readl(mvebu_gpioreg_blink(mvchip));
+> +	mvchip->in_pol_reg = readl(mvebu_gpioreg_in_pol(mvchip));
+> +
+> +	switch (mvchip->soc_variant) {
+> +	case MVEBU_GPIO_SOC_VARIANT_ORION:
+> +		mvchip->edge_mask_regs[0] =
+> +			readl(mvchip->membase + GPIO_EDGE_MASK_OFF);
+> +		mvchip->level_mask_regs[0] =
+> +			readl(mvchip->membase + GPIO_LEVEL_MASK_OFF);
+> +		break;
+> +	case MVEBU_GPIO_SOC_VARIANT_MV78200:
+> +		for (i = 0; i < 2; i++) {
+> +			mvchip->edge_mask_regs[i] =
+> +				readl(mvchip->membase +
+> +				      GPIO_EDGE_MASK_MV78200_OFF(i));
+> +			mvchip->level_mask_regs[i] =
+> +				readl(mvchip->membase +
+> +				      GPIO_LEVEL_MASK_MV78200_OFF(i));
+> +		}
+> +		break;
+
+I don't know if the suspend is supported on this platform but as we were
+on the road to remove this platform I don't know it it worth testing it unless
+some interested users show up.
+
+I didn't tested it on a mv782xx platform but the patch looks correct:
+
+Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+
+
+Thanks,
+
+Gregory
 
 
 
 -- 
-motzblog.wordpress.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
