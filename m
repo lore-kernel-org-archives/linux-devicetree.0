@@ -1,116 +1,68 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/6] Add support for USB cluster(PHY muxer) on the
- Armada 375
-Date: Mon, 03 Nov 2014 17:48:14 +0100
-Message-ID: <5457B1CE.4060108@free-electrons.com>
-References: <1414164254-13053-1-git-send-email-gregory.clement@free-electrons.com> <20141101224647.GD3698@titan.lakedaemon.net>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 02/14] mfd/regulator: dt-bindings: max77686: Document
+ of_compatible for regulator
+Date: Mon, 3 Nov 2014 17:00:42 +0000
+Message-ID: <20141103170042.GC12011@x1>
+References: <1414668053-31370-1-git-send-email-k.kozlowski@samsung.com>
+ <1414668053-31370-3-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141101224647.GD3698-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1414668053-31370-3-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
+On Thu, 30 Oct 2014, Krzysztof Kozlowski wrote:
 
-On 01/11/2014 23:46, Jason Cooper wrote:
-> Gregory,
-> 
-> On Fri, Oct 24, 2014 at 05:24:08PM +0200, Gregory CLEMENT wrote:
->> Hello,
->>
->> this is the second version of a series I initially submitted in May:
->> https://lkml.org/lkml/2014/5/16/743
->>
->> This series adds support for the USB cluster which is on the Armada
->> 375 SoC. We can mainly see this device as a PHY muxer.
->>
->> I more or less forgotten this series until the talk of Kishon Vijay
->> Abraham I about the phy framework.
->>
->> Since this time, things have changed in the USB framework and I no
->> longer have to add the generic phy support in the xhci driver since it
->> was done at the usb core level.
->>
->> While I ran coccicheck on my code I also found some possible
->> improvement in the phy driver: it was done in the 1st patch.
->>
->> The second patch was a patch initially submitted by Andrew. This patch
->> added the mvebu-phy.txt but fell through a crack when adding the
->> driver. I join this patch on my series in order to be able to add the
->> new binding for the USB cluster of the Armada 375.
->>
->> This was done in the third patch.
->>
->> The forth patch was the addition of the phys driver itself.
->>
->> The fifth and sixth patches are updating the device tree files related
->> to the Armada 375 using the new biding.
->>
->> Thanks,
->>
->> Gregory
->>
->> Changelog:
->>
->> v1 -> v2:
->>
->> - Add a patch fixing the use of PTR_ERR_OR_ZERO.
->>
->> - Add the patch adding the DT binding documentation for Marvell MVEBU
->> SATA phy from Andrew Lunn
->>
->> - Move the DT binding documentation of the Armada 375 USB cluster into
->>   the phy-mvebu.txt file.
->>
->> - Made the armada375_usb_phy_xlate more robust" if there is a phy_put
->>   and then a phy_get".
->>
->> Andrew Lunn (1):
->>   Phy: DT binding documentation for Marvell MVEBU SATA phy.
->>
->> Gregory CLEMENT (5):
->>   phy: Use PTR_ERR_OR_ZERO to fix warning raised by coccinelle
->>   Phy: DT binding documentation for the Armada 375 USB cluster binding
->>   phy: add support for USB cluster on the Armada 375 SoC
->>   ARM: mvebu: add Device Tree description of USB cluster controller on
->>     Armada 375
->>   ARM: mvebu: add PHY support to the dts for the USB controllers on
->>     Armada 375
-> 
-> I assume Kishon is taking the phy portion of this series and we'll
-> handle the dts portion? 
+> Document new required property for regulator driver: of_compatible. T=
+he
+> property allows MFD core to bind the driver to node with regulators a=
+nd
+> this simplifies parsing regulators init data from DTS
+>=20
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/max77686.txt | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 
-Yes I expect that we merge the patch 5 and 6, and patch 1-4 should
-be pulled by Kishon.
+I want a thumbs-up from Mark on this before applying.
 
+> diff --git a/Documentation/devicetree/bindings/mfd/max77686.txt b/Doc=
+umentation/devicetree/bindings/mfd/max77686.txt
+> index 75fdfaf41831..f4010a9f66eb 100644
+> --- a/Documentation/devicetree/bindings/mfd/max77686.txt
+> +++ b/Documentation/devicetree/bindings/mfd/max77686.txt
+> @@ -18,8 +18,11 @@ Required properties:
+> =20
+>  Optional node:
+>  - voltage-regulators : The regulators of max77686 have to be instant=
+iated
+> -  under subnode named "voltage-regulators" using the following forma=
+t.
+> +  under subnode named "voltage-regulators".
+> +  Required property:
+> +  - compatible : Must be "maxim,max77686-pmic"
+> =20
+> +  Optional properties: For each regulator use following format:
+>  	regulator_name {
+>  		regulator-compatible =3D LDOn/BUCKn
+>  		standard regulator constraints....
+> @@ -49,6 +52,8 @@ Example:
+>  		reg =3D <0x09>;
+> =20
+>  		voltage-regulators {
+> +			compatible =3D "maxim,max77686-pmic";
+> +
+>  			ldo11_reg {
+>  				regulator-compatible =3D "LDO11";
+>  				regulator-name =3D "vdd_ldo11";
 
-> Before doing so, I'd like to see an Ack from
-> the DT maintainers and Kishon...
-
-I also would like have a feedback from them :)
-
-
-Thanks,
-
-Gregory
-
-> 
-> thx,
-> 
-> Jason.
-> 
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
