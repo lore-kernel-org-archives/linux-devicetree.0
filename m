@@ -1,13 +1,13 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 3/8] ARM: mediatek: Add basic support for mt8135
-Date: Mon, 3 Nov 2014 18:58:09 +0100
-Message-ID: <CABuKBeKx3hKiCRwM0jGwjpbF929BZC313DY6KQR8hUsi3jwLcA@mail.gmail.com>
+Subject: Re: [PATCH v4 4/8] ARM: mediatek: add dts for MT8135 evaluation board.
+Date: Mon, 3 Nov 2014 18:58:46 +0100
+Message-ID: <CABuKBeJR+iCw_gZeq_SbZB2CtESJ5FX3jOZ1OwzELRcBH+jn9A@mail.gmail.com>
 References: <1413973797-17619-1-git-send-email-yingjoe.chen@mediatek.com>
-	<1413973797-17619-4-git-send-email-yingjoe.chen@mediatek.com>
+	<1413973797-17619-5-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413973797-17619-4-git-send-email-yingjoe.chen@mediatek.com>
+In-Reply-To: <1413973797-17619-5-git-send-email-yingjoe.chen@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "Joe.C" <yingjoe.chen@mediatek.com>
 Cc: Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Yingjoe Chen <yingjoe.chen@gmail.com>, Hsien-Chun Yen <hc.yen@mediatek.com>, huang eddie <eddie.huang@mediatek.com>, Nathan Chung <nathan.chung@mediatek.com>, Yuhau Chen <yh.chen@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>
@@ -16,21 +16,20 @@ List-Id: devicetree@vger.kernel.org
 2014-10-22 12:29 GMT+02:00 Joe.C <yingjoe.chen@mediatek.com>:
 > From: "Joe.C" <yingjoe.chen@mediatek.com>
 >
-> This adds a basic dtsi for MT8135 based SoC.
+> Evbp1 is a tablet evaluation board based on MT8135 SoC.
 >
 > Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
 > ---
->  arch/arm/boot/dts/mt8135.dtsi     | 115 ++++++++++++++++++++++++++++++++++++++
->  arch/arm/mach-mediatek/mediatek.c |   1 +
->  2 files changed, 116 insertions(+)
->  create mode 100644 arch/arm/boot/dts/mt8135.dtsi
+>  arch/arm/boot/dts/mt8135-evbp1.dts | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/mt8135-evbp1.dts
 >
-> diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
+> diff --git a/arch/arm/boot/dts/mt8135-evbp1.dts b/arch/arm/boot/dts/mt8135-evbp1.dts
 > new file mode 100644
-> index 0000000..90a56ad
+> index 0000000..cba80b8
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/mt8135.dtsi
-> @@ -0,0 +1,115 @@
+> +++ b/arch/arm/boot/dts/mt8135-evbp1.dts
+> @@ -0,0 +1,24 @@
 > +/*
 > + * Copyright (c) 2014 MediaTek Inc.
 > + * Author: Joe.C <yingjoe.chen@mediatek.com>
@@ -45,122 +44,20 @@ List-Id: devicetree@vger.kernel.org
 > + * GNU General Public License for more details.
 > + */
 > +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include "skeleton64.dtsi"
-
-Same here A15 is 32 bits.
-
+> +/dts-v1/;
+> +#include "mt8135.dtsi"
 > +
 > +/ {
-> +       compatible = "mediatek,mt8135";
-> +       interrupt-parent = <&gic>;
+> +       model = "mediatek,mt8135-evbp1", "mediatek,mt8135";
+
+Same here, you switched model and compatible property. Please provide
+both of them.
+
 > +
-> +       cpu-map {
-> +               cluster0 {
-> +                       core0 {
-> +                               cpu = <&cpu0>;
-> +                       };
-> +                       core1 {
-> +                               cpu = <&cpu1>;
-> +                       };
-> +               };
-> +
-> +               cluster1 {
-> +                       core0 {
-> +                               cpu = <&cpu2>;
-> +                       };
-> +                       core1 {
-> +                               cpu = <&cpu3>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               cpu0: cpu@0 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a7";
-> +                       reg = <0x000>;
-> +               };
-> +
-> +               cpu1: cpu@1 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a7";
-> +                       reg = <0x001>;
-> +               };
-> +
-> +               cpu2: cpu@100 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a15";
-> +                       reg = <0x100>;
-> +               };
-> +
-> +               cpu3: cpu@101 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a15";
-> +                       reg = <0x101>;
-> +               };
-> +       };
-> +
-> +       clocks {
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               compatible = "simple-bus";
-> +               ranges;
-> +
-> +               system_clk: dummy13m {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <13000000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +
-> +               rtc_clk: dummy32k {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <32000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +       };
-> +
-> +       soc {
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               compatible = "simple-bus";
-> +               ranges;
-> +
-> +               timer: timer@10008000 {
-> +                       compatible = "mediatek,mt8135-timer", "mediatek,mt6577-timer";
-> +                       reg = <0 0x10008000 0 0x80>;
-> +                       interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&system_clk>, <&rtc_clk>;
-> +                       clock-names = "system-clk", "rtc-clk";
-> +               };
-> +
-> +               gic: interrupt-controller@10211000 {
-> +                       compatible = "arm,cortex-a15-gic";
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <3>;
-> +                       reg = <0 0x10211000 0 0x1000>,
-> +                             <0 0x10212000 0 0x1000>,
-> +                             <0 0x10214000 0 0x2000>,
-> +                             <0 0x10216000 0 0x2000>;
-> +               };
+> +       memory {
+> +               reg = <0 0x80000000 0 0x40000000>;
 > +       };
 > +};
-> diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
-> index 7f478ce..48051a2 100644
-> --- a/arch/arm/mach-mediatek/mediatek.c
-> +++ b/arch/arm/mach-mediatek/mediatek.c
-> @@ -20,6 +20,7 @@
->  static const char * const mediatek_board_dt_compat[] = {
->         "mediatek,mt6589",
->         "mediatek,mt8127",
-> +       "mediatek,mt8135",
->         NULL,
->  };
->
 > --
 > 1.8.1.1.dirty
 >
