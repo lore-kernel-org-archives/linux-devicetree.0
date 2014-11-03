@@ -1,82 +1,54 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [PATCH] ARM: kbuild: Fix forced rebuild after 'make dtbs'
-Date: Sun,  2 Nov 2014 20:52:29 +0000
-Message-ID: <1414961549-31666-1-git-send-email-jason@lakedaemon.net>
-References: <CACRpkdYmJWy1_vs0tWRA7SvkQnvbXXKqf7pHpH5b5tZ6vR+KJg@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdYmJWy1_vs0tWRA7SvkQnvbXXKqf7pHpH5b5tZ6vR+KJg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: Re: [PATCH 1/2] regulator: Document binding for regulator suspend
+ voltage
+Date: Mon, 03 Nov 2014 08:27:17 +0800
+Message-ID: <5456CBE5.9050209@rock-chips.com>
+References: <1414813978-32233-1-git-send-email-dianders@chromium.org> <54549DBA.5020102@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54549DBA.5020102@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Doug Anderson <dianders@chromium.org>, Mark Brown <broonie@kernel.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Andrew Bresticker <abrestic@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, carlos@cgarcia.org, rdunlap@infradead.org, jkosina@suse.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-After this patch:
 
-  f4d4ffc03efc kbuild: dtbs_install: new make target
+On 11/01/2014 04:45 PM, Javier Martinez Canillas wrote:
+> Hello Doug,
+>
+> On 11/01/2014 04:52 AM, Doug Anderson wrote:
+>> This patch builds upon (291d761 regulator: Document binding for
+>> regulator suspend state for PM state) to allow setting the uV in
+>> addition to the state at suspend time.
+>>
+>> Signed-off-by: Doug Anderson <dianders@chromium.org>
+>> ---
+>>   Documentation/devicetree/bindings/regulator/regulator.txt | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+>> index aaad615..4e7ed76 100644
+>> --- a/Documentation/devicetree/bindings/regulator/regulator.txt
+>> +++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+>> @@ -28,6 +28,8 @@ Optional properties:
+>>   - regulator-state-[mem/disk] node has following common properties:
+>>   	- regulator-on-in-suspend: regulator should be on in suspend state.
+>>   	- regulator-off-in-suspend: regulator should be off in suspend state.
+>> +	- regulator-suspend-microvolt: regulator should be set to this voltage
+>> +	  in suspend.
+> The patch looks good to me:
+>
+> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>
+> On thing I wonder is if the binding should say that the suspend voltage is
+> independent of the runtime one and it may be outside of the runtime range?
+>
+> Best regards,
+> Javier
+>
+>
+>
 
-was added the kernel tree, Linus Walleij noticed that 'make dtbs' forced
-a following 'make zImage' to rebuild the entire tree, even though
-nothing had changed.  His report:
-
-  After this patch a while back I have observed the following behaviour
-  of the kernel build:
-
-  make zImage
-  make zImage
-  -> incremental build, just relink
-
-  make zImage
-  make dtbs
-  make zImage
-  -> The whole kernel gets rebuilt
-
-  So now if I happen to recompile my device trees, I suddenly want
-  the entire zImage to be rebuilt to? It's by definition not changes
-  that affect the kernel build :-(
-
-  I noticed this because my build scripts calls make dtbs && make
-  zImage, and started to rebuild absolutely everything all the time.
-
-To fix this, we make only the dtbs_install target depend on the prepare
-target.  It's needed to make sure KERNELVERSION is calculated prior to
-installing.
-
-Fixes: f4d4ffc03efc: ("kbuild: dtbs_install: new make target")
-Reported-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Tested-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
----
-Note: I've no idea if this is a 100% correct solution or not.  I know it's
-definitely better than what we have currently.  If there is another way to
-guarantee KERNELVERSION is set other than depending on 'prepare', I'd love to
-hear it.
-
-thx,
-
-Jason.
-
- arch/arm/Makefile | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index 034a94904d69..ae1c278128f8 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -312,7 +312,9 @@ $(INSTALL_TARGETS):
- 	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $(boot)/dts/$@
- 
- PHONY += dtbs dtbs_install
--dtbs dtbs_install: prepare scripts
-+dtbs: scripts
-+	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $@
-+dtbs_install: prepare scripts
- 	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $@
- 
- # We use MRPROPER_FILES and CLEAN_FILES now
--- 
-2.1.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Chris Zhong <zyw@rock-chips.com>
