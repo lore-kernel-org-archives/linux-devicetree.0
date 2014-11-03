@@ -1,102 +1,94 @@
-From: Torsten Fleischer <torfl6749@gmail.com>
-Subject: [PATCH v2 1/1] spi: spi-gpio: Add dt support for a single device with no chip select
-Date: Mon,  3 Nov 2014 17:17:55 +0100
-Message-ID: <1415031475-2268-1-git-send-email-torfl6749@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org
-Cc: Torsten Fleischer <torfl6749@gmail.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v3 0/2] Add DRA7xx CPSW Ethernet support in Device Tree
+Date: Mon, 3 Nov 2014 10:27:22 -0600
+Message-ID: <20141103162722.GN27425@saruman>
+References: <1413885661-4850-1-git-send-email-mugunthanvnm@ti.com>
+ <54463063.80207@ti.com>
+ <20141021172223.GA12943@kahuna>
+Reply-To: <balbi@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VnOTrGv5LmZxna7m"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141021172223.GA12943@kahuna>
+Sender: linux-omap-owner@vger.kernel.org
+Cc: Mugunthan V N <mugunthanvnm@ti.com>, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Torsten Fleischer <torfl6749@gmail.com>
+--VnOTrGv5LmZxna7m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In order to describe a single slave device that has no chip select line
-the 'num-chipselects' property has to be <0> and the 'cs-gpios' property
-doesn't need to be set.
+On Tue, Oct 21, 2014 at 12:22:23PM -0500, Nishanth Menon wrote:
+> On 15:37-20141021, Mugunthan V N wrote:
+> > Nishanth
+> >=20
+> > On Tuesday 21 October 2014 03:30 PM, Mugunthan V N wrote:
+> > > Adding device tree entry for CPSW to make it work in Dual EMAC mode.
+> > > These patches were tested with DRA7 hwmod patches on top of linux-nex=
+t.
+> > > Patches are tested on top of Nishanth's PM tree for v3.17 [1] and pus=
+hed
+> > > my tree to [2].
+> > >=20
+> > > Did a boot test with CPSW and ping test with suspend/resume, the boot=
+ logs
+> > > on DRA7xx EVM are posted at [3]
+> > >=20
+> > > [1] git://github.com/nmenon/linux-2.6-playground.git testing/v3.17/cp=
+u-idle-suspend-dra7-omap5-framework
+> > > [2] git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git v3.17/dr=
+a7-evm-cpsw-v3
+> > > [3] http://pastebin.ubuntu.com/8613072/
+> > >=20
+> > > Changes from v2:
+> > > * Changed pinctrl comments to hold mode0-name.mode-selected-name
+> > > * Changes slave numbers in the pinctrl comments
+> > > * Added cpsw and cpts clocks
+> > >=20
+> >=20
+> > I have not added support for dra72x-evm as it has only slave no 2 pinned
+> > out and having issues with bringing up the interface, need some more
+> > time to submit the patch, in the mean time I have submitted dra7-evm
+> > support only so that people can use dra7-evm on linux-next.
+>=20
+> Quickly tested as well:
+> http://slexy.org/raw/s2vISJxYrR
+>=20
+> Please feel free to add:
+> Tested-by: Nishanth Menon <nm@ti.com>
+> Acked-by: Nishanth Menon <nm@ti.com>
 
-Signed-off-by: Torsten Fleischer <torfl6749@gmail.com>
----
- Documentation/devicetree/bindings/spi/spi-gpio.txt |  6 ++++--
- drivers/spi/spi-gpio.c                             | 21 +++++++++++++++------
- 2 files changed, 19 insertions(+), 8 deletions(-)
+I've used these patches with X15 (DRA7xx-based yet-to-be-released board)
+with v3.18-rc2.
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-gpio.txt b/Documentation/devicetree/bindings/spi/spi-gpio.txt
-index 8a824be..a95603b 100644
---- a/Documentation/devicetree/bindings/spi/spi-gpio.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-gpio.txt
-@@ -8,8 +8,10 @@ Required properties:
-  - gpio-sck: GPIO spec for the SCK line to use
-  - gpio-miso: GPIO spec for the MISO line to use
-  - gpio-mosi: GPIO spec for the MOSI line to use
-- - cs-gpios: GPIOs to use for chipselect lines
-- - num-chipselects: number of chipselect lines
-+ - cs-gpios: GPIOs to use for chipselect lines.
-+             Not needed if num-chipselects = <0>.
-+ - num-chipselects: Number of chipselect lines. Should be <0> if a single device
-+                    with no chip select is connected.
- 
- Example:
- 
-diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
-index 9f59553..f0492c9 100644
---- a/drivers/spi/spi-gpio.c
-+++ b/drivers/spi/spi-gpio.c
-@@ -413,6 +413,7 @@ static int spi_gpio_probe(struct platform_device *pdev)
- 	struct spi_gpio_platform_data	*pdata;
- 	u16 master_flags = 0;
- 	bool use_of = 0;
-+	int num_devices;
- 
- 	status = spi_gpio_probe_dt(pdev);
- 	if (status < 0)
-@@ -422,16 +423,21 @@ static int spi_gpio_probe(struct platform_device *pdev)
- 
- 	pdata = dev_get_platdata(&pdev->dev);
- #ifdef GENERIC_BITBANG
--	if (!pdata || !pdata->num_chipselect)
-+	if (!pdata || (!use_of && !pdata->num_chipselect))
- 		return -ENODEV;
- #endif
- 
-+	if (use_of && !SPI_N_CHIPSEL)
-+		num_devices = 1;
-+	else
-+		num_devices = SPI_N_CHIPSEL;
-+
- 	status = spi_gpio_request(pdata, dev_name(&pdev->dev), &master_flags);
- 	if (status < 0)
- 		return status;
- 
- 	master = spi_alloc_master(&pdev->dev, sizeof(*spi_gpio) +
--					(sizeof(int) * SPI_N_CHIPSEL));
-+					(sizeof(int) * num_devices));
- 	if (!master) {
- 		status = -ENOMEM;
- 		goto gpio_free;
-@@ -446,7 +452,7 @@ static int spi_gpio_probe(struct platform_device *pdev)
- 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(1, 32);
- 	master->flags = master_flags;
- 	master->bus_num = pdev->id;
--	master->num_chipselect = SPI_N_CHIPSEL;
-+	master->num_chipselect = num_devices;
- 	master->setup = spi_gpio_setup;
- 	master->cleanup = spi_gpio_cleanup;
- #ifdef CONFIG_OF
-@@ -461,9 +467,12 @@ static int spi_gpio_probe(struct platform_device *pdev)
- 		 * property of the node.
- 		 */
- 
--		for (i = 0; i < SPI_N_CHIPSEL; i++)
--			spi_gpio->cs_gpios[i] =
--				of_get_named_gpio(np, "cs-gpios", i);
-+		if (!SPI_N_CHIPSEL)
-+			spi_gpio->cs_gpios[0] = SPI_GPIO_NO_CHIPSELECT;
-+		else
-+			for (i = 0; i < SPI_N_CHIPSEL; i++)
-+				spi_gpio->cs_gpios[i] =
-+					of_get_named_gpio(np, "cs-gpios", i);
- 	}
- #endif
- 
--- 
-1.8.4.5
+Tested-by: Felipe Balbi <balbi@ti.com>
+
+--=20
+balbi
+
+--VnOTrGv5LmZxna7m
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUV6zqAAoJEIaOsuA1yqREFaUP/32dgxZtWZYEVyl+myp/M3Hb
+E1zqqKezV8X+YGNRCUUbZc+1JuurVm68A17ElOwz8y2/wqEIzwvGAd+cbV/elkcz
+NzksTPP+oFEiWV1YShX1xb08CSfjWMk2U82kC4/i5zTVWlN+1PM/PDYXXKCU2WMK
+lZf6oNfINoxXxK9+1gvWqq7mtUjYrh96Ch6eu7TxBa9zR2DeL8BsuizpavIwcO8D
+ckSJon60x7j8ENtjNZPss5cPykT9cEYheu3StM6vrQQiY39X1/z6QHhN79jzkYPy
+VYpZR4hk4DEojZ2OwnBkD332DMrE0f9XL9YIO+JHlzCjBzZiABnQcGZ+YK98byka
+q/m8ed9vi9oJWm4tQ7xRrqtmV9S+HNGms7BqC5GpZuOCN98THQMQ5L0EDnf4Nk/n
+vA1YsEIo6KhRt6RScD0Zn5XKbA9BxCiCrmCfexwsLDRsTHfjVDAp6Axt02fpeV58
+jsM4Q4heL8gj1vDTCiQ/DuPoTuOugx22Tqp5gn+v62rk49bYZHyLxQWOtGfjrCMC
+amHTwuZKAqkORu5Y9GQaNFozP54EqQTQ6zxRXYPOlX3OByOS6g3gK+hVEeGqP3bX
+HjGdDTtOXOz2l0Jc2u7tZnxgjqa/Ff0+t+1fDN5a0znsmytg/9HQXAKGEWqQQRnX
+xRArRJ8jQnXHqqrmXRk2
+=cT0+
+-----END PGP SIGNATURE-----
+
+--VnOTrGv5LmZxna7m--
