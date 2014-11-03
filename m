@@ -1,34 +1,102 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v4 03/14] regulator: of: Add regulator desc param to of_get_regulator_init_data()
-Date: Mon, 03 Nov 2014 17:11:43 +0100
-Message-ID: <5457A93F.70308@collabora.co.uk>
-References: <1415025649-8119-1-git-send-email-javier.martinez@collabora.co.uk> <1415025649-8119-4-git-send-email-javier.martinez@collabora.co.uk> <20141103153303.GQ3815@sirena.org.uk> <5457A3D2.1090602@collabora.co.uk> <20141103155909.GX3815@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20141103155909.GX3815@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Torsten Fleischer <torfl6749@gmail.com>
+Subject: [PATCH v2 1/1] spi: spi-gpio: Add dt support for a single device with no chip select
+Date: Mon,  3 Nov 2014 17:17:55 +0100
+Message-ID: <1415031475-2268-1-git-send-email-torfl6749@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org
+Cc: Torsten Fleischer <torfl6749@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/03/2014 04:59 PM, Mark Brown wrote:
-> No, it's only *currently* used for that.  If we don't bother passing the
-> descriptor in then future additions which make use of it (including
-> adding mode operations to existing drivers) won't work and it might not
-> be obvious why.
->
+From: Torsten Fleischer <torfl6749@gmail.com>
 
-fair enough.
+In order to describe a single slave device that has no chip select line
+the 'num-chipselects' property has to be <0> and the 'cs-gpios' property
+doesn't need to be set.
+
+Signed-off-by: Torsten Fleischer <torfl6749@gmail.com>
+---
+ Documentation/devicetree/bindings/spi/spi-gpio.txt |  6 ++++--
+ drivers/spi/spi-gpio.c                             | 21 +++++++++++++++------
+ 2 files changed, 19 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-gpio.txt b/Documentation/devicetree/bindings/spi/spi-gpio.txt
+index 8a824be..a95603b 100644
+--- a/Documentation/devicetree/bindings/spi/spi-gpio.txt
++++ b/Documentation/devicetree/bindings/spi/spi-gpio.txt
+@@ -8,8 +8,10 @@ Required properties:
+  - gpio-sck: GPIO spec for the SCK line to use
+  - gpio-miso: GPIO spec for the MISO line to use
+  - gpio-mosi: GPIO spec for the MOSI line to use
+- - cs-gpios: GPIOs to use for chipselect lines
+- - num-chipselects: number of chipselect lines
++ - cs-gpios: GPIOs to use for chipselect lines.
++             Not needed if num-chipselects = <0>.
++ - num-chipselects: Number of chipselect lines. Should be <0> if a single device
++                    with no chip select is connected.
  
-> You're already going through and modifying every single driver and all
-> of those I looked at already had references to the descriptor in
-> adjacent code or a global descriptor for the one regulator supported by
-> the driver.
-> 
-
-Ok, I'll make sure that all drivers passes the descriptor.
-
-Best regards,
-Javier
+ Example:
+ 
+diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
+index 9f59553..f0492c9 100644
+--- a/drivers/spi/spi-gpio.c
++++ b/drivers/spi/spi-gpio.c
+@@ -413,6 +413,7 @@ static int spi_gpio_probe(struct platform_device *pdev)
+ 	struct spi_gpio_platform_data	*pdata;
+ 	u16 master_flags = 0;
+ 	bool use_of = 0;
++	int num_devices;
+ 
+ 	status = spi_gpio_probe_dt(pdev);
+ 	if (status < 0)
+@@ -422,16 +423,21 @@ static int spi_gpio_probe(struct platform_device *pdev)
+ 
+ 	pdata = dev_get_platdata(&pdev->dev);
+ #ifdef GENERIC_BITBANG
+-	if (!pdata || !pdata->num_chipselect)
++	if (!pdata || (!use_of && !pdata->num_chipselect))
+ 		return -ENODEV;
+ #endif
+ 
++	if (use_of && !SPI_N_CHIPSEL)
++		num_devices = 1;
++	else
++		num_devices = SPI_N_CHIPSEL;
++
+ 	status = spi_gpio_request(pdata, dev_name(&pdev->dev), &master_flags);
+ 	if (status < 0)
+ 		return status;
+ 
+ 	master = spi_alloc_master(&pdev->dev, sizeof(*spi_gpio) +
+-					(sizeof(int) * SPI_N_CHIPSEL));
++					(sizeof(int) * num_devices));
+ 	if (!master) {
+ 		status = -ENOMEM;
+ 		goto gpio_free;
+@@ -446,7 +452,7 @@ static int spi_gpio_probe(struct platform_device *pdev)
+ 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(1, 32);
+ 	master->flags = master_flags;
+ 	master->bus_num = pdev->id;
+-	master->num_chipselect = SPI_N_CHIPSEL;
++	master->num_chipselect = num_devices;
+ 	master->setup = spi_gpio_setup;
+ 	master->cleanup = spi_gpio_cleanup;
+ #ifdef CONFIG_OF
+@@ -461,9 +467,12 @@ static int spi_gpio_probe(struct platform_device *pdev)
+ 		 * property of the node.
+ 		 */
+ 
+-		for (i = 0; i < SPI_N_CHIPSEL; i++)
+-			spi_gpio->cs_gpios[i] =
+-				of_get_named_gpio(np, "cs-gpios", i);
++		if (!SPI_N_CHIPSEL)
++			spi_gpio->cs_gpios[0] = SPI_GPIO_NO_CHIPSELECT;
++		else
++			for (i = 0; i < SPI_N_CHIPSEL; i++)
++				spi_gpio->cs_gpios[i] =
++					of_get_named_gpio(np, "cs-gpios", i);
+ 	}
+ #endif
+ 
+-- 
+1.8.4.5
