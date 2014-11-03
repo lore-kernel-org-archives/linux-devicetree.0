@@ -1,179 +1,83 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 08/14] mfd: max77686/802: Remove support for board
- files
-Date: Mon, 3 Nov 2014 17:01:28 +0000
-Message-ID: <20141103170128.GD12011@x1>
-References: <1414668053-31370-1-git-send-email-k.kozlowski@samsung.com>
- <1414668053-31370-9-git-send-email-k.kozlowski@samsung.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 01/17] Documentation: dt-bindings: minimal documentation
+ for MVEBU SDRAM controller
+Date: Mon, 03 Nov 2014 18:05:17 +0100
+Message-ID: <5457B5CD.1050706@free-electrons.com>
+References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com> <1414151970-6626-2-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1414668053-31370-9-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414151970-6626-2-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 30 Oct 2014, Krzysztof Kozlowski wrote:
+Hi Thomas,
 
-> The driver is used only on Exynos based boards with DTS support.
-> Convert the driver to DTS-only version. This simplifies a little the
-> code:
-> 1. No dead (unused) entries in platform_data structure.
-> 2. More code removed.
-> 3. Regulator driver does not depend on allocated memory
->    from MFD driver.
-> 4. It makes also easier extending the regulator driver.
->=20
-> Add to the max77686 MFD driver dependency on CONFIG_OF because withou=
-t
-> DTS the regulator drivers won't bind.
->=20
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.u=
-k>
+This binding looks coorect for me
+
+On 24/10/2014 13:59, Thomas Petazzoni wrote:
+> The suspend/resume code for Armada XP has to modify certain registers
+> of the SDRAM controller. Therefore, we need to define a Device Tree
+> binding for this hardware block.
+
+Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+
+Thanks,
+
+Gregory
+
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  drivers/mfd/Kconfig                  |  1 +
->  drivers/mfd/max77686.c               | 23 -----------------------
->  include/linux/mfd/max77686-private.h |  1 -
->  include/linux/mfd/max77686.h         | 28 --------------------------=
+>  .../memory-controllers/mvebu-sdram-controller.txt   | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt b/Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt
+> new file mode 100644
+> index 0000000..89657d1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt
+> @@ -0,0 +1,21 @@
+> +Device Tree bindings for MVEBU SDRAM controllers
+> +
+> +The Marvell EBU SoCs all have a SDRAM controller. The SDRAM controller
+> +differs from one SoC variant to another, but they also share a number
+> +of commonalities.
+> +
+> +For now, this Device Tree binding documentation only documents the
+> +Armada XP SDRAM controller.
+> +
+> +Required properties:
+> +
+> + - compatible: for Armada XP, "marvell,armada-xp-sdram-controller"
+> + - reg: a resource specifier for the register space, which should
+> +   include all SDRAM controller registers as per the datasheet.
+> +
+> +Example:
+> +
+> +sdramc@1400 {
+> +	compatible = "marvell,armada-xp-sdram-controller";
+> +	reg = <0x1400 0x500>;
+> +};
+> 
+
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
->  4 files changed, 1 insertion(+), 52 deletions(-)
-
-Applied, thanks.
-
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index cbdb10918af1..fd9d19ccf8c0 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -401,6 +401,7 @@ config MFD_MAX14577
->  config MFD_MAX77686
->  	bool "Maxim Semiconductor MAX77686/802 PMIC Support"
->  	depends on I2C=3Dy
-> +	depends on OF
->  	select MFD_CORE
->  	select REGMAP_I2C
->  	select REGMAP_IRQ
-> diff --git a/drivers/mfd/max77686.c b/drivers/mfd/max77686.c
-> index 9e1046bdef90..418b08b6c066 100644
-> --- a/drivers/mfd/max77686.c
-> +++ b/drivers/mfd/max77686.c
-> @@ -211,24 +211,10 @@ static const struct of_device_id max77686_pmic_=
-dt_match[] =3D {
->  	{ },
->  };
-> =20
-> -static struct max77686_platform_data *max77686_i2c_parse_dt_pdata(st=
-ruct device
-> -								  *dev)
-> -{
-> -	struct max77686_platform_data *pd;
-> -
-> -	pd =3D devm_kzalloc(dev, sizeof(*pd), GFP_KERNEL);
-> -	if (!pd)
-> -		return NULL;
-> -
-> -	dev->platform_data =3D pd;
-> -	return pd;
-> -}
-> -
->  static int max77686_i2c_probe(struct i2c_client *i2c,
->  			      const struct i2c_device_id *id)
->  {
->  	struct max77686_dev *max77686 =3D NULL;
-> -	struct max77686_platform_data *pdata =3D dev_get_platdata(&i2c->dev=
-);
->  	const struct of_device_id *match;
->  	unsigned int data;
->  	int ret =3D 0;
-> @@ -239,14 +225,6 @@ static int max77686_i2c_probe(struct i2c_client =
-*i2c,
->  	const struct mfd_cell *cells;
->  	int n_devs;
-> =20
-> -	if (IS_ENABLED(CONFIG_OF) && i2c->dev.of_node && !pdata)
-> -		pdata =3D max77686_i2c_parse_dt_pdata(&i2c->dev);
-> -
-> -	if (!pdata) {
-> -		dev_err(&i2c->dev, "No platform data found.\n");
-> -		return -EINVAL;
-> -	}
-> -
->  	max77686 =3D devm_kzalloc(&i2c->dev,
->  				sizeof(struct max77686_dev), GFP_KERNEL);
->  	if (!max77686)
-> @@ -265,7 +243,6 @@ static int max77686_i2c_probe(struct i2c_client *=
-i2c,
->  	max77686->dev =3D &i2c->dev;
->  	max77686->i2c =3D i2c;
-> =20
-> -	max77686->wakeup =3D pdata->wakeup;
->  	max77686->irq =3D i2c->irq;
-> =20
->  	if (max77686->type =3D=3D TYPE_MAX77686) {
-> diff --git a/include/linux/mfd/max77686-private.h b/include/linux/mfd=
-/max77686-private.h
-> index 960b92ad450d..f5043490d67c 100644
-> --- a/include/linux/mfd/max77686-private.h
-> +++ b/include/linux/mfd/max77686-private.h
-> @@ -447,7 +447,6 @@ struct max77686_dev {
->  	struct regmap_irq_chip_data *rtc_irq_data;
-> =20
->  	int irq;
-> -	bool wakeup;
->  	struct mutex irqlock;
->  	int irq_masks_cur[MAX77686_IRQ_GROUP_NR];
->  	int irq_masks_cache[MAX77686_IRQ_GROUP_NR];
-> diff --git a/include/linux/mfd/max77686.h b/include/linux/mfd/max7768=
-6.h
-> index 553f7d09258a..bb995ab9a575 100644
-> --- a/include/linux/mfd/max77686.h
-> +++ b/include/linux/mfd/max77686.h
-> @@ -119,12 +119,6 @@ enum max77802_regulators {
->  	MAX77802_REG_MAX,
->  };
-> =20
-> -struct max77686_regulator_data {
-> -	int id;
-> -	struct regulator_init_data *initdata;
-> -	struct device_node *of_node;
-> -};
-> -
->  enum max77686_opmode {
->  	MAX77686_OPMODE_NORMAL,
->  	MAX77686_OPMODE_LP,
-> @@ -136,26 +130,4 @@ struct max77686_opmode_data {
->  	int mode;
->  };
-> =20
-> -struct max77686_platform_data {
-> -	int ono;
-> -	int wakeup;
-> -
-> -	/* ---- PMIC ---- */
-> -	struct max77686_regulator_data *regulators;
-> -	int num_regulators;
-> -
-> -	struct max77686_opmode_data *opmode_data;
-> -
-> -	/*
-> -	 * GPIO-DVS feature is not enabled with the current version of
-> -	 * MAX77686 driver. Buck2/3/4_voltages[0] is used as the default
-> -	 * voltage at probe. DVS/SELB gpios are set as OUTPUT-LOW.
-> -	 */
-> -	int buck234_gpio_dvs[3]; /* GPIO of [0]DVS1, [1]DVS2, [2]DVS3 */
-> -	int buck234_gpio_selb[3]; /* [0]SELB2, [1]SELB3, [2]SELB4 */
-> -	unsigned int buck2_voltage[8]; /* buckx_voltage in uV */
-> -	unsigned int buck3_voltage[8];
-> -	unsigned int buck4_voltage[8];
-> -};
-> -
->  #endif /* __LINUX_MFD_MAX77686_H */
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
