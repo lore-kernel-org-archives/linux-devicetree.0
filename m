@@ -1,69 +1,88 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v3] mmc: dw_mmc: add support for the other bit of sdio interrupt
-Date: Mon, 03 Nov 2014 11:23:52 +0100
-Message-ID: <3540679.aQ4QUeBEJd@diego>
-References: <1414666240-16782-1-git-send-email-addy.ke@rock-chips.com> <1414977633-3196-1-git-send-email-addy.ke@rock-chips.com> <5457440E.3070002@samsung.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: at91/dt: sam9263: Add CAN device nodes
+Date: Mon, 3 Nov 2014 11:21:55 +0100
+Message-ID: <54575743.3080407@atmel.com>
+References: <1412599207-15676-1-git-send-email-alexander.stein@systec-electronic.com> <20141006140914.GA15599@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5457440E.3070002@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: Addy Ke <addy.ke@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, huangtao@rock-chips.com, devicetree@vger.kernel.org, hl@rock-chips.com, linux-doc@vger.kernel.org, yzq@rock-chips.com, zyw@rock-chips.com, zhangqing@rock-chips.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, kever.yang@rock-chips.com, lintao@rock-chips.com, linux-rockchip@lists.infradead.org, xjq@rock-chips.com, zhenfu.fang@rock-chips.com, chenfen@rock-chips.com, cf@rock-chips.com, hj@rock-chips.com, linux-arm-kernel@lists.infradead.org, zyf@rock-chips.com
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141006140914.GA15599-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jaehoon,
+On 06/10/2014 16:09, Alexandre Belloni :
+> On 06/10/2014 at 14:40:07 +0200, Alexander Stein wrote :
+>> Add the missing CAN devices node including their pin muxing. The required
+>> clock node already exists.
+>>
+>> Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+> Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Am Montag, 3. November 2014, 17:59:58 schrieb Jaehoon Chung:
-> Hi, Addy.
+
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+and stacked on top of at91-3.19-dt branch.
+
+Thanks!
+
 > 
-> On 11/03/2014 10:20 AM, Addy Ke wrote:
-> > The bit of sdio interrupt is 16 in designware implementation,
-> > but it is 24 on Rockchip SoCs.This patch add sdio_id0 for the
-> > number of slot0 in the SDIO interrupt registers.
-> > 
-> > Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
-> > ---
-> > Changes in v2:
-> > - rebase on http://git.linaro.org/git/people/ulf.hansson/mmc.git, next
-> > branch Changes in v3:
-> > - Remove dts for sdio_id0, just replace this with 8, suggested by Doug
-> > - Change to support all Rockchip Socs, suggested by Heiko
-> > 
-> >  drivers/mmc/host/dw_mmc-rockchip.c | 10 ++++++++++
-> >  drivers/mmc/host/dw_mmc.c          | 12 +++++++-----
-> >  drivers/mmc/host/dw_mmc.h          |  2 ++
-> >  include/linux/mmc/dw_mmc.h         |  3 +++
-> >  4 files changed, 22 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/mmc/host/dw_mmc-rockchip.c
-> > b/drivers/mmc/host/dw_mmc-rockchip.c index bbb4ec3..b997c8f 100644
-> > --- a/drivers/mmc/host/dw_mmc-rockchip.c
-> > +++ b/drivers/mmc/host/dw_mmc-rockchip.c
-> > @@ -68,14 +68,24 @@ static void dw_mci_rk3288_set_ios(struct dw_mci *host,
-> > struct mmc_ios *ios)> 
-> >  	}
-> >  
-> >  }
-> > 
-> > +static int dw_mci_rockchip_parse_dt(struct dw_mci *host)
-> > +{
-> > +	/* It is slot 8 on Rockchip SoCs */
-> > +	host->sdio_id0 = 8;
-> > +
-> > +	return 0;
-> > +}
+>> ---
+>>  arch/arm/boot/dts/at91sam9263.dtsi | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+>> index bb23c2d..174ab77 100644
+>> --- a/arch/arm/boot/dts/at91sam9263.dtsi
+>> +++ b/arch/arm/boot/dts/at91sam9263.dtsi
+>> @@ -672,6 +672,14 @@
+>>  					};
+>>  				};
+>>  
+>> +				can {
+>> +					pinctrl_can_rx_tx: can_rx_tx {
+>> +						atmel,pins =
+>> +							<AT91_PIOA 14 AT91_PERIPH_A AT91_PINCTRL_NONE	/* CANRX, conflicts with IRQ0 */
+>> +							 AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* CANTX, conflicts with PCK0 */
+>> +					};
+>> +				};
+>> +
+>>  				pioA: gpio@fffff200 {
+>>  					compatible = "atmel,at91rm9200-gpio";
+>>  					reg = <0xfffff200 0x200>;
+>> @@ -898,6 +906,17 @@
+>>  				clock-names = "pwm_clk";
+>>  				status = "disabled";
+>>  			};
+>> +
+>> +			can: can@fffac000 {
+>> +				compatible = "atmel,at91sam9263-can";
+>> +				reg = <0xfffac000 0x300>;
+>> +				interrupts = <12 IRQ_TYPE_LEVEL_HIGH 3>;
+>> +				pinctrl-names = "default";
+>> +				pinctrl-0 = <&pinctrl_can_rx_tx>;
+>> +				clocks = <&can_clk>;
+>> +				clock-names = "can_clk";
+>> +				status = "disabled";
+>> +			};
+>>  		};
+>>  
+>>  		fb0: fb@0x00700000 {
+>> -- 
+>> 2.0.4
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
-> Well, function is "__parse_dt__", but this function don't parse anything.
-> If All rockchip soc is supported, i think that it can be located to other
-> place.
-
-do you have a suggestion for a location?
-
-The only alternative I can see right now would be using the init-hook in 
-dw_mci_drv_data or adding a new field to it holding the slot-offset.
-[with using the init-hook being my personal preference of the two]
 
 
-Heiko
+-- 
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
