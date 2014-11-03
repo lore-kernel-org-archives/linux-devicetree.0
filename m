@@ -1,78 +1,81 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESUBMIT PATCH v6 1/8] mfd: Add support for Skyworks SKY81452
- driver
-Date: Mon, 3 Nov 2014 22:30:22 +0000
-Message-ID: <20141103223022.GE13359@x1>
-References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
- <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
- <1414739322-12487-2-git-send-email-jack.yoo@skyworksinc.com>
- <20141103171451.GG12011@x1>
- <1415050088.20372.72.camel@x220>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH] ACPI / GPIO: Driver GPIO mappings for ACPI GPIOs
+Date: Mon, 03 Nov 2014 23:56:53 +0100
+Message-ID: <1433051.htaUTMPMBY@vostro.rjw.lan>
+References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com> <2758495.RYBbleVHkC@vostro.rjw.lan> <CACRpkdanUC4QYbMXgMOkiGS+6oVyD1Opg_sFo95TEsyHJTM6_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1415050088.20372.72.camel@x220>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Cc: gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdanUC4QYbMXgMOkiGS+6oVyD1Opg_sFo95TEsyHJTM6_w@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 03 Nov 2014, Paul Bolle wrote:
+On Monday, November 03, 2014 02:22:10 PM Linus Walleij wrote:
+> On Sat, Oct 25, 2014 at 12:05 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> 
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Provide a way for device drivers using GPIOs described by ACPI
+> > GpioIo resources in _CRS to tell the GPIO subsystem what names
+> > (connection IDs) to associate with specific GPIO pins defined
+> > in there.
+> >
+> > To do that, a driver needs to define a mapping table as a
+> > NULL-terminated array of struct acpi_gpio_mapping objects
+> > that each contain a name, a pointer to an array of pin data
+> > (struct acpi_gpio_params) objects and the size of that array.
+> >
+> > Each struct acpi_gpio_params object consists of three fields,
+> > crs_entry_index, pin_index, active_low, representing the index of
+> 
+> I prefer that you call the second thing "line_index" rather than
+> "pin_index". Not all GPIOs in the world are tied to physical pins.
+> Also it is easy to confuse stuff with the pin control terminology
+> if it's called "pin".
+> 
+> > the target GpioIo()/GpioInt() resource in _CRS starting from zero,
+> > the index of the target pin in that resource starting from zero,
+> > and the active-low flag for that pin, respectively.
+> >
+> > Next, the mapping table needs to be passed as the second argument to
+> > acpi_dev_add_driver_gpios() that will register it with the ACPI device
+> > object pointed to by its first argument.  That object must represent
+> > the ACPI namespace node containing the _CRS object referred to by the
+> > GPIO mapping.  That should be done in the driver's .probe() routine.
+> >
+> > On removal, the driver should unregister its GPIO mapping table
+> > by calling acpi_dev_remove_driver_gpios() on the ACPI device
+> > object where that table was previously registered.
+> >
+> > Included are fixes from Mika Westerberg.
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> And "pin" is mentioned several times in the commit message.
+> I prefer that we talk about "lines".
+> 
+> (...)
+> 
+> > +struct acpi_gpio_params {
+> > +       unsigned int crs_entry_index;
+> > +       unsigned int pin_index;
+> 
+> So line_index;
+> 
+> > +       bool active_low;
+> > +};
+> 
+> With that change:
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> On Mon, 2014-11-03 at 17:14 +0000, Lee Jones wrote:
-> >On Fri, 31 Oct 2014, gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> > Code looks fine, but what are its dependencies.  I'm assuming nothi=
-ng;
-> > however, did Mark say that something depends on it?
->=20
-> That would be REGULATOR_SKY81452. That is currently dangling (since
-> v3.18-rc1) as it depends on the non-existent symbol SKY81452.
->=20
-> > If so, what and what are you going to do about it?
->=20
-> See 7/8. That patch makes REGULATOR_SKY81452 depend on MFD_SKY81452,
-> making it buildable.
+OK, made the changes and added your Reviewed-by.
 
-Okay, so I can take this patch with no fall-out then.
+One semi-related question though.  Alexandre ACKed the patch before, so
+what did that mean from the GPIO subsystem's perspective?  Was the patch
+approved, not approved, semi-approved?
 
-> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > > index 1456ea7..a54244c 100644
-> > > --- a/drivers/mfd/Kconfig
-> > > +++ b/drivers/mfd/Kconfig
-> > > @@ -693,6 +693,18 @@ config MFD_SM501_GPIO
-> > >  	 lines on the SM501. The platform data is used to supply the
-> > >  	 base number for the first GPIO line to register.
-> > > =20
-> > > +config MFD_SKY81452
-> > > +	tristate "Skyworks Solutions SKY81452"
-> > > +	select MFD_CORE
-> > > +	select REGMAP_I2C
-> > > +	depends on I2C
-> > > +	help
-> > > +	  This is the core driver for the Skyworks SKY81452 backlight a=
-nd
-> > > +	  voltage regulator device.
-> > > +
-> > > +	  This driver can also be built as a module.  If so, the module
-> > > +	  will be called sky81452.
-> > > +
-> > >  config MFD_SMSC
-> > >         bool "SMSC ECE1099 series chips"
-> > >         depends on I2C=3Dy
->=20
->=20
-> Paul Bolle
->=20
+Rafael
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
