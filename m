@@ -1,72 +1,90 @@
-From: =?UTF-8?B?SmFudXN6IFXFvHlja2k=?= <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
-Subject: Re: [PATCH] clk: Add PWM clock driver
-Date: Mon, 03 Nov 2014 18:45:59 +0100
-Message-ID: <5457BF57.3020906@elproma.com.pl>
-References: <5410AEFD.5030302@elproma.com.pl> <20140923085130.GO30514@ulmo> <20140927200122.19023.40310@quantum>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 8/8] ARM: mediatek: Fix description for mediatek SoCs
+Date: Mon, 3 Nov 2014 18:51:01 +0100
+Message-ID: <CABuKBeK_uUy=T-GX=fmMCMzCajWdg_MNt1FArTfkU49mMB65ig@mail.gmail.com>
+References: <1413973797-17619-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1413973797-17619-9-git-send-email-yingjoe.chen@mediatek.com>
+	<CABuKBe+Ew6R2Kb90-gDHBQ4HuydfFxJdYmr+v9-KNC-b0K4Tkw@mail.gmail.com>
+	<1413984696.19686.72.camel@mtksdaap41>
+	<CABuKBeLJuaDnCYuvvS6csNzvbTeEdgEUdZ4tBQeVPuw37JK11Q@mail.gmail.com>
+	<1414129026.14830.588.camel@mtksdaap41>
+	<1414719439.5833.25.camel@mtksdaap41>
+	<CABuKBeKFZQAHPR4xjCnM+nz67zE79rWPTHbc=m3VKcCX54Q8rQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140927200122.19023.40310@quantum>
+In-Reply-To: <CABuKBeKFZQAHPR4xjCnM+nz67zE79rWPTHbc=m3VKcCX54Q8rQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Hsien-Chun Yen <hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yuhau Chen <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nathan Chung <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, huang eddie <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-W dniu 2014-09-27 o 22:01, Mike Turquette pisze:
-> Quoting Thierry Reding (2014-09-23 01:51:31)
->> On Wed, Sep 10, 2014 at 10:05:17PM +0200, Janusz U=C5=BCycki wrote:
->>> Hi,
->>>
->>> http://patchwork.ozlabs.org/patch/359069/
->>> https://lkml.org/lkml/2014/6/12/186
->>>
->>> Will the patch ever included to linux-next?
->> I've never seen this patch before. From a quick look it doesn't seem
->> like it would work as is, but the idea is certainly interesting. If
->> somebody decides to continue work on it, please Cc me and the linux-=
-pwm
->> mailing list.
-> I just merged a gpio-controlled clock gate and I'm fine with a PWM cl=
-ock
-> output.
+2014-10-31 15:53 GMT+01:00 Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> Hi Joe,
 >
-> Janusz, how are you testing the clock driver?
-
-Sorry, I didn't noticed the email.
-I didn't test the patch yet. However I plan to check it this year.
-
-best regards
-Janusz
-
->
-> Regards,
-> Mike
->
->>> pwm_config()  API could be extended to support
->>> not only period [ns] and duty [ns] time
->>> but also frequency [Hz] and duty cycle fraction [1/1000?]
->>> (instead of time in ns) as parameters.
->>> Then  ns (rounded by pwm) to freq. conversion problem
->>> inclk_pwm_recalc_rate() usingpwm_get_period()
->>> could be avoided.
->>> To extend the API pwm_config() can support
->>> new flags forduty_ns and period_ns,
->>> eg. PWM_DUTY_PERCENT and PWM_PERIOD_HZ.
->> Is that rounding really a problem? Also the PWM chips will most like=
-ly
->> use the concept of period and duty-cycle internally anyway, so it wi=
-ll
->> convert back from Hz/percentage to nanoseconds and fall victim to
->> similar rounding effects.
+> 2014-10-31 2:37 GMT+01:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+>> Hi Matthias,
 >>
->> Thierry
+>> Is this series + this new 8/8 patch OK?
+>> Anything else that I should change?
+>>
 >
+> I checked the patches on my mt8135 board and they work for me. So from
+> my site everything fine.
 
+I just had another look on them and I think they are not correct,
+please see my comments in the other mail.
+
+>
+> I added the patches to my tree [0] branches v3.19-next/soc and v3.19-next/dts
+> I made a small change to the commit message of patch 8 and I will try
+> to send the pull request asap.
+>
+> Thanks,
+> Matthias
+>
+> [0] https://github.com/mbgg/linux-mediatek
+>
+>> Joe.C
+>>
+>> On Fri, 2014-10-24 at 13:37 +0800, Yingjoe Chen wrote:
+>>> From: "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>>
+>>> We support more MediaTek SoCs now, update the description.
+>>>
+>>> Signed-off-by: Joe.C <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>  arch/arm/mach-mediatek/Kconfig | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/arm/mach-mediatek/Kconfig
+>>> b/arch/arm/mach-mediatek/Kconfig
+>>> index 2c043a2..f73f588 100644
+>>> --- a/arch/arm/mach-mediatek/Kconfig
+>>> +++ b/arch/arm/mach-mediatek/Kconfig
+>>> @@ -1,6 +1,6 @@
+>>>  config ARCH_MEDIATEK
+>>> -     bool "Mediatek MT6589 SoC" if ARCH_MULTI_V7
+>>> +     bool "Mediatek MT65xx & MT81xx SoC" if ARCH_MULTI_V7
+>>>       select ARM_GIC
+>>>       select MTK_TIMER
+>>>       help
+>>> -       Support for Mediatek Cortex-A7 Quad-Core-SoC MT6589.
+>>> +       Support for Mediatek MT65xx & MT81xx SoCs
+>>
+>>
+>>
+>
+>
+>
+> --
+> motzblog.wordpress.com
+
+
+
+-- 
+motzblog.wordpress.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
