@@ -1,55 +1,53 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 03/17] irqchip: irq-armada-370-xp: use proper return value
- for ->set_affinity()
-Date: Mon, 03 Nov 2014 18:20:00 +0100
-Message-ID: <5457B940.2030105@free-electrons.com>
-References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com> <1414151970-6626-4-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v6 2/2] clk: shmobile: document DIV6 clock parent bindings
+Date: Mon, 3 Nov 2014 18:24:18 +0100
+Message-ID: <CAMuHMdVAXFXjkim6OtvUDxCSrMQqYzc6KmE+pHUfrCfyGOZyVg@mail.gmail.com>
+References: <1415030496-26054-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+	<1415030496-26054-3-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414151970-6626-4-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1415030496-26054-3-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+On Mon, Nov 3, 2014 at 5:01 PM, Ulrich Hecht
+<ulrich.hecht+renesas@gmail.com> wrote:
+> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
+> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
+> @@ -7,11 +7,17 @@ to 64.
+>  Required Properties:
+>
+>    - compatible: Must be one of the following
+> +    - "renesas,r8a73a4-div6-clock" for R8A73A4 (R-Mobile APE6) DIV6 clocks
+> +    - "renesas,r8a7740-div6-clock" for R8A7740 (R-Mobile A1) DIV6 clocks
+>      - "renesas,r8a7790-div6-clock" for R8A7790 (R-Car H2) DIV6 clocks
+>      - "renesas,r8a7791-div6-clock" for R8A7791 (R-Car M2) DIV6 clocks
+> +    - "renesas,sh73a0-div6-clock" for SH73A0 (SH-Mobile AG5) DIV6 clocks
+>      - "renesas,cpg-div6-clock" for generic DIV6 clocks
+>    - reg: Base address and length of the memory resource used by the DIV6 clock
+> -  - clocks: Reference to the parent clock
+> +  - clocks: Reference to the parent clock(s); if there are multiple parent
+> +    clocks, one must be specified for each possible parent clock setting
+> +    in the clock register. Invalid settings must be specified as "<0>".
+> +    Trailing invalid settings may be omitted.
 
-On 24/10/2014 13:59, Thomas Petazzoni wrote:
-> The ->set_affinity() hook of 'struct irq_chip' is supposed to return
-> one of IRQ_SET_MASK_OK or IRQ_SET_MASK_OK_NOCOPY. However, the code
-> currently simply returns 0. This patch fixes that by using
-> IRQ_SET_MASK_OK, which tells the IRQ core that it is responsible for
-> updating irq_data.affinity.
+Is there a possibility that omitting trailing invalid settings will cause 4
+or less entries for a clock with 8 parents? That would change its class,
+and the corresponding src_width and src_shift.
 
-It seems that this driver is not the only one to return 0 instead of
-IRQ_SET_MASK_OK in the >set_affinity(). I found also irq-xtensa-mx.c,
-irq-metag.c and irq-metag-ext.c.
+So I'm inclined to say the number of parent clocks must be one of 1, 4, or 8,
+i.e. no omissions, to remove this ambiguity.
 
+Gr{oetje,eeting}s,
 
-> 
-> Note that this patch does not cause any change to the compiled code,
-> as IRQ_SET_MASK_OK has the value 0. This is therefore just a simple
-> cleanup.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/irqchip/irq-armada-370-xp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+                        Geert
 
-Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-Thanks,
-
-Gregory
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
