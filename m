@@ -1,68 +1,66 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 4/8] ARM: mediatek: add dts for MT8135 evaluation board.
-Date: Mon, 3 Nov 2014 18:58:46 +0100
-Message-ID: <CABuKBeJR+iCw_gZeq_SbZB2CtESJ5FX3jOZ1OwzELRcBH+jn9A@mail.gmail.com>
-References: <1413973797-17619-1-git-send-email-yingjoe.chen@mediatek.com>
-	<1413973797-17619-5-git-send-email-yingjoe.chen@mediatek.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] of/irq: Drop obsolete 'interrupts' vs 'interrupts-extended'
+ text
+Date: Mon, 03 Nov 2014 10:06:07 -0800
+Message-ID: <5457C40F.8050407@gmail.com>
+References: <20141101233531.4958.96713.stgit@bhelgaas-glaptop2.roam.corp.google.com> <20141103101516.GA29621@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413973797-17619-5-git-send-email-yingjoe.chen@mediatek.com>
+In-Reply-To: <20141103101516.GA29621@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Joe.C" <yingjoe.chen@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Yingjoe Chen <yingjoe.chen@gmail.com>, Hsien-Chun Yen <hc.yen@mediatek.com>, huang eddie <eddie.huang@mediatek.com>, Nathan Chung <nathan.chung@mediatek.com>, Yuhau Chen <yh.chen@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>
+To: Mark Rutland <mark.rutland@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-10-22 12:29 GMT+02:00 Joe.C <yingjoe.chen@mediatek.com>:
-> From: "Joe.C" <yingjoe.chen@mediatek.com>
->
-> Evbp1 is a tablet evaluation board based on MT8135 SoC.
->
-> Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
-> ---
->  arch/arm/boot/dts/mt8135-evbp1.dts | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 arch/arm/boot/dts/mt8135-evbp1.dts
->
-> diff --git a/arch/arm/boot/dts/mt8135-evbp1.dts b/arch/arm/boot/dts/mt8135-evbp1.dts
-> new file mode 100644
-> index 0000000..cba80b8
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mt8135-evbp1.dts
-> @@ -0,0 +1,24 @@
-> +/*
-> + * Copyright (c) 2014 MediaTek Inc.
-> + * Author: Joe.C <yingjoe.chen@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +/dts-v1/;
-> +#include "mt8135.dtsi"
-> +
-> +/ {
-> +       model = "mediatek,mt8135-evbp1", "mediatek,mt8135";
+On 11/03/2014 02:15 AM, Mark Rutland wrote:
+> On Sat, Nov 01, 2014 at 11:35:31PM +0000, Bjorn Helgaas wrote:
+>> a9ecdc0fdc54 ("of/irq: Fix lookup to use 'interrupts-extended' property
+>> first") updated the description to say that:
+>>
+>>   - Both 'interrupts' and 'interrupts-extended' may be present
+>>   - Software should prefer 'interrupts-extended'
+>>   - Software that doesn't comprehend 'interrupts-extended' may use
+>>     'interrupts'
+>>
+>> But there is still a paragraph at the end that prohibits having both and
+>> says 'interrupts' should be preferred.
+>>
+>> Remove the contradictory text.
+>>
+>> Fixes: a9ecdc0fdc54 ("of/irq: Fix lookup to use 'interrupts-extended' property first")
+>> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>> CC: stable@vger.kernel.org	# v3.13+
+>> ---
+>>  .../bindings/interrupt-controller/interrupts.txt   |    4 ----
+>>  1 file changed, 4 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>> index ce6a1a072028..8a3c40829899 100644
+>> --- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>> @@ -30,10 +30,6 @@ should only be used when a device has multiple interrupt parents.
+>>    Example:
+>>  	interrupts-extended = <&intc1 5 1>, <&intc2 1 0>;
+>>  
+>> -A device node may contain either "interrupts" or "interrupts-extended", but not
+>> -both. If both properties are present, then the operating system should log an
+>> -error and use only the data in "interrupts".
+> 
+> Why not update the binding to explain that interrupts-extended is
+> typically preferred?
 
-Same here, you switched model and compatible property. Please provide
-both of them.
+Does not the following:
 
-> +
-> +       memory {
-> +               reg = <0 0x80000000 0 0x40000000>;
-> +       };
-> +};
-> --
-> 1.8.1.1.dirty
->
+"Nodes that describe devices which generate interrupts must contain an
+"interrupts" property, an "interrupts-extended" property, or both. If
+both are
+present, the latter should take precedence; the former may be provided
+simply
+for compatibility with software that does not recognize the latter."
 
-
-
--- 
-motzblog.wordpress.com
+already makes it clear that 'interrupts-extended' is the preferred way
+to represent interrupts?
+--
+Florian
