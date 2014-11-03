@@ -1,42 +1,113 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH V3 00/14] genirq endian fixes; bcm7120/brcmstb IRQ
- updates
-Date: Mon, 3 Nov 2014 21:18:20 +0100 (CET)
-Message-ID: <alpine.DEB.2.11.1411032117050.5308@nanos>
-References: <1414890241-9938-1-git-send-email-cernekee@gmail.com> <2217077.1aQXS9nJph@wuerfel>
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: Re: [PATCH 1/3] media: rc: add driver for Amlogic Meson IR remote
+ receiver
+Date: Mon, 3 Nov 2014 21:54:53 +0100
+Message-ID: <20141103205453.GA18529@gmail.com>
+References: <1413144115-23188-1-git-send-email-b.galvani@gmail.com>
+ <1413144115-23188-2-git-send-email-b.galvani@gmail.com>
+ <20141103111410.6b1147a0.m.chehab@samsung.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <2217077.1aQXS9nJph@wuerfel>
-Sender: linux-sh-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Kevin Cernekee <cernekee@gmail.com>, f.fainelli@gmail.com, jason@lakedaemon.net, ralf@linux-mips.org, linux-sh@vger.kernel.org, sergei.shtylyov@cogentembedded.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141103111410.6b1147a0.m.chehab@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <m.chehab@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Carlo Caione <carlo@caione.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 3 Nov 2014, Arnd Bergmann wrote:
-> On Saturday 01 November 2014 18:03:47 Kevin Cernekee wrote:
-> > V2->V3:
-> > 
-> >  - Move updated irq_reg_{readl,writel} functions back into <linux/irq.h>
-> >    so they can be called by irqchip drivers
-> > 
-> >  - Add gc->reg_{readl,writel} function pointers so that irqchip
-> >    drivers like arch/sh/boards/mach-se/{7343,7722}/irq.c can override them
-> > 
-> >  - CC: linux-sh list in lieu of Paul's defunct linux-sh.org email address
-> > 
-> >  - Fix handling of zero L2 status in bcm7120-l2.c
-> > 
-> >  - Rebase on Linus' head of tree
+On Mon, Nov 03, 2014 at 11:14:10AM -0200, Mauro Carvalho Chehab wrote:
+> Em Sun, 12 Oct 2014 22:01:53 +0200
+> Beniamino Galvani <b.galvani@gmail.com> escreveu:
 > 
-> Looks all great. I also looked at the series now and am very happy
-> about how it turned out.
+> > Amlogic Meson SoCs include a infrared remote control receiver that can
+> > operate in two modes: in "NEC" mode the hardware can decode frames
+> > using the NEC IR protocol, while in "general" mode the receiver simply
+> > reports the duration of pulses and spaces for software decoding.
+> > 
+> > This is a driver for the IR receiver that uses software decoding of
+> > received frames.
+> 
+> There are a few checkpatch warnings there:
+> 
+> WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+> #71: 
+> new file mode 100644
+> 
+> WARNING: Missing a blank line after declarations
+> #151: FILE: drivers/media/rc/meson-ir.c:76:
+> +	u32 duration;
+> +	DEFINE_IR_RAW_EVENT(rawir);
 
-Does that translate to an Acked-by on the whole lot?
+Here the macro is actually a variable definition and so it makes sense
+to group it with the other definitions without blank lines. I checked
+other rc drivers and many of them have a similar pattern. Could we
+consider the warning as a false positive?
 
-Jason, can you please pick that lot up with an Acked-by-me on the
-changes to the existing infrastructure?
+> 
+> WARNING: DT compatible string "amlogic,meson6-ir" appears un-documented -- check ./Documentation/devicetree/bindings/
+> #272: FILE: drivers/media/rc/meson-ir.c:197:
+> +	{ .compatible = "amlogic,meson6-ir" },
+> 
+> total: 0 errors, 3 warnings, 238 lines checked
+> 
+> patches/lmml_26418_1_3_media_rc_add_driver_for_amlogic_meson_ir_remote_receiver.patch has style problems, please review.
+> 
+> I'm seeing that the DT patches are there, after this one. The best
+> would be to add them before in the series.
+> 
+> Please add also an entry at the MAINTAINERS file.
 
-Thanks,
+I'll reorder the patches and add the maintainer entry.
 
-	tglx
+> 
+> 
+> > 
+> > Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+> > ---
+> >  drivers/media/rc/Kconfig    |  11 +++
+> >  drivers/media/rc/Makefile   |   1 +
+> >  drivers/media/rc/meson-ir.c | 214 ++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 226 insertions(+)
+> >  create mode 100644 drivers/media/rc/meson-ir.c
+> > 
+> > diff --git a/drivers/media/rc/Kconfig b/drivers/media/rc/Kconfig
+> > index 8ce0810..2d742e2 100644
+> > --- a/drivers/media/rc/Kconfig
+> > +++ b/drivers/media/rc/Kconfig
+> > @@ -223,6 +223,17 @@ config IR_FINTEK
+> >  	   To compile this driver as a module, choose M here: the
+> >  	   module will be called fintek-cir.
+> >  
+> > +config IR_MESON
+> > +	tristate "Amlogic Meson IR remote receiver"
+> > +	depends on RC_CORE
+> > +	depends on ARCH_MESON
+> 
+> Please add COMPILE_TEST too, as we want to be able to compile it on
+> x86 and other archs, in order to check if the driver builds fine and
+> to enable the static analyzers to look into this code.
+
+Ok.
+
+[...]
+
+> > +
+> > +	ir->rc->priv = ir;
+> > +	ir->rc->input_name = DRIVER_NAME;
+> > +	ir->rc->input_phys = DRIVER_NAME "/input0";
+> > +	ir->rc->input_id.bustype = BUS_HOST;
+> 
+> > +	ir->rc->input_id.vendor = 0x0001;
+> > +	ir->rc->input_id.product = 0x0001;
+> > +	ir->rc->input_id.version = 0x0100;
+> 
+> I don't like very much the idea of filling it like that. From where those
+> numbers came? Could you add a define for them somewhere?
+
+I've seen that other drivers as gpio-ir-recv and sunxi-cir assign
+those numbers to the fields of input_id but I couldn't find a
+documentation of the meaning. If the assignments are not needed I will
+drop them in the next version.
+
+Beniamino
