@@ -1,216 +1,98 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2] clk: Add PWM clock driver
-Date: Mon,  3 Nov 2014 10:31:18 +0100
-Message-ID: <1415007078-7947-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?UTF-8?q?Janusz=20U=C5=BCycki?= <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 4/4] crypto: Add Allwinner Security
+ System crypto accelerator
+Date: Mon, 3 Nov 2014 10:34:46 +0100
+Message-ID: <20141103093446.GG11263@lukather>
+References: <1413728182-13569-1-git-send-email-clabbe.montjoie@gmail.com>
+ <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com>
+ <20141021191149.GQ21108@lukather>
+ <544A9FEA.6020304@gmail.com>
+ <20141030171933.GR21251@lukather>
+ <20141031072030.GA7563@gondor.apana.org.au>
+ <20141031081323.GS21251@lukather>
+ <20141031081803.GA8012@gondor.apana.org.au>
+ <20141031095706.GA8054@lukather>
+ <20141031100522.GA8655@gondor.apana.org.au>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UTZ8bGhNySVQ9LYl"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBR4Y3WRAKGQEOVYCCTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141031100522.GA8655-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Cc: Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some board designers, when running out of clock output pads, decide to
-(mis)use PWM output pads to provide a clock to external components.
-This driver supports this practice by providing an adapter between the
-PWM and clock bindings in the device tree. As the PWM bindings specify
-the period in the device tree, this is a fixed clock.
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
-I'm resending this because last time the linux-pwm list was not in Cc:
-So far I have not received any comments on the patch itself. I have used
-it on a BoundaryDevices Nitrogen6X board to produce a master clock for
-the OV5640 MIPI CSI-2 camera module.
+--UTZ8bGhNySVQ9LYl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes since v1:
- - none (rebased onto v3.18-rc3)
----
- .../devicetree/bindings/clock/pwm-clock.txt        |  23 +++++
- drivers/clk/Kconfig                                |   7 ++
- drivers/clk/Makefile                               |   1 +
- drivers/clk/clk-pwm.c                              | 110 +++++++++++++++++++++
- 4 files changed, 141 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/pwm-clock.txt
- create mode 100644 drivers/clk/clk-pwm.c
+On Fri, Oct 31, 2014 at 06:05:22PM +0800, Herbert Xu wrote:
+> On Fri, Oct 31, 2014 at 10:57:06AM +0100, Maxime Ripard wrote:
+> >
+> > On a 3.18-rc2 kernel:
+> >=20
+> > $ git grep kmap -- crypto/
+> > crypto/ahash.c:                         walk->data =3D kmap(walk->pg);
+> > crypto/ahash.c:                         walk->data =3D kmap_atomic(walk=
+->pg);
+> > crypto/async_tx/async_memcpy.c:         dest_buf =3D kmap_atomic(dest) =
++ dest_offset;
+> > crypto/async_tx/async_memcpy.c:         src_buf =3D kmap_atomic(src) + =
+src_offset;
+> > crypto/scatterwalk.c:                   return kmap_atomic(scatterwalk_=
+page(walk)) +
+> > crypto/shash.c:                         data =3D kmap_atomic(sg_page(sg=
+));
+> > crypto/shash.c:                         data =3D kmap_atomic(sg_page(sg=
+));
+> >=20
+> > None of the drivers are.
+>=20
+> What do you mean? It's precisely because the page can be in highmem
+> that we are mapping it.  If it's not in highmem it'll be a noop.
 
-diff --git a/Documentation/devicetree/bindings/clock/pwm-clock.txt b/Documentation/devicetree/bindings/clock/pwm-clock.txt
-new file mode 100644
-index 0000000..d127d17
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/pwm-clock.txt
-@@ -0,0 +1,23 @@
-+Binding for an external clock signal driven by a PWM pin.
-+
-+This binding uses the common clock binding[1] and the common PWM binding[2].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+[2] Documentation/devicetree/bindings/pwm/pwm.txt
-+
-+Required properties:
-+- compatible : shall be "pwm-clock".
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- pwms : from common PWM binding; this determines the clock frequency
-+  via the PWM period given in the pwm-specifier.
-+
-+Optional properties:
-+- clock-output-names : From common clock binding.
-+
-+Example:
-+	clock {
-+		compatible = "pwm-clock";
-+		#clock-cells = <0>;
-+		clock-output-names = "mipi_mclk";
-+		pwms = <&pwm2 0 40>; /* 1 / 40 ns = 25 MHz */
-+	};
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 455fd17..36a6918a 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -129,6 +129,13 @@ config COMMON_CLK_PALMAS
- 	  This driver supports TI Palmas devices 32KHz output KG and KG_AUDIO
- 	  using common clock framework.
- 
-+config COMMON_CLK_PWM
-+	bool "Clock driver for PWMs used as clock outputs"
-+	depends on PWM
-+	---help---
-+	  Adapter driver so that any PWM output can be (mis)used as clock signal
-+	  at 50% duty cycle.
-+
- config COMMON_CLK_PXA
- 	def_bool COMMON_CLK && ARCH_PXA
- 	---help---
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index d5fba5b..6a0c5cf 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_ARCH_U300)			+= clk-u300.o
- obj-$(CONFIG_ARCH_VT8500)		+= clk-vt8500.o
- obj-$(CONFIG_COMMON_CLK_WM831X)		+= clk-wm831x.o
- obj-$(CONFIG_COMMON_CLK_XGENE)		+= clk-xgene.o
-+obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
- obj-$(CONFIG_COMMON_CLK_AT91)		+= at91/
- obj-$(CONFIG_ARCH_BCM_MOBILE)		+= bcm/
- obj-$(CONFIG_ARCH_BERLIN)		+= berlin/
-diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
-new file mode 100644
-index 0000000..8f747b3
---- /dev/null
-+++ b/drivers/clk/clk-pwm.c
-@@ -0,0 +1,110 @@
-+/*
-+ * Copyright (C) 2014 Philipp Zabel, Pengutronix
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * PWM (mis)used as clock output
-+ */
-+#include <linux/clk-provider.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+
-+struct clk_pwm {
-+	struct clk_hw hw;
-+	struct pwm_device *pwm;
-+};
-+
-+#define to_clk_pwm(_hw) container_of(_hw, struct clk_pwm, hw)
-+
-+static int clk_pwm_enable(struct clk_hw *hw)
-+{
-+	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
-+
-+	return pwm_enable(clk_pwm->pwm);
-+}
-+
-+static void clk_pwm_disable(struct clk_hw *hw)
-+{
-+	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
-+
-+	pwm_disable(clk_pwm->pwm);
-+}
-+
-+static unsigned long clk_pwm_recalc_rate(struct clk_hw *hw,
-+					 unsigned long parent_rate)
-+{
-+	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
-+	unsigned int period_ns = pwm_get_period(clk_pwm->pwm);
-+
-+	return period_ns ? (1000000000 / period_ns) : 0;
-+}
-+
-+const struct clk_ops clk_pwm_ops = {
-+	.enable = clk_pwm_enable,
-+	.disable = clk_pwm_disable,
-+	.recalc_rate = clk_pwm_recalc_rate,
-+};
-+
-+int clk_pwm_probe(struct platform_device *pdev)
-+{
-+	struct clk_init_data init;
-+	struct clk_pwm *clk_pwm;
-+	struct pwm_device *pwm;
-+	struct clk *clk;
-+	int ret;
-+
-+	clk_pwm = devm_kzalloc(&pdev->dev, sizeof(*clk_pwm), GFP_KERNEL);
-+	if (!clk_pwm)
-+		return -ENOMEM;
-+
-+	pwm = devm_pwm_get(&pdev->dev, NULL);
-+	if (IS_ERR(pwm))
-+		return PTR_ERR(pwm);
-+
-+	ret = pwm_config(pwm, (pwm->period + 1) >> 1, pwm->period);
-+	if (ret < 0)
-+		return ret;
-+
-+	init.name = "pwm-clock";
-+	init.ops = &clk_pwm_ops;
-+	init.flags = CLK_IS_ROOT;
-+	init.num_parents = 0;
-+
-+	clk_pwm->pwm = pwm;
-+	clk_pwm->hw.init = &init;
-+	clk = devm_clk_register(&pdev->dev, &clk_pwm->hw);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	return of_clk_add_provider(pdev->dev.of_node,
-+				   of_clk_src_simple_get, clk);
-+}
-+
-+int clk_pwm_remove(struct platform_device *pdev)
-+{
-+	of_clk_del_provider(pdev->dev.of_node);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id clk_pwm_dt_ids[] = {
-+	{ .compatible = "pwm-clock" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, clk_pwm_dt_ids);
-+
-+static struct platform_driver clk_pwm_driver = {
-+	.probe = clk_pwm_probe,
-+	.driver = {
-+		.name = "pwm-clock",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(clk_pwm_dt_ids),
-+	},
-+};
-+
-+module_platform_driver(clk_pwm_driver);
--- 
-2.1.1
+What I mean is that since you are saying that drivers should do the
+kmap themselves, then *all* of the drivers are broken if they are not
+using it. And all of them are missing this kmap.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--UTZ8bGhNySVQ9LYl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUV0w2AAoJEBx+YmzsjxAg/zUP/RYiTHvBw1aa+/lHomPgAEs0
+OQVMt3GAKLK72eym+H4kee7Xkx4X+dA7JhArMKSsm6w7NnTFn/SeUqcAzEhn6eKh
+GpKkjgfwDDwfBvM9ayeimQuKsPmBTHLCuQVmehcD3c9WzTTaWIMHekbN0cztRUM0
+WfKmrOiclBuBYWHyQr22ZuXptSN95RdAqpG4VNUSl47zQztaJEg1iO5Rb6JbVug9
+7FheB4BnXtlok95X1IfP58i0rAiqFzX1LaTa7nhUo14GZ1EnQH+aVRg00q2PtwBy
+kWFYn2wWY4SD4dG/TrSeJVfwt4pari2wkjDaS6iSdHK/xpDXh9yZQlsh3NSxsfUy
+010tvNr45DYPlpRFzPHrhm952AXjbHwJgKnMgrt1zDtFTBBt9jOd4xKMpsX6v3on
+0VtzSSjaZD2Ro6bFan/l4/Co0d0G/NNqqt9swxdMw80Zfy6hVs75Lr5KlOD8Oyey
+HZUi9CAhloqbM+q+4tNfTMxYufcLjpYPPLRrXSNZOE7BaZuidW8Q8qqDUElE16ys
+Lq72scAikcsveNGt2uTdfwr9Jgx15BN+TQRL2Lr4Tf/bxxp5O2TSIRf7uQrbZB5J
+Y1QWwDweprX3ry3+l/yHqu0FxGO8bFv+oqONl3GpD+xYGrgs0iakM7oQwLIOV7eM
+Zc/q99AwyNzJ0LXg2XeO
+=8cj2
+-----END PGP SIGNATURE-----
+
+--UTZ8bGhNySVQ9LYl--
