@@ -1,55 +1,35 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [RESUBMIT PATCH v6 7/8] regulator: sky81452: Add compatible
- string for device binding
-Date: Mon, 03 Nov 2014 22:45:39 +0100
-Message-ID: <1415051139.20372.85.camel@x220>
-References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
-	 <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
-	 <1414739322-12487-8-git-send-email-jack.yoo@skyworksinc.com>
-	 <20141031164418.GC18557@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: [PATCH 0/4] omapdss: Add video output support for gta04 board
+Date: Mon,  3 Nov 2014 22:59:24 +0100
+Message-ID: <1415051968-4878-1-git-send-email-marek@goldelico.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141031164418.GC18557-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-10-31 at 16:44 +0000, Mark Brown wrote:
-> On Fri, Oct 31, 2014 at 04:08:41PM +0900, gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> > From: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-> > 
-> > Signed-off-by: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-> 
-> This doesn't apply against current code and depends on the MFD symbol
-> rename - can you please check what's going on here?
-> 
-> It would make sense to split the Kconfig symbol rename into a separate
-> patch to ease merging,
+This patch series add support for video output on gta04 board. It consist
+from opa362 video amplifier driver + DT bindings, adding venc -> opa362 -> svideo-connecor
+setup in DT and finally static setup for tvbypass anc acbias bin in devconf1 register
+via pinctrl subsystem.
 
-The relicensing (from GPL to GPL v2, thus dropping the "or later"
-provision) is odd too. The header still uses GPL v2 or later, doesn't
-it? Anyhow, that could be a separate patch too.
+Marek Belisko (4):
+  video: omapdss: Add opa362 driver
+  Documentation: DT: Add documentation for ti,opa362 bindings
+  arm: dts: omap3-gta04: Add handling for tv output
+  arm: dts: omap3-gta04: Add static configuration for devconf1 register
 
-> it doesn't seem obviously related to the driver
-> change and should probably be in the same patch as the MFD symbol rename
-> for bisetion.
+ .../devicetree/bindings/video/ti,opa362.txt        |  38 +++
+ arch/arm/boot/dts/omap3-gta04.dtsi                 |  70 +++++
+ drivers/video/fbdev/omap2/displays-new/Kconfig     |   6 +
+ drivers/video/fbdev/omap2/displays-new/Makefile    |   1 +
+ .../fbdev/omap2/displays-new/amplifier-opa362.c    | 347 +++++++++++++++++++++
+ 5 files changed, 462 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/ti,opa362.txt
+ create mode 100644 drivers/video/fbdev/omap2/displays-new/amplifier-opa362.c
 
-I don't think there will be bisection problems (in mainline). Currently
-this driver depends on SKY81452. But that symbol doesn't exist. Only
-after both 1/8 and this patch will this driver become buildable, for the
-first time. So it's not that this driver was buildable, became
-unbuildable in 1/8 and buildable again in this patch.
-
-(I don't think it's much of a problem that the regulator driver got
-merged, in v3.18-rc1, before the mfd driver on which it depends.
-Avoiding that temporarily problem appears to be more trouble than it's
-worth.)
-
-
-Paul Bolle
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
