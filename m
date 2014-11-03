@@ -1,39 +1,80 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v5 4/4] crypto: Add Allwinner Security System crypto
- accelerator
-Date: Mon, 3 Nov 2014 18:35:28 +0800
-Message-ID: <20141103103528.GA30154@gondor.apana.org.au>
-References: <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com>
- <20141021191149.GQ21108@lukather>
- <544A9FEA.6020304@gmail.com>
- <20141030171933.GR21251@lukather>
- <20141031072030.GA7563@gondor.apana.org.au>
- <20141031081323.GS21251@lukather>
- <20141031081803.GA8012@gondor.apana.org.au>
- <20141031095706.GA8054@lukather>
- <20141031100522.GA8655@gondor.apana.org.au>
- <20141103093446.GG11263@lukather>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 00/14] genirq endian fixes; bcm7120/brcmstb IRQ updates
+Date: Mon, 03 Nov 2014 12:56:52 +0100
+Message-ID: <2217077.1aQXS9nJph@wuerfel>
+References: <1414890241-9938-1-git-send-email-cernekee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141103093446.GG11263@lukather>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Corentin LABBE <clabbe.montjoie@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, davem@davemloft.net, grant.likely@linaro.org, akpm@linux-foundation.org, gregkh@linuxfoundation.org, joe@perches.com, mchehab@osg.samsung.com, crope@iki.fi, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1414890241-9938-1-git-send-email-cernekee@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Kevin Cernekee <cernekee@gmail.com>
+Cc: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org, linux-sh@vger.kernel.org, sergei.shtylyov@cogentembedded.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 03, 2014 at 10:34:46AM +0100, Maxime Ripard wrote:
-> What I mean is that since you are saying that drivers should do the
-> kmap themselves, then *all* of the drivers are broken if they are not
-> using it. And all of them are missing this kmap.
+On Saturday 01 November 2014 18:03:47 Kevin Cernekee wrote:
+> V2->V3:
+> 
+>  - Move updated irq_reg_{readl,writel} functions back into <linux/irq.h>
+>    so they can be called by irqchip drivers
+> 
+>  - Add gc->reg_{readl,writel} function pointers so that irqchip
+>    drivers like arch/sh/boards/mach-se/{7343,7722}/irq.c can override them
+> 
+>  - CC: linux-sh list in lieu of Paul's defunct linux-sh.org email address
+> 
+>  - Fix handling of zero L2 status in bcm7120-l2.c
+> 
+>  - Rebase on Linus' head of tree
 
-kmap is used by the software implementations to map the input/output
-into virtual address space.  Drivers typically use DMA and operate
-on physical addresses so they don't need kmap.
+Looks all great. I also looked at the series now and am very happy
+about how it turned out.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+>  - Drop GENERIC_CHIP / GENERIC_CHIP_BE compile-time optimizations
+> 
+> For the latter item, I ran a quick benchmark to see if the extra
+> indirection in irq_reg_{readl,write} had any perceptible effect on
+> register access times.  The MIPS BE case did show a small performance
+> hit from using the read wrapper, but on ARM LE the only differences
+> were attributed to the presence/absence of a barrier:
+>
+>
+> BCM3384 (UBUS architecture, MIPS BE, IRQ_GC_BE_IO):
+> 
+> irq_reg_readl       : 207 ns
+> readl               : 186 ns
+> __raw_readl         : 186 ns
+> ioread32be          : 195 ns
+> 
+> irq_reg_writel      : 177 ns
+> writel              : 177 ns
+> __raw_writel        : 177 ns
+> iowrite32be         : 177 ns
+> 
+> 
+> BCM7445 (GISB architecture, ARM LE, standard LE readl):
+> 
+> irq_reg_readl       : 519 ns
+> readl               : 519 ns
+> __raw_readl         : 482 ns
+> ioread32be          : 519 ns
+> 
+> irq_reg_writel      : 500 ns
+> writel              : 500 ns
+> __raw_writel        : 482 ns
+> iowrite32be         : 500 ns
+> 
+
+Yes, good idea to check this. 43ns is probably not significant to
+warrant optimizing this, but if we wanted to, a driver could now
+override the accessors using readl_relaxed()/writel_relaxed().
+
+Note that the cost of the barriers can depend a lot on the hardware
+setup and on the state of the system. I believe synchronizing the
+L2 cache on some Cortex-A9 machines can be particularly expensive.
+
+Anyway, the existing code doesn't do it, so we can leave that as
+a possible optimization.
+
+	Arnd
