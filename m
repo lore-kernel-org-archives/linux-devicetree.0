@@ -1,49 +1,61 @@
-From: carolyn24164-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
-Subject: Fix Penguin Penalty 17th October2014 ( mail-archive.com )
-Date: Tue, 4 Nov 2014 01:24:21 +0530
-Message-ID: <5457dd6e.c4a2420a.2d38.5a68@mx.google.com>
-Reply-To: seo.expert388-/E1597aS9LQAvxtiuMwx3w@public.gmane.org
+From: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
+Subject: Re: [V9 PATCH 2/2] irqchip: gicv2m: Add supports for ARM GICv2m MSI(-X)
+Date: Mon, 3 Nov 2014 13:57:24 -0600
+Message-ID: <5457DE24.9030302@amd.com>
+References: <1414743990-28421-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <1414743990-28421-3-git-send-email-suravee.suthikulpanit@amd.com>
+ <alpine.DEB.2.11.1410311014050.5308@nanos>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.11.1410311014050.5308@nanos>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "Catalin.Marinas@arm.com" <Catalin.Marinas@arm.com>, "Will.Deacon@arm.com" <Will.Deacon@arm.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>, "Kasiviswanathan, Harish" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Sir
+On 10/31/2014 4:40 AM, Thomas Gleixner wrote:
+> On Fri, 31 Oct 2014, suravee.suthikulpanit@amd.com wrote:
+>> +/*
+>> + * alloc_msi_irq - Allocate MSIs from available MSI bitmap.
+>> + * @data: Pointer to v2m_data
+>> + * @nvec: Number of interrupts to allocate
+>> + * @irq: Pointer to the allocated irq
+>> + *
+>> + * Allocates interrupts only if the contiguous range of MSIs
+>> + * with specified nvec are available. Otherwise return the number
+>> + * of available interrupts. If none are available, then returns -ENOENT.
+>
+> And the exact purpose of returning the number of available interrupts
+> is?
 
-Did your website get hit by Google Penguin update on October 17th 2014?=
- What basically is Google Penguin Update? It is actually a code name fo=
-r Google algorithm which aims at decreasing your websites search engine=
- rankings that violate Google=92s guidelines by using black hat SEO tec=
-hniques to rank your webpage by giving number of spammy links to the pa=
-ge.
-=20
-We are one of those few SEO companies that can help you avoid penalties=
- from Google Updates like Penguin and Panda. Our clients have survived =
-all the previous and present updates with ease. They have never been hi=
-t because we use 100% white hat SEO techniques to rank Webpages.  Simpl=
-e thing that we do to keep websites away from any Penguin or Panda pena=
-lties is follow Google guidelines and we give Google users the best ans=
-wers to their queries.
+Initially, I intended to use this function to allocate irqs for both MSI 
+and multi-MSI case. But I'll simplify this and revisit it again when 
+adding the multi-MSI.
 
-If you are looking to increase the quality of your websites and to get =
-more targeted traffic or save your websites from these Google penalties=
- email us back with your interest.=20
+>
+>> +	virq = __irq_domain_alloc_irqs(v2m->domain, hwirq,
+>> +				       1, NUMA_NO_NODE, v2m, true);
+>
+> And surely the ability of alloc_msi_irq() to allocate a contiguous
+> vector space is required to satisfy an hardcoded allocation of ONE
+> interrupt.
+>
+> What is guaranteeing that the caller only requests a single interrupt?
 
-We will be glad to serve you and help you grow your business.
+Since this is calling from gicv2m_setup_msi_irq(), it should only setup 
+1 MSI interrupt.
 
-Regards
+ >[...]
+>> +err_out:
+>
+> Single error exit which undoes the stuff in the same order it got
+> initialized is just plain wrong. Ever looked at proper error exits in
+> other kernel files?
+>
 
-Vince G
+I'll clean this up in V10. Thanks for pointing this out.
 
-SEO Manager ( TOB )
-B7 Green Avenue, Amritsar 143001 Punjab
-____________________________
-NO CLICK in the subject to STOP EMAILS
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Suravee
+
