@@ -1,59 +1,102 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [V9 PATCH 2/2] irqchip: gicv2m: Add supports for ARM GICv2m MSI(-X)
-Date: Mon, 03 Nov 2014 14:10:15 +0000
-Message-ID: <54578CC7.4050901@arm.com>
-References: <1414743990-28421-1-git-send-email-suravee.suthikulpanit@amd.com> <1414743990-28421-3-git-send-email-suravee.suthikulpanit@amd.com> <54574FF7.706@arm.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v4] media: spi: Add support for LMH0395
+Date: Mon, 03 Nov 2014 15:12:08 +0100
+Message-ID: <54578D38.4000004@xs4all.nl>
+References: <1410342234-7444-1-git-send-email-jean-michel.hautbois@vodalys.com> <1630377.tEqlt7fWO7@avalon> <545784DA.50109@xs4all.nl> <12414520.uxZUhSYI7c@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54574FF7.706-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org" <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "Harish.Kasiviswanathan-5C7GfCeVMHo@public.gmane.org" <Harish.Kasiviswanathan-5C7GfCeVMHo@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <12414520.uxZUhSYI7c@avalon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, m.chehab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/11/14 09:50, Marc Zyngier wrote:
-
->> @@ -843,10 +847,14 @@ static int gic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
->>         unsigned int type = IRQ_TYPE_NONE;
->>         struct of_phandle_args *irq_data = arg;
+On 11/03/2014 02:42 PM, Laurent Pinchart wrote:
+> On Monday 03 November 2014 14:36:26 Hans Verkuil wrote:
+>> On 11/03/2014 02:13 PM, Laurent Pinchart wrote:
+>>> Hi Jean-Michel,
+>>>
+>>> Thank you for the patch.
 >>
->> -       ret = gic_irq_domain_xlate(domain, irq_data->np, irq_data->args,
->> -                                  irq_data->args_count, &hwirq, &type);
->> -       if (ret)
->> -               return ret;
->> +       if (irq_data) {
->> +               ret = gic_irq_domain_xlate(domain, irq_data->np, irq_data->args,
->> +                                          irq_data->args_count, &hwirq, &type);
->> +               if (ret)
->> +                       return ret;
->> +       } else {
->> +               hwirq = virq;
->> +       }
+>>> On Wednesday 10 September 2014 11:43:54 Jean-Michel Hautbois wrote:
+>> <snip>
+>>
+>>>> +static int lmh0395_s_routing(struct v4l2_subdev *sd, u32 input, u32
+>>>> output, +				u32 config)
+>>>> +{
+>>>> +	struct lmh0395_state *state = to_state(sd);
+>>>> +	int err = 0;
+>>>> +
+>>>> +	if (state->output_type != output)
+>>>> +		err = lmh0395_set_output_type(sd, output);
+>>>> +
+>>>> +	return err;
+>>>>
+>>>         if (state->output_type == output)
+>>>                 return 0;
+>>>         
+>>>         return lmh0395_set_output_type(sd, output);
+>>>
+>>> You can then get rid of the err variable.
+>>>
+>>> I don't really like this implementation though, the output argument is
+>>> device- specific, you thus require explicit knowledge of the LMH0395 in
+>>> your bridge driver.
+>>
+>> Well, that's the way s_routing is defined. It's the bridge driver's job to
+>> translate between V4L2 inputs/outputs and low-level routing information.
+>>
+>>> I'm not sure what the config argument is used for, but naively I would
+>>> have
+>>
+>> config is normally not used. There are one or two drivers that need it for
+>> additional routing configuration, but it's rare.
 > 
-> I'm slightly puzzled here. What's the purpose of this? The whole goal of
-> the domain hierarchy is to avoid that kind of thing. Also, you should
-> never have to call xlate on an MSI, because it should never be described
-> in the device tree the first place.
+> OK.
+> 
+>>> used it to tell whether to enable (1) or disable (0) the route from input
+>>> to output. The input value should then always be 0, and the output value
+>>> can be 1 or 2. Another option would be to use the new S_ROUTING userspace
+>>> ioctl I've proposed in
+>>> http://git.linuxtv.org/cgit.cgi/pinchartl/media.git/commit/?h=xilinx-wip&i
+>>> d=fc094c354338861673464ed4b8fa198089fe7bf0.
+>>>
+>>> Hans, could you comment on that ?
+>>
+>> Well, first of all your proposed API isn't merged yet, or even posted on the
+>> mailinglist, so it's a bit unfair to require someone else to use it :-)
+> 
+> It's not a requirement, just a proposal :-) I can send a patch series if 
+> there's enough interest for using that API.
+> 
+>> Also, while I do agree with your proposed new API I am a lot less
+>> enthusiastic about creating yet another duplicate pad op for an existing
+>> audio/video routing op.
+>>
+>> The problem is that existing drivers are never updated for the new op and
+>> you are stuck with competing internal APIs. Not nice at all.
+> 
+> Agreed, it's not nice, feel free to propose a better solution :-)
+> 
+>> Bottom line is that this driver uses s_routing like any other driver
+>> currently in the kernel, so I have no problem with that.
+> 
+> I do :-)
+> 
+> The bridge to subdev dependency is fine for PCI or USB devices where the 
+> hardware topology is known to the driver. It isn't for composite embedded 
+> devices, as we don't want to teach all bridges about all subdevs.
+> 
 
-Thinking of it some more:
+I agree, and your proposal is a nice solution. But whoever want to get this
+merged *will* have to take a good look at the existing g/s_routing ops and
+how they can be converted to the new one. I didn't block that when similar
+duplicate ops were added in the past and I am increasingly sorry I didn't do
+that. It's creating incompatible subdevs, where the whole point of the subdev
+API was to avoid that.
 
-The actual reason why this is required is because the MSI domain calls
-into this via irq_domain_alloc_irqs_parent(). But because MSIs are not
-described in DT, they do not have a of_phandle to pass down to the xlate
-helper. In this case, the v2m widget has the knowledge of what are the
-valid SPI numbers, and the core GIC code must blindly accept it.
+Regards,
 
-This definitely requires a fat comment, because this is far from obvious.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Hans
