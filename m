@@ -1,193 +1,115 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 2/4] extcon: gpio: Add dt support for the driver.
-Date: Mon, 3 Nov 2014 10:32:28 -0600
-Message-ID: <1415032350-8459-3-git-send-email-balbi@ti.com>
-References: <1415032350-8459-1-git-send-email-balbi@ti.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 0/6] Add support for USB cluster(PHY muxer) on the
+ Armada 375
+Date: Mon, 03 Nov 2014 17:48:14 +0100
+Message-ID: <5457B1CE.4060108@free-electrons.com>
+References: <1414164254-13053-1-git-send-email-gregory.clement@free-electrons.com> <20141101224647.GD3698@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1415032350-8459-1-git-send-email-balbi-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20141101224647.GD3698-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+Hi Jason,
 
-Add device tree support to extcon-gpio driver.
-Add devicetree binding documentation
+On 01/11/2014 23:46, Jason Cooper wrote:
+> Gregory,
+> 
+> On Fri, Oct 24, 2014 at 05:24:08PM +0200, Gregory CLEMENT wrote:
+>> Hello,
+>>
+>> this is the second version of a series I initially submitted in May:
+>> https://lkml.org/lkml/2014/5/16/743
+>>
+>> This series adds support for the USB cluster which is on the Armada
+>> 375 SoC. We can mainly see this device as a PHY muxer.
+>>
+>> I more or less forgotten this series until the talk of Kishon Vijay
+>> Abraham I about the phy framework.
+>>
+>> Since this time, things have changed in the USB framework and I no
+>> longer have to add the generic phy support in the xhci driver since it
+>> was done at the usb core level.
+>>
+>> While I ran coccicheck on my code I also found some possible
+>> improvement in the phy driver: it was done in the 1st patch.
+>>
+>> The second patch was a patch initially submitted by Andrew. This patch
+>> added the mvebu-phy.txt but fell through a crack when adding the
+>> driver. I join this patch on my series in order to be able to add the
+>> new binding for the USB cluster of the Armada 375.
+>>
+>> This was done in the third patch.
+>>
+>> The forth patch was the addition of the phys driver itself.
+>>
+>> The fifth and sixth patches are updating the device tree files related
+>> to the Armada 375 using the new biding.
+>>
+>> Thanks,
+>>
+>> Gregory
+>>
+>> Changelog:
+>>
+>> v1 -> v2:
+>>
+>> - Add a patch fixing the use of PTR_ERR_OR_ZERO.
+>>
+>> - Add the patch adding the DT binding documentation for Marvell MVEBU
+>> SATA phy from Andrew Lunn
+>>
+>> - Move the DT binding documentation of the Armada 375 USB cluster into
+>>   the phy-mvebu.txt file.
+>>
+>> - Made the armada375_usb_phy_xlate more robust" if there is a phy_put
+>>   and then a phy_get".
+>>
+>> Andrew Lunn (1):
+>>   Phy: DT binding documentation for Marvell MVEBU SATA phy.
+>>
+>> Gregory CLEMENT (5):
+>>   phy: Use PTR_ERR_OR_ZERO to fix warning raised by coccinelle
+>>   Phy: DT binding documentation for the Armada 375 USB cluster binding
+>>   phy: add support for USB cluster on the Armada 375 SoC
+>>   ARM: mvebu: add Device Tree description of USB cluster controller on
+>>     Armada 375
+>>   ARM: mvebu: add PHY support to the dts for the USB controllers on
+>>     Armada 375
+> 
+> I assume Kishon is taking the phy portion of this series and we'll
+> handle the dts portion? 
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
----
- .../devicetree/bindings/extcon/extcon-gpio.txt     | 21 ++++++
- drivers/extcon/extcon-gpio.c                       | 75 +++++++++++++++-------
- 2 files changed, 73 insertions(+), 23 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+Yes I expect that we merge the patch 5 and 6, and patch 1-4 should
+be pulled by Kishon.
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-new file mode 100644
-index 0000000..5fe6846
---- /dev/null
-+++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-@@ -0,0 +1,21 @@
-+GPIO based EXTCON
-+
-+EXTCON GPIO
-+-----------
-+
-+Required Properties:
-+ - compatible: should be:
-+   * "linux,extcon-gpio"
-+ - gpios: specifies the gpio pin used.
-+
-+Optional Properties:
-+ - debounce: Debounce time for GPIO IRQ in ms
-+
-+
-+Eg:
-+
-+	extcon1: am43_usbid_extcon1 {
-+		compatible = "linux,extcon-gpio";
-+		gpios = <&gpio3 12 GPIO_ACTIVE_HIGH>;
-+		debounce = <20>;
-+	};
-diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
-index 70e3fc7..9571e1f 100644
---- a/drivers/extcon/extcon-gpio.c
-+++ b/drivers/extcon/extcon-gpio.c
-@@ -25,8 +25,10 @@
- #include <linux/gpio.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
-+#include <linux/irq.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/workqueue.h>
-@@ -80,16 +82,12 @@ static ssize_t extcon_gpio_print_state(struct extcon_dev *edev, char *buf)
- 
- static int gpio_extcon_probe(struct platform_device *pdev)
- {
-+	struct device_node *np = pdev->dev.of_node;
- 	struct gpio_extcon_platform_data *pdata = dev_get_platdata(&pdev->dev);
- 	struct gpio_extcon_data *extcon_data;
- 	int ret;
--
--	if (!pdata)
--		return -EBUSY;
--	if (!pdata->irq_flags) {
--		dev_err(&pdev->dev, "IRQ flag is not specified.\n");
--		return -EINVAL;
--	}
-+	unsigned int irq_flags;
-+	unsigned int debounce = 0;
- 
- 	extcon_data = devm_kzalloc(&pdev->dev, sizeof(struct gpio_extcon_data),
- 				   GFP_KERNEL);
-@@ -101,26 +99,51 @@ static int gpio_extcon_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "failed to allocate extcon device\n");
- 		return -ENOMEM;
- 	}
--	extcon_data->edev->name = pdata->name;
--
--	extcon_data->gpiod = gpio_to_desc(pdata->gpio);
--	extcon_data->state_on = pdata->state_on;
--	extcon_data->state_off = pdata->state_off;
--	extcon_data->check_on_resume = pdata->check_on_resume;
--	if (pdata->state_on && pdata->state_off)
--		extcon_data->edev->print_state = extcon_gpio_print_state;
- 
--	ret = devm_gpio_request_one(&pdev->dev, pdata->gpio, GPIOF_DIR_IN,
--				    pdev->name);
--	if (ret < 0)
--		return ret;
-+	if (np) {
-+		int irq;
-+
-+		extcon_data->gpiod = devm_gpiod_get(&pdev->dev, NULL);
-+		if (IS_ERR(extcon_data->gpiod))
-+			return PTR_ERR(extcon_data->gpiod);
-+
-+		extcon_data->edev->name = np->name;
-+		extcon_data->edev->dev.parent = &pdev->dev;
-+		of_property_read_u32(np, "debounce", &debounce);
-+		irq = gpiod_to_irq(extcon_data->gpiod);
-+		irq_flags = irq_get_trigger_type(irq);
-+	} else {
-+		if (!pdata)
-+			return -EBUSY;
-+
-+		if (!pdata->irq_flags) {
-+			dev_err(&pdev->dev, "IRQ flag is not specified.\n");
-+			return -EINVAL;
-+		}
-+
-+		extcon_data->edev->name = pdata->name;
-+
-+		extcon_data->gpiod = gpio_to_desc(pdata->gpio);
-+		extcon_data->state_on = pdata->state_on;
-+		extcon_data->state_off = pdata->state_off;
-+		extcon_data->check_on_resume = pdata->check_on_resume;
-+		if (pdata->state_on && pdata->state_off)
-+			extcon_data->edev->print_state = extcon_gpio_print_state;
-+
-+		ret = devm_gpio_request_one(&pdev->dev, pdata->gpio, GPIOF_DIR_IN,
-+				pdev->name);
-+		if (ret < 0)
-+			return ret;
-+		irq_flags = pdata->irq_flags;
-+		debounce = pdata->debounce;
-+	}
- 
--	if (pdata->debounce) {
-+	if (debounce) {
- 		ret = gpiod_set_debounce(extcon_data->gpiod,
--					pdata->debounce * 1000);
-+					 debounce * 1000);
- 		if (ret < 0)
- 			extcon_data->debounce_jiffies =
--				msecs_to_jiffies(pdata->debounce);
-+				msecs_to_jiffies(debounce);
- 	}
- 
- 	ret = devm_extcon_dev_register(&pdev->dev, extcon_data->edev);
-@@ -134,7 +157,7 @@ static int gpio_extcon_probe(struct platform_device *pdev)
- 		return extcon_data->irq;
- 
- 	ret = request_any_context_irq(extcon_data->irq, gpio_irq_handler,
--				      pdata->irq_flags, pdev->name,
-+				      irq_flags, pdev->name,
- 				      extcon_data);
- 	if (ret < 0)
- 		return ret;
-@@ -172,6 +195,11 @@ static int gpio_extcon_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(gpio_extcon_pm_ops, NULL, gpio_extcon_resume);
- 
-+static struct of_device_id of_extcon_gpio_match_tbl[] = {
-+	{ .compatible = "linux,extcon-gpio", },
-+	{ /* end */ }
-+};
-+
- static struct platform_driver gpio_extcon_driver = {
- 	.probe		= gpio_extcon_probe,
- 	.remove		= gpio_extcon_remove,
-@@ -179,6 +207,7 @@ static struct platform_driver gpio_extcon_driver = {
- 		.name	= "extcon-gpio",
- 		.owner	= THIS_MODULE,
- 		.pm	= &gpio_extcon_pm_ops,
-+		.of_match_table = of_extcon_gpio_match_tbl,
- 	},
- };
- 
+
+> Before doing so, I'd like to see an Ack from
+> the DT maintainers and Kishon...
+
+I also would like have a feedback from them :)
+
+
+Thanks,
+
+Gregory
+
+> 
+> thx,
+> 
+> Jason.
+> 
+
+
 -- 
-2.1.0.GIT
-
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
