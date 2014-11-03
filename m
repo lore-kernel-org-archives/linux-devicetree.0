@@ -1,75 +1,234 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 07/17] bus: mvebu-mbus: suspend/resume support
-Date: Mon, 03 Nov 2014 19:08:21 +0100
-Message-ID: <5457C495.7080403@free-electrons.com>
-References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com> <1414151970-6626-8-git-send-email-thomas.petazzoni@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414151970-6626-8-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: mathieu.poirier@linaro.org
+Subject: [PATCH v9] coresight: bindings for coresight drivers
+Date: Mon,  3 Nov 2014 11:13:03 -0700
+Message-ID: <1415038383-23750-1-git-send-email-mathieu.poirier@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-[...]
+Coresight IP blocks allow for the support of HW assisted tracing
+on ARM SoCs.  Bindings for the currently available blocks are
+presented herein.
 
->  struct mvebu_mbus_state {
->  	void __iomem *mbuswins_base;
->  	void __iomem *sdramwins_base;
-> +	void __iomem *mbusbridge_base;
+Signed-off-by: Pratik Patel <pratikp@codeaurora.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+---
+ .../devicetree/bindings/arm/coresight.txt          | 203 +++++++++++++++++++++
+ 1 file changed, 203 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/coresight.txt
 
-Here you store the information about the availability of the register needed
-for suspend/resume ...
-
-[...]
-
-
-> +static int mvebu_mbus_suspend(void)
-> +{
-> +	struct mvebu_mbus_state *s = &mbus_state;
-> +	int win;
-> +
-> +	for (win = 0; win < s->soc->num_wins; win++) {
-> +		void __iomem *addr = s->mbuswins_base +
-> +			s->soc->win_cfg_offset(win);
-> +
-> +		s->wins[win].base = readl(addr + WIN_BASE_OFF);
-> +		s->wins[win].ctrl = readl(addr + WIN_CTRL_OFF);
-> +
-> +		if (win >= s->soc->num_remappable_wins)
-> +			continue;
-> +
-> +		s->wins[win].remap_lo = readl(addr + WIN_REMAP_LO_OFF);
-> +		s->wins[win].remap_hi = readl(addr + WIN_REMAP_HI_OFF);
-> +	}
-> +
-> +	if (s->mbusbridge_base) {
-> +		s->mbus_bridge_ctrl = readl(s->mbusbridge_base +
-> +					    MBUS_BRIDGE_CTRL_OFF);
-> +		s->mbus_bridge_base = readl(s->mbusbridge_base +
-> +					    MBUS_BRIDGE_BASE_OFF);
-> +	}
-
-... so here could you exit with an error if the register is not available.
-Then it would prevent to enter in suspend instead of crashing the system.
-
-
-Thanks,
-
-Gregory
-
-
-
+diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+new file mode 100644
+index 0000000..96dd947
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/coresight.txt
+@@ -0,0 +1,203 @@
++* CoreSight Components:
++
++CoreSight components are compliant with the ARM CoreSight architecture
++specification and can be connected in various topologies to suit a particular
++SoCs tracing needs. These trace components can generally be classified as sinks,
++links and sources. Trace data produced by one or more sources flows through the
++intermediate links connecting the source to the currently selected sink. Each
++CoreSight component device should use these properties to describe its hardware
++characteristcs.
++
++* Required properties for all components *except* non-configurable replicators:
++
++	* compatible: These have to be supplemented with "arm,primecell" as
++	  drivers are using the AMBA bus interface.  Possible values include:
++		- "arm,coresight-etb10", "arm,primecell";
++		- "arm,coresight-tpiu", "arm,primecell";
++		- "arm,coresight-tmc", "arm,primecell";
++		- "arm,coresight-funnel", "arm,primecell";
++		- "arm,coresight-etm3x", "arm,primecell";
++
++	* reg: physical base address and length of the register
++	  set(s) of the component.
++
++	* clocks: the clock associated to this component.
++
++	* clock-names: the name of the clock as referenced by the code.
++	  Since we are using the AMBA framework, the name should be
++	  "apb_pclk".
++
++	* port or ports: The representation of the component's port
++	  layout using the generic DT graph presentation found in
++	  "bindings/graph.txt".
++
++* Required properties for devices that don't show up on the AMBA bus, such as
++  non-configurable replicators:
++
++	* compatible: Currently supported value is (note the absence of the
++	  AMBA markee):
++		- "arm,coresight-replicator"
++
++	* id: a unique number that will identify this replicator.
++
++	* port or ports: same as above.
++
++* Optional properties for ETM/PTMs:
++
++	* arm,cp14: must be present if the system accesses ETM/PTM management registers
++	  via co-processor 14.
++
++	* cpu: the cpu phandle this ETM/PTM is affined to. When omitted the source is
++	  considered to belong to CPU0.
++
++* Optional property for TMC:
++
++	* arm,buffer-size: size of contiguous buffer space for TMC ETR
++	 (embedded trace router)
++
++
++Example:
++
++1. Sinks
++	etb@0,20010000 {
++		compatible = "arm,coresight-etb10", "arm,primecell";
++		reg = <0 0x20010000 0 0x1000>;
++
++		coresight-default-sink;
++		clocks = <&oscclk6a>;
++		clock-names = "apb_pclk";
++		port {
++			etb_in_port: endpoint@0 {
++				slave-mode;
++				remote-endpoint = <&replicator_out_port0>;
++			};
++		};
++	};
++
++	tpiu@0,20030000 {
++		compatible = "arm,coresight-tpiu", "arm,primecell";
++		reg = <0 0x20030000 0 0x1000>;
++
++		clocks = <&oscclk6a>;
++		clock-names = "apb_pclk";
++		port {
++			tpiu_in_port: endpoint@0 {
++				slave-mode;
++				remote-endpoint = <&replicator_out_port1>;
++			};
++		};
++	};
++
++2. Links
++	replicator {
++		/* non-configurable replicators don't show up on the
++		 * AMBA bus.  As such no need to add "arm,primecell".
++		 */
++		compatible = "arm,coresight-replicator";
++		/* this will show up in debugfs as "0.replicator" */
++		id = <0>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* replicator output ports */
++			port@0 {
++				reg = <0>;
++				replicator_out_port0: endpoint {
++					remote-endpoint = <&etb_in_port>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				replicator_out_port1: endpoint {
++					remote-endpoint = <&tpiu_in_port>;
++				};
++			};
++
++			/* replicator input port */
++			port@2 {
++				reg = <0>;
++				replicator_in_port0: endpoint {
++					slave-mode;
++					remote-endpoint = <&funnel_out_port0>;
++				};
++			};
++		};
++	};
++
++	funnel@0,20040000 {
++		compatible = "arm,coresight-funnel", "arm,primecell";
++		reg = <0 0x20040000 0 0x1000>;
++
++		clocks = <&oscclk6a>;
++		clock-names = "apb_pclk";
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* funnel output port */
++			port@0 {
++				reg = <0>;
++				funnel_out_port0: endpoint {
++					remote-endpoint = <&replicator_in_port0>;
++				};
++			};
++
++			/* funnel input ports */
++			port@1 {
++				reg = <0>;
++				funnel_in_port0: endpoint {
++					slave-mode;
++					remote-endpoint = <&ptm0_out_port>;
++				};
++			};
++
++			port@2 {
++				reg = <1>;
++				funnel_in_port1: endpoint {
++					slave-mode;
++					remote-endpoint = <&ptm1_out_port>;
++				};
++			};
++
++			port@3 {
++				reg = <2>;
++				funnel_in_port2: endpoint {
++					slave-mode;
++					remote-endpoint = <&etm0_out_port>;
++				};
++			};
++
++		};
++	};
++
++3. Sources
++	ptm@0,2201c000 {
++		compatible = "arm,coresight-etm3x", "arm,primecell";
++		reg = <0 0x2201c000 0 0x1000>;
++
++		cpu = <&cpu0>;
++		clocks = <&oscclk6a>;
++		clock-names = "apb_pclk";
++		port {
++			ptm0_out_port: endpoint {
++				remote-endpoint = <&funnel_in_port0>;
++			};
++		};
++	};
++
++	ptm@0,2201d000 {
++		compatible = "arm,coresight-etm3x", "arm,primecell";
++		reg = <0 0x2201d000 0 0x1000>;
++
++		cpu = <&cpu1>;
++		clocks = <&oscclk6a>;
++		clock-names = "apb_pclk";
++		port {
++			ptm1_out_port: endpoint {
++				remote-endpoint = <&funnel_in_port1>;
++			};
++		};
++	};
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
