@@ -1,80 +1,59 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 00/14] genirq endian fixes; bcm7120/brcmstb IRQ updates
-Date: Mon, 03 Nov 2014 12:56:52 +0100
-Message-ID: <2217077.1aQXS9nJph@wuerfel>
-References: <1414890241-9938-1-git-send-email-cernekee@gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 6/8] regulator: max77686: Add external GPIO control
+Date: Mon, 03 Nov 2014 13:07:02 +0100
+Message-ID: <1415016422.4241.28.camel@AMDC1943>
+References: <1414422226-10948-7-git-send-email-k.kozlowski@samsung.com>
+ <544EA4FA.6040704@collabora.co.uk> <1414486356.24949.19.camel@AMDC1943>
+ <1414498308.24949.32.camel@AMDC1943> <1414579362.18868.11.camel@AMDC1943>
+ <5450C63B.3000602@collabora.co.uk>
+ <CAAVeFuLncbkNLGxEAj90yMmugRDNjtjeGoV_QYTMDZ7NVMJCmg@mail.gmail.com>
+ <1414681386.26703.6.camel@AMDC1943>
+ <CAAVeFuJo1wTyxOo4FEZM3=GTejuSHi+mnr=QV6HUeV5mAOCmqg@mail.gmail.com>
+ <1414741898.20071.8.camel@AMDC1943> <20141031103217.GJ18557@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1414890241-9938-1-git-send-email-cernekee@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kevin Cernekee <cernekee@gmail.com>
-Cc: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org, linux-sh@vger.kernel.org, sergei.shtylyov@cogentembedded.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20141031103217.GJ18557@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 01 November 2014 18:03:47 Kevin Cernekee wrote:
-> V2->V3:
-> 
->  - Move updated irq_reg_{readl,writel} functions back into <linux/irq.h>
->    so they can be called by irqchip drivers
-> 
->  - Add gc->reg_{readl,writel} function pointers so that irqchip
->    drivers like arch/sh/boards/mach-se/{7343,7722}/irq.c can override them
-> 
->  - CC: linux-sh list in lieu of Paul's defunct linux-sh.org email address
-> 
->  - Fix handling of zero L2 status in bcm7120-l2.c
-> 
->  - Rebase on Linus' head of tree
+On pi=C4=85, 2014-10-31 at 10:32 +0000, Mark Brown wrote:
+> On Fri, Oct 31, 2014 at 08:51:38AM +0100, Krzysztof Kozlowski wrote:
+>=20
+> > However new DT style parsing (regulator_of_get_init_data()) does th=
+e
+> > basic parsing stuff and this removes a lot of code from driver. The
+> > driver no longer parses all regulaotrs but the regulator core does =
+it.
+> > Unfortunately regulator core does not parse custom bindings (like s=
+uch
+> > GPIOs) so I would have to iterate once again through all regulators=
+ just
+> > to find "gpios" property.
+>=20
+> We could always add a callback for the driver to handle any custom
+> properties...  one of the advantages of an OS like Linux is that we c=
+an
+> improve the core code.
 
-Looks all great. I also looked at the series now and am very happy
-about how it turned out.
+I thought about this - adding a callback, called on each child in
+regulator_of_get_init_data(). However the reason behind this callback i=
+s
+to parse GPIO and set config.ena_gpio. However in that context the
+regulator_config is const so the callback cannot change it. Unless it
+casts it to non-const... which isn't what we want I think.
 
->  - Drop GENERIC_CHIP / GENERIC_CHIP_BE compile-time optimizations
-> 
-> For the latter item, I ran a quick benchmark to see if the extra
-> indirection in irq_reg_{readl,write} had any perceptible effect on
-> register access times.  The MIPS BE case did show a small performance
-> hit from using the read wrapper, but on ARM LE the only differences
-> were attributed to the presence/absence of a barrier:
->
->
-> BCM3384 (UBUS architecture, MIPS BE, IRQ_GC_BE_IO):
-> 
-> irq_reg_readl       : 207 ns
-> readl               : 186 ns
-> __raw_readl         : 186 ns
-> ioread32be          : 195 ns
-> 
-> irq_reg_writel      : 177 ns
-> writel              : 177 ns
-> __raw_writel        : 177 ns
-> iowrite32be         : 177 ns
-> 
-> 
-> BCM7445 (GISB architecture, ARM LE, standard LE readl):
-> 
-> irq_reg_readl       : 519 ns
-> readl               : 519 ns
-> __raw_readl         : 482 ns
-> ioread32be          : 519 ns
-> 
-> irq_reg_writel      : 500 ns
-> writel              : 500 ns
-> __raw_writel        : 482 ns
-> iowrite32be         : 500 ns
-> 
+So now I wonder whether adding generic bindings for ena_gpio make sense=
+=2E
+These would look like bindings for fixed-regulator (with "ena-" prefix)=
+=2E
+Unfortunately this would duplicate a little the ena_gpio in
+regulator_config... but to me it seems more appropriate.
 
-Yes, good idea to check this. 43ns is probably not significant to
-warrant optimizing this, but if we wanted to, a driver could now
-override the accessors using readl_relaxed()/writel_relaxed().
+What do you think about adding generic bindings for ena_gpio?
 
-Note that the cost of the barriers can depend a lot on the hardware
-setup and on the state of the system. I believe synchronizing the
-L2 cache on some Cortex-A9 machines can be particularly expensive.
-
-Anyway, the existing code doesn't do it, so we can leave that as
-a possible optimization.
-
-	Arnd
+Best regards,
+Krzysztof
