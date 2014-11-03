@@ -1,98 +1,76 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 4/4] crypto: Add Allwinner Security
- System crypto accelerator
-Date: Mon, 3 Nov 2014 10:34:46 +0100
-Message-ID: <20141103093446.GG11263@lukather>
-References: <1413728182-13569-1-git-send-email-clabbe.montjoie@gmail.com>
- <1413728182-13569-5-git-send-email-clabbe.montjoie@gmail.com>
- <20141021191149.GQ21108@lukather>
- <544A9FEA.6020304@gmail.com>
- <20141030171933.GR21251@lukather>
- <20141031072030.GA7563@gondor.apana.org.au>
- <20141031081323.GS21251@lukather>
- <20141031081803.GA8012@gondor.apana.org.au>
- <20141031095706.GA8054@lukather>
- <20141031100522.GA8655@gondor.apana.org.au>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2] clk: shmobile: document DIV6 clock parent bindings
+Date: Mon, 3 Nov 2014 10:35:25 +0100
+Message-ID: <CAMuHMdWMyTBEw+jRg9+Ku9RvtkB_Cnj9GuU93Mub4rCPhjBMCQ@mail.gmail.com>
+References: <1414767696-23211-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+	<1414767696-23211-3-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UTZ8bGhNySVQ9LYl"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBR4Y3WRAKGQEOVYCCTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141031100522.GA8655-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Cc: Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1414767696-23211-3-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Ulrich,
 
---UTZ8bGhNySVQ9LYl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Oct 31, 2014 at 4:01 PM, Ulrich Hecht
+<ulrich.hecht+renesas@gmail.com> wrote:
+> Adds properties renesas,src-shift and renesas,src-width, and describes
+> how to specify the available parent clocks.
 
-On Fri, Oct 31, 2014 at 06:05:22PM +0800, Herbert Xu wrote:
-> On Fri, Oct 31, 2014 at 10:57:06AM +0100, Maxime Ripard wrote:
-> >
-> > On a 3.18-rc2 kernel:
-> >=20
-> > $ git grep kmap -- crypto/
-> > crypto/ahash.c:                         walk->data =3D kmap(walk->pg);
-> > crypto/ahash.c:                         walk->data =3D kmap_atomic(walk=
-->pg);
-> > crypto/async_tx/async_memcpy.c:         dest_buf =3D kmap_atomic(dest) =
-+ dest_offset;
-> > crypto/async_tx/async_memcpy.c:         src_buf =3D kmap_atomic(src) + =
-src_offset;
-> > crypto/scatterwalk.c:                   return kmap_atomic(scatterwalk_=
-page(walk)) +
-> > crypto/shash.c:                         data =3D kmap_atomic(sg_page(sg=
-));
-> > crypto/shash.c:                         data =3D kmap_atomic(sg_page(sg=
-));
-> >=20
-> > None of the drivers are.
->=20
-> What do you mean? It's precisely because the page can be in highmem
-> that we are mapping it.  If it's not in highmem it'll be a noop.
+Thanks for your patch!
 
-What I mean is that since you are saying that drivers should do the
-kmap themselves, then *all* of the drivers are broken if they are not
-using it. And all of them are missing this kmap.
+> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+> ---
+>  .../bindings/clock/renesas,cpg-div6-clocks.txt     | 28 +++++++++++++++++-----
+>  1 file changed, 22 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
+> index 952e373..348954b 100644
+> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
+> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
+> @@ -7,22 +7,38 @@ to 64.
+>  Required Properties:
+>
+>    - compatible: Must be one of the following
+> +    - "renesas,r8a73a4-div6-clock" for R8A73A4 (R-Mobile APE6) DIV6 clocks
+> +    - "renesas,r8a7740-div6-clock" for R8A7740 (R-Mobile A1) DIV6 clocks
+>      - "renesas,r8a7790-div6-clock" for R8A7790 (R-Car H2) DIV6 clocks
+>      - "renesas,r8a7791-div6-clock" for R8A7791 (R-Car M2) DIV6 clocks
+> +    - "renesas,sh73a0-div6-clock" for SH73A0 (SH-MobileAG5) DIV6 clocks
 
-Maxime
+Missing space between "SH-Mobile" and "AG5".
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+>      - "renesas,cpg-div6-clock" for generic DIV6 clocks
+>    - reg: Base address and length of the memory resource used by the DIV6 clock
+> -  - clocks: Reference to the parent clock
+> +  - clocks: Reference to the parent clock(s); if there are multiple parent
+> +    clocks, one must be specified for each possible parent clock setting
+> +    in the clock register. Invalid settings must be specified as "<0>".
+> +    Trailing invalid settings may be omitted.
 
---UTZ8bGhNySVQ9LYl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Perhaps it's good to mention "if there are multiple parent clocks, up to
+1 << renesas,src-width parent clocks"?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+>    - #clock-cells: Must be 0
+>    - clock-output-names: The name of the clock as a free-form string
+>
+> +Optional Properties:
+> +
+> +  - renesas,src-shift: Bit position of the input clock selector (default:
+> +    fixed input clock; requires renesas,src-width)
+> +  - renesas,src-width: Bit width of the input clock selector (default: fixed
+> +    input clock; requires renesas,src-shift)
 
-iQIcBAEBAgAGBQJUV0w2AAoJEBx+YmzsjxAg/zUP/RYiTHvBw1aa+/lHomPgAEs0
-OQVMt3GAKLK72eym+H4kee7Xkx4X+dA7JhArMKSsm6w7NnTFn/SeUqcAzEhn6eKh
-GpKkjgfwDDwfBvM9ayeimQuKsPmBTHLCuQVmehcD3c9WzTTaWIMHekbN0cztRUM0
-WfKmrOiclBuBYWHyQr22ZuXptSN95RdAqpG4VNUSl47zQztaJEg1iO5Rb6JbVug9
-7FheB4BnXtlok95X1IfP58i0rAiqFzX1LaTa7nhUo14GZ1EnQH+aVRg00q2PtwBy
-kWFYn2wWY4SD4dG/TrSeJVfwt4pari2wkjDaS6iSdHK/xpDXh9yZQlsh3NSxsfUy
-010tvNr45DYPlpRFzPHrhm952AXjbHwJgKnMgrt1zDtFTBBt9jOd4xKMpsX6v3on
-0VtzSSjaZD2Ro6bFan/l4/Co0d0G/NNqqt9swxdMw80Zfy6hVs75Lr5KlOD8Oyey
-HZUi9CAhloqbM+q+4tNfTMxYufcLjpYPPLRrXSNZOE7BaZuidW8Q8qqDUElE16ys
-Lq72scAikcsveNGt2uTdfwr9Jgx15BN+TQRL2Lr4Tf/bxxp5O2TSIRf7uQrbZB5J
-Y1QWwDweprX3ry3+l/yHqu0FxGO8bFv+oqONl3GpD+xYGrgs0iakM7oQwLIOV7eM
-Zc/q99AwyNzJ0LXg2XeO
-=8cj2
------END PGP SIGNATURE-----
+Gr{oetje,eeting}s,
 
---UTZ8bGhNySVQ9LYl--
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
