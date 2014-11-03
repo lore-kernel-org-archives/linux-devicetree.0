@@ -1,64 +1,114 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: [PATCH v4 01/14] regulator: Document binding for initial and suspend modes
-Date: Mon,  3 Nov 2014 15:40:36 +0100
-Message-ID: <1415025649-8119-2-git-send-email-javier.martinez@collabora.co.uk>
-References: <1415025649-8119-1-git-send-email-javier.martinez@collabora.co.uk>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1415025649-8119-1-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v2] pinctrl: dra: dt-bindings: Fix output pull up/down
+Date: Mon, 3 Nov 2014 08:59:36 -0600
+Message-ID: <54579858.4030605@ti.com>
+References: <1414752745-13696-1-git-send-email-rogerq@ti.com> <1415009392-6627-1-git-send-email-rogerq@ti.com> <20141103143023.GA8260@kahuna> <545794CB.5030802@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <545794CB.5030802@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: tony@atomide.com, balbi@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some regulators can run on different operating modes (opmodes). This
-allows systems to choose the most efficient opmode for each regulator.
+On 11/03/2014 08:44 AM, Roger Quadros wrote:
+> On 11/03/2014 04:30 PM, Nishanth Menon wrote:
+>> On 12:09-20141103, Roger Quadros wrote:
+>>> For PIN_OUTPUT_PULLUP and PIN_OUTPUT_PULLDOWN we must not set the
+>>> PULL_DIS bit which disables the PULLs.
+>>>
+>>> PULL_ENA is a 0 and using it in an OR operation is a NOP, so don't
+>>> use it in the PIN_OUTPUT_PULLUP/DOWN macros.
+>>>
+>>> Fixes: 23d9cec07c58 ("pinctrl: dra: dt-bindings: Fix pull enable/disable")
+>>>
+>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>> ---
+>>>  include/dt-bindings/pinctrl/dra.h | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/include/dt-bindings/pinctrl/dra.h b/include/dt-bindings/pinctrl/dra.h
+>>> index 3d33794..7448edf 100644
+>>> --- a/include/dt-bindings/pinctrl/dra.h
+>>> +++ b/include/dt-bindings/pinctrl/dra.h
+>>> @@ -40,8 +40,8 @@
+>>>  
+>>>  /* Active pin states */
+>>>  #define PIN_OUTPUT		(0 | PULL_DIS)
+>>> -#define PIN_OUTPUT_PULLUP	(PIN_OUTPUT | PULL_ENA | PULL_UP)
+>>> -#define PIN_OUTPUT_PULLDOWN	(PIN_OUTPUT | PULL_ENA)
+>>> +#define PIN_OUTPUT_PULLUP	(PULL_UP)
+>>> +#define PIN_OUTPUT_PULLDOWN	(0)
+>>>  #define PIN_INPUT		(INPUT_EN | PULL_DIS)
+>>>  #define PIN_INPUT_SLEW		(INPUT_EN | SLEWCONTROL)
+>>>  #define PIN_INPUT_PULLUP	(PULL_ENA | INPUT_EN | PULL_UP)
+>>
+>> You are right, we do have an issue with using PIN_OUTPUT along with
+>> remaining setting.
+>>
+>> For a moment, I wondered why input was not impacted - then I realized
+>> that INPUT_EN was being used instead of PIN_INPUT - following that
+>> convention. With the intent being explicitly using macros that
+>> clearly indicate what each setting combination is is, how about the
+>> following?
+>>
+>>
+>> diff --git a/include/dt-bindings/pinctrl/dra.h b/include/dt-bindings/pinctrl/dra.h
+>> index 3d33794..d4037e7 100644
+>> --- a/include/dt-bindings/pinctrl/dra.h
+>> +++ b/include/dt-bindings/pinctrl/dra.h
+>> @@ -34,14 +34,15 @@
+>>  #define PULL_DIS		(1 << 16)
+>>  #define PULL_UP			(1 << 17)
+>>  #define INPUT_EN		(1 << 18)
+>> +#define OUTPUT_EN		(0 << 18)
+>>  #define SLEWCONTROL		(1 << 19)
+>>  #define WAKEUP_EN		(1 << 24)
+>>  #define WAKEUP_EVENT		(1 << 25)
+>>  
+>>  /* Active pin states */
+>> -#define PIN_OUTPUT		(0 | PULL_DIS)
+>> -#define PIN_OUTPUT_PULLUP	(PIN_OUTPUT | PULL_ENA | PULL_UP)
+>> -#define PIN_OUTPUT_PULLDOWN	(PIN_OUTPUT | PULL_ENA)
+>> +#define PIN_OUTPUT		(OUTPUT_EN | PULL_DIS)
+>> +#define PIN_OUTPUT_PULLUP	(OUTPUT_EN | PULL_ENA | PULL_UP)
+>> +#define PIN_OUTPUT_PULLDOWN	(OUTPUT_EN | PULL_ENA)
+> 
+> To me it adds more confusion and this change is a NOP as we're ORing 0 here
+> with OUTPUT_EN.
 
-This patch builds on top of (291d761 regulator: Document binding for
-regulator suspend state for PM state) adding a regulator-initial-mode
-DT property to configure at startup the operating mode for regulators
-that support changing its mode during normal operation and a property
-regulator-mode to be used in the regulator-state-[mem/disk] nodes for
-regulators that supports changing its operating mode when the system
-enters in a suspend state.
+look at this this way:
 
-The set of possible modes that a regulator can operate depends on the
-hardware capabilities so a list of generic operating modes can't be
-provided. Instead, each hardware binding should define the list of
-valid operating modes for the regulators found on that device.
+PIN_OUTPUT_PULLDOWN	(OUTPUT_EN | PULL_ENA)
 
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
----
+should probably trigger in mind (what about PULLDOWN?)
 
-Changes in v3:
- - Rebased on top of regulator suspend voltage series
+PIN_OUTPUT_PULLDOWN	(OUTPUT_EN | PULL_ENA | PULL_DOWN)
 
- Documentation/devicetree/bindings/regulator/regulator.txt | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+then verify values of each OUTPUT_EN  -> 0 in bit 18, ok, etc.
 
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index 4e7ed76..3fffa3b 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -30,6 +30,20 @@ Optional properties:
- 	- regulator-off-in-suspend: regulator should be off in suspend state.
- 	- regulator-suspend-microvolt: regulator should be set to this voltage
- 	  in suspend.
-+	- regulator-mode: operating mode in the given suspend state.
-+	  The set of possible operating modes depends on the capabilities of
-+	  every hardware so the valid modes are documented on each regulator
-+	  device tree binding document.
-+	  The "regulator-mode" property only takes effect if the regulator is
-+	  enabled for the given suspend state using "regulator-on-in-suspend".
-+	  If the regulator has not been explicitly disabled for the given state
-+	  with "regulator-off-in-suspend", then setting the operating mode
-+	  will also have no effect.
-+- regulator-initial-mode: initial operating mode. The set of possible operating
-+  modes is the same used for the regulator-mode property and the device binding
-+  documentation explains which property each regulator supports.
-+If no mode is defined, then the OS will not manage the modes and the hardware
-+default values will be used instead.
- 
- Deprecated properties:
- - regulator-compatible: If a regulator chip contains multiple
+
+if we ensure that PIN_XX macros use just the basic primitives, it is
+easier to prevent the mistake like the one I made. the other option of
+not defining macros whose values are 0 implies that the reviewer has
+to recheck against trm to ensure all the right "1" bits are set.
+
+
+just my view here.
+
+> 
+>>  #define PIN_INPUT		(INPUT_EN | PULL_DIS)
+>>  #define PIN_INPUT_SLEW		(INPUT_EN | SLEWCONTROL)
+>>  #define PIN_INPUT_PULLUP	(PULL_ENA | INPUT_EN | PULL_UP)
+>>
+> 
+> cheers,
+> -roger
+> 
+
+
 -- 
-2.1.0
+Regards,
+Nishanth Menon
