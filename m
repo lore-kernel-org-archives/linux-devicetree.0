@@ -1,148 +1,31 @@
-From: Addy Ke <addy.ke@rock-chips.com>
-Subject: [PATCH v3] mmc: dw_mmc: add support for the other bit of sdio interrupt
-Date: Mon,  3 Nov 2014 09:20:33 +0800
-Message-ID: <1414977633-3196-1-git-send-email-addy.ke@rock-chips.com>
-References: <1414666240-16782-1-git-send-email-addy.ke@rock-chips.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: [PATCH] pinctrl: Fix path error in documentation
+Date: Mon, 3 Nov 2014 10:28:11 +0800
+Message-ID: <1414981691-14087-1-git-send-email-yingjoe.chen@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414666240-16782-1-git-send-email-addy.ke@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, Addy Ke <addy.ke@rock-chips.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, yingjoe.chen@gmail.com, hc.yen@mediatek.com, eddie.huang@mediatek.com, nathan.chung@mediatek.com, yh.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-The bit of sdio interrupt is 16 in designware implementation,
-but it is 24 on Rockchip SoCs.This patch add sdio_id0 for the
-number of slot0 in the SDIO interrupt registers.
+Fix pinconfig include file path.
 
-Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
 ---
-Changes in v2:
-- rebase on http://git.linaro.org/git/people/ulf.hansson/mmc.git, next branch
-Changes in v3:
-- Remove dts for sdio_id0, just replace this with 8, suggested by Doug
-- Change to support all Rockchip Socs, suggested by Heiko
+ Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/mmc/host/dw_mmc-rockchip.c | 10 ++++++++++
- drivers/mmc/host/dw_mmc.c          | 12 +++++++-----
- drivers/mmc/host/dw_mmc.h          |  2 ++
- include/linux/mmc/dw_mmc.h         |  3 +++
- 4 files changed, 22 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
-index bbb4ec3..b997c8f 100644
---- a/drivers/mmc/host/dw_mmc-rockchip.c
-+++ b/drivers/mmc/host/dw_mmc-rockchip.c
-@@ -68,14 +68,24 @@ static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
- 	}
- }
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+index 98eb94d..47d84b6 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+@@ -216,4 +216,4 @@ arguments are described below.
+   or 0 to disable debouncing
  
-+static int dw_mci_rockchip_parse_dt(struct dw_mci *host)
-+{
-+	/* It is slot 8 on Rockchip SoCs */
-+	host->sdio_id0 = 8;
-+
-+	return 0;
-+}
-+
- static const struct dw_mci_drv_data rk2928_drv_data = {
- 	.prepare_command        = dw_mci_rockchip_prepare_command,
-+	.parse_dt	= dw_mci_rockchip_parse_dt,
- };
- 
- static const struct dw_mci_drv_data rk3288_drv_data = {
- 	.prepare_command        = dw_mci_rockchip_prepare_command,
- 	.set_ios		= dw_mci_rk3288_set_ios,
- 	.setup_clock    = dw_mci_rk3288_setup_clock,
-+	.parse_dt	= dw_mci_rockchip_parse_dt,
- };
- 
- static const struct of_device_id dw_mci_rockchip_match[] = {
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index bb46b1b..a633b58 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -823,7 +823,7 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
- 
- 		/* enable clock; only low power if no SDIO */
- 		clk_en_a = SDMMC_CLKEN_ENABLE << slot->id;
--		if (!(mci_readl(host, INTMASK) & SDMMC_INT_SDIO(slot->id)))
-+		if (!(mci_readl(host, INTMASK) & SDMMC_INT_SDIO(slot->sdio_id)))
- 			clk_en_a |= SDMMC_CLKEN_LOW_PWR << slot->id;
- 		mci_writel(host, CLKENA, clk_en_a);
- 
-@@ -1184,10 +1184,10 @@ static void dw_mci_enable_sdio_irq(struct mmc_host *mmc, int enb)
- 		dw_mci_disable_low_power(slot);
- 
- 		mci_writel(host, INTMASK,
--			   (int_mask | SDMMC_INT_SDIO(slot->id)));
-+			   (int_mask | SDMMC_INT_SDIO(slot->sdio_id)));
- 	} else {
- 		mci_writel(host, INTMASK,
--			   (int_mask & ~SDMMC_INT_SDIO(slot->id)));
-+			   (int_mask & ~SDMMC_INT_SDIO(slot->sdio_id)));
- 	}
- }
- 
-@@ -2056,8 +2056,9 @@ static irqreturn_t dw_mci_interrupt(int irq, void *dev_id)
- 		/* Handle SDIO Interrupts */
- 		for (i = 0; i < host->num_slots; i++) {
- 			struct dw_mci_slot *slot = host->slot[i];
--			if (pending & SDMMC_INT_SDIO(i)) {
--				mci_writel(host, RINTSTS, SDMMC_INT_SDIO(i));
-+			if (pending & SDMMC_INT_SDIO(slot->sdio_id)) {
-+				mci_writel(host, RINTSTS,
-+					   SDMMC_INT_SDIO(slot->sdio_id));
- 				mmc_signal_sdio_irq(slot->mmc);
- 			}
- 		}
-@@ -2145,6 +2146,7 @@ static int dw_mci_init_slot(struct dw_mci *host, unsigned int id)
- 
- 	slot = mmc_priv(mmc);
- 	slot->id = id;
-+	slot->sdio_id = host->sdio_id0 + id;
- 	slot->mmc = mmc;
- 	slot->host = host;
- 	host->slot[id] = slot;
-diff --git a/drivers/mmc/host/dw_mmc.h b/drivers/mmc/host/dw_mmc.h
-index 71d4995..0562f10 100644
---- a/drivers/mmc/host/dw_mmc.h
-+++ b/drivers/mmc/host/dw_mmc.h
-@@ -214,6 +214,7 @@ extern int dw_mci_resume(struct dw_mci *host);
-  *	with CONFIG_MMC_CLKGATE.
-  * @flags: Random state bits associated with the slot.
-  * @id: Number of this slot.
-+ * @sdio_id: Number of this slot in the SDIO interrupt registers.
-  */
- struct dw_mci_slot {
- 	struct mmc_host		*mmc;
-@@ -233,6 +234,7 @@ struct dw_mci_slot {
- #define DW_MMC_CARD_PRESENT	0
- #define DW_MMC_CARD_NEED_INIT	1
- 	int			id;
-+	int			sdio_id;
- };
- 
- struct dw_mci_tuning_data {
-diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
-index 69d0814..72c319f 100644
---- a/include/linux/mmc/dw_mmc.h
-+++ b/include/linux/mmc/dw_mmc.h
-@@ -96,6 +96,7 @@ struct mmc_data;
-  * @quirks: Set of quirks that apply to specific versions of the IP.
-  * @irq_flags: The flags to be passed to request_irq.
-  * @irq: The irq value to be passed to request_irq.
-+ * @sdio_id0: Number of slot0 in the SDIO interrupt registers.
-  *
-  * Locking
-  * =======
-@@ -191,6 +192,8 @@ struct dw_mci {
- 	bool			vqmmc_enabled;
- 	unsigned long		irq_flags; /* IRQ flags */
- 	int			irq;
-+
-+	int			sdio_id0;
- };
- 
- /* DMA ops for Internal/External DMAC interface */
+ More in-depth documentation on these parameters can be found in
+-<include/linux/pinctrl/pinconfig-generic.h>
++<include/linux/pinctrl/pinconf-generic.h>
 -- 
-1.8.3.2
+1.8.1.1.dirty
