@@ -1,53 +1,44 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v6 2/2] clk: shmobile: document DIV6 clock parent bindings
-Date: Mon, 3 Nov 2014 18:24:18 +0100
-Message-ID: <CAMuHMdVAXFXjkim6OtvUDxCSrMQqYzc6KmE+pHUfrCfyGOZyVg@mail.gmail.com>
-References: <1415030496-26054-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-	<1415030496-26054-3-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 04/17] irqchip: irq-armada-370-xp: suspend/resume support
+Date: Mon, 03 Nov 2014 18:38:10 +0100
+Message-ID: <5457BD82.3090309@free-electrons.com>
+References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com> <1414151970-6626-5-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1415030496-26054-3-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: Simon Horman <horms@verge.net.au>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414151970-6626-5-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 3, 2014 at 5:01 PM, Ulrich Hecht
-<ulrich.hecht+renesas@gmail.com> wrote:
-> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-> @@ -7,11 +7,17 @@ to 64.
->  Required Properties:
->
->    - compatible: Must be one of the following
-> +    - "renesas,r8a73a4-div6-clock" for R8A73A4 (R-Mobile APE6) DIV6 clocks
-> +    - "renesas,r8a7740-div6-clock" for R8A7740 (R-Mobile A1) DIV6 clocks
->      - "renesas,r8a7790-div6-clock" for R8A7790 (R-Car H2) DIV6 clocks
->      - "renesas,r8a7791-div6-clock" for R8A7791 (R-Car M2) DIV6 clocks
-> +    - "renesas,sh73a0-div6-clock" for SH73A0 (SH-Mobile AG5) DIV6 clocks
->      - "renesas,cpg-div6-clock" for generic DIV6 clocks
->    - reg: Base address and length of the memory resource used by the DIV6 clock
-> -  - clocks: Reference to the parent clock
-> +  - clocks: Reference to the parent clock(s); if there are multiple parent
-> +    clocks, one must be specified for each possible parent clock setting
-> +    in the clock register. Invalid settings must be specified as "<0>".
-> +    Trailing invalid settings may be omitted.
+Hi Thomas,
 
-Is there a possibility that omitting trailing invalid settings will cause 4
-or less entries for a clock with 8 parents? That would change its class,
-and the corresponding src_width and src_shift.
+On 24/10/2014 13:59, Thomas Petazzoni wrote:
+> This commit adds suspend/resume support to the irqchip driver used on
+> Armada XP platforms (amongst others). It does so by adding a set of
+> suspend/resume syscore_ops, that will respectively save and restore
+> the necessary registers to ensure interrupts continue to work after
+> resume.
+> 
+> It is worth mentioning that the affinity is lost during a
+> suspend/resume cycle, because when a secondary CPU is brought
+> off-line, all interrupts that are assigned to this CPU in terms of
+> affinity gets re-assigned to a still running CPU. Therefore, right
+> before entering suspend, all interrupts are assigned to the boot CPU.
 
-So I'm inclined to say the number of parent clocks must be one of 1, 4, or 8,
-i.e. no omissions, to remove this ambiguity.
+So what about /proc/irq/*/smp_affinity ?
 
-Gr{oetje,eeting}s,
+Do this files still represent accurate information?
 
-                        Geert
+Thanks,
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Gregory
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
