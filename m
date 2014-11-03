@@ -1,75 +1,72 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 05/17] clocksource: time-armada-370-xp: add suspend/resume
- support
-Date: Mon, 03 Nov 2014 18:45:11 +0100
-Message-ID: <5457BF27.8000108@free-electrons.com>
-References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com> <1414151970-6626-6-git-send-email-thomas.petazzoni@free-electrons.com>
+From: =?UTF-8?B?SmFudXN6IFXFvHlja2k=?= <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
+Subject: Re: [PATCH] clk: Add PWM clock driver
+Date: Mon, 03 Nov 2014 18:45:59 +0100
+Message-ID: <5457BF57.3020906@elproma.com.pl>
+References: <5410AEFD.5030302@elproma.com.pl> <20140923085130.GO30514@ulmo> <20140927200122.19023.40310@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414151970-6626-6-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20140927200122.19023.40310@quantum>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
 
-On 24/10/2014 13:59, Thomas Petazzoni wrote:
-> This commit adds a set of suspend/resume syscore_ops to respectively
-> save and restore a number of timer registers, in order to make sure
-> the clockevent and clocksource devices continue to work properly
-> accross a suspend/resume cycle.
-  across
+W dniu 2014-09-27 o 22:01, Mike Turquette pisze:
+> Quoting Thierry Reding (2014-09-23 01:51:31)
+>> On Wed, Sep 10, 2014 at 10:05:17PM +0200, Janusz U=C5=BCycki wrote:
+>>> Hi,
+>>>
+>>> http://patchwork.ozlabs.org/patch/359069/
+>>> https://lkml.org/lkml/2014/6/12/186
+>>>
+>>> Will the patch ever included to linux-next?
+>> I've never seen this patch before. From a quick look it doesn't seem
+>> like it would work as is, but the idea is certainly interesting. If
+>> somebody decides to continue work on it, please Cc me and the linux-=
+pwm
+>> mailing list.
+> I just merged a gpio-controlled clock gate and I'm fine with a PWM cl=
+ock
+> output.
+>
+> Janusz, how are you testing the clock driver?
 
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  drivers/clocksource/time-armada-370-xp.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
-> 
-> diff --git a/drivers/clocksource/time-armada-370-xp.c b/drivers/clocksource/time-armada-370-xp.c
-> index 0451e62..1a32dcb 100644
-> --- a/drivers/clocksource/time-armada-370-xp.c
-> +++ b/drivers/clocksource/time-armada-370-xp.c
-> @@ -43,6 +43,7 @@
->  #include <linux/module.h>
->  #include <linux/sched_clock.h>
->  #include <linux/percpu.h>
-> +#include <linux/syscore_ops.h>
->  
->  /*
->   * Timer block registers.
-> @@ -223,6 +224,28 @@ static struct notifier_block armada_370_xp_timer_cpu_nb = {
->  	.notifier_call = armada_370_xp_timer_cpu_notify,
->  };
->  
-> +static u32 timer_ctrl_reg, timer_local_ctrl_reg;
+Sorry, I didn't noticed the email.
+I didn't test the patch yet. However I plan to check it this year.
 
-We don't need to restore any other timer than the timer 0, but it
-would worth mentioning that we save and restore only this one
-by naming the variable timer0_ctrl_reg and timer0_local_ctrl_reg
+best regards
+Janusz
 
-Besides this and the typo:
+>
+> Regards,
+> Mike
+>
+>>> pwm_config()  API could be extended to support
+>>> not only period [ns] and duty [ns] time
+>>> but also frequency [Hz] and duty cycle fraction [1/1000?]
+>>> (instead of time in ns) as parameters.
+>>> Then  ns (rounded by pwm) to freq. conversion problem
+>>> inclk_pwm_recalc_rate() usingpwm_get_period()
+>>> could be avoided.
+>>> To extend the API pwm_config() can support
+>>> new flags forduty_ns and period_ns,
+>>> eg. PWM_DUTY_PERCENT and PWM_PERIOD_HZ.
+>> Is that rounding really a problem? Also the PWM chips will most like=
+ly
+>> use the concept of period and duty-cycle internally anyway, so it wi=
+ll
+>> convert back from Hz/percentage to nanoseconds and fall victim to
+>> similar rounding effects.
+>>
+>> Thierry
+>
 
-Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-
-Thanks,
-
-Gregory
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
