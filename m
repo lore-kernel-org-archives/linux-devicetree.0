@@ -1,60 +1,75 @@
-From: Flora Fu <flora.fu@mediatek.com>
-Subject: [PATCH v2 3/3] ARM: dts: mt8135: Add Reset Controller for MediaTek SoC
-Date: Mon, 3 Nov 2014 17:02:51 +0800
-Message-ID: <1415005371-4323-4-git-send-email-flora.fu@mediatek.com>
-References: <1415005371-4323-1-git-send-email-flora.fu@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v2] mfd: syscon: add child device support
+Date: Mon,  3 Nov 2014 10:16:48 +0100
+Message-ID: <1415006209-1312-1-git-send-email-p.zabel@pengutronix.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415005371-4323-1-git-send-email-flora.fu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, arm@kernel.org
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Flora Fu <flora.fu@mediatek.com>
+To: Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Flora Fu <flora.fu@mediatek.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Add reset controller to MT8135 board dts.
+For devices which have a complete register for themselves, it is possible to
+place them next to the syscon device with overlapping reg ranges. The same is
+not possible for devices which only occupy bitfields in registers shared with
+other users.
+For devices that are completely controlled by bitfields in the syscon address
+range, such as multiplexers or voltage regulators, allow to put child devices
+into the syscon device node.
 
-Signed-off-by: Flora Fu <flora.fu@mediatek.com>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- arch/arm/boot/dts/mt8135.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Changes since v1:
+ - Reworded binding documentation to allow #size-cells = <1>, which is useful
+   for syscon children that are controlled through a (possibly shared) register
+   range.
+---
+ Documentation/devicetree/bindings/mfd/syscon.txt | 13 +++++++++++++
+ drivers/mfd/syscon.c                             |  3 +++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
-index 90a56ad..259a2b5 100644
---- a/arch/arm/boot/dts/mt8135.dtsi
-+++ b/arch/arm/boot/dts/mt8135.dtsi
-@@ -102,6 +102,32 @@
- 			clock-names = "system-clk", "rtc-clk";
- 		};
+diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+index fe8150b..0c6b497 100644
+--- a/Documentation/devicetree/bindings/mfd/syscon.txt
++++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+@@ -9,12 +9,25 @@ using a specific compatible value), interrogate the node (or associated
+ OS driver) to determine the location of the registers, and access the
+ registers directly.
  
-+		infracfg: syscon@10001000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "mediatek,mt8135-infracfg", "syscon";
-+			reg = <0 0x10001000 0 0x1000>;
++Optionally, devices that are controlled exclusively through syscon registers,
++or even bitfields in shared syscon registers, can also be added as child nodes
++to the syscon device node. These devices can implicitly assume their parent
++node is a syscon provider without referencing it explicitly via phandle.
++In this case, the syscon node should have #address-cells = <1> and
++#size-cells = <0> or <1> and no ranges property.
 +
-+			infrarst: reset-controller@30 {
-+				#reset-cells = <1>;
-+				compatible = "mediatek,mt8135-infracfg-reset", "mediatek,reset";
-+				reg = <0x30 0x8>;
-+			};
-+		};
+ Required properties:
+ - compatible: Should contain "syscon".
+ - reg: the register region can be accessed from syscon
+ 
++Optional properties:
++- #address-cells: Should be 1.
++- #size-cells: Should be 0 or 1.
 +
-+		pericfg: syscon@10003000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "mediatek,mt8135-pericfg", "syscon";
-+			reg = <0 0x10003000 0 0x1000>;
+ Examples:
+ gpr: iomuxc-gpr@020e0000 {
++	#address-cells = <1>;
++	#size-cells = <0>;
+ 	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
+ 	reg = <0x020e0000 0x38>;
+ };
+diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+index ca15878..38da178 100644
+--- a/drivers/mfd/syscon.c
++++ b/drivers/mfd/syscon.c
+@@ -155,6 +155,9 @@ static int syscon_probe(struct platform_device *pdev)
+ 
+ 	dev_dbg(dev, "regmap %pR registered\n", res);
+ 
++	if (!of_device_is_compatible(pdev->dev.of_node, "simple-bus"))
++		of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
 +
-+			perirst: reset-controller@00 {
-+				#reset-cells = <1>;
-+				compatible = "mediatek,mt8135-pericfg-reset", "mediatek,reset";
-+				reg = <0x00 0x8>;
-+			};
-+		};
-+
- 		gic: interrupt-controller@10211000 {
- 			compatible = "arm,cortex-a15-gic";
- 			interrupt-controller;
+ 	return 0;
+ }
+ 
 -- 
-1.8.1.1.dirty
+2.1.1
