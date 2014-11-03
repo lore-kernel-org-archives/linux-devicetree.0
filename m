@@ -1,59 +1,43 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 6/8] regulator: max77686: Add external GPIO control
-Date: Mon, 03 Nov 2014 13:07:02 +0100
-Message-ID: <1415016422.4241.28.camel@AMDC1943>
-References: <1414422226-10948-7-git-send-email-k.kozlowski@samsung.com>
- <544EA4FA.6040704@collabora.co.uk> <1414486356.24949.19.camel@AMDC1943>
- <1414498308.24949.32.camel@AMDC1943> <1414579362.18868.11.camel@AMDC1943>
- <5450C63B.3000602@collabora.co.uk>
- <CAAVeFuLncbkNLGxEAj90yMmugRDNjtjeGoV_QYTMDZ7NVMJCmg@mail.gmail.com>
- <1414681386.26703.6.camel@AMDC1943>
- <CAAVeFuJo1wTyxOo4FEZM3=GTejuSHi+mnr=QV6HUeV5mAOCmqg@mail.gmail.com>
- <1414741898.20071.8.camel@AMDC1943> <20141031103217.GJ18557@sirena.org.uk>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH 0/4] Touchscreen performance related fixes
+Date: Mon, 03 Nov 2014 13:17:28 +0100
+Message-ID: <54577258.9080508@linutronix.de>
+References: <1414408111-2631-1-git-send-email-vigneshr@ti.com> <544E821D.5040004@linutronix.de> <912A29987EAE174BA6CF187D7CDFA9CE26F46B2B@DLEE08.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20141031103217.GJ18557@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <912A29987EAE174BA6CF187D7CDFA9CE26F46B2B@DLEE08.ent.ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: "Griffis, Brad" <bgriffis@ti.com>, "R, Vignesh" <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, "Balbi, Felipe" <balbi@ti.com>, Jan Kardell <jan.kardell@telliq.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On pi=C4=85, 2014-10-31 at 10:32 +0000, Mark Brown wrote:
-> On Fri, Oct 31, 2014 at 08:51:38AM +0100, Krzysztof Kozlowski wrote:
->=20
-> > However new DT style parsing (regulator_of_get_init_data()) does th=
-e
-> > basic parsing stuff and this removes a lot of code from driver. The
-> > driver no longer parses all regulaotrs but the regulator core does =
-it.
-> > Unfortunately regulator core does not parse custom bindings (like s=
-uch
-> > GPIOs) so I would have to iterate once again through all regulators=
- just
-> > to find "gpios" property.
->=20
-> We could always add a callback for the driver to handle any custom
-> properties...  one of the advantages of an OS like Linux is that we c=
-an
-> improve the core code.
+On 10/27/2014 08:02 PM, Griffis, Brad wrote:
+> On 10/27/2014 12:34 PM, Sebastian Andrzej Siewior wrote:
+>> Do we really need #3 (and then #4)? Given the complexity we have already, is there any benefit by decreasing this value? 
+> 
+> I specifically requested we add ti,charge-delay to the device tree because it is THE critical value to tune for a given design.  Although I think the current value of 0xB000 will be suitable for a great many designs, I expect that many users will need to adjust this value for their hardware.  Details such as which touchscreen vendor is being used and how the touchscreen is connected (header vs cable) have an effect on what's appropriate here.
 
-I thought about this - adding a callback, called on each child in
-regulator_of_get_init_data(). However the reason behind this callback i=
-s
-to parse GPIO and set config.ena_gpio. However in that context the
-regulator_config is const so the callback cannot change it. Unless it
-casts it to non-const... which isn't what we want I think.
+Oh. That is one knob I hoped we could avoid since I haven't seen it
+before on other TSCs. But okay. Please make sure that there is a
+message printed if the default value is used. And lets hope the user
+will do something about his.
 
-So now I wonder whether adding generic bindings for ena_gpio make sense=
-=2E
-These would look like bindings for fixed-regulator (with "ena-" prefix)=
-=2E
-Unfortunately this would duplicate a little the ena_gpio in
-regulator_config... but to me it seems more appropriate.
+>> Would  someone want to increase it? Can we safely determine a value which works for everyone?
+> 
+> This value represents a hardware delay before checking for the pen-up event.  So in the scenario where someone is seeing excessive false pen-up events they will want to increase this parameter.  The downsize of making this larger is that it decreases the overall sampling speed of both the touchscreen as well as the standalone ADC samples.  At one point I tried making it huge, but that made the touchscreen overly sluggish because the sampling became too slow.  So there is a definite trade-off that if you make it too large the touchscreen becomes sluggish, and if you make it too small then you may see false pen-up events.  The optimal value will need to be tuned for a given design.
 
-What do you think about adding generic bindings for ena_gpio?
+I applied the patches from this series and did the following test on my
+am335x-evm: A mug on the touchscreen (to make sure the events are
+coming), evtest on the event node to see that the events and loop of
 
-Best regards,
-Krzysztof
+	cat /sys/bus/iio/devices/iio\:device0/in_voltage4_raw
+
+In the past I was able lock up the TSC/ADC HW that way (see commit
+7ca6740cd1 ("mfd: input: iio: ti_amm335x: Rework TSC/ADC
+synchronization")) for details.
+With this patches applied I don't seen any TSC events once the IIO
+interface is (heavily) used. Can this be fixed?
+
+Sebastian
