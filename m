@@ -1,45 +1,49 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: Re: [PATCH v1 1/2] dtb: xgene: fix: Disable 10GbE and SGMII based
- 1GbE by default
-Date: Mon, 3 Nov 2014 11:45:44 -0800
-Message-ID: <CAKh23FkVrPdCuR6dn1S4RvW14_f4Xq8MWaChUh9DyVp44kVtSg@mail.gmail.com>
-References: <1414630580-24640-1-git-send-email-isubramanian@apm.com>
-	<1414630580-24640-2-git-send-email-isubramanian@apm.com>
-	<1991367.DGHysZpQVP@wuerfel>
+From: carolyn24164-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Subject: Fix Penguin Penalty 17th October2014 ( mail-archive.com )
+Date: Tue, 4 Nov 2014 01:24:21 +0530
+Message-ID: <5457dd6e.c4a2420a.2d38.5a68@mx.google.com>
+Reply-To: seo.expert388-/E1597aS9LQAvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1991367.DGHysZpQVP@wuerfel>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Miller <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Keyur Chudgar <kchudgar@apm.com>, patches <patches@apm.com>
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Dear Sir
 
-On Thu, Oct 30, 2014 at 3:13 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wednesday 29 October 2014 17:56:19 Iyappan Subramanian wrote:
->> @@ -621,7 +621,7 @@
->>                         };
->>                 };
->>
->> -               sgenet0: ethernet@1f210000 {
->> +               sgenet0: sgenet@1f210000 {
->>                         compatible = "apm,xgene-enet";
->>                         status = "disabled";
->>                         reg = <0x0 0x1f210000 0x0 0x10000>,
->>
->
-> This looks like you accidentally reverted a bug fix made earlier.
-> Network devices should always have the name 'ethernet@...'.
+Did your website get hit by Google Penguin update on October 17th 2014?=
+ What basically is Google Penguin Update? It is actually a code name fo=
+r Google algorithm which aims at decreasing your websites search engine=
+ rankings that violate Google=92s guidelines by using black hat SEO tec=
+hniques to rank your webpage by giving number of spammy links to the pa=
+ge.
+=20
+We are one of those few SEO companies that can help you avoid penalties=
+ from Google Updates like Penguin and Panda. Our clients have survived =
+all the previous and present updates with ease. They have never been hi=
+t because we use 100% white hat SEO techniques to rank Webpages.  Simpl=
+e thing that we do to keep websites away from any Penguin or Panda pena=
+lties is follow Google guidelines and we give Google users the best ans=
+wers to their queries.
 
-Thanks for the review.  Since our firmware was patching the dtb, based
-on the node-name, we thought by changing node-name, we can avoid the
-patching and maintain backward compatibility.
+If you are looking to increase the quality of your websites and to get =
+more targeted traffic or save your websites from these Google penalties=
+ email us back with your interest.=20
 
-Now we know that network devices should have 'ethernet@...', we will
-handle the backward compatibility in a different way and will post the
-patch v2 shortly.
+We will be glad to serve you and help you grow your business.
 
->
->         Arnd
+Regards
+
+Vince G
+
+SEO Manager ( TOB )
+B7 Green Avenue, Amritsar 143001 Punjab
+____________________________
+NO CLICK in the subject to STOP EMAILS
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
