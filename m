@@ -1,123 +1,171 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v2] pinctrl: dra: dt-bindings: Fix output pull up/down
-Date: Mon, 3 Nov 2014 11:56:34 -0600
-Message-ID: <CAGo_u6p-A4X9ux5RArvziKwYzPQECUwv8tUEJyAXNAPkP+Sjfg@mail.gmail.com>
-References: <1414752745-13696-1-git-send-email-rogerq@ti.com>
-	<1415009392-6627-1-git-send-email-rogerq@ti.com>
-	<20141103143023.GA8260@kahuna>
-	<545794CB.5030802@ti.com>
-	<54579858.4030605@ti.com>
-	<54579A4B.9060301@ti.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v4 3/8] ARM: mediatek: Add basic support for mt8135
+Date: Mon, 3 Nov 2014 18:58:09 +0100
+Message-ID: <CABuKBeKx3hKiCRwM0jGwjpbF929BZC313DY6KQR8hUsi3jwLcA@mail.gmail.com>
+References: <1413973797-17619-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1413973797-17619-4-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <54579A4B.9060301@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, "Balbi, Felipe" <balbi@ti.com>, linux-omap <linux-omap@vger.kernel.org>, dt list <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413973797-17619-4-git-send-email-yingjoe.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Joe.C" <yingjoe.chen@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Yingjoe Chen <yingjoe.chen@gmail.com>, Hsien-Chun Yen <hc.yen@mediatek.com>, huang eddie <eddie.huang@mediatek.com>, Nathan Chung <nathan.chung@mediatek.com>, Yuhau Chen <yh.chen@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 3, 2014 at 9:07 AM, Roger Quadros <rogerq@ti.com> wrote:
-> On 11/03/2014 04:59 PM, Nishanth Menon wrote:
->> On 11/03/2014 08:44 AM, Roger Quadros wrote:
->>> On 11/03/2014 04:30 PM, Nishanth Menon wrote:
->>>> On 12:09-20141103, Roger Quadros wrote:
->>>>> For PIN_OUTPUT_PULLUP and PIN_OUTPUT_PULLDOWN we must not set the
->>>>> PULL_DIS bit which disables the PULLs.
->>>>>
->>>>> PULL_ENA is a 0 and using it in an OR operation is a NOP, so don't
->>>>> use it in the PIN_OUTPUT_PULLUP/DOWN macros.
->>>>>
->>>>> Fixes: 23d9cec07c58 ("pinctrl: dra: dt-bindings: Fix pull enable/disable")
->>>>>
->>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>>> ---
->>>>>  include/dt-bindings/pinctrl/dra.h | 4 ++--
->>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/include/dt-bindings/pinctrl/dra.h b/include/dt-bindings/pinctrl/dra.h
->>>>> index 3d33794..7448edf 100644
->>>>> --- a/include/dt-bindings/pinctrl/dra.h
->>>>> +++ b/include/dt-bindings/pinctrl/dra.h
->>>>> @@ -40,8 +40,8 @@
->>>>>
->>>>>  /* Active pin states */
->>>>>  #define PIN_OUTPUT                (0 | PULL_DIS)
->>>>> -#define PIN_OUTPUT_PULLUP (PIN_OUTPUT | PULL_ENA | PULL_UP)
->>>>> -#define PIN_OUTPUT_PULLDOWN       (PIN_OUTPUT | PULL_ENA)
->>>>> +#define PIN_OUTPUT_PULLUP (PULL_UP)
->>>>> +#define PIN_OUTPUT_PULLDOWN       (0)
->>>>>  #define PIN_INPUT         (INPUT_EN | PULL_DIS)
->>>>>  #define PIN_INPUT_SLEW            (INPUT_EN | SLEWCONTROL)
->>>>>  #define PIN_INPUT_PULLUP  (PULL_ENA | INPUT_EN | PULL_UP)
->>>>
->>>> You are right, we do have an issue with using PIN_OUTPUT along with
->>>> remaining setting.
->>>>
->>>> For a moment, I wondered why input was not impacted - then I realized
->>>> that INPUT_EN was being used instead of PIN_INPUT - following that
->>>> convention. With the intent being explicitly using macros that
->>>> clearly indicate what each setting combination is is, how about the
->>>> following?
->>>>
->>>>
->>>> diff --git a/include/dt-bindings/pinctrl/dra.h b/include/dt-bindings/pinctrl/dra.h
->>>> index 3d33794..d4037e7 100644
->>>> --- a/include/dt-bindings/pinctrl/dra.h
->>>> +++ b/include/dt-bindings/pinctrl/dra.h
->>>> @@ -34,14 +34,15 @@
->>>>  #define PULL_DIS           (1 << 16)
->>>>  #define PULL_UP                    (1 << 17)
->>>>  #define INPUT_EN           (1 << 18)
->>>> +#define OUTPUT_EN          (0 << 18)
->>>>  #define SLEWCONTROL                (1 << 19)
->>>>  #define WAKEUP_EN          (1 << 24)
->>>>  #define WAKEUP_EVENT               (1 << 25)
->>>>
->>>>  /* Active pin states */
->>>> -#define PIN_OUTPUT         (0 | PULL_DIS)
->>>> -#define PIN_OUTPUT_PULLUP  (PIN_OUTPUT | PULL_ENA | PULL_UP)
->>>> -#define PIN_OUTPUT_PULLDOWN        (PIN_OUTPUT | PULL_ENA)
->>>> +#define PIN_OUTPUT         (OUTPUT_EN | PULL_DIS)
->>>> +#define PIN_OUTPUT_PULLUP  (OUTPUT_EN | PULL_ENA | PULL_UP)
->>>> +#define PIN_OUTPUT_PULLDOWN        (OUTPUT_EN | PULL_ENA)
->>>
->>> To me it adds more confusion and this change is a NOP as we're ORing 0 here
->>> with OUTPUT_EN.
->>
->> look at this this way:
->>
->> PIN_OUTPUT_PULLDOWN   (OUTPUT_EN | PULL_ENA)
->>
->> should probably trigger in mind (what about PULLDOWN?)
->>
->> PIN_OUTPUT_PULLDOWN   (OUTPUT_EN | PULL_ENA | PULL_DOWN)
->>
->> then verify values of each OUTPUT_EN  -> 0 in bit 18, ok, etc.
->>
->>
->> if we ensure that PIN_XX macros use just the basic primitives, it is
->> easier to prevent the mistake like the one I made. the other option of
->> not defining macros whose values are 0 implies that the reviewer has
->> to recheck against trm to ensure all the right "1" bits are set.
->>
->>
->> just my view here.
+2014-10-22 12:29 GMT+02:00 Joe.C <yingjoe.chen@mediatek.com>:
+> From: "Joe.C" <yingjoe.chen@mediatek.com>
 >
-> Aren't the macros defining the bit positions not the actual enable or
-> disable actions?
+> This adds a basic dtsi for MT8135 based SoC.
 >
-> If we go by what you said then you will have to add
-> WAKEUP_DIS, SLEWCONTROL_DIS, WAKEUP_EVENT_DIS and so on.
+> Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
+> ---
+>  arch/arm/boot/dts/mt8135.dtsi     | 115 ++++++++++++++++++++++++++++++++++++++
+>  arch/arm/mach-mediatek/mediatek.c |   1 +
+>  2 files changed, 116 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/mt8135.dtsi
 >
-> Which again makes no sense as you will have to define them to zero.
+> diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
+> new file mode 100644
+> index 0000000..90a56ad
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/mt8135.dtsi
+> @@ -0,0 +1,115 @@
+> +/*
+> + * Copyright (c) 2014 MediaTek Inc.
+> + * Author: Joe.C <yingjoe.chen@mediatek.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include "skeleton64.dtsi"
 
-WAKEUP should not be defined anyways - pinctrl controls them - should
-probably remove them from header.
+Same here A15 is 32 bits.
 
-but your point is probably a valid view w.r.t TI SoC bit definitions -
-we just define the "1" states in omap.h as well.
+> +
+> +/ {
+> +       compatible = "mediatek,mt8135";
+> +       interrupt-parent = <&gic>;
+> +
+> +       cpu-map {
+> +               cluster0 {
+> +                       core0 {
+> +                               cpu = <&cpu0>;
+> +                       };
+> +                       core1 {
+> +                               cpu = <&cpu1>;
+> +                       };
+> +               };
+> +
+> +               cluster1 {
+> +                       core0 {
+> +                               cpu = <&cpu2>;
+> +                       };
+> +                       core1 {
+> +                               cpu = <&cpu3>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       cpus {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               cpu0: cpu@0 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x000>;
+> +               };
+> +
+> +               cpu1: cpu@1 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0x001>;
+> +               };
+> +
+> +               cpu2: cpu@100 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a15";
+> +                       reg = <0x100>;
+> +               };
+> +
+> +               cpu3: cpu@101 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a15";
+> +                       reg = <0x101>;
+> +               };
+> +       };
+> +
+> +       clocks {
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               compatible = "simple-bus";
+> +               ranges;
+> +
+> +               system_clk: dummy13m {
+> +                       compatible = "fixed-clock";
+> +                       clock-frequency = <13000000>;
+> +                       #clock-cells = <0>;
+> +               };
+> +
+> +               rtc_clk: dummy32k {
+> +                       compatible = "fixed-clock";
+> +                       clock-frequency = <32000>;
+> +                       #clock-cells = <0>;
+> +               };
+> +       };
+> +
+> +       soc {
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               compatible = "simple-bus";
+> +               ranges;
+> +
+> +               timer: timer@10008000 {
+> +                       compatible = "mediatek,mt8135-timer", "mediatek,mt6577-timer";
+> +                       reg = <0 0x10008000 0 0x80>;
+> +                       interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&system_clk>, <&rtc_clk>;
+> +                       clock-names = "system-clk", "rtc-clk";
+> +               };
+> +
+> +               gic: interrupt-controller@10211000 {
+> +                       compatible = "arm,cortex-a15-gic";
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <3>;
+> +                       reg = <0 0x10211000 0 0x1000>,
+> +                             <0 0x10212000 0 0x1000>,
+> +                             <0 0x10214000 0 0x2000>,
+> +                             <0 0x10216000 0 0x2000>;
+> +               };
+> +       };
+> +};
+> diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
+> index 7f478ce..48051a2 100644
+> --- a/arch/arm/mach-mediatek/mediatek.c
+> +++ b/arch/arm/mach-mediatek/mediatek.c
+> @@ -20,6 +20,7 @@
+>  static const char * const mediatek_board_dt_compat[] = {
+>         "mediatek,mt6589",
+>         "mediatek,mt8127",
+> +       "mediatek,mt8135",
+>         NULL,
+>  };
+>
+> --
+> 1.8.1.1.dirty
+>
+
+
+
 -- 
----
-Regards,
-Nishanth Menon
+motzblog.wordpress.com
