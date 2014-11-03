@@ -1,73 +1,39 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 07/17] bus: mvebu-mbus: suspend/resume support
-Date: Mon, 3 Nov 2014 22:20:40 +0100
-Message-ID: <20141103222040.045231ae@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 06/17] gpio: mvebu: add suspend/resume support
+Date: Mon, 3 Nov 2014 22:21:55 +0100
+Message-ID: <20141103222155.49bcb7ef@free-electrons.com>
 References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1414151970-6626-8-git-send-email-thomas.petazzoni@free-electrons.com>
-	<5457C495.7080403@free-electrons.com>
+	<1414151970-6626-7-git-send-email-thomas.petazzoni@free-electrons.com>
+	<5457C119.90809@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5457C495.7080403-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <5457C119.90809@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Dear Gregory CLEMENT,
 
-On Mon, 03 Nov 2014 19:08:21 +0100, Gregory CLEMENT wrote:
+On Mon, 03 Nov 2014 18:53:29 +0100, Gregory CLEMENT wrote:
 
-> >  struct mvebu_mbus_state {
-> >  	void __iomem *mbuswins_base;
-> >  	void __iomem *sdramwins_base;
-> > +	void __iomem *mbusbridge_base;
-> 
-> Here you store the information about the availability of the register needed
-> for suspend/resume ...
-> 
-> [...]
-> 
-> 
-> > +static int mvebu_mbus_suspend(void)
-> > +{
-> > +	struct mvebu_mbus_state *s = &mbus_state;
-> > +	int win;
-> > +
-> > +	for (win = 0; win < s->soc->num_wins; win++) {
-> > +		void __iomem *addr = s->mbuswins_base +
-> > +			s->soc->win_cfg_offset(win);
-> > +
-> > +		s->wins[win].base = readl(addr + WIN_BASE_OFF);
-> > +		s->wins[win].ctrl = readl(addr + WIN_CTRL_OFF);
-> > +
-> > +		if (win >= s->soc->num_remappable_wins)
-> > +			continue;
-> > +
-> > +		s->wins[win].remap_lo = readl(addr + WIN_REMAP_LO_OFF);
-> > +		s->wins[win].remap_hi = readl(addr + WIN_REMAP_HI_OFF);
-> > +	}
-> > +
-> > +	if (s->mbusbridge_base) {
-> > +		s->mbus_bridge_ctrl = readl(s->mbusbridge_base +
-> > +					    MBUS_BRIDGE_CTRL_OFF);
-> > +		s->mbus_bridge_base = readl(s->mbusbridge_base +
-> > +					    MBUS_BRIDGE_BASE_OFF);
-> > +	}
-> 
-> ... so here could you exit with an error if the register is not available.
-> Then it would prevent to enter in suspend instead of crashing the system.
+> I don't know if the suspend is supported on this platform but as we were
+> on the road to remove this platform I don't know it it worth testing it unless
+> some interested users show up.
 
-Hum, yeah, good point. Returning something like -ENODEV will abort the
-suspend procedure. I'll fix that. Thanks for the idea.
+The same can be said of the entire mv78xx0 support in gpio-mvebu: it's
+completely unused today. Since the migration to mv78xx0 has not been
+started, this platform is still using the old style GPIO driver in
+plat-orion/gpio.c. And therefore, all the mv78xx0 specific code in
+gpio-mvebu.c is purely "tentative" and has never been actually tested
+on HW.
+
+Best regards,
 
 Thomas
 -- 
 Thomas Petazzoni, CTO, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
