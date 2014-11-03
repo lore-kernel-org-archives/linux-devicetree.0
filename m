@@ -1,72 +1,43 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2 3/3] ARM: dts: mt8135: Add Reset Controller for
- MediaTek SoC
-Date: Mon, 03 Nov 2014 10:41:09 +0100
-Message-ID: <1415007669.3060.6.camel@pengutronix.de>
-References: <1415005371-4323-1-git-send-email-flora.fu@mediatek.com>
-	 <1415005371-4323-4-git-send-email-flora.fu@mediatek.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC Patch] gpio: add GPIO hogging mechanism
+Date: Mon, 3 Nov 2014 10:43:46 +0100
+Message-ID: <CACRpkda-HbKmN_RisHpWRV4bquwpBsd4RgaA5pW0qXrhYChRYA@mail.gmail.com>
+References: <1413922198-29373-1-git-send-email-bparrot@ti.com>
+	<3D00ADB3-00B3-40A8-8263-444BCADDAC33@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415005371-4323-4-git-send-email-flora.fu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Flora Fu <flora.fu@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <3D00ADB3-00B3-40A8-8263-444BCADDAC33@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@gmail.com>
+Cc: Benoit Parrot <bparrot@ti.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, den 03.11.2014, 17:02 +0800 schrieb Flora Fu:
-> Add reset controller to MT8135 board dts.
-> 
-> Signed-off-by: Flora Fu <flora.fu@mediatek.com>
-> ---
->  arch/arm/boot/dts/mt8135.dtsi | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
-> index 90a56ad..259a2b5 100644
-> --- a/arch/arm/boot/dts/mt8135.dtsi
-> +++ b/arch/arm/boot/dts/mt8135.dtsi
-> @@ -102,6 +102,32 @@
->  			clock-names = "system-clk", "rtc-clk";
->  		};
->  
-> +		infracfg: syscon@10001000 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
+On Wed, Oct 29, 2014 at 9:53 AM, Pantelis Antoniou
+<pantelis.antoniou@gmail.com> wrote:
 
-Same as with patch 2, please use #size-cells = <1>.
+> 3) I=E2=80=99m not very fond of having this being part of the gpio co=
+ntroller. This
+> configuration conceptually has little to do with the gpio controller =
+per se,
+> it is more of a board specific thing. Why not come up with a gpio-hog=
+ driver that
+> references GPIOs? That way with a single gpio-hog driver instance you=
+ could setup
+> all the GPIO-hogging configuration for all GPIOs on the board, even o=
+ne that
+> lie on different GPIO controllers.
 
-> +			compatible = "mediatek,mt8135-infracfg", "syscon";
-> +			reg = <0 0x10001000 0 0x1000>;
-> +
-> +			infrarst: reset-controller@30 {
-> +				#reset-cells = <1>;
-> +				compatible = "mediatek,mt8135-infracfg-reset", "mediatek,reset";
-> +				reg = <0x30 0x8>;
-> +			};
-> +		};
-> +
-> +		pericfg: syscon@10003000 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
+You have a point. But it's vital that we set up hogs at the same time a=
+s the
+gpio_chip is probed, not later, or there may be a race as to who
+gets the GPIO line, and that should be avoided at any cost.
 
-And here. Other than that,
-Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-> +			compatible = "mediatek,mt8135-pericfg", "syscon";
-> +			reg = <0 0x10003000 0 0x1000>;
-> +
-> +			perirst: reset-controller@00 {
-> +				#reset-cells = <1>;
-> +				compatible = "mediatek,mt8135-pericfg-reset", "mediatek,reset";
-> +				reg = <0x00 0x8>;
-> +			};
-> +		};
-> +
->  		gic: interrupt-controller@10211000 {
->  			compatible = "arm,cortex-a15-gic";
->  			interrupt-controller;
-
-regards
-Philipp
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
