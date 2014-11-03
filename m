@@ -1,56 +1,67 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: [PATCH v7 3/3] ARM: dts: rk3288: add VOP iommu nodes
-Date: Mon,  3 Nov 2014 10:53:29 +0800
-Message-ID: <1414983209-2472-4-git-send-email-djkurtz@chromium.org>
-References: <1414983209-2472-1-git-send-email-djkurtz@chromium.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] of/irq: Drop obsolete 'interrupts' vs 'interrupts-extended'
+ text
+Date: Sun, 02 Nov 2014 19:31:31 -0800
+Message-ID: <5456F713.8090503@gmail.com>
+References: <20141101233531.4958.96713.stgit@bhelgaas-glaptop2.roam.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1414983209-2472-1-git-send-email-djkurtz@chromium.org>
+In-Reply-To: <20141101233531.4958.96713.stgit@bhelgaas-glaptop2.roam.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Joerg Roedel <joro@8bytes.org>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Simon Xue <xxm@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Rockchip
-	SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add device nodes for the VOP iommus.
-Device nodes for other iommus will be added in later patches.
+Le 01/11/2014 16:35, Bjorn Helgaas a =C3=A9crit :
+> a9ecdc0fdc54 ("of/irq: Fix lookup to use 'interrupts-extended' proper=
+ty
+> first") updated the description to say that:
+>
+>    - Both 'interrupts' and 'interrupts-extended' may be present
+>    - Software should prefer 'interrupts-extended'
+>    - Software that doesn't comprehend 'interrupts-extended' may use
+>      'interrupts'
+>
+> But there is still a paragraph at the end that prohibits having both =
+and
+> says 'interrupts' should be preferred.
+>
+> Remove the contradictory text.
+>
+> Fixes: a9ecdc0fdc54 ("of/irq: Fix lookup to use 'interrupts-extended'=
+ property first")
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-The iommu nodes use the #iommu-cells property as described in:
-  Documentation/devicetree/bindings/iommu/iommu.txt
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-Signed-off-by: Simon Xue <xxm@rock-chips.com>
----
- arch/arm/boot/dts/rk3288.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 5950b0a..df1170c 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -271,6 +271,24 @@
- 		status = "disabled";
- 	};
- 
-+	vopb_mmu: iommu@ff930300 {
-+		compatible = "rockchip,iommu";
-+		reg = <0xff930300 0x100>;
-+		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "vopb_mmu";
-+		#iommu-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	vopl_mmu: iommu@ff940300 {
-+		compatible = "rockchip,iommu";
-+		reg = <0xff940300 0x100>;
-+		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "vopl_mmu";
-+		#iommu-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	gic: interrupt-controller@ffc01000 {
- 		compatible = "arm,gic-400";
- 		interrupt-controller;
--- 
-2.1.0.rc2.206.gedb03e5
+> CC: stable@vger.kernel.org	# v3.13+
+> ---
+>   .../bindings/interrupt-controller/interrupts.txt   |    4 ----
+>   1 file changed, 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/i=
+nterrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/=
+interrupts.txt
+> index ce6a1a072028..8a3c40829899 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/interrup=
+ts.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/interrup=
+ts.txt
+> @@ -30,10 +30,6 @@ should only be used when a device has multiple int=
+errupt parents.
+>     Example:
+>   	interrupts-extended =3D <&intc1 5 1>, <&intc2 1 0>;
+>
+> -A device node may contain either "interrupts" or "interrupts-extende=
+d", but not
+> -both. If both properties are present, then the operating system shou=
+ld log an
+> -error and use only the data in "interrupts".
+> -
+>   2) Interrupt controller nodes
+>   -----------------------------
+>
+>
