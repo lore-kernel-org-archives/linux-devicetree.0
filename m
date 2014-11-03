@@ -1,75 +1,83 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v2] mfd: syscon: add child device support
-Date: Mon,  3 Nov 2014 10:16:48 +0100
-Message-ID: <1415006209-1312-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Flora Fu <flora.fu@mediatek.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Philipp Zabel <p.zabel@pengutronix.de>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH] pinctrl: dra: dt-bindings: Fix output pull up/down
+Date: Mon, 3 Nov 2014 11:28:57 +0200
+Message-ID: <54574AD9.3040907@ti.com>
+References: <1414752745-13696-1-git-send-email-rogerq@ti.com> <20141031135030.GA25252@kahuna>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20141031135030.GA25252@kahuna>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: tony@atomide.com, balbi@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-For devices which have a complete register for themselves, it is possible to
-place them next to the syscon device with overlapping reg ranges. The same is
-not possible for devices which only occupy bitfields in registers shared with
-other users.
-For devices that are completely controlled by bitfields in the syscon address
-range, such as multiplexers or voltage regulators, allow to put child devices
-into the syscon device node.
+On 10/31/2014 03:50 PM, Nishanth Menon wrote:
+> On 12:52-20141031, Roger Quadros wrote:
+>> For PIN_OUTPUT_PULLUP and PIN_OUTPUT_PULLDOWN we must not set the
+>> PULL_DIS bit which disables the PULLs.
+>>
+>> While at that get rid for the PULL_ENA defination. It is misleading
+>> as there is no PULL enable bit in the register. And a zero bit defination
+>> makes no sense.
+> It was done to make it readable. Pull is enabled when that bit is 0 and
+> disabled when that bit is 1. it is counter intutive enough for a macro
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
-Changes since v1:
- - Reworded binding documentation to allow #size-cells = <1>, which is useful
-   for syscon children that are controlled through a (possibly shared) register
-   range.
----
- Documentation/devicetree/bindings/mfd/syscon.txt | 13 +++++++++++++
- drivers/mfd/syscon.c                             |  3 +++
- 2 files changed, 16 insertions(+)
+But you can't enable the PULL by ORing it. you have to AND it's inverted version with the rest.
+It is confusing because it doesn't follow the logic of the other bit masks.
 
-diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
-index fe8150b..0c6b497 100644
---- a/Documentation/devicetree/bindings/mfd/syscon.txt
-+++ b/Documentation/devicetree/bindings/mfd/syscon.txt
-@@ -9,12 +9,25 @@ using a specific compatible value), interrogate the node (or associated
- OS driver) to determine the location of the registers, and access the
- registers directly.
- 
-+Optionally, devices that are controlled exclusively through syscon registers,
-+or even bitfields in shared syscon registers, can also be added as child nodes
-+to the syscon device node. These devices can implicitly assume their parent
-+node is a syscon provider without referencing it explicitly via phandle.
-+In this case, the syscon node should have #address-cells = <1> and
-+#size-cells = <0> or <1> and no ranges property.
-+
- Required properties:
- - compatible: Should contain "syscon".
- - reg: the register region can be accessed from syscon
- 
-+Optional properties:
-+- #address-cells: Should be 1.
-+- #size-cells: Should be 0 or 1.
-+
- Examples:
- gpr: iomuxc-gpr@020e0000 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
- 	reg = <0x020e0000 0x38>;
- };
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index ca15878..38da178 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -155,6 +155,9 @@ static int syscon_probe(struct platform_device *pdev)
- 
- 	dev_dbg(dev, "regmap %pR registered\n", res);
- 
-+	if (!of_device_is_compatible(pdev->dev.of_node, "simple-bus"))
-+		of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-+
- 	return 0;
- }
- 
--- 
-2.1.1
+> to be defined. I suggest retaining that and not mixing with the current
+> patch.
+
+Agreed. I'll revise this patch to not touch that macro.
+
+cheers,
+-roger
+
+> 
+> 
+>>
+>> Fixes: 23d9cec07c58 (:pinctrl: dra: dt-bindings: Fix pull enable/disable")
+> s/:pinctrl/"pinctrl/ ?
+> 
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>  include/dt-bindings/pinctrl/dra.h | 9 ++++-----
+>>  1 file changed, 4 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/include/dt-bindings/pinctrl/dra.h b/include/dt-bindings/pinctrl/dra.h
+>> index 3d33794..71098e4 100644
+>> --- a/include/dt-bindings/pinctrl/dra.h
+>> +++ b/include/dt-bindings/pinctrl/dra.h
+>> @@ -30,7 +30,6 @@
+>>  #define MUX_MODE14	0xe
+>>  #define MUX_MODE15	0xf
+>>  
+>> -#define PULL_ENA		(0 << 16)
+>>  #define PULL_DIS		(1 << 16)
+>>  #define PULL_UP			(1 << 17)
+>>  #define INPUT_EN		(1 << 18)
+>> @@ -40,12 +39,12 @@
+>>  
+>>  /* Active pin states */
+>>  #define PIN_OUTPUT		(0 | PULL_DIS)
+>> -#define PIN_OUTPUT_PULLUP	(PIN_OUTPUT | PULL_ENA | PULL_UP)
+>> -#define PIN_OUTPUT_PULLDOWN	(PIN_OUTPUT | PULL_ENA)
+>> +#define PIN_OUTPUT_PULLUP	(PULL_UP)
+>> +#define PIN_OUTPUT_PULLDOWN	(0)
+>>  #define PIN_INPUT		(INPUT_EN | PULL_DIS)
+>>  #define PIN_INPUT_SLEW		(INPUT_EN | SLEWCONTROL)
+>> -#define PIN_INPUT_PULLUP	(PULL_ENA | INPUT_EN | PULL_UP)
+>> -#define PIN_INPUT_PULLDOWN	(PULL_ENA | INPUT_EN)
+>> +#define PIN_INPUT_PULLUP	(INPUT_EN | PULL_UP)
+>> +#define PIN_INPUT_PULLDOWN	(INPUT_EN)
+>>  
+>>  #endif
+>>  
+>> -- 
+>> 1.8.3.2
+>>
+> 
+
