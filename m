@@ -1,83 +1,216 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH] pinctrl: dra: dt-bindings: Fix output pull up/down
-Date: Mon, 3 Nov 2014 11:28:57 +0200
-Message-ID: <54574AD9.3040907@ti.com>
-References: <1414752745-13696-1-git-send-email-rogerq@ti.com> <20141031135030.GA25252@kahuna>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20141031135030.GA25252@kahuna>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: tony@atomide.com, balbi@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2] clk: Add PWM clock driver
+Date: Mon,  3 Nov 2014 10:31:18 +0100
+Message-ID: <1415007078-7947-1-git-send-email-p.zabel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?UTF-8?q?Janusz=20U=C5=BCycki?= <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2014 03:50 PM, Nishanth Menon wrote:
-> On 12:52-20141031, Roger Quadros wrote:
->> For PIN_OUTPUT_PULLUP and PIN_OUTPUT_PULLDOWN we must not set the
->> PULL_DIS bit which disables the PULLs.
->>
->> While at that get rid for the PULL_ENA defination. It is misleading
->> as there is no PULL enable bit in the register. And a zero bit defination
->> makes no sense.
-> It was done to make it readable. Pull is enabled when that bit is 0 and
-> disabled when that bit is 1. it is counter intutive enough for a macro
+Some board designers, when running out of clock output pads, decide to
+(mis)use PWM output pads to provide a clock to external components.
+This driver supports this practice by providing an adapter between the
+PWM and clock bindings in the device tree. As the PWM bindings specify
+the period in the device tree, this is a fixed clock.
 
-But you can't enable the PULL by ORing it. you have to AND it's inverted version with the rest.
-It is confusing because it doesn't follow the logic of the other bit masks.
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+I'm resending this because last time the linux-pwm list was not in Cc:
+So far I have not received any comments on the patch itself. I have used
+it on a BoundaryDevices Nitrogen6X board to produce a master clock for
+the OV5640 MIPI CSI-2 camera module.
 
-> to be defined. I suggest retaining that and not mixing with the current
-> patch.
+Changes since v1:
+ - none (rebased onto v3.18-rc3)
+---
+ .../devicetree/bindings/clock/pwm-clock.txt        |  23 +++++
+ drivers/clk/Kconfig                                |   7 ++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-pwm.c                              | 110 +++++++++++++++++++++
+ 4 files changed, 141 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/pwm-clock.txt
+ create mode 100644 drivers/clk/clk-pwm.c
 
-Agreed. I'll revise this patch to not touch that macro.
+diff --git a/Documentation/devicetree/bindings/clock/pwm-clock.txt b/Documentation/devicetree/bindings/clock/pwm-clock.txt
+new file mode 100644
+index 0000000..d127d17
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/pwm-clock.txt
+@@ -0,0 +1,23 @@
++Binding for an external clock signal driven by a PWM pin.
++
++This binding uses the common clock binding[1] and the common PWM binding[2].
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++[2] Documentation/devicetree/bindings/pwm/pwm.txt
++
++Required properties:
++- compatible : shall be "pwm-clock".
++- #clock-cells : from common clock binding; shall be set to 0.
++- pwms : from common PWM binding; this determines the clock frequency
++  via the PWM period given in the pwm-specifier.
++
++Optional properties:
++- clock-output-names : From common clock binding.
++
++Example:
++	clock {
++		compatible = "pwm-clock";
++		#clock-cells = <0>;
++		clock-output-names = "mipi_mclk";
++		pwms = <&pwm2 0 40>; /* 1 / 40 ns = 25 MHz */
++	};
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 455fd17..36a6918a 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -129,6 +129,13 @@ config COMMON_CLK_PALMAS
+ 	  This driver supports TI Palmas devices 32KHz output KG and KG_AUDIO
+ 	  using common clock framework.
+ 
++config COMMON_CLK_PWM
++	bool "Clock driver for PWMs used as clock outputs"
++	depends on PWM
++	---help---
++	  Adapter driver so that any PWM output can be (mis)used as clock signal
++	  at 50% duty cycle.
++
+ config COMMON_CLK_PXA
+ 	def_bool COMMON_CLK && ARCH_PXA
+ 	---help---
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index d5fba5b..6a0c5cf 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -40,6 +40,7 @@ obj-$(CONFIG_ARCH_U300)			+= clk-u300.o
+ obj-$(CONFIG_ARCH_VT8500)		+= clk-vt8500.o
+ obj-$(CONFIG_COMMON_CLK_WM831X)		+= clk-wm831x.o
+ obj-$(CONFIG_COMMON_CLK_XGENE)		+= clk-xgene.o
++obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
+ obj-$(CONFIG_COMMON_CLK_AT91)		+= at91/
+ obj-$(CONFIG_ARCH_BCM_MOBILE)		+= bcm/
+ obj-$(CONFIG_ARCH_BERLIN)		+= berlin/
+diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
+new file mode 100644
+index 0000000..8f747b3
+--- /dev/null
++++ b/drivers/clk/clk-pwm.c
+@@ -0,0 +1,110 @@
++/*
++ * Copyright (C) 2014 Philipp Zabel, Pengutronix
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * PWM (mis)used as clock output
++ */
++#include <linux/clk-provider.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++
++struct clk_pwm {
++	struct clk_hw hw;
++	struct pwm_device *pwm;
++};
++
++#define to_clk_pwm(_hw) container_of(_hw, struct clk_pwm, hw)
++
++static int clk_pwm_enable(struct clk_hw *hw)
++{
++	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
++
++	return pwm_enable(clk_pwm->pwm);
++}
++
++static void clk_pwm_disable(struct clk_hw *hw)
++{
++	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
++
++	pwm_disable(clk_pwm->pwm);
++}
++
++static unsigned long clk_pwm_recalc_rate(struct clk_hw *hw,
++					 unsigned long parent_rate)
++{
++	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
++	unsigned int period_ns = pwm_get_period(clk_pwm->pwm);
++
++	return period_ns ? (1000000000 / period_ns) : 0;
++}
++
++const struct clk_ops clk_pwm_ops = {
++	.enable = clk_pwm_enable,
++	.disable = clk_pwm_disable,
++	.recalc_rate = clk_pwm_recalc_rate,
++};
++
++int clk_pwm_probe(struct platform_device *pdev)
++{
++	struct clk_init_data init;
++	struct clk_pwm *clk_pwm;
++	struct pwm_device *pwm;
++	struct clk *clk;
++	int ret;
++
++	clk_pwm = devm_kzalloc(&pdev->dev, sizeof(*clk_pwm), GFP_KERNEL);
++	if (!clk_pwm)
++		return -ENOMEM;
++
++	pwm = devm_pwm_get(&pdev->dev, NULL);
++	if (IS_ERR(pwm))
++		return PTR_ERR(pwm);
++
++	ret = pwm_config(pwm, (pwm->period + 1) >> 1, pwm->period);
++	if (ret < 0)
++		return ret;
++
++	init.name = "pwm-clock";
++	init.ops = &clk_pwm_ops;
++	init.flags = CLK_IS_ROOT;
++	init.num_parents = 0;
++
++	clk_pwm->pwm = pwm;
++	clk_pwm->hw.init = &init;
++	clk = devm_clk_register(&pdev->dev, &clk_pwm->hw);
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++
++	return of_clk_add_provider(pdev->dev.of_node,
++				   of_clk_src_simple_get, clk);
++}
++
++int clk_pwm_remove(struct platform_device *pdev)
++{
++	of_clk_del_provider(pdev->dev.of_node);
++
++	return 0;
++}
++
++static const struct of_device_id clk_pwm_dt_ids[] = {
++	{ .compatible = "pwm-clock" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, clk_pwm_dt_ids);
++
++static struct platform_driver clk_pwm_driver = {
++	.probe = clk_pwm_probe,
++	.driver = {
++		.name = "pwm-clock",
++		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(clk_pwm_dt_ids),
++	},
++};
++
++module_platform_driver(clk_pwm_driver);
+-- 
+2.1.1
 
-cheers,
--roger
-
-> 
-> 
->>
->> Fixes: 23d9cec07c58 (:pinctrl: dra: dt-bindings: Fix pull enable/disable")
-> s/:pinctrl/"pinctrl/ ?
-> 
->>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->>  include/dt-bindings/pinctrl/dra.h | 9 ++++-----
->>  1 file changed, 4 insertions(+), 5 deletions(-)
->>
->> diff --git a/include/dt-bindings/pinctrl/dra.h b/include/dt-bindings/pinctrl/dra.h
->> index 3d33794..71098e4 100644
->> --- a/include/dt-bindings/pinctrl/dra.h
->> +++ b/include/dt-bindings/pinctrl/dra.h
->> @@ -30,7 +30,6 @@
->>  #define MUX_MODE14	0xe
->>  #define MUX_MODE15	0xf
->>  
->> -#define PULL_ENA		(0 << 16)
->>  #define PULL_DIS		(1 << 16)
->>  #define PULL_UP			(1 << 17)
->>  #define INPUT_EN		(1 << 18)
->> @@ -40,12 +39,12 @@
->>  
->>  /* Active pin states */
->>  #define PIN_OUTPUT		(0 | PULL_DIS)
->> -#define PIN_OUTPUT_PULLUP	(PIN_OUTPUT | PULL_ENA | PULL_UP)
->> -#define PIN_OUTPUT_PULLDOWN	(PIN_OUTPUT | PULL_ENA)
->> +#define PIN_OUTPUT_PULLUP	(PULL_UP)
->> +#define PIN_OUTPUT_PULLDOWN	(0)
->>  #define PIN_INPUT		(INPUT_EN | PULL_DIS)
->>  #define PIN_INPUT_SLEW		(INPUT_EN | SLEWCONTROL)
->> -#define PIN_INPUT_PULLUP	(PULL_ENA | INPUT_EN | PULL_UP)
->> -#define PIN_INPUT_PULLDOWN	(PULL_ENA | INPUT_EN)
->> +#define PIN_INPUT_PULLUP	(INPUT_EN | PULL_UP)
->> +#define PIN_INPUT_PULLDOWN	(INPUT_EN)
->>  
->>  #endif
->>  
->> -- 
->> 1.8.3.2
->>
-> 
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
