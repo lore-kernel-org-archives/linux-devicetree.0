@@ -1,71 +1,123 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 2/8] ARM: mediatek: add dts for 8127 Moose board
-Date: Mon, 3 Nov 2014 18:55:34 +0100
-Message-ID: <CABuKBe+ku=vWiWbvAm8M7QgyzvVWZ5sdkRMocuUym8JTyk-okg@mail.gmail.com>
-References: <1413973797-17619-1-git-send-email-yingjoe.chen@mediatek.com>
-	<1413973797-17619-3-git-send-email-yingjoe.chen@mediatek.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v2] pinctrl: dra: dt-bindings: Fix output pull up/down
+Date: Mon, 3 Nov 2014 11:56:34 -0600
+Message-ID: <CAGo_u6p-A4X9ux5RArvziKwYzPQECUwv8tUEJyAXNAPkP+Sjfg@mail.gmail.com>
+References: <1414752745-13696-1-git-send-email-rogerq@ti.com>
+	<1415009392-6627-1-git-send-email-rogerq@ti.com>
+	<20141103143023.GA8260@kahuna>
+	<545794CB.5030802@ti.com>
+	<54579858.4030605@ti.com>
+	<54579A4B.9060301@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1413973797-17619-3-git-send-email-yingjoe.chen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Joe.C" <yingjoe.chen@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Yingjoe Chen <yingjoe.chen@gmail.com>, Hsien-Chun Yen <hc.yen@mediatek.com>, huang eddie <eddie.huang@mediatek.com>, Nathan Chung <nathan.chung@mediatek.com>, Yuhau Chen <yh.chen@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <54579A4B.9060301@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, "Balbi, Felipe" <balbi@ti.com>, linux-omap <linux-omap@vger.kernel.org>, dt list <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-10-22 12:29 GMT+02:00 Joe.C <yingjoe.chen@mediatek.com>:
-> From: "Joe.C" <yingjoe.chen@mediatek.com>
+On Mon, Nov 3, 2014 at 9:07 AM, Roger Quadros <rogerq@ti.com> wrote:
+> On 11/03/2014 04:59 PM, Nishanth Menon wrote:
+>> On 11/03/2014 08:44 AM, Roger Quadros wrote:
+>>> On 11/03/2014 04:30 PM, Nishanth Menon wrote:
+>>>> On 12:09-20141103, Roger Quadros wrote:
+>>>>> For PIN_OUTPUT_PULLUP and PIN_OUTPUT_PULLDOWN we must not set the
+>>>>> PULL_DIS bit which disables the PULLs.
+>>>>>
+>>>>> PULL_ENA is a 0 and using it in an OR operation is a NOP, so don't
+>>>>> use it in the PIN_OUTPUT_PULLUP/DOWN macros.
+>>>>>
+>>>>> Fixes: 23d9cec07c58 ("pinctrl: dra: dt-bindings: Fix pull enable/disable")
+>>>>>
+>>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>>>> ---
+>>>>>  include/dt-bindings/pinctrl/dra.h | 4 ++--
+>>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/include/dt-bindings/pinctrl/dra.h b/include/dt-bindings/pinctrl/dra.h
+>>>>> index 3d33794..7448edf 100644
+>>>>> --- a/include/dt-bindings/pinctrl/dra.h
+>>>>> +++ b/include/dt-bindings/pinctrl/dra.h
+>>>>> @@ -40,8 +40,8 @@
+>>>>>
+>>>>>  /* Active pin states */
+>>>>>  #define PIN_OUTPUT                (0 | PULL_DIS)
+>>>>> -#define PIN_OUTPUT_PULLUP (PIN_OUTPUT | PULL_ENA | PULL_UP)
+>>>>> -#define PIN_OUTPUT_PULLDOWN       (PIN_OUTPUT | PULL_ENA)
+>>>>> +#define PIN_OUTPUT_PULLUP (PULL_UP)
+>>>>> +#define PIN_OUTPUT_PULLDOWN       (0)
+>>>>>  #define PIN_INPUT         (INPUT_EN | PULL_DIS)
+>>>>>  #define PIN_INPUT_SLEW            (INPUT_EN | SLEWCONTROL)
+>>>>>  #define PIN_INPUT_PULLUP  (PULL_ENA | INPUT_EN | PULL_UP)
+>>>>
+>>>> You are right, we do have an issue with using PIN_OUTPUT along with
+>>>> remaining setting.
+>>>>
+>>>> For a moment, I wondered why input was not impacted - then I realized
+>>>> that INPUT_EN was being used instead of PIN_INPUT - following that
+>>>> convention. With the intent being explicitly using macros that
+>>>> clearly indicate what each setting combination is is, how about the
+>>>> following?
+>>>>
+>>>>
+>>>> diff --git a/include/dt-bindings/pinctrl/dra.h b/include/dt-bindings/pinctrl/dra.h
+>>>> index 3d33794..d4037e7 100644
+>>>> --- a/include/dt-bindings/pinctrl/dra.h
+>>>> +++ b/include/dt-bindings/pinctrl/dra.h
+>>>> @@ -34,14 +34,15 @@
+>>>>  #define PULL_DIS           (1 << 16)
+>>>>  #define PULL_UP                    (1 << 17)
+>>>>  #define INPUT_EN           (1 << 18)
+>>>> +#define OUTPUT_EN          (0 << 18)
+>>>>  #define SLEWCONTROL                (1 << 19)
+>>>>  #define WAKEUP_EN          (1 << 24)
+>>>>  #define WAKEUP_EVENT               (1 << 25)
+>>>>
+>>>>  /* Active pin states */
+>>>> -#define PIN_OUTPUT         (0 | PULL_DIS)
+>>>> -#define PIN_OUTPUT_PULLUP  (PIN_OUTPUT | PULL_ENA | PULL_UP)
+>>>> -#define PIN_OUTPUT_PULLDOWN        (PIN_OUTPUT | PULL_ENA)
+>>>> +#define PIN_OUTPUT         (OUTPUT_EN | PULL_DIS)
+>>>> +#define PIN_OUTPUT_PULLUP  (OUTPUT_EN | PULL_ENA | PULL_UP)
+>>>> +#define PIN_OUTPUT_PULLDOWN        (OUTPUT_EN | PULL_ENA)
+>>>
+>>> To me it adds more confusion and this change is a NOP as we're ORing 0 here
+>>> with OUTPUT_EN.
+>>
+>> look at this this way:
+>>
+>> PIN_OUTPUT_PULLDOWN   (OUTPUT_EN | PULL_ENA)
+>>
+>> should probably trigger in mind (what about PULLDOWN?)
+>>
+>> PIN_OUTPUT_PULLDOWN   (OUTPUT_EN | PULL_ENA | PULL_DOWN)
+>>
+>> then verify values of each OUTPUT_EN  -> 0 in bit 18, ok, etc.
+>>
+>>
+>> if we ensure that PIN_XX macros use just the basic primitives, it is
+>> easier to prevent the mistake like the one I made. the other option of
+>> not defining macros whose values are 0 implies that the reviewer has
+>> to recheck against trm to ensure all the right "1" bits are set.
+>>
+>>
+>> just my view here.
 >
-> Moose is a tablet evalutation board based on MT8127 SoC.
+> Aren't the macros defining the bit positions not the actual enable or
+> disable actions?
 >
-> Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
-> ---
->  arch/arm/boot/dts/mt8127-moose.dts | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 arch/arm/boot/dts/mt8127-moose.dts
+> If we go by what you said then you will have to add
+> WAKEUP_DIS, SLEWCONTROL_DIS, WAKEUP_EVENT_DIS and so on.
 >
-> diff --git a/arch/arm/boot/dts/mt8127-moose.dts b/arch/arm/boot/dts/mt8127-moose.dts
-> new file mode 100644
-> index 0000000..602e2f0
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mt8127-moose.dts
-> @@ -0,0 +1,24 @@
-> +/*
-> + * Copyright (c) 2014 MediaTek Inc.
-> + * Author: Joe.C <yingjoe.chen@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +/dts-v1/;
-> +#include "mt8127.dtsi"
-> +
-> +/ {
-> +       model = "mediatek,mt8127-moose", "mediatek,mt8127";
+> Which again makes no sense as you will have to define them to zero.
 
-The model should be a string that identifies the board, e.g. "Moose".
-Please add the compatible property.
+WAKEUP should not be defined anyways - pinctrl controls them - should
+probably remove them from header.
 
-> +
-> +       memory {
-> +               reg = <0 0x80000000 0 0x40000000>;
-
-See comment on mt8127 register definitions.
-
-> +       };
-> +};
-> --
-> 1.8.1.1.dirty
->
-
-
-
+but your point is probably a valid view w.r.t TI SoC bit definitions -
+we just define the "1" states in omap.h as well.
 -- 
-motzblog.wordpress.com
+---
+Regards,
+Nishanth Menon
