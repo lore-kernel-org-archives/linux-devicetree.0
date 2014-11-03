@@ -1,243 +1,401 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 2/2] ARM: dts: OMAP2+: Add #mbox-cells property to all mailbox nodes
-Date: Mon, 3 Nov 2014 17:07:35 -0600
-Message-ID: <1415056055-64201-3-git-send-email-s-anna@ti.com>
-References: <1415056055-64201-1-git-send-email-s-anna@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1415056055-64201-1-git-send-email-s-anna@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Dave Gerlach <d-gerlach@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Suman Anna <s-anna@ti.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] of: Fix overflow bug in string property parsing functions
+Date: Mon,  3 Nov 2014 23:38:24 +0000
+Message-ID: <1415057904-6187-1-git-send-email-grant.likely@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Darren Hart <darren.hart-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The '#mbox-cells' property is added to all the OMAP mailbox
-nodes. This property is mandatory with the new mailbox framework.
+The string property read helpers will run off the end of the buffer if
+it is handed a malformed string property. Rework the parsers to make
+sure that doesn't happen. At the same time add new test cases to make
+sure the functions behave themselves.
 
-Cc: "Beno=C3=AEt Cousson" <bcousson@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Signed-off-by: Suman Anna <s-anna@ti.com>
+The original implementations of of_property_read_string_index() and
+of_property_count_strings() both open-coded the same block of parsing
+code, each with it's own subtly different bugs. The fix here merges
+functions into a single helper and makes the original functions static
+inline wrappers around the helper.
+
+One non-bugfix aspect of this patch is the addition of a new wrapper,
+of_property_read_string_array(). The new wrapper is needed by the
+device_properties feature that Rafael is working on and planning to
+merge for v3.19. The implementation is identical both with and without
+the new static inline wrapper, so it just got left in to reduce the
+churn on the header file.
+
+Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rafael J. Wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Darren Hart <darren.hart-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>  # v3.3+: Drop selftest hunks that don't apply
 ---
- arch/arm/boot/dts/am33xx.dtsi   |  1 +
- arch/arm/boot/dts/am4372.dtsi   |  1 +
- arch/arm/boot/dts/dra7.dtsi     | 13 +++++++++++++
- arch/arm/boot/dts/omap2420.dtsi |  1 +
- arch/arm/boot/dts/omap2430.dtsi |  1 +
- arch/arm/boot/dts/omap3.dtsi    |  1 +
- arch/arm/boot/dts/omap4.dtsi    |  1 +
- arch/arm/boot/dts/omap5.dtsi    |  1 +
- 8 files changed, 20 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.d=
-tsi
-index 8318105..41659df 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -356,6 +356,7 @@
- 			reg =3D <0x480C8000 0x200>;
- 			interrupts =3D <77>;
- 			ti,hwmods =3D "mailbox";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <8>;
- 			mbox_wkupm3: wkup_m3 {
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.d=
-tsi
-index 46660ff..4367f75 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -168,6 +168,7 @@
- 			reg =3D <0x480C8000 0x200>;
- 			interrupts =3D <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <8>;
- 			mbox_wkupm3: wkup_m3 {
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index b8c9c67..2af7867 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -425,6 +425,7 @@
- 				     <GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox1";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <3>;
- 			ti,mbox-num-fifos =3D <8>;
- 			status =3D "disabled";
-@@ -438,6 +439,7 @@
- 				     <GIC_SPI 239 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 240 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox2";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -451,6 +453,7 @@
- 				     <GIC_SPI 243 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 244 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox3";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -464,6 +467,7 @@
- 				     <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 248 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox4";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -477,6 +481,7 @@
- 				     <GIC_SPI 251 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 252 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox5";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -490,6 +495,7 @@
- 				     <GIC_SPI 255 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox6";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -503,6 +509,7 @@
- 				     <GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 260 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox7";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -516,6 +523,7 @@
- 				     <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 264 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox8";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -529,6 +537,7 @@
- 				     <GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox9";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -542,6 +551,7 @@
- 				     <GIC_SPI 271 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox10";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -555,6 +565,7 @@
- 				     <GIC_SPI 275 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 276 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox11";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -568,6 +579,7 @@
- 				     <GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox12";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-@@ -581,6 +593,7 @@
- 				     <GIC_SPI 381 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 382 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox13";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <12>;
- 			status =3D "disabled";
-diff --git a/arch/arm/boot/dts/omap2420.dtsi b/arch/arm/boot/dts/omap24=
-20.dtsi
-index ae89aad..e2b2e93 100644
---- a/arch/arm/boot/dts/omap2420.dtsi
-+++ b/arch/arm/boot/dts/omap2420.dtsi
-@@ -157,6 +157,7 @@
- 			interrupts =3D <26>, <34>;
- 			interrupt-names =3D "dsp", "iva";
- 			ti,hwmods =3D "mailbox";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <6>;
- 			mbox_dsp: dsp {
-diff --git a/arch/arm/boot/dts/omap2430.dtsi b/arch/arm/boot/dts/omap24=
-30.dtsi
-index b56d7161..0dc8de2 100644
---- a/arch/arm/boot/dts/omap2430.dtsi
-+++ b/arch/arm/boot/dts/omap2430.dtsi
-@@ -247,6 +247,7 @@
- 			reg =3D <0x48094000 0x200>;
- 			interrupts =3D <26>;
- 			ti,hwmods =3D "mailbox";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <4>;
- 			ti,mbox-num-fifos =3D <6>;
- 			mbox_dsp: dsp {
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dts=
-i
-index d0e884d..8db7def 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -332,6 +332,7 @@
- 			ti,hwmods =3D "mailbox";
- 			reg =3D <0x48094000 0x200>;
- 			interrupts =3D <26>;
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <2>;
- 			ti,mbox-num-fifos =3D <2>;
- 			mbox_dsp: dsp {
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dts=
-i
-index 878c979..a46eab8 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -661,6 +661,7 @@
- 			reg =3D <0x4a0f4000 0x200>;
- 			interrupts =3D <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <3>;
- 			ti,mbox-num-fifos =3D <8>;
- 			mbox_ipu: mbox_ipu {
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dts=
-i
-index 256b7f6..b321fdf 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -651,6 +651,7 @@
- 			reg =3D <0x4a0f4000 0x200>;
- 			interrupts =3D <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "mailbox";
-+			#mbox-cells =3D <1>;
- 			ti,mbox-num-users =3D <3>;
- 			ti,mbox-num-fifos =3D <8>;
- 			mbox_ipu: mbox_ipu {
---=20
-2.1.0
+I'd like to get this into v3.18 in the next week. Please shout if you
+have any objections.
+
+ drivers/of/base.c                           | 88 ++++++++---------------------
+ drivers/of/selftest.c                       | 66 ++++++++++++++++++++--
+ drivers/of/testcase-data/tests-phandle.dtsi |  2 +
+ include/linux/of.h                          | 84 ++++++++++++++++++++++-----
+ 4 files changed, 154 insertions(+), 86 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 2305dc0382bc..3823edf2d012 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1280,52 +1280,6 @@ int of_property_read_string(struct device_node *np, const char *propname,
+ EXPORT_SYMBOL_GPL(of_property_read_string);
+ 
+ /**
+- * of_property_read_string_index - Find and read a string from a multiple
+- * strings property.
+- * @np:		device node from which the property value is to be read.
+- * @propname:	name of the property to be searched.
+- * @index:	index of the string in the list of strings
+- * @out_string:	pointer to null terminated return string, modified only if
+- *		return value is 0.
+- *
+- * Search for a property in a device tree node and retrieve a null
+- * terminated string value (pointer to data, not a copy) in the list of strings
+- * contained in that property.
+- * Returns 0 on success, -EINVAL if the property does not exist, -ENODATA if
+- * property does not have a value, and -EILSEQ if the string is not
+- * null-terminated within the length of the property data.
+- *
+- * The out_string pointer is modified only if a valid string can be decoded.
+- */
+-int of_property_read_string_index(struct device_node *np, const char *propname,
+-				  int index, const char **output)
+-{
+-	struct property *prop = of_find_property(np, propname, NULL);
+-	int i = 0;
+-	size_t l = 0, total = 0;
+-	const char *p;
+-
+-	if (!prop)
+-		return -EINVAL;
+-	if (!prop->value)
+-		return -ENODATA;
+-	if (strnlen(prop->value, prop->length) >= prop->length)
+-		return -EILSEQ;
+-
+-	p = prop->value;
+-
+-	for (i = 0; total < prop->length; total += l, p += l) {
+-		l = strlen(p) + 1;
+-		if (i++ == index) {
+-			*output = p;
+-			return 0;
+-		}
+-	}
+-	return -ENODATA;
+-}
+-EXPORT_SYMBOL_GPL(of_property_read_string_index);
+-
+-/**
+  * of_property_match_string() - Find string in a list and return index
+  * @np: pointer to node containing string list property
+  * @propname: string list property name
+@@ -1351,7 +1305,7 @@ int of_property_match_string(struct device_node *np, const char *propname,
+ 	end = p + prop->length;
+ 
+ 	for (i = 0; p < end; i++, p += l) {
+-		l = strlen(p) + 1;
++		l = strnlen(p, end - p) + 1;
+ 		if (p + l > end)
+ 			return -EILSEQ;
+ 		pr_debug("comparing %s with %s\n", string, p);
+@@ -1363,39 +1317,41 @@ int of_property_match_string(struct device_node *np, const char *propname,
+ EXPORT_SYMBOL_GPL(of_property_match_string);
+ 
+ /**
+- * of_property_count_strings - Find and return the number of strings from a
+- * multiple strings property.
++ * of_property_read_string_util() - Utility helper for parsing string properties
+  * @np:		device node from which the property value is to be read.
+  * @propname:	name of the property to be searched.
++ * @out_strs:	output array of string pointers.
++ * @sz:		number of array elements to read.
++ * @skip:	Number of strings to skip over at beginning of list.
+  *
+- * Search for a property in a device tree node and retrieve the number of null
+- * terminated string contain in it. Returns the number of strings on
+- * success, -EINVAL if the property does not exist, -ENODATA if property
+- * does not have a value, and -EILSEQ if the string is not null-terminated
+- * within the length of the property data.
++ * Don't call this function directly. It is a utility helper for the
++ * of_property_read_string*() family of functions.
+  */
+-int of_property_count_strings(struct device_node *np, const char *propname)
++int of_property_read_string_helper(struct device_node *np, const char *propname,
++				   const char **out_strs, size_t sz, int skip)
+ {
+ 	struct property *prop = of_find_property(np, propname, NULL);
+-	int i = 0;
+-	size_t l = 0, total = 0;
+-	const char *p;
++	int l = 0, i = 0;
++	const char *p, *end;
+ 
+ 	if (!prop)
+ 		return -EINVAL;
+ 	if (!prop->value)
+ 		return -ENODATA;
+-	if (strnlen(prop->value, prop->length) >= prop->length)
+-		return -EILSEQ;
+-
+ 	p = prop->value;
++	end = p + prop->length;
+ 
+-	for (i = 0; total < prop->length; total += l, p += l, i++)
+-		l = strlen(p) + 1;
+-
+-	return i;
++	for (i = 0; p < end && (!out_strs || i < skip + sz); i++, p += l) {
++		l = strnlen(p, end - p) + 1;
++		if (p + l > end)
++			return -EILSEQ;
++		if (out_strs && i >= skip)
++			*out_strs++ = p;
++	}
++	i -= skip;
++	return i <= 0 ? -ENODATA : i;
+ }
+-EXPORT_SYMBOL_GPL(of_property_count_strings);
++EXPORT_SYMBOL_GPL(of_property_read_string_helper);
+ 
+ void of_print_phandle_args(const char *msg, const struct of_phandle_args *args)
+ {
+diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+index 78001270a598..11b873c54a77 100644
+--- a/drivers/of/selftest.c
++++ b/drivers/of/selftest.c
+@@ -339,8 +339,9 @@ static void __init of_selftest_parse_phandle_with_args(void)
+ 	selftest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+ }
+ 
+-static void __init of_selftest_property_match_string(void)
++static void __init of_selftest_property_string(void)
+ {
++	const char *strings[4];
+ 	struct device_node *np;
+ 	int rc;
+ 
+@@ -357,13 +358,66 @@ static void __init of_selftest_property_match_string(void)
+ 	rc = of_property_match_string(np, "phandle-list-names", "third");
+ 	selftest(rc == 2, "third expected:0 got:%i\n", rc);
+ 	rc = of_property_match_string(np, "phandle-list-names", "fourth");
+-	selftest(rc == -ENODATA, "unmatched string; rc=%i", rc);
++	selftest(rc == -ENODATA, "unmatched string; rc=%i\n", rc);
+ 	rc = of_property_match_string(np, "missing-property", "blah");
+-	selftest(rc == -EINVAL, "missing property; rc=%i", rc);
++	selftest(rc == -EINVAL, "missing property; rc=%i\n", rc);
+ 	rc = of_property_match_string(np, "empty-property", "blah");
+-	selftest(rc == -ENODATA, "empty property; rc=%i", rc);
++	selftest(rc == -ENODATA, "empty property; rc=%i\n", rc);
+ 	rc = of_property_match_string(np, "unterminated-string", "blah");
+-	selftest(rc == -EILSEQ, "unterminated string; rc=%i", rc);
++	selftest(rc == -EILSEQ, "unterminated string; rc=%i\n", rc);
++
++	/* of_property_count_strings() tests */
++	rc = of_property_count_strings(np, "string-property");
++	selftest(rc == 1, "Incorrect string count; rc=%i\n", rc);
++	rc = of_property_count_strings(np, "phandle-list-names");
++	selftest(rc == 3, "Incorrect string count; rc=%i\n", rc);
++	rc = of_property_count_strings(np, "unterminated-string");
++	selftest(rc == -EILSEQ, "unterminated string; rc=%i\n", rc);
++	rc = of_property_count_strings(np, "unterminated-string-list");
++	selftest(rc == -EILSEQ, "unterminated string array; rc=%i\n", rc);
++
++	/* of_property_read_string_index() tests */
++	rc = of_property_read_string_index(np, "string-property", 0, strings);
++	selftest(rc == 0 && !strcmp(strings[0], "foobar"), "of_property_read_string_index() failure; rc=%i\n", rc);
++	strings[0] = NULL;
++	rc = of_property_read_string_index(np, "string-property", 1, strings);
++	selftest(rc == -ENODATA && strings[0] == NULL, "of_property_read_string_index() failure; rc=%i\n", rc);
++	rc = of_property_read_string_index(np, "phandle-list-names", 0, strings);
++	selftest(rc == 0 && !strcmp(strings[0], "first"), "of_property_read_string_index() failure; rc=%i\n", rc);
++	rc = of_property_read_string_index(np, "phandle-list-names", 1, strings);
++	selftest(rc == 0 && !strcmp(strings[0], "second"), "of_property_read_string_index() failure; rc=%i\n", rc);
++	rc = of_property_read_string_index(np, "phandle-list-names", 2, strings);
++	selftest(rc == 0 && !strcmp(strings[0], "third"), "of_property_read_string_index() failure; rc=%i\n", rc);
++	strings[0] = NULL;
++	rc = of_property_read_string_index(np, "phandle-list-names", 3, strings);
++	selftest(rc == -ENODATA && strings[0] == NULL, "of_property_read_string_index() failure; rc=%i\n", rc);
++	strings[0] = NULL;
++	rc = of_property_read_string_index(np, "unterminated-string", 0, strings);
++	selftest(rc == -EILSEQ && strings[0] == NULL, "of_property_read_string_index() failure; rc=%i\n", rc);
++	rc = of_property_read_string_index(np, "unterminated-string-list", 0, strings);
++	selftest(rc == 0 && !strcmp(strings[0], "first"), "of_property_read_string_index() failure; rc=%i\n", rc);
++	strings[0] = NULL;
++	rc = of_property_read_string_index(np, "unterminated-string-list", 2, strings); /* should fail */
++	selftest(rc == -EILSEQ && strings[0] == NULL, "of_property_read_string_index() failure; rc=%i\n", rc);
++	strings[1] = NULL;
++
++	/* of_property_read_string_array() tests */
++	rc = of_property_read_string_array(np, "string-property", strings, 4);
++	selftest(rc == 1, "Incorrect string count; rc=%i\n", rc);
++	rc = of_property_read_string_array(np, "phandle-list-names", strings, 4);
++	selftest(rc == 3, "Incorrect string count; rc=%i\n", rc);
++	rc = of_property_read_string_array(np, "unterminated-string", strings, 4);
++	selftest(rc == -EILSEQ, "unterminated string; rc=%i\n", rc);
++	/* -- An incorrectly formed string should cause a failure */
++	rc = of_property_read_string_array(np, "unterminated-string-list", strings, 4);
++	selftest(rc == -EILSEQ, "unterminated string array; rc=%i\n", rc);
++	/* -- parsing the correctly formed strings should still work: */
++	strings[2] = NULL;
++	rc = of_property_read_string_array(np, "unterminated-string-list", strings, 2);
++	selftest(rc == 2 && strings[2] == NULL, "of_property_read_string_array() failure; rc=%i\n", rc);
++	strings[1] = NULL;
++	rc = of_property_read_string_array(np, "phandle-list-names", strings, 1);
++	selftest(rc == 1 && strings[1] == NULL, "Overwrote end of string array; rc=%i, str='%s'\n", rc, strings[1]);
+ }
+ 
+ #define propcmp(p1, p2) (((p1)->length == (p2)->length) && \
+@@ -881,7 +935,7 @@ static int __init of_selftest(void)
+ 	of_selftest_find_node_by_name();
+ 	of_selftest_dynamic();
+ 	of_selftest_parse_phandle_with_args();
+-	of_selftest_property_match_string();
++	of_selftest_property_string();
+ 	of_selftest_property_copy();
+ 	of_selftest_changeset();
+ 	of_selftest_parse_interrupts();
+diff --git a/drivers/of/testcase-data/tests-phandle.dtsi b/drivers/of/testcase-data/tests-phandle.dtsi
+index ce0fe083d406..5b1527e8a7fb 100644
+--- a/drivers/of/testcase-data/tests-phandle.dtsi
++++ b/drivers/of/testcase-data/tests-phandle.dtsi
+@@ -39,7 +39,9 @@
+ 				phandle-list-bad-args = <&provider2 1 0>,
+ 							<&provider3 0>;
+ 				empty-property;
++				string-property = "foobar";
+ 				unterminated-string = [40 41 42 43];
++				unterminated-string-list = "first", "second", [40 41 42 43];
+ 			};
+ 		};
+ 	};
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 6545e7aec7bb..3b3c6e849ae8 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -267,14 +267,12 @@ extern int of_property_read_u64(const struct device_node *np,
+ extern int of_property_read_string(struct device_node *np,
+ 				   const char *propname,
+ 				   const char **out_string);
+-extern int of_property_read_string_index(struct device_node *np,
+-					 const char *propname,
+-					 int index, const char **output);
+ extern int of_property_match_string(struct device_node *np,
+ 				    const char *propname,
+ 				    const char *string);
+-extern int of_property_count_strings(struct device_node *np,
+-				     const char *propname);
++extern int of_property_read_string_helper(struct device_node *np,
++					      const char *propname,
++					      const char **out_strs, size_t sz, int index);
+ extern int of_device_is_compatible(const struct device_node *device,
+ 				   const char *);
+ extern int of_device_is_available(const struct device_node *device);
+@@ -486,15 +484,9 @@ static inline int of_property_read_string(struct device_node *np,
+ 	return -ENOSYS;
+ }
+ 
+-static inline int of_property_read_string_index(struct device_node *np,
+-						const char *propname, int index,
+-						const char **out_string)
+-{
+-	return -ENOSYS;
+-}
+-
+-static inline int of_property_count_strings(struct device_node *np,
+-					    const char *propname)
++static inline int of_property_read_string_helper(struct device_node *np,
++						 const char *propname,
++						 char **out_strs, size_t sz, int index)
+ {
+ 	return -ENOSYS;
+ }
+@@ -668,6 +660,70 @@ static inline int of_property_count_u64_elems(const struct device_node *np,
+ }
+ 
+ /**
++ * of_property_read_string_array() - Read an array of strings from a multiple
++ * strings property.
++ * @np:		device node from which the property value is to be read.
++ * @propname:	name of the property to be searched.
++ * @out_strs:	output array of string pointers.
++ * @sz:		number of array elements to read.
++ *
++ * Search for a property in a device tree node and retrieve a list of
++ * terminated string values (pointer to data, not a copy) in that property.
++ *
++ * If @out_strs is NULL, the number of strings in the property is returned.
++ */
++static inline int of_property_read_string_array(struct device_node *np,
++						const char *propname, const char **out_strs,
++						size_t sz)
++{
++	return of_property_read_string_helper(np, propname, out_strs, sz, 0);
++}
++
++/**
++ * of_property_count_strings() - Find and return the number of strings from a
++ * multiple strings property.
++ * @np:		device node from which the property value is to be read.
++ * @propname:	name of the property to be searched.
++ *
++ * Search for a property in a device tree node and retrieve the number of null
++ * terminated string contain in it. Returns the number of strings on
++ * success, -EINVAL if the property does not exist, -ENODATA if property
++ * does not have a value, and -EILSEQ if the string is not null-terminated
++ * within the length of the property data.
++ */
++static inline int of_property_count_strings(struct device_node *np,
++					    const char *propname)
++{
++	return of_property_read_string_helper(np, propname, NULL, 0, 0);
++}
++
++/**
++ * of_property_read_string_index() - Find and read a string from a multiple
++ * strings property.
++ * @np:		device node from which the property value is to be read.
++ * @propname:	name of the property to be searched.
++ * @index:	index of the string in the list of strings
++ * @out_string:	pointer to null terminated return string, modified only if
++ *		return value is 0.
++ *
++ * Search for a property in a device tree node and retrieve a null
++ * terminated string value (pointer to data, not a copy) in the list of strings
++ * contained in that property.
++ * Returns 0 on success, -EINVAL if the property does not exist, -ENODATA if
++ * property does not have a value, and -EILSEQ if the string is not
++ * null-terminated within the length of the property data.
++ *
++ * The out_string pointer is modified only if a valid string can be decoded.
++ */
++static inline int of_property_read_string_index(struct device_node *np,
++						const char *propname,
++						int index, const char **output)
++{
++	int rc = of_property_read_string_helper(np, propname, output, 1, index);
++	return rc < 0 ? rc : 0;
++}
++
++/**
+  * of_property_read_bool - Findfrom a property
+  * @np:		device node from which the property value is to be read.
+  * @propname:	name of the property to be searched.
+-- 
+1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
