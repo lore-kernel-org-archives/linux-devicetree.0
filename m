@@ -1,102 +1,71 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 06/17] gpio: mvebu: add suspend/resume support
-Date: Mon, 03 Nov 2014 18:53:29 +0100
-Message-ID: <5457C119.90809@free-electrons.com>
-References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com> <1414151970-6626-7-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v4 2/8] ARM: mediatek: add dts for 8127 Moose board
+Date: Mon, 3 Nov 2014 18:55:34 +0100
+Message-ID: <CABuKBe+ku=vWiWbvAm8M7QgyzvVWZ5sdkRMocuUym8JTyk-okg@mail.gmail.com>
+References: <1413973797-17619-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1413973797-17619-3-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1414151970-6626-7-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1413973797-17619-3-git-send-email-yingjoe.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Joe.C" <yingjoe.chen@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Yingjoe Chen <yingjoe.chen@gmail.com>, Hsien-Chun Yen <hc.yen@mediatek.com>, huang eddie <eddie.huang@mediatek.com>, Nathan Chung <nathan.chung@mediatek.com>, Yuhau Chen <yh.chen@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 24/10/2014 13:59, Thomas Petazzoni wrote:
-> This commit adds the implementation of ->suspend() and ->resume()
-> platform_driver hooks in order to save and restore the state of the
-> GPIO configuration. In order to achieve that, additional fields are
-> added to the mvebu_gpio_chip structure.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Alexandre Courbot <gnurou@gmail.com>
-> Cc: linux-gpio@vger.kernel.org
+2014-10-22 12:29 GMT+02:00 Joe.C <yingjoe.chen@mediatek.com>:
+> From: "Joe.C" <yingjoe.chen@mediatek.com>
+>
+> Moose is a tablet evalutation board based on MT8127 SoC.
+>
+> Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
 > ---
->  drivers/gpio/gpio-mvebu.c | 99 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 99 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> index 418e386..dd5545c 100644
-> --- a/drivers/gpio/gpio-mvebu.c
-> +++ b/drivers/gpio/gpio-mvebu.c
-> @@ -83,6 +83,14 @@ struct mvebu_gpio_chip {
->  	int		   irqbase;
->  	struct irq_domain *domain;
->  	int                soc_variant;
+>  arch/arm/boot/dts/mt8127-moose.dts | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/mt8127-moose.dts
+>
+> diff --git a/arch/arm/boot/dts/mt8127-moose.dts b/arch/arm/boot/dts/mt8127-moose.dts
+> new file mode 100644
+> index 0000000..602e2f0
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/mt8127-moose.dts
+> @@ -0,0 +1,24 @@
+> +/*
+> + * Copyright (c) 2014 MediaTek Inc.
+> + * Author: Joe.C <yingjoe.chen@mediatek.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
 > +
-> +	/* Used to preserve GPIO registers accross suspend/resume */
-                                           across
-
-> +	u32                out_reg;
-> +	u32                io_conf_reg;
-> +	u32                blink_en_reg;
-> +	u32                in_pol_reg;
-> +	u32                edge_mask_regs[4];
-> +	u32                level_mask_regs[4];
->  };
->  
->  /*
-> @@ -554,6 +562,93 @@ static const struct of_device_id mvebu_gpio_of_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, mvebu_gpio_of_match);
->  
-> +static int mvebu_gpio_suspend(struct platform_device *pdev, pm_message_t state)
-> +{
-> +	struct mvebu_gpio_chip *mvchip = platform_get_drvdata(pdev);
-> +	int i;
+> +/dts-v1/;
+> +#include "mt8127.dtsi"
 > +
-> +	mvchip->out_reg = readl(mvebu_gpioreg_out(mvchip));
-> +	mvchip->io_conf_reg = readl(mvebu_gpioreg_io_conf(mvchip));
-> +	mvchip->blink_en_reg = readl(mvebu_gpioreg_blink(mvchip));
-> +	mvchip->in_pol_reg = readl(mvebu_gpioreg_in_pol(mvchip));
+> +/ {
+> +       model = "mediatek,mt8127-moose", "mediatek,mt8127";
+
+The model should be a string that identifies the board, e.g. "Moose".
+Please add the compatible property.
+
 > +
-> +	switch (mvchip->soc_variant) {
-> +	case MVEBU_GPIO_SOC_VARIANT_ORION:
-> +		mvchip->edge_mask_regs[0] =
-> +			readl(mvchip->membase + GPIO_EDGE_MASK_OFF);
-> +		mvchip->level_mask_regs[0] =
-> +			readl(mvchip->membase + GPIO_LEVEL_MASK_OFF);
-> +		break;
-> +	case MVEBU_GPIO_SOC_VARIANT_MV78200:
-> +		for (i = 0; i < 2; i++) {
-> +			mvchip->edge_mask_regs[i] =
-> +				readl(mvchip->membase +
-> +				      GPIO_EDGE_MASK_MV78200_OFF(i));
-> +			mvchip->level_mask_regs[i] =
-> +				readl(mvchip->membase +
-> +				      GPIO_LEVEL_MASK_MV78200_OFF(i));
-> +		}
-> +		break;
+> +       memory {
+> +               reg = <0 0x80000000 0 0x40000000>;
 
-I don't know if the suspend is supported on this platform but as we were
-on the road to remove this platform I don't know it it worth testing it unless
-some interested users show up.
+See comment on mt8127 register definitions.
 
-I didn't tested it on a mv782xx platform but the patch looks correct:
-
-Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-
-
-Thanks,
-
-Gregory
+> +       };
+> +};
+> --
+> 1.8.1.1.dirty
+>
 
 
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+motzblog.wordpress.com
