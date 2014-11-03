@@ -1,138 +1,69 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v2 00/13] Xilinx Video IP Core support
-Date: Mon, 03 Nov 2014 11:16:08 +0100
-Message-ID: <545755E8.4010305@xs4all.nl>
-References: <1414940018-3016-1-git-send-email-laurent.pinchart@ideasonboard.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v3] mmc: dw_mmc: add support for the other bit of sdio interrupt
+Date: Mon, 03 Nov 2014 11:23:52 +0100
+Message-ID: <3540679.aQ4QUeBEJd@diego>
+References: <1414666240-16782-1-git-send-email-addy.ke@rock-chips.com> <1414977633-3196-1-git-send-email-addy.ke@rock-chips.com> <5457440E.3070002@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1414940018-3016-1-git-send-email-laurent.pinchart@ideasonboard.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org
-Cc: Michal Simek <michal.simek@xilinx.com>, Chris Kohn <christian.kohn@xilinx.com>, Hyun Kwon <hyun.kwon@xilinx.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5457440E.3070002@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: Addy Ke <addy.ke@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, huangtao@rock-chips.com, devicetree@vger.kernel.org, hl@rock-chips.com, linux-doc@vger.kernel.org, yzq@rock-chips.com, zyw@rock-chips.com, zhangqing@rock-chips.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, kever.yang@rock-chips.com, lintao@rock-chips.com, linux-rockchip@lists.infradead.org, xjq@rock-chips.com, zhenfu.fang@rock-chips.com, chenfen@rock-chips.com, cf@rock-chips.com, hj@rock-chips.com, linux-arm-kernel@lists.infradead.org, zyf@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi Jaehoon,
 
-On 11/02/2014 03:53 PM, Laurent Pinchart wrote:
-> Hello,
+Am Montag, 3. November 2014, 17:59:58 schrieb Jaehoon Chung:
+> Hi, Addy.
 > 
-> Here's the second version of the Xilinx FPGA Video IP Cores kernel drivers.
+> On 11/03/2014 10:20 AM, Addy Ke wrote:
+> > The bit of sdio interrupt is 16 in designware implementation,
+> > but it is 24 on Rockchip SoCs.This patch add sdio_id0 for the
+> > number of slot0 in the SDIO interrupt registers.
+> > 
+> > Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+> > ---
+> > Changes in v2:
+> > - rebase on http://git.linaro.org/git/people/ulf.hansson/mmc.git, next
+> > branch Changes in v3:
+> > - Remove dts for sdio_id0, just replace this with 8, suggested by Doug
+> > - Change to support all Rockchip Socs, suggested by Heiko
+> > 
+> >  drivers/mmc/host/dw_mmc-rockchip.c | 10 ++++++++++
+> >  drivers/mmc/host/dw_mmc.c          | 12 +++++++-----
+> >  drivers/mmc/host/dw_mmc.h          |  2 ++
+> >  include/linux/mmc/dw_mmc.h         |  3 +++
+> >  4 files changed, 22 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/mmc/host/dw_mmc-rockchip.c
+> > b/drivers/mmc/host/dw_mmc-rockchip.c index bbb4ec3..b997c8f 100644
+> > --- a/drivers/mmc/host/dw_mmc-rockchip.c
+> > +++ b/drivers/mmc/host/dw_mmc-rockchip.c
+> > @@ -68,14 +68,24 @@ static void dw_mci_rk3288_set_ios(struct dw_mci *host,
+> > struct mmc_ios *ios)> 
+> >  	}
+> >  
+> >  }
+> > 
+> > +static int dw_mci_rockchip_parse_dt(struct dw_mci *host)
+> > +{
+> > +	/* It is slot 8 on Rockchip SoCs */
+> > +	host->sdio_id0 = 8;
+> > +
+> > +	return 0;
+> > +}
 > 
-> I won't detail in great lengths the Xilinx Video IP architecture here, as that
-> would result in dozens of pages of documentation. The interested reader can
-> refer to the Zynq ZC702 Base TRD (Targeted Reference Design) User Guide
-> (http://www.xilinx.com/support/documentation/boards_and_kits/zc702_zvik/2014_2/ug925-zynq-zc702-base-trd.pdf).
-> 
-> In a nutshell, the Xilinx Video IP Cores architecture specifies how
-> video-related IP cores need to be designed to interoperate and how to assemble
-> them in pipelines of various complexities. The concepts map neatly to the
-> media controller architecture, which this patch set uses extensively.
-> 
-> The series starts with various new V4L2 core features, bug fixes or cleanups,
-> with a small documentation enhancement (01/13), the addition of new media bus
-> formats needed by the new drivers (02/13 to 04/13) and a new V4L2 OF link
-> parsing function (05/13).
-> 
-> The next two patches (06/13 and 07/13) fix two race conditions in videobuf2.
-> They could be applied seperately from this series as they're not specific to
-> Xilinx drivers.
-> 
-> The next three patches (08/13 to 10/13) fix bugs in the Xilinx Video DMA
-> driver. They are required as a runtime dependency but will not break
-> compilation. I will submit a separate pull request for them through the DMA
-> engine tree.
-> 
-> The last three patches are the core of this series.
-> 
-> Patch 11/13 adds support for the Xilinx Video IP architecture core in the form
-> of a base object to model video IP cores (xilinx-vip.c - Video IP), a
-> framework that parses a DT representation of a video pipeline and connects the
-> corresponding V4L2 subdevices together (xilinx-vipp.c - Video IP Pipeline) and
-> a glue between the Video DMA engine driver and the V4L2 API (xilinx-dma.c).
-> 
-> Patch 12/13 adds a driver for the Video Timing Controller (VTC) IP core. While
-> not strictly a video processing IP core, the VTC is required by other video IP
-> core drivers.
-> 
-> Finally, patch 13/13 adds a first video IP core driver for the Test Pattern
-> Generator (TPG). Drivers for other IP cores will be added in the future.
+> Well, function is "__parse_dt__", but this function don't parse anything.
+> If All rockchip soc is supported, i think that it can be located to other
+> place.
 
-Can you add a 'Changes since' section next time? It helps reviewing.
+do you have a suggestion for a location?
 
-For patches 1-7 and 12-13:
+The only alternative I can see right now would be using the init-hook in 
+dw_mci_drv_data or adding a new field to it holding the slot-offset.
+[with using the init-hook being my personal preference of the two]
 
-Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
 
-Regards,
-
-	Hans
-
-> 
-> Cc: devicetree@vger.kernel.org
-> 
-> Hyun Kwon (2):
->   v4l: Sort YUV formats of v4l2_mbus_pixelcode
->   v4l: Add VUY8 24 bits bus format
-> 
-> Laurent Pinchart (8):
->   media: entity: Document the media_entity_ops structure
->   v4l: Add RBG and RGB 8:8:8 media bus formats on 24 and 32 bit busses
->   v4l: of: Add v4l2_of_parse_link() function
->   v4l: vb2: Fix race condition in vb2_fop_poll
->   v4l: vb2: Fix race condition in _vb2_fop_release
->   v4l: xilinx: Add Xilinx Video IP core
->   v4l: xilinx: Add Video Timing Controller driver
->   v4l: xilinx: Add Test Pattern Generator driver
-> 
-> Srikanth Thokala (3):
->   dma: xilinx: vdma: Check if the segment list is empty in a descriptor
->   dma: xilinx: vdma: Allow only one chunk in a line
->   dma: xilinx: vdma: icg should be difference of stride and hsize
-> 
->  Documentation/DocBook/media/v4l/subdev-formats.xml | 719 +++++++++-------
->  .../devicetree/bindings/media/xilinx/video.txt     |  52 ++
->  .../devicetree/bindings/media/xilinx/xlnx,v-tc.txt |  33 +
->  .../bindings/media/xilinx/xlnx,v-tpg.txt           |  68 ++
->  .../bindings/media/xilinx/xlnx,video.txt           |  55 ++
->  MAINTAINERS                                        |  10 +
->  drivers/dma/xilinx/xilinx_vdma.c                   |  13 +-
->  drivers/media/platform/Kconfig                     |   1 +
->  drivers/media/platform/Makefile                    |   2 +
->  drivers/media/platform/xilinx/Kconfig              |  23 +
->  drivers/media/platform/xilinx/Makefile             |   5 +
->  drivers/media/platform/xilinx/xilinx-dma.c         | 770 +++++++++++++++++
->  drivers/media/platform/xilinx/xilinx-dma.h         | 109 +++
->  drivers/media/platform/xilinx/xilinx-tpg.c         | 921 +++++++++++++++++++++
->  drivers/media/platform/xilinx/xilinx-vip.c         | 269 ++++++
->  drivers/media/platform/xilinx/xilinx-vip.h         | 227 +++++
->  drivers/media/platform/xilinx/xilinx-vipp.c        | 669 +++++++++++++++
->  drivers/media/platform/xilinx/xilinx-vipp.h        |  49 ++
->  drivers/media/platform/xilinx/xilinx-vtc.c         | 386 +++++++++
->  drivers/media/platform/xilinx/xilinx-vtc.h         |  42 +
->  drivers/media/v4l2-core/v4l2-of.c                  |  61 ++
->  drivers/media/v4l2-core/videobuf2-core.c           |  35 +-
->  include/media/media-entity.h                       |   9 +
->  include/media/v4l2-of.h                            |  27 +
->  include/uapi/linux/Kbuild                          |   1 +
->  include/uapi/linux/v4l2-mediabus.h                 |  19 +-
->  include/uapi/linux/xilinx-v4l2-controls.h          |  73 ++
->  27 files changed, 4302 insertions(+), 346 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/xilinx/video.txt
->  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,v-tc.txt
->  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,v-tpg.txt
->  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt
->  create mode 100644 drivers/media/platform/xilinx/Kconfig
->  create mode 100644 drivers/media/platform/xilinx/Makefile
->  create mode 100644 drivers/media/platform/xilinx/xilinx-dma.c
->  create mode 100644 drivers/media/platform/xilinx/xilinx-dma.h
->  create mode 100644 drivers/media/platform/xilinx/xilinx-tpg.c
->  create mode 100644 drivers/media/platform/xilinx/xilinx-vip.c
->  create mode 100644 drivers/media/platform/xilinx/xilinx-vip.h
->  create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.c
->  create mode 100644 drivers/media/platform/xilinx/xilinx-vipp.h
->  create mode 100644 drivers/media/platform/xilinx/xilinx-vtc.c
->  create mode 100644 drivers/media/platform/xilinx/xilinx-vtc.h
->  create mode 100644 include/uapi/linux/xilinx-v4l2-controls.h
-> 
+Heiko
