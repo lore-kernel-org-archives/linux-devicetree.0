@@ -1,82 +1,42 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: [PATCH v2 3/3] drivers: net: xgene: fix: Use separate resources
-Date: Mon,  3 Nov 2014 11:59:56 -0800
-Message-ID: <1415044796-5081-4-git-send-email-isubramanian@apm.com>
-References: <1415044796-5081-1-git-send-email-isubramanian@apm.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1415044796-5081-1-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, patches@apm.com, kchudgar@apm.com, Iyappan Subramanian <isubramanian@apm.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH V3 00/14] genirq endian fixes; bcm7120/brcmstb IRQ
+ updates
+Date: Mon, 3 Nov 2014 21:18:20 +0100 (CET)
+Message-ID: <alpine.DEB.2.11.1411032117050.5308@nanos>
+References: <1414890241-9938-1-git-send-email-cernekee@gmail.com> <2217077.1aQXS9nJph@wuerfel>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <2217077.1aQXS9nJph@wuerfel>
+Sender: linux-sh-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kevin Cernekee <cernekee@gmail.com>, f.fainelli@gmail.com, jason@lakedaemon.net, ralf@linux-mips.org, linux-sh@vger.kernel.org, sergei.shtylyov@cogentembedded.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes the following kernel crash during SGMII based 1GbE probe.
+On Mon, 3 Nov 2014, Arnd Bergmann wrote:
+> On Saturday 01 November 2014 18:03:47 Kevin Cernekee wrote:
+> > V2->V3:
+> > 
+> >  - Move updated irq_reg_{readl,writel} functions back into <linux/irq.h>
+> >    so they can be called by irqchip drivers
+> > 
+> >  - Add gc->reg_{readl,writel} function pointers so that irqchip
+> >    drivers like arch/sh/boards/mach-se/{7343,7722}/irq.c can override them
+> > 
+> >  - CC: linux-sh list in lieu of Paul's defunct linux-sh.org email address
+> > 
+> >  - Fix handling of zero L2 status in bcm7120-l2.c
+> > 
+> >  - Rebase on Linus' head of tree
+> 
+> Looks all great. I also looked at the series now and am very happy
+> about how it turned out.
 
-	BUG: Bad page state in process swapper/0  pfn:40fe6ad
-	page:ffffffbee37a75d8 count:-1 mapcount:0 mapping:          (null) index:0x0
-	flags: 0x0()
-	page dumped because: nonzero _count
-	Modules linked in:
-	CPU: 0 PID: 0 Comm: swapper/0 Not tainted 3.17.0+ #7
-	Call trace:
-	[<ffffffc000087fa0>] dump_backtrace+0x0/0x12c
-	[<ffffffc0000880dc>] show_stack+0x10/0x1c
-	[<ffffffc0004d981c>] dump_stack+0x74/0xc4
-	[<ffffffc00012fe70>] bad_page+0xd8/0x128
-	[<ffffffc000133000>] get_page_from_freelist+0x4b8/0x640
-	[<ffffffc000133260>] __alloc_pages_nodemask+0xd8/0x834
-	[<ffffffc0004194f8>] __netdev_alloc_frag+0x124/0x1b8
-	[<ffffffc00041bfdc>] __netdev_alloc_skb+0x90/0x10c
-	[<ffffffc00039ff30>] xgene_enet_refill_bufpool+0x11c/0x280
-	[<ffffffc0003a11a4>] xgene_enet_process_ring+0x168/0x340
-	[<ffffffc0003a1498>] xgene_enet_napi+0x1c/0x50
-	[<ffffffc00042b454>] net_rx_action+0xc8/0x18c
-	[<ffffffc0000b0880>] __do_softirq+0x114/0x24c
-	[<ffffffc0000b0c34>] irq_exit+0x94/0xc8
-	[<ffffffc0000e68a0>] __handle_domain_irq+0x8c/0xf4
-	[<ffffffc000081288>] gic_handle_irq+0x30/0x7c
+Does that translate to an Acked-by on the whole lot?
 
-This was due to hardware resource sharing conflict with the firmware. This
-patch fixes this crash by using resources (descriptor ring, prefetch buffer)
-that are not shared.
+Jason, can you please pick that lot up with an Acked-by-me on the
+changes to the existing infrastructure?
 
-Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-Signed-off-by: Keyur Chudgar <kchudgar@apm.com>
----
- drivers/net/ethernet/apm/xgene/xgene_enet_main.c | 6 +++---
- drivers/net/ethernet/apm/xgene/xgene_enet_main.h | 3 +++
- 2 files changed, 6 insertions(+), 3 deletions(-)
+Thanks,
 
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-index cc3f955..1236696 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-@@ -639,9 +639,9 @@ static int xgene_enet_create_desc_rings(struct net_device *ndev)
- 	struct device *dev = ndev_to_dev(ndev);
- 	struct xgene_enet_desc_ring *rx_ring, *tx_ring, *cp_ring;
- 	struct xgene_enet_desc_ring *buf_pool = NULL;
--	u8 cpu_bufnum = 0, eth_bufnum = 0;
--	u8 bp_bufnum = 0x20;
--	u16 ring_id, ring_num = 0;
-+	u8 cpu_bufnum = 0, eth_bufnum = START_ETH_BUFNUM;
-+	u8 bp_bufnum = START_BP_BUFNUM;
-+	u16 ring_id, ring_num = START_RING_NUM;
- 	int ret;
- 
- 	/* allocate rx descriptor ring */
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_main.h b/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
-index dba647d..f9958fa 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
-@@ -38,6 +38,9 @@
- #define SKB_BUFFER_SIZE		(XGENE_ENET_MAX_MTU - NET_IP_ALIGN)
- #define NUM_PKT_BUF	64
- #define NUM_BUFPOOL	32
-+#define START_ETH_BUFNUM	2
-+#define START_BP_BUFNUM		0x22
-+#define START_RING_NUM		8
- 
- #define PHY_POLL_LINK_ON	(10 * HZ)
- #define PHY_POLL_LINK_OFF	(PHY_POLL_LINK_ON / 5)
--- 
-1.9.1
+	tglx
