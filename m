@@ -1,125 +1,56 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2] pinctrl: dra: dt-bindings: Fix output pull up/down
-Date: Mon, 3 Nov 2014 17:07:55 +0200
-Message-ID: <54579A4B.9060301@ti.com>
-References: <1414752745-13696-1-git-send-email-rogerq@ti.com> <1415009392-6627-1-git-send-email-rogerq@ti.com> <20141103143023.GA8260@kahuna> <545794CB.5030802@ti.com> <54579858.4030605@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <54579858.4030605@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: tony@atomide.com, balbi@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: [PATCH v4 0/2] Initial support for voltage ADC
+Date: Mon,  3 Nov 2014 17:24:28 +0200
+Message-ID: <1415028270-25860-1-git-send-email-iivanov@mm-sol.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/03/2014 04:59 PM, Nishanth Menon wrote:
-> On 11/03/2014 08:44 AM, Roger Quadros wrote:
->> On 11/03/2014 04:30 PM, Nishanth Menon wrote:
->>> On 12:09-20141103, Roger Quadros wrote:
->>>> For PIN_OUTPUT_PULLUP and PIN_OUTPUT_PULLDOWN we must not set the
->>>> PULL_DIS bit which disables the PULLs.
->>>>
->>>> PULL_ENA is a 0 and using it in an OR operation is a NOP, so don't
->>>> use it in the PIN_OUTPUT_PULLUP/DOWN macros.
->>>>
->>>> Fixes: 23d9cec07c58 ("pinctrl: dra: dt-bindings: Fix pull enable/disable")
->>>>
->>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>> ---
->>>>  include/dt-bindings/pinctrl/dra.h | 4 ++--
->>>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/include/dt-bindings/pinctrl/dra.h b/include/dt-bindings/pinctrl/dra.h
->>>> index 3d33794..7448edf 100644
->>>> --- a/include/dt-bindings/pinctrl/dra.h
->>>> +++ b/include/dt-bindings/pinctrl/dra.h
->>>> @@ -40,8 +40,8 @@
->>>>  
->>>>  /* Active pin states */
->>>>  #define PIN_OUTPUT		(0 | PULL_DIS)
->>>> -#define PIN_OUTPUT_PULLUP	(PIN_OUTPUT | PULL_ENA | PULL_UP)
->>>> -#define PIN_OUTPUT_PULLDOWN	(PIN_OUTPUT | PULL_ENA)
->>>> +#define PIN_OUTPUT_PULLUP	(PULL_UP)
->>>> +#define PIN_OUTPUT_PULLDOWN	(0)
->>>>  #define PIN_INPUT		(INPUT_EN | PULL_DIS)
->>>>  #define PIN_INPUT_SLEW		(INPUT_EN | SLEWCONTROL)
->>>>  #define PIN_INPUT_PULLUP	(PULL_ENA | INPUT_EN | PULL_UP)
->>>
->>> You are right, we do have an issue with using PIN_OUTPUT along with
->>> remaining setting.
->>>
->>> For a moment, I wondered why input was not impacted - then I realized
->>> that INPUT_EN was being used instead of PIN_INPUT - following that
->>> convention. With the intent being explicitly using macros that
->>> clearly indicate what each setting combination is is, how about the
->>> following?
->>>
->>>
->>> diff --git a/include/dt-bindings/pinctrl/dra.h b/include/dt-bindings/pinctrl/dra.h
->>> index 3d33794..d4037e7 100644
->>> --- a/include/dt-bindings/pinctrl/dra.h
->>> +++ b/include/dt-bindings/pinctrl/dra.h
->>> @@ -34,14 +34,15 @@
->>>  #define PULL_DIS		(1 << 16)
->>>  #define PULL_UP			(1 << 17)
->>>  #define INPUT_EN		(1 << 18)
->>> +#define OUTPUT_EN		(0 << 18)
->>>  #define SLEWCONTROL		(1 << 19)
->>>  #define WAKEUP_EN		(1 << 24)
->>>  #define WAKEUP_EVENT		(1 << 25)
->>>  
->>>  /* Active pin states */
->>> -#define PIN_OUTPUT		(0 | PULL_DIS)
->>> -#define PIN_OUTPUT_PULLUP	(PIN_OUTPUT | PULL_ENA | PULL_UP)
->>> -#define PIN_OUTPUT_PULLDOWN	(PIN_OUTPUT | PULL_ENA)
->>> +#define PIN_OUTPUT		(OUTPUT_EN | PULL_DIS)
->>> +#define PIN_OUTPUT_PULLUP	(OUTPUT_EN | PULL_ENA | PULL_UP)
->>> +#define PIN_OUTPUT_PULLDOWN	(OUTPUT_EN | PULL_ENA)
->>
->> To me it adds more confusion and this change is a NOP as we're ORing 0 here
->> with OUTPUT_EN.
-> 
-> look at this this way:
-> 
-> PIN_OUTPUT_PULLDOWN	(OUTPUT_EN | PULL_ENA)
-> 
-> should probably trigger in mind (what about PULLDOWN?)
-> 
-> PIN_OUTPUT_PULLDOWN	(OUTPUT_EN | PULL_ENA | PULL_DOWN)
-> 
-> then verify values of each OUTPUT_EN  -> 0 in bit 18, ok, etc.
-> 
-> 
-> if we ensure that PIN_XX macros use just the basic primitives, it is
-> easier to prevent the mistake like the one I made. the other option of
-> not defining macros whose values are 0 implies that the reviewer has
-> to recheck against trm to ensure all the right "1" bits are set.
-> 
-> 
-> just my view here.
+Hi, 
 
-Aren't the macros defining the bit positions not the actual enable or 
-disable actions?
+This is the forth version of this driver. V3 could be found here [1].
 
-If we go by what you said then you will have to add
-WAKEUP_DIS, SLEWCONTROL_DIS, WAKEUP_EVENT_DIS and so on.
+Changes since v3.
 
-Which again makes no sense as you will have to define them to zero.
+- Addressed review comments from Hartmut Knaack and Mark Rutland:
+  Better description of 'reg' property.
+  Add # to address-cells and size-cells DT document.
+  Dropped interrupt-names property, it was not actually used by driver.
+  DT header file, which contain channels names definitions, is part of 
+  documentation patch now.
+  Clarified 'qcom,decimation' property. Hopefully it make sense now.
+  Make more explicit that all reference channels configuration nodes have
+  to be defined in DT.
+- Promote dev_dbg to dev_err in error paths. Stan, I hope you are ok with this :-)
+- Use 32 bit calculations in calibration routine.
+- Read ADC result with one regmap call.
+- Show status and state registers if ADC conversin fails. Errors should not
+  normally happen, so I will like to see content of this registers in such cases.
+- Use new struct iio_info::of_xlate for channel number translation.
+- Removed device wakeup initialization code, which didn't make sense to me
+  for such kind of device.
 
-cheers,
--roger
+Patches depend on "iio: inkern: Add of_xlate function to struct iio_info" patch,
+which is included in IIO testing branch [2].
 
-> 
->>
->>>  #define PIN_INPUT		(INPUT_EN | PULL_DIS)
->>>  #define PIN_INPUT_SLEW		(INPUT_EN | SLEWCONTROL)
->>>  #define PIN_INPUT_PULLUP	(PULL_ENA | INPUT_EN | PULL_UP)
->>>
->>
->> cheers,
->> -roger
->>
-> 
-> 
+[1] http://comments.gmane.org/gmane.linux.ports.arm.msm/9741
+[2] http://git.kernel.org/cgit/linux/kernel/git/jic23/iio.git/log/?h=testing
 
+Stanimir Varbanov (2):
+  DT: iio: vadc: document dt binding
+  iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+
+ .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  129 +++
+ drivers/iio/adc/Kconfig                            |   14 +
+ drivers/iio/adc/Makefile                           |    1 +
+ drivers/iio/adc/qcom-spmi-vadc.c                   | 1015 ++++++++++++++++++++
+ include/dt-bindings/iio/qcom,spmi-vadc.h           |  119 +++
+ 5 files changed, 1278 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+ create mode 100644 drivers/iio/adc/qcom-spmi-vadc.c
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-vadc.h
+
+-- 
+1.9.1
