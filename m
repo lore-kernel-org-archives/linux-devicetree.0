@@ -1,73 +1,59 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 03/14] regulator: of: Add regulator desc param to
- of_get_regulator_init_data()
-Date: Mon, 3 Nov 2014 15:59:09 +0000
-Message-ID: <20141103155909.GX3815@sirena.org.uk>
-References: <1415025649-8119-1-git-send-email-javier.martinez@collabora.co.uk>
- <1415025649-8119-4-git-send-email-javier.martinez@collabora.co.uk>
- <20141103153303.GQ3815@sirena.org.uk>
- <5457A3D2.1090602@collabora.co.uk>
+From: Ulrich Hecht <ulrich.hecht@gmail.com>
+Subject: Re: [PATCH v4] clk: shmobile: div6: support selectable-input clocks
+Date: Mon, 3 Nov 2014 17:00:55 +0100
+Message-ID: <CAO3366y98LcYGUCPXUvAKAZ28aPfCej47sUfYV-CUkJqsurxUQ@mail.gmail.com>
+References: <1409238671-30452-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+	<20140828160528.GN14650@leverpostej>
+	<1780299.8YZEnbE9lj@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wwU9tsYnHnYeRAKj"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5457A3D2.1090602@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Chris Zhong <zyw@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1780299.8YZEnbE9lj@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "horms@verge.net.au" <horms@verge.net.au>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Aug 29, 2014 at 1:58 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+[...]
+> We could thus extend the DIV6 clocks with clock source selection using the
+> following layout
+>
+> Bits     Name           Function
+> -----------------------------------------------------------------------------
+> 8        CKSTP    Clock Stop
+> 7-6      EXSRC    Source Selection
+> 5-0      DIV      Division Ratio
+>
+> The clocks property would be a list of one, two, three or four clock
+> references, mapping to the 00, 01, 10 and 11 values of the EXSRC field. Empty
+> references (just a 0 value) would be used to denote invalid values of the
+> EXSRC field.
+>
+> A new compatible string would then be added for the VCLK clocks with the
+> following layout
+>
+> Bits     Name           Function
+> -----------------------------------------------------------------------------
+> 14-12    EXSRC    Source Selection (VCLK[123] clocks)
+> 8        CKSTP    Clock Stop
+> 7-6      PDIV     PLL Division Ratio (VCLK3 clock)
+> 5-0      DIV      Division Ratio
 
---wwU9tsYnHnYeRAKj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I think even a new compatible string would not be necessary, given
+that all such clocks have more than four parents, which cannot be the
+case for clocks with two EXSRC bits.
 
-On Mon, Nov 03, 2014 at 04:48:34PM +0100, Javier Martinez Canillas wrote:
-> On 11/03/2014 04:33 PM, Mark Brown wrote:
-> > On Mon, Nov 03, 2014 at 03:40:38PM +0100, Javier Martinez Canillas wrote:
+> The clocks property would be handled as for the common DIV6 clocks, and we
+> would need to define a way to describe the valid values of the PDIV field. As
+> far as I can see, the PDIV values are identical for all VCLK clocks when
+> implemented (00 -> 1/1, 01 -> 1/2, 10 -> Reserved, 11 -> 1/4), so a single
+> renesas,has-pdiv property should be enough.
 
-> >>  		if (!of_node_cmp(np->name, info->desc.name)) {
-> >>  			config->init_data =
-> >> -				of_get_regulator_init_data(&pdev->dev, np);
-> >> +				of_get_regulator_init_data(&pdev->dev, np,
-> >> +							   NULL);
+Sounds reasonable to me.
 
-> > This looks buggy, we're not passing in a descriptor.
+I'll send a patch.
 
-> The descriptor is only used when extracting the init_data to map the
-> modes and since it was not a parameter before, some drivers needs to
-> be refactored to pass that information.
-
-No, it's only *currently* used for that.  If we don't bother passing the
-descriptor in then future additions which make use of it (including
-adding mode operations to existing drivers) won't work and it might not
-be obvious why.
-
-> I thought that instead of adding intrusive changes in drivers that I
-> don't have hw to test, that parameter could be optional so the patch
-> that use that information check if the descriptor and the map_modes
-> function pointer are not NULL.
-
-You're already going through and modifying every single driver and all
-of those I looked at already had references to the descriptor in
-adjacent code or a global descriptor for the one regulator supported by
-the driver.
-
---wwU9tsYnHnYeRAKj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUV6ZMAAoJECTWi3JdVIfQpnIH/2ELsHglxNemBdNBvlYIZRR8
-krsswG75WFonKz0pkm+7w6O44sMk015dhbuHAGY/CLV1Q/sfsbkdKhwGKhFX92NY
-uEf7t50VihcjZ4InzluW4zbvaMJtmuJRAWC5EfxWarTNR+z+mxZJRUCZ2D4YhTPI
-5suvjRGCPSR2GsrMPGTgoQDOmfGkIY4KLbYKtDFTZlzB24TNKfvW82fEWgznoB/x
-alS+NuGfgWoVFc/oqZLyqCiHkczEyIHysh+zJGjQE4nvWI0EfvhZBMoIOFf+whfR
-926L/NPwtNpB0wITHd6SynndeZAfa5elgsTX5nVoAM1KsyPl7wgCpAK+4o0skXo=
-=elGm
------END PGP SIGNATURE-----
-
---wwU9tsYnHnYeRAKj--
+CU
+Uli
