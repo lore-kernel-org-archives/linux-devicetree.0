@@ -1,45 +1,60 @@
 From: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
 Subject: Re: [V9 PATCH 2/2] irqchip: gicv2m: Add supports for ARM GICv2m MSI(-X)
-Date: Mon, 3 Nov 2014 13:57:36 -0600
-Message-ID: <5457DE30.3010200@amd.com>
+Date: Mon, 3 Nov 2014 13:57:29 -0600
+Message-ID: <5457DE29.4020907@amd.com>
 References: <1414743990-28421-1-git-send-email-suravee.suthikulpanit@amd.com>
  <1414743990-28421-3-git-send-email-suravee.suthikulpanit@amd.com>
- <54574FF7.706@arm.com>
+ <54574FF7.706@arm.com> <54578CC7.4050901@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <54574FF7.706@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54578CC7.4050901@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Marc Zyngier <marc.zyngier@arm.com>
 Cc: Mark Rutland <Mark.Rutland@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "tglx@linutronix.de" <tglx@linutronix.de>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/3/2014 3:50 AM, Marc Zyngier wrote:
->> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
->> >index a99c211..4069eb3 100644
->> >--- a/drivers/irqchip/irq-gic.c
->> >+++ b/drivers/irqchip/irq-gic.c
->> >@@ -46,6 +46,7 @@
->> >  #include <asm/smp_plat.h>
->> >
->> >  #include "irq-gic-common.h"
->> >+#include "irq-gic-v2m.h"
->> >  #include "irqchip.h"
->> >
->> >  union gic_base {
->> >@@ -68,6 +69,9 @@ struct gic_chip_data {
->> >  #ifdef CONFIG_GIC_NON_BANKED
->> >         void __iomem *(*get_base)(union gic_base *);
->> >  #endif
->> >+#ifdef CONFIG_ARM_GIC_V2M
->> >+       struct list_head v2m_list;
->> >+#endif
-> Can't that be something private to the v2m widget driver? I don't think
-> it brings anything to the main GIC driver.
+On 11/3/2014 8:10 AM, Marc Zyngier wrote:
+> On 03/11/14 09:50, Marc Zyngier wrote:
+>
+>>> @@ -843,10 +847,14 @@ static int gic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>>>          unsigned int type = IRQ_TYPE_NONE;
+>>>          struct of_phandle_args *irq_data = arg;
+>>>
+>>> -       ret = gic_irq_domain_xlate(domain, irq_data->np, irq_data->args,
+>>> -                                  irq_data->args_count, &hwirq, &type);
+>>> -       if (ret)
+>>> -               return ret;
+>>> +       if (irq_data) {
+>>> +               ret = gic_irq_domain_xlate(domain, irq_data->np, irq_data->args,
+>>> +                                          irq_data->args_count, &hwirq, &type);
+>>> +               if (ret)
+>>> +                       return ret;
+>>> +       } else {
+>>> +               hwirq = virq;
+>>> +       }
+>>
+>> I'm slightly puzzled here. What's the purpose of this? The whole goal of
+>> the domain hierarchy is to avoid that kind of thing. Also, you should
+>> never have to call xlate on an MSI, because it should never be described
+>> in the device tree the first place.
+>
+> Thinking of it some more:
+>
+> The actual reason why this is required is because the MSI domain calls
+> into this via irq_domain_alloc_irqs_parent(). But because MSIs are not
+> described in DT, they do not have a of_phandle to pass down to the xlate
+> helper. In this case, the v2m widget has the knowledge of what are the
+> valid SPI numbers, and the core GIC code must blindly accept it.
+>
+> This definitely requires a fat comment, because this is far from obvious.
+>
+> Thanks,
+>
+> 	M.
 >
 
-Looking at this again, now that we use the hierarchy irqdomain, GIC no 
-longer needs to be handling with children v2m. I'll remove this altogether.
+I'll put in proper comments here.
 
 Suravee
