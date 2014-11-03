@@ -1,76 +1,73 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] ACPI / GPIO: Driver GPIO mappings for ACPI GPIOs
-Date: Mon, 3 Nov 2014 14:22:10 +0100
-Message-ID: <CACRpkdanUC4QYbMXgMOkiGS+6oVyD1Opg_sFo95TEsyHJTM6_w@mail.gmail.com>
-References: <CAAVeFuLW6fucvDxQvY5DDfnhPrgYM+1pi7WoHfBQa_BgYnc_Cw@mail.gmail.com>
-	<20141024073436.GN1484@lahna.fi.intel.com>
-	<1971306.rIA5QAW7ve@vostro.rjw.lan>
-	<2758495.RYBbleVHkC@vostro.rjw.lan>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 6/8] regulator: max77686: Add external GPIO control
+Date: Mon, 3 Nov 2014 13:23:52 +0000
+Message-ID: <20141103132352.GN3815@sirena.org.uk>
+References: <1414486356.24949.19.camel@AMDC1943>
+ <1414498308.24949.32.camel@AMDC1943>
+ <1414579362.18868.11.camel@AMDC1943>
+ <5450C63B.3000602@collabora.co.uk>
+ <CAAVeFuLncbkNLGxEAj90yMmugRDNjtjeGoV_QYTMDZ7NVMJCmg@mail.gmail.com>
+ <1414681386.26703.6.camel@AMDC1943>
+ <CAAVeFuJo1wTyxOo4FEZM3=GTejuSHi+mnr=QV6HUeV5mAOCmqg@mail.gmail.com>
+ <1414741898.20071.8.camel@AMDC1943>
+ <20141031103217.GJ18557@sirena.org.uk>
+ <1415016422.4241.28.camel@AMDC1943>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Ie5iOtK4e9kgqh2F"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2758495.RYBbleVHkC@vostro.rjw.lan>
+Content-Disposition: inline
+In-Reply-To: <1415016422.4241.28.camel@AMDC1943>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 25, 2014 at 12:05 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
 
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> Provide a way for device drivers using GPIOs described by ACPI
-> GpioIo resources in _CRS to tell the GPIO subsystem what names
-> (connection IDs) to associate with specific GPIO pins defined
-> in there.
->
-> To do that, a driver needs to define a mapping table as a
-> NULL-terminated array of struct acpi_gpio_mapping objects
-> that each contain a name, a pointer to an array of pin data
-> (struct acpi_gpio_params) objects and the size of that array.
->
-> Each struct acpi_gpio_params object consists of three fields,
-> crs_entry_index, pin_index, active_low, representing the index of
+--Ie5iOtK4e9kgqh2F
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I prefer that you call the second thing "line_index" rather than
-"pin_index". Not all GPIOs in the world are tied to physical pins.
-Also it is easy to confuse stuff with the pin control terminology
-if it's called "pin".
+On Mon, Nov 03, 2014 at 01:07:02PM +0100, Krzysztof Kozlowski wrote:
+> On pi=C4=85, 2014-10-31 at 10:32 +0000, Mark Brown wrote:
 
-> the target GpioIo()/GpioInt() resource in _CRS starting from zero,
-> the index of the target pin in that resource starting from zero,
-> and the active-low flag for that pin, respectively.
->
-> Next, the mapping table needs to be passed as the second argument to
-> acpi_dev_add_driver_gpios() that will register it with the ACPI device
-> object pointed to by its first argument.  That object must represent
-> the ACPI namespace node containing the _CRS object referred to by the
-> GPIO mapping.  That should be done in the driver's .probe() routine.
->
-> On removal, the driver should unregister its GPIO mapping table
-> by calling acpi_dev_remove_driver_gpios() on the ACPI device
-> object where that table was previously registered.
->
-> Included are fixes from Mika Westerberg.
->
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > We could always add a callback for the driver to handle any custom
+> > properties...  one of the advantages of an OS like Linux is that we can
+> > improve the core code.
 
-And "pin" is mentioned several times in the commit message.
-I prefer that we talk about "lines".
+> I thought about this - adding a callback, called on each child in
+> regulator_of_get_init_data(). However the reason behind this callback is
+> to parse GPIO and set config.ena_gpio. However in that context the
+> regulator_config is const so the callback cannot change it. Unless it
+> casts it to non-const... which isn't what we want I think.
 
-(...)
+> So now I wonder whether adding generic bindings for ena_gpio make sense.
+> These would look like bindings for fixed-regulator (with "ena-" prefix).
+> Unfortunately this would duplicate a little the ena_gpio in
+> regulator_config... but to me it seems more appropriate.
 
-> +struct acpi_gpio_params {
-> +       unsigned int crs_entry_index;
-> +       unsigned int pin_index;
+> What do you think about adding generic bindings for ena_gpio?
 
-So line_index;
+Well, if you only want this for enable GPIO control (sorry, I'm really
+not reading a lot of these long threads when it looks like there'll be a
+resubmit anyway) we can always add a way for drivers to specify the name
+of a property to look at easily enough.
 
-> +       bool active_low;
-> +};
+--Ie5iOtK4e9kgqh2F
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-With that change:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Yours,
-Linus Walleij
+iQEcBAEBAgAGBQJUV4HnAAoJECTWi3JdVIfQeJ4H/iHv+IReYh2qELgYqwBgn4At
+1IBM1/+RC0Kwrr6ZC0Lgtk3ooAzMMnc+I0zaKECKKqq8C0S2N1Jy+K3p9eu7vCFQ
+OFzpcYnhsadjtnnAfrUZQ1l7atTmEUXvk8Wp7gZwoOcpD9ijNmDHYxZyqyOwDMBF
+3pRnwx5vkSWv9mvuMd05Gdc855NCOwTVYdYJELwSgpJO9AQd8czltzkdctoaAh3l
+eDyEG+kObWU5Zq9EAL9i4HhDKqi7Isjl3fQIMj1IBMuWRaGh51BtKGcExfn93OSa
+vMSq1GDVDeNKl6XKfo/NeDNSt4xICWpnm+P8fjUzqBM5DWmGLLmf85uQkmbZWxQ=
+=RRTU
+-----END PGP SIGNATURE-----
+
+--Ie5iOtK4e9kgqh2F--
