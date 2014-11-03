@@ -1,41 +1,30 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/irq: Drop obsolete 'interrupts' vs
- 'interrupts-extended' text
-Date: Mon, 3 Nov 2014 10:14:28 -0800
-Message-ID: <20141103181428.GH23619@ld-irv-0074>
-References: <20141101233531.4958.96713.stgit@bhelgaas-glaptop2.roam.corp.google.com>
+From: Andreas Schwab <schwab@linux-m68k.org>
+Subject: Re: [PATCH v4 1/9] PM / Domains: Change prototype for the ->attach_dev() callback
+Date: Mon, 03 Nov 2014 19:15:04 +0100
+Message-ID: <8761ewduc7.fsf@igel.home>
+References: <1415028896-9005-1-git-send-email-geert+renesas@glider.be>
+	<1415028896-9005-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141101233531.4958.96713.stgit-1RhO1Y9PlrlHTL0Zs8A6p/gx64E7kk8eUsxypvmhUTTZJqsBc5GL+g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1415028896-9005-2-git-send-email-geert+renesas@glider.be> (Geert
+	Uytterhoeven's message of "Mon, 3 Nov 2014 16:34:48 +0100")
+Sender: linux-pm-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Philipp Zabel <philipp.zabel@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 01, 2014 at 05:35:31PM -0600, Bjorn Helgaas wrote:
-> a9ecdc0fdc54 ("of/irq: Fix lookup to use 'interrupts-extended' property
-> first") updated the description to say that:
-> 
->   - Both 'interrupts' and 'interrupts-extended' may be present
->   - Software should prefer 'interrupts-extended'
->   - Software that doesn't comprehend 'interrupts-extended' may use
->     'interrupts'
-> 
-> But there is still a paragraph at the end that prohibits having both and
-> says 'interrupts' should be preferred.
-> 
-> Remove the contradictory text.
-> 
-> Fixes: a9ecdc0fdc54 ("of/irq: Fix lookup to use 'interrupts-extended' property first")
-> Signed-off-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> CC: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org	# v3.13+
+Geert Uytterhoeven <geert+renesas@glider.be> writes:
 
-Acked-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> From: Ulf Hansson <ulf.hansson@linaro.org>
+>
+> Convert the prototype to return and int. This is just an initial step,
 
-Thanks for noticing.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+s/and/an/
+
+Andreas.
+
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 58CA 54C7 6D53 942B 1756  01D3 44D5 214B 8276 4ED5
+"And now for something completely different."
