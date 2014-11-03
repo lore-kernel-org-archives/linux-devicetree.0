@@ -1,72 +1,260 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] of/irq: Drop obsolete 'interrupts' vs
- 'interrupts-extended' text
-Date: Mon, 3 Nov 2014 18:33:58 +0000
-Message-ID: <20141103183358.GB28908@leverpostej>
-References: <20141101233531.4958.96713.stgit@bhelgaas-glaptop2.roam.corp.google.com>
- <20141103101516.GA29621@leverpostej>
- <CAErSpo4pFCie-+fjRvyERMJuPxCV9DwX8uMWGO7UU=bNLdOi7A@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v9] coresight: bindings for coresight drivers
+Date: Mon, 3 Nov 2014 13:20:16 -0600
+Message-ID: <CAL_JsqLzPhU1rjiCkBCYF++acD=c+CiFNTW8=6W7szTsvjPeZg@mail.gmail.com>
+References: <1415038383-23750-1-git-send-email-mathieu.poirier@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAErSpo4pFCie-+fjRvyERMJuPxCV9DwX8uMWGO7UU=bNLdOi7A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415038383-23750-1-git-send-email-mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 03, 2014 at 05:07:53PM +0000, Bjorn Helgaas wrote:
-> On Mon, Nov 3, 2014 at 3:15 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Sat, Nov 01, 2014 at 11:35:31PM +0000, Bjorn Helgaas wrote:
-> >> a9ecdc0fdc54 ("of/irq: Fix lookup to use 'interrupts-extended' property
-> >> first") updated the description to say that:
-> >>
-> >>   - Both 'interrupts' and 'interrupts-extended' may be present
-> >>   - Software should prefer 'interrupts-extended'
-> >>   - Software that doesn't comprehend 'interrupts-extended' may use
-> >>     'interrupts'
-> >>
-> >> But there is still a paragraph at the end that prohibits having both and
-> >> says 'interrupts' should be preferred.
-> >>
-> >> Remove the contradictory text.
-> >>
-> >> Fixes: a9ecdc0fdc54 ("of/irq: Fix lookup to use 'interrupts-extended' property first")
-> >> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> >> CC: stable@vger.kernel.org    # v3.13+
-> >> ---
-> >>  .../bindings/interrupt-controller/interrupts.txt   |    4 ----
-> >>  1 file changed, 4 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> >> index ce6a1a072028..8a3c40829899 100644
-> >> --- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> >> +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> >> @@ -30,10 +30,6 @@ should only be used when a device has multiple interrupt parents.
-> >>    Example:
-> >>       interrupts-extended = <&intc1 5 1>, <&intc2 1 0>;
-> >>
-> >> -A device node may contain either "interrupts" or "interrupts-extended", but not
-> >> -both. If both properties are present, then the operating system should log an
-> >> -error and use only the data in "interrupts".
-> >
-> > Why not update the binding to explain that interrupts-extended is
-> > typically preferred?
-> 
-> I'm only trying to fix the contradictory text.  It's fine with me if
-> somebody wants to go farther and prefer interrupts-extended (though it
-> does look like "interrupts" will be more concise for machines with a
-> single interrupt controller).
+On Mon, Nov 3, 2014 at 12:13 PM,  <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Coresight IP blocks allow for the support of HW assisted tracing
+> on ARM SoCs.  Bindings for the currently available blocks are
+> presented herein.
+>
+> Signed-off-by: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Ah, my bad. I had skimmed this and failed to notice that the commit
-message makes it very clear that the wording I want is already present,
-and it is just the dangling contradiction you are removing.
+Same question I asked on v8:
 
-Sorry about that. Please ignore my original comment, this looks fine
-as-is.
+Didn't I give you a reviewed-by on this already?
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Thanks,
-Mark.
+Also, you've sent 3 versions since I reviewed it and I don't have a
+clue what you changed in each version since v6. The line count is the
+same and there don't appear to have been any comments, so I don't know
+why you keep sending this.
+
+I don't intend to merge this as it should go in with the rest of your
+series when ready.
+
+Rob
+
+> ---
+>  .../devicetree/bindings/arm/coresight.txt          | 203 +++++++++++++++++++++
+>  1 file changed, 203 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/coresight.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> new file mode 100644
+> index 0000000..96dd947
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> @@ -0,0 +1,203 @@
+> +* CoreSight Components:
+> +
+> +CoreSight components are compliant with the ARM CoreSight architecture
+> +specification and can be connected in various topologies to suit a particular
+> +SoCs tracing needs. These trace components can generally be classified as sinks,
+> +links and sources. Trace data produced by one or more sources flows through the
+> +intermediate links connecting the source to the currently selected sink. Each
+> +CoreSight component device should use these properties to describe its hardware
+> +characteristcs.
+> +
+> +* Required properties for all components *except* non-configurable replicators:
+> +
+> +       * compatible: These have to be supplemented with "arm,primecell" as
+> +         drivers are using the AMBA bus interface.  Possible values include:
+> +               - "arm,coresight-etb10", "arm,primecell";
+> +               - "arm,coresight-tpiu", "arm,primecell";
+> +               - "arm,coresight-tmc", "arm,primecell";
+> +               - "arm,coresight-funnel", "arm,primecell";
+> +               - "arm,coresight-etm3x", "arm,primecell";
+> +
+> +       * reg: physical base address and length of the register
+> +         set(s) of the component.
+> +
+> +       * clocks: the clock associated to this component.
+> +
+> +       * clock-names: the name of the clock as referenced by the code.
+> +         Since we are using the AMBA framework, the name should be
+> +         "apb_pclk".
+> +
+> +       * port or ports: The representation of the component's port
+> +         layout using the generic DT graph presentation found in
+> +         "bindings/graph.txt".
+> +
+> +* Required properties for devices that don't show up on the AMBA bus, such as
+> +  non-configurable replicators:
+> +
+> +       * compatible: Currently supported value is (note the absence of the
+> +         AMBA markee):
+> +               - "arm,coresight-replicator"
+> +
+> +       * id: a unique number that will identify this replicator.
+> +
+> +       * port or ports: same as above.
+> +
+> +* Optional properties for ETM/PTMs:
+> +
+> +       * arm,cp14: must be present if the system accesses ETM/PTM management registers
+> +         via co-processor 14.
+> +
+> +       * cpu: the cpu phandle this ETM/PTM is affined to. When omitted the source is
+> +         considered to belong to CPU0.
+> +
+> +* Optional property for TMC:
+> +
+> +       * arm,buffer-size: size of contiguous buffer space for TMC ETR
+> +        (embedded trace router)
+> +
+> +
+> +Example:
+> +
+> +1. Sinks
+> +       etb@0,20010000 {
+> +               compatible = "arm,coresight-etb10", "arm,primecell";
+> +               reg = <0 0x20010000 0 0x1000>;
+> +
+> +               coresight-default-sink;
+> +               clocks = <&oscclk6a>;
+> +               clock-names = "apb_pclk";
+> +               port {
+> +                       etb_in_port: endpoint@0 {
+> +                               slave-mode;
+> +                               remote-endpoint = <&replicator_out_port0>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       tpiu@0,20030000 {
+> +               compatible = "arm,coresight-tpiu", "arm,primecell";
+> +               reg = <0 0x20030000 0 0x1000>;
+> +
+> +               clocks = <&oscclk6a>;
+> +               clock-names = "apb_pclk";
+> +               port {
+> +                       tpiu_in_port: endpoint@0 {
+> +                               slave-mode;
+> +                               remote-endpoint = <&replicator_out_port1>;
+> +                       };
+> +               };
+> +       };
+> +
+> +2. Links
+> +       replicator {
+> +               /* non-configurable replicators don't show up on the
+> +                * AMBA bus.  As such no need to add "arm,primecell".
+> +                */
+> +               compatible = "arm,coresight-replicator";
+> +               /* this will show up in debugfs as "0.replicator" */
+> +               id = <0>;
+> +
+> +               ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       /* replicator output ports */
+> +                       port@0 {
+> +                               reg = <0>;
+> +                               replicator_out_port0: endpoint {
+> +                                       remote-endpoint = <&etb_in_port>;
+> +                               };
+> +                       };
+> +
+> +                       port@1 {
+> +                               reg = <1>;
+> +                               replicator_out_port1: endpoint {
+> +                                       remote-endpoint = <&tpiu_in_port>;
+> +                               };
+> +                       };
+> +
+> +                       /* replicator input port */
+> +                       port@2 {
+> +                               reg = <0>;
+> +                               replicator_in_port0: endpoint {
+> +                                       slave-mode;
+> +                                       remote-endpoint = <&funnel_out_port0>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+> +       funnel@0,20040000 {
+> +               compatible = "arm,coresight-funnel", "arm,primecell";
+> +               reg = <0 0x20040000 0 0x1000>;
+> +
+> +               clocks = <&oscclk6a>;
+> +               clock-names = "apb_pclk";
+> +               ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       /* funnel output port */
+> +                       port@0 {
+> +                               reg = <0>;
+> +                               funnel_out_port0: endpoint {
+> +                                       remote-endpoint = <&replicator_in_port0>;
+> +                               };
+> +                       };
+> +
+> +                       /* funnel input ports */
+> +                       port@1 {
+> +                               reg = <0>;
+> +                               funnel_in_port0: endpoint {
+> +                                       slave-mode;
+> +                                       remote-endpoint = <&ptm0_out_port>;
+> +                               };
+> +                       };
+> +
+> +                       port@2 {
+> +                               reg = <1>;
+> +                               funnel_in_port1: endpoint {
+> +                                       slave-mode;
+> +                                       remote-endpoint = <&ptm1_out_port>;
+> +                               };
+> +                       };
+> +
+> +                       port@3 {
+> +                               reg = <2>;
+> +                               funnel_in_port2: endpoint {
+> +                                       slave-mode;
+> +                                       remote-endpoint = <&etm0_out_port>;
+> +                               };
+> +                       };
+> +
+> +               };
+> +       };
+> +
+> +3. Sources
+> +       ptm@0,2201c000 {
+> +               compatible = "arm,coresight-etm3x", "arm,primecell";
+> +               reg = <0 0x2201c000 0 0x1000>;
+> +
+> +               cpu = <&cpu0>;
+> +               clocks = <&oscclk6a>;
+> +               clock-names = "apb_pclk";
+> +               port {
+> +                       ptm0_out_port: endpoint {
+> +                               remote-endpoint = <&funnel_in_port0>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       ptm@0,2201d000 {
+> +               compatible = "arm,coresight-etm3x", "arm,primecell";
+> +               reg = <0 0x2201d000 0 0x1000>;
+> +
+> +               cpu = <&cpu1>;
+> +               clocks = <&oscclk6a>;
+> +               clock-names = "apb_pclk";
+> +               port {
+> +                       ptm1_out_port: endpoint {
+> +                               remote-endpoint = <&funnel_in_port1>;
+> +                       };
+> +               };
+> +       };
+> --
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
