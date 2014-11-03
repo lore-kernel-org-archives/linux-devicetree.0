@@ -1,67 +1,142 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] of/irq: Drop obsolete 'interrupts' vs 'interrupts-extended'
- text
-Date: Sun, 02 Nov 2014 19:31:31 -0800
-Message-ID: <5456F713.8090503@gmail.com>
-References: <20141101233531.4958.96713.stgit@bhelgaas-glaptop2.roam.corp.google.com>
+From: xudong chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/3] I2C: mediatek: Add driver for MediaTek I2C
+ controller
+Date: Mon, 3 Nov 2014 13:44:30 +0800
+Message-ID: <1414993470.10276.19.camel@mhfsdcap03>
+References: <1414561058-23803-1-git-send-email-xudong.chen@mediatek.com>
+	 <1414561058-23803-4-git-send-email-xudong.chen@mediatek.com>
+	 <CABuKBe+RXboBEZD7Bu_kSbVwiapJJcAuuw_wo=xw67osJWJ20w@mail.gmail.com>
+	 <1414737101.32208.18.camel@mhfsdcap03>
+	 <CABuKBeK1O2q37RMVE0Yjp2=QgkzXZfh=vxXiZrw-JMiYMxb-QQ@mail.gmail.com>
+	 <1414766288.5833.46.camel@mtksdaap41>
+	 <CABuKBeJ2NxcVn=yapcvNs1xLU+eye4JWESBwdcWoeqO=-vMBKw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141101233531.4958.96713.stgit@bhelgaas-glaptop2.roam.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABuKBeJ2NxcVn=yapcvNs1xLU+eye4JWESBwdcWoeqO=-vMBKw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nathan Chung <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YH Chen <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 01/11/2014 16:35, Bjorn Helgaas a =C3=A9crit :
-> a9ecdc0fdc54 ("of/irq: Fix lookup to use 'interrupts-extended' proper=
-ty
-> first") updated the description to say that:
->
->    - Both 'interrupts' and 'interrupts-extended' may be present
->    - Software should prefer 'interrupts-extended'
->    - Software that doesn't comprehend 'interrupts-extended' may use
->      'interrupts'
->
-> But there is still a paragraph at the end that prohibits having both =
-and
-> says 'interrupts' should be preferred.
->
-> Remove the contradictory text.
->
-> Fixes: a9ecdc0fdc54 ("of/irq: Fix lookup to use 'interrupts-extended'=
- property first")
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+On Fri, 2014-10-31 at 17:10 +0100, Matthias Brugger wrote:
+> 2014-10-31 15:38 GMT+01:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> > On Fri, 2014-10-31 at 11:48 +0100, Matthias Brugger wrote:
+> >> 2014-10-31 7:31 GMT+01:00 xudong chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> >> > On Thu, 2014-10-30 at 14:16 +0100, Matthias Brugger wrote:
+> >> >> 2014-10-29 6:37 GMT+01:00 Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> >> >> > The mediatek SoCs have I2C controller that handle I2C transfer.
+> >> >> > This patch include common I2C bus driver.
+> >> >> > This driver is compatible with I2C controller on mt65xx/mt81xx.
+> >> >> >
+> >> >> > Signed-off-by: Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >> >> > Change-Id: Icc17e326b9df46a226d536956e103f17b0382b6e
+> >> >> > ---
+> >> >> >  drivers/i2c/busses/Kconfig      |   9 +
+> >> >> >  drivers/i2c/busses/Makefile     |   1 +
+> >> >> >  drivers/i2c/busses/i2c-mt65xx.c | 728 ++++++++++++++++++++++++++++++++++++++++
+> >> >> >  3 files changed, 738 insertions(+)
+> >> >> >  create mode 100644 drivers/i2c/busses/i2c-mt65xx.c
+> >> >> >
+> >> >> > diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> >> >> > index 917c358..0d7d0a4 100644
+> >> >> > --- a/drivers/i2c/busses/Kconfig
+> >> >> > +++ b/drivers/i2c/busses/Kconfig
+> >> >> > @@ -564,6 +564,15 @@ config I2C_MPC
+> >> >> >           This driver can also be built as a module.  If so, the module
+> >> >> >           will be called i2c-mpc.
+> >> >> >
+> >> >> > +config I2C_MT65XX
+> >> >> > +       tristate "MediaTek I2C adapter"
+> >> >> > +       depends on ARCH_MEDIATEK
+> >> >> > +       help
+> >> >> > +         This selects the MediaTek(R) Integrated Inter Circuit bus driver
+> >> >> > +         for MT65xx and MT81xx.
+> >> >> > +         If you want to use MediaTek(R) I2C interface, say Y or M here.
+> >> >> > +         If unsure, say N.
+> >> >> > +
+> >> >> >  config I2C_MV64XXX
+> >> >> >         tristate "Marvell mv64xxx I2C Controller"
+> >> >> >         depends on MV64X60 || PLAT_ORION || ARCH_SUNXI
+> >> >> > diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
+> >> >> > index 78d56c5..7a9f0f3 100644
+> >> >> > --- a/drivers/i2c/busses/Makefile
+> >> >> > +++ b/drivers/i2c/busses/Makefile
+> >> >> > @@ -54,6 +54,7 @@ obj-$(CONFIG_I2C_IMX)         += i2c-imx.o
+> >> >> >  obj-$(CONFIG_I2C_IOP3XX)       += i2c-iop3xx.o
+> >> >> >  obj-$(CONFIG_I2C_KEMPLD)       += i2c-kempld.o
+> >> >> >  obj-$(CONFIG_I2C_MPC)          += i2c-mpc.o
+> >> >> > +obj-$(CONFIG_I2C_MT65XX)       += i2c-mt65xx.o
+> >> >> > +
+> >> >> > +static int mt_i2c_do_transfer(struct mt_i2c *i2c)
+> >> >> > +{
+> >> >> > +       u16 addr_reg;
+> >> >> > +       u16 control_reg;
+> >> >> > +       int tmo = i2c->adap.timeout;
+> >> >> > +
+> >> >> > +       i2c->trans_stop = false;
+> >> >> > +       i2c->irq_stat = 0;
+> >> >> > +
+> >> >> > +       /* If use i2c pin from PMIC mt6397 side, need set PATH_DIR first */
+> >> >> > +       if (i2c->have_pmic)
+> >> >> > +               i2c_writew(I2C_CONTROL_WRAPPER, i2c, OFFSET_PATH_DIR);
+> >> >>
+> >> >> So this is some sort of multiplexer bit, right?
+> >> >> I think in this case we need to build a multi function device (mfd)
+> >> >> where the pmic driver will set this bit.
+> >> >>
+> >> > Hi,
+> >> >
+> >> > This feature means the chip can use I2C pins from PMIC(mt6397).
+> >> > In this case,
+> >> > 1. We actually control the register on mt8135 and the DMA/Control Logic
+> >> > is on mt8135, only use pins from mt6397. If set register OFFSET_PATH_DIR
+> >> > bit0 to 1, the I2C data will go/from PMIC pins.
+> >>
+> >> Sorry but I'm a bit puzzled. mt6397 is the PMIC, right?
+> >> So from the mt6589 datasheet it says:
+> >> "PATH_DIR Decides transmission direction
+> >> If set, the I2C data will go/from PMIC; otherwise, the I2C data will
+> >> go/from main die."
+> >>
+> >> From my understanding the I2C bus will be multiplexed depending on
+> >> this bit. The bit decides if it the data will be send to the PMIC or
+> >> to some other I2C peripheral.
+> >>
+> >> So we need a mfd and the PMIC device driver sets/unsets the PATH_DIR register.
+> >
+> > Yes, mt6397 is the PMIC work with mt8135 or mt8127.
+> >
+> > I think the datasheet is a little misleading here. AFAIK, on 8135 even
+> > if your clear the bit for I2C4, there are no corresponding pins for this
+> > i2c port on 8135. So it is not really multiplexed. Base on my
+> > understanding this is more like "Set this bit if this a PMIC I2C port".
+> 
+> I had a look at mt6589. The SoC has seven i2c controller. Looking at
+> the source code all controller with an ID bigger then 3 can be set to
+> pmic wrapper state.
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+I have checked the mt8135 and mt6589 GPIO datasheet, there are pins on
+mt8135 or mt6589 for i2c4~i2c6, we also can use i2c4~i2c6 modules on
+mt8135 or mt6589 after set pinmux. Sorry about the misunderstand before.
+I will add i2c4~i2c6 nodes to the mt8135.dtsi in next patch.
 
-> CC: stable@vger.kernel.org	# v3.13+
-> ---
->   .../bindings/interrupt-controller/interrupts.txt   |    4 ----
->   1 file changed, 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/i=
-nterrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/=
-interrupts.txt
-> index ce6a1a072028..8a3c40829899 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/interrup=
-ts.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/interrup=
-ts.txt
-> @@ -30,10 +30,6 @@ should only be used when a device has multiple int=
-errupt parents.
->     Example:
->   	interrupts-extended =3D <&intc1 5 1>, <&intc2 1 0>;
->
-> -A device node may contain either "interrupts" or "interrupts-extende=
-d", but not
-> -both. If both properties are present, then the operating system shou=
-ld log an
-> -error and use only the data in "interrupts".
-> -
->   2) Interrupt controller nodes
->   -----------------------------
->
->
+> So I would say that the PATH_DIR bit is not always bound to i2c4. We
+> should implement a driver which will work on all possible
+> configurations. We don't know if apart from mt6589 and mt8135 some
+> other SoC in the future will use this i2c controller.
+> 
+Because the mt6397 HW limitation, it's i2c module cannot be used when
+apart from mt6589 or mt8135.
+Take mt6589 for example:
+If we want to use mt6397 i2c pins, it must work together with mt6589,
+also we need to set the i2c control register on mt6589(DIR_PATH and the
+other registers) and then the HW will auto handle the communication
+between mt6397 and mt6589 internal(do not need any SW control), so data
+can go/from mt6397 pins. In this case the i2c pins on mt6397 will work
+just like the i2c pins is from mt6589.
+
+> Maybe you can check with the HW guys how this is implemented to shed
+> some light on the issue.
+> 
