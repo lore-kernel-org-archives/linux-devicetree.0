@@ -1,54 +1,64 @@
-From: <suravee.suthikulpanit@amd.com>
-Subject: [V10 PATCH 0/2] irqchip: gic: Introduce ARM GICv2m MSI(-X) support
-Date: Mon, 3 Nov 2014 16:16:15 -0600
-Message-ID: <1415052977-26036-1-git-send-email-suravee.suthikulpanit@amd.com>
+From: <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+Subject: [V10 PATCH 1/2] genirq: Add irq_chip_set_type_parent function
+Date: Mon, 3 Nov 2014 16:16:16 -0600
+Message-ID: <1415052977-26036-2-git-send-email-suravee.suthikulpanit@amd.com>
+References: <1415052977-26036-1-git-send-email-suravee.suthikulpanit@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net, tglx@linutronix.de
-Cc: Catalin.Marinas@arm.com, Will.Deacon@arm.com, liviu.dudau@arm.com, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415052977-26036-1-git-send-email-suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Cc: Catalin.Marinas-5wv7dgnIgG8@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, Harish.Kasiviswanathan-5C7GfCeVMHo@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
 
-This patch set introduces support for MSI(-X) in GICv2m specification,
-which is implemented in some variation of GIC400.
+Add a helper function to set irq type in parent irq domain.
 
-This patch adopt the new hierarchy irq domain, and is rebased from: 
-    Git tree   : git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git
-    Git branch : domain_hierarchy
-    Last commit: 97d4ea1f0922fb47dd1b09cd2694b7fa5b519db9
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+---
+ include/linux/irq.h |  1 +
+ kernel/irq/chip.c   | 10 ++++++++++
+ 2 files changed, 11 insertions(+)
 
-Changes in V10 includes:
-  * Remove the alloc_msi_irq and integrate into gicv2m_setup_msi_irq
-  * Clean up the error_out logic in gicv2m_init_one
-  * Add comments in gic_irq_domain_alloc()
-  * Removed v2m_list since no longer needed with the irqdomain hierachy framework
-  * Rename variable in gicv2m_taredown_msi_irq to be consistent with other functions
-
-History:
-    V9: https://lkml.org/lkml/2014/10/31/111
-    V8: https://lkml.org/lkml/2014/9/20/111
-    V7: https://lkml.org/lkml/2014/9/17/751
-
-
-Suravee Suthikulpanit (2):
-  genirq: Add irq_chip_set_type_parent function
-  irqchip: gicv2m: Add supports for ARM GICv2m MSI(-X)
-
- Documentation/devicetree/bindings/arm/gic.txt |  53 ++++
- arch/arm64/Kconfig                            |   1 +
- drivers/irqchip/Kconfig                       |   5 +
- drivers/irqchip/Makefile                      |   1 +
- drivers/irqchip/irq-gic-v2m.c                 | 340 ++++++++++++++++++++++++++
- drivers/irqchip/irq-gic-v2m.h                 |   6 +
- drivers/irqchip/irq-gic.c                     |  23 +-
- include/linux/irq.h                           |   1 +
- kernel/irq/chip.c                             |  10 +
- 9 files changed, 436 insertions(+), 4 deletions(-)
- create mode 100644 drivers/irqchip/irq-gic-v2m.c
- create mode 100644 drivers/irqchip/irq-gic-v2m.h
-
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 6159256..e3952fa 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -440,6 +440,7 @@ extern void irq_chip_ack_parent(struct irq_data *data);
+ extern void irq_chip_mask_parent(struct irq_data *data);
+ extern void irq_chip_unmask_parent(struct irq_data *data);
+ extern void irq_chip_eoi_parent(struct irq_data *data);
++extern int irq_chip_set_type_parent(struct irq_data *data, unsigned int type);
+ extern int irq_chip_set_affinity_parent(struct irq_data *data,
+ 				const struct cpumask *dest, bool force);
+ extern int irq_chip_retrigger_hierarchy(struct irq_data *data);
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 0ecc270..b24eca3 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -847,6 +847,16 @@ void irq_chip_eoi_parent(struct irq_data *data)
+ 	data->chip->irq_eoi(data);
+ }
+ 
++int irq_chip_set_type_parent(struct irq_data *data, unsigned int type)
++{
++	data = data->parent_data;
++
++	if (data->chip && data->chip->irq_set_type)
++		return data->chip->irq_set_type(data, type);
++
++	return -ENOSYS;
++}
++
+ int irq_chip_set_affinity_parent(struct irq_data *data,
+ 				 const struct cpumask *dest, bool force)
+ {
 -- 
 1.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
