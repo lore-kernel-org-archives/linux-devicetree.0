@@ -1,94 +1,194 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v3 0/2] Add DRA7xx CPSW Ethernet support in Device Tree
-Date: Mon, 3 Nov 2014 10:27:22 -0600
-Message-ID: <20141103162722.GN27425@saruman>
-References: <1413885661-4850-1-git-send-email-mugunthanvnm@ti.com>
- <54463063.80207@ti.com>
- <20141021172223.GA12943@kahuna>
-Reply-To: <balbi@ti.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 2/4] extcon: gpio: Add dt support for the driver.
+Date: Mon, 3 Nov 2014 10:32:28 -0600
+Message-ID: <1415032350-8459-3-git-send-email-balbi@ti.com>
+References: <1415032350-8459-1-git-send-email-balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VnOTrGv5LmZxna7m"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141021172223.GA12943@kahuna>
-Sender: linux-omap-owner@vger.kernel.org
-Cc: Mugunthan V N <mugunthanvnm@ti.com>, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415032350-8459-1-git-send-email-balbi-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---VnOTrGv5LmZxna7m
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+From: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
 
-On Tue, Oct 21, 2014 at 12:22:23PM -0500, Nishanth Menon wrote:
-> On 15:37-20141021, Mugunthan V N wrote:
-> > Nishanth
-> >=20
-> > On Tuesday 21 October 2014 03:30 PM, Mugunthan V N wrote:
-> > > Adding device tree entry for CPSW to make it work in Dual EMAC mode.
-> > > These patches were tested with DRA7 hwmod patches on top of linux-nex=
-t.
-> > > Patches are tested on top of Nishanth's PM tree for v3.17 [1] and pus=
-hed
-> > > my tree to [2].
-> > >=20
-> > > Did a boot test with CPSW and ping test with suspend/resume, the boot=
- logs
-> > > on DRA7xx EVM are posted at [3]
-> > >=20
-> > > [1] git://github.com/nmenon/linux-2.6-playground.git testing/v3.17/cp=
-u-idle-suspend-dra7-omap5-framework
-> > > [2] git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git v3.17/dr=
-a7-evm-cpsw-v3
-> > > [3] http://pastebin.ubuntu.com/8613072/
-> > >=20
-> > > Changes from v2:
-> > > * Changed pinctrl comments to hold mode0-name.mode-selected-name
-> > > * Changes slave numbers in the pinctrl comments
-> > > * Added cpsw and cpts clocks
-> > >=20
-> >=20
-> > I have not added support for dra72x-evm as it has only slave no 2 pinned
-> > out and having issues with bringing up the interface, need some more
-> > time to submit the patch, in the mean time I have submitted dra7-evm
-> > support only so that people can use dra7-evm on linux-next.
->=20
-> Quickly tested as well:
-> http://slexy.org/raw/s2vISJxYrR
->=20
-> Please feel free to add:
-> Tested-by: Nishanth Menon <nm@ti.com>
-> Acked-by: Nishanth Menon <nm@ti.com>
+Add device tree support to extcon-gpio driver.
+Add devicetree binding documentation
 
-I've used these patches with X15 (DRA7xx-based yet-to-be-released board)
-with v3.18-rc2.
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+---
+ .../devicetree/bindings/extcon/extcon-gpio.txt     | 21 ++++++
+ drivers/extcon/extcon-gpio.c                       | 75 +++++++++++++++-------
+ 2 files changed, 73 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio.txt
 
-Tested-by: Felipe Balbi <balbi@ti.com>
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+new file mode 100644
+index 0000000..5fe6846
+--- /dev/null
++++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+@@ -0,0 +1,21 @@
++GPIO based EXTCON
++
++EXTCON GPIO
++-----------
++
++Required Properties:
++ - compatible: should be:
++   * "linux,extcon-gpio"
++ - gpios: specifies the gpio pin used.
++
++Optional Properties:
++ - debounce: Debounce time for GPIO IRQ in ms
++
++
++Eg:
++
++	extcon1: am43_usbid_extcon1 {
++		compatible = "linux,extcon-gpio";
++		gpios = <&gpio3 12 GPIO_ACTIVE_HIGH>;
++		debounce = <20>;
++	};
+diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
+index 70e3fc7..9571e1f 100644
+--- a/drivers/extcon/extcon-gpio.c
++++ b/drivers/extcon/extcon-gpio.c
+@@ -25,8 +25,10 @@
+ #include <linux/gpio.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
++#include <linux/irq.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of_gpio.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/workqueue.h>
+@@ -80,16 +82,12 @@ static ssize_t extcon_gpio_print_state(struct extcon_dev *edev, char *buf)
+ 
+ static int gpio_extcon_probe(struct platform_device *pdev)
+ {
++	struct device_node *np = pdev->dev.of_node;
+ 	struct gpio_extcon_platform_data *pdata = dev_get_platdata(&pdev->dev);
+ 	struct gpio_extcon_data *extcon_data;
+ 	int ret;
+-
+-	if (!pdata)
+-		return -EBUSY;
+-	if (!pdata->irq_flags) {
+-		dev_err(&pdev->dev, "IRQ flag is not specified.\n");
+-		return -EINVAL;
+-	}
++	unsigned int irq_flags;
++	unsigned int debounce = 0;
+ 
+ 	extcon_data = devm_kzalloc(&pdev->dev, sizeof(struct gpio_extcon_data),
+ 				   GFP_KERNEL);
+@@ -101,26 +99,51 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "failed to allocate extcon device\n");
+ 		return -ENOMEM;
+ 	}
+-	extcon_data->edev->name = pdata->name;
+-
+-	extcon_data->gpiod = gpio_to_desc(pdata->gpio);
+-	extcon_data->state_on = pdata->state_on;
+-	extcon_data->state_off = pdata->state_off;
+-	extcon_data->check_on_resume = pdata->check_on_resume;
+-	if (pdata->state_on && pdata->state_off)
+-		extcon_data->edev->print_state = extcon_gpio_print_state;
+ 
+-	ret = devm_gpio_request_one(&pdev->dev, pdata->gpio, GPIOF_DIR_IN,
+-				    pdev->name);
+-	if (ret < 0)
+-		return ret;
++	if (np) {
++		int irq;
++
++		extcon_data->gpiod = devm_gpiod_get(&pdev->dev, NULL);
++		if (IS_ERR(extcon_data->gpiod))
++			return PTR_ERR(extcon_data->gpiod);
++
++		extcon_data->edev->name = np->name;
++		extcon_data->edev->dev.parent = &pdev->dev;
++		of_property_read_u32(np, "debounce", &debounce);
++		irq = gpiod_to_irq(extcon_data->gpiod);
++		irq_flags = irq_get_trigger_type(irq);
++	} else {
++		if (!pdata)
++			return -EBUSY;
++
++		if (!pdata->irq_flags) {
++			dev_err(&pdev->dev, "IRQ flag is not specified.\n");
++			return -EINVAL;
++		}
++
++		extcon_data->edev->name = pdata->name;
++
++		extcon_data->gpiod = gpio_to_desc(pdata->gpio);
++		extcon_data->state_on = pdata->state_on;
++		extcon_data->state_off = pdata->state_off;
++		extcon_data->check_on_resume = pdata->check_on_resume;
++		if (pdata->state_on && pdata->state_off)
++			extcon_data->edev->print_state = extcon_gpio_print_state;
++
++		ret = devm_gpio_request_one(&pdev->dev, pdata->gpio, GPIOF_DIR_IN,
++				pdev->name);
++		if (ret < 0)
++			return ret;
++		irq_flags = pdata->irq_flags;
++		debounce = pdata->debounce;
++	}
+ 
+-	if (pdata->debounce) {
++	if (debounce) {
+ 		ret = gpiod_set_debounce(extcon_data->gpiod,
+-					pdata->debounce * 1000);
++					 debounce * 1000);
+ 		if (ret < 0)
+ 			extcon_data->debounce_jiffies =
+-				msecs_to_jiffies(pdata->debounce);
++				msecs_to_jiffies(debounce);
+ 	}
+ 
+ 	ret = devm_extcon_dev_register(&pdev->dev, extcon_data->edev);
+@@ -134,7 +157,7 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+ 		return extcon_data->irq;
+ 
+ 	ret = request_any_context_irq(extcon_data->irq, gpio_irq_handler,
+-				      pdata->irq_flags, pdev->name,
++				      irq_flags, pdev->name,
+ 				      extcon_data);
+ 	if (ret < 0)
+ 		return ret;
+@@ -172,6 +195,11 @@ static int gpio_extcon_resume(struct device *dev)
+ 
+ static SIMPLE_DEV_PM_OPS(gpio_extcon_pm_ops, NULL, gpio_extcon_resume);
+ 
++static struct of_device_id of_extcon_gpio_match_tbl[] = {
++	{ .compatible = "linux,extcon-gpio", },
++	{ /* end */ }
++};
++
+ static struct platform_driver gpio_extcon_driver = {
+ 	.probe		= gpio_extcon_probe,
+ 	.remove		= gpio_extcon_remove,
+@@ -179,6 +207,7 @@ static struct platform_driver gpio_extcon_driver = {
+ 		.name	= "extcon-gpio",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= &gpio_extcon_pm_ops,
++		.of_match_table = of_extcon_gpio_match_tbl,
+ 	},
+ };
+ 
+-- 
+2.1.0.GIT
 
---=20
-balbi
-
---VnOTrGv5LmZxna7m
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUV6zqAAoJEIaOsuA1yqREFaUP/32dgxZtWZYEVyl+myp/M3Hb
-E1zqqKezV8X+YGNRCUUbZc+1JuurVm68A17ElOwz8y2/wqEIzwvGAd+cbV/elkcz
-NzksTPP+oFEiWV1YShX1xb08CSfjWMk2U82kC4/i5zTVWlN+1PM/PDYXXKCU2WMK
-lZf6oNfINoxXxK9+1gvWqq7mtUjYrh96Ch6eu7TxBa9zR2DeL8BsuizpavIwcO8D
-ckSJon60x7j8ENtjNZPss5cPykT9cEYheu3StM6vrQQiY39X1/z6QHhN79jzkYPy
-VYpZR4hk4DEojZ2OwnBkD332DMrE0f9XL9YIO+JHlzCjBzZiABnQcGZ+YK98byka
-q/m8ed9vi9oJWm4tQ7xRrqtmV9S+HNGms7BqC5GpZuOCN98THQMQ5L0EDnf4Nk/n
-vA1YsEIo6KhRt6RScD0Zn5XKbA9BxCiCrmCfexwsLDRsTHfjVDAp6Axt02fpeV58
-jsM4Q4heL8gj1vDTCiQ/DuPoTuOugx22Tqp5gn+v62rk49bYZHyLxQWOtGfjrCMC
-amHTwuZKAqkORu5Y9GQaNFozP54EqQTQ6zxRXYPOlX3OByOS6g3gK+hVEeGqP3bX
-HjGdDTtOXOz2l0Jc2u7tZnxgjqa/Ff0+t+1fDN5a0znsmytg/9HQXAKGEWqQQRnX
-xRArRJ8jQnXHqqrmXRk2
-=cT0+
------END PGP SIGNATURE-----
-
---VnOTrGv5LmZxna7m--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
