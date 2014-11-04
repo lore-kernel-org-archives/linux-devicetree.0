@@ -1,38 +1,40 @@
-From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Subject: Re: [V10 PATCH 2/2] irqchip: gicv2m: Add supports for ARM GICv2m
- MSI(-X)
-Date: Tue, 4 Nov 2014 11:00:31 -0600
-Message-ID: <5459062F.6090603@amd.com>
-References: <1415052977-26036-1-git-send-email-suravee.suthikulpanit@amd.com>
- <1415052977-26036-3-git-send-email-suravee.suthikulpanit@amd.com>
- <5458CE31.3040404@linux.intel.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 02/12] Driver core: Unified device properties interface
+ for platform firmware
+Date: Tue, 4 Nov 2014 17:01:04 +0000
+Message-ID: <CACxGe6uv0TmoZivL3ESw+oRW-OjqakLP4KBnDrwJXzQ2ku8ZLA@mail.gmail.com>
+References: <13750506.S2yVlRRDa2@vostro.rjw.lan> <2127128.VT1Iq03xz1@vostro.rjw.lan>
+ <CACxGe6tvz8MiXnNGJ3XtrofxFr=o87yOB6kUKm57fXvQ0fL8jw@mail.gmail.com> <3645687.BsyGDrJDrU@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5458CE31.3040404@linux.intel.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jiang Liu <jiang.liu@linux.intel.com>, marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net, tglx@linutronix.de
-Cc: Catalin.Marinas@arm.com, Will.Deacon@arm.com, liviu.dudau@arm.com, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3645687.BsyGDrJDrU-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Darren Hart <darren.hart-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/4/14 07:01, Jiang Liu wrote:
-> Hi Suravee,
-> 	You may build a two level hierarchy irqdomains. Use the
-> utilities in this thread
-> http://www.spinics.net/lists/arm-kernel/msg374722.html to build an MSI
-> irqdomain to manage MSI controllers
-> in PCI devices. And build another irqdomain to manage SPI allocation
-> in GICv2.
-> 	That is: MSI irqdomain (program MSI registers)  -->
-> GIV irqdomain (manage SPIs in GICv2 controller)
+On Mon, Nov 3, 2014 at 10:04 PM, Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> wrote:
+>> I also found that this parser code doesn't correctly handle malformed
+>> (unterminated) string properties. It will overflow. The existing
+>> functions have the same problem, so it isn't something that you've
+>> added. I've got a fix, and as a side effect the fix creates the _array
+>> version basically for free as part of reworking
+>> of_property_count_strings() and of_property_read_string_index()
+>
+> OK
+>
+> So can you please point me to a git branch containing the fix?  I'll rebase the
+> patch on top of that then and everything should merge just fine.
 
-That's great. I'll look at this patch in and make use of it to create to 
-MSI domain.
+git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git devicetree/merge
 
-Thanks,
+I'm going to let the patch sit in there for a few days to get
+linux-next exposure before I ask Linus to pull. The pull req will go
+out before the end of the week.
 
-Suravee
-
-> Regards!
-> Gerry
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
