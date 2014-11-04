@@ -1,44 +1,42 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] serial: of-serial: zero-out struct of_serial_info
-Date: Tue, 04 Nov 2014 10:23:49 -0800
-Message-ID: <545919B5.9020905@gmail.com>
-References: <1414703913-1343-1-git-send-email-f.fainelli@gmail.com> <5481851.EJfv4DSzbT@wuerfel>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 11/13] arm: dts: dra7: add DMA properties for UART
+Date: Tue, 4 Nov 2014 19:32:07 +0100
+Message-ID: <CABxcv=kT+M70Xoyf_z4eQQyM0Oo9S5Y0YeX2R6PbAqxK-JTLLg@mail.gmail.com>
+References: <1412014009-13315-1-git-send-email-bigeasy@linutronix.de>
+	<1412014009-13315-12-git-send-email-bigeasy@linutronix.de>
+	<20141104170233.GB24112@csclub.uwaterloo.ca>
+	<5459079D.7080703@linutronix.de>
+	<20141104172117.GC24112@csclub.uwaterloo.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <5481851.EJfv4DSzbT@wuerfel>
+In-Reply-To: <20141104172117.GC24112@csclub.uwaterloo.ca>
 Sender: linux-serial-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, jslaby@suse.cz, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, jingchang.lu@freescale.com, gregory.0xf0@gmail.com
+To: Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-serial@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tony Lindgren <tony@atomide.com>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/30/2014 02:55 PM, Arnd Bergmann wrote:
-> On Thursday 30 October 2014 14:18:33 Florian Fainelli wrote:
->> of_platform_serial_probe() invokes of_platform_serial_setup() with a
->> kmalloc'd struct of_serial_info cookie, which is not much of a problem
->> for most of the struct of_serial_info fields we access but info->clk.
->>
->> On platforms which do not provide a clock phandle for their UART nodes
->> but do provide a 'clock-frequency' property, we basically leave the
->> info->clk variable uninitialized, and this craps out during
->> suspend/resume with oopses, crashes or warnings in the clock code.
->>
->> Fix this by using kzalloc() which also zeroes-out the structure and
->> provides an initialized info->clk member set to NULL.
->>
->> Fixes: 2dea53bf57783 ("serial: of-serial: add PM suspend/resume support")
->> Fixes: e34b9c94b6e8d ("[POWERPC] of_serial: add port type checking")
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->>
-> 
-> I thought I'd acked this patch before, maybe someone else sent the same
-> one. This is definitely required, so
-> 
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> 
+Hello,
 
-Thanks, so who's taking that patch? Let me know if I need to resubmit
-targeting a specific tree.
---
-Florian
+On Tue, Nov 4, 2014 at 6:21 PM, Lennart Sorensen
+<lsorense@csclub.uwaterloo.ca> wrote:
+>> Mind sharing the manual with me? Mine does not mention DMA channels for
+>> UART7-10. If you are able to test 7+8 (and it works) could you please
+>> make patch which with for the remaining four devices?
+>
+> Well the file I have is called AM572x_ES1.1_NDA_TRM_vT.pdf, so I am not
+> sure who I am allowed to share that file with.  Might be simpler to just
+> ask TI for the latest version.
+>
+> How I hate NDAs.
+>
+
+I saw today an announcement about a public AM572x Silicon Revision 1.1
+TRM [0] that has just made available by TI. I'm not familiar with this
+SoC so I don't know if that has the information you want but I thought
+it was worth to mention in case it did.
+
+Best regards,
+Javier
+
+[0]: http://www.ti.com/lit/ug/spruhz6/spruhz6.pdf
