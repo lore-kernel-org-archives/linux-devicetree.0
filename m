@@ -1,96 +1,66 @@
-From: "Lennart Sorensen" <lsorense@csclub.uwaterloo.ca>
-Subject: Re: [PATCH 11/13] arm: dts: dra7: add DMA properties for UART
-Date: Tue, 4 Nov 2014 12:02:33 -0500
-Message-ID: <20141104170233.GB24112@csclub.uwaterloo.ca>
-References: <1412014009-13315-1-git-send-email-bigeasy@linutronix.de>
- <1412014009-13315-12-git-send-email-bigeasy@linutronix.de>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 1/1] of/fdt: simplify early_init_dt_verify
+Date: Tue, 4 Nov 2014 10:03:52 -0700
+Message-ID: <CAErSpo6Upf=QPn7=Cd=XDazXVnSPhb-9gDZjH9_CcY37-xUKLw@mail.gmail.com>
+References: <1414497065-9808-1-git-send-email-thunder.leizhen@huawei.com> <20141104162054.4CC9BC423D0@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1412014009-13315-12-git-send-email-bigeasy@linutronix.de>
+In-Reply-To: <20141104162054.4CC9BC423D0@trevor.secretlab.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, balbi@ti.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Zhen Lei <thunder.leizhen@huawei.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Kefeng Wang <wangkefeng.wang@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 29, 2014 at 08:06:47PM +0200, Sebastian Andrzej Siewior wrote:
-> Cc: devicetree@vger.kernel.org
-> Reviewed-by: Tony Lindgren <tony@atomide.com>
-> Tested-by: Tony Lindgren <tony@atomide.com>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->  arch/arm/boot/dts/dra7.dtsi | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index d678152db4cb..f273e3811f75 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -332,6 +332,8 @@
->  			ti,hwmods = "uart1";
->  			clock-frequency = <48000000>;
->  			status = "disabled";
-> +			dmas = <&sdma 49>, <&sdma 50>;
-> +			dma-names = "tx", "rx";
->  		};
->  
->  		uart2: serial@4806c000 {
-> @@ -341,6 +343,8 @@
->  			ti,hwmods = "uart2";
->  			clock-frequency = <48000000>;
->  			status = "disabled";
-> +			dmas = <&sdma 51>, <&sdma 52>;
-> +			dma-names = "tx", "rx";
->  		};
->  
->  		uart3: serial@48020000 {
-> @@ -350,6 +354,8 @@
->  			ti,hwmods = "uart3";
->  			clock-frequency = <48000000>;
->  			status = "disabled";
-> +			dmas = <&sdma 53>, <&sdma 54>;
-> +			dma-names = "tx", "rx";
->  		};
->  
->  		uart4: serial@4806e000 {
-> @@ -359,6 +365,8 @@
->  			ti,hwmods = "uart4";
->  			clock-frequency = <48000000>;
->                          status = "disabled";
-> +			dmas = <&sdma 55>, <&sdma 56>;
-> +			dma-names = "tx", "rx";
->  		};
->  
->  		uart5: serial@48066000 {
-> @@ -368,6 +376,8 @@
->  			ti,hwmods = "uart5";
->  			clock-frequency = <48000000>;
->  			status = "disabled";
-> +			dmas = <&sdma 63>, <&sdma 64>;
-> +			dma-names = "tx", "rx";
->  		};
->  
->  		uart6: serial@48068000 {
-> @@ -377,6 +387,8 @@
->  			ti,hwmods = "uart6";
->  			clock-frequency = <48000000>;
->  			status = "disabled";
-> +			dmas = <&sdma 79>, <&sdma 80>;
-> +			dma-names = "tx", "rx";
->  		};
->  
->  		uart7: serial@48420000 {
+On Tue, Nov 4, 2014 at 9:20 AM, Grant Likely <grant.likely@linaro.org> wrote:
+> On Tue, 28 Oct 2014 19:51:05 +0800
+> , Zhen Lei <thunder.leizhen@huawei.com>
+>  wrote:
+>> put off initial_boot_params = params; until all checks finished. If any check
+>> failed, initial_boot_params is equal NULL, base upon bss segment initial value.
+>>
+>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+>
+> Interesting. I received exactly the same patch from Bjorn Helgaas. Were
+> the two of you working together, or is this merely a coincedence?
 
-According to the manual the DMA channels for UART7 to 10 are:
+LOL, that's really funny.  We're not working together, so it's a total
+coincidence :)
 
-uart7:  144 145
-uart8:  146 147
-uart9:  148 149
-uart10: 150 151
-
-Might as well add those too.  We have uart 7 and 8 in use on our board
-so I am about to go test it.
-
--- 
-Len Sorensen
+>> ---
+>>  drivers/of/fdt.c | 10 ++++------
+>>  1 file changed, 4 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>> index d1ffca8..325c638 100644
+>> --- a/drivers/of/fdt.c
+>> +++ b/drivers/of/fdt.c
+>> @@ -994,14 +994,12 @@ bool __init early_init_dt_verify(void *params)
+>>       if (!params)
+>>               return false;
+>>
+>> -     /* Setup flat device-tree pointer */
+>> -     initial_boot_params = params;
+>> -
+>>       /* check device tree validity */
+>> -     if (fdt_check_header(params)) {
+>> -             initial_boot_params = NULL;
+>> +     if (fdt_check_header(params))
+>>               return false;
+>> -     }
+>> +
+>> +     /* Setup flat device-tree pointer */
+>> +     initial_boot_params = params;
+>>
+>>       return true;
+>>  }
+>> --
+>> 1.8.0
+>>
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Please read the FAQ at  http://www.tux.org/lkml/
+>
