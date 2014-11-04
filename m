@@ -1,64 +1,65 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4 2/8] phy: miphy28lp: Add PHY header file for DT x Driver
- defines
-Date: Tue, 4 Nov 2014 14:55:12 +0530
-Message-ID: <54589B78.3040104@ti.com>
-References: <1413962067-25557-1-git-send-email-gabriel.fernandez@linaro.org>
- <1413962067-25557-3-git-send-email-gabriel.fernandez@linaro.org>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 09/17] clk: mvebu: add suspend/resume for gatable clocks
+Date: Tue, 04 Nov 2014 10:32:26 +0100
+Message-ID: <54589D2A.5060807@free-electrons.com>
+References: <1414151970-6626-1-git-send-email-thomas.petazzoni@free-electrons.com> <1414151970-6626-10-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1413962067-25557-3-git-send-email-gabriel.fernandez@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, andrew@lunn.ch, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gregory.clement@free-electrons.com, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, jason@lakedaemon.net
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414151970-6626-10-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gabriel,
+Hi Thomas,
 
-On Wednesday 22 October 2014 12:44 PM, Gabriel FERNANDEZ wrote:
-> This provides the shared header file which will be reference from both
-> PHY driver and its associated Device Tree node(s).
+On 24/10/2014 13:59, Thomas Petazzoni wrote:
+> This commit adds suspend/resume support for the gatable clock driver
+> used on Marvell EBU platforms. When getting out of suspend, the
+> Marvell EBU platforms go through the bootloader, which re-enables all
+> gatable clocks. However, upon resume, the clock framework will not
+> disable again all gatable clocks that are not used.
 > 
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> Therefore, if the clock driver does not save/restore the state of the
+> gatable clocks, all gatable clocks that are not claimed by any device
+> driver will remain enabled after a resume. This is why this driver
+> saves and restores the state of those clocks.
+> 
+> Since clocks aren't real devices, we don't have the normal ->suspend()
+> and ->resume() of the device model, and have to use the ->suspend()
+> and ->resume() hooks of the syscore_ops mechanism. This mechanism has
+> the unfortunate idea of not providing a way of passing private data,
+> which requires us to change the driver to make the assumption that
+> there is only once instance of the gatable clock control structure.
+
+It should be possible to store more than one instance in an array, and
+to go trough this array during suspend and resume. However until now we
+never had needed more than one instance, so I agree to keep the code simple
+with this assumption.
+
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > ---
->  include/dt-bindings/phy/phy.h | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 include/dt-bindings/phy/phy.h
+>  drivers/clk/mvebu/common.c | 30 ++++++++++++++++++++++++++++--
+>  1 file changed, 28 insertions(+), 2 deletions(-)
 > 
-> diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
-> new file mode 100644
-> index 0000000..a142c69
-> --- /dev/null
-> +++ b/include/dt-bindings/phy/phy.h
-> @@ -0,0 +1,17 @@
-> +/*
-> + *
-> + * This header provides constants for the phy framework
-> + *
-> + * Copyright (C) 2014 STMicroelectronics
-> + * Author: Gabriel Fernandez <gabriel.fernandez@st.com>
-> + * License terms:  GNU General Public License (GPL), version 2
-> + */
-> +
-> +#ifndef _DT_BINDINGS_PHY
-> +#define _DT_BINDINGS_PHY
-> +
-> +#define PHY_TYPE_SATA		1
-> +#define PHY_TYPE_PCIE		2
-> +#define PHY_TYPE_USB		3
 
-Can we have a separate #define for USB2 and USB3? Looks like Gregory will need
-it for Armada 375 SoC.
+Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Thanks
-Kishon
+Thanks,
+
+Gregory
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
