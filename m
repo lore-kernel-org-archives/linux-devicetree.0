@@ -1,55 +1,65 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4 1/8] ARM: mediatek: Add basic support for mt8127
-Date: Tue, 04 Nov 2014 10:45:40 +0100
-Message-ID: <4360790.RbZnni9y9f@wuerfel>
-References: <1413973797-17619-1-git-send-email-yingjoe.chen@mediatek.com> <13477264.GuOdydWub7@wuerfel> <CABuKBeL1JX88BBK7uXqpmaGzwCe5D6inB_n-NV6ajUt59V1swA@mail.gmail.com>
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: Re: [PATCH v4 2/8] phy: miphy28lp: Add PHY header file for DT x
+ Driver defines
+Date: Tue, 4 Nov 2014 10:58:26 +0100
+Message-ID: <CAG374jDfd24odPXMGC1=1ckaeukk=8Pix1j_bspH5prNpJWhQw@mail.gmail.com>
+References: <1413962067-25557-1-git-send-email-gabriel.fernandez@linaro.org>
+	<1413962067-25557-3-git-send-email-gabriel.fernandez@linaro.org>
+	<54589B78.3040104@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABuKBeL1JX88BBK7uXqpmaGzwCe5D6inB_n-NV6ajUt59V1swA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: HC Yen <hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "Joe. C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, huang eddie <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nathan Chung <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yuhau Chen <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54589B78.3040104@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>, Lee Jones <lee.jones@linaro.org>, gregory.clement@free-electrons.com, jason@lakedaemon.net, andrew@lunn.ch, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 04 November 2014 09:36:39 Matthias Brugger wrote:
-> 2014-11-04 8:39 GMT+01:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
-> > On Tuesday 04 November 2014 14:36:45 HC Yen wrote:
-> >> > > +
-> >> > > +#include <dt-bindings/interrupt-controller/irq.h>
-> >> > > +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> >> > > +#include "skeleton64.dtsi"
-> >> >
-> >> > Cortex a7 is 32 bits, right? So why do you use skeleton64.dtsi?
-> >>
-> >> Cortex-A7 is 32-bit, but that doesn't mean it can only have 32-bit
-> >> physical address.  With LPAE enabled, we can have physical address more
-> >> than 32 bits.
-> >>
-> >> The main difference between "skeleton64.dtsi" and "skeleton.dtsi" is
-> >> "#address-cells" property set to 2.  Although there are few sources
-> >> using "skeleton64.dtsi", some of them write "#address-cells = <2>"
-> >> directly in order to have 64-bit address space.  ARM's TC2 reference
-> >> platform (vexpress-v2p-ca15_a7.dts) is an example.
-> >>
-> >> Some of MediaTek ARMv7 SoCs support address space larger than 4GB. It
-> >> will be convenient to share the sources if we all use 64-bit device
-> >> tree.
-> >
-> > Right, in general, I'd use #address-cells=<2> for Cortex-A7/A15/A17.
-> 
-> Alright, thanks for clarification. So we should use skeleton64.dtsi
-> for mt6589 as well, right?
+Hi Kishon,
 
-If the chip is capable of accessing memory or registers higher than 4GB
-physical address, then you should, yes.
+Sure, I'll update my patch set and sent to you soon as possible.
 
-If the SoC has limitations that mean you can't have higher addresses
-anyway, then either way is fine, no need to change it.
+Best Regards
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Gabriel
+
+On 4 November 2014 10:25, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> Hi Gabriel,
+>
+> On Wednesday 22 October 2014 12:44 PM, Gabriel FERNANDEZ wrote:
+>> This provides the shared header file which will be reference from both
+>> PHY driver and its associated Device Tree node(s).
+>>
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+>> ---
+>>  include/dt-bindings/phy/phy.h | 17 +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>>  create mode 100644 include/dt-bindings/phy/phy.h
+>>
+>> diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+>> new file mode 100644
+>> index 0000000..a142c69
+>> --- /dev/null
+>> +++ b/include/dt-bindings/phy/phy.h
+>> @@ -0,0 +1,17 @@
+>> +/*
+>> + *
+>> + * This header provides constants for the phy framework
+>> + *
+>> + * Copyright (C) 2014 STMicroelectronics
+>> + * Author: Gabriel Fernandez <gabriel.fernandez@st.com>
+>> + * License terms:  GNU General Public License (GPL), version 2
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_PHY
+>> +#define _DT_BINDINGS_PHY
+>> +
+>> +#define PHY_TYPE_SATA                1
+>> +#define PHY_TYPE_PCIE                2
+>> +#define PHY_TYPE_USB         3
+>
+> Can we have a separate #define for USB2 and USB3? Looks like Gregory will need
+> it for Armada 375 SoC.
+>
+> Thanks
+> Kishon
