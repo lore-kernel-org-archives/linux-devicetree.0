@@ -1,238 +1,64 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH v2 2/3] ARM: OMAP2+: hwmod: AM335x/AM43x: add hwmod support
- for tscadc on am43x-evm
-Date: Tue, 4 Nov 2014 16:45:27 +0530
-Message-ID: <1415099728-10959-3-git-send-email-vigneshr@ti.com>
-References: <1415099728-10959-1-git-send-email-vigneshr@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESUBMIT PATCH v6 1/8] mfd: Add support for Skyworks SKY81452
+ driver
+Date: Tue, 4 Nov 2014 11:38:33 +0000
+Message-ID: <20141104113833.GI3815@sirena.org.uk>
+References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1414739322-12487-2-git-send-email-jack.yoo@skyworksinc.com>
+ <20141103171451.GG12011@x1>
+ <1415050088.20372.72.camel@x220>
+ <20141103223022.GE13359@x1>
+ <1415091946.20372.136.camel@x220>
+ <20141104091609.GI17577@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1415099728-10959-1-git-send-email-vigneshr@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vignesh R <vigneshr@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fze0sZZmuBV4A+b2"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141104091609.GI17577@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds hwmod support for tscadc to work on am43xx-evm. The am33xx
-hwmod structures of tscadc has been moved to ipblock_data so that it can
-be reused in am43xx. The clock domain names are separately set for am33xx
-and am43xx. Thus tscadc dt entries can now be added to am43xx board
-dt files.
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
- .../mach-omap2/omap_hwmod_33xx_43xx_common_data.h  |  1 +
- .../mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 56 ++++++++++++++++++++++
- arch/arm/mach-omap2/omap_hwmod_33xx_data.c         | 49 -------------------
- arch/arm/mach-omap2/omap_hwmod_43xx_data.c         |  1 +
- 4 files changed, 58 insertions(+), 49 deletions(-)
+--fze0sZZmuBV4A+b2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
-index 6e57b8ad0db5..b92a7c7825fa 100644
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
-@@ -65,6 +65,7 @@ extern struct omap_hwmod_ocp_if am33xx_l4_ls__timer4;
- extern struct omap_hwmod_ocp_if am33xx_l4_ls__timer5;
- extern struct omap_hwmod_ocp_if am33xx_l4_ls__timer6;
- extern struct omap_hwmod_ocp_if am33xx_l4_ls__timer7;
-+extern struct omap_hwmod_ocp_if am33xx_l4_wkup__adc_tsc;
- extern struct omap_hwmod_ocp_if am33xx_l3_main__tpcc;
- extern struct omap_hwmod_ocp_if am33xx_l3_main__tptc0;
- extern struct omap_hwmod_ocp_if am33xx_l3_main__tptc1;
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-index 7f44922ab540..ce9c133ea9ff 100644
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-@@ -29,6 +29,7 @@
- #define CLKCTRL(oh, clkctrl) ((oh).prcm.omap4.clkctrl_offs = (clkctrl))
- #define RSTCTRL(oh, rstctrl) ((oh).prcm.omap4.rstctrl_offs = (rstctrl))
- #define RSTST(oh, rstst) ((oh).prcm.omap4.rstst_offs = (rstst))
-+#define CLKDMNAME(oh, clkdmname) ((oh).clkdm_name = (clkdmname))
- 
- /*
-  * 'l3' class
-@@ -151,6 +152,45 @@ struct omap_hwmod_class am33xx_wkup_m3_hwmod_class = {
- };
- 
- /*
-+ * 'adc/tsc' class
-+ * TouchScreen Controller (Anolog-To-Digital Converter)
-+ */
-+static struct omap_hwmod_class_sysconfig am33xx_adc_tsc_sysc = {
-+	.rev_offs	= 0x00,
-+	.sysc_offs	= 0x10,
-+	.sysc_flags	= SYSC_HAS_SIDLEMODE,
-+	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
-+			SIDLE_SMART_WKUP),
-+	.sysc_fields	= &omap_hwmod_sysc_type2,
-+};
-+
-+static struct omap_hwmod_class am33xx_adc_tsc_hwmod_class = {
-+	.name		= "adc_tsc",
-+	.sysc		= &am33xx_adc_tsc_sysc,
-+};
-+
-+struct omap_hwmod am33xx_adc_tsc_hwmod = {
-+	.name		= "adc_tsc",
-+	.class		= &am33xx_adc_tsc_hwmod_class,
-+	.clkdm_name	= "l4_wkup_clkdm",
-+	.main_clk	= "adc_tsc_fck",
-+	.prcm		= {
-+		.omap4  = {
-+			.modulemode     = MODULEMODE_SWCTRL,
-+		},
-+	},
-+};
-+
-+/* L4 WKUP -> ADC_TSC */
-+
-+struct omap_hwmod_ocp_if am33xx_l4_wkup__adc_tsc = {
-+	.master		= &am33xx_l4_wkup_hwmod,
-+	.slave		= &am33xx_adc_tsc_hwmod,
-+	.clk		= "dpll_core_m4_div2_ck",
-+	.user		= OCP_USER_MPU,
-+};
-+
-+/*
-  * 'pru-icss' class
-  * Programmable Real-Time Unit and Industrial Communication Subsystem
-  */
-@@ -1370,6 +1410,7 @@ static void omap_hwmod_am33xx_clkctrl(void)
- 	CLKCTRL(am33xx_timer5_hwmod, AM33XX_CM_PER_TIMER5_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_timer6_hwmod, AM33XX_CM_PER_TIMER6_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_timer7_hwmod, AM33XX_CM_PER_TIMER7_CLKCTRL_OFFSET);
-+	CLKCTRL(am33xx_adc_tsc_hwmod, AM33XX_CM_WKUP_ADC_TSC_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_smartreflex0_hwmod,
- 		AM33XX_CM_WKUP_SMARTREFLEX0_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_smartreflex1_hwmod,
-@@ -1398,6 +1439,18 @@ static void omap_hwmod_am33xx_clkctrl(void)
- 	CLKCTRL(am33xx_aes0_hwmod , AM33XX_CM_PER_AES0_CLKCTRL_OFFSET);
- }
- 
-+static void am33xx_hwmod_clockdomain(void)
-+{
-+	CLKDMNAME(am33xx_l4_hs_hwmod, "l4hs_clkdm");
-+	CLKDMNAME(am33xx_adc_tsc_hwmod, "l4_wkup_clkdm");
-+}
-+
-+static void am43xx_hwmod_clockdomain(void)
-+{
-+	CLKDMNAME(am33xx_l4_hs_hwmod, "l3_clkdm");
-+	CLKDMNAME(am33xx_adc_tsc_hwmod, "l3s_tsc_clkdm");
-+}
-+
- static void omap_hwmod_am33xx_rst(void)
- {
- 	RSTCTRL(am33xx_pruss_hwmod, AM33XX_RM_PER_RSTCTRL_OFFSET);
-@@ -1409,6 +1462,7 @@ void omap_hwmod_am33xx_reg(void)
- {
- 	omap_hwmod_am33xx_clkctrl();
- 	omap_hwmod_am33xx_rst();
-+	am33xx_hwmod_clockdomain();
- }
- 
- static void omap_hwmod_am43xx_clkctrl(void)
-@@ -1443,6 +1497,7 @@ static void omap_hwmod_am43xx_clkctrl(void)
- 	CLKCTRL(am33xx_timer5_hwmod, AM43XX_CM_PER_TIMER5_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_timer6_hwmod, AM43XX_CM_PER_TIMER6_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_timer7_hwmod, AM43XX_CM_PER_TIMER7_CLKCTRL_OFFSET);
-+	CLKCTRL(am33xx_adc_tsc_hwmod, AM43XX_CM_WKUP_ADC_TSC_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_smartreflex0_hwmod,
- 		AM43XX_CM_WKUP_SMARTREFLEX0_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_smartreflex1_hwmod,
-@@ -1482,4 +1537,5 @@ void omap_hwmod_am43xx_reg(void)
- {
- 	omap_hwmod_am43xx_clkctrl();
- 	omap_hwmod_am43xx_rst();
-+	am43xx_hwmod_clockdomain();
- }
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-index ce7d260495cb..c3ff14828850 100644
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-@@ -88,37 +88,6 @@ static struct omap_hwmod am33xx_wkup_m3_hwmod = {
- };
- 
- /*
-- * 'adc/tsc' class
-- * TouchScreen Controller (Anolog-To-Digital Converter)
-- */
--static struct omap_hwmod_class_sysconfig am33xx_adc_tsc_sysc = {
--	.rev_offs	= 0x00,
--	.sysc_offs	= 0x10,
--	.sysc_flags	= SYSC_HAS_SIDLEMODE,
--	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
--			SIDLE_SMART_WKUP),
--	.sysc_fields	= &omap_hwmod_sysc_type2,
--};
--
--static struct omap_hwmod_class am33xx_adc_tsc_hwmod_class = {
--	.name		= "adc_tsc",
--	.sysc		= &am33xx_adc_tsc_sysc,
--};
--
--static struct omap_hwmod am33xx_adc_tsc_hwmod = {
--	.name		= "adc_tsc",
--	.class		= &am33xx_adc_tsc_hwmod_class,
--	.clkdm_name	= "l4_wkup_clkdm",
--	.main_clk	= "adc_tsc_fck",
--	.prcm		= {
--		.omap4	= {
--			.clkctrl_offs	= AM33XX_CM_WKUP_ADC_TSC_CLKCTRL_OFFSET,
--			.modulemode	= MODULEMODE_SWCTRL,
--		},
--	},
--};
--
--/*
-  * Modules omap_hwmod structures
-  *
-  * The following IPs are excluded for the moment because:
-@@ -426,24 +395,6 @@ static struct omap_hwmod_ocp_if am33xx_l4_wkup__gpio0 = {
- 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
- };
- 
--/* L4 WKUP -> ADC_TSC */
--static struct omap_hwmod_addr_space am33xx_adc_tsc_addrs[] = {
--	{
--		.pa_start	= 0x44E0D000,
--		.pa_end		= 0x44E0D000 + SZ_8K - 1,
--		.flags		= ADDR_TYPE_RT
--	},
--	{ }
--};
--
--static struct omap_hwmod_ocp_if am33xx_l4_wkup__adc_tsc = {
--	.master		= &am33xx_l4_wkup_hwmod,
--	.slave		= &am33xx_adc_tsc_hwmod,
--	.clk		= "dpll_core_m4_div2_ck",
--	.addr		= am33xx_adc_tsc_addrs,
--	.user		= OCP_USER_MPU,
--};
--
- static struct omap_hwmod_ocp_if am33xx_l4_hs__cpgmac0 = {
- 	.master		= &am33xx_l4_hs_hwmod,
- 	.slave		= &am33xx_cpgmac0_hwmod,
-diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-index fea01aa3ef42..3ce8d28c0f9a 100644
---- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-@@ -809,6 +809,7 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
- 	&am33xx_l4_ls__timer5,
- 	&am33xx_l4_ls__timer6,
- 	&am33xx_l4_ls__timer7,
-+	&am33xx_l4_wkup__adc_tsc,
- 	&am33xx_l3_main__tpcc,
- 	&am33xx_l4_ls__uart2,
- 	&am33xx_l4_ls__uart3,
--- 
-1.9.1
+On Tue, Nov 04, 2014 at 09:16:09AM +0000, Lee Jones wrote:
+> On Tue, 04 Nov 2014, Paul Bolle wrote:
+
+> > Nothing will break. But I think Mark prefers the dependency rename, now
+> > done in 7/8, to be done as part of this patch.
+
+> I don't agree.  The rename should be taken independantly by Mark.
+> The regulator driver won't build until they match anyway, so there's
+> no hard dependency.  Unless someone can give me a really good reason
+> to revert it, I'm applying this driver now.
+
+The important thing is that the dependency rename isn't silently thrown
+into an unrelated patch.
+
+--fze0sZZmuBV4A+b2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUWLq5AAoJECTWi3JdVIfQ7BMH/0fsSCTGrADlqu3T1AszEMkH
+a1VPtAuDRHAFZWsnAqLxFzOQOHx6Z4dMFsBMKrbYCnq+E5ExphzUlXcFTMVCbloI
+UUuc16QPcob7UEy5LmHB8MVgKrhYKuSTWLPdr6WN4ypdhcsKybNpu4tZ5y5vXxe/
+kxGIQoeYPcFbULUU0TbQIjp6GEmFC8kZfpIU64a5ERNXYkgyJ3Y8KRcR20YyruRQ
+HKQ7Ak/vZbfg6xSEo2UOoW0sCPxEHbYufApaYsEUCUFpHl+mlJ+Z/BsvcIXrxJyq
+nTvk6pSVXzlHPHluXmXuTUa4tETq3xfe+vU2QmYT9fPTfRo6jCBmmXVKEOMGZAk=
+=fr+h
+-----END PGP SIGNATURE-----
+
+--fze0sZZmuBV4A+b2--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
