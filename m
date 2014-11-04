@@ -1,71 +1,91 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v5 0/8] phy: miphy28lp: Introduce support for MiPHY28lp
-Date: Tue,  4 Nov 2014 11:51:16 +0100
-Message-ID: <1415098284-11182-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH v5 7/8] phy: miphy28lp: Tune tx impedance across Soc cuts
+Date: Tue,  4 Nov 2014 11:51:23 +0100
+Message-ID: <1415098284-11182-8-git-send-email-gabriel.fernandez@linaro.org>
+References: <1415098284-11182-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415098284-11182-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Grant Likely <grant.likely@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Giuseppe Condorelli <giuseppe.condorelli@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Changes in v5:
- - split TYPE_USB define into TYPE_USB2 & TYPE_USB3
+This patch to compensate tx impedance (Sata, PCIe)
+depending on Soc cuts the kernel is built for.
 
-Changes in v4:
- - use a generic phy header file for dt binding 
- - cosmetic correction
- - add comments
+Signed-off-by: Giuseppe Condorelli <giuseppe.condorelli@st.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+---
+ Documentation/devicetree/bindings/phy/phy-miphy28lp.txt |  1 +
+ drivers/phy/phy-miphy28lp.c                             | 16 ++++++++++++++++
+ 2 files changed, 17 insertions(+)
 
-Changes in v3:
- - split into separate smaller functions and can be resued 
-   for sata / pcie and usb
- - uses macros for registers and values
- - cosmetic correction
-
-from Kishon
- - create a common file for phy
- - cosmetic correction in phy-miphy28lp.txt file
- - change initialization of the registers
-from Srinivas
- - rename and simplify a procedure
- - Add Tx impedance and SSC support for SATA and PCI
-
-Hi Kishon,
-
-The goal of this series is to add the support of MiPHY28lp Generic PHY.
-I tried to be as close as possible to the MiPHY365x Lee Jones proposal.
-
-Best Regards
-Gabriel.
-
-Gabriel Fernandez (8):
-  phy: miphy28lp: Add Device Tree bindings for the MiPHY28lp
-  phy: miphy28lp: Add PHY header file for DT x Driver defines
-  phy: miphy28lp: Provide support for the MiPHY28lp Generic PHY
-  ARM: DT: STi: STiH407: Add DT node for MiPHY28lp
-  phy: miphy28lp: Add SSC support for SATA
-  phy: miphy28lp: Add SSC support for PCIE
-  phy: miphy28lp: Tune tx impedance across Soc cuts
-  ARM: multi_v7_defconfig: Enable MiPHY28lp - ST's Generic (SATA, PCIe &
-    USB3) PHY
-
- .../devicetree/bindings/phy/phy-miphy28lp.txt      |  128 ++
- arch/arm/boot/dts/stih407-b2120.dts                |   11 +
- arch/arm/boot/dts/stih407.dtsi                     |   65 +
- arch/arm/configs/multi_v7_defconfig                |    1 +
- drivers/phy/Kconfig                                |    8 +
- drivers/phy/Makefile                               |    1 +
- drivers/phy/phy-miphy28lp.c                        | 1283 ++++++++++++++++++++
- include/dt-bindings/phy/phy.h                      |   18 +
- 8 files changed, 1515 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
- create mode 100644 drivers/phy/phy-miphy28lp.c
- create mode 100644 include/dt-bindings/phy/phy.h
-
+diff --git a/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt b/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
+index 4a3b4af..46a135d 100644
+--- a/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
++++ b/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
+@@ -40,6 +40,7 @@ Optional properties (port (child) node):
+ - st,px_rx_pol_inv	: to invert polarity of RXn/RXp (respectively negative line and positive
+ 			  line).
+ - st,scc-on		: enable ssc to reduce effects of EMI (only for sata or PCIe).
++- st,tx-impedance-comp	: to compensate tx impedance avoiding out of range values.
+ 
+ example:
+ 
+diff --git a/drivers/phy/phy-miphy28lp.c b/drivers/phy/phy-miphy28lp.c
+index d8ff895..87dcc9a 100644
+--- a/drivers/phy/phy-miphy28lp.c
++++ b/drivers/phy/phy-miphy28lp.c
+@@ -204,6 +204,7 @@ struct miphy28lp_phy {
+ 	bool osc_rdy;
+ 	bool px_rx_pol_inv;
+ 	bool ssc;
++	bool tx_impedance;
+ 
+ 	struct reset_control *miphy_rst;
+ 
+@@ -632,6 +633,12 @@ static void miphy_pcie_tune_ssc(struct miphy28lp_phy *miphy_phy)
+ 	}
+ }
+ 
++static inline void miphy_tune_tx_impedance(struct miphy28lp_phy *miphy_phy)
++{
++	/* Compensate Tx impedance to avoid out of range values */
++	writeb_relaxed(0x02, miphy_phy->base + MIPHY_COMP_POSTP);
++}
++
+ static inline int miphy28lp_configure_sata(struct miphy28lp_phy *miphy_phy)
+ {
+ 	void __iomem *base = miphy_phy->base;
+@@ -670,6 +677,9 @@ static inline int miphy28lp_configure_sata(struct miphy28lp_phy *miphy_phy)
+ 	if (miphy_phy->ssc)
+ 		miphy_sata_tune_ssc(miphy_phy);
+ 
++	if (miphy_phy->tx_impedance)
++		miphy_tune_tx_impedance(miphy_phy);
++
+ 	return 0;
+ }
+ 
+@@ -703,6 +713,9 @@ static inline int miphy28lp_configure_pcie(struct miphy28lp_phy *miphy_phy)
+ 	if (miphy_phy->ssc)
+ 		miphy_pcie_tune_ssc(miphy_phy);
+ 
++	if (miphy_phy->tx_impedance)
++		miphy_tune_tx_impedance(miphy_phy);
++
+ 	return 0;
+ }
+ 
+@@ -1154,6 +1167,9 @@ static int miphy28lp_of_probe(struct device_node *np,
+ 
+ 	miphy_phy->ssc = of_property_read_bool(np, "st,ssc-on");
+ 
++	miphy_phy->tx_impedance =
++		of_property_read_bool(np, "st,tx-impedance-comp");
++
+ 	of_property_read_u32(np, "st,sata-gen", &miphy_phy->sata_gen);
+ 	if (!miphy_phy->sata_gen)
+ 		miphy_phy->sata_gen = SATA_GEN1;
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
