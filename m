@@ -1,131 +1,32 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH RESEND V4 5/9] of: Add NVIDIA Tegra xHCI controller binding
-Date: Tue, 4 Nov 2014 12:44:52 -0800
-Message-ID: <CAL1qeaEbQoXFgYjtxVvAwULC6P_9xrb56_=-HjKOmUBaLVUh2w@mail.gmail.com>
-References: <1414535277-15645-1-git-send-email-abrestic@chromium.org>
-	<1414535277-15645-6-git-send-email-abrestic@chromium.org>
-	<20141029094338.GA28356@ulmo.nvidia.com>
-	<CAL1qeaEf0mTQfMgnY8jHGDBvbQ7ivtzAQRWaE9K24TJ86hWYMg@mail.gmail.com>
-	<20141030135500.GC19802@ulmo.nvidia.com>
-	<CAL1qeaG701hKtcUL5a67b=X38hbcYunUOUBziZMpxemvhhAayA@mail.gmail.com>
-	<20141030172432.GA8944@ulmo.nvidia.com>
-	<CAL1qeaEbRkOQApyjkpwxBd3mGkQ3JuXNiar1MbBd844NWe5h9g@mail.gmail.com>
-	<20141031113249.GD10778@ulmo.nvidia.com>
-	<CAL1qeaFcyoSUbVdgUdWZ6RtRiuj0X1H-ohXCsckwF8=VPw8jRA@mail.gmail.com>
+From: "Lennart Sorensen" <lsorense@csclub.uwaterloo.ca>
+Subject: Re: [PATCH 11/13] arm: dts: dra7: add DMA properties for UART
+Date: Tue, 4 Nov 2014 16:03:15 -0500
+Message-ID: <20141104210315.GF24112@csclub.uwaterloo.ca>
+References: <1412014009-13315-1-git-send-email-bigeasy@linutronix.de>
+ <1412014009-13315-12-git-send-email-bigeasy@linutronix.de>
+ <20141104170233.GB24112@csclub.uwaterloo.ca>
+ <5459079D.7080703@linutronix.de>
+ <20141104172117.GC24112@csclub.uwaterloo.ca>
+ <20141104183315.GD24112@csclub.uwaterloo.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaFcyoSUbVdgUdWZ6RtRiuj0X1H-ohXCsckwF8=VPw8jRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141104183315.GD24112@csclub.uwaterloo.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, balbi@ti.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 31, 2014 at 9:41 AM, Andrew Bresticker
-<abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> On Fri, Oct 31, 2014 at 4:32 AM, Thierry Reding
-> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Thu, Oct 30, 2014 at 10:26:47AM -0700, Andrew Bresticker wrote:
->>> On Thu, Oct 30, 2014 at 10:24 AM, Thierry Reding
->>> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> > On Thu, Oct 30, 2014 at 10:19:21AM -0700, Andrew Bresticker wrote:
->>> >> On Thu, Oct 30, 2014 at 6:55 AM, Thierry Reding
->>> >> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> >> > On Wed, Oct 29, 2014 at 09:37:14AM -0700, Andrew Bresticker wrote:
->>> >> >> On Wed, Oct 29, 2014 at 2:43 AM, Thierry Reding
->>> >> >> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> >> >> > On Tue, Oct 28, 2014 at 03:27:50PM -0700, Andrew Bresticker wrote:
->>> >> >> > [...]
->>> >> >> >> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt
->>> >> >> > [...]
->>> >> >> >> +Optional properties:
->>> >> >> >> +-------------------
->>> >> >> >> +- vbus-{0,1,2}-supply: VBUS regulator for the corresponding UTMI pad.
->>> >> >> >> +- vddio-hsic-supply: VDDIO regulator for the HSIC pads.
->>> >> >> >> +- nvidia,usb3-port-{0,1}-lane: PCIe/SATA lane to which the corresponding USB3
->>> >> >> >> +  port is mapped.  See <dt-bindings/pinctrl/pinctrl-tegra-xusb.h> for the list
->>> >> >> >> +  of valid values.
->>> >> >> >
->>> >> >> > I dislike how we now need to provide a list of all pins in the header
->>> >> >> > file, where previously we used strings for this. This could become very
->>> >> >> > ugly if the set of pins changes in future generations of this IP block.
->>> >> >> >
->>> >> >> > Could we instead derive this from the pinmux nodes? For example you have
->>> >> >> > this in the example below:
->>> >> >> >
->>> >> >> >         usb3p0 {
->>> >> >> >                 nvidia,lanes = "pcie-0";
->>> >> >> >                 ...
->>> >> >> >         };
->>> >> >> >
->>> >> >> > Perhaps what we need is to either key off the node name or add another
->>> >> >> > property, such as:
->>> >> >> >
->>> >> >> >         nvidia,usb3-port = <0>;
->>> >> >> >
->>> >> >> > This would match the nvidia,usb2-port property that you've added below.
->>> >> >>
->>> >> >> That is actually how I described the USB3 port to SS lane mapping
->>> >> >> originally, but in review of an earlier version of this series,
->>> >> >> Stephen suggested that I make it a separate, not pinconfig property
->>> >> >> since it wasn't a value written directly to the hardware.  I'm fine
->>> >> >> with changing it back as the pinconfig property makes more sense to me
->>> >> >> as well.
->>> >> >
->>> >> > Hmm... I had considered it a mux option of the specific lane. If the
->>> >> > function is usb3, it'd still need to be muxed to one of the ports. So
->>> >> > it's additional information associated with the usb3 function.
->>> >> >
->>> >> > I did look through the driver changes and can't really make out which
->>> >> > part of the code actually performs this assignment. Can you point me to
->>> >> > it?
->>> >>
->>> >> There's not really an assignment.  The property is used to map between
->>> >> a lane (e.g. PCIe-0 or SATA) and the USB3.0 port it's mapped to.  For
->>> >> an example of where it's used, take a look at usb3_phy_power_on().
->>> >> There are certain per-lane registers which need to be programmed in
->>> >> addition to the per-USB3.0 port pad registers.  This mapping is used
->>> >> to determine which lane needs to be programmed.
->>> >
->>> > Are you saying the mapping of lane to USB port is fixed? That is, PCIe-0
->>> > lane is always used for USB port X and SATA always for USB port Y?
->>>
->>> No, sorry if that was unclear, it's not fixed - it's a board specific
->>> property.
->>
->> Okay, but there's no register that contains the mapping of the port to a
->> lane, similar to what's done for the functions, right?
->
-> Correct.
->
->> I mean the driver only uses the lane to find out which register to write.
->> Doesn't that imply that two lanes (or more) could be mapped to the same
->> USB 3.0 port?
->
-> I guess?  Not sure how that would work in hardware to have two
-> SuperSpeed lanes wired up to a single port.
->
->> I'm not sure I'm being clear here, so let me try another way. In order
->> to establish a mapping between USB port and lane, I would've expected
->> one of the following to happen:
->>
->>         - A value derived from the lane number is written to a register
->>           belonging to a given port.
->>
->>         - A value derived from the port number is written to a register
->>           belonging to a given lane.
->>
->> I can't see the code do either of the above, which to me implies that
->> there's a fixed mapping between lanes and ports. What am I missing?
->
-> It's fixed in that it's not a software-modifiable property.  It's
-> describing an electrical connection between lane and port.  For
-> example, it's possible that one board has PCIe lane 1 wired up to
-> SuperSpeed port 1 and on another board for the SATA lane to be wired
-> up to SuperSpeed port 1.  Does that make sense?
+On Tue, Nov 04, 2014 at 01:33:15PM -0500, Lennart Sorensen wrote:
+> Well it doesn't work, because I don't have the dma croassbar patches
+> from ti-linux-3.14.y which are required to use the full range of dma
+> channels on the dra7.
+> 
+> I will see how well it works without dma at least.
 
-So what's the verdict here?
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So it seems to be working on our board so far.  Will stress test it
+some more.  No DMA of course for now, but oh well.
+
+-- 
+Len Sorensen
