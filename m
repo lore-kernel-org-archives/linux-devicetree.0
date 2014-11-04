@@ -1,65 +1,29 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v3 02/14] mfd/regulator: dt-bindings: max77686: Document
- of_compatible for regulator
-Date: Tue, 04 Nov 2014 08:53:13 +0100
-Message-ID: <1415087593.2389.6.camel@AMDC1943>
-References: <1414668053-31370-1-git-send-email-k.kozlowski@samsung.com>
- <1414668053-31370-3-git-send-email-k.kozlowski@samsung.com>
- <20141103170042.GC12011@x1>
+From: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 2/3] usb: phy: convert gpio-vbus to gpio_desc
+Date: Tue, 4 Nov 2014 09:01:08 +0100
+Message-ID: <CA+gwMcfmE6vbO4USnQttC_JM1P=YaihwQK2UcZHZWw0TdkS54w@mail.gmail.com>
+References: <1414951910-16075-1-git-send-email-robert.jarzmik@free.fr>
+	<1414951910-16075-2-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20141103170042.GC12011@x1>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Chanwoo Choi <cw00.choi@samsung.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414951910-16075-2-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On pon, 2014-11-03 at 17:00 +0000, Lee Jones wrote:
-> On Thu, 30 Oct 2014, Krzysztof Kozlowski wrote:
-> 
-> > Document new required property for regulator driver: of_compatible. The
-> > property allows MFD core to bind the driver to node with regulators and
-> > this simplifies parsing regulators init data from DTS
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/max77686.txt | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> I want a thumbs-up from Mark on this before applying.
+On Sun, Nov 2, 2014 at 7:11 PM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
+> In order to prepare device-tree conversion, port gpio_vbus to use
+> gpio_desc.
+>
+> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 
-I'll be resending new version, without the compatible property.
+Acked-by: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Best regards,
-Krzysztof
-
-> 
-> > diff --git a/Documentation/devicetree/bindings/mfd/max77686.txt b/Documentation/devicetree/bindings/mfd/max77686.txt
-> > index 75fdfaf41831..f4010a9f66eb 100644
-> > --- a/Documentation/devicetree/bindings/mfd/max77686.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/max77686.txt
-> > @@ -18,8 +18,11 @@ Required properties:
-> >  
-> >  Optional node:
-> >  - voltage-regulators : The regulators of max77686 have to be instantiated
-> > -  under subnode named "voltage-regulators" using the following format.
-> > +  under subnode named "voltage-regulators".
-> > +  Required property:
-> > +  - compatible : Must be "maxim,max77686-pmic"
-> >  
-> > +  Optional properties: For each regulator use following format:
-> >  	regulator_name {
-> >  		regulator-compatible = LDOn/BUCKn
-> >  		standard regulator constraints....
-> > @@ -49,6 +52,8 @@ Example:
-> >  		reg = <0x09>;
-> >  
-> >  		voltage-regulators {
-> > +			compatible = "maxim,max77686-pmic";
-> > +
-> >  			ldo11_reg {
-> >  				regulator-compatible = "LDO11";
-> >  				regulator-name = "vdd_ldo11";
-> 
+regards
+Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
