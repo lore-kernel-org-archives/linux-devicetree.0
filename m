@@ -1,123 +1,89 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v6 02/12] Driver core: Unified device properties
- interface for platform firmware
-Date: Tue, 04 Nov 2014 15:51:12 +0000
-Message-ID: <20141104155112.6FC67C423D0@trevor.secretlab.ca>
-References: <13750506.S2yVlRRDa2@vostro.rjw.lan>
-	<2127128.VT1Iq03xz1@vostro.rjw.lan>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2127128.VT1Iq03xz1@vostro.rjw.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <darren.hart@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH 0/1] Compact interface for Device-Tree
+Date: Tue, 04 Nov 2014 15:53:29 +0000
+Message-ID: <20141104155329.A23A5C423D0@trevor.secretlab.ca>
+References: <1414709964-27284-1-git-send-email-gavidov@codeaurora.org>
+	<CAL_JsqLtkiiyisxSG_qBknmz6n2qDKUdpwM-ZY3tH3wgYSrO1w@mail.gmail.com>
+	<7637604.7PK9W8ePf3@vostro.rjw.lan> <40803956.DTL7dD7CLv@wuerfel>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <40803956.DTL7dD7CLv@wuerfel>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Rob Herring <robherring2@gmail.com>, Gilad Avidov <gavidov@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Oct 2014 23:15:50 +0200
-, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+On Mon, 03 Nov 2014 16:06:03 +0100
+, Arnd Bergmann <arnd@arndb.de>
  wrote:
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> 
-> Add a uniform interface by which device drivers can request device
-> properties from the platform firmware by providing a property name
-> and the corresponding data type.  The purpose of it is to help to
-> write portable code that won't depend on any particular platform
-> firmware interface.
-> 
-> The following general helper functions are added:
-> 
-> device_property_present()
-> device_property_read_u8()
-> device_property_read_u16()
-> device_property_read_u32()
-> device_property_read_u64()
-> device_property_read_string()
-> device_property_read_u8_array()
-> device_property_read_u16_array()
-> device_property_read_u32_array()
-> device_property_read_u64_array()
-> device_property_read_string_array()
-> 
-> The first one allows the caller to check if the given property is
-> present.  The next 5 of them allow single-valued properties of
-> various types to be retrieved in a uniform way.  The remaining 5 are
-> for reading properties with multiple values (arrays of either numbers
-> or strings).
-> 
-> The interface covers both ACPI and Device Trees.
-> 
-> This change set includes material from Mika Westerberg and Aaron Lu.
-> 
-> Signed-off-by: Aaron Lu <aaron.lu@intel.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
-> 
-> Changes from v5:
-> - acpi_dev_prop_read() can now handle both list (package) and single-value
->   properties (the latter are tried first for the last argument equal to 1).
-> - There is a new macro to generate the bodies of device_property_read_u*_array().
-> - device_property_read_u*() are implemented using device_property_read_u*_array().
-> - device_property_read_bool() is a new static inline wrapper around
->   device_property_present().
-> 
-> ---
->  drivers/acpi/property.c  |  178 +++++++++++++++++++++++++++++++++++
->  drivers/base/Makefile    |    2 
->  drivers/base/property.c  |  233 +++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/of/base.c        |  106 ++++++++++++++++++---
->  include/linux/acpi.h     |   32 ++++++
->  include/linux/of.h       |   22 ++++
->  include/linux/property.h |   53 ++++++++++
->  7 files changed, 609 insertions(+), 17 deletions(-)
->  create mode 100644 drivers/base/property.c
->  create mode 100644 include/linux/property.h
-> 
-> Index: linux-pm/include/linux/property.h
-> ===================================================================
-> --- /dev/null
-> +++ linux-pm/include/linux/property.h
-> @@ -0,0 +1,53 @@
-> +/*
-> + * property.h - Unified device property interface.
-> + *
-> + * Copyright (C) 2014, Intel Corporation
-> + * Authors: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> + *          Mika Westerberg <mika.westerberg@linux.intel.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#ifndef _LINUX_PROPERTY_H_
-> +#define _LINUX_PROPERTY_H_
-> +
-> +#include <linux/types.h>
-> +
-> +struct device;
-> +
-> +enum dev_prop_type {
-> +	DEV_PROP_U8,
-> +	DEV_PROP_U16,
-> +	DEV_PROP_U32,
-> +	DEV_PROP_U64,
-> +	DEV_PROP_STRING,
-> +	DEV_PROP_MAX,
-> +};
-> +
-> +bool device_property_present(struct device *dev, const char *propname);
-> +int device_property_read_u8_array(struct device *dev, const char *propname,
-> +				  u8 *val, size_t nval);
-> +int device_property_read_u16_array(struct device *dev, const char *propname,
-> +				   u16 *val, size_t nval);
-> +int device_property_read_u32_array(struct device *dev, const char *propname,
-> +				   u32 *val, size_t nval);
-> +int device_property_read_u64_array(struct device *dev, const char *propname,
-> +				   u64 *val, size_t nval);
-> +int device_property_read_string_array(struct device *dev, const char *propname,
-> +				      char **val, size_t nval);
+> On Friday 31 October 2014 23:53:28 Rafael J. Wysocki wrote:
+> > On Saturday, November 01, 2014 05:13:45 AM Rob Herring wrote:
+> > > On Fri, Oct 31, 2014 at 6:59 AM, Gilad Avidov <gavidov@codeaurora=
+=2Eorg> wrote:
+> > > >
+> > > > Device-Tree compact API
+> > > > ------------------------
+> > > >
+> > > > Common code seen in driver=E2=80=99s probe reads device tree va=
+lues and handling
+> > > > erroneous return codes from all those of_property_read_xxx()  A=
+PIs. This
+> > > > common code is factored out by the of_property_map module which=
+ allows
+> > > > driver=E2=80=99s probe to replace that (often lengthy) code wit=
+h a concise table:
+> > > >
+> > > > struct of_prop_map map[] =3D {
+> > > >     {"i2c",            &dev->id,        OF_REQ,  OF_ID,  -1},
+> > > >     {"qcom,clk-freq-out",    &dev->clk_freq_out,    OF_REQ,  OF=
+_U32,  0},
+> > > >     {"qcom,clk-freq-in",    &dev->clk_freq_in,    OF_REQ,  OF_U=
+32,  0},
+> > > >     {"qcom,disable-dma",    &dev->disable_dma,    OF_OPT,  OF_B=
+OOL, 0},
+> > > >     {"qcom,master-id",    &dev->mstr_id,        OF_SGST, OF_U32=
+,  0},
+> > > >     {NULL,            NULL,            0,       0,       0},
+> > > > };
+> > > >
+> > > > Then call populate to read the values into the device=E2=80=99s=
+ variables:
+> > > >
+> > > > ret =3D of_prop_populate(dev, dev->of_node, map);
+> > >=20
+> > > Interesting idea. The main concern I have with this is there has =
+been
+> > > on-going discussions about how to generalize property handling ac=
+ross
+> > > DT and ACPI to make drivers more agnostic, so I'm copying a few f=
+olks
+> > > involved in that. That may be a bit orthogonal to what this is do=
+ing,
+> > > but we may want some coordination here.
+> >=20
+> > Agreed.
+> >=20
+> > We actually have a patchset adding a unified device property API in=
+=20
+> > linux-next (http://git.kernel.org/cgit/linux/kernel/git/rafael/linu=
+x-pm.git/log/?h=3Ddevice-properties)
+> > and I'd prefer to see the "compactization" to happen at that level,=
+ if possible,
+> > rather that for of_ only.
+>=20
+> Agreed, this should definitely use the new generalized API.
+> I have prototyped a similar concept last year, which actually went mu=
+ch
+> further and also abstracted high-level properties such as interrupts,
+> gpios, pwm, dma-engine, etc. I still think we should do something
+> like that, but I've never had the time to follow up and nobody else
+> picked up my work from back then.
+>=20
+> Would others like to see that?
 
-I'm not sure if I asked this elsewhere. Can 'val' be made a const char **?
+Absolutely. I also tried to do the same thing and didn't get very far.
+And, yes, it should be done at the level of the device properties API.
 
 g.
