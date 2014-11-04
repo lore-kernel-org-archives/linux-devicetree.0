@@ -1,57 +1,58 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESUBMIT PATCH v6 1/8] mfd: Add support for Skyworks SKY81452
- driver
-Date: Tue, 4 Nov 2014 14:35:59 +0000
-Message-ID: <20141104143559.GQ17577@x1>
-References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
- <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
- <1414739322-12487-2-git-send-email-jack.yoo@skyworksinc.com>
- <20141103171451.GG12011@x1>
- <1415050088.20372.72.camel@x220>
- <20141103223022.GE13359@x1>
- <1415091946.20372.136.camel@x220>
- <20141104091609.GI17577@x1>
- <20141104113833.GI3815@sirena.org.uk>
+From: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v6 04/12] misc: at25: Make use of device property API
+Date: Tue, 4 Nov 2014 16:38:01 +0200
+Message-ID: <20141104143801.GM1618@lahna.fi.intel.com>
+References: <13750506.S2yVlRRDa2@vostro.rjw.lan>
+ <5019278.RtDq7RlWqt@vostro.rjw.lan>
+ <20141104141826.36F8AC408F6@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20141104113833.GI3815-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <20141104141826.36F8AC408F6-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Darren Hart <darren.hart-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 04 Nov 2014, Mark Brown wrote:
+On Tue, Nov 04, 2014 at 02:18:26PM +0000, Grant Likely wrote:
+> > -	strncpy(chip->name, np->name, sizeof(chip->name));
+> > +	strncpy(chip->name, "at25", sizeof(chip->name));
+> 
+> This line changes behaviour of the driver. It's possibly not a problem,
+> but it should be commented on and whether any due diligance has been
+> done to make sure it there isn't anything that depends on it.
 
-> On Tue, Nov 04, 2014 at 09:16:09AM +0000, Lee Jones wrote:
-> > On Tue, 04 Nov 2014, Paul Bolle wrote:
->=20
-> > > Nothing will break. But I think Mark prefers the dependency renam=
-e, now
-> > > done in 7/8, to be done as part of this patch.
->=20
-> > I don't agree.  The rename should be taken independantly by Mark.
-> > The regulator driver won't build until they match anyway, so there'=
-s
-> > no hard dependency.  Unless someone can give me a really good reaso=
-n
-> > to revert it, I'm applying this driver now.
->=20
-> The important thing is that the dependency rename isn't silently thro=
-wn
-> into an unrelated patch.
+I found only one user for "atmel,at25" in any of the DT sample files.
 
-That I agree with.
+arch/arm/boot/dts/phy3250.dts:
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+	eeprom: at25@0 {
+		...
+		at25,byte-len = <0x8000>;
+		at25,addr-mode = <2>;
+		at25,page-size = <64>;
+
+		compatible = "atmel,at25";
+		reg = <0>;
+		spi-max-frequency = <5000000>;
+	};
+
+I think np->name is "at25" in this case? The binding file
+Documentation/devicetree/bindings/misc/at25.txt also has the same name.
+
+Are you OK, if we add something like below to the changelog?
+
+ In addition we hard-code the name of the chip to be "at25" for the
+ reason that there is no common mechanism to fetch name of the firmware
+ node. The only existing user (arch/arm/boot/dts/phy3250.dts) uses the
+ same name so it should continue to work.
+
+> Otherwise:
+> Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Thanks.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
