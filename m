@@ -1,53 +1,44 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/1] spi: spi-gpio: Add dt support for a single device
- with no chip select
-Date: Tue, 4 Nov 2014 19:57:32 +0000
-Message-ID: <20141104195732.GX3815@sirena.org.uk>
-References: <1415031475-2268-1-git-send-email-torfl6749@gmail.com>
+From: Juergen Borleis <juergen127@kreuzholzen.de>
+Subject: Samsung S3C6410 SoC/devicetree: how to describe RTC interrupts
+ connected to two different interrupt parents?
+Date: Tue, 4 Nov 2014 21:04:45 +0100
+Message-ID: <201411042104.45632.juergen127@kreuzholzen.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="umhhH1MY3lvPZrwj"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1415031475-2268-1-git-send-email-torfl6749-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Torsten Fleischer <torfl6749-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---umhhH1MY3lvPZrwj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+the Samsung S3C6410 SoC comes with an RTC with two interrupts connected to two 
+different interrupt controllers.
 
-On Mon, Nov 03, 2014 at 05:17:55PM +0100, Torsten Fleischer wrote:
-> From: Torsten Fleischer <torfl6749-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->=20
-> In order to describe a single slave device that has no chip select line
-> the 'num-chipselects' property has to be <0> and the 'cs-gpios' property
-> doesn't need to be set.
+The old platform code uses this resource to describe it:
 
-Applied, thanks.
+static struct resource s3c_rtc_resource[] = {
+	[0] = DEFINE_RES_MEM(S3C24XX_PA_RTC, SZ_256),
+	[1] = DEFINE_RES_IRQ(IRQ_RTC),  <-- channel 2 at VIC0
+	[2] = DEFINE_RES_IRQ(IRQ_TICK), <-- channel 28 at VIC1
+};
 
---umhhH1MY3lvPZrwj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+In the devicetree I can define multiple interrupt channels with the 
+keyword 'interrupts' but it seems all of them must share the same interrupt 
+parent defined via 'interrupt-parent'. How to handle the special S3C6410 
+case?
+The file "Documentation/devicetree/bindings/rtc/s3c-rtc.txt" isn't really 
+helpful.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUWS+sAAoJECTWi3JdVIfQ2zoH/AtLkp1eNCvq46l7yZU6Cy+9
-DUB96pmHjF1HozvCcFPzuS9S+6JUJYxmoVYltYKt6hb5D/Pgta7z3Iwo9BTwe/pt
-/bW4S7wCb2Bu2yfZ4Heu2vftWhUXc3cwfi0VPT7qsCch+EOEHH3cw3W0vFcPVq2+
-YH+EG6wOHhrVWojX6YsOH/0Trl7YAsWKC1sqI/E7IKnr6C7c/KQ/KJV3FIhpIDtN
-cqCVZ0YIpozGCqmAPWMCTkJlYaxXVahiXixqZ4o6OJ9K0j5khHLPhxjWK9KTJUU8
-QsSiQbVLRkbFa58Xv7DB2azHpB87JaJR6aMXbyKuX04DBfg4/7HQVY0SlFdIW8U=
-=nmig
------END PGP SIGNATURE-----
-
---umhhH1MY3lvPZrwj--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+jbo
