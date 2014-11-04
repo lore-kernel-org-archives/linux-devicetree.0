@@ -1,227 +1,57 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH] mfd: qcom-spmi-pmic: Add support for more chips versions
-Date: Tue,  4 Nov 2014 15:33:23 +0200
-Message-ID: <1415108003-16387-1-git-send-email-iivanov@mm-sol.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 0/2] make imx hdmi publicly used by dw hdmi compatible platform
+Date: Tue,  4 Nov 2014 21:33:10 +0800
+Message-ID: <1415107992-34289-1-git-send-email-andy.yan@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: airlied-cv59FeDIM0c@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Josh Boyer <jwboyer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Update compatible string with runtime detected chip revision
-information, for example qcom,pm8941 will become qcom,pm8941-v1.0.
+From: Andy yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
----
- .../devicetree/bindings/mfd/qcom,spmi-pmic.txt     |  18 ++-
- drivers/mfd/qcom-spmi-pmic.c                       | 142 +++++++++++++++++++++
- 2 files changed, 156 insertions(+), 4 deletions(-)
+We found freescale imx6 and rockchip rk3288 and Ingenic JZ4780 (Xburst/MIPS)
+use the interface compatible Designware HDMI IP, but they also have some
+lightly difference, such as phy pll configuration, register width(imx hdmi
+register is one byte, but rk3288 is 4 bytes width and can only access by word),
+4K support(imx6 doesn't support 4k, but rk3288 does).
 
-diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-index 7182b88..bbe7db8 100644
---- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-+++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-@@ -15,10 +15,20 @@ each. A function can consume one or more of these fixed-size register regions.
- 
- Required properties:
- - compatible:      Should contain one of:
--                     "qcom,pm8941"
--                     "qcom,pm8841"
--                     "qcom,pma8084"
--                     or generalized "qcom,spmi-pmic".
-+                   qcom,pm8941,
-+                   qcom,pm8841,
-+                   qcom,pm8019,
-+                   qcom,pm8226,
-+                   qcom,pm8110,
-+                   qcom,pma8084,
-+                   qcom,pmi8962,
-+                   qcom,pmd9635,
-+                   qcom,pm8994,
-+                   qcom,pmi8994,
-+                   qcom,pm8916,
-+                   qcom,pm8004,
-+                   qcom,pm8909,
-+                   or generalized "qcom,spmi-pmic".
- - reg:             Specifies the SPMI USID slave address for this device.
-                    For more information see:
-                    Documentation/devicetree/bindings/spmi/spmi.txt
-diff --git a/drivers/mfd/qcom-spmi-pmic.c b/drivers/mfd/qcom-spmi-pmic.c
-index 4b8beb2..67446a4 100644
---- a/drivers/mfd/qcom-spmi-pmic.c
-+++ b/drivers/mfd/qcom-spmi-pmic.c
-@@ -13,10 +13,126 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/slab.h>
- #include <linux/spmi.h>
- #include <linux/regmap.h>
-+#include <linux/of.h>
- #include <linux/of_platform.h>
- 
-+#define PMIC_REV2		0x101
-+#define PMIC_REV3		0x102
-+#define PMIC_REV4		0x103
-+#define PMIC_TYPE		0x104
-+#define PMIC_SUBTYPE		0x105
-+
-+#define PMIC_TYPE_VALUE		0x51
-+
-+#define PM8941_SUBTYPE		0x01
-+#define PM8841_SUBTYPE		0x02
-+#define PM8019_SUBTYPE		0x03
-+#define PM8226_SUBTYPE		0x04
-+#define PM8110_SUBTYPE		0x05
-+#define PMA8084_SUBTYPE		0x06
-+#define PMI8962_SUBTYPE		0x07
-+#define PMD9635_SUBTYPE		0x08
-+#define PM8994_SUBTYPE		0x09
-+#define PMI8994_SUBTYPE		0x0a
-+#define PM8916_SUBTYPE		0x0b
-+#define PM8004_SUBTYPE		0x0c
-+#define PM8909_SUBTYPE		0x0d
-+
-+static int pmic_spmi_read_revid(struct regmap *map, char **name,
-+				int *major, int *minor)
-+{
-+	unsigned int rev2, rev3, rev4, type, subtype;
-+	int ret;
-+
-+	ret = regmap_read(map, PMIC_TYPE, &type);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (type != PMIC_TYPE_VALUE)
-+		return -EINVAL;
-+
-+	ret = regmap_read(map, PMIC_SUBTYPE, &subtype);
-+	if (ret < 0)
-+		return ret;
-+
-+	rev2 = regmap_read(map, PMIC_REV2, &rev2);
-+	if (ret < 0)
-+		return ret;
-+
-+	rev3 = regmap_read(map, PMIC_REV3, &rev3);
-+	if (ret < 0)
-+		return ret;
-+
-+	rev4 = regmap_read(map, PMIC_REV4, &rev4);
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * In early versions of PM8941 and PM8226, the major revision number
-+	 * started incrementing from 0 (eg 0 = v1.0, 1 = v2.0).
-+	 * Increment the major revision number here if the chip is an early
-+	 * version of PM8941 or PM8226.
-+	 */
-+	if ((subtype == PM8941_SUBTYPE || subtype == PM8226_SUBTYPE) &&
-+	    rev4 < 0x02)
-+		rev4++;
-+
-+	*major = rev4;
-+	if (subtype == PM8110_SUBTYPE)
-+		*minor = rev2;
-+	else
-+		*minor = rev3;
-+
-+	switch (subtype) {
-+	case PM8941_SUBTYPE:
-+		*name = "pm8941";
-+		break;
-+	case PM8841_SUBTYPE:
-+		*name = "pm8841";
-+		break;
-+	case PM8019_SUBTYPE:
-+		*name = "pm8019";
-+		break;
-+	case PM8226_SUBTYPE:
-+		*name = "pm8226";
-+		break;
-+	case PM8110_SUBTYPE:
-+		*name = "pm8110";
-+		break;
-+	case PMA8084_SUBTYPE:
-+		*name = "pma8084";
-+		break;
-+	case PMI8962_SUBTYPE:
-+		*name = "pmi8962";
-+		break;
-+	case PMD9635_SUBTYPE:
-+		*name = "pmd8635";
-+		break;
-+	case PM8994_SUBTYPE:
-+		*name = "pm8994";
-+		break;
-+	case PMI8994_SUBTYPE:
-+		*name = "pmi8994";
-+		break;
-+	case PM8916_SUBTYPE:
-+		*name = "pm8916";
-+		break;
-+	case PM8004_SUBTYPE:
-+		*name = "pm8004";
-+		break;
-+	case PM8909_SUBTYPE:
-+		*name = "pm8909";
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static const struct regmap_config spmi_regmap_config = {
- 	.reg_bits	= 16,
- 	.val_bits	= 8,
-@@ -28,11 +144,27 @@ static int pmic_spmi_probe(struct spmi_device *sdev)
- {
- 	struct device_node *root = sdev->dev.of_node;
- 	struct regmap *regmap;
-+	struct property *prop;
-+	int major, minor, ret;
-+	char *name, compatible[32];
- 
- 	regmap = devm_regmap_init_spmi_ext(sdev, &spmi_regmap_config);
- 	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
- 
-+	ret = pmic_spmi_read_revid(regmap, &name, &major, &minor);
-+	if (!ret) {
-+		snprintf(compatible, ARRAY_SIZE(compatible), "qcom,%s-v%d.%d",
-+			 name, major, minor);
-+		prop = kzalloc(sizeof(*prop), GFP_KERNEL);
-+		if (prop) {
-+			prop->name = kstrdup("compatible", GFP_KERNEL);
-+			prop->value = kstrdup(compatible, GFP_KERNEL);
-+			prop->length = strlen(prop->value);
-+			of_update_property(root, prop);
-+		}
-+	}
-+
- 	return of_platform_populate(root, NULL, NULL, &sdev->dev);
- }
- 
-@@ -45,7 +177,17 @@ static const struct of_device_id pmic_spmi_id_table[] = {
- 	{ .compatible = "qcom,spmi-pmic" },
- 	{ .compatible = "qcom,pm8941" },
- 	{ .compatible = "qcom,pm8841" },
-+	{ .compatible = "qcom,pm8019" },
-+	{ .compatible = "qcom,pm8226" },
-+	{ .compatible = "qcom,pm8110" },
- 	{ .compatible = "qcom,pma8084" },
-+	{ .compatible = "qcom,pmi8962" },
-+	{ .compatible = "qcom,pmd9635" },
-+	{ .compatible = "qcom,pm8994" },
-+	{ .compatible = "qcom,pmi8994" },
-+	{ .compatible = "qcom,pm8916" },
-+	{ .compatible = "qcom,pm8004" },
-+	{ .compatible = "qcom,pm8909" },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, pmic_spmi_id_table);
+To reuse the imx-hdmi driver, we do this patch set:
+patch (1): split out imx-soc code from imx-hdmi to dw_hdmi-imx.c
+patch (2): move imx-hdmi to bridge/, and rename to dw-hdmi to
+make this driver indepent of drm-imx . And we will add rockchip 
+platform specific code dw_hdmi-rockchip.c later, this is depend
+on drm-rockchip.
+
+Andy Yan (1):
+  imx-drm: imx-hdmi: split imx soc specific code from imx-hdmi
+
+Andy yan (1):
+  move imx-hdmi to bridge/dw-hdmi
+
+ drivers/gpu/drm/bridge/Kconfig        |    5 +
+ drivers/gpu/drm/bridge/Makefile       |    1 +
+ drivers/gpu/drm/bridge/dw_hdmi.c      | 1651 ++++++++++++++++++++++++++++++
+ drivers/gpu/drm/bridge/dw_hdmi.h      | 1032 +++++++++++++++++++
+ drivers/staging/imx-drm/Kconfig       |    1 +
+ drivers/staging/imx-drm/Makefile      |    2 +-
+ drivers/staging/imx-drm/dw_hdmi-imx.c |  214 ++++
+ drivers/staging/imx-drm/imx-hdmi.c    | 1767 ---------------------------------
+ drivers/staging/imx-drm/imx-hdmi.h    | 1032 -------------------
+ include/drm/bridge/dw_hdmi.h          |  114 +++
+ 10 files changed, 3019 insertions(+), 2800 deletions(-)
+ create mode 100644 drivers/gpu/drm/bridge/dw_hdmi.c
+ create mode 100644 drivers/gpu/drm/bridge/dw_hdmi.h
+ create mode 100644 drivers/staging/imx-drm/dw_hdmi-imx.c
+ delete mode 100644 drivers/staging/imx-drm/imx-hdmi.c
+ delete mode 100644 drivers/staging/imx-drm/imx-hdmi.h
+ create mode 100644 include/drm/bridge/dw_hdmi.h
+
 -- 
-1.9.1
+1.8.3.2
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
