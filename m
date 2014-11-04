@@ -1,104 +1,49 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v6 00/12] Add ACPI _DSD and unified device properties
- support
-Date: Tue, 04 Nov 2014 15:49:50 +0000
-Message-ID: <20141104154950.3175EC423D0@trevor.secretlab.ca>
-References: <13750506.S2yVlRRDa2@vostro.rjw.lan>
-	<2453849.ZcbreFmRlO@vostro.rjw.lan>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <2453849.ZcbreFmRlO@vostro.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <darren.hart@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>
+From: Robert Richter <robert.richter@caviumnetworks.com>
+Subject: Re: [GIT PULL] dts, kbuild: Implement support for dtb vendor subdirs
+Date: Tue, 4 Nov 2014 16:49:17 +0100
+Message-ID: <20141104154917.GP31556@rric.localhost>
+References: <1409899692-1455-1-git-send-email-rric@kernel.org>
+ <20141021181504.GV20170@rric.localhost>
+ <20141104044717.GA13562@quad.lixom.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20141104044717.GA13562@quad.lixom.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, Michal Marek <mmarek@suse.cz>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Robert Richter <rric@kernel.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Bresticker <abrestic@google.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 25 Oct 2014 00:10:20 +0200
-, "Rafael J. Wysocki" <rjw@rjwysocki.net>
- wrote:
-> On Tuesday, October 21, 2014 11:08:59 PM Rafael J. Wysocki wrote:
-> > Hi Everyone,
+On 03.11.14 20:47:17, Olof Johansson wrote:
+> > > Robert Richter (6):
+> > >   dts, arm64: Add dtbs_install make target
+> > >   dts, kbuild: Factor out dtbs install rules to Makefile.dtbinst
+> > >   dts, arm/arm64: Remove dtbs build rules in sub-makes
+> > >   dts, kbuild: Implement support for dtb vendor subdirs
+> > >   dts, arm64: Move dts files to vendor subdirs
+> > >   dts, arm: Remove $(MACHINE) variable from dtbs make recipes
 > > 
-> > This is version 6 of the unified device properties interface patchset.
+> > please pull this series for inclusion into v3.19 from:
 > > 
-> > The original cover letter from Mika is here:
+> >  git://git.kernel.org/pub/scm/linux/kernel/git/rric/linux.git dts-subdirs-for-arm-soc-v3.19
 > > 
-> > http://marc.info/?l=devicetree&m=141087052200600&w=4
-> > 
-> > and my cover letters for previous iterations are at:
-> > 
-> > http://marc.info/?l=linux-acpi&m=141212903816560&w=4
-> > http://marc.info/?l=linux-kernel&m=141354745011569&w=4
-> > 
-> > There are a few changes with respect to v5 and the affected patches are
-> > [02-03/12] and [09-12/12].  The remaining ones have not been modified.
-> > 
-> > Most importantly, requesting the first element of a list (package) property
-> > from _DSD is now equivalent to accessing a single-value property of the
-> > same type, so device_property_read_u8(dev, pname, val) will now be equivalent
-> > to device_property_read_u8_array(dev, pname, val, 1), for example.
-> > Consequently, this _DSD definition:
-> > 
-> > Name (_DSD, Package () {
-> >     ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> >     Package () {
-> >         Package () {"blah", "A string"},
-> >     }
-> > })
-> > 
-> > can be used instead of
-> > 
-> > Name (_DSD, Package () {
-> >     ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> >     Package () {
-> >         Package () {"blah", Package () {"A string"}},
-> >     }
-> > })
-> > 
-> > and the code will be able to retrieve the property value from the both of
-> > them just fine.
-> > 
-> > This means, among other things, that accessors for single-value properties
-> > can be implemented in terms of the analogous "array" property accessors
-> > which allows the code size to be reduced somewhat.
-> > 
-> > Patches [02/12] and [09/12] have been modified to achieve that and patch
-> > [03/12] have been modified accordingly for the "compatible" property in
-> > _DSD to behave in an analogous way.  Additionally, the bodies of the
-> > numerical property accessors in patches [02/12] and [09/12] are now
-> > generated using macros (string property accessors have slightly different
-> > rules and are simply open coded for that reason).
-> > 
-> > Patch [10/12] has been modified to drop function arguments that happened to
-> > have the same values for both of the current users of those functions and
-> > patches [11-12/12] have been modified to take that change into account.  If
-> > the code in question needs to be made more complex in the future, there
-> > should not be any problems with that.
-> > 
-> > Due to the nature of the changes I have retained all ACKs except for the
-> > Grant's Reviewed-by on patch [03/12] (if that had been Acked-by, I would have
-> > retained it too, but that didn't feel appropriate for the "reviewed by" thing
-> > to me).  If any of you think that the ACKs are not applicable any more, please
-> > let me know and I'll drop them.
-> > 
-> > Finally, many thanks to Mika for testing the series on MinnowBoard 1 and
-> > MinnowBoard Max.  In case anybody else would like to test it, it is available
-> > from the device-properties branch of the linux-pm.git tree:
-> > 
-> > git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git device-properties
-> > 
-> > Thanks!
+> > I have updated and rebased the patches to v3.18-rc1. No changes except
+> > conflict resolution of patch 5/6.
 > 
-> Crickets ...
-> 
-> OK, so I'm taking the lack of comments as the lack of objections and I'm already
-> getting merge conflicts for this series.  Moreover, we already have done some
-> work on top of it.
-> 
-> So, if there still are no comments by Sunday evening, I'll add this series to
-> my linux-next branch with 3.19-rc1 as the target.
+> Pulled, and I added the description from 0/6 as the merge text -- feel free to
+> add it to the tag if you do something like this in the future.
 
-Aside from the comments I've made elsewhere, you can add my acked by for the whole series.
+Thanks for pulling and the hint on the tag description (I was
+wondering what to put in there).
 
-Acked-by: Grant Likely <grant.likely@linaro.org>
-
-g.
+-Robert
