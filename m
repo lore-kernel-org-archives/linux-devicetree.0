@@ -1,48 +1,53 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [V10 PATCH 2/2] irqchip: gicv2m: Add supports for ARM GICv2m
- MSI(-X)
-Date: Tue, 4 Nov 2014 15:28:39 +0100 (CET)
-Message-ID: <alpine.DEB.2.11.1411041526100.4245@nanos>
-References: <1415052977-26036-1-git-send-email-suravee.suthikulpanit@amd.com> <1415052977-26036-3-git-send-email-suravee.suthikulpanit@amd.com> <alpine.DEB.2.11.1411032300160.5308@nanos> <54584681.2010103@amd.com> <alpine.DEB.2.11.1411040903340.5308@nanos>
- <5458E0BE.2090803@amd.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 0/2] make imx hdmi publicly used by dw hdmi compatible
+ platform
+Date: Tue, 4 Nov 2014 14:29:09 +0000
+Message-ID: <20141104142908.GG4042@n2100.arm.linux.org.uk>
+References: <1415107992-34289-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5458E0BE.2090803@amd.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, jason@lakedaemon.net, Catalin.Marinas@arm.com, Will.Deacon@arm.com, liviu.dudau@arm.com, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1415107992-34289-1-git-send-email-andy.yan@rock-chips.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: heiko@sntech.de, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 4 Nov 2014, Suravee Suthikulpanit wrote:
-> And that's what I am trying to do here except that GIC is expecting that
-> information to be passed to it via irq_domain_alloc_irqs(..., args) where args
-> is struct of_phandle_args (e.g. in the kernel/irqdomain.c:
-> irq_create_of_mapping). This works fine when specifying interrupt from DT, but
-> that is not always the case.
-> 
-> Currently, I can just create a fake of_phandle_args just to pass the hwirq
-> information to GIC.
-> 
->     --> gicv2m_setup_msi_irq()
->      |    struct of_phandle_args phan;
->      |    phan.np = NULL;
->      |    phan.args_count = 3;
->      |    phan.args[0] = 0;
->      |    phan.args[1] = hwirq - 32;
->      |    phan.args[2] = IRQ_TYPE_EDGE_RISING;
->      |--> irq_domain_alloc_irqs(d, 1, NUMA_NO_NODE, &phan);
->       |--> gicv2m_domain_alloc(d, virq, nr_irqs, arg)
-> 	|--> irq_domain_alloc_irqs_parent(d, virq, nr_irqs, arg);
-> 
-> I am trying to figure out what would be a common data structure for this
-> purpose that would work for both Dt and non-DT case (e.g. GICv2m MSI). Unless
-> you think this is ok.
-
-You need to sort that out with Marc. It needs to be done in a way
-which is usable for the other potential use cases of stacked domains
-on top of GIC.
-
-Thanks,
-
-	tglx
+T24gVHVlLCBOb3YgMDQsIDIwMTQgYXQgMDk6MzM6MTBQTSArMDgwMCwgQW5keSBZYW4gd3JvdGU6
+Cj4gRnJvbTogQW5keSB5YW4gPGFuZHkueWFuQHJvY2stY2hpcHMuY29tPgo+IAo+IFdlIGZvdW5k
+IGZyZWVzY2FsZSBpbXg2IGFuZCByb2NrY2hpcCByazMyODggYW5kIEluZ2VuaWMgSlo0NzgwIChY
+YnVyc3QvTUlQUykKPiB1c2UgdGhlIGludGVyZmFjZSBjb21wYXRpYmxlIERlc2lnbndhcmUgSERN
+SSBJUCwgYnV0IHRoZXkgYWxzbyBoYXZlIHNvbWUKPiBsaWdodGx5IGRpZmZlcmVuY2UsIHN1Y2gg
+YXMgcGh5IHBsbCBjb25maWd1cmF0aW9uLCByZWdpc3RlciB3aWR0aChpbXggaGRtaQo+IHJlZ2lz
+dGVyIGlzIG9uZSBieXRlLCBidXQgcmszMjg4IGlzIDQgYnl0ZXMgd2lkdGggYW5kIGNhbiBvbmx5
+IGFjY2VzcyBieSB3b3JkKSwKPiA0SyBzdXBwb3J0KGlteDYgZG9lc24ndCBzdXBwb3J0IDRrLCBi
+dXQgcmszMjg4IGRvZXMpLgo+IAo+IFRvIHJldXNlIHRoZSBpbXgtaGRtaSBkcml2ZXIsIHdlIGRv
+IHRoaXMgcGF0Y2ggc2V0Ogo+IHBhdGNoICgxKTogc3BsaXQgb3V0IGlteC1zb2MgY29kZSBmcm9t
+IGlteC1oZG1pIHRvIGR3X2hkbWktaW14LmMKPiBwYXRjaCAoMik6IG1vdmUgaW14LWhkbWkgdG8g
+YnJpZGdlLywgYW5kIHJlbmFtZSB0byBkdy1oZG1pIHRvCj4gbWFrZSB0aGlzIGRyaXZlciBpbmRl
+cGVudCBvZiBkcm0taW14IC4gQW5kIHdlIHdpbGwgYWRkIHJvY2tjaGlwIAo+IHBsYXRmb3JtIHNw
+ZWNpZmljIGNvZGUgZHdfaGRtaS1yb2NrY2hpcC5jIGxhdGVyLCB0aGlzIGlzIGRlcGVuZAo+IG9u
+IGRybS1yb2NrY2hpcC4KCkdyZWF0IC0gSSBmdWxseSBhZ3JlZSB0aGF0IHRoaXMgbmVlZHMgdG8g
+YmUgcmVuYW1lZCBhcyBpdCBpcyBhIERlc2lnbndhcmUKSVAuCgpTaG91bGQgaXQgYmUgbW92ZWQg
+aW50byBicmlkZ2UvID8gIEl0IGlzbid0IGltcGxlbWVudGVkIGFzIGEgRFJNIGJyaWRnZQpkcml2
+ZXIgYXQgcHJlc2VudCwgc28gdGhpcyBzZWVtcyBpbGxvZ2ljYWwuICBJcyB0aGUgbG9uZ2VyIHRl
+cm0gcGxhbiB0bwpjb252ZXJ0IGl0IHRvIGJlIGEgRFJNIGJyaWRnZT8KClNlY29uZGx5LCBpZiB5
+b3Ugd2FudCBIRE1JIGF1ZGlvIHN1cHBvcnQsIHlvdSBtYXkgZmluZCB0aGUgcGF0Y2hlcyBJCm1h
+aW50YWluIGZvciB0aGUgU29saWRSdW4gZGV2aWNlcyB1c2VmdWwsIHdoaWNoIGFkZCB0aGlzIGFz
+IGEgc3RhbmRhcmQKQUxTQSBkZXZpY2UuICBJIGFsc28gaGF2ZSBDRUMgc3VwcG9ydCBmb3IgaXQg
+YXMgd2VsbC4gIElmIHlvdSdyZQppbnRlcmVzdGVkLCBJJ2xsIGVtYWlsIHRob3NlLgoKLS0gCkZU
+VEMgYnJvYWRiYW5kIGZvciAwLjhtaWxlIGxpbmU6IGN1cnJlbnRseSBhdCA5LjVNYnBzIGRvd24g
+NDAwa2JwcyB1cAphY2NvcmRpbmcgdG8gc3BlZWR0ZXN0Lm5ldC4KX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
