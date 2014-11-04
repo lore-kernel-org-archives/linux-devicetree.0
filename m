@@ -1,82 +1,44 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH v5 7/8] ARM: mediatek: Add earlyprintk support for mt8127 &
- mt8135
-Date: Tue, 4 Nov 2014 15:30:54 +0800
-Message-ID: <1415086255-5555-8-git-send-email-yingjoe.chen@mediatek.com>
-References: <1415086255-5555-1-git-send-email-yingjoe.chen@mediatek.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 1/8] ARM: mediatek: Add basic support for mt8127
+Date: Tue, 04 Nov 2014 08:39:55 +0100
+Message-ID: <13477264.GuOdydWub7@wuerfel>
+References: <1413973797-17619-1-git-send-email-yingjoe.chen@mediatek.com> <CABuKBeLYMbD-dV_25FJd_NE1RgfVkgF+SoCiAx9O9jKUUAcexA@mail.gmail.com> <1415083006.10186.85.camel@mtksdaap41>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1415086255-5555-1-git-send-email-yingjoe.chen@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, arm@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, hc.yen@mediatek.com, yh.chen@mediatek.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, nathan.chung@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, eddie.huang@mediatek.com, yingjoe.chen@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1415083006.10186.85.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: HC Yen <hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Joe. C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, huang eddie <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nathan Chung <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yuhau Chen <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Joe.C" <yingjoe.chen@mediatek.com>
+On Tuesday 04 November 2014 14:36:45 HC Yen wrote:
+> > > +
+> > > +#include <dt-bindings/interrupt-controller/irq.h>
+> > > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > > +#include "skeleton64.dtsi"
+> > 
+> > Cortex a7 is 32 bits, right? So why do you use skeleton64.dtsi?
+> 
+> Cortex-A7 is 32-bit, but that doesn't mean it can only have 32-bit
+> physical address.  With LPAE enabled, we can have physical address more
+> than 32 bits.
+> 
+> The main difference between "skeleton64.dtsi" and "skeleton.dtsi" is
+> "#address-cells" property set to 2.  Although there are few sources
+> using "skeleton64.dtsi", some of them write "#address-cells = <2>"
+> directly in order to have 64-bit address space.  ARM's TC2 reference
+> platform (vexpress-v2p-ca15_a7.dts) is an example.
+> 
+> Some of MediaTek ARMv7 SoCs support address space larger than 4GB. It
+> will be convenient to share the sources if we all use 64-bit device
+> tree.
 
-Enable low-level debug for Mediatek mt8127 & mt8135 SoC.
+Right, in general, I'd use #address-cells=<2> for Cortex-A7/A15/A17.
 
-Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
----
- arch/arm/Kconfig.debug | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index 03dc4c1..7d78ed7 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -866,6 +866,22 @@ choice
- 		  Say Y here if you want kernel low-level debugging support
- 		  for Mediatek mt6589 based platforms on UART0.
- 
-+	config DEBUG_MT8127_UART0
-+		bool "Mediatek mt8127 UART0"
-+		depends on ARCH_MEDIATEK
-+		select DEBUG_UART_8250
-+		help
-+		  Say Y here if you want kernel low-level debugging support
-+		  for Mediatek mt8127 based platforms on UART0.
-+
-+	config DEBUG_MT8135_UART3
-+		bool "Mediatek mt8135 UART3"
-+		depends on ARCH_MEDIATEK
-+		select DEBUG_UART_8250
-+		help
-+		  Say Y here if you want kernel low-level debugging support
-+		  for Mediatek mt8135 based platforms on UART3.
-+
- 	config DEBUG_VEXPRESS_UART0_DETECT
- 		bool "Autodetect UART0 on Versatile Express Cortex-A core tiles"
- 		depends on ARCH_VEXPRESS && CPU_CP15_MMU
-@@ -1113,7 +1129,9 @@ config DEBUG_UART_PHYS
- 	default 0x10126000 if DEBUG_RK3X_UART1
- 	default 0x101f1000 if ARCH_VERSATILE
- 	default 0x101fb000 if DEBUG_NOMADIK_UART
-+	default 0x11002000 if DEBUG_MT8127_UART0
- 	default 0x11006000 if DEBUG_MT6589_UART0
-+	default 0x11009000 if DEBUG_MT8135_UART3
- 	default 0x16000000 if ARCH_INTEGRATOR
- 	default 0x18000300 if DEBUG_BCM_5301X
- 	default 0x1c090000 if DEBUG_VEXPRESS_UART0_RS1
-@@ -1181,7 +1199,9 @@ config DEBUG_UART_VIRT
- 	default 0xf01fb000 if DEBUG_NOMADIK_UART
- 	default 0xf0201000 if DEBUG_BCM2835
- 	default 0xf1000300 if DEBUG_BCM_5301X
-+	default 0xf1002000 if DEBUG_MT8127_UART0
- 	default 0xf1006000 if DEBUG_MT6589_UART0
-+	default 0xf1009000 if DEBUG_MT8135_UART3
- 	default 0xf11f1000 if ARCH_VERSATILE
- 	default 0xf1600000 if ARCH_INTEGRATOR
- 	default 0xf1c28000 if DEBUG_SUNXI_UART0
--- 
-1.8.1.1.dirty
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
