@@ -1,48 +1,50 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] arm: imx: clean up machine mxc_arch_reset_init_dt reset
- init
-Date: Tue, 4 Nov 2014 06:24:55 +0000
-Message-ID: <4ac66b526b7241928f7f5b3d6dc45a50@BN3PR0301MB1236.namprd03.prod.outlook.com>
-References: <1414748393-20799-1-git-send-email-jingchang.lu@freescale.com>
- <20141104061212.GH10821@tiger>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 5/6] ARM: mvebu: add Device Tree description of USB
+ cluster controller on Armada 375
+Date: Tue, 4 Nov 2014 11:55:17 +0530
+Message-ID: <5458714D.4060107@ti.com>
+References: <1414164254-13053-1-git-send-email-gregory.clement@free-electrons.com> <1414164254-13053-6-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141104061212.GH10821@tiger>
-Content-Language: en-US
+In-Reply-To: <1414164254-13053-6-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogU2hhd24gR3VvIFttYWlsdG86c2hh
-d24uZ3VvQGxpbmFyby5vcmddDQo+U2VudDogVHVlc2RheSwgTm92ZW1iZXIgMDQsIDIwMTQgMjox
-MiBQTQ0KPlRvOiBMdSBKaW5nY2hhbmctQjM1MDgzDQo+Q2M6IGxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj5TdWJqZWN0OiBS
-ZTogW1BBVENIXSBhcm06IGlteDogY2xlYW4gdXAgbWFjaGluZSBteGNfYXJjaF9yZXNldF9pbml0
-X2R0DQo+cmVzZXQgaW5pdA0KPg0KPk9uIEZyaSwgT2N0IDMxLCAyMDE0IGF0IDA1OjM5OjUzUE0g
-KzA4MDAsIEppbmdjaGFuZyBMdSB3cm90ZToNCj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNo
-LWlteC9pbXgzMS1kdC5jDQo+PiBiL2FyY2gvYXJtL21hY2gtaW14L2lteDMxLWR0LmMgaW5kZXgg
-NDE4ZGJjOC4uZTBhNGUyZiAxMDA2NDQNCj4+IC0tLSBhL2FyY2gvYXJtL21hY2gtaW14L2lteDMx
-LWR0LmMNCj4+ICsrKyBiL2FyY2gvYXJtL21hY2gtaW14L2lteDMxLWR0LmMNCj4+IEBAIC0xNSwx
-NiArMTUsOCBAQA0KPj4gICNpbmNsdWRlIDxhc20vbWFjaC9hcmNoLmg+DQo+PiAgI2luY2x1ZGUg
-PGFzbS9tYWNoL3RpbWUuaD4NCj4+DQo+PiAtI2luY2x1ZGUgImNvbW1vbi5oIg0KPg0KPlRoZSBj
-aGFuZ2UgY2F1c2VzIHRoZSBidWlsZCBlcnJvcnMgYmVsb3cuDQo+DQo+ICBDQyAgICAgIGFyY2gv
-YXJtL21hY2gtaW14L2lteDMxLWR0Lm8NCj4uLi9hcmNoL2FybS9tYWNoLWlteC9pbXgzMS1kdC5j
-OiBJbiBmdW5jdGlvbiDigJhpbXgzMV9kdF90aW1lcl9pbml04oCZOg0KPi4uL2FyY2gvYXJtL21h
-Y2gtaW14L2lteDMxLWR0LmM6Mjc6MjogZXJyb3I6IGltcGxpY2l0IGRlY2xhcmF0aW9uIG9mDQo+
-ZnVuY3Rpb24g4oCYbXgzMV9jbG9ja3NfaW5pdF9kdOKAmSBbLVdlcnJvcj1pbXBsaWNpdC1mdW5j
-dGlvbi1kZWNsYXJhdGlvbl0NCj4uLi9hcmNoL2FybS9tYWNoLWlteC9pbXgzMS1kdC5jOiBBdCB0
-b3AgbGV2ZWw6DQo+Li4vYXJjaC9hcm0vbWFjaC1pbXgvaW14MzEtZHQuYzozMToxMzogZXJyb3I6
-IOKAmG14MzFfbWFwX2lv4oCZIHVuZGVjbGFyZWQNCj5oZXJlIChub3QgaW4gYSBmdW5jdGlvbikN
-Cj4uLi9hcmNoL2FybS9tYWNoLWlteC9pbXgzMS1kdC5jOjMyOjE2OiBlcnJvcjog4oCYaW14MzFf
-aW5pdF9lYXJseeKAmQ0KPnVuZGVjbGFyZWQgaGVyZSAobm90IGluIGEgZnVuY3Rpb24pDQo+Li4v
-YXJjaC9hcm0vbWFjaC1pbXgvaW14MzEtZHQuYzozMzoxNDogZXJyb3I6IOKAmG14MzFfaW5pdF9p
-cnHigJkgdW5kZWNsYXJlZA0KPmhlcmUgKG5vdCBpbiBhIGZ1bmN0aW9uKQ0KPg0KPlNvIHRoZSBj
-b21tb24uaCBpbmNsdXNpb24gbmVlZHMgdG8gYmUga2VwdC4gIEkgZml4ZWQgaXQgdXAgYW5kIGFw
-cGxpZWQgdGhlDQo+cGF0Y2guDQo+DQo+U2hhd24NCg0KTWFueSB0aGFua3MhDQoNCkJlc3QgUmVn
-YXJkcywNCkppbmdjaGFuZw0KDQo=
+
+
+On Friday 24 October 2014 08:54 PM, Gregory CLEMENT wrote:
+> On Armada 375, the USB cluster allows to control the cluster composed
+> of the USB2 and USB3 host controllers.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Acked-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/armada-375.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
+> index de6571445cef..8f45cf5d2a50 100644
+> --- a/arch/arm/boot/dts/armada-375.dtsi
+> +++ b/arch/arm/boot/dts/armada-375.dtsi
+> @@ -342,6 +342,12 @@
+>  				#clock-cells = <1>;
+>  			};
+>  
+> +			usbcluster: usb-cluster@18400 {
+> +				compatible = "marvell,armada-375-usb-cluster";
+> +				reg = <0x18400 0x4>;
+> +				#phy-cells = <1>;
+> +			};
+> +
+>  			mbusc: mbus-controller@20000 {
+>  				compatible = "marvell,mbus-controller";
+>  				reg = <0x20000 0x100>, <0x20180 0x20>;
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
