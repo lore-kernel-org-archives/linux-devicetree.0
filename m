@@ -1,70 +1,50 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 2/3] ARM: dts: vf610: enable USB misc/phy nodes where necessary
-Date: Tue,  4 Nov 2014 14:07:09 +0100
-Message-ID: <1415106430-6271-3-git-send-email-stefan@agner.ch>
-References: <1415106430-6271-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1415106430-6271-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawn.guo@linaro.org, kernel@pengutronix.de
-Cc: linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stefan@agner.ch
+From: bpqw <bpqw-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/1 V2] devicetree: bindings: Add vendor prefix for Micron
+ Technology Co., Ltd.
+Date: Tue, 4 Nov 2014 13:17:16 +0000
+Message-ID: <A765B125120D1346A63912DDE6D8B6315E9B34@NTXXIAMBX02.xacn.micron.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Silvio F <silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Since restructuring of the device tree files, the USB misc/phy
-nodes are disabled by default. Hence we need to enable those
-explicitly when USB is used.
+This patch is used to add vendor prefix for Micron Technology Inc in the 
+vendor-prefixes.txt file.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
+Micron Technology,Inc.is an American multinational corporation based in Boise,
+Idaho,best known for producing many forms of semiconductor devices.This includes
+DRAM,SDRAM,flash memory,eMMC and SSDs.
+
+Signed-off-by: bean huo <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: bpqw <bpqw-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/vf-colibri.dtsi | 16 ++++++++++++++++
- arch/arm/boot/dts/vf610-twr.dts   |  8 ++++++++
- 2 files changed, 24 insertions(+)
+V2:
+  - Add signed-off-by
+  - Modify commit logs that wrapped to less than 80 columns
 
-diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
-index ab9616d7..2371760 100644
---- a/arch/arm/boot/dts/vf-colibri.dtsi
-+++ b/arch/arm/boot/dts/vf-colibri.dtsi
-@@ -75,6 +75,22 @@
- 	status = "okay";
- };
- 
-+&usbmisc0 {
-+	status = "okay";
-+};
-+
-+&usbmisc1 {
-+	status = "okay";
-+};
-+
-+&usbphy0 {
-+	status = "okay";
-+};
-+
-+&usbphy1 {
-+	status = "okay";
-+};
-+
- &iomuxc {
- 	vf610-colibri {
- 		pinctrl_gpio_ext: gpio_ext {
-diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
-index 793a376..a0f7621 100644
---- a/arch/arm/boot/dts/vf610-twr.dts
-+++ b/arch/arm/boot/dts/vf610-twr.dts
-@@ -294,6 +294,14 @@
- 	status = "okay";
- };
- 
-+&usbmisc0 {
-+	status = "okay";
-+};
-+
-+&usbmisc1 {
-+	status = "okay";
-+};
-+
- &usbphy0 {
- 	status = "okay";
- };
--- 
-2.1.3
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 723999d..a7bbf6e 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -92,6 +92,7 @@ maxim	Maxim Integrated Products
+ mediatek	MediaTek Inc.
+ micrel	Micrel Inc.
+ microchip	Microchip Technology Inc.
++micron	Micron Technology Inc.
+ mitsubishi	Mitsubishi Electric Corporation
+ mosaixtech	Mosaix Technologies, Inc.
+ moxa	Moxa
+--
+1.7.9.5
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
