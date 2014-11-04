@@ -1,88 +1,197 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v4 0/9] ARM: shmobile: R-Mobile: DT PM domain support
-Date: Mon, 03 Nov 2014 17:28:54 -0800
-Message-ID: <7hegtj69ex.fsf@deeprootsystems.com>
-References: <1415028896-9005-1-git-send-email-geert+renesas@glider.be>
-	<CANLsYkzVw_fQQuK9pEomMp6A_z2Qg9L-Hj1f+8b_1o7cFjMiDw@mail.gmail.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH v3] mmc: dw_mmc: add support for the other bit of sdio
+ interrupt
+Date: Tue, 04 Nov 2014 11:14:16 +0900
+Message-ID: <54583678.5020501@samsung.com>
+References: <1414666240-16782-1-git-send-email-addy.ke@rock-chips.com>
+ <1414977633-3196-1-git-send-email-addy.ke@rock-chips.com>
+ <5457440E.3070002@samsung.com> <545757B3.30208@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CANLsYkzVw_fQQuK9pEomMp6A_z2Qg9L-Hj1f+8b_1o7cFjMiDw@mail.gmail.com>
-	(Mathieu Poirier's message of "Mon, 3 Nov 2014 14:02:31 -0700")
-Sender: linux-pm-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Philipp Zabel <philipp.zabel@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, linux-pm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <545757B3.30208@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: addy ke <addy.ke@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org
+Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, hl@rock-chips.com, linux-doc@vger.kernel.org, yzq@rock-chips.com, zyw@rock-chips.com, zhangqing@rock-chips.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, kever.yang@rock-chips.com, lintao@rock-chips.com, linux-rockchip@lists.infradead.org, xjq@rock-chips.com, zhenfu.fang@rock-chips.com, chenfen@rock-chips.com, cf@rock-chips.com, hj@rock-chips.com, linux-arm-kernel@lists.infradead.org, zyf@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Mathieu Poirier <mathieu.poirier@linaro.org> writes:
+Dear, Addy.
 
-> On 3 November 2014 08:34, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
->>         Hi Rafael, Simon, Magnus,
+On 11/03/2014 07:23 PM, addy ke wrote:
+> Hi, Jaehoo
+> 
+> On 2014/11/3 16:59, Jaehoon Chung wrote:
+>> Hi, Addy.
 >>
->> This patch series enables DT support for PM domains on Renesas R-Mobile SoCs.
+>> On 11/03/2014 10:20 AM, Addy Ke wrote:
+>>> The bit of sdio interrupt is 16 in designware implementation,
+>>> but it is 24 on Rockchip SoCs.This patch add sdio_id0 for the
+>>> number of slot0 in the SDIO interrupt registers.
+>>>
+>>> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+>>> ---
+>>> Changes in v2:
+>>> - rebase on http://git.linaro.org/git/people/ulf.hansson/mmc.git, next branch
+>>> Changes in v3:
+>>> - Remove dts for sdio_id0, just replace this with 8, suggested by Doug
+>>> - Change to support all Rockchip Socs, suggested by Heiko
+>>>
+>>>  drivers/mmc/host/dw_mmc-rockchip.c | 10 ++++++++++
+>>>  drivers/mmc/host/dw_mmc.c          | 12 +++++++-----
+>>>  drivers/mmc/host/dw_mmc.h          |  2 ++
+>>>  include/linux/mmc/dw_mmc.h         |  3 +++
+>>>  4 files changed, 22 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
+>>> index bbb4ec3..b997c8f 100644
+>>> --- a/drivers/mmc/host/dw_mmc-rockchip.c
+>>> +++ b/drivers/mmc/host/dw_mmc-rockchip.c
+>>> @@ -68,14 +68,24 @@ static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+>>>  	}
+>>>  }
+>>>  
+>>> +static int dw_mci_rockchip_parse_dt(struct dw_mci *host)
+>>> +{
+>>> +	/* It is slot 8 on Rockchip SoCs */
+>>> +	host->sdio_id0 = 8;
+>>> +
+>>> +	return 0;
+>>> +}
 >>
->> Currently it's limited to R-Mobile A1 (r8a7740), but given the similarity of
->> the SYSC System-Controller on the various SH-Mobile/R-Mobile SoCs, and the
->> abstraction of PM domains in DT, it should be sufficiently generic to handle
->> other SoCs in the future (e.g. SH-Mobile AP4 (sh7372), SH-Mobile AG5 (sh73a0),
->> R-Mobile APE6 (r8a73a4)).
+>> Well, function is "__parse_dt__", but this function don't parse anything.
+>> If All rockchip soc is supported, i think that it can be located to other place.
 >>
->> Functionality-wise, this behaves the same as the legacy (non-DT) version
->> (modulo missing DT support in some device drivers).
->>
->> Dependencies:
->>   - This is based on Simon Horman's renesas-devel-20141030-v3.18-rc2, and
->>     Rafael J. Wysocki's linux-pm.git#linux-next,
->>   - This depends on "PM / Domains: Change prototype for the ->attach_dev()
->>     callback" from Ulf hanson, which is intended to still enter v3.18-rcX
->>     through the linux-pm tree.
->>     As this is a one-line change, I included this patch as the first patch of
->>     this series.  Perhaps it's even acceptable for Simon to (also) apply it, so
->>     we don't have to wait for the v3.18-rcX that will include it?
->>
->> For your convenience, I've also pushed this to
->> git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git#rmobile-genpd
->>
->> Changes compared to v3 (more detailed changelogs in the individual patches):
->>   - I dropped the patch to add preliminary PM domain latencies, as I want to do
->>     more measurements for PM domains that are currently never powered off.
->>     Values seem to range between 8.5 and 26 us, depending on the PM domain.
->>   - I dropped all patches related to QoS device latencies, as these need more
->>     discussion,
->>   - The power-{on,off}-latency properties have been changed from a single value
->>     to a list,
->>   - Device save/restore state latencies have been dropped, as they're Linux
->>     driver-specific, and thus don't belong in DT,
->>   - Use proper pm_clk_create()/pm_clk_destroy(), and update for attach_dev()
->>     returning an error code again,
->>   - New patch to enable module clocks if !CONFIG_PM_RUNTIME,
->>   - Always keep D4 powered, until the new Coresight code handles runtime
->>     PM,
->
-> I took the time to really look at the problems you are experiencing
-> with pm runtime in hw_breackpoint.c this weekend.  The coresight
-> patchset, when supplemented with PM runtime awareness, will fix that
-> problem *only* when traces are activated.  The other obvious condition
-> is that other component using the same power domain are also converted
-> to using runtime PM.
->
-> That being said, the coresight framework and breakpoint handler code
-> are two different subsystem.  Their only commonality is that they make
-> use of the debug registers (and not even the same ones).  As such (and
-> in my opinion) the code in hw_breakpoint should be getting its own pm
-> runtime reference without relying on the coresight subsystem.  As
-> indicated above, that would only work in some cases.
->
-> Supplementing hw_breakpoint to interact with the runtime PM may prove
-> trickier than it seems... I'm especially worried about the
-> non-blocking requirement inherent to using "smp_call_function()".  I'm
-> stepping forward to look into that problem but before doing so I need
-> to finish runtime PM on coresight.
+> Can add it in "init" function? like this:
+> int dw_mci_rockchip_init(struct dw_mci *host)
+> {
+> 	/* It is slot 8 on Rockchip SoCs */
+> 	host->sdio_id0 = 8;
+> 
+> 	return 0;
+> }
+> static const struct dw_mci_drv_data xxxx {
+>     ....
+>     .init = dw_mci_rockchip_init,
+> };
 
-Matthieu, without looking more deeply myself, I'm not sure this is what
-you need, but have a look at the "IRQ safe" mode of runtime PM.  If you
-know your devices runtime PM callbacks are IRQ safe, you can call
-pm_runtime_irq_safe(), and your callbacks will be called with IRQs
-disabled.
+I think good this solution is used. "init-hook" can be also used in future.
+When you resend the patch, i will reply with my-ack.
 
-Kevin
+Best Regards,
+Jaehoon Chung
+
+> 
+> 
+>> Best Regards,
+>> Jaehoon Chung
+>>
+>>> +
+>>>  static const struct dw_mci_drv_data rk2928_drv_data = {
+>>>  	.prepare_command        = dw_mci_rockchip_prepare_command,
+>>> +	.parse_dt	= dw_mci_rockchip_parse_dt,
+>>>  };
+>>>  
+>>>  static const struct dw_mci_drv_data rk3288_drv_data = {
+>>>  	.prepare_command        = dw_mci_rockchip_prepare_command,
+>>>  	.set_ios		= dw_mci_rk3288_set_ios,
+>>>  	.setup_clock    = dw_mci_rk3288_setup_clock,
+>>> +	.parse_dt	= dw_mci_rockchip_parse_dt,
+>>>  };
+>>>  
+>>>  static const struct of_device_id dw_mci_rockchip_match[] = {
+>>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>>> index bb46b1b..a633b58 100644
+>>> --- a/drivers/mmc/host/dw_mmc.c
+>>> +++ b/drivers/mmc/host/dw_mmc.c
+>>> @@ -823,7 +823,7 @@ static void dw_mci_setup_bus(struct dw_mci_slot *slot, bool force_clkinit)
+>>>  
+>>>  		/* enable clock; only low power if no SDIO */
+>>>  		clk_en_a = SDMMC_CLKEN_ENABLE << slot->id;
+>>> -		if (!(mci_readl(host, INTMASK) & SDMMC_INT_SDIO(slot->id)))
+>>> +		if (!(mci_readl(host, INTMASK) & SDMMC_INT_SDIO(slot->sdio_id)))
+>>>  			clk_en_a |= SDMMC_CLKEN_LOW_PWR << slot->id;
+>>>  		mci_writel(host, CLKENA, clk_en_a);
+>>>  
+>>> @@ -1184,10 +1184,10 @@ static void dw_mci_enable_sdio_irq(struct mmc_host *mmc, int enb)
+>>>  		dw_mci_disable_low_power(slot);
+>>>  
+>>>  		mci_writel(host, INTMASK,
+>>> -			   (int_mask | SDMMC_INT_SDIO(slot->id)));
+>>> +			   (int_mask | SDMMC_INT_SDIO(slot->sdio_id)));
+>>>  	} else {
+>>>  		mci_writel(host, INTMASK,
+>>> -			   (int_mask & ~SDMMC_INT_SDIO(slot->id)));
+>>> +			   (int_mask & ~SDMMC_INT_SDIO(slot->sdio_id)));
+>>>  	}
+>>>  }
+>>>  
+>>> @@ -2056,8 +2056,9 @@ static irqreturn_t dw_mci_interrupt(int irq, void *dev_id)
+>>>  		/* Handle SDIO Interrupts */
+>>>  		for (i = 0; i < host->num_slots; i++) {
+>>>  			struct dw_mci_slot *slot = host->slot[i];
+>>> -			if (pending & SDMMC_INT_SDIO(i)) {
+>>> -				mci_writel(host, RINTSTS, SDMMC_INT_SDIO(i));
+>>> +			if (pending & SDMMC_INT_SDIO(slot->sdio_id)) {
+>>> +				mci_writel(host, RINTSTS,
+>>> +					   SDMMC_INT_SDIO(slot->sdio_id));
+>>>  				mmc_signal_sdio_irq(slot->mmc);
+>>>  			}
+>>>  		}
+>>> @@ -2145,6 +2146,7 @@ static int dw_mci_init_slot(struct dw_mci *host, unsigned int id)
+>>>  
+>>>  	slot = mmc_priv(mmc);
+>>>  	slot->id = id;
+>>> +	slot->sdio_id = host->sdio_id0 + id;
+>>>  	slot->mmc = mmc;
+>>>  	slot->host = host;
+>>>  	host->slot[id] = slot;
+>>> diff --git a/drivers/mmc/host/dw_mmc.h b/drivers/mmc/host/dw_mmc.h
+>>> index 71d4995..0562f10 100644
+>>> --- a/drivers/mmc/host/dw_mmc.h
+>>> +++ b/drivers/mmc/host/dw_mmc.h
+>>> @@ -214,6 +214,7 @@ extern int dw_mci_resume(struct dw_mci *host);
+>>>   *	with CONFIG_MMC_CLKGATE.
+>>>   * @flags: Random state bits associated with the slot.
+>>>   * @id: Number of this slot.
+>>> + * @sdio_id: Number of this slot in the SDIO interrupt registers.
+>>>   */
+>>>  struct dw_mci_slot {
+>>>  	struct mmc_host		*mmc;
+>>> @@ -233,6 +234,7 @@ struct dw_mci_slot {
+>>>  #define DW_MMC_CARD_PRESENT	0
+>>>  #define DW_MMC_CARD_NEED_INIT	1
+>>>  	int			id;
+>>> +	int			sdio_id;
+>>>  };
+>>>  
+>>>  struct dw_mci_tuning_data {
+>>> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+>>> index 69d0814..72c319f 100644
+>>> --- a/include/linux/mmc/dw_mmc.h
+>>> +++ b/include/linux/mmc/dw_mmc.h
+>>> @@ -96,6 +96,7 @@ struct mmc_data;
+>>>   * @quirks: Set of quirks that apply to specific versions of the IP.
+>>>   * @irq_flags: The flags to be passed to request_irq.
+>>>   * @irq: The irq value to be passed to request_irq.
+>>> + * @sdio_id0: Number of slot0 in the SDIO interrupt registers.
+>>>   *
+>>>   * Locking
+>>>   * =======
+>>> @@ -191,6 +192,8 @@ struct dw_mci {
+>>>  	bool			vqmmc_enabled;
+>>>  	unsigned long		irq_flags; /* IRQ flags */
+>>>  	int			irq;
+>>> +
+>>> +	int			sdio_id0;
+>>>  };
+>>>  
+>>>  /* DMA ops for Internal/External DMAC interface */
+>>>
+>>
+>>
+>>
+>>
+> 
+> 
+
