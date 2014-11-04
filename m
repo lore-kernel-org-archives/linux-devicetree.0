@@ -1,8 +1,8 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v5 8/8] ARM: multi_v7_defconfig: Enable MiPHY28lp - ST's
- Generic (SATA, PCIe & USB3) PHY
-Date: Tue,  4 Nov 2014 11:51:24 +0100
-Message-ID: <1415098284-11182-9-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH v5 2/8] phy: miphy28lp: Add PHY header file for DT x Driver
+ defines
+Date: Tue,  4 Nov 2014 11:51:18 +0100
+Message-ID: <1415098284-11182-3-git-send-email-gabriel.fernandez@linaro.org>
 References: <1415098284-11182-1-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,22 +22,38 @@ To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutl
 Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+This provides the shared header file which will be reference from both
+PHY driver and its associated Device Tree node(s).
+
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 ---
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ include/dt-bindings/phy/phy.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 include/dt-bindings/phy/phy.h
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index f1dc7fc..d5c2ff1 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -425,6 +425,7 @@ CONFIG_PWM_TEGRA=y
- CONFIG_PWM_VT8500=y
- CONFIG_OMAP_USB2=y
- CONFIG_TI_PIPE3=y
-+CONFIG_PHY_MIPHY28LP=y
- CONFIG_PHY_MIPHY365X=y
- CONFIG_PHY_SUN4I_USB=y
- CONFIG_EXT4_FS=y
+diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+new file mode 100644
+index 0000000..e8c6a3f
+--- /dev/null
++++ b/include/dt-bindings/phy/phy.h
+@@ -0,0 +1,18 @@
++/*
++ *
++ * This header provides constants for the phy framework
++ *
++ * Copyright (C) 2014 STMicroelectronics
++ * Author: Gabriel Fernandez <gabriel.fernandez@st.com>
++ * License terms:  GNU General Public License (GPL), version 2
++ */
++
++#ifndef _DT_BINDINGS_PHY
++#define _DT_BINDINGS_PHY
++
++#define PHY_TYPE_SATA		1
++#define PHY_TYPE_PCIE		2
++#define PHY_TYPE_USB2		3
++#define PHY_TYPE_USB3		4
++
++#endif /* _DT_BINDINGS_PHY */
 -- 
 1.9.1
