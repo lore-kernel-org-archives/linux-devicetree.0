@@ -1,31 +1,127 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH 2/3] sata_rcar: Document deprecated "renesas,rcar-sata"
-Date: Tue, 4 Nov 2014 09:16:23 -0500
-Message-ID: <20141104141623.GC14459@htj.dyndns.org>
-References: <1414591131-21771-1-git-send-email-geert+renesas@glider.be>
- <1414591131-21771-3-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1414591131-21771-3-git-send-email-geert+renesas@glider.be>
-Sender: linux-ide-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v6 04/12] misc: at25: Make use of device property API
+Date: Tue, 04 Nov 2014 14:18:26 +0000
+Message-ID: <20141104141826.36F8AC408F6@trevor.secretlab.ca>
+References: <13750506.S2yVlRRDa2@vostro.rjw.lan>
+	<5019278.RtDq7RlWqt@vostro.rjw.lan>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5019278.RtDq7RlWqt@vostro.rjw.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <darren.hart@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 29, 2014 at 02:58:50PM +0100, Geert Uytterhoeven wrote:
-> Commit e67adb4e669db834 ("sata_rcar: Add R-Car Gen2 SATA PHY support")
-> deprecated "renesas,rcar-sata" in favor of "renesas,sata-r8a7779", but
-> the deprecated value was never documented in the binding documentation,
-> while it is still in active use.
+On Tue, 21 Oct 2014 23:19:56 +0200
+, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+ wrote:
+> From: Mika Westerberg <mika.westerberg@linux.intel.com>
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Make use of device property API in this driver so that both DT and ACPI
+> based systems can use this driver.
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/misc/eeprom/at25.c |   34 +++++++++++++---------------------
+>  1 file changed, 13 insertions(+), 21 deletions(-)
+> 
+> Index: linux-pm/drivers/misc/eeprom/at25.c
+> ===================================================================
+> --- linux-pm.orig/drivers/misc/eeprom/at25.c
+> +++ linux-pm/drivers/misc/eeprom/at25.c
+> @@ -18,7 +18,7 @@
+>  
+>  #include <linux/spi/spi.h>
+>  #include <linux/spi/eeprom.h>
+> -#include <linux/of.h>
+> +#include <linux/property.h>
+>  
+>  /*
+>   * NOTE: this is an *EEPROM* driver.  The vagaries of product naming
+> @@ -301,35 +301,33 @@ static ssize_t at25_mem_write(struct mem
+>  
+>  /*-------------------------------------------------------------------------*/
+>  
+> -static int at25_np_to_chip(struct device *dev,
+> -			   struct device_node *np,
+> -			   struct spi_eeprom *chip)
+> +static int at25_fw_to_chip(struct device *dev, struct spi_eeprom *chip)
+>  {
+>  	u32 val;
+>  
+>  	memset(chip, 0, sizeof(*chip));
+> -	strncpy(chip->name, np->name, sizeof(chip->name));
+> +	strncpy(chip->name, "at25", sizeof(chip->name));
 
-This one doesn't apply anymore.  Can you please refresh it against
-libata/for-3.19.
+This line changes behaviour of the driver. It's possibly not a problem,
+but it should be commented on and whether any due diligance has been
+done to make sure it there isn't anything that depends on it.
 
-Thanks.
+Otherwise:
+Acked-by: Grant Likely <grant.likely@linaro.org>
 
--- 
-tejun
+>  
+> -	if (of_property_read_u32(np, "size", &val) == 0 ||
+> -	    of_property_read_u32(np, "at25,byte-len", &val) == 0) {
+> +	if (device_property_read_u32(dev, "size", &val) == 0 ||
+> +	    device_property_read_u32(dev, "at25,byte-len", &val) == 0) {
+>  		chip->byte_len = val;
+>  	} else {
+>  		dev_err(dev, "Error: missing \"size\" property\n");
+>  		return -ENODEV;
+>  	}
+>  
+> -	if (of_property_read_u32(np, "pagesize", &val) == 0 ||
+> -	    of_property_read_u32(np, "at25,page-size", &val) == 0) {
+> +	if (device_property_read_u32(dev, "pagesize", &val) == 0 ||
+> +	    device_property_read_u32(dev, "at25,page-size", &val) == 0) {
+>  		chip->page_size = (u16)val;
+>  	} else {
+>  		dev_err(dev, "Error: missing \"pagesize\" property\n");
+>  		return -ENODEV;
+>  	}
+>  
+> -	if (of_property_read_u32(np, "at25,addr-mode", &val) == 0) {
+> +	if (device_property_read_u32(dev, "at25,addr-mode", &val) == 0) {
+>  		chip->flags = (u16)val;
+>  	} else {
+> -		if (of_property_read_u32(np, "address-width", &val)) {
+> +		if (device_property_read_u32(dev, "address-width", &val)) {
+>  			dev_err(dev,
+>  				"Error: missing \"address-width\" property\n");
+>  			return -ENODEV;
+> @@ -350,7 +348,7 @@ static int at25_np_to_chip(struct device
+>  				val);
+>  			return -ENODEV;
+>  		}
+> -		if (of_find_property(np, "read-only", NULL))
+> +		if (device_property_present(dev, "read-only"))
+>  			chip->flags |= EE_READONLY;
+>  	}
+>  	return 0;
+> @@ -360,21 +358,15 @@ static int at25_probe(struct spi_device
+>  {
+>  	struct at25_data	*at25 = NULL;
+>  	struct spi_eeprom	chip;
+> -	struct device_node	*np = spi->dev.of_node;
+>  	int			err;
+>  	int			sr;
+>  	int			addrlen;
+>  
+>  	/* Chip description */
+>  	if (!spi->dev.platform_data) {
+> -		if (np) {
+> -			err = at25_np_to_chip(&spi->dev, np, &chip);
+> -			if (err)
+> -				return err;
+> -		} else {
+> -			dev_err(&spi->dev, "Error: no chip description\n");
+> -			return -ENODEV;
+> -		}
+> +		err = at25_fw_to_chip(&spi->dev, &chip);
+> +		if (err)
+> +			return err;
+>  	} else
+>  		chip = *(struct spi_eeprom *)spi->dev.platform_data;
+>  
+> 
