@@ -1,43 +1,77 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 00/14] genirq endian fixes; bcm7120/brcmstb IRQ updates
-Date: Tue, 04 Nov 2014 09:18:17 +0100
-Message-ID: <2690630.v59x1FdWZd@wuerfel>
-References: <1414890241-9938-1-git-send-email-cernekee@gmail.com> <2217077.1aQXS9nJph@wuerfel> <alpine.DEB.2.11.1411032117050.5308@nanos>
+From: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 1/3] usb: phy: device-tree documentation for gpio-vbus
+Date: Tue, 4 Nov 2014 09:20:55 +0100
+Message-ID: <CA+gwMcco4-aOHd4tQRFkUts+C9G5+ymxEhGXYB_FaeuBLQSBrw@mail.gmail.com>
+References: <1414951910-16075-1-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.11.1411032117050.5308@nanos>
-Sender: linux-sh-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Kevin Cernekee <cernekee@gmail.com>, f.fainelli@gmail.com, jason@lakedaemon.net, ralf@linux-mips.org, linux-sh@vger.kernel.org, sergei.shtylyov@cogentembedded.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414951910-16075-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 03 November 2014 21:18:20 Thomas Gleixner wrote:
-> On Mon, 3 Nov 2014, Arnd Bergmann wrote:
-> > On Saturday 01 November 2014 18:03:47 Kevin Cernekee wrote:
-> > > V2->V3:
-> > > 
-> > >  - Move updated irq_reg_{readl,writel} functions back into <linux/irq.h>
-> > >    so they can be called by irqchip drivers
-> > > 
-> > >  - Add gc->reg_{readl,writel} function pointers so that irqchip
-> > >    drivers like arch/sh/boards/mach-se/{7343,7722}/irq.c can override them
-> > > 
-> > >  - CC: linux-sh list in lieu of Paul's defunct linux-sh.org email address
-> > > 
-> > >  - Fix handling of zero L2 status in bcm7120-l2.c
-> > > 
-> > >  - Rebase on Linus' head of tree
-> > 
-> > Looks all great. I also looked at the series now and am very happy
-> > about how it turned out.
-> 
-> Does that translate to an Acked-by on the whole lot?
-> 
-> Jason, can you please pick that lot up with an Acked-by-me on the
-> changes to the existing infrastructure?
+Hi Robert,
 
-Yes, I should have been more explicit:
+On Sun, Nov 2, 2014 at 7:11 PM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
+> Add documentation for device-tree binding of the generic gpio-vbus phy
+> controller.
+>
+> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  .../devicetree/bindings/phy/gpio-vbus.txt          | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/gpio-vbus.txt
+>
+> diff --git a/Documentation/devicetree/bindings/phy/gpio-vbus.txt b/Documentation/devicetree/bindings/phy/gpio-vbus.txt
+> new file mode 100644
+> index 0000000..ffcfd35
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/gpio-vbus.txt
+> @@ -0,0 +1,23 @@
+> +GPIO VBus phy
+> +=============
+> +
+> +gpio-vbus is a phy controller supporting VBus detection and pullup activation on
+> +GPIOs.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Maybe duplicate the comment from the driver here how his is about
+B peripheral only devices
+
+> +Required properties:
+> +- compatible : should be "generic,phy-gpio-vbus"
+
+I'm not sure about the compatible value. I have not seen the "generic,"
+vendor prefix, and all the other generic gpio-something bindings don't
+use any prefix: "gpio-gate-clock", "gpio-leds", "gpio-beeper",
+"pps-gpio", etc.
+
+> +- #phy-cells : from the generic PHY bindings, must be 1.
+> +- gpios      : set of 2 gpio properties (see gpio.txt for gpio properties format)
+> +               first gpio is required, it's the VBus sensing input gpio
+> +              second gpio is optional, it's the D+ pullup controlling output
+> +              gpio
+> +
+> +Optional properties:
+> +- wakeup     : boolean, if true the VBus gpio will wakeup the platform
+
+The vbus_draw regulator should be part of this binding, I think.
+
+> +Example:
+> +       usb2phy : gpio-vbus@13 {
+> +               compatible = "generic,phy-gpio-vbus";
+> +               gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
+> +               wakeup;
+
+This on the other hand might be too generic.
+I'd like to see just wakeup used here, but the other bindings prefix
+"linux," (or "gpio-key,").
+
+regards
+Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
