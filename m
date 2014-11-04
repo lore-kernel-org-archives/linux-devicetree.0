@@ -1,59 +1,58 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of/fdt: Don't clear initial_boot_params
- =?iso-8859-1?Q?if=0D?= fdt_check_header() fails
-Date: Tue, 04 Nov 2014 16:08:39 +0000
-Message-ID: <20141104160839.6F238C423D0@trevor.secretlab.ca>
-References: <20141029181500.16094.46561.stgit@bhelgaas-glaptop2.roam.corp.google.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141029181500.16094.46561.stgit@bhelgaas-glaptop2.roam.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: check for size < 0 after rounding in
+ early_init_dt_add_memory_arch
+Date: Tue, 04 Nov 2014 16:16:37 +0000
+Message-ID: <20141104161637.7AFCEC423D0@trevor.secretlab.ca>
+References: <1414598972-22761-1-git-send-email-ard.biesheuvel@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414598972-22761-1-git-send-email-ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 Oct 2014 12:15:00 -0600
-, Bjorn Helgaas <bhelgaas@google.com>
+On Wed, 29 Oct 2014 17:09:32 +0100
+, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
  wrote:
-> If the device tree pointer is NULL, early_init_dt_verify() fails, leaving
-> initial_boot_params unchanged.  If the device tree pointer is non-NULL but
-> invalid, early_init_dt_verify() again fails but this time it also clears
-> initial_boot_params.
+> Memory regions passed to early_init_dt_add_memory_arch() are rounded to
+> PAGE_SIZE by subtracting the size of the leading fractional page from
+> the 'size' argument. However, size being a u64 type, if its value is
+> sufficiently small, the subtraction wraps around and produces a bogus
+> value, potentially leading to crashes.
 > 
-> Leave initial_boot_params unchanged if the device tree pointer is invalid.
-> This doesn't fix a bug, but it makes the behavior more consistent and
-> easier to analyze.
+> Fix this by ignoring the memory range in such cases.
 > 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Looks correct. Applied.
+Applied, thanks.
 
 g.
 
 > ---
->  drivers/of/fdt.c |    9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
+>  drivers/of/fdt.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index d1ffca8b34ea..55a566a53f36 100644
+> index d1ffca8b34ea..3b423f5b99c6 100644
 > --- a/drivers/of/fdt.c
 > +++ b/drivers/of/fdt.c
-> @@ -994,15 +994,12 @@ bool __init early_init_dt_verify(void *params)
->  	if (!params)
->  		return false;
+> @@ -930,6 +930,11 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+>  	const u64 phys_offset = __pa(PAGE_OFFSET);
 >  
-> -	/* Setup flat device-tree pointer */
-> -	initial_boot_params = params;
-> -
->  	/* check device tree validity */
-> -	if (fdt_check_header(params)) {
-> -		initial_boot_params = NULL;
-> +	if (fdt_check_header(params))
->  		return false;
-> -	}
->  
-> +	/* Setup flat device-tree pointer */
-> +	initial_boot_params = params;
->  	return true;
->  }
->  
+>  	if (!PAGE_ALIGNED(base)) {
+> +		if (size < PAGE_SIZE - (base & ~PAGE_MASK)) {
+> +			pr_warn("Ignoring memory block 0x%llx - 0x%llx\n",
+> +				base, base + size);
+> +			return;
+> +		}
+>  		size -= PAGE_SIZE - (base & ~PAGE_MASK);
+>  		base = PAGE_ALIGN(base);
+>  	}
+> -- 
+> 1.8.3.2
 > 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
