@@ -1,65 +1,88 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RESUBMIT PATCH v6 7/8] regulator: sky81452: Add compatible
- string for device binding
-Date: Tue, 4 Nov 2014 00:55:42 +0000
-Message-ID: <20141104005542.GB3815@sirena.org.uk>
-References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
- <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
- <1414739322-12487-8-git-send-email-jack.yoo@skyworksinc.com>
- <20141031164418.GC18557@sirena.org.uk>
- <1415051139.20372.85.camel@x220>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v4 0/9] ARM: shmobile: R-Mobile: DT PM domain support
+Date: Mon, 03 Nov 2014 17:28:54 -0800
+Message-ID: <7hegtj69ex.fsf@deeprootsystems.com>
+References: <1415028896-9005-1-git-send-email-geert+renesas@glider.be>
+	<CANLsYkzVw_fQQuK9pEomMp6A_z2Qg9L-Hj1f+8b_1o7cFjMiDw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="j6zkAHxOZJkiczrA"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415051139.20372.85.camel@x220>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: gyungoh@gmail.com, sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CANLsYkzVw_fQQuK9pEomMp6A_z2Qg9L-Hj1f+8b_1o7cFjMiDw@mail.gmail.com>
+	(Mathieu Poirier's message of "Mon, 3 Nov 2014 14:02:31 -0700")
+Sender: linux-pm-owner@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Philipp Zabel <philipp.zabel@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, linux-pm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Mathieu Poirier <mathieu.poirier@linaro.org> writes:
 
---j6zkAHxOZJkiczrA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On 3 November 2014 08:34, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+>>         Hi Rafael, Simon, Magnus,
+>>
+>> This patch series enables DT support for PM domains on Renesas R-Mobile SoCs.
+>>
+>> Currently it's limited to R-Mobile A1 (r8a7740), but given the similarity of
+>> the SYSC System-Controller on the various SH-Mobile/R-Mobile SoCs, and the
+>> abstraction of PM domains in DT, it should be sufficiently generic to handle
+>> other SoCs in the future (e.g. SH-Mobile AP4 (sh7372), SH-Mobile AG5 (sh73a0),
+>> R-Mobile APE6 (r8a73a4)).
+>>
+>> Functionality-wise, this behaves the same as the legacy (non-DT) version
+>> (modulo missing DT support in some device drivers).
+>>
+>> Dependencies:
+>>   - This is based on Simon Horman's renesas-devel-20141030-v3.18-rc2, and
+>>     Rafael J. Wysocki's linux-pm.git#linux-next,
+>>   - This depends on "PM / Domains: Change prototype for the ->attach_dev()
+>>     callback" from Ulf hanson, which is intended to still enter v3.18-rcX
+>>     through the linux-pm tree.
+>>     As this is a one-line change, I included this patch as the first patch of
+>>     this series.  Perhaps it's even acceptable for Simon to (also) apply it, so
+>>     we don't have to wait for the v3.18-rcX that will include it?
+>>
+>> For your convenience, I've also pushed this to
+>> git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git#rmobile-genpd
+>>
+>> Changes compared to v3 (more detailed changelogs in the individual patches):
+>>   - I dropped the patch to add preliminary PM domain latencies, as I want to do
+>>     more measurements for PM domains that are currently never powered off.
+>>     Values seem to range between 8.5 and 26 us, depending on the PM domain.
+>>   - I dropped all patches related to QoS device latencies, as these need more
+>>     discussion,
+>>   - The power-{on,off}-latency properties have been changed from a single value
+>>     to a list,
+>>   - Device save/restore state latencies have been dropped, as they're Linux
+>>     driver-specific, and thus don't belong in DT,
+>>   - Use proper pm_clk_create()/pm_clk_destroy(), and update for attach_dev()
+>>     returning an error code again,
+>>   - New patch to enable module clocks if !CONFIG_PM_RUNTIME,
+>>   - Always keep D4 powered, until the new Coresight code handles runtime
+>>     PM,
+>
+> I took the time to really look at the problems you are experiencing
+> with pm runtime in hw_breackpoint.c this weekend.  The coresight
+> patchset, when supplemented with PM runtime awareness, will fix that
+> problem *only* when traces are activated.  The other obvious condition
+> is that other component using the same power domain are also converted
+> to using runtime PM.
+>
+> That being said, the coresight framework and breakpoint handler code
+> are two different subsystem.  Their only commonality is that they make
+> use of the debug registers (and not even the same ones).  As such (and
+> in my opinion) the code in hw_breakpoint should be getting its own pm
+> runtime reference without relying on the coresight subsystem.  As
+> indicated above, that would only work in some cases.
+>
+> Supplementing hw_breakpoint to interact with the runtime PM may prove
+> trickier than it seems... I'm especially worried about the
+> non-blocking requirement inherent to using "smp_call_function()".  I'm
+> stepping forward to look into that problem but before doing so I need
+> to finish runtime PM on coresight.
 
-On Mon, Nov 03, 2014 at 10:45:39PM +0100, Paul Bolle wrote:
-> On Fri, 2014-10-31 at 16:44 +0000, Mark Brown wrote:
+Matthieu, without looking more deeply myself, I'm not sure this is what
+you need, but have a look at the "IRQ safe" mode of runtime PM.  If you
+know your devices runtime PM callbacks are IRQ safe, you can call
+pm_runtime_irq_safe(), and your callbacks will be called with IRQs
+disabled.
 
-> > it doesn't seem obviously related to the driver
-> > change and should probably be in the same patch as the MFD symbol rename
-> > for bisetion.
-
-> I don't think there will be bisection problems (in mainline). Currently
-> this driver depends on SKY81452. But that symbol doesn't exist. Only
-> after both 1/8 and this patch will this driver become buildable, for the
-> first time. So it's not that this driver was buildable, became
-> unbuildable in 1/8 and buildable again in this patch.
-
-> (I don't think it's much of a problem that the regulator driver got
-> merged, in v3.18-rc1, before the mfd driver on which it depends.
-> Avoiding that temporarily problem appears to be more trouble than it's
-> worth.)
-
-The symbol rename should not be randomly shoved in with another patch,
-and if the MFD still hasn't been merged then it probably makes sense to
-do the rename as part of merging the MFD so it's clear what's going on.
-
---j6zkAHxOZJkiczrA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUWCQNAAoJECTWi3JdVIfQEVgH/3b8xvvY7XaXswI0SnFRS34n
-NjAkr4i/yNthEQvI+lzXpW4NQfAmgtzDkChLVM2wLaKl4JzwrKyLpEr+OXQsUAsl
-qK+ZkUDF4tL33isb96E9P755Np8idMmQvIZxRRez/fLQ2+XZ3Qt/tZhdFmgQc5vF
-mxjRWQuk4D4Lt3Zn1q3+TJBWd9kuwf19is6cMl12MMWwEf+J1Vea7S6BIN7iw68E
-/TGqIKL6cg0YB2HQgI7uq2zOS1zdG7NcUGmbFCyZUwKwelTSZ+tsxvHUGRKJfXvl
-HG7VD3vV8wiwoxNRDNZV6ymbWkq5+LaAN8/hzVEqOzk9U8t1XXWdMxCBa5ezaIo=
-=5uCL
------END PGP SIGNATURE-----
-
---j6zkAHxOZJkiczrA--
+Kevin
