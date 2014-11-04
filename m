@@ -1,40 +1,96 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 02/12] Driver core: Unified device properties interface
- for platform firmware
-Date: Tue, 4 Nov 2014 17:01:04 +0000
-Message-ID: <CACxGe6uv0TmoZivL3ESw+oRW-OjqakLP4KBnDrwJXzQ2ku8ZLA@mail.gmail.com>
-References: <13750506.S2yVlRRDa2@vostro.rjw.lan> <2127128.VT1Iq03xz1@vostro.rjw.lan>
- <CACxGe6tvz8MiXnNGJ3XtrofxFr=o87yOB6kUKm57fXvQ0fL8jw@mail.gmail.com> <3645687.BsyGDrJDrU@vostro.rjw.lan>
+From: "Lennart Sorensen" <lsorense@csclub.uwaterloo.ca>
+Subject: Re: [PATCH 11/13] arm: dts: dra7: add DMA properties for UART
+Date: Tue, 4 Nov 2014 12:02:33 -0500
+Message-ID: <20141104170233.GB24112@csclub.uwaterloo.ca>
+References: <1412014009-13315-1-git-send-email-bigeasy@linutronix.de>
+ <1412014009-13315-12-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3645687.BsyGDrJDrU-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Darren Hart <darren.hart-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1412014009-13315-12-git-send-email-bigeasy@linutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, balbi@ti.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 3, 2014 at 10:04 PM, Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> wrote:
->> I also found that this parser code doesn't correctly handle malformed
->> (unterminated) string properties. It will overflow. The existing
->> functions have the same problem, so it isn't something that you've
->> added. I've got a fix, and as a side effect the fix creates the _array
->> version basically for free as part of reworking
->> of_property_count_strings() and of_property_read_string_index()
->
-> OK
->
-> So can you please point me to a git branch containing the fix?  I'll rebase the
-> patch on top of that then and everything should merge just fine.
+On Mon, Sep 29, 2014 at 08:06:47PM +0200, Sebastian Andrzej Siewior wrote:
+> Cc: devicetree@vger.kernel.org
+> Reviewed-by: Tony Lindgren <tony@atomide.com>
+> Tested-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>  arch/arm/boot/dts/dra7.dtsi | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index d678152db4cb..f273e3811f75 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -332,6 +332,8 @@
+>  			ti,hwmods = "uart1";
+>  			clock-frequency = <48000000>;
+>  			status = "disabled";
+> +			dmas = <&sdma 49>, <&sdma 50>;
+> +			dma-names = "tx", "rx";
+>  		};
+>  
+>  		uart2: serial@4806c000 {
+> @@ -341,6 +343,8 @@
+>  			ti,hwmods = "uart2";
+>  			clock-frequency = <48000000>;
+>  			status = "disabled";
+> +			dmas = <&sdma 51>, <&sdma 52>;
+> +			dma-names = "tx", "rx";
+>  		};
+>  
+>  		uart3: serial@48020000 {
+> @@ -350,6 +354,8 @@
+>  			ti,hwmods = "uart3";
+>  			clock-frequency = <48000000>;
+>  			status = "disabled";
+> +			dmas = <&sdma 53>, <&sdma 54>;
+> +			dma-names = "tx", "rx";
+>  		};
+>  
+>  		uart4: serial@4806e000 {
+> @@ -359,6 +365,8 @@
+>  			ti,hwmods = "uart4";
+>  			clock-frequency = <48000000>;
+>                          status = "disabled";
+> +			dmas = <&sdma 55>, <&sdma 56>;
+> +			dma-names = "tx", "rx";
+>  		};
+>  
+>  		uart5: serial@48066000 {
+> @@ -368,6 +376,8 @@
+>  			ti,hwmods = "uart5";
+>  			clock-frequency = <48000000>;
+>  			status = "disabled";
+> +			dmas = <&sdma 63>, <&sdma 64>;
+> +			dma-names = "tx", "rx";
+>  		};
+>  
+>  		uart6: serial@48068000 {
+> @@ -377,6 +387,8 @@
+>  			ti,hwmods = "uart6";
+>  			clock-frequency = <48000000>;
+>  			status = "disabled";
+> +			dmas = <&sdma 79>, <&sdma 80>;
+> +			dma-names = "tx", "rx";
+>  		};
+>  
+>  		uart7: serial@48420000 {
 
-git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git devicetree/merge
+According to the manual the DMA channels for UART7 to 10 are:
 
-I'm going to let the patch sit in there for a few days to get
-linux-next exposure before I ask Linus to pull. The pull req will go
-out before the end of the week.
+uart7:  144 145
+uart8:  146 147
+uart9:  148 149
+uart10: 150 151
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Might as well add those too.  We have uart 7 and 8 in use on our board
+so I am about to go test it.
+
+-- 
+Len Sorensen
