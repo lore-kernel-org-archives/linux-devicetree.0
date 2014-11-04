@@ -1,54 +1,76 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 4/6] ARM: mediatek: Add sysirq interrupt polarity
- support
-Date: Tue, 4 Nov 2014 15:04:21 +0800
-Message-ID: <1415084661.31861.5.camel@mtksdaap41>
-References: <1414576824-16143-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <1414576824-16143-5-git-send-email-yingjoe.chen@mediatek.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: [PATCH v5 0/8] arm: Add basic support for MediaTek MT8127 & MT8135
+ SoCs
+Date: Tue, 4 Nov 2014 15:30:47 +0800
+Message-ID: <1415086255-5555-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414576824-16143-5-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, hc.yen@mediatek.com, yh.chen@mediatek.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, nathan.chung@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, eddie.huang@mediatek.com, yingjoe.chen@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-10-29 at 18:00 +0800, Yingjoe Chen wrote:
-> diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
-> new file mode 100644
-> index 0000000..4403bcf
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-mtk-sysirq.c
-> +static int mtk_sysirq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> +				   unsigned int nr_irqs, void *arg)
-> +{
-> +	int i, ret;
-> +	irq_hw_number_t hwirq;
-> +	struct of_phandle_args *irq_data = arg;
-> +
-> +	if (irq_data->args_count < 3)
-> +		return -EINVAL;
-> +
-> +	hwirq = irq_data->args[1];
-> +	for (i = 0; i < nr_irqs; i++)
-> +		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
-> +					      &mtk_sysirq_chip,
-> +					      domain->host_data);
-> +
-> +	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
-> +}
+This is v5 of adding basic device tree support for MT8127 & MT8135.
+This series is based on v3.18-rc1
 
-(answering my own patch)
-The ret is not used in this function. I'll remove it in next version.
+This version fix board model name and change to use 32bits address for
+mt8127/mt8135 dtsi. I also took the chance to do a minor wording change
+in dt-bindings. Please note we already have some patches (uart, reset,
+i2c, pinctrl, intpol) thats depends on old version, and should be changed
+if this version is merged.
 
-Besides this, is there anything that should be changed in this series?
+We are planning to upstream drivers for MT8127 & MT8135 SoCs.
+MT8135 is a tablet soc featuring 2 CA7 + 2 CA15. MT8127 is a
+tablet soc with 4 CA7. They share many similar IP components
+with MT65xx series.
 
-Joe.C
+Changes in v5:
+ - Using 32bits address instead of 64bits in dtsi.
+ - Fix model name error
+ - Adjust wording in dtbindings.
 
+Changes in v4:
+ - Include config options for different mediatek SoCs.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes in v3:
+ - Changing earlyprintk order and dt-binding based on Matthias' suggestion.
+
+v2:
+ - Change timer compatible string.
+ - Build dtb for mt8127 & mt8135
+ - Adding earlyprintk support for mt8127 & mt8135
+
+Joe.C (8):
+  ARM: mediatek: Add basic support for mt8127
+  ARM: mediatek: add dts for 8127 Moose board
+  ARM: mediatek: Add basic support for mt8135
+  ARM: mediatek: add dts for MT8135 evaluation board.
+  dt-bindings: add more chips in documentation for Mediatek SoC
+  ARM: dts: Build dtb for mt8127 & mt8135
+  ARM: mediatek: Add earlyprintk support for mt8127 & mt8135
+  ARM: mediatek: Fix description for mediatek SoCs
+
+ Documentation/devicetree/bindings/arm/mediatek.txt |  15 ++-
+ arch/arm/Kconfig.debug                             |  20 ++++
+ arch/arm/boot/dts/Makefile                         |   4 +-
+ arch/arm/boot/dts/mt8127-moose.dts                 |  25 +++++
+ arch/arm/boot/dts/mt8127.dtsi                      |  94 +++++++++++++++++
+ arch/arm/boot/dts/mt8135-evbp1.dts                 |  25 +++++
+ arch/arm/boot/dts/mt8135.dtsi                      | 116 +++++++++++++++++++++
+ arch/arm/mach-mediatek/Kconfig                     |   4 +-
+ arch/arm/mach-mediatek/mediatek.c                  |   2 +
+ 9 files changed, 299 insertions(+), 6 deletions(-)
+ create mode 100644 arch/arm/boot/dts/mt8127-moose.dts
+ create mode 100644 arch/arm/boot/dts/mt8127.dtsi
+ create mode 100644 arch/arm/boot/dts/mt8135-evbp1.dts
+ create mode 100644 arch/arm/boot/dts/mt8135.dtsi
