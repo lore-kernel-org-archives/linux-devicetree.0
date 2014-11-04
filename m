@@ -1,59 +1,32 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH] PCI: add missing DT binding for linux,pci-domain property
-Date: Tue, 4 Nov 2014 11:05:39 -0600
-Message-ID: <560410DB-26D4-4921-BFEA-176A05DA06CB@codeaurora.org>
-References: <1415101660-26450-1-git-send-email-l.stach@pengutronix.de>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1415101660-26450-1-git-send-email-l.stach@pengutronix.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Liviu Dudau <Liviu.Dudau@arm.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH 11/13] arm: dts: dra7: add DMA properties for UART
+Date: Tue, 04 Nov 2014 18:06:37 +0100
+Message-ID: <5459079D.7080703@linutronix.de>
+References: <1412014009-13315-1-git-send-email-bigeasy@linutronix.de> <1412014009-13315-12-git-send-email-bigeasy@linutronix.de> <20141104170233.GB24112@csclub.uwaterloo.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20141104170233.GB24112@csclub.uwaterloo.ca>
+Sender: linux-serial-owner@vger.kernel.org
+To: Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, balbi@ti.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-On Nov 4, 2014, at 5:47 AM, Lucas Stach <l.stach@pengutronix.de> wrote:
-
-> This property was added by 41e5c0f81d3e
-> (of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr())
-> without the required binding documentation. As this property
-> will be supported by a number of host bridge drivers going forward,
-> add it to the common PCI binding doc.
+On 11/04/2014 06:02 PM, Lennart Sorensen wrote:
 > 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
-> This is a non-critical fix, but may still qualify for 3.18-rc as
-> the property was added in this release cycle.
-> ---
-> Documentation/devicetree/bindings/pci/pci.txt | 10 ++++++++++
-> 1 file changed, 10 insertions(+)
+> According to the manual the DMA channels for UART7 to 10 are:
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-> index 41aeed38926d..b754f786ed5e 100644
-> --- a/Documentation/devicetree/bindings/pci/pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci.txt
-> @@ -7,3 +7,13 @@ And for the interrupt mapping part:
+> uart7:  144 145
+> uart8:  146 147
+> uart9:  148 149
+> uart10: 150 151
 > 
-> Open Firmware Recommended Practice: Interrupt Mapping
-> http://www.openfirmware.org/1275/practice/imap/imap0_9d.pdf
-> +
-> +Additionally to the properties specified in the above standards a host bridge
-> +driver implementation may support the following properties:
-> +
-> +- linux,pci-domain:
-> +   If present this property assigns a fixed PCI domain number to a host bridge,
-> +   otherwise an unstable (across boots) unique number will be assigned.
-> +   It is recommended to either not set this property at all or set it for all
-> +   host bridges in the system, otherwise potentially conflicting domain numbers
-> +   may be assigned to root buses behind different host bridges.
+> Might as well add those too.  We have uart 7 and 8 in use on our board
+> so I am about to go test it.
 
-Probably should add something about domain numbers being unique across all host bridgse.
+Mind sharing the manual with me? Mine does not mention DMA channels for
+UART7-10. If you are able to test 7+8 (and it works) could you please
+make patch which with for the remaining four devices?
 
-- k
-
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Sebastian
