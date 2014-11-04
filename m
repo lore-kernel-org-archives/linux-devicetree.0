@@ -1,97 +1,54 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v4 0/9] ARM: shmobile: R-Mobile: DT PM domain support
-Date: Tue, 4 Nov 2014 07:57:14 -0700
-Message-ID: <CANLsYkzAsvJE_TR4AvP6PEXOO-jkcwMQE_GfBD-jS9k5BOmOeg@mail.gmail.com>
-References: <1415028896-9005-1-git-send-email-geert+renesas@glider.be>
-	<CANLsYkzVw_fQQuK9pEomMp6A_z2Qg9L-Hj1f+8b_1o7cFjMiDw@mail.gmail.com>
-	<7hegtj69ex.fsf@deeprootsystems.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v6 04/12] misc: at25: Make use of device property API
+Date: Tue, 4 Nov 2014 15:04:54 +0000
+Message-ID: <CACxGe6u5ppSjHc-Wa7K_NWQ9YEZ_V3ys9fdsECss_bPabUTN+g@mail.gmail.com>
+References: <13750506.S2yVlRRDa2@vostro.rjw.lan> <5019278.RtDq7RlWqt@vostro.rjw.lan>
+ <20141104141826.36F8AC408F6@trevor.secretlab.ca> <20141104143801.GM1618@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <7hegtj69ex.fsf@deeprootsystems.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Philipp Zabel <philipp.zabel@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, linux-pm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20141104143801.GM1618@lahna.fi.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <darren.hart@intel.com>, Aaron Lu <aaron.lu@intel.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 3 November 2014 18:28, Kevin Hilman <khilman@kernel.org> wrote:
-> Mathieu Poirier <mathieu.poirier@linaro.org> writes:
+On Tue, Nov 4, 2014 at 2:38 PM, Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> On Tue, Nov 04, 2014 at 02:18:26PM +0000, Grant Likely wrote:
+>> > -   strncpy(chip->name, np->name, sizeof(chip->name));
+>> > +   strncpy(chip->name, "at25", sizeof(chip->name));
+>>
+>> This line changes behaviour of the driver. It's possibly not a problem,
+>> but it should be commented on and whether any due diligance has been
+>> done to make sure it there isn't anything that depends on it.
 >
->> On 3 November 2014 08:34, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
->>>         Hi Rafael, Simon, Magnus,
->>>
->>> This patch series enables DT support for PM domains on Renesas R-Mobile SoCs.
->>>
->>> Currently it's limited to R-Mobile A1 (r8a7740), but given the similarity of
->>> the SYSC System-Controller on the various SH-Mobile/R-Mobile SoCs, and the
->>> abstraction of PM domains in DT, it should be sufficiently generic to handle
->>> other SoCs in the future (e.g. SH-Mobile AP4 (sh7372), SH-Mobile AG5 (sh73a0),
->>> R-Mobile APE6 (r8a73a4)).
->>>
->>> Functionality-wise, this behaves the same as the legacy (non-DT) version
->>> (modulo missing DT support in some device drivers).
->>>
->>> Dependencies:
->>>   - This is based on Simon Horman's renesas-devel-20141030-v3.18-rc2, and
->>>     Rafael J. Wysocki's linux-pm.git#linux-next,
->>>   - This depends on "PM / Domains: Change prototype for the ->attach_dev()
->>>     callback" from Ulf hanson, which is intended to still enter v3.18-rcX
->>>     through the linux-pm tree.
->>>     As this is a one-line change, I included this patch as the first patch of
->>>     this series.  Perhaps it's even acceptable for Simon to (also) apply it, so
->>>     we don't have to wait for the v3.18-rcX that will include it?
->>>
->>> For your convenience, I've also pushed this to
->>> git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git#rmobile-genpd
->>>
->>> Changes compared to v3 (more detailed changelogs in the individual patches):
->>>   - I dropped the patch to add preliminary PM domain latencies, as I want to do
->>>     more measurements for PM domains that are currently never powered off.
->>>     Values seem to range between 8.5 and 26 us, depending on the PM domain.
->>>   - I dropped all patches related to QoS device latencies, as these need more
->>>     discussion,
->>>   - The power-{on,off}-latency properties have been changed from a single value
->>>     to a list,
->>>   - Device save/restore state latencies have been dropped, as they're Linux
->>>     driver-specific, and thus don't belong in DT,
->>>   - Use proper pm_clk_create()/pm_clk_destroy(), and update for attach_dev()
->>>     returning an error code again,
->>>   - New patch to enable module clocks if !CONFIG_PM_RUNTIME,
->>>   - Always keep D4 powered, until the new Coresight code handles runtime
->>>     PM,
->>
->> I took the time to really look at the problems you are experiencing
->> with pm runtime in hw_breackpoint.c this weekend.  The coresight
->> patchset, when supplemented with PM runtime awareness, will fix that
->> problem *only* when traces are activated.  The other obvious condition
->> is that other component using the same power domain are also converted
->> to using runtime PM.
->>
->> That being said, the coresight framework and breakpoint handler code
->> are two different subsystem.  Their only commonality is that they make
->> use of the debug registers (and not even the same ones).  As such (and
->> in my opinion) the code in hw_breakpoint should be getting its own pm
->> runtime reference without relying on the coresight subsystem.  As
->> indicated above, that would only work in some cases.
->>
->> Supplementing hw_breakpoint to interact with the runtime PM may prove
->> trickier than it seems... I'm especially worried about the
->> non-blocking requirement inherent to using "smp_call_function()".  I'm
->> stepping forward to look into that problem but before doing so I need
->> to finish runtime PM on coresight.
+> I found only one user for "atmel,at25" in any of the DT sample files.
 >
-> Matthieu, without looking more deeply myself, I'm not sure this is what
-> you need, but have a look at the "IRQ safe" mode of runtime PM.  If you
-> know your devices runtime PM callbacks are IRQ safe, you can call
-> pm_runtime_irq_safe(), and your callbacks will be called with IRQs
-> disabled.
+> arch/arm/boot/dts/phy3250.dts:
+>
+>         eeprom: at25@0 {
+>                 ...
+>                 at25,byte-len = <0x8000>;
+>                 at25,addr-mode = <2>;
+>                 at25,page-size = <64>;
+>
+>                 compatible = "atmel,at25";
+>                 reg = <0>;
+>                 spi-max-frequency = <5000000>;
+>         };
+>
+> I think np->name is "at25" in this case? The binding file
+> Documentation/devicetree/bindings/misc/at25.txt also has the same name.
+>
+> Are you OK, if we add something like below to the changelog?
+>
+>  In addition we hard-code the name of the chip to be "at25" for the
+>  reason that there is no common mechanism to fetch name of the firmware
+>  node. The only existing user (arch/arm/boot/dts/phy3250.dts) uses the
+>  same name so it should continue to work.
 
-Thanks for the follow up - I will have to dig further into the
-irq_safe() API along with understanding the exact requirements
-stemming from hw_breakpoint.c.  I did a few test yesterday and it
-turns out the "reset_ctrl_regs()" problem in hw_breakpoint.c is
-exactly the same as a corner case popping up on coresight.  As such
-fixing one readily provides a solution for the other.
+Yes. If somebody complains, then we can reinstate the previous
+behaviour, but assume it isn't necessary for now.
 
->
-> Kevin
+g.
