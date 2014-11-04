@@ -1,69 +1,65 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
 Subject: Re: [RESUBMIT PATCH v6 7/8] regulator: sky81452: Add compatible
  string for device binding
-Date: Tue, 4 Nov 2014 00:53:29 +0000
-Message-ID: <20141104005329.GA3815@sirena.org.uk>
+Date: Tue, 4 Nov 2014 00:55:42 +0000
+Message-ID: <20141104005542.GB3815@sirena.org.uk>
 References: <1414393369-31583-1-git-send-email-jack.yoo@skyworksinc.com>
  <1414739322-12487-1-git-send-email-jack.yoo@skyworksinc.com>
  <1414739322-12487-8-git-send-email-jack.yoo@skyworksinc.com>
  <20141031164418.GC18557@sirena.org.uk>
- <20141104004333.GA2965@jack-ThinkPad-T520>
+ <1415051139.20372.85.camel@x220>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="edESjMboOAwUFn6i"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="j6zkAHxOZJkiczrA"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20141104004333.GA2965@jack-ThinkPad-T520>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <1415051139.20372.85.camel@x220>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: gyungoh@gmail.com, sameo@linux.intel.com, lee.jones@linaro.org, jg1.han@samsung.com, cooloney@gmail.com, lgirdwood@gmail.com, jack.yoo@skyworksinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, heiko@sntech.de, jason@lakedaemon.net, shawn.guo@freescale.com, treding@nvidia.com, florian.vaussard@epfl.ch, trivial@kernel.org, linux@roeck-us.net, andrew@lunn.ch, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---edESjMboOAwUFn6i
+--j6zkAHxOZJkiczrA
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Nov 04, 2014 at 09:43:34AM +0900, Gyungoh Yoo wrote:
-> On Fri, Oct 31, 2014 at 04:44:18PM +0000, Mark Brown wrote:
+On Mon, Nov 03, 2014 at 10:45:39PM +0100, Paul Bolle wrote:
+> On Fri, 2014-10-31 at 16:44 +0000, Mark Brown wrote:
 
-> > This doesn't apply against current code and depends on the MFD symbol
-> > rename - can you please check what's going on here?
-
-> Are you talking about 'sky81452-regulator'?
-> I am sorry I don't understand. Can you explain in more detail?
-
-No, I mean the Kconfig change.
-
-> > It would make sense to split the Kconfig symbol rename into a separate
-> > patch to ease merging, it doesn't seem obviously related to the driver
+> > it doesn't seem obviously related to the driver
 > > change and should probably be in the same patch as the MFD symbol rename
 > > for bisetion.
 
-> becuase the symbol in the modfied MFD does not match with the
-> merged regulator driver, it was hard to split the patch.
+> I don't think there will be bisection problems (in mainline). Currently
+> this driver depends on SKY81452. But that symbol doesn't exist. Only
+> after both 1/8 and this patch will this driver become buildable, for the
+> first time. So it's not that this driver was buildable, became
+> unbuildable in 1/8 and buildable again in this patch.
 
-I'm having a hard time understanding why it is difficult to split the
-two changes - they are in completely separate files.
+> (I don't think it's much of a problem that the regulator driver got
+> merged, in v3.18-rc1, before the mfd driver on which it depends.
+> Avoiding that temporarily problem appears to be more trouble than it's
+> worth.)
 
---edESjMboOAwUFn6i
+The symbol rename should not be randomly shoved in with another patch,
+and if the MFD still hasn't been merged then it probably makes sense to
+do the rename as part of merging the MFD so it's clear what's going on.
+
+--j6zkAHxOZJkiczrA
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBAgAGBQJUWCOIAAoJECTWi3JdVIfQK2kH/3A2hGV39X3qo6WiZJA/id51
-8866trNV5Cr1Yxo59oTslu8XKgK8yfqQNh5fHqKYVWZJ5ryYL7NbDmlVLc1cFbbx
-zYnpZ/IX4hYFNbaaPA0RyeH50F/EtrYhJuab4ppPdrnVgnpeXn+DSANUlswnt97c
-cgE0B6aOkEM/Jdm1FMYSiKgW4mlVAjkZOxF06d2OAlqimxir7a+RdTk/nKTyA+Jk
-8GMrTEn6Lw2oMsQ0TFYP3/+EVMeLlzG8uTnbGldHvv17B8TjwPx8KFqD9UIXEvCQ
-TC0D6sM8h1AqIU85XYjmQMayrBvORMKmWlhceuRpcKc3gDoX9WSwR3+ouYQrKIs=
-=7luX
+iQEcBAEBAgAGBQJUWCQNAAoJECTWi3JdVIfQEVgH/3b8xvvY7XaXswI0SnFRS34n
+NjAkr4i/yNthEQvI+lzXpW4NQfAmgtzDkChLVM2wLaKl4JzwrKyLpEr+OXQsUAsl
+qK+ZkUDF4tL33isb96E9P755Np8idMmQvIZxRRez/fLQ2+XZ3Qt/tZhdFmgQc5vF
+mxjRWQuk4D4Lt3Zn1q3+TJBWd9kuwf19is6cMl12MMWwEf+J1Vea7S6BIN7iw68E
+/TGqIKL6cg0YB2HQgI7uq2zOS1zdG7NcUGmbFCyZUwKwelTSZ+tsxvHUGRKJfXvl
+HG7VD3vV8wiwoxNRDNZV6ymbWkq5+LaAN8/hzVEqOzk9U8t1XXWdMxCBa5ezaIo=
+=5uCL
 -----END PGP SIGNATURE-----
 
---edESjMboOAwUFn6i--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--j6zkAHxOZJkiczrA--
