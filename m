@@ -1,252 +1,64 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 4/6] phy: add support for USB cluster on the Armada
- 375 SoC
-Date: Tue, 4 Nov 2014 14:48:07 +0530
-Message-ID: <545899CF.3080001@ti.com>
-References: <1414164254-13053-1-git-send-email-gregory.clement@free-electrons.com> <1414164254-13053-5-git-send-email-gregory.clement@free-electrons.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v4 2/8] phy: miphy28lp: Add PHY header file for DT x Driver
+ defines
+Date: Tue, 4 Nov 2014 14:55:12 +0530
+Message-ID: <54589B78.3040104@ti.com>
+References: <1413962067-25557-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1413962067-25557-3-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414164254-13053-5-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1413962067-25557-3-git-send-email-gabriel.fernandez@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, andrew@lunn.ch, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gregory.clement@free-electrons.com, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, jason@lakedaemon.net
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Gabriel,
 
-On Friday 24 October 2014 08:54 PM, Gregory CLEMENT wrote:
-> The Armada 375 SoC comes with an USB2 host and device controller and
-> an USB3 controller. The USB cluster control register allows to manage
-> common features of both USB controllers.
+On Wednesday 22 October 2014 12:44 PM, Gabriel FERNANDEZ wrote:
+> This provides the shared header file which will be reference from both
+> PHY driver and its associated Device Tree node(s).
 > 
-> This commit adds a driver integrated in the generic PHY framework to
-> control this USB cluster feature.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 > ---
->  drivers/phy/Kconfig                              |   6 +
->  drivers/phy/Makefile                             |   1 +
->  drivers/phy/phy-armada375-usb2.c                 | 145 +++++++++++++++++++++++
->  include/dt-bindings/phy/armada-375-usb-cluster.h |  19 +++
->  4 files changed, 171 insertions(+)
->  create mode 100644 drivers/phy/phy-armada375-usb2.c
->  create mode 100644 include/dt-bindings/phy/armada-375-usb-cluster.h
+>  include/dt-bindings/phy/phy.h | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 include/dt-bindings/phy/phy.h
 > 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index 2a436e607f99..625adb0abd43 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -21,6 +21,12 @@ config PHY_BERLIN_SATA
->  	select GENERIC_PHY
->  	help
->  	  Enable this to support the SATA PHY on Marvell Berlin SoCs.
-> +config ARMADA375_USBCLUSTER_PHY
-> +	def_bool y
-> +	depends on MACH_ARMADA_375 || COMPILE_TEST
-> +	depends on OF
-> +	select GENERIC_PHY
-> +
->  
->  config PHY_EXYNOS_MIPI_VIDEO
->  	tristate "S5P/EXYNOS SoC series MIPI CSI-2/DSI PHY driver"
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index c4590fce082f..26b5633f378a 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -4,6 +4,7 @@
->  
->  obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
->  obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
-> +obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
->  obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
->  obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
->  obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
-> diff --git a/drivers/phy/phy-armada375-usb2.c b/drivers/phy/phy-armada375-usb2.c
+> diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
 > new file mode 100644
-> index 000000000000..7c6daa9029b3
+> index 0000000..a142c69
 > --- /dev/null
-> +++ b/drivers/phy/phy-armada375-usb2.c
-> @@ -0,0 +1,145 @@
+> +++ b/include/dt-bindings/phy/phy.h
+> @@ -0,0 +1,17 @@
 > +/*
-> + * USB cluster support for Armada 375 platform.
 > + *
-> + * Copyright (C) 2014 Marvell
+> + * This header provides constants for the phy framework
 > + *
-> + * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2 or later. This program is licensed "as is"
-> + * without any warranty of any kind, whether express or implied.
-> + *
-> + * Armada 375 comes with an USB2 host and device controller and an
-> + * USB3 controller. The USB cluster control register allows to manage
-> + * common features of both USB controllers.
+> + * Copyright (C) 2014 STMicroelectronics
+> + * Author: Gabriel Fernandez <gabriel.fernandez@st.com>
+> + * License terms:  GNU General Public License (GPL), version 2
 > + */
 > +
-> +#include <dt-bindings/phy/armada-375-usb-cluster.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
+> +#ifndef _DT_BINDINGS_PHY
+> +#define _DT_BINDINGS_PHY
 > +
-> +#define USB2_PHY_CONFIG_DISABLE BIT(0)
-> +
-> +struct armada375_cluster_phy {
-> +	struct phy *phy;
-> +	void __iomem *reg;
-> +	bool use_usb3;
-> +	int phy_provided;
-> +};
-> +
-> +static struct armada375_cluster_phy usb_cluster_phy;
-> +
-> +static int armada375_usb_phy_init(struct phy *phy)
-> +{
-> +	struct armada375_cluster_phy *cluster_phy = phy_get_drvdata(phy);
-> +	u32 reg;
-> +
-> +	reg = readl(cluster_phy->reg);
-> +	if (cluster_phy->use_usb3)
-> +		reg |= USB2_PHY_CONFIG_DISABLE;
-> +	else
-> +		reg &= ~USB2_PHY_CONFIG_DISABLE;
-> +	writel(reg, cluster_phy->reg);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct phy_ops armada375_usb_phy_ops = {
-> +	.init = armada375_usb_phy_init,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +/*
-> + * Only one controller can use this PHY. We shouldn't have the case
-> + * when two controllers want to use this PHY. But if this case occurs
-> + * then we provide a phy to the first one and return an error for the
-> + * next one. This error has also to be an error returned by
-> + * devm_phy_optional_get() so different from ENODEV for USB2. In the
-> + * USB3 case it still optional and we use ENODEV.
-> + */
-> +static struct phy *armada375_usb_phy_xlate(struct device *dev,
-> +					struct of_phandle_args *args)
-> +{
-> +
-> +    /*
-> +     * Either the phy had never been requested and then the first usb
-> +     * claiming it can get it, or it had already been requested in
-> +     * this case, we only allow to use it with the same configuration.
-> +     */
-> +	if (WARN_ON((usb_cluster_phy.phy_provided != PHY_NONE) &&
-> +			(usb_cluster_phy.phy_provided != args->args[0]))) {
-> +		dev_err(dev, "This PHY has already been provided!\n");
-> +		dev_err(dev, "Check your device tree, only one controller can use it\n.");
-> +		if (args->args[0] == PHY_USB2)
-> +			return ERR_PTR(-EBUSY);
-> +		else
-> +			return ERR_PTR(-ENODEV);
-> +	}
-> +
-> +	if (args->args[0] == PHY_USB2)
-> +		usb_cluster_phy.use_usb3 = false;
-> +	else if (args->args[0] == PHY_USB3)
-> +		usb_cluster_phy.use_usb3 = true;
-> +	else {
-> +		dev_err(dev, "Invalid PHY mode\n");
-> +		return ERR_PTR(-ENODEV);
-> +	}
-> +
-> +	/* Store which phy mode is used for next test */
-> +	usb_cluster_phy.phy_provided = args->args[0];
-> +
-> +	return usb_cluster_phy.phy;
-> +}
-> +
-> +static int armada375_usb_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct phy *phy;
-> +	struct phy_provider *phy_provider;
-> +	void __iomem *usb_cluster_base;
-> +	struct resource *res;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	usb_cluster_base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (!usb_cluster_base)
-> +		return -ENOMEM;
-> +
-> +	phy = devm_phy_create(dev, NULL, &armada375_usb_phy_ops, NULL);
-> +	if (IS_ERR(phy)) {
-> +		dev_err(dev, "failed to create PHY\n");
-> +		return PTR_ERR(phy);
-> +	}
-> +
-> +	usb_cluster_phy.phy = phy;
-> +	usb_cluster_phy.reg = usb_cluster_base;
-> +	phy_set_drvdata(phy, &usb_cluster_phy);
-> +
-> +	phy_provider = devm_of_phy_provider_register(&pdev->dev,
-> +						     armada375_usb_phy_xlate);
-> +	return PTR_ERR_OR_ZERO(phy_provider);
-> +}
-> +
-> +static const struct of_device_id of_usb_cluster_table[] = {
-> +	{ .compatible = "marvell,armada-375-usb-cluster", },
-> +	{ /* end of list */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, of_usb_cluster_table);
-> +
-> +static struct platform_driver armada375_usb_phy_driver = {
-> +	.probe	= armada375_usb_phy_probe,
-> +	.driver = {
-> +		.of_match_table	= of_usb_cluster_table,
-> +		.name  = "armada-375-usb-cluster",
-> +		.owner = THIS_MODULE,
-> +	}
-> +};
-> +module_platform_driver(armada375_usb_phy_driver);
-> +
-> +MODULE_DESCRIPTION("Armada 375 USB cluster driver");
-> +MODULE_AUTHOR("Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/dt-bindings/phy/armada-375-usb-cluster.h b/include/dt-bindings/phy/armada-375-usb-cluster.h
-> new file mode 100644
-> index 000000000000..cbd2d4e720bb
-> --- /dev/null
-> +++ b/include/dt-bindings/phy/armada-375-usb-cluster.h
-> @@ -0,0 +1,19 @@
-> +/*
-> + * Copyright (C) 2014 Marvell
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of the
-> + * License, or (at your option) any later version.
-> + */
-> +
-> +#ifndef __ARMADA_375_USB_CLUSTER__
-> +#define __ARMADA_375_USB_CLUSTER__
-> +
-> +/* The supported mode passed through by the phandle are the following */
-> +
-> +#define PHY_NONE    0
-> +#define PHY_USB2    1
-> +#define PHY_USB3    2
+> +#define PHY_TYPE_SATA		1
+> +#define PHY_TYPE_PCIE		2
+> +#define PHY_TYPE_USB		3
 
-Let's not add a separate file for every platform for these generic modes.
+Can we have a separate #define for USB2 and USB3? Looks like Gregory will need
+it for Armada 375 SoC.
 
 Thanks
 Kishon
-> +
-> +#endif /* __DT_BINDINGS_CLOCK_R8A7791_H__ */
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
