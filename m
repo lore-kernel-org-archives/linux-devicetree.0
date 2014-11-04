@@ -1,57 +1,77 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: [PATCH] of/platform: Move platform devices under /sys/devices/platform
-Date: Tue,  4 Nov 2014 10:45:20 +0000
-Message-ID: <1415097920-30014-1-git-send-email-grant.likely@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v3 00/10] ARM: dts: TI: Add CAN support
+Date: Tue, 4 Nov 2014 12:48:44 +0200
+Message-ID: <1415098134-26405-1-git-send-email-rogerq@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-can-owner@vger.kernel.org>
+Sender: linux-can-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: wg@grandegger.com, mkl@pengutronix.de, wsa@the-dreams.de, mugunthanvnm@ti.com, george.cherian@ti.com, balbi@ti.com, nsekhar@ti.comnm@ti.com, sergei.shtylyov@cogentembedded.com, linux-omap@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Currently the devices created by drivers/of/platform.c get created at
-the root of /sys/devices. This goes against the typical pattern for
-sysfs where the top level /sys/devices structure contains categories of
-devices, and the structure of devices is placed below that. To fix this,
-make the code in drivers/of/platform.c follow the drivers/base/platform.c
-behaviour, and use &platform_bus as the default parent for all new
-platform_devices and amba_devices.
+Hi Tony,
 
-This change has been discussed for a long time, but nobody has actually
-acted on it. Userspace code that expects to find devices under a fixed
-/sys/devices/... path will be affected. It isn't /supposed/ to do that,
-but if anyone complains then I'll add a default-off workaround option to
-put them back into the root.
+These patches add CAN support for am33xx, am43xx and dra7 platforms.
+They must go in together with CAN driver RAMINIT Syscon support [1].
 
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Tested on am335x-evm, am437x-gp-evm and dra7-evm.
+
+NOTE:
+- for DCAN to work on DRA7 we need this patch to keep the CAN PHY powered.
+https://lkml.org/lkml/2014/10/21/484
+
+- There is another issue which causes undesired behaviour if WKUPAON and
+L4CFG clock domains are allowed to HW_AUTO. Undesired behaviour is in the form
+of DCAN1 module being stuck-in-transition when disabled and RAMINIT-done bit
+not getting set as part of RAMINIT mechanism. To address these issues there is a patch
+to prevent these clockdomains from HW_AUTO.
+https://github.com/rogerq/linux/commit/31d6da939dbbaf8ea2ab96ca5680b81cd5607e51
+Even without this second patch DCAN seems to work.
+
+cheers,
+-roger
+
+Changelog:
+
+v3:
+- Move raminit register data into driver data
+- rename syscon property to "syscon-raminit"
+
+v2:
+- Added vendor prefix "ti," to raminit properties
+- Updated am335x dcan nodes
+
+[1] - CAN driver RAMINIT Syscon support
+http://article.gmane.org/gmane.linux.can/6773
+
+cheers,
+-roger
+
 ---
- drivers/of/platform.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Mugunthan V N (1):
+  arm: dts: am437x-gp: Add dcan support
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 3b64d0bf5bba..7c6771986c06 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -138,7 +138,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 	}
- 
- 	dev->dev.of_node = of_node_get(np);
--	dev->dev.parent = parent;
-+	dev->dev.parent = parent ? : &platform_bus;
- 
- 	if (bus_id)
- 		dev_set_name(&dev->dev, "%s", bus_id);
-@@ -291,7 +291,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
- 
- 	/* setup generic device info */
- 	dev->dev.of_node = of_node_get(node);
--	dev->dev.parent = parent;
-+	dev->dev.parent = parent ? : &platform_bus;
- 	dev->dev.platform_data = platform_data;
- 	if (bus_id)
- 		dev_set_name(&dev->dev, "%s", bus_id);
+Roger Quadros (9):
+  ARM: dts: dra7: Add syscon regmap for CORE CONTROL area
+  ARM: dts: DRA7: Add DCAN nodes
+  ARM: dts: dra7-evm: Add CAN support
+  ARM: dts: dra72-evm: Add CAN support
+  ARM: dts: am4372: Add control module syscon node
+  ARM: dts: am4372: Add DCAN nodes
+  ARM: dts: am33xx: Add control module syscon node
+  ARM: dts: am33xx: Update DCAN nodes
+  ARM: dts: am335x-evm: Add DCAN1 details
+
+ arch/arm/boot/dts/am335x-evm.dts    | 13 +++++++++++++
+ arch/arm/boot/dts/am33xx.dtsi       | 25 +++++++++++++++++--------
+ arch/arm/boot/dts/am4372.dtsi       | 27 +++++++++++++++++++++++++++
+ arch/arm/boot/dts/am437x-gp-evm.dts | 26 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/dra7-evm.dts      | 23 +++++++++++++++++++++++
+ arch/arm/boot/dts/dra7.dtsi         | 27 +++++++++++++++++++++++++++
+ arch/arm/boot/dts/dra72-evm.dts     | 23 +++++++++++++++++++++++
+ 7 files changed, 156 insertions(+), 8 deletions(-)
+
 -- 
-1.9.1
+1.8.3.2
+
