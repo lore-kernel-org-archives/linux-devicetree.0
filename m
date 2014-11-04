@@ -1,66 +1,59 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 1/1] of/fdt: simplify early_init_dt_verify
-Date: Tue, 4 Nov 2014 10:03:52 -0700
-Message-ID: <CAErSpo6Upf=QPn7=Cd=XDazXVnSPhb-9gDZjH9_CcY37-xUKLw@mail.gmail.com>
-References: <1414497065-9808-1-git-send-email-thunder.leizhen@huawei.com> <20141104162054.4CC9BC423D0@trevor.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141104162054.4CC9BC423D0@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Zhen Lei <thunder.leizhen@huawei.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH] PCI: add missing DT binding for linux,pci-domain property
+Date: Tue, 4 Nov 2014 11:05:39 -0600
+Message-ID: <560410DB-26D4-4921-BFEA-176A05DA06CB@codeaurora.org>
+References: <1415101660-26450-1-git-send-email-l.stach@pengutronix.de>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1415101660-26450-1-git-send-email-l.stach@pengutronix.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Liviu Dudau <Liviu.Dudau@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 4, 2014 at 9:20 AM, Grant Likely <grant.likely@linaro.org> wrote:
-> On Tue, 28 Oct 2014 19:51:05 +0800
-> , Zhen Lei <thunder.leizhen@huawei.com>
->  wrote:
->> put off initial_boot_params = params; until all checks finished. If any check
->> failed, initial_boot_params is equal NULL, base upon bss segment initial value.
->>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->
-> Interesting. I received exactly the same patch from Bjorn Helgaas. Were
-> the two of you working together, or is this merely a coincedence?
 
-LOL, that's really funny.  We're not working together, so it's a total
-coincidence :)
+On Nov 4, 2014, at 5:47 AM, Lucas Stach <l.stach@pengutronix.de> wrote:
 
->> ---
->>  drivers/of/fdt.c | 10 ++++------
->>  1 file changed, 4 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> index d1ffca8..325c638 100644
->> --- a/drivers/of/fdt.c
->> +++ b/drivers/of/fdt.c
->> @@ -994,14 +994,12 @@ bool __init early_init_dt_verify(void *params)
->>       if (!params)
->>               return false;
->>
->> -     /* Setup flat device-tree pointer */
->> -     initial_boot_params = params;
->> -
->>       /* check device tree validity */
->> -     if (fdt_check_header(params)) {
->> -             initial_boot_params = NULL;
->> +     if (fdt_check_header(params))
->>               return false;
->> -     }
->> +
->> +     /* Setup flat device-tree pointer */
->> +     initial_boot_params = params;
->>
->>       return true;
->>  }
->> --
->> 1.8.0
->>
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->> Please read the FAQ at  http://www.tux.org/lkml/
->
+> This property was added by 41e5c0f81d3e
+> (of/pci: Add pci_get_new_domain_nr() and of_get_pci_domain_nr())
+> without the required binding documentation. As this property
+> will be supported by a number of host bridge drivers going forward,
+> add it to the common PCI binding doc.
+> 
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> ---
+> This is a non-critical fix, but may still qualify for 3.18-rc as
+> the property was added in this release cycle.
+> ---
+> Documentation/devicetree/bindings/pci/pci.txt | 10 ++++++++++
+> 1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+> index 41aeed38926d..b754f786ed5e 100644
+> --- a/Documentation/devicetree/bindings/pci/pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci.txt
+> @@ -7,3 +7,13 @@ And for the interrupt mapping part:
+> 
+> Open Firmware Recommended Practice: Interrupt Mapping
+> http://www.openfirmware.org/1275/practice/imap/imap0_9d.pdf
+> +
+> +Additionally to the properties specified in the above standards a host bridge
+> +driver implementation may support the following properties:
+> +
+> +- linux,pci-domain:
+> +   If present this property assigns a fixed PCI domain number to a host bridge,
+> +   otherwise an unstable (across boots) unique number will be assigned.
+> +   It is recommended to either not set this property at all or set it for all
+> +   host bridges in the system, otherwise potentially conflicting domain numbers
+> +   may be assigned to root buses behind different host bridges.
+
+Probably should add something about domain numbers being unique across all host bridgse.
+
+- k
+
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
