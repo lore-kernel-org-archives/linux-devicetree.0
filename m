@@ -1,89 +1,58 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH v3] mmc: dw_mmc: add support for the other bit of sdio
- interrupt
-Date: Tue, 04 Nov 2014 11:15:54 +0900
-Message-ID: <545836DA.90905@samsung.com>
-References: <1414666240-16782-1-git-send-email-addy.ke@rock-chips.com>
- <1414977633-3196-1-git-send-email-addy.ke@rock-chips.com>
- <5457440E.3070002@samsung.com> <3540679.aQ4QUeBEJd@diego>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH v3 2/6] pinctrl: Introduce pinctrl driver for Qualcomm
+ SSBI PMIC's
+Date: Mon, 3 Nov 2014 18:25:45 -0800
+Message-ID: <20141104022544.GB24501@sonymobile.com>
+References: <1407771634-14946-1-git-send-email-iivanov@mm-sol.com>
+ <1407771634-14946-3-git-send-email-iivanov@mm-sol.com>
+ <53F456F3.3000309@linaro.org>
+ <20140820212843.GB16274@sonymobile.com>
+ <CAJAp7Ojt=PCCDhoR+nhEtQbPHzsp+=uTLx-XMM7-W78bfnQytA@mail.gmail.com>
+ <54574177.5030906@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <3540679.aQ4QUeBEJd@diego>
-Sender: linux-mmc-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
-Cc: Addy Ke <addy.ke@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, huangtao@rock-chips.com, devicetree@vger.kernel.org, hl@rock-chips.com, linux-doc@vger.kernel.org, yzq@rock-chips.com, zyw@rock-chips.com, zhangqing@rock-chips.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, kever.yang@rock-chips.com, lintao@rock-chips.com, linux-rockchip@lists.infradead.org, xjq@rock-chips.com, zhenfu.fang@rock-chips.com, chenfen@rock-chips.com, cf@rock-chips.com, hj@rock-chips.com, linux-arm-kernel@lists.infradead.org, zyf@rock-chips.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54574177.5030906@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Bjorn Andersson <bjorn@kryo.se>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Heiko.
+On Mon 03 Nov 00:48 PST 2014, Srinivas Kandagatla wrote:
 
-On 11/03/2014 07:23 PM, Heiko St=FCbner wrote:
-> Hi Jaehoon,
->=20
-> Am Montag, 3. November 2014, 17:59:58 schrieb Jaehoon Chung:
->> Hi, Addy.
->>
->> On 11/03/2014 10:20 AM, Addy Ke wrote:
->>> The bit of sdio interrupt is 16 in designware implementation,
->>> but it is 24 on Rockchip SoCs.This patch add sdio_id0 for the
->>> number of slot0 in the SDIO interrupt registers.
->>>
->>> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
->>> ---
->>> Changes in v2:
->>> - rebase on http://git.linaro.org/git/people/ulf.hansson/mmc.git, n=
-ext
->>> branch Changes in v3:
->>> - Remove dts for sdio_id0, just replace this with 8, suggested by D=
-oug
->>> - Change to support all Rockchip Socs, suggested by Heiko
->>>
->>>  drivers/mmc/host/dw_mmc-rockchip.c | 10 ++++++++++
->>>  drivers/mmc/host/dw_mmc.c          | 12 +++++++-----
->>>  drivers/mmc/host/dw_mmc.h          |  2 ++
->>>  include/linux/mmc/dw_mmc.h         |  3 +++
->>>  4 files changed, 22 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/mmc/host/dw_mmc-rockchip.c
->>> b/drivers/mmc/host/dw_mmc-rockchip.c index bbb4ec3..b997c8f 100644
->>> --- a/drivers/mmc/host/dw_mmc-rockchip.c
->>> +++ b/drivers/mmc/host/dw_mmc-rockchip.c
->>> @@ -68,14 +68,24 @@ static void dw_mci_rk3288_set_ios(struct dw_mci=
- *host,
->>> struct mmc_ios *ios)>=20
->>>  	}
->>> =20
->>>  }
->>>
->>> +static int dw_mci_rockchip_parse_dt(struct dw_mci *host)
->>> +{
->>> +	/* It is slot 8 on Rockchip SoCs */
->>> +	host->sdio_id0 =3D 8;
->>> +
->>> +	return 0;
->>> +}
->>
->> Well, function is "__parse_dt__", but this function don't parse anyt=
-hing.
->> If All rockchip soc is supported, i think that it can be located to =
-other
->> place.
->=20
-> do you have a suggestion for a location?
->=20
-> The only alternative I can see right now would be using the init-hook=
- in=20
-> dw_mci_drv_data or adding a new field to it holding the slot-offset.
-> [with using the init-hook being my personal preference of the two]
+> Hi Bjorn,
+> 
+> On 20/08/14 23:13, Bjorn Andersson wrote:
+> > On Wed, Aug 20, 2014 at 2:28 PM, Bjorn Andersson
+> > <bjorn.andersson@sonymobile.com> wrote:
+> >> On Wed 20 Aug 01:06 PDT 2014, Srinivas Kandagatla wrote:
+> >>> 2> Looking back at v3.4 kernel, for gpio modes, BIT(0) of bank 0 is set
+> >>> to enable gpio mode. without this bit driver does not work for output pins.
+> >>>
+> >>
+> >> Thanks, I missed that.
+> >>
+> >> Unfortunately, setting that bit results in input not working - the interrupt
+> >> bits are never set for gpios that have that bit set. I'm trying to figure out
+> >> why this is the case before sending out the new version...
+> >
+> > With help from Andy Gross this is now corrected as well, turned out
+> > that BIT(0) in bank0 controls if the "direction" is considered. As I
+> > was tricked by the multiple levels of indirection in the codeaurora
+> > version I got these wrong.
+> >
+> > Will send out an updated version shortly.
+> Did you get a chance to spin a new version of this patcheset?
+> 
 
-init-hook can be used, then, in future, it can also included other spec=
-ific code for rock-chip.
+Hi Srini,
 
-Best Regards,
-Jaehoon Chung
->=20
->=20
-> Heiko
->=20
+Unfortunately it ended up on my todo list waiting for a discussion on
+irq_read_line(). As this seems to fall in place I will try to get this updated
+and sent out.
 
+Sorry for the delays.
+
+Regards,
+Bjorn
