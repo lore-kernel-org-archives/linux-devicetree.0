@@ -1,107 +1,71 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v6 00/12] Add ACPI _DSD and unified device properties support
-Date: Tue, 04 Nov 2014 17:20:36 +0100
-Message-ID: <1763231.GI0axx7QAH@vostro.rjw.lan>
-References: <13750506.S2yVlRRDa2@vostro.rjw.lan> <2453849.ZcbreFmRlO@vostro.rjw.lan> <20141104154950.3175EC423D0@trevor.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20141104154950.3175EC423D0@trevor.secretlab.ca>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <darren.hart@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: Request and map make argument name constant
+Date: Tue, 04 Nov 2014 16:00:48 +0000
+Message-ID: <20141104160048.10D57C423D0@trevor.secretlab.ca>
+References: <1413908845-11526-1-git-send-email-matthias.bgg@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1413908845-11526-1-git-send-email-matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, November 04, 2014 03:49:50 PM Grant Likely wrote:
-> On Sat, 25 Oct 2014 00:10:20 +0200
-> , "Rafael J. Wysocki" <rjw@rjwysocki.net>
->  wrote:
-> > On Tuesday, October 21, 2014 11:08:59 PM Rafael J. Wysocki wrote:
-> > > Hi Everyone,
-> > > 
-> > > This is version 6 of the unified device properties interface patchset.
-> > > 
-> > > The original cover letter from Mika is here:
-> > > 
-> > > http://marc.info/?l=devicetree&m=141087052200600&w=4
-> > > 
-> > > and my cover letters for previous iterations are at:
-> > > 
-> > > http://marc.info/?l=linux-acpi&m=141212903816560&w=4
-> > > http://marc.info/?l=linux-kernel&m=141354745011569&w=4
-> > > 
-> > > There are a few changes with respect to v5 and the affected patches are
-> > > [02-03/12] and [09-12/12].  The remaining ones have not been modified.
-> > > 
-> > > Most importantly, requesting the first element of a list (package) property
-> > > from _DSD is now equivalent to accessing a single-value property of the
-> > > same type, so device_property_read_u8(dev, pname, val) will now be equivalent
-> > > to device_property_read_u8_array(dev, pname, val, 1), for example.
-> > > Consequently, this _DSD definition:
-> > > 
-> > > Name (_DSD, Package () {
-> > >     ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > >     Package () {
-> > >         Package () {"blah", "A string"},
-> > >     }
-> > > })
-> > > 
-> > > can be used instead of
-> > > 
-> > > Name (_DSD, Package () {
-> > >     ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > >     Package () {
-> > >         Package () {"blah", Package () {"A string"}},
-> > >     }
-> > > })
-> > > 
-> > > and the code will be able to retrieve the property value from the both of
-> > > them just fine.
-> > > 
-> > > This means, among other things, that accessors for single-value properties
-> > > can be implemented in terms of the analogous "array" property accessors
-> > > which allows the code size to be reduced somewhat.
-> > > 
-> > > Patches [02/12] and [09/12] have been modified to achieve that and patch
-> > > [03/12] have been modified accordingly for the "compatible" property in
-> > > _DSD to behave in an analogous way.  Additionally, the bodies of the
-> > > numerical property accessors in patches [02/12] and [09/12] are now
-> > > generated using macros (string property accessors have slightly different
-> > > rules and are simply open coded for that reason).
-> > > 
-> > > Patch [10/12] has been modified to drop function arguments that happened to
-> > > have the same values for both of the current users of those functions and
-> > > patches [11-12/12] have been modified to take that change into account.  If
-> > > the code in question needs to be made more complex in the future, there
-> > > should not be any problems with that.
-> > > 
-> > > Due to the nature of the changes I have retained all ACKs except for the
-> > > Grant's Reviewed-by on patch [03/12] (if that had been Acked-by, I would have
-> > > retained it too, but that didn't feel appropriate for the "reviewed by" thing
-> > > to me).  If any of you think that the ACKs are not applicable any more, please
-> > > let me know and I'll drop them.
-> > > 
-> > > Finally, many thanks to Mika for testing the series on MinnowBoard 1 and
-> > > MinnowBoard Max.  In case anybody else would like to test it, it is available
-> > > from the device-properties branch of the linux-pm.git tree:
-> > > 
-> > > git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git device-properties
-> > > 
-> > > Thanks!
-> > 
-> > Crickets ...
-> > 
-> > OK, so I'm taking the lack of comments as the lack of objections and I'm already
-> > getting merge conflicts for this series.  Moreover, we already have done some
-> > work on top of it.
-> > 
-> > So, if there still are no comments by Sunday evening, I'll add this series to
-> > my linux-next branch with 3.19-rc1 as the target.
+On Tue, 21 Oct 2014 18:27:25 +0200
+, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ wrote:
+> This patch makes the name argument from of_io_request_and_map constant.
 > 
-> Aside from the comments I've made elsewhere, you can add my acked by for the whole series.
+> Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Applied, thanks.
+
+g.
+
+> ---
+>  drivers/of/address.c       | 2 +-
+>  include/linux/of_address.h | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> Acked-by: Grant Likely <grant.likely@linaro.org>
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index afdb782..e02828f 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -871,7 +871,7 @@ EXPORT_SYMBOL(of_iomap);
+>   *		return PTR_ERR(base);
+>   */
+>  void __iomem *of_io_request_and_map(struct device_node *np, int index,
+> -					char *name)
+> +					const char *name)
+>  {
+>  	struct resource res;
+>  	void __iomem *mem;
+> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+> index 8cb14eb..d88e81b 100644
+> --- a/include/linux/of_address.h
+> +++ b/include/linux/of_address.h
+> @@ -106,7 +106,7 @@ extern int of_address_to_resource(struct device_node *dev, int index,
+>  				  struct resource *r);
+>  void __iomem *of_iomap(struct device_node *node, int index);
+>  void __iomem *of_io_request_and_map(struct device_node *device,
+> -					int index, char *name);
+> +					int index, const char *name);
+>  #else
+>  
+>  #include <linux/io.h>
+> @@ -123,7 +123,7 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
+>  }
+>  
+>  static inline void __iomem *of_io_request_and_map(struct device_node *device,
+> -					int index, char *name)
+> +					int index, const char *name)
+>  {
+>  	return IOMEM_ERR_PTR(-EINVAL);
+>  }
+> -- 
+> 1.9.1
+> 
 
-Thanks!
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
